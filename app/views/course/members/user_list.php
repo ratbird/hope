@@ -59,7 +59,7 @@
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                            type="checkbox" name="user[<?= $leser['user_id'] ?>]" value="1" />
                 </td>
-                <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
+                <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$leser['username'])) ?>">
                     <?= Avatar::getAvatar($leser['user_id'],$leser['username'])->getImageTag(Avatar::SMALL,
@@ -94,13 +94,14 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($rechte && $is_dozent) : ?>
+        <? if ($rechte && $is_tutor) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="4">
                     <select name="action_user" id="user_action" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion auswählen') ?></option>
-                        <option value="downgrade"><?= sprintf(_('Zu %s herabstufen'), $status_groups['autor']) ?></option>
+                        <option value="upgrade"><?= sprintf(_('Als %s befördern'),
+                                htmlReady($status_groups['autor'])) ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
                         <!--<option value="copy_to_course"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>

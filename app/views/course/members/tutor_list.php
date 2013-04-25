@@ -7,16 +7,16 @@
                   $status_groups['tutor']) ?>');">
     <table class="default collapsable zebra">
         <colgroup>
-        <? if($rechte) : ?>
-        <col width="3%">
+        <? if($rechte && $is_dozent) : ?>
+            <col width="3%">
         <? endif ?>
-        <col width="3%">
-        <col width="<?=($rechte) ? '79%' : '82%'?>">
+        <col width="<?=(!$rechte || $is_dozent) ? '3%' : '6%'?>">
+        <col width="<?=($rechte && $is_dozent) ? '79%' : '82%'?>">
         <col width="15%">
     </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 3 : 2?>">
+                <th class="table_header_bold" colspan="<?=($rechte && $is_dozent) ? 3 : 2?>">
                     <?= $status_groups['tutor'] ?>
                     <?= tooltipIcon(sprintf(_('%s haben Verwaltungsrechte, können jedoch keine %s hinzufügen.'),
                             $status_groups['tutor'], $status_groups['dozent'])) ?>
@@ -44,9 +44,9 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=($rechte) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ?
+                <th colspan="<?=($rechte && $is_dozent) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte) : ?>
+                    <? if ($rechte && $is_dozent) : ?>
                         <input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]">
                     <? endif ?>
@@ -63,13 +63,13 @@
         <? $nr= 0; foreach($tutoren as $tutor) : ?>
         <? $fullname = $tutor->user->getFullName('full_rev');?>
             <tr>
-                <? if ($rechte) : ?>
+                <? if ($rechte && $is_dozent) : ?>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['tutor']) ?>"
                            type="checkbox" name="tutor[<?= $tutor['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
-                <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
+                <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$tutor['username'])) ?>">
                     <?= Avatar::getAvatar($tutor['user_id'], $tutor['username'])->getImageTag(Avatar::SMALL,

@@ -51,7 +51,7 @@
                 <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                         type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1" />
                 </td>
-                <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
+                <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$accept['username'])) ?>">
                     <?= Avatar::getAvatar($accept['user_id'], $accept['username'])->getImageTag(Avatar::SMALL,

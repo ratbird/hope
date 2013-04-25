@@ -17,7 +17,6 @@
                     <?= QuickSearch::get('new_tutor', $search)
                         ->withButton(array('reset_button_name' => 'reset_tutor', 
                             'search_button_name' => 'search_tutor'))
-                        ->setAttributes(array('required' => 'required'))
                         ->render(); ?>  
                     <input type="hidden" name="seminar_id" value="<?= $course_id ?>">
                 </td>
@@ -26,7 +25,7 @@
                         array('title' => sprintf(_('als %s eintragen'), 
                                 htmlReady($decoratedStatusGroups['tutor'])))) ?>
                 <?= LinkButton::createCancel(_('Abbrechen'), 
-                        $controller->url_for('dispatch.php/course/members/index')) ?>
+                        $controller->url_for('course/members/index')) ?>
                 </td>
             </tr>
         </tbody>

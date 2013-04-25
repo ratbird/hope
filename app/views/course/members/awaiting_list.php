@@ -57,7 +57,7 @@
             <tr>
                 <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
                             name="awaiting[<?= $user['user_id'] ?>]" value="1" /></td>
-                <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
+                <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
                     <?= Avatar::getAvatar($waiting['user_id'], $waiting['username'])->getImageTag(Avatar::SMALL,

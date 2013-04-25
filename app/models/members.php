@@ -43,22 +43,6 @@ class MembersModel {
         return $count;
     }
 
-    /**
-     * Returns the Subject for the Messaging
-     * @return String
-     */
-    public function getSubject() {
-        $course = new Course($this->course_id);
-        $result = $course->toArray('veranstaltungsnummer');
-        
-        $subject = ($result['veranstaltungsnummer'] == '') ? sprintf('[%s]', $this->course_title) : 
-            sprintf('[%s] : %s', $result['veranstaltungsnummer'], $this->course_title);
-
-        return $subject;
-    }
-
-
-
     public function setAdmissionVisibility($user_id, $status) {
         $query = "UPDATE admission_seminar_user SET visible = '?' WHERE user_id = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);

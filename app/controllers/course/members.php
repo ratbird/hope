@@ -55,6 +55,7 @@ class Course_MembersController extends AuthenticatedController {
 
         Navigation::activateItem('/course/members');
         Navigation::activateItem('/course/members/view');
+        
         if (Request::isXhr()) {
             $this->set_layout(null);
         } else {
@@ -128,11 +129,7 @@ class Course_MembersController extends AuthenticatedController {
             $this->my_visibilty = $this->getUserVisibility();
         }
 
-        // Check Seminar
-        if ($rechte && $sem->isAdmissionEnabled()) {
-            $this->semAdmissionEnabled = true;
-            $this->count = $this->members->getCountedMembers();
-        }
+
 
         $this->sort_by = Request::option('sortby', 'nachname');
         $this->order = Request::option('order', 'asc');
@@ -168,11 +165,16 @@ class Course_MembersController extends AuthenticatedController {
         $this->awaiting     = $this->getMembers('awaiting');
         $this->accepted     = $this->getMembers('accepted');
         $this->studipticket = Seminar_Session::get_ticket();
-        $this->subject      = $this->members->getSubject();
+        $this->subject      = $this->getSubject();
         $this->groups       = $this->status_groups;
         $this->rechte       = $rechte;
         $this->waitingTitle = $this->getTitleForAwaiting();
-
+        
+        // Check Seminar
+        if ($rechte && $sem->isAdmissionEnabled()) {
+            $this->semAdmissionEnabled = true;
+            $this->count = $this->members->getCountedMembers();    
+        }
         // Set the infobox
         if ($rechte) {
             $this->setInfoBoxImage('infobox/groups.jpg');
@@ -201,7 +203,7 @@ class Course_MembersController extends AuthenticatedController {
                                 htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '',
                         _('TeilnehmerInnen exportieren als rtf Dokument'),
                         'passthrough');
-                $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/blue/file-xls.png');
+                $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/blue/file-office.png');
                 $this->addToInfobox(_('Aktionen'), $rtfExport, 'icons/16/blue/file-text.png');
                 
                 if(count($this->awaiting) > 0) {
@@ -213,7 +215,7 @@ class Course_MembersController extends AuthenticatedController {
                             "csv", "csv-warteliste", "awaiting", _("Warteliste exportieren als csv Dokument"), 
                             'passthrough');
                     
-                    $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/blue/file-xls.png');
+                    $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/blue/file-office.png');
                     $this->addToInfobox(_('Aktionen'), $awaiting_rtf, 'icons/16/blue/file-text.png'); 
                 }
             }
@@ -325,11 +327,12 @@ class Course_MembersController extends AuthenticatedController {
     private function getInvisibleCount() {
         $course = $this->course;
         $user_id = $this->user_id;
+        
         return $course->members->findBy('status', 'autor')->findBy('visible', 'no')
-                        ->filter(function($user)use($user_id) {
-                                    return $user['user_id'] != $user_id;
-                                })
-                        ->count();
+            ->filter(function($user)use($user_id) {
+                        return $user['user_id'] != $user_id;
+                    })
+            ->count();
     }
 
 
@@ -388,18 +391,18 @@ class Course_MembersController extends AuthenticatedController {
         $sem_institutes = $sem->getInstitutes();
 
         if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
-            $search_template = "user_inst_not_already_in_sem";
+            $search_template = 'user_inst_not_already_in_sem';
         } else {
-            $search_template = "user_not_already_in_sem";
+            $search_template = 'user_not_already_in_sem';
         }
 
         $this->search = new PermissionSearch(
-                $search_template, sprintf(_("%s suchen"), get_title_for_status('tutor', 1, $sem->status)),
-                "user_id", array('permission' => array('dozent', 'tutor'),
-            'seminar_id' => $this->course_id,
-            'sem_perm' => array('dozent', 'tutor'),
-            'institute' => $sem_institutes
-                )
+            $search_template, sprintf(_('%s suchen'), get_title_for_status('tutor', 1, $sem->status)),
+                'user_id', array('permission' => array('dozent', 'tutor'),
+                'seminar_id' => $this->course_id,
+                'sem_perm' => array('dozent', 'tutor'),
+                'institute' => $sem_institutes
+            )
         );
     }
 
@@ -443,8 +446,7 @@ class Course_MembersController extends AuthenticatedController {
         Request::set('consider_contingent', $this->flash['consider_contingent']);
 
         // new user-search for given status
-        $this->search = new SQLSearch("SELECT auth_user_md5.user_id, CONCAT(auth_user_md5.Nachname, \",
-                \", auth_user_md5.Vorname, \" (\", auth_user_md5.username, \")\") " .
+        $this->search = new SQLSearch("SELECT auth_user_md5.user_id, " . $GLOBALS['_fullname_sql']['full'].
                 "FROM auth_user_md5 " .
                 "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                 "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -479,77 +481,95 @@ class Course_MembersController extends AuthenticatedController {
 
         $sem = Seminar::GetInstance($this->course_id);
         // insert new dozent in a seminar
-        if (Request::get('new_dozent') && (Request::submitted('add_dozent')
+        if ((Request::submitted('add_dozent')
                 || Request::submitted('add_dozent_x')) && $perm->have_studip_perm("dozent", $this->course_id)) {
+            
+            if(!Request::option('new_dozent')) {
+                PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt 
+                    oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+                
+                $this->redirect('course/members/add_dozent');
+            } else {
+                $deputies_enabled = get_config('DEPUTIES_ENABLE');
 
-            $deputies_enabled = get_config('DEPUTIES_ENABLE');
-
-            if ($sem->addMember(Request::option('new_dozent'), "dozent")) {
-                // Only applicable when globally enabled and user deputies enabled too
-                if ($deputies_enabled) {
-                    // Check whether chosen person is set as deputy
-                    // -> delete deputy entry.
-                    if (isDeputy(Request::option('new_dozent'), $this->course_id)) {
-                        deleteDeputy(Request::option('new_dozent'), $this->course_id);
-                    }
-                    // Add default deputies of the chosen lecturer...
-                    if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
-                        $deputies = getDeputies(Request::option('new_dozent'));
-                        $lecturers = $sem->getMembers('dozent');
-                        foreach ($deputies as $deputy) {
-                            // ..but only if not already set as lecturer or deputy.
-                            if (!isset($lecturers[$deputy['user_id']]) &&
-                                    !isDeputy($deputy['user_id'], $this->course_id)) {
-                                addDeputy($deputy['user_id'], $this->course_id);
+                if ($sem->addMember(Request::option('new_dozent'), "dozent")) {
+                    // Only applicable when globally enabled and user deputies enabled too
+                    if ($deputies_enabled) {
+                        // Check whether chosen person is set as deputy
+                        // -> delete deputy entry.
+                        if (isDeputy(Request::option('new_dozent'), $this->course_id)) {
+                            deleteDeputy(Request::option('new_dozent'), $this->course_id);
+                        }
+                        // Add default deputies of the chosen lecturer...
+                        if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
+                            $deputies = getDeputies(Request::option('new_dozent'));
+                            $lecturers = $sem->getMembers('dozent');
+                            foreach ($deputies as $deputy) {
+                                // ..but only if not already set as lecturer or deputy.
+                                if (!isset($lecturers[$deputy['user_id']]) &&
+                                        !isDeputy($deputy['user_id'], $this->course_id)) {
+                                    addDeputy($deputy['user_id'], $this->course_id);
+                                }
                             }
                         }
                     }
+                    // new dozent was successfully insert
+                    PageLayout::postMessage(MessageBox::success(sprintf(_('%s wurde hinzugefügt.'),
+                            get_title_for_status('dozent', 1, $sem->status))));
+                    // go back
+                    $this->redirect('course/members/index');
+                } else {
+                    // sorry that was a fail
+                    PageLayout::postMessage(MessageBox::error(_('Die gewünsche Operation konnte nicht ausgeführt werden')));
+                    // go back
+                    $this->redirect('course/members/add_dozent');
                 }
-                // new dozent was successfully insert
-                PageLayout::postMessage(MessageBox::success(printf(_("%s wurde hinzugefügt."),
-                        get_title_for_status('dozent', 1, $sem->status))));
-            } else {
-                // sorry that was a fail
-                PageLayout::postMessage(MessageBox::error(_('Die gewünsche Operation konnte nicht ausgeführt werden')));
             }
-            // go back
-            $this->redirect('course/members/?cid=' . Request::get('cid'));
         }
 
         // empty dozent formular
         if (Request::submitted('search_dozent') && Request::submitted('search_dozent_x')) {
             $this->flash['new_dozent_parameter'] = Request::get('new_dozent_parameter');
-            $this->redirect('course/members/add_dozent?cid=' . Request::get('cid'));
+            $this->redirect('course/members/add_dozent');
         }
 
         //insert new tutor
-        if (Request::option('new_tutor') && (Request::submitted('add_tutor_x')
+        if ((Request::submitted('add_tutor_x')
                 || Request::submitted('add_tutor')) && $perm->have_studip_perm("tutor", $this->course_id)) {
-
-            if ($sem->addMember(Request::option('new_tutor'), "tutor")) {
-                PageLayout::postMessage(MessageBox::success(sprintf(_("%s wurde hinzugefügt."),
-                        get_title_for_status('tutor', 1, $sem->status))));
+            
+            // selection fails
+            if(!Request::option('new_tutor')) {
+                PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt 
+                    oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+                $this->redirect('course/members/add_tutor');
+                
             } else {
-                // sorry that was a fail
-                PageLayout::postMessage(MessageBox::error(_('Die gewünsche Operation konnte nicht ausgeführt werden')));
+                if ($sem->addMember(Request::option('new_tutor'), "tutor")) {
+                    PageLayout::postMessage(MessageBox::success(sprintf(_('%s wurde hinzugefügt.'),
+                            get_title_for_status('tutor', 1, $sem->status))));
+                    $this->redirect('course/members/index');
+                } else {
+                    // sorry that was a fail
+                    PageLayout::postMessage(MessageBox::error(_('Die gewünsche Operation konnte nicht ausgeführt werden')));
+                
+                    $this->redirect('course/members/add_tutor');
+                }
             }
-
-            // go back
-            $this->redirect('course/members/?cid=' . Request::get('cid'));
         }
-
+        
         // empty tutor formular
         if (Request::submitted('search_tutor') && Request::submitted('search_tutor_x')) {
             $this->flash['new_tutor_parameter'] = Request::get('new_tutor_parameter');
-            $this->redirect('course/members/add_tutor?cid=' . Request::get('cid'));
+            $this->redirect('course/members/add_tutor');
+            
         }
-
+        
         if (Request::submitted('reset_dozent') && Request::submitted('reset_dozent_x')) {
-            $this->redirect('course/members/add_dozent?cid=' . Request::get('cid'));
+            $this->redirect('course/members/add_dozent');
         }
 
         if (Request::submitted('reset_tutor') && Request::submitted('reset_tutor_x')) {
-            $this->redirect('course/members/add_tutor?cid=' . Request::get('cid'));
+            $this->redirect('course/members/add_tutor');
         }
     }
 
@@ -575,9 +595,13 @@ class Course_MembersController extends AuthenticatedController {
             $this->flash['new_autor_parameter'] = Request::get('new_autor_parameter');
             $this->flash['consider_contingent'] = Request::get('consider_contingent');
 
-            $this->redirect('course/members/add_member?cid=' . Request::get('cid'));
+            $this->redirect('course/members/add_member');
         }
-
+        
+        if (Request::submitted('reset_autor') && Request::submitted('reset_autor_x')) {
+            $this->redirect('course/members/add_member');
+        }
+        
         //insert new autor
         if (Request::option('new_autor') && (Request::submitted('add_autor_x')
                 || Request::submitted('add_autor')) && $perm->have_studip_perm("tutor", $this->course_id)) {
@@ -585,12 +609,11 @@ class Course_MembersController extends AuthenticatedController {
             $msg = $this->members->addMember(Request::get('new_autor'), 'autor', Request::get('consider_contingent'));
 
             PageLayout::postMessage($msg);
-
-            $this->redirect('course/members/?cid=' . Request::get('cid'));
-        }
-
-        if (Request::submitted('reset_autor') && Request::submitted('reset_autor_x')) {
-            $this->redirect('course/members/add_member?cid=' . Request::get('cid'));
+            $this->redirect('course/members/index');
+        } else {
+            PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt 
+                oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+            $this->redirect('course/members/add_member');
         }
     }
 
@@ -1180,13 +1203,13 @@ class Course_MembersController extends AuthenticatedController {
      * @param String $seminar_id
      * @return Array
      */
-    public function getUserVisibility() {
+    private function getUserVisibility() {
         $member = $this->course->members->findBy('user_id', $this->user_id);
         
         $visibility = $member->val('visible');
         $status = $member->val('status');
- 
-        $result['visible_mode'] = 'false';
+        
+        $result['visible_mode'] = false;
 
         if ($visibility) {
             $result['iam_visible'] = $visibility == 'yes';
@@ -1206,7 +1229,7 @@ class Course_MembersController extends AuthenticatedController {
             $result['iam_visible'] = $admission_visibility == 'yes';
             $result['visible_mode'] = 'awaiting';
         }
-        
+       
         return $result;
     }
     /**
@@ -1217,5 +1240,18 @@ class Course_MembersController extends AuthenticatedController {
         $sem = Seminar::GetInstance($this->course_id);
         return ($sem->admission_type == 2 || $sem->admission_selection_take_place == 1) ?
         _("Warteliste") : _("Anmeldeliste");
+    }
+    
+    /**
+     * Returns the Subject for the Messaging
+     * @return String
+    */
+    private function getSubject() {
+        $result = $this->course->getValue('veranstaltungsnummer');
+        
+        $subject = ($result == '') ? sprintf('[%s]', $this->course_title) : 
+            sprintf('[%s] : %s', $result, $this->course_title);
+
+        return $subject;
     }
 }

@@ -20,17 +20,17 @@
                 <td style="width: 30%; text-align: left">
                     <?= QuickSearch::get("new_autor", $search)
                             ->withButton(array('reset_button_name' => 'reset_autor', 'search_button_name' => 'search_autor'))
-                            ->setAttributes(array('required' => 'required'))
                             ->render();
                     ?>
                     <input type="hidden" name="cid" value="<?= $course_id ?>">
                 </td>
                 <td style="width: 20%; text-align: center"> 
                     <? if ($semAdmissionEnabled)  :?>
-                        <?=Assets::img('icons/16/black/info.png', array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
-                                                                        'alt' => _('Kontingent berücksichtigen'),
-                                                                        'style' => 'cursor: pointer',
-                                                                        'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
+                        <?=Assets::img('icons/16/black/info.png', 
+                            array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
+                                'alt' => _('Kontingent berücksichtigen'),
+                                'style' => 'cursor: pointer',
+                                'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
                         <label for="kontingent"><?=_("Kontingent berücksichtigen:");?>
                         <select name="consider_contingent" id="kontingent">
                             <option value=""><?=_("Kein Kontingent")?></option>
@@ -91,10 +91,11 @@
         <? if ($semAdmissionEnabled)  :?>
         <tr>
             <td>
-                <?=Assets::img('icons/16/black/info.png', array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
-                                                                    'alt' => _('Kontingent berücksichtigen'),
-                                                                    'style' => 'cursor: pointer',
-                                                                    'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
+                <?=Assets::img('icons/16/black/info.png', 
+                        array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
+                            'alt' => _('Kontingent berücksichtigen'),
+                            'style' => 'cursor: pointer',
+                            'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
                 <?=_("Kontingent berücksichtigen:");?>
             </td>
             <td colspan="2">  
@@ -124,5 +125,5 @@
 </form>
 
 <div style="text-align: right">
-    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('dispatch.php/course/members/index')) ?>
+    <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('course/members/index')) ?>
 </div>

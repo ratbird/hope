@@ -1,7 +1,7 @@
 <? use \Studip\Button; ?>
 <a name="autoren"></a>
 
-<? if (count($autoren) >0 ) : ?>
+
 <form action="<?= $controller->url_for(sprintf('course/members/edit_autor/%s',$page)) ?>"
           method="post" onsubmit="if ($('#action_autor').val() == 'remove')
               return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
@@ -17,12 +17,12 @@
                 <? $cols = 6 ?>
                 <? if ($rechte == 'autor' && $semAdmissionEnabled) : ?>
                     <? $cols = 7?>
-                    <? $cols_foot = 5?>
+                    <? $cols_foot = 7?>
                     <? $cols_head = 3?>
                     <col width="29%">
                     <col width="15%">
                 <? else : ?>
-                    <? $cols_foot = 4?>
+                    <? $cols_foot = 6?>
                     <? $cols_head = 3?>
                     <col width="39%">
                 <? endif ?>
@@ -41,7 +41,7 @@
                 </th>
                 <th class="table_header_bold" style="text-align: right" <?= ($rechte) ? 'colspan="2"' : ''?>>
                 <? if ($rechte) : ?>
-                    <? if (!empty($autoren)) : ?>
+                    <? if (count($autoren) > 0) : ?>
                         <?=$controller->getEmailLinkByStatus('autor')?>
                         <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'send_sms_to_all',
@@ -91,6 +91,7 @@
             </tr>
         </thead>
         <tbody>
+        <? if (count($autoren) >0 ) : ?>
         <? $nr = $autor_nr?>
         <? foreach($autoren as $autor) : ?>
         <? $fullname = $autor->user->getFullName('full_rev');?>
@@ -101,7 +102,7 @@
                            type="checkbox" name="autor[<?= $autor['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
-                <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
+                <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$autor['username'])) ?>">
                     <?= Avatar::getAvatar($autor['user_id'], $autor['username'])->getImageTag(Avatar::SMALL,
@@ -176,15 +177,24 @@
                 <td colspan="<?=$cols?>">+ <?= sprintf(_('%u unsichtbare %s'), $invisibles, $status_groups['autor']) ?></td>
             </tr>
         <? endif ?>
+        <? else : ?>
+            <tr>
+                <td colspan="<?=$cols?>">
+                <?=MessageBox::info(_('Derzeit sind noch keine Teilnehmer vorhanden'))?>
+                </td>
+            </tr>
+        <? endif ?>
         </tbody>
+        <? if ($rechte && count($autoren) >0) : ?>
         <tfoot>
             <tr>
-            <? if ($rechte) : ?>
                 <td class="printhead" colspan="<?=$cols_foot?>">
                     <select name="action_autor" id="action_autor" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
-                        <option value="upgrade"><?= sprintf(_('Als %s befördern'),
+                        <? if($is_dozent) : ?>
+                            <option value="upgrade"><?= sprintf(_('Als %s befördern'),
                                 htmlReady($status_groups['tutor'])) ?></option>
+                        <? endif ?>
                         <option value="downgrade"><?= sprintf(_('Als %s herabstufen'),
                                 htmlReady($status_groups['user'])) ?></option>
                         <!--<option value="to_admission">Auf Warteliste setzen</option>-->
@@ -193,24 +203,10 @@
                     </select>
                     <?= Button::create(_('Ausführen'), 'submit_autor') ?>
                 </td>
-            <? endif ?>
-            <td style="text-align: right" class="printhead" colspan="<?=!$rechte ? $cols : 2?>">
-            <? if ($total > $max_per_page && $page != 0) : ?>
-                <?
-                $pagination = $GLOBALS['template_factory']->open('shared/pagechooser');
-                $pagination->set_attributes(array(
-                    'perPage' => $max_per_page,
-                    'num_postings' => $total,
-                    'page' => $page,
-                    'pagelink' => $controller->url_for('course/members/index/%u#autoren')
-                ));
-                echo $pagination->render();
-                ?>
-            <? endif ?>
-            </td>
             </tr>
         </tfoot>
+        <? endif ?>
     </table>
 </form>
-<? endif; ?>
+
 

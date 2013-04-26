@@ -119,17 +119,11 @@ endif;
     <?= MessageBox::info(_('In dieser Ansicht befinden sich zur Zeit keine Beiträge.')) ?>
 <? endif ?>
 
-<!-- Bereiche / Themen / Beiträge -->
-<? if (!empty($list)) : ?>
-    <!-- Bereiche / Themen darstellen -->
-    <? if ($constraint['depth'] == 0) : ?>
+<!-- Bereiche / Themen darstellen -->
+<? if ($constraint['depth'] == 0) : ?>
     <?= $this->render_partial('index/_areas') ?>
-    <? else : ?>
+<? elseif ($constraint['depth'] == 1) : ?>
     <?= $this->render_partial('index/_threads') ?>
-    <? endif ?>
-<? elseif ($constraint['depth'] == 0 && $section == 'forum') : ?>
-    <?= MessageBox::info(_('Dieses Forum wurde noch nicht eingerichtet. '.
-            'Es gibt bisher keine Bereiche, in denen man ein Thema erstellen könnte.')); ?>
 <? endif ?>
 
 <? if (!empty($postings)) : ?>

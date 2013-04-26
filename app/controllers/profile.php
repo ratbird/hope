@@ -114,8 +114,7 @@ class ProfileController extends AuthenticatedController
         }
 
         // Get Avatar
-        $avatar_user_id = $this->profile->checkVisibility('picture') ? $this->current_user->user_id : 'nobody';
-        $this->avatar   = Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL);
+        $this->avatar   = Avatar::getAvatar($this->current_user->user_id)->getImageTag(Avatar::NORMAL);
 
         // GetScroreList
         $score  = new Score($this->current_user->user_id);

@@ -171,6 +171,11 @@ html.no-js #forum .js {
   height: 50px;
   overflow: hidden;
 }
+#forum table.forum .areacontent {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
 #forum table.forum td.selected {
   background-color: #ffffcc;
 }

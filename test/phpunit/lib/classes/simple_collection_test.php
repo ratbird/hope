@@ -27,12 +27,14 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $data[] = array('id' => 1, 'vorname' => 'André', 'nachname' => 'Noack', 'perm' => 'dozent');
+        $data[] = array('id' => 1, 'vorname' => 'Ândré', 'nachname' => 'Noack', 'perm' => 'dozent');
         $data[] = array('id' => 2, 'vorname' => 'Stefan', 'nachname' => 'Suchi', 'perm' => 'dozent');
-        $data[] = array('id' => 10, 'vorname' => 'Elmar', 'nachname' => 'Ludwig', 'perm' => 'admin');
+        $data[] = array('id' => 10, 'vorname' => 'Élmar', 'nachname' => 'Ludwig', 'perm' => 'admin');
         $data[] = array('id' => 11, 'vorname' => 'Jan-Hendrik', 'nachname' => 'Wilms', 'perm' => 'tutor');
         $data[] = array('id' => 15, 'vorname' => 'Nico', 'nachname' => 'Müller', 'perm' => 'root');
         
+        $a = new SimpleCollection();
+        $this->assertInstanceOf('SimpleCollection', $a);
         $a = SimpleCollection::createFromArray($data);
         $this->assertInstanceOf('SimpleCollection', $a);
         $this->assertEquals($a[0], $data[0]);
@@ -95,8 +97,20 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SimpleCollection', $test);
         $this->assertCount(1, $test);
         $one = $a->findOneBy('id', 10);
-        $this->assertEquals('Elmar', $one['vorname']);
-        $this->assertEquals('Elmar', $a->findBy('id', 10)->val('vorname'));
+        $this->assertEquals('Ludwig', $one['nachname']);
+        $this->assertEquals('Ludwig', $a->findBy('id', 10)->val('nachname'));
+    }
+    
+    /**
+     * @depends testConstruct
+     */
+    public function testUnsetBy($a)
+    {
+        $ok = $a->unsetBy('id', 10);
+        $this->assertEquals(1, $ok);
+        $this->assertCount(1, $a->getDeleted());
+        $this->assertEquals('Ludwig', $a->getDeleted()->val('nachname'));
+        $this->assertEquals(5, $a->refresh());
     }
     
     /**
@@ -108,8 +122,79 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $a->pluck('id'));
         $expected = array(array(1, 'dozent'), array(2, 'dozent'), array(10, 'admin'),array(11, 'tutor'), array(15, 'root'));
         $this->assertEquals($expected, $a->pluck(array('id', 'perm')));
+        
     }
-
+    
+    /**
+     * @depends testConstruct
+     */
+    public function testToGroupedArray($a)
+    {
+        $expected = array();
+        $expected[1] = array('nachname' => 'Noack');
+        $expected[2] = array('nachname' => 'Suchi');
+        $expected[10] = array('nachname' => 'Ludwig');
+        $expected[11] = array('nachname' => 'Wilms');
+        $expected[15] = array('nachname' => 'Müller');
+        $this->assertEquals($expected, $a->toGroupedArray('id', array('nachname')));
+        $expected = array();
+        $expected['dozent'] = 2;
+        $expected['admin'] = 1;
+        $expected['tutor'] = 1;
+        $expected['root'] = 1;
+        $group_func = function ($a) {return count($a);};
+        $this->assertEquals($expected, $a->toGroupedArray('perm', 'perm', $group_func));
+    }
+    
+    /**
+     * @depends testConstruct
+     * @depends testPluck
+     */
+    public function testLimit($a)
+    {
+        $expected = array(1, 2);
+        $this->assertEquals($expected, $a->limit(2)->pluck('id'));
+        $expected = array(3 => 11, 4 => 15);
+        $this->assertEquals($expected, $a->limit(3,2)->pluck('id'));
+        $this->assertEquals($expected, $a->limit(-2)->pluck('id'));
+        $expected = array(2 => 10);
+        $this->assertEquals($expected, $a->limit(2,-2)->pluck('id'));
+    }
+    
+    /**
+     * @depends testConstruct
+     * @depends testPluck
+     */
+    public function testOrderBy($a)
+    {
+        $expected = array( 'Wilms',
+                            'Suchi',
+                            'Noack',
+                            'Müller',
+                            'Ludwig'
+        );
+        $this->assertEquals($expected, array_values($a->orderBy('nachname desc')->pluck('nachname')));
+        $this->assertEquals(array_reverse($expected), array_values($a->orderBy('nachname asc')->pluck('nachname')));
+        $expected = array (
+                        'Jan-Hendrik',
+                        'Nico',
+                        'Stefan',
+                        'Ândré',
+                        'Élmar'
+        );
+        $this->assertEquals($expected, array_values($a->orderBy('vorname asc', SORT_STRING)->pluck('vorname')));
+        $expected = array (
+                         'Ândré',
+                         'Élmar',
+                         'Jan-Hendrik',
+                         'Nico',
+                         'Stefan'
+        );
+        $this->assertEquals($expected, array_values($a->orderBy('vorname asc', SORT_LOCALE_STRING)->pluck('vorname')));
+        $expected = array(1,2,10,11,15);
+        $this->assertEquals($expected, array_values($a->orderBy('id asc', SORT_NUMERIC)->pluck('id')));
+    }
+    
     /**
      * @depends testConstruct
      * @expectedException        InvalidArgumentException

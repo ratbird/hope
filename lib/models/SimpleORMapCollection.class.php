@@ -41,18 +41,20 @@ class SimpleORMapCollection extends SimpleCollection
     public static function createFromArray(Array $data, $strict = true)
     {
         $ret = new SimpleORMapCollection();
-        $first = current($data);
-        if ($first instanceof SimpleORMap) {
-            $ret->setClassName(get_class($first));
-            if ($strict) {
-                foreach ($data as $one) {
-                    $ret[] = $one;
+        if (count($data)) {
+            $first = current($data);
+            if ($first instanceof SimpleORMap) {
+                $ret->setClassName(get_class($first));
+                if ($strict) {
+                    foreach ($data as $one) {
+                        $ret[] = $one;
+                    }
+                } else {
+                    $ret->exchangeArray($data);
                 }
             } else {
-                $ret->exchangeArray($data);
+                throw new InvalidArgumentException('This collection only accepts objects derived from SimpleORMap');
             }
-        } else {
-            throw new InvalidArgumentException('This collection only accepts objects derived from SimpleORMap');
         }
         return $ret;
     }
@@ -68,7 +70,7 @@ class SimpleORMapCollection extends SimpleCollection
     {
         $this->relation_options = $options;
         $this->related_record = $record;
-        parent::__construct($finder);
+        parent::__construct($finder === null ? array() : $finder);
     }
 
     /**

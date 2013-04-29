@@ -185,7 +185,7 @@ class SimpleCollection extends ArrayObject
      *
      * @param mixed $data array or closure to fill collection
      */
-    function __construct($data = null)
+    function __construct($data = array())
     {
         $this->finder = $data instanceof Closure ? $data : null;
         $this->deleted = clone $this;

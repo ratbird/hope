@@ -1,3 +1,4 @@
+<? if (empty($list)) return; ?>
 <br>
 <div id="sortable_areas">
 <? foreach ($list as $category_id => $entries) : ?>

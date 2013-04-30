@@ -3,7 +3,7 @@
 <div class="posting">
     <span class="corners-top"><span></span></span>
     <div class="postbody">
-        <div class="content"><?= formatReady($constraint['content']) ?></div>
+        <div class="content"><?= formatReady(ForumEntry::killEdit($constraint['content'])) ?></div>
     </div>
     <dl class="postprofile" style="min-height: 20px">
         <dt>

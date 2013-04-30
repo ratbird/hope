@@ -51,6 +51,25 @@ class SimpleCollection extends ArrayObject
     }
 
     /**
+     * converts arrays or objects to ArrayObject objects
+     * if ArrayAccess interface is not available 
+     * 
+     * @param mixed $a
+     * @return ArrayAccess
+     */
+    public static function arrayToArrayObject($a)
+    {
+        if ($a instanceof ArrayObject) {
+            $a->setFlags(ArrayObject::ARRAY_AS_PROPS); 
+            return $a;
+        } else if ($a instanceof ArrayAccess) {
+            return $a;
+        } else {
+            return new ArrayObject($a, ArrayObject::ARRAY_AS_PROPS);
+        }
+    }
+
+    /**
      * returns closure to compare a value against given arguments
      * using given operator
      * 
@@ -194,6 +213,53 @@ class SimpleCollection extends ArrayObject
         } else {
             $this->exchangeArray($data);
         }
+    }
+
+    function exchangeArray(Array $input)
+    {
+        return parent::exchangeArray(array_map('SimpleCollection::arrayToArrayObject', $input));
+    }
+
+    /**
+     * converts the object and all elements to plain arrays
+     * 
+     * @return array
+     */
+    function toArray()
+    {
+        return $this->map( function ($a) {
+            if (method_exists($a, 'toArray')) {
+                return $a->toArray();
+            }
+            if (method_exists($a, 'getArrayCopy')) {
+                return $a->getArrayCopy();
+            }
+            return (array)$a;
+        }
+        );
+    }
+
+    /**
+     *
+     * @see ArrayObject::append()
+     */
+    function append($value)
+    {
+        return $this->offsetSet(null, $value);
+    }
+
+    /**
+     * Sets the value at the specified index
+     * ensures the value has ArrayAccess
+     *
+     * @see ArrayObject::offsetSet()
+     */
+    function offsetSet($index, $newval)
+    {
+        if (!is_null($index) && is_numeric($index)) {
+            $index = (int)$index;
+        }
+        return parent::offsetSet($index, SimpleCollection::arrayToArrayObject($newval));
     }
 
     /**
@@ -389,7 +455,7 @@ class SimpleCollection extends ArrayObject
         if (is_string($only_these_fields)) {
             $only_these_fields = words($only_these_fields);
         }
-        foreach ($this as $record) {
+        foreach ($this->toArray() as $record) {
             $key = $record[$group_by];
             $ret = array();
             if (is_array($only_these_fields)) {

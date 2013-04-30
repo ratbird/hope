@@ -74,15 +74,6 @@ class SimpleORMapCollection extends SimpleCollection
     }
 
     /**
-     *
-     * @see ArrayObject::append()
-     */
-    function append($value)
-    {
-        return $this->offsetSet(null, $value);
-    }
-
-    /**
      * Sets the value at the specified index
      * checks if the value is an object of specified class
      *

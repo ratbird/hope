@@ -37,13 +37,48 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('SimpleCollection', $a);
         $a = SimpleCollection::createFromArray($data);
         $this->assertInstanceOf('SimpleCollection', $a);
-        $this->assertEquals($a[0], $data[0]);
-        $this->assertEquals($a->getArrayCopy(), $data);
+        $this->assertInstanceOf('ArrayAccess', $a[0]);
+        $this->assertEquals($data[0]['id'], $a[0]['id']);
+        $this->assertEquals($a->toArray(), $data);
         $finder = function () use ($data) {return $data;};
         $a = new SimpleCollection($finder);
-        $this->assertEquals($a[0], $data[0]);
-        $this->assertEquals($a->getArrayCopy(), $data);
+        $this->assertInstanceOf('ArrayAccess', $a[0]);
+        $this->assertEquals($data[0]['id'], $a[0]['id']);
+        $this->assertEquals($a->toArray(), $data);
         return $a;
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testArrayAccess($a)
+    {
+        $newval = array('id' => 17, 'vorname' => 'Till', 'nachname' => 'Glöggler', 'perm' => 'root');
+        $a[] = $newval;
+        $last = count($a) - 1;
+        $this->assertEquals(17, $a[$last]->id);
+        $a[$last]->id = 18;
+        $this->assertEquals(18, $a[$last]['id']);
+        
+        $a[] = new ArrayObject($newval);
+        $last = count($a) - 1;
+        $this->assertEquals(17, $a[$last]->id);
+        $a[$last]->id = 18;
+        $this->assertEquals(18, $a[$last]['id']);
+        
+        $newobj = new stdClass();
+        foreach ($newval as $k => $v) $newobj->$k = $v;
+        $a[] = $newobj;
+        $last = count($a) - 1;
+        $this->assertEquals(17, $a[$last]->id);
+        $a[$last]->id = 18;
+        $this->assertEquals(18, $a[$last]['id']);
+        
+        $lastval = array_pop($a->toArray());
+        $lastval['id'] = 17;
+        $this->assertEquals($newval, $lastval);
+        
+        $a->refresh();
     }
 
     /**

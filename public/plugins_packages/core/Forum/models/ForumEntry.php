@@ -566,7 +566,7 @@ class ForumEntry {
                     FROM forum_entries
                     LEFT JOIN forum_favorites as ou ON (ou.topic_id = forum_entries.topic_id AND ou.user_id = :user_id)
                     WHERE seminar_id = :seminar_id AND lft > :left
-                        AND rgt < :right AND mkdate >= :mkdate
+                        AND rgt < :right AND (mkdate >= :mkdate OR chdate >= :mkdate)
                     ORDER BY mkdate ASC
                     LIMIT $start, ". ForumEntry::POSTINGS_PER_PAGE);
                 

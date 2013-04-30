@@ -8,7 +8,7 @@
         </a>
     <? elseif ($section == 'newest'): ?>
         <a href="<?= PluginEngine::getURL('coreforum/index/newest') ?>">
-            <?= _('Neueste Beiträge') ?>
+            <?= _('Neue Beiträge') ?>
         </a>
     <? elseif ($section == 'latest') : ?>
         <a href="<?= PluginEngine::getURL('coreforum/index/latest') ?>">

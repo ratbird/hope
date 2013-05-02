@@ -1045,8 +1045,10 @@ function validate_upload($the_file, $real_file_name='') {
             $active_upload_type = "attachments";
             $sem_status = $GLOBALS['perm']->get_perm();
         } else {
-            $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
-            $active_upload_type = $SessSemName["art_num"];
+            if (Request::option('cid')) {
+                $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
+                $active_upload_type = $SessSemName["art_num"];
+            }
             if (!isset($UPLOAD_TYPES[$active_upload_type])) {
                 $active_upload_type = 'default';
             }

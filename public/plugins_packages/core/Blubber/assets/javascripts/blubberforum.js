@@ -321,7 +321,10 @@ STUDIP.Blubber = {
                 if (files > 0) {
                     jQuery(textarea).addClass("uploading");
                     jQuery.ajax({
-                        'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/post_files?context=" + context_id + "&context_type=" + context_type,
+                        'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val()
+                            + "/post_files?context=" + context_id
+                            + "&context_type=" + context_type
+                            + (context_type === "course" ? "&cid=" + context_id : ""),
                         'data': data,
                         'cache': false,
                         'contentType': false,

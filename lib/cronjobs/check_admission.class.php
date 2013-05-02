@@ -43,9 +43,9 @@ class CheckAdmissionJob extends CronJob
       {
           require_once 'lib/language.inc.php';
           require_once 'lib/admission.inc.php';
-          if (!($GLOBALS['MAIL_LOCALHOST'] && $GLOBALS['MAIL_HOST_NAME'] && $GLOBALS['ABSOLUTE_URI_STUDIP'])) {
-              throw new Exception('To use check_admission job you MUST set correct values for $MAIL_LOCALHOST, $MAIL_HOST_NAME and $ABSOLUTE_URI_STUDIP in config_local.inc.php!');
-          }
+          if (empty($GLOBALS['ABSOLUTE_URI_STUDIP'])) {
+            throw new Exception('To use check_admission job you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!');
+        }
       }
 
       public function execute($last_result, $parameters = array())

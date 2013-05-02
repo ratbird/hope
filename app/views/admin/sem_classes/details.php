@@ -152,7 +152,11 @@
             <td colspan="2"><h3><?= _("Sonstiges") ?></h3></td>
         </tr>
         <tr class="sub">
-            <td><label for="workgroup_mode"><?= _("Studentische Arbeitsgruppe") ?></label></td>
+            <td><label for="studygroup_mode"><?= _("Studentische Arbeitsgruppe") ?></label></td>
+            <td><input type="checkbox" id="studygroup_mode" value="1"<?= $sem_class['studygroup_mode'] ? " checked" : "" ?>></td>
+        </tr>
+        <tr class="sub">
+            <td><label for="workgroup_mode"><?= _("Neue Nutzer immer als Tutoren eintragen.") ?></label></td>
             <td><input type="checkbox" id="workgroup_mode" value="1"<?= $sem_class['workgroup_mode'] ? " checked" : "" ?>></td>
         </tr>
         <tr class="sub">

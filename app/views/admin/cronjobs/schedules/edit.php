@@ -99,7 +99,7 @@
         </thead>
     <? foreach ($tasks as $task): ?>
         <? if (!$schedule->isNew() && $task->task_id != $schedule->task_id) continue; ?>
-        <tbody <? if ($schedule->isNew() && $task->task_id === $schedule->task_id) echo 'class="selected"'; ?>>
+        <tbody <? if (!$schedule->isNew() && $task->task_id === $schedule->task_id) echo 'class="selected"'; ?>>
             <tr>
                 <td>
                 <? if ($schedule->isNew()): ?>

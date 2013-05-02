@@ -171,11 +171,6 @@ html.no-js #forum .js {
   height: 50px;
   overflow: hidden;
 }
-#forum table.forum .areacontent {
-  position: absolute;
-  left: 0;
-  right: 0;
-}
 #forum table.forum td.selected {
   background-color: #ffffcc;
 }
@@ -254,6 +249,7 @@ html.no-js #forum .js {
   margin: 0 0 0.75em 0;
   padding: 0;
   background-color: #ecf3f7;
+  word-break: break-all;
 }
 @keyframes border-pulsate {
   0% {

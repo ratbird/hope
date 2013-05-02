@@ -335,7 +335,8 @@ function checkObjectModule($module)
     if ($SessSemName[1]) {
         $modules = new Modules();
 
-        if (!$modules->checkLocal($module, $SessSemName[1])) {
+        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
+        if (!$sem_class->isSlotMandatory($module) && !$modules->checkLocal($module, $SessSemName[1])) {
             throw new CheckObjectException(sprintf(_('Das Inhaltselement "%s" ist für dieses Objekt leider nicht verfügbar.'), ucfirst($module)));
         }
     }

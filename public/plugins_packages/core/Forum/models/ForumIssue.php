@@ -45,6 +45,9 @@ class ForumIssue
             ForumEntry::update($topic_id, $title ?: _('Kein Titel'), $content);
 
         } else {                                                  // create
+            // make sure the forum is set up properly
+            ForumEntry::checkRootEntry($seminar_id);
+
             $topic_id = md5(uniqid(rand()));
 
             ForumEntry::insert(array(

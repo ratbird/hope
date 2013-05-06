@@ -36,7 +36,7 @@ $(function () {
             <?endif;?>
                 <p><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
 
-                <form name="login" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
+                <form name="login" method="post" action="<?= URLHelper::getLink(Request::url(), array('cancel_login' => NULL)) ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
                     <input type="hidden" name="resolution"  value="">

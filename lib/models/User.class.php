@@ -148,11 +148,8 @@ class User extends AuthUserMd5
         if (!$sql) {
             return $this->vorname . ' ' . $this->nachname;
         }
-        foreach (array_merge(array_keys($this->db_fields), array_keys($this->additional_fields)) as $one) {
-            $search[] = $one;
-            $replace[] = $db->quote($this->getValue($one));
-        }
-        return $db->query("SELECT " . str_replace($search, $replace, strtolower($sql)))->fetchColumn();
+        $data = array_map(array($db,'quote'), $this->toArray());
+        return $db->query("SELECT " . strtr(strtolower($sql), $data))->fetchColumn();
     }
 
     function toArrayRecursive($only_these_fields = null)

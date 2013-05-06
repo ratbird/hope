@@ -201,11 +201,11 @@ function parse_link($link, $level=0) {
         } else {
             $the_file_name = basename($url_parts['path']) ?: $the_file_name;
         }
-
         // Weg über einen Locationheader:
-        if (($parsed_link["HTTP/1.1 302 Found"] || $parsed_link["HTTP/1.0 302 Found"]) && $parsed_link["Location"]) {
-            $the_link = $parsed_link["Location"];
-            parse_link($parsed_link["Location"],$level + 1);
+        $location_header = $parsed_link["Location"]
+                        ?: $parsed_link["location"];
+        if (in_array($parsed_link["response_code"], array(300,301,302,303,305,307)) && $location_header) {
+            parse_link($location_header, $level + 1);
         }
         return $parsed_link;
     }

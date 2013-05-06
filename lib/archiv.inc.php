@@ -679,6 +679,6 @@ function in_archiv ($sem_id)
         $archiv_file_id, 
         $forumdump,
         $wikidump,
-        $studienbereiche,
+        $studienbereiche ?: '',
     ));
 }

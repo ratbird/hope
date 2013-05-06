@@ -63,7 +63,7 @@ class CycleDataDB
         $ret = array();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $data = $row;
-            $data['related_persons'] = explode(',', $data['related_persons']);
+            $data['related_persons'] = array_filter(explode(',', $data['related_persons']));
             $ret[] = $data;
         }
 
@@ -90,7 +90,7 @@ class CycleDataDB
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $zw = $row;
             $zw['ex_termin'] = TRUE;
-            $zw['related_persons'] = explode(',', $zw['related_persons']);
+            $zw['related_persons'] = array_filter(explode(',', $zw['related_persons']));
             $ret[] = $zw;
         }
 

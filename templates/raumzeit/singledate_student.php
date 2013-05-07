@@ -26,7 +26,7 @@
     <td nowrap class="<?=$tpl['class']?>">
         <a class="tree" href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
                  <i><?= htmlReady($tpl['art']) ?>:</i>
-                <?=$tpl['date']?>
+                <?=$tpl['date']?>&nbsp;
         </a>
     </td>
 

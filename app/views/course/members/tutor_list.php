@@ -5,7 +5,7 @@
       method="post" onsubmit="if ($('#tutor_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                   $status_groups['tutor']) ?>');">
-    <table class="default collapsable zebra">
+    <table class="default collapsable zebra-hover">
         <colgroup>
         <? if($rechte && $is_dozent) : ?>
             <col width="3%">

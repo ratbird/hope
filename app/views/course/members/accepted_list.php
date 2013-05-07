@@ -5,7 +5,7 @@
 <form action="<?= $controller->url_for(sprintf('course/members/edit_accepted/%s',$page)) ?>"
       method="post" onsubmit="if ($('#action_accepted').val() == 'remove')
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
-    <table class="default collapsable zebra">
+    <table class="default collapsable zebra-hover">
         <colgroup>
             <col width="3%">
             <col width="3%">

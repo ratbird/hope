@@ -5,7 +5,7 @@
       method="post" onsubmit="if ($('#user_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                   $status_groups['user']) ?>');">
-    <table class="default collapsable zebra">
+    <table class="default collapsable zebra-hover">
         <colgroup>
             <col width="3%">
             <col width="3%">

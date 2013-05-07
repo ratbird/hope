@@ -86,7 +86,7 @@ class CoreAdmin implements StudipModule {
             }  // endif modules only seminars
 
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
-                $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
+                $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $GLOBALS['SessSemName']['class']);
                 $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
                 $navigation->addSubNavigation('news', $item);
 

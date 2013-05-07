@@ -1,4 +1,5 @@
-<?
+#!/usr/bin/php -q
+<?php
 /**
  * cronjob-worker - Worker process for the cronjobs
  *

@@ -830,17 +830,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function toArray($only_these_fields = null)
     {
-        foreach($only_these_fields as $key => $field) {
-            if(!is_array($field)) {
-                $only_these_fields[$key] = strtolower($field);
-            }
-        }
         $ret = array();
         if (is_string($only_these_fields)) {
             $only_these_fields = words($only_these_fields);
         }
         $fields = array_diff($this->known_slots, array_keys($this->relations));
         if (is_array($only_these_fields)) {
+            $only_these_fields = array_map('strtolower', $only_these_fields);
             $fields = array_intersect($only_these_fields, $fields);
         }
         foreach($fields as $field) {
@@ -882,11 +878,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (is_array($only_these_fields)) {
             foreach ($only_these_fields as $key => $value) {
                 if (!is_array($value) &&
-                        array_key_exists($value, $this->relations)) {
-                    $relations[$value] = 0; //not null|array|string to stop recursion
+                        array_key_exists(strtolower($value), $this->relations)) {
+                    $relations[strtolower($value)] = 0; //not null|array|string to stop recursion
                 }
-                if (array_key_exists($key, $this->relations)) {
-                    $relations[$key] = $value;
+                if (array_key_exists(strtolower($key), $this->relations)) {
+                    $relations[strtolower($key)] = $value;
                 }
             }
         }

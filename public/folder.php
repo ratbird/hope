@@ -37,6 +37,10 @@ page_open(array("sess" => "Seminar_Session",
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+checkObject();
+checkObjectModule('documents');
+object_set_visit_module('documents');
+
 // -- here you have to put initialisations for the current page
 require_once('lib/datei.inc.php');
 require_once('lib/msg.inc.php');
@@ -135,10 +139,6 @@ if (Request::submitted('download_selected')) {
     }
 }
 
-checkObject();
-checkObjectModule('documents');
-object_set_visit_module('documents');
-
     // add skip links
     SkipLinks::addIndex(Navigation::getItem('/course/files/all')->getTitle(), 'main_content', 100);
     SkipLinks::addIndex(Navigation::getItem('/course/files/tree')->getTitle(), 'main_content', 100);
@@ -168,7 +168,7 @@ if (!$rechte && $open_cmd) {
 
     $owner = (($result['user_id'] == $user->id)
            && ($result['user_id'] != 'nobody')
-           && $folder_tree->isWritable($result['range_id'], $user->id)); 
+           && $folder_tree->isWritable($result['range_id'], $user->id));
 } else {
     $owner = FALSE;
 }
@@ -746,7 +746,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 
     //Datei soll in einen Ordner kopiert werden
     if ((Request::get("copyintofolder")) && (Request::get("copyfile"))) {
-        $query = "SELECT name, description, filename, mkdate, filesize, 
+        $query = "SELECT name, description, filename, mkdate, filesize,
                          autor_host, url, protected
                   FROM dokumente
                   WHERE dokument_id = ?";
@@ -1090,7 +1090,7 @@ div.droppable.hover {
         if($SessSemName['class'] == 'sem') {
             $query = "SELECT DISTINCT folder_id
                       FROM themen AS th
-                      LEFT JOIN themen_termine AS tt ON (th.issue_id = tt.issue_id) 
+                      LEFT JOIN themen_termine AS tt ON (th.issue_id = tt.issue_id)
                       LEFT JOIN termine AS t ON (t.termin_id = tt.termin_id)
                       INNER JOIN folder ON (th.issue_id = folder.range_id)
                       WHERE th.seminar_id = ?

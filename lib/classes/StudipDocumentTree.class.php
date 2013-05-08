@@ -142,6 +142,9 @@ class StudipDocumentTree extends TreeAbstract {
     }
     
     function checkPermission($folder_id, $perm, $user_id = null){
+        if (!isset($this->tree_data[$folder_id])) {
+            return false;
+        }
         if ($user_id && is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_studip_perm($this->must_have_perm, $this->range_id, $user_id)){
             return true;
         } 

@@ -347,7 +347,7 @@ function createTempFolder($folder_id, $tmp_full_path, $sem_id, $perm_check = TRU
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $folder_id,
-        $perm_check ? $sem_id : null
+        $perm_check ? (string)$sem_id : null
     ));
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         if ($row['url'] != '') {  // just a linked file

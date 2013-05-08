@@ -888,7 +888,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (count($relations)) {
             foreach ($relations as $relation_name => $relation_only_these_fields) {
                 $options = $this->getRelationOptions($relation_name);
-                if ($options['type'] === 'has_one') {
+                if ($options['type'] === 'has_one' ||
+                        $options['type'] === 'belongs_to') {
                     $ret[$relation_name] =
                             $this->{$relation_name}->
                                             toArrayRecursive($relation_only_these_fields);

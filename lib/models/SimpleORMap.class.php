@@ -830,6 +830,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function toArray($only_these_fields = null)
     {
+        foreach($only_these_fields as $key => $field) {
+            if(!is_array($field)) {
+                $only_these_fields[$key] = strtolower($field);
+            }
+        }
         $ret = array();
         if (is_string($only_these_fields)) {
             $only_these_fields = words($only_these_fields);

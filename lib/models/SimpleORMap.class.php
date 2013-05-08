@@ -836,7 +836,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $fields = array_diff($this->known_slots, array_keys($this->relations));
         if (is_array($only_these_fields)) {
-            $only_these_fields = array_map('strtolower', $only_these_fields);
+            $only_these_fields = array_filter(array_map(function($s) {
+                return is_string($s) ? strtolower($s) : null;
+            }, $only_these_fields));
             $fields = array_intersect($only_these_fields, $fields);
         }
         foreach($fields as $field) {

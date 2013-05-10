@@ -477,7 +477,7 @@ class AdminNewsController {
                                                                     ,$news->getValue('topic')) ."\n" . get_fullname() . ' ('.get_username().')';
                         restoreLanguage();
                     }
-                    $kill_count += $news->delete();
+                    $kill_count += $news->delete() ? 1 : 0;
                 }
 
             }

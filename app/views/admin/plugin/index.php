@@ -42,8 +42,9 @@ use Studip\Button, Studip\LinkButton;
                 <th><?= _('Name')?></th>
                 <th><?= _('Typ') ?></th>
                 <th><?= _('Version') ?></th>
+                <th><?= _('Schema') ?></th>
                 <th><?= _('Position') ?></th>
-                <th colspan="4"><?= _('Aktionen') ?></th>
+                <th colspan="3"><?= _('Aktionen') ?></th>
             </tr>
 
             <? foreach ($plugins as $plugin): ?>
@@ -63,6 +64,14 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
                         <?= htmlReady($update_info[$pluginid]['version']) ?>
+                    </td>
+                    <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
+                        <?= htmlReady($migrations[$pluginid]['schema_version']) ?>
+                        <? if ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version']) :?>
+                            <a href="<?= $controller->url_for('admin/plugin/migrate', $pluginid) ?>" title="<?= sprintf(_("Update auf Version %d verfügbar"), $migrations[$pluginid]['migration_top_version']) ?>">
+                            <?= Assets::img('icons/16/blue/new/admin.png');?>
+                            </a>
+                        <? endif; ?>
                     </td>
                     <td>
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>

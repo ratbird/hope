@@ -112,7 +112,7 @@ class PluginAdministration
             rmdirr($plugindir);
             throw new PluginInstallationException(_('Das Plugin enthält keine gültige Plugin-Klasse.'));
         }
-        
+
         // if we have a homepageplugin register some visibility
         $pluginInfo = $plugin_manager->getPluginInfoById($pluginid);
         if (in_array('HomepagePlugin', $pluginInfo['type'])) {
@@ -121,7 +121,7 @@ class PluginAdministration
 
         // register additional plugin classes in this package
         $additionalclasses = $manifest['additionalclasses'];
-        
+
         if (is_array($additionalclasses)) {
             foreach ($additionalclasses as $class) {
                 $plugin_manager->registerPlugin($class, $class, $pluginpath, $pluginid);
@@ -187,7 +187,7 @@ class PluginAdministration
 
         // delete database if needed
         $this->deleteDBSchema($plugindir, $manifest);
-        
+
         // delete visibility options
         Visibility::removePlugin($plugin['id']);
 
@@ -386,5 +386,126 @@ class PluginAdministration
         }
 
         return $update_info;
+    }
+
+    /**
+     * Fetch migration information plugins. This method
+     * returns for each plugin: 
+     * current schema version and top migration version, if available.
+     *
+     * @return array
+     */
+    public function getMigrationInfo()
+    {
+        $info = array();
+        $plugin_manager = PluginManager::getInstance();
+        $plugins = $plugin_manager->getPluginInfos();
+        $basepath = get_config('PLUGINS_PATH');
+        foreach ($plugins as $id => $plugin) {
+            $plugindir = $basepath.'/'.$plugin['path'].'/';
+            if (is_dir($plugindir.'/migrations')) {
+                $schema_version = new DBSchemaVersion($plugin['name']);
+                $migrator = new Migrator($plugindir .'/migrations', $schema_version);
+                $info[$id]['migration_top_version'] = $migrator->top_version();
+                $info[$id]['schema_version'] = $schema_version->get();
+            }
+        }
+        return $info;
+    }
+
+    /**
+     * migrate plugin to top migration
+     * 
+     * @param integer $plugin_id
+     * @return string output from migrator
+     */
+    public function migratePlugin($plugin_id)
+    {
+        $plugin_manager = PluginManager::getInstance();
+        $plugin = $plugin_manager->getPluginInfoById($plugin_id);
+        $basepath = get_config('PLUGINS_PATH');
+        $plugindir = $basepath.'/'.$plugin['path'].'/';
+        if (is_dir($plugindir.'/migrations')) {
+            $schema_version = new DBSchemaVersion($plugin['name']);
+            $migrator = new Migrator($plugindir .'/migrations', $schema_version, true);
+            ob_start();
+            $migrator->migrate_to(null);
+            $log = ob_get_clean();
+        }
+        return $log;
+    }
+
+    /**
+     * scans PLUGINS_PATH for plugin.manifest files
+     * belonging to not registered plugins
+     * 
+     * @return array with manifest meta data
+     */
+    public function scanPluginDirectory()
+    {
+        $found = array();
+        $basepath = get_config('PLUGINS_PATH');
+        $plugin_manager = PluginManager::getInstance();
+        $iterator = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basepath)), '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
+        foreach ($iterator as $manifest_file) {
+            $manifest = $this->getPluginManifest($manifest_file->getPath());
+            if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])) {
+                $manifest['path'] = $manifest_file->getPath();
+                $found[] = $manifest;
+            }
+        }
+        return $found;
+    }
+
+    /**
+     * registers plugin at given path in database
+     * 
+     * @param string $plugindir path to plugin
+     * @throws PluginInstallationException
+     */
+    public function registerPlugin($plugindir)
+    {
+        $manifest = $this->getPluginManifest($plugindir);
+        if (!$manifest) {
+            throw new PluginInstallationException(_('Das Manifest des Plugins fehlt.'));
+        }
+
+        // get plugin meta data
+        $pluginclass = $manifest['pluginclassname'];
+        $origin      = $manifest['origin'];
+        $min_version = $manifest['studipMinVersion'];
+        $max_version = $manifest['studipMaxVersion'];
+
+        // check for compatible version
+        if (isset($min_version) && version_compare($min_version, $GLOBALS['SOFTWARE_VERSION']) > 0 ||
+            isset($max_version) && version_compare($max_version, $GLOBALS['SOFTWARE_VERSION']) < 0) {
+            throw new PluginInstallationException(_('Das Plugin ist mit dieser Stud.IP-Version nicht kompatibel.'));
+        }
+
+        // determine the plugin path
+        $basepath = get_config('PLUGINS_PATH');
+        $pluginpath = $origin.'/'.$pluginclass;
+
+        $plugin_manager = PluginManager::getInstance();
+        $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);
+
+        if ($pluginregistered) {
+            new PluginInstallationException(_('Das Plugin ist bereits registriert.'));
+        }
+
+        // create database schema if needed
+        $this->createDBSchema($plugindir, $manifest, $pluginregistered);
+
+        // now register the plugin in the database
+        $pluginid = $plugin_manager->registerPlugin($manifest['pluginname'], $pluginclass, $pluginpath);
+
+        // register additional plugin classes in this package
+        $additionalclasses = $manifest['additionalclasses'];
+
+        if (is_array($additionalclasses)) {
+            foreach ($additionalclasses as $class) {
+                $plugin_manager->registerPlugin($class, $class, $pluginpath, $pluginid);
+            }
+        }
     }
 }

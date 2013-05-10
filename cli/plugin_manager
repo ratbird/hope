@@ -22,7 +22,7 @@ if ($args) {
     $command = $args[1];
 
      if (!$command) {
-        echo 'Usage: '. $args[0] .' {install|register|unregister|migrate|activate|deactivate|info}' . "\n";
+        echo 'Usage: '. $args[0] .' {install|register|unregister|migrate|activate|deactivate|info|scan}' . "\n";
     }
 
     switch ($command) {
@@ -259,11 +259,42 @@ if ($args) {
             if ($pluginname) {
                 $plugins = array_filter($plugins, function($p) use ($pluginname) {return strtolower($pluginname) == strtolower($p['name']);});
             }
+            $basepath = get_config('PLUGINS_PATH');
             foreach ($plugins as $plugin) {
+                $plugindir = $basepath.'/'.$plugin['path'].'/';
+                $plugin['class_exists'] = 0;
+                $pluginfile = $plugindir.$plugin['class'].'.class.php';
+                if (file_exists($pluginfile)) {
+                    $plugin['class_exists'] = 1;
+                } else {
+                    $pluginfile = $plugindir.$plugin['class'].'.php';
+                    if (file_exists($pluginfile)) {
+                        $plugin['class_exists'] = 1;
+                    }
+                }
+                if (is_dir($plugindir.'/migrations')) {
+                    $schema_version = new DBSchemaVersion($plugin['name']);
+                    $migrator = new Migrator($plugindir .'/migrations', $schema_version);
+                    $plugin['migration_top_version'] = $migrator->top_version();
+                    $plugin['schema_version'] = $schema_version->get();
+                }
                 echo "\n";
                 $plugin['type'] = join(',' , $plugin['type']);
                 echo join("\n", array_filter(array_map(function($p){if ($p[0] == ' ') return trim($p);},explode("\n", print_r($plugin,1)))));
                 echo "\n";
+            }
+            exit(0);
+        break;
+
+        case 'scan':
+            $plugin_admin = new PluginAdministration();
+            $plugin_manager = PluginManager::getInstance();
+            foreach ($plugin_admin->scanPluginDirectory() as $manifest) {
+                if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])) {
+                    echo "\n";
+                    echo join("\n", array_filter(array_map(function($p){if ($p[0] == ' ') return trim($p);},explode("\n", print_r($manifest,1)))));
+                    echo "\n";
+                }
             }
             exit(0);
         break;

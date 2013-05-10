@@ -94,6 +94,7 @@ class Admin_PluginController extends AuthenticatedController
         $this->plugin_types  = $this->plugin_admin->getPluginTypes();
         $this->update_info   = $this->get_update_info($this->plugins);
         $this->plugin_filter = $plugin_filter;
+        $this->migrations    = $this->plugin_admin->getMigrationInfo();
 
         foreach ($this->update_info as $id => $info) {
             if (isset($info['update']) && !$this->plugins[$id]['depends']) {
@@ -175,6 +176,7 @@ class Admin_PluginController extends AuthenticatedController
         $this->search         = $search;
         $this->search_results = $search_results;
         $this->plugins        = $plugins;
+        $this->unknown_plugins = $this->plugin_admin->scanPluginDirectory();
     }
 
     /**
@@ -371,4 +373,45 @@ class Admin_PluginController extends AuthenticatedController
 
         $this->redirect('admin/plugin/default_activation/'.$plugin_id);
     }
+
+    /**
+     * migrate a plugin to top version
+     *
+     * @param integer   id of plugin to migrate
+     */
+    public function migrate_action($plugin_id)
+    {
+        $plugin_manager = PluginManager::getInstance();
+        $plugin_filter = Request::option('plugin_filter', '');
+        $plugin = $plugin_manager->getPluginInfoById($plugin_id);
+        $log = $this->plugin_admin->migratePlugin($plugin_id);
+        if ($log) {
+            PageLayout::postMessage(MessageBox::success(_('Die Migration wurde durchgeführt.'), array_map('htmlReady', explode("\n", trim($log)))));
+        } else {
+            PageLayout::postMessage(MessageBox::error(_('Die Migration konnte nicht durchgeführt werden.')));
+        }
+        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
+    }
+
+    /**
+     * register a plugin in database when it 
+     * already exists in file system
+     *
+     * @param integer   number of found plugin
+     */
+    public function register_action($number)
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        $unknown_plugins = $this->plugin_admin->scanPluginDirectory();
+        $plugin = $unknown_plugins[$number];
+
+        try {
+            $this->plugin_admin->registerPlugin($plugin['path']);
+            $this->flash['message'] = _('Das Plugin wurde erfolgreich installiert.');
+        } catch (PluginInstallationException $ex) {
+            $this->flash['error'] = $ex->getMessage();
+        }
+        $this->redirect('admin/plugin');
+    }
+
 }

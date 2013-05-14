@@ -139,9 +139,10 @@ class PluginEngine {
     * @param $plugin - the plugin to which should be linked
     * @param $params - an array with name value pairs
     * @param $cmd - command to execute by clicking the link
+    * @param bool $ignore_registered_params do not add registered params
     * @return a link to the current plugin with the additional $params
     */
-    public static function getURL($plugin, $params = array(), $cmd = 'show') {
+    public static function getURL($plugin, $params = array(), $cmd = 'show', $ignore_registered_params = false) {
         if (is_null($plugin)) {
             throw new InvalidArgumentException(_('Es wurde kein Plugin gewählt.'));
         } else if (is_object($plugin)) {
@@ -150,7 +151,7 @@ class PluginEngine {
             $plugin = $plugin . '/' . $cmd;
         }
 
-        return URLHelper::getURL('plugins.php/' . $plugin, $params);
+        return URLHelper::getURL('plugins.php/' . $plugin, $params, $ignore_registered_params);
     }
 
     /**
@@ -158,10 +159,11 @@ class PluginEngine {
     * @param $plugin - the plugin to which should be linked
     * @param $params - an array with name value pairs
     * @param $cmd - command to execute by clicking the link
+    * @param bool $ignore_registered_params do not add registeredparams
     * @return a link to the current plugin with the additional $params
     */
-    public static function getLink($plugin, $params = array(), $cmd = 'show') {
-        return htmlReady(self::getURL($plugin, $params, $cmd));
+    public static function getLink($plugin, $params = array(), $cmd = 'show', $ignore_registered_params = false) {
+        return htmlReady(self::getURL($plugin, $params, $cmd, $ignore_registered_params));
     }
 
     /**

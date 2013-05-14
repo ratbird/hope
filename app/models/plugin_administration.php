@@ -390,7 +390,7 @@ class PluginAdministration
 
     /**
      * Fetch migration information plugins. This method
-     * returns for each plugin: 
+     * returns for each plugin:
      * current schema version and top migration version, if available.
      *
      * @return array
@@ -415,7 +415,7 @@ class PluginAdministration
 
     /**
      * migrate plugin to top migration
-     * 
+     *
      * @param integer $plugin_id
      * @return string output from migrator
      */
@@ -438,7 +438,7 @@ class PluginAdministration
     /**
      * scans PLUGINS_PATH for plugin.manifest files
      * belonging to not registered plugins
-     * 
+     *
      * @return array with manifest meta data
      */
     public function scanPluginDirectory()
@@ -446,7 +446,10 @@ class PluginAdministration
         $found = array();
         $basepath = get_config('PLUGINS_PATH');
         $plugin_manager = PluginManager::getInstance();
-        $iterator = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basepath)), '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
+        $iterator = new RegexIterator(
+                        new RecursiveIteratorIterator(
+                            new RecursiveDirectoryIterator($basepath, FilesystemIterator::FOLLOW_SYMLINKS | FilesystemIterator::UNIX_PATHS)),
+                        '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
         foreach ($iterator as $manifest_file) {
             $manifest = $this->getPluginManifest($manifest_file->getPath());
             if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])) {
@@ -459,7 +462,7 @@ class PluginAdministration
 
     /**
      * registers plugin at given path in database
-     * 
+     *
      * @param string $plugindir path to plugin
      * @throws PluginInstallationException
      */

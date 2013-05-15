@@ -3,6 +3,15 @@
 ?>
     <!-- Beginn Footer -->
     <div id="layout_footer">
+        <? if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') : ?>
+            <div id="footer" style="float: left; margin: 4px; color: #dfdfdf;">
+                <? printf(_('Sie sind angemeldet als %s (%s)'),
+                          $GLOBALS['auth']->auth['uname'],
+                          $GLOBALS['auth']->auth['perm']) ?>
+                |
+                <?= date("d.m.Y, H:i:s", time()) ?>
+            </div>
+        <? endif ?>
         <ul>
         <? if (Navigation::hasItem('/footer')) : ?>
         <? foreach (Navigation::getItem('/footer') as $nav) : ?>

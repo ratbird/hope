@@ -152,15 +152,31 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
     }
 
     /**
-     * Needed function to return notification-objects. Not yet implemented.
+     * Needed function to return notification-objects.
      * @param string $course_id
      * @param int $since
      * @param string $user_id
-     * @return array
+     * @return array of type ContentElement
      */
     public function getNotificationObjects($course_id, $since, $user_id)
     {
-        return array();
+        $blubber = BlubberPosting::getPostings(array(
+            'seminar_id' => $course_id,
+            'since' => $since
+        ));
+        $contents = array();
+        foreach ($blubber as $blubb) {
+            $contents[] = new ContentElement(
+                $blubb['title'],
+                $blubb['title'],
+                $blubb['description'],
+                $blubb['user_id'],
+                get_fullname($blubb['user_id']),
+                PluginEngine::getURL($this, array(), 'streams/thread/'.$blubb['root_id']),
+                $blubb['mkdate']
+            );
+        }
+        return $contents;
     }
 
     /**

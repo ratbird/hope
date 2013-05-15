@@ -2037,13 +2037,13 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
  
     $result = array();
     foreach ($units as $short => $long) {
-        $remainder = $size % 1000;
+        $remainder = $size % 1024;
         if ($remainder > 0) {
             $template = sprintf('%%u %s%%s', $verbose ? $long : $short);
             $result[] = sprintf($template, $remainder, ($verbose && $remainder !== 1) ? 's' : '');
         }
 
-        $size = floor($size / 1000);
+        $size = floor($size / 1024);
         if ($size === 0) {
             break;
         }

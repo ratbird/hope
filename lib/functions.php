@@ -2019,6 +2019,7 @@ function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance 
  * @param String $glue             Text used to glue the different unit parts
  *                                 together
  * @return String The filesize in human readable form.
+ * @todo Allow "1,3 MB"
  */
 function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
 {

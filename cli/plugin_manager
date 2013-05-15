@@ -3,6 +3,9 @@
 /*
  * plugin_manager.php - CLI Plugin-Manager for Stud.IP
  *
+ * Detailed documentation of this cli-script can be found at:
+ * http://docs.studip.de/develop/Entwickler/CLIPluginManager
+ *
  * Copyright (C) 2012 - Till Glöggler <tgloeggl@uos.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -31,6 +34,7 @@ if ($args) {
 
             // show usage
             if (!$zipfile) {
+                echo 'Usage: '. $args[0] .' install PATH/TO/PLUGIN.ZIP' . "\n\n";
                 exit(1);
             }
 

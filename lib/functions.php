@@ -2003,3 +2003,52 @@ function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance 
     }
     return implode($glue, array_reverse(array_slice($result, -$displayed_levels)));
 }
+
+/**
+ * Displays a filesize in a (shortened) human readable form including the
+ * according units. For instance, 1234567 would be displayed as "1 MB" or
+ * 12345 would be displayed as "12 kB".
+ * The function can display the units in a short or a long form ("1 b" vs.
+ * "1 Byte").
+ * Optionally, more than one unit part can be displayed. For instance, 1234567
+ * could also be displayed as "1 MB, 234 kB, 567 b".
+ *
+ * @param int    $size             The raw filesize as integer
+ * @param bool   $verbose          Use short or long unit names
+ * @param int    $displayed_levels How many unit parts should be displayed 
+ * @param String $glue             Text used to glue the different unit parts
+ *                                 together
+ * @return String The filesize in human readable form.
+ */
+function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
+{
+    $units = array(
+        'b' => 'Byte',
+        'kB' => 'Kilobyte',
+        'MB' => 'Megabyte',
+        'GB' => 'Gigabyte',
+        'TB' => 'Terabyte',
+        'PB' => 'Petabyte',
+        'EB' => 'Exabyte',
+        'ZB' => 'Zettabyte',
+        'YB' => 'Yottabyte',
+    );
+ 
+    $result = array();
+    foreach ($units as $short => $long) {
+        $remainder = $size % 1000;
+        if ($remainder > 0) {
+            $template = sprintf('%%u %s%%s', $verbose ? $long : $short);
+            $result[] = sprintf($template, $remainder, ($verbose && $remainder !== 1) ? 's' : '');
+        }
+
+        $size = floor($size / 1000);
+        if ($size === 0) {
+            break;
+        }
+    }
+    if ($displayed_levels > 0) {
+        $result = array_slice($result, -$displayed_levels);
+    }
+    return implode($glue, array_reverse($result));
+}

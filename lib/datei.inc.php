@@ -1647,10 +1647,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     }
 
     //add the size
-    if (($datei["filesize"] /1024 / 1024) >= 1)
-        print "&nbsp;&nbsp;(".round ($datei["filesize"] / 1024 / 1024)." MB";
-    else
-        print "&nbsp;&nbsp;(".round ($datei["filesize"] / 1024)." kB";
+    print '&nbsp;&nbsp;(' . relsize($datei['filesize'], $datei['filesize'] < 1000);
 
     //add number of downloads
     print " / ".(($datei["downloads"] == 1) ? $datei["downloads"]." "._("Download") : $datei["downloads"]." "._("Downloads")).")";

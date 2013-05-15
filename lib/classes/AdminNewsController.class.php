@@ -394,7 +394,7 @@ class AdminNewsController {
                             $this->msg .= "msg§ " . _("Die Ankündigung wurde ver&auml;ndert!") . "§";
                             if ($this->modus=="admin" AND $user_id!=$this->user_id) {
                                 setTempLanguage($user_id);
-                                $this->sms[$user_id] = sprintf(_("Ihre Ankündigung \"%s\" wurde von einem Administrator verändert!"),$this->news_query["topic"])
+                                $this->sms[$user_id] = sprintf(_('Ihre Ankündigung "%s" wurde von einem Administrator verändert!'), $this->news_query["topic"])
                                                     ."\n" . get_fullname() . ' ('.get_username().')'. "\n";
                                 restoreLanguage();
                             }
@@ -786,7 +786,7 @@ class AdminNewsController {
     function send_sms() {
         $msg_object = new messaging();
         while (list($user_id,$msg) = each($this->sms)) {
-            $msg_object->insert_message(mysql_escape_string($msg), get_username($user_id) , "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Ankündigung geändert"));
+            $msg_object->insert_message($msg, get_username($user_id) , "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Ankündigung geändert"));
         }
     }
 

@@ -295,13 +295,12 @@ function semadmission_get_institute($seminare_condition) {
                   GROUP BY a.Institut_id
                   ORDER BY is_fak, Name, num_sem DESC";
     } else {
-        $query = "SELECT a.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak,
-                         COUNT(seminar_id) AS num_sem
+        $query = "SELECT b.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak, COUNT( seminar_id ) AS num_sem
                   FROM user_inst AS s
-                  LEFT JOIN Institute AS b USING (Institut_id)
-                  LEFT JOIN seminare ON (seminare.Institut_id = b.Institut_id {$seminare_condition})
-                  WHERE a.user_id = ? AND a.inst_perms = 'admin'
-                  GROUP BY a.Institut_id
+                  LEFT JOIN Institute AS b USING ( Institut_id ) 
+                  LEFT JOIN seminare ON ( seminare.Institut_id = b.Institut_id {$seminare_condition})
+                  WHERE s.user_id = ? AND s.inst_perms = 'admin'
+                  GROUP BY b.Institut_id
                   ORDER BY is_fak, Name, num_sem DESC";
         $parameters[] = $user->id;
     }

@@ -264,8 +264,10 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             $values = $data;
         }
         switch ($this->metadata[$field]['type']) {
-            case 'integer':
             case 'boolean':
+                $values['value'] = (bool)$values['value'];
+            break;
+            case 'integer':
                 $values['value'] = (int)$values['value'];
             break;
             case 'array' :

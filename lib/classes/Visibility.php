@@ -230,7 +230,7 @@ class Visibility {
             ? as category,
             ? as name,
             $default,
-            ?' as plugin
+            ? as plugin
             FROM `user_visibility_settings` 
             $default_join
             WHERE `identifier`='plugins' );";

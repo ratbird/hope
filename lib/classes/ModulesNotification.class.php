@@ -192,11 +192,8 @@ class ModulesNotification extends Modules {
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $seminar_id = $row['Seminar_id'];
-            $modulesInt = $row['modules'];
-            if( $modulesInt === null ){
-                $modulesInt = $this->getDefaultBinValue( $seminar_id , "sem", $row['sem_status']);
-            }
-            $modules = $this->generateModulesArrayFromModulesInteger( $modulesInt );
+            $modules = $this->getLocalModules($seminar_id, 'sem', $row['modules'], $row['sem_status']);
+            $modulesInt = array_sum($modules); //korrigiert wg. SemClass::isSlotMandatory() Kram
             $my_sem[$seminar_id] = array(
                     'name'       => $row['Name'],
                     'chdate'     => $row['chdate'],
@@ -246,7 +243,6 @@ class ModulesNotification extends Modules {
 
             $template_text = $GLOBALS['template_factory']->open('mail/notification_text');
             $template_text->set_attribute('news', $news);
-
             return array('text' => $template_text->render(), 'html' => $template->render());;
         } else {
             return FALSE;
@@ -255,7 +251,43 @@ class ModulesNotification extends Modules {
 
     // only range = 'sem' is implemented
     function getModuleText ($m_name, $range_id, $r_data, $range) {
+        global $SEM_CLASS, $SEM_TYPE;
         $text = '';
+        $sem_class = $SEM_CLASS[$SEM_TYPE[$r_data['sem_status']]["class"]];
+        $slot_mapper = array(
+                'files' => "documents",
+                'elearning' => "elearning_interface"
+            );
+        if ($sem_class) {
+            $slot = isset($slot_mapper[$m_name]) ? $slot_mapper[$m_name] : $m_name;
+            $module = $sem_class->getModule($slot);
+            if (is_a($module, "StandardPlugin")) {
+                $base_url = UrlHelper::setBaseURL();
+                $nav = $module->getIconNavigation($range_id, $r_data['visitdate'], $GLOBALS['user']->id);
+                UrlHelper::setBaseURl($base_url);
+                if (isset($nav) && $nav->isVisible(true)) {
+                    if ($nav->getBadgeNumber()) {
+                        $url = 'seminar_main.php?again=yes&auswahl=' . $range_id . '&redirect_to=' . strtr($nav->getURL(), '?', '&');
+                        $image = $nav->getImage();
+                        $icon = $image['src'];
+                        $tab = $module->getTabNavigation();
+                        if (isset($tab) && $tab->isVisible()) {
+                            $text = $tab->getTitle();
+                        } else {
+                            $text = $this->registered_modules[$m_name]['name'];
+                        }
+                        if ($nav->getBadgeNumber() == 1) {
+                            $text .= ' - ' . _("Ein neuer Beitrag:");
+                        } else {
+                            $text .= ' - ' . sprintf(_("%s neue Beiträge:"), $nav->getBadgeNumber());
+                        }
+                        return compact('text', 'url', 'icon', 'range_id');
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
         switch ($m_name) {
             case 'participants' :
                 if (in_array($r_data['status'], words('dozent tutor'))) {
@@ -269,7 +301,11 @@ class ModulesNotification extends Modules {
                     } else if ($r_data['newparticipants'] > 0) {
                         $text = _("1 neuer TeilnehmerIn:");
                     }
-                    $redirect = '&redirect_to=dispatch.php/course/member/index';
+                    if ($sem_class['studygroup_mode']) {
+                        $redirect = '&redirect_to=dispatch.php/course/studygroup/members/';
+                    } else {
+                        $redirect = '&redirect_to=dispatch.php/course/member/index';
+                    }
                     $icon = "icons/16/blue/persons.png";
                 }
                 break;

@@ -45,11 +45,11 @@ class CoreForum extends StudipPlugin implements ForumModule
         // Add JS and StyleSheet to header
         PageLayout::addScript($this->getPluginURL() . '/javascript/forum.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/forum.css');
-        
+
         // JQuery-Tutor JoyRide JS and CSS
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/joyride.css');
-        
+
         // Set helpkeyword for Stud.IP's user-documentation
         PageLayout::setHelpKeyword('Basis.Forum');
     }
@@ -66,7 +66,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         $dispatcher->dispatch($unconsumed_path);
 
     }
-    
+
     /* interface method */
     public function getTabNavigation($course_id)
     {
@@ -79,12 +79,12 @@ class CoreForum extends StudipPlugin implements ForumModule
 
         // add main third-level navigation-item
         $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), PluginEngine::getLink($this, array(), 'index')));
-        
+
         if (ForumPerm::has('fav_entry', $course_id)) {
             $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getLink($this, array(), 'index/newest')));
             $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getLink($this, array(), 'index/latest')));
             $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getLink($this, array(), 'index/favorites')));
-            
+
             // mass-administrate the forum
             if (ForumPerm::has('admin', $course_id)) {
                 $navigation->addSubNavigation('admin', new Navigation(_('Administration'), PluginEngine::getLink($this, array(), 'index/admin')));
@@ -108,9 +108,9 @@ class CoreForum extends StudipPlugin implements ForumModule
             $num_entries = 0;
             $text = 'Forum';
         }
-        
+
         $navigation = new Navigation('forum', PluginEngine::getLink($this, array(), 'index/enter_seminar'));
-        #$navigation->setBadgeNumber($num_entries);
+        $navigation->setBadgeNumber($num_entries);
 
         if ($num_entries > 0) {
             $navigation->setImage('icons/16/red/new/forum.png', array('title' => $text));
@@ -127,27 +127,27 @@ class CoreForum extends StudipPlugin implements ForumModule
         return array();
     }
 
- 
+
     /**
      * This method is called, whenever an user clicked to clear the visit timestamps
      * and set everything as visited
-     * 
+     *
      * @param object $notification
      * @param string $user_id
      */
     function overviewDidClear($notification, $user_id)
     {
-        $stmt = DBManager::get()->prepare("UPDATE forum_visits 
+        $stmt = DBManager::get()->prepare("UPDATE forum_visits
             SET visitdate = UNIX_TIMESTAMP(), last_visitdate = UNIX_TIMESTAMP()
             WHERE user_id = ?");
         $stmt->execute(array($user_id));
     }
-    
+
     function getInfoTemplate($course_id)
     {
         return null;
     }
-    
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     /* * IMPLEMENTATION OF METHODS FROM FORUMMODULE-INTERFACE  * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -157,37 +157,37 @@ class CoreForum extends StudipPlugin implements ForumModule
         if ($topic_id = ForumIssue::getThreadIdForIssue($issue_id)) {
             return PluginEngine::getLink($this, array(), '/index/index/' . $topic_id);
         }
-        
+
         return false;
     }
-    
+
     function setThreadForIssue($issue_id, $title, $content)
     {
         ForumIssue::setThreadForIssue($GLOBALS['SessSemName'][1], $issue_id, $title, $content);
     }
-    
+
     function getNumberOfPostingsForUser($user_id, $seminar_id = null)
     {
         return ForumEntry::countUserEntries($user_id, $seminar_id);
     }
-    
+
     function getNumberOfPostingsForIssue($issue_id)
     {
         $topic_id = ForumIssue::getThreadIdForIssue($issue_id);
 
         return ForumEntry::countEntries($topic_id);
     }
-    
+
     function getNumberOfPostingsForSeminar($seminar_id)
     {
         return floor(ForumEntry::countEntries($seminar_id));
     }
-    
+
     function getNumberOfPostings()
     {
         return ForumEntry::countAllEntries();
     }
-    
+
     function getEntryTableInfo()
     {
         return array(
@@ -198,22 +198,22 @@ class CoreForum extends StudipPlugin implements ForumModule
             'user_id'    => 'user_id'
         );
     }
-    
+
     function getTopTenSeminars()
     {
         return ForumEntry::getTopTenSeminars();
     }
-    
+
     function migrateUser($user_from, $user_to)
     {
         return ForumEntry::migrateUser($user_from, $user_to);
     }
-    
+
     function deleteContents($seminar_id)
     {
         return ForumEntry::delete($seminar_id);
     }
-    
+
     function getDump($seminar_id)
     {
         ForumEntry::getDump($seminar_id);

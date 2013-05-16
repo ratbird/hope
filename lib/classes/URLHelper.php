@@ -41,10 +41,13 @@ class URLHelper
      * NULL to use no base URL and skip the URL resolving step.
      *
      * @param string $url  relative or absolute URL (or NULL)
+     * @return string old URL
      */
     static function setBaseURL ($url)
     {
+        $old = self::$base_url;
         self::$base_url = $url;
+        return $old;
     }
 
     /**

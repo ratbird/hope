@@ -69,29 +69,35 @@ class Modules {
         if (!$range_type) {
             $range_type = get_object_type($range_id);
         }
-        
+
         if ($modules === false) {
             if ($range_type == 'sem') {
                 $query = "SELECT modules, status FROM seminare WHERE Seminar_id = ?";
             } else {
-                $query = "SELECT modules FROM Institute WHERE Institut_id = ? ";
+                $query = "SELECT modules, type as status FROM Institute WHERE Institut_id = ? ";
             }
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($range_id));
             $modules = $statement->fetch(PDO::FETCH_ASSOC);
-            $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$modules['status']]['class']];
             $modules = $modules['modules'];
+            $type = $modules['status'];
         }
         if ($modules === null || $modules === false) {
             $modules = $this->getDefaultBinValue($range_id, $range_type, $type);
         }
-        
+        if ($range_type == 'sem') {
+            $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$type]['class']];
+        }
         foreach ($this->registered_modules as $key => $val) {
             if ($sem_class) {
                 $module = $sem_class->getSlotModule($key);
             }
             if (!$sem_class || $sem_class->isModuleAllowed($module)) {
-            $modules_list[$key] = $this->isBit($modules, $val['id']);
+                $modules_list[$key] = $this->isBit($modules, $val['id']);
+
+                if ($sem_class && $sem_class->isSlotMandatory($key)) {
+                    $modules_list[$key] = pow(2, $val['id']);
+                }
             } else {
                 $modules_list[$key] = 0;
         }

@@ -62,9 +62,9 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
             // need to use strtr() here to deal with seminar_main craziness
             $url = $type.'_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
             $image=$nav->getImage();
-            printf('<a %s href="%s">'.Assets::img($image['src'], array_map("htmlready", $image)).'</a>', 
-                $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"' : '', 
-                htmlReady($url));
+            printf('<a %s href="%s">'.Assets::img($image['src'], array_map("htmlready", $image)).'</a>',
+                $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"' : '',
+                UrlHelper::getScriptLink($url));
        } else if (is_string($key)) {
             echo Assets::img('blank.gif', array('width' => 16, 'height' => 16));
         }
@@ -389,7 +389,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (Request::option('action') === 'tabularasa') {
         // Extract timestamp from request
         $timestamp = Request::int('timestamp', time());
-        
+
         // load plugins, so they have a chance to register themselves as observers
         PluginEngine::getPlugins('StandardPlugin');
 

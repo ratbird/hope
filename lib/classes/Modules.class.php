@@ -67,10 +67,10 @@ class Modules {
 
     function getLocalModules($range_id, $range_type = '', $modules = false, $type = false) {
         if (!$range_type) {
-            $range_type = get_object_type($range_id);
+            $range_type = get_object_type($range_id, array('sem','inst'));
         }
 
-        if ($modules === false) {
+        if ($modules === false || $type === false) {
             if ($range_type == 'sem') {
                 $query = "SELECT modules, status FROM seminare WHERE Seminar_id = ?";
             } else {

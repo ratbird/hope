@@ -54,7 +54,7 @@ if (Request::get('auswahl')) {
 
 // gibt es eine Anweisung zur Umleitung?
 if (Request::get('redirect_to')) {
-    $query_parts = explode('&', stristr($_SERVER['QUERY_STRING'], 'redirect_to'));
+    $query_parts = explode('&', stristr(urldecode($_SERVER['QUERY_STRING']), 'redirect_to'));
     list( , $where_to) = explode('=', array_shift($query_parts));
     $new_query = $where_to . '?' . join('&', $query_parts);
     page_close();

@@ -257,9 +257,9 @@ function raumzeit_doDeleteCycle($sem) {
 function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinute){
     if(strlen($date)<8
             ||($startStunde<0 || $startStunde>23)
-            ||($startMinute<0 || $startMinute>23)
+            ||($startMinute<0 || $startMinute>59)
             ||($endStunde<0   ||$endStunde>23)
-            ||($endMinute<0   ||$endMinute>23)
+            ||($endMinute<0   ||$endMinute>59)
             ||!is_int($startStunde) || !is_int($endStunde)
             ||!is_int($startMinute) || !is_int($endMinute)
             
@@ -273,7 +273,7 @@ function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinu
 function raumzeit_doAddSingleDate($sem) {
     global $cmd;
     //check date aus calendar_functions.inc.php herausgezogen und fuer datepicker angepasst
-    if(!raumzeit_checkDate(Request::get('startDate'), Request::get('start_stunde'), Request::get('start_minute'), Request::get('end_stunde'), Request::get('end_minute'))){
+    if(!raumzeit_checkDate(Request::get('startDate'), Request::int('start_stunde'), Request::int('start_minute'), Request::int('end_stunde'), Request::int('end_minute'))){
         $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
         $cmd = 'createNewSingleDate';
     }

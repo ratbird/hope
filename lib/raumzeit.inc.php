@@ -259,7 +259,11 @@ function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinu
             ||($startStunde<0 || $startStunde>23)
             ||($startMinute<0 || $startMinute>23)
             ||($endStunde<0   ||$endStunde>23)
-            ||($endMinute<0   ||$endMinute>23)     ){
+            ||($endMinute<0   ||$endMinute>23)
+            ||!is_int($startStunde) || !is_int($endStunde)
+            ||!is_int($startMinute) || !is_int($endMinute)
+            
+            ){
         return FALSE;
     }
     else{

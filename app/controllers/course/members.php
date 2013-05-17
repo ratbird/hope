@@ -180,7 +180,7 @@ class Course_MembersController extends AuthenticatedController {
             $this->setInfoBoxImage('infobox/groups.jpg');
 
             $link = sprintf('<a href="%s">%s</a>', URLHelper::getLink('sms_send.php',
-                    array('sms_source_page' => 'dispatch.php/cource/members',
+                    array('sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $this->course_id,
                         'subject' => $this->subject,
                         'filter' => 'all',

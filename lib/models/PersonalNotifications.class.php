@@ -252,10 +252,12 @@ class PersonalNotifications extends SimpleORMap {
             "WHERE pn.personal_notification_id != :pn_id " .
                 "AND u.user_id = :user_id " .
                 "AND u.seen = '0' " .
+                "AND pn.url = :url " .
         "");
         $statement->execute(array(
             'pn_id' => $this->getId(),
-            'user_id' => $GLOBALS['user']->id
+            'user_id' => $GLOBALS['user']->id,
+            'url' => $this['url']
         ));
         $number = $statement->fetch(PDO::FETCH_COLUMN, 0);
         return $number;

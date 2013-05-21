@@ -655,8 +655,7 @@ $txt['008'] = _("Lesebestätigung");
                 $attachment->autor_host = $_SERVER['REMOTE_ADDR'];
                 $attachment->user_id = $user->id;
                 $attachment->description = Request::option('attachment_message_id');
-                $new_attachment = $attachment->toArray();
-                unset($new_attachment['dokument_id']);
+                $new_attachment = $attachment->toArray(array('range_id', 'user_id', 'seminar_id', 'name', 'description', 'filename', 'filesize'));
                 StudipDocument::createWithFile(get_upload_file_path($attachment->getId()), $new_attachment);
             }
             unset($quote);

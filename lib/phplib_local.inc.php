@@ -348,16 +348,18 @@ class Seminar_User {
     public $cfg = null; //UserConfig object
     private $user = null; //User object
 
-    function __construct($uid = null)
+    function __construct($user = null)
     {
-        if ($uid) {
-            $this->user = User::find($uid);
-            $this->cfg = UserConfig::get($uid);
-            if (!isset($this->user)) {
-                $this->user = new User();
-                $this->user->user_id = 'nobody';
-            }
+        if ($user instanceOf User) {
+            $this->user = $user;
+        } else {
+            $this->user = User::find($user);
         }
+        if (!isset($this->user)) {
+            $this->user = new User();
+            $this->user->user_id = 'nobody';
+        }
+        $this->cfg = UserConfig::get($this->user->user_id);
     }
 
     function get_last_action()

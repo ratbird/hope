@@ -69,7 +69,12 @@ $auth->auth = array('uid' => 'cli',
                     'uname' => 'cli',
                     'perm' => 'root');
 
-$user = new Seminar_User();
+$faked_root = new User();
+$faked_root->user_id = 'cli';
+$faked_root->username = 'cli';
+$faked_root->perms = 'root';
+$user = new Seminar_User($faked_root);
+unset($faked_root);
 
 $perm = new Seminar_Perm();
 ?>

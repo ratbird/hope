@@ -101,8 +101,7 @@ class StudipDocument extends SimpleORMap {
         if (!$this->getValue('dokument_id')) return false;
         $object_type = get_object_type($this->getValue('seminar_id'));
         $access = false;
-
-        if (in_array($object_type, array('inst', 'fak', 'user'))) {
+        if (in_array($object_type, array('inst', 'fak'))) {
             //download from institute and user is always allowed
             if (get_config('ENABLE_FREE_ACCESS') || $GLOBALS['perm']->have_perm('user', $user_id)) {
                 $access = true;
@@ -118,17 +117,21 @@ class StudipDocument extends SimpleORMap {
             } else {
                 $access = $GLOBALS['perm']->have_studip_perm('user', $this->getValue('seminar_id'), $user_id);
             }
-        } else {
+        } else if ($object_type == 'user') {
             // message attachement
-            $st = DBManager::get()->prepare("SELECT dokument_id FROM dokumente
-                INNER JOIN message_user ON message_id=range_id AND message_user.user_id = ?
+            $st = DBManager::get()->prepare("SELECT message_user.user_id FROM dokumente
+                INNER JOIN message_user ON message_id=range_id
                 WHERE dokument_id = ?");
-            $st->execute(array($user_id, $this->getValue('dokument_id')));
-            return ($st->fetchColumn() == true);
+            $st->execute(array($this->getValue('dokument_id')));
+            $message_user = $st->fetchAll(PDO::FETCH_COLUMN);
+            if (count($message_user)) {
+                $access = in_array($user_id, $message_user);
+            } else { //Blubberdatei aus persönlichem Blubb
+                $access = $GLOBALS['perm']->have_perm('user', $user_id);
+            }
         }
-
         //if allowed basically, check for closed folders and protected documents
-        if ($access) {
+        if ($access && in_array($object_type, array('inst', 'fak', 'sem'))) {
             $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $this->getValue('seminar_id')));
             if (!$folder_tree->isDownloadFolder($this->getValue('range_id'), $user_id)) {
                 $access = false;

@@ -241,6 +241,12 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
                         $value = (string)$row['value'];
                         $row['type'] = 'string';
                 }
+
+                // set the the type of the default entry for the modified entry
+                if (!empty($this->metadata[$row['field']])) {
+                    $row['type'] = $this->metadata[$row['field']]['type'];
+                }
+                
                 $this->data[$row['field']] = $value;
                 $this->metadata[$row['field']] = array_intersect_key($row, array_flip(words('type section range description is_default comment')));
                 $this->metadata[$row['field']]['field'] = $row['field'];
@@ -296,6 +302,10 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
                 if (isset($values['comment'])) {
                     $entry->comment = $values['comment'];
                 }
+                
+                // store the default-type for the modified entry
+                $entry->type = $this->metadata[$field]['type'];
+
                 $ret += $entry->store();
             }
             if ($ret) {

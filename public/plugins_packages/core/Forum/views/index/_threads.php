@@ -1,5 +1,6 @@
 <br>
 
+<? if (trim($constraint['content'])) : ?>
 <div class="posting">
     <span class="corners-top"><span></span></span>
     <div class="postbody">
@@ -7,9 +8,10 @@
     </div>
     <span class="corners-bottom"><span></span></span>
 </div>
+<? endif ?>
 
 <div id="sortable_areas">
-<? foreach ($list as $category_id => $entries) : ?>
+<? if (!empty($list)) foreach ($list as $category_id => $entries) : ?>
 <table class="forum" data-category-id="<?= $category_id ?>">
     <thead>
     <tr>

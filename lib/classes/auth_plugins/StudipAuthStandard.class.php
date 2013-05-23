@@ -6,8 +6,8 @@
 // This file is part of Stud.IP
 // StudipAuthStandard.class.php
 // Basic Stud.IP authentication, using the Stud.IP database
-// 
-// Copyright (c) 2003 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2003 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -29,40 +29,40 @@ require_once ("lib/classes/auth_plugins/StudipAuthAbstract.class.php");
 /**
 * Basic Stud.IP authentication, using the Stud.IP database
 *
-* Basic Stud.IP authentication, using the Stud.IP database 
+* Basic Stud.IP authentication, using the Stud.IP database
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class StudipAuthStandard extends StudipAuthAbstract {
-    
+
     var $dbv_auth;
-    
+
     var $bad_char_regex =  false;
 
     /**
     * Constructor
     *
-    * 
+    *
     * @access public
-    * 
+    *
     */
     function StudipAuthStandard() {
         //calling the baseclass constructor
         parent::StudipAuthAbstract();
         $this->dbv_auth = $this->dbv;
     }
-    
+
     /**
-    * 
     *
-    * 
+    *
+    *
     * @access public
-    * 
+    *
     */
     function isAuthenticated($username, $password, $jscript){
-        $this->dbv_auth->params[] = mysql_real_escape_string($username);
+        $this->dbv_auth->params[] = mysql_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
         if (!$db->next_record()){
             $this->error_msg= _("Dieser Benutzername existiert nicht!") ;
@@ -84,7 +84,7 @@ class StudipAuthStandard extends StudipAuthAbstract {
             return true;
         }
     }
-    
+
     function isUsedUsername($username){
         $this->dbv_auth->params[] = mysql_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
@@ -95,6 +95,6 @@ class StudipAuthStandard extends StudipAuthAbstract {
             return true;
         }
     }
-    
+
 }
 ?>

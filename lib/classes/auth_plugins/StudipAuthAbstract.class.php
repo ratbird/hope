@@ -293,7 +293,7 @@ class StudipAuthAbstract {
     * @return   string  the Stud.IP user id or false if an error occurs
     */
     function getStudipUserid($username){
-        $this->dbv->params[] = mysql_real_escape_string($username);
+        $this->dbv->params[] = mysql_escape_string($username);
         $db = $this->dbv->get_query("view:AUTH_USER_UNAME");
         if ($db->next_record()){
             $auth_plugin = is_null($db->f("auth_plugin")) ? "standard" : $db->f("auth_plugin");

@@ -62,8 +62,8 @@ if (isset($voteID)) {
 }
 if( !$rangeID ) $rangeID = Request::option("rangeID");
 
-if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || 
-        $auth->auth["uname"] == $rangeID || (isDeputyEditAboutActivated() && 
+if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) ||
+        $auth->auth["uname"] == $rangeID || (isDeputyEditAboutActivated() &&
         isDeputy($auth->auth["uid"], get_userid($rangeID), true)) ) ) {
     $reason = ( ! is_object($vote)
         ? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne die zu editierende Umfrage anzugeben...")
@@ -113,7 +113,9 @@ $rangeID = Request::option('rangeID');
 $type = Request::option('type');
 if( empty($type) ) $type = "vote";
 $makeACopy = Request::option('makecopy');
-
+if (strlen($makeACopy) > 1) {
+    list($voteID, $type) = explode('_', $makeACopy);
+}
 if ($type=="test") { $vote = new TestVote( $voteID ); }
 else               { $vote = new Vote    ( $voteID ); }
 

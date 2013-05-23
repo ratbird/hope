@@ -14,7 +14,7 @@
  * @package     vote
  * @modulegroup vote_modules
  */
- 
+
 use Studip\Button, Studip\LinkButton;
 
 include_once("lib/vote/view/vote_show.lib.php");
@@ -202,9 +202,10 @@ function printSelections($range,$sarchRange = "",$safeguard = NULL)
           . "   <tr><td>".$safeguard."</td>".$bgimage."</tr><tr>\n";
 
     // create new vote/test
-$html .= makeNewVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
-
-
+    $html .= makeNewVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
+    $html.="    </tr>\n"
+         . "    <tr>\n";
+    $html .= makeCopyVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
     // background-image
 
     $html.="    </tr>\n"
@@ -675,7 +676,7 @@ function makeNewVoteSelectForm($action){
         $html .= "<font size=\"-1\">".$range[0][1]."</font>\n"
               . "      <input type=\"hidden\" name=\"rangeID\" value=\"".$range[0][0]."\">\n";
     }
-          
+
     $html   .=      Button::create(decodeHTML($label["selections_tooltip"]), 'new', array('title' => decodeHTML($label["selections_tooltip"])))
             . "     <br>&nbsp;</form>\n"
             . "   </td>\n";
@@ -791,5 +792,32 @@ function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
         $html.= $label["arrow_closethis"];
     $html.= "\"></a>\n"
          .  "    </td>\n";
+    return $html;
+}
+
+function makeCopyVoteSelectForm($action) {
+    global $showrangeID;
+    $st = DBManager::get()->prepare("SELECT vote_id,type,title FROM vote WHERE author_id=? ORDER BY chdate");
+    $st->execute(array($GLOBALS['user']->id));
+    $votes = $st->fetchAll(PDO::FETCH_ASSOC);
+    if (count($votes)) {
+        $html = "    <td class=\"table_row_even\" style=\"vertical-align:middle;\" nowrap>\n"
+            . "     <form action=\"".URLHelper::getLink($action)."\" method=post><br>&nbsp;\n"
+            .       CSRFProtection::tokenTag()
+        // vote/test selection
+        . "     <select name=\"makecopy\" style=\"vertical-align:middle;\">";
+        foreach ($votes  as $vote) {
+            $html .= "      <option value=\"".htmlReady($vote['vote_id'] . '_' . $vote['type'])."\">".htmlReady($vote['title'] . ' (' . ($vote['type'] == 'vote' ? _("Umfrage") : _("Test")) .')')."</option>\n";
+        }
+        $html .= "     </select>&nbsp;";
+
+
+        $html .= Button::create(_("Kopie erstellen"))
+            . "<input type=\"hidden\" name=\"rangeID\" value=\"".htmlready($showrangeID)."\">"
+            . "     <br>&nbsp;</form>\n"
+            . "   </td>\n";
+    } else {
+        $html = '<td></td>';
+    }
     return $html;
 }

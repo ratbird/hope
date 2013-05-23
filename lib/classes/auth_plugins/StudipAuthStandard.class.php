@@ -62,7 +62,7 @@ class StudipAuthStandard extends StudipAuthAbstract {
     * 
     */
     function isAuthenticated($username, $password, $jscript){
-        $this->dbv_auth->params[] = mysql_escape_string($username);
+        $this->dbv_auth->params[] = mysql_real_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
         if (!$db->next_record()){
             $this->error_msg= _("Dieser Benutzername existiert nicht!") ;

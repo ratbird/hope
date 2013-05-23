@@ -34,7 +34,7 @@ class CalendarDay extends CalendarMonth
         $this->dom = $date["mday"];
         $this->year = $date["year"];
         $this->mon = $date["mon"];
-        $this->ts = mktime(12, 0, 0, $this->mon, $this->dom, $this->year, 0);
+        $this->ts = mktime(12, 0, 0, $this->mon, $this->dom, $this->year);
     }
 
     // public

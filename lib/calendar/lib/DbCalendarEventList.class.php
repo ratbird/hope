@@ -50,8 +50,8 @@ class DbCalendarEventList
 
         $this->start = $start;
         $this->end = $end;
-        $this->ts = mktime(12, 0, 0, date('n', $this->start), date('j', $this->start), date('Y', $this->start), 0);
-        $end_ts = mktime(12, 0, 0, date('n', $this->end), date('j', $this->end), date('Y', $this->end), 0);
+        $this->ts = mktime(12, 0, 0, date('n', $this->start), date('j', $this->start), date('Y', $this->start));
+        $end_ts = mktime(12, 0, 0, date('n', $this->end), date('j', $this->end), date('Y', $this->end));
         for ($ts = $this->ts; $ts < $end_ts; $ts += 86400) {
             $this->wdays[$ts] = new DbCalendarDay($calendar, $ts, NULL, $restrictions, $sem_ids);
         }

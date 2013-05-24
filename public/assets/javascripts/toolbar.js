@@ -56,7 +56,7 @@
                             offset      = _.isObject(result)
                                         ? result.offset
                                         : (result || '').length;
-                        $element.replaceSelection(replacement, offset);
+                        $element.replaceSelection(replacement, offset).change();
                         return false;
                     });
 

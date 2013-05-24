@@ -234,17 +234,21 @@ class StudipAdmissionGroup extends SimpleORMap
 
     function checkUserSubscribedtoGroup($user_id, $waitlist = false)
     {
-        $table = $waitlist ? 'admission_seminar_user' : 'seminar_user' ;
-
-        $query = "SELECT seminar_id
-                  FROM :table
-                  WHERE seminar_id IN (:seminar_ids) AND user_id = :user_id";
-        $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
-        $statement->bindValue(':seminar_ids', $this->getMemberIds() ?: '');
-        $statement->bindValue(':user_id', $user_id);
-        $statement->execute();
-        return $statement->fetchColumn();
+        $member_ids = $this->getMemberIds();
+        if (count($member_ids)) {
+            $table = $waitlist ? 'admission_seminar_user' : 'seminar_user' ;
+            $query = "SELECT seminar_id
+                      FROM :table
+                      WHERE seminar_id IN (:seminar_ids) AND user_id = :user_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
+            $statement->bindValue(':seminar_ids', $member_ids, StudipPDO::PARAM_ARRAY);
+            $statement->bindValue(':user_id', $user_id);
+            $statement->execute();
+            return $statement->fetchColumn();
+        } else {
+            return false;
+        }
     }
 
     function checkUserSubscribedtoGroupWaitingList($user_id)

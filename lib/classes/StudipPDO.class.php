@@ -121,7 +121,7 @@ class StudipPDO extends PDO
             case PDO::PARAM_INT:
                 return (int) $value;
             case StudipPDO::PARAM_ARRAY:
-                return join(',', array_map(array($this, 'quote'), $value));
+                return is_array($value) && count($value) ? join(',', array_map(array($this, 'quote'), $value)) : 'NULL';
             case StudipPDO::PARAM_COLUMN:
                 return preg_replace('/\\W/', '', $value);
             default:
@@ -159,7 +159,7 @@ class StudipPDO extends PDO
         } else {
             $stmt = parent::query($statement);
         }
-        
+
         $studip_stmt = new StudipPDOStatement($this, $statement, array());
         $studip_stmt->setStatement($stmt);
         return $studip_stmt;
@@ -246,7 +246,7 @@ class StudipPDOStatement implements IteratorAggregate
      * Unlike bindValue(), the variable is bound as a reference and will
      * only be evaluated at the time that execute() is called.
      */
-    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR)
+    public function bindParam($parameter, &$variable, $data_type = null)
     {
         if (is_string($parameter) && $parameter[0] !== ':') {
             $parameter = ':' . $parameter;
@@ -260,7 +260,7 @@ class StudipPDOStatement implements IteratorAggregate
      * Binds a value to a corresponding named or question mark placeholder
      * in the SQL statement that was used to prepare the statement.
      */
-    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
+    public function bindValue($parameter, $value, $data_type = null)
     {
         if (is_string($parameter) && $parameter[0] !== ':') {
             $parameter = ':' . $parameter;

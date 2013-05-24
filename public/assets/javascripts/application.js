@@ -284,11 +284,9 @@ jQuery(function ($) {
         $(window).off('beforeunload', securityHandler)
     };
 
-    $(document).on('change keyup', 'textarea[data-secure]', function (event) {
-        var textarea = event.target,
-            secured  = $(textarea).data('secured'),
-            changed  = (textarea.value != textarea.defaultValue),
-            form     = $(textarea).closest('form'),
+    $(document).on('change keyup', 'textarea[data-secure]', function () {
+        var secured  = $(this).data('secured'),
+            changed  = (this.value != this.defaultValue),
             action   = null;
 
         if (changed && !secured) {
@@ -298,10 +296,15 @@ jQuery(function ($) {
         }
 
         if (action !== null) {
+            // (at|de)tach before unload handler that will display the message
             $(window)[action]('beforeunload', securityHandler);
-            form[action]('submit', submissionHandler);
 
-            $(textarea).data('secured', action === 'on');
+            // (at|de)tach submit handler that will remove the securityHandler
+            // on form submission
+            $(this).closest('form')[action]('submit', submissionHandler);
+
+            // Store current state
+            $(this).data('secured', action === 'on');
         }
     });
 }(jQuery));

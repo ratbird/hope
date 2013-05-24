@@ -270,3 +270,38 @@ jQuery(function ($) {
         return false;
     });
 });
+
+/* Secure textareas by displaying a warning on page unload if there are
+   unsaved changes */
+(function ($) {
+    function securityHandler (event) {
+        var message = 'Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString(),
+            event   = event || window.event || {};
+        event.returnValue = message;
+        return message;
+    };
+    function submissionHandler () {
+        $(window).off('beforeunload', securityHandler)
+    };
+
+    $(document).on('change keyup', 'textarea[data-secure]', function (event) {
+        var textarea = event.target,
+            secured  = $(textarea).data('secured'),
+            changed  = (textarea.value != textarea.defaultValue),
+            form     = $(textarea).closest('form'),
+            action   = null;
+
+        if (changed && !secured) {
+            action = 'on';
+        } else if (!changed && secured) {
+            action = 'off';
+        }
+
+        if (action !== null) {
+            $(window)[action]('beforeunload', securityHandler);
+            form[action]('submit', submissionHandler);
+
+            $(textarea).data('secured', action === 'on');
+        }
+    });
+}(jQuery));

@@ -610,7 +610,7 @@ class about extends messaging
         $evalDB = new EvaluationDB();
         $activeEvals = $evalDB->getEvaluationIDs($this->auth_user['user_id'], EVAL_STATE_ACTIVE);
         // Literature
-        $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
+        $lit_list = StudipLitList::GetListsByRange($this->auth_user['user_id']);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
         // Homepage plugins

@@ -377,7 +377,7 @@ class AssignObject {
             $multiChecker->setAutoTimeRange(Array($this));
             $multiChecker->addResource($this->resource_id);
             $events = Array();
-            
+
             foreach ($this->getEvents() as $evtObj) {
                 $events[$evtObj->getId()] = $evtObj;
             }
@@ -391,7 +391,7 @@ class AssignObject {
                     $overlaps[$overlapping_event["assign_id"]]["end"]   = $overlapping_event["end"];
                 }
             }
-            
+
             return $overlaps;
         } else {
             return false;
@@ -400,10 +400,12 @@ class AssignObject {
 
     function getFormattedShortInfo() {
         $info = strftime("%A", $this->begin);
+        $info = strftime("%A", $this->end);
         $info.= ", ".date("d.m.Y", $this->begin);
         if ((date("d", $this->begin) != date("d", $this->repeat_end)) &&
             (date("m", $this->begin) != date("m", $this->repeat_end)) &&
-            (date("Y", $this->begin) != date("Y", $this->repeat_end)))
+            (date("Y", $this->begin) != date("Y", $this->repeat_end)) &&
+             $this->repeat_end)
             $info.= " - ". date("d.m.Y", $this->repeat_end);
         $info.=", ".date("H:i", $this->begin)." - ".date("H:i", $this->end);
         if (($this->getRepeatMode() != "na") && ($this->getRepeatMode() != "sd"))
@@ -554,7 +556,7 @@ class AssignObject {
             $this->repeat_week_of_month = (int)$res["repeat_week_of_month"];
             $this->repeat_day_of_week = (int)$res["repeat_day_of_week"];
             $this->repeat_week = (int)$res["repeat_week"];
-            $this->comment_internal = $res["comment_internal"]; 
+            $this->comment_internal = $res["comment_internal"];
             return TRUE;
         }
         return FALSE;
@@ -582,7 +584,7 @@ class AssignObject {
                         repeat_week_of_month = ?, repeat_day_of_week = ?, mkdate = ?, comment_internal = ?
                     WHERE assign_id = ?");
             }
-            
+
             $result = $stmt->execute(array($this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin,
                 $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval,
                 $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month,
@@ -607,7 +609,7 @@ class AssignObject {
                 $query = sprintf("UPDATE resources_assign SET chdate='%s' WHERE assign_id='%s' ", $chdate, $this->id);
                 $db->exec($query);
                 $this->syncronizeMetaDates();
-                
+
                 $this->updateResourcesTemporaryEvents();
 
                 return true;
@@ -623,7 +625,7 @@ class AssignObject {
      */
     function updateResourcesTemporaryEvents() {
         // delete old events
-        $stmt = DBManager::get()->prepare("DELETE FROM resources_temporary_events 
+        $stmt = DBManager::get()->prepare("DELETE FROM resources_temporary_events
             WHERE assign_id = ?");
         $stmt->execute(array($this->id));
 

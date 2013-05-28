@@ -49,7 +49,7 @@ class BlubberStream extends SimpleORMap {
         $stream = new BlubberStream();
         $stream['pool_courses'] = array("all");
         $stream['pool_groups'] = array("all");
-        $stream['sort'] = "age";
+        $stream['sort'] = "activity";
         return $stream;
     }
     

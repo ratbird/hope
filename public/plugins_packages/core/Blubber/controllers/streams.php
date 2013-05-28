@@ -23,21 +23,18 @@ class StreamsController extends ApplicationController {
      */
     public function global_action() {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle(_("Globaler Blubberstream"));
         Navigation::activateItem("/community/blubber");
-
-        $parameter = array(
-            'limit' => $this->max_threads + 1
-        );
+        
+        $globalstream = BlubberStream::getGlobalStream();
         if (Request::get("hash")) {
-            $this->search = "#".Request::get("hash");
+            $this->search = Request::get("hash");
+            $globalstream = new BlubberStream();
+            $globalstream->filter_hashtags = array(Request::get("hash"));
         }
-        if ($this->search) {
-            $parameter['search'] = $this->search;
-        }
-        $this->threads = BlubberPosting::getThreads($parameter);
+        $this->threads = $globalstream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         if ($this->more_threads) {
             $this->threads = array_slice($this->threads, 0, $this->max_threads);
@@ -66,22 +63,17 @@ class StreamsController extends ApplicationController {
             throw new AccessDeniedException("Kein Zugriff");
         }
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
         Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
         Navigation::activateItem("/course/blubberforum");
-        $parameter = array(
-            'seminar_id' => $_SESSION['SessionSeminar'],
-            'limit' => $this->max_threads + 1
-        );
+        $coursestream = BlubberStream::getCourseStream($_SESSION['SessionSeminar']);
         if (Request::get("hash")) {
             $this->search = "#".Request::get("hash");
+            $coursestream->filter_hashtags = array(Request::get("hash"));
         }
-        if ($this->search) {
-            $parameter['search'] = $this->search;
-        }
-        $this->threads = BlubberPosting::getThreads($parameter);
+        $this->threads = $coursestream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];
         if ($this->more_threads) {
@@ -94,7 +86,7 @@ class StreamsController extends ApplicationController {
      */
     public function profile_action() {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
 
         if (Request::get("extern")) {
@@ -104,10 +96,8 @@ class StreamsController extends ApplicationController {
         }
         PageLayout::setTitle($this->user->getName()." - Blubber");
         
-        $this->threads = BlubberPosting::getThreads(array(
-            'user_id' => $this->user->getId(),
-            'limit' => $this->max_threads + 1
-        ));
+        $this->threads = BlubberStream::getProfileStream($this->user->getId())
+                            ->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];
         if ($this->more_threads) {
@@ -171,25 +161,26 @@ class StreamsController extends ApplicationController {
      */
     public function more_postings_action() {
         $context_id = Request::option("context_id");
-        if (Request::get("stream") === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
-            $seminar = new Seminar($context_id);
-            if ($seminar->read_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context_id)) {
-                throw new AccessDeniedException("Kein Zugriff");
-            }
+        switch (Request::get("stream")) {
+            case "global":
+                $stream = BlubberStream::getGlobalStream();
+                break;
+            case "course":
+                $stream = BlubberStream::getCourseStream($context_id);
+                break;
+            case "profile":
+                $stream = BlubberStream::getProfileStream($context_id);
+                break;
+            case "custom":
+                $stream = new BlubberStream($context_id);
+                break;
         }
         $output = array();
-        $parameter = array(
-            'offset' => $this->max_threads * Request::int("offset"),
-            'stream_time' => Request::int("stream_time"),
-            'limit' => $this->max_threads + 1
-        );
-        if (Request::get("stream") === "course") {
-            $parameter['seminar_id'] = $context_id;
-        }
-        if (Request::get("stream") === "profile") {
-            $parameter['user_id'] = $context_id;
-        }
-        $threads = BlubberPosting::getThreads($parameter);
+        $offset = $this->max_threads * Request::int("offset");
+        $limit = $this->max_threads + 1;
+        $stream_time = Request::int("stream_time");
+        
+        $threads = $stream->fetchThreads($offset, $limit, $stream_time);
         $output['more'] = count($threads) > $this->max_threads;
         if ($output['more']) {
             $threads = array_slice($threads, 0, $this->max_threads);
@@ -243,13 +234,6 @@ class StreamsController extends ApplicationController {
             } else {
                 throw new AccessDeniedException("No permission to write posting.");
             }
-        }
-
-        if ($thread->isNew() && !$thread->getId()) {
-            $thread->store();
-            $thread['root_id'] = $thread->getId();
-            $thread->store();
-            
         }
 
         BlubberPosting::$mention_posting_id = $thread->getId();
@@ -589,7 +573,7 @@ class StreamsController extends ApplicationController {
     public function thread_action($thread_id)
     {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         
         $this->thread = new BlubberPosting($thread_id);
@@ -655,6 +639,169 @@ class StreamsController extends ApplicationController {
             'success' => 1,
             'message' => studip_utf8encode((string)MessageBox::success(_("Kontakt hinzugefügt")))
         ));
+    }
+    
+    public function custom_action($stream_id) {
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
+        
+        $this->stream = new BlubberStream($stream_id);
+        if ($this->stream['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException("Not your stream.");
+        }
+        $this->threads = $this->stream->fetchThreads(0, $this->max_threads + 1);
+        $this->more_threads = count($this->threads) > $this->max_threads;
+        if ($this->more_threads) {
+            $this->threads = array_slice($this->threads, 0, $this->max_threads);
+        }
+    }
+    
+    /**
+     * Create a new or edit an existing stream. 
+     * @param string,null $stream_id 
+     */
+    public function edit_action($stream_id = null) {
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
+        
+        $this->stream = new BlubberStream($stream_id);
+        if ($GLOBALS['user']->id === "nobody") {
+            throw new AccessDeniedException("Access denied!");
+        }
+        if ($stream_id) {
+            Navigation::activateItem("/community/blubber/".$stream_id);
+        }
+        if ($this->stream['user_id'] && $this->stream['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException("Not allowed to edit stream");
+        }
+        if (Request::isPost()) {
+            $new = $this->stream->isNew();
+            $this->stream['name'] = Request::get("name");
+            $this->stream['user_id'] = $GLOBALS['user']->id;
+            $this->stream['sort'] = Request::get("sort");
+            $this->stream['defaultstream'] = Request::int("defaultstream");
+            
+            //Pool-rules
+            $this->stream['pool_courses'] = Request::get("pool_courses_check")
+                ? (in_array("all", Request::getArray("pool_courses")) ? array("all") : Request::getArray("pool_courses"))
+                : null;
+            $this->stream['pool_groups'] = Request::get("pool_groups_check")
+                ? (in_array("all", Request::getArray("pool_groups")) ? array("all") : Request::getArray("pool_groups"))
+                : null;
+            $this->stream['pool_hashtags'] = Request::get("pool_hashtags_check")
+                ? preg_split("/\s+/", Request::get("pool_hashtags"), null, PREG_SPLIT_NO_EMPTY)
+                : null;
+            if (is_array($this->stream['pool_hashtags'])) {
+                $this->stream['pool_hashtags'] = array_map(function ($tag) {
+                    while ($tag[0] === "#") {
+                        $tag = substr($tag, 1);
+                    }
+                    return $tag;
+                }, $this->stream['pool_hashtags']);
+            }
+            
+            //Filter-rules
+            $this->stream['filter_type'] = Request::get("filter_type_check")
+                ? Request::getArray("filter_type")
+                : null;
+            $this->stream['filter_courses'] = Request::get("filter_courses_check")
+                ? (in_array("all", Request::getArray("filter_courses")) ? array("all") : Request::getArray("filter_courses"))
+                : null;
+            $this->stream['filter_groups'] = Request::get("filter_groups_check")
+                ? (in_array("all", Request::getArray("filter_groups")) ? array("all") : Request::getArray("filter_groups"))
+                : null;
+            $this->stream['filter_hashtags'] = Request::get("filter_hashtags_check")
+                ? preg_split("/\s+/", Request::get("filter_hashtags"), null, PREG_SPLIT_NO_EMPTY)
+                : null;
+            if (is_array($this->stream['filter_hashtags'])) {
+                $this->stream['filter_hashtags'] = array_map(function ($tag) {
+                    while ($tag[0] === "#") {
+                        $tag = substr($tag, 1);
+                    }
+                    return $tag;
+                }, $this->stream['filter_hashtags']);
+            }
+            $this->stream['filter_nohashtags'] = Request::get("filter_nohashtags_check")
+                ? preg_split("/\s+/", Request::get("filter_nohashtags"), null, PREG_SPLIT_NO_EMPTY)
+                : null;
+            if (is_array($this->stream['filter_nohashtags'])) {
+                $this->stream['filter_nohashtags'] = array_map(function ($tag) {
+                    while ($tag[0] === "#") {
+                        $tag = substr($tag, 1);
+                    }
+                    return $tag;
+                }, $this->stream['filter_nohashtags']);
+            }
+            
+            $this->stream->store();
+            if ($_FILES['image']) {
+                StreamAvatar::getAvatar($this->stream->getId())->createFromUpload("image");
+            }
+            if ($new) {
+                $this->redirect(PluginEngine::getURL($this->plugin, array(), "streams/custom/".$this->stream->getId()));
+            } else {
+                PageLayout::postMessage(MessageBox::success(_("Stream wurde gespeichert.")));
+            }
+        }
+    } 
+    
+    public function get_streams_threadnumber_action() {
+        $stream = new BlubberStream();
+        //Pool-rules
+        $stream['pool_courses'] = Request::get("pool_courses_check")
+            ? (in_array("all", Request::getArray("pool_courses")) ? array("all") : Request::getArray("pool_courses"))
+            : null;
+        $stream['pool_groups'] = Request::get("pool_groups_check")
+            ? (in_array("all", Request::getArray("pool_groups")) ? array("all") : Request::getArray("pool_groups"))
+            : null;
+        $stream['pool_hashtags'] = Request::get("pool_hashtags_check")
+            ? preg_split("/\s+/", Request::get("pool_hashtags"), null, PREG_SPLIT_NO_EMPTY)
+            : null;
+        if (is_array($this->stream['pool_hashtags'])) {
+            $this->stream['pool_hashtags'] = array_map(function ($tag) {
+                while ($tag[0] === "#") {
+                    $tag = substr($tag, 1);
+                }
+                return $tag;
+            }, $this->stream['pool_hashtags']);
+        }
+
+        //Filter-rules
+        $stream['filter_type'] = Request::get("filter_type_check")
+            ? Request::getArray("filter_type")
+            : null;
+        $stream['filter_courses'] = Request::get("filter_courses_check")
+            ? (in_array("all", Request::getArray("filter_courses")) ? array("all") : Request::getArray("filter_courses"))
+            : null;
+        $stream['filter_groups'] = Request::get("filter_groups_check")
+            ? (in_array("all", Request::getArray("filter_groups")) ? array("all") : Request::getArray("filter_groups"))
+            : null;
+        $stream['filter_hashtags'] = Request::get("filter_hashtags_check")
+            ? preg_split("/\s+/", Request::get("filter_hashtags"), null, PREG_SPLIT_NO_EMPTY)
+            : null;
+        if (is_array($this->stream['filter_hashtags'])) {
+            $this->stream['filter_hashtags'] = array_map(function ($tag) {
+                while ($tag[0] === "#") {
+                    $tag = substr($tag, 1);
+                }
+                return $tag;
+            }, $this->stream['filter_hashtags']);
+        }
+        $stream['filter_nohashtags'] = Request::get("filter_nohashtags_check")
+            ? preg_split("/\s+/", Request::get("filter_nohashtags"), null, PREG_SPLIT_NO_EMPTY)
+            : null;
+        if (is_array($this->stream['filter_nohashtags'])) {
+            $this->stream['filter_nohashtags'] = array_map(function ($tag) {
+                while ($tag[0] === "#") {
+                    $tag = substr($tag, 1);
+                }
+                return $tag;
+            }, $this->stream['filter_nohashtags']);
+        }
+        
+        $this->render_text($stream->fetchNumberOfThreads());
     }
 
 }

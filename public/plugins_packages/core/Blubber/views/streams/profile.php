@@ -32,7 +32,7 @@
 </div>
 <? endif ?>
 
-<ul id="forum_threads" class="profilestream" aria-live="polite" aria-relevant="additions">
+<ul id="blubber_threads" class="profilestream" aria-live="polite" aria-relevant="additions">
     <? foreach ($threads as $thread) : ?>
     <?= $this->render_partial("streams/thread.php", array('thread' => $thread)) ?>
     <? endforeach ?>

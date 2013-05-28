@@ -20,6 +20,8 @@ class BlubberPosting extends SimpleORMap {
     static public $course_hashes = false;
     //One-time variable that is set right before markup
     static public $mention_posting_id = false;
+    //regexp for hashtags
+    static public $hashtags_regexp = "(^|\s)#([\w\d_\.\-\?!\+=%]*[\w\d])";
 
     /**
      * Special format-function that adds hashtags to the common formatReady-markup.
@@ -27,7 +29,7 @@ class BlubberPosting extends SimpleORMap {
      * @return string : formatted text
      */
     static public function format($text) {
-        StudipFormat::addStudipMarkup("blubberhashtag", "(^|\s)#([\w\d_\.\-]*[\w\d])", null, "BlubberPosting::markupHashtags");
+        StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, null, "BlubberPosting::markupHashtags");
         $output = formatReady($text);
         StudipFormat::removeStudipMarkup("blubberhashtag");
         return $output;
@@ -158,215 +160,6 @@ class BlubberPosting extends SimpleORMap {
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
-    /**
-     * Returns some blubber-threads (as BlubberPosting-objects). The parameter
-     * "parameter" defines the search as follows:
-     * $parameter = array(
-     *      'seminar_id' => null|string, //search only in one course?
-     *      'user_id' => null|string, //search only for one user, who write the thread-posting
-     *      'search' => null|string, //a search-word that must appear in the thread or a comment to that thread
-     *      'stream_time' => false|int, //only postings older than the stream_time (as unix-timestamp); this is mostly used for ordering-purposes
-     *      'offset' => int, //throw away the first n threads, used for paginating, default 0
-     *      'limit' => null //maximum number of threads, so you don't get all 100000 threads at once.
-     *  );
-     * All parameter are optional. The order of the threads is the date of their
-     * latest comment or their own mkdate.
-     * @param array $parameter : see above
-     * @return array of \BlubberPosting
-     */
-    static public function getThreads($parameter = array()) {
-        $defaults = array(
-            'seminar_id' => null,
-            'user_id' => null,
-            'search' => null,
-            'stream_time' => false,
-            'offset' => 0,
-            'limit' => null
-        );
-        $parameter = array_merge($defaults, $parameter);
-        $sql_params = array();
-        
-        $joins = $where_and = $where_or = array();
-        $limit = "";
-        
-        if ($parameter['seminar_id']) {
-            $where_and[] = "AND blubber.Seminar_id = :range_id ";
-            $sql_params['range_id'] = $parameter['seminar_id'];
-            if ($parameter['search']) {
-                $where_and[] = "AND MATCH (blubber.description) AGAINST (:search IN BOOLEAN MODE) ";
-                $sql_params['search'] = $parameter['search'];
-            }
-        }
-        if ($parameter['user_id']) {
-            $where_and[] = "AND blubber.Seminar_id = :range_id ";
-            $where_and[] = "AND blubber.context_type = 'public' ";
-            $sql_params['range_id'] = $parameter['user_id'];
-        }
-        if ($parameter['stream_time']) {
-            $where_and[] = "AND blubber.mkdate <= :stream_time ";
-            $sql_params['stream_time'] = $parameter['stream_time'];
-        }
-        if ($parameter['limit'] > 0) {
-            $limit = "LIMIT ".((int) $parameter['offset']).", ".((int) $parameter['limit']);
-        }
-        if ($parameter['search'] && !is_array($parameter['search']) && !$parameter['seminar_id']) {
-            $where_and[] = "AND MATCH (blubber.description) AGAINST (:search IN BOOLEAN MODE) ";
-            $sql_params['search'] = $parameter['search'];
-        }
-        if (!$parameter['seminar_id'] && !$parameter['user_id']) {
-            //Globaler Stream:
-            $seminar_ids = self::getMyBlubberCourses();
-            $where_or[] = "OR (blubber.Seminar_id IS NULL " .
-                            (count($seminar_ids) ? "OR blubber.Seminar_id IN (:seminar_ids) " : "") .
-                       ") ";
-            $sql_params['seminar_ids'] = $seminar_ids;
-            $user_ids = self::getMyBlubberBuddys();
-            if (count($user_ids)) {
-                $where_or[] = "OR (blubber.context_type = 'public' AND blubber.Seminar_id IN (:internal_user_ids) AND blubber.external_contact = '0') ";
-                $sql_params['internal_user_ids'] = $user_ids;
-            }
-            $user_ids = self::getMyExternalContacts();
-            if (count($user_ids)) {
-                $where_or[] = "OR (blubber.context_type = 'public' AND blubber.Seminar_id IN (:external_user_ids) AND blubber.external_contact = '1') ";
-                $sql_params['external_user_ids'] = $user_ids;
-            }
-            
-            //private Blubber
-            $joins[] = "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.root_id) ";
-            $where_or[] = "OR (blubber.context_type != 'course' AND blubber_mentions.user_id = :me) ";
-            $sql_params['me'] = $GLOBALS['user']->id;
-
-            if ($parameter['search'] && is_array($parameter['search'])) {
-                foreach ((array) $parameter['search'] as $key => $searchword) {
-                    $where_or[] = "OR (blubber.Seminar_id = blubber.user_id AND MATCH (blubber.description) AGAINST (:searchword".($key + 1)." IN BOOLEAN MODE) ) ";
-                    $sql_params['searchword'.($key + 1)] = $searchword;
-                }
-            }
-        }
-        
-        $sql = "SELECT blubber.root_id " .
-            "FROM blubber " .
-                implode(" ", $joins) . " " .
-            "WHERE 1=1 " .
-                implode(" ", $where_and) . " " .
-                (count($where_or) ? "AND ( 1=2 " . implode(" ", $where_or) . " ) " : "") .
-            "GROUP BY blubber.root_id " .
-            "ORDER BY MAX(blubber.mkdate) DESC " .
-            $limit." ";
-        $statement = DBManager::get()->prepare($sql);
-        $statement->execute($sql_params);
-        $thread_ids = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-        
-        $threads = array();
-        foreach ($thread_ids as $thread_id) {
-            $threads[] = new BlubberPosting($thread_id);
-        }
-        return $threads;
-    }
-
-    /**
-     * Returns BlubberPostings for the given search, defined by the
-     * parameter "parameter" as follows:
-     * $parameter = array(
-     *      'seminar_id' => null|string, //search only in one course?
-     *      'user_id' => null|string, //search only for one user, who write the thread-posting
-     *      'thread' => null|string, //only with root_id = thread
-     *      'search' => array/string, //a search-word that must appear in the thread or a comment to that thread
-     *      'since' => null|int //only postings newer than the since (as unix-timestamp)
-     *  );
-     * All parameters are optional. The postings are ordered by their mkdate.
-     * @param array $parameter : see above
-     * @return array of \BlubberPosting
-     */
-    static public function getPostings($parameter = array()) {
-        $defaults = array(
-            'seminar_id' => null,
-            'user_id' => null,
-            'thread' => null,
-            'search' => array(),
-            'since' => null
-        );
-        $parameter = array_merge($defaults, $parameter);
-        $sql_params = array();
-
-        $joins = $where = $where_filter = array();
-        $limit = "";
-
-        if ($parameter['since'] > 0) {
-            $where_and[] = "AND blubber.chdate >= :since ";
-            $sql_params['since'] = $parameter['since'];
-        }
-        if ($parameter['seminar_id']) {
-            $where_and[] = "AND threads.Seminar_id = :seminar_id ";
-            $sql_params['seminar_id'] = $parameter['seminar_id'];
-            if ($parameter['search']) {
-                $where_and[] = "AND MATCH (threads.description) AGAINST (:search IN BOOLEAN MODE) ";
-                $sql_params['search'] = $parameter['search'];
-            }
-        }
-        if ($parameter['user_id']) {
-            $where_and[] = "AND threads.Seminar_id = :user_id ";
-            $where_and[] = "AND threads.context_type = 'public' ";
-            $sql_params['user_id'] = $parameter['user_id'];
-        }
-        if ($parameter['thread']) {
-            $where_and[] = "AND threads.topic_id = :thread ";
-            $sql_params['thread'] = $parameter['thread'];
-        }
-        if ($parameter['search'] && !is_array($parameter['search']) && !$parameter['seminar_id']) {
-            $where_and[] = "AND MATCH (threads.description) AGAINST (:search IN BOOLEAN MODE) ";
-            $sql_params['search'] = $parameter['search'];
-        }
-        if (!$parameter['seminar_id'] && !$parameter['user_id'] && !$parameter['thread']) {
-            //Globaler Stream:
-            $seminar_ids = self::getMyBlubberCourses();
-            if (count($seminar_ids)) {
-                $where_or[] = "OR threads.Seminar_id IN (:seminar_ids) ";
-                $sql_params['seminar_ids'] = $seminar_ids;
-            }
-            $user_ids = self::getMyBlubberBuddys();
-            if (count($user_ids)) {
-                //$joins[] = "INNER JOIN blubber AS thread ON (thread.topic_id = blubber.root_id) ";
-                $where_or[] = "OR (threads.context_type = 'public' AND threads.Seminar_id IN (:internal_user_ids) AND threads.external_contact = '0') ";
-                $sql_params['internal_user_ids'] = $user_ids;
-            }
-            $user_ids = self::getMyExternalContacts();
-            if (count($user_ids)) {
-                $where_or[] = "OR (threads.context_type = 'public' AND threads.Seminar_id IN (:external_user_ids) AND threads.external_contact = '1' ) ";
-                $sql_params['external_user_ids'] = $user_ids;
-            }
-            
-            //private Blubber
-            $where_or[] = "OR (threads.context_type != 'course' AND blubber_mentions.user_id = :me) ";
-            $joins[] = "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = threads.root_id) ";
-            $sql_params['me'] = $GLOBALS['user']->id;
-            
-            if ($parameter['search'] && is_array($parameter['search'])) {
-                foreach ($parameter['search'] as $key => $searchword) {
-                    $where_or[] = "OR (threads.Seminar_id = threads.user_id AND MATCH (threads.description) AGAINST (:searchword".($key + 1)." IN BOOLEAN MODE) ) ";
-                    $sql_params['searchword'.($key + 1)] = $searchword;
-                }
-            }
-        }
-
-        $sql = "SELECT blubber.topic_id " .
-            "FROM blubber " .
-                "INNER JOIN blubber AS threads ON (threads.topic_id = blubber.root_id) " .
-                implode(" ", $joins) . " " .
-            "WHERE 1=1 " .
-                implode(" ", $where_and) . " " .
-                (count($where_or) ? "AND ( 1=2 " . implode(" ", $where_or) . " ) " : "") .
-            "ORDER BY blubber.mkdate ASC ";
-        $statement = DBManager::get()->prepare($sql);
-        $statement->execute($sql_params);
-        $thread_ids = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-
-        $threads = array();
-        foreach ($thread_ids as $thread_id) {
-            $threads[] = new BlubberPosting($thread_id);
-        }
-        return $threads;
-    }
 
     /**
      * Overrides the contructor of SimpleORMap and is used in the exact same way.
@@ -390,7 +183,58 @@ class BlubberPosting extends SimpleORMap {
             }
         };
         $this->db_table = "blubber";
+        $this->registerCallback('after_store', 'synchronizeHashtags');
         parent::__construct($id);
+    }
+    
+    protected function synchronizeHashtags() {
+        if (!$this['root_id'] && !$this['parent_id']) {
+            $this['root_id'] = $this->getId();
+        }
+        $get_old_hashtags = DBManager::get()->prepare(
+            "SELECT DISTINCT tag " .
+            "FROM blubber_tags " .
+            "WHERE blubber_tags.topic_id = :topic_id " .
+        "");
+        $get_old_hashtags->execute(array('topic_id' => $this['root_id']));
+        $old_hashtags = $get_old_hashtags->fetchAll(PDO::FETCH_COLUMN, 0);
+        
+        $get_current_hashtags = DBManager::get()->prepare(
+            "SELECT description " .
+            "FROM blubber " .
+            "WHERE blubber.root_id = :topic_id " .
+        "");
+        $get_current_hashtags->execute(array('topic_id' => $this['root_id']));
+        $entries = $get_current_hashtags->fetchAll(PDO::FETCH_COLUMN, 0);
+        $current_tags = array();
+        foreach ($entries as $entry) {
+            preg_match_all("/".BlubberPosting::$hashtags_regexp."/", $entry, $hashtags);
+            $hashtags = $hashtags[2];
+            $current_tags = array_merge($current_tags, $hashtags);
+        }
+        $delete_tag_statement = DBManager::get()->prepare(
+            "DELETE FROM blubber_tags " .
+            "WHERE topic_id = :topic_id " .
+                "AND tag = :tag " .
+        "");
+        foreach (array_diff($old_hashtags, $current_tags) as $delete_tag) {
+            $delete_tag_statement->execute(array(
+                'topic_id' => $this['root_id'],
+                'tag' => $delete_tag
+            ));
+        }
+        $insert_statement = DBManager::get()->prepare(
+            "INSERT IGNORE INTO blubber_tags " .
+            "SET topic_id = :topic_id, " .
+                "tag = :tag " .
+        "");
+        foreach (array_diff($current_tags, $old_hashtags) as $insert_tag) {
+            $insert_statement->execute(array(
+                'topic_id' => $this['root_id'],
+                'tag' => $insert_tag
+            ));
+        }
+            
     }
 
     /**
@@ -450,6 +294,20 @@ class BlubberPosting extends SimpleORMap {
             NotificationCenter::postNotification("PostingHasSaved", $this);
         }
         return $success;
+    }
+    
+    /**
+     * Create new unique pk as md5 hash and puts it to field root_id if this is 
+     * not a comment.
+     * if pk consists of multiple columns, false is returned
+     * @return boolean|string
+     */
+    function getNewId() {
+        $id = parent::getNewId();
+        if (!$this['root_id']) {
+            $this['root_id'] = $id;
+        }
+        return $id;
     }
 
     /**

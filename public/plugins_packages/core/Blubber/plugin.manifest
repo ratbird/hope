@@ -1,6 +1,6 @@
 pluginclassname=Blubber
 pluginname=Blubber
 origin=core
-version=2.0
-studipMinVersion=2.3.99
+version=2.5
+studipMinVersion=2.5
 studipMaxVersion=2.99

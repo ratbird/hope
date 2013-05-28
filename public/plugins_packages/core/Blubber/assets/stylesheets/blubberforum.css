@@ -1,15 +1,15 @@
-#forum_threads, #forum_threads > li > ul {
+#blubber_threads, #blubber_threads > li > ul {
     list-style-type: none;
 }
-#forum_threads {
+#blubber_threads {
     padding: 0px;
     margin: 5px;
     border-left: thin solid lightblue;
 }
-#forum_threads > li.thread .hiddeninfo {
+#blubber_threads > li.thread .hiddeninfo {
     display: none;
 }
-#forum_threads > li.thread .contextinfo {
+#blubber_threads > li.thread .contextinfo {
     display: table-cell;
     width: 100px;
     margin-left: -108px;
@@ -31,13 +31,13 @@
     overflow: hidden;
     white-space: nowrap;
 }
-#forum_threads > li.thread .contextinfo > .empty {
+#blubber_threads > li.thread .contextinfo > .empty {
     min-width: 1px;
     min-height: 100px;
     vertical-align: middle;
     display: inline-block;
 }
-#forum_threads > li.thread .contextinfo > .name {
+#blubber_threads > li.thread .contextinfo > .name {
     font-weight: bold;
     color: rgba(255,255,255,0.8);
     text-shadow: 0px 0px 3px black;
@@ -48,55 +48,55 @@
     opacity: 0;
     max-width: 100%;
 }
-#forum_threads > li.thread:hover .contextinfo {
+#blubber_threads > li.thread:hover .contextinfo {
     opacity: 1;
 }
-#forum_threads > li.thread .contextinfo:hover {
+#blubber_threads > li.thread .contextinfo:hover {
     opacity: 1;
 }
-#forum_threads > li.thread:hover .contextinfo > .name {
+#blubber_threads > li.thread:hover .contextinfo > .name {
     opacity: 1;
 }
-#forum_threads.coursestream > li.thread .contextinfo, #forum_threads.profilestream > li.thread .contextinfo  {
+#blubber_threads.coursestream > li.thread .contextinfo, #blubber_threads.profilestream > li.thread .contextinfo  {
     display: none;
 }
-#forum_threads.globalstream {
+#blubber_threads.globalstream {
     margin-left: 100px;
 }
-#forum_threads > li > ul {
+#blubber_threads > li > ul {
     border-left: thin solid lightblue;
     background-color: #f5f5ff;
     margin-left: 60px;
     padding-left: 0px;
 }
-#forum_threads .more, #forum_threads .loading {
+#blubber_threads .more, #blubber_threads .loading {
     text-align: center;
 }
-#forum_threads > li, #forum_threads > li > ul > li {
+#blubber_threads > li, #blubber_threads > li > ul > li {
     border-top: thin solid lightblue;
     padding: 7px;
     margin: 0px;
 }
-#forum_threads > li:first-child, #forum_threads > li > ul > li:first-child {
+#blubber_threads > li:first-child, #blubber_threads > li > ul > li:first-child {
     border: none;
 }
 
-#forum_threads .content {
+#blubber_threads .content {
     margin-bottom: 5px;
 }
-#forum_threads .timer {
+#blubber_threads .timer {
     float: right;
     color: #bbbbbb;
     font-size: 0.8em;
     visibility: hidden;
 }
-#forum_threads .content_column:hover > .timer {
+#blubber_threads .content_column:hover > .timer {
     visibility: visible;
 }
-#forum_threads .content_column .timer a, #forum_threads .content_column .timer a:hover {
+#blubber_threads .content_column .timer a, #blubber_threads .content_column .timer a:hover {
     color: #606060;
 }
-#forum_threads .content_column > .timer .icon {
+#blubber_threads .content_column > .timer .icon {
     vertical-align: middle; 
     opacity: 0.6; 
     width: 14px; 
@@ -104,46 +104,46 @@
     display: inline-block; 
     background-position: center center;
 }
-#forum_threads .content_column .permalink {
+#blubber_threads .content_column .permalink {
     background-position: -20px 0px;
     background-repeat: no-repeat;
     opacity: 0.6;
 }
-#forum_threads .content_column .permalink:hover {
+#blubber_threads .content_column .permalink:hover {
     padding-left: 18px;
     background-position: 0px 0px;
 }
-#forum_threads .writer {
+#blubber_threads .writer {
     margin-left: 60px;
     margin-top: 5px;
 }
-#forum_threads .writer textarea {
+#blubber_threads .writer textarea {
     width: 97%;
     height: 20px;
 }
-#forum_threads .writer textarea.hovered, #new_posting.hovered, #forum_threads textarea.corrector {
+#blubber_threads .writer textarea.hovered, #new_posting.hovered, #blubber_threads textarea.corrector {
     background-color: #f5f5ff;
     opacity: 1.0;
 }
-#forum_threads .writer textarea {
+#blubber_threads .writer textarea {
     opacity: 0.5;
 }
-#forum_threads .writer textarea:hover {
+#blubber_threads .writer textarea:hover {
     opacity: 1;
 }
-#forum_threads textarea.uploading {
+#blubber_threads textarea.uploading {
     background: url('../../../../../assets/images/ajax_indicator_small.gif') bottom right no-repeat;
     background-color: yellow;
 }
-#forum_threads .avatar, #forum_threads .content {
+#blubber_threads .avatar, #blubber_threads .content {
     vertical-align: middle;
     display: inline-block;
 }
-#forum_threads .content h1, #forum_threads .content h2, #forum_threads .content h3, #forum_threads .content h4, #forum_threads .content h5, #forum_threads .content h6 {
+#blubber_threads .content h1, #blubber_threads .content h2, #blubber_threads .content h3, #blubber_threads .content h4, #blubber_threads .content h5, #blubber_threads .content h6 {
     display: block;
     margin-top: 4px;
 }
-#forum_threads .avatar_column {
+#blubber_threads .avatar_column {
     vertical-align: top;
     padding: 5px;
     width: 55px;
@@ -152,7 +152,7 @@
     text-align: center;
     display: table-cell;
 }
-#forum_threads .avatar_column .avatar_image {
+#blubber_threads .avatar_column .avatar_image {
     margin-left: auto;
     margin-right: auto;
     width: 50px;
@@ -161,22 +161,22 @@
     background-repeat: no-repeat; 
     background-position: center center; 
 }
-#forum_threads .content_column {
+#blubber_threads .content_column {
     display: table-cell;
     padding: 5px;
     width: 100%;
 }
-#forum_threads .content_column {
+#blubber_threads .content_column {
 }
-#forum_threads .content_column > .name {
+#blubber_threads .content_column > .name {
     color: #888888;
     font-weight: bold;
     font-size: 0.8em;
 }
-#forum_threads .content_column > .name a {
+#blubber_threads .content_column > .name a {
     color: #888888;
 }
-#forum_threads .content_column > .content {
+#blubber_threads .content_column > .content {
     margin-top: 7px;
     width: 100%;
     max-width: 100%;
@@ -185,41 +185,41 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
-#forum_threads .content_column > .content a {
+#blubber_threads .content_column > .content a {
     word-break: break-all;
 }
-#forum_threads .posting img, #forum_threads .posting video, #forum_threads .content_column > .content {
+#blubber_threads .posting img, #blubber_threads .posting video, #blubber_threads .content_column > .content {
     max-width: 600px;
 }
-#forum_threads.globalstream .posting img, #forum_threads.globalstream .posting video, #forum_threads.globalstream .content_column > .content {
+#blubber_threads.globalstream .posting img, #blubber_threads.globalstream .posting video, #blubber_threads.globalstream .content_column > .content {
     max-width: 500px;
 }
-#forum_threads.singlethread .posting img, #forum_threads.singlethread .posting video, #forum_threads.singlethread .content_column > .content {
+#blubber_threads.singlethread .posting img, #blubber_threads.singlethread .posting video, #blubber_threads.singlethread .content_column > .content {
     max-width: 800px;
 }
-#forum_threads .comment img, #forum_threads .comment video, #forum_threads .comment .content_column > .content {
+#blubber_threads .comment img, #blubber_threads .comment video, #blubber_threads .comment .content_column > .content {
     max-width: 550px;
 }
-#forum_threads.globalstream .comment img, #forum_threads.globalstream .comment video, #forum_threads.globalstream  .comment .content_column > .content {
+#blubber_threads.globalstream .comment img, #blubber_threads.globalstream .comment video, #blubber_threads.globalstream  .comment .content_column > .content {
     max-width: 450px;
 }
-#forum_threads.singlethread .comment img, #forum_threads.singlethread .comment video, #forum_threads.singlethread  .comment .content_column > .content {
+#blubber_threads.singlethread .comment img, #blubber_threads.singlethread .comment video, #blubber_threads.singlethread  .comment .content_column > .content {
     max-width: 750px;
 }
-#forum_threads li.more {
+#blubber_threads li.more {
     cursor: pointer;
     color: #bbbbbb;
 }
-#forum_threads li.more:hover {
+#blubber_threads li.more:hover {
     background-color: #e5e5ff;
     color: #777777;
 }
-#forum_threads textarea.corrector {
+#blubber_threads textarea.corrector {
     width: 100%;
     height: 20px;
     background-color: white;
 }
-#forum_threads .related_users {
+#blubber_threads .related_users {
     display: none;
 }
 

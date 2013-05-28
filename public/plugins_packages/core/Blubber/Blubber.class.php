@@ -12,6 +12,7 @@ require_once "lib/classes/UpdateInformation.class.php";
 require_once 'lib/datei.inc.php';
 require_once dirname(__file__)."/models/BlubberPosting.class.php";
 require_once dirname(__file__)."/models/BlubberExternalContact.class.php";
+require_once dirname(__file__)."/models/BlubberStream.class.php";
 
 class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
@@ -26,26 +27,27 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
             $data = Request::getArray("page_info");
             if (stripos(Request::get("page"), "plugins.php/blubber") !== false) {
                 $output = array();
-                $context_id = $data['Blubber']['context_id'];
-                $stream = $data['Blubber']['stream'];
+                switch ($data['Blubber']['stream']) {
+                    case "global":
+                        $stream = BlubberStream::getGlobalStream();
+                        break;
+                    case "course":
+                        $stream = BlubberStream::getCourseStream($data['Blubber']['context_id']);
+                        break;
+                    case "profile":
+                        $stream = BlubberStream::getProfileStream($data['Blubber']['context_id']);
+                        break;
+                    /*case "thread":
+                        $stream = BlubberStream::getThreadStream($data['Blubber']['context_id']);
+                        break;
+                     */
+                    case "custom":
+                        $stream = new BlubberStream($data['Blubber']['context_id']);
+                        break;
+                }
                 $last_check = $data['Blubber']['last_check'] ? $data['Blubber']['last_check'] : (time() - 5 * 60);
 
-                $parameter = array(
-                    'since' => $last_check
-                );
-                if ($stream === "thread") {
-                    $parameter['thread'] = $context_id;
-                }
-                if ($stream === "course") {
-                    $parameter['seminar_id'] = $context_id;
-                }
-                if ($stream === "profile") {
-                    $parameter['user_id'] = $context_id;
-                }
-                if ($data['Blubber']['search']) {
-                    $parameter['search'] = $data['Blubber']['search'];
-                }
-                $new_postings = BlubberPosting::getPostings($parameter);
+                $new_postings = $stream->fetchNewPostings($last_check);
 
                 $factory = new Flexi_TemplateFactory($this->getPluginPath()."/views");
                 foreach ($new_postings as $new_posting) {
@@ -85,9 +87,18 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
             }
         }
         if (Navigation::hasItem("/community")) {
-            $nav = new AutoNavigation($this->getDisplayTitle(), PluginEngine::getURL($this, array(), "streams/global"));
+            $nav = new Navigation($this->getDisplayTitle(), PluginEngine::getURL($this, array(), "streams/global"));
+            $nav->addSubNavigation("global", new AutoNavigation(_("Globaler Stream"), PluginEngine::getURL($this, array(), "streams/global")));
+            foreach (BlubberStream::findMine() as $stream) {
+                $url = PluginEngine::getURL($this, array(), "streams/custom/".$stream->getId());
+                $nav->addSubNavigation($stream->getId(), new AutoNavigation($stream['name'], $url));
+                if ($stream['defaultstream']) {
+                    $nav->setURL($url);
+                }
+            }
+            $nav->addSubNavigation("add", new AutoNavigation(_("+"), PluginEngine::getURL($this, array(), "streams/edit")));
             Navigation::insertItem("/community/blubber", $nav, "online");
-            Navigation::getItem("/community")->setURL(PluginEngine::getURL($this, array(), "streams/global"));
+            Navigation::getItem("/community")->setURL($nav->getURL());
         }
         
         if (Navigation::hasItem("/profile") && 

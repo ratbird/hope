@@ -17,7 +17,7 @@
 <input type="hidden" id="last_check" value="<?= time() ?>">
 <input type="hidden" id="base_url" value="plugins.php/blubber/streams/">
 <input type="hidden" id="user_id" value="<?= htmlReady($GLOBALS['user']->id) ?>">
-<input type="hidden" id="stream" value="all">
+<input type="hidden" id="stream" value="global">
 <input type="hidden" id="stream_time" value="<?= time() ?>">
 <input type="hidden" id="search" value="<?= htmlReady($search) ?>">
 <input type="hidden" id="browser_start_time" value="">
@@ -59,7 +59,7 @@
                 <tr>
                     <td colspan="3"><hr></td>
                 </tr>
-                <tr onMousedown="$('#context_type').val('private'); $('#threadwriter .context_selector').removeAttr('class').addClass('private context_selector'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
+                <tr onMousedown="jQuery('#context_type').val('private'); jQuery('#threadwriter .context_selector').removeAttr('class').addClass('private context_selector'); jQuery(this).parent().find('.selected').removeClass('selected'); jQuery(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
                             <?= Assets::img("icons/32/black/group3", array('class' => "text-bottom")) ?>
@@ -93,7 +93,7 @@
                 <tr>
                     <td colspan="3"><hr></td>
                 </tr>
-                <tr onMousedown="$('#context_type').val('course'); $('#threadwriter .context_selector').removeAttr('class').addClass('seminar context_selector'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
+                <tr onMousedown="jQuery('#context_type').val('course'); jQuery('#threadwriter .context_selector').removeAttr('class').addClass('seminar context_selector'); jQuery(this).parent().find('.selected').removeClass('selected'); jQuery(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
                             <?= Assets::img("icons/32/black/seminar", array('class' => "text-bottom")) ?>
@@ -132,7 +132,7 @@
 
 
 <div id="context_background">
-<ul id="forum_threads" class="globalstream" aria-live="polite" aria-relevant="additions">
+<ul id="blubber_threads" class="globalstream" aria-live="polite" aria-relevant="additions">
     <? foreach ($threads as $thread) : ?>
     <?= $this->render_partial("streams/thread.php", array('thread' => $thread)) ?>
     <? endforeach ?>

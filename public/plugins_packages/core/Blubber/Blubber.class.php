@@ -37,10 +37,9 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
                     case "profile":
                         $stream = BlubberStream::getProfileStream($data['Blubber']['context_id']);
                         break;
-                    /*case "thread":
+                    case "thread":
                         $stream = BlubberStream::getThreadStream($data['Blubber']['context_id']);
                         break;
-                     */
                     case "custom":
                         $stream = new BlubberStream($data['Blubber']['context_id']);
                         break;

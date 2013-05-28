@@ -736,7 +736,7 @@ class StreamsController extends ApplicationController {
             }
             
             $this->stream->store();
-            if ($_FILES['image']) {
+            if ($_FILES['image']['size']) {
                 StreamAvatar::getAvatar($this->stream->getId())->createFromUpload("image");
             }
             if ($new) {

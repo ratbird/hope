@@ -137,6 +137,9 @@ class Course_StudygroupController extends AuthenticatedController {
 
         $admin  = $perm->have_perm('admin');
         $errors = array();
+
+        CSRFProtection::verifyUnsafeRequest();
+
         foreach ($GLOBALS['SEM_CLASS'] as $key => $class) {
             if ($class['studygroup_mode']) {
                 $sem_class = $class;
@@ -427,6 +430,8 @@ class Course_StudygroupController extends AuthenticatedController {
             $founders = StudygroupModel::getFounders($id);
             $sem       = new Seminar($id);
             $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']];
+
+            CSRFProtection::verifyUnsafeRequest();
 
             if (Request::get('abort_deactivate')) {
                 // let's do nothing and go back to the studygroup

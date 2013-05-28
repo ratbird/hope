@@ -42,7 +42,7 @@ class ForumIssue
     static function setThreadForIssue($seminar_id, $issue_id, $title, $content)
     {
         if ($topic_id = self::getThreadIdForIssue($issue_id)) {   // update
-            ForumEntry::update($topic_id, $title ?: _('Kein Titel'), $content);
+            ForumEntry::update($topic_id, $title ?: _('Ohne Titel'), $content);
 
         } else {                                                  // create
             // make sure the forum is set up properly
@@ -54,7 +54,7 @@ class ForumIssue
                 'topic_id'    => $topic_id,
                 'seminar_id'  => $seminar_id,
                 'user_id'     => $GLOBALS['user']->id,
-                'name'        => $title ?: _('Kein Titel'),
+                'name'        => $title ?: _('Ohne Titel'),
                 'content'     => $content,
                 'author'      => get_fullname($GLOBALS['user']->id),
                 'author_host' => getenv('REMOTE_ADDR')

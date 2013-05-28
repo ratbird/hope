@@ -2082,9 +2082,9 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
         if (!empty($dates_title)) {
             $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
-                 ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
+                 ", " . ($tmp_titel ? $tmp_titel : _("Ohne Titel"));
         } else {
-            $tmp_titel = $tmp_titel ? $tmp_titel : _("ohne Titel");
+            $tmp_titel = $tmp_titel ? $tmp_titel : _("Ohne Titel");
         }
     }
 
@@ -2121,7 +2121,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         if (sizeof($dates_title) > 0) {
             $title_name = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title));
             if (!$result['name']) {
-                $title_name .= _(", ohne Titel");
+                $title_name .= ', '._("Ohne Titel");
             } else {
                 $title_name .= ', '.htmlReady($result['name']);
             }

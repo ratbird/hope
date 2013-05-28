@@ -148,11 +148,6 @@ class Issue {
     function store() {
         $this->chdate = time();
 
-        // If we don't do this, we have empty forum entries
-        if (!$this->getTitle()) {
-            $this->setTitle(_("Ohne Titel"));
-        }
-
         if ($this->hasForum) {
             $sem = Seminar::getInstance($this->seminar_id);
             $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');

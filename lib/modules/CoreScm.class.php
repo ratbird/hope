@@ -25,18 +25,23 @@ class CoreScm implements StudipModule {
     
     function getTabNavigation($course_id) {
         if (get_config('SCM_ENABLE')) {
-            $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($course_id));
+            $temp = StudipScmEntry::findByRange_id($course_id, 'ORDER BY position ASC');
+            $scms = SimpleORMapCollection::createFromArray($temp);
 
-            $navigation = new Navigation($scms[0]['tab_name']);
+            $navigation = new Navigation($scms->first()->tab_name);
             $navigation->setImage('icons/16/white/infopage.png');
             $navigation->setActiveImage('icons/16/black/infopage.png');
 
             foreach ($scms as $scm) {
-                $navigation->addSubNavigation($scm['scm_id'], new Navigation($scm['tab_name'] , "scm.php?show_scm=".$scm['scm_id']));
+                $scm_link = URLHelper::getLink('dispatch.php/course/scm/' . $scm->id);
+                $nav = new Navigation($scm['tab_name'], $scm_link);
+                $navigation->addSubNavigation($scm->id, $nav);
             }
 
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
-                $navigation->addSubNavigation('new_entry', new Navigation(_('Neuen Eintrag anlegen'), "scm.php?show_scm=new_entry&i_view=edit"));
+                $scm_link = URLHelper::getLink('dispatch.php/course/scm/create');
+                $nav = new Navigation(_('Neuen Eintrag anlegen'), $scm_link);
+                $navigation->addSubNavigation('new_entry', $nav);
             }
 
             return array('scm' => $navigation);
@@ -83,14 +88,20 @@ class CoreScm implements StudipModule {
                     $row['fullname'], $row['Name'], $row['tab_name']);
             }
 
+            $link = URLHelper::getLink('dispatch.php/course/scm/' . $row['scm_id'],
+                                       array('cid' => $row['range_id']));
+
             $items[] = new ContentElement(
-                'Info: ' . $row['tab_name'], $summary, ($row['content'] ?: ''), $row['user_id'], $row['fullname'],
-                URLHelper::getLink('scm.php',
-                    array('cid' => $row['range_id'], 'show_scm' => $row['scm_id'])),
+                'Info: ' . $row['tab_name'],
+                $summary,
+                $row['content'] ?: '',
+                $row['user_id'],
+                $row['fullname'],
+                $link,
                 $row['chdate']
             );
         }
-        
+
         return $items;
-    }   
+    }
 }

@@ -83,7 +83,7 @@ function get_my_sem_values(&$my_sem) {
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($my_semids));
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $nav = new Navigation('scm', 'scm.php');
+        $nav = new Navigation('scm', 'dispatch.php/course/scm');
         $nav->setImage('icons/16/grey/infopage.png', array('title' => sprintf(_('%s Einträge'), $row['count'])));
         $my_sem[$row['range_id']]['scm'] = $nav;
     }

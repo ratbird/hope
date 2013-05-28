@@ -234,14 +234,14 @@ function dump_sem($sem_id, $print_view = false)
 
     //SCM
     if ($Modules['scm']) {
-        foreach(StudipScmEntry::GetSCMEntriesForRange($sem_id) as $scm) {
-            if (!empty($scm['content'])) {
+        foreach(StudipScmEntry::findByRange_id($sem_id, 'ORDER BY position ASC') as $scm) {
+            if (!empty($scm->content)) {
                 $dump .= '<br>';
                 $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
                 $dump .= ' <tr><td align="left" class="table_header_bold">';
-                $dump .= '<h2 class="table_header_bold">&nbsp;' . htmlReady($scm['tab_name']) . '</h2>';
+                $dump .= '<h2 class="table_header_bold">&nbsp;' . htmlReady($scm->tab_name) . '</h2>';
                 $dump .= '</td></tr>' . "\n";
-                $dump .= '<tr><td align="left" width="100%"><br>'. formatReady($scm['content'], 1, 1) .'<br></td></tr>' . "\n";
+                $dump .= '<tr><td align="left" width="100%"><br>'. formatReady($scm->content, 1, 1) .'<br></td></tr>' . "\n";
                 $dump .= '</table>' . "\n";
             }
         }

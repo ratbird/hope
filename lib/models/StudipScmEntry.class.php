@@ -1,16 +1,15 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TEST
-# Lifter010: TODO
+# Lifter003: DONE - not applicable
+# Lifter007: TEST
+# Lifter010: DONE - not applicable
+
 /**
-* StudipScmEntry.class.php
-*
-*
-*
-*
-* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access   public
-*/
+ * StudipScmEntry.class.php
+ *
+ * @author André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @author Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @access public
+ */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -34,35 +33,24 @@
 
 class StudipScmEntry extends SimpleORMap
 {
-
-    public static function GetSCMEntriesForRange($range_id, $as_objects = false){
-        return SimpleORMapCollection::createFromArray(self::findByRange_id($range_id))->toGroupedArray();
-    }
-
-    public static function GetNumSCMEntriesForRange($range_id)
-    {
-        return self::countBySql("range_id = ?", array($range_id));
-    }
-
-    public static function DeleteSCMEntriesForRange($range_ids)
-    {
-        if (!is_array($range_ids)) {
-            $range_ids = array($range_ids);
-        }
-        $where = "range_id IN (?)";
-        return self::deleteBySQL($where, array($range_ids));
-    }
-
     /**
-     *
-     * @param string $id primary key of table
+     * @param mixed $id primary key of table
      */
     function __construct($id = null)
     {
         $this->db_table = 'scm';
+
+        $this->belongs_to = array(
+            'user' => array(
+                'class_name'  => 'User',
+                'foreign_key' => 'user_id',
+            ),
+            'course' => array(
+                'class_name'  => 'Course',
+                'foreign_key' => 'range_id',
+            ),
+        );
+
         parent::__construct($id);
     }
-
 }
-
-?>

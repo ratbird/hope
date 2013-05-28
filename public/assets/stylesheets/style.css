@@ -1037,9 +1037,9 @@ li#notification_container:hover .list {
   display: block;
 }
 #notification_container #notification_list .more {
-    font-size: 0.8em;
-    font-weight: bold;
-    text-align: center;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-align: center;
 }
 #barTopFont {
   color: #cccccc;
@@ -3130,4 +3130,27 @@ div.info {
 }
 .online-list-double table:first-child {
   float: left;
+}
+/* Simple Content Module */
+.scm .content_title td {
+  text-align: right;
+  white-space: nowrap;
+}
+.scm .content_title td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+.scm .content_title input[type=text] {
+  width: 200px;
+}
+.scm .content_body td {
+  padding: 22px;
+}
+.scm .content_body textarea {
+  height: 200px;
+  width: 100%;
+  resize: vertical;
+}
+.scm .table_footer td {
+  text-align: center;
 }

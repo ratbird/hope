@@ -387,7 +387,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
 
-            $nav = new Navigation('scm', 'scm.php');
+            $nav = new Navigation('scm', 'dispatch.php/course/scm');
 
             if ($db2->f('count')) {
                 if ($db2->f('neue')) {

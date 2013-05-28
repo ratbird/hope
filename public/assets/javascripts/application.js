@@ -308,3 +308,10 @@ jQuery(function ($) {
         }
     });
 }(jQuery));
+
+/* Copies a value from a select to another element*/
+jQuery(document).on('change', 'select[data-copy-to]', function () {
+    var target = jQuery(this).data().copyTo,
+        value  = jQuery(this).val() || jQuery(target).prop('defaultValue');
+    jQuery(target).val(value);
+});

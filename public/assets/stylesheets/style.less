@@ -410,3 +410,34 @@ div.info { padding-left: 1%; }
         }
     }
 }
+
+/* Simple Content Module */
+.scm {
+    // Workaround for :last-child which is not supported by IE8
+    .content_title {
+        td {
+            text-align: right;
+            white-space: nowrap;
+            &:first-child {
+                text-align: left;
+                white-space: normal;
+            }
+        }
+        input[type=text] {
+            width: 200px;
+        }
+    }
+    .content_body {
+        td {
+            padding: 22px;
+        }
+        textarea {
+            height: 200px;
+            width: 100%;
+            resize: vertical;
+        }
+    }
+    .table_footer td {
+        text-align: center;
+    }
+}

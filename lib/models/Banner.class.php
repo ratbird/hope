@@ -13,6 +13,21 @@
  * @category    Stud.IP
  * @package     admin
  * @since       2.4
+ * 
+ * @property string ad_id database column
+ * @property string id alias column for ad_id
+ * @property string banner_path database column
+ * @property string description database column
+ * @property string alttext database column
+ * @property string target_type database column
+ * @property string target database column
+ * @property string startdate database column
+ * @property string enddate database column
+ * @property string priority database column
+ * @property string views database column
+ * @property string clicks database column
+ * @property string mkdate database column
+ * @property string chdate database column
  */
 
 class Banner extends SimpleORMap

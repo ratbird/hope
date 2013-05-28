@@ -2,19 +2,6 @@
 /**
  * User.class.php
  * model class for combined auth_user_md5/user_info record
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      André Noack <noack@data-quest.de>
- * @copyright   2011 Stud.IP Core-Group
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
-*/
-
-/**
  * this class represents one user, the attributes from tables
  * auth_user_md5 and user_info were merged.
  *
@@ -24,7 +11,59 @@
  * $a_user->email = $another_users_email;
  * $a_user->store();
  * @endcode
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
+ * @author      André Noack <noack@data-quest.de>
+ * @copyright   2011 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ *
+ * @property string user_id database column
+ * @property string id alias column for user_id
+ * @property string username database column
+ * @property string password database column
+ * @property string perms database column
+ * @property string vorname database column
+ * @property string nachname database column
+ * @property string email database column
+ * @property string validation_key database column
+ * @property string auth_plugin database column
+ * @property string locked database column
+ * @property string lock_comment database column
+ * @property string locked_by database column
+ * @property string visible database column
+ * @property string hobby computed column read/write
+ * @property string lebenslauf computed column read/write
+ * @property string publi computed column read/write
+ * @property string schwerp computed column read/write
+ * @property string home computed column read/write
+ * @property string privatnr computed column read/write
+ * @property string privatcell computed column read/write
+ * @property string privadr computed column read/write
+ * @property string score computed column read/write
+ * @property string geschlecht computed column read/write
+ * @property string mkdate computed column read/write
+ * @property string chdate computed column read/write
+ * @property string title_front computed column read/write
+ * @property string title_rear computed column read/write
+ * @property string preferred_language computed column read/write
+ * @property string smsforward_copy computed column read/write
+ * @property string smsforward_rec computed column read/write
+ * @property string guestbook computed column read/write
+ * @property string email_forward computed column read/write
+ * @property string smiley_favorite computed column read/write
+ * @property string motto computed column read/write
+ * @property string lock_rule computed column read/write
+ * @property SimpleORMapCollection course_memberships has_many CourseMember
+ * @property SimpleORMapCollection institute_memberships has_many InstituteMember
+ * @property SimpleORMapCollection admission_applications has_many AdmissionApplication
+ * @property SimpleORMapCollection archived_course_memberships has_many ArchivedCourseMember
+ * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
+ * @property UserInfo info has_one UserInfo
  */
 class User extends AuthUserMd5
 {
@@ -62,6 +101,11 @@ class User extends AuthUserMd5
         return $users;
     }
 
+    /**
+     * @var string a test
+     */
+    private $test1;
+    
     /**
      *
      * @param string $id a user id

@@ -1,17 +1,4 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TEST
-# Lifter010: TODO
-/**
-* StudipNews.class.php
-*
-*
-*
-*
-* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access   public
-*/
-
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 //
@@ -31,9 +18,33 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-
 require_once 'lib/object.inc.php';
 
+/**
+ * StudipNews.class.php
+ *
+ *
+ *
+ *
+ * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @access   public
+ *
+ * @property string news_id database column
+ * @property string id alias column for news_id
+ * @property string topic database column
+ * @property string body database column
+ * @property string author database column
+ * @property string date database column
+ * @property string user_id database column
+ * @property string expire database column
+ * @property string allow_comments database column
+ * @property string chdate database column
+ * @property string chdate_uid database column
+ * @property string mkdate database column
+ * @property SimpleORMapCollection news_ranges has_many NewsRange
+ * @property SimpleORMapCollection comments has_many StudipComment
+ * @property User owner belongs_to User
+ */
 class StudipNews extends SimpleORMap {
 
     public static function GetNewsByRange($range_id, $only_visible = false, $as_objects = false)

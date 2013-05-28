@@ -1,21 +1,32 @@
 <?php
-/*
+/**
+ * Studienbereich... TODO
+ *
  * Copyright (C) 2008 - Marcus Lunzenauer <mlunzena@uos.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- */
-
-/**
- * Studienbereich... TODO
- *
+ * 
  * @package     studip
  *
  * @author    mlunzena
  * @author    André Noack <noack@data-quest.de>
  * @copyright (c) Authors
+ * 
+ * @property string sem_tree_id database column
+ * @property string id alias column for sem_tree_id
+ * @property string parent_id database column
+ * @property string priority database column
+ * @property string info database column
+ * @property string name database column
+ * @property string studip_object_id database column
+ * @property string type database column
+ * @property SimpleORMapCollection _children has_many StudipStudyArea
+ * @property Institute institute belongs_to Institute
+ * @property StudipStudyArea _parent belongs_to StudipStudyArea
+ * @property SimpleORMapCollection courses has_and_belongs_to_many Course
  */
 
 class StudipStudyArea extends SimpleORMap

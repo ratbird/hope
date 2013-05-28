@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
  * SeminarCycleDate.class.php
  * model class for table seminar_cycle_dates
@@ -13,7 +12,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.0
-*/
+ * @property string metadate_id database column
+ * @property string id alias column for metadate_id
+ * @property string seminar_id database column
+ * @property string start_time database column
+ * @property string end_time database column
+ * @property string weekday database column
+ * @property string description database column
+ * @property string sws database column
+ * @property string cycle database column
+ * @property string week_offset database column
+ * @property string sorter database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string start_hour computed column read/write
+ * @property string start_minute computed column read/write
+ * @property string end_hour computed column read/write
+ * @property string end_minute computed column read/write
+ */
 
 class SeminarCycleDate extends SimpleORMap
 {

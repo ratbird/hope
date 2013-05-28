@@ -13,7 +13,17 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ * 
+ * @property string userconfig_id database column
+ * @property string id alias column for userconfig_id
+ * @property string parent_id database column
+ * @property string user_id database column
+ * @property string field database column
+ * @property string value database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string comment database column
+ */
 
 class UserConfigEntry extends SimpleORMap
 {

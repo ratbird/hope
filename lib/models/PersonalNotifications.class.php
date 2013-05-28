@@ -1,17 +1,4 @@
 <?php
-
-/*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Rasmus Fuhse <fuhse@data-quest.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since       2.4
- */
-
 /**
  * This is an easy to use class to display personal notifications to the user,
  * that are shown in real-time. Users can deactivate the feature of personal
@@ -31,6 +18,24 @@
  *
  * Appearing to the user, deleting by the user and so on of the notification is
  * handled by this class automatically.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus Fuhse <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
+ * 
+ * @property string personal_notification_id database column
+ * @property string id alias column for personal_notification_id
+ * @property string url database column
+ * @property string text database column
+ * @property string avatar database column
+ * @property string html_id database column
+ * @property string mkdate database column
  */
 class PersonalNotifications extends SimpleORMap {
 

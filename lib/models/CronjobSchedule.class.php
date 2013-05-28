@@ -1,13 +1,4 @@
 <?php
-/**
- * CronjobSchedule - Model for the database table "cronjobs_schedules"
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since       2.4
- */
-
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // CronjobSchedule.class.php
@@ -27,6 +18,39 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+
+/**
+ * CronjobSchedule - Model for the database table "cronjobs_schedules"
+ *
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
+ * 
+ * @property string schedule_id database column
+ * @property string id alias column for schedule_id
+ * @property string task_id database column
+ * @property string active database column
+ * @property string title database column
+ * @property string description database column
+ * @property string parameters database column
+ * @property string priority database column
+ * @property string type database column
+ * @property string minute database column
+ * @property string hour database column
+ * @property string day database column
+ * @property string month database column
+ * @property string day_of_week database column
+ * @property string next_execution database column
+ * @property string last_execution database column
+ * @property string last_result database column
+ * @property string execution_count database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property SimpleORMapCollection logs has_many CronjobLog
+ * @property CronjobTask task belongs_to CronjobTask
+ */
+
 class CronjobSchedule extends SimpleORMap
 {
     const PRIORITY_LOW    = 'low';

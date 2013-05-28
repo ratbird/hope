@@ -1,13 +1,4 @@
 <?php
-/**
- * CronjobLog - Model for the database table "cronjobs_logs"
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since       2.4
- */
-
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // CronjobLog.class.php
@@ -27,6 +18,25 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+
+/**
+ * CronjobLog - Model for the database table "cronjobs_logs"
+ *
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
+ * 
+ * @property string log_id database column
+ * @property string id alias column for log_id
+ * @property string schedule_id database column
+ * @property string scheduled database column
+ * @property string executed database column
+ * @property string exception database column
+ * @property string output database column
+ * @property string duration database column
+ * @property CronjobSchedule schedule belongs_to CronjobSchedule
+ */
 
 class CronjobLog extends SimpleORMap
 {

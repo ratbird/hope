@@ -1,6 +1,6 @@
 <?php
 # Lifter010: TODO
-/*
+/**
  * Semester.class.php
  * model class for table semester_data
  *
@@ -12,8 +12,20 @@
  * @author      André Noack <noack@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
-
+ *
+ * @property string semester_id database column
+ * @property string id alias column for semester_id
+ * @property string name database column
+ * @property string description database column
+ * @property string semester_token database column
+ * @property string beginn database column
+ * @property string ende database column
+ * @property string vorles_beginn database column
+ * @property string vorles_ende database column
+ * @property string first_sem_week computed column
+ * @property string last_sem_week computed column
+ * @property string past computed column
+ */
 class Semester extends SimpleORMap
 {
     /**

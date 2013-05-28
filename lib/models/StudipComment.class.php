@@ -2,16 +2,6 @@
 # Lifter007: TODO
 # Lifter003: TEST
 # Lifter010: TODO
-/**
-* StudipComments.class.php
-*
-*
-*
-*
-* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access   public
-*/
-
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 //
@@ -32,6 +22,23 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+/**
+ * StudipComments.class.php
+ *
+ *
+ *
+ *
+ * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @access   public
+ * 
+ * @property string comment_id database column
+ * @property string id alias column for comment_id
+ * @property string object_id database column
+ * @property string user_id database column
+ * @property string content database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ */
 
 class StudipComment extends SimpleORMap
 {

@@ -1,5 +1,7 @@
 <?php
-# Lifter010: TODO
+require_once 'lib/log_events.inc.php';
+require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
+
 /**
  * RoomRequest.class.php - model class for table resources_requests
  *
@@ -14,15 +16,21 @@
  * @author      Suchi & Berg GmbH <info@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
-
-require_once 'lib/log_events.inc.php';
-require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
-
-/**
-* RoomRequest, class for room-requests and room-property-requests
-*
-**/
+ * 
+ * @property string request_id database column
+ * @property string id alias column for request_id
+ * @property string seminar_id database column
+ * @property string termin_id database column
+ * @property string metadate_id database column
+ * @property string user_id database column
+ * @property string resource_id database column
+ * @property string category_id database column
+ * @property string comment database column
+ * @property string reply_comment database column
+ * @property string closed database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ */
 class RoomRequest extends SimpleORMap
 {
     private $properties = array();          //the assigned property-requests

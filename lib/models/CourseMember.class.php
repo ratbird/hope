@@ -12,7 +12,30 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ * 
+ * @property string seminar_id database column
+ * @property string user_id database column
+ * @property string status database column
+ * @property string position database column
+ * @property string gruppe database column
+ * @property string admission_studiengang_id database column
+ * @property string notification database column
+ * @property string mkdate database column
+ * @property string comment database column
+ * @property string visible database column
+ * @property string label database column
+ * @property string bind_calendar database column
+ * @property string vorname computed column
+ * @property string nachname computed column
+ * @property string username computed column
+ * @property string email computed column
+ * @property string title_front computed column
+ * @property string title_rear computed column
+ * @property string course_name computed column
+ * @property string id computed column read/write
+ * @property User user belongs_to User
+ * @property Course course belongs_to Course
+ */
 class CourseMember extends SimpleORMap
 {
 

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * SemesterHoliday.class.php
  * model class for table semester_holiday
  *
@@ -11,7 +11,15 @@
  * @author      André Noack <noack@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ *
+ * @property string holiday_id database column
+ * @property string id alias column for holiday_id
+ * @property string semester_id database column
+ * @property string name database column
+ * @property string description database column
+ * @property string beginn database column
+ * @property string ende database column
+ */
 
 class SemesterHoliday extends SimpleORMap
 {

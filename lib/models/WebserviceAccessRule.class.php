@@ -2,60 +2,6 @@
 /**
  * WebserviceAccessRule.class.php
  * model class for table webservice_access_rules
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      André Noack <noack@data-quest.de>
- * @copyright   2011 Stud.IP Core-Group
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
-*/
-
-/**
- * This class works like an array.
- * The internal array is constructed from a comma separated string
- * When used in an string context, it is automatically converted to a comma
- * separated string
- *
- * Usage:
- * @code
- * $csvarray = new CSVArrayObject('eins,zwei,drei');
- * $csvarray[] = 'vier';
- * echo $csvarray; // prints out "eins,zwei,drei,vier"
- * @endcode
- *
- * @link http://www.php.net/manual/en/class.arrayobject.php
-*/
-class CSVArrayObject extends ArrayObject
-{
-    /**
-     * Construct an array object from a string of comma separated items
-     *
-     * @param string $input a string of comma separated items
-     */
-    function __construct($input)
-    {
-        if (is_string($input)) {
-            $input = strlen($input) ? array_map('trim', explode(',', $input)) : array();
-        }
-        parent::__construct((array)$input);
-    }
-
-    /**
-     * magic method for use of object in string context
-     *
-     * @return string internal array itmes converted to a comma separated list
-     */
-    function __toString()
-    {
-        return implode(',', (array)$this);
-    }
-}
-
-/**
  * this class represents one record of the table webservice_access_rules
  * the column ip_range is converted from a comma separated list to an ArrayObject and vice-versa,
  * to allow array-like access
@@ -68,6 +14,21 @@ class CSVArrayObject extends ArrayObject
  * echo $rule['ip_range']; //prints out 127.0.0.1,192.168.19.0/8
  * @endcode
  *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      André Noack <noack@data-quest.de>
+ * @copyright   2011 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ *
+ * @property string api_key database column
+ * @property string method database column
+ * @property string ip_range database column
+ * @property string type database column
+ * @property string id database column
  */
 class WebserviceAccessRule extends SimpleORMap
 {

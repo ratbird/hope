@@ -12,9 +12,17 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
-
-require_once 'lib/classes/DataFieldEntry.class.php';
+ * 
+ * @property string datafield_id database column
+ * @property string range_id database column
+ * @property string content database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string sec_range_id database column
+ * @property string name computed column
+ * @property string id computed column read/write
+ * @property Datafield datafield belongs_to Datafield
+ */
 
 class DatafieldEntryModel extends SimpleORMap
 {

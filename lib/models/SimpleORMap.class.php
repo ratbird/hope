@@ -743,13 +743,18 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * returns table metadata
+     * returns table and columns metadata
      *
      * @return array assoc array with columns, primary keys and name of table
      */
     function getTableMetadata()
     {
-        return array('fields' => $this->db_fields, 'pk' => $this->pk, 'table' => $this->db_table);
+        return array('fields' => $this->db_fields,
+                     'pk' => $this->pk,
+                     'table' => $this->db_table,
+                     'additional_fields' => $this->additional_fields,
+                     'alias_fields' => $this->alias_fields,
+                     'relations' => array_keys($this->relations));
     }
 
     /**

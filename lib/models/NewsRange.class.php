@@ -11,6 +11,15 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ * 
+ * @property string news_id database column
+ * @property string range_id database column
+ * @property string type computed column
+ * @property string name computed column
+ * @property string id computed column read/write
+ * @property User user belongs_to User
+ * @property Course course belongs_to Course
+ * @property Institute institute belongs_to Institute
  */
 class NewsRange extends SimpleORMap
 {

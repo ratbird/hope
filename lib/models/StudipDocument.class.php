@@ -2,16 +2,6 @@
 # Lifter007: TODO
 # Lifter003: TEST
 # Lifter010: TODO
-/**
-* StudipDocument.class.php
-*
-*
-*
-*
-* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access   public
-*/
-
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 //
@@ -33,9 +23,30 @@
 // +---------------------------------------------------------------------------+
 
 /**
- * Small class derived from SimpleORMap to give access to the table dokumente
- * @author André Noack
+ * StudipDocument.class.php
+ * give access to the table dokumente
  *
+ *
+ * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @access   public
+ * 
+ * @property string dokument_id database column
+ * @property string id alias column for dokument_id
+ * @property string range_id database column
+ * @property string user_id database column
+ * @property string seminar_id database column
+ * @property string name database column
+ * @property string description database column
+ * @property string filename database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string filesize database column
+ * @property string autor_host database column
+ * @property string downloads database column
+ * @property string url database column
+ * @property string protected database column
+ * @property string priority database column
+ * @property string author_name database column
  */
 class StudipDocument extends SimpleORMap {
 

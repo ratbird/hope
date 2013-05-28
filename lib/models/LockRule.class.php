@@ -2,19 +2,6 @@
 /**
  * LockRule.class.php
  * model class for table lock_rule
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      André Noack <noack@data-quest.de>
- * @copyright   2011 Stud.IP Core-Group
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
-*/
-
-/**
  * this class represents one record of the lock_rules table
  * the column attributes is converted to an ArrayObject and vice-versa,
  * to allow array-like access
@@ -25,8 +12,27 @@
  * $lockrule['attributes']['name'] = 1;
  * $lockrule->store();
  * @endcode
+ 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
+ * @author      André Noack <noack@data-quest.de>
+ * @copyright   2011 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * 
+ * @property string lock_id database column
+ * @property string id alias column for lock_id
+ * @property string permission database column
+ * @property string name database column
+ * @property string description database column
+ * @property string attributes database column
+ * @property string object_type database column
+ * @property string user_id database column
  */
+
 class LockRule extends SimpleORMap
 {
 

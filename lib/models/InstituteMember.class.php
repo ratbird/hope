@@ -12,7 +12,28 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ * 
+ * @property string user_id database column
+ * @property string institut_id database column
+ * @property string inst_perms database column
+ * @property string sprechzeiten database column
+ * @property string raum database column
+ * @property string telefon database column
+ * @property string fax database column
+ * @property string externdefault database column
+ * @property string priority database column
+ * @property string visible database column
+ * @property string vorname computed column
+ * @property string nachname computed column
+ * @property string username computed column
+ * @property string email computed column
+ * @property string title_front computed column
+ * @property string title_rear computed column
+ * @property string institute_name computed column
+ * @property string id computed column read/write
+ * @property User user belongs_to User
+ * @property Institute institute belongs_to Institute
+ */
 class InstituteMember extends SimpleORMap
 {
 

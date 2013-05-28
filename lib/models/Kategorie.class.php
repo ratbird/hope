@@ -11,6 +11,15 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
+ * 
+ * @property string kategorie_id database column
+ * @property string id alias column for kategorie_id
+ * @property string range_id database column
+ * @property string name database column
+ * @property string content database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string priority database column
  */
 
 class Kategorie extends SimpleORMap

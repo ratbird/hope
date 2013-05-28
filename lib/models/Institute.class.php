@@ -12,6 +12,30 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.0
+ * 
+ * @property string institut_id database column
+ * @property string id alias column for institut_id
+ * @property string name database column
+ * @property string fakultaets_id database column
+ * @property string strasse database column
+ * @property string plz database column
+ * @property string url database column
+ * @property string telefon database column
+ * @property string email database column
+ * @property string fax database column
+ * @property string type database column
+ * @property string modules database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string lit_plugin_name database column
+ * @property string srienabled database column
+ * @property string lock_rule database column
+ * @property string is_fak computed column
+ * @property SimpleORMapCollection members has_many InstituteMember
+ * @property SimpleORMapCollection home_courses has_many Course
+ * @property SimpleORMapCollection sub_institutes has_many Institute
+ * @property Institute faculty belongs_to Institute
+ * @property SimpleORMapCollection courses has_and_belongs_to_many Course
  */
 
 class Institute extends SimpleORMap
@@ -94,6 +118,33 @@ class Institute extends SimpleORMap
     {
         $this->db_table = 'Institute';
         $this->additional_fields['is_fak']['get'] = function($me) {return $me->fakultaets_id == $me->institut_id;};
+        $this->has_many = array(
+                'members' => array(
+                        'class_name' => 'InstituteMember',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'home_courses' => array(
+                        'class_name' => 'Course',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'sub_institutes' => array(
+                        'class_name' => 'Institute',
+                        'assoc_foreign_key' => 'fakultaets_id',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                );
+        $this->belongs_to = array(
+                'faculty' => array(
+                        'class_name' => 'Institute',
+                        'foreign_key' => 'fakultaets_id',
+                        )
+                );
+        $this->has_and_belongs_to_many = array(
+                'courses' => array(
+                        'class_name' => 'Course',
+                        'thru_table' => 'seminar_inst',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'));
         parent::__construct($id);
     }
 

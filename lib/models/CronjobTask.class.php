@@ -1,6 +1,40 @@
-<?
+<?php
+// +---------------------------------------------------------------------------+
+// This file is part of Stud.IP
+// CronjobSchedule.class.php
+//
+// Copyright (C) 2013 Jan-Hendrik Willms <tleilax+studip@gmail.com>
+// +---------------------------------------------------------------------------+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or any later version.
+// +---------------------------------------------------------------------------+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+// +---------------------------------------------------------------------------+
+
 /**
+ * CronjobTask - Model for the database table "cronjobs_tasks"
+ *
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
  * 
+ * @property string task_id database column
+ * @property string id alias column for task_id
+ * @property string filename database column
+ * @property string class database column
+ * @property string active database column
+ * @property string execution_count database column
+ * @property string assigned_count database column
+ * @property SimpleORMapCollection schedules has_many CronjobSchedule
  */
 class CronjobTask extends SimpleORMap
 {

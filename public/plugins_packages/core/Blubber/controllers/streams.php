@@ -28,6 +28,15 @@ class StreamsController extends ApplicationController {
         PageLayout::setTitle(_("Globaler Blubberstream"));
         Navigation::activateItem("/community/blubber");
         
+        if (Request::get("delete_stream")) {
+            $stream = new BlubberStream(Request::option("delete_stream"));
+            if ($stream['user_id'] === $GLOBALS['user']->id) {
+                $stream->delete();
+                PageLayout::postMessage(MessageBox::success(_("Stream wurde erfolgreich gelöscht.")));
+                Navigation::removeItem("/community/blubber/".Request::option("delete_stream"));
+            }
+        }
+        
         $globalstream = BlubberStream::getGlobalStream();
         if (Request::get("hash")) {
             $this->search = Request::get("hash");

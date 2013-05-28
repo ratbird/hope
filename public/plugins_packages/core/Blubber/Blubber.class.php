@@ -13,6 +13,7 @@ require_once 'lib/datei.inc.php';
 require_once dirname(__file__)."/models/BlubberPosting.class.php";
 require_once dirname(__file__)."/models/BlubberExternalContact.class.php";
 require_once dirname(__file__)."/models/BlubberStream.class.php";
+require_once dirname(__file__)."/models/StreamAvatar.class.php";
 
 class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 

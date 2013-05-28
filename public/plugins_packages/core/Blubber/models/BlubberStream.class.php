@@ -8,7 +8,6 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once dirname(__file__)."/StreamAvatar.class.php";
 
 /**
  * A class to fetch blubber-postings from the database and return an array of
@@ -23,8 +22,6 @@ require_once dirname(__file__)."/StreamAvatar.class.php";
  * 
  */
 class BlubberStream extends SimpleORMap {
-
-    public $filter_threads = array();
     
     static public function create($pool = array(), $filter = array()) {
         $stream = new BlubberStream();
@@ -49,7 +46,7 @@ class BlubberStream extends SimpleORMap {
         $stream = new BlubberStream();
         $stream['pool_courses'] = array("all");
         $stream['pool_groups'] = array("all");
-        $stream['sort'] = "activity";
+        $stream['sort'] = "age";
         return $stream;
     }
     
@@ -65,12 +62,6 @@ class BlubberStream extends SimpleORMap {
         $stream['filter_users'] = array($user_id);
         $stream['filter_type'] = array("public");
         $stream['sort'] = "age";
-        return $stream;
-    }
-
-    static public function getThreadStream($topic_id) {
-        $stream = new BlubberStream();
-        $stream->filter_threads = array($topic_id);
         return $stream;
     }
 
@@ -290,10 +281,6 @@ class BlubberStream extends SimpleORMap {
         if (count($this['filter_nohashtags']) > 0) {
             $filter_sql[] = "( 0 = (SELECT COUNT(*) FROM blubber_tags AS tags WHERE tags.topic_id = blubber.topic_id AND tag IN (:filter_nohashtags) ) )";
             $parameters['filter_nohashtags'] = $this['filter_nohashtags'];
-        }
-        if (count($this->filter_threads) > 0) {
-            $filter_sql[] = "blubber.topic_id IN (:filter_threads) ";
-            $parameters['filter_threads'] = $this->filter_threads;
         }
         return array($pool_sql, $filter_sql, $parameters);
     }

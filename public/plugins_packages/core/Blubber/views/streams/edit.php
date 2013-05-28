@@ -255,6 +255,16 @@ jQuery(function () {
 </script>
 
 <?
+$action = array(
+    "kategorie" => _("Aktionen"),
+    "eintrag"   => array()
+);
+if (!$stream->isNew()) {
+    $action['eintrag'][] = array(
+        "icon" => "icons/16/red/decline",
+        "text" => '<a href="'.PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global").'">'._("Diesen Stream löschen")."</a>"
+    );
+}
 
 $infobox = array(
     array("kategorie" => _("Informationen"),
@@ -269,7 +279,8 @@ $infobox = array(
                 "text" => _("Ein Blubberstream ist immer eine Kombination aus Sammlung von Blubbern (der Pool) und eine anschließende Filterung dieser Sammlung. Der Aufbau des Streams besteht also immer aus zwei Phasen, die Sie hier nebenstehend übersichtlich definieren können.")
             )
         )
-    )
+    ),
+    (count($action['eintrag']) > 0 ? $action : null)
 );
 $infobox = array(
     'picture' => StreamAvatar::getAvatar($stream->getId())->getURL(Avatar::NORMAL),

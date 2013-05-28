@@ -52,6 +52,7 @@ class InitCustomBlubberStreams extends Migration {
             "SET topic_id = :topic_id, " .
                 "tag = :tag " .
         "");
+        
         while($blubber = $statement->fetch(PDO::FETCH_ASSOC)) {
             preg_match_all("/".$hashtag_regexp."/", $blubber['description'], $matches);
             foreach ($matches as $match) {

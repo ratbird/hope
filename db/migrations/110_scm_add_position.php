@@ -35,6 +35,9 @@ class ScmAddPosition extends Migration
             $update_statement->bindValue(':scm_id', $row['scm_id']);
             $update_statement->execute();
         }
+        
+        // Expire orm cache, so the change can take effect
+        SimpleORMap::expireTableScheme();
     }
 
     function down()

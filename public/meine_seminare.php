@@ -647,21 +647,36 @@ elseif ($auth->auth["perm"]=="admin") {
             $user->cfg->store('MY_INSTITUTES_DEFAULT', isset($_my_inst[Request::option('institut_id')]) ? Request::option('institut_id') : $_my_inst_arr[0]);
         }
         $_my_admin_inst_id = $user->cfg->MY_INSTITUTES_DEFAULT ? : $_my_inst_arr[0];
+        $sortFlag = Request::get('sortFlag');
         $sortby = Request::quoted('sortby');
+        
+        if(!isset($sortFlag) || $_SESSION['sortby'] != $sortby) {
+            $sortFlag = 'ASC';
+        } else {
+            $sortFlag = ($sortFlag == 'asc') ? 'DESC' : 'ASC';
+        }
+        $_SESSION['sortby'] = $sortby;
+        Request::set('sortFlag', $sortFlag);
+        
         //tic #650 sortierung in der userconfig merken
-        if (!empty($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {
+        //tic #3569 erweiterung der sortierung
+        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer dozent'))) {
+            $sortby = ($sortby != 'dozent') ? $sortby . " " . $sortFlag: $sortby;
             $userConfig->store('MEINE_SEMINARE_SORT', $sortby);
         } else {
             $sortby = $userConfig->getValue('MEINE_SEMINARE_SORT');
 
             if ($sortby=="" || $sortby==false) {
-                $sortby = "VeranstaltungsNummer ASC, Name ASC";
-            }
+                $sortby = sprintf('VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag);
+            } 
         }
+
         if ($sortby == "teilnehmer") {
-            $sortby = "teilnehmer DESC";
+            $sortby = sprintf('teilnehmer %s', $sortFlag);
         } elseif ($sortby == "status") {
-            $sortby = "status ASC, VeranstaltungsNummer ASC, Name ASC";
+            $sortby = sprintf('status %s, VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag, $sortFlag);
+        } elseif($sortby == 'dozent') {
+            $sortby = sprintf('seminar_user.status %s', $sortFlag);
         }
 
         // Prepare teacher statement
@@ -729,7 +744,6 @@ elseif ($auth->auth["perm"]=="admin") {
             get_my_obj_values($my_sem, $GLOBALS['user']->id);
         }
     }
-
 
 
     $template = $GLOBALS["template_factory"]->open("meine_seminare/index_admin");

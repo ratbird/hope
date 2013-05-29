@@ -62,33 +62,33 @@ global $SEM_TYPE;
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="sortable">
                                 <th width="2%">
                                     &nbsp;
                                 </th>
 
-                                <th width="6%" align="left">
-                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
+                                <th width="6%" align="left" <?=(Request::get('sortby') == 'VeranstaltungsNummer')? sprintf('class="sort%s"', strtolower(Request::get('sortFlag'))): ''?>>
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'VeranstaltungsNummer', 'sortFlag' => strtolower(Request::get('sortFlag')))) ?>"><?=_("Nr.")?></a>
                                 </th>
 
-                                <th width="50%" align="left">
-                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'Name')) ?>"><?=_("Name")?></a>
+                                <th width="50%" align="left" <?=(Request::get('sortby') == 'Name')? sprintf('class="sort%s"', strtolower(Request::get('sortFlag'))): ''?>>
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'Name', 'sortFlag' => strtolower(Request::get('sortFlag')))) ?>"><?=_("Name")?></a>
                                 </th>
 
-                                <th width="10%" align="left">
-                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'status')) ?>"><?=_("Veranstaltungstyp")?></a>
+                                <th width="10%" align="left" <?=(Request::get('sortby') == 'status')? sprintf('class="sort%s"', strtolower(Request::get('sortFlag'))): ''?>>
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'status', 'sortFlag' => strtolower(Request::get('sortFlag')))) ?>"><?=_("Veranstaltungstyp")?></a>
                                 </th>
 
-                                <th width="15%" align="left">
-                                    <b><?= _("DozentIn") ?></b>
+                                <th width="15%" align="left" <?=(Request::get('sortby') == 'dozent')? sprintf('class="sort%s"', strtolower(Request::get('sortFlag'))): ''?>>
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'dozent', 'sortFlag' => strtolower(Request::get('sortFlag')))) ?>"><?= _("DozentIn") ?></a>
                                 </th>
 
                                 <th width="10%">
                                     <b><?= _("Inhalt") ?></b>
                                 </th>
 
-                                <th width="5%">
-                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'teilnehmer')) ?>"><?=_("TeilnehmerInnen")?></a>
+                                <th width="5%" <?=(Request::get('sortby') == 'teilnehmer')? sprintf('class="sort%s"', strtolower(Request::get('sortFlag'))): ''?>>
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'teilnehmer', 'sortFlag' => strtolower(Request::get('sortFlag')))) ?>"><?=_("TeilnehmerInnen")?></a>
                                 </th>
 
                                 <th width="2%">

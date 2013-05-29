@@ -661,7 +661,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 } else {
                     $nav = new Navigation('participants', 'dispatch.php/course/members/index');
                 }
-                $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
+                $nav->setImage('icons/16/grey/persons.png', array('title' => _('TeilnehmerInnen')));
                 $my_obj[$object_id]['participants'] = $nav;
             }
         }

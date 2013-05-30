@@ -47,7 +47,7 @@
         <tr>
             <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
             <td>
-                <a style="positon: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$dozent['username'])) ?>">
+                <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$dozent['username'])) ?>">
                     <?= Avatar::getAvatar($dozent['user_id'], $dozent['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
                     <?= $dozent['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',

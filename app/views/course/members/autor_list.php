@@ -23,7 +23,7 @@
                     <col width="15%">
                 <? else : ?>
                     <? $cols_foot = 6?>
-                    <? $cols_head = 3?>
+                    <? $cols_head = 2?>
                     <col width="39%">
                 <? endif ?>
             <? else : ?>
@@ -64,12 +64,14 @@
                 </th>
             </tr>
             <tr class="sortable">
+                <? if ($rechte) : ?>
+                    <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                           type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=autor]">
+                    </th>
+                <? endif ?>
                 <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
-                               type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=autor]">
-                    <? endif ?>
+                    
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s',
                        $order, ($sort_by == 'nachname'))) ?>#autoren">
                        <?=_('Nachname, Vorname')?>
@@ -108,7 +110,7 @@
                     <?= Avatar::getAvatar($autor['user_id'], $autor['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
                     <?= $autor['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
-                        array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
+                        array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                     <? if ($user_id == $autor['user_id'] && $autor['visible'] == 'no') : ?>
                        (<?= _('unsichtbar') ?>)

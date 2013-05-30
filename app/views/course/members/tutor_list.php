@@ -44,11 +44,14 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=($rechte && $is_dozent) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ?
+                <? if($rechte && $is_dozent) : ?>
+                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                               type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]"></th>
+                <? endif ?>
+                <th colspan="2" <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
                     <? if ($rechte && $is_dozent) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
-                               type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]">
+                        
                     <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=tutor&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#tutoren">
@@ -75,7 +78,7 @@
                     <?= Avatar::getAvatar($tutor['user_id'], $tutor['username'])->getImageTag(Avatar::SMALL,
                             array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
                     <?= $tutor['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
-                        array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
+                        array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>

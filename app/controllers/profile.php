@@ -173,6 +173,7 @@ class ProfileController extends AuthenticatedController
         // show news on profile page
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
+
         if (($this->show_news = $this->profile->checkVisibility('news')) === true) {
             $this->profile_data = $about_data;
             $this->show_admin   = $show_admin;

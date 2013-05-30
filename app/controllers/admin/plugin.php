@@ -36,7 +36,7 @@ class Admin_PluginController extends AuthenticatedController
         // set page title and navigation
         PageLayout::setTitle(_('Verwaltung von Plugins'));
         Navigation::activateItem('/admin/config/plugins');
-
+        
         $this->plugin_admin = new PluginAdministration();
     }
 

@@ -181,6 +181,37 @@ jQuery(function ($) {
 
 });
 
+/* ------------------------------------------------------------------------
+ * Toggle dates in seminar_main
+ * ------------------------------------------------------------------------ */
+(function ($) {
+    $('.more-dates').live('click', function() {
+        $('.more-dates-infos').toggle();
+         $('.more-dates-digits').toggle();
+        if($('.more-dates-infos').is(':visible')) {
+            $('.more-dates').text('(weniger)');
+            $('.more-dates').attr('title', 'Blenden Sie die restlichen Termine aus');
+        } else {
+           
+            $('.more-dates').text('(mehr)');
+            $('.more-dates').attr('title', 'Blenden Sie die restlichen Termine ein');
+        }
+        
+    });
+    
+    $('.more-location-dates').live('click', function() {
+        $(this).closest('div').prev().toggle();
+        $(this).prev().toggle();
+        
+        if($(this).closest('div').prev().is(':visible')) {
+            $(this).text('(weniger)');
+            $(this).attr('title', 'Blenden Sie die restlichen Termine aus');
+        } else {
+            $(this).text('(mehr)');
+            $(this).attr('title', 'Blenden Sie die restlichen Termine ein');
+        }
+    });
+}(jQuery));
 
 /* ------------------------------------------------------------------------
  * only numbers in the input field

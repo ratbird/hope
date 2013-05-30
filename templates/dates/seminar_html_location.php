@@ -49,12 +49,26 @@ endforeach;
 <? elseif (sizeof($output) == 1) : ?>
     <?= array_pop(array_keys($output)) ?>
 <? else: ?>
-<table class="default" style="width: auto;">
-    <? foreach ($output as $room => $dates) : ?>
-    <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;"><?= $room ?></td>
-        <td style="padding: 0px;"><?= implode('<br>', $dates) ?></td>
-    </tr>
-    <? endforeach ?>
+<table class="default">
+  <? foreach ($output as $room => $dates) : ?>
+  <tr>
+    <td style="vertical-align: top"><?= $room ?></td>
+    <td>
+        <? $dates = implode('<br>', $dates)?>
+
+        <? if(strlen($dates) > 222) : ?>
+            <?= substr($dates, 0, 228)?>
+            <div class="more-location-dates-infos" style="display:none">
+                <?=$dates?>
+            </div>
+            <div>
+                <span class='more-location-digits'>...</span>
+                <a class="more-location-dates" style="cursor: pointer; margin-left: 3px">(mehr)</a>
+            </div>
+        <? else : ?>
+            <?= $dates ?>
+        <? endif ?>
+    </td>
+  <? endforeach ?>
 </table>
 <? endif ?>

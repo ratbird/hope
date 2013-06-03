@@ -65,7 +65,7 @@ class StudipAuthStandard extends StudipAuthAbstract {
         $this->dbv_auth->params[] = mysql_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
         if (!$db->next_record()){
-            $this->error_msg= _("Dieser Benutzername existiert nicht!") ;
+            $this->error_msg= _("Ungültige Benutzername/Passwort-Kombination!") ;
             return false;
         } elseif ($db->f("username") != $username) {
             $this->error_msg = _("Bitte achten Sie auf korrekte Gro&szlig;-Kleinschreibung beim Username!");

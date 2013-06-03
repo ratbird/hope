@@ -53,20 +53,26 @@ use Studip\Button, Studip\LinkButton;
                 <td>
                     <?= _('Automatisches Eintragen mit Nutzerstatus:') ?>
                 </td>
-                <td>
-                    <label>
-                        <input type="checkbox" name="rechte[]" value="dozent">
+             
+              
+            </tr>
+                  <?php foreach($userdomains as $domain):?>
+              <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                  <td> <?= htmlReady($domain['name']) ?></td>
+                   <td> <label>
+                        <input type="checkbox" name="rechte[<?= $domain['id']?>][]" value="dozent">
                         <?= _('Dozent') ?>
                     </label>
                     <label>
-                        <input type="checkbox" name="rechte[]" value="tutor">
+                        <input type="checkbox" name="rechte[<?= $domain['id']?>][]" value="tutor">
                         <?= _('Tutor') ?>
                     </label>
                     <label>
-                        <input type="checkbox" name="rechte[]" value="autor">
+                        <input type="checkbox" name="rechte[<?= $domain['id']?>][]" value="autor">
                         <?= _('Autor') ?>
                     </label>
                 </td>
+                    <?php endforeach;?>
             </tr>
         </tbody>
         <tfoot>
@@ -99,9 +105,14 @@ use Studip\Button, Studip\LinkButton;
                     <?= htmlReady($auto_sem['Name'])?>
                 </a>
             </td>
-            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'dozent', 'auto_sem' => $auto_sem)) ?>
-            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'tutor', 'auto_sem' => $auto_sem)) ?>
-            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'autor', 'auto_sem' => $auto_sem)) ?>
+                
+           
+         
+            
+        
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'dozent', 'auto_sem' => $auto_sem,'domains'=>$userdomains)) ?>
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'tutor', 'auto_sem' => $auto_sem,'domains'=>$userdomains)) ?>
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'autor', 'auto_sem' => $auto_sem,'domains'=>$userdomains)) ?>
             <td align="right">
                 <a href="<?=$controller->url_for('admin/autoinsert/delete')?>/<?= $auto_sem['seminar_id'] ?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Veranstaltung entfernen'), 'class' => 'text-top')) ?>

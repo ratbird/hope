@@ -20,7 +20,10 @@
 require_once 'app/controllers/authenticated_controller.php';
 
 // classes required for global-specification-settings
+require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
+require_once 'lib/classes/AutoInsert.class.php';
+require_once 'lib/classes/UserLookup.class.php';
 
 class Admin_AutoinsertController extends AuthenticatedController
 {
@@ -63,7 +66,21 @@ class Admin_AutoinsertController extends AuthenticatedController
                 $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
             }
         }
-        $this->auto_sems = AutoInsert::getAllSeminars();
+        $seminare = AutoInsert::getAllSeminars();
+        $this->auto_sems = $seminare;
+      
+        $domains = array();
+        $domains []=array(  'id'=>'keine',
+            'name'=>_('Ohne Domain'));
+        foreach(UserDomain::getUserDomains() as $domain){
+            $domains[] = array(
+                'id'=>$domain->getId(),
+                'name'=>$domain->getName());
+    }
+
+        $this->userdomains = $domains;
+        
+        
     }
 
     /**
@@ -73,14 +90,19 @@ class Admin_AutoinsertController extends AuthenticatedController
     {
         if (Request::submitted('anlegen')) {
             $sem_id = Request::option('sem_id');
-            $rechte = Request::getArray('rechte');
-            if (empty($rechte)) {
+            $domains = Request::getArray('rechte');
+            if (empty($domains)) {
                 $this->flash['error'] = _('Mindestens ein Status sollte selektiert werden!');
-            } elseif (!AutoInsert::checkSeminar($sem_id)) {
-                AutoInsert::saveSeminar($sem_id, $rechte);
+            } else {
+                foreach ($domains as $id => $rechte) {
+                    if ($id === 'keine') $id = '';
+                    if (!AutoInsert::checkSeminar($sem_id, $id)) {
+                        AutoInsert::saveSeminar($sem_id, $rechte, $id);
                 $this->flash['success'] = _('Die Zuordnung wurde erfolgreich gespeichert!');
             } else {
                 $this->flash['error'] = _('Das Seminar wird bereits zu diesem Zweck verwendet!');
+            }
+        }
             }
         }
         $this->redirect('admin/autoinsert');
@@ -93,9 +115,10 @@ class Admin_AutoinsertController extends AuthenticatedController
      * @param string $status
      * @param int $remove
      */
-    public function edit_action($seminar_id, $status, $remove = NULL)
+    public function edit_action($seminar_id,$domain, $status, $remove = NULL)
     {
-        AutoInsert::updateSeminar($seminar_id, $status, $remove);
+        if($domain === 'keine') $domain = '';
+        AutoInsert::updateSeminar($seminar_id,$domain, $status, $remove);
         $this->flash['success'] = _("Die Statusgruppenanpassung wurde erfolgreich übernommen!");
         $this->redirect('admin/autoinsert');
     }
@@ -202,6 +225,7 @@ class Admin_AutoinsertController extends AuthenticatedController
             'fachsemester' => _('Studienfachsemester'),
             'institut'     => _('Einrichtung'),
             'status'       => _('Statusgruppe'),
+            'domain'      =>_('Domäne')
         );
     }
 

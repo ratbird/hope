@@ -130,6 +130,7 @@ class Admin_UserController extends AuthenticatedController
                                    'email', 
                                    'status', 
                                    'authentifizierung', 
+                                   'domänen',
                                    'registriert seit', 
                                    'inaktiv seit');
                 $mapper = function ($u) {
@@ -139,6 +140,7 @@ class Admin_UserController extends AuthenticatedController
                                     $u['Email'], 
                                     $u['perms'], 
                                     $u['auth_plugin'], 
+                                    $u['userdomains'],
                                     strftime('%x', $u['mkdate']), 
                                     strftime('%x', $u['changed_timestamp']));
                 };
@@ -402,7 +404,15 @@ class Admin_UserController extends AuthenticatedController
             if (Request::get('new_userdomain', 'none') != 'none' && $editPerms[0] != 'root') {
                 $domain = new UserDomain(Request::get('new_userdomain'));
                 $domain->addUser($user_id);
+                $result = AutoInsert::instance()->saveUser($user_id);
+
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');
+                 foreach ($result['added'] as $item) {
+                    $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+            }
+                foreach ($result['removed'] as $item) {
+                    $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                }
             }
 
             //change datafields
@@ -648,6 +658,16 @@ class Admin_UserController extends AuthenticatedController
                     } else {
                         $details[] = _("Der Benutzer konnte nicht in die Nutzerdomäne eingetragen werden.");
                     }
+                    $result = AutoInsert::instance()->saveUser($user_id);
+
+
+
+                    foreach ($result['added'] as $item) {
+                        $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                }
+                    foreach ($result['removed'] as $item) {
+                        $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                    }
                 }
 
                 //get message
@@ -873,7 +893,18 @@ class Admin_UserController extends AuthenticatedController
         $domain_id = Request::get('domain_id');
         $domain = new UserDomain($domain_id);
         $domain->removeUser($user_id);
-        PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.')));
+        $result = AutoInsert::instance()->saveUser($user_id);
+
+        $details = array();
+
+        foreach ($result['added'] as $item) {
+            $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+        }
+        foreach ($result['removed'] as $item) {
+            $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+        }
+
+        PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.'), $details));
         $this->redirect('admin/user/edit/' . $user_id);
     }
 }

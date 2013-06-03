@@ -71,6 +71,10 @@ final class UserLookup
             'filter' => 'UserLookup::statusFilter',
             'values' => 'UserLookup::statusValues',
         ),
+        'domain'=>array(
+            'filter'    =>'UserLookup::domainFilter',
+            'values'    =>'UserLookup::domainValues'
+        )
     );
 
     /**
@@ -352,6 +356,21 @@ final class UserLookup
     {
         $result = self::arrayQuery("SELECT user_id FROM auth_user_md5 WHERE perms IN (??)", $needles);
         return $result->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    protected static function domainFilter($needles){
+   $result = self::arrayQuery("SELECT user_id FROM user_userdomains WHERE userdomain_id IN (??)", $needles);
+        return $result->fetchAll(PDO::FETCH_COLUMN);
+    }
+    protected static function domainValues(){
+     
+           $domains = array();
+        $domains ['keine']=_('Ohne Domain');
+        foreach(UserDomain::getUserDomains() as $domain){
+            $domains[$domain->getId()] = $domain->getName();
+        }
+       
+        return $domains;
     }
 
     /**

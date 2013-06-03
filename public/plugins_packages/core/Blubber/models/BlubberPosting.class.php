@@ -264,6 +264,7 @@ class BlubberPosting extends SimpleORMap {
      */
     public function delete() {
         $id = $this->getId();
+        $root_id = $this['root_id'];
         NotificationCenter::postNotification("PostingWillDelete", $this);
         foreach ((array) self::findBySQL("parent_id = ? ", array($id)) as $child_posting) {
             $child_posting->delete();
@@ -280,6 +281,17 @@ class BlubberPosting extends SimpleORMap {
                 "mkdate = UNIX_TIMESTAMP() " .
         "");
         $delete_stmt->execute(array('item_id' => $id));
+        if ($id !== $root_id) {
+            $thread = new BlubberPosting($root_id);
+            $thread['chdate'] = time();
+            $thread->store();
+        } else {
+            $delete_hashtags = DBManager::get()->prepare(
+                "DELETE FROM blubber_tags " .
+                "WHERE topic_id = :topic_id " .
+            "");
+            $delete_hashtags->execute(array('topic_id' => $id));
+        }
         return $success;
     }
 

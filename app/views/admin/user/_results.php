@@ -58,7 +58,7 @@ use Studip\Button, Studip\LinkButton;
                 $tooltxt .= "\n" .  _("Nutzer ist gesperrt!");
             }
             ?>
-           <?= tooltipicon(htmlReady($tooltxt, true, true), false, true) ?>
+           <?= tooltipicon($tooltxt) ?>
         </td>
         <td>
             <?= $user['perms'] ?>
@@ -102,7 +102,7 @@ use Studip\Button, Studip\LinkButton;
     <? endforeach ?>
 
     <tr class="table_footer">
-        <td colspan="10" align="right">
+        <td colspan="11" align="right">
             <?= Button::create(_('Löschen'), array('title' => _('Alle ausgewählten Benutzer löschen')))?>
             <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
         </td>

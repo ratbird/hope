@@ -245,7 +245,7 @@ function jsReady ($what, $target) {
     case "inline-double" :
         return htmlReady(addcslashes($what, "\\\"\n\r"), false, false, true);
     break;
-        
+
     }
     return addslashes($what);
 }
@@ -817,8 +817,7 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
 function tooltipIcon($text, $important = false, $html = false)
 {
     // prepare text
-    $text = preg_replace("/(\n\r|\r\n|\n|\r)/", " ", $text);
-    $text = ($html) ? $text : htmlReady($text);
+    $text = ($html) ? $text : htmlReady($text, true, true);
 
     // render tooltip
     $template = $GLOBALS['template_factory']->open('shared/tooltip');

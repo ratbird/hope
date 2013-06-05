@@ -132,7 +132,7 @@ class Course_MembersController extends AuthenticatedController {
 
 
         $this->sort_by = Request::option('sortby', 'nachname');
-        $this->order = Request::option('order', 'asc');
+        $this->order = Request::option('order', 'desc');
         $this->sort_status = Request::get('sort_status');
         $this->page = $page;
 

@@ -434,72 +434,9 @@ class AutoInsert {
         return $result > 0;
     }
 
-    /**
-     * Checks whether a user is already automatically registered for all
-     * seminars according to his status.
-     * PLEASE NOTE: The user <strong>will be registered</strong> in all seminars
-     * he's not yet registered in.
-     *
-     * @param  string $status  Current user status
-     * @param  string $user_id Id of the user
-     * @return array  List of all seminar names the user was registered in
-     */
-    public static function checkNewUser($status, $user_id) {
+ 
 
-        $seminars = self::getAllSeminars();
-        $added = array();
 
-        foreach ($seminars as $seminar) {
-
-            if (!self::checkUser($user_id, $seminar['seminar_id']))
-        {
-                if (self::saveUser($status, $user_id, $seminar))
-                {
-                   $added[] = $seminar['Name'];
-                }
-            }
-        }
-
-        return $added;
-    }
-
-    /**
-     * Checks whether a user is already automatically registered for all
-     * seminars according to his _changed_ status.
-     * PLEASE NOTE: The user <strong>will be registered</strong> in all seminars
-     * he's not yet registered in.
-     *
-     * @param  string $old_status Old user status
-     * @param  string $new_status Current user status
-     * @param  string $user_id    Id of the user
-     * @return array  List of all seminar names the user was registered in
-     */
-    public static function checkOldUser($old_status, $new_status, $user_id) {
-        if ($old_status == $new_status)
-    {
-            return array();
-        }
-
-        $seminars = self::getAllSeminars();
-        $added = array();
-
-        foreach ($seminars as $seminar) {
-            if (!self::checkUser($user_id, $seminar['seminar_id']))
-        {
-                if (self::saveUser($new_status, $user_id, $seminar))
-                {
-                    $added[] = $seminar['Name'];
-                }
-            }
-            elseif (self::checkUserStatus($user_id, $seminar['seminar_id']) == 'user')
-            {
-                self::updateUserStatus($user_id, $seminar['seminar_id']);
-                $added[] = $seminar['Name'];
-            }
-        }
-
-        return $added;
-    }
 
 }
 

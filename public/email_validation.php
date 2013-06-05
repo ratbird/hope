@@ -96,10 +96,10 @@ else if ($secret == $hash) {
         $message = MessageBox::success($success, $details);
 
         // Auto-Inserts
-        AutoInsert::checkNewUser('autor', $user->id);
+        AutoInsert::instance()->saveUser($user->id, "autor");
 
         $auth->logout();    // einen Logout durchführen, um erneuten Login zu erzwingen
-        
+
         $info = sprintf(_('Die Statusänderung wird erst nach einem erneuten %sLogin%s wirksam!<br>
                           Deshalb wurden Sie jetzt automatisch ausgeloggt.'),
                         '<a href="index.php?again=yes"><em>',

@@ -328,7 +328,7 @@ class StudipAuthAbstract {
         $this->dbv->params[] = $uid;
         $db = $this->dbv->get_query("view:AUTH_USER_UID");
         if ($db->next_record()) {
-            AutoInsert::checkNewUser($db->f("perms"), $uid);
+            AutoInsert::instance()->saveUser($uid, $db->f("perms"));
             return true;
         }
         return false;

@@ -366,9 +366,14 @@ class UserManagement
         $this->msg .= "msg§" . sprintf(_("BenutzerIn \"%s\" angelegt."), $newuser['auth_user_md5.username']) . "§";
 
         // Automated entering new users, based on their status (perms)
-        $result = AutoInsert::checkNewUser($this->user_data['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
-        foreach ($result as $item) {
+        $result = AutoInsert::instance()->saveUser($this->user_data['auth_user_md5.user_id'],$this->user_data['auth_user_md5.perms']);
+
+      //  $result = AutoInsert::checkNewUser($this->user_data['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
+        foreach ($result['added'] as $item) {
             $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+        }
+        foreach ($result['removed'] as $item) {
+            $this->msg .= "msg§".sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
         }
 
         // include language-specific subject and mailbody
@@ -378,7 +383,7 @@ class UserManagement
 
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
-        
+
         // add default visibility settings
         Visibility::createDefaultCategories($this->user_data['auth_user_md5.user_id']);
 
@@ -435,10 +440,10 @@ class UserManagement
             $query = "SELECT COUNT(*)
                       FROM seminar_user AS su
                           LEFT JOIN seminare AS s USING (Seminar_id)
-                      WHERE su.user_id = ? 
-                          AND s.status NOT IN (?) 
-                          AND su.status = 'dozent' 
-                          AND (SELECT COUNT(*) FROM seminar_user su2 WHERE Seminar_id = su.Seminar_id AND su2.status = 'dozent') = 1 
+                      WHERE su.user_id = ?
+                          AND s.status NOT IN (?)
+                          AND su.status = 'dozent'
+                          AND (SELECT COUNT(*) FROM seminar_user su2 WHERE Seminar_id = su.Seminar_id AND su2.status = 'dozent') = 1
                       GROUP BY user_id";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
@@ -514,11 +519,13 @@ class UserManagement
         $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";
 
         // Automated entering new users, based on their status (perms)
-        $result = AutoInsert::checkOldUser($old_perms, $newuser['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
-        foreach ($result as $item) {
+        $result = AutoInsert::instance()->saveUser( $this->user_data['auth_user_md5.user_id'],$newuser['auth_user_md5.perms']);
+        foreach ($result['added'] as $item) {
             $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
         }
-
+        foreach ($result['removed'] as $item) {
+            $this->msg .= "msg§".sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+        }
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
         $Zeit=date("H:i:s, d.m.Y",time());
@@ -942,7 +949,7 @@ class UserManagement
             $avatar->reset();
             $this->msg .= "info§" . _("Bild gel&ouml;scht.") . "§";
         }
-        
+
         // delete visibility settings
         Visibility::removeUserPrivacySettings($this->user_data['auth_user_md5.user_id']);
 

@@ -64,7 +64,6 @@ $start_pages = array(
                 </td>
             </tr>
         <? endif; ?>
-        <? if (Config::get()->SKIPLINKS_ENABLE): ?>
             <tr>
                 <td>
                     <label for="skiplinks_enable">
@@ -83,8 +82,6 @@ $start_pages = array(
                            <? if ($config->SKIPLINKS_ENABLE) echo 'checked'; ?>>
                 </td>
             </tr>
-        <? endif; ?>
-        <? if (Config::get()->ACCESSKEY_ENABLE): ?>
             <tr>
                 <td>
                     <label for="accesskey_enable">
@@ -106,7 +103,6 @@ $start_pages = array(
                            <? if ($config->ACCESSKEY_ENABLE) echo 'checked'; ?>>
                 </td>
             </tr>
-        <? endif; ?>
             <tr>
                 <td>
                     <label for="showsem_enable">

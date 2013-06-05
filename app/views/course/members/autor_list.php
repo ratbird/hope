@@ -71,14 +71,14 @@
                 <? endif ?>
                 <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    
+                    <? ($sort_status != 'autor') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s',
                        $order, ($sort_by == 'nachname'))) ?>#autoren">
                        <?=_('Nachname, Vorname')?>
                    </a>
                 </th>
                 <? if($rechte) :?>
-                <th <?= ($sort_by == 'mkdate' && $sort_status == 'tutor') ? sprintf('class="sort%s"', $order) : '' ?>>
+                <th <?= ($sort_by == 'mkdate' && $sort_status == 'autor') ? sprintf('class="sort%s"', $order) : '' ?>>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=autor&order=%s&toggle=%s',
                        $order, ($sort_by == 'mkdate'))) ?>#autoren">
                         <?= _('Anmeldedatum') ?>

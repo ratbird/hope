@@ -37,7 +37,7 @@
                 <? endif?>
                 <th colspan="<?=($rechte) ? 2: 3?>" <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
                 sprintf('class="sort%s"', $order) : '' ?>>
-                    
+                    <? ($sort_status != 'accepted') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=accepted&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#users">
                         <?=_('Nachname, Vorname')?>

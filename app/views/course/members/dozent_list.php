@@ -31,6 +31,7 @@
         </tr>
         <tr class="sortable">
             <th colspan="2" <?= ($sort_by == 'nachname' && $sort_status == 'dozent') ? sprintf('class="sort%s"', $order) : '' ?>>
+                <? ($sort_status != 'dozent') ? $order = 'desc' : $order = $order ?>
                 <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=dozent&order=%s&toggle=%s',
                         $order, ($sort_by == 'nachname'))) ?>">
                     <?=_('Nachname, Vorname')?>

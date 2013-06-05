@@ -45,6 +45,7 @@
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=user]"></th>
                 <? endif ?>
                 <th colspan="<?=$rechte ? 2 : 3?>" <?= ($sort_by == 'nachname' && $sort_status == 'user') ? sprintf('class="sort%s"', $order) : '' ?>>
+                    <? ($sort_status != 'user') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=user&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#users">
                         <?=_('Nachname, Vorname')?>

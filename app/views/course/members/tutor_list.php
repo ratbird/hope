@@ -53,6 +53,7 @@
                     <? if ($rechte && $is_dozent) : ?>
                         
                     <? endif ?>
+                    <? ($sort_status != 'tutor') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=tutor&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#tutoren">
                         <?=_('Nachname, Vorname')?>

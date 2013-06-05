@@ -42,6 +42,7 @@
                 </th>
                 <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == 'awaiting') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
+                    <? ($sort_status != 'awaiting') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status=awaiting&order=%s&toggle=%s',
                             $order, ($sort_by == 'position'))) ?>#awaiting">
                         <?= _('Position') ?>

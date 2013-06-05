@@ -11,7 +11,9 @@ use Studip\Button, Studip\LinkButton;
     <tr class="sortable">
         <th align="left" colspan="2" <?= ($sortby == 'username') ? 'class="sort' . $order . '"' : ''?>>
             <a href="<?=URLHelper::getLink('?sortby=username&order='.$order.'&toggle='.($sortby == 'username'))?>"><?=_("Benutzername")?></a>
-            <span style="font-size:smaller; font-weight:normal; color:#f8f8f8;">(<?=_("Sichtbarkeit")?>)</span>
+        </th>
+        <th>
+        &nbsp;
         </th>
         <th align="left" <?= ($sortby == 'perms') ? 'class="sort' . $order . '"' : ''?>>
             <a href="<?=URLHelper::getLink('?sortby=perms&order='.$order.'&toggle='.($sortby == 'perms'))?>"><?=_("Status")?></a>
@@ -47,10 +49,16 @@ use Studip\Button, Studip\LinkButton;
             <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $user['username'])) ?>" title="<?= _('Profil des Benutzers anzeigen')?>">
                 <?= $user['username'] ?>
             </a>
-            <?= ($user['locked'] == '1') ?
-                '<span style="font-size:smaller; color:red; font-weight:bold;">' . _(" gesperrt!") .'</span>' :
-                '<span style="font-size:smaller; color:#888;">('.$user['visible'].')</span>'
+        </td>
+        <td>
+            <?
+            $tooltxt = _("Sichtbarkeit:") . ' ' . $user['visible'];
+            $tooltxt .= "\n" . _("Domänen:") . ' ' . $user['userdomains'];
+            if ($user['locked'] == '1') {
+                $tooltxt .= "\n" .  _("Nutzer ist gesperrt!");
+            }
             ?>
+           <?= tooltipicon(htmlReady($tooltxt, true, true), false, true) ?>
         </td>
         <td>
             <?= $user['perms'] ?>

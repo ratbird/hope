@@ -125,33 +125,33 @@ class Admin_UserController extends AuthenticatedController
             if (is_array($this->users) && Request::submitted('export')) {
                 $tmpname = md5(uniqid('tmp'));
                 $captions = array('username',
-                                   'vorname', 
-                                   'nachname', 
-                                   'email', 
-                                   'status', 
-                                   'authentifizierung', 
+                                   'vorname',
+                                   'nachname',
+                                   'email',
+                                   'status',
+                                   'authentifizierung',
                                    'domänen',
-                                   'registriert seit', 
+                                   'registriert seit',
                                    'inaktiv seit');
                 $mapper = function ($u) {
                     return array( $u['username'],
                                     $u['Vorname'],
-                                    $u['Nachname'], 
-                                    $u['Email'], 
-                                    $u['perms'], 
-                                    $u['auth_plugin'], 
+                                    $u['Nachname'],
+                                    $u['Email'],
+                                    $u['perms'],
+                                    $u['auth_plugin'],
                                     $u['userdomains'],
-                                    strftime('%x', $u['mkdate']), 
+                                    strftime('%x', $u['mkdate']),
                                     strftime('%x', $u['changed_timestamp']));
                 };
                 if (array_to_csv(array_map($mapper, $this->users), $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
-                    $this->redirect(GetDownloadLink($tmpname, 'nutzer-export.csv', 4, 'force'));
+                    $this->redirect(GetDownloadLink($tmpname, 'nutzer-export.csv', 4));
                 }
             }
         }
         $this->userdomains = UserDomain::getUserDomains();
         $this->available_auth_plugins = UserModel::getAvailableAuthPlugins();
-        
+
         //show datafields search
         if ($advanced || $request['auth_plugins'] || $request['userdomains'] || count($search_datafields) > 0) {
             $this->advanced = true;
@@ -339,7 +339,7 @@ class Admin_UserController extends AuthenticatedController
                     if (strlen(Request::get('pass_1')) < 4) {
                         $details[] = _("Das Passwort ist zu kurz. Es sollte mindestens 4 Zeichen lang sein.");
                     } else {
-                        $um->changePassword(Request::get('pass_1'));                      
+                        $um->changePassword(Request::get('pass_1'));
                     }
                 } else {
                     $details[] = _("Bei der Wiederholung des Passwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Passwort ein!");
@@ -461,7 +461,7 @@ class Admin_UserController extends AuthenticatedController
             }
             //get message
             $umdetails = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
-            $details = array_reverse(array_merge((array)$details,(array)$umdetails));          
+            $details = array_reverse(array_merge((array)$details,(array)$umdetails));
             PageLayout::postMessage(MessageBox::info(_('Hinweise:'), $details));
         }
 
@@ -691,7 +691,7 @@ class Admin_UserController extends AuthenticatedController
         } else {
             $sql = "SELECT a.Institut_id, Name, b.Institut_id = b.fakultaets_id AS is_fak
                     FROM user_inst a
-                    LEFT JOIN Institute b USING (Institut_id) 
+                    LEFT JOIN Institute b USING (Institut_id)
                     WHERE a.user_id = ? AND a.inst_perms = 'admin'
                     ORDER BY is_fak, Name";
             $statement = DBManager::get()->prepare($sql);

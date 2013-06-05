@@ -139,12 +139,14 @@ class UserModel
                 }
             }
         }
-        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, uo.last_lifesign as changed_timestamp, ui.mkdate "
+        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, uo.last_lifesign as changed_timestamp, ui.mkdate, "
+                ." GROUP_CONCAT(DISTINCT uds.name) as userdomains "
                 ."FROM auth_user_md5 au "
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
                 ."LEFT JOIN user_online uo ON au.user_id = uo.user_id "
                 ."LEFT JOIN user_info ui ON (au.user_id = ui.user_id) "
                 ."LEFT JOIN user_userdomains uud ON (au.user_id = uud.user_id) "
+                ."LEFT JOIN userdomains uds USING (userdomain_id) "
                 ."WHERE 1 ";
 
         if ($username) {
@@ -203,6 +205,7 @@ class UserModel
                 $query .= "AND userdomain_id = " . $db->quote($userdomains) . " ";
             }
         }
+        $query .= " GROUP BY au.user_id ";
         //sortieren
         switch ($sort) {
             case "perms":
@@ -307,7 +310,7 @@ class UserModel
      */
     public static function convert($old_id, $new_id, $identity = false)
     {
-        NotificationCenter::postNotification('UserWillMigrate', $old_id, $new_id); 
+        NotificationCenter::postNotification('UserWillMigrate', $old_id, $new_id);
 
         $messages = array();
 
@@ -531,7 +534,7 @@ class UserModel
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 
-        NotificationCenter::postNotification('UserDidMigrate', $old_id, $new_id); 
+        NotificationCenter::postNotification('UserDidMigrate', $old_id, $new_id);
 
         $messages[] = _('Dateien, Termine, Adressbuch, Nachrichten und weitere Daten wurden migriert.');
         return $messages;

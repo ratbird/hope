@@ -434,9 +434,7 @@ class IndexController extends StudipController
         $page = ForumEntry::getPostingPage($topic_id);
         URLHelper::addLinkParam('page', $page);
         
-        ForumPerm::check('remove_entry', $this->getId(), $topic_id);
-
-        if (ForumPerm::hasEditPerms($topic_id)) {
+        if (ForumPerm::hasEditPerms($topic_id) || ForumPerm::check('remove_entry', $this->getId(), $topic_id)) {
             $path = ForumEntry::getPathToPosting($topic_id);
             $topic  = array_pop($path);
             $parent = array_pop($path);

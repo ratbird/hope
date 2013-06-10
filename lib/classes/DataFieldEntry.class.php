@@ -41,7 +41,7 @@ abstract class DataFieldEntry
         $this->rangeID = $rangeID;
         $this->value = $value;
     }
-    
+
     function getDescription()
     {
         return $this->structure->getDescription();
@@ -113,7 +113,7 @@ abstract class DataFieldEntry
                     $parameters[':object_class'] = (int) $object_class;
                     break;
             }
-            $query = "SELECT a.*, content 
+            $query = "SELECT a.*, content
                       FROM datafields AS a
                       LEFT JOIN datafields_entries AS b
                         ON (a.datafield_id = b.datafield_id AND range_id = :range_id {$clause1})
@@ -370,7 +370,7 @@ abstract class DataFieldEntry
     {
         if(!trim($this->getValue()) && $this->structure->getIsRequired())
            return false;
-        else 
+        else
            return true;
     }
 
@@ -496,9 +496,9 @@ class DataFieldTextareaEntry extends DataFieldEntry
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
         $require = $this->structure->getIsRequired() ? "required" : "";
-        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58" %s>%s</textarea>', $field_name, $field_id, htmlReady($this->getValue()), $require);
+        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58" %s>%s</textarea>', $field_name, $field_id,  $require, htmlReady($this->getValue()));
     }
-   
+
 }
 
 class DataFieldEmailEntry extends DataFieldEntry
@@ -639,7 +639,7 @@ class DataFieldRadioEntry extends DataFieldSelectboxEntry
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
             $require = $this->structure->getIsRequired() ? "required" : "";
-            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s"%s %s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '', htmlReady($pval), $require)."</label>";
+            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s" %s %s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '',  $require, htmlReady($pval))."</label>";
         }
         return $ret;
     }

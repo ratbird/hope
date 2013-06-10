@@ -1,12 +1,12 @@
 /* An enhanced style for the forum, Web 2.0 - like*/
 /* mixins */
-@media screen and (min-width: 401px) {
+@media screen and (min-width: 801px) {
   #forum .small_screen,
   #forum .searchbar {
     display: none;
   }
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 800px) {
   #forum .large_screen {
     display: none;
   }
@@ -79,6 +79,9 @@
     margin: 0px;
     padding: 0px;
   }
+  html.forum #layout_sidebar {
+    display: none ! important;
+  }
 }
 @media print {
   #forum .searchbar,
@@ -93,9 +96,6 @@
   #forum div.postbody {
     width: 100%;
   }
-}
-#layout_content {
-  width: 100%;
 }
 .ui-dialog {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
@@ -297,9 +297,6 @@ html.no-js #forum .js {
 #forum div.postbody .content {
   overflow: hidden;
   clear: both;
-}
-#forum div.postbody .content:hover {
-  overflow: visible;
 }
 #forum p.author {
   margin: 2px 0px 8px 0px;

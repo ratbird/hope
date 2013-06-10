@@ -28,18 +28,19 @@
     background-color: white;
     .border-radius(0 0 2px 2px);
     margin: 0;
-    display: table;
-    width: 100%;
 }
 #layout_container > div {
-    display: table-row;
+    position: relative;
 }
 
 #layout_content {
     // Without the +1 zooming out would break the layout (weird behaviour, i know)
-    display: table-cell;
     padding: 12px;
     vertical-align: top;
+}
+
+#layout_content.with_sidebar {
+    padding: 12px 285px 12px 12px;
 }
 
 #layout_sidebar {
@@ -47,8 +48,9 @@
     border-left: 1px dashed @brand-color-darker;
     max-width: @infobox-width;
     width: @infobox-width;
-    position: relative;
-    display: table-cell;
+    position: absolute;
+    top: 0px;
+    right: 0px;
     vertical-align: top;
     padding: 12px;
 }

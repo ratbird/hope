@@ -676,24 +676,25 @@ table.tree .centered table {
   -moz-border-radius: 0 0 2px 2px;
   border-radius: 0 0 2px 2px;
   margin: 0;
-  display: table;
-  width: 100%;
 }
 #layout_container > div {
-  display: table-row;
+  position: relative;
 }
 #layout_content {
-  display: table-cell;
   padding: 12px;
   vertical-align: top;
+}
+#layout_content.with_sidebar {
+  padding: 12px 285px 12px 12px;
 }
 #layout_sidebar {
   background: inherit;
   border-left: 1px dashed #1e3e70;
   max-width: 250px;
   width: 250px;
-  position: relative;
-  display: table-cell;
+  position: absolute;
+  top: 0px;
+  right: 0px;
   vertical-align: top;
   padding: 12px;
 }
@@ -3068,6 +3069,30 @@ img.bookable_rooms_action {
   margin-left: 20px;
   margin-right: 20px;
   overflow-x: auto;
+  padding: 3px;
+}
+.code_header {
+  text-transform: uppercase;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 3px;
+  background: #eee none;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  font-weight: bold;
+}
+code.code_content {
+  overflow: auto;
+  display: block;
+  white-space: nowrap;
+  max-height: 300px;
+  background: #eee none;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+  margin-left: 20px;
+  margin-right: 20px;
   padding: 3px;
 }
 .semtree li {

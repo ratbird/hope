@@ -31,10 +31,6 @@
     <? include 'lib/include/header.php' ?>
 
         <div id="layout_container"><div>
-          <div id="layout_content">
-            <?= implode(PageLayout::getMessages()) ?>
-            <?= $content_for_layout ?>
-          </div>
           <? if ($infobox) : ?>
           <div id="layout_sidebar">
               <div id="layout_infobox">
@@ -42,6 +38,10 @@
               </div>
           </div>
           <? endif ?>
+          <div id="layout_content" <?= $infobox ? 'class="with_sidebar"' : '' ?>>
+            <?= implode(PageLayout::getMessages()) ?>
+            <?= $content_for_layout ?>
+          </div>
         </div></div>
     </div> <? // Closes #layout_page opened in included templates/header.php ?>
 

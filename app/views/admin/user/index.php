@@ -117,11 +117,13 @@ use Studip\Button, Studip\LinkButton;
                         <input type="radio" name="<?= $datafield->getID()?>" value="0" <?= ($user[$datafield->getID()] === "0") ? 'checked' : '' ?>>
                         <?= _('nein') ?>
                     </label>
-                <? elseif ($datafield->getType() == 'selectbox') : ?>
+                <? elseif ($datafield->getType() == 'selectbox' || $datafield->getType() == 'radio') : ?>
+                    <? $datafield_entry = DataFieldEntry::createDataFieldEntry($datafield);?>
                     <select name="<?= $datafield->getID()?>">
-                        <option value="alle"><?= _('alle') ?></option>
-                        <? foreach (array_map('trim', explode("\n", $datafield->getTypeParam())) as $entry) :?>
-                        <option value="<?= $entry ?>" <?= ($user[$datafield->getID()] == $entry) ? 'selected' : '' ?>><?= htmlReady($entry) ?></option>
+                        <option value="---ignore---"><?= _('alle') ?></option>
+                        <? foreach ($datafield_entry->type_param as $pkey => $pval) :?>
+                        <? $value = $datafield_entry->is_assoc_param ? (string) $pkey : $pval; ?>
+                        <option value="<?= $value ?>" <?= ($user[$datafield->getID()] === $value) ? 'selected' : '' ?>><?= htmlReady($pval) ?></option>
                         <? endforeach ?>
                     </select>
                 <? else : ?>

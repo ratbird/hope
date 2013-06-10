@@ -84,7 +84,7 @@ class Admin_UserController extends AuthenticatedController
         //Datafields
         $datafields = DataFieldStructure::getDataFieldStructures("user");
         foreach ($datafields as $datafield) {
-            if ($this->perm->have_perm($datafield->getViewPerms())) {
+            if ($datafield->accessAllowed($this->perm)) {
                 $this->datafields[] = $datafield;
             }
         }
@@ -93,8 +93,8 @@ class Admin_UserController extends AuthenticatedController
         if (isset($request)) {
             //suche mit datafields
             foreach ($datafields as $id => $datafield) {
-                if (($request[$id] || ($datafield->getType() == 'bool' && strlen($request[$id]) > 0))
-                    && ($datafield->getType() != 'selectbox' && $request[$id] != 'alle')) {
+                if (strlen($request[$id]) > 0
+                    && !(in_array($datafield->getType(), words('selectbox radio')) && $request[$id] === '---ignore---')) {
                     $search_datafields[$id] = $request[$id];
                 }
             }
@@ -474,7 +474,7 @@ class Admin_UserController extends AuthenticatedController
         $this->institutes = UserModel::getUserInstitute($user_id);
         $this->available_institutes = Institute::getMyInstitutes();
         $this->datafields = DataFieldStructure::getDataFieldStructures("user");
-        $this->userfields = DataFieldEntry::getDataFieldEntries($user_id);
+        $this->userfields = DataFieldEntry::getDataFieldEntries($user_id, 'user');
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);
         if (LockRules::CheckLockRulePermission($user_id) && LockRules::getObjectRule($user_id)->description) {
             PageLayout::postMessage(MessageBox::info(formatLinks(LockRules::getObjectRule($user_id)->description)));

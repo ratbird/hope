@@ -304,7 +304,7 @@ class ModulesNotification extends Modules {
                     if ($sem_class['studygroup_mode']) {
                         $redirect = '&redirect_to=dispatch.php/course/studygroup/members/';
                     } else {
-                        $redirect = '&redirect_to=dispatch.php/course/member/index';
+                        $redirect = '&redirect_to=dispatch.php/course/members/index';
                     }
                     $icon = "icons/16/blue/persons.png";
                 }

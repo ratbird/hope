@@ -170,6 +170,10 @@ html.no-js #forum .js {
 #forum table.forum td.areaentry > div {
   height: 50px;
   overflow: hidden;
+  word-break: break-word;
+}
+#forum table.forum td.areaentry .areaname {
+  min-width: 100px;
 }
 #forum table.forum td.selected {
   background-color: #ffffcc;

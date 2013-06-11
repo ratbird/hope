@@ -931,7 +931,7 @@ class Seminar
             return TRUE;
         }
     }
-    
+
     function cancelSingleDate($date_id, $cycle_id = '')
     {
         if ($cycle_id) {
@@ -2185,12 +2185,12 @@ class Seminar
         // Alle weiteren Postings zu diesem Seminar in den Forums-Modulen löschen
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
             $plugin->deleteContents($s_id);  // delete content irrespective of plugin-activation in the seminar
-            
+
             if ($plugin->isActivated($s_id)) {   // only show a message, if the plugin is activated, to not confuse the user
                 $this->createMessage(sprintf(_('Einträge in %s archiviert.'), $plugin->getPluginName()));
             }
-        }        
-            
+        }
+
 
         // Alle Dokumente zu diesem Seminar loeschen.
         if (($db_ar = delete_all_documents($s_id)) > 0) {
@@ -2453,7 +2453,8 @@ class Seminar
             $statement = DBManager::get()->prepare($query);
 
             foreach($todelete as $inst) {
-                log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde gelöscht.');
+                $tmp_instname= get_object_name($inst, 'inst');
+                log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung "'. $tmp_instname['name'] .'" wurde gelöscht.');
                 $statement->execute(array($this->id, $inst));
             }
 
@@ -2463,7 +2464,8 @@ class Seminar
             $statement = DBManager::get()->prepare($query);
 
             foreach($toinsert as $inst) {
-                log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
+                $tmp_instname= get_object_name($inst, 'inst');
+                log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung "'. $tmp_instname['name'] .'" wurde hinzugefügt.');
                 $statement->execute(array($this->id, $inst));
             }
             if ($todelete || $toinsert) {
@@ -2485,7 +2487,7 @@ class Seminar
      */
     public function addMember($user_id, $status = 'autor', $force = false)
     {
-        
+
         if (in_array(get_global_perm($user_id), array("admin", "root"))) {
             $this->createError(_("Admin und Root dürfen nicht Mitglied einer Veranstaltung sein."));
             return false;
@@ -2502,7 +2504,7 @@ class Seminar
             "");
             $user_institute_stmt->execute(array('user_id' => $user_id));
             $user_institute = $user_institute_stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-            
+
             if (!in_array($this->institut_id, $user_institute) && !count(array_intersect($user_institute, $this->getInstitutes()))) {
                 $this->createError(_("Einzutragender Nutzer stammt nicht einem beteiligten Institut an."));
 
@@ -2585,7 +2587,7 @@ class Seminar
                                    get_title_for_status('dozent', 1, $this->status)) .
                                    ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
             }
-            
+
             return false;
         }
     }
@@ -2621,7 +2623,7 @@ class Seminar
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
                     "<i>".htmlReady(get_fullname($user_id))."</i>"));
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
- 
+
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),

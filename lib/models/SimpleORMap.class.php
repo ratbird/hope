@@ -608,6 +608,38 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * clean up references after cloning
+     *
+     *
+     */
+    function __clone()
+    {
+        //all references link still to old object => reset all aliases
+        foreach ($this->alias_fields as $alias => $field) {
+            if (isset($this->db_fields[$field])) {
+                $content_value = $this->content[$field];
+                $content_db_value = $this->content_db[$field];
+                unset($this->content[$alias]);
+                unset($this->content_db[$alias]);
+                unset($this->content[$field]);
+                unset($this->content_db[$field]);
+                $this->content[$field] = $content_value;
+                $this->content_db[$field] = $content_db_value;
+                $this->content[$alias] =& $this->content[$field];
+                $this->content_db[$alias] =& $this->content_db[$field];
+            }
+        }
+        //unset all relations for now
+        //TODO: maybe a deep copy of all belonging objects is more appropriate
+        foreach(array('has_many', 'belongs_to', 'has_one', 'has_and_belongs_to_many') as $type) {
+            foreach (array_keys($this->{$type}) as $one) {
+                $this->relations[$one] = null;
+            }
+        }
+        //begun the clone war has... hmpf
+    }
+
+    /**
      * try to determine all needed options for a relationship from
      * configured options
      *

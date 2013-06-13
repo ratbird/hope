@@ -81,6 +81,7 @@ class exportController extends AuthenticatedController {
         $this->savelink = $this->url_for("export/save/" . $export->template . $export->getParamString());
 
         if ($export->isEditable()) {
+            $this->templates = array();
             foreach ($export->getSavedTemplates() as $template) {
                 $tmp['delete'] = $this->url_for("export/removeTemplate/" . $template->id . $this->argstring);
                 $tmp['export'] = $this->url_for("export/exportTemplate", $template->id);

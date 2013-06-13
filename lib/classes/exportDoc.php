@@ -61,7 +61,7 @@ class exportDoc extends SimpleORMap {
     private $isEditable;
     private $xml;
 
-    public function __construct($id) {
+    public function __construct($id = null) {
         $this->db_table = 'export_templates';
         parent::__construct($id);
         if ($this->isNew()) {

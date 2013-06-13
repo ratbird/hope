@@ -1,7 +1,4 @@
 <?php
-
-set_time_limit();
-
 class Exportapi extends Migration {
 
     function description() {

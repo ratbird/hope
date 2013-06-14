@@ -7,7 +7,7 @@
         <td>
             <? foreach ($templates as $template): ?>
                 <a href="<?= $template['export'] ?>">
-                    <?= Assets::img("icons/16/blue/file-".$template['format'].".png") ?>
+                    <?= Assets::img("icons/16/blue/export/file.png") ?>
                     <?= $template['name'] ?>
                 </a>
             <a href='<?= $template['delete'] ?>' ><?= Assets::img('icons/12/blue/decline.png') ?></a>

@@ -23,7 +23,7 @@
             >
                 <a href="<?= URLHelper::getLink('?filter=all') ?>">a-z</a>
                 <a href="<?= URLHelper::getLink('contact_export.php?groupid=all') ?>">
-                    <?= Assets::img('icons/16/blue/vcard', tooltip2(_('Alle Einträge als vCard exportieren'))) ?>
+                    <?= Assets::img('icons/16/blue/export/vcard', tooltip2(_('Alle Einträge als vCard exportieren'))) ?>
                 </a>
             </td>
         <? for ($i = 0, $chr = 'a'; $i++ < 26; $chr++): ?>

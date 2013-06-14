@@ -31,7 +31,7 @@
 
     <? if ($open || $contact['view'] == 'gruppen'): ?>
         <li>
-            <?= Assets::img('icons/16/blue/vcard') ?>
+            <?= Assets::img('icons/16/blue/export/vcard') ?>
             <?= _('als vCard exportieren') ?>
         </li>
     <? endif; ?>

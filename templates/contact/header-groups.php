@@ -17,7 +17,7 @@
                 <?= _('Alle Gruppen') ?>
             </a>
             <a href="<?= URLHelper::getLink('?groupid=all')?>">
-                <?= Assets::img('icons/16/blue/vcard', tooltip2(_('Alle Einträge als vCard exportieren'))) ?>
+                <?= Assets::img('icons/16/blue/export/vcard', tooltip2(_('Alle Einträge als vCard exportieren'))) ?>
             </a>
         </td>
     <? foreach ($groups as $group_id => $name): ?>
@@ -32,7 +32,7 @@
                 <?= Assets::img('icons/16/blue/mail', tooltip2(_('Nachricht an alle Personen dieser Gruppe schicken'))) ?>
             </a>
             <a href="<?= URLHelper::getLink('contact_export.php', array('groupid' => $group_id)) ?>">
-                <?= Assets::img('icons/16/blue/vcard', tooltip2(_('Diese Gruppe als vCard exportieren'))) ?>
+                <?= Assets::img('icons/16/blue/export/vcard', tooltip2(_('Diese Gruppe als vCard exportieren'))) ?>
             </a>
         <? endif; ?>
         </td>

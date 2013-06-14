@@ -731,7 +731,7 @@ if ($termin_id) {
     } else {
         $info_box['export_link'] = URLHelper::getLink('', array('cmd' => 'export', 'expmod' => 'exp_direct', 'termin_id' => $_calendar->event->getId()));
     }
-    $info_box['export'] = array('icon' => 'icons/16/black/date.png',
+    $info_box['export'] = array('icon' => 'icons/16/black/export/date.png',
         'text' => sprintf(_("Diesen Termin einzeln %sexportieren%s."), "<a href=\"{$info_box['export_link']}\">", "</a>"));
 }
 

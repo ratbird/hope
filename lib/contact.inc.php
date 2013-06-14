@@ -520,7 +520,7 @@ function ShowContact ($contact_id)
                         . $calstatus . $buddy
                         . '<a href="' . URLHelper::getLink('', array('edit_id' => $contact_id)) . '">' . Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Editieren'))) . '</a> '
                         . '<a href="' . URLHelper::getLink('contact_export.php', array('contactid' => $contact_id)) . '">'
-                        .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Als vCard exportieren")))
+                        .  Assets::img('icons/16/blue/export/vcard.png', array('class' => 'text-top', 'title' => _("Als vCard exportieren")))
                         . ' <a href="' . URLHelper::getLink('', array('view' => $view, 'cmd' => 'delete', 'contact_id' => $contact_id, 'open' => $open)) . '">'
                         .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Kontakt löschen")))
                         . ' </a></td></tr>'

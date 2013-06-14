@@ -70,7 +70,7 @@ if (ForumPerm::has('abo', $seminar_id)) {
 
 if (ForumPerm::has('pdfexport', $seminar_id)) {
     $eintraege[] = array(
-        'icon' => 'icons/16/black/link-intern.png',
+        'icon' => 'icons/16/black/export/file-pdf.png',
         'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'">' . _('Beiträge als PDF exportieren') .'</a>'
     );
 }

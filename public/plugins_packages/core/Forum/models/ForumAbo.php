@@ -104,21 +104,32 @@ class ForumAbo {
 
             // create subject and content
             setTempLanguage(get_userid($user_id));
-            $title = implode(' >> ', ForumEntry::getFlatPathToPosting($topic_id));
-            
-            $subject = addslashes(_('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag')));
-            $message = addslashes($template->render(compact('user_id', 'topic', 'path')));
-            restoreLanguage();
             
             // check if user wants an email for selected messages only
             $force_email = false;
             if ($messaging->user_wants_email($user_id) == 3) {
                 $force_email = true;
             }
+            $parent_id = ForumEntry::getParentTopicId($topic['topic_id']);
 
-            // #TODO: why ist $db->quote not working here?
-            $messaging->insert_message($message, get_username($user_id),
-                "____%system%____", false, false, false, false, $subject, $force_email);
+            PersonalNotifications::add(
+                $user_id,
+                UrlHelper::getUrl(
+                    'plugins.php/coreforum/index/index/'.$parent_id,
+                    array('cid' => $topic['seminar_id']),
+                    true
+                ),
+                sprintf(_("%s hat einen Beitrag geschrieben"), $topic['author']),
+                "forumposting_".$topic['topic_id'],
+                Assets::image_path("icons/40/blue/forum.png")
+            );
+            if ($force_email) {
+                $title = implode(' >> ', ForumEntry::getFlatPathToPosting($topic_id));
+                $subject = addslashes(_('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag')));
+                $message = addslashes($template->render(compact('user_id', 'topic', 'path')));
+                StudipMail::sendMessage(User::find($user_id)->email, $subject, $message);
+            }
+            restoreLanguage();
         }
         
         $messaging->bulkSend();

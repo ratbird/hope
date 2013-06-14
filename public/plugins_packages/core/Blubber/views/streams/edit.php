@@ -75,7 +75,7 @@ table.select td.selected {
     <tbody>
         <tr>
             <th colspan="3">
-                <h3><?= _("Pool") ?></h3>
+                <h3><?= _("Sammlung") ?></h3>
                 <p class="info"><?= _("Definiere, welche Postings Dein Stream alle umfassen soll.") ?></p>
             </th>
         </tr>
@@ -142,8 +142,8 @@ table.select td.selected {
     <tbody>
         <tr>
             <th colspan="5">
-                <h3><?= _("Filter") ?></h3>
-                <p class="info"><?= _("Grenze den obigen Pool an Postings ein mit Filtermˆglichkeiten") ?></p>
+                <h3><?= _("Filterung") ?></h3>
+                <p class="info"><?= _("Grenze die oben definierte Sammlung an Postings ein mit Filtermˆglichkeiten") ?></p>
             </th>
         </tr>
         <tr>
@@ -272,11 +272,11 @@ $infobox = array(
         array(
             array(
                 "icon" => "icons/16/black/info",
-                "text" => _("Wenn man Blubber viel nutzt, kann der globale Blubberstream leicht mal un¸bersichtlich werden. Erstellen Sie einfach individuelle Blubberstreams. Beispielsweise alle privaten Postings Ihrer Buddies oder alle Postings mit gewissen Hashtags wie #opensource und #mathematik.")
+                "text" => _("Benutzerdefinierte Streams sind ideal, damit Sie genau die Blubber sehen, die Sie sehen wollen. F¸r Vielblubberer ein Muss.")
             ),
             array(
                 "icon" => "icons/16/black/activity",
-                "text" => _("Ein Blubberstream ist immer eine Kombination aus Sammlung von Blubbern (der Pool) und eine anschlieﬂende Filterung dieser Sammlung. Der Aufbau des Streams besteht also immer aus zwei Phasen, die Sie hier nebenstehend ¸bersichtlich definieren kˆnnen.")
+                "text" => _("Ein Blubberstream ist immer eine Kombination aus Sammlung von Blubbern und eine anschlieﬂende Filterung dieser Sammlung.")
             )
         )
     ),

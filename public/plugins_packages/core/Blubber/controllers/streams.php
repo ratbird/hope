@@ -766,13 +766,13 @@ class StreamsController extends ApplicationController {
         $stream['pool_hashtags'] = Request::get("pool_hashtags_check")
             ? preg_split("/\s+/", Request::get("pool_hashtags"), null, PREG_SPLIT_NO_EMPTY)
             : null;
-        if (is_array($this->stream['pool_hashtags'])) {
-            $this->stream['pool_hashtags'] = array_map(function ($tag) {
+        if (is_array($stream['pool_hashtags'])) {
+            $stream['pool_hashtags'] = array_map(function ($tag) {
                 while ($tag[0] === "#") {
                     $tag = substr($tag, 1);
                 }
                 return $tag;
-            }, $this->stream['pool_hashtags']);
+            }, $stream['pool_hashtags']);
         }
 
         //Filter-rules
@@ -788,24 +788,24 @@ class StreamsController extends ApplicationController {
         $stream['filter_hashtags'] = Request::get("filter_hashtags_check")
             ? preg_split("/\s+/", Request::get("filter_hashtags"), null, PREG_SPLIT_NO_EMPTY)
             : null;
-        if (is_array($this->stream['filter_hashtags'])) {
-            $this->stream['filter_hashtags'] = array_map(function ($tag) {
+        if (is_array($stream['filter_hashtags'])) {
+            $stream['filter_hashtags'] = array_map(function ($tag) {
                 while ($tag[0] === "#") {
                     $tag = substr($tag, 1);
                 }
                 return $tag;
-            }, $this->stream['filter_hashtags']);
+            }, $stream['filter_hashtags']);
         }
         $stream['filter_nohashtags'] = Request::get("filter_nohashtags_check")
             ? preg_split("/\s+/", Request::get("filter_nohashtags"), null, PREG_SPLIT_NO_EMPTY)
             : null;
-        if (is_array($this->stream['filter_nohashtags'])) {
-            $this->stream['filter_nohashtags'] = array_map(function ($tag) {
+        if (is_array($stream['filter_nohashtags'])) {
+            $stream['filter_nohashtags'] = array_map(function ($tag) {
                 while ($tag[0] === "#") {
                     $tag = substr($tag, 1);
                 }
                 return $tag;
-            }, $this->stream['filter_nohashtags']);
+            }, $stream['filter_nohashtags']);
         }
         
         $this->render_text($stream->fetchNumberOfThreads());

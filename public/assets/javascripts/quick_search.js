@@ -17,11 +17,14 @@ STUDIP.QuickSearch = {
         var form = {};   //the basic JSON-object that will be returned later
         jQuery(selector).find(':input[name]').each(function () {
             var name = jQuery(this).attr('name');   //name of the input
-            if (form[name]) {
-                //for double-variables (not arrays):
-                form[name] = form[name] + ',' + jQuery(this).val();
-            } else {
-                form[name] = jQuery(this).val();
+            var active = jQuery(this).attr("type") !== "checkbox" || jQuery(this).is(":checked");
+            if (active) {
+                if (form[name]) {
+                    //for double-variables (not arrays):
+                    form[name] = form[name] + ',' + jQuery(this).val();
+                } else {
+                    form[name] = jQuery(this).val();
+                }
             }
         });
         return form;

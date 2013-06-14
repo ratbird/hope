@@ -292,6 +292,26 @@ $UPLOAD_TYPES["attachments"] =
                                     )
                 );
 
+/* Set the allowed and prohibited file types for personal files (like in blubber-upload).
+*
+*  "type"=>"deny" means: only the listed "file_types" are allowed
+*  "type"=>"allow" means: all, but the listed "file_types" are allowed
+*
+*  "file_sizes" determines how much each user class can upload per file (multiple of 1 MB = 1048576 Bytes)
+*/
+
+$UPLOAD_TYPES["personalfiles"] =
+                array(  "type" => "allow",
+                        "file_types" => array ("exe"),
+                        "file_sizes" => array ( "root" => 7 * 1048576,
+                                    "admin" => 7 * 1048576,
+                                    "tutor" => 7 * 1048576,
+                                    "dozent" => 7 * 1048576,
+                                    "autor" => 7 * 1048576,
+                                    "nobody" => 0
+                                    )
+                );
+
 
 /*
 * define presets for the status-groups in courses (refers to the key of the $SEM_CLASS array above)

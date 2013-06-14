@@ -1048,8 +1048,12 @@ function validate_upload($the_file, $real_file_name='') {
             if (Request::option('cid')) {
                 $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
                 $active_upload_type = $SessSemName["art_num"];
+            } else {
+                $sem_status = $GLOBALS['perm']->get_perm();
+                $active_upload_type = "personalfiles";
             }
             if (!isset($UPLOAD_TYPES[$active_upload_type])) {
+                $sem_status = $GLOBALS['perm']->get_perm();
                 $active_upload_type = 'default';
             }
         }

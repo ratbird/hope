@@ -542,12 +542,10 @@ class StreamsController extends ApplicationController {
 
         foreach ($_FILES as $file) {
             $GLOBALS['msg'] = '';
-            if ($context_type === "course") {
-                validate_upload($file);
-                if ($GLOBALS['msg']) {
-                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
-                    continue;
-                }
+            validate_upload($file);
+            if ($GLOBALS['msg']) {
+                $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
+                continue;
             }
             if ($file['size']) {
                 $document['name'] = $document['filename'] = studip_utf8decode(strtolower($file['name']));

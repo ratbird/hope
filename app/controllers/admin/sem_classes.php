@@ -84,9 +84,7 @@ class Admin_SemClassesController extends AuthenticatedController
         $plugin_infos = PluginManager::getInstance()->getPluginInfos("StandardPlugin");
 
         foreach ($plugin_infos as $plugin_info) {
-            if (!$plugin_info['core']) {
-                $modules[$plugin_info['class']] = $plugin_info;
-            }
+            $modules[$plugin_info['class']] = $plugin_info;
         }
 
         $this->modules = $modules;

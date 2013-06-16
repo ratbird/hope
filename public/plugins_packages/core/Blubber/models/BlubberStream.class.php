@@ -333,12 +333,52 @@ class BlubberStream extends SimpleORMap {
     }
     
     protected function getMyCourses() {
+        $mandatory_classes = array();
+        $standard_classes = array();
+        $forbidden_classes = array();
+        $mandatory_types = array();
+        $standard_types = array();
+        $forbidden_types = array();
+        foreach (SemClass::getClasses() as $key => $class) {
+            if ($class->isModuleMandatory("Blubber")) {
+                $mandatory_classes[] = $key;
+            }
+            if ($class->isSlotModule("Blubber")) {
+                $standard_classes[] = $key;
+            }
+            if (!$class->isModuleAllowed("Blubber")) {
+                $forbidden_classes[] = $key;
+            }
+        }
+        foreach (SemType::getTypes() as $key => $type) {
+            if (in_array($type['class'], $mandatory_classes)) {
+                $mandatory_types[] = $key;
+            }
+            if (in_array($type['class'], $standard_classes)) {
+                $standard_types[] = $key;
+            }
+            if (in_array($type['class'], $forbidden_classes)) {
+                $forbidden_types[] = $key;
+            }
+        }
         $statement = DBManager::get()->prepare(
-            "SELECT Seminar_id " .
+            "SELECT seminare.Seminar_id " .
             "FROM seminar_user " .
+                "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
+                "LEFT JOIN plugins_activated ON (plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
             "WHERE user_id = :me " .
+                "AND (".
+                    "seminare.status IN (:mandatory_types) " .
+                    "OR (plugins_activated.state = 'on') " .
+                    "OR (seminare.status IN (:standard_types) AND plugins_activated.state IS NULL) " .
+                ") " .
+                "AND seminare.status NOT IN (:forbidden_types) " .
         "");
-        $statement->execute(array('me' => $GLOBALS['user']->id));
+        $parameter = array('me' => $GLOBALS['user']->id);
+        $parameter['mandatory_types'] = count($mandatory_types) ? $mandatory_types : null;
+        $parameter['standard_types'] = count($standard_types) ? $standard_types : null;
+        $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : null;
+        $statement->execute($parameter);
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
     

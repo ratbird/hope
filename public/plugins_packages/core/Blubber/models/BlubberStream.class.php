@@ -340,10 +340,11 @@ class BlubberStream extends SimpleORMap {
         $standard_types = array();
         $forbidden_types = array();
         foreach (SemClass::getClasses() as $key => $class) {
+            $blubber_setting = $class->getModuleMetadata("Blubber");
             if ($class->isModuleMandatory("Blubber")) {
                 $mandatory_classes[] = $key;
             }
-            if ($class->isSlotModule("Blubber")) {
+            if ($class->isSlotModule("Blubber") or ($blubber_setting['activated'] && !$blubber_setting['sticky'])) {
                 $standard_classes[] = $key;
             }
             if (!$class->isModuleAllowed("Blubber")) {
@@ -366,18 +367,18 @@ class BlubberStream extends SimpleORMap {
             "FROM seminar_user " .
                 "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
                 "LEFT JOIN plugins_activated ON (plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
-            "WHERE user_id = :me " .
-                "AND (".
+            "WHERE seminar_user.user_id = :me " .
+                "AND (" .
                     "seminare.status IN (:mandatory_types) " .
                     "OR (plugins_activated.state = 'on') " .
-                    "OR (seminare.status IN (:standard_types) AND plugins_activated.state IS NULL) " .
+                    "OR (seminare.status IN (:standard_types) AND plugins_activated.state != 'off') " .
                 ") " .
                 "AND seminare.status NOT IN (:forbidden_types) " .
         "");
         $parameter = array('me' => $GLOBALS['user']->id);
         $parameter['mandatory_types'] = count($mandatory_types) ? $mandatory_types : null;
         $parameter['standard_types'] = count($standard_types) ? $standard_types : null;
-        $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : null;
+        $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : array(-1);
         $statement->execute($parameter);
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }

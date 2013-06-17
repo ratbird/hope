@@ -83,11 +83,12 @@ class StreamsController extends ApplicationController {
             $coursestream->filter_hashtags = array(Request::get("hash"));
         }
         $get_tags = DBManager::get()->prepare(
-            "SELECT DISTINCT blubber_tags.tag " .
+            "SELECT blubber_tags.tag " .
             "FROM blubber_tags " .
                 "INNER JOIN blubber ON (blubber.topic_id = blubber_tags.topic_id) " .
             "WHERE blubber.Seminar_id = :seminar_id " .
                 "AND context_type = 'course' " .
+            "GROUP BY blubber_tags.tag " .
             "ORDER BY SUM(1) DESC " .
         "");
         $get_tags->execute(array('seminar_id' => $_SESSION['SessionSeminar']));

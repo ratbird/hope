@@ -29,7 +29,7 @@ class BlubberPosting extends SimpleORMap {
      * @return string : formatted text
      */
     static public function format($text) {
-        StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, null, "BlubberPosting::markupHashtags");
+        StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, "", "BlubberPosting::markupHashtags");
         $output = formatReady($text);
         StudipFormat::removeStudipMarkup("blubberhashtag");
         return $output;
@@ -47,7 +47,7 @@ class BlubberPosting extends SimpleORMap {
         } else {
             $url = URLHelper::getLink("plugins.php/Blubber/streams/global", array('hash' => $matches[2]));
         }
-        return $matches[1].'<a href="'.$url.'" class="hashtag">#'.$markup->quote($matches[2]).'</a>';
+        return $matches[1].'<a href="'.$url.'" class="hashtag">#'.htmlReady($matches[2]).'</a>';
     }
 
     /**

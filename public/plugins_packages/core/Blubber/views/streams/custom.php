@@ -168,6 +168,10 @@ $infobox = array(
             array(
                 "icon" => "icons/16/black/person",
                 "text" => _("Erwähne jemanden mit @username oder @\"Vorname Nachname\". Diese Person wird dann speziell auf Deinen Blubber hingewiesen.")
+            ),
+            array(
+                "icon" => "icons/16/black/hash",
+                "text" => sprintf(_("Schreibe %s#Hashtags%s in Blubber und Kommentare."), '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => "hashtags")).'">', "</a>")
             )
         )
     )

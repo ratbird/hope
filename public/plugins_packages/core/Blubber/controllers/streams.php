@@ -82,6 +82,16 @@ class StreamsController extends ApplicationController {
             $this->search = "#".Request::get("hash");
             $coursestream->filter_hashtags = array(Request::get("hash"));
         }
+        $get_tags = DBManager::get()->prepare(
+            "SELECT DISTINCT blubber_tags.tag " .
+            "FROM blubber_tags " .
+                "INNER JOIN blubber ON (blubber.topic_id = blubber_tags.topic_id) " .
+            "WHERE blubber.Seminar_id = :seminar_id " .
+                "AND context_type = 'course' " .
+            "ORDER BY SUM(1) DESC " .
+        "");
+        $get_tags->execute(array('seminar_id' => $_SESSION['SessionSeminar']));
+        $this->tags = $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);
         $this->threads = $coursestream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];

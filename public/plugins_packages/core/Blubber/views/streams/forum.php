@@ -102,10 +102,29 @@ $infobox = array(
             array(
                 "icon" => "icons/16/black/person",
                 "text" => _("Erwähne jemanden mit @username oder @\"Vorname Nachname\". Diese Person wird dann speziell auf Deinen Blubber hingewiesen.")
+            ),
+            array(
+                "icon" => "icons/16/black/hash",
+                "text" => sprintf(_("Schreibe %s#Hashtags%s in Blubber und Kommentare."), '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => "hashtags")).'">', "</a>")
             )
         )
     )
 );
+if (count($tags) && $tags[0]) {
+    $text = "";
+    foreach ($tags as $tag) {
+        $text .= '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)).'">#'.htmlReady($tag).'</a> ';
+    }
+    $infobox[] = array(
+        "kategorie" => _("Tagwolke"),
+        "eintrag"   => array(
+            array(
+                'icon' => "icons/16/black/link-intern",
+                'text' => $text
+            )
+        )
+    );
+}
 $infobox = array(
     'picture' => CourseAvatar::getAvatar($course_id)->getURL(Avatar::NORMAL),
     'content' => $infobox

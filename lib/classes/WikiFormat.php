@@ -98,9 +98,9 @@ class WikiFormat extends StudipFormat
             $this->addMarkup(
                 $name,
                 $rule['start'],
-                $rule['end'],
+                $rule['end'] ? $rule['end'] : "",
                 $rule['callback'],
-                $rule['before'] ? $rule['before'] : null
+                $rule['before']
             );
         }
     }

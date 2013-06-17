@@ -33,7 +33,7 @@
             <?= Assets::img("icons/32/blue/group3", array('class' => "private")) ?>
             <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar")) ?>
         </div>
-        <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
+        <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady("#".$search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
     </div>
     <div id="context_selector_title" style="display: none;"><?= _("Kontext auswählen") ?></div>
     <div id="context_selector" style="display: none;">

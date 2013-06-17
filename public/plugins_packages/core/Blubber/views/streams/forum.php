@@ -26,7 +26,7 @@
         <input type="hidden" name="context_type" value="course" checked="checked">
         <input type="hidden" name="context" value="<?= $_SESSION['SessionSeminar'] ?>">
     </div>
-    <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= htmlReady($search) ?></textarea>
+    <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= $search ? htmlReady("#".$search) : "" ?></textarea>
 </div>
 
 <? if ($GLOBALS['user']->id === "nobody") : ?>

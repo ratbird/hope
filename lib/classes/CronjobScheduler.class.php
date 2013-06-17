@@ -71,7 +71,7 @@ class CronjobScheduler
      */
     public function registerTask($class_filename, $active = true)
     {
-        $filename = $GLOBALS['ABSOLUTE_PATH_STUDIP'] . $class_filename;
+        $filename = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $class_filename;
         if (!file_exists($filename)) {
             $message = sprintf('Task class file "%s" does not exist.', $class_filename);
             throw new InvalidArgumentException($message);

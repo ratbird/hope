@@ -334,9 +334,8 @@ function checkObjectModule($module)
 
     if ($SessSemName[1]) {
         $modules = new Modules();
-
-        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
-        if (!$sem_class->isSlotMandatory($module) && !$modules->checkLocal($module, $SessSemName[1])) {
+        $local_modules = $modules->getLocalModules($SessSemName[1], $SessSemName['class']);
+        if (!$local_modules[$module]) {
             throw new CheckObjectException(sprintf(_('Das Inhaltselement "%s" ist für dieses Objekt leider nicht verfügbar.'), ucfirst($module)));
         }
     }
@@ -2015,7 +2014,7 @@ function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance 
  *
  * @param int    $size             The raw filesize as integer
  * @param bool   $verbose          Use short or long unit names
- * @param int    $displayed_levels How many unit parts should be displayed 
+ * @param int    $displayed_levels How many unit parts should be displayed
  * @param String $glue             Text used to glue the different unit parts
  *                                 together
  * @return String The filesize in human readable form.
@@ -2034,7 +2033,7 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
         'ZB' => 'Zettabyte',
         'YB' => 'Yottabyte',
     );
- 
+
     $result = array();
     foreach ($units as $short => $long) {
         $remainder = $size % 1024;

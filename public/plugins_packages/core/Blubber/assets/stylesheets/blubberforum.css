@@ -60,6 +60,16 @@
 #blubber_threads.coursestream > li.thread .contextinfo, #blubber_threads.profilestream > li.thread .contextinfo  {
     display: none;
 }
+#blubber_threads > li.thread .additional_tags {
+    margin-top: 3px;
+    margin-bottom: 7px;
+}
+#blubber_threads > li.thread .additional_tags a {
+    color: #888888;
+}
+#blubber_threads > li.thread .additional_tags a:hover {
+    color: #FF3333;
+}
 #blubber_threads.globalstream {
     margin-left: 100px;
 }

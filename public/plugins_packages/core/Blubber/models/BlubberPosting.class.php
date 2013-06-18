@@ -187,6 +187,20 @@ class BlubberPosting extends SimpleORMap {
         parent::__construct($id);
     }
     
+    public function getTags() {
+        if ($this->isThread()) {
+            $get_tags = DBManager::get()->prepare(
+                "SELECT tag " .
+                "FROM blubber_tags " .
+                "WHERE topic_id = :id " .
+            "");
+            $get_tags->execute(array('id' => $this->getId()));
+            return $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);
+        } else {
+            return array();
+        }
+    }
+    
     protected function synchronizeHashtags() {
         if (!$this['root_id'] && !$this['parent_id']) {
             $this['root_id'] = $this->getId();

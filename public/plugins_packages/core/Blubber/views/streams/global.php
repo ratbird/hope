@@ -144,6 +144,11 @@
 
 <?
 
+$tagcloud = "";
+foreach ($favourite_tags as $tag) {
+    $tagcloud .= '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => $tag)).'">'.htmlReady("#". $tag).'</a> ';
+}
+
 $infobox = array(
     array("kategorie" => _("Informationen"),
           "eintrag"   =>
@@ -184,7 +189,16 @@ $infobox = array(
                 "text" => sprintf(_("Schreibe %s#Hashtags%s in Blubber und Kommentare."), '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => "hashtags")).'">', "</a>")
             )
         )
-    )
+    ),
+    array("kategorie" => _("Beliebte #Hashtags"),
+          "eintrag"   =>
+        array(
+            array(
+                "icon" => "icons/16/black/link-intern",
+                "text" => $tagcloud
+            )
+        )
+    ),
 );
 $infobox = array(
     'picture' => $assets_url . "/images/foam.png",

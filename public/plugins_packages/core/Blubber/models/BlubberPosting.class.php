@@ -248,7 +248,11 @@ class BlubberPosting extends SimpleORMap {
                 'tag' => $insert_tag
             ));
         }
-            
+        if (count(array_diff($current_tags, $old_hashtags)) or count(array_diff($old_hashtags, $current_tags))) {
+            $thread = BlubberPosting::find($this['root_id']);
+            $thread['chdate'] = time();
+            $thread->store();
+        }
     }
 
     /**

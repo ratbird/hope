@@ -54,6 +54,18 @@ class StreamsController extends ApplicationController {
             "WHERE statusgruppen.range_id = ".DBManager::get()->quote($GLOBALS['user']->id)." " .
             "ORDER BY name ASC " .
         "")->fetchAll(PDO::FETCH_ASSOC);
+        $get_tags = DBManager::get()->prepare(
+            "SELECT blubber_tags.tag " .
+            "FROM blubber_tags " .
+                "INNER JOIN blubber ON (blubber.root_id = blubber_tags.topic_id) " .
+            "WHERE blubber.mkdate >= :last_month " .
+                "AND blubber.context_type = 'public' " .
+            "GROUP BY blubber_tags.tag " .
+            "ORDER BY SUM(1) DESC " .
+            "LIMIT 50 " .
+        "");
+        $get_tags->execute(array('last_month' => time() - (86400 * 30)));
+        $this->favourite_tags = $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
     /**

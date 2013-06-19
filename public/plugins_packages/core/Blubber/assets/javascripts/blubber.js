@@ -161,22 +161,23 @@ STUDIP.Blubber = {
     /**
      * Inserts any new thread-postings in the correct order
      */
-    insertThread: function (posting_id, mkdate, comment) {
+    insertThread: function (posting_id, mkdate, content) {
         if (jQuery("#posting_" + posting_id).length) {
             if (jQuery("#posting_" + posting_id + " > .content_column textarea.corrector").length === 0) {
-                var new_version = jQuery(comment);
+                var new_version = jQuery(content);
                 jQuery("#posting_" + posting_id + " > .content_column .content").html(new_version.find(".content").html());
+                jQuery("#posting_" + posting_id + " > .content_column .tags").html(new_version.find(".tags").html());
                 new_version.remove();
             }
         } else {
             if (jQuery("#blubber_threads > li").length === 0) {
-                jQuery(comment).appendTo("#blubber_threads").hide().fadeIn();
+                jQuery(content).appendTo("#blubber_threads").hide().fadeIn();
             } else {
                 var already_inserted = false;
                 jQuery("#blubber_threads > li[id]").each(function (index, li) {
                     if (!already_inserted && jQuery(li).attr("mkdate") < mkdate) {
                         var top = jQuery(document).scrollTop();
-                        jQuery(comment).insertBefore(li).hide().fadeIn();
+                        jQuery(content).insertBefore(li).hide().fadeIn();
                         var comment_top = jQuery("#posting_" + posting_id).offset().top;
                         var height = jQuery("#posting_" + posting_id).height() +
                             + 15; //2 * padding + 1 für Border
@@ -188,7 +189,7 @@ STUDIP.Blubber = {
                     }
                 });
                 if (!already_inserted) {
-                    jQuery(comment).appendTo("#blubber_threads").hide().fadeIn();
+                    jQuery(content).appendTo("#blubber_threads").hide().fadeIn();
                 }
             }
         }

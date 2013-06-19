@@ -51,10 +51,7 @@ global
   $PERS_TERMIN_KAT,
   $record_of_study_templates,
   $SCM_PRESET,
-  $SEM_CLASS,
   $SEM_STATUS_GROUPS,
-  $SEM_TYPE,
-  $SEM_TYPE_MISC_NAME,
   $skip_page_3,
   $SMILE_SHORT,
   $SYMBOL_SHORT,
@@ -88,82 +85,12 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 2.3 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 2.4 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
-/*
-* "courses" in Stud.IP generally classified using two attributes:
-* class (roughly 'the category') and type
-* both can be configured below
-*/
-
-// Classes are used as configuration templates and categories
-
-$SEM_CLASS[1]=array("name"=>_("Lehre"),                     //the name of the class
-                    "compact_mode"=>FALSE,          //indicates, if all fields are used in the creation process or only the fields that are necessary for workgroups
-                    "workgroup_mode"=>FALSE,        //indicates, if the workgroup mode is used (to use different declarations)
-                    "only_inst_user"=>TRUE,         //indicates, that olny staff from the Einrichtungen which own the Veranstaltung, are allowed for tutor and dozent
-                    "turnus_default"=>0 ,       //indicates, whether the turnus field is default set to "regulary" (0), "not regulary" (1) or "no dates" (-1) in the creation process
-                    "default_read_level"=>1,        //the default read acces level. "without signed in" (0), "signed in" (1), "password" (2)
-                    "default_write_level" =>1,      //the default write acces level. "without signed in" (0), "signed in" (1), "password" (2)
-                    "bereiche"=>TRUE,           //indicates, if bereiche should be used
-                    "show_browse"=>TRUE,            //indicates, if the hierachy-system should be shown in the search-process
-                    "write_access_nobody"=>FALSE,       //indicates, if write access level 0 is possible. If this is not possibly, don't set default_write_level to 0
-                    "topic_create_autor"=>FALSE,        //indicates, if global autor is allowed to create topic in the forums
-                    "visible"=>TRUE,            //indicates, if the seminar is visible throughout the systems, if FALSE, it is hidden!
-                    "course_creation_forbidden" => FALSE, //indicates if it is allowed to create courses of this class
-                    //modules, select the active modules for this class
-                    "forum"=>TRUE,              //forum, this module is stud_ip core; always available
-                    "documents"=>TRUE,          //documents, this module is stud_ip core; always available
-                    "schedule"=>TRUE,           //schedule, this module is stud_ip core; always available
-                    "participants"=>TRUE,           //participants, this module is stud_ip core; always available
-                    "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
-                    "literature"=>TRUE,         //literature, this module is stud_ip core; always available
-                    "wiki"=>TRUE,               //wikiwiki-web, this module is stud_ip core; always available
-                    "admission_prelim_default" => 0,     //default for direct (0) or provisional(1) entry
-                    "admission_type_default" => 0,     //default for participant restriction type (0 = none, 1 = chronological, 2 = by lots, 3 = locked)
-                    //descriptions
-                    "description"=>_("Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen"),                      //the description
-                    "create_description"=>_("Verwenden Sie diese Kategorie, um normale Lehrveranstaltungen anzulegen"));        //the description in the creation process
-
-$SEM_CLASS[2]=array("name"=>_("Organisation"),
-                    "compact_mode"=>TRUE,
-                    "workgroup_mode"=>TRUE,
-                    "only_inst_user"=>FALSE,
-                    "turnus_default"=>-1,
-                    "default_read_level"=>2,
-                    "default_write_level" =>2,
-                    "show_browse"=>TRUE,
-                    "visible"=>TRUE,
-                    "forum"=>TRUE,
-                    "documents"=>TRUE,
-                    "schedule"=>TRUE,
-                    "participants"=>TRUE,
-                    "scm"=>FALSE,
-                    "literature"=>TRUE,
-                    "wiki"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
-                    "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
-
-$SEM_CLASS[3]=array("name"=>_("Community"),
-                    "compact_mode"=>TRUE,
-                    "only_inst_user"=>FALSE,
-                    "turnus_default"=>-1,
-                    "default_read_level"=>1,
-                    "default_write_level" =>1,
-                    "show_browse"=>TRUE,
-                    "write_access_nobody"=>TRUE,
-                    "visible"=>TRUE,
-                    "forum"=>TRUE,
-                    "documents"=>TRUE,
-                    "schedule"=>TRUE,
-                    "scm"=>FALSE,
-                    "participants"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen"),
-                    "create_description"=>_("Wenn Sie Veranstaltungen als Diskussionsgruppen zu unterschiedlichen Themen anlegen m&ouml;chten, verwenden Sie diese Kategorie"));
-
-// more classes can be added below (please adhere exactly to the structure given above)
-
+/* $SEM_CLASS and $SEM_TYPE configuration moved to database
+=> Admin/Global settings/Course categories
+----------------------------------------------------------------*/
 
 // define default names for status groups
 $DEFAULT_TITLE_FOR_STATUS = array(
@@ -175,36 +102,6 @@ $DEFAULT_TITLE_FOR_STATUS = array(
     'accepted' => array(_('Vorläufig akzeptierte TeilnehmerIn'),
                         _('Vorläufig akzeptierte TeilnehmerInnen')));
 
-/*
-name the allowed course-types and assign them to one of the above classes
-alternative titles for members can be specified within each type (see example below)
-*/
-$SEM_TYPE_MISC_NAME=_("sonstige"); //this name is replaced by the common name (=course)
-$SEM_TYPE[1]=array("name"=>_("Vorlesung"), "class"=>1);
-$SEM_TYPE[2]=array("name"=>_("Seminar"),  "class"=>1);
-$SEM_TYPE[3]=array("name"=>_("Übung"),  "class"=>1);
-$SEM_TYPE[4]=array("name"=>_("Praktikum"), "class"=>1);
-$SEM_TYPE[5]=array("name"=>_("Colloquium"),  "class"=>1);
-$SEM_TYPE[6]=array("name"=>_("Forschungsgruppe"), "class"=>1);
-$SEM_TYPE[7]=array("name"=>_("sonstige"), "class"=>1);
-$SEM_TYPE[8]=array("name"=>_("Gremium"), "class"=>2, "title_dozent" => array(_("LeiterIn"), _("LeiterInnen")), "title_tutor" => array(_("Mitglied"), _("Mitglieder")));
-$SEM_TYPE[9]=array("name"=>_("Projektgruppe"), "class"=>2, "title_dozent" => array(_("LeiterIn"), _("LeiterInnen")), "title_tutor" => array(_("Mitglied"), _("Mitglieder")));
-$SEM_TYPE[10]=array("name"=>_("sonstige"), "class"=>2);
-$SEM_TYPE[11]=array("name"=>_("Kulturforum"), "class"=>3);
-$SEM_TYPE[12]=array("name"=>_("Veranstaltungsboard"), "class"=>3);
-$SEM_TYPE[13]=array("name"=>_("sonstige"), "class"=>3);
-//more types can be added below
-
-// required config settings for study groups (courses that can be created by students)
-$SEM_TYPE[99]=array("name"=>_("Studiengruppe"), "class"=>99,
-                    "title_dozent" => array(_("GruppengründerIn"), _("GruppengründerInnen")),
-                    "title_tutor" => array(_("ModeratorIn"), _("ModeratorInnen")),
-                    "title_autor" => array(_("Mitglied"), _("Mitglieder")));
-
-$SEM_CLASS[99]=array("name"=>_("Studiengruppen"),
-                    "studygroup_mode"=>TRUE,
-                    "topic_create_autor"=>TRUE,
-                    "course_creation_forbidden" => TRUE);
 
 /*
 possible types of sem_tree ("Veranstaltungshierarchie") types
@@ -226,17 +123,6 @@ $SEM_TREE_TYPES[0] = array("name" => "", "editable" => true); //default type, mu
 */
 
 $UPLOAD_TYPES=array(    "default" =>
-                array(  "type"=>"deny",
-                        "file_types" => array ("rtf", "xls", "ppt", "zip", "pdf", "txt", "tgz", "gz", "bz2"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 1.38 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                ),
-            "8" =>
                 array(  "type"=>"allow",
                         "file_types" => array ("exe"),
                         "file_sizes" => array ( "root" => 7 * 1048576,
@@ -247,28 +133,6 @@ $UPLOAD_TYPES=array(    "default" =>
                                     "nobody" => 1.38 * 1048576
                                     )
                 ),
-            "9" =>
-                array(  "type"=>"allow",
-                        "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                ),
-            "10" =>
-                array(  "type"=>"allow",
-                        "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                )
 // rules for futher course-types can be added below (please adhere exactly to the structure given above)
         );
 

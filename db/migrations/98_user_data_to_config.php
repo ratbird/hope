@@ -172,7 +172,7 @@ class UserDataToConfig extends Migration
                 }
             }
         }
-        //DBManager::get()->exec("DROP TABLE `user_data`");
+        DBManager::get()->exec("DROP TABLE `user_data`");
     }
 
     function down()

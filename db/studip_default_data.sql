@@ -295,6 +295,36 @@ INSERT INTO `roles_user` (`roleid`, `userid`) VALUES(7, 'nobody');
 INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 107);
 
 --
+-- Dumping data for table `sem_classes`
+--
+
+INSERT INTO `sem_classes` (`id`, `name`, `compact_mode`, `workgroup_mode`, `only_inst_user`, `turnus_default`, `default_read_level`, `default_write_level`, `bereiche`, `show_browse`, `write_access_nobody`, `topic_create_autor`, `visible`, `course_creation_forbidden`, `overview`, `forum`, `admin`, `documents`, `schedule`, `participants`, `literature`, `scm`, `wiki`, `resources`, `calendar`, `elearning_interface`, `modules`, `description`, `create_description`, `studygroup_mode`, `admission_prelim_default`, `admission_type_default`, `title_dozent`, `title_dozent_plural`, `title_tutor`, `title_tutor_plural`, `title_autor`, `title_autor_plural`, `mkdate`, `chdate`) VALUES
+(1, 'Lehre', 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 'CoreOverview', 'CoreForum', 'CoreAdmin', 'CoreDocuments', 'CoreSchedule', 'CoreParticipants', 'CoreLiterature', 'CoreScm', 'CoreWiki', 'CoreResources', 'CoreCalendar', 'CoreElearningInterface', '{"CoreOverview":{"activated":"1","sticky":"1"},"CoreAdmin":{"activated":"1","sticky":"1"},"CoreForum":{"activated":"1","sticky":"0"},"CoreParticipants":{"activated":"1","sticky":"0"},"CoreDocuments":{"activated":"1","sticky":"0"},"CoreSchedule":{"activated":"1","sticky":"0"},"CoreLiterature":{"activated":"1","sticky":"0"},"CoreScm":{"activated":"1","sticky":"0"},"CoreWiki":{"activated":"1","sticky":"0"},"CoreResources":{"activated":"1","sticky":"0"},"CoreCalendar":{"activated":"1","sticky":"0"},"CoreElearningInterface":{"activated":"1","sticky":"0"},"CoreStudygroupAdmin":{"activated":"0","sticky":"1"},"CoreStudygroupParticipants":{"activated":"0","sticky":"1"}}', 'Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen', '', 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 1366882120, 1366882169),
+(2, 'Organisation', 1, 1, 0, -1, 2, 2, 0, 1, 0, 0, 1, 0, 'CoreOverview', 'CoreForum', 'CoreAdmin', 'CoreDocuments', 'CoreSchedule', 'CoreParticipants', NULL, NULL, 'CoreWiki', 'CoreResources', NULL, NULL, '{"CoreOverview":{"activated":"1","sticky":"1"},"CoreAdmin":{"activated":"1","sticky":"1"},"CoreForum":{"activated":"1","sticky":"0"},"CoreParticipants":{"activated":"1","sticky":"0"},"CoreDocuments":{"activated":"1","sticky":"0"},"CoreSchedule":{"activated":"1","sticky":"0"},"CoreWiki":{"activated":"1","sticky":"0"},"CoreResources":{"activated":"1","sticky":"0"},"CoreStudygroupAdmin":{"activated":"0","sticky":"1"},"CoreStudygroupParticipants":{"activated":"0","sticky":"1"},"CoreScm":{"activated":"0","sticky":"1"},"CoreLiterature":{"activated":"0","sticky":"1"},"CoreCalendar":{"activated":"0","sticky":"1"},"CoreElearningInterface":{"activated":"0","sticky":"1"}}', 'Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t', '', 0, 0, 0, 'LeiterIn', 'LeiterInnen', 'Mitglied', 'Mitglieder', NULL, NULL, 1366882120, 1366882198),
+(3, 'Community', 1, 0, 0, -1, 1, 1, 0, 1, 1, 0, 1, 0, 'CoreOverview', 'CoreForum', 'CoreAdmin', 'CoreDocuments', 'CoreSchedule', 'CoreParticipants', 'CoreLiterature', NULL, 'CoreWiki', 'CoreResources', NULL, NULL, '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}}', 'Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen', '', 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 1366882120, 1366882120),
+(99, 'Studiengruppen', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 'CoreOverview', 'CoreForum', 'CoreStudygroupAdmin', 'CoreDocuments', NULL, 'CoreStudygroupParticipants', NULL, 'CoreScm', 'CoreWiki', NULL, NULL, NULL, '{"CoreOverview":{"activated":"1","sticky":"1"},"CoreStudygroupAdmin":{"activated":"1","sticky":"1"},"CoreForum":{"activated":"1","sticky":"0"},"CoreStudygroupParticipants":{"activated":"1","sticky":"1"},"CoreDocuments":{"activated":"1","sticky":"0"},"CoreScm":{"activated":"1","sticky":"0"},"CoreWiki":{"activated":"1","sticky":"0"},"CoreAdmin":{"activated":"0","sticky":"1"},"CoreSchedule":{"activated":"0","sticky":"1"},"CoreParticipants":{"activated":"0","sticky":"1"},"CoreLiterature":{"activated":"0","sticky":"1"},"CoreCalendar":{"activated":"0","sticky":"1"},"CoreElearningInterface":{"activated":"0","sticky":"1"},"CoreResources":{"activated":"0","sticky":"1"}}', '', '', 1, 0, 0, 'GruppengründerIn', 'GruppengründerInnen', 'ModeratorIn', 'ModeratorInnen', 'Mitglied', 'Mitglieder', 1366882120, 1366882252);
+
+--
+-- Dumping data for table `sem_types`
+--
+
+INSERT INTO `sem_types` (`id`, `name`, `class`, `mkdate`, `chdate`) VALUES
+(1, 'Vorlesung', 1, 1366882120, 1366882120),
+(2, 'Seminar', 1, 1366882120, 1366882120),
+(3, 'Übung', 1, 1366882120, 1366882120),
+(4, 'Praktikum', 1, 1366882120, 1366882120),
+(5, 'Colloquium', 1, 1366882120, 1366882120),
+(6, 'Forschungsgruppe', 1, 1366882120, 1366882120),
+(7, 'sonstige', 1, 1366882120, 1366882120),
+(8, 'Gremium', 2, 1366882120, 1366882120),
+(9, 'Projektgruppe', 2, 1366882120, 1366882120),
+(10, 'sonstige', 2, 1366882120, 1366882120),
+(11, 'Kulturforum', 3, 1366882120, 1366882120),
+(12, 'Veranstaltungsboard', 3, 1366882120, 1366882120),
+(13, 'sonstige', 3, 1366882120, 1366882120),
+(99, 'Studiengruppe', 99, 1366882120, 1366882120);
+
+--
 -- Daten für Tabelle `semester_data`
 --
 

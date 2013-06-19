@@ -2616,21 +2616,6 @@ CREATE TABLE IF NOT EXISTS `user_config` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_data`
---
-
-DROP TABLE IF EXISTS `user_data`;
-CREATE TABLE IF NOT EXISTS `user_data` (
-  `sid` varchar(32) NOT NULL DEFAULT '',
-  `val` mediumtext NOT NULL,
-  `changed` timestamp NOT NULL,
-  PRIMARY KEY (`sid`),
-  KEY `changed` (`changed`)
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `user_info`
 --
 

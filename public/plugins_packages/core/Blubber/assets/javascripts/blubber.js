@@ -166,7 +166,7 @@ STUDIP.Blubber = {
             if (jQuery("#posting_" + posting_id + " > .content_column textarea.corrector").length === 0) {
                 var new_version = jQuery(content);
                 jQuery("#posting_" + posting_id + " > .content_column .content").html(new_version.find(".content").html());
-                jQuery("#posting_" + posting_id + " > .content_column .tags").html(new_version.find(".tags").html());
+                jQuery("#posting_" + posting_id + " > .content_column .additional_tags").html(new_version.find(".additional_tags").html());
                 new_version.remove();
             }
         } else {

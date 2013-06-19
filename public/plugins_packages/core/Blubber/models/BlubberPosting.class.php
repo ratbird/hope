@@ -193,6 +193,7 @@ class BlubberPosting extends SimpleORMap {
                 "SELECT tag " .
                 "FROM blubber_tags " .
                 "WHERE topic_id = :id " .
+                "ORDER BY tag ASC " .
             "");
             $get_tags->execute(array('id' => $this->getId()));
             return $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);

@@ -153,7 +153,7 @@ class CalendarDriver
                         LEFT JOIN seminar_user su ON su.Seminar_id=t.range_id "
                     . "LEFT JOIN seminare s ON s.Seminar_id=t.range_id "
                     . "LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE "
-                    . "(IFNULL(t.metadate_id,'') = '' OR t.metadate_id NOT IN (SELECT metadate_id FROM schedule_seminare WHERE user_id = ? AND visible = 0)) AND " 
+                    . "(IFNULL(t.metadate_id,'') = '' OR t.metadate_id NOT IN (SELECT metadate_id FROM schedule_seminare WHERE user_id = ? AND visible = 0)) AND "
                     . "user_id = ? GROUP BY termin_id ORDER BY NULL";
             $db_sem = DBManager::get()->prepare($query);
             $db_sem->execute(array(
@@ -205,7 +205,8 @@ class CalendarDriver
                 'STUDIP_ID' => $result['event_id'],
                 'DTSTAMP' => time(),
                 'EVENT_TYPE' => 'cal',
-                'STUDIP_AUTHOR_ID' => $result['autor_id']);
+                'STUDIP_AUTHOR_ID' => $result['autor_id'],
+                'STUDIP_EDITOR_ID' => $result['editor_id']);
 
             $this->count();
 
@@ -243,7 +244,8 @@ class CalendarDriver
                 'LAST-MODIFIED' => $result['chdate'],
                 'DTSTAMP' => time(),
                 'EVENT_TYPE' => 'semcal',
-                'STUDIP_AUTHOR_ID' => $result['autor_id']);
+                'STUDIP_AUTHOR_ID' => $result['autor_id'],
+                'STUDIP_EDITOR_ID' => $result['editor_id']);
 
             if ($this->perm->have_studip_perm('autor', $properties['SEM_ID'], $this->user_id)) {
                 $properties['CLASS'] = 'PRIVATE';

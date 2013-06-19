@@ -15,11 +15,11 @@
                             <?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?>
                         <? else : ?>
                             <? if (strtolower(get_class($day_event)) == 'seminarevent') : ?>
-                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart(), 'evtype' => 'sem')) ?>"><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
+                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart(), 'evtype' => 'sem')) ?>" <?= js_hover($day_event); ?>><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
                             <? elseif  (strtolower(get_class($day_event)) == 'seminarcalendarevent') : ?>
-                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart(), 'evtype' => 'semcal')) ?>"><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
+                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart(), 'evtype' => 'semcal')) ?>" <?= js_hover($day_event); ?>><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
                             <? else : ?>
-                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart())) ?>"><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
+                            <a style="color:#fff; font-size:10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $day_event->getId(), 'atime' => $day_event->getStart())) ?>" <?= js_hover($day_event); ?>><?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?></a>
                             <? endif ?>
                         <? endif ?>
                     </td>

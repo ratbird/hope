@@ -725,7 +725,8 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
 function fit_title($title, $cols, $rows, $max_length, $end_str = "...", $pad = TRUE)
 {
     global $auth;
-    if ($auth->auth['jscript'])
+
+    if ($auth->auth['xres'] > 1024)
         $max_length = $max_length * ($auth->auth['xres'] / 1024);
 
     $title_length = strlen($title);
@@ -762,7 +763,7 @@ function js_hover(Event $aterm)
     }
     if ($aterm->getDescription()) {
         $jscript_text .= '<b>' . _("Beschreibung:") . ' </b> '
-                . htmlReady(mila($aterm->getDescription(), 200)) . '<br>';
+                . htmlReady(mila($aterm->getDescription(), 300)) . '<br>';
     }
     if ($categories = $aterm->toStringCategories()) {
         $jscript_text .= '<b>' . _("Kategorie:") . ' </b> '
@@ -782,7 +783,7 @@ function js_hover(Event $aterm)
         $jscript_text .= '<b>' . _("Wiederholung:") . ' </b>'
                 . htmlReady($aterm->toStringRecurrence()) . '<br>';
     }
-    
+
     if (!($aterm instanceof SeminarEvent)) {
         if (get_config('CALENDAR_GROUP_ENABLE')) {
             $jscript_text .= sprintf(_('<span style="font-weight: bold;">Eingetragen am:</span> %s von %s'),
@@ -839,7 +840,7 @@ function info_icons(&$event)
 
 function quick_search_form($search_string, $cmd, $atime)
 {
-   
+
     $out = "\n<!-- CALENDAR QUICK SEARCH -->\n";
     $out .= "<form name=\"cal_event_search\" method=\"post\" action=\"".URLHelper::getLink('?cmd=$cmd&atime='.$atime)."\">\n";
     $out .= "<font font size=\"2\" color=\"#555555\">";

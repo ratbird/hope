@@ -720,7 +720,7 @@ else {
 
 if ($editor_id = $_calendar->event->getEditorId()) {
     echo "<tr><td>";
-    echo sprintf(_("Termin geändert am %s von %s"), get_fullname($editor_id), strftime('%c', $_calendar->event->properties['LAST-MODIFIED']));
+    echo sprintf(_("Termin geändert am %s von %s"), strftime('%x %X', $_calendar->event->properties['LAST-MODIFIED']), get_fullname($editor_id));
     echo "</td></tr>";
 }
 

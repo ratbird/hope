@@ -181,7 +181,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
             if ($schedule->type === 'once') {
                 $temp = Request::getArray('once');
-                $schedule->next_execution = strtotime($temp['date'] . ' ' . $date['time']);
+                $schedule->next_execution = strtotime($temp['date'] . ' ' . $temp['time']);
             } else {
                 $temp = Request::getArray('periodic');
                 $schedule->minute      = $this->extractCronItem($temp['minute']);

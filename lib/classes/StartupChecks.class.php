@@ -237,7 +237,7 @@ class StartupChecks {
             if ($row['is_fak']) {
                 $query = "SELECT Institut_id
                           FROM Institute
-                          WHERE fakultaets_id = ? AND a.Institut_id != fakultaets_id";
+                          WHERE fakultaets_id = ? AND Institut_id != fakultaets_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($row['Institut_id']));
                 while ($temp_id = $statement->fetchColumn()) {

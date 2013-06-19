@@ -677,25 +677,15 @@ table.tree .centered table {
   border-radius: 0 0 2px 2px;
   margin: 0;
 }
-#layout_container > div {
-  position: relative;
-}
 #layout_content {
   padding: 12px;
   vertical-align: top;
-}
-#layout_content.with_sidebar {
-  padding: 12px 285px 12px 12px;
 }
 #layout_sidebar {
   background: inherit;
   border-left: 1px dashed #1e3e70;
   max-width: 250px;
   width: 250px;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  vertical-align: top;
   padding: 12px;
 }
 #layout_infobox {
@@ -722,6 +712,63 @@ table.tree .centered table {
   margin: 0;
   padding: 0 15px 0 0;
   text-align: right;
+}
+.flex-container {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  -moz-box-direction: normal;
+  -moz-box-orient: horizontal;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  -moz-box-pack: start;
+  -moz-box-align: stretch;
+  justify-content: flex-start;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+.flex-item:nth-child(1) {
+  -webkit-order: 0;
+  -ms-flex-order: 0;
+  -moz-box-ordinal-group: 1;
+  order: 0;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  -moz-box-flex: 1;
+  flex: 1 1 auto;
+  -webkit-align-self: auto;
+  -ms-flex-item-align: auto;
+  align-self: auto;
+}
+.flex-item:nth-child(2) {
+  -webkit-order: 0;
+  -ms-flex-order: 0;
+  -moz-box-ordinal-group: 1;
+  order: 0;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  -moz-box-flex: 0;
+  flex: 0 1 auto;
+  -webkit-align-self: auto;
+  -ms-flex-item-align: auto;
+  align-self: auto;
+}
+@-moz-document url-prefix() {
+  .flex-container {
+    width: 100%;
+    -moz-box-sizing: border-box;
+  }
 }
 /* --- header.css ----------------------------------------------------------- */
 #wrap2 {

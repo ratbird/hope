@@ -79,8 +79,8 @@ class Modules {
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($range_id));
             $modules = $statement->fetch(PDO::FETCH_ASSOC);
-            $modules = $modules['modules'];
             $type = $modules['status'];
+            $modules = $modules['modules'];
         }
         if ($modules === null || $modules === false) {
             $modules = $this->getDefaultBinValue($range_id, $range_type, $type);

@@ -30,13 +30,13 @@
     <dt><?= _('Typ') ?></dt>
 <? if ($schedule->type === 'once'): ?>
     <dd>
-        <?= sprintf(_('Einmalig am %s um %s'), date('d.m.Y', $schedule->next_execution), date('H:m', $schedule->next_execution)) ?>
+        <?= sprintf(_('Einmalig am %s um %s'), date('d.m.Y', $schedule->next_execution), date('H:i', $schedule->next_execution)) ?>
     </dd>
     
     <dt><?= _('Ausgeführt') ?>?</dt>
     <dd>
     <? if ($schedule->execution_count > 0): ?>
-        <?= _('Ja') ?>, <?= sprintf(_('am %s um %s'), date('d.m.Y', $schedule->last_execution), date('H:m:i', $schedule->last_execution)) ?>
+        <?= _('Ja') ?>, <?= sprintf(_('am %s um %s'), date('d.m.Y', $schedule->last_execution), date('H:i:s', $schedule->last_execution)) ?>
     <? else: ?>
         <?= _('Nein') ?>
     <? endif; ?>

@@ -58,6 +58,7 @@ class ExternModuleTemplateNews extends ExternModule {
 
         $this->data_fields = array();
         $this->registered_elements = array(
+                'LinkInternTemplate',
                 'TemplateGeneric'
         );
         $this->field_names = array();
@@ -75,7 +76,9 @@ class ExternModuleTemplateNews extends ExternModule {
     //  $this->elements["LinkIntern"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
     
         $this->elements['TemplateGeneric']->real_name = _("Template");
-        $this->elements['TemplateGeneric']->link_module_type = 2;
+        // Set internal link to module 'staff details'
+        $this->elements['LinkInternTemplate']->link_module_type = array(2, 14);
+        $this->elements['LinkInternTemplate']->real_name = _("Verlinkung zum Modul MitarbeiterInnendetails");
     
     }
     
@@ -221,10 +224,10 @@ class ExternModuleTemplateNews extends ExternModule {
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
                     $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['USERNAME'] = $temp['username'];
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $temp['username']));
                                     
                     if (GetAllStatusgruppen($this->config->range_id, $temp['user_id'], true)) {
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $temp['username']));
                         $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
                         $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
                         $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);
@@ -271,10 +274,10 @@ class ExternModuleTemplateNews extends ExternModule {
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
                     $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_USERNAME'] = $temp['username'];
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $temp['username']));
                                     
                     if (GetAllStatusgruppen($this->config->range_id, $temp['user_id'], true)) {
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $temp['username']));
                         $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
                         $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
                         $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);

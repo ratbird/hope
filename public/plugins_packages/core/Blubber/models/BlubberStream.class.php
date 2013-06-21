@@ -182,13 +182,14 @@ class BlubberStream extends SimpleORMap {
             $filter_sql[] = "blubber.mkdate <= :stream_time";
             $parameters['stream_time'] = $stream_time;
         }
+        $about_tags = ((count($this['pool_hashtags']) > 0) or (count($this['filter_hashtags']) > 0));
         
         $sql = 
             "SELECT blubber.* " .
             "FROM blubber " .
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.topic_id) " .
-                "LEFT JOIN blubber_tags ON (blubber_tags.topic_id = blubber.topic_id) " .
+                ($about_tags ? "LEFT JOIN blubber_tags ON (blubber_tags.topic_id = blubber.topic_id) " : "") .
             "WHERE " .
                 //pool
                 (count($pool_sql) ? "(1 != 1 OR ".implode(" OR ", $pool_sql).") " : "") .

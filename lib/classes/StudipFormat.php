@@ -211,7 +211,9 @@ class StudipFormat extends TextFormat
             }
         }
         if (!$inserted) {
-            self::$studip_rules[$name] = compact('start', 'end', 'callback');
+            self::$studip_rules[$name] = $end 
+                    ? compact('start', 'end', 'callback')
+                    : compact('start', 'callback');
         }
     }
     

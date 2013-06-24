@@ -44,7 +44,7 @@
         if ($_SESSION['sms_msg']):
             parse_msg ($_SESSION['sms_msg']);
             $_SESSION['sms_msg'] = '';
-            $sess->unregister('sms_msg');
+            $GLOBALS['sess']->unregister('sms_msg');
         endif;
     ?>
     </table>

@@ -90,7 +90,7 @@ class  InstanceStm
                   FROM stm_instances
                   NATURAL JOIN stm_instances_text 
                   WHERE stm_instances.stm_instance_id = ?";
-        $statemtent = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->stm_instance_id));
         $vals = $statement->fetch(PDO::FETCH_ASSOC);
 

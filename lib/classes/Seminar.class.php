@@ -51,7 +51,7 @@ class Seminar
 
     var $user_number = 0;
 
-    function GetInstance($id = false, $refresh_cache = false)
+    static function GetInstance($id = false, $refresh_cache = false)
     {
         static $seminar_object_pool;
 

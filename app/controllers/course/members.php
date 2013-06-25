@@ -16,7 +16,7 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/members.php';
-require_once 'app/models/user.php';
+require_once 'app/models/UserModel.php';
 require_once 'lib/messaging.inc.php'; //Funktionen des Nachrichtensystems
 
 require_once 'lib/admission.inc.php'; //Funktionen der Teilnehmerbegrenzung

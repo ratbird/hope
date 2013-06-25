@@ -16,8 +16,6 @@
 global $RELATIVE_PATH_CALENDAR;
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'app/models/user.php';
-require_once 'app/models/profile.php';
 
 require_once 'lib/messaging.inc.php';
 require_once 'lib/object.inc.php';

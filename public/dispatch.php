@@ -21,7 +21,9 @@ require_once 'lib/functions.php';
 require_once 'vendor/trails/trails.php';
 require_once 'lib/classes/StudipDispatcher.php';
 
-URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
+# prepare environment
+URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
+StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/app/models');
 
 $request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 

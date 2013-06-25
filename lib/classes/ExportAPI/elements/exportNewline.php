@@ -17,7 +17,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-class export_newline extends exportElement {
+class exportNewline extends exportElement {
 
     public function load($content) {
         

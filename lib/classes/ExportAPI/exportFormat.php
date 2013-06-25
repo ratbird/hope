@@ -38,7 +38,7 @@ class exportFormat {
             if (method_exists($this, $type)) {
                 call_user_func(array($this, $type), $element);
             } else {
-                call_user_func(array($this, "export_missing"), $type);
+                call_user_func(array($this, "exportMissing"), $type);
             }
         }
         $this->finish();

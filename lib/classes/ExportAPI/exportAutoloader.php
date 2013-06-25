@@ -15,8 +15,8 @@ spl_autoload_register(function ($class) {
             if (file_exists(__DIR__ . '/elements/' . $class . '.php')) {
                 include 'elements/' . $class . '.php';
             }
-            if (file_exists(__DIR__ . '/formats/' . $class . "/" . $class . '.php')) {
-                include 'formats/' . $class . "/" . $class . '.php';
+            if (file_exists(__DIR__ . '/formats/' . $class . '.php')) {
+                include 'formats/' . $class . '.php';
             }
         });
 ?>

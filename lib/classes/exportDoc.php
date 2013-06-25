@@ -133,7 +133,7 @@ class exportDoc extends SimpleORMap {
      * @return object new element
      */
     public function add($type) {
-        $classname = "export_$type";
+        $classname = "export".ucfirst($type);
         $result = new $classname;
         $this->elements[] = $result;
         return $result;
@@ -150,7 +150,7 @@ class exportDoc extends SimpleORMap {
         $format = $format ? : $this->format;
         $format = $format ? : $this->getDefaultFormat();
         $this->loadElements();
-        $classname = "Export_$format";
+        $classname = "Export$format";
         $export = new $classname;
         $export->setContent($this->elements);
         $export->filename = $this->filename;

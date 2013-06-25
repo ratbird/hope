@@ -15,7 +15,6 @@
  * @since       2.1
  */
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'app/models/user.php';
 require_once 'lib/classes/UserManagement.class.php';
 require_once 'vendor/email_message/blackhole_message.php';
 

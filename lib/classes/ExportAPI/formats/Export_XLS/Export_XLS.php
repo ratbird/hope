@@ -19,7 +19,7 @@ class Export_XLS extends exportFormat {
     private $colcount = 0;
 
     public function start() {
-        require_once 'requires/PHPExcel.php';
+        require_once $GLOBALS['BASE_URI_STUDIP'].'vendor/PHPExcel/PHPExcel.php';
         $this->workbook = new PHPExcel();
         $this->worksheet = $this->workbook->getActiveSheet();
     }

@@ -187,6 +187,12 @@ class BlubberPosting extends SimpleORMap {
         parent::__construct($id);
     }
     
+    /**
+     * Returns all tags for a posting. Be sure that comments don't have
+     * any tags at all. They can have hashtags in the text, but those hashtags
+     * turn only into tags for the whole thread.
+     * @return: array of string tags (of course without the #)
+     */
     public function getTags() {
         if ($this->isThread()) {
             $get_tags = DBManager::get()->prepare(
@@ -202,6 +208,14 @@ class BlubberPosting extends SimpleORMap {
         }
     }
     
+    /**
+     * When a posting (comment or thread) is edited this method synchronizes the
+     * tags with the already inserted tags of the thread. If the tags changed in 
+     * any way (something added, something deleted) the thread is getting a
+     * changed chdate so that all users see the changed hashtag list of the thread
+     * in realtime.
+     * @return boolean: true if something has changed, false if not
+     */
     protected function synchronizeHashtags() {
         if (!$this['root_id'] && !$this['parent_id']) {
             $this['root_id'] = $this->getId();
@@ -253,6 +267,9 @@ class BlubberPosting extends SimpleORMap {
             $thread = BlubberPosting::find($this['root_id']);
             $thread['chdate'] = time();
             $thread->store();
+            return true;
+        } else {
+            return false;
         }
     }
 

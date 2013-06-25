@@ -37,6 +37,11 @@ class BlubberStream extends SimpleORMap {
         return $stream;
     }
     
+    /**
+     * find all customized streams of that user
+     * @param string/null $user_id : current user if null
+     * @return array of BlubberStream
+     */
     static public function findMine($user_id = null) {
         $user_id OR $user_id = $GLOBALS['user']->id;
         return self::findBySQL(
@@ -45,6 +50,10 @@ class BlubberStream extends SimpleORMap {
         );
     }
     
+    /**
+     * Creates the global-blubberstream and returns it.
+     * @return BlubberStream 
+     */
     static public function getGlobalStream() {
         $stream = new BlubberStream();
         $stream['pool_courses'] = array("all");
@@ -53,6 +62,11 @@ class BlubberStream extends SimpleORMap {
         return $stream;
     }
     
+    /**
+     * Creates a course-stream and returns it.
+     * @param string $course_id : a Seminar_id of a course
+     * @return BlubberStream 
+     */
     static public function getCourseStream($course_id) {
         $stream = new BlubberStream();
         $stream['pool_courses'] = array($course_id);
@@ -60,6 +74,11 @@ class BlubberStream extends SimpleORMap {
         return $stream;
     }
 
+    /**
+     * Creates a personal profile-stream of a user and returns it.
+     * @param string $user_id : user_id of the wanted profile-stream
+     * @return BlubberStream 
+     */
     static public function getProfileStream($user_id) {
         $stream = new BlubberStream();
         $stream['filter_users'] = array($user_id);
@@ -68,12 +87,21 @@ class BlubberStream extends SimpleORMap {
         return $stream;
     }
 
+    /**
+     * Creates a stream for given thread or all given threads (as an array)
+     * @param string/array $topic_id : id(s) of thread
+     * @return \BlubberStream 
+     */
     static public function getThreadStream($topic_id) {
         $stream = new BlubberStream();
-        $stream->filter_threads = array($topic_id);
+        $stream->filter_threads = is_array($topic_id) ? $topic_id : array($topic_id);
         return $stream;
     }
 
+    /**
+     * constructor
+     * @param string/null $id : id of blubber-stream 
+     */
     public function __construct($id = null) {
         $this->db_table = "blubber_streams";
         $this->registerCallback('before_store', 'serializeData');
@@ -101,7 +129,7 @@ class BlubberStream extends SimpleORMap {
 
     /**
      * Unserializes $this->data so it can be used as an array or something else.
-     * @return boolean
+     * @return boolean : true
      */
     protected function unserializeData()
     {
@@ -136,6 +164,17 @@ class BlubberStream extends SimpleORMap {
         return true;
     }
     
+    /**
+     * Returns an array of BlubberPosting objects that are the threads of the 
+     * stream.
+     * @param integer $offset : start with the $offset-th thread in stream
+     * @param integer $limit : return only $limit threads, null means unlimited
+     * @param integer $stream_time : defines the state of the stream, because the 
+     *   postings in a stream and their order changes from time to time, we need 
+     *   the stream-time to have a precise offset-value and get exactly those
+     *   threads we want to display.
+     * @return array of \BlubberPosting 
+     */
     public function fetchThreads($offset = 0, $limit = null, $stream_time = null) {
         list($sql, $parameters) = $this->getThreadsSql($offset, $limit, $stream_time);
         $statement = DBManager::get()->prepare($sql);
@@ -151,6 +190,10 @@ class BlubberStream extends SimpleORMap {
         return $postings;
     }
     
+    /**
+     * Returns the number of threads in this stream.
+     * @return integer 
+     */
     public function fetchNumberOfThreads() {
         list($sql, $parameters) = $this->getThreadsSql();
         $statement = DBManager::get()->prepare(
@@ -161,6 +204,12 @@ class BlubberStream extends SimpleORMap {
         return $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
     
+    /**
+     * Fetches all new postings (threads and comments) that appear in the stream
+     * and are newer than $since (as a unix timestamp).
+     * @param integer $since : unix-timestamp
+     * @return array of \BlubberPosting 
+     */
     public function fetchNewPostings($since) {
         list($sql, $parameters) = $this->getNewPostingsSql($since);
         $statement = DBManager::get()->prepare($sql);
@@ -176,6 +225,16 @@ class BlubberStream extends SimpleORMap {
         return $postings;
     }
     
+    /**
+     * Returns sql and parameter for a PDO-statement that fetches all threads of 
+     * this stream.
+     * @param integer $offset : $offset of the stream
+     * @param integer $limit : how many threads should be returned (null means unlimited)
+     * @param integer stream_time : unix-timestamp that defines the state of the 
+     *   stream. Ignore all threads that are newer than $stream_time and use the 
+     *   old order of the stream from the time $stream_time.
+     * @return array : array(string $sql, array $parameter)
+     */
     protected function getThreadsSql($offset = 0, $limit = null, $stream_time = null) {
         list($pool_sql, $filter_sql, $parameters) = $this->getSqlParts();
         if ($stream_time !== null) {
@@ -203,6 +262,12 @@ class BlubberStream extends SimpleORMap {
         return array($sql, $parameters);
     }
     
+    /**
+     * Returns an array with sql and parameter for a PDO-statement that fetches
+     * all blubber-postings of this stream newer than $since.
+     * @param integer $since : unix-timestamp
+     * @return array : array(string $sql, array $parameter) 
+     */
     protected function getNewPostingsSql($since) {
         list($pool_sql, $filter_sql, $parameters) = $this->getSqlParts();
         $filter_sql[] = "comment.chdate > :since ";
@@ -225,6 +290,11 @@ class BlubberStream extends SimpleORMap {
         return array($sql, $parameters);
     }
     
+    /** 
+     * Returns parts for an sql-statement in shape of arrays that define the
+     * pool-sql, the filter-sql and the parameter of the stream.
+     * @return array(array $pool_sql, array $filter_sql, array $parameter) 
+     */
     protected function getSqlParts() {
         $pool_sql = array();
         $filter_sql = array();
@@ -299,6 +369,10 @@ class BlubberStream extends SimpleORMap {
         return array($pool_sql, $filter_sql, $parameters);
     }
     
+    /**
+     * Returns an array of users defined by the groups selected in the stream.
+     * @return array : array of user_ids
+     */
     protected function getUsersByGroups($groups) {
         if ($groups[0] === "all") {
             $statement = DBManager::get()->prepare(
@@ -324,6 +398,12 @@ class BlubberStream extends SimpleORMap {
         }
     }
     
+    /**
+     * Returns the Seminar_ids selected in this stream but only those I am 
+     * member of and in which blubber is an active plugin.
+     * @param array $courses : array of Seminar_ids or the string "all"
+     * @return array of Seminar_ids 
+     */
     protected function getCourses($courses) {
         $mycourses = $this->getMyCourses();
         if ($courses[0] === "all") {
@@ -333,6 +413,11 @@ class BlubberStream extends SimpleORMap {
         }
     }
     
+    /**
+     * Returns all Seminar_ids to courses I am member of and in which blubber 
+     * is an active plugin.
+     * @return array of string : array of Seminar_ids 
+     */
     protected function getMyCourses() {
         $mandatory_classes = array();
         $standard_classes = array();

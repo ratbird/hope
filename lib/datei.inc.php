@@ -564,7 +564,7 @@ function move_item($item_id, $new_parent, $change_sem_to = false)
             } else {
                 $doc['range_id'] = $new_parent;
             }
-
+            $doc['chdate'] = $doc['chdate'] + 1;
             $doc->store();
 
             return array(0,1);

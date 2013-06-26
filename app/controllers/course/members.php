@@ -595,6 +595,7 @@ class Course_MembersController extends AuthenticatedController {
             $this->flash['consider_contingent'] = Request::get('consider_contingent');
 
             $this->redirect('course/members/add_member');
+            return;
         }
         
         if (Request::submitted('reset_autor') && Request::submitted('reset_autor_x')) {

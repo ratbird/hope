@@ -346,3 +346,7 @@ jQuery(document).on('change', 'select[data-copy-to]', function () {
         value  = jQuery(this).val() || jQuery(target).prop('defaultValue');
     jQuery(target).val(value);
 });
+
+jQuery(document).ready(function ($) {
+    $('#checkAll').attr('checked', $('.sem_checkbox:checked').length !== 0);
+});

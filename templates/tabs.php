@@ -59,3 +59,4 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
         <? endforeach ?>
     <? endif ?>
 </ul>
+<div class="clear"></div>

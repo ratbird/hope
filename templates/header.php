@@ -2,54 +2,51 @@
 # Lifter010: TODO
 ?>
 <!-- Start Header -->
-<div id="flex-header">
-    <div id="header">
-        <!--<div id='barTopLogo'>
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoneu.jpg" alt="Logo Uni Göttingen">
-        </div>
-         -->
-        <div id="barTopFont">
-        <?= htmlReady($GLOBALS['UNI_NAME_CLEAN']) ?>
-        </div>
-        <? SkipLinks::addIndex(_("Hauptnavigation"), 'barTopMenu', 1); ?>
-        <ul id="barTopMenu" role="navigation">
-        <? $accesskey = 0 ?>
-        <? foreach (Navigation::getItem('/') as $path => $nav) : ?>
-            <? if ($nav->isVisible(true)) : ?>
-                <?
-                $accesskey_attr = '';
-                $image = $nav->getImage();
-
-                if ($accesskey_enabled) {
-                    $accesskey = ++$accesskey % 10;
-                    $accesskey_attr = 'accesskey="' . $accesskey . '"';
-                    $image['title'] .= "  [ALT] + $accesskey";
-                }
-
-                $badge_attr = '';
-                if ($nav->hasBadgeNumber()) {
-                    $badge_attr = ' class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"';
-                }
-
-                ?>
-                <li id="nav_<?= $path ?>"<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
-                    <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?><?= $badge_attr ?>>
-                       <span style="background-image: url('<?= $image['src'] ?>'); background-size: auto 32px;" class="<?= $image['class'] ?>"> </span><br>
-                       <?= htmlReady($nav->getTitle()) ?>
-                   </a>
-                </li>
-            <? endif ?>
-        <? endforeach ?>
-        </ul>
+<div id='header'>
+    <!--<div id='barTopLogo'>
+        <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoneu.jpg" alt="Logo Uni Göttingen">
     </div>
-    <!-- Stud.IP Logo -->
-    <div id="barTopStudip">
-        <a href="http://www.studip.de/" title="Studip Homepage">
-            <?= Assets::img('/images/logos/header_logo.png', array('@2x' => TRUE, 'size' => '203@44')); ?>
-        </a>
+     -->
+    <div id="barTopFont">
+    <?= htmlReady($GLOBALS['UNI_NAME_CLEAN']) ?>
     </div>
+    <? SkipLinks::addIndex(_("Hauptnavigation"), 'barTopMenu', 1); ?>
+    <ul id="barTopMenu" role="navigation">
+    <? $accesskey = 0 ?>
+    <? foreach (Navigation::getItem('/') as $path => $nav) : ?>
+        <? if ($nav->isVisible(true)) : ?>
+            <?
+            $accesskey_attr = '';
+            $image = $nav->getImage();
+
+            if ($accesskey_enabled) {
+                $accesskey = ++$accesskey % 10;
+                $accesskey_attr = 'accesskey="' . $accesskey . '"';
+                $image['title'] .= "  [ALT] + $accesskey";
+            }
+
+            $badge_attr = '';
+            if ($nav->hasBadgeNumber()) {
+                $badge_attr = ' class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"';
+            }
+
+            ?>
+            <li id="nav_<?= $path ?>"<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
+                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?><?= $badge_attr ?>>
+                   <span style="background-image: url('<?= $image['src'] ?>'); background-size: auto 32px;" class="<?= $image['class'] ?>"> </span><br>
+                   <?= htmlReady($nav->getTitle()) ?>
+               </a>
+            </li>
+        <? endif ?>
+    <? endforeach ?>
+    </ul>
 </div>
-
+<!-- Stud.IP Logo -->
+<div id="barTopStudip">
+    <a href="http://www.studip.de/" title="Studip Homepage">
+        <?= Assets::img('/images/logos/header_logo.png', array('@2x' => TRUE, 'size' => '203@44')); ?>
+    </a>
+</div>
 <!-- Leiste unten -->
 <div id="barBottomContainer" <?= $public_hint ? 'class="public_course"' : '' ?>>
     <div id="barBottomLeft">

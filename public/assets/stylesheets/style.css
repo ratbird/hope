@@ -840,9 +840,6 @@ table.tree .centered table {
   -moz-box-flex: 0;
   flex: 0 1 auto;
 }
-#layout_wrapper #layout_page table:nth-child(3) {
-  font-weight: bold;
-}
 #layout_wrapper #layout_page #layout_container {
   display: -ms-flexbox;
   display: -webkit-box;

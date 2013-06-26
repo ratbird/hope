@@ -203,7 +203,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         $index_nobody_template->set_attribute('logout', true);
     }
 
-    echo '<div class="index_container" style="width: 750px; margin: 0 auto !important;">';
+    echo '<div><div class="index_container" style="width: 750px; margin: 0 auto !important;">';
     echo $index_nobody_template->render();
 }
 

@@ -2,6 +2,7 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 ?>
+<div>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 $(function () {
@@ -95,4 +96,5 @@ $(function () {
         </tr>
     </tbody>
 </table>
+</div>
 </div>

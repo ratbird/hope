@@ -100,7 +100,10 @@
 
         &:hover { color: #fff; }
     }
-    ul { margin: 0; }
+    ul { 
+        margin: 0;
+        float: right;
+    }
     li {
         display: inline-block;
         height: 24px;
@@ -277,10 +280,8 @@
 
 #barTopStudip {
     position: absolute;
+    bottom: 5px;
     right: 5px;
-    text-align: right;
-    top: 45px;
-
     &, img { border: none; }
 }
 
@@ -291,8 +292,12 @@
 }
 
 #header {
-    #gradient > .vertical(@brand-color-darker, @brand-color-light);
     height: 100px;
+}
+
+#flex-header {
+    #gradient > .vertical(@brand-color-darker, @brand-color-light);
+    position: relative;
 }
 
 /* --- public course marker ------------------------------------------------ */

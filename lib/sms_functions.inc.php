@@ -841,10 +841,10 @@ function show_addrform()
         ->render();
 
 
-	print Assets::input(!(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) 
+    print Assets::input(!(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) 
               ? 'icons/16/blue/search.png' : 'icons/16/blue/refresh.png', 
               array('type' => "image", 'style' => "vertical-align: text-top;", 'name' => "search_person", 
-	          'title' => !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) ? _("Suchen"): _("Suche zurücksetzen")));
+              'title' => !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) ? _("Suchen"): _("Suche zurücksetzen")));
 
     $tmp .= ob_get_clean();
 

@@ -471,14 +471,7 @@ class Avatar {
      * @return boolean: true if visible
      */
     protected function checkAvatarVisibility() {
-        if ($GLOBALS['perm']->have_perm('root')) {
-            return true;
-        }
-        $visibilities = get_local_visibility_by_id($this->user_id, 'homepage');
-        $visibilities = json_decode($visibilities, true);
-        $visibilities || $visibilities = array();
-        $visibility = $visibilities['picture'];
-        $visible = is_element_visible_for_user($GLOBALS['user']->id, $this->user_id, $visibility);
+        $visible = Visibility::verify('picture', $this->user_id);
         if (!$visible) {
             $this->user_id = 'nobody';
         }

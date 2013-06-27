@@ -35,7 +35,12 @@ class Visibility {
      * current visibilitysetting otherwise false; 
      */
     public static function verify($visibilityid, $ownerid = null, $userid = null) {
-        
+
+        // root = sauron, therefore sees everything
+        if ($GLOBALS['perm']->have_perm('root')) {
+            return true;
+        }
+
         // check if visiting user is given
         self::getUser($userid);
 
@@ -101,7 +106,7 @@ class Visibility {
      */
     public static function addPrivacySetting($name, $identifier = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null) {
         $db = DBManager::get();
-        
+
         // find out our default state
         if ($default == null) {
             $default = self::get_default_homepage_visibility($user);
@@ -405,14 +410,14 @@ class Visibility {
     public static function removePrivacySetting($id, $user = null) {
         $db = DBManager::get();
         $where = self::prepareWhere($id, $user);
-        
+
         // select last state
         $sql = "SELECT state FROM user_visibility_settings $where";
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $lastState = $stmt->fetch(PDO::FETCH_ASSOC);#
         $lastState = $lastState['state'];
-        
+
         // now delete the value
         $sql = "DELETE FROM user_visibility_settings $where";
         $db->prepare($sql)->execute();
@@ -624,7 +629,7 @@ class Visibility {
             self::addPrivacySetting($plugin->getPluginName(), ("plugin".$plugin->getPluginId()), 'plugins', 1, $user, null, $plugin->getPluginId());
         }
     }
-    
+
     /**
      * Checks if a specific visibilityID or an identifier & userid combination
      * exists
@@ -641,7 +646,7 @@ class Visibility {
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
         $result = $stmt->execute();
-        return $stmt->rowCount() > 0;       
+        return $stmt->rowCount() > 0;
     }
 }
 ?>

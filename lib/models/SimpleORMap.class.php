@@ -325,7 +325,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = array();
         $c = 0;
         while($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $ret[$c] = clone $record;
+            $ret[$c] = new $class();
             $ret[$c]->setData($row, true);
             $ret[$c]->setNew(false);
             ++$c;
@@ -359,7 +359,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = array();
         $c = 0;
         while($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $ret[$c] = clone $record;
+            $ret[$c] = new $class();
             $ret[$c]->setData($row, true);
             $ret[$c]->setNew(false);
             ++$c;
@@ -385,7 +385,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $st->execute($params);
         $ret = 0;
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $current = clone $record;
+            $current = new $class();
             $current->setData($row, true);
             $current->setNew(false);
             $callable($current);

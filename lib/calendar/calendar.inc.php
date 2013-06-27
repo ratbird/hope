@@ -608,8 +608,10 @@ if ($cmd == 'export') {
     include $RELATIVE_PATH_CALENDAR . '/views/export.inc.php';
 }
 
-echo "</td></tr>\n</table>\n";
+if ($cmd !== 'bind') {
+    echo "</td></tr>\n</table>\n";
 
-include ('lib/include/html_end.inc.php');
+    include ('lib/include/html_end.inc.php');
+}
 page_close();
 

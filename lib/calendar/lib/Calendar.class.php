@@ -320,7 +320,7 @@ class Calendar
 
     function getHeadline()
     {
-        return html_entity_decode($this->headline);
+        return decodeHTML($this->headline);
     }
 
     function createEvent($properties = NULL)
@@ -426,16 +426,18 @@ class Calendar
 
         $db = DBManager::get();
         if ($names) {
-            $query = "SELECT su.Seminar_id, s.Name FROM seminar_user su LEFT JOIN seminare s USING(Seminar_id) WHERE user_id = '$user_id'";
+            $query = "SELECT su.Seminar_id, s.Name FROM seminar_user su LEFT JOIN seminare s USING(Seminar_id) WHERE user_id = ?";
         } else {
-            $query = "SELECT Seminar_id FROM seminar_user WHERE user_id = '$user_id'";
+            $query = "SELECT Seminar_id FROM seminar_user WHERE user_id = ?";
         }
         if (is_null($all) || $all === false) {
             $query .= " AND bind_calendar = 1";
         }
         if ($names) {
             $query .= ' ORDER BY Name';
-            $result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user_id));
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $row) {
                 $bind_seminare[$row['Seminar_id']] = $row['Name'];
             }
@@ -447,7 +449,9 @@ class Calendar
                 }
                 return NULL;
             } else {
-                $result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($user_id));
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result as $row) {
                     $bind_seminare[] = $row['Seminar_id'];
                 }
@@ -463,6 +467,15 @@ class Calendar
     function getBindInstitute($user_id = NULL, $all = NULL, $names = false)
     {
 
+    }
+    
+    function explodeDate($dateFromPicker)
+    {
+        $foo = explode('.', $dateFromPicker);
+        $date['day']=$foo[0];
+        $date['month']=$foo[1];
+        $date['year']=$foo[2]; 
+        return $date;
     }
 
     function setUserSettings($user_settings = NULL)
@@ -486,21 +499,20 @@ class Calendar
 
     function setEventProperties(&$calendar_form_data, $mod)
     {
-
+        $startDate=$this->explodeDate($calendar_form_data['startDate']); 
+        $endDate=$this->explodeDate($calendar_form_data['endDate']); 
+        
         if ($calendar_form_data['wholeday']) {
-            $this->event->properties['DTSTART'] = mktime(0, 0, 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
-            $this->event->properties['DTEND'] = mktime(23, 59, 59, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
+            $this->event->properties['DTSTART'] = mktime(0, 0, 0, $startDate['month'], $startDate['day'], $startDate['year']); 
+            $this->event->properties['DTEND'] = mktime(23, 59, 59,  $endDate['month'], $endDate['day'], $endDate['year']); 
             $this->event->setDayEvent();
         } else {
-            $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
-            $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
+            $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0,  $startDate['month'], $startDate['day'], $startDate['year']); 
+            $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0,  $endDate['month'], $endDate['day'], $endDate['year']); 
         }
-        $this->event->properties['SUMMARY'] = html_entity_decode($calendar_form_data['txt']);
-        $this->event->properties['CATEGORIES'] = html_entity_decode($calendar_form_data['cat_text']);
-        $this->event->properties['STUDIP_CATEGORY'] = $calendar_form_data['cat'];
-        $this->event->properties['PRIORITY'] = $calendar_form_data['priority'];
-        $this->event->properties['LOCATION'] = html_entity_decode($calendar_form_data['loc']);
-        $this->event->properties['DESCRIPTION'] = html_entity_decode($calendar_form_data['content']);
+
+        $this->event->properties['LOCATION'] = decodeHTML($calendar_form_data['loc']);
+        $this->event->properties['DESCRIPTION'] = decodeHTML($calendar_form_data['content']); 
 
         switch ($calendar_form_data['via']) {
             case 'PUBLIC':
@@ -698,7 +710,15 @@ class Calendar
 
     function checkFormData(&$calendar_form_data)
     {
-
+        $foo = explode('.',$calendar_form_data['startDate']); 
+        $calendar_form_data['start_day'] = $foo[0]; 
+        $calendar_form_data['start_month'] = $foo[1]; 
+        $calendar_form_data['start_year'] = $foo[2];
+        $fooBar = explode('.',$calendar_form_data['endDate']); 
+        $calendar_form_data['end_day'] = $fooBar[0]; 
+        $calendar_form_data['end_month'] = $fooBar[1]; 
+        $calendar_form_data['end_year'] = $fooBar[2];
+        
         $err = array();
         if (!check_date($calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']))
             $err['start_time'] = true;

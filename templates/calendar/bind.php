@@ -1,11 +1,12 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 
+<? if(!empty($result)) : ?>
 <? if (!empty($calendar_sess_control_data['view_prv'])): ?>
 <form action="<?= URLHelper::getLink('?cmd=' . $calendar_sess_control_data['view_prv']) ?>" method="post">
 <? else: ?>
 <form action="<?= URLHelper::getLink('?cmd=showweek') ?>" method="post">
 <? endif; ?>
-
+<input type="hidden" name="selected_sem" value="<?=$selected_sem?>" />
 <?= CSRFProtection::tokenTag() ?>
 <table class="default zebra-hover" id="main_content">
     <colgroup>
@@ -40,7 +41,7 @@
                     <?= _('Status') ?>
                 </a>
             </th>
-            <th>&nbsp;</th>
+            <th><input type="checkbox" name="all" value="1" checked="checked" aria-label="Alle auswählen" data-proxyfor=":checkbox[name^=sem]"/></th>
         </tr>
     </thead>
     <tbody>
@@ -90,3 +91,6 @@
     </tfoot>
 </table>
 </form>
+<? else : ?>
+    <?= MessageBox::info('In dem ausgewählten Semester sind keine Veranstaltungen hinterlegt');?>
+<? endif; ?>

@@ -87,6 +87,51 @@ function init_i18n($_language) {
     return $_language_path;
 }
 
+
+/**
+* create the img tag for graphic buttons
+*
+* This function creates the html text for a button.
+* Decides, which button (folder)
+* is used for international buttons.
+*
+* @deprecated   2.3  - 2012/02/10
+* @access       public
+* @param        string  the (german) button name
+* @param        string  if mode = img, the functions return the full tag, if mode = src, it return only the src-part , if mode = input returns full input tag
+* @param        string  tooltip text, if tooltip should be included in tag
+* @param        string  if mode=input this param defines the name attribut
+* @return       string  html output of the button
+*/
+function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) {
+
+    $url = localeButtonUrl($name . '-button.png');
+    $tooltext = ($tooltip ? tooltip($tooltip) : '');
+
+    switch ($mode) {
+
+        case 'img':
+            $tag = "\n" . sprintf('<img class="button" src="%s" %s >',
+                                  $url, $tooltext);
+            break;
+        
+        case 'input':
+            $inputname || $inputname = $name;
+            $tag = "\n" . sprintf('<input class="button" type="image" src="%s" %s '.
+                                  'name="%s" >',
+                                $url, $tooltext, $inputname);
+            break;
+
+
+        default:
+            $tag = sprintf('class="button" src="%s"', $url);
+
+    }
+
+    return $tag;
+}
+
+
 /**
  * retrieves preferred language of user from database, falls back to default
  * language

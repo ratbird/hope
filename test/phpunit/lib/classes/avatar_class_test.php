@@ -14,6 +14,8 @@ require_once 'lib/phplib/perm.inc';
 require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
+require_once 'lib/models/SimpleORMap.class.php';
+require_once 'lib/classes/Visibility.php';
 
 /**
  * Testcase for Avatar class.
@@ -33,14 +35,14 @@ class AvatarTestCase extends PHPUnit_Framework_TestCase {
         $stub->expects($this->any())
             ->method('have_perm')
             ->will($this->returnValue(true));
-        
+
         $GLOBALS['perm'] = $stub;
         $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
         $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
         $this->avatar_id = "123456789";
         $this->avatar = Avatar::getAvatar($this->avatar_id);
     }
-    
+
   function tearDown() {
     unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
   }

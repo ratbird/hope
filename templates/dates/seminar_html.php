@@ -78,7 +78,7 @@
                     echo implode(', ', array_slice($dates, 10));
                     echo '</span>';
                     echo '<span class="more-dates-digits"> ...</span>';
-                    echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px" 
+                    echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px"
                  title="Blenden Sie die restlichen Termine ein">(mehr)</a>';
                 else :
                     $string = implode(', ', $dates);
@@ -89,7 +89,7 @@
                         echo substr($string, 229);
                         echo '</span>';
                         echo '<span class="more-dates-digits"> ...</span>';
-                        echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px" 
+                        echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px"
                             title="Blenden Sie die restlichen Termine ein">(mehr)</a>';
                     else :
                         echo $string;
@@ -106,7 +106,7 @@
                     if (count($dates) > 10) :
                         echo "<br />";
                     else :
-                        echo " ,";
+                        echo ", ";
                     endif;
 
                     echo _("Ort:") . ' ';

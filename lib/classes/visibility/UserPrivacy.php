@@ -1,11 +1,17 @@
 <?php
-
 /**
- * Description of UserVisibility
+ * UserPrivacy.php - Represents the privacy settings for a user
  *
- * @author flo
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
-require_once 'PrivacySetting.php';
+require_once 'User_Visibility_Settings.php';
 
 class UserPrivacy {
 
@@ -17,45 +23,13 @@ class UserPrivacy {
     private $profileSettings;
 
     /**
-     * Loads the privacySettings from the database
-     */
-    private function initProfileSettings() {
-        $this->profileSettings = array();
-        /* $db = new DB_Seminar("SELECT visibilityid 
-          FROM user_visibility_settings
-          JOIN plugins ON user_visibility_settings.plugin = plugins.pluginid
-          JOIN plugins_activated ON user_visibility_settings.plugin = plugins_activated.pluginid
-          WHERE userid = '$this->userid' AND parent_id = 0 AND enabled ='yes'
-          AND plugins_activated.poiid = 'user$this->userid' AND plugins_activated.state = 'on'");
-         */
-        $db = new DB_Seminar("SELECT visibilityid, plugin 
-                FROM user_visibility_settings
-                WHERE user_id = '$this->userid' AND parent_id = 0 
-");
-
-        while ($db->next_record()) {
-            $pluginManager = PluginManager::getInstance();
-            $plugin = $pluginManager->getPluginInfoById($db->f("plugin"));
-            if ($db->f("plugin") == 0
-                    || ($pluginManager->isPluginActivatedForUser($db->f("plugin"), $this->userid)) 
-                            && $plugin['enabled']) {
-        
-                array_push($this->profileSettings, new PrivacySetting($db->f(visibilityid)));
-            }
-        }
-    }
-
-    /**
      * Builds a visibility setting for a specific userid
      */
-    function __construct($userid = null, $loadAll = TRUE) {
+    public function __construct($userid = null) {
         if ($userid == null) {
             $this->userid = $GLOBALS['user']->user_id;
         } else {
             $this->userid = $userid;
-        }
-        if ($loadAll) {
-            $this->initProfileSettings();
         }
     }
 
@@ -64,7 +38,12 @@ class UserPrivacy {
      * @return type categorys and it's items
      */
     function getProfileSettings() {
-        $this->loadSettings();
+        if (!isset($this->profileSettings)) {
+            $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 ", array($this->userid));
+            foreach ($this->profileSettings as $vis) {
+                $vis->loadChildren();
+            }
+        }
         return $this->profileSettings;
     }
 
@@ -75,7 +54,7 @@ class UserPrivacy {
      * @param type $default default visibility state
      * @return type new visibilityID
      */
-    function addPrivacySetting($category, $name, $parent_id = "0", $default = 1, $pluginid = 0) {
+    public function addPrivacySetting($category, $name, $parent_id = "0", $default = 1, $pluginid = 0) {
         $visibilityid = uniqid();
         $db = DBManager::get();
         $sql = "INSERT INTO user_visibility_settings (`userid`, `visibilityid`, `parent_id`, `category`, `name`, `state`, `plugin`)
@@ -85,38 +64,15 @@ class UserPrivacy {
     }
 
     /**
-     * Returns a specific privacysetting by a given visibilityid
-     * @param type $id the visibility id of the privacysetting 
-     * @return type the state of the setting
-     */
-    function getPrivacySettingByID($id) {
-        if ($this->isSettingsLoaded()) {
-            foreach ($this->profileSettings as $category) {
-                foreach ($category as $key => $item) {
-                    if ($item["id"] == $id) {
-                        return $item["visibility"];
-                    }
-                }
-            }
-        } else {
-            $db = new DB_Seminar("SELECT state FROM user_visibility_settings WHERE visibilityid = '$id'");
-            if ($db->next_record()) {
-                return $db->f("state");
-            }
-        }
-    }
-
-    /**
      * Takes the new_priv_settings request and stores it into the database
      */
-    function updateAllFromRequest($data) {
+    public function updateAllFromRequest($data) {
         $db = DBManager::get();
-        
-        /* 
+
+        /*
          * This is really interesting! A single update query with CASE construct
          * is performed in about half the time of multiple queries with WHERE
          */
-        
         $sql = "UPDATE `user_visibility_settings` SET `state` = CASE `visibilityid` ";
         foreach ($data as $key => $ps) {
             $sql .= "WHEN '$key' THEN '$ps' ";
@@ -133,7 +89,7 @@ class UserPrivacy {
      * @param type $db Optional an open database connection
      * @param type $userid Optional the users id
      */
-    function update($key, $state, $db = null, $userid = null) {
+    public function update($key, $state, $db = null, $userid = null) {
         if ($db == null) {
             $db = DBManager::get();
         }
@@ -142,26 +98,6 @@ class UserPrivacy {
             $sql .= " AND userid = '$userid'";
         }
         $db->exec($sql);
-    }
-
-    /**
-     * Loads all privacysettings for a user
-     */
-    function loadSettings() {
-        if (!isset($this->profileSettings)) {
-            $this->initProfileSettings();
-        }
-    }
-
-    /**
-     * Reloads all privacysettings for a user
-     */
-    function reloadSettings() {
-        $this->initProfileSettings();
-    }
-
-    private function isSettingsLoaded() {
-        is_array($this->profileSettings);
     }
 
     /**
@@ -175,12 +111,10 @@ class UserPrivacy {
         $result['header_names'] = $privacy_states->getAllNames();
         $result['states'] = $privacy_states->getAllKeys();
         $result['entry'] = array();
-        foreach ($this->profileSettings as $child) {
+        foreach ($this->getProfileSettings() as $child) {
             $child->getHTMLArgs($result['entry']);
         }
         return $result;
     }
-
 }
-
 ?>

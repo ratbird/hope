@@ -112,30 +112,6 @@ class Visibility {
             $default = self::get_default_homepage_visibility($user);
         }
 
-        // if we get no defined pluginid we need to check if we have to set one
-        if ($pluginid == null) {
-
-            // build the callstack and find out if any file is in the pluginpath
-            $trace = debug_backtrace();
-            for ($i = 0; $i < sizeof($trace) && $pluginid == 0; $i++) {
-                if (strpos($trace[$i]['file'], get_config('PLUGINS_PATH')) !== false) {
-
-                    // we found a file in the pluginfolder. find out the pluginid
-                    $sql = "SELECT `pluginid` FROM `plugins` WHERE `pluginclassname` = ?";
-                    $statement = DBManager::get()->prepare($sql);
-                    $statement->execute(array($trace[$i]['class']));
-                    if ($statement->rowCount()) {
-                        $pluginid = $statement->fetchColumn(0);
-
-                        // if we have no parent set we use "plugins" col
-                        if ($parent === null) {
-                            $parent = "plugins";
-                        }
-                    }
-                }
-            }
-        }
-
         // parse User and Identifier to format we want to have in the database
         self::getUser($user);
         $parent = self::parseIdentifier($parent, $user);
@@ -189,30 +165,6 @@ class Visibility {
      */
     public static function addPrivacySettingForAll($name, $identifier = "", $parent = null, $category = 1, $default = null, $pluginid = null) {
         $db = DBManager::get();
-
-        // if we get no defined pluginid we need to check if we have to set one
-        if ($pluginid == null) {
-
-            // build the callstack and find out if any file is in the pluginpath
-            $trace = debug_backtrace();
-            for ($i = 0; $i < sizeof($trace) && $pluginid == 0; $i++) {
-                if (strpos($trace[$i]['file'], get_config('PLUGINS_PATH')) !== false) {
-
-                    // we found a file in the pluginfolder. find out the pluginid
-                    $sql = "SELECT `pluginid` FROM `plugins` WHERE `pluginclassname` = ?";
-                    $statement = DBManager::get()->prepare($sql);
-                    $statement->execute(array($trace[$i]['class']));
-                    if ($statement->rowCount()) {
-                        $pluginid = $statement->fetchColumn(0);
-
-                        // if we have no parent set we use "plugins" col
-                        if ($parent === null) {
-                            $parent = "plugins";
-                        }
-                    }
-                }
-            }
-        }
 
         // load the users default out of the database if needed
         if ($default == null) {
@@ -415,7 +367,7 @@ class Visibility {
         $sql = "SELECT state FROM user_visibility_settings $where";
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $lastState = $stmt->fetch(PDO::FETCH_ASSOC);#
+        $lastState = $stmt->fetch(PDO::FETCH_ASSOC);
         $lastState = $lastState['state'];
 
         // now delete the value
@@ -431,7 +383,7 @@ class Visibility {
      */
     public static function removeAllPrivacySettingForIdentifier($ident) {
 
-        $sql = "DELETE FROM $db_table WHERE `identifier`='$ident'";
+        $sql = "DELETE FROM user_visibility_settings WHERE `identifier`='$ident'";
         $db = DBManager::get();
         $db->exec($sql);
     }
@@ -496,7 +448,7 @@ class Visibility {
     public static function updateUserFromRequest($data, $userid = null) {
         self::getUser($userid);
         try {
-            $userPrivacy = new UserPrivacy($userid, false);
+            $userPrivacy = new UserPrivacy($userid);
             $userPrivacy->updateAllFromRequest($data);
         } catch (Exception $e) {
             return false;
@@ -613,7 +565,18 @@ class Visibility {
         $query = "SELECT default_homepage_visibility FROM user_visibility WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
-        $visibility = $statement->fetchColumn();
+        
+        /*
+         * If we have no default visibility set by the user itself we load the
+         * global config set in configuration. Unfortunatelly we have to map
+         * this throughout the constants. Oneday this should be eliminated
+         * by a migration.
+         */
+        if (!$visibility = $statement->fetchColumn()) {
+            $def = Config::getInstance()->getValue('HOMEPAGE_VISIBILITY_DEFAULT');
+            $consts = get_defined_constants();
+            $visibility = $consts[$def];
+        }
         return $visibility;
     }
 

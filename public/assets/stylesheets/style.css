@@ -924,7 +924,7 @@ table.tree .centered table {
 .fixed #header {
   border-bottom: 1px solid #000;
   margin-top: 24px;
-  margin-bottom: 1.5em;
+  margin-bottom: 5px;
 }
 .fixed #barBottomContainer {
   position: fixed;

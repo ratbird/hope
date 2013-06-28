@@ -32,7 +32,7 @@
         $('#edit_userdata').on('change', 'input[name^=email]', function () {
             var changed = false;
             $('#edit_userdata input[name^=email]').each(function () {
-                changed = changed || (this.value != this.defaultValue);
+                changed = changed || (this.value !== this.defaultValue);
             });
             $('#edit_userdata .email-change-confirm').toggle(changed);
         });

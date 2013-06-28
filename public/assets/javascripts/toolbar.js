@@ -50,12 +50,8 @@
                     button.html(label).button().click(function () {
                         var selection   = $element.getSelection(),
                             result      = format.evaluate(selection, $element, this) || selection,
-                            replacement = _.isObject(result)
-                                        ? result.replacement
-                                        : (_.isUndefined(result) ? selection : result),
-                            offset      = _.isObject(result)
-                                        ? result.offset
-                                        : (result || '').length;
+                            replacement = _.isObject(result) ? result.replacement : (_.isUndefined(result) ? selection : result),
+                            offset      = _.isObject(result) ? result.offset : (result || '').length;
                         $element.replaceSelection(replacement, offset).change();
                         return false;
                     });

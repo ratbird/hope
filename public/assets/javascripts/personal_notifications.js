@@ -59,8 +59,8 @@
                 old_count  = parseInt($('#notification_marker').text(), 10),
                 really_new = 0;
             $('#notification_list > ul > li').each(function () {
-                if (parseInt($(this).attr("data-timestamp"), 10) > parseInt($('#notification_marker').attr("data-lastvisit"))) {
-                    really_new++;
+                if (parseInt($(this).attr("data-timestamp"), 10) > parseInt($('#notification_marker').attr("data-lastvisit"), 10)) {
+                    really_new += 1;
                 }
             });
             if (really_new > 0) {

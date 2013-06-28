@@ -1,3 +1,6 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
 (function ($, STUDIP) {
 
     // Cron task: Change tbody class according to inherent input setting
@@ -54,7 +57,7 @@
     // Submit surrounding form on change
     $('.cronjob-filters select').live('change', function () {
         $(this).closest('form').submit();
-    })
+    });
     
     // Cronjob tables:
     // Disable bulk action unless a valid action has been selected
@@ -73,7 +76,7 @@
 
         $('.cron-item select').change();
         $('.cronjobs tfoot select').change();
-    })
+    });
 
 
 }(jQuery, STUDIP));

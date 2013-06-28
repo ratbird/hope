@@ -1,5 +1,5 @@
 /*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
-/*global window, $, jQuery, _ */
+/*global window, $, jQuery, _, MathJax */
 
 /* ------------------------------------------------------------------------
  * Javascript-spezifisches Markup
@@ -7,10 +7,11 @@
 
 STUDIP.Markup = {
     element: function (selector) {
+        var elements;
         if (document.getElementById(selector)) {
-            var elements = jQuery("#" + selector);
+            elements = jQuery("#" + selector);
         } else {
-            var elements = jQuery(selector);
+            elements = jQuery(selector);
         }
         jQuery.each(elements, function (index, element) {
             STUDIP.Markup.math_jax(element[0]);

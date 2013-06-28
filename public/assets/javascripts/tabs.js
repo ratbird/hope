@@ -91,7 +91,7 @@
 
         return Tabs;
 
-    })();
+    }());
 
     $(function () {
         var tabs;

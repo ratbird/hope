@@ -92,5 +92,5 @@
 </table>
 </form>
 <? else : ?>
-    <?= MessageBox::info('In dem ausgewählten Semester sind keine Veranstaltungen hinterlegt');?>
+    <?= MessageBox::info(_('Keine Veranstaltungen zum Anzeigen vorhanden.'));?>
 <? endif; ?>

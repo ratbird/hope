@@ -52,12 +52,10 @@ if ($selected_sem != "0") {
 } else {
     
 }
-
-
 $query .= "GROUP BY Seminar_id ORDER BY " . $sortby . " " . $order;
+
 $db = DBManager::get()->prepare($query);
 $db->execute($conds);
-
 $result = $db->fetchAll(PDO::FETCH_ASSOC);
 
 $template = $GLOBALS['template_factory']->open('calendar/bind'); 
@@ -71,7 +69,7 @@ $template->atime                      = $atime;
 $template->infobox = array(
     'picture' => 'infobox/dates.jpg',
     'content' => array(
-        array("kategorie" => _("Semesterauswahl"),
+        array("kategorie" => _("'Semesterauswahl:"),
         "eintrag" => array(
             array("icon" => "",
                 "text" => '<form method="post" id="sem_auswahl" name="semester" action="' . $PHP_SELF . '?cmd=bind">' .
@@ -84,7 +82,8 @@ $template->infobox = array(
             'eintrag'   => array(
                 array( 
                     'icon' => 'icons/16/black/info.png',
-                    'text' => _('Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.') 
+                    'text' => _('Termine aus den ausgew&auml;hlten Veranstaltungen 
+                        werden in Ihren Terminkalender &uuml;bernommen.') 
                 )
             ) 
         )

@@ -79,7 +79,7 @@
                     echo '</span>';
                     echo '<span class="more-dates-digits"> ...</span>';
                     echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px"
-                 title="Blenden Sie die restlichen Termine ein">(mehr)</a>';
+                 title="' . _('Blenden Sie die restlichen Termine ein') . '">(' ._('mehr'). ')</a>';
                 else :
                     $string = implode(', ', $dates);
                     if (strlen($string) > 222) :
@@ -90,7 +90,7 @@
                         echo '</span>';
                         echo '<span class="more-dates-digits"> ...</span>';
                         echo '<a class="more-dates" style="cursor: pointer; margin-left: 3px"
-                            title="Blenden Sie die restlichen Termine ein">(mehr)</a>';
+                            title="' . _('Blenden Sie die restlichen Termine ein') . '">(' ._('mehr'). ')</a>';
                     else :
                         echo $string;
                     endif;

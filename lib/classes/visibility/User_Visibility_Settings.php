@@ -49,7 +49,7 @@ class User_Visibility_Settings extends SimpleORMap {
         // check if it is a plugin and if it is activated
         $pluginManager = PluginManager::getInstance();
         $plugin = $pluginManager->getPluginInfoById($this->plugin);
-        $pluginDisplay = ($this->plugin == 0 || ($pluginManager->isPluginActivatedForUser($this->plugin, $this->userid)) && $plugin['enabled']);
+        $pluginDisplay = ($this->plugin == 0 || ($pluginManager->isPluginActivatedForUser($this->plugin, $this->user_id)) && $plugin['enabled']);
         
         // now check both
         if ($catDisplay && $pluginDisplay) {

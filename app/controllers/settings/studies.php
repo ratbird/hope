@@ -163,10 +163,6 @@ class Settings_StudiesController extends Settings_SettingsController {
         $new_inst = Request::option('new_inst');
         if ($new_inst) {
 
-            // if we didnt have a institute yet we create the visibilityID
-            if (!$this->hasInstitute()) {
-                
-            }
             $query = "INSERT IGNORE INTO user_inst
                         (user_id, Institut_id, inst_perms)
                       VALUES (?, ?, 'user')";
@@ -201,15 +197,4 @@ class Settings_StudiesController extends Settings_SettingsController {
         ));
         return $statement->rowCount() > 0;
     }
-
-    private function hasInstitute() {
-        $query = "SELECT * FROM user_inst
-                      WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $this->user->user_id
-        ));
-        return $statement->rowCount() > 0;
-    }
-
 }

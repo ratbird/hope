@@ -160,9 +160,9 @@ use Studip\Button, Studip\LinkButton;
         <tbody class="privacy">
             <tr>
                 <td>&nbsp;</td>
-            <? foreach ($visibilities as $visibility): ?>
-                <td><?= htmlReady($visibility) ?></td>
-            <? endforeach; ?>
+                <? foreach ($visibilities as $visibility): ?>
+                    <td><?= htmlReady($visibility) ?></td>
+                <? endforeach; ?>
             </tr>
             <? foreach ($homepage_elements['entry'] as $element): ?>
                 <? if ($element['is_header']): ?>
@@ -174,12 +174,16 @@ use Studip\Button, Studip\LinkButton;
                 <? else: ?>
                     <tr>
                         <td style="padding-left: <?= $element['padding'] ?>"><?= htmlReady($element['name']) ?></td>
-                        <? foreach ($homepage_elements['states'] as $state): ?>
-                            <td>
-                                <input type="radio" name="visibility_update[<?= $element['id'] ?>]" value="<?= $state ?>"
-                                       <? if ($element['state'] == $state) echo 'checked'; ?>>
-                            </td>
-                        <? endforeach; ?>
+                        <? if ($element['is_category']): ?>
+                            <td colspan="<?= $colCount ?>"></td>
+                        <? else: ?>
+                            <? foreach ($homepage_elements['states'] as $state): ?>
+                                <td>
+                                    <input type="radio" name="visibility_update[<?= $element['id'] ?>]" value="<?= $state ?>"
+                                           <? if ($element['state'] == $state) echo 'checked'; ?>>
+                                </td>
+                            <? endforeach; ?>
+                        <? endif; ?>
                     </tr>
                 <? endif; ?>
             <? endforeach; ?>

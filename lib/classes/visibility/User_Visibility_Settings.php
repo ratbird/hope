@@ -15,7 +15,8 @@
 /**
  * The PrivacySetting class is one privacySettings in the UserPrivacyTree
  */
-class User_Visibility_Settings extends SimpleORMap {
+class User_Visibility_Settings extends SimpleORMap
+{
 
     // parent of the Visibility
     public $parent;
@@ -79,7 +80,7 @@ class User_Visibility_Settings extends SimpleORMap {
     public function getHTMLArgs(&$result, $depth = 0)
     {
         if ($this->displayed) {
-            $entry['is_header'] = $this->parent_id == 0;
+            $entry['is_header'] = $this->category == 0 && $this->parent_id == 0;
             $entry['is_category'] = $this->category == 0;
             $entry['id'] = $this->visibilityid;
             $entry['state'] = $this->state;

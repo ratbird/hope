@@ -84,8 +84,9 @@ class Visibility
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
      * 0. Plugins creating a privacysetting will automaticly be added to the
-     * parent "plugins". Important: If u add a visibility without a parent and
-     * without beeing a toplevelpoint itself it will NEVER be displayed.
+     * parent "plugins". Important: If u add a visibility without as a parent
+     * and as a category it wont be displayed until it has children that are
+     * displayed.
      * 
      * @param int $category Sets the type of the visibilitysetting. Currently
      * there are only 2 types available:
@@ -106,7 +107,7 @@ class Visibility
      * 
      * @return int the created visibilityid 
      */
-    public static function addPrivacySetting($name, $identifier = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
+    public static function addPrivacySetting($name, $identifier = "", $parent = 0, $category = 1, $user = null, $default = null, $pluginid = null)
     {
         $db = DBManager::get();
 
@@ -166,7 +167,7 @@ class Visibility
      * 
      * @return int the created visibilityid 
      */
-    public static function addPrivacySettingForAll($name, $identifier = "", $parent = null, $category = 1, $default = null, $pluginid = null)
+    public static function addPrivacySettingForAll($name, $identifier = "", $parent = 0, $category = 1, $default = null, $pluginid = null)
     {
         $db = DBManager::get();
 

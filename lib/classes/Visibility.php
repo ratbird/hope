@@ -19,7 +19,8 @@
 require_once 'visibility/VisibilitySettings.php';
 require_once 'visibility/UserPrivacy.php';
 
-class Visibility {
+class Visibility
+{
 
     /**
      * Basic visibilitycheck to find out if a given user (or the current logged
@@ -34,9 +35,10 @@ class Visibility {
      * @return boolean true if user is allowed to view content according to the 
      * current visibilitysetting otherwise false; 
      */
-    public static function verify($visibilityid, $ownerid = null, $userid = null) {
+    public static function verify($visibilityid, $ownerid = null, $userid = null)
+    {
 
-        // root = sauron, therefore sees everything
+        // root sees everything
         if ($GLOBALS['perm']->have_perm('root')) {
             return true;
         }
@@ -104,7 +106,8 @@ class Visibility {
      * 
      * @return int the created visibilityid 
      */
-    public static function addPrivacySetting($name, $identifier = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null) {
+    public static function addPrivacySetting($name, $identifier = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
+    {
         $db = DBManager::get();
 
         // find out our default state
@@ -163,7 +166,8 @@ class Visibility {
      * 
      * @return int the created visibilityid 
      */
-    public static function addPrivacySettingForAll($name, $identifier = "", $parent = null, $category = 1, $default = null, $pluginid = null) {
+    public static function addPrivacySettingForAll($name, $identifier = "", $parent = null, $category = 1, $default = null, $pluginid = null)
+    {
         $db = DBManager::get();
 
         // load the users default out of the database if needed
@@ -201,7 +205,8 @@ class Visibility {
      * @param int $user Userid to define what user should create the categories
      * default: current logged on user; 
      */
-    public static function createDefaultCategories($user = null) {
+    public static function createDefaultCategories($user = null)
+    {
         self::getUser($user);
         Visibility::addPrivacySetting(_("Allgemeine Daten"), "commondata", 0, 0, $user);
         Visibility::addPrivacySetting(_("Private Daten"), "privatedata", 0, 0, $user);
@@ -219,7 +224,8 @@ class Visibility {
      * 
      * @return string Description of the state or false if visibilityid was not found 
      */
-    public static function getStateDescription($visibilityid, $owner = null) {
+    public static function getStateDescription($visibilityid, $owner = null)
+    {
         $visibilityid = self::parseIdentifier($visibilityid, $owner);
         $vs = VisibilitySettings::getInstance();
         $sql = "SELECT state FROM user_visibility_settings WHERE visibilityid = '$visibilityid'";
@@ -271,7 +277,8 @@ class Visibility {
      * 
      * @return int the created visibilityid 
      */
-    public static function updatePrivacySetting($name, $id = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null) {
+    public static function updatePrivacySetting($name, $id = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
+    {
         $default = Visibility::removePrivacySetting($id);
         return Visibility::addPrivacySetting($name, $id, $parent, $category, $user, $default, $pluginid);
     }
@@ -320,7 +327,8 @@ class Visibility {
      * 
      * @return int the created visibilityid 
      */
-    public static function updatePrivacySettingWithTest($test, $name, $id, $parent = null, $category = 1, $user = null, $default = null, $pluginid = null) {
+    public static function updatePrivacySettingWithTest($test, $name, $id, $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
+    {
         $default = Visibility::removePrivacySetting($id, $user);
         if ($test != "") {
             return Visibility::addPrivacySetting($name, $id, $parent, $category, $user, $default, $pluginid);
@@ -337,7 +345,8 @@ class Visibility {
      * 
      * @return int The visibilityID 
      */
-    public static function getPrivacyIdByIdentifier($ident, $user = null) {
+    public static function getPrivacyIdByIdentifier($ident, $user = null)
+    {
         self::getUser($user);
         $sql = "SELECT `visibilityid` FROM user_visibility_settings WHERE `user_id` = '$user' AND `identifier` = '$ident'";
         $db = DBManager::get();
@@ -359,7 +368,8 @@ class Visibility {
      * 
      * @return int state The state the deleted visibility had
      */
-    public static function removePrivacySetting($id, $user = null) {
+    public static function removePrivacySetting($id, $user = null)
+    {
         $db = DBManager::get();
         $where = self::prepareWhere($id, $user);
 
@@ -381,7 +391,8 @@ class Visibility {
      * 
      * @param string $ident The Identifier to be removed
      */
-    public static function removeAllPrivacySettingForIdentifier($ident) {
+    public static function removeAllPrivacySettingForIdentifier($ident)
+    {
 
         $sql = "DELETE FROM user_visibility_settings WHERE `identifier`='$ident'";
         $db = DBManager::get();
@@ -393,7 +404,8 @@ class Visibility {
      * 
      * @param int $id the pluginid
      */
-    public static function removePlugin($id) {
+    public static function removePlugin($id)
+    {
         $db = DBManager::get();
         $sql = "DELETE FROM user_visibility_settings WHERE `plugin`='" . $id . "'";
         $db->exec($sql);
@@ -408,7 +420,8 @@ class Visibility {
      * 
      * @param string $user Userid. Default: Current logged on user
      */
-    public static function renamePrivacySetting($id, $new_name, $user = null) {
+    public static function renamePrivacySetting($id, $new_name, $user = null)
+    {
         $db = DBManager::get();
         $where = self::prepareWhere($id);
         $sql = "UPDATE user_visibility_settings set name = '$new_name' $where ";
@@ -420,7 +433,8 @@ class Visibility {
      * 
      * @param string $user_id the given userid
      */
-    public static function removeUserPrivacySettings($user_id) {
+    public static function removeUserPrivacySettings($user_id)
+    {
         $db = DBManager::get();
         $sql = "DELETE FROM user_visibility_settings WHERE `user_id`='" . $user_id . "'";
         $db->exec($sql);
@@ -433,7 +447,8 @@ class Visibility {
      * 
      * @return array tree of htmlArgs
      */
-    public static function getSettingsArgs($userid) {
+    public static function getSettingsArgs($userid)
+    {
         $userPrivacy = new UserPrivacy($userid);
         return $userPrivacy->getHTMLArgs();
     }
@@ -445,7 +460,8 @@ class Visibility {
      * 
      * @param string $userid the userid. Default: current logged on user
      */
-    public static function updateUserFromRequest($data, $userid = null) {
+    public static function updateUserFromRequest($data, $userid = null)
+    {
         self::getUser($userid);
         try {
             $userPrivacy = new UserPrivacy($userid);
@@ -466,7 +482,8 @@ class Visibility {
      * 
      * @return string Where clause to use in a sql statement 
      */
-    private static function prepareWhere($id, $userid = null) {
+    private static function prepareWhere($id, $userid = null)
+    {
         if (is_int($id)) {
             return "WHERE `visibilityid`='$id'";
         } else {
@@ -480,7 +497,8 @@ class Visibility {
      * 
      * @param type $user Userid input.
      */
-    private static function getUser(&$user) {
+    private static function getUser(&$user)
+    {
         if ($user == null) {
             $user = $GLOBALS['user']->user_id;
         }
@@ -491,7 +509,8 @@ class Visibility {
      * 
      * @return int Number of columns
      */
-    public static function getColCount() {
+    public static function getColCount()
+    {
         return VisibilitySettings::getInstance()->count();
     }
 
@@ -500,7 +519,8 @@ class Visibility {
      * 
      * @return array all visibility names
      */
-    public static function getVisibilities() {
+    public static function getVisibilities()
+    {
         return VisibilitySettings::getInstance()->getAllNames();
     }
 
@@ -509,7 +529,8 @@ class Visibility {
      * 
      * @return array tree of settingelements
      */
-    public static function getHTMLArgs() {
+    public static function getHTMLArgs()
+    {
         $ps = new UserPrivacy();
         return $ps->getHTMLArgs();
     }
@@ -523,7 +544,8 @@ class Visibility {
      * 
      * @return id The visibilityID 
      */
-    private static function parseIdentifier($id, $user) {
+    private static function parseIdentifier($id, $user)
+    {
         if (is_int($id)) {
             return $id;
         } else {
@@ -541,7 +563,8 @@ class Visibility {
      * 
      * @param type $user The user. Default: current logged on user;
      */
-    public static function setAllSettingsForUser($state, $user = null) {
+    public static function setAllSettingsForUser($state, $user = null)
+    {
         try {
             self::getUser($user);
             $sql = "UPDATE user_visibility_settings SET `state` = $state WHERE `user_id`='" . $user . "'";
@@ -560,7 +583,8 @@ class Visibility {
      * 
      * @return int Default visibility level.
      */
-    function get_default_homepage_visibility($user_id = null) {
+    function get_default_homepage_visibility($user_id = null)
+    {
         self::getUser($user_id);
         $query = "SELECT default_homepage_visibility FROM user_visibility WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -585,7 +609,8 @@ class Visibility {
      * 
      * @param type $user the user for whom the settings should be created
      */
-    private function createHomepagePluginEntries($user) {
+    private function createHomepagePluginEntries($user)
+    {
         self::getUser($user);
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         foreach ($homepageplugins as $plugin) {
@@ -603,7 +628,8 @@ class Visibility {
      * 
      * @return type true if the id exists. false if not
      */
-    public function exists($id, $user) {
+    public function exists($id, $user)
+    {
         $where = self::prepareWhere($id, $user);
         $sql = "SELECT user_id FROM user_visibility_settings $where";
         $db = DBManager::get();

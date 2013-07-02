@@ -1,4 +1,5 @@
 <?php
+
 /**
  * VisibilitySettings.php - Group of all possible states of a visibility
  *
@@ -16,17 +17,32 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-
 require_once 'VisibilityAbstract.php';
 
 /**
  * Groups all visibilitySettings
  */
-class VisibilitySettings {
+class VisibilitySettings
+{
 
+    /**
+     * @var array all visibilitystates 
+     */
     public $states = array();
+    
+     /**
+     * @var array all names of all states
+     */   
     private $names = array();
+    
+     /**
+     * @var array all paths of all states
+     */   
     private $require_path = array();
+    
+     /**
+     * @var VisibilitySettings Singleton pattern
+     */   
     static private $instance = null;
 
     /**
@@ -35,12 +51,13 @@ class VisibilitySettings {
      * 
      * @return VisibilitySettings The sessionwide visibilitySettings
      */
-    static public function getInstance() {
+    static public function getInstance() 
+    {
         if (!$_SESSION['VisibilitySettings']) {
             self::$instance = new self;
             $_SESSION['VisibilitySettings'] = serialize(new VisibilitySettings);
         } else {
-            
+
             /*
              * This part is really tricky. We serialize the class to be able to
              * save it in the session BUT it will definetly need all the
@@ -59,7 +76,8 @@ class VisibilitySettings {
      * On first construct we scan the visibilitySettings folder and load all
      * applied visibilitySettings
      */
-    function __construct() {
+    function __construct()
+    {
 
         $pathinfo = pathinfo(realpath(__FILE__));
         $includepath = $pathinfo['dirname'];
@@ -68,7 +86,7 @@ class VisibilitySettings {
         if ($handle = opendir("$includepath/visibilitySettings")) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != "." && $file != ".." && substr($file, -4) != ".svn") {
-                    
+
                     // load file and save everything needed
                     $require_path = "$includepath/visibilitySettings/$file";
                     require_once $require_path;
@@ -94,7 +112,8 @@ class VisibilitySettings {
      * @return boolean true if the user may see it, false if the user is not
      * allowed to see 
      */
-    function verify($user_id, $owner_id, $visibility) {
+    function verify($user_id, $owner_id, $visibility)
+    {
         return $this->states[$visibility] && $this->states[$visibility]->verify($user_id, $owner_id);
     }
 
@@ -103,7 +122,8 @@ class VisibilitySettings {
      * @param int $stateid the int representation
      * @return string State description
      */
-    function getDescription($stateid) {
+    function getDescription($stateid)
+    {
         return $this->states[$stateid]->getDescription();
     }
 
@@ -111,7 +131,8 @@ class VisibilitySettings {
      * Returns all keys of states
      * @return array all keys of states 
      */
-    function getAllKeys() {
+    function getAllKeys()
+    {
         return array_keys($this->names);
     }
 
@@ -119,7 +140,8 @@ class VisibilitySettings {
      * Returns all names of states
      * @return array all names of states 
      */
-    function getAllNames() {
+    function getAllNames()
+    {
         return $this->names;
     }
 
@@ -127,7 +149,8 @@ class VisibilitySettings {
      * Returns the number of possible states
      * @return type 
      */
-    function count() {
+    function count()
+    {
         return count($this->states);
     }
 

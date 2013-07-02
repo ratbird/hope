@@ -164,25 +164,25 @@ use Studip\Button, Studip\LinkButton;
                 <td><?= htmlReady($visibility) ?></td>
             <? endforeach; ?>
             </tr>
-    <? foreach ($homepage_elements['entry'] as $element): ?>
-            <? if($element['is_header']): ?>
-            <tr>
-                <td colspan="<?= 1 + $colCount ?>">
-                    <?= htmlReady($element['name']) ?>
-                </td>
-            </tr>
-            <? else: ?>
-            <tr>
-                <td style="padding-left: <?= $element['padding'] ?>"><?= htmlReady($element['name']) ?></td>
-            <? foreach ($homepage_elements['states'] as $state): ?>
-                <td>
-                    <input type="radio" name="visibility_update[<?= $element['id'] ?>]" value="<?= $state ?>"
-                           <? if ($element['state'] == $state) echo 'checked'; ?>>
-                </td>
+            <? foreach ($homepage_elements['entry'] as $element): ?>
+                <? if ($element['is_header']): ?>
+                    <tr>
+                        <td colspan="<?= 1 + $colCount ?>">
+                            <?= htmlReady($element['name']) ?>
+                        </td>
+                    </tr>
+                <? else: ?>
+                    <tr>
+                        <td style="padding-left: <?= $element['padding'] ?>"><?= htmlReady($element['name']) ?></td>
+                        <? foreach ($homepage_elements['states'] as $state): ?>
+                            <td>
+                                <input type="radio" name="visibility_update[<?= $element['id'] ?>]" value="<?= $state ?>"
+                                       <? if ($element['state'] == $state) echo 'checked'; ?>>
+                            </td>
+                        <? endforeach; ?>
+                    </tr>
+                <? endif; ?>
             <? endforeach; ?>
-            </tr>
-            <? endif; ?>
-    <? endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
@@ -243,127 +243,4 @@ use Studip\Button, Studip\LinkButton;
             </tr>
         </tbody>
     </table>
-    
 </form>
-
-<? /* BACKUP JUST IN CASE
-<form method="post" action="<?= $controller->url_for('settings/privacy/homepage') ?>">
-    <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
-    
-    <table class="settings zebra-hover">
-        <colgroup>
-            <col width="34%">
-        <? if ($user_domains): ?>
-            <col width="13.2%">
-            <col width="13.2%">
-            <col width="13.2%">
-            <col width="13.2%">
-            <col width="13.2%">
-        <? else: ?>
-            <col width="16.5%">
-            <col width="16.5%">
-            <col width="16.5%">
-            <col width="16.5%">
-        <? endif; ?>
-        </colgroup>
-        <thead>
-            <tr>
-                <th colspan="<?= 5 + (int)$user_domains ?>">
-                    <?= _('Privatsphäre') ?>:
-                    <?= _('Eigenes Profil') ?>
-                </th>
-            </tr>
-            <tr class="divider">
-                <th style="text-align: left; font-size: 10pt"><?= _('Profil-Element'); ?></th>
-                <th style="font-size: 10pt;" colspan="<?= count($visibilities) ?>"><?= _('sichtbar für'); ?></th>
-            </tr>
-        </thead>
-        <tbody class="privacy">
-            <tr class="blue_gradient">
-                <td>&nbsp;</td>
-            <? foreach ($visibilities as $visibility): ?>
-                <td><?= htmlReady($visibility) ?></td>
-            <? endforeach; ?>
-            </tr>
-    <? foreach ($homepage_elements as $category => $elements): ?>
-            <tr>
-                <td colspan="<?= 1 + count($visibilities) ?>">
-                    <?= htmlReady($category) ?>
-                </td>
-            </tr>
-        <? foreach ($elements as $key => $element): ?>
-            <tr>
-                <td><?= htmlReady($element['name']) ?></td>
-            <? foreach (array_keys($visibilities) as $visibility): ?>
-                <td>
-                    <input type="radio" name="<?= $key ?>" value="<?= $visibility ?>"
-                           <? if ($element['visibility'] == $visibility) echo 'checked'; ?>>
-                </td>
-            <? endforeach; ?>
-            </tr>
-        <? endforeach; ?>
-    <? endforeach; ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                 <td colspan="<?= 1 + count($visibilities) ?>">
-                    <?= Button::create(_('Übernehmen'), 'store', array('title' =>  _('Änderungen speichern')))?>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-</form>
-
-<br><br>
-<form method="post" action="<?= $controller->url_for('settings/privacy/bulk') ?>">
-    <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
-    <table class="zebra settings">
-        <thead>
-            <tr>
-                <th width="50%" colspan="2"><?= _('Bulk Aktionen auf Profil-Elemente') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="table_row_even">
-                    <label>
-                        <?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
-                        <select name="default">
-                            <option value="">-- <?= _('bitte wählen'); ?> --</option>
-                        <? foreach ($visibilities as $visibility => $label): ?>
-                            <option value="<?= $visibility ?>" <? if ($default_homepage_visibility == $visibility) echo 'selected'; ?>>
-                                <?= htmlReady($label) ?>
-                            </option>
-                        <? endforeach; ?>
-                        </select>
-                    </label>
-                </td>
-                <td class="table_row_even">
-                    <?= Button::create(_('Übernehmen'), 'store_default', array('title' =>  _('Änderungen speichern')))?>
-                </td>
-            </tr>
-            <tr>
-                <td class="table_row_even">
-                    <label>
-                        <?= _('alle Sichtbarkeiten setzen auf'); ?>
-                        <select name="all">
-                            <option value="">-- <?= _("bitte wählen"); ?> --</option>
-                        <? foreach ($visibilities as $visibility => $label): ?>
-                            <option value="<?= $visibility ?>">
-                                <?= htmlReady($label) ?>
-                            </option>
-                        <? endforeach; ?>
-                        </select>
-                    </label>
-                </td>
-                <td class="table_row_even">
-                    <?= Button::create(_('Übernehmen'), 'store_all', array('title' => _('Änderungen speichern'))) ?>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    
-</form>
-*/?>

@@ -1,6 +1,9 @@
 <?php
+require_once 'User_Visibility_Settings.php';
+
 /**
  * UserPrivacy.php - Represents the privacy settings for a user
+ * 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -11,21 +14,25 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'User_Visibility_Settings.php';
-
-class UserPrivacy {
+class UserPrivacy
+{
 
     /**
-     * Userobject that owns the privacy settings
-     * @var type int
+     * @var int Userid that owns the privacy settings
      */
     private $userid;
+    
+    /**
+     * @var array Privacysettingstree
+     */
     private $profileSettings;
 
     /**
      * Builds a visibility setting for a specific userid
+     * @param type $userid the specific userid
      */
-    public function __construct($userid = null) {
+    public function __construct($userid = null)
+    {
         if ($userid == null) {
             $this->userid = $GLOBALS['user']->user_id;
         } else {
@@ -35,9 +42,10 @@ class UserPrivacy {
 
     /**
      * Returns all the categorys and it's items
-     * @return type categorys and it's items
+     * @return array categorys and it's items
      */
-    function getProfileSettings() {
+    function getProfileSettings()
+    {
         if (!isset($this->profileSettings)) {
             $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 ", array($this->userid));
             foreach ($this->profileSettings as $vis) {
@@ -48,25 +56,12 @@ class UserPrivacy {
     }
 
     /**
-     * Adds a new privacysetting to the database and returns the created id
-     * @param type $category category where it should be shown in settings
-     * @param type $name name of the entry (shown in settings)
-     * @param type $default default visibility state
-     * @return type new visibilityID
-     */
-    public function addPrivacySetting($category, $name, $parent_id = "0", $default = 1, $pluginid = 0) {
-        $visibilityid = uniqid();
-        $db = DBManager::get();
-        $sql = "INSERT INTO user_visibility_settings (`userid`, `visibilityid`, `parent_id`, `category`, `name`, `state`, `plugin`)
-                   VALUES ('$this->userid', '" . $visibilityid . "', '" . $parent_id . "', '$category', '$name', '$default', '$pluginid')";
-        $db->exec($sql);
-        return $visibilityid;
-    }
-
-    /**
      * Takes the new_priv_settings request and stores it into the database
+     * @param array $data The given requestdata produced by the privacySettings
+     * view
      */
-    public function updateAllFromRequest($data) {
+    public function updateAllFromRequest($data)
+    {
         $db = DBManager::get();
 
         /*
@@ -89,7 +84,8 @@ class UserPrivacy {
      * @param type $db Optional an open database connection
      * @param type $userid Optional the users id
      */
-    public function update($key, $state, $db = null, $userid = null) {
+    public function update($key, $state, $db = null, $userid = null)
+    {
         if ($db == null) {
             $db = DBManager::get();
         }
@@ -104,7 +100,8 @@ class UserPrivacy {
      * Returns all Arguments for the SettingsPage
      * @return array Arguments for the SettingsPage
      */
-    function getHTMLArgs() {
+    function getHTMLArgs()
+    {
         $privacy_states = VisibilitySettings::getInstance();
         $result['header_colspan'] = $privacy_states->count() + 1;
         $result['row_colspan'] = $privacy_states->count();

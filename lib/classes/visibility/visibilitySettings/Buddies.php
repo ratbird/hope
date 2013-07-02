@@ -1,33 +1,35 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Buddies
+ * Visibility_Buddies.php - Verifies if two users are buddies
  *
- * @author flo
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
-class Visibility_Buddies extends VisibilityAbstract{
+class Visibility_Buddies extends VisibilityAbstract
+{
     
-    // Soll dieser Status benutzt werden können
+    // Should this state be used?
     protected $activated = true;
     
-    // Welche int Repräsentation in der Datenbank
+    // What number does this state get in the database?
     protected $int_representation = 2;
     
-    // Was wird in den Einstellungen angezeigt
-    protected $display_name = "Buddies";
+    // How is the state displayed in the settings?
+    protected $display_name = 'Buddies';
     
-    // Was wird bei Visibility::getStateDescription() angezeigt
+    // Description for the state
     protected $description = "nur für meine Buddies sichtbar";
     
-    // Wann haben zwei Nutzer diesen Status
-    function verify($user_id, $other_id) {
+    // When do two users have this state
+    function verify($user_id, $other_id)
+    {
         return CheckBuddy(get_username($other_id), $user_id) || $user_id == $other_id;
     }   
 }
-
 ?>

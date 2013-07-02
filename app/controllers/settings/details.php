@@ -70,7 +70,7 @@ class Settings_DetailsController extends Settings_SettingsController
 
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
             $this->config->store('SKYPE_NAME', preg_replace('/[^a-z0-9.,_-]/i', '', Request::get('skype_name')));
-            Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1,$this->user->user_id);
+            Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1, $this->user->user_id);
             $this->config->store('SKYPE_ONLINE_STATUS', Request::int('skype_online_status'));
             Visibility::updatePrivacySettingWithTest(Request::int('skype_online_status'), _("Skype Online Status"), "skype_online_status", 'skype_name', 1, $this->user->user_id);
         }
@@ -139,6 +139,5 @@ class Settings_DetailsController extends Settings_SettingsController
             $this->postPrivateMessage(_('Daten im Lebenslauf u.a. wurden geändert.'));
             restoreLanguage();
         }
-        //$this->redirect('settings/details');
     }
 }

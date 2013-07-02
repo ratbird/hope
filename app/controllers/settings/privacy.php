@@ -62,7 +62,6 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->visibilities = Visibility::getVisibilities();
         $this->homepage_elements = Visibility::getHTMLArgs(); 
         
-        //$visibilities = get_local_visibility_by_id($this->current_user->user_id, 'homepage');
     }
 
     /**
@@ -118,18 +117,15 @@ class Settings_PrivacyController extends Settings_SettingsController
      * Stores the privacy settings concerning the homepage / profile of a
      * user.
      */
-    public function homepage_action()
-    {
+    public function homepage_action() {
         $this->check_ticket();
-
         $data = Request::getArray('visibility_update');
-                if (Visibility::updateUserFromRequest($data)) {
+        if (Visibility::updateUserFromRequest($data)) {
             $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
         } else {
             $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
         }
-        
-  $this->redirect('settings/privacy');
+        $this->redirect('settings/privacy');
     }
     
     /**

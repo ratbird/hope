@@ -227,7 +227,7 @@ class ProfileController extends AuthenticatedController
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         
         foreach ($homepageplugins as $homepageplugin) {
-            if ($homepageplugin->isActivated($this->current_user->user_id, 'user') && Visibility::verify("plugin".$homepageplugin->getPluginID(), $this->current_user->user_id)) {
+            if ($homepageplugin->isActivated($this->current_user->user_id, 'user') && Visibility::verify("plugin" . $homepageplugin->getPluginID(), $this->current_user->user_id)) {
                 // get homepageplugin tempaltes
                 $template = $homepageplugin->getHomepageTemplate($this->current_user->user_id);
                 // create output of the plugins
@@ -263,7 +263,7 @@ class ProfileController extends AuthenticatedController
             unset($vis_text);
 
             if ($this->user->user_id == $this->current_user->user_id) {
-                      $vis_text .= ' ( '. Visibility::getStateDescription('kat_'.$cat->kategorie_id).' )';
+                      $vis_text .= ' ( ' . Visibility::getStateDescription('kat_' . $cat->kategorie_id) . ' )';
             }
 
             if ($this->profile->checkVisibility('kat_'.$cat->kategorie_id)) {

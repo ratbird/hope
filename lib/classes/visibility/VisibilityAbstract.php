@@ -17,7 +17,8 @@
  * 
  * @abstract
  */
-abstract class VisibilityAbstract {
+abstract class VisibilityAbstract
+{
 
     protected $activated;
     protected $int_representation;
@@ -26,7 +27,9 @@ abstract class VisibilityAbstract {
 
     /**
      * verify method to determine if 2 users satisfy the criteria
-     * 
+     * @param string $user_id the owner of the visibility
+     * @param string $other_id the user who gets checked if he can see the
+     * selected object
      * @abstract
      */
     abstract function verify($user_id, $other_id);
@@ -36,7 +39,8 @@ abstract class VisibilityAbstract {
      * 
      * @return boolean true if the visibilitySetting is activated 
      */
-    public function isActivated() {
+    public function isActivated()
+    {
         return $this->activated;
     }
 
@@ -45,7 +49,8 @@ abstract class VisibilityAbstract {
      * 
      * @return int the visibilitySetting in the database 
      */
-    public function getIntRepresentation() {
+    public function getIntRepresentation()
+    {
         return $this->int_representation;
     }
 
@@ -54,7 +59,8 @@ abstract class VisibilityAbstract {
      * 
      * @return string the displayname 
      */
-    public function getDisplayName() {
+    public function getDisplayName()
+    {
         return $this->display_name;
     }
 
@@ -63,7 +69,8 @@ abstract class VisibilityAbstract {
      * 
      * @return string  description of the visibilitySetting
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 

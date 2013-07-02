@@ -55,9 +55,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         $visibilities = array();
         $hidden_count = 0;
         foreach ($categories as $index => $category) {
-            $visibility = get_homepage_element_visibility($this->user->user_id, 'kat_' . $category->kategorie_id);
-            $visibilities[$category->kategorie_id] = $visibility;
-
+            $visibilities[$category->kategorie_id] = Visibility::getStateDescription('kat_' . $category->kategorie_id, $this->user->user_id);
             if ($this->restricted && $GLOBALS['perm']->have_perm('admin') && $visibility == VISIBILITY_ME) {
                 $hidden_count += 1;
                 unset($categories[$index]);

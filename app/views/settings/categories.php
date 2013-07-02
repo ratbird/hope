@@ -1,18 +1,4 @@
 <? use Studip\Button, Studip\LinkButton; ?>
-
-<? 
-    $printVisibility = function ($visibility) {
-        $mapping = array(
-            VISIBILITY_ME      => _('sichtbar für mich selbst'),
-            VISIBILITY_BUDDIES => _('sichtbar für meine Buddies'),
-            VISIBILITY_DOMAIN  => _('sichtbar für meine Nutzerdomäne'),
-            VISIBILITY_STUDIP  => _('sichtbar für alle Stud.IP-Nutzer'),
-            VISIBILITY_EXTERN  => _('sichtbar auf externen Seiten'),
-        );
-        return $mapping[$visibility] ?: _('Unbekannt');
-    }
-?>
-
 <? if ($verify && $verify['action'] === 'delete'): ?>
 <?= $controller->verifyDialog(
         sprintf(_('Möchten Sie wirklich die Kategorie "%s" löschen?'), Kategorie::find($verify['id'])->name),
@@ -47,7 +33,7 @@
                            value="<?= htmlReady($category->name) ?>">
                 </td>
                 <td style="text-align: right;">
-                    <?= $printVisibility($visibilities[$category->id]) ?>
+                    <?= $visibilities[$category->id] ?>
                 </td>
                 <td rowspan="2" style="text-align: right; vertical-align: middle;">
                 <? if ($index > 0): ?>

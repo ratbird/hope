@@ -308,7 +308,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
 
     }
 
-    function simpleMap(&$cat_element, $data, $field, $args){
+    function simpleMap($cat_element, $data, $field, $args){
         $trim_chars = " \t\n\r\0/,:.";
         if ($args != "" && is_array($data)){
             foreach($data as $key => $value){
@@ -326,7 +326,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         return;
     }
 
-    function simpleListMap(&$cat_element, $data, $field, $args){
+    function simpleListMap($cat_element, $data, $field, $args){
         if(is_array($data)){
             $result = join('; ', $data);
         } else {
@@ -337,18 +337,19 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         return;
     }
 
-    function simpleFixFieldMap(&$cat_element, $data, $field, $args){
-        if (is_array($args) && $data != ""){
-            $result = substr($data,$args['start'],$args['length']);
-            if ($args['template']){
-                $result = str_replace('{result}',$result, $args['template']);
+    function simpleFixFieldMap($cat_element, $data, $field, $args){
+        if (is_array($args) && $data != "") {
+            if ($result = trim(substr($data,$args['start'],$args['length']))) {
+                if ($args['template']){
+                    $result = str_replace('{result}',$result, $args['template']);
+                }
+                $cat_element->setValue($field, $cat_element->getValue($field) . " " . $result);
             }
-            $cat_element->setValue($field, $cat_element->getValue($field) . " " . $result);
         }
         return;
     }
 
-    function notEmptyMap(&$cat_element, $data, $field, $args){
+    function notEmptyMap($cat_element, $data, $field, $args){
         if (!$cat_element->getValue($field)){
             $this->simpleMap($cat_element, $data, $field, $args[0]);
         } else {

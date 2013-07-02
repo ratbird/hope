@@ -7,8 +7,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginZ3950Abstract_Aleph.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2005 Jörg Röpke  -  <roepke@uni-trier.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -29,76 +29,86 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract
 
 
 class StudipLitSearchPluginZ3950Abstract_Aleph extends StudipLitSearchPluginZ3950Abstract {
-    
+
     var $convert_umlaute = true;
-    
+    var $z_record_encoding = 'utf-8';
+
     var $superTitle = "";
     var $superAutor = "";
     var $superCity = "";
     var $superPublisher = "";
-    
-    function StudipLitSearchPluginZ3950Abstract_Aleph() { 
+
+    function StudipLitSearchPluginZ3950Abstract_Aleph() {
         parent::StudipLitSearchPluginZ3950Abstract();
-                                        
-        // USMARC mapping                               
-        $this->mapping['USMARC'] = array('001' => array('field' => 'accession_number', 'callback' => 'idMap', 'cb_args' => ''),
-                                         '010' => array('field' => 'dc_title', 'callback' => 'search_superbook', 'cb_args' => FALSE),
+        $mapping =
+                                   array('001' => array('field' => 'accession_number', 'callback' => 'idMap', 'cb_args' => FALSE),
+                                         // übergeordneter Band
+                                         '760' => array('field' => 'dc_title', 'callback' => 'search_superbook', 'cb_args' => '$o'),
+                                         // Titel
+                                         '245' => array (array('field' => 'dc_title', 'callback' => 'simpleMap', 'cb_args' => '$a - $b'),
+                                                array('field' => 'dc_contributor', 'callback' => 'simpleMap', 'cb_args' => '$c')),
+                                         // Autor
                                          '100' => array('field' => 'dc_creator', 'callback' => 'simpleMap', 'cb_args' => '$a'),
-                                         '104' => array('field' => 'dc_creator', 'callback' => 'notEmptyMap', 'cb_args' => array('$a','dc_contributor','$a;')),
-                                         '108' => array('field' => 'dc_creator', 'callback' => 'notEmptyMap', 'cb_args' => array('$a$b','dc_contributor','$a$b;')),
-                                         '112' => array('field' => 'dc_creator', 'callback' => 'notEmptyMap', 'cb_args' => array('$a','dc_contributor','$a;')),
-                                         '331' => array('field' => 'dc_title', 'callback' => 'titleMap', 'cb_args' => FALSE),
-                                         '335' => array('field' => 'dc_title', 'callback' => 'simpleMap', 'cb_args' => ' - $a'),
-                                         //'403' => array('field' => 'dc_identifier', 'callback' => 'simpleMap', 'cb_args' => 'ISBN: $a'),
+                                         // alle weitere Autoren
+                                         '700' => array('field' => 'dc_creator', 'callback' => 'simpleMap', 'cb_args' => '$a'),
+
                                          '433' => array('field' => 'dc_format', 'callback' => 'simpleMap', 'cb_args' => '$a'),
-                                         '410' => array('field' => 'dc_publisher', 'callback' => 'simpleMap', 'cb_args' => '$a'),
-                                         '412' => array('field' => 'dc_publisher', 'callback' => 'simpleMap', 'cb_args' => '$a'),
-                                         '425' => array('field' => 'dc_date', 'callback' => 'simpleMap', 'cb_args' => '$a-01-01'),
-                                         '540' => array('field' => 'dc_identifier', 'callback' => 'simpleMap', 'cb_args' => 'ISBN: $a'),
-                                         //'902' => array('field' => 'dc_subject', 'callback' => 'simpleMap', 'cb_args' => '$s;'),
+
+                                         '260' => array (array('field' => 'dc_publisher', 'callback' => 'simpleMap', 'cb_args' => '$a $b, '),
+                                                 array('field' => 'dc_date', 'callback' => 'notEmptyMap', 'cb_args' => array('$c-01-01','dummy','dummy'))),
+                                         '020' => array('field' => 'dc_identifier', 'callback' => 'simpleMap', 'cb_args' => 'ISBN: $a'),
                                          '907' => array('field' => 'dc_subject', 'callback' => 'simpleMap', 'cb_args' => '$s;')
                                         );
+        foreach ($mapping as $k => $v) {
+            $this->mapping['USMARC'][$k] = $v;
+        }
     }
-    
-    
-    
-    
+
+
+
+
     // suche übergeortnetem Band
-    function search_superbook(&$cat_element, $data, $field, $args)
+    function search_superbook($cat_element, $data, $field, $args)
     {
-        $result = $data['a'];
+        $result = $data['o'];
         if(!$zid = $this->doZConnect()){
             return false;
         }
+        //var_dump($cat_element);
+        $tempcreator = $cat_element->getValue('dc_contributor');
+        $temptitle = $cat_element->getValue('dc_title');
+        if(substr($temptitle, -1) == "-")
+            $temptitle = substr($temptitle, 0, -1);
         $ok = $this->doZsearch($zid, "@attr 1=12 \"".$result."\"", 1, 1);
         if($ok){
             $super = $this->getZRecord($zid, 1);
-            $cat_element->setValue('dc_title', $super['dc_title'] . " (...)");
+            $cat_element->setValue('dc_title', $super['dc_title'] . " - " . $temptitle);
             $cat_element->setValue('dc_creator', $super['dc_creator']);
             $cat_element->setValue('dc_publisher', $super['dc_publisher']);
             $cat_element->super_book = $super;
         }
     }
-    
-    
+
+
     // ID Mapping für Hyperlink zum Bibliothekskatalog
-    function idMap(&$cat_element, $data, $field, $args)
+    function idMap($cat_element, $data, $field, $args)
     {
-        
-        $cat_element->setValue($field, "IDN=".substr($data,3));
-        
+        // NEU
+        //$cat_element->setValue($field, "IDN=".substr($data,3));
+        $cat_element->setValue($field, "IDN=".$data);
+
         return;
     }
-        
+
 
     // Titel
-    function titleMap(&$cat_element, $data, $field, $args)
+    function titleMap($cat_element, $data, $field, $args)
     {
         $result = $data['a'];
-        
+
         $result = str_replace(array('<','>'),'',$result);
         $result = trim($result);
-        
+
         // Untergeordneter Band -> Supertitel hinzufügen
         if($cat_element->super_book['dc_title'] != "")
             $cat_element->setValue($field, $cat_element->super_book['dc_title']." - ".$result);
@@ -107,12 +117,22 @@ class StudipLitSearchPluginZ3950Abstract_Aleph extends StudipLitSearchPluginZ395
             $cat_element->setValue($field, $result);
         return;
     }
-    
-    function simpleMap(&$cat_element, $data, $field, $args){
-        foreach($data as $key => $value){
-            $data1[$key] = str_replace(array('<','>'),'',$value);
+
+    function simpleMap($cat_element, $data, $field, $args){
+        if (is_array($data)) {
+            foreach($data as $key => $value){
+                $data1[$key] = str_replace(array('<','>'),'',$value);
+            }
         }
         parent::simpleMap($cat_element, $data1, $field, $args);
+
+        if($field == 'dc_title') {
+            $temptitle = $cat_element->getValue('dc_title');
+            if(substr($temptitle, -1) == "-") {
+                $temptitle = substr($temptitle, 0, -1);
+                $cat_element->setValue('dc_title', $temptitle);
+            }
+        }
     }
 }
 ?>

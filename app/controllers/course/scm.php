@@ -100,7 +100,7 @@ class Course_ScmController extends StudipController
 
         if (Request::get('verify') == 'delete') {
             $this->verification = $GLOBALS['template_factory']->open('shared/question')->render(array(
-                'approvalLink'    => $this->url_for('course/scm/delete/' . $this->scm->id . '?verified=' . md5('verified')),
+                'approvalLink'    => $this->url_for('course/scm/delete/' . $this->scm->id . '?ticket=' . get_ticket()),
                 'disapprovalLink' => $this->url_for('course/scm/' . $this->scm->id),
                 'question'        => _('Wollen Sie diese Seite wirklich löschen?'),
             ));
@@ -198,7 +198,8 @@ class Course_ScmController extends StudipController
      */
     public function delete_action($id)
     {
-        if (Request::option('verified') === md5('verified')) {
+        $ticket = Request::option('ticket');
+        if ($ticket && check_ticket($ticket)) {
             $scm = new StudipScmEntry($id);
             if (!$scm->isNew() && $scm->range_id == $GLOBALS['SessSemName'][1]){
                 $scm->delete();
@@ -208,6 +209,7 @@ class Course_ScmController extends StudipController
             return;
         }
         
+        PageLayout::postMessage(MessageBox::error(_('Es ist ein Fehler aufgetreten. Bitte versuchen Sie erneut, diese Seite zu löschen.')));
         $this->redirect('course/scm/' . $id);
     }
 

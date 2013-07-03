@@ -1,16 +1,23 @@
 // TODO: LESSify
 
+@page-margin: 15px;
+
 @infobox-width: 250px;
-@infobox-margin: 20px;
-@infobox-padding: 20px;
+@infobox-padding: 12px;
 @infobox-border-width: 1px;
+
+@content-width: 400px;
+@content-padding: 12px;
+
+@site-width: (@page-margin * 2) + @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-padding * 2); 
+@page-width: @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-padding * 2); 
 
 
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
     .border-radius(0 0 2px 2px);
     clear: both;
-    margin: 15px;
+    margin: @page-margin;
 }
 
 // for old pages without template layout
@@ -32,8 +39,9 @@
 
 #layout_content {
     // Without the +1 zooming out would break the layout (weird behaviour, i know)
-    padding: 12px;
+    padding: @content-padding;
     vertical-align: top;
+    min-width: @content-width;
 }
 
 #layout_sidebar {
@@ -41,7 +49,8 @@
     border-left: 1px dashed @brand-color-darker;
     max-width: @infobox-width;
     width: @infobox-width;
-    padding: 12px;
+    min-width: @infobox-width;
+    padding: @infobox-padding;
 }
 
 #layout_infobox {
@@ -70,7 +79,6 @@
     color: #fff;
     height: 24px;
     margin: 0;
-    padding: 0 15px 0 0;
     text-align: right;
 }
 
@@ -83,6 +91,8 @@
     .flex-align-items(stretch);
     .flex-justify-content();
 
+    min-width: @site-width;
+
     #flex-header {              // first row of flex-main
         .flex();
         .flex-direction-row(); 
@@ -92,6 +102,8 @@
         .flex-justify-content();
 
         width: 100%;
+        min-width: @site-width;
+
         .flex-item(0,1);
 
         #header {                   // column 1 of flex-header
@@ -105,6 +117,8 @@
 
     #barBottomContainer {       // second row of flex-main
         .flex-item(0, 1);
+
+        min-width: @site-width;
     }
 
     #layout_page {              // third row of flex-main
@@ -116,6 +130,8 @@
         .flex-justify-content();
 
         .flex-item(10, 1);
+
+        min-width: @page-width;
 
         #tabs, #tabs2 {                     // row 1 of layout_page
             min-height: 25px;
@@ -132,6 +148,7 @@
             .flex-justify-content();
 
             .flex-item(1, 1);
+            min-width: @page-width;
 
             #layout_content {           // column 1 of layout_container
                 .flex-item(1, 1);
@@ -146,6 +163,7 @@
 
     #layout_footer {
         .flex-item(0,1);        // fourth row of flex-main
+        min-width: @site-width;
     }
 
 }

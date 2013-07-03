@@ -680,12 +680,14 @@ table.tree .centered table {
 #layout_content {
   padding: 12px;
   vertical-align: top;
+  min-width: 400px;
 }
 #layout_sidebar {
   background: inherit;
   border-left: 1px dashed #1e3e70;
   max-width: 250px;
   width: 250px;
+  min-width: 250px;
   padding: 12px;
 }
 #layout_infobox {
@@ -711,7 +713,6 @@ table.tree .centered table {
   color: #fff;
   height: 24px;
   margin: 0;
-  padding: 0 15px 0 0;
   text-align: right;
 }
 #layout_wrapper {
@@ -741,6 +742,7 @@ table.tree .centered table {
   -ms-flex-pack: start;
   -moz-box-pack: start;
   justify-content: flex-start;
+  min-width: 730px;
 }
 #layout_wrapper #flex-header {
   display: -ms-flexbox;
@@ -770,6 +772,7 @@ table.tree .centered table {
   -moz-box-pack: start;
   justify-content: flex-start;
   width: 100%;
+  min-width: 730px;
   -webkit-box-flex: 0;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -796,6 +799,7 @@ table.tree .centered table {
   -ms-flex: 0 1 auto;
   -moz-box-flex: 0;
   flex: 0 1 auto;
+  min-width: 730px;
 }
 #layout_wrapper #layout_page {
   display: -ms-flexbox;
@@ -829,6 +833,7 @@ table.tree .centered table {
   -ms-flex: 10 1 auto;
   -moz-box-flex: 10;
   flex: 10 1 auto;
+  min-width: 700px;
 }
 #layout_wrapper #layout_page #tabs,
 #layout_wrapper #layout_page #tabs2 {
@@ -872,6 +877,7 @@ table.tree .centered table {
   -ms-flex: 1 1 auto;
   -moz-box-flex: 1;
   flex: 1 1 auto;
+  min-width: 700px;
 }
 #layout_wrapper #layout_page #layout_container #layout_content {
   -webkit-box-flex: 1;
@@ -893,6 +899,7 @@ table.tree .centered table {
   -ms-flex: 0 1 auto;
   -moz-box-flex: 0;
   flex: 0 1 auto;
+  min-width: 730px;
 }
 @-moz-document url-prefix() {
   .flex-container {

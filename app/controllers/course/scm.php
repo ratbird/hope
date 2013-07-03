@@ -95,7 +95,7 @@ class Course_ScmController extends StudipController
         $this->scm  = $id ? $this->scms->find($id) : $this->scms->first();
 
         if (!$this->scm) {
-            throw new RuntimeException(_('Es konnte keine freie Informationsseite mit der angegebenen Id gefunden werden.'));
+            throw new Trails_Exception(404, _('Es konnte keine freie Informationsseite mit der angegebenen Id gefunden werden.'));
         }
 
         if (Request::get('verify') == 'delete') {

@@ -91,7 +91,7 @@ if ($args) {
 
             // determine the plugin path
             $basepath = get_config('PLUGINS_PATH');
-            $pluginpath = $origin.'/'.$pluginclass;
+            $pluginpath = $origin . '/' . $pluginclass;
 
             $plugin_manager = PluginManager::getInstance();
             $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);
@@ -103,7 +103,7 @@ if ($args) {
 
             // create database schema if needed
             if (isset($manifest['dbscheme']) && !$update) {
-                $schemafile = $plugindir.'/'.$manifest['dbscheme'];
+                $schemafile = $plugindir . '/' . $manifest['dbscheme'];
                 $contents   = file_get_contents($schemafile);
                 $statements = preg_split("/;[[:space:]]*\n/", $contents, -1, PREG_SPLIT_NO_EMPTY);
                 $db = DBManager::get();
@@ -113,9 +113,9 @@ if ($args) {
             }
 
             // check for migrations
-            if (is_dir($plugindir.'/migrations')) {
+            if (is_dir($plugindir . '/migrations')) {
                 $schema_version = new DBSchemaVersion($manifest['pluginname']);
-                $migrator = new Migrator($plugindir.'/migrations', $schema_version);
+                $migrator = new Migrator($plugindir . '/migrations', $schema_version);
                 $migrator->migrate_to(null);
             }
 
@@ -166,7 +166,7 @@ if ($args) {
                 if (strtolower($pluginname) == strtolower($plugin['name'])) {
                     $plugindir = get_config('PLUGINS_PATH') .'/'. $plugin['path'];
 
-                    if (is_dir($plugindir.'/migrations')) {
+                    if (is_dir($plugindir . '/migrations')) {
                         // if there are migrations, migrate
                         $schema_version = new DBSchemaVersion($plugin['name']);
                         $migrator = new Migrator($plugindir .'/migrations', $schema_version, $verbose);
@@ -192,7 +192,7 @@ if ($args) {
                 }
             }
 
-            echo 'Konnte kein Plugin mit dem Namen '. $pluginname .' finden.' . "\n";
+            echo 'Konnte kein Plugin mit dem Namen ' . $pluginname . ' finden.' . "\n";
             echo 'Überprüfen sie bitte den Namen (auch auf Groß-/Kleinschreibung!)' ."\n";
             exit(1);
         break;
@@ -214,9 +214,9 @@ if ($args) {
 
                     $plugin_manager->unregisterPlugin($plugin['id']);
 
-                    if (is_dir($plugindir.'/migrations')) {
+                    if (is_dir($plugindir . '/migrations')) {
                         $schema_version = new DBSchemaVersion($plugin['name']);
-                        $migrator = new Migrator($plugindir.'/migrations', $schema_version);
+                        $migrator = new Migrator($plugindir . '/migrations', $schema_version);
                         $migrator->migrate_to(0);
                     }
 
@@ -265,18 +265,18 @@ if ($args) {
             }
             $basepath = get_config('PLUGINS_PATH');
             foreach ($plugins as $plugin) {
-                $plugindir = $basepath.'/'.$plugin['path'].'/';
+                $plugindir = $basepath . '/' . $plugin['path'] . '/';
                 $plugin['class_exists'] = 0;
-                $pluginfile = $plugindir.$plugin['class'].'.class.php';
+                $pluginfile = $plugindir . $plugin['class'] . '.class.php';
                 if (file_exists($pluginfile)) {
                     $plugin['class_exists'] = 1;
                 } else {
-                    $pluginfile = $plugindir.$plugin['class'].'.php';
+                    $pluginfile = $plugindir . $plugin['class'] . '.php';
                     if (file_exists($pluginfile)) {
                         $plugin['class_exists'] = 1;
                     }
                 }
-                if (is_dir($plugindir.'/migrations')) {
+                if (is_dir($plugindir . '/migrations')) {
                     $schema_version = new DBSchemaVersion($plugin['name']);
                     $migrator = new Migrator($plugindir .'/migrations', $schema_version);
                     $plugin['migration_top_version'] = $migrator->top_version();

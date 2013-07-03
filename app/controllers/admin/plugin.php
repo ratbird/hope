@@ -36,7 +36,7 @@ class Admin_PluginController extends AuthenticatedController
         // set page title and navigation
         PageLayout::setTitle(_('Verwaltung von Plugins'));
         Navigation::activateItem('/admin/config/plugins');
-        
+
         $this->plugin_admin = new PluginAdministration();
     }
 
@@ -117,8 +117,8 @@ class Admin_PluginController extends AuthenticatedController
 
         // update enabled/disabled status and position if set
         foreach ($plugins as $plugin){
-            $enabled = Request::int('enabled_'.$plugin['id'], 0);
-            $navpos = Request::int('position_'.$plugin['id']);
+            $enabled = Request::int('enabled_' . $plugin['id'], 0);
+            $navpos = Request::int('position_' . $plugin['id']);
 
             $plugin_manager->setPluginEnabled($plugin['id'], $enabled);
 
@@ -128,7 +128,7 @@ class Admin_PluginController extends AuthenticatedController
         }
 
         $this->flash['message'] = _('Die Änderungen wurden gespeichert.');
-        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter=' . $plugin_filter);
     }
 
     /**
@@ -249,7 +249,7 @@ class Admin_PluginController extends AuthenticatedController
             $this->plugin_admin->uninstallPlugin($plugin);
         }
 
-        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter=' . $plugin_filter);
     }
 
     /**
@@ -263,16 +263,16 @@ class Admin_PluginController extends AuthenticatedController
         $plugin = $plugin_manager->getPluginInfoById($plugin_id);
 
         // prepare file name for download
-        $pluginpath = get_config('PLUGINS_PATH').'/'.$plugin['path'];
+        $pluginpath = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
         $manifest = $this->plugin_admin->getPluginManifest($pluginpath);
-        $filename = $plugin['class'].'-'.$manifest['version'].'.zip';
-        $filepath = get_config('TMP_PATH').'/'.$filename;
+        $filename = $plugin['class'] . '-' . $manifest['version'] . '.zip';
+        $filepath = get_config('TMP_PATH') . '/' . $filename;
 
         create_zip_from_directory($pluginpath, $filepath);
 
         header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        header('Content-Length: '.filesize($filepath));
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . filesize($filepath));
         header('Pragma: public');
 
         $this->render_nothing();
@@ -317,7 +317,7 @@ class Admin_PluginController extends AuthenticatedController
             $this->flash['message'] = _('Update erfolgreich installiert.');
         }
 
-        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter=' . $plugin_filter);
     }
 
     /**
@@ -329,7 +329,7 @@ class Admin_PluginController extends AuthenticatedController
         $plugin = $plugin_manager->getPluginInfoById($plugin_id);
 
         // retrieve manifest
-        $pluginpath = get_config('PLUGINS_PATH').'/'.$plugin['path'];
+        $pluginpath = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
         $manifest = $this->plugin_admin->getPluginManifest($pluginpath);
 
         $this->plugin   = $plugin;
@@ -371,7 +371,7 @@ class Admin_PluginController extends AuthenticatedController
                 count($selected_inst));
         }
 
-        $this->redirect('admin/plugin/default_activation/'.$plugin_id);
+        $this->redirect('admin/plugin/default_activation/' . $plugin_id);
     }
 
     /**
@@ -390,11 +390,11 @@ class Admin_PluginController extends AuthenticatedController
         } else {
             PageLayout::postMessage(MessageBox::error(_('Die Migration konnte nicht durchgeführt werden.')));
         }
-        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter=' . $plugin_filter);
     }
 
     /**
-     * register a plugin in database when it 
+     * register a plugin in database when it
      * already exists in file system
      *
      * @param integer   number of found plugin

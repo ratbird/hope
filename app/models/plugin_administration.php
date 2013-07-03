@@ -40,7 +40,7 @@ class PluginAdministration
     {
         global $SOFTWARE_VERSION;
 
-        $packagedir = get_config('PLUGINS_PATH').'/tmp_'.md5($filename);
+        $packagedir = get_config('PLUGINS_PATH') . '/tmp_' . md5($filename);
 
         // extract plugin files
         mkdir($packagedir);
@@ -73,8 +73,8 @@ class PluginAdministration
 
         // determine the plugin path
         $basepath = get_config('PLUGINS_PATH');
-        $pluginpath = $origin.'/'.$pluginclass;
-        $plugindir = $basepath.'/'.$pluginpath;
+        $pluginpath = $origin . '/' . $pluginclass;
+        $plugindir = $basepath . '/' . $pluginpath;
 
         $plugin_manager = PluginManager::getInstance();
         $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);
@@ -96,8 +96,8 @@ class PluginAdministration
         }
 
         // move directory to final destination
-        if (!file_exists($basepath.'/'.$origin)) {
-            mkdir($basepath.'/'.$origin);
+        if (!file_exists($basepath . '/' . $origin)) {
+            mkdir($basepath . '/' . $origin);
         }
 
         rename($packagedir, $plugindir);
@@ -116,7 +116,7 @@ class PluginAdministration
         // if we have a homepageplugin register some visibility
         $pluginInfo = $plugin_manager->getPluginInfoById($pluginid);
         if (in_array('HomepagePlugin', $pluginInfo['type'])) {
-            Visibility::addPrivacySettingForAll($pluginInfo['name'], "plugin".$pluginInfo['id'], 0, 1, null, $pluginid);
+            Visibility::addPrivacySettingForAll($pluginInfo['name'], "plugin" . $pluginInfo['id'], 0, 1, null, $pluginid);
         }
 
         // register additional plugin classes in this package
@@ -182,7 +182,7 @@ class PluginAdministration
         }
 
         $plugin_manager->unregisterPlugin($plugin['id']);
-        $plugindir = get_config('PLUGINS_PATH').'/'.$plugin['path'];
+        $plugindir = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
         $manifest = $this->getPluginManifest($plugindir);
 
         // delete database if needed
@@ -241,7 +241,7 @@ class PluginAdministration
         $pluginname = $manifest['pluginname'];
 
         if (isset($manifest['dbscheme']) && !$update) {
-            $schemafile = $plugindir.'/'.$manifest['dbscheme'];
+            $schemafile = $plugindir . '/' . $manifest['dbscheme'];
             $contents   = file_get_contents($schemafile);
             $statements = preg_split("/;[[:space:]]*\n/", $contents, -1, PREG_SPLIT_NO_EMPTY);
             $db = DBManager::get();
@@ -250,9 +250,9 @@ class PluginAdministration
             }
         }
 
-        if (is_dir($plugindir.'/migrations')) {
+        if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($pluginname);
-            $migrator = new Migrator($plugindir.'/migrations', $schema_version);
+            $migrator = new Migrator($plugindir . '/migrations', $schema_version);
             $migrator->migrate_to(null);
         }
     }
@@ -268,16 +268,16 @@ class PluginAdministration
     {
         $pluginname = $manifest['pluginname'];
 
-        if (is_dir($plugindir.'/migrations')) {
+        if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($pluginname);
             $new_version = 0;
 
-            if (is_dir($new_pluginpath.'/migrations')) {
-                $migrator = new Migrator($new_pluginpath.'/migrations', $schema_version);
+            if (is_dir($new_pluginpath . '/migrations')) {
+                $migrator = new Migrator($new_pluginpath . '/migrations', $schema_version);
                 $new_version = $migrator->top_version();
             }
 
-            $migrator = new Migrator($plugindir.'/migrations', $schema_version);
+            $migrator = new Migrator($plugindir . '/migrations', $schema_version);
             $migrator->migrate_to($new_version);
         }
     }
@@ -292,14 +292,14 @@ class PluginAdministration
     {
         $pluginname = $manifest['pluginname'];
 
-        if (is_dir($plugindir.'/migrations')) {
+        if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($pluginname);
-            $migrator = new Migrator($plugindir.'/migrations', $schema_version);
+            $migrator = new Migrator($plugindir . '/migrations', $schema_version);
             $migrator->migrate_to(0);
         }
 
         if (isset($manifest['uninstalldbscheme'])) {
-            $schemafile = $plugindir.'/'.$manifest['uninstalldbscheme'];
+            $schemafile = $plugindir . '/' . $manifest['uninstalldbscheme'];
             $contents   = file_get_contents($schemafile);
             $statements = preg_split("/;[[:space:]]*\n/", $contents, -1, PREG_SPLIT_NO_EMPTY);
             $db = DBManager::get();
@@ -368,7 +368,7 @@ class PluginAdministration
 
         foreach ($plugins as $plugin) {
             $repository = $default_repository;
-            $plugindir = get_config('PLUGINS_PATH').'/'.$plugin['path'];
+            $plugindir = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
             $manifest = $this->getPluginManifest($plugindir);
 
             if (isset($manifest['updateURL'])) {
@@ -402,10 +402,10 @@ class PluginAdministration
         $plugins = $plugin_manager->getPluginInfos();
         $basepath = get_config('PLUGINS_PATH');
         foreach ($plugins as $id => $plugin) {
-            $plugindir = $basepath.'/'.$plugin['path'].'/';
-            if (is_dir($plugindir.'/migrations')) {
+            $plugindir = $basepath . '/' . $plugin['path'] . '/';
+            if (is_dir($plugindir . '/migrations')) {
                 $schema_version = new DBSchemaVersion($plugin['name']);
-                $migrator = new Migrator($plugindir .'/migrations', $schema_version);
+                $migrator = new Migrator($plugindir . '/migrations', $schema_version);
                 $info[$id]['migration_top_version'] = $migrator->top_version();
                 $info[$id]['schema_version'] = $schema_version->get();
             }
@@ -424,8 +424,8 @@ class PluginAdministration
         $plugin_manager = PluginManager::getInstance();
         $plugin = $plugin_manager->getPluginInfoById($plugin_id);
         $basepath = get_config('PLUGINS_PATH');
-        $plugindir = $basepath.'/'.$plugin['path'].'/';
-        if (is_dir($plugindir.'/migrations')) {
+        $plugindir = $basepath . '/' . $plugin['path'] . '/';
+        if (is_dir($plugindir . '/migrations')) {
             $schema_version = new DBSchemaVersion($plugin['name']);
             $migrator = new Migrator($plugindir .'/migrations', $schema_version, true);
             ob_start();
@@ -488,7 +488,7 @@ class PluginAdministration
 
         // determine the plugin path
         $basepath = get_config('PLUGINS_PATH');
-        $pluginpath = $origin.'/'.$pluginclass;
+        $pluginpath = $origin . '/' . $pluginclass;
 
         $plugin_manager = PluginManager::getInstance();
         $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);

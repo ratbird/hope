@@ -527,7 +527,7 @@ function printRuntimeSettings ( $startMode = "manual",
     $startMonth = date("m", $startDate);
     $startYear = date("Y", $startDate);
     //Change to use the Datepicker
-    $startEvent = $startDay.'.'.$startMonth.'.'.$startYear;
+    $startEvent = $startDay . '.' . $startMonth . '.' . $startYear;
     $startHour = date("H", $startDate);
     $startMinute = date("i", $startDate);
 
@@ -538,7 +538,7 @@ function printRuntimeSettings ( $startMode = "manual",
     $stopMonth = date("m", $stopDate);
     $stopYear = date("Y", $stopDate);
     //Change to use the Datepicker
-    $stopEvent = $stopDay.'.'.$stopMonth.'.'.$stopYear;
+    $stopEvent = $stopDay . '.' . $stopMonth . '.' . $stopYear;
     $stopHour = date("H", $stopDate);
     $stopMinute = date("i", $stopDate);
 
@@ -572,7 +572,7 @@ function printRuntimeSettings ( $startMode = "manual",
     $html .= "&nbsp;&nbsp;<input type=text id=startEvent name=startEvent size=10 maxlength=10 value=\"".$startEvent."\">&nbsp;"
           . sprintf( "<font size=-1>" . _("um %s Uhr") . "</font>",
                "&nbsp;<input type=text name=startHour size=3 maxlength=2 value=\"".$startHour."\">&nbsp;:".
-               "&nbsp;<input type=text name=startMinute size=3 maxlength=2 value=\"".$startMinute."\">&nbsp;" );
+               "&nbsp;<input type=text name=startMinute size=3 maxlength=2 value=\"" . $startMinute . "\">&nbsp;" );
     $html .= "</td></tr>";
     //Add Script for Datepicker belongs to input field "startEvent"
     $html .= '<script>jQuery("#startEvent").datepicker();</script>';
@@ -598,16 +598,16 @@ function printRuntimeSettings ( $startMode = "manual",
 
     . "<table width=\"100%\" cellpadding=2 cellspacing=0 border=0>\n"
     . "<tr><th>" . _("Ende") . "</th></tr>"
-    . "<tr><td><input type=radio name=stopMode value=manual".$checkManualStop.">&nbsp;"
+    . "<tr><td><input type=radio name=stopMode value=manual" . $checkManualStop . ">&nbsp;"
     . "<font size=-1>" . _("manuell beenden") . "</font>"
     . "</td></tr>"
-    . "<tr><td class=table_row_odd><input type=radio name=stopMode value=timeBased".$checkTimeStop.">&nbsp;"
+    . "<tr><td class=table_row_odd><input type=radio name=stopMode value=timeBased" . $checkTimeStop . ">&nbsp;"
     . "<font size=-1>" . _("Endzeitpunkt:") . "</font>";
     //Change to use the Datepicker
-    $html .= "&nbsp;&nbsp;<input type=text id=stopEvent name=stopEvent size=10 maxlength=10 value=\"".$stopEvent."\">&nbsp;"
+    $html .= "&nbsp;&nbsp;<input type=text id=stopEvent name=stopEvent size=10 maxlength=10 value=\"" . $stopEvent . "\">&nbsp;"
           . sprintf( "<font size=-1>"._("um %s Uhr")."</font>",
-           "&nbsp;<input type=text name=stopHour size=3 maxlength=2 value=\"".$stopHour."\">&nbsp;:".
-           "&nbsp;<input type=text name=stopMinute size=3 maxlength=2 value=\"".$stopMinute."\">&nbsp;" );
+           "&nbsp;<input type=text name=stopHour size=3 maxlength=2 value=\"" . $stopHour . "\">&nbsp;:".
+           "&nbsp;<input type=text name=stopMinute size=3 maxlength=2 value=\"" . $stopMinute . "\">&nbsp;" );
     //Add Script for Datepicker belongs to input field "stopEvent"
     $html .= '<script>jQuery("#stopEvent").datepicker();</script>';
     //Add Script for Datepicker ENDE

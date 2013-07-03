@@ -2166,7 +2166,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     }
     if($view == "view_group_schedule_daily" || $view == 'openobject_group_schedule'){
         if(Request::submitted('jump')) {
-            $splitDate= explode('.',  $_REQUEST['schedule_begin_date']);
+            $splitDate = explode('.',  $_REQUEST['schedule_begin_date']);
             
             $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, $splitDate[1], $splitDate[0], $splitDate[2]);
             //$_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, Request::int('schedule_begin_month'), Request::int('schedule_begin_day'), Request::int('schedule_begin_year'));

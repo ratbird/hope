@@ -69,12 +69,12 @@ if ($expmod == 'exp_direct' && $termin_id) {
 $err = array();
 
 if ($experiod == 'period') {
-    $fooStart = explode('.', $_POST['exStartDate']);
-    $fooStop = explode('.',$_POST['exEndDate']);
-    if (!$exstart = check_date($fooStart[1], $fooStart[0], $fooStart[2], 0, 0)) {
+    $tempStart = explode('.', $_POST['exStartDate']);
+    $tempStop = explode('.', $_POST['exEndDate']);
+    if (!$exstart = check_date($tempStart[1], $tempStart[0], $tempStart[2], 0, 0)) {
         $err['exstart'] = true;
     }
-    if (!$exend = check_date($fooStop[1],$fooStop[0],$fooStop[2], 23, 59)) {
+    if (!$exend = check_date($tempStop[1], $tempStop[0], $tempStop[2], 23, 59)) {
         $err['exend'] = true;
     }
     if ($exstart >= $exend) {
@@ -248,14 +248,14 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $exstartmonth = date("m", time()); 
        if (!$exstartyear)
             $exstartyear = date("Y", time());
-        if(!$exStartDate)
+        if (!$exStartDate)
             $exStartDate = $exstartday.'.'.$exstartmonth.'.'.$exstartyear;
 
         
         // insert popup calendar
         $atimetxt = '&atime=' . mktime(12, 0, 0, $exstartday, $exstartmonth, $exstartyear);
         $text_exstart = "<input type=\"text\" id=\"exStartDate\" name=\"exStartDate\" size=\"10\" maxlength=\"10\" value=\"". $exStartDate."\">&nbsp;\n"
-                ."<script>jQuery('#exStartDate').datepicker();</script>";
+                . "<script>jQuery('#exStartDate').datepicker();</script>";
                 //." &nbsp <input type=\"text\" name=\"exstartday\" size=\"2\" maxlength=\"2\" value=\""
                 //. $exstartday . "\">.&nbsp;\n"
                 //. "<input type=\"text\" name=\"exstartmonth\" size=\"2\" maxlength=\"2\" value=\""
@@ -273,12 +273,12 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $exendmonth = date("m", time());
         if (!$exendyear)
             $exendyear = date("Y", time()) + 1;
-        if(!$exEndDate)
-        $exEndDate = $exendday.'.'.$exendmonth.'.'.$exendyear;
+        if (!$exEndDate)
+            $exEndDate = $exendday . '.' . $exendmonth . '.' . $exendyear;
 
         $atimetxt = '&atime=' . mktime(12, 0, 0, $exendday, $exendmonth, $exendyear);
         $text_exend = "<input type=\"text\" id=\"exEndDate\" name=\"exEndDate\" size=\"10\" maxlength=\"10\" value=\"". $exEndDate ."\">"
-                ."<script>jQuery('#exEndDate').datepicker();</script>";
+                . "<script>jQuery('#exEndDate').datepicker();</script>";
                 //." &nbsp; <input type=\"text\" name=\"exendday\" size=\"2\" maxlength=\"2\" value=\""
                 //. $exendday . "\">.&nbsp;\n"
                 //. "<input type=\"text\" name=\"exendmonth\" size=\"2\" maxlength=\"2\" value=\""

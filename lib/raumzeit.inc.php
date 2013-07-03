@@ -265,8 +265,7 @@ function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinu
             
             ){
         return FALSE;
-    }
-    else{
+    } else {
         return TRUE;
     }
 }
@@ -277,13 +276,7 @@ function raumzeit_doAddSingleDate($sem) {
         $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
         $cmd = 'createNewSingleDate';
     }
-    
-    // check validity of the date
-    //if (!check_singledate(Request::get('day'), Request::get('month'), Request::get('year'), Request::get('start_stunde'),
-    //    Request::get('start_minute'), Request::get('end_stunde'), Request::get('end_minute'))) {
-    //    $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
-    //    $cmd = 'createNewSingleDate';
-    //}
+
 
     // create date
     else {

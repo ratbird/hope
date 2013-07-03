@@ -23,7 +23,7 @@ shuffle($likes);
             $text = _('Dir gefällt das.');
         }
     } else {
-        $text = '<a class="tooltip">' . sprintf(_('%s Nutzer/innen gefällt das.'), sizeof($likes));
+        $text = '<a class="tooltip">' . sprintf(_('%s gefällt das.'), sizeof($likes));
         $text .= '<span>';
         foreach ($likes as $user_id) {
             $text .= get_fullname($user_id) .'<br>';

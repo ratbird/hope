@@ -203,9 +203,9 @@ function printSelections($range,$sarchRange = "",$safeguard = NULL)
 
     // create new vote/test
     $html .= makeNewVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
-    $html.="    </tr>\n"
-         . "    <tr>\n";
-    $html .= makeCopyVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
+    $html .="    </tr>\n"
+          . "    <tr>\n";
+    $html .= makeCopyVoteSelectForm(VOTE_FILE_ADMIN . "?page=edit");
     // background-image
 
     $html.="    </tr>\n"
@@ -801,21 +801,21 @@ function makeCopyVoteSelectForm($action) {
     $st->execute(array($GLOBALS['user']->id));
     $votes = $st->fetchAll(PDO::FETCH_ASSOC);
     if (count($votes)) {
-        $html = "    <td class=\"table_row_even\" style=\"vertical-align:middle;\" nowrap>\n"
-            . "     <form action=\"".URLHelper::getLink($action)."\" method=post><br>&nbsp;\n"
-            .       CSRFProtection::tokenTag()
-        // vote/test selection
-        . "     <select name=\"makecopy\" style=\"vertical-align:middle;\">";
+        $html = '<td class="table_row_even" style="vertical-align:middle;" nowrap>' . "\n"
+            . '<form action="' . URLHelper::getLink($action) . '" method="post"><br>&nbsp;' . "\n"
+            . CSRFProtection::tokenTag() . "\n"
+            . '<select name="makecopy" style="vertical-align:middle;">' . "\n";
         foreach ($votes  as $vote) {
-            $html .= "      <option value=\"".htmlReady($vote['vote_id'] . '_' . $vote['type'])."\">".htmlReady($vote['title'] . ' (' . ($vote['type'] == 'vote' ? _("Umfrage") : _("Test")) .')')."</option>\n";
+            $html .= sprintf('<option value="%s">%s (%s)</option>' . "\n",
+                     htmlReady($vote['vote_id'] . '_' . $vote['type']),
+                     htmlReady($vote['title']),
+                     $vote['type'] == 'vote' ? _("Umfrage") : _("Test"));
         }
-        $html .= "     </select>&nbsp;";
-
-
-        $html .= Button::create(_("Kopie erstellen"))
-            . "<input type=\"hidden\" name=\"rangeID\" value=\"".htmlready($showrangeID)."\">"
-            . "     <br>&nbsp;</form>\n"
-            . "   </td>\n";
+        $html .= '</select>&nbsp;' . "\n"
+            . Button::create(_("Kopie erstellen")) ."\n"
+            . '<input type="hidden" name="rangeID" value="' . htmlready($showrangeID) . '>' ."\n"
+            . '<br>&nbsp;</form>' . "\n"
+            . '</td>' . "\n";
     } else {
         $html = '<td></td>';
     }

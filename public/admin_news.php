@@ -311,7 +311,7 @@ if (!$cmd OR $cmd=="show") {
         if ($news->search_result) {
             uasort($news->search_result, 'callback_cmp_newsarray');
             echo "\n".'<tr><td width="100%" class="blank"><p class="info">';
-            echo '<table width="'.round(0.88*$news->xres).'" cellspacing="0" cellpadding="2" border="0">';
+            echo '<table width="100%" cellspacing="0" cellpadding="2" border="0">';
             while (list($typen_key,$typen_value)=each ($typen)) {
                 if (!$perm->have_perm("root") AND $typen_key=="user")
                     continue;

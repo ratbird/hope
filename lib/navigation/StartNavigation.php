@@ -163,6 +163,18 @@ class StartNavigation extends Navigation
         $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));
         $this->addSubNavigation('messaging', $navigation);
 
+        // community 
+        $navigation = new Navigation(_('Community')); 
+        $navigation->addSubNavigation('online', new Navigation(_('Wer ist online?'), 'dispatch.php/online')); 
+        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha'))); 
+        // study groups 
+        if (get_config('STUDYGROUPS_ENABLE')) { 
+            $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse')); 
+        } 
+        // ranking 
+        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score')); 
+        $this->addSubNavigation('community', $navigation);
+
         // calendar / home page
         if (!$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Mein Profil'), 'dispatch.php/profile');

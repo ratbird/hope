@@ -224,6 +224,35 @@ class BlubberStream extends SimpleORMap {
         }
         return $postings;
     }
+
+    /**
+     * Fetches all hashtags that appear in this stream ordered by appearances
+     * (starting with the most frequented). You can also define a date, so you
+     * get only hashtags from threads newer than that date. And you can define
+     * a limit.
+     * @param integer|null $since : unix-timestamp for a date so you get only
+     *   hashtags from threads that are newer than that date. Or null if there is
+     *   no restriction in time.
+     * @param integer|null $limit : limit the amount of results or null for
+     *   infinite results
+     * @return array of strings
+     */
+    public function fetchTags($since = null, $limit = null) {
+        list($sql, $parameters) = $this->getThreadsSql();
+        $statement = DBManager::get()->prepare(
+            "SELECT blubber_tags.tag " .
+            "FROM (".$sql.") AS threads " .
+                "INNER JOIN blubber_tags ON (blubber_tags.topic_id = threads.topic_id) " .
+            (($since !== null) ? "WHERE threads.chdate >= :tags_since " : "") .
+            "GROUP BY blubber_tags.tag " .
+            "ORDER BY SUM(1) DESC " .
+        "");
+        if ($since !== null) {
+            $parameters['tags_since'] = $since;
+        }
+        $statement->execute($parameters);
+        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
     
     /**
      * Returns sql and parameter for a PDO-statement that fetches all threads of 

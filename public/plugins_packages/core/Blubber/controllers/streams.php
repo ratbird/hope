@@ -54,18 +54,7 @@ class StreamsController extends ApplicationController {
             "WHERE statusgruppen.range_id = ".DBManager::get()->quote($GLOBALS['user']->id)." " .
             "ORDER BY name ASC " .
         "")->fetchAll(PDO::FETCH_ASSOC);
-        $get_tags = DBManager::get()->prepare(
-            "SELECT blubber_tags.tag " .
-            "FROM blubber_tags " .
-                "INNER JOIN blubber ON (blubber.root_id = blubber_tags.topic_id) " .
-            "WHERE blubber.mkdate >= :last_month " .
-                "AND blubber.context_type = 'public' " .
-            "GROUP BY blubber_tags.tag " .
-            "ORDER BY SUM(1) DESC " .
-            "LIMIT 50 " .
-        "");
-        $get_tags->execute(array('last_month' => time() - (86400 * 30)));
-        $this->favourite_tags = $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);
+        $this->favourite_tags = $globalstream->fetchTags(time() - (86400 * 30), 50);
     }
 
     /**
@@ -94,17 +83,7 @@ class StreamsController extends ApplicationController {
             $this->search = "#".Request::get("hash");
             $coursestream->filter_hashtags = array(Request::get("hash"));
         }
-        $get_tags = DBManager::get()->prepare(
-            "SELECT blubber_tags.tag " .
-            "FROM blubber_tags " .
-                "INNER JOIN blubber ON (blubber.topic_id = blubber_tags.topic_id) " .
-            "WHERE blubber.Seminar_id = :seminar_id " .
-                "AND context_type = 'course' " .
-            "GROUP BY blubber_tags.tag " .
-            "ORDER BY SUM(1) DESC " .
-        "");
-        $get_tags->execute(array('seminar_id' => $_SESSION['SessionSeminar']));
-        $this->tags = $get_tags->fetchAll(PDO::FETCH_COLUMN, 0);
+        $this->tags = $coursestream->fetchTags();
         $this->threads = $coursestream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];

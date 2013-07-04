@@ -6,8 +6,7 @@
     </label>
     <br>
     <input type="text" id="subject" name="messagesubject" style="width: 99%"
-           value="<?= trim(htmlready($messagesubject)) ?>"
-    </label>
+           value="<?= trim(htmlready($messagesubject)) ?>">
 </div>
 
 <div style="margin-bottom: 1em;">

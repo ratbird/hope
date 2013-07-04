@@ -117,7 +117,7 @@ $start_pages = array(
                 <td>
                     <input type="checkbox" name="showsem_enable" id="showsem_enable"
                            aria-describedby="showsem_enable_description" value="1"
-                           <? if ($config->SHOWSEM_ENABLE) echo 'checked'; ?>
+                           <? if ($config->SHOWSEM_ENABLE) echo 'checked'; ?>>
                 </td>
             </tr>
         </tbody>

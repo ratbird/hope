@@ -15,7 +15,7 @@ class Visibilityapi extends Migration {
   `parent_id` int(32) NOT NULL,
   `category` varchar(128)  NOT NULL,
   `name` varchar(128)  NOT NULL,
-  `state` int(2) NOT NULL,
+  `state` int(2) NULL,
   `plugin` int(11),
   `identifier` varchar(64)  NOT NULL,
   PRIMARY KEY (`visibilityid`),

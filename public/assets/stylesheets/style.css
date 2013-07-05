@@ -1222,6 +1222,9 @@ li#notification_container:hover .list {
 #notification_container.hoverable:hover .list {
   display: block;
 }
+#notification_container #notification_list ul {
+  width: 100%;
+}
 #notification_container #notification_list .more {
   font-size: 0.8em;
   font-weight: bold;

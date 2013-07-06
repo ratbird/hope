@@ -69,7 +69,7 @@ $template->atime                      = $atime;
 $template->infobox = array(
     'picture' => 'infobox/dates.jpg',
     'content' => array(
-        array("kategorie" => _("'Semesterauswahl:"),
+        array("kategorie" => _("Semesterauswahl:"),
         "eintrag" => array(
             array("icon" => "",
                 "text" => '<form method="post" id="sem_auswahl" name="semester" action="' . $PHP_SELF . '?cmd=bind">' .

@@ -469,13 +469,13 @@ tr.sortable th.sortdesc {
   padding: 8px;
   vertical-align: top;
 }
-.settings tbody.maxed input[type=email],
-.settings tbody.maxed input[type=password],
-.settings tbody.maxed input[type=tel],
-.settings tbody.maxed input[type=text],
-.settings tbody.maxed input[type=url],
-.settings tbody.maxed select,
-.settings tbody.maxed textarea {
+.settings tbody.maxed input[type=email]:first-child,
+.settings tbody.maxed input[type=password]:first-child,
+.settings tbody.maxed input[type=tel]:first-child,
+.settings tbody.maxed input[type=text]:first-child,
+.settings tbody.maxed input[type=url]:first-child,
+.settings tbody.maxed select:first-child,
+.settings tbody.maxed textarea:first-child {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

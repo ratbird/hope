@@ -291,8 +291,10 @@ tr.sortable {
     tbody {
         &.maxed {
             input[type=email], input[type=password], input[type=tel], input[type=text], input[type=url], select, textarea {
-                .box-sizing(border-box);
-                width: 100%;
+                &:first-child {
+                    .box-sizing(border-box);
+                    width: 100%;
+                }
             }
             td[colspan]:first-child {
                 input[type=email], input[type=password], input[type=tel], input[type=text], input[type=url], select, textarea {

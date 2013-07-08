@@ -51,7 +51,7 @@ class Settings_DetailsController extends Settings_SettingsController
     {
         //add the free administrable datafields
         $userEntries = DataFieldEntry::getDataFieldEntries($this->user->user_id);
-        array_filter($userEntries, function ($entry) { return $entry->isVisible(); });
+        $userEntries = array_filter($userEntries, function ($entry) { return $entry->isVisible(); });
 
         $this->locked_info     = LockRules::CheckLockRulePermission($this->user->user_id)
                                ? LockRules::getObjectRule($this->user->user_id)->description
@@ -68,11 +68,21 @@ class Settings_DetailsController extends Settings_SettingsController
     {
         $this->check_ticket();
 
+        $changed = false;
+
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
-            $this->config->store('SKYPE_NAME', preg_replace('/[^a-z0-9.,_-]/i', '', Request::get('skype_name')));
-            Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1, $this->user->user_id);
-            $this->config->store('SKYPE_ONLINE_STATUS', Request::int('skype_online_status'));
-            Visibility::updatePrivacySettingWithTest(Request::int('skype_online_status'), _("Skype Online Status"), "skype_online_status", 'skype_name', 1, $this->user->user_id);
+            $new_skype_name = preg_replace('/[^a-z0-9.,_-]/i', '', Request::get('skype_name'));
+            if ($new_skype_name != $this->config->SKYPE_NAME) {
+                $this->config->store('SKYPE_NAME', $new_skype_name);
+                Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1, $this->user->user_id);
+                $changed = true;
+            }
+
+            if (Request::int('skype_online_status') != $this->config->SKYPE_ONLINE_STATUS) {
+                $this->config->store('SKYPE_ONLINE_STATUS', Request::int('skype_online_status'));
+                Visibility::updatePrivacySettingWithTest(Request::int('skype_online_status'), _("Skype Online Status"), "skype_online_status", 'skype_name', 1, $this->user->user_id);
+                $changed = true;
+            }
         }
 
         $mapping = array(
@@ -101,9 +111,10 @@ class Settings_DetailsController extends Settings_SettingsController
 
         foreach ($mapping as $key => $column) {
             $value = Request::get($key);
-            if ($this->shallChange('user_info.' . $column, $column, $value)) {
+            if ($this->user->$column != $value && $this->shallChange('user_info.' . $column, $column, $value)) {
                 $this->user->$column = $value;
                 Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $column, 'privatedata', 1, $this->user->user_id);
+                $changed = true;
             }
         }
 
@@ -132,12 +143,13 @@ class Settings_DetailsController extends Settings_SettingsController
 
         if (count($errors) > 0) {
             $this->reportErrorWithDetails(_('Bitte überprüfen Sie Ihre Eingaben.'), $errors);
-        } else if ($this->user->store() || $datafields_changed) {
+        } else if ($this->user->store() || $changed || $datafields_changed) {
             $this->reportSuccess(_('Daten im Lebenslauf u.a. wurden geändert.'));
 
             setTempLanguage($this->user->user_id);
             $this->postPrivateMessage(_('Daten im Lebenslauf u.a. wurden geändert.'));
             restoreLanguage();
         }
+        $this->redirect('settings/details');
     }
 }

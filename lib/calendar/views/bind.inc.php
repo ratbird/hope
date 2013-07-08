@@ -30,6 +30,7 @@ if (Request::submitted('sem_auswahl')) {
 } else {
     $selected_sem = $current_semester['semester_id'];
 }
+$order = Request::get('order');
 // alle vom user abonnierten Seminare
 $db = DBManager::get();
 $sortby = Request::option('sortby', 'seminar_user.gruppe, seminare.Name');

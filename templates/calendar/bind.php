@@ -26,18 +26,21 @@
                 </a>
             </th>
             <th align="left">
-                <a href="<?= URLHelper::getLink('?cmd=bind&sortby=Name&order=' . $order) ?>">
+                <a href="<?= URLHelper::getUrl('calendar.php', 
+                        array('cmd' => 'bind', 'sortby' => 'Name', 'order' => $order, 'selected_sem' => $selected_sem))?>">
                     <?= _('Name') ?>
                 </a>
             </th>
             <th>
-                <a href="<?= URLHelper::getLink('?cmd=bind&sortby=count&order=' . $order) ?>">
+                <a href="<?= URLHelper::getUrl('calendar.php', 
+                        array('cmd' => 'bind', 'sortby' => 'count', 'order' => $order, 'selected_sem' => $selected_sem))?>">
                     <?= _('Termine') ?>
                 </a>
             </th>
             <th><?= _('besucht') ?></th>
             <th>
-                <a href="<?= URLHelper::getLink('?cmd=bind&sortby=status&order=' . $order) ?>">
+                <a href="<?= URLHelper::getUrl('calendar.php', 
+                        array('cmd' => 'bind', 'sortby' => 'status', 'order' => $order, 'selected_sem' => $selected_sem))?>">
                     <?= _('Status') ?>
                 </a>
             </th>

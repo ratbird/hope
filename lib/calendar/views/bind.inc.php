@@ -25,11 +25,13 @@ SkipLinks::addIndex(_("Veranstaltungstermine"), 'main_content', 100);
 $semester_data = new SemesterData();
 $current_semester = $semester_data->getCurrentSemesterData();
 
-if (Request::submitted('sem_auswahl')) {
-    $selected_sem = Request::get('sem_auswahl');
+if (Request::submitted('selected_sem')) {
+    $selected_sem = Request::get('selected_sem');
 } else {
     $selected_sem = $current_semester['semester_id'];
 }
+
+
 $order = Request::get('order');
 // alle vom user abonnierten Seminare
 $db = DBManager::get();
@@ -73,8 +75,8 @@ $template->infobox = array(
         array("kategorie" => _("Semesterauswahl:"),
         "eintrag" => array(
             array("icon" => "",
-                "text" => '<form method="post" id="sem_auswahl" name="semester" action="' . URLHelper::getUrl('calendar.php', array('cmd' => 'bind')) . '">' .
-                $semester_data->GetSemesterSelector(array('name' => 'sem_auswahl', 'onchange' => 'jQuery(\'#sem_auswahl\').submit()'), $selected_sem)
+                "text" => '<form method="post" id="selected_sem" name="semester" action="' . URLHelper::getUrl('calendar.php', array('cmd' => 'bind')) . '">' .
+                $semester_data->GetSemesterSelector(array('name' => 'selected_sem', 'onchange' => 'jQuery(\'#selected_sem\').submit()'), $selected_sem)
                 . '</form>'
                 )
             )

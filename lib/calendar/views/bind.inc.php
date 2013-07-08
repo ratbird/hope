@@ -72,7 +72,7 @@ $template->infobox = array(
         array("kategorie" => _("Semesterauswahl:"),
         "eintrag" => array(
             array("icon" => "",
-                "text" => '<form method="post" id="sem_auswahl" name="semester" action="' . $PHP_SELF . '?cmd=bind">' .
+                "text" => '<form method="post" id="sem_auswahl" name="semester" action="' . URLHelper::getUrl('calendar.php', array('cmd' => 'bind')) . '">' .
                 $semester_data->GetSemesterSelector(array('name' => 'sem_auswahl', 'onchange' => 'jQuery(\'#sem_auswahl\').submit()'), $selected_sem)
                 . '</form>'
                 )

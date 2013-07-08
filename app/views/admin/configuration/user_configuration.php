@@ -51,6 +51,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
     </tr>
     <? endforeach; ?>
+</table>
 <? endif;?>
 <? if ($give_alls): ''?>
 <h3>

@@ -329,7 +329,7 @@ class Navigation implements IteratorAggregate
     {
         if (isset($image)) {
             $options['src'] = Assets::image_path($image);
-            if ((isset($options['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] == 2)) {
+            if ((isset($options['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2)) {
                 $options['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $options['src']);
             }
             $this->image = $options;

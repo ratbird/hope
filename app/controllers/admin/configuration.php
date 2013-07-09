@@ -125,9 +125,10 @@ class Admin_ConfigurationController extends AuthenticatedController
         $this->infobox = $this-> getInfobox();
 
         //ajax
-        if (@$_SERVER['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest') {
+        if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
+            $this->response->add_header('Content-Type', 'text/html;charset=windows-1252');
         }
     }
 

@@ -142,7 +142,7 @@ class Assets {
    
    if (($pos = array_search("icons", $parts)) !== false) {
         $size = $parts[$pos+1] . '@' . $parts[$pos+1];
-        if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) {
+        if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }
  
@@ -154,7 +154,7 @@ class Assets {
 
     $opt['src'] = Assets::image_path($source);
 
-    if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] == 2)) {
+    if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2)) {
         $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
         unset ($opt['@2x']);
     }
@@ -192,7 +192,7 @@ class Assets {
     
     if (($pos = array_search("icons", $parts)) || (in_array("icons", $parts))) {
         $opt['size'] = $parts[$pos+1];
-        if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) {
+        if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }
         $source = implode("/", $parts);
@@ -202,7 +202,7 @@ class Assets {
 
     $opt['src'] = Assets::image_path($source);
 
-    if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] == 2)) {
+    if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2)) {
         $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
         unset ($opt['@2x']);
     }

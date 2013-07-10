@@ -752,7 +752,7 @@ function check_admission ($send_message=TRUE)
                         $seminar->getId()
                     ));
                 }
-                $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1');
+                $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Teilnahme an der Veranstaltung %s'), $seminar->getName()));
                 restoreLanguage();
             }
             

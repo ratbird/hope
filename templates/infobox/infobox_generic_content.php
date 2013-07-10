@@ -43,7 +43,7 @@
 
                 <tr>
                   <td width="1%" align="center" valign="top">
-                    <?= Assets::img($item['icon']) ?>
+                    <?= Assets::img($item['icon'], array('width' => "16px")) ?>
                   </td>
                   <td width="99%">
                     <?= $item["text"] ?>

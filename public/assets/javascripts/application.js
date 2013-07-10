@@ -233,7 +233,7 @@ jQuery.ui.accordion.prototype.options.icons = {
 /* ------------------------------------------------------------------------
  * jQuery datepicker
  * ------------------------------------------------------------------------ */
-jQuery(function ($) {
+(function ($) {
     $.datepicker.regional.de = {
         closeText: 'schließen',
         prevText: '&#x3c;zurück',

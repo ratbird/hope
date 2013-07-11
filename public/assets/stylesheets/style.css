@@ -3346,6 +3346,35 @@ div.info {
 .online-list-double table:first-child {
   float: left;
 }
+.online-config,
+.online-config li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.online-config li {
+  *zoom: 1;
+}
+.online-config li:before,
+.online-config li:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.online-config li:after {
+  clear: both;
+}
+.online-config li:first-child {
+  margin-bottom: 0.5em;
+}
+.online-config a {
+  float: left;
+  width: 20px;
+}
+.online-config span {
+  display: block;
+  margin-left: 20px;
+}
 /* Simple Content Module */
 .scm .content_title td {
   text-align: right;

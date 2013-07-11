@@ -49,29 +49,6 @@ class OnlineController extends AuthenticatedController
             $this->settings['show_groups'] = $has_contact_groups;
         }
 
-        // Infobox
-        $this->setInfoboxImage('infobox/online.jpg');
-        $this->addToInfobox(_('Information:'),
-                            _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
-                            'icons/16/black/info.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Sie können diesen NutzerInnen eine Nachricht schicken.'),
-                            'icons/16/black/mail.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.'),
-                            'icons/16/black/person.png');
-
-        // Add buddy configuration option to infobox only if the user actually
-        // has buddies
-        if ($this->buddy_count > 0) {
-            $template = $this->get_template_factory()->open('online/buddy-config');
-            $template->show_only_buddys = $this->settings['show_only_buddys'];
-            $template->show_groups      = $this->settings['show_groups'];
-            $template->controller       = $this;
-            $this->addToInfobox(_('Einstellung:'),
-                                $template->render(),
-                                'icons/16/black/admin.png');
-        }
     }
 
     /**
@@ -88,6 +65,31 @@ class OnlineController extends AuthenticatedController
         $this->limit = Config::getInstance()->ENTRIES_PER_PAGE;
         $max_page    = ceil(count($this->users['users']) / $this->limit);
         $this->page  = min(Request::int('page', 1), $max_page);
+
+        // Infobox
+        $this->setInfoboxImage('infobox/online.jpg');
+        $this->addToInfobox(_('Information:'),
+                            _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
+                            'icons/16/black/info.png');
+        $this->addToInfobox(_('Information:'),
+                            _('Sie können diesen NutzerInnen eine Nachricht schicken.'),
+                            'icons/16/black/mail.png');
+        $this->addToInfobox(_('Information:'),
+                            _('Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.'),
+                            'icons/16/black/person.png');
+
+        // Add buddy configuration option to infobox only if the user actually
+        // has buddies
+        if ($this->buddy_count > 0) {
+            $template = $this->get_template_factory()->open('online/config');
+            $template->show_only_buddys = $this->settings['show_only_buddys'];
+            $template->show_groups      = $this->settings['show_groups'];
+            $template->controller       = $this;
+            $template->ticket           = get_ticket();
+            $this->addToInfobox(_('Einstellung:'),
+                                $template->render(),
+                                'icons/16/black/admin.png');
+        }
     }
 
     /**
@@ -96,11 +98,10 @@ class OnlineController extends AuthenticatedController
      * The following actions are supported:
      * - "add" to add a user to the current user's buddy list
      * - "remove" to remove a user from the current user's buddy list
-     * - "config" to set the buddy related config options
      *
      * @param String $action The action to be executed
      */
-    public function buddy_action($action = 'add')
+    public function buddy_action($action = 'add', $setting = null, $ticket = null)
     {
         $username = Request::username('username');
 
@@ -111,13 +112,32 @@ class OnlineController extends AuthenticatedController
         } elseif ($action === 'remove' && $username !== null) {
             $messaging->delete_buddy($username);
             PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Buddies.')));
-        } elseif ($action === 'config' && Request::submitted('store')) {
-            CSRFProtection::verifyUnsafeRequest();
-            $this->settings['show_only_buddys'] = Request::int('show_only_buddys', 0);
-            $this->settings['show_groups']      = Request::int('show_groups', 0);
-            $GLOBALS['user']->cfg->store('MESSAGING_SETTINGS', $this->settings);
-            PageLayout::postMessage(MessageBox::success(_('Ihre Einstellungen wurden gespeichert.')));
         }
+        $this->redirect('online');
+    }
+
+    /**
+     * Changes a specific setting by toggling it's state.
+     *
+     * @param String $settings The settings to be changed
+     * @param String $ticket   Neccessary studip ticket to execute the change
+     */
+    public function config_action($setting, $ticket)
+    {
+        if (!in_array($setting, words('show_buddies show_groups')) || !check_ticket($ticket)) {
+            $message = MessageBox::error(_('Es ist ein Fehler aufgetreten. Bitte versuchen Sie die Aktion erneut.'));
+        } else {
+            if ($setting === 'show_buddies') {
+                $this->settings['show_only_buddys'] = (int)!$this->settings['show_only_buddys'];
+            } else {
+                $this->settings['show_groups'] = (int)!$this->settings['show_groups'];
+            }
+            $GLOBALS['user']->cfg->store('MESSAGING_SETTINGS', $this->settings);
+            
+            $message = MessageBox::success(_('Ihre Einstellungen wurden gespeichert.'));
+        }
+        
+        PageLayout::postMessage($message);
         $this->redirect('online');
     }
 

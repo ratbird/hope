@@ -55,7 +55,7 @@
                 label: 'img',
                 evaluate: function (string) {
                     var url = window.prompt('URL:') || '';
-                    return url.length === 0 ? string : '[img=' + string + ']' + url;
+                    return url.length === 0 ? string : '[img]' + url;
                 }
             }
         },

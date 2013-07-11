@@ -85,7 +85,6 @@ class OnlineController extends AuthenticatedController
             $template->show_only_buddys = $this->settings['show_only_buddys'];
             $template->show_groups      = $this->settings['show_groups'];
             $template->controller       = $this;
-            $template->ticket           = get_ticket();
             $this->addToInfobox(_('Einstellung:'),
                                 $template->render(),
                                 'icons/16/black/admin.png');

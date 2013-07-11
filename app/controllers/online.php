@@ -100,7 +100,7 @@ class OnlineController extends AuthenticatedController
      *
      * @param String $action The action to be executed
      */
-    public function buddy_action($action = 'add', $setting = null, $ticket = null)
+    public function buddy_action($action = 'add')
     {
         $username = Request::username('username');
 

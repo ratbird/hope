@@ -247,6 +247,9 @@ class StreamsController extends ApplicationController {
             }
         }
 
+        $thread['description'] = Request::get("content");
+        $thread->store();
+        
         BlubberPosting::$mention_posting_id = $thread->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");

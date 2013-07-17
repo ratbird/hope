@@ -307,7 +307,7 @@ class SiteinfoMarkupEngine {
                        Email, username
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
-                WHERE perms='root'
+                WHERE perms='root' AND locked=0
                 AND ".get_vis_query()."
                 ORDER BY Nachname";
         $result = $this->db->query($sql);
@@ -328,7 +328,7 @@ class SiteinfoMarkupEngine {
                 LEFT JOIN Institute ON (user_inst.institut_id = Institute.Institut_id)
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
-                WHERE inst_perms = 'admin'
+                WHERE inst_perms = 'admin' AND locked=0
                 AND ".get_vis_query()."
                 ORDER BY Institute.Name, auth_user_md5.Nachname, auth_user_md5.Vorname";
         $result = $this->db->query($sql);

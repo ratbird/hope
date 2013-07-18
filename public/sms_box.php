@@ -359,13 +359,10 @@ $query_time = $query_time_sort;
         } ?>
         <table cellpadding="3" cellspacing="0" border="0" width="100%">
             <tr>
-                <td class="blank" align="right" valign="bottom">&nbsp; <?
-                    if ($cmd != "admin_folder" && !$sms_data['tmp']['move_to_folder']) {
-                        echo LinkButton::create(_('Neuer Ordner'), URLHelper::getURL("?cmd=admin_folder&cmd_2=new"));
-                    } else {
-                        echo LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL("?cmd="));
-                    }
-                    ?>
+                <td class="blank" align="right" valign="bottom">
+                <? if ($cmd != "admin_folder" && !$sms_data['tmp']['move_to_folder']): ?>
+                    <?= LinkButton::create(_('Neuer Ordner'), URLHelper::getURL("?cmd=admin_folder&cmd_2=new")) ?>
+                <? endif; ?>
                 </td>
             </tr>
         </table> <?

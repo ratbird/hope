@@ -1053,7 +1053,7 @@ if ($show == "funktion") {
                       LEFT JOIN auth_user_md5 AS aum USING (user_id)
                       LEFT JOIN user_info USING (user_id)
                       WHERE statusgruppen.statusgruppe_id IN (:statusgruppen_ids)
-                        AND Institut_id = ?
+                        AND Institut_id = :inst_id
                       GROUP BY user_id
                       ORDER BY :sort_column :sort_order";
             $parameters[':statusgruppen_ids'] = getAllStatusgruppenIDS($auswahl);

@@ -3,17 +3,20 @@
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/functions.php';
 
-class MembersModel {
+class MembersModel 
+{
 
     protected $course_id;
     protected $course_title;
 
-    public function __construct($course_id, $course_title) {
+    public function __construct($course_id, $course_title) 
+    {
         $this->course_id = $course_id;
         $this->course_title = $course_title;
     }
 
-    public function getCountedMembers() {
+    public function getCountedMembers()
+    {
         $count = array();
 
         $query1 = "SELECT COUNT(user_id) AS members, SUM(admission_studiengang_id != '') AS members_contingent
@@ -43,21 +46,27 @@ class MembersModel {
         return $count;
     }
 
-    public function setAdmissionVisibility($user_id, $status) {
+    public function setAdmissionVisibility($user_id, $status)
+    {
         $query = "UPDATE admission_seminar_user SET visible = '?' WHERE user_id = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
 
         return $statement->execute(array($status, $user_id, $this->course_id));
     }
 
-    public function setVisibilty($user_id, $status) {
+    public function setVisibilty($user_id, $status) 
+    {
+
         $query = "UPDATE seminar_user SET visible = ? WHERE user_id = ? AND Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
 
-        return $statement->execute(array($status, $user_id, $this->course_id));
+        $statement->execute(array($status, $user_id, $this->course_id));
+        
+        return $statement->rowCount();
     }
 
-    public function setMemberStatus($members, $status, $next_status, $direction) {
+    public function setMemberStatus($members, $status, $next_status, $direction)
+    {
         $msgs = array();
         $query = 'UPDATE seminar_user SET status = ?, position = ? WHERE Seminar_id = ? AND user_id = ? AND status = ?';
         $pleasure_statement = DBManager::get()->prepare($query);
@@ -110,7 +119,8 @@ class MembersModel {
         }
     }
 
-    public function cancelSubscription($users) {
+    public function cancelSubscription($users) 
+    {
         $sem = Seminar::GetInstance($this->course_id);
         foreach ($users as $user_id) {
             // delete member from seminar
@@ -125,13 +135,27 @@ class MembersModel {
             }
         }
 
-        // check for successor
-        update_admission($this->course_id);
-
+        return $msgs;
+    }
+    
+    public function cancelAdmissionSubscription($users, $status) 
+    {
+        $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ? AND user_id = ? AND status = ?";
+        $db = DBManager::get()->prepare($query);
+        foreach($users as $user_id) {
+            $temp_user = UserModel::getUser($user_id);
+            $db->execute(array($this->course_id,$user_id, $status));
+            
+            if($db->rowCount() > 0) {
+                log_event('SEM_USER_DEL', $this->course_id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
+                $msgs[] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
+            }
+        }
         return $msgs;
     }
 
-    public function insertAdmissionMember($users, $next_status, $consider_contingent, $accepted = null, $cmd = 'add_user') {
+    public function insertAdmissionMember($users, $next_status, $consider_contingent, $accepted = null, $cmd = 'add_user')
+    {
         $messaging = new messaging;
         foreach ($users as $user_id => $value) {
             if ($value) {
@@ -177,7 +201,8 @@ class MembersModel {
         return $msgs;
     }
 
-    public function addMember($user_id, $accepted = null, $consider_contingent = null, $cmd = 'add_user') {
+    public function addMember($user_id, $accepted = null, $consider_contingent = null, $cmd = 'add_user') 
+    {
         global $perm, $SEM_CLASS, $SEM_TYPE;
 
         $user = UserModel::getUser($user_id);
@@ -269,7 +294,8 @@ class MembersModel {
      * @param String $nachname
      * @return Array
      */
-    public function getMemberByIdentification($nachname, $vorname = null) {
+    public function getMemberByIdentification($nachname, $vorname = null) 
+    {
         // TODO Fullname
         $query = "SELECT a.user_id, username, perms, b.Seminar_id AS is_present
                  FROM auth_user_md5 AS a
@@ -290,7 +316,8 @@ class MembersModel {
      * @param String $username
      * @return Array
      */
-    public function getMemberByUsername($username) {
+    public function getMemberByUsername($username)
+    {
         // TODO Fullname
         $query = "SELECT a.user_id, username,
                         perms, b.Seminar_id AS is_present
@@ -312,7 +339,8 @@ class MembersModel {
      * @param String $datafield_id
      * @return Array
      */
-    public function getMemberByDatafield($nachname, $datafield_id) {
+    public function getMemberByDatafield($nachname, $datafield_id)
+    {
         // TODO Fullname
         $query = "SELECT a.user_id, username, b.Seminar_id AS is_present
                  FROM datafields_entries AS de
@@ -332,7 +360,8 @@ class MembersModel {
      * @param String $user_id
      * @return String
      */
-    private function getPosition($user_id) {
+    private function getPosition($user_id) 
+    {
         $query = "SELECT position FROM seminar_user WHERE user_id = ?";
         $position_statement = DBManager::get()->prepare($query);
 
@@ -347,7 +376,8 @@ class MembersModel {
         }
     }
 
-    private function getLogLevel($direction, $status) {
+    private function getLogLevel($direction, $status)
+    {
         if ($direction == 'upgrade') {
             $directionString = 'Hochgestuft';
         } else {

@@ -6,12 +6,12 @@
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-            <col width="3%">
-            <col width="3%">
-            <col width="49%">
+            <col width="20">
+            <col width="20">
+            <col>
             <col width="5%">
             <col width="25%"
-            <col width="15%">
+            <col width="80">
         </colgroup>
         <thead>
             <tr>
@@ -30,10 +30,12 @@
             </tr>
             <tr class="sortable">
                 <? if($rechte) :?>
-                <input aria-label="<?= _('NutzerInnen auswählen') ?>"
-                            type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]">
+                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                            type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]" />
+                </th>
                 <? endif ?>
-                <th colspan="<?=$rechte ? 2 : 3?>>"<?= ($sort_by == 'nachname' && $sort_status == 'awaiting') ?
+                <th></th>
+                <th <?= ($sort_by == 'nachname' && $sort_status == 'awaiting') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=awaiting&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#awaiting">
@@ -71,7 +73,7 @@
                 </td>
                 <td style="text-align: center"><?= $waiting['position'] ?></td>
                 <td style="text-align: center">
-                    <?= ($autor['admission_studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
+                    <?= ($waiting['studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
                 </td>
                 <td style="text-align: right">
                     <a href="<?= URLHelper::getLink('sms_send.php',
@@ -89,7 +91,7 @@
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s/%s',
                                 $page, $waiting['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/remove/person.png',
+                        <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>

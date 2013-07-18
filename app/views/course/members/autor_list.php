@@ -9,39 +9,36 @@
 
     <table id="autor" class="default collapsable zebra-hover tablesorter">
         <colgroup>
-            <col width="3%">
+            <col width="20">
             <? if($rechte) : ?>
-                <col width="3%">
-                <col width="25%">
+                <col width="20">
+                <col>
                 <col width="15%">
                 <? $cols = 6 ?>
                 <? if ($rechte == 'autor' && $semAdmissionEnabled) : ?>
                     <? $cols = 7?>
                     <? $cols_foot = 7?>
-                    <? $cols_head = 3?>
-                    <col width="29%">
+                    <? $cols_head = 2?>
+                    <col width="15%">
                     <col width="15%">
                 <? else : ?>
+                    <col width="25%">
                     <? $cols_foot = 6?>
-                    <? $cols_head = 2?>
-                    <col width="39%">
                 <? endif ?>
-            <? else : ?>
-                <col width="82%">
-                <? $cols_head = 2?>
+            <? else : ?> 
+                <col>
                 <? $cols = 3 ?>
             <? endif ?>
-            <col width="15%">
+           
+            <col width="80">
         </colgroup>
         <thead>
             <tr>
                 <th class="table_header_bold" colspan="<?=($rechte) ? $cols-2 : $cols-1?>">
                     <?= $status_groups['autor'] ?>
-                    <?= tooltipIcon(sprintf(_('%s haben Schreib- und Leserechte'), htmlReady($status_groups['autor']))) ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right" <?= ($rechte) ? 'colspan="2"' : ''?>>
                 <? if ($rechte) : ?>
-                    <? if (count($autoren) > 0) : ?>
                         <?=$controller->getEmailLinkByStatus('autor')?>
                         <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'send_sms_to_all',
@@ -60,7 +57,6 @@
                                     tooltip2(sprintf(_('Neuen %s zur Veranstaltung hinzufügen'),htmlReady($status_groups['autor'])))) ?>
                         </a>
                     <? endif ?>
-                <? endif ?>
                 </th>
             </tr>
             <tr class="sortable">
@@ -69,7 +65,8 @@
                            type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=autor]">
                     </th>
                 <? endif ?>
-                <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ?
+                <th></th>
+                <th <?= ($sort_by == 'nachname' && $sort_status == 'autor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
                     <? ($sort_status != 'autor') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s',
@@ -93,7 +90,6 @@
             </tr>
         </thead>
         <tbody>
-        <? if (count($autoren) >0 ) : ?>
         <? $nr = $autor_nr?>
         <? foreach($autoren as $autor) : ?>
         <? $fullname = $autor->user->getFullName('full_rev');?>
@@ -148,23 +144,26 @@
                     <? endif ?>
                 <? endif ?>
                 <td style="text-align: right">
-                    <a href="<?= URLHelper::getLink('sms_send.php',
-                                array('filter' => 'send_sms_to_all',
-                                'rec_uname' => $autor['username'],
-                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
-                                'subject' => $subject))
-                            ?>
-                    ">
-                        <?= Assets::img('icons/16/blue/mail.png',
-                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
-                    </a>
-
+                    <? if($user_id != $autor['user_id']) : ?>
+                        <a href="<?= URLHelper::getLink('sms_send.php',
+                                    array('filter' => 'send_sms_to_all',
+                                    'rec_uname' => $autor['username'],
+                                    'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
+                                    'subject' => $subject))
+                                ?>
+                        ">
+                            <?= Assets::img('icons/16/blue/mail.png',
+                                    tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                        </a>
+                    <? else : ?>
+                        <?= Assets::img('icons/16/grey/mail.png')?>
+                    <? endif ?>
                     <? if ($rechte && $is_tutor) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/autor/%s/%s',
                                 $page, $autor['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/remove/person.png',
+                        <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
@@ -179,13 +178,7 @@
                 <td colspan="<?=$cols?>">+ <?= sprintf(_('%u unsichtbare %s'), $invisibles, $status_groups['autor']) ?></td>
             </tr>
         <? endif ?>
-        <? else : ?>
-            <tr>
-                <td colspan="<?=$cols?>">
-                <?=MessageBox::info(_('Derzeit sind noch keine Teilnehmer vorhanden'))?>
-                </td>
-            </tr>
-        <? endif ?>
+        
         </tbody>
         <? if ($rechte && count($autoren) >0) : ?>
         <tfoot>

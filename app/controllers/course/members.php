@@ -23,9 +23,11 @@ require_once 'lib/functions.php'; //Funktionen der Teilnehmerbegrenzung
 require_once 'lib/language.inc.php'; //Funktionen der Teilnehmerbegrenzung
 require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionne für den Export
 
-class Course_MembersController extends AuthenticatedController {
+class Course_MembersController extends AuthenticatedController 
+{
 
-    function before_filter(&$action, &$args) {
+    function before_filter(&$action, &$args) 
+    {
         parent::before_filter($action, $args);
 
         global $perm;
@@ -95,7 +97,8 @@ class Course_MembersController extends AuthenticatedController {
         $this->course = Course::find($this->course_id);
     }
 
-    function index_action($page = 1) {
+    function index_action($page = 1) 
+    {
         global $perm, $rechte, $PATH_EXPORT;
         $sem = Seminar::getInstance($this->course_id);
 
@@ -103,11 +106,6 @@ class Course_MembersController extends AuthenticatedController {
         if ($_SESSION['sms_msg']) {
             $this->msg = $_SESSION['sms_msg'];
             unset($_SESSION['sms_msg']);
-        }
-
-        // if user have no perms
-        if (!$rechte) {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
         }
 
         // Check dozent-perms
@@ -175,9 +173,8 @@ class Course_MembersController extends AuthenticatedController {
             $this->count = $this->members->getCountedMembers();    
         }
         // Set the infobox
+        $this->setInfoBoxImage('infobox/groups.jpg');
         if ($rechte) {
-            $this->setInfoBoxImage('infobox/groups.jpg');
-
             $link = sprintf('<a href="%s">%s</a>', URLHelper::getLink('sms_send.php',
                     array('sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $this->course_id,
@@ -206,18 +203,52 @@ class Course_MembersController extends AuthenticatedController {
                 $this->addToInfobox(_('Aktionen'), $rtfExport, 'icons/16/black/export/file-text.png');
                 
                 if(count($this->awaiting) > 0) {
-                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), $this->course_title), 
+                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), 
+                            $this->course_title), 
                             "rtf", "rtf-warteliste", "awaiting", _("Warteliste exportieren als rtf Dokument"), 
                             'passthrough');
                     
-                    $awaiting_csv =  export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), $this->course_title), 
+                    $awaiting_csv =  export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), 
+                            $this->course_title), 
                             "csv", "csv-warteliste", "awaiting", _("Warteliste exportieren als csv Dokument"), 
                             'passthrough');
                     
                     $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/black/export/file-office.png');
                     $this->addToInfobox(_('Aktionen'), $awaiting_rtf, 'icons/16/black/export/file-text.png'); 
                 }
+                if(count($this->tutoren) == 0) {
+                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_tutor/'),
+                            sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $this->status_groups['tutor']));
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+
+                }
+                
+                if(count($this->autoren) == 0) {
+                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_member/'),
+                            sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $this->status_groups['autor']));
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+
+                }
             }
+        } elseif(!$this->is_tutor) {
+            
+            // Visibility preferences
+            if(!$this->my_visibilty['iam_visible']) {
+                $text      = _('Sie erscheinen nicht auf der Teilnehmerliste.');
+                $icon      = 'icons/16/black/visibility-visible.png';
+                $modus     = 'make_visible'; 
+                $link_text = _('Klicken Sie hier, um sichtbar zu werden.');
+            } else {
+                $text      = _('Sie erscheinen für andere TeilnehmerInnen sichtbar auf der Teilnehmerliste.');
+                $icon      = 'icons/16/black/visibility-invisible.png';
+                $modus     = 'make_invisible'; 
+                $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');
+            }
+
+            $link = sprintf('<a href="%s">%s</a>',$this->url_for(sprintf('course/members/change_visibility/%s/%s', 
+                $modus, $this->my_visibilty['visible_mode'])),$link_text );
+            $this->addToInfobox(_('Sichtbarkeit'), $text, 'icons/16/black/info.png');
+            $this->addToInfobox(_('Sichtbarkeit'), $link, $icon);
         }
     }
 
@@ -225,7 +256,8 @@ class Course_MembersController extends AuthenticatedController {
      * Get all members by status of a seminar
      * @return SimpleOrMapCollection
      */
-    private function getMembers($status) {
+    private function getMembers($status) 
+    {
         $course = $this->course;
         // get members
         if ($status == 'awaiting' || $status == 'accepted') {
@@ -258,7 +290,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Object $perm
      * @return SimpleOrMapCollection
      */
-    private function getAutors() {
+    private function getAutors() 
+    {
         global $perm;
 
         $course = $this->course;
@@ -271,24 +304,13 @@ class Course_MembersController extends AuthenticatedController {
                         return ($user['visible'] != 'no' || $user['user_id'] == $user_id);
             });
         }
-
-        // Count total member for pagination
-//        $this->total = count($members);
-
+        
         // Sorting
         if ($this->sort_status == 'autor') {
             $members->orderBy(sprintf('%s %s', $this->sort_by, $this->order));
         } else {
             $members->orderBy('position asc');
         }
-
-//        if ($this->page != 0) {
-//            $offset = ($this->page - 1) * $this->max_per_page;
-//
-//            $results = $members->limit($offset, $this->max_per_page);
-//        } else {
-//            $results = $members;
-//        }
 
         return $members;
     }
@@ -323,7 +345,8 @@ class Course_MembersController extends AuthenticatedController {
      *
      * @return int
      */
-    private function getInvisibleCount() {
+    private function getInvisibleCount() 
+    {
         $course = $this->course;
         $user_id = $this->user_id;
         
@@ -341,7 +364,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Boolean $rechte
      * @throws AccessDeniedException
      */
-    function add_dozent_action() {
+    function add_dozent_action() 
+    {
         global $perm, $rechte;
         // Security Check
         if ((!$rechte || !$perm->have_studip_perm('dozent', $this->course_id)) && $this->dozent_is_locked) {
@@ -377,7 +401,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Boolean $rechte
      * @throws AccessDeniedException
      */
-    function add_tutor_action() {
+    function add_tutor_action() 
+    {
         global $perm, $rechte;
 
         if (!$rechte || !$perm->have_studip_perm('tutor', $this->course_id) || $this->is_tutor_locked) {
@@ -411,7 +436,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Boolean $rechte
      * @throws AccessDeniedException
      */
-    function add_member_action() {
+    function add_member_action() 
+    {
         global $perm, $rechte;
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
         // get the seminar object
@@ -469,7 +495,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Boolean $rechte
      * @throws AccessDeniedException
      */
-    function set_action() {
+    function set_action() 
+    {
         global $perm, $rechte;
 
         // Security Check
@@ -578,7 +605,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Boolean $rechte
      * @throws AccessDeniedException
      */
-    function set_autor_action() {
+    function set_autor_action() 
+    {
         global $perm, $rechte;
 
         // Security Check
@@ -625,7 +653,8 @@ class Course_MembersController extends AuthenticatedController {
      * @return type
      * @throws AccessDeniedException
      */
-    function set_autor_csv_action() {
+    function set_autor_csv_action() 
+    {
         global $rechte, $perm, $TEILNEHMER_IMPORT_DATAFIELDS;
         // Security Check
         if (!$rechte) {
@@ -791,7 +820,8 @@ class Course_MembersController extends AuthenticatedController {
      * @global Object $perm
      * @throws AccessDeniedException
      */
-    function csv_manual_assignment_action() {
+    function csv_manual_assignment_action() 
+    {
         global $perm;
         // Security. If user not autor, then redirect to index
         if (!$perm->have_studip_perm('tutor', $this->course_id)) {
@@ -808,7 +838,8 @@ class Course_MembersController extends AuthenticatedController {
      * Change the visibilty of an autor
      * @return Boolean
      */
-    function change_visibility_action() {
+    function change_visibility_action($cmd, $mode) 
+    {
         global $perm;
         // Security. If user not autor, then redirect to index
         if ($perm->have_studip_perm('tutor', $this->course_id)) {
@@ -817,25 +848,25 @@ class Course_MembersController extends AuthenticatedController {
         }
 
         // Check for visibile mode
-        if (Request::get('cmd') == 'make_visible') {
-            $cmd = 'yes';
+        if ($cmd == 'make_visible') {
+            $command = 'yes';
         } else {
-            $cmd = 'no';
+            $command = 'no';
         }
 
-        if (Request::option('mode') == 'awaiting') {
-            $result = $this->members->setAdmissionVisibility($this->user_id, $cmd);
+        if ($mode == 'awaiting') {
+            $result = $this->members->setAdmissionVisibility($this->user_id, $command);
         } else {
-            $result = $this->members->setVisibilty($this->user_id, $cmd);
+            $result = $this->members->setVisibilty($this->user_id, $command);
         }
 
-        if ($result) {
+        if ($result > 0) {
             PageLayout::postMessage(MessageBox::success(_('Ihre Sichtbarkeit ist erfolgreich geändert worden')));
         } else {
             PageLayout::postMessage(MessageBox::error(_('Leider ist beim ändern der
                 Sichtbarkeit ein Fehler aufgetreten')));
         }
-        $this->redirect('course/members?cid=' . Request::get('cid'));
+        $this->redirect('course/members');
     }
 
     /**
@@ -843,7 +874,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param int $page
      * @throws AccessDeniedException
      */
-    function edit_tutor_action($page) {
+    function edit_tutor_action($page) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -873,7 +905,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param int $page
      * @throws AccessDeniedException
      */
-    function edit_autor_action($page) {
+    function edit_autor_action($page) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -908,7 +941,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param int $page
      * @throws AccessDeniedException
      */
-    function edit_user_action($page) {
+    function edit_user_action($page) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -939,7 +973,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param int $page
      * @throws AccessDeniedException
      */
-    function edit_awaiting_action($page) {
+    function edit_awaiting_action($page) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -970,7 +1005,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param int $page
      * @throws AccessDeniedException
      */
-    function edit_accepted_action($page) {
+    function edit_accepted_action($page) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -1005,7 +1041,8 @@ class Course_MembersController extends AuthenticatedController {
      * @return String
      * @throws AccessDeniedException
      */
-    function insert_admission_action($status, $cmd, $user_id) {
+    function insert_admission_action($status, $cmd, $user_id) 
+    {
         if (!$this->rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
@@ -1065,7 +1102,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param String $user_id
      * @throws AccessDeniedException
      */
-    function cancel_subscription_action($cmd, $status, $page, $user_id = null) {
+    function cancel_subscription_action($cmd, $status, $page, $user_id = null) 
+    {
         global $rechte;
         if (!$rechte) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
@@ -1082,9 +1120,14 @@ class Course_MembersController extends AuthenticatedController {
                 }
             }
         }
-
+        
         if (!empty($users)) {
-            $msgs = $this->members->cancelSubscription($users);
+            if($status == 'accepted') {
+                $msgs = $this->members->cancelAdmissionSubscription($users, $status);
+            } else {
+                $msgs = $this->members->cancelSubscription($users);
+            }
+            
             // deleted authors
             if (!empty($msgs)) {
                 if (count($msgs) <= 5) {
@@ -1102,7 +1145,7 @@ class Course_MembersController extends AuthenticatedController {
 
         $this->redirect(sprintf('course/members/index/%s', $page));
     }
-
+    
     /**
      * Upgrade a user to a selected status
      * @param type $status
@@ -1111,7 +1154,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param type $cmd
      * @throws AccessDeniedException
      */
-    function upgrade_user_action($status, $next_status, $page) {
+    function upgrade_user_action($status, $next_status, $page) 
+    {
         global $perm, $rechte;
 
         // Security Check
@@ -1158,7 +1202,8 @@ class Course_MembersController extends AuthenticatedController {
      * @param type $cmd
      * @throws AccessDeniedException
      */
-    function downgrade_user_action($status, $next_status, $page) {
+    function downgrade_user_action($status, $next_status, $page)
+    {
         global $perm;
         // Security Check
         if (!$this->rechte) {
@@ -1203,16 +1248,17 @@ class Course_MembersController extends AuthenticatedController {
      * @param String $seminar_id
      * @return Array
      */
-    private function getUserVisibility() {
+    private function getUserVisibility() 
+    {
         $member = $this->course->members->findBy('user_id', $this->user_id);
         
         $visibility = $member->val('visible');
         $status = $member->val('status');
-        
+        #echo "<pre>"; var_dump($member); echo "</pre>";
         $result['visible_mode'] = false;
 
         if ($visibility) {
-            $result['iam_visible'] = $visibility == 'yes';
+            $result['iam_visible'] = ($visibility == 'yes' || $visibility == 'unknown');
 
             if ($status == 'user' || $status == 'autor') {
                 $result['visible_mode'] = 'participant';
@@ -1226,7 +1272,7 @@ class Course_MembersController extends AuthenticatedController {
         $admission_visibility = $admission_member->val('visible');
 
         if ($admission_visibility) {
-            $result['iam_visible'] = $admission_visibility == 'yes';
+            $result['iam_visible'] = ($admission_visibility == 'yes' || $admission_visibility == 'unknown');
             $result['visible_mode'] = 'awaiting';
         }
        
@@ -1236,7 +1282,8 @@ class Course_MembersController extends AuthenticatedController {
      * Creates a String for the waitinglist
      * @return String
      */
-    private function getTitleForAwaiting() {
+    private function getTitleForAwaiting() 
+    {
         $sem = Seminar::GetInstance($this->course_id);
         return ($sem->admission_type == 2 || $sem->admission_selection_take_place == 1) ?
         _("Warteliste") : _("Anmeldeliste");
@@ -1246,7 +1293,8 @@ class Course_MembersController extends AuthenticatedController {
      * Returns the Subject for the Messaging
      * @return String
     */
-    private function getSubject() {
+    private function getSubject() 
+    {
         $result = $this->course->getValue('veranstaltungsnummer');
         
         $subject = ($result == '') ? sprintf('[%s]', $this->course_title) : 

@@ -7,14 +7,16 @@
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-            <col width="3%">
-            <col width="3%">
-            <col width="79%">
+            <col width="20">
+            <col width="20">
+            <col>
             <col width="15%">
+            <col width="25%">
+            <col width="80">
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="3">
+                <th class="table_header_bold" colspan="5">
                     <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
@@ -31,11 +33,11 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($rechte) :?>
-                <input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=accepted]">
-                <? endif?>
-                <th colspan="<?=($rechte) ? 2: 3?>" <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
+                </th>
+                <th></th>
+                <th <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
                 sprintf('class="sort%s"', $order) : '' ?>>
                     <? ($sort_status != 'accepted') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=accepted&order=%s&toggle=%s',
@@ -43,6 +45,13 @@
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
+                <th <?= ($sort_by == 'mkdate' && $sort_status == 'accepted') ? sprintf('class="sort%s"', $order) : '' ?>>
+                    <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=accepted&order=%s&toggle=%s',
+                       $order, ($sort_by == 'mkdate'))) ?>#accepted">
+                        <?= _('Anmeldedatum') ?>
+                    </a>
+                </th>
+                <th><?=_('Studiengang')?></th>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
         </thead>
@@ -64,6 +73,29 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
+                <td><?= date("d.m.y,", $accept['mkdate']) ?> <?= date("H:i:s", $accept['mkdate']) ?></td>
+                <td>
+                    <? $study_courses = UserModel::getUserStudycourse($accept['user_id']) ?>
+                    <? if(!empty($study_courses)) : ?>
+                        <? if (count($study_courses) < 2) : ?>
+                            <? for ($i = 0; $i < 1; $i++) : ?>
+                                <?= htmlReady($study_courses[$i]['fach']) ?>
+                                (<?= htmlReady($study_courses[$i]['abschluss']) ?>)
+                            <? endfor ?>
+                        <? else : ?>
+                            <?= htmlReady($study_courses[0]['fach']) ?>
+                            (<?= htmlReady($study_courses[0]['abschluss']) ?>)
+                            [...]
+                            <? foreach($study_courses as $course) : ?>
+                                <? $course_res .= sprintf('- %s (%s)<br>',
+                                                          htmlReady($course['fach']),
+                                                          htmlReady($course['abschluss'])) ?>
+                            <? endforeach ?>
+                            <?= tooltipIcon('<strong>' . _('Weitere Studiengänge') . '</strong><br>' . $course_res, false, true) ?>
+                            <? unset($course_res); ?>
+                        <? endif ?>
+                    <? endif ?>
+                </td>
                 <td style="text-align: right">
                     <a href="<?= URLHelper::getLink('sms_send.php',
                                 array('filter' => 'send_sms_to_all',
@@ -81,7 +113,7 @@
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s/%s',
                                 $page, $accept['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/remove/person.png',
+                        <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
@@ -89,10 +121,9 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($rechte && $is_dozent) : ?>
         <tfoot>
             <tr>
-                <td class="printhead" colspan="4">
+                <td class="printhead" colspan="6">
                     <select name="action_accepted" id="action_accepted" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade"><?= _('Akzeptieren') ?></option>
@@ -103,6 +134,5 @@
                 </td>
             </tr>
         </tfoot>
-        <? endif ?>
     </table>
 </form>

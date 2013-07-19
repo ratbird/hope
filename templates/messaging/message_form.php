@@ -14,7 +14,7 @@
         <b><?= _('Nachricht:') ?></b>
     </label>
     <br>
-    <textarea id="message" name="message" class="add_toolbar"
+    <textarea id="message" name="message" class="add_toolbar" data-secure="true"
               style="width: 99%; height: 10em;"><?= htmlReady($message) ?></textarea>
 </div>
 

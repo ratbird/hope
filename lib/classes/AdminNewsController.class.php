@@ -271,7 +271,7 @@ class AdminNewsController {
             . "</b><br><input type=\"TEXT\" style=\"width: 100%\" size=\"".floor($this->max_col*.5*.8)."\" maxlength=\"100\" name=\"topic\" value=\""
             .htmlReady($this->news_query["topic"])."\"><br>";
         list ($body,$admin_msg)=explode("<admin_msg>",$this->news_query["body"]);
-        echo "\n<br><b>" . _("Inhalt") . "</b><br><textarea class=\"add_toolbar resizable\" name=\"body\" style=\"width: 100%\" cols=\"".floor($this->max_col*.8*.8)."\" rows=\"10\"      wrap=\"virtual\">"
+        echo "\n<br><b>" . _("Inhalt") . "</b><br><textarea class=\"add_toolbar resizable\" name=\"body\" style=\"width: 100%\" cols=\"".floor($this->max_col*.8*.8)."\" rows=\"10\" wrap=\"virtual\" data-secure=\"true\">"
             .htmlReady($body)."</textarea><br></td>";
         echo "\n<td class=\"table_row_odd\" width=\"30%\">" . _("Geben Sie hier die &Uuml;berschrift und den Inhalt Ihrer Ankündigung ein.")
             . "<br><br>" . _("Im unteren Bereich k&ouml;nnen Sie ausw&auml;hlen, in welchen Bereichen Ihre Ankündigung angezeigt wird.");

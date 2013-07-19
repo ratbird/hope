@@ -972,7 +972,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
 
     $cont .= "<p><form method=\"post\" action=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=edit")."\">";
     $cont .= CSRFProtection::tokenTag();
-    $cont .= "<textarea name=\"body\" class=\"wiki-editor add_toolbar resizable\">".htmlready($body)."</textarea>\n";
+    $cont .= "<textarea name=\"body\" class=\"wiki-editor add_toolbar resizable\" data-secure=\"true\">".htmlready($body)."</textarea>\n";
     $cont .= "<input type=\"hidden\" name=\"wiki\" value=\"".htmlReady($keyword)."\">";
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"".htmlReady($version)."\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";

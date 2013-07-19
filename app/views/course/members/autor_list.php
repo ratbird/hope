@@ -116,7 +116,7 @@
                 <? if ($rechte) : ?>
                     <td>
                         <? if(!empty($autor['mkdate'])) : ?>
-                            <?= date("d.m.y, H:i:s", $autor['mkdate']) ?>
+                            <?= strftime('%x %X', $autor['mkdate'])?>
                         <? endif ?>
                     </td>
                     <td>

@@ -75,7 +75,7 @@
                 </td>
                 <td>
                     <? if(!empty($accept['mkdate'])) : ?>
-                        <?= date("d.m.y, H:i:s", $accept['mkdate']) ?>
+                        <?= strftime('%x %X', $accept['mkdate'])?>
                     <? endif ?>
                 </td>
                 <td>

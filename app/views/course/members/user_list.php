@@ -93,7 +93,7 @@
                 <? if($rechte) : ?>
                     <td>
                         <? if(!empty($leser['mkdate'])) : ?>
-                            <?= date("d.m.y, H:i:s", $leser['mkdate']) ?>
+                            <?= strftime('%x %X', $leser['mkdate'])?>
                         <? endif ?>
                     </td>
                     <td>

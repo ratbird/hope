@@ -74,8 +74,8 @@
                     </a>
                 </td>
                 <td>
-                    <? if(isset($accept['mkdate'])) : ?>
-                        <?= date("d.m.y,", $accept['mkdate']) ?> <?= date("H:i:s", $accept['mkdate']) ?>
+                    <? if(!empty($accept['mkdate'])) : ?>
+                        <?= date("d.m.y, H:i:s", $accept['mkdate']) ?>
                     <? endif ?>
                 </td>
                 <td>

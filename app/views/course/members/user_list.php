@@ -92,8 +92,8 @@
                 </td>
                 <? if($rechte) : ?>
                     <td>
-                        <? if(isset($leser['mkdate'])) : ?>
-                            <?= date("d.m.y,", $leser['mkdate']) ?> <?= date("H:i:s", $leser['mkdate']) ?>
+                        <? if(!empty($leser['mkdate'])) : ?>
+                            <?= date("d.m.y, H:i:s", $leser['mkdate']) ?>
                         <? endif ?>
                     </td>
                     <td>

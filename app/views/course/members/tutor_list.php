@@ -96,8 +96,8 @@
                 </td>
                 <? if($rechte && $is_dozent) : ?>
                     <td>
-                        <? if(isset($tutor['mkdate'])) : ?>
-                            <?= date("d.m.y,", $tutor['mkdate']) ?> <?= date("H:i:s", $tutor['mkdate']) ?>
+                        <? if(!empty($tutor['mkdate'])) : ?>
+                            <?= date("d.m.y, H:i:s", $tutor['mkdate']) ?>
                         <? endif ?>
                     </td>
                     <td>

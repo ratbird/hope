@@ -115,8 +115,8 @@
                 </td>
                 <? if ($rechte) : ?>
                     <td>
-                        <? if(isset($autor['mkdate'])) : ?>
-                            <?= date("d.m.y,", $autor['mkdate']) ?> <?= date("H:i:s", $autor['mkdate']) ?>
+                        <? if(!empty($autor['mkdate'])) : ?>
+                            <?= date("d.m.y, H:i:s", $autor['mkdate']) ?>
                         <? endif ?>
                     </td>
                     <td>

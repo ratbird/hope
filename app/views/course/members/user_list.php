@@ -14,7 +14,7 @@
             <col>
             <? if($rechte) :?>
             <col width="15%">
-            <col width="25%">
+            <col width="40%">
             <? endif ?>
             <col width="80">
         </colgroup>
@@ -91,7 +91,11 @@
                     </a>
                 </td>
                 <? if($rechte) : ?>
-                    <td><?= date("d.m.y,", $leser['mkdate']) ?> <?= date("H:i:s", $leser['mkdate']) ?></td>
+                    <td>
+                        <? if(isset($leser['mkdate'])) : ?>
+                            <?= date("d.m.y,", $leser['mkdate']) ?> <?= date("H:i:s", $leser['mkdate']) ?>
+                        <? endif ?>
+                    </td>
                     <td>
                         <? $study_courses = UserModel::getUserStudycourse($leser['user_id']) ?>
                         <? if(!empty($study_courses)) : ?>

@@ -11,7 +11,7 @@
             <col width="20">
             <col>
             <col width="15%">
-            <col width="25%">
+            <col width="40%">
             <col width="80">
         </colgroup>
         <thead>
@@ -73,7 +73,11 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
-                <td><?= date("d.m.y,", $accept['mkdate']) ?> <?= date("H:i:s", $accept['mkdate']) ?></td>
+                <td>
+                    <? if(isset($accept['mkdate'])) : ?>
+                        <?= date("d.m.y,", $accept['mkdate']) ?> <?= date("H:i:s", $accept['mkdate']) ?>
+                    <? endif ?>
+                </td>
                 <td>
                     <? $study_courses = UserModel::getUserStudycourse($accept['user_id']) ?>
                     <? if(!empty($study_courses)) : ?>

@@ -14,7 +14,7 @@
         <col>
         <? if($rechte && $is_dozent) : ?>
             <col width="15%">
-            <col width="25%">
+            <col width="40%">
         <? endif ?>
         <col width="80">
     </colgroup>
@@ -95,7 +95,11 @@
                     </a>
                 </td>
                 <? if($rechte && $is_dozent) : ?>
-                    <td><?= date("d.m.y,", $tutor['mkdate']) ?> <?= date("H:i:s", $tutor['mkdate']) ?></td>
+                    <td>
+                        <? if(isset($tutor['mkdate'])) : ?>
+                            <?= date("d.m.y,", $tutor['mkdate']) ?> <?= date("H:i:s", $tutor['mkdate']) ?>
+                        <? endif ?>
+                    </td>
                     <td>
                         <? $study_courses = UserModel::getUserStudycourse($tutor['user_id']) ?>
                         <? if(!empty($study_courses)) : ?>

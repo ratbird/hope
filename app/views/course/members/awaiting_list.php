@@ -10,7 +10,7 @@
             <col width="20">
             <col>
             <col width="5%">
-            <col width="25%"
+            <col width="25%">
             <col width="80">
         </colgroup>
         <thead>

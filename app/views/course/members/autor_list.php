@@ -19,7 +19,7 @@
                     <? $cols = 7?>
                     <? $cols_foot = 7?>
                     <? $cols_head = 2?>
-                    <col width="15%">
+                    <col width="25%">
                     <col width="15%">
                 <? else : ?>
                     <col width="25%">
@@ -114,7 +114,11 @@
                     </a>
                 </td>
                 <? if ($rechte) : ?>
-                    <td><?= date("d.m.y,", $autor['mkdate']) ?> <?= date("H:i:s", $autor['mkdate']) ?></td>
+                    <td>
+                        <? if(isset($autor['mkdate'])) : ?>
+                            <?= date("d.m.y,", $autor['mkdate']) ?> <?= date("H:i:s", $autor['mkdate']) ?>
+                        <? endif ?>
+                    </td>
                     <td>
                         <? $study_courses = UserModel::getUserStudycourse($autor['user_id']) ?>
                         <? if(!empty($study_courses)) : ?>

@@ -14,7 +14,11 @@
         <col>
         <? if($rechte && $is_dozent) : ?>
             <col width="15%">
+            <? if($semAdmissionEnabled) :?>
             <col width="40%">
+            <? else :?>
+            <col width="25%">
+            <?endif ?>
         <? endif ?>
         <col width="80">
     </colgroup>
@@ -97,7 +101,7 @@
                 <? if($rechte && $is_dozent) : ?>
                     <td>
                         <? if(!empty($tutor['mkdate'])) : ?>
-                            <?= date("d.m.y, H:i:s", $tutor['mkdate']) ?>
+                            <?= strftime('%x %X', $tutor['mkdate'])?>
                         <? endif ?>
                     </td>
                     <td>

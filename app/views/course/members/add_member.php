@@ -78,8 +78,7 @@
             <td colspan="2">
                 <select name="csv_import_format">
                     <option value="realname"><?=_("Nachname, Vorname")?> &crarr;</option>
-                    <option value="username"><?=_("Nutzername")?> '&crarr;</option>
-                    
+                    <option value="username"><?=_("Nutzername")?> &crarr;</option>
                     <? if(!empty($accessible_df)) : ?>
                         <? foreach ($accessible_df as $df) : ?>
                             <option value="<?=$df->getId()?>" <?=(Request::get('csv_import_format') ==  $df->getId()? 'selected="selected"': '')?>><?= htmlReady($df->getName())?> &crarr;</option>

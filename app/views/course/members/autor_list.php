@@ -51,7 +51,7 @@
                                     tooltip2(sprintf(_('Nachricht an alle %s verschicken'), htmlReady($status_groups['autor'])))) ?>
                         </a>
                     <? endif ?>
-                    <? if ($is_dozent) : ?>
+                    <? if ($is_tutor) : ?>
                         <a href="<?= $controller->url_for('course/members/add_member')?>">
                             <?= Assets::img('icons/16/blue/add/community.png',
                                     tooltip2(sprintf(_('Neuen %s zur Veranstaltung hinzufügen'),htmlReady($status_groups['autor'])))) ?>

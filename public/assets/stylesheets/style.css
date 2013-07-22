@@ -490,7 +490,7 @@ tr.sortable th.sortdesc {
 .settings tbody.maxed td[colspan]:first-child textarea {
   width: 200px;
 }
-.settings tbody.privacy td:first-child # td {
+.settings tbody.privacy td:first-child ~ td {
   font-style: italic;
   text-align: center;
 }
@@ -1889,7 +1889,7 @@ div.clear {
 #tabs2 li {
   background: no-repeat left center;
   background-image: url("../images/icons/16/grey/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1x, url("../images/icons/32/grey/arr_1right.png") 2x);
+  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1x, url("../images/icons/32/black/arr_1right.png") 2x);
   cursor: pointer;
   line-height: 20pt;
   margin-left: 1em;

@@ -614,7 +614,7 @@ function makeTableDataCellForm( $displayclass = "table_row_even",
         $button = LinkButton::create(decodeHTML($button_tooltip), URLHelper::getURL(VOTE_FILE_ADMIN, $linkparams), array('title' => decodeHTML($button_tooltip)));
     }
     else{
-        $button .= "<a href=\"".URLHelper::getLink($link)."\">";
+        $button .= "<a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN, $linkparams)."\">";
         $button .= "<img src=\"" . Assets::image_path('icons/16/blue/visibility-' . $button_name . '.png') . "\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" class=\"middle\"></a>";
     }
 
@@ -813,7 +813,7 @@ function makeCopyVoteSelectForm($action) {
         }
         $html .= '</select>&nbsp;' . "\n"
             . Button::create(_("Kopie erstellen")) ."\n"
-            . '<input type="hidden" name="rangeID" value="' . htmlready($showrangeID) . '>' ."\n"
+            . '<input type="hidden" name="rangeID" value="' . htmlready($showrangeID) . '">' ."\n"
             . '<br>&nbsp;</form>' . "\n"
             . '</td>' . "\n";
     } else {

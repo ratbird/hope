@@ -1794,9 +1794,11 @@ div.quicksearch_frame select {
 }
 .skip_target {
   position: absolute;
-  text-indent: 100%;
-  white-space: nowrap;
-  overflow: hidden;
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
 }
 #skiplink_list {
   display: none;

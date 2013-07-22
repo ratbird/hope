@@ -28,7 +28,7 @@ class CoreScm implements StudipModule {
             $temp = StudipScmEntry::findByRange_id($course_id, 'ORDER BY position ASC');
             $scms = SimpleORMapCollection::createFromArray($temp);
 
-            $navigation = new Navigation($scms->first()->tab_name);
+            $navigation = new Navigation($scms->first()->tab_name ?: _('Informationen'));
             $navigation->setImage('icons/16/white/infopage.png');
             $navigation->setActiveImage('icons/16/black/infopage.png');
 

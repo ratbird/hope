@@ -119,6 +119,8 @@ class Course_ScmController extends StudipController
         $this->scm->user_id = $GLOBALS['user']->id;
         $this->scm->chdate  = time();
 
+        $this->first_entry = StudipScmEntry::countBySql('range_id = ?', array($GLOBALS['SessSemName'][1])) == 0;
+        
         $this->set_title(_('Neue Informationsseite anlegen'));
         Navigation::activateItem('/course/scm/new_entry');
 

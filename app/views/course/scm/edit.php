@@ -51,8 +51,12 @@
             <tr>
                 <td colspan="2">
                     <?= Button::createAccept(_('Speichern'), 'submit') ?>
+                <? if ($first_entry): ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('seminar_main.php')) ?>
+                <? else: ?>
                     <?= LinkButton::createCancel(_('Abbrechen'),
-                                           $controller->url_for('course/scm/' . $scm->id)) ?>
+                                                 $controller->url_for('course/scm/' . $scm->id)) ?>
+                <? endif; ?>
                 </td>
             </tr>
         </tfoot>

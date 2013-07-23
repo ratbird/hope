@@ -15,17 +15,17 @@ class Exportapi extends Migration {
   `format` varchar(32) NOT NULL,
   `params` text NOT NULL,
   PRIMARY KEY (`id`)
-);";
+) ENGINE=MyISAM";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
         $stmt->execute();
     }
 
     function down() {
-              $sql = "DROP TABLE `export_templates`;";
+              $sql = "DROP TABLE `export_templates`";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute();  
+        $stmt->execute();
     }
 
 }

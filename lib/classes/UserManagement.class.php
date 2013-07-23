@@ -368,7 +368,6 @@ class UserManagement
         // Automated entering new users, based on their status (perms)
         $result = AutoInsert::instance()->saveUser($this->user_data['auth_user_md5.user_id'],$this->user_data['auth_user_md5.perms']);
 
-      //  $result = AutoInsert::checkNewUser($this->user_data['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
         foreach ($result['added'] as $item) {
             $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
         }

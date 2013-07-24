@@ -401,11 +401,10 @@ if (!$have_config) {
                 // Switching for the is_default option. Read the comment above.
                 if ($configuration["is_default"]) {
                     echo '<a href="' . URLHelper::getLink('?com=unset_default&config_id=' . $configuration['id']) . '#anker">';
-                    echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' => _("Standard zuweisen")));
-                }
-                else {
+                    echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' => _("Standard entziehen")));
+                } else {
                     echo '<a href="' . URLHelper::getLink('?com=set_default&config_id=' . $configuration['id']) . '#anker">';
-                    echo Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top', 'title' => _("Standard entziehen")));
+                    echo Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top', 'title' => _("Standard zuweisen")));
                 }
 
                 echo "</a>\n</td>\n";

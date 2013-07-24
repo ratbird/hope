@@ -1,7 +1,7 @@
 <? use \Studip\Button; ?>
 <br />
 <a name="awaiting"></a>
-<form action="<?= $controller->url_for(sprintf('course/members/edit_awaiting/%s/?cid=%s', $page, Request::get('cid'))) ?>"
+<form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>"
       method="post" onsubmit="if ($('#action_awaiting').val() == 'remove')
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
@@ -24,12 +24,12 @@
                             array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
                                 'course_id' => $course_id,
                                 'subject' => $subject))?>">
-                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen verschicken')))?>
+                        <?= Assets::img('icons/16/white/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen verschicken')))?>
                     </a>
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($rechte) :?>
+                <? if($is_tutor) :?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                             type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]" />
                 </th>
@@ -60,7 +60,7 @@
         <? $fullname = $waiting->user->getFullName('full_rev');?>
             <tr>
                 <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
-                            name="awaiting[<?= $user['user_id'] ?>]" value="1" /></td>
+                            name="awaiting[<?= $waiting['user_id'] ?>]" value="1" /></td>
                 <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
@@ -86,11 +86,11 @@
                         <?= Assets::img('icons/16/blue/mail.png',
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
-                    <? if ($rechte && $is_tutor) : ?>
+                    <? if ($is_tutor) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s/%s',
-                                $page, $waiting['user_id'])) ?>">
+                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s',
+                                $waiting['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>

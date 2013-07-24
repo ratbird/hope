@@ -1,18 +1,18 @@
 <? use \Studip\Button; ?>
 <a name="users"></a>
 
-<form action="<?= $controller->url_for(sprintf('course/members/edit_user/%s',$page)) ?>"
+<form action="<?= $controller->url_for('course/members/edit_user/') ?>"
       method="post" onsubmit="if ($('#user_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                   $status_groups['user']) ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-            <? if($rechte) :?>
+            <? if($is_tutor) :?>
             <col width="20">
             <? endif ?>
             <col width="20">
             <col>
-            <? if($rechte) :?>
+            <? if($is_tutor) :?>
             <col width="15%">
             <col width="40%">
             <? endif ?>
@@ -20,11 +20,11 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 5 : 2?>">
+                <th class="table_header_bold" colspan="<?=($is_tutor) ? 5 : 2?>">
                     <?= $status_groups['user'] ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
-                    <? if($rechte) :?>
+                    <? if($is_tutor) :?>
                         <?=$controller->getEmailLinkByStatus('user')?>
                         <a href="<?= URLHelper::getLink('sms_send.php',
                                 array('filter' => 'send_sms_to_all',
@@ -33,12 +33,12 @@
                                     'course_id' => $course_id,
                                     'subject' => $subject))
                         ?>">
-                            <?= Assets::img('icons/16/blue/inbox.png',
+                            <?= Assets::img('icons/16/white/inbox.png',
                                     tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['user'])))?>
                         </a>
-                        <? if ($is_dozent) : ?>
+                        <? if ($is_tutor) : ?>
                         <a href="<?= $controller->url_for('course/members/add_member/user/')?>">
-                            <?= Assets::img('icons/16/blue/add/community.png',
+                            <?= Assets::img('icons/16/white/add/community.png',
                                     tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['user']))) ?>
                         </a>
                         <? endif ?>
@@ -46,7 +46,7 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($rechte) :?>
+                <? if($is_tutor) :?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=user]"></th>
                 <? endif ?>
@@ -58,7 +58,7 @@
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
-                <? if($rechte) : ?>
+                <? if($is_tutor) : ?>
                 <th <?= ($sort_by == 'mkdate' && $sort_status == 'user') ? sprintf('class="sort%s"', $order) : '' ?>>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=user&order=%s&toggle=%s',
                        $order, ($sort_by == 'mkdate'))) ?>#user">
@@ -74,7 +74,7 @@
         <? $nr= 0; foreach($users as $leser) : ?>
         <? $fullname = $leser->user->getFullName('full_rev');?>
             <tr>
-                <? if($rechte) :?>
+                <? if($is_tutor) :?>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                            type="checkbox" name="user[<?= $leser['user_id'] ?>]" value="1" />
@@ -90,7 +90,7 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
-                <? if($rechte) : ?>
+                <? if($is_tutor) : ?>
                     <td>
                         <? if(!empty($leser['mkdate'])) : ?>
                             <?= strftime('%x %X', $leser['mkdate'])?>
@@ -135,11 +135,11 @@
                         <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
                                         
-                    <? if ($rechte && $is_tutor) : ?>
+                    <? if ($is_tutor) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/user/%s/%s',
-                                $page, $leser['user_id'])) ?>">
+                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/user/%s',
+                                $leser['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
@@ -148,7 +148,7 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($rechte && $is_tutor) : ?>
+        <? if ($is_tutor) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="6">

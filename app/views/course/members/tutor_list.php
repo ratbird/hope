@@ -1,18 +1,18 @@
 <? use \Studip\Button; ?>
 
 <a name="tutoren"></a>
-<form action="<?= $controller->url_for(sprintf('course/members/edit_tutor/%s',$page)) ?>"
+<form action="<?= $controller->url_for('course/members/edit_tutor') ?>"
       method="post" onsubmit="if ($('#tutor_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                   $status_groups['tutor']) ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-        <? if($rechte && $is_dozent) : ?>
+        <? if($is_dozent) : ?>
             <col width="20">
         <? endif ?>
-        <col width="<?=(!$rechte || $is_dozent) ? '20' : '40'?>">
+        <col width="<?=(!$is_dozent) ? '20' : '40'?>">
         <col>
-        <? if($rechte && $is_dozent) : ?>
+        <? if($is_dozent) : ?>
             <col width="15%">
             <? if($semAdmissionEnabled) :?>
             <col width="40%">
@@ -24,11 +24,11 @@
     </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte && $is_dozent) ? 5 : 2?>">
+                <th class="table_header_bold" colspan="<?=($is_dozent) ? 5 : 2?>">
                     <?= $status_groups['tutor'] ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
-                <? if($rechte) : ?>
+                <? if($is_tutor) : ?>
                     <?=$controller->getEmailLinkByStatus('tutor')?>
                     <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'send_sms_to_all',
@@ -37,12 +37,12 @@
                                 'course_id' => $course_id,
                                 'subject' => $subject))
                     ?>">
-                        <?= Assets::img('icons/16/blue/inbox.png',
+                        <?= Assets::img('icons/16/white/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['tutor'])))?>
                     </a>
                     <? if ($is_dozent && !$is_tutor_locked) : ?>
                     <a href="<?= $controller->url_for('course/members/add_tutor/')?>">
-                        <?= Assets::img('icons/16/blue/add/community.png',
+                        <?= Assets::img('icons/16/white/add/community.png',
                                 tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['tutor']))) ?>
                     </a>
                     <? endif ?>
@@ -50,23 +50,20 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($rechte && $is_dozent) : ?>
+                <? if($is_dozent) : ?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]"></th>
                 <? endif ?>
                 <th></th>
                 <th <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte && $is_dozent) : ?>
-                        
-                    <? endif ?>
                     <? ($sort_status != 'tutor') ? $order = 'desc' : $order = $order ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=tutor&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#tutoren">
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
-                <? if($rechte && $is_dozent) : ?>
+                <? if($is_dozent) : ?>
                 <th <?= ($sort_by == 'mkdate' && $sort_status == 'tutor') ? sprintf('class="sort%s"', $order) : '' ?>>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=tutor&order=%s&toggle=%s',
                        $order, ($sort_by == 'mkdate'))) ?>#tutoren">
@@ -82,7 +79,7 @@
         <? $nr= 0; foreach($tutoren as $tutor) : ?>
         <? $fullname = $tutor->user->getFullName('full_rev');?>
             <tr>
-                <? if ($rechte && $is_dozent) : ?>
+                <? if ($is_dozent) : ?>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['tutor']) ?>"
                            type="checkbox" name="tutor[<?= $tutor['user_id'] ?>]" value="1" />
@@ -98,7 +95,7 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
-                <? if($rechte && $is_dozent) : ?>
+                <? if($is_dozent) : ?>
                     <td>
                         <? if(!empty($tutor['mkdate'])) : ?>
                             <?= strftime('%x %X', $tutor['mkdate'])?>
@@ -142,11 +139,11 @@
                     <? else :?>
                         <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
-                    <? if ($rechte && $is_dozent && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
+                    <? if ($is_dozent && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s/%s',
-                                $page, $tutor['user_id'])) ?>">
+                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s',
+                                $tutor['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
@@ -155,7 +152,7 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($rechte && $is_dozent) : ?>
+        <? if ($is_dozent) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="6">

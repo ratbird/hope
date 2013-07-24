@@ -1,6 +1,6 @@
 <table class="default collapsable zebra-hover">
     <colgroup>
-        <col width="<?=($rechte) ? '40' : '20'?>">
+        <col width="<?=($is_tutor) ? '40' : '20'?>">
         <col>
         <col width="80">
     </colgroup>
@@ -10,18 +10,17 @@
                 <?= $this->status_groups['dozent'] ?>
             </th>
             <th class="table_header_bold" style="text-align:right">
-            <? if ($rechte) : ?>
+            <? if ($is_tutor) : ?>
                 <?=$controller->getEmailLinkByStatus('dozent')?>
                 <a href="<?= URLHelper::getLink('sms_send.php', array('filter' => 'send_sms_to_all', 'who' =>
                         'dozent', 'sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $course_id, 'subject' => $subject)) ?>">
-
-                    <?= Assets::img('icons/16/blue/inbox.png',
+                    <?= Assets::img('icons/16/white/inbox.png',
                             tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['dozent']))) ?>
                 </a>
                 <? if ($is_dozent && !$dozent_is_locked) : ?>
                     <a href="<?=$controller->url_for('course/members/add_dozent/')?>">
-                        <?= Assets::img('icons/16/blue/add/community.png',
+                        <?= Assets::img('icons/16/white/add/community.png',
                                 tooltip2(sprintf(_('Neuen %s hinzufügen'), $status_groups['dozent'])))?>
                     </a>
                 <? endif ?>
@@ -71,7 +70,7 @@
                     <?= Assets::img('icons/16/grey/mail.png') ?>
                 <? endif ?>
 
-            <? if ($rechte && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
+            <? if ($is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
                 <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                         htmlReady($fullname)) ?>');"
                     href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s/%s',

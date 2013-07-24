@@ -2,7 +2,7 @@
 <br />
 <a name="users"></a>
 
-<form action="<?= $controller->url_for(sprintf('course/members/edit_accepted/%s',$page)) ?>"
+<form action="<?= $controller->url_for('course/members/edit_accepted/') ?>"
       method="post" onsubmit="if ($('#action_accepted').val() == 'remove')
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
@@ -27,7 +27,7 @@
                                 'course_id' => $course_id,
                                 'subject' => $subject))
                     ?>">
-                        <?= Assets::img('icons/16/blue/inbox.png',
+                        <?= Assets::img('icons/16/white/inbox.png',
                                 tooltip2(_('Nachricht an alle NutzerInnen verschicken')))?>
                     </a>
                 </th>
@@ -112,11 +112,11 @@
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
 
-                    <? if ($rechte && $is_tutor) : ?>
+                    <? if ($is_tutor) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s/%s',
-                                $page, $accept['user_id'])) ?>">
+                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s',
+                                $accept['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>

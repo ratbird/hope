@@ -18,12 +18,6 @@
                     <?= Assets::img('icons/16/white/inbox.png',
                             tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['dozent']))) ?>
                 </a>
-                <? if ($is_dozent && !$dozent_is_locked) : ?>
-                    <a href="<?=$controller->url_for('course/members/add_dozent/')?>">
-                        <?= Assets::img('icons/16/white/add/community.png',
-                                tooltip2(sprintf(_('Neuen %s hinzufügen'), $status_groups['dozent'])))?>
-                    </a>
-                <? endif ?>
             <? endif ?>
             </th>
         </tr>

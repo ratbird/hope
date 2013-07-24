@@ -40,12 +40,6 @@
                         <?= Assets::img('icons/16/white/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['tutor'])))?>
                     </a>
-                    <? if ($is_dozent && !$is_tutor_locked) : ?>
-                    <a href="<?= $controller->url_for('course/members/add_tutor/')?>">
-                        <?= Assets::img('icons/16/white/add/community.png',
-                                tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['tutor']))) ?>
-                    </a>
-                    <? endif ?>
                 <? endif ?>
                 </th>
             </tr>

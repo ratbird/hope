@@ -169,7 +169,25 @@ class Course_MembersController extends AuthenticatedController
         }
         // Set the infobox
         $this->setInfoBoxImage('infobox/groups.jpg');
-        if ($this->is_tutor) {
+        if ($this->is_tutor) {             
+            if($this->is_dozent) {
+                if(!$this->dozent_is_locked) {
+                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_dozent/'), 
+                            sprintf(_('Neue/n %s eintragen'), $this->status_groups['dozent']));
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+                }
+
+                if(!$this->tutor_is_locked) {
+                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_tutor/'), 
+                            sprintf(_('Neue/n %s eintragen'), $this->status_groups['tutor']));
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+                }
+            }
+
+            $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_member/'), 
+                    sprintf(_('Neue/n %s eintragen'), $this->status_groups['autor']));
+            $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+            
             $link = sprintf('<a href="%s">%s</a>', URLHelper::getLink('sms_send.php', 
                     array('sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $this->course_id,
@@ -203,18 +221,6 @@ class Course_MembersController extends AuthenticatedController
 
                     $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/black/export/file-office.png');
                     $this->addToInfobox(_('Aktionen'), $awaiting_rtf, 'icons/16/black/export/file-text.png');
-                }
-                
-                if (count($this->tutoren) == 0) {
-                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_tutor/'), 
-                            sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $this->status_groups['tutor']));
-                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
-                }
-
-                if (count($this->autoren) == 0) {
-                    $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_member/'), 
-                            sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $this->status_groups['autor']));
-                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
                 }
             }
         } elseif (!$this->is_tutor) {

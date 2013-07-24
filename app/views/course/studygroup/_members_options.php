@@ -11,6 +11,8 @@ use Studip\Button, Studip\LinkButton;
     <?= LinkButton::create(_("Runterstufen"), $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/promote/autor?user='.$m['username'])) ?>
 <? elseif($GLOBALS['perm']->have_studip_perm('dozent', $sem_id)) : ?>
     <?= LinkButton::create(_("Hochstufen"), $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/promote/tutor?user='.$m['username'])) ?>
-<? else : ?>
-    <?= LinkButton::create(_("Rauswerfen"), $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/remove?user='.$m['username'])) ?>
 <? endif ?>
+<? if ($m['user_id'] !== $GLOBALS['user']->id): ?>
+    <?= LinkButton::create(_("Rauswerfen"), $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/remove?user='.$m['username']))
+ ?>
+<? endif; ?>

@@ -773,7 +773,14 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['messages'] = $messages;
                 }
                 unset($sem);
-                $this->redirect(URLHelper::getURL('meine_seminare.php'));
+                
+                // Weiterleitung auf die "meine Seminare", wenn es kein Admin
+                // ist, ansonsten auf die Studiengruppenseite
+                if (!$perm->have_perm('root')) {
+                    $this->redirect(URLHelper::getURL('meine_seminare.php'));
+                } else {
+                    $this->redirect(URLHelper::getURL('dispatch.php/studygroup/browse'));
+                }
                 return;
             } else if (!$approveDelete) {
                 $template = $GLOBALS['template_factory']->open('shared/question');

@@ -10,7 +10,7 @@
         <? if($is_dozent) : ?>
             <col width="20">
         <? endif ?>
-        <col width="<?=(!$is_dozent) ? '20' : '40'?>">
+        <col width="<?=($is_tutor && !$is_dozent)? '40' :'20' ?>">
         <col>
         <? if($is_dozent) : ?>
             <col width="15%">

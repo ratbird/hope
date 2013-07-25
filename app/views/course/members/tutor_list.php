@@ -7,10 +7,10 @@
                   $status_groups['tutor']) ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-        <? if($is_dozent) : ?>
+        <? if($is_dozent && !$tutor_is_locked) : ?>
             <col width="20">
         <? endif ?>
-        <col width="<?=($is_tutor && !$is_dozent)? '40' :'20' ?>">
+        <col width="<?=(!$is_tutor || $tutor_is_locked  ? '40' :'20')?>">
         <col>
         <? if($is_dozent) : ?>
             <col width="15%">
@@ -24,7 +24,7 @@
     </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($is_dozent) ? 5 : 2?>">
+                <th class="table_header_bold" colspan="<?=($is_dozent ? ($tutor_is_locked ? 4 : 5) : 2)?>">
                     <?= $status_groups['tutor'] ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
@@ -44,7 +44,7 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($is_dozent) : ?>
+                <? if($is_dozent && !$tutor_is_locked) : ?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]"></th>
                 <? endif ?>
@@ -73,7 +73,7 @@
         <? $nr= 0; foreach($tutoren as $tutor) : ?>
         <? $fullname = $tutor->user->getFullName('full_rev');?>
             <tr>
-                <? if ($is_dozent) : ?>
+                <? if ($is_dozent && !$tutor_is_locked) : ?>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['tutor']) ?>"
                            type="checkbox" name="tutor[<?= $tutor['user_id'] ?>]" value="1" />
@@ -133,7 +133,7 @@
                     <? else :?>
                         <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
-                    <? if ($is_dozent && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
+                    <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s',
@@ -146,7 +146,7 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($is_dozent) : ?>
+        <? if ($is_dozent && !$tutor_is_locked) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="6">

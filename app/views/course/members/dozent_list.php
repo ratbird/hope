@@ -64,7 +64,7 @@
                     <?= Assets::img('icons/16/grey/mail.png') ?>
                 <? endif ?>
 
-            <? if ($is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
+            <? if (!$dozent_is_locked && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
                 <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                         htmlReady($fullname)) ?>');"
                     href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s/%s',

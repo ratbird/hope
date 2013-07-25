@@ -29,7 +29,7 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <? if($is_tutor) :?>
+                <? if (!$is_locked) : ?>
                 <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
                             type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]" />
                 </th>
@@ -59,8 +59,12 @@
         <? foreach($awaiting as $waiting) : ?>
         <? $fullname = $waiting->user->getFullName('full_rev');?>
             <tr>
-                <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
-                            name="awaiting[<?= $waiting['user_id'] ?>]" value="1" /></td>
+                <td>
+                <? if (!$is_locked) : ?>
+                    <input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
+                            name="awaiting[<?= $waiting['user_id'] ?>]" value="1" />
+                <? endif ?>
+                </td>
                 <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
@@ -86,7 +90,7 @@
                         <?= Assets::img('icons/16/blue/mail.png',
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
-                    <? if ($is_tutor) : ?>
+                    <? if (!$is_locked) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s',
@@ -99,6 +103,7 @@
             </tr>
         <? endforeach ?>
         </tbody>
+        <? if (!$is_locked) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="6">
@@ -116,5 +121,6 @@
                 </td>
             </tr>
         </tfoot>
+        <? endif ?>
     </table>
 </form>

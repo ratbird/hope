@@ -7,7 +7,9 @@
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
+            <? if (!$is_locked) : ?>
             <col width="20">
+            <? endif ?>
             <col width="20">
             <col>
             <col width="15%">
@@ -16,7 +18,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="5">
+                <th class="table_header_bold" colspan="<?=(!$is_locked ? 5 : 4)?>">
                     <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
@@ -33,9 +35,12 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                <? if (!$is_locked) : ?>
+                <th>
+                    <input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=accepted]">
                 </th>
+                <? endif ?>
                 <th></th>
                 <th <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
                 sprintf('class="sort%s"', $order) : '' ?>>
@@ -59,10 +64,12 @@
         <? $nr= 0; foreach($accepted as $accept) : ?>
         <? $fullname = $accept->user->getFullName('full_rev');?>
             <tr>
+                <? if (!$is_locked) : ?>
                 <td>
-                <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
+                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                         type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1" />
                 </td>
+                <? endif ?>
                 <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a style="position: relative" href="<?= $controller->url_for(sprintf('profile?username=%s',$accept['username'])) ?>">
@@ -112,7 +119,7 @@
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
 
-                    <? if ($is_tutor) : ?>
+                    <? if (!$is_locked) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
                             htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s',
@@ -125,6 +132,7 @@
             </tr>
         <? endforeach ?>
         </tbody>
+        <? if (!$is_locked) : ?>
         <tfoot>
             <tr>
                 <td class="printhead" colspan="6">
@@ -138,5 +146,6 @@
                 </td>
             </tr>
         </tfoot>
+        <? endif ?>
     </table>
 </form>

@@ -1041,7 +1041,6 @@ if ($show == "funktion") {
                       LEFT JOIN user_info AS info USING (user_id)
                       WHERE statusgruppen.statusgruppe_id IN (:statusgruppen_ids)
                         AND Institut_id = :inst_id
-                        AND ui.visible = 1 AND aum.visible != 'never'
                       ORDER BY :sort_column :sort_order";
             $parameters[':statusgruppen_ids'] = getAllStatusgruppenIDS($auswahl);
         }
@@ -1068,7 +1067,6 @@ if ($show == "funktion") {
                       LEFT JOIN user_info USING (user_id)
                       WHERE statusgruppen.statusgruppe_id IN (:statusgruppen_ids)
                         AND Institut_id = :inst_id
-                        AND ui.visible = 1 AND aum.visible != 'never'
                       GROUP BY user_id
                       ORDER BY :sort_column :sort_order";
             $parameters[':statusgruppen_ids'] = getAllStatusgruppenIDS($auswahl);

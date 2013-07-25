@@ -870,7 +870,8 @@ if ($show == "funktion") {
                 if ($extend == 'yes') {
                     $query = "SELECT {$_fullname_sql['full_rev']} AS fullname, ui.inst_perms,
                                      ui.raum, ui.sprechzeiten, ui.Telefon, aum.Email, aum.user_id,
-                                     aum.username, info.Home, statusgruppe_id
+                                     aum.username, info.Home, statusgruppe_id, 
+                                     (ui.visible = 1 AND aum.visible != 'never') AS visible
                               FROM statusgruppe_user
                               LEFT JOIN auth_user_md5 AS aum USING (user_id)
                               LEFT JOIN user_info AS info USING (user_id)
@@ -881,7 +882,8 @@ if ($show == "funktion") {
                 } else {
                     $query = "SELECT {$_fullname_sql['full_rev']} AS fullname, user_inst.raum,
                                      user_inst.sprechzeiten, user_inst.Telefon, inst_perms,
-                                     Email, user_id, username, statusgruppe_id
+                                     Email, user_id, username, statusgruppe_id,
+                                     (user_inst.visible = 1 AND auth_user_md5.visible != 'never') AS visible
                               FROM statusgruppe_user
                               LEFT JOIN auth_user_md5 USING (user_id)
                               LEFT JOIN user_info USING (user_id)
@@ -898,6 +900,9 @@ if ($show == "funktion") {
                 $statement->execute();
 
                 $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $institut_members = array_filter($institut_members, function ($member) {
+                    return $GLOBALS['perm']->have_perm('admin') || $member['visible'];
+                });
 
                 if (count($institut_members) > 0) {
                     // StEP 154: Nachricht an alle Mitglieder der Gruppe
@@ -974,7 +979,8 @@ if ($show == "funktion") {
 
     $query = "SELECT {$_fullname_sql['full_rev']} AS fullname,
                      ui.raum, ui.sprechzeiten, ui.Telefon,
-                     inst_perms, Email, user_id, username
+                     inst_perms, Email, user_id, username,
+                     (ui.visible = 1 AND auth_user_md5.visible != 'never') AS visible
               FROM user_inst AS ui
               LEFT JOIN auth_user_md5 USING (user_id)
               LEFT JOIN user_info USING (user_id)
@@ -990,6 +996,9 @@ if ($show == "funktion") {
         $statement->execute();
 
         $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $institut_members = array_filter($institut_members, function ($member) {
+            return $GLOBALS['perm']->have_perm('admin') || $member['visible'];
+        });
 
         $statement->closeCursor();
 
@@ -1013,7 +1022,8 @@ if ($show == "funktion") {
         if ($perm->have_perm('admin')) {
             $query = "SELECT {$_fullname_sql['full_rev']} AS fullname,
                              ui.raum, ui.sprechzeiten, ui.Telefon, ui.inst_perms,
-                             user_id, info.Home, aum.Email, aum.username
+                             user_id, info.Home, aum.Email, aum.username,
+                             (ui.visible = 1 AND aum.visible != 'never') AS visible
                       FROM user_inst AS ui
                       LEFT JOIN auth_user_md5 AS aum USING (user_id)
                       LEFT JOIN user_info AS info USING (user_id)
@@ -1022,7 +1032,8 @@ if ($show == "funktion") {
         } else {
             $query = "SELECT {$_fullname_sql['full_rev']} AS fullname,
                              ui.raum, ui.sprechzeiten, ui.Telefon,
-                             user_id, info.Home, aum.Email, aum.username, Institut_id
+                             user_id, info.Home, aum.Email, aum.username, Institut_id,
+                             (ui.visible = 1 AND aum.visible != 'never') AS visible
                       FROM statusgruppen
                       LEFT JOIN statusgruppe_user USING (statusgruppe_id)
                       LEFT JOIN user_inst AS ui USING (user_id)
@@ -1030,6 +1041,7 @@ if ($show == "funktion") {
                       LEFT JOIN user_info AS info USING (user_id)
                       WHERE statusgruppen.statusgruppe_id IN (:statusgruppen_ids)
                         AND Institut_id = :inst_id
+                        AND ui.visible = 1 AND aum.visible != 'never'
                       ORDER BY :sort_column :sort_order";
             $parameters[':statusgruppen_ids'] = getAllStatusgruppenIDS($auswahl);
         }
@@ -1037,7 +1049,8 @@ if ($show == "funktion") {
         if ($perm->have_perm('admin')) {
             $query = "SELECT {$_fullname_sql['full_rev']} AS fullname,
                              ui.raum, ui.sprechzeiten, ui.Telefon,
-                             user_id, username, inst_perms
+                             user_id, username, inst_perms,
+                             (ui.visible = 1 AND auth_user_md5.visible != 'never') AS visible
                       FROM user_inst AS ui
                       LEFT JOIN auth_user_md5 USING (user_id)
                       LEFT JOIN user_info USING (user_id)
@@ -1046,7 +1059,8 @@ if ($show == "funktion") {
         } else {
             $query = "SELECT {$_fullname_sql['full_rev']} AS fullname,
                              ui.raum, ui.sprechzeiten, ui.Telefon,
-                             user_id, username, Institut_id
+                             user_id, username, Institut_id,
+                             (ui.visible = 1 AND aum.visible != 'never') AS visible
                       FROM statusgruppen
                       LEFT JOIN statusgruppe_user AS su USING (statusgruppe_id)
                       LEFT JOIN user_inst AS ui USING (user_id)
@@ -1054,6 +1068,7 @@ if ($show == "funktion") {
                       LEFT JOIN user_info USING (user_id)
                       WHERE statusgruppen.statusgruppe_id IN (:statusgruppen_ids)
                         AND Institut_id = :inst_id
+                        AND ui.visible = 1 AND aum.visible != 'never'
                       GROUP BY user_id
                       ORDER BY :sort_column :sort_order";
             $parameters[':statusgruppen_ids'] = getAllStatusgruppenIDS($auswahl);
@@ -1077,6 +1092,9 @@ if ($show == "funktion") {
         $statement->execute();
 
         $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $institut_members = array_filter($institut_members, function ($member) {
+            return $GLOBALS['perm']->have_perm('admin') || $member['visible'];
+        });
 
         if (count($institut_members) > 0) {
             table_body($institut_members, $auswahl, $table_structure);

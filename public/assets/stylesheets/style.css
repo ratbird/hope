@@ -1888,7 +1888,9 @@ div.clear {
   padding: 4px 0 4px 0;
   width: 100%;
 }
-#tabs2 li {
+#tabs2 a {
+  color: #6e6e6e;
+  display: block;
   background: no-repeat left center;
   background-image: url("../images/icons/16/grey/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1x, url("../images/icons/32/grey/arr_1right.png") 2x);
@@ -1897,17 +1899,13 @@ div.clear {
   margin-left: 1em;
   padding-left: 20px;
 }
-#tabs2 li:hover {
+#tabs2 li:hover a {
   background-image: url("../images/icons/16/black/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1x, url("../images/icons/32/black/arr_1right.png") 2x);
 }
-#tabs2 li.current {
+#tabs2 li.current a {
   background-image: url("../images/icons/16/red/arr_1down.png");
   background-image: -webkit-image-set(url("../images/icons/16/red/arr_1down.png") 1x, url("../images/icons/32/red/arr_1down.png") 2x);
-}
-#tabs2 a {
-  color: #6e6e6e;
-  display: block;
 }
 #tabs2 a:hover,
 #tabs2 li:hover a,

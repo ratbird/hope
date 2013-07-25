@@ -36,3 +36,9 @@
     }
 }
 
+.retina-background-icon(@icon) {
+    background-image: url("@{image-path}/icons/16/@{icon}");
+    background-image: -webkit-image-set(
+        url("@{image-path}/icons/16/@{icon}") @one,
+        url("@{image-path}/icons/32/@{icon}") @two);
+}

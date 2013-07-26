@@ -123,6 +123,7 @@ class Admin_DatafieldsController extends AuthenticatedController
         //save changes
         if (Request::submitted('save')) {
             $struct = new DataFieldStructure(compact('datafield_id'));
+            $struct->load();
             $struct->setTypeParam(Request::get('typeparam'));
             $struct->store();
             $this->flash['success'] = _('Die Parameter wurden übernommen.');

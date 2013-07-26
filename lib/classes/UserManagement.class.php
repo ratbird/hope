@@ -929,16 +929,23 @@ class UserManagement
         UserConfigEntry::deleteByUser($this->user_data['auth_user_md5.user_id']);
 
         // delete all remaining user data
-        $query = "DELETE FROM rss_feeds WHERE user_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
-        $query = "DELETE FROM kategorien WHERE range_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
-        $query = "DELETE FROM user_info WHERE user_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
-        $query = "DELETE FROM user_visibility WHERE user_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
-        $query = "DELETE FROM user_online WHERE user_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        $queries = array(
+            "DELETE FROM rss_feeds WHERE user_id = ?",
+            "DELETE FROM kategorien WHERE range_id = ?",
+            "DELETE FROM user_info WHERE user_id = ?",
+            "DELETE FROM user_visibility WHERE user_id = ?",
+            "DELETE FROM user_online WHERE user_id = ?",
+            "DELETE FROM auto_insert_user WHERE user_id = ?",
+            "DELETE FROM roles_user WHERE userid = ?",
+            "DELETE FROM schedule WHERE user_id = ?",
+            "DELETE FROM schedule_seminare WHERE user_id = ?",
+            "DELETE FROM termin_related_persons WHERE user_id = ?",
+            "DELETE FROM user_userdomains WHERE user_id = ?",
+        );
+        foreach ($queries as $query) {
+            DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        }
+        
         object_kill_visits($this->user_data['auth_user_md5.user_id']);
         object_kill_views($this->user_data['auth_user_md5.user_id']);
 

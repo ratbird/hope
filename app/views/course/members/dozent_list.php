@@ -17,7 +17,7 @@
                         'dozent', 'sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $course_id, 'subject' => $subject)) ?>">
                     <?= Assets::img('icons/16/white/inbox.png',
-                            tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['dozent']))) ?>
+                            tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['dozent']))) ?>
                 </a>
             <? endif ?>
             </th>
@@ -59,7 +59,7 @@
                         ?>
                 ">
                     <?= Assets::img('icons/16/blue/mail.png',
-                            tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                            tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                 </a>
                 <? endif ?>
             <? if (!$dozent_is_locked && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>

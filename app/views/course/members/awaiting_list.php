@@ -22,7 +22,7 @@
                             array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
                                 'course_id' => $course_id,
                                 'subject' => $subject))?>">
-                        <?= Assets::img('icons/16/white/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen verschicken')))?>
+                        <?= Assets::img('icons/16/white/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen versenden')))?>
                     </a>
                 </th>
             </tr>
@@ -87,7 +87,7 @@
                                 ?>
                         ">
                             <?= Assets::img('icons/16/blue/mail.png',
-                                    tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                                    tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                         </a>
                     <? endif?>
                     <? if (!$is_locked) : ?>
@@ -107,12 +107,12 @@
                 <td class="printhead" colspan="6">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
-                        <option value="upgrade"><?= _('Als NutzerInnen befördern') ?></option>
+                        <option value="upgrade"><?= _('Als NutzerInnen hochstufen') ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
+                        <option value="message"><?=_('Nachricht senden')?></option>
     <!--                    <option value="copy_to_sem"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>
-                    <?= tooltipIcon( _('Mit dieser Einstellung beeinflussen Sie,
-                            ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'))?>
+                    <?= tooltipIcon( _('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden.'))?>
                     <?= _("Kontingent berücksichtigen:"); ?>
                     <input type="checkbox" value="1" name="consider_contingent" checked="checked" />
                     <?= Button::create(_('Ausführen'), 'submit_awaiting') ?>

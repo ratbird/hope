@@ -196,16 +196,15 @@ class Course_MembersController extends AuthenticatedController
                 include_once($PATH_EXPORT . "/export_linking_func.inc.php");
 
                 // create csv-export link
-                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('TeilnehmerInnen exportieren als csv Dokument'), 'passthrough');
+                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('Teilnehmer-Liste als csv-Dokument exportieren'), 'passthrough');
                 // create csv-export link
-                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen exportieren als rtf Dokument'), 'passthrough');
+                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('Teilnehmer-Liste als rtf-Dokument exportieren'), 'passthrough');
                 $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/black/export/file-office.png');
                 $this->addToInfobox(_('Aktionen'), $rtfExport, 'icons/16/black/export/file-text.png');
 
                 if (count($this->awaiting) > 0) {
-                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", "awaiting", _("Warteliste exportieren als rtf Dokument"), 'passthrough');
-
-                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", "awaiting", _("Warteliste exportieren als csv Dokument"), 'passthrough');
+                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", "awaiting", _("Warteliste als rtf-Dokument exportieren"), 'passthrough');
+                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", "awaiting", _("Warteliste als csv-Dokument exportieren"), 'passthrough');
 
                     $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/black/export/file-office.png');
                     $this->addToInfobox(_('Aktionen'), $awaiting_rtf, 'icons/16/black/export/file-text.png');
@@ -214,12 +213,12 @@ class Course_MembersController extends AuthenticatedController
         } elseif (!$this->is_tutor) {
             // Visibility preferences
             if (!$this->my_visibilty['iam_visible']) {
-                $text = _('Sie erscheinen nicht auf der Teilnehmerliste.');
+                $text = _('Sie sind für andere TeilnehmerInnen auf der Teilnehmerliste nicht sichtbar.');
                 $icon = 'icons/16/black/visibility-visible.png';
                 $modus = 'make_visible';
                 $link_text = _('Klicken Sie hier, um sichtbar zu werden.');
             } else {
-                $text = _('Sie erscheinen für andere TeilnehmerInnen sichtbar auf der Teilnehmerliste.');
+                $text = _('Sie sind für andere TeilnehmerInnen auf der Teilnehmerliste sichtbar.');
                 $icon = 'icons/16/black/visibility-invisible.png';
                 $modus = 'make_invisible';
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');
@@ -302,15 +301,17 @@ class Course_MembersController extends AuthenticatedController
         $course = $this->course;
 
         if ($status == 'accepted' || $status == 'awaiting') {
+            $textStatus = 'NutzerInnen';
             $members = $course->admission_applicants->findBy('status', $status);
         } else {
+            $textStatus = $this->status_groups[$status];
             $members = $course->members->findBy('status', $status);
         }
 
         $results = $members->pluck('email');
 
         if (!empty($results)) {
-            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Assets::img('icons/16/white/move_right/mail.png', tooltip2('Email an alle NutzerInnen senden')));
+            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Assets::img('icons/16/white/move_right/mail.png', tooltip2(sprintf('E-Mail an alle %s versenden', $textStatus))));
         } else {
             return null;
         }
@@ -342,7 +343,7 @@ class Course_MembersController extends AuthenticatedController
         // Security Check
         if (!$this->is_dozent || $this->dozent_is_locked) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $sem = Seminar::GetInstance($this->course_id);
@@ -372,8 +373,7 @@ class Course_MembersController extends AuthenticatedController
     function add_tutor_action()
     {
         if (!$this->is_dozent || $this->is_tutor_locked) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
         $sem = Seminar::GetInstance($this->course_id);
         Request::set('new_tutor_parameter', $this->flash['new_tutor_parameter']);
@@ -409,8 +409,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         // Check Seminar
@@ -463,8 +462,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $sem = Seminar::GetInstance($this->course_id);
@@ -472,8 +470,7 @@ class Course_MembersController extends AuthenticatedController
         if (Request::submitted('add_dozent') && $this->is_dozent) {
 
             if (!Request::option('new_dozent')) {
-                PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt
-                    oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+                PageLayout::postMessage(MessageBox::error(_('Es wurde niemand gefunden.')));
 
                 $this->redirect('course/members/add_dozent');
             } else {
@@ -506,7 +503,7 @@ class Course_MembersController extends AuthenticatedController
                     $this->redirect('course/members/index');
                 } else {
                     // sorry that was a fail
-                    PageLayout::postMessage(MessageBox::error(_('Die gewünsche Operation konnte nicht ausgeführt werden')));
+                    PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.')));
                     // go back
                     $this->redirect('course/members/add_dozent');
                 }
@@ -566,8 +563,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Security Check
         if (!$this->is_tutor || !$perm->have_studip_perm('tutor', $this->course_id)) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         // empty autor formular
@@ -599,6 +595,27 @@ class Course_MembersController extends AuthenticatedController
         }
     }
 
+    
+    /**
+     * Send Stud.IP-Message to selected users
+     */
+    function send_message_action()
+    {
+        if (!empty($this->flash['users'])) {
+            // create a usable array
+            foreach ($this->flash['users'] as $user => $val) {
+                if ($val) {
+                    $users[] = UserModel::getUser($user, 'username');
+                }
+            }
+            $_SESSION['sms_data']['p_rec'] = $users;
+
+            $this->redirect(URLHelper::getURL('sms_send.php'));
+        } else {
+            $this->redirect('course/members/index');
+        }
+    }
+
     /**
      * Old version of CSV import (copy and paste from teilnehmer.php
      * @global Object $perm
@@ -610,8 +627,7 @@ class Course_MembersController extends AuthenticatedController
         global $perm;
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         // prepare CSV-Lines
@@ -678,13 +694,7 @@ class Course_MembersController extends AuthenticatedController
                             $csv_count_insert++;
                             setTempLanguage($this->user_id);
 
-                            if ($GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$_SESSION['SessSemName']['art_num']]['class']]['workgroup_mode']) {
-                                $message = sprintf(_('Sie wurden von einem/r LeiterIn oder AdministratorIn als
-                                    TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
-                            } else {
-                                $message = sprintf(_('Sie wurden von einem/r DozentIn oder AdministratorIn als
-                                    TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
-                            }
+                            $message = sprintf(_('Sie wurden als TeilnehmerIn in die Veranstaltung **%s** eingetragen.'), $this->course_title);
 
                             restoreLanguage();
                             $messaging->insert_message(mysql_escape_string($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'), _('Eintragung in Veranstaltung')), TRUE);
@@ -769,8 +779,7 @@ class Course_MembersController extends AuthenticatedController
         global $perm;
         // Security. If user not autor, then redirect to index
         if (!$perm->have_studip_perm('tutor', $this->course_id)) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung, um auf diesen Teil
-                des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         if (empty($this->flash['csv_mult_founds'])) {
@@ -805,10 +814,9 @@ class Course_MembersController extends AuthenticatedController
         }
 
         if ($result > 0) {
-            PageLayout::postMessage(MessageBox::success(_('Ihre Sichtbarkeit ist erfolgreich geändert worden')));
+            PageLayout::postMessage(MessageBox::success(_('Ihre Sichtbarkeit wurde erfolgreich geändert.')));
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Leider ist beim ändern der
-                Sichtbarkeit ein Fehler aufgetreten')));
+            PageLayout::postMessage(MessageBox::error(_('Leider ist beim Ändern der Sichtbarkeit ein Fehler aufgetreten. Die Einstellung konnte nicht vorgenommen werden.')));
         }
         $this->redirect('course/members');
     }
@@ -820,8 +828,7 @@ class Course_MembersController extends AuthenticatedController
     function edit_tutor_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $this->flash['users'] = Request::getArray('tutor');
@@ -837,6 +844,9 @@ class Course_MembersController extends AuthenticatedController
             case 'remove':
                 $this->redirect('course/members/cancel_subscription/collection/tutor');
                 break;
+            case 'message':
+                $this->redirect('course/members/send_message');
+                break;
             default:
                 $this->redirect('course/members/index');
                 break;
@@ -850,8 +860,7 @@ class Course_MembersController extends AuthenticatedController
     function edit_autor_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $this->flash['users'] = Request::getArray('autor');
@@ -871,6 +880,9 @@ class Course_MembersController extends AuthenticatedController
                 break;
             case 'remove':
                 $this->redirect('course/members/cancel_subscription/collection/autor');
+                break;
+            case 'message':
+                $this->redirect('course/members/send_message');
                 break;
             default:
                 $this->redirect('course/members/index');
@@ -903,6 +915,9 @@ class Course_MembersController extends AuthenticatedController
             case 'remove':
                 $this->redirect('course/members/cancel_subscription/collection/user');
                 break;
+            case 'message':
+                $this->redirect('course/members/send_message');
+                break;
             default:
                 $this->redirect('course/members/index');
                 break;
@@ -916,8 +931,7 @@ class Course_MembersController extends AuthenticatedController
     function edit_awaiting_action()
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $this->flash['users'] = Request::getArray('awaiting');
@@ -933,6 +947,9 @@ class Course_MembersController extends AuthenticatedController
                 break;
             case 'remove':
                 $this->redirect('course/members/cancel_subscription/collection/awaiting');
+                break;
+            case 'message':
+                $this->redirect('course/members/send_message');
                 break;
             default:
                 $this->redirect('course/members/index');
@@ -966,6 +983,9 @@ class Course_MembersController extends AuthenticatedController
             case 'remove':
                 $this->redirect('course/members/cancel_subscription/collection/accepted');
                 break;
+            case 'message':
+                $this->redirect('course/members/send_message');
+                break;
             default:
                 $this->redirect('course/members/index');
                 break;
@@ -983,8 +1003,7 @@ class Course_MembersController extends AuthenticatedController
     function insert_admission_action($status, $cmd, $user_id = null)
     {
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         if (isset($this->flash['consider_contingent'])) {
@@ -1005,13 +1024,13 @@ class Course_MembersController extends AuthenticatedController
 
             if ($msgs) {
                 if ($cmd == 'add_user') {
-                    $message = sprintf(_('NutzerIn %s wurde in die Veranstaltung mit dem Status <b>%s</b> eingetragen.'), htmlReady(join(',', $msgs)), $this->decoratedStatusGroups['autor']);
+                    $message = sprintf(_('%s wurde in die Veranstaltung mit dem Status <b>%s</b> eingetragen.'), htmlReady(join(',', $msgs)), $this->decoratedStatusGroups['autor']);
                 } else {
                     if ($status == 'awaiting') {
-                        $message = sprintf(_('NutzerIn %s wurde aus der Anmelde bzw. Warteliste mit dem Status
+                        $message = sprintf(_('%s wurde aus der Anmelde bzw. Warteliste mit dem Status
                             <b>%s</b> in die Veranstaltung eingetragen.'), htmlReady(join(', ', $msgs)), $this->decoratedStatusGroups['autor']);
                     } else {
-                        $message = sprintf(_('NutzerIn %s wurde mit dem Status <b>%s</b> endgültig akzeptiert
+                        $message = sprintf(_('%s wurde mit dem Status <b>%s</b> endgültig akzeptiert
                             und damit in die Veranstaltung aufgenommen.'), htmlReady(join(', ', $msgs)), $this->decoratedStatusGroups['autor']);
                     }
                 }
@@ -1022,7 +1041,7 @@ class Course_MembersController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::error($message));
             }
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Sie haben keine Nutzer zum Befördern ausgewählt')));
+            PageLayout::postMessage(MessageBox::error(_('Sie haben keine Nutzer zum Hochstufen ausgewählt.')));
         }
 
         $this->redirect('course/members/index');
@@ -1056,13 +1075,13 @@ class Course_MembersController extends AuthenticatedController
                     // deleted authors
                     if (!empty($msgs)) {
                         if (count($msgs) <= 5) {
-                            PageLayout::postMessage(MessageBox::success(sprintf(_("%s %s wurde aus der Veranstaltung entfernt."), htmlReady($this->status_groups[$status]), htmlReady(join(', ', $msgs)))));
+                            PageLayout::postMessage(MessageBox::success(sprintf(_("%s %s wurde aus der Veranstaltung ausgetragen."), htmlReady($this->status_groups[$status]), htmlReady(join(', ', $msgs)))));
                         } else {
                             PageLayout::postMessage(MessageBox::success(sprintf(_("%u %s wurden aus der Veranstaltung entfernt."), count($msgs), htmlReady($this->status_groups[$status]))));
                         }
                     }
                 } else {
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum austragen ausgewählt')), $this->status_groups[$status]));
+                    PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Austragen ausgewählt')), $this->status_groups[$status]));
                 }
             } else {
                 if ($cmd == "singleuser") {
@@ -1099,8 +1118,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Security Check
         if (!$this->is_tutor) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-                um auf diesen Teil des Systems zuzugreifen');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         if ($this->is_tutor && $perm->have_studip_perm('tutor', $this->course_id) && $next_status != 'autor' && !$perm->have_studip_perm('dozent', $this->course_id)) {
@@ -1121,16 +1139,16 @@ class Course_MembersController extends AuthenticatedController
             $msgs = $this->members->setMemberStatus($users, $status, $next_status, 'upgrade');
 
             if ($msgs['success']) {
-                PageLayout::postMessage(MessageBox::success(sprintf(_('Bef&ouml;rderung auf den Status  %s von %s
+                PageLayout::postMessage(MessageBox::success(sprintf(_('Das Hochstufen auf den Status  %s von %s
                     wurde erfolgreich durchgef&uuml;hrt'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['success'])))));
             }
 
             if ($msgs['no_tutor']) {
-                PageLayout::postMessage(MessageBox::error(sprintf(_('Bef&ouml;rderung auf den Status  %s von %s
+                PageLayout::postMessage(MessageBox::error(sprintf(_('Das Hochstufen auf den Status  %s von %s
                    konnte wegen fehldnder Rechte nicht durchgef&uuml;hrt werden.'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['no_tutor'])))));
             }
         } else {
-            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Befördern ausgewählt'), htmlReady($this->status_groups[$status]))));
+            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Hochstufen ausgewählt'), htmlReady($this->status_groups[$status]))));
         }
 
         $this->redirect('course/members/index');
@@ -1157,9 +1175,6 @@ class Course_MembersController extends AuthenticatedController
                 um auf diesen Teil des Systems zuzugreifen');
         }
 
-
-        // create a usable array
-        // TODO: arrayFilter
         foreach ($this->flash['users'] as $user => $val) {
             if ($val) {
                 $users[] = $user;
@@ -1171,10 +1186,10 @@ class Course_MembersController extends AuthenticatedController
 
             if ($msgs['success']) {
                 PageLayout::postMessage(MessageBox::success(sprintf(_('Der/die %s %s wurde auf den
-                    Status %s zur&uuml;ckgestuft'), htmlReady($this->decoratedStatusGroups[$status]), htmlReady(join(', ', $msgs['success'])), $this->decoratedStatusGroups[$next_status])));
+                    Status %s heruntergestuft.'), htmlReady($this->decoratedStatusGroups[$status]), htmlReady(join(', ', $msgs['success'])), $this->decoratedStatusGroups[$next_status])));
             }
         } else {
-            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Herabstufen ausgewählt'), htmlReady($this->status_groups[$status]))));
+            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Herunterstufen ausgewählt'), htmlReady($this->status_groups[$status]))));
         }
 
         $this->redirect('course/members/index');

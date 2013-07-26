@@ -28,14 +28,14 @@
                                 'subject' => $subject))
                     ?>">
                         <?= Assets::img('icons/16/white/inbox.png',
-                                tooltip2(_('Nachricht an alle NutzerInnen verschicken')))?>
+                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten NutzerInnen')))?>
                     </a>
                 </th>
             </tr>
             <tr class="sortable">
                 <? if (!$is_locked) : ?>
                 <th>
-                    <input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), 'vorläufig akzeptierten NutzerInnen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=accepted]">
                 </th>
                 <? endif ?>
@@ -64,7 +64,7 @@
             <tr>
                 <? if (!$is_locked) : ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), 'Vorläufig akzeptierte/n NutzerIn') ?>"
                         type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
@@ -115,7 +115,7 @@
                                 ?>
                         ">
                             <?= Assets::img('icons/16/blue/mail.png',
-                                    tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                                    tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                         </a>
                     <? endif?>
                     <? if (!$is_locked) : ?>
@@ -137,6 +137,7 @@
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade"><?= _('Akzeptieren') ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
+                        <option value="message"><?=_('Nachricht senden')?></option>
                         <!--<option value="copy_to_course"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>
                     <?= Button::create(_('Ausführen'), 'submit_accepted') ?>

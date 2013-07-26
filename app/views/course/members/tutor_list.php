@@ -35,14 +35,14 @@
                                 'subject' => $subject))
                     ?>">
                         <?= Assets::img('icons/16/white/inbox.png',
-                                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['tutor'])))?>
+                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['tutor'])))?>
                     </a>
                 <? endif ?>
                 </th>
             </tr>
             <tr class="sortable">
                 <? if($is_dozent && !$tutor_is_locked) : ?>
-                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                <th><input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['tutor']) ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=tutor]"></th>
                 <? endif ?>
                 <th></th>
@@ -72,7 +72,7 @@
             <tr>
                 <? if ($is_dozent && !$tutor_is_locked) : ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['tutor']) ?>"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), $status_groups['tutor']) ?>"
                            type="checkbox" name="tutor[<?= $tutor['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
@@ -125,7 +125,7 @@
                             ?>
                     ">
                         <?= Assets::img('icons/16/blue/mail.png',
-                              tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                              tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
                     <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
@@ -144,8 +144,9 @@
                 <td class="printhead" colspan="6">
                     <select name="action_tutor" id="tutor_action" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion auswählen') ?></option>
-                        <option value="downgrade"><?= sprintf(_('Zu %s herabstufen'), $status_groups['autor']) ?></option>
+                        <option value="downgrade"><?= sprintf(_('Zu %s herunterstufen'), $status_groups['autor']) ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
+                        <option value="message"><?=_('Nachricht senden')?></option>
                         <!--<option value="copy_to_course"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>
                     <?= Button::create(_('Ausführen'), 'submit_autor') ?>

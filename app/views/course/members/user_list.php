@@ -31,12 +31,12 @@
                                     'subject' => $subject))
                         ?>">
                             <?= Assets::img('icons/16/white/inbox.png',
-                                    tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['user'])))?>
+                                    tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user'])))?>
                         </a>
                         <? if ($is_tutor) : ?>
                         <a href="<?= $controller->url_for('course/members/add_member/user/')?>">
                             <?= Assets::img('icons/16/white/add/community.png',
-                                    tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['user']))) ?>
+                                    tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'),$status_groups['user']))) ?>
                         </a>
                         <? endif ?>
                     <? endif ?>
@@ -44,7 +44,7 @@
             </tr>
             <tr class="sortable">
                 <? if($is_tutor) :?>
-                <th><input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                <th><input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=user]"></th>
                 <? endif ?>
                 <th></th>
@@ -73,7 +73,7 @@
             <tr>
                 <? if($is_tutor) :?>
                 <td>
-                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
+                    <input aria-label="<?= sprintf(_('%s auswählen'), $status_groups['user']) ?>"
                            type="checkbox" name="user[<?= $leser['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
@@ -126,7 +126,7 @@
                             ?>
                     ">
                         <?= Assets::img('icons/16/blue/mail.png',
-                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                                tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
                                         
@@ -147,9 +147,10 @@
                 <td class="printhead" colspan="6">
                     <select name="action_user" id="user_action" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion auswählen') ?></option>
-                        <option value="upgrade"><?= sprintf(_('Als %s befördern'),
+                        <option value="upgrade"><?= sprintf(_('Als %s hochstufen'),
                                 htmlReady($status_groups['autor'])) ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
+                        <option value="message"><?=_('Nachricht senden')?></option>
                         <!--<option value="copy_to_course"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>
                     <?= Button::create(_('Ausführen'), 'submit_user') ?>

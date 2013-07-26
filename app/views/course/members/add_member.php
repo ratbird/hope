@@ -26,11 +26,8 @@
                 </td>
                 <td style="width: 20%; text-align: center"> 
                     <? if ($semAdmissionEnabled)  :?>
-                        <?=Assets::img('icons/16/black/info.png', 
-                            array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
-                                'alt' => _('Kontingent berücksichtigen'),
-                                'style' => 'cursor: pointer',
-                                'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
+                        <?= tooltipIcon(_('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden'))?>
+                        
                         <label for="kontingent"><?=_("Kontingent berücksichtigen:");?>
                         <select name="consider_contingent" id="kontingent">
                             <option value=""><?=_("Kein Kontingent")?></option>
@@ -59,21 +56,19 @@
         <tr class="table_header header-row">
             <th class="toggle-indicator" colspan="3">
                 <a class="toggler">
-                    <?=_('Teilnehmerliste übernehmen')?> 
-                    
+                    <?=_('Teilnehmerliste übernehmen')?>
                 </a>
-                
             </th>
         </tr>
         <tr>
             <td>
                 <?=_('Eingabeformat')?>:
                 
-                <?= tooltipIcon(_('In das Textfeld <strong>Teilnehmerliste übernehmen</strong> können Sie eine Liste mit Namen von NutzerInnen eingeben, 
+                <?= tooltipIcon(sprintf(_('In das Textfeld <strong>Teilnehmerliste übernehmen</strong> können Sie eine Liste mit Namen von %s eingeben, 
                     die in die Veranstaltung aufgenommen werden sollen. Wählen Sie in der Auswahlbox das gewünschte Format, in dem Sie die Namen eingeben möchten.<br />
                     <strong>Eingabeformat</strong><br/>
                     <strong>Nachname, Vorname &crarr;</strong><br />Geben Sie dazu in jede Zeile den Nachnamen und (optional) den Vornamen getrennt durch ein Komma oder ein Tabulatorzeichen ein.<br />
-                    <strong>Nutzername &crarr;</strong><br />Geben Sie dazu in jede Zeile den Stud.IP Nutzernamen ein.'),false, true);?>
+                    <strong>Nutzername &crarr;</strong><br />Geben Sie dazu in jede Zeile den Stud.IP Nutzernamen ein.'),$status_groups['autor']),false, true);?>
             </td>
             <td colspan="2">
                 <select name="csv_import_format">

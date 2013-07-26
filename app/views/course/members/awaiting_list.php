@@ -2,6 +2,7 @@
 <br />
 <a name="awaiting"></a>
 <form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable zebra-hover">
         <colgroup>
             <col width="20">

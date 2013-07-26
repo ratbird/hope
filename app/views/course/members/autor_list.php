@@ -3,6 +3,7 @@
 
 
 <form action="<?= $controller->url_for('course/members/edit_autor/') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table id="autor" class="default collapsable zebra-hover tablesorter">
         <colgroup>
             <col width="20">

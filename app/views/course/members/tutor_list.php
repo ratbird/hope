@@ -2,9 +2,10 @@
 
 <a name="tutoren"></a>
 <form action="<?= $controller->url_for('course/members/edit_tutor') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable zebra-hover">
         <colgroup>
-        <? if($is_dozent && !$dozent_is_locked) : ?>
+        <? if($is_dozent && !$tutor_is_locked) : ?>
             <col width="20">
         <? endif ?>
         <col width="<?=(($is_tutor && !$is_dozent) || $tutor_is_locked  ? '40' :'20')?>">

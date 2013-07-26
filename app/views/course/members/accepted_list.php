@@ -3,6 +3,7 @@
 <a name="users"></a>
 
 <form action="<?= $controller->url_for('course/members/edit_accepted/') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable zebra-hover">
         <colgroup>
             <? if (!$is_locked) : ?>

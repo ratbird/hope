@@ -1,9 +1,8 @@
 <? use Studip\Button, Studip\LinkButton?>
 
 <h1><?=sprintf(_('%s hinzufügen'), htmlReady($decoratedStatusGroups['autor']))?></h1>
-<?= CSRFProtection::tokenTag() ?>
 <form action="<?=$controller->url_for('course/members/set_autor')?>" method="post">
-    <input type="hidden" name="studipticket" value="<?=$studipticket?>">
+<?= CSRFProtection::tokenTag() ?>
     <table class="default zebra collapsable">
         <tbody>
             <tr class="table_header header-row">
@@ -24,10 +23,10 @@
                     ?>
                     <input type="hidden" name="cid" value="<?= $course_id ?>">
                 </td>
-                <td style="width: 20%; text-align: center"> 
+                <td style="width: 20%; text-align: center">
                     <? if ($semAdmissionEnabled)  :?>
                         <?= tooltipIcon(_('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden'))?>
-                        
+
                         <label for="kontingent"><?=_("Kontingent berücksichtigen:");?>
                         <select name="consider_contingent" id="kontingent">
                             <option value=""><?=_("Kein Kontingent")?></option>
@@ -48,9 +47,8 @@
     </table>
 </form>
 
-<?= CSRFProtection::tokenTag() ?>
 <form action="<?= $controller->url_for('course/members/set_autor_csv')?>" method="post" name="user">
-<input type="hidden" name="studipticket" value="<?=$studipticket?>">
+<?= CSRFProtection::tokenTag() ?>
 <table class="default zebra collapsable">
     <tbody class="collapsed">
         <tr class="table_header header-row">
@@ -63,8 +61,8 @@
         <tr>
             <td>
                 <?=_('Eingabeformat')?>:
-                
-                <?= tooltipIcon(sprintf(_('In das Textfeld <strong>Teilnehmerliste übernehmen</strong> können Sie eine Liste mit Namen von %s eingeben, 
+
+                <?= tooltipIcon(sprintf(_('In das Textfeld <strong>Teilnehmerliste übernehmen</strong> können Sie eine Liste mit Namen von %s eingeben,
                     die in die Veranstaltung aufgenommen werden sollen. Wählen Sie in der Auswahlbox das gewünschte Format, in dem Sie die Namen eingeben möchten.<br />
                     <strong>Eingabeformat</strong><br/>
                     <strong>Nachname, Vorname &crarr;</strong><br />Geben Sie dazu in jede Zeile den Nachnamen und (optional) den Vornamen getrennt durch ein Komma oder ein Tabulatorzeichen ein.<br />
@@ -85,14 +83,14 @@
         <? if ($semAdmissionEnabled)  :?>
         <tr>
             <td>
-                <?=Assets::img('icons/16/black/info.png', 
-                        array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'), 
+                <?=Assets::img('icons/16/black/info.png',
+                        array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'),
                             'alt' => _('Kontingent berücksichtigen'),
                             'style' => 'cursor: pointer',
                             'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
                 <?=_("Kontingent berücksichtigen:");?>
             </td>
-            <td colspan="2">  
+            <td colspan="2">
                 <select name="consider_contingent_csv" id="kontingent_csv">
                     <option value=""><?=_("Kein Kontingent")?></option>
                     <? if(!empty($admission_studiengang)) :?>
@@ -110,7 +108,7 @@
                 <textarea name="csv_import" rows="6" cols="50"></textarea>
             </td>
             <td style="width: 20%; text-align: right">
-                <?= Button::createAccept(_('Eintragen'), 'add_member_list', 
+                <?= Button::createAccept(_('Eintragen'), 'add_member_list',
                         array('title' => sprintf(_("als %s eintragen"), htmlReady($decoratedStatusGroups['autor'])))) ?>
             </td>
         </tr>

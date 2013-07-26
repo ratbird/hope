@@ -4,6 +4,7 @@
 <?= (isset($flash['success'])) ? MessageBox::success($flash['success']) : '' ?>
 <?= (isset($flash['info'])) ? MessageBox::info($flash['info']) : '' ?>
 <form action="<?= $controller->url_for('course/members/set_autor_csv')?>" method="post" name="user">
+<?= CSRFProtection::tokenTag() ?>
 <table class="default zebra">
     <thead>
         <tr>

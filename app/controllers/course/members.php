@@ -342,8 +342,7 @@ class Course_MembersController extends AuthenticatedController
     {
         // Security Check
         if (!$this->is_dozent || $this->dozent_is_locked) {
-            throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
-Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
         $sem = Seminar::GetInstance($this->course_id);
@@ -464,7 +463,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-
+        CSRFProtection::verifyUnsafeRequest();
         $sem = Seminar::GetInstance($this->course_id);
         // insert new dozent in a seminar
         if (Request::submitted('add_dozent') && $this->is_dozent) {
@@ -565,7 +564,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor || !$perm->have_studip_perm('tutor', $this->course_id)) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-
+        CSRFProtection::verifyUnsafeRequest();
         // empty autor formular
         if (Request::submitted('search_autor') && Request::submitted('search_autor_x')) {
             $this->flash['new_autor'] = Request::get('new_autor');
@@ -595,7 +594,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         }
     }
 
-    
+
     /**
      * Send Stud.IP-Message to selected users
      */
@@ -609,8 +608,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
                 }
             }
             $_SESSION['sms_data']['p_rec'] = $users;
-
-            $this->redirect(URLHelper::getURL('sms_send.php'));
+            $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => 'dispatch.php/course/members/index', 'messagesubject' => $this->getSubject(), 'tmpsavesnd' => 1)));
         } else {
             $this->redirect('course/members/index');
         }
@@ -629,6 +627,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         // prepare CSV-Lines
         $messaging = new messaging();
@@ -830,6 +829,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         $this->flash['users'] = Request::getArray('tutor');
 
@@ -862,6 +862,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         $this->flash['users'] = Request::getArray('autor');
 
@@ -900,6 +901,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         $this->flash['users'] = Request::getArray('user');
         $this->flash['consider_contingent'] = Request::get('consider_contingent');
@@ -933,6 +935,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         $this->flash['users'] = Request::getArray('awaiting');
         $this->flash['consider_contingent'] = Request::get('consider_contingent');
@@ -967,6 +970,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
                 um auf diesen Teil des Systems zuzugreifen');
         }
+        CSRFProtection::verifyUnsafeRequest();
 
         $this->flash['users'] = Request::getArray('accepted');
         $this->flash['consider_contingent'] = Request::get('consider_contingent');
@@ -1000,7 +1004,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
      * @return String
      * @throws AccessDeniedException
      */
-    function insert_admission_action($status, $cmd, $user_id = null)
+    function insert_admission_action($status, $cmd)
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -1010,18 +1014,13 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
             Request::set('consider_contingent', $this->flash['consider_contingent']);
         }
 
-        if ($cmd == "singleuser") {
-            $users = array($user_id);
-        } else {
-            // create a usable array
-            $users = array_filter($this->flash['users'], function ($user) {
+        // create a usable array
+        $users = array_filter($this->flash['users'], function ($user) {
                         return $user;
                     });
-        }
 
         if ($users) {
             $msgs = $this->members->insertAdmissionMember($users, 'autor', Request::get('consider_contingent'));
-
             if ($msgs) {
                 if ($cmd == 'add_user') {
                     $message = sprintf(_('%s wurde in die Veranstaltung mit dem Status <b>%s</b> eingetragen.'), htmlReady(join(',', $msgs)), $this->decoratedStatusGroups['autor']);
@@ -1064,6 +1063,7 @@ Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud
         if (!Request::submitted('no')) {
 
             if (Request::submitted('yes')) {
+                CSRFProtection::verifyUnsafeRequest();
                 $users = Request::getArray('users');
                 if (!empty($users)) {
                     if ($status == 'accepted' || $status == 'awaiting') {

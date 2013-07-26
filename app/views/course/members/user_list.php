@@ -2,6 +2,7 @@
 <a name="users"></a>
 
 <form action="<?= $controller->url_for('course/members/edit_user/') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable zebra-hover">
         <colgroup>
             <? if($is_tutor) :?>
@@ -129,7 +130,7 @@
                                 tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
-                                        
+
                     <? if ($is_tutor) : ?>
                     <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/user/%s',
                                 $leser['user_id'])) ?>">

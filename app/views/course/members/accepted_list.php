@@ -2,9 +2,7 @@
 <br />
 <a name="users"></a>
 
-<form action="<?= $controller->url_for('course/members/edit_accepted/') ?>"
-      method="post" onsubmit="if ($('#action_accepted').val() == 'remove')
-          return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
+<form action="<?= $controller->url_for('course/members/edit_accepted/') ?>" method="post">
     <table class="default collapsable zebra-hover">
         <colgroup>
             <? if (!$is_locked) : ?>
@@ -120,9 +118,7 @@
                     </a>
 
                     <? if (!$is_locked) : ?>
-                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
-                            htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s',
+                    <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s',
                                 $accept['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>

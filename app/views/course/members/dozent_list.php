@@ -1,3 +1,4 @@
+
 <table class="default collapsable zebra-hover">
     <colgroup>
         <col width="<?=($is_tutor) ? '40' : '20'?>">
@@ -65,12 +66,9 @@
                 <? endif ?>
 
             <? if (!$dozent_is_locked && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
-                <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
-                        htmlReady($fullname)) ?>');"
-                    href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s/%s',
-                            $page, $dozent['user_id'])) ?>">
+                <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s',$dozent['user_id'])) ?>">
                     <?= Assets::img('icons/16/blue/door-leave.png',
-                            tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
+                        tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                 </a>
             <? endif ?>
             </td>

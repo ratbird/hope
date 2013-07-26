@@ -2,11 +2,7 @@
 <a name="autoren"></a>
 
 
-<form action="<?= $controller->url_for('course/members/edit_autor/') ?>"
-          method="post" onsubmit="if ($('#action_autor').val() == 'remove')
-              return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
-                      htmlReady($status_groups['autor'])) ?>');">
-
+<form action="<?= $controller->url_for('course/members/edit_autor/') ?>" method="post">
     <table id="autor" class="default collapsable zebra-hover tablesorter">
         <colgroup>
             <col width="20">
@@ -160,13 +156,11 @@
                         <?= Assets::img('icons/16/grey/mail.png')?>
                     <? endif ?>
                     <? if ($is_tutor && !$is_locked) : ?>
-                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
-                            htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/autor/%s',
-                                $autor['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/door-leave.png',
-                                tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
-                    </a>
+                        <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/autor/%s',
+                                    $autor['user_id'])) ?>">
+                            <?= Assets::img('icons/16/blue/door-leave.png',
+                                    tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
+                        </a>
                     <? endif ?>
                 </td>
             </tr>

@@ -1,10 +1,7 @@
 <? use \Studip\Button; ?>
 
 <a name="tutoren"></a>
-<form action="<?= $controller->url_for('course/members/edit_tutor') ?>"
-      method="post" onsubmit="if ($('#tutor_action').val() == 'remove')
-          return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
-                  $status_groups['tutor']) ?>');">
+<form action="<?= $controller->url_for('course/members/edit_tutor') ?>" method="post">
     <table class="default collapsable zebra-hover">
         <colgroup>
         <? if($is_dozent && !$tutor_is_locked) : ?>
@@ -134,10 +131,7 @@
                         <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
                     <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
-                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
-                            htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s',
-                                $tutor['user_id'])) ?>">
+                    <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s', $tutor['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>

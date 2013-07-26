@@ -1,9 +1,7 @@
 <? use \Studip\Button; ?>
 <br />
 <a name="awaiting"></a>
-<form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>"
-      method="post" onsubmit="if ($('#action_awaiting').val() == 'remove')
-          return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
+<form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post">
     <table class="default collapsable zebra-hover">
         <colgroup>
             <col width="20">
@@ -91,9 +89,7 @@
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
                     <? if (!$is_locked) : ?>
-                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
-                            htmlReady($fullname)) ?>');"
-                        href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s',
+                    <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s',
                                 $waiting['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>

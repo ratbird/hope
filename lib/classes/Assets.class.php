@@ -134,21 +134,22 @@ class Assets {
    * * file name without extension, like "logo", that gets expanded to "/images/logo.png"
    */
   static function img($source, $opt = array()) {
-  
-    if (!$source)
+
+    if (!$source) {
       return '';
-      
+    }
+
    $parts = explode('/', $source);
-   
+
    if (($pos = array_search("icons", $parts)) !== false) {
         $size = $parts[$pos+1] . '@' . $parts[$pos+1];
         if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }
- 
         $source = implode("/", $parts);
-    } else
+    } else {
         $size = $opt['size'];
+    }
 
     $opt = Assets::parse_attributes($opt);
 
@@ -159,14 +160,15 @@ class Assets {
         unset ($opt['@2x']);
     }
 
-    if (!isset($opt['alt']))
-      $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
+    if (!isset($opt['alt'])) {
+        $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
+    }
 
     if (isset($size)) {
-      list($opt['width'], $opt['height']) = explode('@', $size, 2);
-      unset($opt['size']);
+        list($opt['width'], $opt['height']) = explode('@', $size, 2);
+        unset($opt['size']);
     }
-   
+
     return Assets::tag('img', $opt);
   }
 
@@ -185,33 +187,37 @@ class Assets {
    */
   static function input($source, $opt = array()) {
 
-    if (!$source)
+    if (!$source) {
       return '';
+    }
 
     $parts = explode('/', $source);
-    
-    if (($pos = array_search("icons", $parts)) || (in_array("icons", $parts))) {
-        $opt['size'] = $parts[$pos+1];
+
+    if (($pos = array_search("icons", $parts)) !== false) {
+        $size = $parts[$pos+1] . '@' . $parts[$pos+1];
         if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }
         $source = implode("/", $parts);
+    } else {
+        $size = $opt['size'];
     }
-  
+
     $opt = Assets::parse_attributes($opt);
 
     $opt['src'] = Assets::image_path($source);
+    $opt['type'] = 'image';
 
     if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2)) {
         $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
         unset ($opt['@2x']);
     }
 
-    if (isset($opt['size'])) {
-      list($opt['width'], $opt['height']) = explode('@', $opt['size'], 2);
-      unset($opt['size']);
+    if (isset($size)) {
+        list($opt['width'], $opt['height']) = explode('@', $size, 2);
+        unset($opt['size']);
     }
-    
+
     return Assets::tag('input', $opt);
   }
 
@@ -431,10 +437,10 @@ class Assets {
 
     return $attributes;
   }
-  
+
     /**
      * Returns the dimensions for the passed image.
-     * 
+     *
      * $source can be supplied as a...
      *
      * full path,
@@ -445,20 +451,20 @@ class Assets {
      *
      * file name without extension,
      *   like "logo", that gets expanded to "/images/logo.png"
-     * 
+     *
      * @param string $source path to the image
-     * 
+     *
      * @return array an array containing width and height for the passed image
      */
-    public static function getImageSize($source) 
+    public static function getImageSize($source)
     {
         $image_path = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', Assets::image_path($source));
         $image_size = getimagesize($GLOBALS['STUDIP_BASE_PATH'] . '/public/' . $image_path);
-        
+
         if ($image_size) {
             return array('height' => $image_size[1], 'width' => $image_size[0]);
         }
-        
+
         return false;
     }
 }

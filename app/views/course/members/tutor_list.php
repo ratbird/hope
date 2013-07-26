@@ -127,8 +127,6 @@
                         <?= Assets::img('icons/16/blue/mail.png',
                               tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
-                    <? else :?>
-                        <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
                     <? if ($is_dozent && !$tutor_is_locked && $user_id != $tutor['user_id'] && count($tutoren) >= 1) : ?>
                     <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/tutor/%s', $tutor['user_id'])) ?>">

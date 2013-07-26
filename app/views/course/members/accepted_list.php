@@ -106,17 +106,18 @@
                     <? endif ?>
                 </td>
                 <td style="text-align: right">
-                    <a href="<?= URLHelper::getLink('sms_send.php',
-                                array('filter' => 'send_sms_to_all',
-                                'rec_uname' => $accept['username'],
-                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
-                                'subject' => $subject))
-                            ?>
-                    ">
-                        <?= Assets::img('icons/16/blue/mail.png',
-                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
-                    </a>
-
+                    <? if($user_id != $accept['user_id']) : ?>
+                        <a href="<?= URLHelper::getLink('sms_send.php',
+                                    array('filter' => 'send_sms_to_all',
+                                    'rec_uname' => $accept['username'],
+                                    'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
+                                    'subject' => $subject))
+                                ?>
+                        ">
+                            <?= Assets::img('icons/16/blue/mail.png',
+                                    tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
+                        </a>
+                    <? endif?>
                     <? if (!$is_locked) : ?>
                     <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/accepted/%s',
                                 $accept['user_id'])) ?>">

@@ -61,15 +61,14 @@
                     <?= Assets::img('icons/16/blue/mail.png',
                             tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                 </a>
-                <? else : ?>
-                    <?= Assets::img('icons/16/grey/mail.png') ?>
                 <? endif ?>
-
             <? if (!$dozent_is_locked && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
                 <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s',$dozent['user_id'])) ?>">
                     <?= Assets::img('icons/16/blue/door-leave.png',
                         tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                 </a>
+            <? else : ?>
+                <?= Assets::img('blank.gif', array('style' => 'padding-right: 10px'))?>
             <? endif ?>
             </td>
         </tr>

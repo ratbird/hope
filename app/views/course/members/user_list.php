@@ -128,8 +128,6 @@
                         <?= Assets::img('icons/16/blue/mail.png',
                                 tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
-                    <? else : ?>
-                        <?= Assets::img('icons/16/grey/mail.png') ?>
                     <? endif ?>
                                         
                     <? if ($is_tutor) : ?>

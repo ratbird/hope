@@ -173,17 +173,17 @@ class Course_MembersController extends AuthenticatedController
             if ($this->is_dozent) {
                 if (!$this->dozent_is_locked) {
                     $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_dozent/'), sprintf(_('Neue/n %s eintragen'), $this->status_groups['dozent']));
-                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/black/add/community.png');
                 }
 
                 if (!$this->tutor_is_locked) {
                     $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_tutor/'), sprintf(_('Neue/n %s eintragen'), $this->status_groups['tutor']));
-                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+                    $this->addToInfobox(_('Aktionen'), $url, 'icons/16/black/add/community.png');
                 }
             }
             if (!$this->is_locked) {
                 $url = sprintf('<a href="%s">%s</a>', $this->url_for('course/members/add_member/'), sprintf(_('Neue/n %s eintragen'), $this->status_groups['autor']));
-                $this->addToInfobox(_('Aktionen'), $url, 'icons/16/blue/add/community.png');
+                $this->addToInfobox(_('Aktionen'), $url, 'icons/16/black/add/community.png');
             }
             $link = sprintf('<a href="%s">%s</a>', URLHelper::getLink('sms_send.php', array('sms_source_page' => 'dispatch.php/course/members',
                         'course_id' => $this->course_id,

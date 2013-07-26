@@ -1,7 +1,7 @@
 <?php
 /*
  *  Copyright (c) 2012  Rasmus Fuhse <fuhse@data-quest.de>
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -24,7 +24,7 @@ class Admin_SemClassesController extends AuthenticatedController
     public function overview_action()
     {
         Navigation::activateItem("/admin/config/sem_classes");
-        if (count($_POST) && Request::get("delete_sem_class")) {
+        if (count($_POST) && Request::submitted('delete') && Request::get("delete_sem_class")) {
             $sem_class = $GLOBALS['SEM_CLASS'][Request::get("delete_sem_class")];
             if ($sem_class->delete()) {
                 PageLayout::postMessage(MessageBox::success(_("Veranstaltungskategorie wurde gelöscht.")));
@@ -60,8 +60,8 @@ class Admin_SemClassesController extends AuthenticatedController
             }
         }
     }
-    
-    public function details_action() 
+
+    public function details_action()
     {
         Navigation::activateItem("/admin/config/sem_classes");
         $modules = array(
@@ -91,8 +91,8 @@ class Admin_SemClassesController extends AuthenticatedController
         $this->sem_class = $GLOBALS['SEM_CLASS'][Request::get("id")];
         $this->overview_url = $this->url_for("admin/sem_classes/overview");
     }
-    
-    public function save_action() 
+
+    public function save_action()
     {
         if (count($_POST) === 0) {
             throw new Exception("Kein Zugriff über GET");

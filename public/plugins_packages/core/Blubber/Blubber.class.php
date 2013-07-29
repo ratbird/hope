@@ -96,7 +96,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
                     $nav->setURL($url);
                 }
             }
-            $nav->addSubNavigation("add", new AutoNavigation(_("+"), PluginEngine::getURL($this, array(), "streams/edit")));
+            $nav->addSubNavigation("add", new AutoNavigation(_("Neuen Stream erstellen"), PluginEngine::getURL($this, array(), "streams/edit")));
             Navigation::insertItem("/community/blubber", $nav, "online");
             Navigation::getItem("/community")->setURL($nav->getURL());
         }

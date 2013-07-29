@@ -688,6 +688,12 @@ class StreamsController extends ApplicationController {
         if ($this->stream['user_id'] && $this->stream['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException("Not allowed to edit stream");
         }
+        $this->contact_groups = DBManager::get()->query(
+            "SELECT statusgruppen.* " .
+            "FROM statusgruppen " .
+            "WHERE statusgruppen.range_id = ".DBManager::get()->quote($GLOBALS['user']->id)." " .
+            "ORDER BY name ASC " .
+        "")->fetchAll(PDO::FETCH_ASSOC);
         if (Request::isPost()) {
             $new = $this->stream->isNew();
             $this->stream['name'] = Request::get("name");

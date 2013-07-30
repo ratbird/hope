@@ -269,9 +269,10 @@
     -ms-transition: all 1s;
     -o-transition: all 1s;
     transition: all 1s;
+    opacity: 0.2;
 }
 #threadwriter:hover .context_selector {
-    background-color: lightgrey;
+    opacity: 1;
 }
 #threadwriter .context_selector img {
     cursor: pointer;

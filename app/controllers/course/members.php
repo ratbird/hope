@@ -196,9 +196,9 @@ class Course_MembersController extends AuthenticatedController
                 include_once($PATH_EXPORT . "/export_linking_func.inc.php");
 
                 // create csv-export link
-                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('Teilnehmer-Liste als csv-Dokument exportieren'), 'passthrough');
+                $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('TeilnehmerInnen-Liste als csv-Dokument exportieren'), 'passthrough');
                 // create csv-export link
-                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('Teilnehmer-Liste als rtf-Dokument exportieren'), 'passthrough');
+                $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen-Liste als rtf-Dokument exportieren'), 'passthrough');
                 $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/black/export/file-office.png');
                 $this->addToInfobox(_('Aktionen'), $rtfExport, 'icons/16/black/export/file-text.png');
 
@@ -213,12 +213,12 @@ class Course_MembersController extends AuthenticatedController
         } elseif (!$this->is_tutor) {
             // Visibility preferences
             if (!$this->my_visibilty['iam_visible']) {
-                $text = _('Sie sind für andere TeilnehmerInnen auf der Teilnehmerliste nicht sichtbar.');
+                $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste nicht sichtbar.');
                 $icon = 'icons/16/black/visibility-visible.png';
                 $modus = 'make_visible';
                 $link_text = _('Klicken Sie hier, um sichtbar zu werden.');
             } else {
-                $text = _('Sie sind für andere TeilnehmerInnen auf der Teilnehmerliste sichtbar.');
+                $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste sichtbar.');
                 $icon = 'icons/16/black/visibility-invisible.png';
                 $modus = 'make_invisible';
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');

@@ -181,10 +181,10 @@
                     <select name="action_autor" id="action_autor" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <? if($is_dozent) : ?>
-                            <option value="upgrade"><?= sprintf(_('Als %s hochstufen'),
+                            <option value="upgrade"><?= sprintf(_('Zu %s hochstufen'),
                                 htmlReady($status_groups['tutor'])) ?></option>
                         <? endif ?>
-                        <option value="downgrade"><?= sprintf(_('Als %s herunterstufen'),
+                        <option value="downgrade"><?= sprintf(_('Zu %s herunterstufen'),
                                 htmlReady($status_groups['user'])) ?></option>
                         <!--<option value="to_admission">Auf Warteliste setzen</option>-->
                         <option value="remove"><?= _('Austragen') ?></option>

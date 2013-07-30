@@ -108,7 +108,7 @@
                 <td class="printhead" colspan="6">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
-                        <option value="upgrade"><?= _('Als NutzerInnen hochstufen') ?></option>
+                        <option value="upgrade"><?= _('Zu NutzerInnen hochstufen') ?></option>
                         <option value="remove"><?= _('Austragen') ?></option>
                         <option value="message"><?=_('Nachricht senden')?></option>
     <!--                    <option value="copy_to_sem"><?= _('In Seminar verschieben/kopieren') ?></option>-->

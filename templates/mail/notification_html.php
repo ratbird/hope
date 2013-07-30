@@ -13,7 +13,9 @@
       <br><br>
       <?= _("Über welche Inhalte und in welchem Format Sie informiert werden wollen, können Sie hier einstellen:") ?>
       <br>
-      <a href="<?= URLHelper::getLink('sem_notification.php') ?>"><?= URLHelper::getLink('sem_notification.php') ?></a>
+      <a href="<?= URLHelper::getLink('dispatch.php/settings/notification') ?>">
+        <?= URLHelper::getLink('dispatch.php/settings/notification') ?>
+      </a>
     </p>
 
     <table class="default">

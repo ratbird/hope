@@ -8,7 +8,7 @@
 
 <?= _("Über welche Inhalte Sie informiert werden wollen, können Sie hier einstellen:") ?>
 
-<?= URLHelper::getURL('sem_notification.php') ?>
+<?= URLHelper::getURL('dispatch.php/settings/notification') ?>
 
 
 <? foreach ($news as $sem_titel => $data) : ?>

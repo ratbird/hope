@@ -111,6 +111,9 @@ class SendMailNotificationsJob extends CronJob
         $rs = DBManager::get()->query($query);
         while($r = $rs->fetch()){
             $user = new Seminar_User($r["user_id"]);
+            if ($user->locked) {
+                continue;
+            }
             setTempLanguage('', $user->preferred_language);
             $to = $user->email;
             $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");

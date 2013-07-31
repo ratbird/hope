@@ -130,14 +130,15 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
         <? endforeach ?></div>
     </div>
     <ul class="comments">
-    <? $postings = $thread->getChildren() ?>
+    <? $postings = $thread->getChildren(0, 4) ?>
     <? if ($postings) : ?>
-        <? if (count($postings) > 3) : ?>
+        <? $more_comments = $thread->getNumberOfChildren() - 3 ?>
+        <? if ($more_comments > 0) : ?>
         <li class="more">
-            <?= sprintf(ngettext('%u weiterer Kommentar anzeigen', '%u weitere Kommentare anzeigen', count($postings) - 3), count($postings) - 3)?>
+            <?= sprintf(ngettext('%u weiterer Kommentar anzeigen', '%u weitere Kommentare anzeigen', $more_comments), $more_comments) ?>
         </li>
         <? endif; ?>
-        <? foreach (array_slice($postings, -3) as $posting) : ?>
+        <? foreach (array_slice(array_reverse($postings), -3) as $posting) : ?>
         <?= $this->render_partial("streams/comment.php", array('posting' => $posting, 'last_visit' => $last_visit)) ?>
         <? endforeach ?>
     <? endif ?>

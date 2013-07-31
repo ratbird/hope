@@ -530,13 +530,11 @@ jQuery(".writer > textarea").live("keydown", function (event) {
 //initialize click-events on "show more" links to show more comments
 jQuery("#blubber_threads > li > ul.comments > li.more").live("click", function () {
     var thread_id = jQuery(this).closest("li[id]").attr("id").split("_").pop(),
-        last    = jQuery(this).next("li"),
-        last_id = last.attr("id").split("_").pop(),
         li_more = this;
     jQuery(this).wrapInner('<span/>').find('span').showAjaxNotification()
     jQuery.getJSON(STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/more_comments", {
         thread_id: thread_id,
-        last_id: last_id
+        already_there: jQuery(this).closest("ul").children("li[id]").length
     }, function (json) {
         if (!json.more) {
             jQuery(li_more).remove();

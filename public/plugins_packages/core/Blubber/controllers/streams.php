@@ -137,17 +137,19 @@ class StreamsController extends ApplicationController {
             'more' => false,
             'comments' => array()
         );
-        $comments = $thread->getChildren();
+        
 
-        if (($last_id = Request::option("last_id")) && (Request::option('count') !== 'all')) {
+        if (Request::option('count') !== 'all') {
             $count = Request::int("count", 20);
-            $ids   = array_map(function ($item) { return $item->getId(); }, $comments);
-            $pos   = max(0, array_search($last_id, $ids) - $count);
-
-            if ($pos > 0) {
-                $comments = array_slice($comments, $pos);
-                $output['more'] = sprintf(ngettext('%u weiterer Kommentar', '%u weitere Kommentare', $pos), $pos);
+            $already_there = Request::int("already_there");
+            $comments = $thread->getChildren($already_there, $count);
+            $number_of_comments = $thread->getNumberOfChildren();
+            $more = $number_of_comments - $already_there - $count;
+            if ($more > 0) {
+                $output['more'] = sprintf(ngettext('%u weiterer Kommentar', '%u weitere Kommentare', $more), $more);
             }
+        } else {
+            $comments = $thread->getChildren();
         }
 
         $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views");

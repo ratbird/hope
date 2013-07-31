@@ -286,11 +286,34 @@ class BlubberPosting extends SimpleORMap {
      * false if this posting is a comment.
      * @return array|boolean : array of BlubberPosting or false if posting is a comment.
      */
-    public function getChildren() {
+    public function getChildren($offset = 0, $limit = null) {
         if ($this->isThread()) {
-            return self::findBySQL("root_id = ? AND parent_id != '0' ORDER BY mkdate ASC", array($this->getId()));
+            return self::findBySQL(
+                "root_id = ? AND parent_id != '0' ORDER BY mkdate DESC ".($limit > 0 ? "LIMIT ".(int) $offset .", ".(int) $limit : ""), 
+                array($this->getId())
+            );
         } else {
             return false;
+        }
+    }
+    
+    /**
+     * Returns the number of children/comments the thread has. Returns 0 if 
+     * posting is a comment on its own.
+     * @return integer: number of all children
+     */
+    public function getNumberOfChildren() {
+        if ($this->isThread()) {
+            $statement = DBManager::get()->prepare(
+                "SELECT COUNT(*) " .
+                "FROM blubber " .
+                "WHERE root_id = ? " .
+                    "AND parent_id != '0' " .
+            "");
+            $statement->execute(array($this->getId()));
+            return $statement->fetch(PDO::FETCH_COLUMN, 0);
+        } else {
+            return 0;
         }
     }
 

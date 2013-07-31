@@ -6,38 +6,6 @@
  */
 ?>
 <input type="hidden" id="base_url" value="plugins.php/blubber/streams/">
-<style>
-table.select td {
-    border: thin solid #aaaaaa;
-    text-align: center;
-}
-table.select th {
-    border-left: 1px solid #D1D1D1;
-    border-right: 1px solid #D1D1D1;
-}
-table.select td img.check {
-    display: none;
-}
-table.select td input[type=checkbox] {
-    display: none;
-}
-table.select td.selected img.check {
-    display: inline;
-}
-table.select td.selected img.uncheck {
-    display: none;
-}
-table.select td.selected {
-    background-color: #eeeeee;
-}
-
-#additional_settings table {
-    width: 100%;
-}
-#additional_settings input[type=text], #additional_settings select {
-    width: 100%;
-}
-</style>
 <form action="?" method="post" id="edit_stream" enctype="multipart/form-data">
 <div id="additional_settings">
     <table>
@@ -283,33 +251,7 @@ table.select td.selected {
     
 <?= \Studip\Button::createAccept(_("Speichern"), array()) ?>
 
-
 </form>
-
-<script>
-jQuery(function () {
-    jQuery("#edit_stream select, #edit_stream input").bind("change", STUDIP.Blubber.update_streams_threadnumber);
-    jQuery("#edit_stream td .checkicons").bind("click", function () {
-        if (jQuery(this).closest("td").is(".selected")) {
-            jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
-        } else {
-            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
-        }
-    });
-    jQuery("#edit_stream td .label").bind("click", function () {
-        if (!jQuery(this).closest("td").is(".selected")) {
-            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
-        } else {
-            jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
-        }
-    });
-    jQuery("#edit_stream .selector").bind("click", function () {
-        if (!jQuery(this).closest("td").is(".selected")) {
-            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
-        }
-    });
-});
-</script>
 
 <?
 $action = array(

@@ -561,6 +561,29 @@ jQuery(function () {
     jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
     jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
     jQuery("#threadwriter .context_selector img").bind("click", STUDIP.Blubber.showContextWindow);
+
+    //for editing custom streams:
+    jQuery("#edit_stream select, #edit_stream input").bind("change", STUDIP.Blubber.update_streams_threadnumber);
+    jQuery("#edit_stream td .checkicons").bind("click", function () {
+        if (jQuery(this).closest("td").is(".selected")) {
+            jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
+        } else {
+            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
+        }
+    });
+    jQuery("#edit_stream td .label").bind("click", function () {
+        if (!jQuery(this).closest("td").is(".selected")) {
+            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
+        } else {
+            jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
+        }
+    });
+    jQuery("#edit_stream .selector").bind("click", function () {
+        if (!jQuery(this).closest("td").is(".selected")) {
+            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
+        }
+    });
+    
 });
 
 //Infinity-scroll:

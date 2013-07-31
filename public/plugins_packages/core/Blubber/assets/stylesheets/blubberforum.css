@@ -300,3 +300,35 @@
 #context_selector table > tbody > tr.selected img.uncheck {
     display: none;
 }
+
+/* editing custom streams */
+table.select td {
+    border: thin solid #aaaaaa;
+    text-align: center;
+}
+table.select th {
+    border-left: 1px solid #D1D1D1;
+    border-right: 1px solid #D1D1D1;
+}
+table.select td img.check {
+    display: none;
+}
+table.select td input[type=checkbox] {
+    display: none;
+}
+table.select td.selected img.check {
+    display: inline;
+}
+table.select td.selected img.uncheck {
+    display: none;
+}
+table.select td.selected {
+    background-color: #eeeeee;
+}
+
+#additional_settings table {
+    width: 100%;
+}
+#additional_settings input[type=text], #additional_settings select {
+    width: 100%;
+}

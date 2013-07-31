@@ -56,7 +56,7 @@ class ExternEditModule extends ExternEditHtml {
                 = $this->config->getValue($this->element_name, "order");
         $this->form_values[$this->element_name . "_visible"]
                 = $this->config->getValue($this->element_name, "visible");
-        
+
         $order = $this->getValue("order");
         $aliases = $this->getValue("aliases");
         $visible = $this->getValue("visible");
@@ -191,13 +191,13 @@ class ExternEditModule extends ExternEditHtml {
 
         return $out;
     }
-    
+
     function editSort ($field_names, $hide_fields = NULL) {
         if (!is_array($hide_fields)) {
             $hide_fields = array();
         }
         $sort = $this->getValue("sort");
-        
+
         $this->css->resetClass();
         $this->css->switchClass();
 
@@ -205,7 +205,7 @@ class ExternEditModule extends ExternEditHtml {
         $out .= "<tr" . $this->css->getFullClass() . ">\n";
         $out .= "<td><font size=\"2\"><b>" . _("Datenfeld") . "</b></font></td>\n";
         $out .= "<td><font size=\"2\"><b>" . _("Sortierung") . "</b></font></td>\n";
-        
+
         for ($i = 0; $i < sizeof($field_names); $i++) {
             $this->css->switchClass();
             $out .= "<tr" . $this->css->getFullClass() . " valign=\"middle\">\n";
@@ -230,12 +230,12 @@ class ExternEditModule extends ExternEditHtml {
                 $out .= "value=\"0\">\n";
             }
         }
-        
+
         $out .= "</table>\n</td></tr>\n";
 
         return $out;
     }
-    
+
     function editName ($attribute) {
         $info = _("Geben Sie den Namen der Konfiguration an.");
 
@@ -306,7 +306,7 @@ class ExternEditModule extends ExternEditHtml {
             else {
                 $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_show_group[$id]\" src=";
                 $out .= Assets::image_path('icons/16/blue/checkbox-unchecked.png');
-                $out .= " ".tooltip(_("Spalte einblenden"));                
+                $out .= " ".tooltip(_("Spalte einblenden"));
                 $out .= " align=\"middle\">\n</td>\n";
             }
             $out .= "<td>&nbsp;</td></tr>\n";
@@ -326,16 +326,16 @@ class ExternEditModule extends ExternEditHtml {
         $this->form_values[$this->element_name . "_order"]
                 = $this->config->getValue($this->element_name, "order");
         $order = $this->getValue("order");
-        
+
         $this->form_values[$this->element_name . '_visibility']
                 = $this->config->getValue($this->element_name, 'visibility');
         $visibility = $this->getValue('visibility');
-        
+
         // compat <1.3: new attribute visibility (all SemTypes are visible)
         if (!is_array($visibility) || !count($visibility)) {
             $visibility = array_fill(0, sizeof($order), 1);
         }
-        
+
         if (!is_array($order))
             $order = array_keys($SEM_TYPE);
 
@@ -389,21 +389,21 @@ class ExternEditModule extends ExternEditHtml {
                 $out .= $this->error_sign;
             }
             $out .= "</td>\n";
-                        
+
                 // move up
             $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
             $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
             $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
             $out .= " ".tooltip(_("Datenfeld verschieben"));
             $out .= "border=\"0\" align=\"middle\">\n";
-            
+
             // move down
             $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
             $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
             $out .= " ".tooltip(_("Datenfeld verschieben"));
             $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
             $out .= "</td>\n";
-            
+
             // visibility
             $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
             $out .= "<input type=\"checkbox\" name=\"{$this->element_name}_visibility";
@@ -412,30 +412,30 @@ class ExternEditModule extends ExternEditHtml {
                 $out .= ' checked="checked"';
             }
             $out .= '>';
-            
+
             $out .= "</td>\n</tr>\n";
             $this->css->switchClass();
         }
 
         $out .= "</table>\n</td></tr>\n";
         $out .= "<input type=\"hidden\" name=\"count_semtypes\" value=\"$i\">\n";
-        
+
         return $out;
     }
-    
+
     function editSelectSubjectAreas ($selector) {
         $info = _("Wählen Sie die Studienbereiche aus, deren Veranstaltungen angezeigt werden sollen.");
         $info2 = _("Sie können beliebig viele Studienbereiche auswählen.");
         $this->css->resetClass();
         $this->css->switchClass();
         $form_name = $this->element_name . "_" . 'subjectareasselected';
-        
+
         if ($this->faulty_values[$form_name][0]) {
             $error_sign = $this->error_sign;
         } else {
             $error_sign = '';
         }
-        
+
         $selected = $this->config->getValue($this->element_name, 'subjectareasselected');
         $selector->selected = array();
         $selector->sem_tree_ranges = array();
@@ -447,7 +447,7 @@ class ExternEditModule extends ExternEditHtml {
                 $selector->sem_tree_ids[] = $selected_id;
             }
         }
-        
+
         $form_name_tmp = $selector->form_name;
         $selector->form_name = 'SelectSubjectAreas';
         $selector->doSearch();
@@ -456,7 +456,7 @@ class ExternEditModule extends ExternEditHtml {
         $out .= '<tr><td align="left" style="font-size: smaller;" width="100%" nowrap="nowrap" colspan="2">' . _("Suche") . ': ';
         $out .= $selector->getSearchField(array('size' => 30 ,'style' => 'vertical-align:middle;'));
         $out .= $selector->getSearchButton(array('style' => 'vertical-align:middle;'));
-        $out .= '<br><span style="font-size: 0.9em;"> (' . _("Geben Sie '%%%' ein, um alle Studienbereiche zu finden.") . ')</span>';
+        $out .= '<br><span style="font-size: 0.9em;"> (' . sprintf(_("Geben Sie '%s' ein, um alle Studienbereiche zu finden."), '%%%') . ')</span>';
         if ($selector->num_search_result !== false){
             $out .= "<br><span style=\"font-size:smaller;\"><a name=\"anker\">&nbsp;&nbsp;</a>"
                     . sprintf(_("Ihre Suche ergab %s Treffer."),$selector->num_search_result)
@@ -472,10 +472,10 @@ class ExternEditModule extends ExternEditHtml {
         $out .= tooltipIcon($info);
         $out .= "<span style=\"vertical-align:top;\">$error_sign</span>";
         $out .= "</td></tr></table>\n</td></tr>\n";
-        
+
         return $out;
     }
-    
+
     function editMarkerDescription ($markers, $new_datafields = FALSE) {
         $this->css->resetClass();
         $this->css->switchClass();
@@ -548,10 +548,10 @@ class ExternEditModule extends ExternEditHtml {
             $out .= '<td colspan="2" align="center">' . Button::create(_('Aktualisieren')). "</td></tr>\n";
         }
         $out .= "</table></td></tr>\n";
-        
+
         return $out;
     }
-    
+
     function editSelectInstitutes () {
         // get all faculties
         $stm_fak = DBManager::get()->prepare(
@@ -569,7 +569,7 @@ class ExternEditModule extends ExternEditHtml {
         if (!is_array($selected)) {
             $selected = array();
         }
-        
+
         $out = '<div class="selectbox" style="width: 98%;" size="15">';
         while ($row_fak = $stm_fak->fetch(PDO::FETCH_ASSOC)) {
             $stm_inst->execute(array($row_fak['Institut_id']));
@@ -586,5 +586,5 @@ class ExternEditModule extends ExternEditHtml {
         $out .= '</div>';
         return $out;
     }
-    
+
 }

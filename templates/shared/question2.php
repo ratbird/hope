@@ -9,6 +9,7 @@
         </div>
         <div class="buttons">
             <form action="<?=$approvalLink?>" method="post">
+                <?= CSRFProtection::tokenTag() ?> 
                 <? if(isset($approvParams)) :?>
                     <? foreach($approvParams as $key => $param) :?>
                         <? if(is_array($param)) :?>
@@ -23,6 +24,7 @@
                 <?= Button::createAccept(_('JA!'), 'yes', array('style' => 'float: left')) ?>
             </form>
             <form action="<?=$approvalLink?>" method="post">
+                <?= CSRFProtection::tokenTag() ?> 
                 <? if(isset($disapproveParams)) :?>
                     <? foreach($disapproveParams as $key => $param) :?>
                         <? if(is_array($param)) :?>

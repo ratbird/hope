@@ -66,11 +66,13 @@ use Studip\Button, Studip\LinkButton;
                         <?= htmlReady($update_info[$pluginid]['version']) ?>
                     </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
+                        <? if (!$plugin['depends']) : ?>
                         <?= htmlReady($migrations[$pluginid]['schema_version']) ?>
-                        <? if ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version']) :?>
-                            <a href="<?= $controller->url_for('admin/plugin/migrate', $pluginid) ?>" title="<?= sprintf(_("Update auf Version %d verfügbar"), $migrations[$pluginid]['migration_top_version']) ?>">
-                            <?= Assets::img('icons/16/blue/new/plugin.png');?>
-                            </a>
+                            <? if ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version']) :?>
+                                <a href="<?= $controller->url_for('admin/plugin/migrate', $pluginid) ?>" title="<?= sprintf(_("Update auf Version %d verfügbar"), $migrations[$pluginid]['migration_top_version']) ?>">
+                                <?= Assets::img('icons/16/blue/new/plugin.png');?>
+                                </a>
+                            <? endif; ?>
                         <? endif; ?>
                     </td>
                     <td>

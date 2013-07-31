@@ -48,6 +48,9 @@ class Settings_AccountController extends Settings_SettingsController
         $this->locked_info = LockRules::CheckLockRulePermission($this->user['user_id'])
                            ? LockRules::getObjectRule($this->user['user_id'])->description
                            : false;
+
+        $auth = StudipAuthAbstract::GetInstance($this->user->auth_plugin ?: 'standard');
+        $this->is_sso = $auth instanceOf StudipAuthSSO;
     }
 
     /**

@@ -11,6 +11,10 @@ table.select td {
     border: thin solid #aaaaaa;
     text-align: center;
 }
+table.select th {
+    border-left: 1px solid #D1D1D1;
+    border-right: 1px solid #D1D1D1;
+}
 table.select td img.check {
     display: none;
 }
@@ -87,7 +91,7 @@ table.select td.selected {
     <tbody>
         <tr>
             <th colspan="3">
-                <h3><?= _("Sammlung") ?></h3>
+                <h3 style="margin: 0px;"><?= _("Sammlung") ?></h3>
                 <p class="info"><?= _("Definiere, welche Postings Dein Stream alle umfassen soll.") ?></p>
             </th>
         </tr>
@@ -108,9 +112,10 @@ table.select td.selected {
                     <option value="<?= $membership['Seminar_id'] ?>"<?= in_array($membership['Seminar_id'], (array) $stream['pool_courses']) ? " selected" : "" ?>><?= htmlReady($membership->course['name']) ?></option>
                     <? endforeach ?>
                 </select>
-                <br>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="pool_courses_check" id="pool_courses_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_courses'] && count($stream['pool_courses']) ? " checked" : "" ?>>
             </td>
             <td width="33%" class="<?= $stream['pool_groups'] && count($stream['pool_groups']) ? "selected " : "" ?>">
@@ -129,9 +134,10 @@ table.select td.selected {
                     <option value="<?= $group['statusgruppe_id'] ?>"<?= in_array($group['statusgruppe_id'], (array) $stream['pool_groups']) ? " selected" : "" ?>><?= htmlReady($group['name']) ?></option>
                     <? endforeach ?>
                 </select>
-                <br>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="pool_groups_check" id="pool_groups_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_groups'] && count($stream['pool_groups'])? " checked" : "" ?>>
             </td>
             <td width="33%" class="<?= $stream['pool_hashtags'] ? "selected " : "" ?>">
@@ -148,8 +154,10 @@ table.select td.selected {
                           class="selector"
                           ><?= $stream['pool_hashtags'] ? htmlReady("#".implode(" #", $stream['pool_hashtags'])) : "" ?></textarea>
                 </div>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="pool_hashtags_check" id="pool_hashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['pool_hashtags'] ? " checked" : "" ?>>
             </td>
         </tr>
@@ -159,7 +167,7 @@ table.select td.selected {
     <tbody>
         <tr>
             <th colspan="5">
-                <h3><?= _("Filterung") ?></h3>
+                <h3 style="margin: 0px;"><?= _("Filterung") ?></h3>
                 <p class="info"><?= _("Grenze die oben definierte Sammlung an Postings ein mit Filtermöglichkeiten") ?></p>
             </th>
         </tr>
@@ -179,9 +187,10 @@ table.select td.selected {
                     <option value="private"<?= in_array("private", (array) $stream['filter_type']) ? " selected" : "" ?>><?= _("Privat") ?></option>
                     <option value="course"<?= in_array("course", (array) $stream['filter_type']) ? " selected" : "" ?>><?= _("Veranstaltungsblubber") ?></option>
                 </select>
-                <br>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="filter_type_check" id="filter_type_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_type'] && count($stream['filter_type']) ? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_courses'] && count($stream['filter_courses']) ? "selected " : "" ?>">
@@ -200,9 +209,10 @@ table.select td.selected {
                     <option value="<?= $membership['Seminar_id'] ?>"<?= in_array($membership['Seminar_id'], (array) $stream['filter_courses']) ? " selected" : "" ?>><?= htmlReady($membership->course_name) ?></option>
                     <? endforeach ?>
                 </select>
-                <br>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="filter_courses_check" id="filter_courses_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_courses'] && count($stream['filter_courses']) ? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_groups'] && count($stream['filter_groups']) ? "selected " : "" ?>">
@@ -221,9 +231,10 @@ table.select td.selected {
                     <option value="<?= $group['statusgruppe_id'] ?>"<?= in_array($group['statusgruppe_id'], (array) $stream['filter_groups']) ? " selected" : "" ?>><?= htmlReady($group['name']) ?></option>
                     <? endforeach ?>
                 </select>
-                <br>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="filter_groups_check" id="filter_groups_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_groups'] && count($stream['filter_groups'])? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_hashtags'] ? "selected " : "" ?>">
@@ -240,8 +251,10 @@ table.select td.selected {
                           class="selector"
                           ><?= $stream['filter_hashtags'] ? htmlReady("#".implode(" #", $stream['filter_hashtags'])) : "" ?></textarea>
                 </div>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="filter_hashtags_check" id="filter_hashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_hashtags'] ? " checked" : "" ?>>
             </td>
             <td width="20%" class="<?= $stream['filter_nohashtags'] ? "selected " : "" ?>">
@@ -258,8 +271,10 @@ table.select td.selected {
                           class="selector"
                           ><?= $stream['filter_nohashtags'] ? htmlReady("#".implode(" #", $stream['filter_nohashtags'])) : "" ?></textarea>
                 </div>
-                <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
-                <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                <div class="checkicons">
+                    <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "uncheck text-bottom")) ?>
+                    <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "check text-bottom")) ?>
+                </div>
                 <input type="checkbox" name="filter_nohashtags_check" id="filter_nohashtags_check" onChange="jQuery(this).closest('td').toggleClass('selected');" value="1"<?= $stream['filter_nohashtags'] ? " checked" : "" ?>>
             </td>
         </tr>
@@ -274,11 +289,12 @@ table.select td.selected {
 <script>
 jQuery(function () {
     jQuery("#edit_stream select, #edit_stream input").bind("change", STUDIP.Blubber.update_streams_threadnumber);
-    jQuery("#edit_stream td img.check").bind("click", function () {
-        jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
-    });
-    jQuery("#edit_stream td img.uncheck").bind("click", function () {
-        jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
+    jQuery("#edit_stream td .checkicons").bind("click", function () {
+        if (jQuery(this).closest("td").is(".selected")) {
+            jQuery(this).closest("td").removeClass("selected").find("input[type=checkbox]").removeAttr("checked");
+        } else {
+            jQuery(this).closest("td").addClass("selected").find("input[type=checkbox]").attr("checked", "checked");
+        }
     });
     jQuery("#edit_stream td .label").bind("click", function () {
         if (!jQuery(this).closest("td").is(".selected")) {

@@ -22,6 +22,8 @@ $translations = array(
   , 'Die beiden Werte "$1" und "$2" stimmen nicht überein. Bitte überprüfen Sie Ihre Eingabe.' => _('Die beiden Werte "$1" und "$2" stimmen nicht überein. Bitte überprüfen Sie Ihre Eingabe.')
   , "Bitte geben Sie Ihren tatsächlichen Vornamen an." => _("Bitte geben Sie Ihren tatsächlichen Vornamen an.")
   , "Bitte geben Sie Ihren tatsächlichen Nachnamen an." => _("Bitte geben Sie Ihren tatsächlichen Nachnamen an.")
+  , "Blenden Sie die restlichen Termine ein" => _("Blenden Sie die restlichen Termine ein")
+  , "Blenden Sie die restlichen Termine aus" => _("Blenden Sie die restlichen Termine aus")
   // add your translations here
 );
 

@@ -452,13 +452,10 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Add a member to a seminar
-     * @global Object $perm
      * @throws AccessDeniedException
      */
     function set_action()
     {
-        global $perm;
-
         // Security Check
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -553,15 +550,12 @@ class Course_MembersController extends AuthenticatedController
 
     /**
      * Add a author to a seminar
-     * @global Object $perm
      * @throws AccessDeniedException
      */
     function set_autor_action()
     {
-        global $perm;
-
         // Security Check
-        if (!$this->is_tutor || !$perm->have_studip_perm('tutor', $this->course_id)) {
+        if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
         CSRFProtection::verifyUnsafeRequest();
@@ -578,19 +572,22 @@ class Course_MembersController extends AuthenticatedController
 
         if (Request::submitted('reset_autor') && Request::submitted('reset_autor_x')) {
             $this->redirect('course/members/add_member');
+            return;
         }
-
         //insert new autor
-        if (Request::option('new_autor') && (Request::submitted('add_autor_x') || Request::submitted('add_autor')) && $perm->have_studip_perm("tutor", $this->course_id)) {
+        if (Request::option('new_autor') && (Request::submitted('add_autor_x') 
+                || (Request::submitted('add_autor')) && $this->is_tutor)) {
 
             $msg = $this->members->addMember(Request::get('new_autor'), 'autor', Request::get('consider_contingent'));
 
             PageLayout::postMessage($msg);
             $this->redirect('course/members/index');
+            return;
         } else {
             PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt
                 oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
             $this->redirect('course/members/add_member');
+            return;
         }
     }
 

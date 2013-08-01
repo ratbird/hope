@@ -351,10 +351,19 @@ class BlubberStream extends SimpleORMap {
         
         // Rights to see the blubber-postings:
         $parameters['seminar_ids'] = $this->getMyCourses();
-        $filter_sql[] = "(blubber.context_type = 'public' " .
-                                "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
-                                (count($parameters['seminar_ids']) ? "OR (blubber.context_type = 'course' AND blubber.Seminar_id IN (:seminar_ids)) " : "") .
-                            ")";
+        if ($GLOBALS['perm']->have_perm("admin")) {
+            $filter_sql[] =
+                "(blubber.context_type = 'public' " .
+                    "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
+                    "OR (blubber.context_type = 'course') " .
+                ")";
+        } else {
+            $filter_sql[] =
+                "(blubber.context_type = 'public' " .
+                    "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
+                    (count($parameters['seminar_ids']) ? "OR (blubber.context_type = 'course' AND blubber.Seminar_id IN (:seminar_ids)) " : "") .
+                ")";
+        }
         $parameters['me'] = $GLOBALS['user']->id;
         
         if (count($this['filter_type']) > 0) {
@@ -430,6 +439,8 @@ class BlubberStream extends SimpleORMap {
     /**
      * Returns the Seminar_ids selected in this stream but only those I am 
      * member of and in which blubber is an active plugin.
+     * Returns the given array if user is admin/root (or an empty array if 
+     * given array contains "all"). This is due to performance problems.
      * @param array $courses : array of Seminar_ids or the string "all"
      * @return array of Seminar_ids 
      */
@@ -438,7 +449,11 @@ class BlubberStream extends SimpleORMap {
         if ($courses[0] === "all") {
             return $mycourses;
         } else {
-            return array_intersect($courses, $mycourses);
+            if ($GLOBALS['perm']->have_perm("admin")) {
+                return $courses;
+            } else {
+                return array_intersect($courses, $mycourses);
+            }
         }
     }
     
@@ -448,6 +463,9 @@ class BlubberStream extends SimpleORMap {
      * @return array of string : array of Seminar_ids 
      */
     protected function getMyCourses() {
+        if ($GLOBALS['perm']->have_perm("admin")) {
+            return array();
+        }
         $mandatory_classes = array();
         $standard_classes = array();
         $forbidden_classes = array();

@@ -86,7 +86,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
                 "");
             }
         }
-        if (Navigation::hasItem("/community")) {
+        if (Navigation::hasItem("/community") && !$GLOBALS['perm']->have_perm("admin")) {
             $nav = new Navigation($this->getDisplayTitle(), PluginEngine::getURL($this, array(), "streams/global"));
             $nav->addSubNavigation("global", new AutoNavigation(_("Globaler Stream"), PluginEngine::getURL($this, array(), "streams/global")));
             foreach (BlubberStream::findMine() as $stream) {

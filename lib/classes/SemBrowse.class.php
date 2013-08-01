@@ -106,7 +106,7 @@ class SemBrowse {
             if (!$this->sem_browse_data['start_item_id']){
                 $this->sem_browse_data['start_item_id'] = "root";
             }
-            $this->range_tree = new StudipSemRangeTreeViewSimple($sem_browse_data["start_item_id"],$this->sem_number,$sem_status, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
+            $this->range_tree = new StudipSemRangeTreeViewSimple($this->sem_browse_data["start_item_id"],$this->sem_number,$sem_status, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
             $this->sem_browse_data['cmd'] = "qs";
             if (Request::option('cmd') != "show_sem_range_tree" && $level_change && !$this->search_obj->search_button_clicked ){
                 $this->get_sem_range_tree($this->sem_browse_data["start_item_id"], false);

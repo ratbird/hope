@@ -52,22 +52,21 @@ $query = "SELECT bind_calendar, visitdate, seminare.Name, seminare.Seminar_id, s
 if ($selected_sem != "0") {
     $conds[] = $selected_sem;
     $query .= "AND sd1.semester_id = ? ";
-} else {
-    
 }
+$query .= sprintf("AND seminare.status NOT IN (%s) ", DbManager::get()->quote(studygroup_sem_types()));
 $query .= "GROUP BY Seminar_id ORDER BY " . $sortby . " " . $order;
 
 $db = DBManager::get()->prepare($query);
 $db->execute($conds);
 $result = $db->fetchAll(PDO::FETCH_ASSOC);
 
-$template = $GLOBALS['template_factory']->open('calendar/bind'); 
-$template->set_layout('layouts/base'); 
-$template->calendar_sess_control_data = $calendar_sess_control_data; 
-$template->order                      = $order; 
+$template = $GLOBALS['template_factory']->open('calendar/bind');
+$template->set_layout('layouts/base');
+$template->calendar_sess_control_data = $calendar_sess_control_data;
+$template->order                      = $order;
 $template->result                     = $result;
 $template->selected_sem               = $selected_sem;
-$template->atime                      = $atime; 
+$template->atime                      = $atime;
 
 $template->infobox = array(
     'picture' => 'infobox/dates.jpg',
@@ -81,16 +80,16 @@ $template->infobox = array(
                 )
             )
         ),
-        array('kategorie' => _('Information:'), 
+        array('kategorie' => _('Information:'),
             'eintrag'   => array(
-                array( 
+                array(
                     'icon' => 'icons/16/black/info.png',
-                    'text' => _('Termine aus den ausgew&auml;hlten Veranstaltungen 
-                        werden in Ihren Terminkalender &uuml;bernommen.') 
+                    'text' => _('Termine aus den ausgew&auml;hlten Veranstaltungen
+                        werden in Ihren Terminkalender &uuml;bernommen.')
                 )
-            ) 
+            )
         )
     )
 );
-echo $template->render(); 
+echo $template->render();
 

@@ -595,7 +595,7 @@ class SimpleCollection extends ArrayObject
         }
 
         $sorter = array();
-        foreach (explode(',', strtolower($order)) as $one) {
+        foreach (explode(',', $order) as $one) {
             $sorter[] = array_map('trim', explode(' ', $one));
         }
 
@@ -606,11 +606,11 @@ class SimpleCollection extends ArrayObject
                     $value1 = $d1[$field];
                     $value2 = $d2[$field];
                 } else {
-                    $value1 = SimpleCollection::translitLatin1(substr($d1[$field], 0, 10));
-                    $value2 = SimpleCollection::translitLatin1(substr($d2[$field], 0, 10));
+                    $value1 = SimpleCollection::translitLatin1(substr($d1[$field], 0, 100));
+                    $value2 = SimpleCollection::translitLatin1(substr($d2[$field], 0, 100));
                 }
                 $ret = $sort_func($value1, $value2);
-                if ($dir == 'desc') $ret = $ret * -1;
+                if (strtolower($dir) == 'desc') $ret = $ret * -1;
             } while ($ret === 0 && next($sorter));
 
             return $ret;

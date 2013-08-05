@@ -27,7 +27,7 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle(_("Globaler Blubberstream"));
         Navigation::activateItem("/community/blubber");
-        
+
         if (Request::get("delete_stream")) {
             $stream = new BlubberStream(Request::option("delete_stream"));
             if ($stream['user_id'] === $GLOBALS['user']->id) {
@@ -36,7 +36,7 @@ class StreamsController extends ApplicationController {
                 Navigation::removeItem("/community/blubber/".Request::option("delete_stream"));
             }
         }
-        
+
         $globalstream = BlubberStream::getGlobalStream();
         if (Request::get("hash")) {
             $this->search = Request::get("hash");
@@ -106,7 +106,7 @@ class StreamsController extends ApplicationController {
             $this->user = new BlubberUser(Request::option("user_id"));
         }
         PageLayout::setTitle($this->user->getName()." - Blubber");
-        
+
         $this->threads = BlubberStream::getProfileStream($this->user->getId())
                             ->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
@@ -137,7 +137,7 @@ class StreamsController extends ApplicationController {
             'more' => false,
             'comments' => array()
         );
-        
+
 
         if (Request::option('count') !== 'all') {
             $count = Request::int("count", 20);
@@ -192,7 +192,7 @@ class StreamsController extends ApplicationController {
         $offset = $this->max_threads * Request::int("offset");
         $limit = $this->max_threads + 1;
         $stream_time = Request::int("stream_time");
-        
+
         $threads = $stream->fetchThreads($offset, $limit, $stream_time);
         $output['more'] = count($threads) > $this->max_threads;
         if ($output['more']) {
@@ -233,7 +233,7 @@ class StreamsController extends ApplicationController {
         $thread['context_type'] = $context_type;
         $thread['parent_id'] = 0;
         $thread['author_host'] = $_SERVER['REMOTE_ADDR'];
-        
+
         if ($GLOBALS['user']->id !== "nobody") {
             $thread['user_id'] = $GLOBALS['user']->id;
         } else {
@@ -251,12 +251,12 @@ class StreamsController extends ApplicationController {
 
         $thread['description'] = Request::get("content");
         $thread->store();
-        
+
         BlubberPosting::$mention_posting_id = $thread->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
         $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-        
+
         if (strpos($content, "\n") !== false) {
             $thread['name'] = substr($content, 0, strpos($content, "\n"));
             $thread['description'] = $content;
@@ -332,7 +332,7 @@ class StreamsController extends ApplicationController {
     public function edit_posting_action () {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
-        if (($posting['user_id'] !== $GLOBALS['user']->id) 
+        if (($posting['user_id'] !== $GLOBALS['user']->id)
                 && (!$GLOBALS['perm']->have_studip_perm("tutor", $posting['Seminar_id']))) {
             throw new AccessDeniedException("Kein Zugriff");
         }
@@ -342,7 +342,7 @@ class StreamsController extends ApplicationController {
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
         $new_content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-        
+
         if ($new_content && $old_content !== $new_content) {
             $posting['description'] = $new_content;
             if ($posting['topic_id'] === $posting['root_id']) {
@@ -395,7 +395,7 @@ class StreamsController extends ApplicationController {
     public function refresh_posting_action() {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
-        if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id'])) 
+        if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id']))
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
             throw new AccessDeniedException("Kein Zugriff");
         }
@@ -425,12 +425,12 @@ class StreamsController extends ApplicationController {
             $posting['root_id'] = $posting['parent_id'] = $thread->getId();
             $posting['name'] = "Re: ".$thread['name'];
             $posting->store();
-            
+
             BlubberPosting::$mention_posting_id = $posting->getId();
-            StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
-            StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
+            StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', null, "BlubberPosting::mention");
+            StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', null, "BlubberPosting::mention");
             $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-            
+
             $posting['description'] = $content;
             if ($GLOBALS['user']->id !== "nobody") {
                 $posting['user_id'] = $GLOBALS['user']->id;
@@ -455,7 +455,7 @@ class StreamsController extends ApplicationController {
                 $output['content'] = studip_utf8encode($template->render($template->render()));
                 $output['mkdate'] = time();
                 $output['posting_id'] = $posting->getId();
-                
+
                 //Notifications:
                 if (class_exists("PersonalNotifications")) {
                     $user_ids = array();
@@ -472,7 +472,7 @@ class StreamsController extends ApplicationController {
                         $user_ids,
                         PluginEngine::getURL(
                             $this->plugin,
-                            array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null), 
+                            array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null),
                             "streams/thread/".$thread->getId()
                         ),
                         get_fullname()." hat einen Kommentar geschrieben",
@@ -589,7 +589,7 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
+
         $this->thread = new BlubberPosting($thread_id);
         if ($this->thread['context_type'] === "course") {
             PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
@@ -609,15 +609,15 @@ class StreamsController extends ApplicationController {
         } else {
             Navigation::activateItem('/community/blubber');
         }
-        
+
         $this->course_id     = $_SESSION['SessionSeminar'];
         $this->single_thread = true;
         BlubberPosting::$course_hashes = ($thread['user_id'] !== $thread['Seminar_id'] ? $thread['Seminar_id'] : false);
     }
-    
+
     /**
      * Current user is going to follow (add as buddy) the given user, who could
-     * also be an external contact. 
+     * also be an external contact.
      */
     public function follow_user_action() {
         if (!$GLOBALS['perm']->have_perm("autor")) {
@@ -654,12 +654,12 @@ class StreamsController extends ApplicationController {
             'message' => studip_utf8encode((string)MessageBox::success(_("Kontakt hinzugefügt")))
         ));
     }
-    
+
     public function custom_action($stream_id) {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
+
         $this->stream = new BlubberStream($stream_id);
         if ($this->stream['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException("Not your stream.");
@@ -670,16 +670,16 @@ class StreamsController extends ApplicationController {
             $this->threads = array_slice($this->threads, 0, $this->max_threads);
         }
     }
-    
+
     /**
-     * Create a new or edit an existing stream. 
-     * @param string,null $stream_id 
+     * Create a new or edit an existing stream.
+     * @param string,null $stream_id
      */
     public function edit_action($stream_id = null) {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
+
         $this->stream = new BlubberStream($stream_id);
         if ($GLOBALS['user']->id === "nobody") {
             throw new AccessDeniedException("Access denied!");
@@ -702,7 +702,7 @@ class StreamsController extends ApplicationController {
             $this->stream['user_id'] = $GLOBALS['user']->id;
             $this->stream['sort'] = Request::get("sort");
             $this->stream['defaultstream'] = Request::int("defaultstream");
-            
+
             //Pool-rules
             $this->stream['pool_courses'] = Request::get("pool_courses_check")
                 ? (in_array("all", Request::getArray("pool_courses")) ? array("all") : Request::getArray("pool_courses"))
@@ -721,7 +721,7 @@ class StreamsController extends ApplicationController {
                     return $tag;
                 }, $this->stream['pool_hashtags']);
             }
-            
+
             //Filter-rules
             $this->stream['filter_type'] = Request::get("filter_type_check")
                 ? Request::getArray("filter_type")
@@ -754,7 +754,7 @@ class StreamsController extends ApplicationController {
                     return $tag;
                 }, $this->stream['filter_nohashtags']);
             }
-            
+
             $this->stream->store();
             if ($_FILES['image']['size']) {
                 StreamAvatar::getAvatar($this->stream->getId())->createFromUpload("image");
@@ -765,8 +765,8 @@ class StreamsController extends ApplicationController {
                 PageLayout::postMessage(MessageBox::success(_("Stream wurde gespeichert.")));
             }
         }
-    } 
-    
+    }
+
     public function get_streams_threadnumber_action() {
         $stream = new BlubberStream();
         //Pool-rules
@@ -820,7 +820,7 @@ class StreamsController extends ApplicationController {
                 return $tag;
             }, $stream['filter_nohashtags']);
         }
-        
+
         $this->render_text($stream->fetchNumberOfThreads());
     }
 

@@ -1,7 +1,7 @@
 <?php
 /*
  *  Copyright (c) 2012  Rasmus Fuhse <fuhse@data-quest.de>
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -63,10 +63,8 @@ class BlubberPosting extends SimpleORMap {
         $posting = new BlubberPosting(self::$mention_posting_id);
         $username = stripslashes(substr($mention, 1));
         if ($username[0] !== '"') {
-            $user_id = get_userid($username);
-            if ($user_id) {
-                $user = new BlubberUser($user_id);
-            } else {
+            $user = BlubberUser::findByUsername($username);
+            if (!$user) {
                 $user = BlubberExternalContact::findByEmail($username);
             }
         } else {
@@ -87,7 +85,7 @@ class BlubberPosting extends SimpleORMap {
                 $user = BlubberExternalContact::find($user_id);
             }
         }
-        if (!$posting->isNew() && $user->getId() && $user->getId() !== $GLOBALS['user']->id) {
+        if ($user && !$posting->isNew() && $user->getId() && $user->getId() !== $GLOBALS['user']->id) {
             $user->mention($posting);
             $statement = DBManager::get()->prepare(
                 "INSERT IGNORE INTO blubber_mentions " .
@@ -186,7 +184,7 @@ class BlubberPosting extends SimpleORMap {
         $this->registerCallback('after_store', 'synchronizeHashtags');
         parent::__construct($id);
     }
-    
+
     /**
      * Returns all tags for a posting. Be sure that comments don't have
      * any tags at all. They can have hashtags in the text, but those hashtags
@@ -207,10 +205,10 @@ class BlubberPosting extends SimpleORMap {
             return array();
         }
     }
-    
+
     /**
      * When a posting (comment or thread) is edited this method synchronizes the
-     * tags with the already inserted tags of the thread. If the tags changed in 
+     * tags with the already inserted tags of the thread. If the tags changed in
      * any way (something added, something deleted) the thread is getting a
      * changed chdate so that all users see the changed hashtag list of the thread
      * in realtime.
@@ -227,7 +225,7 @@ class BlubberPosting extends SimpleORMap {
         "");
         $get_old_hashtags->execute(array('topic_id' => $this['root_id']));
         $old_hashtags = $get_old_hashtags->fetchAll(PDO::FETCH_COLUMN, 0);
-        
+
         $get_current_hashtags = DBManager::get()->prepare(
             "SELECT description " .
             "FROM blubber " .
@@ -289,16 +287,16 @@ class BlubberPosting extends SimpleORMap {
     public function getChildren($offset = 0, $limit = null) {
         if ($this->isThread()) {
             return self::findBySQL(
-                "root_id = ? AND parent_id != '0' ORDER BY mkdate DESC ".($limit > 0 ? "LIMIT ".(int) $offset .", ".(int) $limit : ""), 
+                "root_id = ? AND parent_id != '0' ORDER BY mkdate DESC ".($limit > 0 ? "LIMIT ".(int) $offset .", ".(int) $limit : ""),
                 array($this->getId())
             );
         } else {
             return false;
         }
     }
-    
+
     /**
-     * Returns the number of children/comments the thread has. Returns 0 if 
+     * Returns the number of children/comments the thread has. Returns 0 if
      * posting is a comment on its own.
      * @return integer: number of all children
      */
@@ -356,7 +354,7 @@ class BlubberPosting extends SimpleORMap {
 
     /**
      * Stores the posting into database and fires notifications "PostingWillSave" and "PostingHasSaved"
-     * @return integer: 1 if posting successfully stored, else 0. 
+     * @return integer: 1 if posting successfully stored, else 0.
      */
     public function store() {
         NotificationCenter::postNotification("PostingWillSave", $this);
@@ -366,9 +364,9 @@ class BlubberPosting extends SimpleORMap {
         }
         return $success;
     }
-    
+
     /**
-     * Create new unique pk as md5 hash and puts it to field root_id if this is 
+     * Create new unique pk as md5 hash and puts it to field root_id if this is
      * not a comment.
      * if pk consists of multiple columns, false is returned
      * @return boolean|string
@@ -416,10 +414,10 @@ class BlubberPosting extends SimpleORMap {
         $statement->execute(array('topic_id' => $this['root_id']));
         return (array) $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
-    
+
     /**
      * Returns an object of the author of this posting. This object may be BlubberUser
-     * or BlubberExternalContact or any other object that implemenst the 
+     * or BlubberExternalContact or any other object that implemenst the
      * BlubberContact-interface (see there).
      * @return \BlubberContact
      */

@@ -452,8 +452,9 @@ class PluginAdministration
                         '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
         foreach ($iterator as $manifest_file) {
             $manifest = $this->getPluginManifest($manifest_file->getPath());
+            $pluginpath = $basepath . '/' . $manifest['origin'] . '/' . $manifest['pluginclassname'];
             if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])
-                && strpos($manifest_file->getPath(), $manifest['origin']) !== false) {
+                && $pluginpath === $manifest_file->getPath()) {
                 $manifest['path'] = $manifest_file->getPath();
                 $found[] = $manifest;
             }

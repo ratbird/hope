@@ -49,7 +49,7 @@ $infobox = array(
             )
         )
     )
-    
+
 );
 $infobox = array(
     'picture' => "infobox/modules.jpg",
@@ -78,7 +78,7 @@ $infobox = array(
                         <?= _($module['name']) ?>
                     </label>
                     <div class="setting_info">
-                        <?= _($module['description']) ?>
+                        <?= $module['description'] ? _($module['description']) : '' ?>
                     </div>
                 </td>
                 <td>

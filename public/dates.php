@@ -18,14 +18,18 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
-$_SESSION['issue_open'] = array();
-$raumzeitFilter = Request::get('newFilter');
-$_SESSION['raumzeitFilter'] = $raumzeitFilter;
-URLHelper::bindLinkParam('date_type', Request::option('date_type'));
-URLHelper::bindLinkParam('raumzeit_filter', $_SESSION['raumzeitFilter']);
-URLHelper::bindLinkParam('rzSeminar', Request::option('rzSeminar'));
-
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
+
+URLHelper::bindLinkParam('date_type', $date_type);
+URLHelper::bindLinkParam('raumzeit_filter', $raumzeitFilter);
+URLHelper::bindLinkParam('rzSeminar', $rzSeminar);
+
+$raumzeitFilter = Request::get('newFilter') ?: Request::get('raumzeit_filter');
+$rzSeminar      = Request::option('rzSeminar');
+$date_type      = Request::option('date_type');
+
+$_SESSION['issue_open'] = array();
+$_SESSION['raumzeitFilter'] = $raumzeitFilter;
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/datei.inc.php');
@@ -46,10 +50,10 @@ object_set_visit_module("schedule");
 
 PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
-if (Request::get('date_type') == '1') {
+if ($date_type == '1') {
     Navigation::activateItem('/course/schedule/type1');
     URLHelper::bindLinkParam('type', Request::option('type'));
-} else if (Request::get('date_type') == 'other') {
+} else if ($date_type == 'other') {
     Navigation::activateItem('/course/schedule/other');
     URLHelper::bindLinkParam('type', Request::option('type'));
 } else {
@@ -59,7 +63,8 @@ if (Request::get('date_type') == '1') {
 $semester = new SemesterData();
 $data = $semester->getCurrentSemesterData();
 if (!$_SESSION['raumzeitFilter'] || ($rzSeminar != $SessSemName[1])) {
-    $_SESSION['raumzeitFilter'] = $data['beginn'];
+    $raumzeitFilter = $data['beginn'];
+    $_SESSION['raumzeitFilter'] = $raumzeitFilter;
     $rzSeminar = $SessSemName[1];
 }
 $sem->checkFilter();
@@ -136,8 +141,8 @@ if (Request::get('export') && $rechte) {
                         ->render(array('start' => $singledate->getStartTime()));
             }
 
-            if (Request::get('date_type')) {
-                switch (Request::get('date_type')) {
+            if ($date_type) {
+                switch ($date_type) {
                     case 'all':
                         break;
 

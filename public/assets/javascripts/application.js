@@ -340,6 +340,15 @@ jQuery(function ($) {
     });
 }(jQuery));
 
+// Global handler:
+// Use a checkbox as a proxy for a set of other checkboxes. Define
+// proxied elements as a css selector in attribute "data-proxyfor".
+$(':checkbox[data-proxyfor]').live('change', function () {
+    var proxied = $(this).data().proxyfor,
+        state   = !!$(this).attr('checked');
+    $(proxied).attr('checked', state);
+});
+
 /* Copies a value from a select to another element*/
 jQuery(document).on('change', 'select[data-copy-to]', function () {
     var target = jQuery(this).data().copyTo,

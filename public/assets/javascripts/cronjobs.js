@@ -10,15 +10,6 @@
     });
 
     // Global handler:
-    // Use a checkbox as a proxy for a set of other checkboxes. Define
-    // proxied elements as a css selector in attribute "data-proxyfor".
-    $(':checkbox[data-proxyfor]').live('change', function () {
-        var proxied = $(this).data().proxyfor,
-            state   = !!$(this).attr('checked');
-        $(proxied).attr('checked', state);
-    });
-
-    // Global handler:
     // Toggle a table element. The url of the link will be called, an ajax
     // indicator will be shown instead of the element and the whole table row
     // will be replaced with the row with the same id from the response.

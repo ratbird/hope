@@ -89,6 +89,8 @@ class StudipAutoloader
 
     /**
      * Locate the file where the class is defined.
+     * Handles possible namespaces by mapping the path elements to the
+     * directory structure.
      *
      * @param string $class  the name of the class
      *
@@ -96,6 +98,18 @@ class StudipAutoloader
      */
     private static function findFile($class)
     {
+        // Handle possible namespace
+        if (strpos($class, '\\') !== false) {
+            // Convert namespace into directory structure
+            $namespaced = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+            $namespaced = strtolower(dirname($namespaced)) . DIRECTORY_SEPARATOR . basename($namespaced);
+            $class = basename($namespaced);
+
+            if ($filename = self::findFile($namespaced)) {
+                return $filename;
+            }
+        }
+
         foreach (self::$autoload_paths as $path) {
             $base =  $path . DIRECTORY_SEPARATOR . $class;
             if (file_exists($base . '.class.php')) {

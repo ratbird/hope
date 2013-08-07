@@ -15,13 +15,13 @@ class Visibility_Domain extends VisibilityAbstract {
 
     // Should this state be used?
     protected $activated = true;
-    
+
     // What number does this state get in the database?
     protected $int_representation = 3;
-    
+
     // How is the state displayed in the settings?
     protected $display_name = "Domain";
-    
+
     // Description for the state
     protected $description = "nur für meine Nutzerdomäne sichtbar";
 
@@ -30,7 +30,11 @@ class Visibility_Domain extends VisibilityAbstract {
     {
         $user_domains = UserDomain::getUserDomainsForUser($user_id);
         $owner_domains = UserDomain::getUserDomainsForUser($other_id);
-        return array_intersect($user_domains, $owner_domains);
+        if (count($user_domains) || count($owner_domains)) {
+            return count(array_intersect($user_domains, $owner_domains)) > 0;
+        } else {
+            return true;
+        }
     }
 }
 ?>

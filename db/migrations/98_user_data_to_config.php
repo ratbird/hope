@@ -127,7 +127,7 @@ class UserDataToConfig extends Migration
                                   KEY `user_id` (`user_id`,`last_lifesign`)
                                 ) ENGINE=MyISAM");
         DBManager::get()->exec("INSERT INTO user_online (user_id,last_lifesign) SELECT sid,UNIX_TIMESTAMP(changed) FROM user_data INNER JOIN auth_user_md5 ON sid = user_id");
-        
+
         $stmt = DBManager::get()->prepare("
             REPLACE INTO config
             (config_id, field, value, is_default, `type`, `range`, mkdate, chdate, description, comment)
@@ -155,25 +155,25 @@ class UserDataToConfig extends Migration
                     if (is_array($vars[$key])) {
                         $old_values = array_intersect_key((array)$vars[$key], $defaults);
                         $new_values = array_merge($defaults, $old_values);
-                        $check->execute($option['name'], $user_id);
+                        $check->execute(array($option['name'], $user_id));
                         $stmt->execute(array(md5($option['name'].$user_id), $user_id, $option['name'], json_encode(studip_utf8encode($new_values))));
                     }
                 }
                 foreach(array('homepage_cache_own','CurrentLogin','LastLogin','_my_sem_group_field','_my_admin_inst_id') as $key) {
                     $option = $this->new_configs[$key];
                     if (isset($vars[$key])) {
-                        $check->execute($option['name'], $user_id);
+                        $check->execute(array($option['name'], $user_id));
                         $stmt->execute(array(md5($option['name'].$user_id), $user_id, $option['name'], (string)$vars[$key]));
                     }
                 }
                 if (isset($vars['my_studip_settings']['startpage_redirect'])) {
                     $option = $this->new_configs['my_studip_settings'];
-                    $check->execute($option['name'], $user_id);
+                    $check->execute(array($option['name'], $user_id));
                     $stmt->execute(array(md5($option['name'].$user_id), $user_id, $option['name'], (int)$vars['my_studip_settings']['startpage_redirect']));
                 }
                 if (isset($vars['_my_sem_open'])) {
                     $option = $this->new_configs['_my_sem_open'];
-                    $check->execute($option['name'], $user_id);
+                    $check->execute(array($option['name'], $user_id));
                     $stmt->execute(array(md5($option['name'].$user_id), $user_id, $option['name'], json_encode($vars['_my_sem_open'])));
                 }
             }

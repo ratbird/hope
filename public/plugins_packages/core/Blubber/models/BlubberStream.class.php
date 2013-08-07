@@ -338,8 +338,8 @@ class BlubberStream extends SimpleORMap {
         }
         if (count($this['pool_groups'])) {
             $pool_users = $this->getUsersByGroups($this['pool_groups']);
+            $pool_users[] = $GLOBALS['user']->id;
             if (count($pool_users)) {
-                $pool_users[] = $GLOBALS['user']->id;
                 $pool_sql[] = "blubber.user_id IN (:pool_users)";
                 $parameters['pool_users'] = $pool_users;
             }

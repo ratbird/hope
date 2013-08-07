@@ -351,8 +351,8 @@ jQuery(function ($) {
         var proxied  = $(this).data('proxyfor'),
             $proxied = $(proxied),
             $checked = $proxied.filter(':checked');
-        $(this).attr('checked', $proxied.length === $checked.length);
-        $(this).prop('indeterminate', $checked.length && $checked.length < $proxied.length);
+        $(this).attr('checked', $proxied.length > 0 && $proxied.length === $checked.length);
+        $(this).prop('indeterminate', $checked.length > 0 && $checked.length < $proxied.length);
     }).on('change', ':checkbox[data-proxiedby]', function () {
         var proxy = $(this).data('proxiedby');
         $(proxy).trigger('update.studip');

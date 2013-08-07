@@ -205,8 +205,8 @@ class ProfileModel
         $short_datafields = array();
         $long_datafields  = array();
         foreach (DataFieldEntry::getDataFieldEntries($this->current_user->user_id, 'user') as $entry) {
-            if (($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id) 
-                    || Visibility::verify($entry->structure->getID(), $this->current_user->user_id)) 
+            if (($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id)
+                    && Visibility::verify($entry->structure->getID(), $this->current_user->user_id))
                             && $entry->getDisplayValue()) {
                 if ($entry instanceof DataFieldTextareaEntry) {
                     $long_datafields[] = $entry;

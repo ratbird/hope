@@ -11,9 +11,8 @@ class InitCustomBlubberStreams extends Migration {
             CREATE TABLE IF NOT EXISTS `blubber_tags` (
                 `topic_id` varchar(32) NOT NULL,
                 `tag` varchar(128) NOT NULL,
-                UNIQUE KEY `unique_tags` (`topic_id`,`tag`),
-                KEY `tag` (`tag`),
-                KEY `topic_id` (`topic_id`)
+                PRIMARY KEY `unique_tags` (`topic_id`,`tag`),
+                KEY `tag` (`tag`)
             ) ENGINE=MyISAM
         ");
         DBManager::get()->exec("
@@ -38,7 +37,13 @@ class InitCustomBlubberStreams extends Migration {
                 KEY `user_id` (`user_id`)
             ) ENGINE=MyISAM
         ");
-        
+
+        DBManager::get()->exec("ALTER TABLE `blubber` DROP INDEX  `root_id` ,
+            ADD INDEX  `root_id` (  `root_id` ,  `mkdate` )");
+
+        DBManager::get()->exec("ALTER TABLE  `blubber` DROP INDEX  `Seminar_id` ,
+            ADD INDEX  `Seminar_id` (  `Seminar_id` ,  `context_type` )");
+
         //noch Hashtags/Tags in eigene Tabelle packen:
         $statement = DBManager::get()->prepare(
             "SELECT blubber.* " .
@@ -52,7 +57,7 @@ class InitCustomBlubberStreams extends Migration {
             "SET topic_id = :topic_id, " .
                 "tag = :tag " .
         "");
-        
+
         while($blubber = $statement->fetch(PDO::FETCH_ASSOC)) {
             preg_match_all("/".$hashtag_regexp."/", $blubber['description'], $matches);
             foreach ($matches as $match) {

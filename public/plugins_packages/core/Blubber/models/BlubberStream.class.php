@@ -13,19 +13,19 @@ require_once dirname(__file__)."/StreamAvatar.class.php";
 /**
  * A class to fetch blubber-postings from the database and return an array of
  * BlubberPosting-objects.
- * 
+ *
  * Such a stream is defined by some pool-variables and some filter-variables.
  * The pool at first defines the set of overall blubber-postings that should
  * be taken and the filter filters this set by it's own parameters.
- * 
+ *
  * For example a profile-stream of a user takes all blubber from the user in the
  * pool and the filter is defined in a way to reduce this set to all public postings.
- * 
+ *
  */
 class BlubberStream extends SimpleORMap {
 
     public $filter_threads = array();
-    
+
     static public function create($pool = array(), $filter = array()) {
         $stream = new BlubberStream();
         foreach ($pool as $key => $pool_variable) {
@@ -36,7 +36,7 @@ class BlubberStream extends SimpleORMap {
         }
         return $stream;
     }
-    
+
     /**
      * find all customized streams of that user
      * @param string/null $user_id : current user if null
@@ -49,10 +49,10 @@ class BlubberStream extends SimpleORMap {
             array($user_id)
         );
     }
-    
+
     /**
      * Creates the global-blubberstream and returns it.
-     * @return BlubberStream 
+     * @return BlubberStream
      */
     static public function getGlobalStream() {
         $stream = new BlubberStream();
@@ -61,11 +61,11 @@ class BlubberStream extends SimpleORMap {
         $stream['sort'] = "activity";
         return $stream;
     }
-    
+
     /**
      * Creates a course-stream and returns it.
      * @param string $course_id : a Seminar_id of a course
-     * @return BlubberStream 
+     * @return BlubberStream
      */
     static public function getCourseStream($course_id) {
         $stream = new BlubberStream();
@@ -77,7 +77,7 @@ class BlubberStream extends SimpleORMap {
     /**
      * Creates a personal profile-stream of a user and returns it.
      * @param string $user_id : user_id of the wanted profile-stream
-     * @return BlubberStream 
+     * @return BlubberStream
      */
     static public function getProfileStream($user_id) {
         $stream = new BlubberStream();
@@ -90,7 +90,7 @@ class BlubberStream extends SimpleORMap {
     /**
      * Creates a stream for given thread or all given threads (as an array)
      * @param string/array $topic_id : id(s) of thread
-     * @return \BlubberStream 
+     * @return \BlubberStream
      */
     static public function getThreadStream($topic_id) {
         $stream = new BlubberStream();
@@ -100,7 +100,7 @@ class BlubberStream extends SimpleORMap {
 
     /**
      * constructor
-     * @param string/null $id : id of blubber-stream 
+     * @param string/null $id : id of blubber-stream
      */
     public function __construct($id = null) {
         $this->db_table = "blubber_streams";
@@ -108,7 +108,7 @@ class BlubberStream extends SimpleORMap {
         $this->registerCallback('after_store after_initialize', 'unserializeData');
         parent::__construct($id);
     }
-    
+
     /**
      * Serializes $this->data so it is saves as string in the database.
      * @return boolean
@@ -136,44 +136,44 @@ class BlubberStream extends SimpleORMap {
         $this->content['pool_courses'] = $this->content['pool_courses']
                 ? explode(",", $this->content['pool_courses'])
                 : array();
-        $this->content['pool_groups'] = $this->content['pool_groups'] 
+        $this->content['pool_groups'] = $this->content['pool_groups']
                 ? explode(",", $this->content['pool_groups'])
                 : array();
-        $this->content['pool_hashtags'] = $this->content['pool_hashtags'] 
+        $this->content['pool_hashtags'] = $this->content['pool_hashtags']
                 ? explode(" ", $this->content['pool_hashtags'])
                 : array();
-        
+
         $this->content['filter_type'] = $this->content['filter_type']
                 ? explode(",", $this->content['filter_type'])
                 : array();
         $this->content['filter_courses'] = $this->content['filter_courses']
                 ? explode(",", $this->content['filter_courses'])
                 : array();
-        $this->content['filter_groups'] = $this->content['filter_groups'] 
+        $this->content['filter_groups'] = $this->content['filter_groups']
                 ? explode(",", $this->content['filter_groups'])
                 : array();
-        $this->content['filter_users'] = $this->content['filter_users'] 
+        $this->content['filter_users'] = $this->content['filter_users']
                 ? explode(",", $this->content['filter_users'])
                 : array();
-        $this->content['filter_hashtags'] = $this->content['filter_hashtags'] 
+        $this->content['filter_hashtags'] = $this->content['filter_hashtags']
                 ? explode(" ", $this->content['filter_hashtags'])
                 : array();
-        $this->content['filter_nohashtags'] = $this->content['filter_nohashtags'] 
+        $this->content['filter_nohashtags'] = $this->content['filter_nohashtags']
                 ? explode(" ", $this->content['filter_nohashtags'])
                 : array();
         return true;
     }
-    
+
     /**
-     * Returns an array of BlubberPosting objects that are the threads of the 
+     * Returns an array of BlubberPosting objects that are the threads of the
      * stream.
      * @param integer $offset : start with the $offset-th thread in stream
      * @param integer $limit : return only $limit threads, null means unlimited
-     * @param integer $stream_time : defines the state of the stream, because the 
-     *   postings in a stream and their order changes from time to time, we need 
+     * @param integer $stream_time : defines the state of the stream, because the
+     *   postings in a stream and their order changes from time to time, we need
      *   the stream-time to have a precise offset-value and get exactly those
      *   threads we want to display.
-     * @return array of \BlubberPosting 
+     * @return array of \BlubberPosting
      */
     public function fetchThreads($offset = 0, $limit = null, $stream_time = null) {
         list($sql, $parameters) = $this->getThreadsSql($offset, $limit, $stream_time);
@@ -182,17 +182,15 @@ class BlubberStream extends SimpleORMap {
         $posting_data = $statement->fetchAll(PDO::FETCH_ASSOC);
         $postings = array();
         foreach ($posting_data as $data) {
-            $posting = new BlubberPosting();
-            $posting->setData($data);
-            $posting->setNew(false);
+            $posting = new BlubberPosting($data['topic_id']);
             $postings[] = $posting;
         }
         return $postings;
     }
-    
+
     /**
      * Returns the number of threads in this stream.
-     * @return integer 
+     * @return integer
      */
     public function fetchNumberOfThreads() {
         list($sql, $parameters) = $this->getThreadsSql();
@@ -203,12 +201,12 @@ class BlubberStream extends SimpleORMap {
         $statement->execute($parameters);
         return $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
-    
+
     /**
      * Fetches all new postings (threads and comments) that appear in the stream
      * and are newer than $since (as a unix timestamp).
      * @param integer $since : unix-timestamp
-     * @return array of \BlubberPosting 
+     * @return array of \BlubberPosting
      */
     public function fetchNewPostings($since) {
         list($sql, $parameters) = $this->getNewPostingsSql($since);
@@ -253,14 +251,14 @@ class BlubberStream extends SimpleORMap {
         $statement->execute($parameters);
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
-    
+
     /**
-     * Returns sql and parameter for a PDO-statement that fetches all threads of 
+     * Returns sql and parameter for a PDO-statement that fetches all threads of
      * this stream.
      * @param integer $offset : $offset of the stream
      * @param integer $limit : how many threads should be returned (null means unlimited)
-     * @param integer stream_time : unix-timestamp that defines the state of the 
-     *   stream. Ignore all threads that are newer than $stream_time and use the 
+     * @param integer stream_time : unix-timestamp that defines the state of the
+     *   stream. Ignore all threads that are newer than $stream_time and use the
      *   old order of the stream from the time $stream_time.
      * @return array : array(string $sql, array $parameter)
      */
@@ -271,9 +269,9 @@ class BlubberStream extends SimpleORMap {
             $parameters['stream_time'] = $stream_time;
         }
         $about_tags = ((count($this['pool_hashtags']) > 0) or (count($this['filter_hashtags']) > 0));
-        
-        $sql = 
-            "SELECT blubber.* " .
+
+        $sql =
+            "SELECT blubber.topic_id,blubber.root_id,blubber.mkdate,blubber.chdate " .
             "FROM blubber " .
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.topic_id) " .
@@ -290,19 +288,19 @@ class BlubberStream extends SimpleORMap {
         "";
         return array($sql, $parameters);
     }
-    
+
     /**
      * Returns an array with sql and parameter for a PDO-statement that fetches
      * all blubber-postings of this stream newer than $since.
      * @param integer $since : unix-timestamp
-     * @return array : array(string $sql, array $parameter) 
+     * @return array : array(string $sql, array $parameter)
      */
     protected function getNewPostingsSql($since) {
         list($pool_sql, $filter_sql, $parameters) = $this->getSqlParts();
         $filter_sql[] = "comment.chdate > :since ";
         $parameters['since'] = $since;
-        
-        $sql = 
+
+        $sql =
             "SELECT comment.* " .
             "FROM blubber " .
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
@@ -318,17 +316,17 @@ class BlubberStream extends SimpleORMap {
         "";
         return array($sql, $parameters);
     }
-    
-    /** 
+
+    /**
      * Returns parts for an sql-statement in shape of arrays that define the
      * pool-sql, the filter-sql and the parameter of the stream.
-     * @return array(array $pool_sql, array $filter_sql, array $parameter) 
+     * @return array(array $pool_sql, array $filter_sql, array $parameter)
      */
     protected function getSqlParts() {
         $pool_sql = array();
         $filter_sql = array();
         $parameters = array();
-        
+
         if (count($this['pool_courses'])) {
             $pool_courses = $this->getCourses($this['pool_courses']);
             if (count($pool_courses)) {
@@ -348,7 +346,7 @@ class BlubberStream extends SimpleORMap {
             $pool_sql[] = "(blubber_tags.tag IN (:pool_hashtags))";
             $parameters['pool_hashtags'] = $this['pool_hashtags'];
         }
-        
+
         // Rights to see the blubber-postings:
         $parameters['seminar_ids'] = $this->getMyCourses();
         if ($GLOBALS['perm']->have_perm("admin")) {
@@ -365,7 +363,7 @@ class BlubberStream extends SimpleORMap {
                 ")";
         }
         $parameters['me'] = $GLOBALS['user']->id;
-        
+
         if (count($this['filter_type']) > 0) {
             $filter_sql[] = "blubber.context_type IN (:filter_type)";
             $parameters['filter_type'] = $this['filter_type'];
@@ -406,7 +404,7 @@ class BlubberStream extends SimpleORMap {
         }
         return array($pool_sql, $filter_sql, $parameters);
     }
-    
+
     /**
      * Returns an array of users defined by the groups selected in the stream.
      * @return array : array of user_ids
@@ -435,14 +433,14 @@ class BlubberStream extends SimpleORMap {
             return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         }
     }
-    
+
     /**
-     * Returns the Seminar_ids selected in this stream but only those I am 
+     * Returns the Seminar_ids selected in this stream but only those I am
      * member of and in which blubber is an active plugin.
-     * Returns the given array if user is admin/root (or an empty array if 
+     * Returns the given array if user is admin/root (or an empty array if
      * given array contains "all"). This is due to performance problems.
      * @param array $courses : array of Seminar_ids or the string "all"
-     * @return array of Seminar_ids 
+     * @return array of Seminar_ids
      */
     protected function getCourses($courses) {
         $mycourses = $this->getMyCourses();
@@ -456,11 +454,11 @@ class BlubberStream extends SimpleORMap {
             }
         }
     }
-    
+
     /**
-     * Returns all Seminar_ids to courses I am member of and in which blubber 
+     * Returns all Seminar_ids to courses I am member of and in which blubber
      * is an active plugin.
-     * @return array of string : array of Seminar_ids 
+     * @return array of string : array of Seminar_ids
      */
     protected function getMyCourses() {
         if ($GLOBALS['perm']->have_perm("admin")) {
@@ -495,11 +493,12 @@ class BlubberStream extends SimpleORMap {
                 $forbidden_types[] = $key;
             }
         }
+        $blubber_plugin_info = PluginManager::getInstance()->getPluginInfo('Blubber');
         $statement = DBManager::get()->prepare(
             "SELECT seminare.Seminar_id " .
             "FROM seminar_user " .
                 "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
-                "LEFT JOIN plugins_activated ON (plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
+                "LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
             "WHERE seminar_user.user_id = :me " .
                 "AND (" .
                     "seminare.status IN (:mandatory_types) " .
@@ -512,8 +511,9 @@ class BlubberStream extends SimpleORMap {
         $parameter['mandatory_types'] = count($mandatory_types) ? $mandatory_types : null;
         $parameter['standard_types'] = count($standard_types) ? $standard_types : null;
         $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : array(-1);
+        $parameter['blubber_plugin_id'] = $blubber_plugin_info['id'];
         $statement->execute($parameter);
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
-    
+
 }

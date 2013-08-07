@@ -111,18 +111,18 @@ class BlubberPosting extends SimpleORMap {
      * @return array of Seminar_ids
      */
     static public function getMyBlubberCourses() {
+        $blubber_plugin_info = PluginManager::getInstance()->getPluginInfo('Blubber');
+
         $statement = DBManager::get()->prepare(
             "SELECT seminar_user.Seminar_id " .
             "FROM seminar_user " .
                 "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
-                "INNER JOIN plugins_activated ON (plugins_activated.poiid = CONCAT('sem', seminar_user.Seminar_id)) " .
-                "INNER JOIN plugins ON (plugins_activated.pluginid = plugins.pluginid) " .
+                "INNER JOIN plugins_activated ON (pluginid = :blubber_id AND plugins_activated.poiid = CONCAT('sem', seminar_user.Seminar_id)) " .
             "WHERE seminar_user.user_id = :user_id " .
                 "AND plugins_activated.state = 'on' " .
-                "AND plugins.pluginclassname = 'Blubber' " .
             "ORDER BY seminare.start_time ASC, seminare.name ASC " .
         "");
-        $statement->execute(array('user_id' => $GLOBALS['user']->id));
+        $statement->execute(array('user_id' => $GLOBALS['user']->id, 'blubber_id' => $blubber_plugin_info['id']));
         return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 

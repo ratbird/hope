@@ -23,7 +23,7 @@
                     <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::SMALL,
                         array('title' => get_username($post['owner_id']))) ?>
 
-                    <?= get_fullname($post['owner_id']) ?>,
+                    <?= htmlReady(get_fullname($post['owner_id'])) ?>,
                     <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
                 </a>
 

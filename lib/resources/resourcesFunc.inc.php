@@ -418,7 +418,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                   FROM resources_requests AS rr
                   INNER JOIN termine AS t
                      ON (rr.seminar_id = t.range_id AND
-                         t.date_typ IN {$presence_type_clause} AND 
+                         t.date_typ IN {$presence_type_clause} AND
                          t.date > UNIX_TIMESTAMP() {$sem_criteria})
                   WHERE rr.termin_id = '' AND rr.metadate_id = '' AND %s ";
     $queries[] = "SELECT DISTINCT request_id
@@ -694,12 +694,12 @@ function search_administrable_seminars ($search_string = '', $user_id = '')
                       LEFT JOIN seminare USING (seminar_id)
                       WHERE seminar_user.status IN ('tutor', 'dozent')
                         AND seminar_user.user_id = :user_id
-                        AND ({$search_sql}) 
+                        AND ({$search_sql})
                       ORDER BY Name";
             $parameters[':user_id'] = $user_id;
         break;
     }
-    
+
     $statement = DBManager::get()->prepare($query);
     $statement->execute($parameters);
     return $statement->fetchGrouped(PDO::FETCH_ASSOC);
@@ -976,12 +976,10 @@ function search_my_objects ($search_string = '', $user_id = '', $sem = TRUE)
         $statement->bindValue(':needle', $search_string ?: '_');
         $statement->bindValue(':user_id', $user_id ?: $user->id);
         $statement->execute();
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $my_objects[$row['id']] = $row;
-        }
+        $my_objects = array_merge($my_objects , $statement->fetchGrouped(PDO::FETCH_ASSOC));
     }
 
-    return $statement->fetchGrouped(PDO::FETCH_ASSOC);
+    return $my_objects;
 }
 
 
@@ -1090,7 +1088,7 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
         // We need the results grouped by 'art'
         $temp = $my_objects ?: array();
         $results = array();
-        
+
         foreach ($temp as $key => $val) {
             $art = $val['art'] ?: $val['name'];
             if (!isset($results[$art])) {

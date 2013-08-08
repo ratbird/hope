@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ExternModuleTemplatePersons.class.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -19,7 +19,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ExternModuleTemplatePersons.class.php
-// 
+//
 // Copyright (C) 2007 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -50,7 +50,7 @@ global $_fullname_sql;
 class ExternModuleTemplatePersons extends ExternModule {
 
     var $markers = array();
-    
+
     /**
     *
     */
@@ -62,7 +62,7 @@ class ExternModuleTemplatePersons extends ExternModule {
                 'LinkInternTemplate',
                 'TemplateGeneric'
         );
-        
+
         $this->field_names = array
         (
                 _("Name"),
@@ -71,47 +71,47 @@ class ExternModuleTemplatePersons extends ExternModule {
                 _("Email"),
                 _("Sprechzeiten")
         );
-        
+
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
     }
-    
+
     function setup () {
         // extend $data_fields if generic datafields are set
     //  $config_datafields = $this->config->getValue("Main", "genericdatafields");
     //  $this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
-        
+
         // setup module properties
     //  $this->elements["LinkIntern"]->link_module_type = 2;
     //  $this->elements["LinkIntern"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-    
+
         $this->elements['TemplateGeneric']->real_name = _("Template");
         // Set internal link to module 'staff details'
         $this->elements['LinkInternTemplate']->link_module_type = array(2, 14);
         $this->elements['LinkInternTemplate']->real_name = _("Verlinkung zum Modul MitarbeiterInnendetails");
-    
+
     }
-    
+
     function toStringEdit ($open_elements = '', $post_vars = '',
             $faulty_values = '', $anker = '') {
-        
+
         $this->updateGenericDatafields('TemplateGeneric', 'user');
         $this->elements['TemplateGeneric']->markers = $this->getMarkerDescription('TemplateGeneric');
-        
+
         return parent::toStringEdit($open_elements, $post_vars, $faulty_values, $anker);
     }
-    
+
     function getMarkerDescription ($element_name) {
         $markers['TemplateGeneric'][] = array('<!-- BEGIN PERSONS -->', '');
-        
+
         $markers['TemplateGeneric'][] = array('<!-- BEGIN NO-PERSONS -->', '');
         $markers['TemplateGeneric'][] = array('###NO-LECTURES-TEXT###', '');
         $markers['TemplateGeneric'][] = array('<!-- END NO-PERSONS -->', '');
-        
+
         $markers['TemplateGeneric'][] = array('<!-- BEGIN GROUP -->', '');
         $markers['TemplateGeneric'][] = array('###GROUPTITLE###', '');
         $markers['TemplateGeneric'][] = array('###GROUPTITLE-SUBSTITUTE###', '');
         $markers['TemplateGeneric'][] = array('###GROUP-NO###', '');
-        
+
         $markers['TemplateGeneric'][] = array('<!-- BEGIN PERSON -->', '');
         $markers['TemplateGeneric'][] = array('###FULLNAME###', '');
         $markers['TemplateGeneric'][] = array('###LASTNAME###', '');
@@ -132,30 +132,30 @@ class ExternModuleTemplatePersons extends ExternModule {
         $markers['TemplateGeneric'][] = array('###PERSON-NO###', '');
         $this->insertDatafieldMarkers('user', $markers, 'TemplateGeneric');
         $markers['TemplateGeneric'][] = array('<!-- END PERSON -->', '');
-        
+
         $markers['TemplateGeneric'][] = array('<!-- END GROUP -->', '');
         $markers['TemplateGeneric'][] = array('<!-- END PERSONS -->', '');
-    
+
         return $markers[$element_name];
     }
-    
+
     function getContent ($args = NULL, $raw = FALSE) {
         if ($raw) {
             $this->setRawOutput();
         }
-        
+
         if (!$all_groups = get_all_statusgruppen($this->config->range_id)) {
             die($GLOBALS["EXTERN_ERROR_MESSAGE"]);
         } else {
             $all_groups = array_keys($all_groups);
         }
-        
+
         if (!$group_ids = $this->config->getValue('Main', 'groupsvisible')) {
             die($GLOBALS["EXTERN_ERROR_MESSAGE"]);
         } else {
             $group_ids = array_intersect($all_groups, $group_ids);
         }
-        
+
         if (!is_array($group_ids)) {
             die($GLOBALS["EXTERN_ERROR_MESSAGE"]);
         }
@@ -163,7 +163,7 @@ class ExternModuleTemplatePersons extends ExternModule {
         if (!$visible_groups = get_statusgruppen_by_id($this->config->range_id, $group_ids)) {
             die($GLOBALS["EXTERN_ERROR_MESSAGE"]);
         }
-        
+
         $sort = $this->config->getValue('Main', 'sort');
         $query_order = '';
         foreach ($sort as $key => $position) {
@@ -175,17 +175,17 @@ class ExternModuleTemplatePersons extends ExternModule {
             ksort($query_order, SORT_NUMERIC);
             $query_order = ' ORDER BY ' . implode(',', $query_order);
         }
-                
+
         $grouping = $this->config->getValue("Main", "grouping");
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'full_rev';
         }
-        
-        
-        
-        
+
+
+
+
         if(!$grouping) {
-            
+
             $mrks =  str_repeat('?,', count($this->config->getValue("Main", "groupsvisible")) - 1) . '?';
             $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms, Email, aum.user_id, username, ";
             $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname, aum.Nachname ";
@@ -203,23 +203,23 @@ class ExternModuleTemplatePersons extends ExternModule {
             }
             $parameters = $this->config->getValue("Main", "groupsvisible");
             $parameters[] = $this->config->range_id;
-            
+
             $statement = DBManager::get()->prepare($query);
             $statement->execute($parameters);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
-       
+
             $visible_groups = array("");
         }
-        
+
         // generic data fields
         $generic_datafields = $this->config->getValue('TemplateGeneric', 'genericdatafields');
-        
+
         $data['data_fields'] = $this->data_fields;
         $defaultaddress = $this->config->getValue('Main', 'defaultadr');
         if (! $defaultaddress) {
            $db_out =& $row;
         }
-        
+
         $out = '';
         $i = 0;
         foreach ($visible_groups as $group_id => $group) {
@@ -234,7 +234,7 @@ class ExternModuleTemplatePersons extends ExternModule {
                 $query .= 'FROM statusgruppe_user su LEFT JOIN auth_user_md5 aum USING(user_id) ';
                 $query .= 'LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ';
                 $query .= "WHERE su.statusgruppe_id = ? AND ".get_ext_vis_query()." AND Institut_id = ? $query_order";
-                
+
                 $parameters = array($group_id, $this->config->range_id );
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute($parameters);
@@ -246,7 +246,7 @@ class ExternModuleTemplatePersons extends ExternModule {
                 }
             }
 
-        
+
             if ($row !== false) {
                 $aliases_groups = $this->config->getValue('Main', 'groupsalias');
                 if($aliases_groups[$position]) {
@@ -254,7 +254,7 @@ class ExternModuleTemplatePersons extends ExternModule {
                 }
                 $content['PERSONS']['GROUP'][$i]['GROUPTITLE'] = ExternModule::ExtHtmlReady($group);
                 $content['PERSONS']['GROUP'][$i]['GROUP-NO'] = $i + 1;
-                
+
                 $j = 0;
                 do{
                     $visibilities = get_local_visibility_by_id($row['user_id'], 'homepage', true);
@@ -270,9 +270,9 @@ class ExternModuleTemplatePersons extends ExternModule {
                         $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $row['user_id'];
                         $query .= "' AND ".get_ext_vis_query().' AND externdefault = 1';
 
-                        $state = DBManager::get()->prepare($query);
-                        $state->execute();
-                        $db_out = $statement->fetch(PDO::FETCH_ASSOC);
+                        $statement2 = DBManager::get()->prepare($query);
+                        $statement2->execute();
+                        $db_out = $statement2->fetch(PDO::FETCH_ASSOC);
                         //no default
                         if ($db_out === false) {
                             $query = 'SELECT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms,  Email, ';
@@ -282,13 +282,12 @@ class ExternModuleTemplatePersons extends ExternModule {
                             $query .= 'user_info USING(user_id) LEFT JOIN ';
                             $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $row['user_id'];
                             $query .= "' AND ".get_ext_vis_query()." AND Institut_id = ? " ;
-                            $state = DBManager::get()->prepare($query);
+                            $statement2 = DBManager::get()->prepare($query);
                             $params = array($this->config->range_id);
-                            $state->execute($params);
-                            $db_out = $statement->fetch(PDO::FETCH_ASSOC);
+                            $statement2->execute($params);
+                            $db_out = $statement2->fetch(PDO::FETCH_ASSOC);
                         }
                     }
-                    
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FULLNAME'] = ExternModule::ExtHtmlReady($db_out['fullname']);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['LASTNAME'] = ExternModule::ExtHtmlReady($db_out['Nachname']);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db_out['Vorname']);
@@ -320,10 +319,10 @@ class ExternModuleTemplatePersons extends ExternModule {
                         #$datafields = $datafields_obj->getLocalFields($db_out->f('user_id'));
                         $k = 1;
                         foreach ($generic_datafields as $datafield) {
-                            if (isset($localEntries[$datafield]) && 
-                                    is_object($localEntries[$datafield] && 
+                            if (isset($localEntries[$datafield]) &&
+                                    is_object($localEntries[$datafield] &&
                                     is_element_visible_externally($db_out['user_id'],
-                                        $user_perm, $localEntries[$datafield]->getId(), 
+                                        $user_perm, $localEntries[$datafield]->getId(),
                                         $visibilities[$localEntries[$datafield]->getId()]))) {
                                 if ($localEntries[$datafield]->getType() == 'link') {
                                     $localEntry = ExternModule::extHtmlReady($localEntries[$datafield]->getValue());
@@ -342,6 +341,7 @@ class ExternModuleTemplatePersons extends ExternModule {
             }
             $i++;
         }
+
         return $content;
     }
 
@@ -350,18 +350,18 @@ class ExternModuleTemplatePersons extends ExternModule {
             $language = "de_DE";
         init_i18n($language);
         echo $this->elements['TemplateGeneric']->toString(array('content' => $this->getContent($args), 'subpart' => 'PERSONS'));
-        
+
     }
-    
+
     function printoutPreview () {
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
+
         echo $this->elements['TemplateGeneric']->toString(array('content' => $this->getContent(), 'subpart' => 'PERSONS', 'hide_markers' => FALSE));
-        
+
     }
-    
+
 }
 
 ?>

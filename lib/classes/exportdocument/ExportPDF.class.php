@@ -91,6 +91,38 @@ class ExportPDF extends TCPDF implements ExportDocument {
         $content = preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#emsU", '$this->addEndnote("//1", "//2")', $content);
         $content = formatReady($content, true, true, true, null);
         $content = str_replace("<table", "<table border=\"1\"", $content);
+
+        // Since TCPDF cannot handle missing images at all, the content needs
+        // to be cleaned from those (see tickets #2957, #3329 and #3688)
+        $content = preg_replace_callback('/<img[^>]+src="(.*?)"[^>]*>/', function ($match) {
+            $url = $match[1];
+
+            // Handle optional media proxy
+            if (Config::GetInstance()->LOAD_EXTERNAL_MEDIA) {
+                $parsed = parse_url($url);
+                // Detect media proxy
+                if (strpos($parsed['path'], 'media_proxy') !== false && strpos($parsed['query'], 'url=') !== false) {
+                    // Remove media proxy
+                    parse_str($parsed['query'], $parameters);
+                    $url = $parameters['url'];
+                }
+            }
+
+            // Fetch headers from url, handle possible redirects
+            do {
+                $headers = get_headers($url, true);
+                list(, $status) = explode(' ', $headers[0]);
+
+                $url = $header['Location'] ?: $header['location'] ?: $url;
+            } while (in_array($status, array(300, 301, 302, 303, 305, 307)));
+
+            // Replace image with link on error, otherwise return sainitized
+            // url
+            return (!$status || $status >= 400)
+                 ? sprintf('[<a href="%s">%s</a>]', $url, basename($url))
+                 : str_replace($match[1], $url, $match[0]);
+        }, $content);
+
         $this->writeHTML($content.$endnote);
     }
 

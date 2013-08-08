@@ -1,6 +1,6 @@
 <?
     $subject = _("[Stud.IP - " . $GLOBALS['UNI_NAME_CLEAN'] . "] Send new password (STEP 3/5)");
-        
+
     $mailbody="This is a Stud.IP system confirmation mail.\n"
     ."(Studienbegleitender Internetsupport von Präsenzlehre)\n"
     ."- $UNI_NAME_CLEAN -\n\n"
@@ -12,7 +12,7 @@
     ."This mail is being sent to you to be sure,\n"
     ."that the given E-mail address does actually belong to you.\n\n"
     ."If this information is correct, please open the link\n\n"
-    ."{$GLOBALS['ABSOLUTE_URI_STUDIP']}request_new_password.php?uname={$username}&id={$id}\n\n"
+    ."{$GLOBALS['ABSOLUTE_URI_STUDIP']}request_new_password.php?uname={$username}&id={$id}&cancel_login=1\n\n"
     ."in your browser. The system will send you a e-mail with your new\n"
     ."password to this e-mail address.\n\n"
     ."Your mail program will probably support a simple click on the link.\n"

@@ -130,6 +130,8 @@ function getSeminare($semesterid,$onlyseminars)
     global $user,$semestersAR,$SEM_CLASS,$SEM_TYPE,$_fullname_sql;
 
     $i = 0;
+    $seminare = array();
+
     // if its not an archiv-only-semester, get the current ones
     if (!$semestersAR[$semesterid]['onlyarchiv']) {
 
@@ -142,9 +144,13 @@ function getSeminare($semesterid,$onlyseminars)
                 $sem_start_times[] = $value['beginn'];
             }
         }
+        
+        $all_sem_status     = array();
+        $allowed_sem_status = array();
         foreach ($SEM_CLASS as $key => $value) {
             if ($value['bereiche']) {
                 foreach($SEM_TYPE as $type_key => $type_value) {
+                    $all_sem_status[] = $type_key;
                     if ($type_value['class'] == $key) {
                         $allowed_sem_status[] = $type_key;
                     }
@@ -153,7 +159,7 @@ function getSeminare($semesterid,$onlyseminars)
         }
 
         // Prepare tutor statement
-        $query = "SELECT GROUP_CONCAT({$_fullname_sql['full']}, '; ')
+        $query = "SELECT TRIM(TRAILING '; ' FROM GROUP_CONCAT(DISTINCT {$_fullname_sql['full']}, '; '))
                   FROM seminar_user
                   LEFT JOIN auth_user_md5 USING (user_id)
                   LEFT JOIN user_info USING (user_id)
@@ -163,19 +169,20 @@ function getSeminare($semesterid,$onlyseminars)
 
         // Prepare and execute statement that obtains all seminars for the current user
         $query = "SELECT b.Seminar_id, b.Name, b.Untertitel, b.VeranstaltungsNummer,
-                          INTERVAL(start_time, :sem_start) AS sem_number , 
+                          INTERVAL(start_time, :sem_start) AS sem_number, 
                           IF(duration_time = -1, -1, INTERVAL(start_time + duration_time, :sem_start)) AS sem_number_end
                    FROM seminar_user AS a
                    LEFT JOIN seminare b USING (Seminar_id)
-                   WHERE (:allowed_status IS NULL OR b.status IN (:allowed_status))
+                   WHERE b.status IN (:allowed_status)
                      AND a.user_id = :user_id AND a.status = :status
                    HAVING (sem_number <= :sem_number AND (sem_number_end = -1 OR sem_number_end >= :sem_number))";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':sem_start', $sem_start_times);
-        $statement->bindValue(':allowed_status', $onlyseminars ? ($allowed_sem_status ?: null) : null);
+        $statement->bindValue(':sem_start', $sem_start_times, StudipPDO::PARAM_ARRAY);
+        $statement->bindValue(':allowed_status', $onlyseminars ? ($allowed_sem_status ?: '') : $all_sem_status);
         $statement->bindValue(':user_id', $user->id);
         $statement->bindValue(':status', $status);
         $statement->bindValue(':sem_number', $semestersAR[$semesterid]['id']);
+#        echo '<pre>';var_dump($semesterid, $semestersAR, $statement);die;
         $statement->execute();
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

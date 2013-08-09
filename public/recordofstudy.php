@@ -41,26 +41,6 @@ require '../lib/bootstrap.php';
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
-include ('lib/seminar_open.php');
-require_once('config.inc.php');
-require_once('lib/datei.inc.php');
-
-
-
-{
-// needed session-variables
-        
-if(empty($_SESSION['seminars'])) $_SESSION['seminars'] = "";
-if(empty($_SESSION['semestersAR'])) $_SESSION['semestersAR'] = array();
-if(empty($_SESSION['template'])) $_SESSION['template'] = "";
-
-$seminars = $_SESSION['seminars'];
-$semestersAR = $_SESSION['semestersAR'];
-$template = $_SESSION['template'];
-
-}
-
-/* **END*of*initialise*Stud.IP-Session*********************************** */
 
 /* ************************************************************************** *
 /*                                                                            *
@@ -72,7 +52,26 @@ $FDF_USAGE_HINT=sprintf(_("Die Ausgabe wird in einem speziellen Format erzeugt, 
 
 include_once($PATH_EXPORT ."/recordofstudy.lib.php");
 include_once($PATH_EXPORT ."/recordofstudyDB.php");
-/* **END*of*initialize*post/get*variables*********************************** */
+include ('lib/seminar_open.php');
+require_once('config.inc.php');
+require_once('lib/datei.inc.php');
+
+// needed session-variables
+if (empty($_SESSION['seminars'])) {
+    $_SESSION['seminars'] = array();
+}
+if (empty($_SESSION['semestersAR'])) {
+    $_SESSION['semestersAR'] = getSemesters();
+}
+if (empty($_SESSION['template'])) {
+    $_SESSION['template'] = "";
+}
+
+$seminars    = $_SESSION['seminars'];
+$semestersAR = $_SESSION['semestersAR'];
+$template    = $_SESSION['template'];
+
+/* **END*of*initialise*Stud.IP-Session*********************************** */
 
 /* ************************************************************************** *
 /*                                                                            *
@@ -101,13 +100,11 @@ else
 $infobox = createInfoxboxArray($mode);
 
 if ($mode == "new"){
-    // collect the current seminars and concerning semesters from the archiv
-    $semestersAR = getSemesters();
 }
 elseif ($mode == "edit"){
     // get the basic data
     if (Request::get('template')){
-        $template = Request::get('template');
+        $template = $_SESSION['template'] = Request::get('template');
     };
 
     $university = htmlReady(stripslashes(Request::get('university')));
@@ -131,7 +128,7 @@ elseif ($mode == "edit"){
     );
 
     // get the seminars from the db
-    if ($semester = $_POST['semester_selected_x']){
+    if (Request::submitted('semester_selected')) {
         $seminareAR = getSeminare($semesterid,Request::get('onlyseminars'));
     }
     // get the seminars from post
@@ -216,6 +213,8 @@ elseif($mode == "pdf_assortment"){
         $j--;
     $seminars["numberofseminars"] = $seminare_max;
     $seminars["numberofpages"] = $j;
+    
+    $_SESSION['seminars'] = $seminars;
 }
 elseif($mode == 'create_pdf'){
     $pdf_file['full_path'] = $ABSOLUTE_URI_STUDIP . sprintf('sendfile.php?type=3&file_id=%1$s&file_name=%1$s', $record_of_study_templates[$template]['template']);

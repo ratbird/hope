@@ -17,7 +17,7 @@ $aktionen[] = array(
 if (count($users) > 0) {
     $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('admin/user?export=1').'">'._('Suchergebnis exportieren').'</a>',
-    "icon" => "icons/16/black/export/file-xls.png"
+    "icon" => "icons/16/black/export/file-office.png"
 );
 }
 

@@ -131,6 +131,7 @@ class IndexController extends StudipController
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * B E R E I C H E / T H R E A D S / P O S T I N G S   L A D E N *
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
         // load list of areas for use in thread-movement
         if (ForumPerm::has('move_thread', $this->getId())) {
             $this->areas = ForumEntry::getList('flat', $this->getId());
@@ -174,7 +175,19 @@ class IndexController extends StudipController
                     $new_list[$this->getId()] = $allgemein;
                 }
 
+                // check, if there are any orphaned entries
+                foreach ($new_list as $key1 => $list_item) {
+                    foreach ($list_item as $key2 => $contents) {
+                        if (empty($contents)) {
+                            // remove the orphaned entry from the list and from the database
+                            unset($new_list[$key1][$key2]); 
+                            ForumCat::removeArea($key2);
+                        }
+                    }
+                }
+
                 $this->list = $new_list;
+                
             } else if ($this->constraint['depth'] == 1) {   // THREADS
                 if (!empty($list['list'])) {
                     $this->list = array($list['list']);

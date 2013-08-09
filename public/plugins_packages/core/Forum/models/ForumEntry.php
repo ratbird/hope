@@ -872,9 +872,9 @@ class ForumEntry {
         $stmt = DBManager::get()->prepare("SELECT topic_id FROM forum_entries
             WHERE seminar_id = ? AND lft >= ? AND rgt <= ? AND depth = 1");
         $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
-        $ids = $stmt->fetch(PDO::FETCH_COLUMN);
+        $ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-        if (strlen($ids) == 32 && !is_array($ids)) $ids = array($ids);
+        if ($ids != false && !is_array($ids)) $ids = array($ids);
 
         if (!empty($ids)) {
             $stmt = DBManager::get()->prepare("DELETE FROM forum_categories_entries

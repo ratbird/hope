@@ -182,7 +182,6 @@ function getSeminare($semesterid,$onlyseminars)
         $statement->bindValue(':user_id', $user->id);
         $statement->bindValue(':status', $status);
         $statement->bindValue(':sem_number', $semestersAR[$semesterid]['id']);
-#        echo '<pre>';var_dump($semesterid, $semestersAR, $statement);die;
         $statement->execute();
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

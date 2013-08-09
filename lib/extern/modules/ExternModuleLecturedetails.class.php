@@ -164,11 +164,9 @@ class ExternModuleLecturedetails extends ExternModule {
                         auth_user_md5 USING(user_id) LEFT JOIN user_info USING(user_id)
                         WHERE su.Seminar_id = ? AND su.status='dozent' ORDER BY position, username";
                 $parameters = array($this->seminar_id);
-                $state = DBManager::get()->prepare($query);
-                $state->execute($parameters);
-
-
-                while ( $res = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute($parameters);
+                while ($res = $statement->fetch(PDO::FETCH_ASSOC)) {
                     $data["lecturer"][] = $this->elements["LinkInternSimple"]->toString(
                             array("module" => "Persondetails",
                             "link_args" => "username=" . $res['username']
@@ -511,8 +509,8 @@ class ExternModuleLecturedetails extends ExternModule {
             $query="SELECT i.Institut_id, i.Name, i.url FROM seminare LEFT JOIN Institute i
                                     USING(institut_id) WHERE Seminar_id = ?";
             $parameters = array($this->seminar_id);
-            $state = DBManager::get()->prepare($query);
-            $state->execute($parameters);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
             $res = $statement->fetch(PDO::FETCH_ASSOC);
             $own_inst = $res['Institut_id'];
 
@@ -534,8 +532,8 @@ class ExternModuleLecturedetails extends ExternModule {
             $query = "SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id)
                                     WHERE seminar_id = ? AND i.institut_id!='$own_inst'";
             $parameters = array($this->seminar_id);
-            $state = DBManager::get()->prepare($query);
-            $state->execute($parameters);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
             $res = $statement->fetch(PDO::FETCH_ASSOC);
             $involved_insts = NULL;
             while ($res) {
@@ -560,8 +558,8 @@ class ExternModuleLecturedetails extends ExternModule {
 
             $query = "SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id = ?";
             $parameters = array($this->seminar_id);
-            $state = DBManager::get()->prepare($query);
-            $state->execute($parameters);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
             $res = $statement->fetch(PDO::FETCH_ASSOC);
 
             if ($res['count_user']) {
@@ -584,8 +582,8 @@ class ExternModuleLecturedetails extends ExternModule {
 
             $query = "SELECT count(*) as count_documents FROM dokumente WHERE seminar_id = ?";
             $parameters = array($this->seminar_id);
-            $state = DBManager::get()->prepare($query);
-            $state->execute($parameters);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
             $res = $statement->fetch(PDO::FETCH_ASSOC);
 
             if ($res['count_documents']) {

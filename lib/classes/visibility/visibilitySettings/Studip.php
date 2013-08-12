@@ -29,7 +29,7 @@ class Visibility_Studip extends VisibilityAbstract {
     // When do two users have this state
     public function verify($user_id, $other_id)
     {
-        return $user_id != "nobody";
+        return $other_id != "nobody";
     }
 }
 ?>

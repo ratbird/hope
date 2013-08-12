@@ -449,9 +449,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         
         $this->user_id = $row['user_id'];
 
-        $visibilities = get_local_visibility_by_id($this->user_id, 'homepage', true);
         $this->user_perm = $visibilities['perms'];
-        $this->visibilities = json_decode($visibilities['homepage'], true);
 
         $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}dispatch.php/settings/account?username=$username&login=yes";
 
@@ -464,14 +462,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             $content['PERSONDETAILS']['STATUSGROUPS'] = ExternModule::ExtHtmlReady(join(', ', array_values($statusgroups)));
         }
         $content['PERSONDETAILS']['USERNAME'] = $row['username'];
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'picture', $this->visibilities['picture'])) {
-            $avatar = Avatar::getAvatar($this->user_id);
-        } else {
-            $avatar = Avatar::getNobody();
-        }
-        if ($avatar->is_customized()) {
-            $content['PERSONDETAILS']['IMAGE-HREF'] = $avatar->getURL(Avatar::NORMAL);
-        }
+        
+        $content['PERSONDETAILS']['IMAGE-HREF'] = Avatar::getAvatar($this->user_id)->getURL(Avatar::NORMAL);
 
         $gruppen = GetRoleNames(GetAllStatusgruppen($this->config->range_id, $row['user_id']));
         for ($i = 0; $i < sizeof($gruppen); $i++) {
@@ -489,7 +481,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $content['PERSONDETAILS']['ROOM'] = ExternModule::ExtHtmlReady($row['raum']);
         $content['PERSONDETAILS']['PHONE'] = ExternModule::ExtHtmlReady($row['Telefon']);
         $content['PERSONDETAILS']['FAX'] = ExternModule::ExtHtmlReady($row['Fax']);
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'Home', $this->visibilities['Home'])) {
+        if (Visibility::verify('Home', $this->user_id)) {
             $content['PERSONDETAILS']['HOMEPAGE-HREF'] = ExternModule::ExtHtmlReady(trim($row['Home']));
         }
         $content['PERSONDETAILS']['OFFICE-HOURS'] = ExternModule::ExtHtmlReady($row['sprechzeiten']);
@@ -519,9 +511,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             foreach ($generic_datafields as $datafield) {
                 if (isset($localEntries[$datafield]) &&
                         is_object($localEntries[$datafield]) &&
-                        is_element_visible_externally($this->user_id,
-                            $this->user_perm, $localEntries[$datafield]->getId(),
-                            $this->visibilities[$localEntries[$datafield]->getId()])) {
+                        Visibility::verify($localEntries[$datafield]->getId(), $this->user_id)) {
                     if ($localEntries[$datafield]->getType() == 'link') {
                         $localEntry = ExternModule::extHtmlReady($localEntries[$datafield]->getValue());
                     } else {
@@ -547,24 +537,24 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             }
         }
 
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['lebenslauf']) && trim($row['lebenslauf']) != '') {
+        if (Visibility::verify('lebenslauf', $this->user_id)) {
             $content['PERSONDETAILS']['CV'] = ExternModule::ExtFormatReady($row['lebenslauf']);
         }
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'schwerp', $this->visibilities['schwerp']) && trim($row['schwerp']) != '') {
+        if (Visibility::verify('schwerp', $this->user_id)) {
             $content['PERSONDETAILS']['RESEARCH-INTERESTS'] = ExternModule::ExtFormatReady($row['schwerp']);
         }
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['publi']) && trim($row['publi']) != '') {
+        if (Visibility::verify('publi', $this->user_id)) {
             $content['PERSONDETAILS']['PUBLICATIONS'] = ExternModule::ExtFormatReady($row['publi']);
         }
 
         $content['PERSONDETAILS']['LECTURES'] = $this->elements['TemplateLectures']->toString(array('content' => $this->getContentLectures(), 'subpart' => 'LECTURES'));
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'news', $this->visibilities['news'])) {
+        if (Visibility::verify('news', $this->user_id)) {
             $content['PERSONDETAILS']['NEWS'] = $this->elements['TemplateNews']->toString(array('content' => $this->getContentNews(), 'subpart' => 'NEWS'));
         }
-        if (get_config('CALENDAR_ENABLE') && is_element_visible_externally($this->user_id, $this->user_perm, 'dates', $this->visibilities['dates'])) {
+        if (Visibility::verify('dates', $this->user_id)) {
             $content['PERSONDETAILS']['APPOINTMENTS'] = $this->elements['TemplateAppointments']->toString(array('content' => $this->getContentAppointments(), 'subpart' => 'APPOINTMENTS'));
         }
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'literature', $this->visibilities['literature'])) {
+        if (Visibility::verify('literature', $this->user_id)) {
             $content['PERSONDETAILS']['LITERATURE'] = $this->elements['TemplateLitList']->toString(array('content' => $this->elements['LitList']->getContent(array('user_id' => $this->user_id)), 'subpart' => 'LITLISTS'));
         }
         $content['PERSONDETAILS']['OWNCATEGORIES'] = $this->elements['TemplateOwnCategories']->toString(array('content' => $this->getContentOwnCategories(), 'subpart' => 'OWNCATEGORIES'));
@@ -581,7 +571,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $stm->execute(array($this->user_id));
         $i = 0;
         while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-            if (is_element_visible_externally($this->user_id, $this->user_perm, 'kat_'.$row['kategorie_id'], $this->visibilities['kat_'.$row['kategorie_id']])) {
+            if (Visibility::verify('kat_'.$row['kategorie_id'], $this->user_id)) {
                 $content['OWNCATEGORIES']['OWNCATEGORY'][$i]['OWNCATEGORY_TITLE'] = ExternModule::ExtHtmlReady($row['name']);
                 $content['OWNCATEGORIES']['OWNCATEGORY'][$i]['OWNCATEGORY_CONTENT'] = ExternModule::ExtFormatReady($row['content']);
                 $content['OWNCATEGORIES']['OWNCATEGORY'][$i]['OWNCATEGORY_NO'] = $i + 1;

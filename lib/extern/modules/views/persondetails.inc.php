@@ -7,6 +7,7 @@
 require_once('config.inc.php');
 require_once('lib/classes/DataFieldEntry.class.php');
 require_once('lib/visual.inc.php');
+require_once('lib/classes/Visibility.php');
 require_once('lib/statusgruppe.inc.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php');
 
@@ -18,15 +19,6 @@ if ($GLOBALS["CALENDAR_ENABLE"]) {
 $instituts_id = $this->config->range_id;
 $username = $args["username"];
 $sem_id = $args["seminar_id"];
-
-$this->visibilities = get_local_visibility_by_username($username, 'homepage', true);
-if ($this->visibilities) {
-    $this->owner_perm = $this->visibilities['perms'];
-    $this->visibilities = json_decode($this->visibilities['homepage'], true);
-} else {
-    $this->visibilities = array();
-    $this->owner_perm = 'user';
-}
 
 // Mitarbeiter/in am Institut
 $ext_vis_query = get_ext_vis_query();
@@ -168,7 +160,7 @@ foreach ($order as $position) {
             case 'lebenslauf' :
             case 'schwerp' :
             case 'publi' :
-                if ($row[$data_field] != '' && is_element_visible_externally($row['user_id'], $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
+                if ($row[$data_field] != '' && Visibility::verify($data_field, $row['user_id'])) {
                     echo "<tr><td width=\"100%\">\n";
                     echo "<table" . $this->config->getAttributes("TableParagraph", "table") . ">\n";
                     echo "<tr" . $this->config->getAttributes("TableParagraphHeadline", "tr");
@@ -184,7 +176,7 @@ foreach ($order as $position) {
                 break;
             case "news" :
             case "termine" :
-                if (is_element_visible_externally($row['user_id'], $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
+                if (Visibility::verify($data_field, $row['user_id'])) {
                     $data_field($this, $row, $aliases_content[$position], $text_div, $text_div_end);
                 }
                 break;
@@ -230,7 +222,7 @@ echo "</table>\n";
 
 function news (&$module, $row, $alias_content, $text_div, $text_div_end)
 {
-    if (is_element_visible_externally($row['user_id'], $module->owner_perm, $data_field, $module->visibilities['news'])) {
+    if (Visibility::verify('news', $row['user_id'])) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -278,7 +270,7 @@ function news (&$module, $row, $alias_content, $text_div, $text_div_end)
 
 function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
 {
-    if ($GLOBALS["CALENDAR_ENABLE"] && is_element_visible_externally($row['user_id'], $module->owner_perm, $data_field, $module->visibilities['dates'])) {
+    if ($GLOBALS["CALENDAR_ENABLE"] && Visibility::verify('dates', $row['user_id'])) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -332,9 +324,7 @@ function kategorien (&$module, $row, $alias_content, $text_div, $text_div_end)
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($row['username']));
     while ($category = $statement->fetch(PDO::FETCH_ASSOC)) {
-        if (is_element_visible_externally($row['user_id'], $module->owner_perm,
-                'kat_'.$category['kategorie_id'],
-                $module->visibilities['kat_'.$category['kategorie_id']])) {
+        if (Visibility::verify('kat_'.$category['kategorie_id'], $row['user_id'])) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
@@ -571,7 +561,7 @@ function head (&$module, $row, $a) {
         if ($module->config->getValue("Main", "showimage")) {
             echo "<td" . $module->config->getAttributes("PersondetailsHeader", "picturetd") . ">";
             $avatar = Avatar::getAvatar($row['user_id']);
-            if ($avatar->is_customized() && is_element_visible_externally($row['user_id'], $module->owner_perm, 'picture', $module->visibilities['picture'])) {
+            if ($avatar->is_customized()) {
                 echo "<img src=\"".$avatar->getURL(Avatar::NORMAL) .
                      "\" alt=\"Foto " . htmlReady(trim($row['fullname'])) . "\"";
                 echo $module->config->getAttributes("PersondetailsHeader", "img") . "></td>";
@@ -675,7 +665,7 @@ function kontakt ($module, $row, $separate = FALSE) {
                 break;
             case 'Home' :
                 if (($separate || !$module->config->getValue('Contact', 'separatelinks')) &&
-                        is_element_visible_externally($row['user_id'], $module->owner_perm, 'homepage', $module->visibilities['homepage'])) {
+                       true || Visiblility::verify('homepage', $row['user_id'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";

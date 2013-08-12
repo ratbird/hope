@@ -694,24 +694,30 @@ table.tree .centered table {
   width: 250px;
 }
 #layout_wrapper {
+  *zoom: 1;
   clear: both;
   min-width: 800px;
   min-height: 100%;
   width: 100%;
   height: auto !important;
   height: 100%;
-  margin: 0 auto -25px;
+  margin: 0 auto;
 }
-#layout_push {
+#layout_wrapper:before,
+#layout_wrapper:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#layout_wrapper:after {
   clear: both;
-  height: 25px;
 }
 #layout_footer {
   background-color: #899ab9;
   border-top: 1px solid #1e3e70;
   clear: both;
   color: #fff;
-  height: 24px;
+  height: 25px;
   margin: 0;
   text-align: right;
 }

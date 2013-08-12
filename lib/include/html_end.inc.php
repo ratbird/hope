@@ -1,8 +1,8 @@
-</div>
-<!-- Ende Page -->
-    <div id="layout_push"></div>
-</div>
+    </div>
+
     <? include 'templates/footer.php'; ?>
+<!-- Ende Page -->
+</div>
 
     <?= SkipLinks::getHTML() ?>
 

@@ -8,7 +8,7 @@
 <? elseif (isset($flash['success'])): ?>
     <?= MessageBox::success($flash['success'], $flash['success_detail']) ?>
 <? elseif (isset($flash['delete'])): ?>
-    <?= createQuestion(sprintf(_('Wollen Sie den Studiengang "%s" wirklich löschen?'), $flash['delete'][0]['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/studycourse/delete_profession') .'/'. $flash['delete'][0]['studiengang_id']); ?>
+    <?= createQuestion(sprintf(_('Wollen Sie den Studiengang "%s" wirklich löschen?'), $flash['delete'][0]['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/studycourse/delete_profession/'. $flash['delete'][0]['studiengang_id'])) ?>
 <? endif; ?>
 <table class="default collapsable">
     <thead>
@@ -36,7 +36,7 @@
             </a>
         </td>
         <td width="20">
-            <? if ($studycourse['count_user'] == 0 && $studycourse['count_sem'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession')?>/<?= $studycourse['studiengang_id'] ?>">
+            <? if ($studycourse['count_user'] == 0 && $studycourse['count_sem'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession/' . $studycourse['studiengang_id']) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Studiengang löschen'), 'class' => 'text-top')) ?>
             </a><? endif;?>
         </td>

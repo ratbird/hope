@@ -140,5 +140,16 @@ class Course extends SimpleORMap
 
         parent::__construct($id);
     }
+    
+    public function store() {
+        parent::store();
+        
+        NotificationCenter::postNotification("CourseDidCreateOrUpdate", $this->id);
+        if ($this->is_new) {
+            NotificationCenter::postNotification("CourseDidCreate", $this->id);
+        } else {
+            NotificationCenter::postNotification("CourseDidUpdate", $this->id);
+        }
+    }
 
 }

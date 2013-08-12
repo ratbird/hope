@@ -2141,8 +2141,6 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 }
             }
             
-            //notification for plugins
-            NotificationCenter::postNotification("seminar_created", $_SESSION['sem_create_data']["sem_id"]);
             //end of the seminar-creation process
             openSem($_SESSION['sem_create_data']["sem_id"]); //open Veranstaltung to administrate in the admin-area
         } else {

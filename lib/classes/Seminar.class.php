@@ -614,9 +614,9 @@ class Seminar
         if ($statement->rowCount() > 0) {
             NotificationCenter::postNotification("CourseDidCreateOrUpdate", $this);
             if ($statement->rowCount() > 1) {
-                NotificationCenter::postNotification("CourseDidCreate", $this);
-            } else {
                 NotificationCenter::postNotification("CourseDidUpdate", $this);
+            } else {
+                NotificationCenter::postNotification("CourseDidCreate", $this);
             }
         }
 

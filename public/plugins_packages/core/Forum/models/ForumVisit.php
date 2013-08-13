@@ -103,35 +103,38 @@ class ForumVisit {
             return array('visit' => $tstamp, 'last_visitdate' => $tstamp);
         }
 
-        if (!$visit[$seminar_id]) {
+        if (!isset($visit[$seminar_id])) {
+            $visit[$seminar_id] = array();
+        }
+        if (!isset($visit[$seminar_id][$GLOBALS['user']->id])) {
             $stmt = DBManager::get()->prepare("SELECT visitdate, last_visitdate FROM forum_visits
                 WHERE seminar_id = ? AND user_id = ?");
             $stmt->execute(array($seminar_id, $GLOBALS['user']->id));
-            $visit[$seminar_id] = $stmt->fetch(PDO::FETCH_ASSOC);
+            $visit[$seminar_id][$GLOBALS['user']->id] = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // no entry for this seminar yet present, create a new one
-            if (!$visit[$seminar_id]) { 
+            if (!$visit[$seminar_id][$GLOBALS['user']->id]) { 
                 $stmt = DBManager::get()->prepare("INSERT INTO forum_visits
                     (seminar_id, user_id, visitdate, last_visitdate) VALUES
                     (?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())");
                 $stmt->execute(array($seminar_id, $GLOBALS['user']->id));
             
                 // set visitdate to current time
-                $visit[$seminar_id] = array(
+                $visit[$seminar_id][$GLOBALS['user']->id] = array(
                     'visit'      => time() - ForumVisit::LAST_VISIT_MAX,
                     'last_visitdate' => time() - ForumVisit::LAST_VISIT_MAX
                 );
             }
             
             // prevent visit-dates from being older than LAST_VISIT_MAX allows
-            foreach ($visit[$seminar_id] as $type => $date) {
+            foreach ($visit[$seminar_id][$GLOBALS['user']->id] as $type => $date) {
                 if ($date < time() - ForumVisit::LAST_VISIT_MAX) {
-                    $visit[$seminar_id][$type] = time() - ForumVisit::LAST_VISIT_MAX;
+                    $visit[$seminar_id][$GLOBALS['user']->id][$type] = time() - ForumVisit::LAST_VISIT_MAX;
                 }
             }
         }
         
-        return $visit[$seminar_id];
+        return $visit[$seminar_id][$GLOBALS['user']->id];
     }
       
     /**

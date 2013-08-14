@@ -320,7 +320,8 @@ function checkObject()
 
 
 /**
- * This function checks, if given module is allowed in this stud-ip object
+ * This function checks, if given old style module "wiki","scm" (not "CoreWiki") etc.
+ * is allowed in this stud.ip-object.
  *
  * @global array $SessSemName
  *
@@ -335,7 +336,16 @@ function checkObjectModule($module)
     if ($SessSemName[1]) {
         $modules = new Modules();
         $local_modules = $modules->getLocalModules($SessSemName[1], $SessSemName['class']);
-        if (!$local_modules[$module]) {
+        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
+        $new_module_name = "Core".ucfirst($module);
+        $mandatory = false;
+        foreach (SemClass::getSlots() as $slot) {
+            if (($sem_class->getSlotModule($slot) === $new_module_name)
+                    && ($sem_class->isModuleMandatory($new_module_name))) {
+                $mandatory = true;
+            }
+        }
+        if (!$local_modules[$module] && !$mandatory) {
             throw new CheckObjectException(sprintf(_('Das Inhaltselement "%s" ist für dieses Objekt leider nicht verfügbar.'), ucfirst($module)));
         }
     }

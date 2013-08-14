@@ -21,7 +21,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
+along with this program; if not, write to the Free Softwareg
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
@@ -2191,8 +2191,12 @@ function GetFileIcon($ext, $with_img_tag = false){
             $icon = 'icons/16/blue/file-text.png';
         break;
         case 'xls':
+        case 'xlsx':
+        case 'ods':
         case 'csv':
         case 'ppt':
+        case 'pptx':
+        case 'odp':
             $icon = 'icons/16/blue/file-office.png';
         break;
         case 'zip':
@@ -2242,7 +2246,13 @@ function get_mime_type($filename)
         'doc'  => 'application/msword',
         'xls'  => 'application/ms-excel',
         'ppt'  => 'application/ms-powerpoint',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'swf'  => 'application/x-shockwave-flash',
+        'odp'  => 'application/vnd.oasis.opendocument.presentation',
+        'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+        'odt'  => 'application/vnd.oasis.opendocument.text',
         // image types
         'gif'  => 'image/gif',
         'jpeg' => 'image/jpeg',

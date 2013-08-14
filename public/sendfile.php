@@ -147,11 +147,11 @@ if (Request::int('zip') && is_file($path_file)) {
     }
 }
 
-if (Request::int('force_download')) {
-    $content_type = "application/octet-stream";
+$content_type = get_mime_type($file_name);
+
+if (Request::int('force_download') || $content_type == "application/octet-stream") {
     $content_disposition = "attachment";
 } else {
-    $content_type = get_mime_type($file_name);
     $content_disposition = "inline";
 }
 
@@ -181,7 +181,7 @@ if ($_SERVER['HTTPS'] == "on"){
     header("Cache-Control: no-store, no-cache, must-revalidate");   // HTTP/1.1
 }
 header("Cache-Control: post-check=0, pre-check=0", false);
-header("Content-Type: $content_type; name=\"$file_name\"");
+header("Content-Type: $content_type");
 header("Content-Description: File Transfer");
 header("Content-Transfer-Encoding: binary");
 if ($filesize != FALSE) header("Content-Length: $filesize");

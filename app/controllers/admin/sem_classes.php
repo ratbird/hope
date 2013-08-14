@@ -124,8 +124,11 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('admission_prelim_default', Request::int("admission_prelim_default"));
         $sem_class->set('admission_type_default', Request::int("admission_type_default"));
         $sem_class->store();
+        if (!count($sem_class->getSemTypes())) {
+            $notice = "<br>"._("Beachten Sie, dass es noch keine Veranstaltungstypen gibt!");
+        }
         $output = array(
-            'html' => studip_utf8encode((string) MessageBox::success(_("Änderungen wurden gespeichert."." ".'<a href="'.URLHelper::getLink("dispatch.php/admin/sem_classes/overview").'">'._("Zurück zur Übersichtsseite.").'</a>')))
+            'html' => studip_utf8encode((string) MessageBox::success(_("Änderungen wurden gespeichert."." ".'<a href="'.URLHelper::getLink("dispatch.php/admin/sem_classes/overview").'">'._("Zurück zur Übersichtsseite.").'</a>').$notice))
         );
         echo json_encode($output);
         $this->render_nothing();

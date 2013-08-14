@@ -339,13 +339,16 @@ function checkObjectModule($module)
         $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
         $new_module_name = "Core".ucfirst($module);
         $mandatory = false;
+        $checkslot = $module;
         foreach (SemClass::getSlots() as $slot) {
-            if (($sem_class->getSlotModule($slot) === $new_module_name)
-                    && ($sem_class->isModuleMandatory($new_module_name))) {
-                $mandatory = true;
+            if ($sem_class->getSlotModule($slot) === $new_module_name) {
+                $checkslot = $slot;
+                if ($sem_class->isModuleMandatory($new_module_name)) {
+                    $mandatory = true;
+                }
             }
         }
-        if (!$local_modules[$module] && !$mandatory) {
+        if (!$local_modules[$checkslot] && !$mandatory) {
             throw new CheckObjectException(sprintf(_('Das Inhaltselement "%s" ist für dieses Objekt leider nicht verfügbar.'), ucfirst($module)));
         }
     }

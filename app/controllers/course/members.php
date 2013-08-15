@@ -518,7 +518,7 @@ class Course_MembersController extends AuthenticatedController
             // selection fails
             if (!Request::option('new_tutor')) {
                 PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt
-                    oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+                    oder der/die gesuchte TeilnehmerIn wurde nicht gefunden')));
                 $this->redirect('course/members/add_tutor');
             } else {
                 if ($sem->addMember(Request::option('new_tutor'), "tutor")) {
@@ -585,7 +585,7 @@ class Course_MembersController extends AuthenticatedController
             return;
         } else {
             PageLayout::postMessage(MessageBox::error(_('Sie haben keine Auswahl getätigt
-                oder der/ die gesuchte TeilnehmerInn wurde nicht gefunden')));
+                oder der/die gesuchte TeilnehmerIn wurde nicht gefunden')));
             $this->redirect('course/members/add_member');
             return;
         }

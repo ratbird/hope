@@ -22,25 +22,19 @@
                     <?= $status_groups['user'] ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
-                    <? if($is_tutor) :?>
-                        <?=$controller->getEmailLinkByStatus('user')?>
-                        <a href="<?= URLHelper::getLink('sms_send.php',
-                                array('filter' => 'send_sms_to_all',
-                                    'who' => 'user',
-                                    'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                                    'course_id' => $course_id,
-                                    'subject' => $subject))
-                        ?>">
-                            <?= Assets::img('icons/16/white/inbox.png',
-                                    tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user'])))?>
-                        </a>
-                        <? if ($is_tutor) : ?>
-                        <a href="<?= $controller->url_for('course/members/add_member/user/')?>">
-                            <?= Assets::img('icons/16/white/add/community.png',
-                                    tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'),$status_groups['user']))) ?>
-                        </a>
-                        <? endif ?>
-                    <? endif ?>
+                <? if($is_tutor) :?>
+                    <?=$controller->getEmailLinkByStatus('user')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('filter' => 'send_sms_to_all',
+                                'who' => 'user',
+                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                    ?>">
+                        <?= Assets::img('icons/16/white/inbox.png',
+                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user'])))?>
+                    </a>
+                <? endif ?>
                 </th>
             </tr>
             <tr class="sortable">

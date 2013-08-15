@@ -593,11 +593,11 @@ class StreamsController extends ApplicationController {
         $this->thread = new BlubberPosting($thread_id);
         if ($this->thread['context_type'] === "private") {
             if (!in_array($GLOBALS['user']->id, $this->thread->getRelatedUsers())) {
-                throw new AccessDeniesException("Kein Zugriff auf diesen Blubb.");
+                throw new AccessDeniedException("Kein Zugriff auf diesen Blubb.");
             }
         } elseif ($this->thread['context_type'] === "course") {
             if (!$GLOBALS['perm']->have_studip_perm("user", $this->thread['Seminar_id'])) {
-                throw new AccessDeniesException("Kein Zugriff auf diesen Blubb.");
+                throw new AccessDeniedException("Kein Zugriff auf diesen Blubb.");
             }
         }
         if ($this->thread['context_type'] === "course") {

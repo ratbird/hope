@@ -607,7 +607,9 @@ class StreamsController extends ApplicationController {
                 Navigation::activateItem('/profile/blubber');
             }
         } else {
-            Navigation::activateItem('/community/blubber');
+            if (Navigation::hasItem('/community/blubber')) {
+                Navigation::activateItem('/community/blubber');
+            }
         }
 
         $this->course_id     = $_SESSION['SessionSeminar'];

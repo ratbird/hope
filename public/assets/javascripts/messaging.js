@@ -4,12 +4,11 @@
 STUDIP.Messaging = {
     addToAdressees: function (username, name) {
         if (!jQuery("select#del_receiver").length) {
-            jQuery("form[name=upload_form]")
-                .attr("action", STUDIP.URLHelper.getURL("?", {
-                    "add_receiver[]": username,
-                    "add_receiver_button_x": true
-                }))
-            [0].submit();
+            var form = jQuery("form[name=upload_form]");
+            jQuery('<input type="hidden" name="add_receiver[]"/>').val(username).appendTo(form);
+            jQuery('<input type="hidden" name="add_receiver_button_x" value="1"/>').appendTo(form);
+            form.submit();
+
             return;
         }
         if (!jQuery('select#del_receiver [value="' + username + '"]').length) {

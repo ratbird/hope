@@ -379,7 +379,7 @@ function PrintAktualContacts($range_id)
 $new_statusgruppe_name = Request::get('new_statusgruppe_name');
 if (($cmd == "add_new_statusgruppe") && ($new_statusgruppe_name != "")) {
     if (Statusgruppe::countByName($new_statusgruppe_name, $range_id) > 0) {
-        $msgs[] = 'info§' . sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits ein Gruppe mit demselben Namen!"), '<b>' . htmlReady($new_statusgruppe_name) . '</b>');
+        $msgs[] = 'info§' . sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits eine Gruppe mit demselben Namen!"), '<b>' . htmlReady($new_statusgruppe_name) . '</b>');
     } else {
         $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>' . htmlReady($new_statusgruppe_name) . '</b>');
     }

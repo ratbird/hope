@@ -296,7 +296,7 @@ if (Request::option('cmd') == 'addRole' && !Request::submitted('choosePreset')) 
         if ($new_role->checkData()) {
             // show a hint if a role with the same name already exists
             if (Statusgruppe::countByName($new_role->getName(), $new_role->getRange_Id()) > 0) {
-                $msgs['info'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits ein Gruppe mit demselben Namen!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+                $msgs['info'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits eine Gruppe mit demselben Namen!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
             } else {
                 $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
             }

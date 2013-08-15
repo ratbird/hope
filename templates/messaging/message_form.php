@@ -25,7 +25,7 @@
     <? endif; ?>
 
         <?= Button::create(_('Vorschau'), 'cmd') ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL($return_to)) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL($return_to ?: 'sms_box.php')) ?>
     </div>
     
     <br><br>

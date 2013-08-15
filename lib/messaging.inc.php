@@ -26,7 +26,6 @@ require_once ('lib/user_visible.inc.php');
 require_once ('lib/contact.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/sms_functions.inc.php');
-require_once 'lib/models/MailQueueEntries.class.php';
 
 //
 function CheckChecked($a, $b)
@@ -230,7 +229,7 @@ class messaging
     {
         $receiver     = User::find($rec_user_id);
         $to           = $receiver->Email;
-                    
+        
         // do not try to send mails to users without a mail address
         if (!$to) {
             return;
@@ -282,11 +281,7 @@ class messaging
                 $mail->addStudipAttachment($attachment['dokument_id']);
             }
         }
-        if (!get_config("MAILQUEUE_ENABLE")) {
-            $mail->send();
-        } else {
-            MailQueueEntries::add($mail, $message_id, $rec_user_id);
-        }
+        $mail->send();
     }
 
     /**

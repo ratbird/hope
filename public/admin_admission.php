@@ -373,7 +373,7 @@ if ($seminar_id
     $admin_admission_data["admission_prelim_txt"]=Request::get('admission_prelim_txt');
   }
 
-  if (Request::submitted('uebernehmen') && Request::option('admission_waitlist')) {
+  if (Request::isPost() && isset($_REQUEST['admission_waitlist'])) {
       $admin_admission_data["admission_disable_waitlist"] = (int)(!Request::int("admission_waitlist"));
   }
 
@@ -1569,7 +1569,10 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                             </font><br><br>
                         <?}?>
                         <input type="hidden" name="admission_waitlist" value="0">
-                        <font size=-1><input type="CHECKBOX" name="admission_waitlist" value="1" <? if (!$admin_admission_data["admission_disable_waitlist"]) echo "checked"; ?>><?=_("Warteliste aktivieren")?></font>
+                        <label>
+                            <input type="CHECKBOX" name="admission_waitlist" value="1" <? if (!$admin_admission_data["admission_disable_waitlist"]) echo "checked"; ?>>
+                            <?= _('Warteliste aktivieren') ?>
+                        </label>
                     <? else : ?>
                         <? if (!$admin_admission_data["admission_disable_waitlist"]){
                             ?>

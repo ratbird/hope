@@ -591,6 +591,15 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
 
         $this->thread = new BlubberPosting($thread_id);
+        if ($this->thread['context_type'] === "private") {
+            if (!in_array($GLOBALS['user']->id, $this->thread->getRelatedUsers())) {
+                throw new AccessDeniesException("Kein Zugriff auf diesen Blubb.");
+            }
+        } elseif ($this->thread['context_type'] === "course") {
+            if (!$GLOBALS['perm']->have_studip_perm("user", $this->thread['Seminar_id'])) {
+                throw new AccessDeniesException("Kein Zugriff auf diesen Blubb.");
+            }
+        }
         if ($this->thread['context_type'] === "course") {
             PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
         } elseif($this->thread['context_type'] === "public") {

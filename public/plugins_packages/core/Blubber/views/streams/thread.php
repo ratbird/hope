@@ -27,6 +27,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
 <input type="hidden" id="browser_start_time" value="">
 <script>jQuery(function () { jQuery("#browser_start_time").val(Math.floor(new Date().getTime() / 1000)); });</script>
 <div id="editing_question" style="display: none;"><?= _("Wollen Sie den Beitrag wirklich bearbeiten?") ?></div>
+<? if (Navigation::hasItem("/community/blubber")) : ?>
 <p>
     <? switch ($thread['context_type']) {
         case "course":
@@ -43,6 +44,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
         <?= _('Zurück zur Übersicht') ?>
     </a>
 </p>
+<? endif ?>
 
 <ul id="blubber_threads" class="coursestream singlethread" aria-live="polite" aria-relevant="additions">
 <? endif; ?>

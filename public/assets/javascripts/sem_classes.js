@@ -72,6 +72,7 @@ STUDIP.admin_sem_class = {
             'data': {
                 'sem_class_id': jQuery("#sem_class_id").val(),
                 'sem_class_name': jQuery("#sem_class_name").val(),
+                'sem_class_description': jQuery("#sem_class_description").val(),
                 'title_dozent': !jQuery("#title_dozent_isnull").is(":checked") ? jQuery("#title_dozent").val() : "",
                 'title_dozent_plural': !jQuery("#title_dozent_isnull").is(":checked") ? jQuery("#title_dozent_plural").val() : "",
                 'title_tutor': !jQuery("#title_tutor_isnull").is(":checked") ? jQuery("#title_tutor").val() : "",

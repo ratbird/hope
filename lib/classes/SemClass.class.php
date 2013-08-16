@@ -315,6 +315,7 @@ class SemClass implements ArrayAccess
         $statement = $db->prepare(
             "UPDATE sem_classes " .
                 "SET name = :name, " .
+                "description = :description, " .
                 "compact_mode = :compact_mode, " .
                 "workgroup_mode = :workgroup_mode, " .
                 "only_inst_user = :only_inst_user, " .
@@ -354,6 +355,7 @@ class SemClass implements ArrayAccess
         return $statement->execute(array(
             'id' => $this->data['id'],
             'name' => $this->data['name'],
+            'description' => $this->data['description'],
             'compact_mode' => (int) $this->data['compact_mode'],
             'workgroup_mode' => (int) $this->data['workgroup_mode'],
             'only_inst_user' => (int) $this->data['only_inst_user'],

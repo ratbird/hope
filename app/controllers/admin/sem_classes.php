@@ -103,6 +103,7 @@ class Admin_SemClassesController extends AuthenticatedController
         }
         $sem_class->setModules(Request::getArray("modules"));
         $sem_class->set('name', Request::get("sem_class_name"));
+        $sem_class->set('description', Request::get("sem_class_description"));
         $sem_class->set('title_dozent', Request::get("title_dozent") ? studip_utf8decode(Request::get("title_dozent")) : null);
         $sem_class->set('title_dozent_plural', Request::get("title_dozent_plural") ? studip_utf8decode(Request::get("title_dozent_plural")) : null);
         $sem_class->set('title_tutor', Request::get("title_tutor") ? studip_utf8decode(Request::get("title_tutor")) : null);

@@ -15,12 +15,15 @@ class InitMailqueue extends Migration
             `message_id` varchar(32) DEFAULT NULL,
             `user_id` varchar(32) DEFAULT NULL,
             `tries` int(11) NOT NULL,
+            `last_try` int(11) NOT NULL DEFAULT '0',
             `mkdate` bigint(20) NOT NULL,
             `chdate` bigint(20) NOT NULL,
             PRIMARY KEY (`mail_queue_id`),
             KEY `message_id` (`message_id`),
             KEY `user_id` (`user_id`)
         ) ENGINE=MyISAM";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute();
 
         // Add config entries
         $query = "INSERT IGNORE INTO `config`

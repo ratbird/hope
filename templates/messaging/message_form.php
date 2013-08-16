@@ -5,7 +5,7 @@
         <small>(<?= _('erforderliches Feld') ?>)</small>
     </label>
     <br>
-    <input type="text" id="subject" name="messagesubject" style="width: 99%"
+    <input type="text" required id="subject" name="messagesubject" style="width: 99%"
            value="<?= trim(htmlready($messagesubject)) ?>">
 </div>
 

@@ -145,7 +145,7 @@ if (Request::submitted('add_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = 1;
 // send message
 if (Request::submitted('cmd_insert')) {
     if (empty($messagesubject)) {
-        $msg = 'error§' . _('Sie können keine leere Nachricht versenden. Bitte geben Sie zumindest einen Betreff an.');
+        $msg = 'error§' . _('Bitte geben Sie einen Betreff an.');
     } else {
         $count = 0;
         if (!empty($sms_data["p_rec"])) {

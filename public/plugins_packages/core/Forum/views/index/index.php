@@ -17,7 +17,7 @@ $infobox_content[] = array(
     'eintrag'   => array(
         array(
             'icon' => 'icons/16/black/info.png',
-            'text' => sprintf(_('Sie befinden sich hier im Forum. Ausführliche Hilfe finden sie in der %sDokumentation%s'),
+            'text' => sprintf(_('Sie befinden sich hier im Forum. Ausführliche Hilfe finden Sie in der %sDokumentation%s.'),
                 '<a href="'. format_help_url(PageLayout::getHelpKeyword()) .'" target="_blank">', '</a>')
         )
     )

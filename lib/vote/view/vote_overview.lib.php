@@ -190,16 +190,12 @@ function printSelections($range,$sarchRange = "",$safeguard = NULL)
 
     $arraysize = count($range);
 
-    $bgimage = "     <td class=\"blank\" width=\"270\" rowspan=\"4\" align=\"center\" valign=\"top\" style=\"vertical-align:top;\">"
-         . "      <img src=\"".Assets::image_path('infobox/voting.jpg')."\" alt=\"".$label["sitetitle_title"]."\">\n"
-         . "     </td>\n";
-
     $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
           . " <tr valign=\"top\">\n"
-          . "  <td width=\"99%\" NOWRAP class=\"blank\"><br>"
+          . "  <td width=\"99%\" class=\"blank\"><br>"
           . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
           . "     "
-          . "   <tr><td>".$safeguard."</td>".$bgimage."</tr><tr>\n";
+          . "   <tr><td>".$safeguard."</td></tr><tr>\n";
 
     // create new vote/test
     $html .= makeNewVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");

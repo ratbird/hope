@@ -1263,7 +1263,7 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
               LEFT JOIN user_visibility ON (user_visibility.user_id = uo.user_id)
               LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id AND buddy = 1)
               WHERE last_lifesign > ? AND uo.user_id <> ?
-              ORDER BY last_action ASC, {$GLOBALS['_fullname_sql'][$name_format]} ASC";
+              ORDER BY {$GLOBALS['_fullname_sql'][$name_format]} ASC";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $GLOBALS['user']->id,

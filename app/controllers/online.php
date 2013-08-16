@@ -217,7 +217,7 @@ class OnlineController extends AuthenticatedController
                 }
             }
             usort($buddies, function ($a, $b) {
-                return ($a['group_position'] - $b['group_position']) ?: ($a['last_action'] - $b['last_action']);
+                return ($a['group_position'] - $b['group_position']) ?: strcmp($a['name'] - $b['name']);
             });
         }
 

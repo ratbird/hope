@@ -46,15 +46,15 @@ class Calendar_ScheduleController extends AuthenticatedController
         parent::before_filter($action, $args);
         $zoom = Request::int('zoom');
         $this->my_schedule_settings = UserConfig::get($user->id)->SCHEDULE_SETTINGS;
-        // bind zoom and show_hidden for all actions, even preserving them after redirect
+        // bind zoom, show_hidden and semester_id for all actions, even preserving them after redirect
         if (isset($zoom)) {
             URLHelper::addLinkParam('zoom', Request::int('zoom'));
             $this->my_schedule_settings['zoom'] = Request::int('zoom');
             UserConfig::get($user->id)->store('SCHEDULE_SETTINGS', $this->my_schedule_settings);
         }
-        if (Request::int('show_hidden')) {
-            URLHelper::addLinkParam('show_hidden', Request::int('show_hidden'));
-        }
+
+        URLHelper::bindLinkParam('semester_id', $this->current_semester['semester_id']);
+        URLHelper::bindLinkParam('show_hidden', $this->show_hidden);
     }
 
     /**
@@ -100,7 +100,6 @@ class Calendar_ScheduleController extends AuthenticatedController
         } else {
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
-        URLHelper::addLinkParam('semester_id', $this->current_semester['semester_id']);
 
         // convert old settings, if necessary (mein_stundenplan.php)
         if (!$this->my_schedule_settings['converted']) {

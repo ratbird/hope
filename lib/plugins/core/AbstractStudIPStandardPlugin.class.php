@@ -66,7 +66,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
         // $last_visit = object_get_visit($this->id, $sem_type, 'current');
 
         if ($this->isShownInOverview() && $this->hasNavigation()) {
-            $navigation = $this->getNavigation();
+            $navigation = array_pop($this->getTabNavigation($course_id));
 
             if ($this->hasChanged($last_visit)) {
                 $navigation->setImage($this->getChangeindicatoriconname(),
@@ -88,12 +88,19 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     function getInfoTemplate($course_id) {
         return NULL;
     }
-    
+
     function getTabNavigation($course_id) {
-        $nav = $this->getNavigation();
-        if ($nav) {
-            $nav->setImage($this->getPluginiconname());
-            return array(get_class($this) => $nav);
+        if ($this->hasNavigation()) {
+            $navigation = $this->getNavigation();
+            $navigation->setImage($this->getPluginiconname());
+            // prepend copy of navigation to its sub navigation
+            $item_names = array_keys($navigation->getSubNavigation());
+            $navigation_copy = clone $navigation;
+            $navigation_copy->clearSubmenu();
+            $navigation_copy->freezeActivation();
+            $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
+            $navigation->setTitle($this->getDisplayTitle());
+            return array(get_class($this) => $navigation);
         } else {
             return null;
         }
@@ -102,7 +109,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     function getNotificationObjects($course_id, $since, $user_id) {
         return null;
     }
-    
+
     /**
      * Gehen beim Deaktivieren des Plugins Daten verloren?
      *

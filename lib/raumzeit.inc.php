@@ -283,8 +283,8 @@ function raumzeit_doAddSingleDate($sem) {
         $termin = new SingleDate();
         //dates[0]=day, dates[1]=month,dates[2]=year
         $dates = explode('.', Request::get('startDate'));        
-        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0,$dates[1],$dates[0],$dates[2]);
-        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1],$dates[0],$dates[2]);
+        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0, $dates[1], $dates[0], $dates[2]);
+        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1], $dates[0], $dates[2]);
         $termin->setTime($start, $ende);
         $termin->setDateType(Request::get('dateType'));
         $termin->store();
@@ -292,8 +292,9 @@ function raumzeit_doAddSingleDate($sem) {
         if ($start < $sem->filterStart || $ende > $sem->filterEnd) {
             $sem->setFilter('all');
         }
-        if (!Request::get('room')) {
-            $termin->setFreeRoomText(Request::quoted('freeRoomText'));
+        if (!Request::get('room') || Request::get('room') === 'nothing') {
+            $termin->setFreeRoomText(Request::get('freeRoomText'));
+            $termin->store();
             $sem->addSingleDate($termin);
         } else {
             $sem->addSingleDate($termin);

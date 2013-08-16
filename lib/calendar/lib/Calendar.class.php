@@ -511,8 +511,11 @@ class Calendar
             $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0,  $endDate['month'], $endDate['day'], $endDate['year']);
         }
 
-        $this->event->properties['LOCATION'] = decodeHTML($calendar_form_data['loc']);
-        $this->event->properties['DESCRIPTION'] = decodeHTML($calendar_form_data['content']);
+        $this->event->properties['SUMMARY']         = decodeHTML($calendar_form_data['txt']);
+        $this->event->properties['LOCATION']        = decodeHTML($calendar_form_data['loc']);
+        $this->event->properties['DESCRIPTION']     = decodeHTML($calendar_form_data['content']);
+        $this->event->properties['STUDIP_CATEGORY'] = $calendar_form_data['cat'];
+        $this->event->properties['CATEGORIES']      = decodeHTML($calendar_form_data['cat_text']);
 
         switch ($calendar_form_data['via']) {
             case 'PUBLIC':

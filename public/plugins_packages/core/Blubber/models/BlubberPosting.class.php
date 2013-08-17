@@ -442,5 +442,73 @@ class BlubberPosting extends SimpleORMap {
             return new BlubberUser($this['user_id']);
         }
     }
+    
+    /**
+     * Returns all known users that have been sharing this thread.
+     * @return array of \BlubberContact 
+     */
+    public function getSharingUsers() {
+        if ($this['context_type'] !== "public") {
+            return array();
+        }
+        $get_shares = DBManager::get()->prepare(
+            "SELECT * FROM blubber_reshares WHERE topic_id = ? " .
+        "");
+        $get_shares->execute(array($this['root_id']));
+        $shares = $get_shares->fetchAll(PDO::FETCH_ASSOC);
+        $users = array();
+        foreach ($shares as $share) {
+            $users[] = $share['external_contact'] 
+                ? BlubberExternalContact::find($share['user_id']) 
+                : BlubberUser::find($share['user_id']);
+        }
+        return $users;
+    }
+    
+    public function reshare($user_id = null, $external_user = 0) {
+        if ($this['context_type'] !== "public") {
+            return false;
+        }
+        $user_id or $user_id = $GLOBALS['user']->id;
+        $share = DBManager::get()->prepare(
+            "INSERT IGNORE INTO blubber_reshares " .
+            "SET topic_id = :topic_id, " .
+                "user_id = :user_id, " .
+                "external_contact = :external_contact, " .
+                "chdate = UNIX_TIMESTAMP() " .
+        "");
+        $success = $share->execute(array(
+            'topic_id' => $this['root_id'],
+            'user_id' => $user_id,
+            'external_contact' => $external_contact
+        ));
+        if ($success) {
+            $thread = $this->isThread() ? $this : BlubberPosting::find($this['root_id']);
+            $thread['chdate'] = time();
+            $thread->store();
+        }
+        return $success;
+    }
+    
+    public function unreshare($user_id = null, $external_user = 0) {
+        $user_id or $user_id = $GLOBALS['user']->id;
+        $unshare = DBManager::get()->prepare(
+            "DELETE FROM blubber_reshares " .
+            "WHERE topic_id = :topic_id " .
+                "AND user_id = :user_id ",
+                "AND external_contact = :external_contact " .
+        "");
+        $success = $unshare->execute(array(
+            'topic_id' => $this['root_id'],
+            'user_id' => $user_id,
+            'external_contact' => $external_contact
+        ));
+        if ($success) {
+            $thread = $this->isThread() ? $this : BlubberPosting::find($this['root_id']);
+            $thread['chdate'] = time();
+            $thread->store();
+        }
+        return $success;
+    }
 
 }

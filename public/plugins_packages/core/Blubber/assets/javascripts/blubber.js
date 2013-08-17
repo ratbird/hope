@@ -167,6 +167,9 @@ STUDIP.Blubber = {
                 var new_version = jQuery(content);
                 jQuery("#posting_" + posting_id + " > .content_column .content").html(new_version.find(".content").html());
                 jQuery("#posting_" + posting_id + " > .content_column .additional_tags").html(new_version.find(".additional_tags").html());
+                if (jQuery("#posting_" + posting_id + " > .reshares").length > 0) {
+                    jQuery("#posting_" + posting_id + " > .reshares").html(new_version.find(".reshares").html());
+                }
                 new_version.remove();
             }
         } else {
@@ -476,6 +479,32 @@ STUDIP.Blubber = {
                 STUDIP.QuickSearch.formToJSON("#additional_settings")
             );
         }, 50);
+    },
+    reshareBlubber: function () {
+        var thread_id = jQuery(this).closest(".thread").attr("id");
+        thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/reshare/" + thread_id,
+            'type': "POST"
+        });
+    },
+    showPublicPanel: function () {
+        var thread_id = jQuery(this).closest(".thread").attr("id");
+        thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/public_panel",
+            'data': {
+                'thread_id': thread_id
+            },
+            'type': "GET",
+            'success': function (html) {
+                jQuery("<div/>").html(html).dialog({
+                    'modal': true,
+                    'title': "Sichtbarkeit",
+                    'width': "80%"
+                });
+            }
+        });
     }
 };
 
@@ -548,16 +577,20 @@ jQuery("#blubber_threads > li > ul.comments > li.more").live("click", function (
         }
     });
 });
+jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
+jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
+jQuery("#blubber_threads .reshare_blubber").live("click", STUDIP.Blubber.reshareBlubber);
+jQuery("#blubber_threads .thread.public .contextinfo").live("click", STUDIP.Blubber.showPublicPanel);
+
 //initialize autoresizer, file-dropper and events
 jQuery(function () {
+    jQuery("#browser_start_time").val(Math.floor(new Date().getTime() / 1000));
     STUDIP.Blubber.makeTextareasAutoresizable();
     jQuery("#new_title").focus(function () {
         jQuery("#new_posting").fadeIn(function () {
             STUDIP.Blubber.makeTextareasAutoresizable();
         });
     });
-    jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
-    jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
     jQuery("#threadwriter .context_selector img").bind("click", STUDIP.Blubber.showContextWindow);
 
     //for editing custom streams:
@@ -583,6 +616,7 @@ jQuery(function () {
     });
     
 });
+
 
 //Infinity-scroll:
 jQuery(window.document).bind('scroll', _.throttle(function (event) {

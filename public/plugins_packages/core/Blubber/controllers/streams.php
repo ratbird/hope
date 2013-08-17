@@ -834,5 +834,28 @@ class StreamsController extends ApplicationController {
 
         $this->render_text($stream->fetchNumberOfThreads());
     }
+    
+    public function reshare_action($thread_id) {
+        if (!Request::isPost()) {
+            throw new Exception("Wrong method for this action - use POST instead");
+        }
+        $thread = new BlubberPosting($thread_id);
+        $success = $thread->reshare();
+        $this->render_nothing();
+    }
+    
+    public function public_panel_action() {
+        $thread_id = Request::option("thread_id");
+        $this->thread = new BlubberPosting($thread_id);
+        if ($this->thread['context_type'] !== "public") {
+            throw new AccessDeniedException("No public posting.");
+        }
+        $template = $this->get_template_factory()->open("streams/public_panel.php");
+        $template->set_attributes($this->get_assigned_variables());
+        $template->set_layout(null);
+        $output = $template->render();
+        echo studip_utf8encode($output);
+        $this->render_nothing();
+    }
 
 }

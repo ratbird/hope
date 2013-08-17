@@ -276,6 +276,7 @@ class BlubberStream extends SimpleORMap {
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.topic_id) " .
                 ($about_tags ? "LEFT JOIN blubber_tags ON (blubber_tags.topic_id = blubber.topic_id) " : "") .
+                "LEFT JOIN blubber_reshares ON (blubber_reshares.topic_id = blubber.topic_id) " .
             "WHERE " .
                 //pool
                 (count($pool_sql) ? "(1 != 1 OR ".implode(" OR ", $pool_sql).") " : "") .
@@ -306,6 +307,7 @@ class BlubberStream extends SimpleORMap {
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_tags ON (blubber_tags.topic_id = blubber.topic_id) " .
+                "LEFT JOIN blubber_reshares ON (blubber_reshares.topic_id = blubber.topic_id) " .
             "WHERE " .
                 //pool
                 (count($pool_sql) ? "(1 != 1 OR ".implode(" OR ", $pool_sql).") " : "") .
@@ -334,11 +336,12 @@ class BlubberStream extends SimpleORMap {
                 $parameters['pool_courses'] = $pool_courses;
             }
         }
-        if (count($this['pool_groups'])) {
+        if (count($this['pool_groups']) > 0) {
             $pool_users = $this->getUsersByGroups($this['pool_groups']);
             $pool_users[] = $GLOBALS['user']->id;
             if (count($pool_users)) {
                 $pool_sql[] = "blubber.user_id IN (:pool_users)";
+                $pool_sql[] = "blubber_reshares.user_id IN (:pool_users)";
                 $parameters['pool_users'] = $pool_users;
             }
         }
@@ -387,7 +390,8 @@ class BlubberStream extends SimpleORMap {
                 $filter_users = $filter_users + $this['filter_users'];
                 $filter_users = array_unique($filter_users);
             }
-            $filter_sql[] = "blubber.user_id IN (:filter_users)";
+            $filter_sql[] = "(blubber.user_id IN (:filter_users) OR blubber_reshares.user_id IN (:filter_users))";
+            
             $parameters['filter_users'] = $filter_users;
         }
         if (count($this['filter_hashtags']) > 0) {

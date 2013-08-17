@@ -21,7 +21,6 @@
 <input type="hidden" id="stream_time" value="<?= time() ?>">
 <input type="hidden" id="search" value="<?= htmlReady($search) ?>">
 <input type="hidden" id="browser_start_time" value="">
-<script>jQuery(function () { jQuery("#browser_start_time").val(Math.floor(new Date().getTime() / 1000)); });</script>
 <input type="hidden" id="loaded" value="1">
 <div id="editing_question" style="display: none;"><?= _("Wollen Sie den Beitrag wirklich bearbeiten?") ?></div>
 

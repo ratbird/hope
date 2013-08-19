@@ -53,7 +53,7 @@ class exportDoc extends SimpleORMap {
      * @var string Name of the produced file 
      */
     public $filename = "export";
-    private $elements;
+    private $elements = array();
     private $savedTemplates;
     private $formats;
     private $permission;
@@ -116,12 +116,26 @@ class exportDoc extends SimpleORMap {
      */
     public function loadTemplate($args) {
         $this->template = array_shift($args);
-        $this->params = $args;
+        $this->params = array_merge($args, Request::getArray('param'));
         $filename = __DIR__ . '/ExportAPI/templates/' . $this->template . '.xml';
-        if (!$tmp = simplexml_load_file($filename))
+        
+        // check if file exists and is well formed xml
+        if (!file_exists($filename) || !$tmp = simplexml_load_file($filename))
             return false;
+        $this->xml = preg_replace_callback("/\\$[0-9]+/", array($this, 'replace_params'), $tmp->asXML());
+                
         $tmp = $tmp->asXML();
-        $this->xml = preg_replace_callback("/\\$[0-9]+/", array($this, 'replace_params'), $tmp);
+        
+        $permissions = $this->getXML()->permissions;
+        if ($permissions) {
+            if ($permissions->context) {
+                if (!$GLOBALS['perm']->have_studip_perm((string) $permissions->usertype, (string) $permissions->context))
+                    return false;
+            } else {
+                if (!$GLOBALS['perm']->have_perm((string) $permissions->usertype))
+                    return false;
+            }
+        }
         return true;
     }
 
@@ -130,13 +144,16 @@ class exportDoc extends SimpleORMap {
      * 
      * @param string Typename of the requested element
      * 
-     * @return object new element
+     * @return mixed object of new element if found. Otherwise false
      */
     public function add($type) {
-        $classname = "export".ucfirst($type);
-        $result = new $classname;
-        $this->elements[] = $result;
-        return $result;
+        $classname = "export" . ucfirst($type);
+        if (class_exists($classname)) {
+            $result = new $classname;
+            $this->elements[] = $result;
+            return $result;
+        }
+        return false;
     }
 
     /**
@@ -225,10 +242,9 @@ class exportDoc extends SimpleORMap {
      * @return array Stringarray of all existing formats
      */
     private function loadExistingFormats() {
-        $formats = glob(__DIR__ . "/ExportAPI/formats/Export_*", GLOB_ONLYDIR);
+        $formats = glob(__DIR__ . "/ExportAPI/formats/Export*");
         foreach ($formats as &$name) {
-            $tmp = explode("Export_", $name);
-            $name = $tmp[1];
+            $name = substr(basename($name), 6, -4);
         }
         $this->formats['existing'] = $formats;
         return $formats;
@@ -275,9 +291,10 @@ class exportDoc extends SimpleORMap {
         if (!$this->elements) {
             $xml = $this->getXML();
             foreach ($xml->elements->children() as $child) {
-                $new = $this->add($child->getName());
-                $new->load($child);
-                $this->isEditable ? : $this->isEditable = $new->isEditable();
+                if ($new = $this->add($child->getName())) {
+                    $new->load($child);
+                    $this->isEditable ? : $this->isEditable = $new->isEditable();
+                }
             }
         }
     }
@@ -407,7 +424,7 @@ class exportDoc extends SimpleORMap {
         }
         return $this->context ? : false;
     }
-
+    
 }
 
 ?>

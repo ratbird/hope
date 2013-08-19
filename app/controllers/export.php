@@ -108,7 +108,11 @@ class exportController extends AuthenticatedController {
      */
     function export_action() {
         $export = new exportDoc();
-        $export->loadTemplate(func_get_args());
+        if (!$export->loadTemplate(func_get_args())) {
+            $this->render_action("error");
+                        return false;
+        }
+
         /* if (Request::getArray('edit')) {
           $export->editTemplate(Request::getArray('edit'));
           } */
@@ -118,7 +122,11 @@ class exportController extends AuthenticatedController {
 
     function save_action() {
         $export = new exportDoc();
-        $export->loadTemplate(func_get_args());
+        if (!$export->loadTemplate(func_get_args())) {
+            
+            $this->render_action("error");
+                        return false;
+        }
         $export->editTemplate(Request::getArray('edit'));
         $name = Request::get('templatename') ? : _("Neue Vorlage");
         $export->save(Request::get('format'), $name);

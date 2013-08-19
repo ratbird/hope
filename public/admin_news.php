@@ -178,6 +178,9 @@ if ($cmd=="news_submit") {
     $max_endtime = $starttime + $expire;
     if ($topic != "" && $add_range && $expire > 0) {
         $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $starttime, $expire, $add_range, $allow_comments);
+        if (!Visibility::exists('news')) {
+            Visibility::addPrivacySetting(_('Persönliche Ankündigungen'), 'news', 'commondata');
+        }
         if ($edit_news) {
             $cmd = "edit";
         } else {

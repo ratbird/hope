@@ -629,14 +629,14 @@ class Visibility
      * 
      * @return type true if the id exists. false if not
      */
-    public function exists($id, $user)
+    public static function exists($id, $user = null)
     {
         $where = self::prepareWhere($id, $user);
         $sql = "SELECT user_id FROM user_visibility_settings $where";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $result = $stmt->execute();
-        return $stmt->rowCount() > 0;
+        $stmt->execute();
+        return $stmt->rowCount();
     }
 }
 ?>

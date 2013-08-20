@@ -703,7 +703,8 @@ class AssignObject {
                         'repeat_day_of_month',
                         'repeat_day_of_month',
                         'repeat_week_of_month',
-                        'repeat_day_of_week') as $prop){
+                        'repeat_day_of_week',
+                        'comment_internal') as $prop){
             $new_assign->$prop = $this->$prop;
         }
         return $new_assign;

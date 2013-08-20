@@ -437,7 +437,6 @@ if ($change_object_schedules) {
                 $ChangeObjectPerms = ResourceObjectPerms::Factory($copy_to_resource_id);
                 if ($ChangeObjectPerms->havePerm("tutor")) {
                     $new_assign = $original_assign->getCopyForResource($copy_to_resource_id);
-                    $new_assign->setCommentInternal(Request::get('comment_internal'));
                     $overlaps = $new_assign->checkOverlap();
                     if ($overlaps) {
                         $bad_msg = _("Nicht buchbare Belegungszeiten:");

@@ -157,10 +157,27 @@ class exportTable extends exportElement {
                 case "database":
                     $this->loadFromDatabaseXML($element);
                     break;
+                case "head":
+                    $this->setHead($element);
+                case "content":
+                    $this->setContent($element);
                 default:
                     break;
             }
         }
+    }
+    
+    private function setHead($element) {
+        foreach ($element as $entry) {
+            $this->header[] = (string) $entry;
+        }
+    }
+    
+    private function setContent($element) {
+        foreach ($element as $entry) {
+            $new[] = (string) $entry;
+        }
+        $this->content[] = $new;
     }
 
     private function loadFromDatabaseXML($element) {

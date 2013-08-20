@@ -30,34 +30,13 @@ require_once 'app/models/media_proxy.php';
  *
  */
 class ExportPDF extends TCPDF
-{
-
-        public $content;
-
-    public function setContent($content) {
-        $this->content = $content;
-    }
-
-    public function export() {
-        $this->start();
-        foreach ($this->content as $element) {
-            $type = get_class($element);
-            if (method_exists($this, $type)) {
-                call_user_func(array($this, $type), $element);
-            } else {
-                call_user_func(array($this, "exportMissing"), $type);
-            }
-        }
-        $this->finish();
-    }
-    
-        
+{       
     public function start() {
         $this->addPage();
     }
     
     public function finish() {
-        $this->dispatch("test");
+        $this->dispatch($this->filename);
     }
     
     public function exportMissing($type) {

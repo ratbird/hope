@@ -12,7 +12,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-class ExportXLS extends exportFormat {
+class ExportXLS {
 
     private $worksheet;
     private $workbook;
@@ -90,13 +90,17 @@ class ExportXLS extends exportFormat {
         if ($content->header) {
             $this->worksheet->mergeCells('A1:' . $endcol . '1');
             $this->worksheet->getRowDimension(1)->setRowHeight(60);
-            $this->worksheet->setCellValueByColumnAndRow($this->colcount, $this->rowcount, utf8_encode($content->header));
+            $this->worksheet->setCellValueByColumnAndRow($this->colcount, $this->rowcount, $content->header);
             $this->rowcount++;
             $this->colcount = 1;
             $style = $this->worksheet->getStyle('A1');
             $style->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
             $style->getAlignment()->setWrapText(true);
         }
+
+        //set border
+        $style = $this->worksheet->getStyle('B' . (1 + $content->header) . ':' . (chr(65 + (count($content->day)))) . (count($content->getTimeAxis()) + 2));
+        $style->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_HAIR);
 
         $rowAfterHeader = $this->rowcount;
 
@@ -121,6 +125,7 @@ class ExportXLS extends exportFormat {
             $this->colcount++;
         }
 
+        //write entries
         if ($content->day) {
             foreach ($content->day as $key => $day) {
                 $endcol = "A";
@@ -133,7 +138,13 @@ class ExportXLS extends exportFormat {
                     $style->getAlignment()->setWrapText(true);
                     $stlye->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
                     $style->getFont()->setSize(6);
-                    $this->worksheet->setCellValueByColumnAndRow($this->colcount, $entryStartRow + $start, utf8_encode($event['content']));
+                    $style->getFill()->applyFromArray(
+                            array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'startcolor' => array('rgb' => 'F2F2F2'),
+                            )
+                    );
+                    $this->worksheet->setCellValueByColumnAndRow($this->colcount, $entryStartRow + $start, html_entity_decode(utf8_encode($event['content'])));
                     $merge = $endcol . ($entryStartRow + $start) . ':' . $endcol . ($entryStartRow + $event['end']);
                     $this->worksheet->mergeCells($merge);
                 }

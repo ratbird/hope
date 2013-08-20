@@ -20,7 +20,7 @@
  */
 class exportTimetable extends exportElement {
 
-    public $header = "Zeitplan&uuml;צהצ-";
+    public $header;
     public $timeMin = 8;
     public $timeMax = 22;
     public $timeSteps = 1;
@@ -48,6 +48,7 @@ class exportTimetable extends exportElement {
         $this->setDate($xml->date);
         $this->setDatabase($xml->database);
         $this->data = (string) $xml->data;
+        $this->header = (string) $xml->header;
         $this->getFromSQL();
     }
 

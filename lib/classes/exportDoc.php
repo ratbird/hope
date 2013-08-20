@@ -1,6 +1,4 @@
 <?php
-
-require_once "ExportAPI/exportFormat.php";
 require_once "ExportAPI/exportElement.php";
 require_once "ExportAPI/exportAutoloader.php";
 
@@ -169,9 +167,18 @@ class exportDoc extends SimpleORMap {
         $this->loadElements();
         $classname = "Export$format";
         $export = new $classname;
-        $export->setContent($this->elements);
+
         $export->filename = $this->filename;
-        $export->export();
+        $export->start();
+        foreach ($this->elements as $element) {
+            $type = get_class($element);
+            if (method_exists($export, $type)) {
+                call_user_func(array($export, $type), $element);
+            } else {
+                call_user_func(array($export, "exportMissing"), $type);
+            }
+        }
+        $export->finish();
     }
 
     /**

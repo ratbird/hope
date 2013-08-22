@@ -263,7 +263,7 @@ class EvalOverview {
                 $shareButton->addAttr("title", $isShared ? _("Die Freigabe für diese Evaluationsvorlage entziehen") : _("Diese Evaluationsvorlage öffentlich freigeben"));
 
                 $content[0] = $shareButton;
-                $content[3] = Button::create(_('kopie erstellen'), 'copy_own_template_button', array('title' => _('Evaluationsvorlage kopieren')));
+                $content[3] = Button::create(_('Kopie erstellen'), 'copy_own_template_button', array('title' => _('Evaluationsvorlage kopieren')));
 
                 $content[4] = LinkButton::create(_('Bearbeiten'), URLHelper::getURL("admin_evaluation.php?page=edit&evalID=" . $evalID), array('title' => _('Evaluation bearbeiten')));
 

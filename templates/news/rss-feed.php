@@ -10,7 +10,7 @@
         </image>
         <description><?= htmlReady(studip_utf8encode($description)) ?></description>
         <lastBuildDate><?= date('r',$last_changed) ?></lastBuildDate>
-        <generator><?= htmlReady(studip_utf8encode('Stud.IP - ' . $GLOBALS['SOFTWARE_VERSION'])) ?></generator>";
+        <generator><?= htmlReady(studip_utf8encode('Stud.IP - ' . $GLOBALS['SOFTWARE_VERSION'])) ?></generator>
 <? foreach ($items as $id => $item): ?>
         <item>
             <title><?= htmlReady(studip_utf8encode($item['topic'])) ?></title>

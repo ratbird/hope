@@ -29,6 +29,16 @@ class PluginManager
     private $rolemgmt;
 
     /**
+     * cache of activated plugins by context
+     */
+    private $plugins_activated_cache = array();
+
+    /**
+     * cache of plugin default activations
+     */
+    private $plugins_default_activations_cache = array();
+
+    /**
      * Returns the PluginManager singleton instance.
      */
     public static function getInstance ()
@@ -157,38 +167,41 @@ class PluginManager
     public function isPluginActivated ($id, $context)
     {
         $plugin_class = $this->plugins[$id]['class'];
-        
-        $query = "SELECT 1 "
-               . "FROM plugins_default_activations "
-               . "JOIN seminar_inst ON (institutid = institut_id) "
-               . "WHERE pluginid = ? AND seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($id, $context));
-        $inst_default = $statement->fetchColumn();
-
-        $query = "SELECT state "
-               . "FROM plugins_activated "
-               . "WHERE pluginid = ? AND (poiid = CONCAT('sem', ?) OR poiid = CONCAT('inst', ?))";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($id, $context, $context));
-        $state = $statement->fetchColumn();
-        
-        $statement = DBManager::get()->prepare(
-            "SELECT status FROM seminare WHERE Seminar_id = :seminar_id " .
-        "");
-        $statement->execute(array('seminar_id' => $context));
-        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$statement->fetch(PDO::FETCH_COLUMN, 0)]['class']];
-        if ($sem_class) {
-            $modules = $sem_class->getModules();
-            $sem_class_default = $modules[$plugin_class]['activated'];
-            $mandatory = $modules[$plugin_class]['sticky'] && $sem_class_default;
-            $forbidden = $modules[$plugin_class]['sticky'] && !$sem_class_default;
+        if (!$context) return;
+        if (!isset($this->plugins_activated_cache[$context])) {
+            $query = "SELECT pluginid, state "
+                   . "FROM plugins_activated "
+                   . "WHERE (poiid = CONCAT('sem', ?) OR poiid = CONCAT('inst', ?))";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($context, $context));
+            $this->plugins_activated_cache[$context] = $statement->fetchGrouped(PDO::FETCH_COLUMN);
         }
-
-        return ((($inst_default || $sem_class_default) && $state !== 'off' || $state === 'on') && !$forbidden) 
+        $state = $this->plugins_activated_cache[$context][$id];
+        if (get_object_type($context, array('sem')) === 'sem') {
+            if (!$state) {
+                if (!isset($this->plugins_default_activations_cache[$context])) {
+                    $query = "SELECT pluginid, 'on' as state "
+                        . "FROM plugins_default_activations "
+                        . "JOIN seminar_inst ON (institutid = institut_id) "
+                        . "WHERE seminar_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($context));
+                    $this->plugins_default_activations_cache[$context] = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+                }
+                $inst_default = $this->plugins_default_activations_cache[$context][$id];
+            }
+            $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][Seminar::GetInstance($context)->status]['class']];
+            if ($sem_class) {
+                $modules = $sem_class->getModules();
+                $sem_class_default = $modules[$plugin_class]['activated'];
+                $mandatory = $modules[$plugin_class]['sticky'] && $sem_class_default;
+                $forbidden = $modules[$plugin_class]['sticky'] && !$sem_class_default;
+            }
+        }
+        return ((($inst_default || $sem_class_default) && $state !== 'off' || $state === 'on') && !$forbidden)
             || $mandatory;
     }
-    
+
     /**
      * Get the activation status of a plugin for the given user.
      * This also checks the plugin default activations and sem_class-settings.
@@ -201,22 +214,25 @@ class PluginManager
         if (!$userId) {
             $userId = $GLOBALS['user']->id;
         }
+        if (!isset($this->plugins_activated_cache[$userId])) {
+            $query = "SELECT pluginid, state "
+                   . "FROM plugins_activated "
+                   . "WHERE poiid = CONCAT('user', ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($userId));
+            $this->plugins_activated_cache[$userId] = $statement->fetchGrouped(PDO::FETCH_COLUMN);
 
-        $query = "SELECT state "
-               . "FROM plugins_activated "
-               . "WHERE pluginid = ? AND poiid = CONCAT('user', ?)";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($pluginId, $userId));
-        $state = $statement->fetchColumn();
+        }
+        $state = $this->plugins_activated_cache[$userId][$pluginId];
         if (!$state) {
             $activated = get_config('HOMEPAGEPLUGIN_DEFAULT_ACTIVATION') ? true : false;
         } else {
             $activated = ($state === 'on');
         }
-        
+
         return $activated;
     }
-    
+
         /**
      * Sets the activation status of a plugin in the given context.
      *
@@ -229,7 +245,7 @@ class PluginManager
     {
         $db = DBManager::get();
         $state = $active ? 'on' : 'off';
-
+        unset($this->plugins_activated_cache[$rangeId]);
         return $db->exec("REPLACE INTO plugins_activated (pluginid, poiid, state)
                    VALUES ('$id', '$context$rangeId', '$state')");
     }
@@ -266,7 +282,7 @@ class PluginManager
 
         $stmt = $db->prepare("INSERT INTO plugins_default_activations
                               (pluginid, institutid) VALUES (?,?)");
-
+        $this->plugins_default_activations_cache = array();
         foreach ($institutes as $instid) {
             $stmt->execute(array($id, $instid));
         }
@@ -356,12 +372,12 @@ class PluginManager
      */
     public function registerPlugin ($name, $class, $path, $depends = NULL)
     {
-        
+
         $db = DBManager::get();
         $info = $this->getPluginInfo($class);
         $type = $this->getPluginType($class, $path);
         $position = 1;
-        
+
         // plugin must implement at least one interface
         if (count($type) == 0) {
             return NULL;
@@ -433,6 +449,8 @@ class PluginManager
             $db->exec("DELETE FROM roles_plugins WHERE pluginid = '$id'");
 
             unset($this->plugins[$id]);
+            $this->plugins_default_activations_cache = array();
+            $this->plugins_activated_cache = array();
         }
     }
 
@@ -532,7 +550,7 @@ class PluginManager
         }
 
         $plugin_class = $this->loadPlugin($class, $path);
-        
+
         if ($plugin_class) {
             $plugin = $plugin_class->newInstance();
         }
@@ -591,7 +609,7 @@ class PluginManager
         usort($plugin_info, array('self', 'positionCompare'));
 
         foreach ($plugin_info as $info) {
-            $activated = $context == NULL 
+            $activated = $context == NULL
                 || $this->isPluginActivated($info['id'], $context);
 
             if ($this->checkUserAccess($info, $user) && $activated) {

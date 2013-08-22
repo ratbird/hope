@@ -477,7 +477,7 @@ function get_object_type($id, $check_only = array())
     }
 
     // Read from cache if available
-    if ($object_type_cache[$id]) {
+    if (isset($object_type_cache[$id])) {
         return $object_type_cache[$id];
     }
 

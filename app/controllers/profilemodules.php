@@ -15,7 +15,7 @@
  * @since       2.4
  */
 
- 
+
 require_once 'app/controllers/authenticated_controller.php';
 
 /**
@@ -30,7 +30,7 @@ class ProfileModulesController extends AuthenticatedController {
     /**
      * This function is called before any output is generated or any other
      * actions are performed. Initializations happen here.
-     * 
+     *
      * @param $action Name of the action to perform
      * @param $args   Arguments for the given action
      */
@@ -79,7 +79,7 @@ class ProfileModulesController extends AuthenticatedController {
         foreach ($this->plugins as $plugin) {
             // Check local activation status.
             $id = $plugin->getPluginId();
-            $activated = PluginManager::isPluginActivatedForUser($id, $this->user_id);
+            $activated = PluginManager::getInstance()->isPluginActivatedForUser($id, $this->user_id);
             $this->modules[$id] = array(
                     'id' => $id,
                     'name' => $plugin->getPluginName(),
@@ -102,9 +102,9 @@ class ProfileModulesController extends AuthenticatedController {
         foreach ($this->plugins as $plugin) {
             // Check local activation status.
             $id = $plugin->getPluginId();
-            $activated = PluginManager::isPluginActivatedForUser($id, $this->user_id);
+            $activated = PluginManager::getInstance()->isPluginActivatedForUser($id, $this->user_id);
             if ((!$activated && Request::get('module_'.$id)) || ($activated && !Request::get('module_'.$id))) {
-                $updated = PluginManager::setPluginActivated($id, $this->user_id, Request::get('module_'.$id), 'user');
+                $updated = PluginManager::getInstance()->setPluginActivated($id, $this->user_id, Request::get('module_'.$id), 'user');
                 $success = ($success === '' ? true : $success) && $updated;
                 if ($updated) {
                     $this->modules[$id]['activated'] = Request::get('module_'.$id);

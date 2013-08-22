@@ -63,9 +63,9 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
         $navigation->setTitle($this->getDisplayTitle());
 
         // Check activation for user and display if appropriate.
-        if (Navigation::hasItem('/profile') && 
+        if (Navigation::hasItem('/profile') &&
             is_object($this->getRequestedUser()) && $GLOBALS['perm']->have_profile_perm('user', $this->getRequestedUser()->getUserid()) &&
-            PluginManager::isPluginActivatedForUser($this->getPluginId(), $this->getRequestedUser()->getUserid())) {
+            PluginManager::getInstance()->isPluginActivatedForUser($this->getPluginId(), $this->getRequestedUser()->getUserid())) {
             Navigation::addItem('/profile/' . $this->getPluginclassname(), $navigation);
         }
     }

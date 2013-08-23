@@ -2,6 +2,7 @@
 div.messagebox {
     background: no-repeat 10px 10px;
     border: 1px solid;
+    border-radius: 3px;
     font-size: 12pt;
     font-weight: bold;
     margin: 5px;
@@ -59,11 +60,11 @@ div.messagebox_details {
     }
 }
 
-.messagebox("info",      #000,    #d8e3fc, #4b6fcb);
-.messagebox("success",   #000,    #dcf1da, #4b8847);
-.messagebox("error",     #000,    #ffdddc, #c74039);
-.messagebox("exception", #d8000c, #ffbaba);
-.messagebox("warning",   #b06500, #f7e98e, #b06500, "advice");
+.messagebox("info",      #000,    #d8e3fc, #b6c1da);
+.messagebox("success",   #000,    #dcf1da, #bad0b8);
+.messagebox("error",     #000,    #ffdddc, #ddbbba);
+.messagebox("exception", #d8000c, #ffbaba, #ddbbba);
+.messagebox("warning",   #b06500, #f7e98e, #d5c76c, "advice");
 
 // Define modal messagebox
 .modaloverlay {

@@ -14,7 +14,11 @@ STUDIP.Markup = {
             elements = jQuery(selector);
         }
         jQuery.each(elements, function (index, element) {
-            STUDIP.Markup.math_jax(element[0]);
+            jQuery.each(STUDIP.Markup, function (index, func) {
+                if ((index !== "element") || typeof func === "function") {
+                    func(element[0]);
+                }
+            });
         });
     },
     math_jax: function (element) {

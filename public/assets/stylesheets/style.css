@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -2898,7 +2898,7 @@ textarea.wiki-editor {
 .pagination .next a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
 }
-/* --- Schrift (Vorgaben: Typ, Größe, Farbe) -------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe) -------------------------------- */
 body,
 input,
 textarea {
@@ -2926,10 +2926,41 @@ body {
   background-repeat: repeat-x;
   margin: 0;
 }
+/* --- ï¿½berschriften -------------------------------------------------------- */
 h1,
 h2,
 h3 {
   font-weight: bold;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #444444;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  width: 80%;
+}
+h1 {
+  margin-top: 0px;
+  font-size: 2em;
+  padding-left: 10px;
+}
+h2 {
+  font-size: 1.7em;
+}
+h3 {
+  font-size: 1.4em;
+}
+h4 {
+  font-size: 1.1em;
+}
+h3,
+h4,
+h5,
+h6 {
+  border-bottom: none;
 }
 h1 + br,
 h2 + br,
@@ -2973,19 +3004,6 @@ input.placeholder {
 }
 ::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.7);
-}
-/* --- Überschriften -------------------------------------------------------- */
-h1.content,
-h2.content,
-h3.content {
-  color: #24437c;
-}
-hr.content {
-  margin: 0 1em;
-  background-color: #555555;
-  border-radius: 5px;
-  height: 1px;
-  border: none;
 }
 table.content {
   border-collapse: collapse;

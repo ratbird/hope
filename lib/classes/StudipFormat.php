@@ -415,7 +415,7 @@ class StudipFormat extends TextFormat
             $title = _('Zitat:');
         }
 
-        return sprintf('<blockquote class="quote"><b>%s</b><hr>%s</blockquote>',
+        return sprintf('<blockquote><div class="author">%s</div>%s</blockquote>',
                        $title, trim($contents));
     }
 

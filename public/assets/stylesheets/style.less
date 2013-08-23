@@ -64,8 +64,22 @@ body {
 h1, h2, h3 { font-weight: bold; }
 
 blockquote {
-    margin: 0;
-    padding: 10px;
+    border-left: 3px solid @brand-color-lighter;
+    padding: 5px;
+    margin: 8px;
+    padding-left: 10px;
+    margin-left: 12px;
+    background-color: rgba(0,0,0,0.05);
+    > .author {
+    	background-color: @brand-color-lighter;
+        margin-left: -10px;
+        padding-left: 10px;
+        margin-right: -5px;
+        padding-right: 5px;
+        color: white;
+        margin-top: -5px;
+        margin-bottom: 5px;
+    }
 }
 
 dd { margin-left: 1.5em; }
@@ -353,14 +367,6 @@ h1:hover, h2:hover, h3:hover, h4:hover {
 
 img.bookable_rooms_action { display: none; }
 
-.quote {
-    background: #eee none;
-    border: 1px solid black;
-    margin-left: 20px;
-    margin-right: 20px;
-    overflow-x: auto;
-    padding: 3px;
-}
 
 .code_header {
     text-transform: uppercase;

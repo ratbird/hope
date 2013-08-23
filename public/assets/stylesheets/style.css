@@ -2931,8 +2931,22 @@ h3 {
   font-weight: bold;
 }
 blockquote {
-  margin: 0;
-  padding: 10px;
+  border-left: 3px solid #899ab9;
+  padding: 5px;
+  margin: 8px;
+  padding-left: 10px;
+  margin-left: 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+blockquote > .author {
+  background-color: #899ab9;
+  margin-left: -10px;
+  padding-left: 10px;
+  margin-right: -5px;
+  padding-right: 5px;
+  color: white;
+  margin-top: -5px;
+  margin-bottom: 5px;
 }
 dd {
   margin-left: 1.5em;
@@ -3258,14 +3272,6 @@ h4:hover .arrow_right {
 }
 img.bookable_rooms_action {
   display: none;
-}
-.quote {
-  background: #eee none;
-  border: 1px solid black;
-  margin-left: 20px;
-  margin-right: 20px;
-  overflow-x: auto;
-  padding: 3px;
 }
 .code_header {
   text-transform: uppercase;

@@ -2930,6 +2930,16 @@ h2,
 h3 {
   font-weight: bold;
 }
+h1 + br,
+h2 + br,
+h3 + br,
+h4 + br,
+h5 + br,
+h6 + br,
+ul + br,
+table + br {
+  display: none;
+}
 blockquote {
   border-left: 3px solid #899ab9;
   padding: 5px;

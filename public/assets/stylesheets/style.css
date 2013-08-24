@@ -136,6 +136,9 @@ table.links1 {
 table.logintable {
   background-image: url("../images/login.jpg");
 }
+table.logintable h1 {
+  border-bottom: 0;
+}
 table.toolbar {
   background-color: #e3eaf6;
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cdd9ed), color-stop(40%, #e3eaf6), to(#e3eaf6));

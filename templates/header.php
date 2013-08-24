@@ -83,8 +83,8 @@
                 </div>
                 <? if (PersonalNotifications::isAudioActivated()) : ?>
                 <audio id="audio_notification" preload="none">
-                    <source src="<?= Assets::url('sounds/30341__junggle__waterdrop24.ogg') ?>" type="audio/ogg">
-                    <source src="<?= Assets::url('sounds/30341__junggle__waterdrop24.mp3') ?>" type="audio/mpeg">
+                    <source src="<?= Assets::url('sounds/blubb.ogg') ?>" type="audio/ogg">
+                    <source src="<?= Assets::url('sounds/blubb.mp3') ?>" type="audio/mpeg">
                 </audio>
                 <? endif ?>
             </li>

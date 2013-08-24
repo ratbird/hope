@@ -19,7 +19,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
 
-    <table class="default">
+    <table class="default" id="settings-notifications">
         <colgroup>
             <col width="7px">
             <col>
@@ -29,7 +29,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th colspan="2" width="90%"><?= _('Veranstaltung') ?></th>
+                <th colspan="2"><?= _('Veranstaltung') ?></th>
             <? foreach ($modules as $name => $data): ?>
                 <th>
                     <?= Assets::img(module_icon($name), array('class' => 'middle', 'title' => $data['name'])) ?>
@@ -78,7 +78,7 @@
     <? if (isset($open[$id])): ?>
         <? foreach ($members as $member): ?>
             <tr>
-                <td style="width:1px" class="gruppe<?= $seminars[$member['seminar_id']]['gruppe'] ?>">&nbsp;</td>
+                <td class="gruppe<?= $seminars[$member['seminar_id']]['gruppe'] ?>">&nbsp;</td>
                 <td>
                     <a href="seminar_main.php?auswahl=<?= $member['seminar_id'] ?>">
                         <?= htmlReady(my_substr($seminars[$member['seminar_id']]['name'], 0, 70)) ?>
@@ -96,7 +96,7 @@
                 </td>
             <? endforeach; ?>
                 <td>
-                    <input type="checkbox" name="all[rows][]" value="<?= $members['seminar_id'] ?>"
+                    <input type="checkbox" name="all[rows][]" value="<?= $member['seminar_id'] ?>"
                            <? if (count(array_filter($checked[$member['seminar_id']])) == count($modules) + 1) echo 'checked'; ?>>
                 </td>
             </tr>

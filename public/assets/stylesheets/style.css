@@ -375,14 +375,23 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
   background-color: #000 !important;
 }
 #my_seminars .gruppe0,
+#settings-notifications .gruppe0,
 #my_seminars .gruppe1,
+#settings-notifications .gruppe1,
 #my_seminars .gruppe2,
+#settings-notifications .gruppe2,
 #my_seminars .gruppe3,
+#settings-notifications .gruppe3,
 #my_seminars .gruppe4,
+#settings-notifications .gruppe4,
 #my_seminars .gruppe5,
+#settings-notifications .gruppe5,
 #my_seminars .gruppe6,
+#settings-notifications .gruppe6,
 #my_seminars .gruppe7,
-#my_seminars .gruppe9 {
+#settings-notifications .gruppe7,
+#my_seminars .gruppe9,
+#settings-notifications .gruppe9 {
   width: 1px;
 }
 .grey {

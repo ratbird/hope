@@ -21,7 +21,7 @@
                 <?= sprintf(_('Zuletzt geändert von %s am %s'),
                             sprintf('<a href="%s">%s</a>',
                                     URLHelper::getLink('dispatch.php/profile?username=' . $scm->user->username),
-                                    $scm->user->getFullName('full')),
+                                    htmlReady($scm->user->getFullName('full'))),
                             strftime('%x, %X', $scm->chdate)) ?>
             </td>
         </tr>

@@ -42,7 +42,7 @@
 }(jQuery));
 
 //
-$('.notification.settings :checkbox').live('change', function () {
+$('#settings-notifications :checkbox').live('change', function () {
     var name = $(this).attr('name');
     
     if (name === 'all[all]') {

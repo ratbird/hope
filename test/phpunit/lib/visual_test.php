@@ -188,7 +188,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testQuote()
     {
         $input = '[quote=__Anonymous__]some text[/quote]';
-        $expected = '<blockquote class="quote">'
+        $expected = '<blockquote>'
                    .'<b><u>Anonymous</u> hat geschrieben:</b><hr>some text'
                    .'</blockquote>';
         $this->assertEquals($expected, formatReady($input));

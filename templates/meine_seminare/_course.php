@@ -16,13 +16,15 @@ foreach ($group_members as $member) {
             <td class="gruppe<?= $values['gruppe'] ?>"></td>
 
             <td>
-                <? if ($studygroup_mode) { ?>
-                    <?= (StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))) !='' ? Assets::img('icons/20/blue/studygroup.png') : 
-                    	StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname'])))) ?>
-                <? } else { ?>
-                    <?= (CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))) != '' ? Assets::img('icons/20/blue/seminar.png') : 
-                    	CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))))?>
-                <? } ?>
+            <? if ($studygroup_mode): ?>
+                <?= StudygroupAvatar::getAvatar($semid)->is_customized()
+                       ? StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname'])))
+                       : Assets::img('icons/20/blue/studygroup.png') ?>
+            <? else: ?>
+                <?= CourseAvatar::getAvatar($semid)->is_customized()
+                       ? CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname'])))
+                       : Assets::img('icons/20/blue/seminar.png') ?>
+            <? endif; ?>
             </td>
 
             <td align="left">

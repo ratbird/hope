@@ -15,7 +15,7 @@
     <td style="white-space: nowrap;">
         <?= ucfirst(reltime(time() - $user['last_action'])) ?>
     </td>
-    <td class="actions">
+    <td class="actions" nowrap="nowrap">
     <? if (class_exists("Blubber")) : ?>
         <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/global', array('mention' => $user['username'])) ?>">
             <?= Assets::img('icons/16/blue/blubber.png', array('title' => _('Blubber diesen Nutzer an'))) ?>

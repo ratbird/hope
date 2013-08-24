@@ -28,7 +28,7 @@
         ?>
             <? if ($showGroups && $last_group !== $buddy['group']): ?>
             <tr>
-                <th class="blue_gradient" colspan="4">
+                <th colspan="4">
                     <a href="<?= URLHelper::getLink('contact.php?view=gruppen',
                                                     array('filter' => $buddy['group_id'])) ?>"
                        class="link-intern" style="color: #000;">

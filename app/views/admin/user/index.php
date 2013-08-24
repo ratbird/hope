@@ -72,7 +72,7 @@ use Studip\Button, Studip\LinkButton;
     <tr class="table_header header-row">
         <th colspan="4" class="toggle-indicator">
             <a class="toggler" href="<?= $controller->url_for('admin/user/')?><?= ($advanced) ? '' : 'index/advanced' ?>" title="<?= _('Zusätzliche Suchfelder ein-/ausblenden') ?>">
-                <b><?= _('Erweiterte Suche')?></b>
+                <?= _('Erweiterte Suche')?>
             </a>
         </th>
     </tr>

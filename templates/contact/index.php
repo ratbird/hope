@@ -1,6 +1,6 @@
 <form action="<?= URLHelper::getLink('?cmd=search#anker') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default">
+    <table width="100%">
         <tr>
             <td>
         <? if ($size_of_book): ?>
@@ -18,26 +18,20 @@
         <? endif; ?>
             </td>
             <td align="right">
+			<span class="actions">
             <? if (!$search_exp || !$search_results): ?>
-                <label>
                     <?=  _('Person zum Eintrag in das Adressbuch suchen:') ?>
                     <input type="text" name="search_exp" value="<?= htmlReady($search_exp) ?>">
-                </label>
-                <input type="image" name="search" border="0"
-                       src="<?= Assets::image_path('icons/16/blue/search') ?>"
-                       value="<?= _('Personen suchen') ?>"
-                       <?= tooltip(_('Person suchen')) ?>>
+                    <?= Assets::input('icons/16/blue/search',  array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "search", 'title' => _('Neue Suche'))) ?>
                 &nbsp;
             <? elseif ($search_results): ?>
-                <input type="image" name="addsearch"
-                       src="<?= Assets::image_path('icons/16/yellow/arr_2down') ?>"
-                       value="<?= _('In Adressbuch eintragen') ?>"
-                       <?= tooltip(_('In Adressbuch eintragen')) ?>>
-                <?= $search_results ?>
+                <?= Assets::input('icons/16/blue/arr_2down',  array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "addsearch", 'title' => _('In Adressbuch eintragen'))) ?>
+              <?= $search_results ?>
                 <a href="<?= URLHelper::getLink() ?>">
                     <?= Assets::img('icons/16/blue/refresh', tooltip2(_('Neue Suche'))) ?>
                 </a>
             <? endif; ?>
+            </span>
             </td>
         </tr>
     <? // TODO: Get rid of this.
@@ -49,9 +43,9 @@
     </table>
 </form>
 
-<table align="center" class="default">
+<table align="center">
     <tr>
-        <td align="middle" class="lightgrey">
+        <td align="middle" >
 
         <? if ($contact['view'] == 'alpha'): ?>
             <?= $this->render_partial('contact/header-alpha') ?>

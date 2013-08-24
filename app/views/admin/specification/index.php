@@ -11,29 +11,32 @@
     <?= createQuestion(sprintf(_('Wollen Sie die Regel "%s" wirklich löschen?'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/specification/delete/'.$flash['delete']['lock_id'])) ?>
 <? endif; ?>
 
-<h3>
-    <?= _('Verwaltung von Zusatzangaben') ?>
-</h3>
 <table class="default">
+    <caption>
+        <?= _('Verwaltung von Zusatzangaben') ?>
+    </caption>
     <colgroup>
         <col width="45%">
         <col width="45%">
         <col width="10%">
     </colgroup>
+    <thead>
     <tr>
         <th><?= _('Name') ?></th>
         <th><?= _('Beschreibung') ?></th>
         <th><?= _('Aktionen') ?></th>
     </tr>
+    </thead>
+    <tbody>
    <? foreach ($allrules as $index=>$rule) : ?>
-    <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+    <tr>
         <td>
             <?= htmlReady($rule['name']) ?>
         </td>
         <td>
             <?= htmlReady($rule['description']) ?>
         </td>
-        <td align="right">
+        <td class="actions">
             <a href="<?=$controller->url_for('admin/specification/edit/'.$rule['lock_id']) ?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Regel bearbeiten'))) ?>
             </a>
@@ -43,6 +46,7 @@
         </td>
     </tr>
     <? endforeach ?>
+    </tbody>
 </table>
 
 <? //infobox

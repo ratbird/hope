@@ -23,21 +23,23 @@ use Studip\Button, Studip\LinkButton;
 </form>
 
 <? if (!empty($role)): ?>
-    <h3>
-        <?= sprintf(_('Liste der Benutzer mit der Rolle "%s"'), htmlReady($role->getRolename())) ?>
-    </h3>
 
     <? if (count($users) > 0): ?>
         <? $index = 0 ?>
         <table class="default">
+        <caption>
+            <?= sprintf(_('Liste der Benutzer mit der Rolle "%s"'), htmlReady($role->getRolename())) ?>
+        </caption>
+        <thead>
             <tr>
                 <th style="width: 3%;"></th>
                 <th style="width: 40%;"><?= _('Name') ?></th>
                 <th><?= _('Status') ?></th>
             </tr>
-
+        </thead>
+        <tbody>
             <? foreach ($users as $user): ?>
-                <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+                <tr>
                     <td style="text-align: right;">
                         <?= ++$index ?>.
                     </td>
@@ -51,26 +53,30 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                 </tr>
             <? endforeach ?>
+        </tbody>
         </table>
+        <br>
     <? else: ?>
         <?= MessageBox::info(_('Es wurden keine Benutzer gefunden.')) ?>
     <? endif ?>
 
-    <h3>
-        <?= sprintf(_('Liste der Plugins mit der Rolle "%s"'), htmlReady($role->getRolename())) ?>
-    </h3>
 
     <? if (count($plugins) > 0): ?>
         <? $index = 0 ?>
         <table class="default">
+        <caption>
+            <?= sprintf(_('Liste der Plugins mit der Rolle "%s"'), htmlReady($role->getRolename())) ?>
+        </caption>
+        <thead>
             <tr>
                 <th style="width: 3%;"></th>
                 <th style="width: 40%;"><?= _('Name') ?></th>
                 <th><?= _('Typ') ?></th>
             </tr>
-
+        </thead>
+        <tbody>
             <? foreach ($plugins as $plugin): ?>
-                <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+                <tr>
                     <td style="text-align: right;">
                         <?= ++$index ?>.
                     </td>
@@ -84,6 +90,7 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                 </tr>
             <? endforeach ?>
+        </tbody>
         </table>
     <? else: ?>
         <?= MessageBox::info(_('Es wurden keine Plugins gefunden.')) ?>

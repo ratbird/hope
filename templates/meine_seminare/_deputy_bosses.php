@@ -1,13 +1,11 @@
 <?
 # Lifter010: TODO
 ?>
-<table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank zebra-hover">
-    <thead>
-        <tr>
-            <th align="left"><?= _("Personen, deren Standardvertretung ich bin") ?></th>
-        </tr>
-    </thead>
-    <tbody>
+<table class "default">
+    <caption>
+		<?=_("Personen, deren Standardvertretung ich bin") ?>
+	</caption>      
+   <tbody>
     <?
     $deputies_edit_about_enabled = get_config('DEPUTIES_EDIT_ABOUT_ENABLE');
     foreach ($my_bosses as $boss) { ?>

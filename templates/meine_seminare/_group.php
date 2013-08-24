@@ -2,88 +2,68 @@
 # Lifter010: TODO
 sort_groups($group_field, $groups);
 $group_names = get_group_names($group_field, $groups);
-foreach ($groups as $group_id => $group_members) {
-    if ($group_field == 'not_grouped') {
+$_my_sem_open['not_grouped'] = $group_field === 'not_grouped';
 
-        $_my_sem_open['not_grouped'] = true;
-
-    } else {
+foreach ($groups as $group_id => $group_members):
+    if (!$_my_sem_open['not_grouped']): 
         $last_modified = check_group_new($group_members, $my_obj);
-        ?>
+?>
+    <tbody class="toggleable <? if (!isset($_my_sem_open[$group_id])) echo 'toggled'; ?>">
         <tr>
-            <td class="blank" colspan="<?= $view == 'ext' ? 7 : 5 ?>">
-                <?= Assets::img("blank.gif", array("size" => "1@5", "style" => "display: block;")) ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="blue_gradient" valign="bottom" nowrap height="20" colspan="2">
-                <?= Assets::img("blank.gif", array("size" => "1@20")) ?>
-                <? if (isset($_my_sem_open[$group_id])) { ?>
-
-                    <a class="tree" style="font-weight:bold;" name="<?= $group_id ?>"
+            <th nowrap colspan="2">
+                <? if (isset($_my_sem_open[$group_id])): ?>
+                    <a class="toggle-switch"
                        href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, 'close_my_sem' => $group_id)) ?>"
-                       <?= tooltip(_("Gruppierung schließen"), true) ?>>
+                       title="<?= _('Gruppierung schließen') ?>">
 
-                        <?= Assets::img($last_modified ? 'icons/16/red/arr_1down.png' : 'icons/16/grey/arr_1down.png') ?>
+                        <?= _('Gruppierung schließen') ?>
                     </a>
-                <? } else { ?>
-                    <a class="tree" name="<?= $group_id ?>"
+                <? else: ?>
+                    <a class="toggle-switch"
                        href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, 'open_my_sem' => $group_id)) ?>"
-                       <?= tooltip(_("Gruppierung öffnen"), true) ?>>
+                       title="<?= _('Gruppierung öffnen') ?>">
 
-                        <?= Assets::img($last_modified ? 'icons/16/red/arr_1right.png' : 'icons/16/grey/arr_1right.png') ?>
+                        <?= _('Gruppierung öffnen') ?>
                     </a>
-                <?
-
-                }
-
+                <? endif; ?>
+				<?
                 if (is_array($group_names[$group_id])) {
                     $group_name = $group_names[$group_id][1]
-                                  ? $group_names[$group_id][1] . " > " . $group_names[$group_id][0]
+                                  ? $group_names[$group_id][1] . ' > ' . $group_names[$group_id][0]
                                   : $group_names[$group_id][0];
                 } else {
                     $group_name = $group_names[$group_id];
                 }
                 ?>
 
-            </td>
+            </th>
+            <th colspan="<?= $view == 'ext' ? 3 : 1 ?>">
 
-            <td class="blue_gradient" align="left" valign="middle"
-                colspan="<?= $view == 'ext' ? 3 : 1 ?>">
-
-                <a class="tree" <?= $_my_sem_open[$group_id] ? 'style="font-weight:bold"' : '' ?>
+                <a class="tree"
                    name="<?= $group_id ?>"
                    href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, ($_my_sem_open[$group_id] ? 'close_my_sem' : 'open_my_sem' ) => $group_id)) ?>"
-                   <?= tooltip(_("Gruppierung öffnen"), true) ?>>
+                   title="<?= _('Gruppierung öffnen') ?>">
 
                     <?= htmlReady($group_field == "sem_tree_id" ? $group_names[$group_id][0] : $group_names[$group_id]) ?>
                 </a>
 
-                <? if ($group_field == "sem_tree_id") { ?>
-                    <br>
-                    <span style="font-size:0.8em">
-                        <sup><?= htmlReady($group_name) ?></sup>
-                    </span>
-                <? } ?>
-            </td>
+            <? if ($group_field == "sem_tree_id"): ?>
+                <br>
+                <small>
+                    <sup><?= htmlReady($group_name) ?></sup>
+                </small>
+            <? endif; ?>
+            </th>
 
-            <td class="blue_gradient" align= "right" valign="top" colspan="4" nowrap>
-            <? if ($last_modified) { ?>
-                <span style="font-size:0.8em">
-                    <sup><?= _("letzte Änderung:") ?></sup>
-                </span>
-
-                <span style="color:red;font-size:0.8em">
-                    <sup><?= strftime("%x, %H:%M", $last_modified) ?></sup>
-                </span>
-            <? } ?>
-            </td>
-
+            <th colspan="4">
+            <? if ($last_modified): ?>
+                <?= tooltipIcon(_('Letzte Änderung: ') . strftime('%x, %H:%M', $last_modified), true) ?>
+            <? endif; ?>
+            </th>
         </tr>
-    <?
-    }
-
-    if (isset($_my_sem_open[$group_id])) {
-        echo $this->render_partial("meine_seminare/_course", compact("group_members"));
-    }
-}
+    <? endif; ?>
+    <? if (isset($_my_sem_open[$group_id])): ?>
+        <?= $this->render_partial('meine_seminare/_course', compact('group_members')) ?>
+    <? endif; ?>
+    </tbody>
+<? endforeach; ?>

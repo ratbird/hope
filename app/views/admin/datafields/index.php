@@ -11,10 +11,11 @@
     <?= createQuestion(sprintf(_('Wollen Sie das Datenfeld "%s" wirklich löschen? Bedenken Sie bitte, dass noch Einträge dazu existieren können'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/datafields/delete'.'/'.$flash['delete']['datafield_id'])); ?>
 <? endif; ?>
 
-<h3><?= _('Verwaltung von generischen Datenfeldern') ?></h3>
-
 <!-- Alle Datenfelder  -->
 <table class="collapsable default" cellspacing="0" cellpadding="2">
+<caption>
+    <?= _('Verwaltung von generischen Datenfeldern') ?>
+</caption>
 <? foreach ($datafields_list as $key => $data): ?>
     <tbody class="<?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'collapsed' ?> <? if (empty($datafields_list[$key])): ?>empty<? endif ?>">
         <tr class="table_header header-row">

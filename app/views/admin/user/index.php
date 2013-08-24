@@ -7,12 +7,15 @@ use Studip\Button, Studip\LinkButton;
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
 <? endif ?>
 
-<h3><?= _('Benutzerverwaltung') ?></h3>
-
 <form action="<?= $controller->url_for('admin/user/') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default collapsable">
-    <tr class="table_row_even">
+    
+    <caption>
+        <?= _('Benutzerverwaltung') ?>
+    </caption>
+
+    <tr>
         <td align="right" width="15%">
             <?= _("Benutzername:") ?>
         </td>
@@ -26,7 +29,7 @@ use Studip\Button, Studip\LinkButton;
             <input name="vorname" type="text" value="<?= htmlReady($user['vorname']) ?>">
         </td>
     </tr>
-    <tr class="table_row_odd">
+    <tr>
         <td align="right" width="15%">
             <?= _("E-Mail:")?>
         </td>
@@ -40,7 +43,7 @@ use Studip\Button, Studip\LinkButton;
             <input name="nachname" type="text" value="<?= htmlReady($user['nachname']) ?>">
         </td>
     </tr>
-    <tr class="table_row_even">
+    <tr>
         <td align="right" width="15%">
             <?= _("Status:")?>
         </td>
@@ -64,15 +67,16 @@ use Studip\Button, Studip\LinkButton;
             <input name="inaktiv_tage" type="text" value="<?= htmlReady($user['inaktiv_tage']) ?>" size="10"> Tage
         </td>
     </tr>
+
     <tbody <?= ($advanced) ? '': 'class="collapsed"' ?>>
     <tr class="table_header header-row">
-        <td colspan="4" class="toggle-indicator">
+        <th colspan="4" class="toggle-indicator">
             <a class="toggler" href="<?= $controller->url_for('admin/user/')?><?= ($advanced) ? '' : 'index/advanced' ?>" title="<?= _('Zusätzliche Suchfelder ein-/ausblenden') ?>">
                 <b><?= _('Erweiterte Suche')?></b>
             </a>
-        </td>
+        </th>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td align="right" width="15%">
             <?= _("Nutzerdomäne:")?>
         </td>
@@ -100,7 +104,7 @@ use Studip\Button, Studip\LinkButton;
     <? if (count($datafields) > 0) : ?>
         <? $i = 0; foreach($datafields as $datafield) : ?>
             <? if ($i % 2 == 0) : ?>
-            <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+            <tr>
             <? endif ?>
                 <td align="right" nowrap><?= htmlReady($datafield->getName()) ?>:</td>
                 <td>
@@ -141,12 +145,14 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
      <? endif ?>
     </tbody>
-    <tr>
-        <td colspan="4" align="center">
-            <?= Button::create(_('Suchen'), 'search')?>
-            <?= Button::create(_('Zurücksetzen'), 'reset')?>
-        </td>
-    </tr>
+    <tfoot>
+        <tr>
+            <td colspan="4" align="center">
+                <?= Button::create(_('Suchen'), 'search')?>
+                <?= Button::create(_('Zurücksetzen'), 'reset')?>
+            </td>
+        </tr>
+    </tfoot>
 </table>
 </form>
 

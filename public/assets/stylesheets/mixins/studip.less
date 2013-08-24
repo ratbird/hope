@@ -40,9 +40,12 @@
 @one: ~"1x";
 @two: ~"2x";
 
-.retina-background-icon(@icon) {
-    background-image: url("@{image-path}/icons/16/@{icon}");
+.retina-background-image(@image0, @image1) {
+    background-image: url("@{image-path}/@{image0}");
     background-image: -webkit-image-set(
-        url("@{image-path}/icons/16/@{icon}") @one,
-        url("@{image-path}/icons/32/@{icon}") @two);
+        url("@{image-path}/@{image0}") @one,
+        url("@{image-path}/@{image1}") @two);
+}
+.retina-background-icon(@icon) {
+    .retina-background-image("/icons/16/@{icon}", "/icons/32/@{icon}");
 }

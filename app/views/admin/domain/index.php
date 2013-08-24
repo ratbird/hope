@@ -8,9 +8,11 @@
 <? if (count($domains) == 0) : ?>
     <?= MessageBox::info(_('Es sind keine Nutzerdomänen vorhanden.')) ?>
 <? else : ?>
-<h3><?= _('Liste der Nutzerdomänen') ?></h3>
 
-<table class="default" style="margin-bottom: 1em;">
+<table class="default">
+    <caption>
+        <?= _('Liste der Nutzerdomänen') ?>
+    </caption>
     <?= $this->render_partial('admin/domain/domains') ?>
 </table>
 

@@ -3,7 +3,19 @@
 <a name="awaiting"></a>
 <form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default collapsable zebra-hover">
+    <table class="default collapsable ">
+    	<caption>
+    		<?= $waitingTitle ?>
+    		<span class="actions">
+    		    <?=$controller->getEmailLinkByStatus('awaiting')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                                'course_id' => $course_id,
+                                'subject' => $subject))?>">
+                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen versenden')))?>
+                    </a>
+    		</span>
+    	</caption>
         <colgroup>
             <col width="20">
             <col width="20">
@@ -15,16 +27,8 @@
         <thead>
             <tr>
                 <th class="table_header_bold" colspan="5">
-                    <?= $waitingTitle ?>
                 </th>
                 <th class="table_header_bold" style="text-align: right">
-                    <?=$controller->getEmailLinkByStatus('awaiting')?>
-                    <a href="<?= URLHelper::getLink('sms_send.php',
-                            array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                                'course_id' => $course_id,
-                                'subject' => $subject))?>">
-                        <?= Assets::img('icons/16/white/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen versenden')))?>
-                    </a>
                 </th>
             </tr>
             <tr class="sortable">
@@ -105,7 +109,7 @@
         <? if (!$is_locked) : ?>
         <tfoot>
             <tr>
-                <td class="printhead" colspan="6">
+                <td colspan="6">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade"><?= _('Zu NutzerInnen hochstufen') ?></option>

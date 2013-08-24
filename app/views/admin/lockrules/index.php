@@ -2,20 +2,23 @@
 # Lifter010: TODO
 echo $message;
 ?>
-<h3>
-    <?=_("Sperrebenen für den Bereich:")?>
-    &nbsp;
-    <?=$rule_type_names[$lock_rule_type];?>
-</h3>
     <table class="default">
+    <caption>
+        <?=_("Sperrebenen für den Bereich:")?>
+        &nbsp;
+        <?=$rule_type_names[$lock_rule_type];?>
+    </caption>
+    <thead>
         <tr>
             <th width="30%"><?= _('Name') ?></th>
             <th width="50%"><?= _('Beschreibung')?></th>
             <th width="20%"><?= _('Besitzer') ?></th>
             <th><?= _('Aktionen') ?></th>
         </tr>
+    </thead>
+    <tbody>
     <? foreach ($lock_rules as $rule): ?>
-        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+        <tr>
         <td>
         <?=htmlReady($rule['name'])?>
         </td>
@@ -25,7 +28,7 @@ echo $message;
         <td width="30">
         <?=htmlReady($rule['user_id'] ? get_fullname($rule['user_id']) : '')?>
         </td>
-        <td>
+        <td class="actions">
         <a href="<?= $controller->url_for('admin/lockrules/edit/'.$rule['lock_id']) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Regel bearbeiten'))) ?>
         </a>
@@ -35,6 +38,7 @@ echo $message;
         </td>
     </tr>
     <? endforeach;?>
+    </tbody>
     </table>
 <?
 

@@ -25,8 +25,6 @@ $perm->check("user");
 global $SEM_CLASS,
        $SEM_TYPE;
 
-ob_start(); //Outputbuffering für maximal Performance
-
 /**
  *
  * @param unknown_type $semid
@@ -66,13 +64,13 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
                 $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"' : '',
                 UrlHelper::getScriptLink($url));
        } else if (is_string($key)) {
-            echo Assets::img('blank.gif', array('width' => 16, 'height' => 16));
+            echo Assets::img('blank.gif', array('width' => 20, 'height' => 20));
         }
         echo ' ';
     }
 }
 
-// we are defintely not in an lexture or institute
+// we are defintely not in an lecture or institute
 closeObject();
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -107,9 +105,8 @@ if (!$perm->have_perm("root")) {
     Navigation::activateItem('/browse/my_courses/list');
 }
 
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
+// Capture output
+ob_start(); 
 
 $cmd = Request::option('cmd');
 if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill kill_admission'))){
@@ -750,6 +747,6 @@ elseif ($auth->auth["perm"]=="admin") {
     $template->set_attribute('_default_sem', $_SESSION['_default_sem']);
     echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id num_my_sem Modules my_sem")));
 }
-    include ('lib/include/html_end.inc.php');
-    ob_end_flush(); //Outputbuffering beenden
+
+    echo $GLOBALS['template_factory']->render('layouts/base', array('content_for_layout' => ob_get_clean()));
     page_close();

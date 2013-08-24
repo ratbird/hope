@@ -18,16 +18,13 @@
     </colgroup>
     <tbody>
         <tr>
-            <td class="<? if (($filter ?: 'all') == 'all') echo 'active'; ?>"
+            <td nobreak class="<? if (($filter ?: 'all') == 'all') echo 'active'; ?>"
                 <?= $tooltip($size_of_book) ?>
             >
                 <a href="<?= URLHelper::getLink('?filter=all') ?>">a-z</a>
-                <a href="<?= URLHelper::getLink('contact_export.php?groupid=all') ?>">
-                    <?= Assets::img('icons/16/blue/export/vcard', tooltip2(_('Alle Einträge als vCard exportieren'))) ?>
-                </a>
             </td>
         <? for ($i = 0, $chr = 'a'; $i++ < 26; $chr++): ?>
-            <td align="center" class="<? if ($filter == $chr) echo 'active'; ?><? if (!$sizes[$chr]) echo ' empty'; ?>"
+            <td nobreak align="center" class="<? if ($filter == $chr) echo 'active'; ?><? if (!$sizes[$chr]) echo ' empty'; ?>"
                 <?= $tooltip($sizes[$chr]) ?>
             >
                 <a href="<?= URLHelper::getLink('', array('view' => $view, 'filter' => $chr)) ?>">

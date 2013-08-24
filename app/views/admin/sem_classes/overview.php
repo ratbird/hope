@@ -9,7 +9,7 @@
  *  the License, or (at your option) any later version.
  */
 ?>
-<table class="default zebra-hover">
+<table class="default">
     <thead>
         <tr>
             <th><?= _("ID") ?></th>
@@ -28,7 +28,7 @@
             <td><?= count($sem_class->getSemTypes()) ?></td>
             <td><?= $sem_class->countSeminars() ?></td>
             <td><?= date("j.n.Y G:i", $sem_class['chdate']) ?> <?= _("Uhr") ?></td>
-            <td>
+            <td class="actions">
                 <a href="<?= URLHelper::getLink("dispatch.php/admin/sem_classes/details", array('id' => $id)) ?>" title="<?= _("Editieren dieser Veranstaltungskategorie") ?>">
                 <?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?>
                 </a>

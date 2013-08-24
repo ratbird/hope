@@ -311,7 +311,7 @@ class Course_MembersController extends AuthenticatedController
         $results = $members->pluck('email');
 
         if (!empty($results)) {
-            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Assets::img('icons/16/white/move_right/mail.png', tooltip2(sprintf('E-Mail an alle %s versenden', $textStatus))));
+            return sprintf('<a href="mailto:%s">%s</a>', htmlReady(join(',', $results)), Assets::img('icons/16/blue/move_right/mail.png', tooltip2(sprintf('E-Mail an alle %s versenden', $textStatus))));
         } else {
             return null;
         }

@@ -98,24 +98,6 @@
 .smiley-toggle.ajax {
   background-image: url("../images/ajax_indicator_small.gif");
 }
-.smiley-admin .separator {
-  border-left: 1px solid #aaa;
-}
-.smiley-admin a:active,
-.smiley-admin a:focus {
-  outline: none;
-}
-.smiley-admin tbody tr a,
-.smiley-admin tbody tr [type=checkbox] {
-  visibility: hidden;
-}
-.smiley-admin tbody tr input:checked {
-  visibility: visible;
-}
-.smiley-admin tbody tr:hover a,
-.smiley-admin tbody tr:hover [type=checkbox] {
-  visibility: visible;
-}
 .smiley-select option.single {
   font-family: monospace;
 }

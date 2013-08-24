@@ -1,6 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
+<thead>
 <tr>
   <th style="width: 40%;">
     <?= _('Name') ?>
@@ -11,13 +12,14 @@
   <th style="width: 15%;">
     <?= _('NutzerInnen') ?>
   </th>
-  <th style="width: 10%;">
+  <th class="aktions" style="width: 10%;">
     <?= _('Aktionen') ?>
   </th>
 </tr>
-
+</thead>
+<tbody>
 <? foreach ($domains as $domain): ?>
-  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+  <tr>
     <td>
       <? if (isset($edit_id) && $edit_id === $domain->getID()): ?>
         <input type="hidden" name="id" value="<?= $edit_id ?>">
@@ -32,7 +34,7 @@
     <td>
       <?= count($domain->getUsers()) ?>
     </td>
-    <td>
+    <td class="actions">
       <a href="<?= $controller->url_for('admin/domain/edit?id='.$domain->getID()) ?>">
         <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
       </a>
@@ -44,3 +46,4 @@
     </td>
   </tr>
 <? endforeach ?>
+

@@ -3,7 +3,7 @@
 <form action="<?= $controller->url_for('/admin/smileys/delete/bulk', $view) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table class="default smiley-admin">
+    <table class="default">
         <colgroup>
             <col width="20px">
             <col>
@@ -41,7 +41,7 @@
     <? else: ?>
         <tbody>
         <? foreach ($smileys as $smiley): ?>
-            <tr id="smiley<?= $smiley->id ?>" class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+            <tr id="smiley<?= $smiley->id ?>">
                 <td><input type="checkbox" name="smiley_id[]" value="<?= $smiley->id ?>"></td>
                 <td><?= $smiley->getImageTag() ?></td>
                 <td><?= htmlReady($smiley->name) ?></td>
@@ -70,7 +70,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <td>&nbsp;</td>
+                <td>
+                    <input class="middle" type="checkbox" data-proxyfor=":checkbox[name^=smiley_id]" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
+                </td>
                 <td colspan="<?= $favorites_enabled ? 7 : 6 ?>">
                     <?= Studip\Button::createCancel(_('Markierte löschen'), 'bulk-delete') ?>
                 </td>

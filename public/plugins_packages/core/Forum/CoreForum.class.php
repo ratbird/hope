@@ -113,9 +113,9 @@ class CoreForum extends StudipPlugin implements ForumModule
         $navigation->setBadgeNumber($num_entries);
 
         if ($num_entries > 0) {
-            $navigation->setImage('icons/16/red/new/forum.png', array('title' => $text));
+            $navigation->setImage('icons/20/red/new/forum.png', array('title' => $text));
         } else {
-            $navigation->setImage('icons/16/grey/forum.png', array('title' => $text));
+            $navigation->setImage('icons/20/grey/forum.png', array('title' => $text));
         }
 
         return $navigation;

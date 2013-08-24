@@ -12,20 +12,22 @@ use Studip\Button, Studip\LinkButton;
               'disapprovalLink' => $controller->url_for('admin/role'))) ?>
 <? endif ?>
 
-<h3>
-    <?= _('Vorhandene Rollen') ?>
-</h3>
-
 <table class="default">
+<caption>
+    <?= _('Vorhandene Rollen') ?>
+</caption>
+<thead>
     <tr>
         <th><?= _('Name') ?></th>
         <th style="text-align: right;"><?= _('Benutzer') ?></th>
         <th style="text-align: right;"><?= _('Plugins') ?></th>
         <th></th>
     </tr>
+</thead>
+<tbody>
     <? foreach ($roles as $role): ?>
         <? $role_id = $role->getRoleid() ?>
-        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+        <tr>
             <td>
                 <a href="<?= $controller->url_for('admin/role/show_role', $role_id) ?>">
                     <?= htmlReady($role->getRolename()) ?>
@@ -38,7 +40,7 @@ use Studip\Button, Studip\LinkButton;
             <td style="text-align: right;">
                 <?= $stats[$role_id]['plugins'] ?>
             </td>
-            <td style="text-align: right;">
+            <td class="actions">
                 <? if (!$role->getSystemtype()): ?>
                     <a href="<?= $controller->url_for('admin/role/ask_remove_role', $role_id) ?>">
                         <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Rolle löschen'))) ?>
@@ -47,6 +49,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
         </tr>
     <? endforeach ?>
+</tbody>
 </table>
 
 <h3>

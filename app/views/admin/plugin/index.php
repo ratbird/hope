@@ -22,10 +22,6 @@ use Studip\Button, Studip\LinkButton;
               'disapprovalLink' => $controller->url_for('admin/plugin'))) ?>
 <? endif ?>
 
-<h3>
-    <?= _('Verwaltung von Plugins')?>
-</h3>
-
 <? if (count($plugins) == 0): ?>
     <?= MessageBox::info(_('Es sind noch keine Plugins in diesem Stud.IP vorhanden.'), array(
             _('Sie können Plugins aus dem Marktplatz installieren oder manuell hochladen.'),
@@ -37,6 +33,10 @@ use Studip\Button, Studip\LinkButton;
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
         <input type="hidden" name="plugin_filter" value="<?= $plugin_filter ?>">
         <table class="default">
+        <caption>
+                <?= _('Verwaltung von Plugins')?>
+        </caption>
+        <thead>
             <tr>
                 <th><?= _('Aktiv') ?></th>
                 <th><?= _('Name')?></th>
@@ -44,12 +44,13 @@ use Studip\Button, Studip\LinkButton;
                 <th><?= _('Version') ?></th>
                 <th><?= _('Schema') ?></th>
                 <th><?= _('Position') ?></th>
-                <th colspan="4"><?= _('Aktionen') ?></th>
+                <th class="actions" colspan="4"><?= _('Aktionen') ?></th>
             </tr>
-
+        </thead>
+        <tbody>
             <? foreach ($plugins as $plugin): ?>
                 <? $pluginid = $plugin['id'] ?>
-                <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+                <tr>
                     <td style="padding-left: 1ex;" width="30">
                         <input type="checkbox" name="enabled_<?= $pluginid ?>" value="1" <?= $plugin['enabled'] ? 'checked' : '' ?>>
                     </td>
@@ -78,26 +79,26 @@ use Studip\Button, Studip\LinkButton;
                     <td>
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>
                     </td>
-                    <td width="20">
+                    <td class="actions" width="20">
                         <? if (in_array('StandardPlugin', $plugin['type'])): ?>
                             <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/add/seminar.png', array('title' => _('In Veranstaltungen aktivieren'))) ?>
                             </a>
                         <? endif ?>
                     </td>
-                    <td width="20">
+                    <td class="actions"  width="20">
                         <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $pluginid) ?>">
                             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
                     </td>
-                    <td width="20">
+                    <td class="actions"  width="20">
                         <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/download', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
-                    <td width="20">
+                    <td class="actions"  width="20">
                         <? if (!$plugin['depends'] && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/ask_delete', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
@@ -106,11 +107,15 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                 </tr>
             <? endforeach ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="text-align: center;" colspan=10>
+                    <?= Button::createAccept(_('Speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
+                </td>
+            </tr>
+        </tfoot>
         </table>
-
-        <div style="padding-top: 1em; text-align: center;">
-            <?= Button::createAccept(_('Speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
-        </div>
     </form>
 <? endif ?>
 

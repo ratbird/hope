@@ -8,57 +8,71 @@ use Studip\Button, Studip\LinkButton;
 <? elseif (isset($flash['info'])): ?>
     <?= MessageBox::info($flash['info']) ?>
 <? endif ?>
-<h3>
-<? if($rule) : ?>
-    <?= sprintf(_('Regel "%s" editieren'), htmlReady($rule['name'])) ?>
-<? else : ?>
-    <?= _('Eine neue Regel definieren') ?>
-<? endif ?>
-</h3>
+
 <form action="<?= $controller->url_for('admin/specification/edit') ?><?= ($rule) ? '/' . $rule['lock_id'] : '' ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
-        <tr class="table_row_odd">
+    <caption>
+        <? if($rule) : ?>
+            <?= sprintf(_('Regel "%s" editieren'), htmlReady($rule['name'])) ?>
+        <? else : ?>
+            <?= _('Eine neue Regel definieren') ?>
+        <? endif ?>
+    </caption>
+    <tbody>
+       <tr>
             <td><?= _("Name der Regel:") ?> <span style="color: red; font-size: 1.6em">*</span></td>
             <td colspan="2">
                 <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>" style="width: 350px;" required="required">
             </td>
         </tr>
-        <tr class="table_row_even">
+        <tr>
             <td><?= _("Beschreibung:") ?> </td>
             <td colspan="2">
                 <textarea cols="60" rows="5" name="description"" style="width: 350px;"><?= htmlReady(Request::get('description', $rule['description'])) ?></textarea>
             </td>
         </tr>
+    </tbody>
+    </table>
+    <table class="default">
+    <thead>
         <tr>
             <th><?= _("Feld:") ?></th>
             <th><?= _("Sortierung:") ?></th>
             <th><?= _("aktivieren:") ?></th>
         </tr>
+    </thead>
+    <tbody>
         <? if (count($entries_semdata) > 0) : ?>
-        <tr class="table_header">
-            <td colspan="3"><b><?= _("Zusatzinformationen") ?></b></td>
+        <tr>
+            <th colspan="3"><b><?= _("Zusatzinformationen") ?></b></th>
         </tr>
         <? foreach ($entries_semdata as $id => $entry) : ?>
           <?= $this->render_partial('admin/specification/_field', array_merge(compact('rule', 'id'), array('name' => $entry->getName()), array('required' => true))) ?>
         <? endforeach ?>
         <? endif ?>
         <? if (count($semFields) > 0) : ?>
-        <tr class="table_header">
-            <td colspan="3"><b><?= _("Veranstaltungsinformationen") ?></b></td>
+    </tbody>
+    <tbody>
+        <tr>
+            <th colspan="3"><b><?= _("Veranstaltungsinformationen") ?></b></th>
         </tr>
         <? foreach ($semFields as $id => $name) : ?>
           <?= $this->render_partial('admin/specification/_field', compact('rule', 'id', 'name')) ?>
         <? endforeach ?>
         <? endif ?>
         <? if(count($entries_user) > 0) : ?>
-        <tr class="table_header">
-            <td colspan="3"><b><?= _("Personenbezogene Informationen") ?></b></td>
+    </tbody>
+    <tbody>
+        <tr>
+            <th colspan="3"><b><?= _("Personenbezogene Informationen") ?></b></th>
         </tr>
         <? foreach ($entries_user as $id => $entry) : ?>
           <?= $this->render_partial('admin/specification/_field', array_merge(compact('rule', 'id'), array('name' => $entry->getName()))) ?>
         <? endforeach ?>
         <? endif ?>
+    </tbody>
+    <tfoot>
         <tr>
             <td colspan="3" align="center">
             <? if($rule) : ?>
@@ -69,6 +83,7 @@ use Studip\Button, Studip\LinkButton;
                 <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/specification'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
+    </tfoot>
     </table>
 </form>
 

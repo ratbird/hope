@@ -18,7 +18,6 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
         <? SkipLinks::addIndex(_("Meine Veranstaltungen"), 'my_seminars') ?>
         <tr valign="top">
             <td valign="top" class="blank" align="center">
-                <br>
                 <table class="default" id="my_seminars">
                     <caption>
                         <?=_("Veranstaltungen") ?>

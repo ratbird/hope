@@ -65,6 +65,7 @@ a:link,
 a:visited {
   color: #24437c;
   text-decoration: none;
+  transition: color 0.3s;
 }
 a.index,
 a:link.index,

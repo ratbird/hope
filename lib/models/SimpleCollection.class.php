@@ -1,4 +1,10 @@
 <?php
+namespace Studip {
+    use Zend\Stdlib\ArrayObject as ZendStdlibArrayObject;
+    require 'vendor/zf2/Zend/Stdlib/ArrayObject/PhpReferenceCompatibility.php';
+    class ArrayObject extends ZendStdlibArrayObject\PhpReferenceCompatibility {}
+}
+namespace {
 if (!defined('SORT_NATURAL')) define('SORT_NATURAL', 6);
 if (!defined('SORT_FLAG_CASE')) define('SORT_FLAG_CASE', 8);
 /**
@@ -15,7 +21,7 @@ if (!defined('SORT_FLAG_CASE')) define('SORT_FLAG_CASE', 8);
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */
-class SimpleCollection extends ArrayObject
+class SimpleCollection extends Studip\ArrayObject
 {
 
     /**
@@ -52,27 +58,29 @@ class SimpleCollection extends ArrayObject
 
     /**
      * converts arrays or objects to ArrayObject objects
-     * if ArrayAccess interface is not available 
-     * 
+     * if ArrayAccess interface is not available
+     *
      * @param mixed $a
      * @return ArrayAccess
      */
     public static function arrayToArrayObject($a)
     {
-        if ($a instanceof ArrayObject) {
-            $a->setFlags(ArrayObject::ARRAY_AS_PROPS); 
+        if ($a instanceof Studip\ArrayObject) {
+            $a->setFlags($a, Studip\ArrayObject::ARRAY_AS_PROPS);
             return $a;
+        } else if ($a instanceof ArrayObject) {
+            return new Studip\ArrayObject($a->getArrayCopy(), Studip\ArrayObject::ARRAY_AS_PROPS);
         } else if ($a instanceof ArrayAccess) {
             return $a;
         } else {
-            return new ArrayObject($a, ArrayObject::ARRAY_AS_PROPS);
+            return new Studip\ArrayObject((array)$a, Studip\ArrayObject::ARRAY_AS_PROPS);
         }
     }
 
     /**
      * returns closure to compare a value against given arguments
      * using given operator
-     * 
+     *
      * @param string $operator
      * @param mixed $args
      * @throws InvalidArgumentException
@@ -176,7 +184,7 @@ class SimpleCollection extends ArrayObject
 
     /**
      * transliterates latin1 string to ascii
-     * 
+     *
      * @param string $text
      * @return string
      */
@@ -206,6 +214,7 @@ class SimpleCollection extends ArrayObject
      */
     function __construct($data = array())
     {
+        parent::__construct();
         $this->finder = $data instanceof Closure ? $data : null;
         $this->deleted = clone $this;
         if ($data instanceof Closure) {
@@ -222,14 +231,15 @@ class SimpleCollection extends ArrayObject
 
     /**
      * converts the object and all elements to plain arrays
-     * 
+     *
      * @return array
      */
     function toArray()
     {
-        return $this->map( function ($a) {
+        $args = func_get_args();
+        return $this->map( function ($a) use ($args) {
             if (method_exists($a, 'toArray')) {
-                return $a->toArray();
+                return call_user_func_array(array($a, 'toArray'), $args);
             }
             if (method_exists($a, 'getArrayCopy')) {
                 return $a->getArrayCopy();
@@ -243,9 +253,9 @@ class SimpleCollection extends ArrayObject
      *
      * @see ArrayObject::append()
      */
-    function append($value)
+    function append($newval)
     {
-        return $this->offsetSet(null, $value);
+        return parent::append(SimpleCollection::arrayToArrayObject($newval));
     }
 
     /**
@@ -256,7 +266,10 @@ class SimpleCollection extends ArrayObject
      */
     function offsetSet($index, $newval)
     {
-        if (!is_null($index) && is_numeric($index)) {
+        if (is_null($index)) {
+            return $this->append($newval);
+        }
+        if (is_numeric($index)) {
             $index = (int)$index;
         }
         return parent::offsetSet($index, SimpleCollection::arrayToArrayObject($newval));
@@ -316,7 +329,7 @@ class SimpleCollection extends ArrayObject
      * returns a new collection containing all elements
      * where given columns value matches given value(s) using passed operator
      * pass array for multiple values
-     * 
+     *
      * operators:
      * == equal, like php
      * === identical, like php
@@ -329,7 +342,7 @@ class SimpleCollection extends ArrayObject
      * *= contains string
      * ^= begins with string
      * $= ends with string
-     * ~= regex 
+     * ~= regex
      *
      * @param string $key the column name
      * @param mixed $value value to search for
@@ -511,7 +524,7 @@ class SimpleCollection extends ArrayObject
      * element(s) are moved to
      * internal deleted collection
      * pass array for multiple values
-     * 
+     *
      * operators:
      * == equal, like php
      * === identical, like php
@@ -524,8 +537,8 @@ class SimpleCollection extends ArrayObject
      * *= contains string
      * ^= begins with string
      * $= ends with string
-     * ~= regex 
-     * 
+     * ~= regex
+     *
      * @param string $key
      * @param mixed $values
      * @param mixed $op operator to find elements
@@ -546,26 +559,26 @@ class SimpleCollection extends ArrayObject
 
     /**
      * sorts the collection by columns of contained elements and returns it
-     * 
+     *
      * works like sql order by:
      * first param is a string containing combinations of column names
      * and sort direction, separated by comma e.g.
-     *  'name asc, nummer desc ' 
+     *  'name asc, nummer desc '
      *  sorts first by name ascending and then by nummer descending
      *  second param denotes the sort type (using PHP sort constants):
-     *  SORT_LOCALE_STRING: 
+     *  SORT_LOCALE_STRING:
      *  compare items as strings, transliterate latin1 to ascii, case insensitiv, natural order for numbers
      *  SORT_NUMERIC:
      *  compare items as integers
      *  SORT_STRING:
      *  compare items as strings
      *  SORT_NATURAL:
-     *  compare items as strings using "natural ordering" 
+     *  compare items as strings using "natural ordering"
      *  SORT_FLAG_CASE:
      *  can be combined (bitwise OR) with SORT_STRING or SORT_NATURAL to sort strings case-insensitively
-     *  
+     *
      * @param string $order columns to order by
-     * @param integer $sort_flags 
+     * @param integer $sort_flags
      * @return SimpleCollection the sorted collection
      */
     function orderBy($order, $sort_flags = SORT_LOCALE_STRING)
@@ -627,10 +640,10 @@ class SimpleCollection extends ArrayObject
      * used with one parameter, the first x elements are extracted
      * used with two parameters, the first parameter denotes the offset, the second the
      * number of elements
-     * 
-     * @param integer $arg1 
+     *
+     * @param integer $arg1
      * @param integer $arg2
-     * @return SimpleCollection 
+     * @return SimpleCollection
      */
     function limit($arg1, $arg2 = null)
     {
@@ -648,4 +661,5 @@ class SimpleCollection extends ArrayObject
         }
         return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count, true));
     }
+}
 }

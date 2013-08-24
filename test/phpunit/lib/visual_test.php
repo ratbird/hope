@@ -189,7 +189,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     {
         $input = '[quote=__Anonymous__]some text[/quote]';
         $expected = '<blockquote>'
-                   .'<div class="author"><b><u>Anonymous</u> hat geschrieben:</div>some text'
+                   .'<div class="author"><u>Anonymous</u> hat geschrieben:</div>some text'
                    .'</blockquote>';
         $this->assertEquals($expected, formatReady($input));
     }

@@ -638,7 +638,7 @@ table.default thead th {
   font-size: 1.0em;
 }
 table.default tbody th {
-  background-color: #f4f7f9;
+  background-color: #f0f4ff;
   border-top: 1px solid #1e3e70;
   border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;

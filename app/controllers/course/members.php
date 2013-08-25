@@ -124,13 +124,6 @@ class Course_MembersController extends AuthenticatedController
             unset($_SESSION['sms_msg']);
         }
 
-        // Check autor-perms
-        if (!$this->is_tutor) {
-            SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
-            $this->invisibles = $this->getInvisibleCount();
-            $this->my_visibilty = $this->getUserVisibility();
-        }
-
         $this->sort_by = Request::option('sortby', 'nachname');
         $this->order = Request::option('order', 'desc');
         $this->sort_status = Request::get('sort_status');
@@ -143,14 +136,24 @@ class Course_MembersController extends AuthenticatedController
         
         if ($this->is_tutor) {
             $filtered_members = array_merge($filtered_members, $this->members->getAdmissionMembers($this->sort_status, $this->sort_by . ' ' . $this->order ));
+            $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
+            $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
+        }
+        
+        // Check autor-perms
+        if (!$this->is_tutor) {
+            SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
+            $this->invisibles = count($filtered_members['autor']->findBy('visible', 'no')) + count($filtered_members['user']->findBy('visible', 'no'));
+            $this->my_visibilty = $this->getUserVisibility();
+            if (!$this->my_visibility['iam_visible']) {
+                $this->invisibles--;
+            }
         }
         // get member informations
         $this->dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname');
         $this->tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname mkdate');
         $this->autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
         $this->users = $filtered_members['user']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
-        $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
-        $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
         $this->studipticket = Seminar_Session::get_ticket();
         $this->subject = $this->getSubject();
         $this->groups = $this->status_groups;
@@ -252,23 +255,6 @@ class Course_MembersController extends AuthenticatedController
         } else {
             return null;
         }
-    }
-
-    /**
-     * Get the count of invisible members
-     *
-     * @return int
-     */
-    private function getInvisibleCount()
-    {
-        $course = $this->course;
-        $user_id = $this->user_id;
-
-        return $course->members->findBy('status', 'autor')->findBy('visible', 'no')
-                        ->filter(function($user)use($user_id) {
-                                    return $user['user_id'] != $user_id;
-                                })
-                        ->count();
     }
 
     /**
@@ -1137,10 +1123,10 @@ class Course_MembersController extends AuthenticatedController
      */
     private function getUserVisibility()
     {
-        $member = $this->course->members->findBy('user_id', $this->user_id);
+        $member = CourseMember::find(array($this->course_id, $this->user_id));
 
-        $visibility = $member->val('visible');
-        $status = $member->val('status');
+        $visibility = $member->visible;
+        $status = $member->status;
         #echo "<pre>"; var_dump($member); echo "</pre>";
         $result['visible_mode'] = false;
 
@@ -1153,14 +1139,6 @@ class Course_MembersController extends AuthenticatedController
                 $result['iam_visible'] = true;
                 $result['visible_mode'] = false;
             }
-        }
-
-        $admission_member = $this->course->admission_applicants->findBy('user_id', $this->user_id);
-        $admission_visibility = $admission_member->val('visible');
-
-        if ($admission_visibility) {
-            $result['iam_visible'] = ($admission_visibility == 'yes' || $admission_visibility == 'unknown');
-            $result['visible_mode'] = 'awaiting';
         }
 
         return $result;

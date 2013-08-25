@@ -354,6 +354,68 @@ class MembersModel
     }
 
     /**
+     * @param string $sort_status
+     * @param string $order_by
+     * @param string $exclude_invisibles
+     * @return SimpleCollection
+     */
+    function getMembers($sort_status = 'autor', $order_by = 'nachname asc', $exclude_invisibles = null)
+    {
+        $query = "SELECT su.user_id,username,vorname,nachname,email,status,position,su.mkdate,su.visible," . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
+                FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
+                INNER JOIN user_info USING(user_id) WHERE seminar_id = ? ORDER BY position, nachname ASC";
+        $st = DBManager::get()->prepare($query);
+        $st->execute(array(
+            $this->course_id
+        ));
+        $members = SimpleCollection::createFromArray($st->fetchAll(PDO::FETCH_ASSOC));
+        $filtered_members = array();
+        foreach (words('user autor tutor dozent') as $status) {
+            $filtered_members[$status] = $members->findBy('status', $status);
+            if ($status == $sort_status) {
+                $filtered_members[$status]->orderBy($order_by, (strpos($order_by, 'nachname') === false ? SORT_NUMERIC : SORT_LOCALE_STRING));
+            } else {
+                $filtered_members[$status]->orderBy(in_array($status, words('tutor dozent')) ? 'position,nachname' : 'nachname asc');
+            }
+            // filter invisible user
+            if ($exclude_invisibles) {
+                $filtered_members[$status] = $filtered_members[$status]->filter(function ($user) use($exclude_invisibles)
+                {
+                    return ($user['visible'] != 'no' || $user['user_id'] == $exclude_invisibles);
+                });
+            }
+        }
+        return $filtered_members;
+    }
+
+    /**
+     * @param string $sort_status
+     * @param string $order_by
+     * @return SimpleCollection
+     */
+    function getAdmissionMembers($sort_status = 'autor', $order_by = 'nachname asc')
+    {
+        $query = "SELECT asu.user_id,username,vorname,nachname,email,status,position,asu.mkdate,asu.visible,studiengang_id," . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
+                FROM admission_seminar_user asu INNER JOIN auth_user_md5 USING(user_id)
+                INNER JOIN user_info USING(user_id) WHERE seminar_id = ? ORDER BY position, nachname ASC";
+        $st = DBManager::get()->prepare($query);
+        $st->execute(array(
+            $this->course_id
+        ));
+        $application_members = SimpleCollection::createFromArray($st->fetchAll(PDO::FETCH_ASSOC));
+        $filtered_members = array();
+        foreach (words('awaiting accepted') as $status) {
+            $filtered_members[$status] = $application_members->findBy('status', $status);
+            if ($status == $sort_status) {
+                $filtered_members[$status]->orderBy($order_by, (strpos($order_by, 'nachname') === false ? SORT_NUMERIC : SORT_LOCALE_STRING));
+            } else {
+                $filtered_members[$status]->orderBy('nachname asc', SORT_LOCALE_STRING);
+            }
+        }
+        return $filtered_members;
+    }
+    
+    /**
      * Get the positon out of the database
      * @param String $user_id
      * @return String

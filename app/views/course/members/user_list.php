@@ -23,7 +23,7 @@
                 </th>
                 <th class="table_header_bold" style="text-align: right">
                 <? if($is_tutor) :?>
-                    <?=$controller->getEmailLinkByStatus('user')?>
+                    <?=$controller->getEmailLinkByStatus('user', $users)?>
                     <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'send_sms_to_all',
                                 'who' => 'user',
@@ -64,7 +64,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($users as $leser) : ?>
-        <? $fullname = $leser->user->getFullName('full_rev');?>
+        <? $fullname = $leser['user_id'];?>
             <tr>
                 <? if($is_tutor) :?>
                 <td>

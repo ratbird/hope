@@ -7,7 +7,7 @@
 	   	<caption>
 	   		<span class="actions">
 	   	   		<? if($is_tutor) : ?>
-                	<?=$controller->getEmailLinkByStatus('tutor')?>
+                	<?=$controller->getEmailLinkByStatus('tutor', $tutoren)?>
                     	<a href="<?= URLHelper::getLink('sms_send.php',
                         	    array('filter' => 'send_sms_to_all',
                             	    'who' => 'tutor',
@@ -67,7 +67,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($tutoren as $tutor) : ?>
-        <? $fullname = $tutor->user->getFullName('full_rev');?>
+        <? $fullname = $tutor['fullname'];?>
             <tr>
                 <? if ($is_dozent && !$tutor_is_locked) : ?>
                 <td>

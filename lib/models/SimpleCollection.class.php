@@ -1,10 +1,4 @@
 <?php
-namespace Studip {
-    use Zend\Stdlib\ArrayObject as ZendStdlibArrayObject;
-    require 'vendor/zf2/Zend/Stdlib/ArrayObject/PhpReferenceCompatibility.php';
-    class ArrayObject extends ZendStdlibArrayObject\PhpReferenceCompatibility {}
-}
-namespace {
 if (!defined('SORT_NATURAL')) define('SORT_NATURAL', 6);
 if (!defined('SORT_FLAG_CASE')) define('SORT_FLAG_CASE', 8);
 /**
@@ -21,7 +15,7 @@ if (!defined('SORT_FLAG_CASE')) define('SORT_FLAG_CASE', 8);
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */
-class SimpleCollection extends Studip\ArrayObject
+class SimpleCollection extends StudipArrayObject
 {
 
     /**
@@ -65,15 +59,15 @@ class SimpleCollection extends Studip\ArrayObject
      */
     public static function arrayToArrayObject($a)
     {
-        if ($a instanceof Studip\ArrayObject) {
-            $a->setFlags($a, Studip\ArrayObject::ARRAY_AS_PROPS);
+        if ($a instanceof StudipArrayObject) {
+            $a->setFlags(StudipArrayObject::ARRAY_AS_PROPS);
             return $a;
         } else if ($a instanceof ArrayObject) {
-            return new Studip\ArrayObject($a->getArrayCopy(), Studip\ArrayObject::ARRAY_AS_PROPS);
+            return new StudipArrayObject($a->getArrayCopy(), StudipArrayObject::ARRAY_AS_PROPS);
         } else if ($a instanceof ArrayAccess) {
             return $a;
         } else {
-            return new Studip\ArrayObject((array)$a, Studip\ArrayObject::ARRAY_AS_PROPS);
+            return new StudipArrayObject((array)$a, StudipArrayObject::ARRAY_AS_PROPS);
         }
     }
 
@@ -266,9 +260,6 @@ class SimpleCollection extends Studip\ArrayObject
      */
     function offsetSet($index, $newval)
     {
-        if (is_null($index)) {
-            return $this->append($newval);
-        }
         if (is_numeric($index)) {
             $index = (int)$index;
         }
@@ -661,5 +652,4 @@ class SimpleCollection extends Studip\ArrayObject
         }
         return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count, true));
     }
-}
 }

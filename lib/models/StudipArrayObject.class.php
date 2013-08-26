@@ -1,29 +1,20 @@
 <?php
 /**
+ * StudipArrayObject
+ *
+ * This ArrayObject is a rewrite of the implementation to fix
+ * issues with php's implementation of ArrayObject regarding cyclic references
+ * based on Zend\Stdlib\ArrayObject\PhpReferenceCompatibility
+ *
+ * @author      André Noack <noack@data-quest.de>
+ *
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
-
-namespace Zend\Stdlib\ArrayObject;
-
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
-use Serializable;
-use Zend\Stdlib\Exception;
-
-/**
- * ArrayObject
- *
- * This ArrayObject is a rewrite of the implementation to fix
- * issues with php's implementation of ArrayObject where you
- * are unable to unset multi-dimensional arrays because you
- * need to fetch the properties / lists as references.
- */
-abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAccess, Serializable, Countable
+class StudipArrayObject implements IteratorAggregate, ArrayAccess, Serializable, Countable
 {
     /**
      * Properties of the object have their normal functionality
@@ -83,7 +74,7 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
             return $this->offsetExists($key);
         }
         if (in_array($key, $this->protectedProperties)) {
-            throw new Exception\InvalidArgumentException('$key is a protected property, use a different key');
+            throw new InvalidArgumentException('$key is a protected property, use a different key');
         }
 
         return isset($this->$key);
@@ -102,7 +93,7 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
             return $this->offsetSet($key, $value);
         }
         if (in_array($key, $this->protectedProperties)) {
-            throw new Exception\InvalidArgumentException('$key is a protected property, use a different key');
+            throw new InvalidArgumentException('$key is a protected property, use a different key');
         }
         $this->$key = $value;
     }
@@ -119,27 +110,26 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
             return $this->offsetUnset($key);
         }
         if (in_array($key, $this->protectedProperties)) {
-            throw new Exception\InvalidArgumentException('$key is a protected property, use a different key');
+            throw new InvalidArgumentException('$key is a protected property, use a different key');
         }
         unset($this->$key);
     }
 
     /**
-     * Returns the value at the specified key by reference
+     * Returns the value at the specified key
      *
      * @param  mixed $key
      * @return mixed
      */
-    public function &__get($key)
+    public function __get($key)
     {
         $ret = null;
         if ($this->flag == self::ARRAY_AS_PROPS) {
-            $ret =& $this->offsetGet($key);
-
+            $ret = $this->offsetGet($key);
             return $ret;
         }
         if (in_array($key, $this->protectedProperties)) {
-            throw new Exception\InvalidArgumentException('$key is a protected property, use a different key');
+            throw new InvalidArgumentException('$key is a protected property, use a different key');
         }
 
         return $this->$key;
@@ -185,7 +175,7 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
     public function exchangeArray($data)
     {
         if (!is_array($data) && !is_object($data)) {
-            throw new Exception\InvalidArgumentException('Passed variable is not an array or object, using empty array instead');
+            throw new InvalidArgumentException('Passed variable is not an array or object, using empty array instead');
         }
 
         if (is_object($data) && ($data instanceof self || $data instanceof \ArrayObject)) {
@@ -291,13 +281,13 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
      * @param  mixed $key
      * @return mixed
      */
-    public function &offsetGet($key)
+    public function offsetGet($key)
     {
         $ret = null;
         if (!$this->offsetExists($key)) {
             return $ret;
         }
-        $ret =& $this->storage[$key];
+        $ret = $this->storage[$key];
 
         return $ret;
     }
@@ -311,6 +301,9 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
      */
     public function offsetSet($key, $value)
     {
+        if (is_null($key)) {
+            return $this->append($value);
+        }
         $this->storage[$key] = $value;
     }
 
@@ -371,7 +364,7 @@ abstract class PhpReferenceCompatibility implements IteratorAggregate, ArrayAcce
             }
         }
 
-        throw new Exception\InvalidArgumentException('The iterator class does not exist');
+        throw new InvalidArgumentException('The iterator class does not exist');
     }
 
     /**

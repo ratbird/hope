@@ -13,6 +13,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once 'lib/models/StudipArrayObject.class.php';
 require_once 'lib/models/SimpleCollection.class.php';
 
 class SimpleCollectionTest extends PHPUnit_Framework_TestCase
@@ -20,7 +21,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
     function setUp()
     {
     }
-    
+
     function tearDown()
     {
     }
@@ -32,7 +33,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $data[] = array('id' => 10, 'vorname' => 'Élmar', 'nachname' => 'Ludwig', 'perm' => 'admin');
         $data[] = array('id' => 11, 'vorname' => 'Jan-Hendrik', 'nachname' => 'Wilms', 'perm' => 'tutor');
         $data[] = array('id' => 15, 'vorname' => 'Nico', 'nachname' => 'Müller', 'perm' => 'root');
-        
+
         $a = new SimpleCollection();
         $this->assertInstanceOf('SimpleCollection', $a);
         $a = SimpleCollection::createFromArray($data);
@@ -59,13 +60,13 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(17, $a[$last]->id);
         $a[$last]->id = 18;
         $this->assertEquals(18, $a[$last]['id']);
-        
+
         $a[] = new ArrayObject($newval);
         $last = count($a) - 1;
         $this->assertEquals(17, $a[$last]->id);
         $a[$last]->id = 18;
         $this->assertEquals(18, $a[$last]['id']);
-        
+
         $newobj = new stdClass();
         foreach ($newval as $k => $v) $newobj->$k = $v;
         $a[] = $newobj;
@@ -73,11 +74,11 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(17, $a[$last]->id);
         $a[$last]->id = 18;
         $this->assertEquals(18, $a[$last]['id']);
-        
+
         $lastval = array_pop($a->toArray());
         $lastval['id'] = 17;
         $this->assertEquals($newval, $lastval);
-        
+
         $a->refresh();
     }
 
@@ -135,7 +136,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Ludwig', $one['nachname']);
         $this->assertEquals('Ludwig', $a->findBy('id', 10)->val('nachname'));
     }
-    
+
     /**
      * @depends testConstruct
      */
@@ -147,7 +148,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Ludwig', $a->getDeleted()->val('nachname'));
         $this->assertEquals(5, $a->refresh());
     }
-    
+
     /**
      * @depends testConstruct
      */
@@ -157,9 +158,9 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $a->pluck('id'));
         $expected = array(array(1, 'dozent'), array(2, 'dozent'), array(10, 'admin'),array(11, 'tutor'), array(15, 'root'));
         $this->assertEquals($expected, $a->pluck(array('id', 'perm')));
-        
+
     }
-    
+
     /**
      * @depends testConstruct
      */
@@ -180,7 +181,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $group_func = function ($a) {return count($a);};
         $this->assertEquals($expected, $a->toGroupedArray('perm', 'perm', $group_func));
     }
-    
+
     /**
      * @depends testConstruct
      * @depends testPluck
@@ -195,7 +196,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $expected = array(2 => 10);
         $this->assertEquals($expected, $a->limit(2,-2)->pluck('id'));
     }
-    
+
     /**
      * @depends testConstruct
      * @depends testPluck
@@ -229,7 +230,7 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
         $expected = array(1,2,10,11,15);
         $this->assertEquals($expected, array_values($a->orderBy('id asc', SORT_NUMERIC)->pluck('id')));
     }
-    
+
     /**
      * @depends testConstruct
      * @expectedException        InvalidArgumentException

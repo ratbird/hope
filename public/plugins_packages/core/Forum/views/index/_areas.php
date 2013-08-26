@@ -36,8 +36,8 @@
             <? if (ForumPerm::has('edit_category', $seminar_id) || ForumPerm::has('remove_category', $seminar_id)) : ?>
             <span style="float: right; padding-right: 5px;" id="tutorCategoryIcons">
                 <? if ($category_id == $seminar_id) : ?>
-                <?= tooltipIcon(_('Vordefinierte Kategorie, kann nicht bearbeitet oder gelöscht werden.'
-                        . 'Für Nutzer/innen ohne Rechte taucht diese Kategorie nur auf, wenn sie Bereiche enthält.'), true) ?>
+                <?= tooltipIcon(_('Diese vordefinierte Kategorie kann nicht bearbeitet oder gelöscht werden.'
+                        . 'Für Autor/innen taucht sie allerdings nur auf, wenn sie Bereiche enthält.')) ?>
                 <? else : ?>
                     <? if (ForumPerm::has('edit_category', $seminar_id)) : ?>
                     <a href="<?= PluginEngine::getLink('coreforum/index/?edit_category=' . $category_id) ?>"

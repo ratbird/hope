@@ -9,8 +9,8 @@ class PerformanceTic3759 extends Migration
     function up()
     {
         DBManager::get()->exec("ALTER TABLE  `plugins_activated` CHANGE  `poiid`  `poiid` VARCHAR( 36 ) NOT NULL DEFAULT  ''");
-        DBManager::get()->exec("ALTER TABLE  `plugins_activated` ADD UNIQUE  `poiid` (  `poiid` ,  `pluginid` ,  `state` )");
-        }
+        DBManager::get()->exec("ALTER TABLE  `plugins_activated` ADD UNIQUE (  `poiid` ,  `pluginid` ,  `state` )");
+    }
 
     function down()
     {

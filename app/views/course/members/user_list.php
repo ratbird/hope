@@ -64,7 +64,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($users as $leser) : ?>
-        <? $fullname = $leser['user_id'];?>
+        <? $fullname = $leser['fullname'];?>
             <tr>
                 <? if($is_tutor) :?>
                 <td>

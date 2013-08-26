@@ -59,7 +59,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($accepted as $accept) : ?>
-        <? $fullname = $accept['user_id'];?>
+        <? $fullname = $accept['fullname'];?>
             <tr>
                 <? if (!$is_locked) : ?>
                 <td>

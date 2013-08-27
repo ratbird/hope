@@ -411,12 +411,12 @@ class StudipFormat extends TextFormat
     {
         if (strlen($matches[1]) > 1) {
             $title = sprintf(_('%s hat geschrieben:'), $markup->format(substr($matches[1], 1)));
-        } else {
-            $title = _('Zitat:');
-        }
-
-        return sprintf('<blockquote><div class="author">%s</div>%s</blockquote>',
+            return sprintf('<blockquote><div class="author">%s</div>%s</blockquote>',
                        $title, trim($contents));
+        } else {
+            return sprintf('<blockquote>%s</blockquote>',
+                       trim($contents));
+        }
     }
 
     /**

@@ -288,7 +288,7 @@ class StudygroupModel
             $parameters = array($status);
 
             if(!empty($search)) {
-                $sql .= " AND s.Name LIKE CONCATA('%', ?, '%')";
+                $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
                 $parameters[] = $search;
             }
             $sql     .= " ORDER BY aum.Nachname ". $sort_order;

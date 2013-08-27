@@ -162,9 +162,12 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
             $query = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user->id, $current_seminar->getId()));
-            if ($statement->rowCount() == 0)
+            if ($statement->rowCount() == 0) {
                 $meldung="error§" . _("Datenbankfehler!");
-            else {
+            } else {
+                // enable others to do something after the user has been deleted
+                NotificationCenter::postNotification('UserDidLeaveCourse', $current_seminar->getId(), $user->id);
+
                 // Löschen aus Statusgruppen
                 RemovePersonStatusgruppeComplete (get_username(), $current_seminar->getId());
 

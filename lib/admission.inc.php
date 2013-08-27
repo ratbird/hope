@@ -99,6 +99,8 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
         VALUES (?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute(array($seminar_id, $user_id, $status, ($contingent ? $contingent : ''), $admission_comment, $colour_group, $mkdate));
 
+    NotificationCenter::postNotification('UserDidEnterCourse', $seminar_id, $user_id);
+
     if ($admission_status) {
         // delete the entries, user is now in the seminar
         $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
@@ -398,6 +400,8 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
                         $row['studiengang_id']
                     ));
                     $affected = $statement->rowCount();
+
+                    NotificationCenter::postNotification('UserDidEnterCourse', $seminar->getId(), $row['user_id']);
                 } else {
                     $query = "UPDATE admission_seminar_user
                               SET status = 'accepted'
@@ -492,6 +496,8 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
                         $insert_statement->bindValue(':studiengang_id', $studiengang_id);
                         $insert_statement->execute();
                         $affected = $insert_statement->rowCount();
+
+                        NotificationCenter::postNotification('UserDidEnterCourse', $seminar->getId(), $row['user_id']);
                     } else {
                         $update_statement->bindValue(':user_id', $row['user_id']);
                         $update_statement->execute();
@@ -690,6 +696,9 @@ function check_admission ($send_message=TRUE)
                         $group,
                         $winner['studiengang_id']
                     ));
+
+                    NotificationCenter::postNotification('UserDidEnterCourse', $seminar->getId(), $winner['user_id']);
+
                     if ($insert_statement->rowCount()) {
                         $delete_statement->execute(array(
                             $winner['user_id'],

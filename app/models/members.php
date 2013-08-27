@@ -133,8 +133,11 @@ class MembersModel
                 setTempLanguage($user_id);
                 restoreLanguage();
                 RemovePersonStatusgruppeComplete($temp_user['username'], $this->course_id);
-                // logging
+
+                // logging & notification
                 log_event('SEM_USER_DEL', $this->course_id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
+                NotificationCenter::postNotification('UserDidLeaveCourse', $this->course_id, $user_id);
+
                 $msgs[] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
             }
         }

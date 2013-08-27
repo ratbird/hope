@@ -111,26 +111,7 @@
                         <? endif ?>
                     </td>
                     <td>
-                        <? $study_courses = UserModel::getUserStudycourse($autor['user_id']) ?>
-                        <? if(!empty($study_courses)) : ?>
-                            <? if (count($study_courses) < 2) : ?>
-                                <? for ($i = 0; $i < 1; $i++) : ?>
-                                    <?= htmlReady($study_courses[$i]['fach']) ?>
-                                    (<?= htmlReady($study_courses[$i]['abschluss']) ?>)
-                                <? endfor ?>
-                            <? else : ?>
-                                <?= htmlReady($study_courses[0]['fach']) ?>
-                                (<?= htmlReady($study_courses[0]['abschluss']) ?>)
-                                [...]
-                                <? foreach($study_courses as $course) : ?>
-                                    <? $course_res .= sprintf('- %s (%s)<br>',
-                                                              htmlReady($course['fach']),
-                                                              htmlReady($course['abschluss'])) ?>
-                                <? endforeach ?>
-                                <?= tooltipIcon('<strong>' . _('Weitere Studiengänge') . '</strong><br>' . $course_res, false, true) ?>
-                                <? unset($course_res); ?>
-                            <? endif ?>
-                        <? endif ?>
+                        <?= $this->render_partial("course/members/_studycourse.php", array('study_courses' => UserModel::getUserStudycourse($autor['user_id']))) ?>
                     </td>
                     <? if ($semAdmissionEnabled) : ?>
                         <td>

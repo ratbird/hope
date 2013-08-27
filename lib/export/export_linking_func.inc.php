@@ -5,8 +5,8 @@
 # Lifter010: TODO
 /**
 * Export-functions to create links to the export-module.
-* 
-* In this file there are three functions which help to include the export-module into Stud.IP-pages. 
+*
+* In this file there are three functions which help to include the export-module into Stud.IP-pages.
 *
 * @author       Arne Schroeder <schroeder@data.quest.de>
 * @access       public
@@ -20,10 +20,10 @@ use Studip\Button, Studip\LinkButton;
 /**
 * Generates a form that can be put into Stud.IP-pages to link to the export-module.
 *
-* This function returns a string with a HTML-form that links to the export-module. 
+* This function returns a string with a HTML-form that links to the export-module.
 * It passes the given parameters in order to allow to jump to a specific part of the export-module.
 *
-* @access   public        
+* @access   public
 * @param        string  $range_id   export-range
 * @param        string  $ex_type    type of data to be exported
 * @param        string  $filename   filename for data-file
@@ -64,14 +64,14 @@ function export_form($range_id, $ex_type = "", $filename = "", $format = "", $fi
     $export_string .= "</form>";
     return $export_string;
 }
-    
+
 /**
 * Generates a link to the export-module that can be put into Stud.IP-pages.
 *
-* This function returns a string with a  link to the export-module. 
+* This function returns a string with a  link to the export-module.
 * It passes the given parameters in order to allow to jump to a specific part of the export-module.
 *
-* @access   public        
+* @access   public
 * @param        string  $range_id   export-range
 * @param        string  $ex_type    type of data to be exported
 * @param        string  $filename   filename for data-file
@@ -87,9 +87,9 @@ function export_link($range_id, $ex_type = "", $filename = "", $format = "", $ch
     $filename = preg_replace('/[\x7f-\x9f]/', '_', $filename);
     $export_string = '<a href="';
     if ($choose != "")
-        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' =>rawurlencode($filename), 'format' => $format, 'choose' => $choose, 'o_mode' => $o_mode, 'filter' => $filter, 'jump' => $i_page));
+        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' => $filename, 'format' => $format, 'choose' => $choose, 'o_mode' => $o_mode, 'filter' => $filter, 'jump' => $i_page));
     elseif ($ex_type != "")
-        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' => rawurlencode($filename), 'o_mode' => 'choose', 'filter' => $filter));
+        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' =>  $filename, 'o_mode' => 'choose', 'filter' => $filter));
     else
         $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'o_mode' => 'start'));
 
@@ -97,14 +97,14 @@ function export_link($range_id, $ex_type = "", $filename = "", $format = "", $ch
     $export_string .= '</a>';
     return $export_string;
 }
-    
+
 /**
 * Generates a Button with a link to the export-module that can be put into Stud.IP-pages.
 *
-* This function returns a string containing an export-button with a link to the export-module. 
+* This function returns a string containing an export-button with a link to the export-module.
 * It passes the given parameters in order to allow to jump to a specific part of the export-module.
 *
-* @access   public        
+* @access   public
 * @param        string  $range_id   export-range
 * @param        string  $ex_type    type of data to be exported
 * @param        string  $filename   filename for data-file
@@ -127,5 +127,5 @@ function export_button($range_id, $ex_type = "", $filename = "", $format = "", $
     $export_string .= LinButton::create(_('Export'), URLHelper::getURL($export_link));
     return $export_string;
 }
-    
+
 ?>

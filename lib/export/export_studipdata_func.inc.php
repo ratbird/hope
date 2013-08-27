@@ -154,7 +154,7 @@ function export_range($range_id)
     if ($range_id != 'root') {
         $tree_object = new RangeTreeObject($range_id);
         $range_name = $tree_object->item_data["name"];
-        
+
         // Tree-Item ist ein Institut:
         if ($tree_object->item_data['studip_object'] == 'inst') {
             if (!$output_startet) {
@@ -219,7 +219,7 @@ function export_range($range_id)
                 } else {
                     $statement = DBManager::get()->query($query);
                 }
-                
+
                 $to_export = $statement->fetchAll(PDO::FETCH_COLUMN);
             }
 
@@ -566,7 +566,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         $studiengang = $statement->fetchGrouped(PDO::FETCH_COLUMN);
 
         $studiengang['all'] = _('Alle Studiengänge');
-        
+
         if ($filter != 'awaiting') {
             if (!$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['workgroup_mode']) {
                 $gruppe = array(
@@ -598,7 +598,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
             // Gruppierung nach Statusgruppen / Funktionen
             if ($key1 == 'no') {
                 $query = "SELECT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) AS registration_date,
-                                 GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name) SEPARATOR '; ') AS nutzer_studiengaenge
+                                 GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                           FROM seminar_user AS su
                           LEFT JOIN auth_user_md5 AS aum USING (user_id)
                           LEFT JOIN user_info AS ui USING (user_id)
@@ -611,7 +611,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                 $parameters[':seminar_id'] = $ex_sem_id;
             } else {
                 $query = "SELECT DISTINCT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) AS registration_date,
-                                 GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name) SEPARATOR '; ') AS nutzer_studiengaenge
+                                 GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                           FROM statusgruppe_user
                           LEFT JOIN seminar_user AS su USING (user_id)
                           LEFT JOIN auth_user_md5 AS aum USING (user_id)
@@ -629,7 +629,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
           else if ($key1 == 'accepted') {
             $query = "SELECT ui.*, aum.*, asu.comment, asu.studiengang_id AS admission_studiengang_id,
                              FROM_UNIXTIME(asu.mkdate) AS registration_date,
-                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name) SEPARATOR '; ') AS nutzer_studiengaenge
+                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                       FROM admission_seminar_user AS asu
                       LEFT JOIN user_info AS ui USING (user_id)
                       LEFT JOIN auth_user_md5 AS aum USING (user_id)
@@ -643,7 +643,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         } elseif ($key1 == 'awaiting') {
             $query = "SELECT ui.*, aum.*, asu.comment, asu.studiengang_id AS admission_studiengang_id,
                              asu.position AS admission_position,
-                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name) SEPARATOR '; ') AS nutzer_studiengaenge
+                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                         FROM admission_seminar_user AS asu
                         LEFT JOIN user_info AS ui USING(user_id)
                         LEFT JOIN auth_user_md5 AS aum USING(user_id)
@@ -655,7 +655,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
             $parameters[':seminar_id'] = $ex_sem_id;
         } else {
             $query = "SELECT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) AS registration_date,
-                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name) SEPARATOR '; ') AS nutzer_studiengaenge
+                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, us.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                       FROM seminar_user AS su
                       LEFT JOIN auth_user_md5 AS aum USING ( user_id )
                       LEFT JOIN user_info AS ui USING ( user_id )
@@ -908,7 +908,7 @@ function get_additional_data($user_id, $range_id)
     // Prepare "default" statement
     $query = "SELECT :column FROM :table WHERE user_id = :user_id";
     $default_statement = DBManager::get()->prepare($query);
-     
+
     $collected_data = array();
 
     if (is_array($GLOBALS['TEILNEHMER_VIEW'])) {
@@ -966,7 +966,7 @@ function get_additional_data($user_id, $range_id)
                 $default_statement->bindValue(':table', $val['table'], StudipPDO::PARAM_COLUMN);
                 $default_statement->bindValue(':user_id', $user_id);
                 $default_statement->execute();
-                $content = $default_statement->fetchColumn(); 
+                $content = $default_statement->fetchColumn();
 
                 if ($content) {
                     $user_data = array('name' => $val["field"], "content" => $content);

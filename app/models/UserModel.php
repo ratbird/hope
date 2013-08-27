@@ -74,7 +74,7 @@ class UserModel
              . "FROM user_studiengang AS us "
              . "LEFT JOIN studiengaenge AS s ON us.studiengang_id = s.studiengang_id "
              . "LEFT JOIN abschluss AS a ON us.abschluss_id = a.abschluss_id "
-             . "WHERE user_id=?";
+             . "WHERE user_id=? ORDER BY fach";
         $db = DBManager::get()->prepare($sql);
         $db->execute(array($user_id));
         return $db->fetchAll(PDO::FETCH_ASSOC);

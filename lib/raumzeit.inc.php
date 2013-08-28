@@ -52,10 +52,10 @@ function raumzeit_delete_singledate($sem) {
                 $sem->createMessage(sprintf(_("Sie haben den Termin %s gelöscht, dem ein Thema zugeorndet war. Sie können das Thema in der %sExpertenansicht des Ablaufplans%s einem anderen Termin (z.B. einem Ausweichtermin) zuordnen."),
                     $termin->toString(), '<a href="'. URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') .'">', '</a>'));
             } else {
-                if ($termin->hasRoom()) {  
-                    $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht! <br> Die Buchung für den Raum %s wurde gelöscht."), 
-                        $termin->toString(), $termin->getRoom()));  
-                } else {  
+                if ($termin->hasRoom()) {
+                    $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht! <br> Die Buchung für den Raum %s wurde gelöscht."),
+                        $termin->toString(), $termin->getRoom()));
+                } else {
                     $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht!"), $termin->toString()));
                 }
             }
@@ -82,7 +82,7 @@ function raumzeit_undelete_singledate($sem) {
 }
 
 function raumzeit_checkboxAction($sem) {
-    // close any opened singledate, if we do a checkbox action    
+    // close any opened singledate, if we do a checkbox action
     if (Request::get('checkboxAction')) {
         Request::set('singleDateID', null);
     }
@@ -262,7 +262,7 @@ function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinu
             ||($endMinute<0   ||$endMinute>59)
             ||!is_int($startStunde) || !is_int($endStunde)
             ||!is_int($startMinute) || !is_int($endMinute)
-            
+
             ){
         return FALSE;
     } else {
@@ -282,9 +282,9 @@ function raumzeit_doAddSingleDate($sem) {
     else {
         $termin = new SingleDate();
         //dates[0]=day, dates[1]=month,dates[2]=year
-        $dates = explode('.', Request::get('startDate'));        
-        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0, $dates[1], $dates[0], $dates[2]);
-        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1], $dates[0], $dates[2]);
+        $dates = explode('.', Request::get('startDate'));
+        $start = mktime(Request::int('start_stunde'), Request::int('start_minute'), 0, $dates[1], $dates[0], $dates[2]);
+        $ende = mktime(Request::int('end_stunde'), Request::int('end_minute'), 0, $dates[1], $dates[0], $dates[2]);
         $termin->setTime($start, $ende);
         $termin->setDateType(Request::get('dateType'));
         $termin->store();
@@ -350,9 +350,9 @@ function raumzeit_editSingleDate($sem) {
     }
     // generate time-stamps we can compare directly
     //dates[0]=day, dates[1]=month,dates[2]=year
-        $dates = explode('.', Request::get('startDate'));        
-        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0,$dates[1],$dates[0],$dates[2]);
-        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1],$dates[0],$dates[2]);
+        $dates = explode('.', Request::get('startDate'));
+        $start = mktime(Request::int('start_stunde'), Request::int('start_minute'), 0,$dates[1],$dates[0],$dates[2]);
+        $ende = mktime(Request::int('end_stunde'), Request::int('end_minute'), 0, $dates[1],$dates[0],$dates[2]);
 
     // get request-variables
     $termin_id = Request::option('singleDateID');
@@ -417,7 +417,7 @@ function raumzeit_editSingleDate($sem) {
                 $termin->killAssign();
                 $sem->createMessage(sprintf(_("Der Termin %s wurde geändert, etwaige Raumbuchung wurden entfernt und stattdessen der angegebene Freitext eingetragen!"), '<b>'.$termin->toString().'</b>'));
             }
-           
+
             $sem->appendMessages($termin->getMessages());
         }
 
@@ -427,7 +427,7 @@ function raumzeit_editSingleDate($sem) {
         // add persons performing at this date
         $teachers = $sem->getMembers('dozent');
         $teacher_added = false;
-        
+
         foreach (explode(',', Request::get('related_teachers')) as $dozent_id) {
             if (in_array($dozent_id, array_keys($teachers)) !== false) {
                 $teacher_added = true;
@@ -438,7 +438,7 @@ function raumzeit_editSingleDate($sem) {
         if (!$teacher_added) {
             $sem->createInfo(_("Jeder Termin muss mindestens eine Person haben, die ihn durchführt!"));
         }
-        
+
         $termin->store();
         NotificationCenter::postNotification("CourseDidChangeSchedule", $sem);
     }
@@ -458,10 +458,10 @@ function raumzeit_editSingleDate($sem) {
                 $zw_termin->end_time = $ende;
 
                 // parameters to be resent on positive answer
-                foreach (words('day month year start_stunde start_minute end_stunde '
+                foreach (words('startDate start_stunde start_minute end_stunde '
                     . 'end_minute related_teachers room_sd freeRoomText_sd dateType cmd '
                     . 'singleDateID cycle_id action') as $param) {
-                    $url_params[$param] = Request::quoted($param);
+                    $url_params[$param] = Request::get($param);
                 }
 
                 $url_params['approveChange'] = true;
@@ -580,7 +580,7 @@ function raumzeit_bulkAction($sem) {
     $persons = Request::getArray('related_persons');
     $action = Request::get('related_persons_action');
     $something_done = false;
-    
+
     if (in_array($action, array('add', 'delete'))) {
         foreach ($singledates as $singledate) {
             $singledate = new SingleDate($singledate);

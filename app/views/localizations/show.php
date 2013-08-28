@@ -24,6 +24,9 @@ $translations = array(
   , "Bitte geben Sie Ihren tatsächlichen Nachnamen an." => _("Bitte geben Sie Ihren tatsächlichen Nachnamen an.")
   , "Blenden Sie die restlichen Termine ein" => _("Blenden Sie die restlichen Termine ein")
   , "Blenden Sie die restlichen Termine aus" => _("Blenden Sie die restlichen Termine aus")
+  , 'Alle Räume anzeigen' => _('Alle Räume anzeigen')
+  , 'Nur buchbare Räume anzeigen' => _('Nur buchbare Räume anzeigen')
+  , 'Jeder Termin muss mindestens eine Person haben, die ihn durchführt!' => _('Jeder Termin muss mindestens eine Person haben, die ihn durchführt!')
   // add your translations here
 );
 

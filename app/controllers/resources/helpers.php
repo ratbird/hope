@@ -30,7 +30,7 @@ class Resources_HelpersController extends AuthenticatedController
         parent::before_filter($action, $args);
         $this->set_layout(NULL);
     }
-    
+
     function bookable_rooms_action()
     {
         if (!getGlobalPerms($GLOBALS['user']->id) == 'admin') {
@@ -47,8 +47,15 @@ class Resources_HelpersController extends AuthenticatedController
         if (count(Request::getArray('new_date'))) {
             $new_date = array();
             foreach (Request::getArray('new_date') as $one) {
-                $new_date[$one['name']] = $one['value'];
+                if ($one['name'] == 'startDate') {
+                    $dmy = explode('.', $one['value']);
+                    $new_date['day'] = (int)$dmy[0];
+                    $new_date['month'] = (int)$dmy[1];
+                    $new_date['year'] = (int)$dmy[2];
+                }
+                $new_date[$one['name']] = (int)$one['value'];
             }
+
             if (check_singledate($new_date['day'], $new_date['month'], $new_date['year'], $new_date['start_stunde'],
             $new_date['start_minute'], $new_date['end_stunde'], $new_date['end_minute'])) {
                 $start = mktime($new_date['start_stunde'], $new_date['start_minute'], 0, $new_date['month'], $new_date['day'], $new_date['year']);
@@ -82,7 +89,7 @@ class Resources_HelpersController extends AuthenticatedController
                     } else {
                         $assign_id = SingleDateDB::getAssignID($termin_id);
                     }
-                    $filter = function($a) use ($assign_id) 
+                    $filter = function($a) use ($assign_id)
                         {
                             if ($a['assign_id'] && $a['assign_id'] == $assign_id) {
                                 return false;
@@ -98,10 +105,10 @@ class Resources_HelpersController extends AuthenticatedController
             $this->render_json(array_keys($result));
             return;
         }
-        
+
         $this->render_nothing();
     }
-    
+
     function render_json($data){
         $this->set_content_type('application/json;charset=utf-8');
         return $this->render_text(json_encode($data));

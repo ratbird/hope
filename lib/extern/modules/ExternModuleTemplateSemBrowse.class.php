@@ -250,6 +250,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             array('###GROUP-NO###', _("Fortlaufende Gruppennummer")),
             array('<!-- BEGIN COURSE -->', ''),
             array('###TITLE###', ''),
+            array('###COURSE_ID###', ''),
             array('###COURSEDETAILS-HREF###', ''),
             array('###SUBTITLE###', ''),
             array('###COURSE_NUMBER###', _("Die Veranstaltungsnummer")),
@@ -607,7 +608,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     function getSelectSemType () {
         $select = '<select name="ext_templatesembrowse[type]" id="ext_templatesembrowse_type" size="1">';
         $select .= '<option value="all"' . ($this->sem_browse_data['type'] == 'all' ? ' selected="selected"' : '') . '>' . _("alle") . '</option>';
-        foreach ($this->sem_browse_data['sem_status'] as $type_id) {
+        foreach ((array) $this->sem_browse_data['sem_status'] as $type_id) {
             $select .= '<option value="' .  $type_id;
             if ($this->sem_browse_data['type'] == $type_id) {
                 $select .= '" selected="selected">';
@@ -757,7 +758,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         global $_fullname_sql, $SEM_TYPE, $SEM_CLASS;
         $content = null;
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
-            list($group_by_data, $sem_data) = $this->getResultSearch($level_id);
+            list($group_by_data, $sem_data) = $this->getResult($level_id);
             if (count($sem_data)) {
                 $content['__GLOBAL__']['COURSES_COUNT'] = count($sem_data);
                 $content['__GLOBAL__']['COURSES_GROUPING'] = $this->group_by_fields[$this->sem_browse_data['group_by']]['name'];
@@ -811,6 +812,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                         $k = 0;
                         $semester = SemesterData::GetSemesterArray();
                         while(list($seminar_id, ) = each($sem_ids['Seminar_id'])) {
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE_ID'] = $seminar_id;
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['TITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Name']));
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE-NO'] = $k + 1;
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSEDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(array('link_args' => 'seminar_id=' . $seminar_id));
@@ -1069,205 +1071,6 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         return $cont;
     }
 
-function getResultSearch ($level_id = null) {
-        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
-        $add_fields = '';
-        $add_query = '';
-        $sem_tree_query = '';
-        $limit_sql = '';
-        $orderby_field = ($this->config->getValue('Main', 'resultorderby') ? $this->config->getValue('Main', 'resultorderby') : 'VeranstaltungsNummer');
-        if ($this->sem_browse_data['group_by'] == 1
-            || (sizeof($this->config->getValue('SelectSubjectAreas', 'subjectareasselected'))
-            && !($this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas') || $this->sem_browse_data['start_item_id'] == 'root'))) {
-            if ($this->config->getValue('Main', 'mode') == 'show_sem_range' && $this->sem_browse_data['start_item_id'] != 'root') {
-                $allowed_ranges = array();
-                if (is_null($level_id)) {
-                    if (!is_object($this->sem_tree)){
-                        $this->sem_tree = TreeAbstract::GetInstance('StudipSemTree');
-                    }
-                    if ($kids = $this->sem_tree->getKidsKids($this->sem_browse_data['start_item_id'])) {
-                        $allowed_ranges = $kids;
-                    }
-                    $allowed_ranges[] = $this->sem_browse_data['start_item_id'];
-                } else {
-                    $allowed_ranges[] = $level_id;
-                }
-
-                if ($this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas')) {
-                    $sem_tree_query = " AND sem_tree_id IN('" . join("','", $allowed_ranges) . "') ";
-                } elseif (is_array($this->config->getValue('SelectSubjectAreas', 'subjectareasselected'))) {
-                    if ($this->config->getValue('SelectSubjectAreas', 'reverseselection')) {
-                        $allowed_ranges = array_diff($allowed_ranges, $this->config->getValue('SelectSubjectAreas', 'subjectareasselected'));
-                    } else {
-                        $allowed_ranges = array_intersect($allowed_ranges, $this->config->getValue('SelectSubjectAreas', 'subjectareasselected'));
-                    }
-                    $sem_tree_query = " AND sem_tree_id IN('" . join("','", $allowed_ranges) . "') ";
-                } else {
-                    return array(array(), array());
-                }
-            }
-            $add_fields = 'seminar_sem_tree.sem_tree_id AS bereich,';
-            $add_query = "LEFT JOIN seminar_sem_tree ON (seminare.Seminar_id = seminar_sem_tree.seminar_id)";
-        } else if ($this->config->getValue('Main', 'maxnumberofhits')) {
-                $limit_sql = ' ORDER BY sem_number DESC, ' . $orderby_field . ' ASC LIMIT ' . ($this->module_params['start'] ? intval($this->module_params['start']) : '0') . ',' . $this->config->getValue('Main', 'maxnumberofhits');
-        }
-        if ($this->sem_browse_data['group_by'] == 4) {
-            $add_fields = 'Institute.Name AS Institut,Institute.Institut_id,';
-            $add_query = 'LEFT JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.Seminar_id)
-            LEFT JOIN Institute ON (Institute.Institut_id = seminar_inst.institut_id)';
-        }
-        // show only selected SemTypes
-        $selected_semtypes = $this->config->getValue('ReplaceTextSemType', 'visibility');
-        $sem_types_array = array();
-        if (count($selected_semtypes)) {
-            for ($i = 0; $i < count($selected_semtypes); $i++) {
-                if ($selected_semtypes[$i] == '1') {
-                    $sem_types_array[] = $i + 1;
-                }
-            }
-            $sem_types_query = "AND seminare.status IN ('" . implode("','", $sem_types_array) . "')";
-        } else {
-            $sem_types_query = '';
-        }
-
-        // participated institutes (or show only courses located at this faculty)
-        /*
-        $sem_inst_query = '';
-        if (!$this->config->getValue('Main', 'allseminars')) {
-            $tree = TreeAbstract::GetInstance('StudipRangeTree');
-            $kidskids = $tree->getKidsKids($this->sem_browse_data['start_item_id']);
-            $institute_ids = array($tree->tree_data[$this->sem_browse_data['start_item_id']]['studip_object_id']);
-            foreach ($kidskids as $kid) {
-                $institute_ids[] = $tree->tree_data[$kid]['studip_object_id'];
-            }
-            $sem_inst_query = " AND seminare.Institut_id IN ('" . join("','", $institute_ids) . "')";
-        }
-        */
-
-        if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
-            $nameformat = 'full_rev';
-        }
-        $dbv = new DbView();
-        /*
-        $query = "SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, seminare.ects, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name,
-                $add_fields" . $_fullname_sql[$nameformat] ." AS fullname, auth_user_md5.username, title_front, title_rear, Vorname, Nachname,
-                " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
-                LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent')
-                LEFT JOIN auth_user_md5 USING (user_id)
-                LEFT JOIN user_info USING (user_id)
-                $add_query
-                WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result'])) . "') $sem_types_query $sem_inst_query $sem_tree_query $limit_sql";
-        */
-
-        $query = "SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, seminare.ects, seminare.Name AS Name,
-                $add_fields" . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end
-                FROM seminare
-                $add_query
-                WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result'])) . "') $sem_types_query $sem_inst_query $sem_tree_query $limit_sql";
-
-        $db = new DB_Seminar($query);
-        if (!$db->num_rows()) {
-            return array(array(), array());
-        }
-        $snap = new DbSnapshot($db);
-        $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
-        $data_fields[0] = 'Seminar_id';
-        if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']) {
-            $data_fields[1] = $this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field'];
-        }
-        $group_by_data = $snap->getGroupedResult($group_field, $data_fields);
-        $sem_data = $snap->getGroupedResult('Seminar_id');
-
-        $query = "SELECT seminare.Seminar_id, " . $_fullname_sql[$nameformat] . " AS fullname, username, title_front, title_rear, Vorname, Nachname, seminar_user.position AS position FROM
-        seminare LEFT JOIN seminar_user ON(seminare.Seminar_id = seminar_user.Seminar_id AND seminar_user.status = 'dozent')
-        LEFT JOIN auth_user_md5 USING(user_id)
-        LEFT JOIN user_info USING(user_id)
-        WHERE seminare.Seminar_id IN ('" . implode("','", array_keys($sem_data)) . "')";
-
-        $db2 = DBManager::get();
-        $stm = $db2->query($query);
-        $snap_dozent = new DbSnapshot(array('resultSet' => $stm));
-        $snap_dozent_grouped = $snap_dozent->getGroupedResult('Seminar_id');
-        $sem_data = array_merge_recursive($sem_data, $snap_dozent_grouped);
-
-        if ($this->sem_browse_data['group_by'] == 0) {
-            $semester = SemesterData::GetSemesterArray();
-            $group_by_duration = $snap->getGroupedResult('sem_number_end', array('sem_number', 'Seminar_id'));
-            foreach ($group_by_duration as $sem_number_end => $detail) {
-                if ($sem_number_end != -1 && ($detail['sem_number'][$sem_number_end] && count($detail['sem_number']) == 1)) {
-                    continue;
-                } else {
-                    foreach ($detail['Seminar_id'] as $seminar_id => $foo) {
-                        $start_sem = key($sem_data[$seminar_id]['sem_number']);
-                        if ($sem_number_end == -1) {
-                            $sem_number_end = count($semester) - 1;
-                        }
-                        for ($i = $start_sem; $i <= $sem_number_end; ++$i) {
-                            if ($this->sem_number === false || (is_array($this->sem_number) && in_array($i, $this->sem_number))) {
-                                if ($group_by_data[$i] && !$tmp_group_by_data[$i]) {
-                                    foreach($group_by_data[$i]['Seminar_id'] as $id => $bar) {
-                                        $tmp_group_by_data[$i]['Seminar_id'][$id] = true;
-                                    }
-                                }
-                                $tmp_group_by_data[$i]['Seminar_id'][$seminar_id] = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (is_array($tmp_group_by_data)) {
-                if ($this->sem_number !== false) {
-                    unset($group_by_data);
-                }
-                foreach ($tmp_group_by_data as $start_sem => $detail) {
-                    $group_by_data[$start_sem] = $detail;
-                }
-            }
-        }
-
-        //release memory
-        unset($snap);
-        unset($tmp_group_by_data);
-
-        foreach ($group_by_data as $group_field => $sem_ids) {
-            foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
-                if ($orderby_field) {
-                    $name = strtolower(key($sem_data[$seminar_id][$orderby_field]));
-                } else {
-                    $name = strtolower(key($sem_data[$seminar_id]["VeranstaltungsNummer"]));
-                }
-                $name = str_replace(array('ä', 'ö', 'ü'), array('ae', 'oe', 'ue'), $name);
-                $group_by_data[$group_field]['Seminar_id'][$seminar_id] = $name;
-            }
-            uasort($group_by_data[$group_field]['Seminar_id'], 'strnatcmp');
-        }
-
-        switch ($this->sem_browse_data['group_by']) {
-            case 0:
-            krsort($group_by_data, SORT_NUMERIC);
-            break;
-
-            case 1:
-            uksort($group_by_data, create_function('$a,$b',
-            '$the_tree = TreeAbstract::GetInstance("StudipSemTree", false);
-            $the_tree->buildIndex();
-            return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
-            '));
-            break;
-
-            case 3:
-            uksort($group_by_data, create_function('$a,$b',
-            'global $SEM_CLASS,$SEM_TYPE;
-            return strnatcasecmp($SEM_TYPE[$a]["name"]." (". $SEM_CLASS[$SEM_TYPE[$a]["class"]]["name"].")",
-            $SEM_TYPE[$b]["name"]." (". $SEM_CLASS[$SEM_TYPE[$b]["class"]]["name"].")");'));
-            break;
-            default:
-            uksort($group_by_data, 'strnatcasecmp');
-            break;
-        }
-
-        return array($group_by_data, $sem_data);
-    }
 
     function getResult ($level_id = null) {
         global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;

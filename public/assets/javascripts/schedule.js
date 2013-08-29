@@ -122,7 +122,7 @@ STUDIP.Schedule = {
     showSeminarDetails: function (seminar_id, cycle_id) {
         STUDIP.Schedule.cancelNewEntry();
         jQuery('#edit_sem_entry').fadeOut('fast');
-        jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id, function (data) {
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id), function (data) {
             jQuery('#edit_sem_entry').remove();
             jQuery('body').append(data);
         });
@@ -136,7 +136,7 @@ STUDIP.Schedule = {
     showScheduleDetails: function (id) {
         STUDIP.Schedule.cancelNewEntry();
         jQuery('#edit_entry').fadeOut('fast');
-        jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + id, function (data) {
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entryajax/' + id), function (data) {
             jQuery('#edit_entry').remove();
             jQuery('body').append(data);
         });
@@ -150,7 +150,7 @@ STUDIP.Schedule = {
     showInstituteDetails: function (id) {
         STUDIP.Schedule.cancelNewEntry();
         jQuery('#edit_inst_entry').fadeOut('fast');
-        jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + id + '/true', function (data) {
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/groupedentry/' + id + '/true'), function (data) {
             jQuery('#edit_inst_entry').remove();
             jQuery('body').append(data);
         });
@@ -169,7 +169,7 @@ STUDIP.Schedule = {
         STUDIP.Schedule.inst_changed = true;
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/0/true'
+            url: STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/0/true')
         });
 
         jQuery('#' + seminar_id + '_' + cycle_id + '_hide').fadeOut('fast', function () {
@@ -188,7 +188,7 @@ STUDIP.Schedule = {
         STUDIP.Schedule.inst_changed = true;
         jQuery.ajax({
             type: 'GET',
-            url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/1/true'
+            url: STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/1/true')
         });
 
         jQuery('#' + seminar_id + '_' + cycle_id + '_show').fadeOut('fast', function () {
@@ -245,7 +245,7 @@ STUDIP.Instschedule = {
     showInstituteDetails: function (id) {
         STUDIP.Schedule.cancelNewEntry();
         jQuery('#edit_inst_entry').fadeOut('fast');
-        jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + id + '/true', function (data) {
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/instschedule/groupedentry/' + id + '/true'), function (data) {
             jQuery('#edit_inst_entry').remove();
             jQuery('body').append(data);
         });

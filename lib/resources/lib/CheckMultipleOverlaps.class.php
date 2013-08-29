@@ -71,16 +71,37 @@ class CheckMultipleOverlaps
         $this->setTimeRange($begin, $end);
     }
 
-    function addResource($resource_id, $day_of_week = false)
+    function addResource($resource_id)
     {
         // check, if the added resources needs to be checked
         $resObj = ResourceObject::Factory($resource_id);
 
         if (!$resObj->getMultipleAssign()) {
+            if (!$this->begin || !$this->end) {
+                throw new RuntimeException(__METHOD__ . ' could not add resource without time range');
+            }
             $this->resource_ids[] = $resource_id;
+            $parameters = array();
+            $query = "SELECT DISTINCT assign_id
+                FROM resources_assign ra
+                LEFT JOIN resources_temporary_events rte USING(assign_id,resource_id)
+                WHERE rte.event_id IS NULL AND
+                ra.resource_id = :resource_id AND
+                (ra.begin BETWEEN :begin AND :end OR (ra.begin <= :end AND (ra.repeat_end > :begin OR ra.end > :begin)))";
+            $parameters[':resource_id'] = $resource_id;
+            $parameters[':begin'] = $this->begin;
+            $parameters[':end']   = $this->end;
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $missing_temporary_assigns = $statement->fetchAll(PDO::FETCH_COLUMN);
+            if (count($missing_temporary_assigns)) {
+                foreach ($missing_temporary_assigns as $assign_id) {
+                    $assign = new AssignObject($assign_id);
+                    $assign->updateResourcesTemporaryEvents();
+                }
+            }
             return true;
         }
-
         return false;
     }
 
@@ -114,7 +135,7 @@ class CheckMultipleOverlaps
 
         $clause = join(' OR ', $clauses);
 
-        $query = "SELECT resource_id, `begin`, end, assign_id, type,
+        $query = "SELECT resource_id, `begin`, end, assign_id,
                          CASE {$cases} END AS event_id
                   FROM resources_temporary_events
                   WHERE ({$clause}) AND resource_id IN (:resource_ids)
@@ -136,7 +157,6 @@ class CheckMultipleOverlaps
                 'event_id'  => $row['event_id'],
                 'own_begin' => $events[$row['event_id']]->getBegin(),
                 'own_end'   => $events[$row['event_id']]->getEnd(),
-                'lock'      => ($row['type'] == 'lock')
             );
         }
     }

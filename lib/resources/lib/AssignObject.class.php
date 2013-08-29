@@ -352,11 +352,11 @@ class AssignObject {
             $end = mktime (23,59,59, date("n", $this->end), date("j", $this->end), date("Y", $this->end));
 
         //load the events of the actual assign...
-        create_assigns($this, $this);
+        $events = $this->getEvents();
 
         //check, if an assign_lock for one of the events is active (results in an "overlap" so assign cant be saved)
         if (($GLOBALS["RESOURCES_ASSIGN_LOCKING_ACTIVE"]) && ($resObject->isLockable()) && ($resObject->isRoom()) && (getGlobalPerms($user->id) != "admin") && ($check_locks)) {
-            foreach ($this->events as $obj) {
+            foreach ($events as $obj) {
                 $lock = getLockPeriod("assign", $obj->getBegin(), $obj->getEnd());
                 if ($lock) {
                     $overlaps[] = array("begin" =>$obj->getBegin(), "end"=>$obj->getEnd(), "lock"=> TRUE, "lock_begin"=>$lock[0], "lock_end"=>$lock[1], "lock_id"=>$lock[2],);
@@ -367,22 +367,16 @@ class AssignObject {
             }
         }
 
-        //...and add the events of existing assigns in the given resource...
-        list_restore_assign($this, $this->resource_id, $start, $end);
-        //..so we have a "virtual" set of assign-events in the given resource. Now we can check overlaps...
-
         //check for regular overlaps
         if (!$resObject->getMultipleAssign()) { //when multiple assigns are allowed, we need no check...
             $multiChecker = new CheckMultipleOverlaps();
             $multiChecker->setAutoTimeRange(Array($this));
             $multiChecker->addResource($this->resource_id);
-            $events = Array();
-
-            foreach ($this->getEvents() as $evtObj) {
-                $events[$evtObj->getId()] = $evtObj;
+            $check_events = Array();
+            foreach ($events as $evtObj) {
+                $check_events[$evtObj->getId()] = $evtObj;
             }
-
-            $multiChecker->checkOverlap($events, $result);
+            $multiChecker->checkOverlap($check_events, $result);
             $overlaps = Array();
 
             if (is_array($result[$this->resource_id][$this->id])) {
@@ -635,11 +629,11 @@ class AssignObject {
         $now = time();
 
         foreach($events as $event) {
-            $sql[] = "('" . md5(uniqid("tempo",1)) ."','$this->resource_id', '".$this->id."', ".$event->getBegin().", ".$event->getEnd().", 'assign', $now)";
+            $sql[] = "('" . $event->id ."','$this->resource_id', '".$this->id."', ".$event->getBegin().", ".$event->getEnd().", $now)";
         }
 
         if (sizeof($sql) > 0) {
-            $query = "INSERT INTO resources_temporary_events (event_id ,resource_id, assign_id,begin,end,type,mkdate) VALUES " . join(",",$sql);
+            $query = "INSERT INTO resources_temporary_events (event_id ,resource_id, assign_id,begin,end,mkdate) VALUES " . join(",",$sql);
             DBManager::get()->query($query);
         }
     }

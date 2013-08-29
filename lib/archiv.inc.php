@@ -666,19 +666,19 @@ function in_archiv ($sem_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $seminar_id,
-        $name,
-        $untertitel,
-        $beschreibung,
+        $name ?: '',
+        $untertitel ?: '',
+        $beschreibung ?: '',
         $start_time,
         $semester_tmp ?: '',
         $heimat_inst_id,
-        $institute,
-        $dozenten,
-        $fakultaet,
-        $dump,
+        $institute ?: '',
+        $dozenten ?: '',
+        $fakultaet ?: '',
+        $dump ?: '',
         $archiv_file_id, 
-        $forumdump,
-        $wikidump,
+        $forumdump ?: '',
+        $wikidump ?: '',
         $studienbereiche ?: '',
     ));
 }

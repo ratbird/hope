@@ -23,6 +23,9 @@ STUDIP.URLHelper = {
     //the base url for all links
     base_url: null,
 
+    // bound link parameters
+    parameters: {},
+
     /**
      * method to extend short URLs like "dispatch.php/profile" to "http://.../dispatch.php/profile"
      */
@@ -50,7 +53,7 @@ STUDIP.URLHelper = {
      */
     getURL: function (url, param_object) {
 
-        var params = param_object ? _.clone(param_object) : {},
+        var params = _.extend(STUDIP.URLHelper.parameters, param_object ? _.clone(param_object) : {}),
         tmp, fragment, query;
 
         tmp = url.split("#");

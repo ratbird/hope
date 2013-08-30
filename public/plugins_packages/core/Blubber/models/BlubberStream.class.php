@@ -353,11 +353,18 @@ class BlubberStream extends SimpleORMap {
         // Rights to see the blubber-postings:
         $parameters['seminar_ids'] = $this->getMyCourses();
         if ($GLOBALS['perm']->have_perm("admin")) {
-            $filter_sql[] =
-                "(blubber.context_type = 'public' " .
-                    "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
-                    "OR (blubber.context_type = 'course') " .
-                ")";
+            if ((count($this['pool_courses']) && ($this['pool_courses'][0] !== "all")) || count($this['filter_courses'])) {
+                $filter_sql[] =
+                    "(blubber.context_type = 'public' " .
+                        "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
+                        "OR (blubber.context_type = 'course') " .
+                    ")";
+            } else {
+                $filter_sql[] =
+                    "(blubber.context_type = 'public' " .
+                        "OR (blubber.context_type = 'private' AND blubber_mentions.user_id = :me) " .
+                    ")";
+            }
         } else {
             $filter_sql[] =
                 "(blubber.context_type = 'public' " .

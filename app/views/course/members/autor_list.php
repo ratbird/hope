@@ -6,7 +6,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <table id="autor" class="default collapsable tablesorter">
         <caption>
-        	 <span class="actions">
+            <span class="actions">
                 <? if ($is_tutor) : ?>
                         <?=$controller->getEmailLinkByStatus('autor', $autoren)?>
                         <a href="<?= URLHelper::getLink('sms_send.php',
@@ -20,8 +20,8 @@
                                     tooltip2(sprintf(_('Nachricht an alle %s versenden'), htmlReady($status_groups['autor'])))) ?>
                         </a>
                 <? endif ?>
- 	      	 </span>
-        	 <?= $status_groups['autor'] ?>
+           </span>
+            <?= $status_groups['autor'] ?>
         </caption>
         <colgroup>
             <col width="20">
@@ -115,7 +115,7 @@
                     </td>
                     <? if ($semAdmissionEnabled) : ?>
                         <td>
-                            <?= ($autor['admission_studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
+                            <?= ($autor['kontingent'] == 'all') ? _('alle Studiengänge') : htmlReady($autor['kontingent']) ?>
                         </td>
                     <? endif ?>
                 <? endif ?>

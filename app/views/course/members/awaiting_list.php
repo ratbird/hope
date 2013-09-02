@@ -80,7 +80,7 @@
                 </td>
                 <td style="text-align: center"><?= $waiting['position'] ?></td>
                 <td style="text-align: center">
-                    <?= ($waiting['studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
+                    <?= ($waiting['kontingent'] == 'all') ? _('alle Studiengänge') : htmlReady($waiting['kontingent']) ?>
                 </td>
                 <td style="text-align: right">
                     <? if($user_id != $waiting['user_id']) : ?>

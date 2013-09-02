@@ -25,7 +25,7 @@ require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionne für den 
 
 class Course_MembersController extends AuthenticatedController
 {
-        
+
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -133,13 +133,13 @@ class Course_MembersController extends AuthenticatedController
         }
 
         $filtered_members = $this->members->getMembers($this->sort_status, $this->sort_by . ' ' . $this->order, !$this->is_tutor ? $this->user_id : null);
-        
+
         if ($this->is_tutor) {
             $filtered_members = array_merge($filtered_members, $this->members->getAdmissionMembers($this->sort_status, $this->sort_by . ' ' . $this->order ));
-            $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
-            $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
+            $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible kontingent mkdate');
+            $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible kontingent mkdate');
         }
-        
+
         // Check autor-perms
         if (!$this->is_tutor) {
             SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
@@ -152,8 +152,8 @@ class Course_MembersController extends AuthenticatedController
         // get member informations
         $this->dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname');
         $this->tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname mkdate');
-        $this->autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
-        $this->users = $filtered_members['user']->toArray('user_id username vorname nachname visible studiengang_id mkdate');
+        $this->autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible kontingent mkdate');
+        $this->users = $filtered_members['user']->toArray('user_id username vorname nachname visible kontingent mkdate');
         $this->studipticket = Seminar_Session::get_ticket();
         $this->subject = $this->getSubject();
         $this->groups = $this->status_groups;
@@ -498,7 +498,7 @@ class Course_MembersController extends AuthenticatedController
             return;
         }
         //insert new autor
-        if (Request::option('new_autor') && (Request::submitted('add_autor_x') 
+        if (Request::option('new_autor') && (Request::submitted('add_autor_x')
                 || (Request::submitted('add_autor')) && $this->is_tutor)) {
 
             $msg = $this->members->addMember(Request::get('new_autor'), 'autor', Request::get('consider_contingent'));

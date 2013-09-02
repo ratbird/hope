@@ -60,7 +60,8 @@ class ForumVisit {
      * @param string $seminar_id
      */
     static function setVisit($seminar_id) {
-        if (self::getVisit($seminar_id) < object_get_visit($seminar_id, 'sem', false, false)) {
+        $type = get_object_type($seminar_id, words('inst sem'));
+        if (self::getVisit($seminar_id) < object_get_visit($seminar_id, $type, false, false)) {
             self::setVisitdates($seminar_id);
         }
     }

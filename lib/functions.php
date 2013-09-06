@@ -517,9 +517,12 @@ function get_object_type($id, $check_only = array())
             return $object_type_cache[$id] = ($is_fak ? 'fak' : 'inst');
         }
     }
-
-    // None of the above
-    return $object_type_cache[$id] = false;
+    if ($check_all) {
+        // None of the above
+        return $object_type_cache[$id] = false;
+    } else {
+        return false;
+    }
 }
 
 /**

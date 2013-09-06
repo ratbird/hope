@@ -389,6 +389,7 @@ STUDIP.Forum = {
             data: posting,
             success: function (html) {
                 jQuery('#' + preview_id).html(html);
+                STUDIP.Markup.element('#' + preview_id);
                 jQuery('#' + preview_id).parent().show();
             }
         });

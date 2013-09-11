@@ -29,7 +29,7 @@ class CalendarMonth extends CalendarYear
     {
         $this->year = date("Y", $tmstamp);
         $this->mon = date("n", $tmstamp);
-        $this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year, 0);
+        $this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year);
     }
 
     // public

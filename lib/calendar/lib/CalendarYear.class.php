@@ -26,7 +26,7 @@ class CalendarYear
     function CalendarYear($tmstamp)
     {
         $this->year = date('Y', $tmstamp);
-        $this->ts = mktime(12, 0, 0, 1, 1, $this->year, 0);
+        $this->ts = mktime(12, 0, 0, 1, 1, $this->year);
     }
 
     // public

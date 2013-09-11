@@ -47,8 +47,8 @@ class DbCalendarYear extends CalendarYear
         $end = $this->getEnd();
         $start = $this->getStart();
         $year = $this->year;
-        $end_ts = mktime(12, 0, 0, 12, 31, $year, 0);
-        $start_ts = mktime(12, 0, 0, 1, 1, $year, 0);
+        $end_ts = mktime(12, 0, 0, 12, 31, $year);
+        $start_ts = mktime(12, 0, 0, 1, 1, $year);
         $month = 1;
 
         while ($properties = $this->driver->nextProperties()) {
@@ -308,7 +308,7 @@ class DbCalendarYear extends CalendarYear
     // public
     function existEvent($tmstamp)
     {
-        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp), 0);
+        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp));
         if (empty($this->appdays["$adate"]))
             return false;
         return true;
@@ -318,7 +318,7 @@ class DbCalendarYear extends CalendarYear
     // public
     function numberOfEvents($tmstamp)
     {
-        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp), 0);
+        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp));
         return sizeof($this->appdays[$adate]);
     }
 

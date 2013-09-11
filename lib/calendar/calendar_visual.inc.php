@@ -575,7 +575,7 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
     require_once($GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/CalendarMonth.class.php');
 
     $amonth = new CalendarMonth($imt);
-    $now = mktime(12, 0, 0, date('n', time()), date('j', time()), date('Y', time()), 0);
+    $now = mktime(12, 0, 0, date('n', time()), date('j', time()), date('Y', time()));
     $width = '25';
     $height = '25';
 

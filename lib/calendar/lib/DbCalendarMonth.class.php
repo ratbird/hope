@@ -229,7 +229,7 @@ class DbCalendarMonth extends DbCalendarYear
     // public
     function nextEvent($tmstamp)
     {
-        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp), 0);
+        $adate = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp));
         if ($this->events["$adate"]) {
             if (!isset($this->arr_pntr["$adate"]))
                 $this->arr_pntr["$adate"] = 0;

@@ -37,7 +37,7 @@ class DbCalendarWeek
         }
 
         // Berechnung des Timestamps für Montag 12:00:00 Uhr
-        $timestamp = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp), 0);
+        $timestamp = mktime(12, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp));
         $this->ts = $timestamp - 86400 * (strftime("%u", $timestamp) - 1);
 
         $this->kw = strftime("%W", $this->ts);

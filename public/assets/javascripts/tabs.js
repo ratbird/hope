@@ -12,7 +12,7 @@
             STUDIP.Tabs
             -----------
             Create a new STUDIP.Tabs object from an element selector
-            whose childrens´ texts are compressed dynamically to fit the
+            whose childrens' texts are compressed dynamically to fit the
             tabs into a single row.
         */
         var findCompressable, needsCompression, truncate;
@@ -55,7 +55,7 @@
         };
 
         /*
-            This method    undoes the compression of the childrens´ texts and
+            This method undoes the compression of the childrens' texts and
             reset them to their original values.
         */
 

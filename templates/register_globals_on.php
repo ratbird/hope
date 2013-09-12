@@ -10,7 +10,7 @@
       body {
         margin: auto;
         width: 40em;
-        font-family: Futura, â€œCentury Gothicâ€, AppleGothic, sans-serif;
+        font-family: Futura, "Century Gothic", AppleGothic, sans-serif;
       }
       p {
         line-height: 1.5em;
@@ -38,9 +38,9 @@
   <body>
     <h1>Fehler in der PHP-Konfiguration Ihrer Stud.IP-Installation</h1>
     <p>
-        FÃ¼r den Betrieb von Stud.IP war es bis jetzt erforderlich,
+        Für den Betrieb von Stud.IP war es bis jetzt erforderlich,
         die Konfiguration des PHP-Moduls Ihres Webservers anzupassen, damit
-        folgende Zeile â€“ evtl. leicht verÃ¤ndert â€“ enthalten ist:
+        folgende Zeile – evtl. leicht verändert – enthalten ist:
     </p>
 
     <code>
@@ -48,7 +48,7 @@
     </code>
 
     <p>
-      Diese Konfigurationsoption wird fÃ¼r Stud.IP ab dieser Version nicht mehr
+      Diese Konfigurationsoption wird für Stud.IP ab dieser Version nicht mehr
       verwendet.
     </p>
 
@@ -63,7 +63,7 @@
     </p>
 
     <p>
-      Wenn Sie dafÃ¼r weitere Hilfe benÃ¶tigen, besuchen Sie bitte das
+      Wenn Sie dafür weitere Hilfe benötigen, besuchen Sie bitte das
       Forum im
       <a href="http://develop.studip.de/studip/seminar_main.php?auswahl=a70c45ca747f0ab2ea4acbb17398d370">Developer-Board</a>.
     </p>

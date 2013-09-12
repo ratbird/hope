@@ -36,7 +36,7 @@ class InitPersonalNotifications extends Migration
                  `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
                  `description`, `comment`, `message_template`)
             VALUES
-                (MD5('PERSONAL_NOTIFICATIONS_ACTIVATED'), '', 'PERSONAL_NOTIFICATIONS_ACTIVATED', 1, '1', 'boolean', 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Sollen persÃ¶nliche Benachrichtigungen aktiviert sein?', '', '')
+                (MD5('PERSONAL_NOTIFICATIONS_ACTIVATED'), '', 'PERSONAL_NOTIFICATIONS_ACTIVATED', 1, '1', 'boolean', 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Sollen persönliche Benachrichtigungen aktiviert sein?', '', '')
         ");
     }
 

@@ -7,7 +7,7 @@
 * published by the Free Software Foundation; either version 2 of
 * the License, or (at your option) any later version.
 *
-* @author Till GlÃ¶ggler <till.gloeggler@elan-ev.de>
+* @author Till Glöggler <till.gloeggler@elan-ev.de>
 * @copyright 2012 ELAN e.V. <http://www.elan-ev.de>
 * @license http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
 * @category Stud.IP

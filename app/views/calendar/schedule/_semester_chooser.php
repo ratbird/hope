@@ -10,6 +10,6 @@
     <? endforeach ?>
     </select>
     <noscript>
-        <?= Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'title' => _('auswÃ¤hlen'))) ?>
+        <?= Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'title' => _('auswählen'))) ?>
     </noscript>
 </form>

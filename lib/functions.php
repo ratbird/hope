@@ -1595,33 +1595,29 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
  */
 function format_help_url($keyword)
 {
-    global $auth, $_language;
-
-    $helppage=$keyword;
+    $helppage = $keyword;
 
     // $loc is only set if special help view for installation is known
-    //
-    $loc="";
-    $locationid=get_config("EXTERNAL_HELP_LOCATIONID");
-    if ($locationid && $locationid!="default") {
-    $loc = $locationid."/";
+    $loc = "";
+
+    $locationid = Config::get()->EXTERNAL_HELP_LOCATIONID;
+    if ($locationid && $locationid !== 'default') {
+        $loc = $locationid . '/';
     }
 
     // all help urls need short language tag (de, en)
-    //
-    $lang="de";
-    if ($_language) {
-        list($lang) = explode('_', $_language);
+    $lang = 'de';
+    if ($_SESSION['_language']) {
+        list($lang) = explode('_', $_SESSION['_language']);
     }
 
     // determine Stud.IP version as of MAJOR.MINOR
     // from SOFTWARE_VERSION. That variable MUST match pattern MAJOR.MINOR.*
-    //
-    $v=array();
-    preg_match("/^([0-9]+\.[0-9]+)/", $GLOBALS['SOFTWARE_VERSION'], $v);
-    $version=$v[0];
+    preg_match('/^(\d+\.\d+)/', $GLOBALS['SOFTWARE_VERSION'], $v);
+    $version = $v[0];
 
-    $help_query="http://docs.studip.de/help/".$version."/".$lang."/".$loc.$helppage;
+    $help_query = sprintf('http://docs.studip.de/help/%s/%s/%s%s',
+                          $version, $lang, $loc, $helppage);
     return $help_query;
 }
 

@@ -1065,11 +1065,11 @@ function getItemHead($itemID){
             . "   <td align=\"right\" valign=\"bottom\" class=\"printhead\" nowrap=\"nowrap\">\n"
             . $this->createLinkImage(EVAL_PIC_MOVE_UP,
                 _("Block nach oben verschieben"),
-                "cmd=Move&direction=up&groupID=$itemID ",
+                "cmd=Move&direction=up&groupID=$itemID",
                 NO)
             . $this->createLinkImage(EVAL_PIC_MOVE_DOWN,
                 _("Block nach unten verschieben"),
-                "cmd=Move&direction=down&groupID=$itemID ",
+                "cmd=Move&direction=down&groupID=$itemID",
                 NO)
             . "&nbsp;";
     }
@@ -1822,13 +1822,12 @@ function execCommandMoveQuestionDown(){
  */
 function execCommandMove(){
 
-    $direction = Request::quoted('direction');
+    $direction = Request::option('direction');
 
     $group = &$this->tree->getGroupObject(Request::option('groupID'));
     $oldposition = $group->getPosition();
 
-    $this->swapPosition($this->itemID, Request::option('groupID'),
-        $oldposition, Request::quoted('direction'));
+    $this->swapPosition($this->itemID, $group->objectID, $oldposition, $direction);
 
     $this->msg[$this->itemID] = "msg§ ";
     if (($this->itemID != ROOT_BLOCK)

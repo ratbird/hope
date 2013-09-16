@@ -99,7 +99,7 @@ class ExportXLS {
         }
 
         //set border
-        $style = $this->worksheet->getStyle('B' . (1 + $content->header) . ':' . (chr(65 + (count($content->day)))) . (count($content->getTimeAxis()) + 2));
+        $style = $this->worksheet->getStyle('B' . (1 + $content->header) . ':' . (chr(65 + (count($content->day)))) . ($content->getTimes() + 2));
         $style->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_HAIR);
 
         $rowAfterHeader = $this->rowcount;
@@ -121,7 +121,7 @@ class ExportXLS {
         foreach ($content->getDayAxis() as $dayAxis) {
             $this->worksheet->setCellValueByColumnAndRow($this->colcount, $this->rowcount, $dayAxis);
             $timewidth = $this->worksheet->getColumnDimension('A1')->getWidth();
-            $this->worksheet->getColumnDimension(chr(65 + $this->colcount))->setWidth((100 - $timewidth) / count($content->getDayAxis()));
+            $this->worksheet->getColumnDimension(chr(65 + $this->colcount))->setWidth((105 - $timewidth) / count($content->getDayAxis()));
             $this->colcount++;
         }
 
@@ -137,18 +137,42 @@ class ExportXLS {
                     $stlye = $this->worksheet->getStyle($endcol . ($entryStartRow + $start));
                     $style->getAlignment()->setWrapText(true);
                     $stlye->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
-                    $style->getFont()->setSize(6);
                     $style->getFill()->applyFromArray(
                             array(
                                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
                                 'startcolor' => array('rgb' => 'F2F2F2'),
                             )
                     );
-                    $this->worksheet->setCellValueByColumnAndRow($this->colcount, $entryStartRow + $start, html_entity_decode(utf8_encode($event['content'])));
+                    $text = html_entity_decode(utf8_encode($event['content']));
+                    if ($content->rich) {
+                        $tmp = new PHPExcel_RichText();
+                        $textBold = $tmp->createTextRun($text);
+                        $textBold->getFont()->setBold(true);
+                        $textBold->getFont()->setSize(8);
+                        $text = $tmp;
+                    } else {
+                        $style->getFont()->setSize(8);
+                    }
+                    $this->worksheet->setCellValueByColumnAndRow($this->colcount, $entryStartRow + $start, $text);
                     $merge = $endcol . ($entryStartRow + $start) . ':' . $endcol . ($entryStartRow + $event['end']);
                     $this->worksheet->mergeCells($merge);
                 }
             }
+        }
+        
+        $this->colcount = 0;
+        $this->rowcount = $content->getTimes()+3;
+        
+        //write footer
+        if ($content->footer) {
+            $this->worksheet->mergeCells('A'.$this->rowcount.':' . chr(65 + $content->getDays() + 1) . $this->rowcount);
+            //$this->worksheet->getRowDimension(1)->setRowHeight(60);
+            $this->worksheet->setCellValueByColumnAndRow($this->colcount, $this->rowcount, $content->footer);
+            /*$this->rowcount++;
+            $this->colcount = 1;*/
+            $style = $this->worksheet->getStyle('A'.$this->rowcount.':' . chr(65 + $content->getDays() + 1) . $this->rowcount);
+            $style->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+            $style->getAlignment()->setWrapText(true);
         }
     }
 

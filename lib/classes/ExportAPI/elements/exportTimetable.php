@@ -21,6 +21,7 @@
 class exportTimetable extends exportElement {
 
     public $header;
+    public $footer;
     public $timeMin = 8;
     public $timeMax = 22;
     public $timeSteps = 1;
@@ -33,6 +34,7 @@ class exportTimetable extends exportElement {
     public $dateEnd = "end_time";
     public $content;
     public $data;
+    public $rich = false;
 
     public function preview($elementNo) {
         return "<br />";
@@ -48,7 +50,9 @@ class exportTimetable extends exportElement {
         $this->setDate($xml->date);
         $this->setDatabase($xml->database);
         $this->data = (string) $xml->data;
+        $this->rich = $xml->data->attributes()->rich;
         $this->header = (string) $xml->header;
+        $this->footer = (string) $xml->footer;
         $this->getFromSQL();
     }
 
@@ -84,6 +88,10 @@ class exportTimetable extends exportElement {
     public function getDays() {
         return ceil(($this->dayMax - $this->dayMin) / 86400);
     }
+    
+    public function getTimes() {
+        return ceil(($this->timeMax - $this->timeMin) + 1) / $this->timeSteps;
+    }
 
     public function getTimeAxis() {
         for ($i = $this->timeMin; $i <= $this->timeMax; $i += $this->timeSteps) {
@@ -112,7 +120,7 @@ class exportTimetable extends exportElement {
                 $slot = (floor($dayTime / 3600 / $this->timeSteps)) - ($this->timeMin / $this->timeSteps);
                 $slotend = (floor($dayTimeEnd / 3600 / $this->timeSteps)) - ($this->timeMin / $this->timeSteps) - 1;
                 $this->day[$day][$slot]['content'] = $this->loadContentFromResult($result);
-                $this->day[$day][$slot]['end'] = $slotend;
+                $this->day[$day][$slot]['end'] = $slotend > $this->getTimes() ? $this->getTimes() :$slotend;
             }
         }
     }
@@ -133,12 +141,14 @@ class exportTimetable extends exportElement {
     }
 
     private function addCondition($sql) {
+        $groupBy = strrchr($sql, "GROUP BY");
+        $sql = substr($sql, 0, strlen($groupBy) * (-1));
         if (stristr($sql, 'where') === false) {
             $sql .= " WHERE ";
         } else {
             $sql .= " AND ";
         }
-        return $sql . $this->dateBegin . ' >= ' .  strtotime("midnight", $this->dayMin) . ' AND ' . $this->dateBegin . ' <= ' . (strtotime("tomorrow", $this->dayMax) - 1);
+        return $sql . $this->dateBegin . ' >= ' .  strtotime("midnight", $this->dayMin) . ' AND ' . $this->dateBegin . ' <= ' . (strtotime("tomorrow", $this->dayMax) - 1)." ".$groupBy;
     }
 
 }

@@ -205,7 +205,7 @@ class Banner extends SimpleORMap
         if ($this->target_type === 'url') {
             $template = '<a href="%s" target="_blank">%s</a>';
         } else if ($this->target_type === 'none') {
-            $template = '%s%s';
+            $template = '%2$s';
         } else {
             $template = '<a href="%s">%s</a>';
         }

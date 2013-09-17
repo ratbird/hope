@@ -785,6 +785,8 @@ class IndexController extends StudipController
         $layout = $GLOBALS['template_factory']->open('layouts/base');
         $this->set_layout($layout);
 
+        // Set help keyword for Stud.IP's user-documentation and page title
+        PageLayout::setHelpKeyword('Basis.Forum');
         PageLayout::setTitle(getHeaderLine($this->getId()) .' - '. _('Forum'));
 
         $this->AVAILABLE_DESIGNS = array('web20', 'studip');

@@ -1258,7 +1258,7 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
     }
 
     $query = "SELECT a.username AS temp, a.username, {$GLOBALS['_fullname_sql'][$name_format]} AS name,
-                     UNIX_TIMESTAMP() - last_lifesign AS last_action,
+                     ABS(CAST(UNIX_TIMESTAMP() AS SIGNED) - CAST(last_lifesign AS SIGNED)) AS last_action,
                      a.user_id, contact_id AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
               FROM user_online uo
               JOIN auth_user_md5 a ON (a.user_id = uo.user_id)

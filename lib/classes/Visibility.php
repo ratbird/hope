@@ -119,6 +119,11 @@ class Visibility
         // parse User and Identifier to format we want to have in the database
         self::getUser($user);
         $parent = self::parseIdentifier($parent, $user);
+        
+        // dont create duplicates
+        if (self::exists($identifier, $user)) {
+            return false;
+        }
 
         // insert the new id and return the id
         $sql = "INSERT INTO user_visibility_settings (`user_id`, `parent_id`, `category`, `name`, `state`, `identifier`, `plugin`)

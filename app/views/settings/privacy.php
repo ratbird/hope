@@ -7,16 +7,22 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     
-    <table id="main_content" class="settings zebra-hover">
+    <table id="main_content" class="default">
         <colgroup>
             <col width="50%">
             <col width="50%">
         </colgroup>
+        <caption>
+            <?= _('Privatsphäre') ?>:
+            <?= _('Globale Einstellungen') ?>
+        </caption>
         <thead>
             <tr>
-                <th colspan="2">
-                    <?= _('Privatsphäre') ?>:
-                    <?= _('Globale Einstellungen') ?>
+                <th>
+                    <?= _('Element') ?>
+                </th>
+                                <th>
+                    <?= _('Einstellung') ?>
                 </th>
             </tr>
         </thead>
@@ -24,13 +30,13 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td>
                     <label for="global_vis">
-                        <?= _('Globale Sichtbarkeit') ?><br>
-                        <dfn id="global_vis_description">
+                        <strong><?= _('Globale Sichtbarkeit') ?></strong><br>
+                        <small>
                         <?= _('Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein '
                               .'und alle Kommunikationsfunktionen von Stud.IP nutzen können '
                               .'wollen, oder ob Sie unsichtbar sein möchten und dann nur '
                               .'eingeschränkte Kommunikationsfunktionen nutzen können.') ?>
-                        </dfn>
+                        </small>
                     </label>
                 </td>
                 <td>
@@ -72,14 +78,14 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td>
                     <label>
-                        <?= _('Erweiterte Einstellungen') ?>
-                        <dfn>
+                        <strong><?= _('Erweiterte Einstellungen') ?></strong><br>
+                        <small>
                             <?= _('Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen.') ?>
                         <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']): ?>
                             <br>
                             <?=  _('Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.') ?>
                         <? endif; ?>
-                        </dfn>
+                            </small>
                     </label>
                 </td>
                 <td>
@@ -138,23 +144,19 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     
-    <table class="settings zebra-hover">
+    <table class="default">
         <colgroup>
             <col width="34%">
         <? for($i = 1; $i <= $colCount; $i++): ?>
             <col width="<?= $colWidth ?>%">
         <? endfor; ?>
         </colgroup>
+        <caption><?= _('Privatsphäre') ?>:
+        <?= _('Eigenes Profil') ?></caption>
         <thead>
             <tr>
-                <th colspan="<?= $colCount + 1 ?>">
-                    <?= _('Privatsphäre') ?>:
-                    <?= _('Eigenes Profil') ?>
-                </th>
-            </tr>
-            <tr class="divider">
-                <th style="text-align: left; font-size: 10pt"><?= _('Profil-Element'); ?></th>
-                <th style="font-size: 10pt;" colspan="<?= $colCount ?>"><?= _('sichtbar für'); ?></th>
+                <th ><?= _('Profil-Element'); ?></th>
+                <th style='text-align: center;' colspan="<?= $colCount++ ?>"><?= _('sichtbar für'); ?></th>
             </tr>
         </thead>
         <tbody class="privacy">
@@ -167,9 +169,9 @@ use Studip\Button, Studip\LinkButton;
             <? foreach ($homepage_elements['entry'] as $element): ?>
                 <? if ($element['is_header']): ?>
                     <tr>
-                        <td colspan="<?= 1 + $colCount ?>">
+                        <th colspan="<?= 1 + $colCount ?>">
                             <?= htmlReady($element['name']) ?>
-                        </td>
+                        </th>
                     </tr>
                 <? else: ?>
                     <tr>
@@ -190,61 +192,38 @@ use Studip\Button, Studip\LinkButton;
         </tbody>
         <tfoot>
             <tr>
-                 <td colspan="<?= 1 + $colCount ?>">
-                    <?= Button::create(_('Übernehmen'), 'store', array('title' =>  _('Änderungen speichern')))?>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-</form>
-
-<br><br>
-<form method="post" action="<?= $controller->url_for('settings/privacy/bulk') ?>">
-    <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
-    <table class="zebra settings">
-        <thead>
-            <tr>
-                <th width="50%" colspan="2"><?= _('Bulk Aktionen auf Profil-Elemente') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="table_row_even">
-                    <label>
-                        <?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
-                        <select name="default">
-                            <option value="">-- <?= _('bitte wählen'); ?> --</option>
+                <td colspan="<?= 1 + $colCount ?>">
+                    <?= _('Neue Elemente auf') ?>
+                    <select name="default">
+                        <option value="">-- <?= _('bitte wählen'); ?> --</option>
                         <? foreach ($visibilities as $visibility => $label): ?>
                             <option value="<?= $visibility ?>" <? if ($default_homepage_visibility == $visibility) echo 'selected'; ?>>
                                 <?= htmlReady($label) ?>
                             </option>
                         <? endforeach; ?>
-                        </select>
-                    </label>
-                </td>
-                <td class="table_row_even">
-                    <?= Button::create(_('Übernehmen'), 'store_default', array('title' =>  _('Änderungen speichern')))?>
+                    </select>
+                    <?= _('setzen') ?>
                 </td>
             </tr>
             <tr>
-                <td class="table_row_even">
-                    <label>
-                        <?= _('alle Sichtbarkeiten setzen auf'); ?>
-                        <select name="all">
-                            <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                <td colspan="<?= 1 + $colCount ?>">
+                    <?= _('Jetzt alle Sichtbarkeiten auf') ?>
+                    <select name="all">
+                        <option value="">-- <?= _("bitte wählen"); ?> --</option>
                         <? foreach ($visibilities as $visibility => $label): ?>
                             <option value="<?= $visibility ?>">
                                 <?= htmlReady($label) ?>
                             </option>
                         <? endforeach; ?>
-                        </select>
-                    </label>
-                </td>
-                <td class="table_row_even">
-                    <?= Button::create(_('Übernehmen'), 'store_all', array('title' => _('Änderungen speichern'))) ?>
+                    </select>
+                    <?= _('setzen') ?>
                 </td>
             </tr>
-        </tbody>
+            <tr>
+                <td colspan="<?= 1 + $colCount ?>">
+                    <?= Button::create(_('Übernehmen'), 'store', array('title' =>  _('Änderungen speichern')))?>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </form>

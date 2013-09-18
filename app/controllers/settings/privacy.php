@@ -119,11 +119,15 @@ class Settings_PrivacyController extends Settings_SettingsController
      */
     public function homepage_action() {
         $this->check_ticket();
-        $data = Request::getArray('visibility_update');
-        if (Visibility::updateUserFromRequest($data)) {
-            $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
-        } else {
-            $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
+        
+        // If no bulk action is performed set all visibilitysettings seperately
+        if (!$this->bulk()) {
+            $data = Request::getArray('visibility_update');
+            if (Visibility::updateUserFromRequest($data)) {
+                $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
+            } else {
+                $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
+            }
         }
         $this->redirect('settings/privacy');
     }
@@ -132,30 +136,23 @@ class Settings_PrivacyController extends Settings_SettingsController
      * Performs bulk actions on the privacy settings of a user. This can be
      * either the setting of new default values or the changing of all privacy
      * values at once.
+     * 
+     * @return boolean Returns <b>true</b> if all visibilities have been set
      */
-    public function bulk_action()
+    public function bulk()
     {
-        $this->check_ticket();
-
-        if (Request::submitted('store_default')) {
-            if (!$default_visibility = Request::int('default')) {
-                $this->reportError(_('Bitte wählen Sie eine Standardsichtbarkeit für Ihre Profilelemente!'));
-            } else if ($this->about->set_default_homepage_visibility($default_visibility)) {
-                $this->reportSuccess(_('Die Standardsichtbarkeit der Profilelemente wurde gespeichert.'));
-            } else {
-                $this->reportError(_('Die Standardsichtbarkeit der Profilelemente wurde nicht gespeichert!'));
-            }
+        if ($default_visibility = Request::int('default')) {
+            $this->about->set_default_homepage_visibility(Request::int('default'));
         }
 
-        if (Request::submitted('store_all')) {
-            if (!$visiblity = Request::int('all')) {
-                $this->reportError(_('Bitte wählen Sie eine Sichtbarkeitsstufe für Ihre Profilelemente!'));
-            } else if (Visibility::setAllSettingsForUser($visiblity)) {
+        if ($visiblity = Request::int('all')) {
+            if (Visibility::setAllSettingsForUser($visiblity)) {
                 $this->reportSuccess(_('Die Sichtbarkeit der Profilelemente wurde gespeichert.'));
+                return true;
             } else {
                 $this->reportError(_('Die Sichtbarkeitseinstellungen der Profilelemente wurden nicht gespeichert!'));
             }
         }
-        $this->redirect('settings/privacy');
+        return false;
     }
 }

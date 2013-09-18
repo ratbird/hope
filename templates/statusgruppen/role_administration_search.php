@@ -2,12 +2,12 @@
 # Lifter010: TODO
     use Studip\Button;
 ?>
-<? $search_exp = Request::quoted('search_exp'); ?>
+<? $search_exp = trim(Request::get('search_exp')); ?>
 <form action="<?= URLHelper::getLink("#$anker") ?>" method="post" style="display: inline">
     <?= CSRFProtection::tokenTag() ?>
     <?
     if ($search_exp) :
-        $users = getSearchResults(trim($GLOBALS['search_exp']), Request::option('role_id'));
+        $users = getSearchResults($search_exp, Request::option('role_id'));
         if ($users) :
     ?>
     <select name="persons_to_add[]" size="10" multiple style="width: 90%">

@@ -122,6 +122,8 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('topic_create_autor', Request::int("topic_create_autor"));
         $sem_class->set('visible', Request::int("visible"));
         $sem_class->set('course_creation_forbidden', Request::int("course_creation_forbidden"));
+        $sem_class->set('description', studip_utf8decode(Request::get("description")));
+        $sem_class->set('create_description', studip_utf8decode(Request::get("create_description")));
         $sem_class->set('admission_prelim_default', Request::int("admission_prelim_default"));
         $sem_class->set('admission_type_default', Request::int("admission_type_default"));
         $sem_class->store();

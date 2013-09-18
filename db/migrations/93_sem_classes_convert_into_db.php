@@ -107,6 +107,7 @@ class SemClassesConvertIntoDb extends Migration
                 "elearning_interface = :elearning_interface, " .
                 "modules = :modules, " .
                 "description = :description, " .
+                "create_description = :create_description, " .
                 "title_dozent = :title_dozent, " .
                 "title_dozent_plural = :title_dozent_plural, " .
                 "title_tutor = :title_tutor, " .

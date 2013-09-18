@@ -186,6 +186,14 @@
             <td><label for="course_creation_forbidden"><?= _("Anlegeassistent für diesen Typ sperren.") ?></label></td>
             <td><input type="checkbox" id="course_creation_forbidden" value="1"<?= $sem_class['course_creation_forbidden'] ? " checked" : "" ?>></td>
         </tr>
+        <tr class="sub">
+            <td><label for="create_description"><?= _("Kurzer Beschreibungstext zum Anlagen einer Veranstaltung") ?></label></td>
+            <td><textarea id="create_description" maxlength="200" style="width: 100%"><?= htmlReady($sem_class['create_description']) ?></textarea></td>
+        </tr>
+        <tr class="sub">
+            <td><label for="description"><?= _("Allgemeiner Beschreibungstext") ?></label></td>
+            <td><textarea id="description" style="width: 100%"><?= htmlReady($sem_class['description']) ?></textarea></td>
+        </tr>
         <tr>
             <td>
                 <?= _("Inhaltselemente") ?>

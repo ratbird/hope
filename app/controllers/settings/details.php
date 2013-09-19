@@ -97,6 +97,19 @@ class Settings_DetailsController extends Settings_SettingsController
             'publi'      => 'publi',
         );
         
+        // Visibilitymapping Remove in Stud.IP 3.0 with a migration
+        $vis_mapping = array(
+            'telefon'    => 'private_phone',
+            'cell'       => 'private_cell',
+            'anschrift'  => 'privadr',
+            'home'       => 'homepage',
+            'motto'      => 'motto',
+            'hobby'      => 'hobby',
+            'lebenslauf' => 'lebenslauf',
+            'schwerp'    => 'schwerp',
+            'publi'      => 'publi',
+        );
+        
         $settingsname = array(
             'telefon'    => _('Private Telefonnummer'),
             'cell'       => _('Private Handynummer'),
@@ -113,7 +126,7 @@ class Settings_DetailsController extends Settings_SettingsController
             $value = Request::get($key);
             if ($this->user->$column != $value && $this->shallChange('user_info.' . $column, $column, $value)) {
                 $this->user->$column = $value;
-                Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $column, 'privatedata', 1, $this->user->user_id);
+                Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $vis_mapping[$key], 'privatedata', 1, $this->user->user_id);
                 $changed = true;
             }
         }

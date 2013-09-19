@@ -1,6 +1,6 @@
 <? if ($msg) parse_msg($msg); ?>
 <? if(!empty($flash['delete'])) : ?>
-    <?= createQuestion2(sprintf(_('Wollen Sie die/den "%s" wirklich austragen?'), $status_groups['autor']), 
+    <?= createQuestion2(sprintf(_('Wollen Sie die/den "%s" wirklich austragen?'), $status_groups[$flash['status']]), 
         array('users' => $flash['delete']),
         array(),
         $controller->url_for(sprintf('course/members/cancel_subscription/collection/%s', $flash['status']))); ?>

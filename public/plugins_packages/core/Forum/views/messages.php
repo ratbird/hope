@@ -1,3 +1,7 @@
 <? if (!empty($flash['messages'])) foreach ($flash['messages'] as $type => $message): ?>
-    <?= MessageBox::$type(htmlReady($message)) ?>
+    <? if ($type == 'info_html') : ?>
+        <?= MessageBox::info($message) ?>
+    <? else : ?>
+        <?= MessageBox::$type(htmlReady($message)) ?>
+    <? endif ?>
 <? endforeach ?>

@@ -29,7 +29,7 @@ if (ForumPerm::has('search', $seminar_id)) :
         'eintrag'   => array(
             array(
                 'icon' => $section == 'search' ? 'icons/16/red/arr_1right.png' : 'icons/16/grey/arr_1right.png',
-                'text' => $this->render_partial('index/_search')
+                'text' => $this->render_partial('index/_search', array('id' => 'tutorSearchInfobox'))
             )
         )
     );
@@ -107,7 +107,7 @@ endif;
 <br style="clear: both">
 
 <div class="searchbar">
-    <?= $this->render_partial('index/_search'); ?>
+    <?= $this->render_partial('index/_search', array('id' => 'tutorSearch')); ?>
 </div>
 
 <!-- Message area -->

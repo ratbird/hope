@@ -1,4 +1,4 @@
-<form action="<?= PluginEngine::getLink('coreforum/index/search') ?>" method="post" id="tutorSearch">
+<form action="<?= PluginEngine::getLink('coreforum/index/search') ?>" method="post" id="<?= $id ?>">
     <input type="text" name="searchfor" value="<?= htmlReady(Request::get('searchfor'))?>" placeholder="<?= _('Beiträge durchsuchen') ?>">
     <input type="image" src="<?= Assets::image_path('icons/16/black/search.png') ?>" title="Forum durchsuchen"><br>
     <input type="checkbox" name="search_title" value="1"   <?= $options['search_title']   || !$searchfor ? 'checked="checked"' : '' ?>> <?= _("Titel") ?>

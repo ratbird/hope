@@ -51,10 +51,23 @@
             settings = $.extend(defaults, opts);
 
             // non configureable settings
+
+            // make a clone of the tips and remove those which refer to invisible elements
+            var tour = $(this).clone();
+
+            tour.find('li').each(function (index) {
+                var id = $(this).attr('data-id');
+
+                if (!$('#' + id).is(':visible')) {
+                    tour.find('li[data-id=' + id +']').remove();
+                }
+            });
+
             settings.document = window.document;
             settings.$document = $(settings.document);
             settings.$window = $(window);
-            settings.$content_el = $(this);
+            // settings.$content_el = $(this);
+            settings.$content_el = tour;
             settings.body_offset = $(settings.tipContainer).position();
             settings.$tip_content = $('> li', settings.$content_el);
             settings.paused = false;
@@ -181,6 +194,7 @@
             tip_class : tipClass,
             index : opts.index,
             button_text : buttonText,
+            ml: opts.$li.attr('data-move') !== 'undefinied' ? opts.$li.attr('data-move') : 0,
             li : opts.$li
           }));
 
@@ -388,10 +402,12 @@
 
         if (!/body/i.test(settings.$target.selector)) {
 
+            var ml = settings.$li.data('move') != undefined ? settings.$li.data('move') : 0;
+
             if (methods.bottom()) {
               settings.$next_tip.css({
                 top: (settings.$target.offset().top + nub_height + settings.$target.outerHeight()),
-                left: settings.$target.offset().left});
+                left: settings.$target.offset().left - ml});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'top');
 
@@ -399,7 +415,7 @@
 
               settings.$next_tip.css({
                 top: (settings.$target.offset().top - settings.$next_tip.outerHeight() - nub_height),
-                left: settings.$target.offset().left});
+                left: settings.$target.offset().left - ml});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'bottom');
 

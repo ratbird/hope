@@ -109,7 +109,16 @@
             einschränken auf eine beliebige Kombination aus Titel, Inhalt und Autor.
         </p>
     </li>
-    
+
+    <li data-id="tutorSearchInfobox" data-text="Weiter" >
+        <h2>Suchen</h2>
+        <p>
+            Sie können sämtliche Inhalte dieses Forums durchsuchen.<br>
+            Unterstützt werden auch Mehrwortsuchen. Außerdem können Sie die Suche
+            einschränken auf eine beliebige Kombination aus Titel, Inhalt und Autor.
+        </p>
+    </li>
+   
     <li data-id="tutorBreadcrumb" data-text="Tour beenden">
         <h2>Tour beendet</h2>
         <p>

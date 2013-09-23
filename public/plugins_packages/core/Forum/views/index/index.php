@@ -35,7 +35,7 @@ if (ForumPerm::has('search', $seminar_id)) :
     );
 endif;
 
-if ($constraint['depth'] == 0) :
+if ($constraint['depth'] == 0 && $section == 'index') :
     $infobox_content[] = array(
         'kategorie' => _('Tour'),
         'eintrag'   => array(

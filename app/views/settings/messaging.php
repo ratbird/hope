@@ -45,17 +45,18 @@
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
 
-    <table class="zebra-hover settings" id="main_content">
+    <table class="default" id="main_content">
         <colgroup>
             <col width="50%">
             <col width="50%">
         </colgroup>
-        <thead>
-            <tr>
-                <th colspan="2"><?= _('Einstellungen des Nachrichtensystems anpassen') ?></th>
-            </tr>
-        </thead>
+        <caption>
+            <?= _('Einstellungen des Nachrichtensystems anpassen') ?>
+        </caption>
         <tbody>
+            <tr>
+                <th colspan="2"><?= _('Nachrichten') ?></th>
+            </tr>
             <tr>
                 <td>
                     <label for="opennew"><?= _('Neue Nachrichten immer aufgeklappt') ?></label>
@@ -203,9 +204,9 @@
         </tbody>
         <tbody>
             <tr>
-                <td colspan="2">
+                <th colspan="2">
                     <?= _('Signatur') ?>
-                </td>
+                </th>
             </tr>
             <tr>
                 <td>
@@ -231,9 +232,9 @@
         </tbody>
         <tbody>
             <tr>
-                <td colspan="2">
+                <th colspan="2">
                     <?= _('Buddies/ Wer ist online?') ?>
-                </td>
+                </th>
             </tr>
             <tr>
                 <td>

@@ -14,17 +14,18 @@ $start_pages = array(
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
 
-    <table id="main_content" class="zebra-hover settings">
+    <table id="main_content" class="default">
         <colgroup>
             <col width="50%">
             <col width="50%">
         </colgroup>
-        <thead>
-            <tr>
-                <th colspan="2"><?= _('Allgemeine Einstellungen anpassen') ?></th>
-            </tr>
-        </thead>
+        <caption>
+            <?= _('Allgemeine Einstellungen anpassen') ?>
+        </caption>
         <tbody>
+            <tr>
+                <th colspan="2"><?= _('Allgemein') ?></th>
+            </tr>
             <tr>
                 <td>
                     <label for="forced_language"><?= _('Sprache') ?></label>
@@ -124,7 +125,7 @@ $start_pages = array(
         <? if (PersonalNotifications::isGloballyActivated()): ?>
         <tbody>
             <tr>
-                <td colspan="2"><?= _('Benachrichtigungen') ?></td>
+                <th colspan="2"><?= _('Benachrichtigungen') ?></th>
             </tr>
             <tr>
                 <td>

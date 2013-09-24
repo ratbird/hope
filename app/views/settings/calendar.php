@@ -31,19 +31,15 @@ $cal_step_weeks = array(
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="zebra-hover settings" id="main_content">
+<table class="default" id="main_content">
     <colgroup>
         <col width="50%">
         <col width="50%">
     </colgroup>
-    <thead>
-        <tr>
-            <th colspan="2"><?= _('Einstellungen des Terminkalenders anpassen') ?></th>
-        </tr>
-    </thead>
+    <caption><?= _('Einstellungen des Terminkalenders anpassen') ?></caption>
     <tbody>
         <tr>
-            <td colspan="2"><?= _('Allgemeine Optionen') ?></td>
+            <th colspan="2"><?= _('Allgemeine Optionen') ?></th>
         </tr>
         <tr>
             <td>
@@ -96,7 +92,7 @@ $cal_step_weeks = array(
     </tbody>
     <tbody>
         <tr>
-            <td colspan="2"><?= _('Einzelterminkalender') ?></td>
+            <th colspan="2"><?= _('Einzelterminkalender') ?></th>
         </tr>
 <? endif ?>
         <tr>
@@ -173,7 +169,7 @@ $cal_step_weeks = array(
     </tbody>
     <tbody>
         <tr>
-            <td colspan="2"><?= _('Gruppenterminkalender') ?></td>
+            <th colspan="2"><?= _('Gruppenterminkalender') ?></th>
         </tr>
         <tr>
             <td>

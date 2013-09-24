@@ -30,13 +30,13 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td>
                     <label for="global_vis">
-                        <strong><?= _('Globale Sichtbarkeit') ?></strong><br>
-                        <small>
+                        <?= _('Globale Sichtbarkeit') ?>
+                        <dfn>
                         <?= _('Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein '
                               .'und alle Kommunikationsfunktionen von Stud.IP nutzen können '
                               .'wollen, oder ob Sie unsichtbar sein möchten und dann nur '
                               .'eingeschränkte Kommunikationsfunktionen nutzen können.') ?>
-                        </small>
+                        </dfn>
                     </label>
                 </td>
                 <td>
@@ -78,14 +78,14 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td>
                     <label>
-                        <strong><?= _('Erweiterte Einstellungen') ?></strong><br>
-                        <small>
+                        <?= _('Erweiterte Einstellungen') ?>
+                        <dfn>
                             <?= _('Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen.') ?>
                         <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']): ?>
                             <br>
                             <?=  _('Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.') ?>
                         <? endif; ?>
-                            </small>
+                            </dfn>
                     </label>
                 </td>
                 <td>

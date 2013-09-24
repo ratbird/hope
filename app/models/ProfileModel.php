@@ -180,12 +180,7 @@ class ProfileModel
                         }
                     }
                 }
-
-                $groups             = GetAllStatusgruppen($inst_result['Institut_id'], $this->current_user->user_id);
-                $default_entries    = DataFieldEntry::getDataFieldEntries(array($this->current_user->user_id, $inst_result['Institut_id']));
-                $data               = get_role_data_recursive($groups, $this->current_user->user_id, $default_entries);
-
-                $institutes[$id]['role'] = $data['standard'];
+                $institutes[$id]['role'] = Statusgruppen::getUserRoles($inst_result['Institut_id'], $this->current_user->user_id);                
             } else {
                 unset($institutes[$id]);
             }

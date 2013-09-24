@@ -458,7 +458,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $content['PERSONDETAILS']['FIRSTNAME'] = ExternModule::ExtHtmlReady($row['Vorname']);
         $content['PERSONDETAILS']['TITLEFRONT'] = ExternModule::ExtHtmlReady($row['title_front']);
         $content['PERSONDETAILS']['TITLEREAR'] = ExternModule::ExtHtmlReady($row['title_rear']);
-        if ($statusgroups = GetRoleNames(GetAllStatusgruppen($instituts_id, $this->user_id))) {
+        if ($statusgroups = Statusgruppen::getUserRoles($instituts_id, $this->user_id)) {
             $content['PERSONDETAILS']['STATUSGROUPS'] = ExternModule::ExtHtmlReady(join(', ', array_values($statusgroups)));
         }
         $content['PERSONDETAILS']['USERNAME'] = $row['username'];

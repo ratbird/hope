@@ -40,7 +40,14 @@
  */
 
 class UserInfo extends SimpleORMap
-{
+{ 
+    /**
+     * Constants for column geschlecht
+     */
+    const GENDER_UNKNOWN = 0;
+    const GENDER_FEMALE = 2;
+    const GENDER_MALE = 1;
+    
     /**
      *
      * @param string $id primary key of table

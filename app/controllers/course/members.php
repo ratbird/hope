@@ -940,7 +940,7 @@ class Course_MembersController extends AuthenticatedController
                     });
 
         if ($users) {
-            $msgs = $this->members->insertAdmissionMember($users, 'autor', Request::get('consider_contingent'));
+            $msgs = $this->members->insertAdmissionMember($users, 'autor', Request::get('consider_contingent'), $status == 'accepted');
             if ($msgs) {
                 if ($cmd == 'add_user') {
                     $message = sprintf(_('%s wurde in die Veranstaltung mit dem Status <b>%s</b> eingetragen.'), htmlReady(join(',', $msgs)), $this->decoratedStatusGroups['autor']);

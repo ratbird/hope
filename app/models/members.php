@@ -178,20 +178,20 @@ class MembersModel
 
                         if ($cmd == "add_user") {
                             $message = sprintf(_('Sie wurden vom einem/einer %s oder AdministratorIn als TeilnehmerIn
-                                in die Veranstaltung **%s** eingetragen.'), get_title_for_status('dozent', 1), $this->course_id);
+                                in die Veranstaltung **%s** eingetragen.'), get_title_for_status('dozent', 1), $this->course_title);
                         } else {
                             if (!$accepted) {
                                 $message = sprintf(_('Sie wurden vom einem/einer %s oder AdministratorIn
                                     aus der Warteliste in die Veranstaltung **%s** aufgenommen und sind damit zugelassen.'),
-                                        get_title_for_status('dozent', 1), $this->course_id);
+                                        get_title_for_status('dozent', 1), $this->course_title);
                             } else {
                                 $message = sprintf(_('Sie wurden von einem/einer %s oder AdministratorIn
                                     vom Status **vorläufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s**
-                                    hochgestuft und sind damit zugelassen.'), get_title_for_status('dozent', 1), $this->course_id);
+                                    hochgestuft und sind damit zugelassen.'), get_title_for_status('dozent', 1), $this->course_title);
                             }
                         }
 
-                        $messaging->insert_message(mysql_escape_string($message), $temp_user['username'],
+                        $messaging->insert_message($message, $temp_user['username'],
                                 '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
                                         _('Eintragung in Veranstaltung')), TRUE);
                         $msgs[] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
@@ -258,7 +258,7 @@ class MembersModel
                 }
             }
             restoreLanguage();
-            $messaging->insert_message(mysql_escape_string($message), $user['username'],
+            $messaging->insert_message($message, $user['username'],
                     '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
                             _('Eintragung in Veranstaltung')), TRUE);
         }

@@ -95,16 +95,21 @@ function raumzeit_checkboxAction($sem) {
             $msg = _("Folgende Termine wurden gelöscht:").'<br>';
             $deleted_dates = array();
             foreach ($singledate as $val) {
-                $termin = $sem->getSingleDate($val, Request::option('cycle_id'));
+                $termin = new SingleDate($val);
                 $msg .= '<li>'.$termin->toString().'<br>';
                 if (Request::get('cancel_comment') !== null) {
                     $sem->cancelSingleDate($val, Request::option('cycle_id'));
-                    $termin = new SingleDate($val);
                     $termin->setComment(Request::get('cancel_comment'));
                     $termin->store();
                     $deleted_dates[] = $termin;
                 } else {
-                    $sem->deleteSingleDate($val, Request::option('cycle_id'));
+                    if ($termin->isExTermin()) {
+                        if (!$termin->getMetadateId()) {
+                            $termin->delete();
+                        }
+                    } else {
+                        $sem->deleteSingleDate($val, Request::option('cycle_id'));
+                    }
                 }
             }
             $sem->createMessage($msg);
@@ -121,6 +126,7 @@ function raumzeit_checkboxAction($sem) {
             $link_params = array(
                 'cmd' => 'checkboxAction',
                 'checkboxAction' => 'cancel',
+                'cycle_id' => Request::option('cycle_id'),
                 'singledate' => Request::getArray('singledate')
             );
 

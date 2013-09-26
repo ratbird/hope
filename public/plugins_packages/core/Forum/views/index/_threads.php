@@ -111,9 +111,14 @@
                 </span>
 
                 <?= _("von") ?>
+            <? if ($entry['anonymous']): ?>
+                <?= _('Anonym') ?>
+            <? endif; ?>
+            <? if (!$entry['anonymous'] || $entry['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
                 <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['owner_id'])) ?>">
                     <?= htmlReady($entry['author']) ?>
                 </a>
+                <? endif; ?>
                 <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['mkdate']) ?>
                 <br>
 
@@ -132,9 +137,15 @@
         <td class="areaentry answer">
             <? if (is_array($entry['last_posting'])) : ?>
             <?= _("von") ?>
+            <? if ($entry['last_posting']['anonymous']): ?>
+                <?= _('Anonym') ?>
+            <? endif; ?>
+            <? if (!$entry['last_posting']['anonymous'] || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <a href="<?= UrlHelper::getLink('about.php?username='. $entry['last_posting']['username']) ?>">
                     <?= htmlReady($entry['last_posting']['user_fullname']) ?>
-            </a><br>
+            </a>
+            <? endif; ?>
+            <br>
             <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['last_posting']['date']) ?>
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $entry['last_posting']['topic_id']) ?>#<?= $entry['last_posting']['topic_id'] ?>" alt="<?= $infotext ?>" title="<?= $infotext ?>">
                 <?= Assets::img('icons/16/blue/link-intern.png', array('title' => $infotext = _("Direkt zum Beitrag..."))) ?>

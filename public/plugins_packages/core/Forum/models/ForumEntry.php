@@ -351,7 +351,8 @@ class ForumEntry {
                 'raw_title'       => $data['name'],
                 'raw_description' => ForumEntry::killEdit($data['content']),
                 'fav'             => ($data['fav'] == 'fav'),
-                'depth'           => $data['depth']
+                'depth'           => $data['depth'],
+                'anonymous'       => $data['anonymous']
             );
         } // retrieve the postings
 
@@ -481,6 +482,7 @@ class ForumEntry {
                 $last_posting['user_id']       = $data['user_id'];
                 $last_posting['user_fullname'] = $data['author'];
                 $last_posting['username']      = get_username($data['user_id']);
+                $last_posting['anonymous']     = $data['anonymous'];
 
                 // we throw away all formatting stuff, tags, etc, so we have just the important bit of information
                 $text = strip_tags($data['name']);
@@ -815,7 +817,7 @@ class ForumEntry {
             VALUES (? ,?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?)");
         $stmt->execute(array($data['topic_id'], $data['seminar_id'], $data['user_id'],
             $data['name'], transformBeforeSave($data['content']), $data['author'], $data['author_host'],
-            $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, 0));
+            $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, $data['anonymous']));
 
         // update "latest_chdate" for easier sorting of actual threads
         DBManager::get()->exec("UPDATE forum_entries SET latest_chdate = UNIX_TIMESTAMP()

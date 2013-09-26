@@ -404,7 +404,7 @@ class IndexController extends StudipController
         } else {
             $fullname = get_fullname($GLOBALS['user']->id);
         }
-
+        
         ForumEntry::insert(array(
             'topic_id'    => $new_id,
             'seminar_id'  => $this->getId(),
@@ -412,7 +412,8 @@ class IndexController extends StudipController
             'name'        => Request::get('name') ?: '',
             'content'     => Request::get('content'),
             'author'      => $fullname,
-            'author_host' => getenv('REMOTE_ADDR')
+            'author_host' => getenv('REMOTE_ADDR'),
+            'anonymous'   => Config::get()->FORUM_ANONYMOUS_POSTINGS ? Request::get('anonymous') ? : 0 : 0
         ), $parent_id);
 
         $this->flash['notify'] = $new_id;

@@ -132,6 +132,10 @@
     <!-- Infobox rechts neben jedem Posting -->
     <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
+            <? if ($post['anonymous']): ?>
+                <dd><strong><?= _('Anonym') ?></strong></dd>
+            <? endif; ?>
+            <? if (!$post['anonymous'] || $post['owner_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <dt>
                 <? if ($post['owner_id'] != 'nobody' && $post['owner_id']) : ?>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
@@ -165,12 +169,7 @@
                     </a>
                 <? endif ?>
             </dt>
-            <dd>
-                <? if (!$post['owner_id']) : ?>
-                <?= _('von Stud.IP erstellt') ?><br>
-                <? endif ?>
-                <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
-            </dd>
+
             <dd>
                 <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['owner_id']))?>
             </dd>
@@ -180,6 +179,14 @@
                 <?= ForumEntry::countUserEntries($post['owner_id']) ?>
             </dd>
             <? endif ?>
+            <? endif; ?>
+            <dd>
+                <? if (!$post['owner_id']) : ?>
+                    <?= _('von Stud.IP erstellt') ?><br>
+                <? endif ?>
+                <?= strftime($time_format_string_short, (int) $post['mkdate']) ?>
+            </dd>
+            
             <dd class="posting_icons">
                 <!-- Favorit -->
                 <span id="favorite_<?= $post['topic_id'] ?>">

@@ -136,8 +136,9 @@ class Settings_AccountController extends Settings_SettingsController
                 $auth   = StudipAuthAbstract::GetInstance($this->user->auth_plugin ?: 'standard');
                 $is_sso = $auth instanceOf StudipAuthSSO;
 
-                if (!$is_sso && $auth->isAuthenticated($this->user->username, Request::get('password'))) {
+                if (!$is_sso && !$auth->isAuthenticated($this->user->username, Request::get('password'))) {
                     $errors[] = _('Das aktuelle Passwort wurde nicht korrekt eingegeben.');
+                    $this->user->Email = $email1;
                 } else if ($email1 !== $email2) {
                     $errors[] = _('Die Wiederholung der E-Mail-Adresse stimmt nicht mit Ihrer Eingabe überein.');
                 } else {

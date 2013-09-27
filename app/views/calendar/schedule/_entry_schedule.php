@@ -5,7 +5,7 @@ use Studip\Button, Studip\LinkButton;
 
 ?>
 <div id="edit_entry" class="schedule_edit_entry" <?= $show_entry ? '' : 'style="display: none"' ?>>
-    <div id="edit_entry_drag" class="window_heading">Termindetails bearbeiten</div>
+    <div id="edit_entry_drag" class="window_heading"><?= _('Termindetails bearbeiten') ?></div>
     <form action="<?= $controller->url_for('calendar/schedule/addentry'. ($show_entry['id'] ? '/'. $show_entry['id'] : '') ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;" onSubmit="return STUDIP.Schedule.checkFormFields()">
         <?= CSRFProtection::tokenTag() ?>
         <b><?= _("Tag") ?>:</b> <select name="entry_day">

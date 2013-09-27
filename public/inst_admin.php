@@ -160,7 +160,7 @@ function table_head ($structure) {
     }
     echo "\n</colgroup>\n";
 
-    echo "<tr>\n";
+    echo "<thead><tr>\n";
 
     $begin = TRUE;
     foreach ($structure as $key => $field) {
@@ -180,7 +180,7 @@ function table_head ($structure) {
             printf("<font size=\"-1\" color=\"black\"><b>%s&nbsp;</b></font>\n", htmlReady($field["name"]));
         echo "</td>\n";
     }
-    echo "</tr>\n";
+    echo "</tr></thead>\n";
 }
 
 
@@ -849,8 +849,8 @@ echo "</td></tr></table>\n";
 if ($perm->have_perm("admin")) {
     echo "\n</form>\n";
 }
-echo "<table class=\"zebra\" border=\"0\" width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
-
+echo "<table class=\"default\" border=\"0\" width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
+echo '<caption>'._('Mitarbeiterinnen und Mitarbeiter').'</caption>';
 table_head($table_structure);
 
 // if you have the right question you will get the right answer ;-)
@@ -908,12 +908,12 @@ if ($show == "funktion") {
                     // StEP 154: Nachricht an alle Mitglieder der Gruppe
                     if ($perm->have_studip_perm('autor', $SessSemName[1]) AND $GLOBALS["ENABLE_EMAIL_TO_STATUSGROUP"] == true) {
                         $group_colspan = $colspan - 2;
-                        echo "<tr><td class=\"content_seperator\" colspan=\"$group_colspan\" height=\"20\">";
+                        echo "<tr><th colspan=\"$group_colspan\" height=\"20\">";
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
-                        echo "<b></font>"."</td><td class=\"content_seperator\" colspan=\"2\" height=\"20\">";
+                        echo "<b></font>"."</th><th colspan=\"2\" height=\"20\">";
                         echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
-                        echo "</td></tr>\n";
+                        echo "</th></tr>\n";
                     }
                     else {
                         echo "<tr><td class=\"content_seperator\" colspan=\"$colspan\" height=\"20\">";

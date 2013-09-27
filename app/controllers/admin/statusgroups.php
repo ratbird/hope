@@ -14,8 +14,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         // Set pagelayout
         PageLayout::setHelpKeyword("Basis.Allgemeines");
         PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
-        Navigation::activateItem('/admin/institute/groups');     
-        
+        Navigation::activateItem('/admin/institute/groups');
+
         // The logic to select an institute should somehow be moved somewhere else
         if ($set = Request::get('admin_inst_id')) {
             $_SESSION['SessionSeminar'] = $set;
@@ -43,6 +43,42 @@ class Admin_StatusgroupsController extends AuthenticatedController {
 
         // Check if the viewing user should get the admin interface
         $this->tutor = $this->type['edit']($this->user_id);
+    }
+
+    /**
+     * Interface to add multiple users to multiple groups
+     */
+    public function memberAdd_action() {
+        // Collect all groups and unfold them for a clear display
+        $this->groups = Statusgruppen::findByRange_id($_SESSION['SessionSeminar']);
+        $this->unfolded = array();
+        $this->unfoldGroup($this->unfolded, $this->groups);
+
+        $this->setInfoBoxImage('infobox/groups.jpg');
+        $this->addToInfobox(_('Aktionen'), "<a href='" . $this->url_for('admin/statusgroups') . "'>" . _('Zurück') . "</a>", 'icons/16/black/arr_1left.png');
+        
+        if ($search = Request::get('freesearch')) {
+            $this->freepeople = User::search($search, 0);
+        }
+
+        if (!Request::submitted('removeSelection')) {
+            $this->selectedGroups = Request::getArray('groups');
+            $this->selectedMembers = Request::getArray('members');
+        } else {
+            $this->selectedGroups = array();
+            $this->selectedMembers = array();
+        }
+        if (Request::submitted('add')) {
+            CSRFProtection::verifyUnsafeRequest();
+            foreach ($this->selectedGroups as $group) {
+                foreach ($this->selectedMembers as $user_id) {
+                    $user = new StatusgruppeUser(array($group, $user_id));
+                    $user->store();
+                    $this->type['after_user_add']($user_id);
+                }
+            }
+                    
+        }
     }
 
     /**
@@ -177,7 +213,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      */
     private function unfoldGroup(&$list, $groups, $preset = array()) {
         foreach ($groups as $group) {
-            
+
             // Numberating groups LIKE A BOSS!
             $this->numbers[$group->id] = join(".", $newpre = array_merge($preset, array(++$i)));
             $list[] = $group;
@@ -201,8 +237,9 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $infobox_search .= "<h4 class='category' id='free_search' style='margin-bottom: 2px; display:none;'>"
                 . _('Freie Suche') . "</h4><div id='search_result'></div>";
 
-        $this->addToInfobox(_('Aktionen'), "<a id='new_group' href='javascript: newgroup()'>" . _('Neue Gruppe anlegen') . "</a>", 'icons/16/black/add/community.png');
+        $this->addToInfobox(_('Aktionen'), "<a id='new_group' href='javascript: newgroup()'>" . _('Neue Gruppe anlegen') . "</a>", 'icons/16/black/add/group3.png');
         $this->addToInfobox(_('Aktionen'), "<a id='new_group' href='javascript: order()'>" . _('Reihenfolge ändern') . "</a>", 'icons/16/black/refresh.png');
+        $this->addToInfobox(_('Aktionen'), "<a id='new_group' href='" . $this->url_for("admin/statusgroups/memberAdd") . "'>" . _('Mehrere Mitglieder hinzufügen') . "</a>", 'icons/16/black/add/community.png');
         $this->addToInfobox('Personensuche', $infobox_search);
     }
 
@@ -245,9 +282,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * Inst statusgroup but could be extended
      */
     private function setType() {
-        if ($_SESSION['SessionSeminar'] 
-                && (Request::get('type') == null
-                        || get_object_type($_SESSION['SessionSeminar']) == Request::get('type'))) {
+        if ($_SESSION['SessionSeminar'] && (Request::get('type') == null || get_object_type($_SESSION['SessionSeminar']) == Request::get('type'))) {
             $types = $this->types();
             $this->type = $types[get_object_type($_SESSION['SessionSeminar'])];
         } else {

@@ -27,6 +27,8 @@ $translations = array(
   , 'Alle Räume anzeigen' => _('Alle Räume anzeigen')
   , 'Nur buchbare Räume anzeigen' => _('Nur buchbare Räume anzeigen')
   , 'Jeder Termin muss mindestens eine Person haben, die ihn durchführt!' => _('Jeder Termin muss mindestens eine Person haben, die ihn durchführt!')
+  , 'Übernehmen' => _('Übernehmen')
+  , 'Abbrechen' => _('Abbrechen')  
   // add your translations here
 );
 

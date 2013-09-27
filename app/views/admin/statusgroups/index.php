@@ -1,3 +1,9 @@
+<style>
+    .person {
+        cursor: move;
+    }
+</style>
+
 <? foreach ($path as $name => $p): ?>
     <input type="hidden" id="<?= $name ?>" value="<?= $p ?>" />
 <? endforeach; ?>
@@ -5,20 +11,20 @@
     <?= _('Es wurden noch keine Gruppen angelegt') ?>
 <? endif; ?>
 <? foreach ($unfolded as $group): ?>
-    <div class="edit_dialog" id="edit_<?= $group->id ?>" title="<?= $group->name ?> ">
+    <div class="edit_dialog" id="edit_<?= $group->id ?>" title="<?= formatReady($group->name) ?> ">
         <form action="" id="form_<?= $group->id ?>" method="POST">
             <input type="hidden" name="id" value="<?= $group->id ?>">
             <label class="caption"><?= _('Gruppenname') ?>
-                <input name="name" class="groupname" type="text" size="30" placeholder="<?= _('Mitarbeiter(in)') ?>" value="<?= $group->name ?>" >
+                <input name="name" class="groupname" type="text" size="30" placeholder="<?= _('Mitarbeiter(in)') ?>" value="<?= formatReady($group->name) ?>" >
             </label>
             <label class="caption"><?= _('Weiblicher Name') ?>
-                <input name="name_w" type="text" size="30" placeholder="<?= _('Mitarbeiterin') ?>" value="<?= $group->name_w ?>" >
+                <input name="name_w" type="text" size="30" placeholder="<?= _('Mitarbeiterin') ?>" value="<?= formatReady($group->name_w) ?>" >
             </label>
             <label class="caption"><?= _('Männlicher Name') ?>
-                <input name="name_m" type="text" size="30" placeholder="<?= _('Mitarbeiter') ?>" value="<?= $group->name_m ?>" >
+                <input name="name_m" type="text" size="30" placeholder="<?= _('Mitarbeiter') ?>" value="<?= formatReady($group->name_m) ?>" >
             </label>
             <label class="caption"><?= _('Größe') ?>
-                <input name="size" type="text" size="30" placeholder="<?= _('Unbegrenzt') ?>" value="<?= $group->size ?>" >
+                <input name="size" type="text" size="30" placeholder="<?= _('Unbegrenzt') ?>" value="<?= formatReady($group->size) ?>" >
             </label>
             <label class="caption"><?= _('Selbsteintrag') ?>
                 <input name="selfassign" type="checkbox" value="1" <?= $group->selfassign ? "CHECKED" : "" ?>>
@@ -38,7 +44,7 @@
             <col width="10%">
         </colgroup>
         <caption class="nodrag">
-            <?= $numbers[$group->id] ?> <?= $group->name ?>
+            <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?>
             <?= $group->getPlaces() ?> 
             <? if ($tutor): ?>
                 <? if ($group->selfassign): ?>
@@ -63,7 +69,7 @@
                 <? endif; ?>
             <? endif; ?>
         </caption>
-        <thead>
+        <thead class="nodrag">
             <tr>
                 <th colspan="3"><?= _('Mitglieder') ?></th>
                 <th style="text-align: right">
@@ -132,7 +138,7 @@ function createLi($item) {
     echo '<ol class="dd-list">';
     foreach ($item as $group) {
         echo '<li class="dd-item" data-id="' . $group->id . '">
-        <div class="dd-handle">' . $group->name . '</div>';
+        <div class="dd-handle">' . formatReady($group->name) . '</div>';
         createLi($group->children);
         echo '</li>';
     }

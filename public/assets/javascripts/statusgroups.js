@@ -48,11 +48,10 @@ $(document).ready(function() {
                     if (data.length > 0) {
                         jQuery.each(data, function(i, val) {
                             if ($('#' + val.id).length === 0) {
-                                $('#search_result').append('<p id="' + (val.id) + '" style="margin: 0px;" class="search_person">' + val.name + '</p>');
+                                $('#search_result').append('<p id="' + (val.id) + '" style="margin: 0px;" class="person">' + val.name + '</p>');
                             }
                         });
-                        $(".search_person").draggable({revert: true,
-                            revertDuration: 0});
+                        afterReload();
                     }
                 });
                 $('#free_search, #search_result').fadeIn(fadeSpeed);
@@ -62,6 +61,16 @@ $(document).ready(function() {
             }
         }
     });
+    
+    var editButtons = {};
+    editButtons["Übernehmen".toLocaleString()] = function() {
+        var id = $(this).attr('id').substr(5);
+        $('#form_' + id).submit();
+        $(this).dialog("close");
+    };
+    editButtons["Abbrechen".toLocaleString()] = function() {
+        $(this).dialog("close");
+    };
 
     // Create dialog to edit groups
     $(".edit_dialog").dialog({
@@ -69,37 +78,32 @@ $(document).ready(function() {
         height: 340,
         width: 300,
         resizable: false,
-        buttons: {
-            "Übernehmen": function() {
-                var id = $(this).attr('id').substr(5);
-                $('#form_' + id).submit();
-                $(this).dialog("close");
-            },
-            Cancel: function() {
-                $(this).dialog("close");
-            }}
+        buttons: editButtons
     });
 
+    var orderButtons = {};
+    orderButtons["Übernehmen".toLocaleString()] = function() {
+        var text = JSON.stringify($('.dd').nestable('serialize'));
+        $.ajax({
+            type: 'POST',
+            url: $('#ajax_order').val(),
+            dataType: 'html',
+            data: {json: text}
+        }).done(function() {
+            location.reload()
+        });
+        $(this).dialog("close");
+    };
+    orderButtons["Abbrechen".toLocaleString()] = function() {
+        $(this).dialog("close");
+    };
     // Create the dialog to change orders
     $(".order_dialog").dialog({
         autoOpen: false,
         height: 340,
         width: 500,
         resizable: false,
-        buttons: {
-            "Übernehmen": function() {
-                var text = JSON.stringify($('.dd').nestable('serialize'));
-                $.ajax({
-                    type: 'POST',
-                    url: $('#ajax_order').val(),
-                    dataType: 'html',
-                    data: {json: text}
-                }).done(function(){location.reload()});
-                $(this).dialog("close");
-            },
-            Cancel: function() {
-                $(this).dialog("close");
-            }}
+        buttons: orderButtons
     });
 
     // Clicking the edit Button should 
@@ -138,6 +142,7 @@ function afterReload() {
     $(".person").draggable({revert: true,
         scroll: true,
         scrollSensitivity: 100,
+        helper: "clone",
         start: function(event, ui) {
             var id = $(this).attr('id');
             $('.dropable').each(function(index, value) {
@@ -151,7 +156,8 @@ function afterReload() {
         stop: function(event, ui) {
             $('.dropable').fadeTo(400, 1);
         },
-        revertDuration: 0});
+        revertDuration: 0
+        });
 
 //make tables droppable
     $(".dropable").droppable({

@@ -307,7 +307,7 @@ if ($rechte) {
         $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/export/file-text.png" ,
             "text"  => export_link($SessSemName[1], "person", _("Gruppenliste") .' ' . $SessSemName[0], "rtf", "rtf-gruppen", "status",  _("Gruppen exportieren als rtf Dokument"), 'passthrough')
             );
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/export/file-xls.png" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/export/file-office.png" ,
             "text"  => export_link($SessSemName[1], "person", _("Gruppenliste") .' ' . $SessSemName[0], "csv", "csv-gruppen", "status",  _("Gruppen exportieren als csv Dokument"), 'passthrough')
             );
     }

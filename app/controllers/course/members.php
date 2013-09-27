@@ -111,6 +111,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Create new MembersModel, to get additionanl informations to a given Seminar
         $this->members = new MembersModel($this->course_id, $this->course_title);
+        $this->members->checkUserVisibility();
     }
 
     function index_action()
@@ -143,12 +144,21 @@ class Course_MembersController extends AuthenticatedController
         // Check autor-perms
         if (!$this->is_tutor) {
             SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
+            // filter invisible user
             $this->invisibles = count($filtered_members['autor']->findBy('visible', 'no')) + count($filtered_members['user']->findBy('visible', 'no'));
-            $this->my_visibilty = $this->getUserVisibility();
+            $current_user_id = $this->user_id;
+            $exclude_invisibles =
+                function ($user) use ($current_user_id) {
+                        return ($user['visible'] != 'no' || $user['user_id'] == $current_user_id);
+                    };
+            $filtered_members['autor'] = $filtered_members['autor']->filter($exclude_invisibles);
+            $filtered_members['user'] = $filtered_members['user']->filter($exclude_invisibles);
+            $this->my_visibility = $this->getUserVisibility();
             if (!$this->my_visibility['iam_visible']) {
                 $this->invisibles--;
             }
         }
+
         // get member informations
         $this->dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname');
         $this->tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname mkdate');

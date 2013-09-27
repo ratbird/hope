@@ -532,10 +532,11 @@ if ($inst_id != '' && $inst_id != '0') {
                     <?= CSRFProtection::tokenTag() ?>
                     <table width="90%" border="0" cellpadding="2" cellspacing="0">
                         <tr>
-                            <td class="content_seperator">
+                            <th>
                                 <font size=-1>
                                     <b>&nbsp;<?=_("Neue Person der Einrichtung zuordnen")?></b>
                                 </font>
+                            </th>
                         </tr>
                         <tr>
                             <td class="table_row_even">
@@ -566,10 +567,10 @@ if ($inst_id != '' && $inst_id != '0') {
             ?><!-- Mail an alle MitarbeiterInnen -->
                 <table width="90%" border="0" cellpadding="2" cellspacing="0">
                     <tr>
-                        <td class="content_seperator">
+                        <th>
                             <font size="-1">
                                 <b>&nbsp;<?=_("Nachricht an alle MitarbeiterInnen verschicken")?></b>
-                        </td>
+                        </th>
                     </tr>
                     <tr>
                         <td class="table_row_even">
@@ -916,10 +917,10 @@ if ($show == "funktion") {
                         echo "</th></tr>\n";
                     }
                     else {
-                        echo "<tr><td class=\"content_seperator\" colspan=\"$colspan\" height=\"20\">";
+                        echo "<tr><th colspan=\"$colspan\" height=\"20\">";
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
-                        echo "<b></font></td></tr>\n";
+                        echo "<b></font></th></tr>\n";
                     }
                     table_body($institut_members, $auswahl, $table_structure);
                 }
@@ -963,9 +964,9 @@ if ($show == "funktion") {
         $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($institut_members) > 0) {
-            echo "<tr><td class=\"content_seperator\" colspan=\"$colspan\" height=\"20\">";
+            echo "<tr><th colspan=\"$colspan\" height=\"20\">";
             echo "<font size=\"-1\"><b>&nbsp;";
-            echo _("keiner Funktion zugeordnet") . "<b></font></td></tr>\n";
+            echo _("keiner Funktion zugeordnet") . "<b></font></th></tr>\n";
             table_body($institut_members, $auswahl, $table_structure);
         }
     }
@@ -1004,14 +1005,14 @@ if ($show == "funktion") {
 
         if (count($institut_members) > 0) {
             $group_colspan = $colspan - 2;
-            echo "<tr><td class=\"content_seperator\" colspan=\"$group_colspan\" height=\"20\">";
+            echo "<tr><th colspan=\"$group_colspan\" height=\"20\">";
             echo "<font size=\"-1\"><b>&nbsp;";
             echo $permission;
-            echo "<b></font>"."</td><td class=\"content_seperator\" colspan=\"2\" height=\"20\">";
+            echo "<b></font>"."</th><th colspan=\"2\" height=\"20\">";
             echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png')
                 ."\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
                  " border=\"0\"></a>&nbsp;";
-            echo "</td></tr>\n";
+            echo "</th></tr>\n";
 
             table_body($institut_members, $auswahl, $table_structure);
         }

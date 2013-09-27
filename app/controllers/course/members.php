@@ -218,7 +218,7 @@ class Course_MembersController extends AuthenticatedController
             }
         } elseif (!$this->is_tutor) {
             // Visibility preferences
-            if (!$this->my_visibilty['iam_visible']) {
+            if (!$this->my_visibility['iam_visible']) {
                 $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste nicht sichtbar.');
                 $icon = 'icons/16/black/visibility-visible.png';
                 $modus = 'make_visible';
@@ -230,7 +230,7 @@ class Course_MembersController extends AuthenticatedController
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');
             }
 
-            $link = sprintf('<a href="%s">%s</a>', $this->url_for(sprintf('course/members/change_visibility/%s/%s', $modus, $this->my_visibilty['visible_mode'])), $link_text);
+            $link = sprintf('<a href="%s">%s</a>', $this->url_for(sprintf('course/members/change_visibility/%s/%s', $modus, $this->my_visibility['visible_mode'])), $link_text);
             $this->addToInfobox(_('Sichtbarkeit'), $text, 'icons/16/black/info.png');
             $this->addToInfobox(_('Sichtbarkeit'), $link, $icon);
         }

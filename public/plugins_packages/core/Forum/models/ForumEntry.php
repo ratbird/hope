@@ -70,12 +70,12 @@ class ForumEntry {
      * @param string $description the posting-content
      * @return string the content with the raw text version of the edit-mark
      */
-    static function parseEdit($description)
+    static function parseEdit($description, $anonymous = false)
     {
         // wurde schon mal editiert
         if (preg_match('/^.*(<admin_msg.*?)$/s', $description, $match)) {
             $tmp = explode('"', $match[1]);
-            $append = "\n\n%%[" . _("Zuletzt editiert von") . ' ' . $tmp[1] . " - " . date("d.m.y - H:i", $tmp[3]) . "]%%";
+            $append = "\n\n%%[" . _("Zuletzt editiert von") . ' ' . ($anonymous && !$GLOBALS['perm']->have_perm('root') ? _('Anonym') : $tmp[1]) . " - " . date("d.m.y - H:i", $tmp[3]) . "]%%";
             $description = ForumEntry::killEdit($description) . $append;
         }
         return $description;
@@ -342,7 +342,7 @@ class ForumEntry {
                 'topic_id'        => $data['topic_id'],
                 'name'            => formatReady($data['name']),
                 'name_raw'        => $data['name'],
-                'content'         => formatReady(ForumEntry::parseEdit($data['content'])),
+                'content'         => formatReady(ForumEntry::parseEdit($data['content'], $data['anonymous'])),
                 'content_raw'     => ForumEntry::killEdit($data['content']),
                 'content_short'   => $desc_short,
                 'chdate'          => $data['chdate'],

@@ -323,7 +323,14 @@ STUDIP.Forum = {
         jQuery('#new_entry_preview').parent().hide();
         jQuery('#new_entry_preview').html('');
 
-        var name = jQuery('span.username[data-profile=' + topic_id +']').text().trim();
+        // watch out for anonymous postings
+        var anonymous = jQuery('.anonymous_post[data-profile=' + topic_id + ']').length > 0;
+
+        if (anonymous) {
+            var name = "Anonym".toLocaleString();
+        } else {
+            var name = jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
+        }
         
         // add content from cited posting in [quote]-tags
         var content = '[quote=' + name + ']' + "\n"

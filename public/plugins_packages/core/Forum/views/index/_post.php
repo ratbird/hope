@@ -133,7 +133,7 @@
     <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <? if ($post['anonymous']): ?>
-                <dd><strong><?= _('Anonym') ?></strong></dd>
+                <dd class="anonymous_post" data-profile="<?= $post['topic_id'] ?>"><strong><?= _('Anonym') ?></strong></dd>
             <? endif; ?>
             <? if (!$post['anonymous'] || $post['owner_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <dt>

@@ -610,7 +610,7 @@ class IndexController extends StudipController
 
         $this->flash['edit_entry'] = true;
         $this->flash['new_entry_title'] = $topic['name'];
-        $this->flash['new_entry_content'] = "[quote=". $topic['author'] ."]\n" . $topic['content'] . "\n[/quote]\n\n";
+        $this->flash['new_entry_content'] = "[quote=". ($topic['anonymous'] ? _('Anonym') : $topic['author']) ."]\n" . $topic['content'] . "\n[/quote]\n\n";
 
         $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));
     }

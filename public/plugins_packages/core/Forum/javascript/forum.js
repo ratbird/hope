@@ -163,13 +163,13 @@ STUDIP.Forum = {
     },
 
     editCategoryName: function (category_id) {
-        jQuery('table[data-category-id=' + category_id + '] span.heading').hide();
+        jQuery('table[data-category-id=' + category_id + '] span.category_name').hide();
         jQuery('table[data-category-id=' + category_id + '] span.heading_edit').show();
     },
 
     cancelEditCategoryName: function (category_id) {
         jQuery('table[data-category-id=' + category_id + '] span.heading_edit').hide();
-        jQuery('table[data-category-id=' + category_id + '] span.heading').show();
+        jQuery('table[data-category-id=' + category_id + '] span.category_name').show();
 
         // reset the input field with the unchanged name
         jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val(
@@ -190,7 +190,7 @@ STUDIP.Forum = {
         jQuery('table[data-category-id=' + category_id + '] span.category_name').text(name.name);
 
         jQuery('table[data-category-id=' + category_id + '] span.heading_edit').hide();
-        jQuery('table[data-category-id=' + category_id + '] span.heading').show();
+        jQuery('table[data-category-id=' + category_id + '] span.category_name').show();
 
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/edit_category/' + category_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',

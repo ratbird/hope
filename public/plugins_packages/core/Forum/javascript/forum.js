@@ -12,11 +12,11 @@ STUDIP.Forum = {
     clipboard: {},
 
     init: function () {
-        $('html').addClass('forum');
+        jQuery('html').addClass('forum');
 
         // Fenstergröße für Infobox testen
         STUDIP.Forum.checkWindowSize();
-        $(window).resize(STUDIP.Forum.checkWindowSize);
+        jQuery(window).resize(STUDIP.Forum.checkWindowSize);
         
        
         // make categories and areas sortable
@@ -126,10 +126,10 @@ STUDIP.Forum = {
     },
 
     checkWindowSize: function() {
-        if ($(window).width() <= 400) {
-            $('#layout_sidebar').css('display', 'none');
+        if (jQuery(window).width() <= 400) {
+            jQuery('#layout_sidebar').css('display', 'none');
         } else {
-            $('#layout_sidebar').css('display', 'block');
+            jQuery('#layout_sidebar').css('display', 'block');
         }
     },
     
@@ -181,7 +181,7 @@ STUDIP.Forum = {
         var name = {};
         name.name = jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val();
 
-        if (!$.trim(name.name).length) {
+        if (!jQuery.trim(name.name).length) {
             jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val('').closest('form').data('validator').checkValidity();
             return;
         }
@@ -376,12 +376,12 @@ STUDIP.Forum = {
     },
 
     moveThreadDialog: function (topic_id) {
-        $('tr[data-area-id=' + topic_id +'] td.areaentry').addClass('selected');
+        jQuery('tr[data-area-id=' + topic_id +'] td.areaentry').addClass('selected');
         jQuery('#dialog_' + topic_id).dialog({ 
             height: 400,
             width: 400,
             beforeClose: function() {
-                $('tr[data-area-id=' + topic_id +'] td.areaentry').removeClass('selected');
+                jQuery('tr[data-area-id=' + topic_id +'] td.areaentry').removeClass('selected');
             }
         });
     },
@@ -407,7 +407,7 @@ STUDIP.Forum = {
     },
     
     startTour: function() {
-        $('#joyRideTipContent').joyride();
+        jQuery('#joyRideTipContent').joyride();
     },
     
     showDialog: function(question, confirm, highlight_element) {

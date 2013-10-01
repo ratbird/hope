@@ -8,7 +8,7 @@ foreach ($path as $path_part) :
 endforeach;
 
 printf(_('Im Forum der Veranstaltung **%s** gibt es einen neuen Beitrag unter **%s** von **%s**'),
-    $sem['name'], implode(' > ', $path_name), $topic['author']) ?>
+    $sem['name'], implode(' > ', $path_name), ($topic['anonymous'] ? _('Anonym') : $topic['author'])) ?>
 
 
 <?= $topic['name'] ? '**' . $topic['name'] ."** \n\n" : '' ?>

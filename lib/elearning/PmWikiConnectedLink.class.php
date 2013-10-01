@@ -114,12 +114,12 @@ class PmWikiConnectedLink extends ConnectedLink
 
         <form method="post" action="<?= URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden"    name="view"                             value="<?= $view ?>">
-            <input type="hidden"    name="search_key"               value="<?= $search_key ?>">
-            <input type="hidden"    name="cms_select"               value="<?= $cms_select ?>">
+            <input type="hidden"    name="view"                             value="<?= htmlReady($view) ?>">
+            <input type="hidden"    name="search_key"               value="<?= htmlReady($search_key) ?>">
+            <input type="hidden"    name="cms_select"               value="<?= htmlReady($cms_select) ?>">
             <input type="hidden"    name="module_type"              value="wiki">
-            <input type="hidden"    name="module_id"                    value="<?= $current_module ?>">
-            <input type="hidden"    name="module_system_type" value="<?= $this->cms_type ?>">
+            <input type="hidden"    name="module_id"                    value="<?= htmlReady($current_module) ?>">
+            <input type="hidden"    name="module_system_type" value="<?= htmlReady($this->cms_type) ?>">
 
             <?php if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) : ?>
 

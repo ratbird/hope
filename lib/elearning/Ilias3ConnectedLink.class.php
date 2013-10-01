@@ -98,12 +98,12 @@ class Ilias3ConnectedLink extends ConnectedLink
 
         $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
-        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getModuleType() . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_id\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getId() . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . htmlReady($search_key) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($connected_cms[$this->cms_type]->content_module[$current_module]->getModuleType()) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_id\" value=\"" . htmlReady($connected_cms[$this->cms_type]->content_module[$current_module]->getId()) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . htmlReady($this->cms_type) . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected())
             $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');

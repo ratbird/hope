@@ -48,12 +48,12 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
         if ($connected_cms[$this->cms_type]->isAuthNecessary() AND (! $connected_cms[$this->cms_type]->user->isConnected())) {
             return false;
         }
-        $output = "<a href=\"" . $this->cms_link . "?"
+        $output = "<a href=\"" . UrlHelper::getLink($this->cms_link . "?"
         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
         . "&cms_select=" . $this->cms_type
         . "&ref_id=" . $module_id
         . "&type=" . $module_type
-        . "&target=start\" target=\"_blank\">";
+        . "&target=start"). "\" target=\"_blank\">";
         $output .= $title;
         $output .= "</a>&nbsp;";
 
@@ -75,16 +75,16 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
             $result = $connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId());
         }
         if ($result) {
-            $output .= "<i>Pfad: ". $connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId()) . "</i><br><br>";
+            $output .= "<i>Pfad: ". htmlReady($connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId())) . "</i><br><br>";
         }
         $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
-        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getModuleType() . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_id\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getId() . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . htmlReady($search_key) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($connected_cms[$this->cms_type]->content_module[$current_module]->getModuleType()) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_id\" value=\"" . htmlReady($connected_cms[$this->cms_type]->content_module[$current_module]->getId()) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . htmlReady($this->cms_type) . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) {
             $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');

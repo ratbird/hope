@@ -22,7 +22,10 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
-$new_account_cms = Request::option('new_account_cms');
+$new_account_cms = Request::get('new_account_cms');
+if (!isset($ELEARNING_INTERFACE_MODULES[$new_account_cms])) {
+    unset($new_account_cms);
+}
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once ('lib/visual.inc.php');
@@ -44,11 +47,11 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     }
     $_SESSION['elearning_open_close']["type"] = "user";
     $_SESSION['elearning_open_close']["id"] = $auth->auth["uid"];
-    if (Request::option('do_open'))
-        $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
-    elseif (Request::option('do_close'))
-        $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
-    
+    if (Request::get('do_open'))
+        $_SESSION['elearning_open_close'][Request::get('do_open')] = true;
+    elseif (Request::get('do_close'))
+        $_SESSION['elearning_open_close'][Request::get('do_close')] = false;
+
 
 
     ?><table cellspacing="0" cellpadding="0" border="0" width="100%">

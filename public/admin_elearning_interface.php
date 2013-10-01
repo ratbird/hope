@@ -24,7 +24,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button, Studip\LinkButton; 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -43,12 +43,12 @@ Navigation::activateItem('/admin/config/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-$cms_select = Request::option('cms_select');
+$cms_select = Request::get('cms_select');
 
 if (get_config('ELEARNING_INTERFACE_ENABLE'))
 {
 
-    if ($cms_select != "")
+    if ($cms_select != "" && isset($ELEARNING_INTERFACE_MODULES[$cms_select]))
     {
         $connected_cms[$cms_select] = new ConnectedCMS();
         $connection_status = $connected_cms[$cms_select]->getConnectionStatus($cms_select);
@@ -68,6 +68,8 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             $connected_cms[$cms_select] = new $classname($cms_select);
             $connected_cms[$cms_select]->initSubclasses();
         }
+    } else {
+        unset($cms_select);
     }
 
     ?><table cellspacing="0" cellpadding="0" border="0" width="100%">

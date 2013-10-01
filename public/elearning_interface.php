@@ -46,15 +46,21 @@ Navigation::activateItem('/course/elearning/' . Request::get('view'));
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 $search_key = Request::get('search_key');
-$cms_select = Request::option('cms_select');
+$cms_select = Request::get('cms_select');
 $view = Request::option('view');
-$open_all = Request::option('open_all');
-$close_all = Request::option('close_all');
-$new_account_cms = Request::option('new_account_cms');
-$module_system_type = Request::option('module_system_type');
-$module_id = Request::option('module_id');
-$module_type = Request::option('module_type');
-$anker_target = Request::option('anker_target');
+$open_all = Request::get('open_all');
+$close_all = Request::get('close_all');
+$new_account_cms = Request::get('new_account_cms');
+$module_system_type = Request::get('module_system_type');
+$module_id = Request::get('module_id');
+$module_type = Request::get('module_type');
+$anker_target = Request::get('anker_target');
+if (!isset($ELEARNING_INTERFACE_MODULES[$new_account_cms])) {
+    unset($new_account_cms);
+}
+if (!isset($ELEARNING_INTERFACE_MODULES[$cms_select])) {
+    unset($cms_select);
+}
 if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 {
     $caching_active = false;
@@ -82,15 +88,15 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         $_SESSION['elearning_open_close']["all open"] = "";
     $_SESSION['elearning_open_close']["type"] = "seminar";
     $_SESSION['elearning_open_close']["id"] = $seminar_id;
-    if (Request::option('do_open'))
+    if (Request::get('do_open'))
     {
-        $anker_target = Request::option('do_open');
-        $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
+        $anker_target = Request::get('do_open');
+        $_SESSION['elearning_open_close'][Request::get('do_open')] = true;
     }
-    elseif (Request::option('do_close'))
+    elseif (Request::get('do_close'))
     {
-        $anker_target = Request::option('do_close');
-        $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
+        $anker_target = Request::get('do_close');
+        $_SESSION['elearning_open_close'][Request::get('do_close')] = false;
     }
 
     // ggf. neuen Ilias4-Kurs anlegen
@@ -291,7 +297,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
             if (! ($searchresult_content_modules == false))
             {
-                echo ELearningUtils::getHeader( sprintf( _("Gefundene Lernmodule zum Suchbegriff \"%s\""), $search_key ) );
+                echo ELearningUtils::getHeader( sprintf( _("Gefundene Lernmodule zum Suchbegriff \"%s\""), htmlReady($search_key) ) );
                 foreach ($searchresult_content_modules as $key => $connection)
                 {
                     // show only those modules which are not already connected to the seminar

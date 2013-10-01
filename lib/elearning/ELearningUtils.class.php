@@ -122,8 +122,8 @@ class ELearningUtils
         $output .=  "&nbsp;&nbsp;";
         $output .= "<br>\n";
         $output .= "<input type=\"HIDDEN\" name=\"anker_target\" value=\"choose\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . htmlReady($search_key) . "\">\n";
         $output .= "<select name=\"cms_select\" style=\"vertical-align:middle\">\n";
         $output .=  "<option value=\"\">" . _("Bitte ausw&auml;hlen") . "</option>\n";
         foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences)
@@ -133,7 +133,7 @@ class ELearningUtils
                 $output .=  "<option value=\"$cms\"";
                 if ($cms_select == $cms)
                     $output .=  " selected";
-                $output .=  ">" . $cms_preferences["name"] . "</option>\n";
+                $output .=  ">" . htmlReady($cms_preferences["name"]) . "</option>\n";
             }
         }
         $output .=  "</select>";
@@ -160,14 +160,14 @@ class ELearningUtils
         global $ELEARNING_INTERFACE_MODULES;//, $module_type, $module_type_cms;
         if (sizeof($ELEARNING_INTERFACE_MODULES[$cms]["types"]) > 1)
         {
-            $output .= "<select name=\"module_type_" . $cms . "\" style=\"vertical-align:middle\">\n";
+            $output .= "<select name=\"module_type_" . htmlReady($cms) . "\" style=\"vertical-align:middle\">\n";
             $output .=  "<option value=\"\">" . _("Bitte ausw&auml;hlen") . "</option>\n";
             foreach($ELEARNING_INTERFACE_MODULES[$cms]["types"] as $type => $info)
             {
                 $output .=  "<option value=\"$type\"";
                 if (Request::get("module_type_" . $cms) == $type)
                     $output .=  " selected";
-                $output .=  ">" . $info["name"] . "</option>\n";
+                $output .=  ">" . htmlReady($info["name"]) . "</option>\n";
             }
             $output .=  "</select>";
         }
@@ -175,8 +175,8 @@ class ELearningUtils
         {
             foreach($ELEARNING_INTERFACE_MODULES[$cms]["types"] as $type => $info)
             {
-                $output = "\"" . $info["name"] . "\"";
-                $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $type . "\">\n";
+                $output = "\"" . htmlReady($info["name"]) . "\"";
+                $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($type) . "\">\n";
             }
         }
         return $output;
@@ -204,8 +204,8 @@ class ELearningUtils
         $output .=  "&nbsp;&nbsp;";
         $output .= "<br>\n";
         $output .= "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
         $output .= "<input name=\"search_key\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . htmlReady($search_key) . "\">\n";
 
         $output .=  "&nbsp;";
@@ -242,7 +242,7 @@ class ELearningUtils
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
         foreach ($ELEARNING_INTERFACE_MODULES as $cms_type => $cms_data)
-            $output .= "<input type=\"HIDDEN\" name=\"module_type_" . $cms_type . "\" value=\"" . Request::option("module_type_" . $cms_type) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"module_type_" . $cms_type . "\" value=\"" . Request::get("module_type_" . $cms_type) . "\">\n";
 //      $output .= "<input type=\"HIDDEN\" name=\"module_type_cms\" value=\"" . $cms . "\">\n";
         $output .= "<font size=\"-1\">";
         $output .= sprintf(_("Typ f&uuml;r neues Lernmodul: %s"), ELearningUtils::getTypeSelectbox($cms));
@@ -280,7 +280,7 @@ class ELearningUtils
         $output .= "</font>";
         $output .= "</td><td align=\"right\">";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"1\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $my_account_cms . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . htmlReady($my_account_cms) . "\">\n";
         if ($connected_cms[$my_account_cms]->user->isConnected())
             $output .=  Button::create(_('Bearbeiten'), 'change');
         else
@@ -308,8 +308,8 @@ class ELearningUtils
         $ext_password = Request::get('ext_password');
         $ext_password_2 = Request::get('ext_password_2');
         $ext_username = Request::get('ext_username');
-        $ref_id = Request::option('ref_id');
-        $module_type = Request::option('module_type');
+        $ref_id = Request::get('ref_id');
+        $module_type = Request::get('module_type');
 
         ELearningUtils::loadClass($new_account_cms);
 
@@ -344,7 +344,7 @@ class ELearningUtils
                 if ($ref_id != "")
                 {
                     $connected_cms[$new_account_cms]->newContentModule($ref_id, $module_type, true);
-                    $output .= sprintf( _("Hier gelangen Sie zum gew&auml;hlten Lernmodul \"%s\":"), $connected_cms[$new_account_cms]->content_module[$current_module]->getTitle() ) . "<br>\n<br>\n";
+                    $output .= sprintf( _("Hier gelangen Sie zum gew&auml;hlten Lernmodul \"%s\":"), htmlReady($connected_cms[$new_account_cms]->content_module[$current_module]->getTitle()) ) . "<br>\n<br>\n";
                     $output .= $connected_cms[$new_account_cms]->link->getUserModuleLinks();
                     $output .= "<br>";
                     $output .= "<br>";
@@ -383,7 +383,7 @@ class ELearningUtils
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"table_row_even\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
-            $output .= sprintf(_("Geben Sie nun Benutzernamen und Passwort Ihres Benutzeraccounts in %s ein."),  $connected_cms[$new_account_cms]->getName()) . "";
+            $output .= sprintf(_("Geben Sie nun Benutzernamen und Passwort Ihres Benutzeraccounts in %s ein."),  htmlReady($connected_cms[$new_account_cms]->getName())) . "";
             $output .= "</font>";
             $output .= "<br></td></tr>\n";
             $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
@@ -393,7 +393,7 @@ class ELearningUtils
             $output .= "&nbsp;" . _("Benutzername: ") . "&nbsp;\n";
             $output .= "</font>";
             $output .= "</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
-            $output .= "" . "<input name=\"ext_username\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . $ext_username . "\">";
+            $output .= "" . "<input name=\"ext_username\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . htmlReady($ext_username) . "\">";
             $output .= "</td></tr>";
             $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
             $output .= "<br></td></tr>\n";
@@ -408,13 +408,12 @@ class ELearningUtils
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
             $output .= "<input type=\"HIDDEN\" name=\"assign\" value=\"1\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $module_type . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . htmlReady($new_account_step) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . htmlReady($ref_id) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($module_type) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . htmlReady($new_account_cms) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
             $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
@@ -431,7 +430,7 @@ class ELearningUtils
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"table_row_even\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
-            $output .= sprintf(_("Geben Sie nun ein Passwort f&uuml;r Ihren neuen Benutzeraccount in %s ein."),  $connected_cms[$new_account_cms]->getName());
+            $output .= sprintf(_("Geben Sie nun ein Passwort f&uuml;r Ihren neuen Benutzeraccount in %s ein."),  htmlReady($connected_cms[$new_account_cms]->getName()));
             $output .= "</font>";
             $output .= "<br></td></tr>\n";
             $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
@@ -456,13 +455,12 @@ class ELearningUtils
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
             $output .= "<input type=\"HIDDEN\" name=\"next\" value=\"" . true . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $module_type . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . htmlReady($new_account_step) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . htmlReady($ref_id) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($module_type) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . htmlReady($new_account_cms) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
             $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
@@ -476,12 +474,12 @@ class ELearningUtils
             $connected_cms[$new_account_cms]->user->setPassword($ext_password);
             if ($connected_cms[$new_account_cms]->user->newUser() != false)
             {
-                $messages["info"] .= sprintf(_("Der Account wurde erzeugt und zugeordnet. Ihr Loginname ist %s."), "<b>" . $connected_cms[$new_account_cms]->user->getUsername() . "</b>");
+                $messages["info"] .= sprintf(_("Der Account wurde erzeugt und zugeordnet. Ihr Loginname ist %s."), "<b>" . htmlReady($connected_cms[$new_account_cms]->user->getUsername()) . "</b>");
                 if ($ref_id != "")
                 {
                     $connected_cms[$new_account_cms]->newContentModule($ref_id, $module_type, true);
                     $output .= "<font size=\"-1\">";
-                    $output .= sprintf( _("Hier gelangen Sie zum gew&auml;hlten Lernmodul \"%s\":"), $connected_cms[$new_account_cms]->content_module[$current_module]->getTitle() ) . "<br>\n<br>\n";
+                    $output .= sprintf( _("Hier gelangen Sie zum gew&auml;hlten Lernmodul \"%s\":"), htmlReady($connected_cms[$new_account_cms]->content_module[$current_module]->getTitle()) ) . "<br>\n<br>\n";
                     $output .= $connected_cms[$new_account_cms]->link->getUserModuleLinks();
                     $output .= "<br>";
                     $output .= "<br>";
@@ -500,22 +498,21 @@ class ELearningUtils
             $output .= "<tr><td>\n";
             $output .= "<font size=\"-1\">";
             if (Request::submitted('start'))
-                $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen k&ouml;nnen, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), $connected_cms[$new_account_cms]->getName()) . "<br><br>\n\n";
+                $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen k&ouml;nnen, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), htmlReady($connected_cms[$new_account_cms]->getName())) . "<br><br>\n\n";
             if ($connected_cms[$new_account_cms]->user->isConnected())
             {
-                $output .= sprintf(_("Ihr Stud.IP-Account wurde bereits mit einem %s-Account verkn&uuml;pft. Wenn Sie den verkn&uuml;pften Account durch einen anderen, bereits existierenden Account ersetzen wollen, klicken Sie auf \"zuordnen\"."),  $connected_cms[$new_account_cms]->getName(),  $connected_cms[$new_account_cms]->getName());
+                $output .= sprintf(_("Ihr Stud.IP-Account wurde bereits mit einem %s-Account verkn&uuml;pft. Wenn Sie den verkn&uuml;pften Account durch einen anderen, bereits existierenden Account ersetzen wollen, klicken Sie auf \"zuordnen\"."),  htmlReady($connected_cms[$new_account_cms]->getName()),  htmlReady($connected_cms[$new_account_cms]->getName()));
 //              $output .= "&nbsp;" . sprintf(_("Wenn Sie den verkn&uuml;pften Account durch einen neuen, automatisch erstellten Account ersetzen wollen, klicken Sie auf \"weiter\"."));
                 $output .= "<br>\n<br>\n";
             }
             else
-                $output .= sprintf(_("Wenn Sie innerhalb von %s bereits &uuml;ber einen BenutzerInnen-Account verf&uuml;gen, k&ouml;nnen Sie ihn jetzt \"zuordnen\". Anderenfalls wird automatisch ein neuer Account in %s f&uuml;r Sie erstellt, wenn Sie auf \"weiter\" klicken."),  $connected_cms[$new_account_cms]->getName(),  $connected_cms[$new_account_cms]->getName()) . "<br>\n<br>\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $module_type . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-            $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
+                $output .= sprintf(_("Wenn Sie innerhalb von %s bereits &uuml;ber einen BenutzerInnen-Account verf&uuml;gen, k&ouml;nnen Sie ihn jetzt \"zuordnen\". Anderenfalls wird automatisch ein neuer Account in %s f&uuml;r Sie erstellt, wenn Sie auf \"weiter\" klicken."),  htmlReady($connected_cms[$new_account_cms]->getName()),  htmlReady($connected_cms[$new_account_cms]->getName())) . "<br>\n<br>\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . htmlReady($new_account_step) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . htmlReady($ref_id) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . htmlReady($module_type) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . htmlReady($new_account_cms) . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
 
             $output .=  "<center>";
             $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
@@ -692,7 +689,7 @@ class ELearningUtils
             foreach($courses as $system_type => $crs_id)
                 if (ELearningUtils::isCMSActive($system_type)) {
                     ELearningUtils::loadClass($system_type);
-                    $course_output[] = "<a href=\"" . $connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start\" target=\"_blank\">".sprintf(_("Kurs in %s"), $connected_cms[$system_type]->getName())."</a>";
+                    $course_output[] = "<a href=\"" . UrlHelper::getLink($connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start") . "\" target=\"_blank\">".sprintf(_("Kurs in %s"), htmlReady($connected_cms[$system_type]->getName()))."</a>";
                     // gegebenenfalls zugeordnete Module aktualisieren
                     if (Request::submitted('update')) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
@@ -712,8 +709,8 @@ class ELearningUtils
             $output["update"] .=  "<font style=\"font-size: -1\">" . _("Hier k&ouml;nnen Sie die Zuordnungen zu den verkn&uuml;pften Kursen aktualisieren."). "<br></font>";
             $output["update"] .=  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
             $output["update"] .= CSRFProtection::tokenTag();
-            $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
-            $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
+            $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
+            $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . htmlReady($cms_select) . "\">\n";
             $output["update"] .= Button::create(_('Aktualisieren'), 'update');
             $output["update"] .= "</form>";
         }

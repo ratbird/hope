@@ -10,43 +10,32 @@
 </div>
 <? endif ?>
 
-<div id="sortable_areas">
 <? if (!empty($list)) foreach ($list as $category_id => $entries) : ?>
-<table class="forum" data-category-id="<?= $category_id ?>">
+<table class="default forum" data-category-id="<?= $category_id ?>">
+
+    <colgroup>
+        <col>
+        <col>
+        <col>
+        <col>
+    </colgroup>
+
     <thead>
-    <tr>
-        <td class="forum_header" colspan="2">
-            <span class="corners-top"></span>
-            <span class="heading">
-                <?= _('Themen') ?>
-            </span>
-        </td>
-
-        <td class="forum_header" data-type="answers">
-            <span class="no-corner"></span>
-            <span class="heading"><?= _("Beiträge") ?></span>
-        </td>
-
-        <td class="forum_header" data-type="last_posting">
-            <span class="corners-top-right"></span>
-            <span class="heading" style="float: left"><?= _("letzte Antwort") ?></span>
-        </td>
-    </tr>
+        <tr>
+            <th colspan="2"><?= _('Thema') ?></th>
+            <th data-type="answers"><?= _("Beiträge") ?></th>
+            <th data-type="last_posting"><?= _("letzte Antwort") ?></th>
+        </tr>
     </thead>
 
-
-    <tbody class="sortable">
-    <!-- this row allows dropping on otherwise empty categories -->
-    <tr class="sort-disabled">
-        <td class="areaborder" style="height: 5px"colspan="4"> </td>
-    </tr>
-
+    <tbody>
+    
     <? if (!empty($entries)) foreach ($entries as $entry) :
         $jump_to_topic_id = ($entry['last_unread'] ?: $entry['topic_id']); ?>
  
     <tr data-area-id="<?= $entry['topic_id'] ?>">
 
-        <td class="areaentry icon">
+        <td class="icon">
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
             <? if ($entry['chdate'] >= $visitdate && $entry['owner_id'] != $GLOBALS['user']->id): ?>
                 <? $jump_to_topic_id = $entry['topic_id'] ?>
@@ -130,11 +119,11 @@
             </div>
         </td>
 
-        <td class="areaentry postings">
+        <td class="postings">
             <?= $entry['num_postings'] ?>
         </td>
 
-        <td class="areaentry answer">
+        <td class="answer">
             <? if (is_array($entry['last_posting'])) : ?>
             <?= _("von") ?>
             <? if ($entry['last_posting']['anonymous']): ?>
@@ -158,18 +147,5 @@
     </tr>
     <? endforeach; ?>
     </tbody>
-
-    <tfoot>
-        <!-- bottom border -->
-        <tr>
-            <td class="areaborder" colspan="4">
-                <span class="corners-bottom"><span></span></span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="6">&nbsp;</td>
-        </tr>
-    </tfoot>
 </table>
 <? endforeach ?>
-</div>

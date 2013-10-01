@@ -74,6 +74,13 @@ if (ForumPerm::has('pdfexport', $seminar_id)) {
         'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'">' . _('Beiträge als PDF exportieren') .'</a>'
     );
 }
+
+if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
+    $eintraege[] = array(
+        'icon' => 'icons/16/black/export/file-pdf.png',
+        'text' => '<a href="#create">' . _('Neue Kategorie erstellen') .'</a>'
+    );
+}
     
 if (!empty($eintraege)) {
     $infobox_content[] = array(
@@ -140,10 +147,6 @@ endif;
 
 <!-- Erstellen eines neuen Elements (Kateogire, Thema, Beitrag) -->
 <? if ($constraint['depth'] == 0) : ?>
-    <? if (ForumPerm::has('add_category', $seminar_id)) : ?>
-        <?= $this->render_partial('index/_new_category') ?>
-    <? endif ?>
-
     <div style="text-align: center">
         <div class="button-group">
             <? if (ForumPerm::has('abo', $seminar_id) && $section == 'index') : ?>
@@ -157,7 +160,10 @@ endif;
             <? endif ?>
         </div>
     </div>
-    
+
+    <? if (ForumPerm::has('add_category', $seminar_id)) : ?>
+        <?= $this->render_partial('index/_new_category') ?>
+    <? endif ?>
 <? else : ?>
     <? if (!$flash['edit_entry'] && ForumPerm::has('add_entry', $seminar_id)) : ?>
     <? $constraint['depth'] == 1 ? $button_face = _('Neues Thema erstellen') : $button_face = _('Antworten') ?>

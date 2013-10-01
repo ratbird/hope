@@ -23,7 +23,6 @@ STUDIP.Forum = {
         jQuery('#sortable_areas').sortable({
             axis: 'y',
             items: ">*.movable",
-            handle: 'td.handle',
             stop: function () {
                 var categories = {};
                 categories.categories = {};

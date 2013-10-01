@@ -2,75 +2,72 @@
 <br>
 <div id="sortable_areas">
 <? foreach ($list as $category_id => $entries) : ?>
-<table class="forum <?= $has_perms && $category_id != $seminar_id ? 'movable' : '' ?>" data-category-id="<?= $category_id ?>">
-    <thead id="tutorCategory">
-    <tr>
-        <td class="forum_header <?= ForumPerm::has('sort_category', $seminar_id) && $category_id != $seminar_id ? 'handle' : '' ?>" colspan="2">
-            <a name="cat_<?= $category_id ?>"></a>
-            <span class="corners-top"></span>
-            <span class="heading">
-                <span class="category_name" <?= Request::get('edit_category') != $category_id ? '' : 'style="display: none;"' ?>>
-                    <?= htmlReady($categories[$category_id]) ?>
-                </span>
-            </span>
-            <span class="heading_edit" style="<?= Request::get('edit_category') == $category_id ? '' : 'display: none;' ?> margin-left: 5px;">
-                <form method="post" action="<?= PluginEngine::getLink('coreforum/index/edit_category/' . $category_id) ?>">
-                    <input type="text" required name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
-
-                    <?= Studip\Button::createAccept('Kategorie speichern', '', 
-                        array('onClick' => "javascript:STUDIP.Forum.saveCategoryName('". $category_id ."'); return false;")) ?>
-                    <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
-                        array('onClick' => "STUDIP.Forum.cancelEditCategoryName('". $category_id ."'); return false;")) ?>
-                </form>
-            </span>
-        </td>
-
-        <td class="forum_header" data-type="answers">
-            <span class="no-corner"></span>
-            <span class="heading"><?= _("Beiträge") ?></span>
-        </td>
-
-        <td class="forum_header" colspan="2" data-type="last_posting">
-            <span class="corners-top-right"></span>
-            <span class="heading" style="float: left"><?= _("letzte Antwort") ?></span>
-            <? if (ForumPerm::has('edit_category', $seminar_id) || ForumPerm::has('remove_category', $seminar_id)) : ?>
-            <span style="float: right; padding-right: 5px;" id="tutorCategoryIcons">
-                <? if ($category_id == $seminar_id) : ?>
-                <?= tooltipIcon(_('Diese vordefinierte Kategorie kann nicht bearbeitet oder gelöscht werden.'
-                        . 'Für Autor/innen taucht sie allerdings nur auf, wenn sie Bereiche enthält.')) ?>
-                <? else : ?>
-                    <? if (ForumPerm::has('edit_category', $seminar_id)) : ?>
-                    <a href="<?= PluginEngine::getLink('coreforum/index/?edit_category=' . $category_id) ?>"
-                        onClick="javascript:STUDIP.Forum.editCategoryName('<?= $category_id ?>'); return false;">
-                        <?= Assets::img('icons/16/white/edit.png', array('title' => 'Name der Kategorie ändern')) ?>
-                    </a>
-                    <? endif ?>
-
-                    <? if(ForumPerm::has('remove_category', $seminar_id)) : ?>
-                    <a href="<?= PluginEngine::getLink('coreforum/index/remove_category/' . $category_id) ?>"
-                        onClick="STUDIP.Forum.deleteCategory('<?= $category_id ?>'); return false;">
-                        <?= Assets::img('icons/16/white/trash.png', array('title' => 'Kategorie entfernen')) ?>
-                    </a>
-                    <? endif ?>
+<a name="cat_<?= $category_id ?>"></a>
+<table class="default forum <?= $has_perms && $category_id != $seminar_id ? 'movable handle' : '' ?>" data-category-id="<?= $category_id ?>">
+    <caption>
+        <? if (ForumPerm::has('edit_category', $seminar_id) || ForumPerm::has('remove_category', $seminar_id)) : ?>
+        <span class="actions" id="tutorCategoryIcons">
+            <? if ($category_id == $seminar_id) : ?>
+            <?= tooltipIcon(_('Diese vordefinierte Kategorie kann nicht bearbeitet oder gelöscht werden.'
+                    . 'Für Autor/innen taucht sie allerdings nur auf, wenn sie Bereiche enthält.')) ?>
+            <? else : ?>
+                <? if (ForumPerm::has('edit_category', $seminar_id)) : ?>
+                <a href="<?= PluginEngine::getLink('coreforum/index/?edit_category=' . $category_id) ?>"
+                    onClick="javascript:STUDIP.Forum.editCategoryName('<?= $category_id ?>'); return false;">
+                    <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Name der Kategorie ändern')) ?>
+                </a>
                 <? endif ?>
-            </span>
+
+                <? if(ForumPerm::has('remove_category', $seminar_id)) : ?>
+                <a href="<?= PluginEngine::getLink('coreforum/index/remove_category/' . $category_id) ?>"
+                    onClick="STUDIP.Forum.deleteCategory('<?= $category_id ?>'); return false;">
+                    <?= Assets::img('icons/16/blue/trash.png', array('title' => 'Kategorie entfernen')) ?>
+                </a>
+                <? endif ?>
             <? endif ?>
-        </td>
-    </tr>
+        </span>
+        <? endif ?>
+
+        <span id="tutorCategory" class="category_name" <?= Request::get('edit_category') != $category_id ? '' : 'style="display: none;"' ?>>
+            <?= htmlReady($categories[$category_id]) ?>
+        </span>
+
+        <span class="heading_edit" style="<?= Request::get('edit_category') == $category_id ? '' : 'display: none;' ?> margin-left: 5px;">
+            <form method="post" action="<?= PluginEngine::getLink('coreforum/index/edit_category/' . $category_id) ?>">
+                <input type="text" required name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
+
+                <?= Studip\Button::createAccept('Kategorie speichern', '', 
+                    array('onClick' => "javascript:STUDIP.Forum.saveCategoryName('". $category_id ."'); return false;")) ?>
+                <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
+                    array('onClick' => "STUDIP.Forum.cancelEditCategoryName('". $category_id ."'); return false;")) ?>
+            </form>
+        </span>        
+    </caption>
+
+    <colgroup>
+        <col>
+        <col>
+        <col>
+        <col>
+        <col>
+    </colgroup>
+
+    <thead>
+        <tr>
+            <th colspan="2"> <?= _('Name des Bereichs') ?></th>
+            <th data-type="answers"><?= _("Beiträge") ?></th>
+            <th colspan="2" data-type="last_posting"><?= _("letzte Antwort") ?></th>
+        </tr>
     </thead>
 
 
     <tbody class="sortable">
-    <!-- this row allows dropping on otherwise empty categories -->
-    <tr class="sort-disabled">
-        <td class="areaborder" style="height: 5px"colspan="7"> </td>
-    </tr>
 
     <? if (!empty($entries)) foreach ($entries as $entry) :
         $jump_to_topic_id = $entry['topic_id']; ?>
 
     <tr id="tutorArea" data-area-id="<?= $entry['topic_id'] ?>" <?= ($has_perms) ? 'class="movable"' : '' ?>>
-        <td class="areaentry icon">
+        <td class="icon">
             <? if (ForumPerm::has('sort_area', $seminar_id)) : ?>
             <img src="<?= $picturepath ?>/anfasser_48.png" class="handle" id="tutorMoveArea">
             <? endif ?>
@@ -164,13 +161,13 @@
             </div>
         </td>
 
-        <td class="areaentry postings">
+        <td class="postings">
             <span id="tutorNumPostings">
                 <?= ($entry['num_postings'] > 0) ? ($entry['num_postings'] - 1) : 0 ?>
             </span>
         </td>
 
-        <td class="areaentry answer">
+        <td class="answer">
             <? if (is_array($entry['last_posting'])) : ?>
             <?= _("von") ?>
             <? if ($entry['last_posting']['anonymous']): ?>
@@ -191,7 +188,7 @@
             <? endif; ?>
         </td>
         
-        <td class="areaentry icon" style="text-align: right; padding-right: 2px;">
+        <td class="icon" style="text-align: right; padding-right: 2px;">
             <? if (ForumPerm::has('sort_area', $seminar_id)) : ?>
             <img src="<?= $picturepath ?>/anfasser_48.png" class="handle" id="tutorMoveArea">
             <? endif ?>
@@ -199,21 +196,9 @@
 
     </tr>
     <? endforeach; ?>
-    </tbody>
-
-    <tfoot>
+    
     <? if ($category_id && ForumPerm::has('add_area', $seminar_id)) : ?>
     <? if (Request::get('add_area') != $category_id) : ?>
-    <tr class="add_area">
-        <td class="areaborder" colspan="5" class="add_area" onClick="STUDIP.Forum.addArea('<?= $category_id ?>'); return false;">
-            <a href="<?= PluginEngine::getLink('coreforum/index/index/?add_area=' . $category_id)?>#cat_<?= $category_id ?>"  title="<?= _('Neuen Bereich zu dieser Kategorie hinzufügen.') ?>">
-                <span><?= _('Bereich hinzufügen') ?></span>
-                <?= Assets::img('icons/16/white/add.png', array('id' => 'tutorAddArea')) ?>
-            </a>
-        </td>
-    </tr>
-    <? endif ?>
-
     <tr <?= (Request::get('add_area') != $category_id) ? 'style="display: none"' : '' ?> class="new_area">
         <td class="areaentry"></td>
         <td class="areaentry">
@@ -227,21 +212,33 @@
                         array('onClick' => "javascript:STUDIP.Forum.cancelAddArea(); return false;")) ?>
             </form>
         </td>
-        <td class="areaentry postings">0</td>
-        <td class="areaentry answer" colspan="2"><br><?= _('keine Antworten') ?></td>
+        <td class="postings">0</td>
+        <td class="answer" colspan="2"><br><?= _('keine Antworten') ?></td>
     </tr>
     <? endif ?>
+    <? endif ?>
+    
+    <!-- this row allows dropping on otherwise empty categories -->
+    <tr class="sort-disabled">
+        <td class="areaborder" style="height: 5px; padding: 0px; margin: 0px"colspan="7"> </td>
+    </tr>
+    </tbody>
 
-
-    <!-- bottom border -->
-    <tr>
-        <td class="areaborder" colspan="5">
-            <span class="corners-bottom"><span></span></span>
+    <tfoot>
+    <? if ($category_id && ForumPerm::has('add_area', $seminar_id)) : ?>
+    <? if (Request::get('add_area') != $category_id) : ?>
+    <tr class="add_area">
+        <td colspan="5" onClick="STUDIP.Forum.addArea('<?= $category_id ?>'); return false;" class="add_area">
+            <a href="<?= PluginEngine::getLink('coreforum/index/index/?add_area=' . $category_id)?>#cat_<?= $category_id ?>"  title="<?= _('Neuen Bereich zu dieser Kategorie hinzufügen.') ?>">
+                <span><?= _('Bereich hinzufügen') ?></span>
+                <?= Assets::img('icons/16/blue/add.png', array('id' => 'tutorAddArea')) ?>
+            </a>
         </td>
     </tr>
-    <tr>
-        <td colspan="6">&nbsp;</td>
-    </tr>
+    <? endif ?>
+    <? endif ?>
+
+    <!-- bottom border -->
     </tfoot>
 </table>
 <? endforeach ?>

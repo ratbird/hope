@@ -70,7 +70,7 @@ class UserDataToConfig extends Migration
                                                    array(
                                                     "glb_start_time"=> 8,
                                                     "glb_end_time"  => 19,
-                                                    "glb_days"      => array ( 0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, ),
+                                                    "glb_days"      => array ( 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 0 => 0, ),
                                                     "glb_sem"       => null,
                                                     "converted"     => true))
                                                ),

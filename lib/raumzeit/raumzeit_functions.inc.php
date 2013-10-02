@@ -82,7 +82,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
         if ($val->getResourceID()) {
             $resObj = ResourceObject::Factory($val->getResourceID());
             $tpl['room']        = _("Raum: ");
-            $tpl['room']       .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+            $tpl['room']       .= $resObj->getFormattedLink(TRUE, TRUE, TRUE, 'view_schedule', 'no_nav', $val->getStartTime());
             $tpl['class']       = 'content_title_green';
             $tpl['resource_id'] = $val->getResourceID();
         } else {

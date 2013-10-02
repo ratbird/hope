@@ -124,7 +124,7 @@ class UserDataToConfig extends Migration
                                   `user_id` char(32) NOT NULL,
                                   `last_lifesign` int(10) unsigned NOT NULL,
                                   PRIMARY KEY (`user_id`),
-                                  KEY `user_id` (`user_id`,`last_lifesign`)
+                                  KEY `last_lifesign` (`last_lifesign`)
                                 ) ENGINE=MyISAM");
         DBManager::get()->exec("INSERT INTO user_online (user_id,last_lifesign) SELECT sid,UNIX_TIMESTAMP(changed) FROM user_data INNER JOIN auth_user_md5 ON sid = user_id");
 

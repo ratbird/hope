@@ -534,9 +534,8 @@ class ExternModuleLecturedetails extends ExternModule {
             $parameters = array($this->seminar_id);
             $statement = DBManager::get()->prepare($query);
             $statement->execute($parameters);
-            $res = $statement->fetch(PDO::FETCH_ASSOC);
             $involved_insts = NULL;
-            while ($res) {
+            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $res) {
                 if ($res['url']) {
                     $link_inst = htmlReady($res['url']);
                     if (!preg_match('{^https?://.+$}', $link_inst))

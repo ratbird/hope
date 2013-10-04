@@ -48,38 +48,40 @@ if ($constraint['depth'] == 0 && $section == 'index') :
 endif;
 
 $eintraege = array();
-if (ForumPerm::has('abo', $seminar_id)) {
-    if (ForumAbo::has($constraint['topic_id'])) :
-        $abo_text = _('Nicht mehr abonnieren');
-        $abo_url = PluginEngine::getLink('coreforum/index/remove_abo/' . $constraint['topic_id']);
-    else :
-        switch ($constraint['depth']) {
-            case '0': $abo_text = _('Komplettes Forum abonnieren');break;
-            case '1': $abo_text = _('Diesen Bereich abonnieren');break;
-            default: $abo_text = _('Dieses Thema abonnieren');break;
-        }
+if ($section == 'index') {
+    if (ForumPerm::has('abo', $seminar_id)) {
+        if (ForumAbo::has($constraint['topic_id'])) :
+            $abo_text = _('Nicht mehr abonnieren');
+            $abo_url = PluginEngine::getLink('coreforum/index/remove_abo/' . $constraint['topic_id']);
+        else :
+            switch ($constraint['depth']) {
+                case '0': $abo_text = _('Komplettes Forum abonnieren');break;
+                case '1': $abo_text = _('Diesen Bereich abonnieren');break;
+                default: $abo_text = _('Dieses Thema abonnieren');break;
+            }
+            
+            $abo_url = PluginEngine::getLink('coreforum/index/abo/' . $constraint['topic_id']);
+        endif;
         
-        $abo_url = PluginEngine::getLink('coreforum/index/abo/' . $constraint['topic_id']);
-    endif;
-    
-    $eintraege[] = array(
-        'icon' => 'icons/16/black/link-intern.png',
-        'text' => '<a href="'. $abo_url .'">' . $abo_text .'</a>'
-    );
-}
+        $eintraege[] = array(
+            'icon' => 'icons/16/black/link-intern.png',
+            'text' => '<a href="'. $abo_url .'">' . $abo_text .'</a>'
+        );
+    }
 
-if (ForumPerm::has('pdfexport', $seminar_id)) {
-    $eintraege[] = array(
-        'icon' => 'icons/16/black/export/file-pdf.png',
-        'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'">' . _('Beiträge als PDF exportieren') .'</a>'
-    );
-}
+    if (ForumPerm::has('pdfexport', $seminar_id)) {
+        $eintraege[] = array(
+            'icon' => 'icons/16/black/export/file-pdf.png',
+            'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'">' . _('Beiträge als PDF exportieren') .'</a>'
+        );
+    }
 
-if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
-    $eintraege[] = array(
-        'icon' => 'icons/16/black/export/file-pdf.png',
-        'text' => '<a href="#create">' . _('Neue Kategorie erstellen') .'</a>'
-    );
+    if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
+        $eintraege[] = array(
+            'icon' => 'icons/16/black/link-intern.png',
+            'text' => '<a href="#create">' . _('Neue Kategorie erstellen') .'</a>'
+        );
+    }
 }
     
 if (!empty($eintraege)) {

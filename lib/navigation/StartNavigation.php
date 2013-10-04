@@ -147,8 +147,19 @@ class StartNavigation extends Navigation
             if (get_config('RESOURCES_ENABLE')) {
                 $navigation = new Navigation(_('Verwaltung von Ressourcen'));
                 $navigation->addSubNavigation('hierarchy', new Navigation(_('Struktur'), 'resources.php#a', array('view' => 'resources')));
-                $navigation->addSubNavigation('start_planning', new Navigation(_('Raumplanung'), 'resources.php?cancel_edit_request_x=1', array('view' => 'requests_start')));
-                if ((getGlobalPerms($user->id) == 'admin') || ($perm->have_perm('root'))) {
+                if ($perm->have_perm('admin') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
+                    if (getGlobalPerms($GLOBALS['user']->id) !== 'admin') {
+                        require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
+                        $resList = new ResourcesUserRoomsList($GLOBALS['user']->id, false, false);
+                        $show_roomplanning = $resList->roomsExist();
+                    } else {
+                        $show_roomplanning = true;
+                    }
+                    if ($show_roomplanning) {
+                        $navigation->addSubNavigation('start_planning', new Navigation(_('Raumplanung'), 'resources.php?cancel_edit_request_x=1', array('view' => 'requests_start')));
+                    }
+                }
+                if (getGlobalPerms($GLOBALS['user']->id) == 'admin') {
                     $navigation->addSubNavigation('edit_types', new Navigation(_('Anpassen'), 'resources.php', array('view' => 'edit_types')));
                 }
                 $this->addSubNavigation('ressources', $navigation);
@@ -163,16 +174,16 @@ class StartNavigation extends Navigation
         $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));
         $this->addSubNavigation('messaging', $navigation);
 
-        // community 
-        $navigation = new Navigation(_('Community')); 
-        $navigation->addSubNavigation('online', new Navigation(_('Wer ist online?'), 'dispatch.php/online')); 
-        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha'))); 
-        // study groups 
-        if (get_config('STUDYGROUPS_ENABLE')) { 
-            $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse')); 
-        } 
-        // ranking 
-        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score')); 
+        // community
+        $navigation = new Navigation(_('Community'));
+        $navigation->addSubNavigation('online', new Navigation(_('Wer ist online?'), 'dispatch.php/online'));
+        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha')));
+        // study groups
+        if (get_config('STUDYGROUPS_ENABLE')) {
+            $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse'));
+        }
+        // ranking
+        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
         $this->addSubNavigation('community', $navigation);
 
         // calendar / home page

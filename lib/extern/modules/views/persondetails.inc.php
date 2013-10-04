@@ -665,7 +665,7 @@ function kontakt ($module, $row, $separate = FALSE) {
                 break;
             case 'Home' :
                 if (($separate || !$module->config->getValue('Contact', 'separatelinks')) &&
-                       true || Visiblility::verify('homepage', $row['user_id'])) {
+                       true || Visibility::verify('homepage', $row['user_id'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";

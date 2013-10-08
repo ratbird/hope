@@ -40,13 +40,13 @@
 
             <div class="buttons">
                 <div class="button-group">
-                    <?= Studip\Button::createAccept('Beitrag erstellen', array('tabindex' => '3')) ?>
+                    <?= Studip\Button::createAccept(_('Beitrag erstellen'), array('tabindex' => '3')) ?>
 
-                    <?= Studip\LinkButton::createCancel('Abbrechen', 'javascript:', array(
+                    <?= Studip\LinkButton::createCancel(_('Abbrechen'), 'javascript:', array(
                         'onClick' => "STUDIP.Forum.cancelNewEntry();",
                         'tabindex' => '4')) ?>
 
-                    <?= Studip\LinkButton::create('Vorschau', "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
+                    <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
                     <? if (Config::get()->FORUM_ANONYMOUS_POSTINGS): ?>
                         <div style="float: left; margin-top: 14px; margin-left: 14px;">    
                             <label><?= _('Anonym') ?>

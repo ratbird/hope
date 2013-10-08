@@ -34,6 +34,7 @@ class ForumPerm {
      *   fav_entry         - Marking a Posting as "favorite"<br>
      *   like_entry        - Liking a posting<br>
      *   move_thread       - Moving a thrad between ares<br>
+     *   close_thread      - Close or open a thread<br>
      *   abo               - Signing up for mail-notifications for new entries<br>
      *   forward_entry     - Forwarding an existing entry as a message<br>
      *   pdfexport         - Exporting parts of the forum as PDF<br>
@@ -93,7 +94,7 @@ class ForumPerm {
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '
-            . 'abo forward_entry pdfexport')
+            . 'close_thread abo forward_entry pdfexport')
         ) !== false) {
             return true;
         } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport')) !== false) {

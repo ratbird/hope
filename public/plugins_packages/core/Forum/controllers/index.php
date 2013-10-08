@@ -597,6 +597,38 @@ class IndexController extends StudipController
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
         }
     }
+    
+    function close_thread_action($topic_id, $redirect, $page)
+    {
+        ForumPerm::check('close_thread', $this->getId(), $topic_id);
+        
+        ForumEntry::close($topic_id);
+        
+        $success_text = _('Das Thema wurde erfolgreich geschlossen.');
+
+        if (Request::isAjax()) {
+            $this->render_text(MessageBox::success($success_text));
+        } else {
+            $this->flash['messages'] = array('success' => $success_text);
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $redirect . '/' . $page));
+        }
+    }
+    
+    function open_thread_action($topic_id, $redirect, $page)
+    {
+        ForumPerm::check('close_thread', $this->getId(), $topic_id);
+        
+        ForumEntry::open($topic_id);
+        
+        $success_text = _('Das Thema wurde erfolgreich geöffnet.');
+
+        if (Request::isAjax()) {
+            $this->render_text(MessageBox::success($success_text));
+        } else {
+            $this->flash['messages'] = array('success' => $success_text);
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $redirect . '/' . $page));
+        }
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
     /* * * *     C O N F I G - A C T I O N S     * * * */

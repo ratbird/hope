@@ -36,9 +36,9 @@
             <form method="post" action="<?= PluginEngine::getLink('coreforum/index/edit_category/' . $category_id) ?>">
                 <input type="text" required name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
 
-                <?= Studip\Button::createAccept('Kategorie speichern', '', 
+                <?= Studip\Button::createAccept(_('Kategorie speichern'), '', 
                     array('onClick' => "javascript:STUDIP.Forum.saveCategoryName('". $category_id ."'); return false;")) ?>
-                <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
+                <?= Studip\LinkButton::createCancel(_('Abbrechen'), PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
                     array('onClick' => "STUDIP.Forum.cancelEditCategoryName('". $category_id ."'); return false;")) ?>
             </form>
         </span>        
@@ -120,9 +120,9 @@
                             <textarea name="content" style="height: 3em;" onClick="jQuery(this).focus()"><?= $entry['content_raw'] ?></textarea>
 
                             <span class="large_screen">
-                                <?= Studip\Button::createAccept('Speichern', '',
+                                <?= Studip\Button::createAccept(_('Speichern'), '',
                                     array('onClick' => "STUDIP.Forum.saveArea('". $entry['topic_id'] ."'); return false;")) ?>
-                                <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index'), 
+                                <?= Studip\LinkButton::createCancel(_('Abbrechen'), PluginEngine::getLink('coreforum/index'), 
                                     array('onClick' => "STUDIP.Forum.cancelEditArea('". $entry['topic_id'] ."'); return false;")) ?>
                             </span>
                             
@@ -207,8 +207,8 @@
                 <input type="text" name="name" size="50" style="width: 99%;" placeholder="<?= _('Name des neuen Bereiches') ?>" required><br>
                 <textarea name="content" style="height: 3em; width: 99%;" placeholder="<?= _('Optionale Beschreibung des neuen Bereiches') ?>"></textarea>
 
-                <?= Studip\Button::create('Bereich hinzufügen') ?>
-                <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
+                <?= Studip\Button::create(_('Bereich hinzufügen')) ?>
+                <?= Studip\LinkButton::createCancel(_('Abbrechen'), PluginEngine::getLink('coreforum/index/index#cat_'. $category_id),
                         array('onClick' => "javascript:STUDIP.Forum.cancelAddArea(); return false;")) ?>
             </form>
         </td>

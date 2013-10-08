@@ -551,7 +551,77 @@ STUDIP.Forum = {
             jQuery(this).find('a[data-role=cancel_cut]').hide();
             jQuery(this).find('a[data-role=paste]').hide();
         });
-    }
+    },
+    
+    openThreadFromOverview: function(topic_id, parent_topic_id, page) {
+        var buttonText = "Thema schließen".toLocaleString();
+        jQuery('#closeButton-' + topic_id + ' img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-locked.png');
+        jQuery('#closeButton-' + topic_id + ' img').attr('title', buttonText);
+        jQuery('#closeButton-' + topic_id).attr('onclick', 'STUDIP.Forum.closeThreadFromOverview("' + topic_id + '", "' + parent_topic_id + '", ' + page + '); return false;');
+        jQuery('#img-locked-' + topic_id).hide();
+        
+        STUDIP.Forum.openThread(topic_id, parent_topic_id, page, false);
+    },
+    
+    openThreadFromThread: function(topic_id, page) {
+        var buttonText = "Thema schließen".toLocaleString();
+        jQuery('.closeButtons').text(buttonText);
+        jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.closeThreadFromThread("' + topic_id + '", ' + page + '); return false;');
+        jQuery('.closeButtons').parent().siblings().find('img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-locked.png');
+        jQuery('.hideWhenClosed').show();
+        
+        STUDIP.Forum.openThread(topic_id, topic_id, page, true);
+    },
+    
+    openThread: function(topic_id, redirect, page, showSuccessMessage) {
+        jQuery.ajax({
+            type: 'GET',
+            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/open_thread/' + topic_id + '/' + redirect + '/' + page),
+            success: function(data) {
+                if (showSuccessMessage == true) {
+                    jQuery('#message_area').html(data);
+                }
+            }
+        });
+                
+        return false;
+    },
+    
+    closeThreadFromOverview: function(topic_id, parent_topic_id, page) {
+        var buttonText = "Thema öffnen".toLocaleString();
+        jQuery('#closeButton-' + topic_id + ' img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-unlocked.png');
+        jQuery('#closeButton-' + topic_id + ' img').attr('title', buttonText);
+        jQuery('#closeButton-' + topic_id).attr('onclick', 'STUDIP.Forum.openThreadFromOverview("' + topic_id + '", ' + page + '); return false;');
+        
+        jQuery('#img-locked-' + topic_id).show();
+        
+        STUDIP.Forum.closeThread(topic_id, parent_topic_id, page, false);
+    },
+    
+    closeThreadFromThread: function(topic_id, page) {
+        var buttonText = "Thema öffnen".toLocaleString();
+        jQuery('.closeButtons').text(buttonText);
+        jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.openThreadFromThread("' + topic_id + '", '+ page +'); return false;');
+        jQuery('.closeButtons').parent().siblings().find('img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-unlocked.png');
+        jQuery('.hideWhenClosed').hide();
+        
+        STUDIP.Forum.closeThread(topic_id, topic_id, page, true);
+    },
+    
+    closeThread: function(topic_id, redirect, page, showSuccessMessage) {
+        
+        jQuery.ajax({
+            type: 'GET',
+            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/close_thread/' + topic_id + '/' + redirect + '/' + page),
+            success: function(data) {
+                if (showSuccessMessage == true) {
+                    jQuery('#message_area').html(data);
+                }
+            }
+        });
+        
+        return false;
+    },
 };
 
 

@@ -124,7 +124,7 @@ class ForumHelpers {
      */
     static function getPage()
     {
-        return self::$page - 1;
+        return self::$page;
     }
 
     /**

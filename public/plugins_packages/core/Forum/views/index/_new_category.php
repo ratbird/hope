@@ -7,7 +7,7 @@
     <div style="width: 100%;">
         <span class="area_input">
             <input type="text" size="50" placeholder="<?= _('Titel für neue Kategorie') ?>" name="category" required>
-            <?= Studip\Button::create('Kategorie erstellen') ?>
+            <?= Studip\Button::create(_('Kategorie erstellen')) ?>
         </span>
     </div>
 </form>

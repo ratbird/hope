@@ -196,7 +196,7 @@ class ForumEntry {
         }
 
         // this calculation only works for postings
-        if ($constraint['depth'] <= 2) return (ForumHelpers::getPage() + 1);
+        if ($constraint['depth'] <= 2) return ForumHelpers::getPage();
 
         if ($parent_id = ForumEntry::getParentTopicId($topic_id)) {
             $parent_constraint = ForumEntry::getConstraints($parent_id);
@@ -352,7 +352,8 @@ class ForumEntry {
                 'raw_description' => ForumEntry::killEdit($data['content']),
                 'fav'             => ($data['fav'] == 'fav'),
                 'depth'           => $data['depth'],
-                'anonymous'       => $data['anonymous']
+                'anonymous'       => $data['anonymous'],
+                'closed'          => $data['closed']
             );
         } // retrieve the postings
 
@@ -517,7 +518,7 @@ class ForumEntry {
      */
     static function getList($type, $parent_id)
     {
-        $start = ForumHelpers::getPage() * ForumEntry::POSTINGS_PER_PAGE;
+        $start = (ForumHelpers::getPage() - 1) * ForumEntry::POSTINGS_PER_PAGE;
 
         switch ($type) {
             case 'area':
@@ -673,7 +674,7 @@ class ForumEntry {
      */
     static function getSearchResults($parent_id, $_searchfor, $options)
     {
-        $start = ForumHelpers::getPage() * ForumEntry::POSTINGS_PER_PAGE;
+        $start = (ForumHelpers::getPage() - 1) * ForumEntry::POSTINGS_PER_PAGE;
 
         // if there are quoted parts, they should not be separated
         $suchmuster = '/".*"/U';
@@ -976,6 +977,42 @@ class ForumEntry {
             SET lft = (lft * -1) + $diff, rgt = (rgt * -1) + $diff
             WHERE seminar_id = '". $constraints_destination['seminar_id'] ."'
                 AND lft < 0");
+    }
+    
+    /**
+     * close the passed topic
+     *
+     * @param type $topic_id the topic to close
+     *
+     * @return void
+     */
+    static function close($topic_id)
+    {
+        $constraints = ForumEntry::getConstraints($topic_id);
+
+        // close all entries belonging to the topic
+        $stmt = DBManager::get()->prepare("UPDATE forum_entries
+            SET closed = 1
+            WHERE seminar_id = ? AND lft >= ? AND rgt <= ?");
+        $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
+    }
+    
+    /**
+     * open the passed topic
+     *
+     * @param type $topic_id the topic to open
+     *
+     * @return void
+     */
+    static function open($topic_id)
+    {
+        $constraints = ForumEntry::getConstraints($topic_id);
+
+        // open all entries belonging to the topic
+        $stmt = DBManager::get()->prepare("UPDATE forum_entries
+            SET closed = 0
+            WHERE seminar_id = ? AND lft >= ? AND rgt <= ?");
+        $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
     }
 
     /**

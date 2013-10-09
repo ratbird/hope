@@ -222,7 +222,7 @@ if (isset($seminar_id)) {
         'admission_endtime_sem'      => 'admission_endtime_sem',
         'admission_disable_waitlist' => 'admission_disable_waitlist',
     );
-    
+
     foreach ($fields as $key => $field) {
         if (LockRules::Check($seminar_id, $key)) {
             $admin_admission_data[$field] = $seminar[$key];
@@ -277,7 +277,7 @@ if ($seminar_id
             $admin_admission_data['admission_endtime'] = -1;
         }
     }
-    
+
     $query = "SELECT ass.studiengang_id, name, quota, COUNT(asu.user_id) + COUNT(su.user_id) AS count
               FROM admission_seminar_studiengang AS ass
               LEFT JOIN studiengaenge USING (studiengang_id)
@@ -521,8 +521,8 @@ if ($seminar_id
                     $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Enddatum der Kontingentierung ein!")."§";
                 }
             }
-           
-            if ($admin_admission_data['admission_endtime'] > 0 && 
+
+            if ($admin_admission_data['admission_endtime'] > 0 &&
                $admin_admission_data['admission_endtime'] <
                    $admin_admission_data['sem_admission_start_date']) {
                 if ($admin_admission_data["admission_type"] == 1) {
@@ -638,7 +638,7 @@ if ($seminar_id
                           WHERE Seminar_id = ? AND su.status = 'autor'";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($admin_admission_data['sem_id']));
-                
+
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                     $insert_statement->execute(array(
                         $row['user_id'],
@@ -670,7 +670,7 @@ if ($seminar_id
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($admin_admission_data['sem_id']));
                 $deleted = $statement->rowCount();
-                
+
                 if ($deleted > 0) {
                     foreach ($usernames as $username) {
                         $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.'), $admin_admission_data['name']);
@@ -706,7 +706,7 @@ if ($seminar_id
                     $delete_statement = DBManager::get()->prepare($query);
 
                     // Prepare and execute statement that obtains all users
-                    // with the status 'accepted' from an admission list for 
+                    // with the status 'accepted' from an admission list for
                     // a given seminar
                     $query = "SELECT user_id, seminar_id, studiengang_id, mkdate, username
                               FROM admission_seminar_user AS asu
@@ -723,7 +723,7 @@ if ($seminar_id
                         ));
                         $delete_statement->execute(array(
                             $row['user_id'],
-                            $row['seminar_user'],
+                            $row['seminar_id'],
                         ));
 
                         $message = sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **Autor** versetzt, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
@@ -818,7 +818,7 @@ if ($seminar_id
 
             if ($statement->rowCount()) {
                 $errormsg.="msg§"._("Die Berechtigungseinstellungen f&uuml;r die Veranstaltung wurden aktualisiert")."§";
-                
+
                 $query = "UPDATE seminare SET chdate = UNIX_TIMESTAMP() WHERE Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($admin_admission_data['sem_id']));
@@ -865,7 +865,7 @@ if ($seminar_id
 
         //Variante nachtraeglich Anmeldeverfahren beenden, alle aus Warteliste kommen in die Veranstaltung
         if (($admin_admission_data["admission_type"] == 0) && ($admin_admission_data["admission_type_org"] > 0)) {
-            $query = "INSERT INTO seminar_user 
+            $query = "INSERT INTO seminar_user
                         (user_id, Seminar_id, status, gruppe, mkdate)
                       VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
             $insert_statement = DBManager::get()->prepare($query);
@@ -889,10 +889,10 @@ if ($seminar_id
 
                 $message = sprintf(_('Sie wurden in die Veranstaltung **%s** eingetragen, da das Anmeldeverfahren aufgehoben wurde. Damit sind Sie als Teilnehmer der Präsenzveranstaltung zugelassen.'), $admin_admission_data['name']);
                 $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
-                
+
                 $inserted += 1;
             }
-            
+
             if ($inserted) {
                 $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
@@ -1024,12 +1024,12 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </tr>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
-                    
+
             </td>
             <td class="<? echo $cssSw->getClass() ?>"  colspan=2 align="left">
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b><br></font>
 
-                <? 
+                <?
                     $admission_type_name = get_admission_description('admission_type', $admin_admission_data["admission_type_org"]);
 
                     if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {
@@ -1242,7 +1242,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
-                
+
             </td>
             <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
                 <font size=-1><b><?=_("Berechtigungen:")?></b><br></font>
@@ -1252,7 +1252,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </tr>
         <tr>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
-                
+
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="20%" align="left">
             <?
@@ -1329,7 +1329,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                    
+
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("Passwort:")?> </b></font><br>
@@ -1370,7 +1370,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         ?>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                    
+
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("maximale Teilnehmeranzahl:")?> </b></font><br>
@@ -1384,7 +1384,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                    
+
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("zugelassenene Studieng&auml;nge:")?> </b></font><br>
@@ -1519,7 +1519,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                        
+
                     </td>
                     <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                         <font size=-1><b><? if ($admin_admission_data["admission_type"] == 1) echo _("Losdatum"); else echo _("Enddatum der Kontingentierung");?>:</b></font><br>
@@ -1554,7 +1554,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             <?if (get_config('ADMISSION_ALLOW_DISABLE_WAITLIST')) {?>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                    
+
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("Warteliste:")?> </b></font><br>
@@ -1594,7 +1594,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             <?}?>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                    
+
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("verbindliche Anmeldung:")?> </b></font><br>
@@ -1616,7 +1616,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <? if (count(($all_domains = UserDomain::getUserDomains()))): ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                
+
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan="2">
                 <font size=-1><b><?=_("Zugelassenene Nutzerdomänen:")?> </b></font><br>

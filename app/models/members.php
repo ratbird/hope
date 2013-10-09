@@ -21,7 +21,7 @@ class MembersModel
 
         $query1 = "SELECT COUNT(user_id) AS members, SUM(admission_studiengang_id != '') AS members_contingent
                    FROM seminar_user
-                   WHERE Seminar_id = ? AND status IN ('user', 'autor')";
+                   WHERE Seminar_id = ? AND status IN ('user','autor','tutor')";
 
         $stm = DBManager::get()->prepare($query1);
         $stm->execute(array($this->course_id));

@@ -171,6 +171,7 @@ class Course_MembersController extends AuthenticatedController
         // Check Seminar
         if ($this->is_tutor && $sem->isAdmissionEnabled()) {
             $this->semAdmissionEnabled = true;
+            $this->course = $sem;
             $this->count = $this->members->getCountedMembers();
         }
         // Set the infobox

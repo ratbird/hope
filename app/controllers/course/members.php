@@ -109,6 +109,9 @@ class Course_MembersController extends AuthenticatedController
             'user' => get_title_for_status('user', 1)
         );
 
+        //check for admission / waiting list
+        update_admission($this->course_id);
+
         // Create new MembersModel, to get additionanl informations to a given Seminar
         $this->members = new MembersModel($this->course_id, $this->course_title);
         $this->members->checkUserVisibility();

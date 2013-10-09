@@ -4,18 +4,19 @@
 <form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable ">
-    	<caption>
-    		<?= $waitingTitle ?>
-    		<span class="actions">
-    		    <?=$controller->getEmailLinkByStatus('awaiting', $awaiting)?>
+        <caption>
+            <?= $waitingTitle ?>
+            <span class="actions">
+                <?=$controller->getEmailLinkByStatus('awaiting', $awaiting)?>
                     <a href="<?= URLHelper::getLink('sms_send.php',
-                            array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                            array('filter' => 'waiting',
+                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
                                 'course_id' => $course_id,
                                 'subject' => $subject))?>">
                         <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen versenden')))?>
                     </a>
-    		</span>
-    	</caption>
+            </span>
+        </caption>
         <colgroup>
             <col width="20">
             <col width="20">

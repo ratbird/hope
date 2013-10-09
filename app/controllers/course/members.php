@@ -535,10 +535,11 @@ class Course_MembersController extends AuthenticatedController
             // create a usable array
             foreach ($this->flash['users'] as $user => $val) {
                 if ($val) {
-                    $users[] = UserModel::getUser($user, 'username');
+                    $users[] = User::find($user)->username;
                 }
             }
-            $_SESSION['sms_data']['p_rec'] = $users;
+            $_SESSION['sms_data'] = array();
+            $_SESSION['sms_data']['p_rec'] = array_filter($users);
             $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => 'dispatch.php/course/members/index', 'messagesubject' => $this->getSubject(), 'tmpsavesnd' => 1)));
         } else {
             $this->redirect('course/members/index');

@@ -6,8 +6,8 @@
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable zebra-hover">
         <caption>
-        	<span class="actions">
-        		<?=$controller->getEmailLinkByStatus('accepted', $accepted)?>
+            <span class="actions">
+                <?=$controller->getEmailLinkByStatus('accepted', $accepted)?>
                     <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'prelim',
                                 'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
@@ -17,8 +17,8 @@
                         <?= Assets::img('icons/16/blue/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten NutzerInnen')))?>
                     </a>
-			</span>
-        	<?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
+            </span>
+            <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
         </caption>
         <colgroup>
             <? if (!$is_locked) : ?>
@@ -29,7 +29,7 @@
             <col width="15%">
             <col width="40%">
             <col width="80">
-        </colgroup>        
+        </colgroup>
         <thead>
             <tr class="sortable">
                 <? if (!$is_locked) : ?>

@@ -412,8 +412,6 @@ class MembersModel
             $filtered_members[$status] = $application_members->findBy('status', $status);
             if ($status == $sort_status) {
                 $filtered_members[$status]->orderBy($order_by, (strpos($order_by, 'nachname') === false ? SORT_NUMERIC : SORT_LOCALE_STRING));
-            } else {
-                $filtered_members[$status]->orderBy('nachname asc', SORT_LOCALE_STRING);
             }
         }
         return $filtered_members;

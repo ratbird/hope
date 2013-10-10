@@ -45,7 +45,7 @@ use Studip\Button, Studip\LinkButton;
                     <?= getWeekDay($day, false) ?>
                 </label><br>
             <? endforeach ?>
-            <br><span class="invalid_message">Bitte mindestens einen Wochentag ausw&auml;hlen.</span><br>
+            <br><span class="invalid_message"><?= _("Bitte mindestens einen Wochentag auswählen.") ?></span><br>
         </div>
 
         <div style="text-align: center; clear: both">

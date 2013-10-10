@@ -45,11 +45,11 @@ use Studip\Button, Studip\LinkButton;
                     <?= getWeekDay($day, false) ?>
                 </label><br>
             <? endforeach ?>
+            <br><span class="invalid_message">Bitte mindestens einen Wochentag ausw&auml;hlen.</span><br>
         </div>
 
         <div style="text-align: center; clear: both">
-            <br>
-            <?= Button::createSuccess(_('Speichern')) ?>
+            <?= Button::createSuccess(_('Speichern'), array('onclick' => "return STUDIP.Calendar.validateNumberOfDays();")) ?>
             <?= LinkButton::createCancel(
                     _('Abbrechen'),
                     $controller->url_for('calendar/schedule'),  

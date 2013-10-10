@@ -76,6 +76,21 @@ STUDIP.Calendar = {
     },
 
     /**
+     * checks if at least one day is selected
+     *
+     * @return: bool true if selected days > 0
+     */
+    validateNumberOfDays: function () {
+        var days = $("input[name='days[]']:checked").map(function(){return $(this).val();}).get();
+        if (days.length == 0) {
+            jQuery('.settings > span[class=invalid_message]').show();
+            return false;
+        } else {
+            return true;
+        }
+    },
+
+    /**
      * check, that the submitted input-fields contain a valid time-range
      *
      * @param  object  the input-element to check (start-hour)

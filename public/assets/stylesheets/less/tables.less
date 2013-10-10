@@ -444,12 +444,13 @@ table.default {
             border-bottom: 1px solid @table-header-color;
             transition: background-color 0.3s;
         }
-        tr:hover td {
-            background-color: fadeout(@brand-color-lighter, 75%);
-        }
         tr:last-child td {
             border-bottom: 1px solid @brand-color-darker;
         }
+    }
+    // Hover effect
+    &:not(.nohover) tbody:not(.nohover) tr:not(.nohover):hover td {
+        background-color: fadeout(@brand-color-lighter, 75%);
     }
     tfoot {
         td {

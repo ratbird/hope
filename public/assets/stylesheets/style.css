@@ -662,11 +662,11 @@ table.default tbody td {
   border-bottom: 1px solid #d1d1d1;
   transition: background-color 0.3s;
 }
-table.default tbody tr:hover td {
-  background-color: rgba(137, 154, 185, 0.25);
-}
 table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
+}
+table.default:not(.nohover) tbody:not(.nohover) tr:not(.nohover):hover td {
+  background-color: rgba(137, 154, 185, 0.25);
 }
 table.default tfoot td {
   background-color: #f4f7f9;

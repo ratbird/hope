@@ -61,6 +61,7 @@ class Settings_NotificationController extends Settings_SettingsController
     {
         $group_field = UserConfig::get($this->user->user_id)->MY_COURSES_GROUPING ?: 'not_grouped';
 
+        $add_fields = $add_query = '';
         if ($group_field == 'sem_tree_id'){
             $add_fields = ',sem_tree_id';
             $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminare.Seminar_id)";
@@ -133,7 +134,7 @@ class Settings_NotificationController extends Settings_SettingsController
         $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
         $checked = array();
         foreach ($groups as $group_id => $group_members){
-            if (!isset($open[$group_id])) {
+            if ($group_id !== 'not_grouped' && !isset($open[$group_id])) {
                 continue;
             }
             foreach ($group_members as $member){

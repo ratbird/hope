@@ -41,7 +41,7 @@ $groupables = array(
         <? endfor; ?>
         </colgroup>
 
-    <? if ($group_field != 'not_grouped'): ?>
+    <? if ($group_field !== 'not_grouped'): ?>
         <tr>
             <td class="table_header" valign="middle" height="20" colspan="10">
             <? if (isset($_my_sem_open[$group_id])): ?>
@@ -60,7 +60,7 @@ $groupables = array(
             </td>
         </tr>
     <? endif; ?>
-<? if (isset($_my_sem_open[$group_id])): ?>
+<? if ($group_id === 'not_grouped' || isset($_my_sem_open[$group_id])): ?>
     <? foreach ($group_members as $member): ?>
         <tr>
             <td>

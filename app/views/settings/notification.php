@@ -44,12 +44,12 @@
             <? for ($i = 0; $i < count($modules); $i += 1): ?>
                 <td>
                     <input type="checkbox" name="all[columns][]" value="<?= $i ?>"
-                           <? if (count(array_filter($checked, function ($item) use ($i) { return $item[$i]; })) == count($checked)) echo 'checked'; ?>>
+                           <? if (!empty($checked) && count(array_filter($checked, function ($item) use ($i) { return $item[$i]; })) == count($checked)) echo 'checked'; ?>>
                 </td>
             <? endfor; ?>
                 <td>
                     <input type="checkbox" name="all[all]" value="all"
-                           <? if (count(array_filter($checked, function ($item) { return $item['all']; })) == count($checked)) echo 'checked'; ?>>
+                           <? if (!empty($checked) && count(array_filter($checked, function ($item) { return $item['all']; })) == count($checked)) echo 'checked'; ?>>
 
                 </td>
             </tr>
@@ -75,7 +75,7 @@
                 </th>
             </tr>
         <? endif; ?>
-    <? if (isset($open[$id])): ?>
+    <? if ($id === 'not_grouped' || isset($open[$id])): ?>
         <? foreach ($members as $member): ?>
             <tr>
                 <td class="gruppe<?= $seminars[$member['seminar_id']]['gruppe'] ?>">&nbsp;</td>
@@ -97,7 +97,7 @@
             <? endforeach; ?>
                 <td>
                     <input type="checkbox" name="all[rows][]" value="<?= $member['seminar_id'] ?>"
-                           <? if (count(array_filter($checked[$member['seminar_id']])) == count($modules) + 1) echo 'checked'; ?>>
+                           <? if (isset($checked[$member['seminar_id']]) && count(array_filter($checked[$member['seminar_id']])) == count($modules) + 1) echo 'checked'; ?>>
                 </td>
             </tr>
         <? endforeach; ?>

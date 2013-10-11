@@ -254,6 +254,21 @@ class CalendarDriver
             $this->count();
             return $properties;
         } elseif (is_array($this->result['sem']) && (list(, $result) = each($this->result['sem']))) {
+            while (true) {
+                if ($result['status'] === 'dozent') {
+                    //wenn ich Dozent bin, zeige den Termin nur, wenn ich durchführender Dozent bin:
+                    $termin = new SingleDate($result['termin_id']);
+                    if (!in_array($this->user_id, $termin->getRelatedPersons())) {
+                        if ((list(, $result) = each($this->result['sem']))) {
+                            continue;
+                        } else {
+                            $this->object_type = 'cal';
+                            return false;
+                        }
+                    }
+                }
+                break;
+            }
             $this->object_type = 'sem';
             $properties = array(
                 'DTSTART' => $result['date'],

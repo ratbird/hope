@@ -18,11 +18,6 @@ $aktionen[] = array(
               "text" => '<a href="' .
 $controller->url_for('course/avatar/update', $course_id) .
                         '">' . _("Bild ändern") . '</a>');
-$aktionen[] = array(
-              "icon" => "icons/16/black/trash.png",
-              "text" => '<a href="' .
-$controller->url_for('course/avatar/delete', $course_id) .
-                        '">' . _("Bild löschen") . '</a>');
 
 $infobox = array(
     array("kategorie" => _("Aktionen:"),

@@ -19,10 +19,6 @@ if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
         "icon" => "icons/16/black/edit.png",
         "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
     );
-    $aktionen[] = array(
-        "icon" => "icons/16/black/trash.png",
-        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild löschen") .'</a>'
-    );
 }
 
 $infobox['content'] = array(

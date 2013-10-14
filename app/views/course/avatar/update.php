@@ -45,3 +45,32 @@ use Studip\Button, Studip\LinkButton;
     </p>
 </form>
 
+<?
+
+$aktionen = array();
+$aktionen[] = array(
+              "icon" => "icons/16/black/trash.png",
+              "text" => '<a href="' .
+$controller->url_for('course/avatar/delete', $course_id) .
+                        '" onClick="return confirm(\''._("Wirklich löschen?").'\');">' . _("Bild löschen") . '</a>');
+
+$infobox = array(
+    array("kategorie" => _("Aktionen:"),
+          "eintrag"   => $aktionen
+    )
+);
+if ($adminList) {
+    $infobox[] = array(
+        "kategorie" => _("Veranstaltungsliste:"),
+        "eintrag"   =>
+            array(
+                array(
+                      "icon" => "icons/16/black/link-intern.png",
+                      "text" => $adminList->render()
+                )
+            )
+    );
+}
+$infobox = array('content' => $infobox,
+                 'picture' => Assets::image_path("infobox/administration.png")
+);

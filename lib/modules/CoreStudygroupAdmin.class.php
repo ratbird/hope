@@ -27,7 +27,9 @@ class CoreStudygroupAdmin implements StudipModule {
             $navigation->setActiveImage('icons/16/black/admin.png');
 
             $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$course_id));
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
+            $navigation->addSubNavigation('avatar', new Navigation(_('Avatar'), 'dispatch.php/course/avatar/update/'.$course_id));
+            
+            if (!$GLOBALS['perm']->have_perm('admin')) {
                 $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
                 $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
                 $navigation->addSubNavigation('news', $item);

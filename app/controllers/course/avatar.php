@@ -41,14 +41,14 @@ class Course_AvatarController extends AuthenticatedController
         $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"];
 
         # choose base layout w/o infobox and set tabs
-        $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+        $layout = $GLOBALS['template_factory']->open('layouts/base');
 
         if ($this->studygroup_mode) {
-            Navigation::activateItem('/course/admin/main');
+            Navigation::activateItem('/course/admin/avatar');
         } else if ($GLOBALS['perm']->have_perm('admin')) {
             Navigation::activateItem('/admin/course/details');
         } else {
-            Navigation::activateItem('/course/admin/details');
+            Navigation::activateItem('/course/admin/avatar');
         }
         $this->set_layout($layout);
     }
@@ -75,8 +75,14 @@ class Course_AvatarController extends AuthenticatedController
             CourseAvatar::getAvatar($this->course_id)->createFromUpload('avatar');
         } catch (Exception $e) {
             $this->error = $e->getMessage();
-            $this->render_action("update");
         }
+        if (!$this->error) {
+            PageLayout::postMessage(MessageBox::success(
+                _("Die Bilddatei wurde erfolgreich hochgeladen."),
+                array(_("Eventuell sehen Sie das neue Bild erst, nachdem Sie diese Seite neu geladen haben (in den meisten Browsern F5 drücken)."))
+            ));
+        }
+        $this->render_action("update");
     }
 
     /**
@@ -87,10 +93,11 @@ class Course_AvatarController extends AuthenticatedController
     function delete_action()
     {
         CourseAvatar::getAvatar($this->course_id)->reset();
+        PageLayout::postMessage(MessageBox::success(_("Veranstaltungsbild gelöscht.")));
         if ($this->studygroup_mode) {
             $this->redirect(URLHelper::getUrl('dispatch.php/course/studygroup/edit/' . $this->course_id));
         } else {
-            $this->redirect(URLHelper::getUrl('dispatch.php/course/basicdata/view/' . $this->course_id));
+            $this->redirect(URLHelper::getUrl('dispatch.php/course/avatar/update/' . $this->course_id));
         }
     }
 }

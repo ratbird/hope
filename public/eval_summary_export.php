@@ -86,6 +86,7 @@ function freetype_answers ($parent_id, $anz_nutzer) {
 
     $query = "SELECT `text`
               FROM evalanswer
+              INNER JOIN evalanswer_user USING(evalanswer_id)
               WHERE parent_id = ? AND `text` != ''
               ORDER BY position";
     $statement = DBManager::get()->prepare($query);

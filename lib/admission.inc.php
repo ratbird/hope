@@ -220,9 +220,10 @@ function renumber_admission ($seminar_id, $send_message = TRUE)
                                    $temp['Name'],
                                    view_turnus($temp['Seminar_id']),
                                    $position);
+                $subject = sprintf(_('Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert'), $temp['Name']);
                 restoreLanguage();
 
-                $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert'), $temp['Name'])); 
+                $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, $subject); 
             }
             $position += 1;
         }

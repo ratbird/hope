@@ -549,7 +549,7 @@ echo $template_factory->render(
             }
             $studienmodule = null;
             if ($studienmodulmanagement = PluginEngine::getPlugin('StudienmodulManagement')){
-                $studienmodule = array_filter(StudipStudyArea::getStudyAreasForCourse($sem_id), create_function('$a', 'return $a->isModule();'));
+                $studienmodule = StudipStudyArea::getStudyAreasForCourse($sem_id)->filter(function($area) { return $area->isModule(); });
                 if (count($studienmodule)){
                     $semester_id = SemesterData::GetSemesterIdByDate($seminar['start_time']);
                     foreach($studienmodule as $module){

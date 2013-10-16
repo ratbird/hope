@@ -350,7 +350,7 @@ class StudipStudyArea extends SimpleORMap
      *
      * @param  id         the course's ID
      *
-     * @return array      an array of that courses study areas
+     * @return mixed      a SimpleORMapCollection of that course's study areas
      */
     static function getStudyAreasForCourse($id) {
         $course = Course::find($id);

@@ -47,6 +47,7 @@ $xslt_filename = Request::quoted('xslt_filename');
 $page = Request::option('page');
 $filter = Request::option('filter');
 $ex_type = Request::quoted('ex_type');
+$ex_sem = Request::option('ex_sem'); 
 $format = Request::option('format');
 $choose = Request::quoted('choose');
 $range_id = Request::option('range_id');

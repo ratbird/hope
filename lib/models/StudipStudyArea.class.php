@@ -8,13 +8,13 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- * 
+ *
  * @package     studip
  *
  * @author    mlunzena
  * @author    André Noack <noack@data-quest.de>
  * @copyright (c) Authors
- * 
+ *
  * @property string sem_tree_id database column
  * @property string id alias column for sem_tree_id
  * @property string parent_id database column
@@ -346,15 +346,15 @@ class StudipStudyArea extends SimpleORMap
 
     /**
      * Get an associative array of all study areas of a course. The array
-     * contains StudipStudyArea instances 
+     * contains StudipStudyArea instances
      *
      * @param  id         the course's ID
      *
-     * @return mixed      a SimpleORMapCollection of that course's study areas
+     * @return SimpleCollection      a SimpleORMapCollection of that course's study areas
      */
     static function getStudyAreasForCourse($id) {
         $course = Course::find($id);
-        return $course ? $course->study_areas : array();
+        return $course ? $course->study_areas : new SimpleCollection();
     }
 
 

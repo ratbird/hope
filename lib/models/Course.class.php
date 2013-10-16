@@ -76,11 +76,9 @@ class Course extends SimpleORMap
      */
     public static function findCurrent()
     {
-        if (empty($GLOBALS['SessSemName'][1])) {
-            return false;
-        }
-
-        return new self($GLOBALS['SessSemName'][1]);
+        return empty($GLOBALS['SessSemName'][1])
+            ? null
+            : Course::find($GLOBALS['SessSemName'][1]);
     }
 
     function __construct($id = null)

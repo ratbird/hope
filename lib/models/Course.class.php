@@ -74,7 +74,7 @@ class Course extends SimpleORMap
      * @return mixed Course object of currently active course, false otherwise
      * @since 3.0
      */
-    public static function getCurrent()
+    public static function findCurrent()
     {
         if (empty($GLOBALS['SessSemName'][1])) {
             return false;

@@ -172,7 +172,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     {
         $topic_id = ForumIssue::getThreadIdForIssue($issue_id);
 
-        return ForumEntry::countEntries($topic_id);
+        return $topic_id ? ForumEntry::countEntries($topic_id) : 0;
     }
 
     function getNumberOfPostingsForSeminar($seminar_id)

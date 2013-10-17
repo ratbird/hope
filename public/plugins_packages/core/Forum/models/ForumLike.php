@@ -30,9 +30,13 @@ class ForumLike {
         $data = ForumEntry::getConstraints($topic_id);
         
         // notify owner of posting about the like
+        setTempLanguage($data['user_id']);
+        $notification = get_fullname($GLOBALS['user']->id) . _(' gefällt einer deiner Forenbeiträge!');
+        restoreLanguage();
+        
         PersonalNotifications::add(
             $data['user_id'], PluginEngine::getURL('coreforum/index/index/' . $topic_id .'?highlight_topic='. $topic_id .'#'. $topic_id),
-            get_fullname($GLOBALS['user']->id) . _(' gefällt einer deiner Forenbeiträge!'), $topic_id,
+            $notification, $topic_id,
             Assets::image_path("icons/40/blue/forum.png")
         );
     }

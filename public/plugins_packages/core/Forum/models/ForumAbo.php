@@ -112,6 +112,10 @@ class ForumAbo {
             }
             $parent_id = ForumEntry::getParentTopicId($topic['topic_id']);
 
+            setTempLanguage($data['user_id']);
+            $notification = sprintf(_("%s hat einen Beitrag geschrieben"), ($topic['anonymous'] ? _('Anonym') : $topic['author']));
+            restoreLanguage();
+
             PersonalNotifications::add(
                 $user_id,
                 UrlHelper::getUrl(
@@ -119,7 +123,7 @@ class ForumAbo {
                     array('cid' => $topic['seminar_id']),
                     true
                 ),
-                sprintf(_("%s hat einen Beitrag geschrieben"), ($topic['anonymous'] ? _('Anonym') : $topic['author'])),
+                $notification,
                 "forumposting_" . $topic['topic_id'],
                 Assets::image_path("icons/40/blue/forum.png")
             );

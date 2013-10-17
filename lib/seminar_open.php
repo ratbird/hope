@@ -48,6 +48,9 @@ function startpage_redirect($page_code) {
         case 5:
             $jump_page = "calendar.php";
         break;
+        case 6:
+            $jump_page = "plugins.php/blubber/streams/global";
+            break;
     }
     page_close();
     header ("location: $jump_page");

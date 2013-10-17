@@ -7,6 +7,7 @@ $start_pages = array(
      3 => _('Mein Stundenplan'),
      4 => _('Mein Adressbuch'),
      5 => _('Mein Planer'),
+     6 => _('Mein globaler Blubberstream'),
 );
 ?>
 

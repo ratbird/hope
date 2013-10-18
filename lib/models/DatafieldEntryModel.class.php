@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string datafield_id database column
  * @property string range_id database column
  * @property string content database column
@@ -26,6 +26,15 @@
 
 class DatafieldEntryModel extends SimpleORMap
 {
+    /**
+     * returns datafields belonging to given model
+     * if a datafield entry not exists yet, a new DatafieldEntryModel is returned
+     * second param filters for a given datafield id
+     *
+     * @param SimpleORMap $model Course,Institute,User,CourseMember or InstituteMember
+     * @param string $datafield_id
+     * @return array of DatafieldEntryModel
+     */
     public static function findByModel(SimpleORMap $model, $datafield_id = null)
     {
         $mask = array("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8, "admin" => 16, "root" => 32);
@@ -33,20 +42,27 @@ class DatafieldEntryModel extends SimpleORMap
         if (is_a($model, "Course")) {
             $object_class = SeminarCategories::GetByTypeId($model->status)->id;
             $object_type = 'sem';
+            $range_id = $model->getId();
         } elseif(is_a($model, "Institute")) {
             $object_class = $model->type;
             $object_type = 'inst';
+            $range_id = $model->getId();
         } elseif(is_a($model, "User")) {
             $object_class = $mask[$model->perms];
             $object_type = 'user';
+            $range_id = $model->getId();
         } elseif(is_a($model, "CourseMember")) {
             $object_class = $mask[$model->status];
             $object_type = 'usersemdata';
+            $range_id = $model->user_id;
+            $sec_range_id = $model->seminar_id;
         } elseif(is_a($model, "InstituteMember")) {
             $object_class = $mask[$model->inst_perms];
             $object_type = 'userinstrole';
+            $range_id = $model->user_id;
+            $sec_range_id = $model->institut_id;
         }
-        
+
         if (!$object_type) {
             throw new InvalidArgumentException('Wrong type of model: ' . get_class($model));
         }
@@ -56,7 +72,7 @@ class DatafieldEntryModel extends SimpleORMap
         $query = "SELECT a.*, b.*,a.datafield_id,b.datafield_id as isset_content ";
         $query .= "FROM datafields a LEFT JOIN datafields_entries b ON (a.datafield_id=b.datafield_id AND range_id = ? AND sec_range_id = ?) ";
         $query .= "WHERE object_type = ? AND ((object_class & ?) OR object_class IS NULL) $one_datafield ORDER BY object_class, priority";
-        list($range_id, $sec_range_id) = (array)$model->getId();
+
         $st = DBManager::get()->prepare($query);
         $st->execute(array(
             (string) $range_id,

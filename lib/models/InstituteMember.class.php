@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string user_id database column
  * @property string institut_id database column
  * @property string inst_perms database column
@@ -55,6 +55,22 @@ class InstituteMember extends SimpleORMap
                                    'institute' => array('class_name' => 'Institute',
                                                     'foreign_key' => 'institut_id')
         );
+        $this->has_many = array(
+            'datafields' => array(
+                        'class_name' => 'DatafieldEntryModel',
+                        'assoc_foreign_key' =>
+                            function($model, $params) {
+                                $model->setValue('range_id', $params[0]->user_id);
+                                $model->setValue('sec_range_id', $params[0]->institut_id);
+                            },
+                        'assoc_func' => 'findByModel',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store',
+                        'foreign_key' =>
+                            function($institute_member) {
+                                return array($institute_member);
+                            })
+            );
         $user_getter = function ($record, $field) { return $record->getRelationValue('user', $field);};
         $this->additional_fields['vorname'] = array('get' => $user_getter);
         $this->additional_fields['nachname'] = array('get' => $user_getter);

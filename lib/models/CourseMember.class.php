@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string seminar_id database column
  * @property string user_id database column
  * @property string status database column
@@ -58,8 +58,25 @@ class CourseMember extends SimpleORMap
                         'foreign_key' => 'user_id'),
                 'course' => array(
                         'class_name' => 'Course',
-                        'foreign_key' => 'seminar_id')
+                        'foreign_key' => 'seminar_id'),
         );
+        $this->has_many = array(
+            'datafields' => array(
+                        'class_name' => 'DatafieldEntryModel',
+                        'assoc_foreign_key' =>
+                            function($model, $params) {
+                                list($sec_range_id, $range_id) = (array)$params[0]->getId();
+                                $model->setValue('range_id', $range_id);
+                                $model->setValue('sec_range_id', $sec_range_id);
+                            },
+                        'assoc_func' => 'findByModel',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store',
+                        'foreign_key' =>
+                            function($course_member) {
+                                return array($course_member);
+                            })
+            );
         $user_getter = function ($record, $field) {
             return $record->getRelationValue('user', $field);
         };

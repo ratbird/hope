@@ -126,12 +126,17 @@ class MembersModel
     public function cancelSubscription($users)
     {
         $sem = Seminar::GetInstance($this->course_id);
+        $messaging = new messaging;
         foreach ($users as $user_id) {
             // delete member from seminar
             if ($sem->deleteMember($user_id)) {
                 $temp_user = UserModel::getUser($user_id);
                 setTempLanguage($user_id);
+                $message = sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn aufgehoben."), $this->course_title, get_title_for_status('dozent', 1));
                 restoreLanguage();
+                $messaging->insert_message($message, $temp_user['username'],
+                                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                                        _("Abonnement aufgehoben")), TRUE);
                 RemovePersonStatusgruppeComplete($temp_user['username'], $this->course_id);
 
                 // logging & notification
@@ -147,13 +152,23 @@ class MembersModel
 
     public function cancelAdmissionSubscription($users, $status)
     {
+        $messaging = new messaging;
         $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ? AND user_id = ? AND status = ?";
         $db = DBManager::get()->prepare($query);
         foreach ($users as $user_id) {
             $temp_user = UserModel::getUser($user_id);
             $db->execute(array($this->course_id, $user_id, $status));
-
             if ($db->rowCount() > 0) {
+                setTempLanguage($user_id);
+                if ($status !== 'accepted') {
+                    $message = sprintf(_("Sie wurden von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn von der Warteliste der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden."), get_title_for_status('dozent', 1),  $this->course_title);
+                } else {
+                    $message = sprintf(_("Sie wurden von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn aus der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden."), get_title_for_status('dozent', 1), $this->course_title);
+                }
+                restoreLanguage();
+                $messaging->insert_message($message, $temp_user['username'],
+                                '____%system%____', FALSE, FALSE, '1', FALSE, sprintf('%s %s', _('Systemnachricht:'),
+                                        _("nicht zugelassen in Veranstaltung")), TRUE);
                 log_event('SEM_USER_DEL', $this->course_id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
                 $msgs[] = $temp_user['Vorname'] . ' ' . $temp_user['Nachname'];
             }
@@ -408,7 +423,7 @@ class MembersModel
         ));
         $application_members = SimpleCollection::createFromArray($st->fetchAll(PDO::FETCH_ASSOC));
         $filtered_members = array();
-        foreach (words('awaiting accepted') as $status) {
+        foreach (words('awaiting accepted claiming') as $status) {
             $filtered_members[$status] = $application_members->findBy('status', $status);
             if ($status == $sort_status) {
                 $filtered_members[$status]->orderBy($order_by, (strpos($order_by, 'nachname') === false ? SORT_NUMERIC : SORT_LOCALE_STRING));

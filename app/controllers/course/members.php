@@ -98,7 +98,9 @@ class Course_MembersController extends AuthenticatedController
             'tutor' => get_title_for_status('tutor', 2),
             'autor' => get_title_for_status('autor', 2),
             'user' => get_title_for_status('user', 2),
-            'accepted' => get_title_for_status('accepted', 2)
+            'accepted' => get_title_for_status('accepted', 2),
+            'awaiting' => _("Wartende NutzerInnen"),
+            'claiming' => _("Wartende NutzerInnen")
         );
 
         // StatusGroups for the view
@@ -142,6 +144,7 @@ class Course_MembersController extends AuthenticatedController
             $filtered_members = array_merge($filtered_members, $this->members->getAdmissionMembers($this->sort_status, $this->sort_by . ' ' . $this->order ));
             $this->awaiting = $filtered_members['awaiting']->toArray('user_id username vorname nachname visible kontingent mkdate');
             $this->accepted = $filtered_members['accepted']->toArray('user_id username vorname nachname visible kontingent mkdate');
+            $this->claiming = $filtered_members['claiming']->toArray('user_id username vorname nachname visible kontingent mkdate');
         }
 
         // Check autor-perms
@@ -170,12 +173,20 @@ class Course_MembersController extends AuthenticatedController
         $this->studipticket = Seminar_Session::get_ticket();
         $this->subject = $this->getSubject();
         $this->groups = $this->status_groups;
-        $this->waitingTitle = $this->getTitleForAwaiting();
         // Check Seminar
         if ($this->is_tutor && $sem->isAdmissionEnabled()) {
-            $this->semAdmissionEnabled = true;
             $this->course = $sem;
             $this->count = $this->members->getCountedMembers();
+            if ($sem->admission_type == 2 || $sem->admission_selection_take_place == 1) {
+                $this->waitingTitle = _("Warteliste");
+                $this->semAdmissionEnabled = 2;
+                $this->waiting_type = 'awaiting';
+            } else {
+                $this->waitingTitle = sprintf(_("Anmeldeliste (Losverfahren am %s)"), strftime('%x %R', $sem->admission_endtime));
+                $this->semAdmissionEnabled = 1;
+                $this->awaiting = $this->claiming;
+                $this->waiting_type = 'claiming';
+            }
         }
         // Set the infobox
         $this->setInfoBoxImage('infobox/groups.jpg');
@@ -256,8 +267,8 @@ class Course_MembersController extends AuthenticatedController
             return;
         }
 
-        if ($status == 'accepted' || $status == 'awaiting') {
-            $textStatus = 'NutzerInnen';
+        if (in_array($status, words('accepted awaiting claiming'))) {
+            $textStatus = _('Wartenden');
         } else {
             $textStatus = $this->status_groups[$status];
         }
@@ -874,7 +885,7 @@ class Course_MembersController extends AuthenticatedController
 
         $this->flash['users'] = Request::getArray('awaiting');
         $this->flash['consider_contingent'] = Request::get('consider_contingent');
-
+        $waiting_type = Request::option('waiting_type');
         // select the additional method
         switch (Request::get('action_awaiting')) {
             case '':
@@ -884,7 +895,7 @@ class Course_MembersController extends AuthenticatedController
                 $this->redirect('course/members/insert_admission/awaiting/collection');
                 break;
             case 'remove':
-                $this->redirect('course/members/cancel_subscription/collection/awaiting');
+                $this->redirect('course/members/cancel_subscription/collection/' . $waiting_type);
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
@@ -1001,7 +1012,7 @@ class Course_MembersController extends AuthenticatedController
                 CSRFProtection::verifyUnsafeRequest();
                 $users = Request::getArray('users');
                 if (!empty($users)) {
-                    if ($status == 'accepted' || $status == 'awaiting') {
+                    if (in_array($status, words('accepted awaiting claiming'))) {
                         $msgs = $this->members->cancelAdmissionSubscription($users, $status);
                     } else {
                         $msgs = $this->members->cancelSubscription($users);
@@ -1157,17 +1168,6 @@ class Course_MembersController extends AuthenticatedController
         }
 
         return $result;
-    }
-
-    /**
-     * Creates a String for the waitinglist
-     * @return String
-     */
-    private function getTitleForAwaiting()
-    {
-        $sem = Seminar::GetInstance($this->course_id);
-        return ($sem->admission_type == 2 || $sem->admission_selection_take_place == 1) ?
-                _("Warteliste") : _("Anmeldeliste");
     }
 
     /**

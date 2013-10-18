@@ -7,13 +7,13 @@
         <caption>
             <?= $waitingTitle ?>
             <span class="actions">
-                <?=$controller->getEmailLinkByStatus('awaiting', $awaiting)?>
+                <?=$controller->getEmailLinkByStatus($waiting_type, $awaiting)?>
                     <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'waiting',
                                 'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
                                 'course_id' => $course_id,
                                 'subject' => $subject))?>">
-                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen versenden')))?>
+                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle Wartenden versenden')))?>
                     </a>
             </span>
         </caption>
@@ -21,8 +21,8 @@
             <col width="20">
             <col width="20">
             <col>
-            <col width="5%">
-            <col width="25%">
+            <col width="15%">
+            <col width="15%">
             <col width="80">
         </colgroup>
         <thead>
@@ -39,21 +39,32 @@
                 </th>
                 <? endif ?>
                 <th></th>
-                <th <?= ($sort_by == 'nachname' && $sort_status == 'awaiting') ?
+                <th <?= ($sort_by == 'nachname' && $sort_status == $waiting_type) ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=awaiting&order=%s&toggle=%s',
+                    <a href="<?= URLHelper::getLink(sprintf("?sortby=nachname&sort_status=$waiting_type&order=%s&toggle=%s",
                             $order, ($sort_by == 'nachname'))) ?>#awaiting">
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
-                <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == 'awaiting') ?
-                    sprintf('class="sort%s"', $order) : '' ?>>
-                    <? ($sort_status != 'awaiting') ? $order = 'desc' : $order = $order ?>
-                    <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status=awaiting&order=%s&toggle=%s',
-                            $order, ($sort_by == 'position'))) ?>#awaiting">
-                        <?= _('Position') ?>
-                    </a>
-                </th>
+                <? if ($waiting_type === 'awaiting') : ?>
+                    <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == $waiting_type) ?
+                        sprintf('class="sort%s"', $order) : '' ?>>
+                        <? ($sort_status != $waiting_type) ? $order = 'desc' : $order = $order ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status=awaiting&order=%s&toggle=%s',
+                                $order, ($sort_by == 'position'))) ?>#awaiting">
+                            <?= _('Position') ?>
+                        </a>
+                    </th>
+                <? else : ?>
+                    <th style="text-align: center" <?= ($sort_by == 'mkdate' && $sort_status == $waiting_type) ?
+                        sprintf('class="sort%s"', $order) : '' ?>>
+                        <? ($sort_status != $waiting_type) ? $order = 'desc' : $order = $order ?>
+                        <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=claiming&order=%s&toggle=%s',
+                                $order, ($sort_by == 'mkdate'))) ?>#awaiting">
+                            <?= _('Anmeldedatum') ?>
+                        </a>
+                    </th>
+                <? endif ?>
                 <th style="text-align: center"><?= _('Kontingent') ?></th>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
@@ -79,7 +90,13 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
-                <td style="text-align: center"><?= $waiting['position'] ?></td>
+                <td style="text-align: center">
+                <? if ($waiting_type === 'awaiting') : ?>
+                    <?= $waiting['position'] ?>
+                <? else : ?>
+                    <?= strftime('%x %X', $waiting['mkdate'])?>
+                <? endif ?>
+                </td>
                 <td style="text-align: center">
                     <?= ($waiting['kontingent'] == 'all') ? _('alle Studiengänge') : htmlReady($waiting['kontingent']) ?>
                 </td>
@@ -97,7 +114,7 @@
                         </a>
                     <? endif?>
                     <? if (!$is_locked) : ?>
-                    <a href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s',
+                    <a href="<?= $controller->url_for(sprintf("course/members/cancel_subscription/singleuser/$waiting_type/%s",
                                 $waiting['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/door-leave.png',
                                 tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
@@ -121,6 +138,7 @@
                     <?= tooltipIcon( _('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden.'))?>
                     <?= _("Kontingent berücksichtigen:"); ?>
                     <input type="checkbox" value="1" name="consider_contingent" checked="checked" />
+                    <input type="hidden" value="<?=$waiting_type?>" name="waiting_type"/>
                     <?= Button::create(_('Ausführen'), 'submit_awaiting') ?>
                 </td>
             </tr>

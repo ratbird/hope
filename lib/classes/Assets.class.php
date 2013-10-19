@@ -459,6 +459,9 @@ class Assets {
     public static function getImageSize($source)
     {
         $image_path = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', Assets::image_path($source));
+        if (strpos($image_path, "?") !== false) {
+            $image_path = substr($image_path, 0, strpos($image_path, "?"));
+        }
         $image_size = getimagesize($GLOBALS['STUDIP_BASE_PATH'] . '/public/' . $image_path);
 
         if ($image_size) {

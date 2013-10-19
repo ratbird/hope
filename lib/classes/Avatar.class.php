@@ -116,11 +116,14 @@ class Avatar {
         $size = $retina && file_exists($this->getCustomAvatarPath($size, 'png', true))
             ? $size."@2x"
             : $size;
-        return sprintf('%s/%s_%s.%s',
-                                     $this->getAvatarDirectoryUrl(),
-                                     $this->user_id,
-                                     $size,
-                                     $ext);
+        return sprintf(
+            '%s/%s_%s.%s?d=%s',
+            $this->getAvatarDirectoryUrl(),
+            $this->user_id,
+            $size,
+            $ext,
+            filemtime($this->getCustomAvatarPath($size)) ?: "0"
+        );
     }
 
 

@@ -663,7 +663,7 @@ jQuery(window.document).bind('scroll', _.throttle(function (event) {
                     STUDIP.Blubber.insertThread(thread.posting_id, thread.mkdate, thread.content);
                 });
                 if (response.more) {
-                    jQuery("#blubber_threads").append(jQuery('<li class="more">...</li>'));
+                    jQuery("#blubber_threads").append(jQuery('<li class="more"><img src="' + STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif" alt="loading"></li>'));
                 }
             }
         });

@@ -61,7 +61,7 @@
     <?= $this->render_partial("streams/thread.php", array('thread' => $thread)) ?>
     <? endforeach ?>
     <? if ($more_threads) : ?>
-    <li class="more"><?= Assets::img("ajax_indicator_small.gif") ?></li>
+    <li class="more"><?= Assets::img("ajax_indicator_small.gif", array('alt' => "loading")) ?></li>
     <? endif ?>
 </ul>
 

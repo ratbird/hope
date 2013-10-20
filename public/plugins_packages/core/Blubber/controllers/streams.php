@@ -857,5 +857,19 @@ class StreamsController extends ApplicationController {
         echo studip_utf8encode($output);
         $this->render_nothing();
     }
+    
+    public function private_panel_action() {
+        $thread_id = Request::option("thread_id");
+        $this->thread = new BlubberPosting($thread_id);
+        if ($this->thread['context_type'] !== "private") {
+            throw new AccessDeniedException("No public posting.");
+        }
+        $template = $this->get_template_factory()->open("streams/private_panel.php");
+        $template->set_attributes($this->get_assigned_variables());
+        $template->set_layout(null);
+        $output = $template->render();
+        echo studip_utf8encode($output);
+        $this->render_nothing();
+    }
 
 }

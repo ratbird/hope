@@ -48,13 +48,18 @@
     opacity: 0;
     max-width: 100%;
 }
+#blubber_threads > li.thread.public .contextinfo > .name, #blubber_threads > li.thread.private .contextinfo > .name {
+    font-size: 0.9em;
+    color: #eeeeee;
+    margin-top: -25px;
+}
 #blubber_threads > li.thread:hover .contextinfo {
     opacity: 1;
 }
 #blubber_threads > li.thread .contextinfo:hover {
     opacity: 1;
 }
-#blubber_threads > li.thread.public .contextinfo:hover {
+#blubber_threads > li.thread.public .contextinfo:hover, #blubber_threads > li.thread.private .contextinfo:hover {
     cursor: pointer;
 }
 #blubber_threads > li.thread:hover .contextinfo > .name {

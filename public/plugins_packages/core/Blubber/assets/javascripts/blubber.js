@@ -501,7 +501,29 @@ STUDIP.Blubber = {
                 jQuery("<div/>").html(html).dialog({
                     'modal': true,
                     'title': "Sichtbarkeit",
-                    'width': "80%"
+                    'width': "80%",
+                    'show': "fade",
+                    'hide': "fade"
+                });
+            }
+        });
+    },
+    showPrivatePanel: function () {
+        var thread_id = jQuery(this).closest(".thread").attr("id");
+        thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/private_panel",
+            'data': {
+                'thread_id': thread_id
+            },
+            'type': "GET",
+            'success': function (html) {
+                jQuery("<div/>").html(html).dialog({
+                    'modal': true,
+                    'title': "Sichtbarkeit",
+                    'width': "80%",
+                    'show': "fade",
+                    'hide': "fade"
                 });
             }
         });
@@ -581,6 +603,7 @@ jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComme
 jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
 jQuery("#blubber_threads .reshare_blubber").live("click", STUDIP.Blubber.reshareBlubber);
 jQuery("#blubber_threads .thread.public .contextinfo").live("click", STUDIP.Blubber.showPublicPanel);
+jQuery("#blubber_threads .thread.private .contextinfo").live("click", STUDIP.Blubber.showPrivatePanel);
 
 //initialize autoresizer, file-dropper and events
 jQuery(function () {

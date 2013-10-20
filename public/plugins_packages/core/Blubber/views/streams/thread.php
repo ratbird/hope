@@ -75,11 +75,19 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             }
         }
     ?>
-    <div class="contextinfo" title="<?= htmlReady($title) ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/private.png');">
+    <div class="contextinfo" title="<?= htmlReady($title) ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/private<?= $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2 ? "@2x" : "" ?>.png');">
+        <div class="name"><?= _("Privat") ?>
+            <? if (count($related_users) > 1) : ?>
+            <br><?= sprintf("%s Personen", count($related_users)) ?>
+            <? endif ?>
+            </div>
+        <div class="empty"></div>
     </div>
     <div class="related_users"></div>
     <? else : ?>
-    <div class="contextinfo" title="<?= _("Öffentlich") ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public.png');">
+    <div class="contextinfo" title="<?= _("Öffentlich") ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public<?= $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2 ? "@2x" : "" ?>.png');">
+        <div class="name"><?= _("Öffentlich") ?></div>
+        <div class="empty"></div>
     </div>
     <? endif ?>
     <? if ($thread['context_type'] === "public") : ?>

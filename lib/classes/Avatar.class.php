@@ -122,7 +122,7 @@ class Avatar {
             $this->user_id,
             $size,
             $ext,
-            filemtime($this->getCustomAvatarPath($size)) ?: "0"
+            @filemtime($this->getCustomAvatarPath($size)) ?: "0"
         );
     }
 

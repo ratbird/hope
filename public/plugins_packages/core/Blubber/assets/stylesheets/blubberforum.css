@@ -376,3 +376,6 @@ table.select td.selected {
 .blubber_contacts > li {
     display: inline-block;
 }
+.blubber_contacts .want_to_share {
+    cursor: pointer;
+}

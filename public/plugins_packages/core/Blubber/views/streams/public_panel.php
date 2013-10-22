@@ -24,13 +24,14 @@
     </li>
     <? endforeach ?>
     <? if (!$i_shared) : ?>
-    <li class="want_to_share">
+    <li class="want_to_share" data-thread_id="<?= htmlReady($thread->getId()) ?>">
         <?= Assets::img("icons/24/blue/add", array('title' => _("Weitersagen / teilen"))) ?>
     </li>
     <? endif ?>
 </ul>
-<hr>
-<? if (!$i_shared && $GLOBALS['user']->id !== "nobody") : ?>
-<?= \Studip\LinkButton::create(_("weitersagen"), "share", array('href' => "?#")) ?>
-<? endif; ?>
+<? if (!$i_shared) : ?>
+<p>
+    <?= _("Klicken Sie auf das Plus, um den Blubber weiterzusagen.") ?>
+</p>
+<? endif ?>
 <br><br>

@@ -839,9 +839,14 @@ class StreamsController extends ApplicationController {
         if (!Request::isPost()) {
             throw new Exception("Wrong method for this action - use POST instead");
         }
-        $thread = new BlubberPosting($thread_id);
-        $success = $thread->reshare();
-        $this->render_nothing();
+        $this->thread = new BlubberPosting($thread_id);
+        $success = $this->thread->reshare();
+        
+        $template = $this->get_template_factory()->open("streams/thread.php");
+        $template->set_attributes($this->get_assigned_variables());
+        $template->set_layout(null);
+        $output = $template->render();
+        $this->render_text(studip_utf8encode($output));
     }
     
     public function public_panel_action() {

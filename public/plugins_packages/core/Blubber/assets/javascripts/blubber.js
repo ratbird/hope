@@ -482,10 +482,22 @@ STUDIP.Blubber = {
     },
     reshareBlubber: function () {
         var thread_id = jQuery(this).closest(".thread").attr("id");
-        thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
+        var is_window = false;
+        if (thread_id) {
+            thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
+        } else {
+            thread_id = jQuery(this).attr("data-thread_id");
+            is_window = true;
+        }
         jQuery.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/reshare/" + thread_id,
-            'type': "POST"
+            'type': "POST",
+            'success': function (output) {
+                jQuery("#posting_" + thread_id + " .reshares").html(jQuery(output).find(".reshares").html());
+                if (is_window) {
+                    jQuery("#blubber_public_panel").dialog("close");
+                }
+            }
         });
     },
     showPublicPanel: function () {
@@ -498,12 +510,15 @@ STUDIP.Blubber = {
             },
             'type': "GET",
             'success': function (html) {
-                jQuery("<div/>").html(html).dialog({
+                jQuery('<div id="blubber_public_panel"/>').html(html).dialog({
                     'modal': true,
                     'title': "Sichtbarkeit",
                     'width': "80%",
                     'show': "fade",
-                    'hide': "fade"
+                    'hide': "fade",
+                    'close': function () {
+                        jQuery(this).remove();
+                    }
                 });
             }
         });
@@ -518,12 +533,15 @@ STUDIP.Blubber = {
             },
             'type': "GET",
             'success': function (html) {
-                jQuery("<div/>").html(html).dialog({
+                jQuery('<div id="blubber_private_panel"/>').html(html).dialog({
                     'modal': true,
                     'title': "Sichtbarkeit",
                     'width': "80%",
                     'show': "fade",
-                    'hide': "fade"
+                    'hide': "fade",
+                    'close': function () {
+                        jQuery(this).remove();
+                    }
                 });
             }
         });
@@ -601,7 +619,7 @@ jQuery("#blubber_threads > li > ul.comments > li.more").live("click", function (
 });
 jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
 jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
-jQuery("#blubber_threads .reshare_blubber").live("click", STUDIP.Blubber.reshareBlubber);
+jQuery("#blubber_threads .reshare_blubber, .blubber_contacts .want_to_share").live("click", STUDIP.Blubber.reshareBlubber);
 jQuery("#blubber_threads .thread.public .contextinfo").live("click", STUDIP.Blubber.showPublicPanel);
 jQuery("#blubber_threads .thread.private .contextinfo").live("click", STUDIP.Blubber.showPrivatePanel);
 

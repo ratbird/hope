@@ -271,7 +271,7 @@ class BlubberStream extends SimpleORMap {
         $about_tags = ((count($this['pool_hashtags']) > 0) or (count($this['filter_hashtags']) > 0));
 
         $sql =
-            "SELECT blubber.topic_id,blubber.root_id,blubber.mkdate,blubber.chdate " .
+            "SELECT blubber.topic_id, blubber.root_id, blubber.mkdate, blubber.chdate " .
             "FROM blubber " .
                 "INNER JOIN blubber AS comment ON (comment.root_id = blubber.topic_id) " .
                 "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.topic_id) " .
@@ -284,7 +284,10 @@ class BlubberStream extends SimpleORMap {
                 //filter
                 (count($filter_sql) ? implode(" AND ", $filter_sql)." " : "") .
             "GROUP BY blubber.topic_id " .
-            "ORDER BY " . ($this['sort'] === "activity" ? "MAX(comment.mkdate) DESC" : "blubber.mkdate DESC")." " .
+            "ORDER BY " . ($this['sort'] === "activity" 
+                            ? "IF(blubber_reshares.chdate IS NULL OR MAX(comment.mkdate) > MAX(blubber_reshares.chdate), MAX(comment.mkdate), MAX(blubber_reshares.chdate)) DESC" 
+                            : "blubber.mkdate DESC"
+                          )." " .
             (($offset or $limit) ? "LIMIT ".(int) $offset.", ".(int) $limit." " : " ") .
         "";
         return array($sql, $parameters);

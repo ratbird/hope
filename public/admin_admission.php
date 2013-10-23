@@ -888,7 +888,7 @@ if ($seminar_id
                 ));
 
                 $message = sprintf(_('Sie wurden in die Veranstaltung **%s** eingetragen, da das Anmeldeverfahren aufgehoben wurde. Damit sind Sie als Teilnehmer der Präsenzveranstaltung zugelassen.'), $admin_admission_data['name']);
-                $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
+                $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
 
                 $inserted += 1;
             }

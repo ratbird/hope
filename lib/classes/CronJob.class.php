@@ -64,7 +64,7 @@ abstract class CronJob
      *   - select, a defined set of values (define in the field "values" as
      *     an array)
      * - "default" provides a default value for this field (optional)
-     * - "status" is either "optional" or "required" (optional, defaults to
+     * - "status" is either "optional" or "mandatory" (optional, defaults to
      *   optional)
      * - "description" provides a decription for this parameter
      *

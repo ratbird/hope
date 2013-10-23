@@ -58,8 +58,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
        title="<?= _("Veranstaltung")." ".htmlReady($title['name']) ?>"
        class="contextinfo"
        style="background-image: url('<?= CourseAvatar::getAvatar($thread['Seminar_id'])->getURL(Avatar::NORMAL) ?>');">
-        <div class="name"><?= htmlReady(Course::find($thread['Seminar_id'])->name) ?></div>
-        <div class="empty"></div>
+        <div class="name"><?= htmlReady(Course::find($thread['Seminar_id'])->name) ?></div><div class="empty"></div>
     </a>
     <? elseif($thread['context_type'] === "private") : ?>
     <? 
@@ -80,21 +79,19 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             <? if (count($related_users) > 1) : ?>
             <br><?= sprintf("%s Personen", count($related_users)) ?>
             <? endif ?>
-            </div>
-        <div class="empty"></div>
+            </div><div class="empty"></div>
     </div>
     <div class="related_users"></div>
     <? else : ?>
     <div class="contextinfo" title="<?= _("Öffentlich") ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public<?= $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2 ? "@2x" : "" ?>.png');">
-        <div class="name"><?= _("Öffentlich") ?></div>
-        <div class="empty"></div>
+        <div class="name"><?= _("Öffentlich") ?></div><div class="empty"></div>
     </div>
     <? endif ?>
     <? if ($thread['context_type'] === "public") : ?>
     <div class="reshares">
         <? $sharingusers = $thread->getSharingUsers() ?>
         <? if (count($sharingusers)) : ?>
-            <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergeblubbert von folgenden Personen"))) ?>
+            <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von folgenden Personen"))) ?>
             <? foreach ($sharingusers as $key => $user) {
                 $url = $user->getURL();
                 $name = $user->getName();

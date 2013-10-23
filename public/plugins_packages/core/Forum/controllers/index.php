@@ -598,7 +598,14 @@ class IndexController extends StudipController
         }
     }
     
-    function close_thread_action($topic_id, $redirect, $page)
+    /**
+     * This action is used to close a thread.
+     * 
+     * @param string $topic_id the topic which will be closed
+     * @param string $redirect the topic which will be shown after closing the thread
+     * @param int    $page the page number of the topic $redirect
+     */
+    function close_thread_action($topic_id, $redirect, $page = 0)
     {
         ForumPerm::check('close_thread', $this->getId(), $topic_id);
         
@@ -614,13 +621,66 @@ class IndexController extends StudipController
         }
     }
     
-    function open_thread_action($topic_id, $redirect, $page)
+    /**
+     * This action is used to open a thread.
+     * 
+     * @param string $topic_id the topic which will be opened
+     * @param string $redirect the topic which will be shown after opening the thread
+     * @param int    $page the page number of the topic $redirect
+     */
+    function open_thread_action($topic_id, $redirect, $page = 0)
     {
         ForumPerm::check('close_thread', $this->getId(), $topic_id);
         
         ForumEntry::open($topic_id);
         
         $success_text = _('Das Thema wurde erfolgreich geöffnet.');
+
+        if (Request::isAjax()) {
+            $this->render_text(MessageBox::success($success_text));
+        } else {
+            $this->flash['messages'] = array('success' => $success_text);
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $redirect . '/' . $page));
+        }
+    }
+    
+    /**
+     * This action is used to mark a thread as sticky.
+     * 
+     * @param string $topic_id the topic which will be marked as sticky.
+     * @param string $redirect the topic which will be shown afterwards
+     * @param int    $page the page number of the topic $redirect
+     */
+    function make_sticky_action($topic_id, $redirect, $page = 0)
+    {
+        ForumPerm::check('make_sticky', $this->getId(), $topic_id);
+        
+        ForumEntry::sticky($topic_id);
+        
+        $success_text = _('Das Thema wurde erfolgreich in der Themenliste hervorgehoben.');
+
+        if (Request::isAjax()) {
+            $this->render_text(MessageBox::success($success_text));
+        } else {
+            $this->flash['messages'] = array('success' => $success_text);
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $redirect . '/' . $page));
+        }
+    }
+    
+    /**
+     * This action is used to remove the sticky attribute from a topic.
+     * 
+     * @param string $topic_id the topic which will be marked as unsticky.
+     * @param string $redirect the topic which will be shown afterwards
+     * @param int    $page the page number of the topic $redirect
+     */
+    function make_unsticky_action($topic_id, $redirect, $page = 0)
+    {
+        ForumPerm::check('make_sticky', $this->getId(), $topic_id);
+        
+        ForumEntry::unsticky($topic_id);
+        
+        $success_text = _('Die Hervorhebung des Themas in der Themenliste wurde entfernt.');
 
         if (Request::isAjax()) {
             $this->render_text(MessageBox::success($success_text));

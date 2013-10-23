@@ -353,7 +353,8 @@ class ForumEntry {
                 'fav'             => ($data['fav'] == 'fav'),
                 'depth'           => $data['depth'],
                 'anonymous'       => $data['anonymous'],
-                'closed'          => $data['closed']
+                'closed'          => $data['closed'],
+                'sticky'          => $data['sticky']
             );
         } // retrieve the postings
 
@@ -541,7 +542,7 @@ class ForumEntry {
                     LEFT JOIN forum_favorites as ou ON (ou.topic_id = fe.topic_id AND ou.user_id = :user_id)
                     WHERE fe.seminar_id = :seminar_id AND fe.lft > :left
                         AND fe.rgt < :right AND fe.depth = 2
-                    ORDER BY latest_chdate DESC
+                    ORDER BY sticky DESC, latest_chdate DESC
                     LIMIT $start, ". ForumEntry::POSTINGS_PER_PAGE);
                 $stmt->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt->bindParam(':left', $constraint['lft'], PDO::PARAM_INT);
@@ -988,13 +989,11 @@ class ForumEntry {
      */
     static function close($topic_id)
     {
-        $constraints = ForumEntry::getConstraints($topic_id);
-
         // close all entries belonging to the topic
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
             SET closed = 1
-            WHERE seminar_id = ? AND lft >= ? AND rgt <= ?");
-        $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
+            WHERE topic_id = ?");
+        $stmt->execute(array($topic_id));
     }
     
     /**
@@ -1006,13 +1005,43 @@ class ForumEntry {
      */
     static function open($topic_id)
     {
-        $constraints = ForumEntry::getConstraints($topic_id);
-
         // open all entries belonging to the topic
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
             SET closed = 0
-            WHERE seminar_id = ? AND lft >= ? AND rgt <= ?");
-        $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
+            WHERE topic_id = ?");
+        $stmt->execute(array($topic_id));
+    }
+    
+    /**
+     * make the passed topic sticky
+     *
+     * @param type $topic_id the topic to make sticky
+     *
+     * @return void
+     */
+    static function sticky($topic_id)
+    {
+        // open all entries belonging to the topic
+        $stmt = DBManager::get()->prepare("UPDATE forum_entries
+            SET sticky = 1
+            WHERE topic_id = ?");
+        $stmt->execute(array($topic_id));
+    }
+    
+    /**
+     * make the passed topic unsticky
+     *
+     * @param type $topic_id the topic to make unsticky
+     *
+     * @return void
+     */
+    static function unsticky($topic_id)
+    {
+        // open all entries belonging to the topic
+        $stmt = DBManager::get()->prepare("UPDATE forum_entries
+            SET sticky = 0
+            WHERE topic_id = ?");
+        $stmt->execute(array($topic_id));
     }
 
     /**

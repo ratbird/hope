@@ -63,6 +63,11 @@
                     'style' => $entry['closed'] ? '' : 'display: none'
             )) ?>
             
+            <?= Assets::img('icons/16/black/staple.png', array(
+                    'title' => _('Dieses Thema wurde hervorgehoben.'),
+                    'id'    => 'img-sticky-' . $entry['topic_id'],
+                    'style' => $entry['sticky'] ? '' : 'display: none'
+            )) ?>
             </a>
         </td>
 
@@ -122,6 +127,24 @@
                                 id="closeButton-<?= $entry['topic_id']; ?>">
                                 <?= Assets::img('icons/16/blue/lock-unlocked.png', 
                                     array('title' => _('Thema öffnen'))) ?>
+                            </a>
+                        <? endif ?>
+                    <? endif ?>
+                    
+                    <? if (ForumPerm::has('make_sticky', $seminar_id) && $constraint['depth'] >= 1) : ?>
+                        <? if ($entry['sticky'] == 0) : ?>
+                            <a href="<?= PluginEngine::getURL('coreforum/index/make_sticky/' . $entry['topic_id'] . '/' 
+                                . $constraint['topic_id'] . '/0'); ?>" 
+                                id="stickyButton-<?= $entry['topic_id']; ?>">
+                                <?= Assets::img('icons/16/blue/staple.png', 
+                                    array('title' => _('Thema hervorheben'))) ?>
+                            </a>
+                        <? else : ?>
+                            <a href="<?= PluginEngine::getURL('coreforum/index/make_unsticky/' . $entry['topic_id'] . '/' 
+                                . $constraint['topic_id'] . '/0'); ?>" 
+                                id="stickyButton-<?= $entry['topic_id']; ?>">
+                                <?= Assets::img('icons/16/blue/staple.png', 
+                                    array('title' => _('Hervorhebung aufheben'))) ?>
                             </a>
                         <? endif ?>
                     <? endif ?>

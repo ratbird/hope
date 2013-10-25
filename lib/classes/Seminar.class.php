@@ -2553,9 +2553,18 @@ class Seminar
                 (int)select_group($this->getSemesterStartTime()),
                 in_array($status, words('tutor dozent')) ? 'yes' : 'unknown',
             ));
-
+            // delete the entries, user is now in the seminar
+            $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
+                                            WHERE user_id = ? AND seminar_id = ?');
+            $stmt->execute(array($user_id, $this->getId()));
+            if ($stmt->rowCount()) {
+                //renumber the waiting/accepted/lot list, a user was deleted from it
+                renumber_admission($this->getId());
+            }
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             NotificationCenter::postNotification("CourseDidGetMember", $this, $user_id);
+            NotificationCenter::postNotification('UserDidEnterCourse', $this->id, $user_id);
+            log_event('SEM_USER_ADD', $this->id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen');
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
@@ -2625,10 +2634,12 @@ class Seminar
                     $statement->execute(array($termin_id, $user_id));
                 }
             }
+            RemovePersonStatusgruppeComplete(get_username($user_id), $this->id);
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
                     "<i>".htmlReady(get_fullname($user_id))."</i>"));
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
-
+            NotificationCenter::postNotification('UserDidLeaveCourse', $this->id, $user_id);
+            log_event('SEM_USER_DEL', $this->id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),

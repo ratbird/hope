@@ -39,21 +39,23 @@ class CycleDataDB
     function getTermine($metadate_id, $start = 0, $end = 0)
     {
         if (($start != 0) || ($end != 0)) {
-            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(DISTINCT trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                      LEFT JOIN resources_assign AS r ON (termin_id = assign_user_id)
+                      LEFT JOIN termin_related_persons AS trp ON (termine.termin_id = trp.range_id)
+                      LEFT JOIN termin_related_groups AS trg ON (termine.termin_id = trg.termin_id)
+                      LEFT JOIN resources_assign AS r ON (termine.termin_id = assign_user_id)
                       WHERE metadate_id = ? AND termine.date BETWEEN ? AND ?
-                      GROUP BY termin_id
+                      GROUP BY termine.termin_id
                       ORDER BY NULL";
             $parameters = array($metadate_id, $start, $end);
         } else {
-            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(DISTINCT trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                      LEFT JOIN resources_assign AS r ON (termin_id = assign_user_id)
+                        LEFT JOIN termin_related_persons AS trp ON (termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (termine.termin_id = trg.termin_id)
+                        LEFT JOIN resources_assign AS r ON (termine.termin_id = assign_user_id)
                       WHERE metadate_id = ?
-                      GROUP BY termin_id
+                      GROUP BY termine.termin_id
                       ORDER BY NULL";
             $parameters = array($metadate_id);
         }
@@ -64,23 +66,26 @@ class CycleDataDB
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $data = $row;
             $data['related_persons'] = array_filter(explode(',', $data['related_persons']));
+            $data['related_groups'] = array_filter(explode(',', $data['related_groups']));
             $ret[] = $data;
         }
 
         if (($start != 0) || ($end != 0)) {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(DISTINCT trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                        LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
                       WHERE metadate_id = ? AND `date` BETWEEN ? AND ?
-                      GROUP BY termin_id
+                      GROUP BY ex_termine.termin_id
                       ORDER BY NULL";
             $parameters = array($metadate_id, $start, $end);
         } else {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(DISTINCT trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                        LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
                       WHERE metadate_id = ?
-                      GROUP BY termin_id
+                      GROUP BY ex_termine.termin_id
                       ORDER BY NULL";
             $parameters = array($metadate_id);
         }
@@ -91,6 +96,7 @@ class CycleDataDB
             $zw = $row;
             $zw['ex_termin'] = TRUE;
             $zw['related_persons'] = array_filter(explode(',', $zw['related_persons']));
+            $zw['related_groups'] = array_filter(explode(',', $zw['related_groups']));
             $ret[] = $zw;
         }
 

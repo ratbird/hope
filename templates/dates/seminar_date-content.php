@@ -1,4 +1,4 @@
-<? use Studip\Button, Studip\LinkButton;
+<?php use Studip\Button, Studip\LinkButton;
 
 $content = '';
 if ($termin_item['info']) {
@@ -56,6 +56,13 @@ if($termin_item['seminar_date'] instanceof SingleDate) {
     foreach ($termin_item['seminar_date']->getRelatedPersons() as $key => $dozent_id) {
         $key < 1 || ($content .= ", ");
         $content .= htmlReady(get_fullname($dozent_id));
+    }
+    $content .= "<br>";
+    $gruppen = $termin_item['seminar_date']->getRelatedGroups();
+    $content .= "<b>" . _("Betroffene Gruppen:") . "</b> ";
+    foreach ($gruppen as $key => $statusgruppe_id) {
+        $key < 1 || ($content .= ", ");
+        $content .= htmlReady(Statusgruppen::find($statusgruppe_id)->name);
     }
     $content .= "<br>";
     if ($show_admin) {

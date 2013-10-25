@@ -130,13 +130,27 @@ class SingleDateDB
         $statement->execute(array($termin->getTerminId()));
 
         if (count($termin->related_persons)) {
-            $query = "INSERT INTO termin_related_persons (range_id, user_id) VALUES (?, ?)";
+            $query = "INSERT IGNORE INTO termin_related_persons (range_id, user_id) VALUES (?, ?)";
             $statement = DBManager::get()->prepare($query);
 
             foreach ($termin->getRelatedPersons() as $user_id) {
                 $statement->execute(array(
                     $termin->getTerminId(),
                     $user_id
+                ));
+            }
+        }
+        
+        $query = "DELETE FROM termin_related_groups WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin->getTerminId()));
+        if (count($termin->related_groups)) {
+            $query = "INSERT IGNORE INTO termin_related_groups (termin_id, statusgruppe_id) VALUES (?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            foreach ($termin->getRelatedGroups() as $statusgruppe_id) {
+                $statement->execute(array(
+                    $termin->getTerminId(),
+                    $statusgruppe_id
                 ));
             }
         }
@@ -147,31 +161,37 @@ class SingleDateDB
     static function restoreSingleDate($termin_id)
     {
         $query = "SELECT termine.*, resource_id, 0 AS ex_termin,
-                         GROUP_CONCAT(trp.user_id) AS related_persons
+                        GROUP_CONCAT(trp.user_id) AS related_persons,
+                        GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                   FROM termine
-                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
-                  WHERE termin_id = ?
-                  GROUP BY termin_id
+                        LEFT JOIN termin_related_persons AS trp ON (termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (termine.termin_id = trg.termin_id)
+                        LEFT JOIN resources_assign ON (assign_user_id = termine.termin_id)
+                  WHERE termine.termin_id = ?
+                  GROUP BY termine.termin_id
                   ORDER BY NULL";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin_id));
         if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result['related_persons'] = array_filter(explode(',', $result['related_persons']));
+            $result['related_groups'] = array_filter(explode(',', $result['related_groups']));
             return $result;
         }
 
         $query = "SELECT ex_termine.*, 1 AS ex_termin,
-                         GROUP_CONCAT(trp.user_id) AS related_persons
+                         GROUP_CONCAT(trp.user_id) AS related_persons,
+                         GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
                   FROM ex_termine
-                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                  WHERE termin_id = ?
+                    LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
+                    LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
+                  WHERE ex_termine.termin_id = ?
                   GROUP BY termin_id
                   ORDER BY NULL";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin_id));
         if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
             $result['related_persons'] = array_filter(explode(',', $result['related_persons']));
+            $result['related_groups'] = array_filter(explode(',', $result['related_groups']));
             return $result;
         }
 

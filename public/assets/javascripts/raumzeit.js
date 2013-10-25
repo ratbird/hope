@@ -198,6 +198,36 @@ STUDIP.Raumzeit = {
 
         jQuery('input[name=related_teachers]').val(data.join(','));
     },
+    addFormGroups: function () {
+        var data = [];
+        jQuery('ul.groups li:visible').each(function () {
+            data.push(jQuery(this).attr('data-groupid'));
+        });
+        jQuery('input[name=related_statusgruppen]').val(data.join(','));
+    },
+    addGroup: function () {
+        jQuery('select[name=groups] option:selected').each(function () {
+            var statusgruppe_id = jQuery(this).val();
+            if (statusgruppe_id === 'none') {
+                return;
+            }
+
+            jQuery('li[data-groupid=' + statusgruppe_id + ']').show();
+            //jQuery('li[data-groupid=' + statusgruppe_id + '] input').val('1');
+            jQuery('select[name=groups] option[value=' + statusgruppe_id + ']').hide();
+            jQuery('select[name=groups] option[value=none]').attr('selected', 'selected');
+        });
+
+        STUDIP.Raumzeit.addFormGroups();
+    },
+
+    removeGroup: function (statusgruppe_id) {
+        jQuery('li[data-groupid=' + statusgruppe_id + ']').hide();
+        //jQuery('li[data-lecturerid=' + statusgruppe_id + '] input').val('0');
+        jQuery('select[name=groups] option[value=' + statusgruppe_id + ']').show();
+
+        STUDIP.Raumzeit.addFormGroups();
+    },
 
     disableBookableRooms: function (icon) {
         var select = $(icon).prev('select')[0];

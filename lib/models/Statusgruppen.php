@@ -34,6 +34,10 @@ class Statusgruppen extends SimpleORMap {
     protected $belongs_to = array('parent' => array('class_name' => 'Statusgruppen',
             'foreign_key' => 'range_id'
     ));
+    
+    static public function findBySeminar_id ($course_id) {
+        return self::findBySQL("range_id = ?", array($course_id));
+    }
 
     /**
      * Produces an array of all statusgroups a user is in

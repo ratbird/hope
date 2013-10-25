@@ -44,7 +44,8 @@ class SingleDate {
     var $content = '';
     var $room_request = NULL;
     var $related_persons = array();
-
+    var $related_groups = array();
+    
     /**
      * Return the SingleDate instance of the given id
      *
@@ -337,6 +338,7 @@ class SingleDate {
         $this->content = $daten['content'];
         $this->update = TRUE;
         $this->related_persons = is_array($daten['related_persons']) ? $daten['related_persons'] : array();
+        $this->related_groups = is_array($daten['related_groups']) ? $daten['related_groups'] : array();
         return TRUE;
     }
 
@@ -735,5 +737,50 @@ class SingleDate {
     public function clearRelatedPersons() {
         $this->related_persons = array();
     }
+    
+    /**
+     * adds a given user_id as a related person to the date
+     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     */
+    public function addRelatedGroup($user_id) {
+        $this->related_groups[] = $user_id;
+        $this->related_groups = array_unique($this->related_groups);
+    }
 
+    /**
+     * unsets a given user_id from the array of related persons
+     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     */
+    public function deleteRelatedGroup($statusgruppe_id) {
+        if (!$this->related_groups) {
+            $sem = Seminar::getInstance($this->getSeminarID());
+            $this->related_groups = array_keys($sem->getMembers('dozent'));
+        }
+        foreach ($this->related_groups as $key => $related_group) {
+            if ($related_group === $statusgruppe_id) {
+                unset($this->related_groups[$key]);
+            }
+        }
+    }
+
+    /**
+     * gets all user_ids of related persons of this date
+     * @return array of user_ids
+     */
+    public function getRelatedGroups() {
+        if (count($this->related_groups)) {
+            return $this->related_groups;
+        } else {
+            $groups = Statusgruppen::findBySeminar_id($this->getSeminarID());
+            return array_map(function ($group) { return $group->getId(); }, $groups);
+        }
+    }
+
+    /**
+     * clears all related persons (in the interface this means that all dozents are
+     * marked as related to the date)
+     */
+    public function clearRelatedGroups() {
+        $this->related_groups = array();
+    }
 }

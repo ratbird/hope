@@ -84,6 +84,14 @@
                 $key < 1 || print ",";
                 print " ".htmlReady(get_fullname($dozent_id));
             }?><BR/>
+        <? if ($tpl['related_groups'] && count($tpl['related_groups'])) : ?>
+        <BR/>
+        <B><?=_("Beteiligte Gruppen")?>:</B>
+            <? foreach ($tpl['related_groups'] as $key => $statusgruppe_id) {
+                $key < 1 || print ",";
+                print " ".htmlReady(Statusgruppen::find($statusgruppe_id)->name);
+            }?><BR/>
+        <? endif ?>
         <? if ($tpl['additional_themes']) { ?>
         <BR/>
         <?=_("Weitere Themen:")?><BR/>

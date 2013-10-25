@@ -61,26 +61,26 @@ use Studip\Button,
 
                 <b><?= _("Durchführende Dozenten:") ?></b><br>
                 
-				<? $dozenten = $sem->getMembers('dozent') ?>
+                <? $dozenten = $sem->getMembers('dozent') ?>
 
-				<ul class="teachers">
-					<? foreach ($dozenten as $related_person => $dozent) : ?>
+                <ul class="termin_related teachers">
+                        <? foreach ($dozenten as $related_person => $dozent) : ?>
 
-					<? $related = false; 
-					if (in_array($related_person, $tpl['related_persons']) !== false) : 
-						$related = true;
-					endif ?>
+                        <? $related = false; 
+                        if (in_array($related_person, $tpl['related_persons']) !== false) : 
+                                $related = true;
+                        endif ?>
 
-					<li data-lecturerid="<?= $related_person ?>" <?= $related ? '' : 'style="display: none"'?>>
-						<? $dozenten[$related_person]['hidden'] = $related ?>
-						<?= htmlReady(get_fullname($related_person)); ?>
-						
-						<a href="javascript:" onClick="STUDIP.Raumzeit.removeLecturer('<?= $related_person ?>')" style="position: absolute; right: 5px;">
-							<?= Assets::img('icons/16/blue/trash.png') ?>
-						</a>
-					</li>
-					<? endforeach ?>
-				</ul>
+                        <li data-lecturerid="<?= $related_person ?>" <?= $related ? '' : 'style="display: none"'?>>
+                                <? $dozenten[$related_person]['hidden'] = $related ?>
+                                <?= htmlReady(get_fullname($related_person)); ?>
+
+                                <a href="javascript:" onClick="STUDIP.Raumzeit.removeLecturer('<?= $related_person ?>')" style="position: absolute; right: 5px;">
+                                        <?= Assets::img('icons/16/blue/trash.png') ?>
+                                </a>
+                        </li>
+                        <? endforeach ?>
+                </ul>
 
                 <input type="hidden" name="related_teachers" value="<?= implode(',', $tpl['related_persons']) ?>">
 
@@ -151,6 +151,43 @@ use Studip\Button,
 					</label>
 					<br>
 				<? endif ?>
+                
+                <br>
+                <br>
+                <br>
+                
+                <b><?= _("Beteiligte Gruppen") ?>:</b><br>
+                
+                <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()) ?>
+                <ul class="termin_related groups">
+                        <? foreach ($gruppen as $statusgruppe) : ?>
+                        <? $related = false ?>
+                        <? if (in_array($statusgruppe->getId(), $tpl['related_groups'])) {
+                            $related = true;
+                        } ?>
+                        <li data-groupid="<?= htmlReady($statusgruppe->getId()) ?>" <?= $related ? '' : 'style="display: none"'?>>
+                            <?= htmlReady($statusgruppe['name']) ?>
+                            <a href="javascript:" onClick="STUDIP.Raumzeit.removeGroup('<?= $statusgruppe->getId() ?>')" style="position: absolute; right: 5px;">
+                                <?= Assets::img('icons/16/blue/trash.png') ?>
+                            </a>
+                        </li>
+                        <? endforeach ?>
+                </ul>
+
+                <input type="hidden" name="related_statusgruppen" value="<?= implode(',', $tpl['related_groups']) ?>">
+
+                <select name="groups" style="width: 300px">
+                    <option value="none"><?= _('-- Gruppen auswählen --') ?></option>
+                    <? foreach ($gruppen as $gruppe) : ?>
+                    <option value="<?= htmlReady($gruppe->getId()) ?>" style="<?= in_array($gruppe->getId(), $tpl['related_groups']) ? 'display: none;' : '' ?>">
+                        <?= htmlReady($gruppe['name']) ?>
+                    </option>
+                    <? endforeach ?>
+                </select>
+                
+                <a href="javascript:" onClick="STUDIP.Raumzeit.addGroup()" title="<?= _('Gruppe hinzufügen') ?>">
+                    <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
+                </a>
             </div>
             <br style="clear: both;"><br>
             

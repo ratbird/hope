@@ -132,7 +132,8 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['end_stunde'] = date('H',$val->getEndTime());
     $tpl['end_minute'] = date('i',$val->getEndTime());
     $tpl['related_persons'] = $val->getRelatedPersons();
-
+    $tpl['related_groups'] = $val->getRelatedGroups();
+    
     if ($request = RoomRequest::findByDate($val->getSingleDateID())) {
         $tpl['room_request'] = $request;
         $tpl['ausruf']  = _("Für diesen Termin existiert eine Raumanfrage:");

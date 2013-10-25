@@ -51,10 +51,11 @@ class SeminarDB
 
     function getSingleDates($seminar_id, $start = 0, $end = 0)
     {
-        $query = "SELECT termine.*, resources_assign.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+        $query = "SELECT termine.*, resources_assign.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons,  GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
                   FROM termine
-                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  LEFT JOIN termin_related_persons AS trp ON (termine.termin_id = trp.range_id)
+                  LEFT JOIN termin_related_groups AS trg ON (termine.termin_id = trg.termin_id)
+                  LEFT JOIN resources_assign ON (assign_user_id = termine.termin_id)
                   WHERE termine.range_id = ?
                     AND (metadate_id IS NULL OR metadate_id = '')";
         $parameters = array($seminar_id);
@@ -64,7 +65,7 @@ class SeminarDB
             array_push($parameters, $start, $end);
         }
 
-        $query .= " GROUP BY termin_id ORDER BY date";
+        $query .= " GROUP BY termine.termin_id ORDER BY date";
 
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
@@ -73,6 +74,9 @@ class SeminarDB
         while ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
             if ($data['related_persons']) {
                 $data['related_persons'] = explode(',', $data['related_persons']);
+            }
+            if ($data['related_groups']) {
+                $data['related_groups'] = explode(',', $data['related_groups']);
             }
             
             $ret[] = $data;
@@ -295,22 +299,24 @@ class SeminarDB
     {
         $ret = array();
         if (($start != 0) || ($end != 0)) {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                        LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
                       WHERE ex_termine.range_id = ?
                         AND (metadate_id IS NULL OR metadate_id = '')
                       AND `date` BETWEEN ? AND ?
-                      GROUP BY termin_id
+                      GROUP BY ex_termine.termin_id
                       ORDER BY date";
             $parameters = array($seminar_id, $start, $end);
         } else {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
-                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                        LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
+                        LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
                       WHERE ex_termine.range_id = ?
                         AND (metadate_id IS NULL OR metadate_id = '')
-                      GROUP BY termin_id
+                      GROUP BY ex_termine.termin_id
                       ORDER BY date";
             $parameters = array($seminar_id);
         }
@@ -321,6 +327,7 @@ class SeminarDB
             $zw = $row;
             $zw['ex_termin'] = TRUE;
             $zw['related_persons'] = explode(',', $zw['related_persons']);
+            $zw['related_groups'] = explode(',', $zw['related_groups']);
             $ret[] = $zw;
         }
         return $ret;

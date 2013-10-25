@@ -312,6 +312,9 @@ function raumzeit_doAddSingleDate($sem) {
                 $termin->addRelatedPerson($dozent_id);
             }
         }
+        foreach (Request::getArray('related_statusgruppen') as $statusgruppe_id) {
+            $termin->addRelatedGroup($statusgruppe_id);
+        }
         $sem->createMessage(sprintf(_("Der Termin %s wurde hinzugefügt!"), '<b>'.$termin->toString().'</b>'));
         $sem->store();
     }
@@ -440,6 +443,15 @@ function raumzeit_editSingleDate($sem) {
                 $termin->addRelatedPerson($dozent_id);
             }
         }
+        
+        $termin->clearRelatedGroups();
+        $gruppen = Statusgruppen::findBySeminar_id($sem->getId());
+        $gruppen_ids = array_map(function ($gruppe) { return $gruppe->getId(); }, $gruppen);
+        foreach (explode(',', Request::get('related_statusgruppen')) as $statusgruppe_id) {
+            if (in_array($statusgruppe_id, $gruppen_ids)) {
+                $termin->addRelatedGroup($statusgruppe_id);
+            }
+        }
 
         if (!$teacher_added) {
             $sem->createInfo(_("Jeder Termin muss mindestens eine Person haben, die ihn durchführt!"));
@@ -494,6 +506,15 @@ function raumzeit_editSingleDate($sem) {
             foreach (explode(',', Request::get('related_teachers')) as $dozent_id) {
                 if (in_array($dozent_id, array_keys($teachers))) {
                     $termin->addRelatedPerson($dozent_id);
+                }
+            }
+            
+            $termin->clearRelatedGroups();
+            $gruppen = Statusgruppen::findBySeminar_id($sem->getId());
+            $gruppen_ids = array_map(function ($gruppe) { return $gruppe->getId(); }, $gruppen);
+            foreach (explode(',', Request::get('related_statusgruppen')) as $statusgruppe_id) {
+                if (in_array($statusgruppe_id, $gruppen_ids)) {
+                    $termin->addRelatedGroup($statusgruppe_id);
                 }
             }
 
@@ -585,15 +606,18 @@ function raumzeit_bulkAction($sem) {
     $singledates = Request::getArray('singledate');
     $persons = Request::getArray('related_persons');
     $action = Request::get('related_persons_action');
-    $something_done = false;
-
+    $groups = Request::getArray('related_groups');
+    $group_action = Request::get('related_groups_action');
+    $teacher_changed = false;
+    $groups_changed = false;
+    
     if (in_array($action, array('add', 'delete'))) {
         foreach ($singledates as $singledate) {
             $singledate = new SingleDate($singledate);
             if ($singledate->getSeminarID() === $sem->getId()) {
                 foreach ($persons as $user_id) {
                     $singledate->{$action."RelatedPerson"}($user_id);
-                    $something_done = true;
+                    $teacher_changed = true;
                 }
             }
             $singledate->store();
@@ -605,18 +629,43 @@ function raumzeit_bulkAction($sem) {
                 $singledate->clearRelatedPersons();
                 foreach ($persons as $user_id) {
                     $singledate->addRelatedPerson($user_id);
-                    $something_done = true;
+                    $teacher_changed = true;
                 }
             }
             $singledate->store();
         }
     }
-    if ($something_done) {
-        $sem->createMessage(_("Zuständige Personen für die Termine wurden geändert."));
-    /*} else {
-        $sem->createInfo(_("An den Zuordnungen von Personen zu Terminen hat sich nichts geändert."));*/
+    if (in_array($group_action, array('add', 'delete'))) {
+        foreach ($singledates as $singledate) {
+            $singledate = new SingleDate($singledate);
+            if ($singledate->getSeminarID() === $sem->getId()) {
+                foreach ($groups as $statusgruppe_id) {
+                    $singledate->{$group_action."RelatedGroup"}($statusgruppe_id);
+                    $groups_changed = true;
+                }
+            }
+            $singledate->store();
+        }
+    } elseif($action === "set") {
+        foreach ($singledates as $singledate) {
+            $singledate = new SingleDate($singledate);
+            if ($singledate->getSeminarID() === $sem->getId()) {
+                $singledate->clearRelatedGroups();
+                foreach ($groups as $statusgruppe_id) {
+                    $singledate->addRelatedGroup($statusgruppe_id);
+                    $groups_changed = true;
+                }
+            }
+            $singledate->store();
+        }
     }
-
+    if ($teacher_changed) {
+        $sem->createMessage(_("Zuständige Personen für die Termine wurden geändert."));
+    }
+    if ($groups_changed) {
+        $sem->createMessage(_("Zugewiesene Gruppen für die Termine wurden geändert."));
+    }
+    
     foreach($singledates as $termin_id) {
         if (Request::option('cycle_id') != '') {
             $termin = $sem->getSingleDate($termin_id, Request::option('cycle_id'));

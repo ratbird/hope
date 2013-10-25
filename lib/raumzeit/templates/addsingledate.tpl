@@ -84,7 +84,16 @@ use Studip\Button,
                     </SELECT>
                     </label>
                 </TD>
-                <TD class="table_row_odd">&nbsp;</TD>
+                <TD class="table_row_odd">
+                    <label><?= _("Beteiligte Gruppen:") ?>
+                    <SELECT name="related_statusgruppen[]" multiple>
+                    <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()) ?>
+                    <? foreach ($gruppen as $gruppe) : ?>
+                    <OPTION value="<?= htmlReady($gruppe->getId()) ?>"><?= htmlReady($gruppe['name']) ?></OPTION>
+                    <? endforeach ?>
+                    </SELECT>
+                    </label>
+                </TD>
             </TR>
             <TR>
                 <TD colspan="9" class="table_row_odd" align="center">

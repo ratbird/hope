@@ -143,26 +143,52 @@ class CalendarDriver
             } else {
                 $range_id = $this->range_id;
             }
+            
+            $my_groups_statement = DBManager::get()->prepare(
+                "SELECT DISTINCT statusgruppen.statusgruppe_id " .
+                "FROM statusgruppe_user " .
+                    "INNER JOIN statusgruppen ON (statusgruppen.statusgruppe_id = statusgruppe_user.statusgruppe_id) " .
+                    "INNER JOIN seminare ON (seminare.Seminar_id = statusgruppen.range_id) " .
+                "WHERE statusgruppe_user.user_id = :user_id " .
+            "");
+            $my_groups_statement->execute(array('user_id' => $range_id));
+            $my_groups = $my_groups_statement->fetchAll(PDO::FETCH_COLUMN, 0);
 
-            $query = "SELECT $select_sem "
-                    . "FROM (SELECT termin_id,range_id,date,end_time,mkdate,chdate,date_typ,content,metadate_id, 0 as ex_termin
-                        FROM termine WHERE range_id IN (?) AND date BETWEEN ? AND ?
-                        UNION SELECT termin_id,range_id,date,end_time,mkdate,chdate,date_typ,content,metadate_id, 1 as ex_termin
-                        FROM ex_termine WHERE content <> '' AND range_id IN (?) AND date BETWEEN ? AND ?) as t
-                        LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id)
-                        LEFT JOIN seminar_user su ON su.Seminar_id=t.range_id "
-                    . "LEFT JOIN seminare s ON s.Seminar_id=t.range_id "
-                    . "LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE "
-                    . "(IFNULL(t.metadate_id,'') = '' OR t.metadate_id NOT IN (SELECT metadate_id FROM schedule_seminare WHERE user_id = ? AND visible = 0)) AND "
-                    . "user_id = ? GROUP BY termin_id ORDER BY NULL";
+            $query = 
+                    "SELECT $select_sem " .
+                    "FROM ( " .
+                        "SELECT termine.termin_id, range_id, date, end_time, mkdate, chdate, date_typ, content, metadate_id, 0 as ex_termin " .
+                        "FROM termine " .
+                            "LEFT JOIN termin_related_groups ON (termin_related_groups.termin_id = termine.termin_id) " .
+                        "WHERE termine.range_id IN (:seminar_ids) " .
+                            "AND (termin_related_groups.statusgruppe_id IS NULL OR termin_related_groups.statusgruppe_id IN (:statusgruppe_ids) ) " .
+                            "AND termine.date BETWEEN :start AND :end " .
+                        "UNION SELECT termin_id, range_id, date, end_time, mkdate, chdate, date_typ, content, metadate_id, 1 as ex_termin " .
+                        "FROM ex_termine " .
+                        "WHERE content <> '' " .
+                            "AND range_id IN (:seminar_ids) " .
+                            "AND date BETWEEN :start AND :end " .
+                    ") as t " .
+                        "LEFT JOIN themen_termine USING (termin_id) " .
+                        "LEFT JOIN themen as th USING (issue_id) " .
+                        "LEFT JOIN seminar_user su ON (su.Seminar_id=t.range_id) " .
+                        "LEFT JOIN seminare s ON (s.Seminar_id=t.range_id) " .
+                        "LEFT JOIN resources_assign ON (assign_user_id = termin_id) " .
+                    "WHERE " .
+                        "( " .
+                            "IFNULL(t.metadate_id,'') = '' " .
+                            "OR t.metadate_id NOT IN (SELECT metadate_id FROM schedule_seminare WHERE user_id = :user_id AND visible = 0) " .
+                        ") " .
+                        "AND user_id = :user_id " .
+                    "GROUP BY termin_id " .
+                    "ORDER BY NULL ";
             $db_sem = DBManager::get()->prepare($query);
             $db_sem->execute(array(
-                    $sem_ids ?: '',
-                    $start, $end,
-                    $sem_ids ?: '',
-                    $start, $end,
-                    $range_id,
-                    $range_id
+                'seminar_ids' => $sem_ids ?: '',
+                'statusgruppe_ids' => $my_groups,
+                'start' => $start, 
+                'end' => $end,
+                'user_id' => $range_id
             ));
 
             $this->result['semcal'] = $db_semcal->fetchAll(PDO::FETCH_ASSOC);

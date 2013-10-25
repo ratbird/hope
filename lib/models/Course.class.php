@@ -89,6 +89,10 @@ class Course extends SimpleORMap
                         'class_name' => 'CourseMember',
                         'on_delete' => 'delete',
                         'on_store' => 'store'),
+                'statusgruppen' => array(
+                        'class_name' => 'Statusgruppen',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
                 'admission_applicants' => array(
                         'class_name' => 'AdmissionApplication',
                         'on_delete' => 'delete',

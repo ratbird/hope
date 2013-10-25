@@ -600,7 +600,7 @@ class SimpleCollection extends StudipArrayObject
 
         $sorter = array();
         foreach (explode(',', $order) as $one) {
-            $sorter[] = array_map('trim', explode(' ', $one));
+            $sorter[] = array_values(array_filter(array_map('trim', explode(' ', $one))));
         }
 
         $func = function ($d1, $d2) use ($sorter, $sort_func, $sort_locale) {

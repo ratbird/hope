@@ -466,7 +466,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $calleach = function($m) use (&$ret, $callable) {
             $ret[] = $callable($m);
         };
-        self::findEachBySQL($calleach, $order, $params);
+        $class = get_called_class();
+        $record = new $class();
+        $db = DBManager::get();
+        if (count($record->pk) > 1) {
+            throw new Exception('not implemented yet');
+        }
+        $where = "`{$record->db_table}`.`{$record->pk[0]}` IN ("  . $db->quote($pks) . ") ";
+        self::findEachBySQL($calleach, $where . $order, $order_params);
         return $ret;
     }
 

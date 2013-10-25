@@ -111,6 +111,7 @@ class CalendarWriteriCalendar extends CalendarWriter
                 case 'EXPIRE':
                 case 'STUDIP_CATEGORY':
                 case 'STUDIP_AUTHOR_ID':
+                case 'STUDIP_EDITOR_ID':
                 case 'STUDIP_ID':
                 case 'BEGIN':
                 case 'END':

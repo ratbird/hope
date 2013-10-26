@@ -48,5 +48,13 @@ $author_url = $author->getURL();
         <div class="content">
             <?= BlubberPosting::format($posting['description']) ?>
         </div>
+        <div class="opengraph_area"><? 
+            if (count(OpenGraphURL::$tempURLStorage)) {
+                $og = new OpenGraphURL(OpenGraphURL::$tempURLStorage[0]);
+                if (!$og->isNew()) {
+                    echo $og->render();
+                } 
+            } 
+        ?></div>
     </div>
 </li>

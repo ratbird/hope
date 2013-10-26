@@ -167,6 +167,7 @@ STUDIP.Blubber = {
                 var new_version = jQuery(content);
                 jQuery("#posting_" + posting_id + " > .content_column .content").html(new_version.find(".content").html());
                 jQuery("#posting_" + posting_id + " > .content_column .additional_tags").html(new_version.find(".additional_tags").html());
+                jQuery("#posting_" + posting_id + " > .content_column .opengraph_area").html(new_version.find(".opengraph_area").html());
                 if (jQuery("#posting_" + posting_id + " > .reshares").length > 0) {
                     jQuery("#posting_" + posting_id + " > .reshares").html(new_version.find(".reshares").html());
                 }

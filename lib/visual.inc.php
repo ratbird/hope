@@ -280,7 +280,9 @@ function quotes_encode($description,$author)
 * @return       string
 */
 function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
+    OpenGraphURL::$tempURLStorage = array();
     $markup = new StudipFormat();
+    
     $what = preg_replace("/\r\n?/", "\n", $what);
     $what = htmlReady($what, $trim);
 

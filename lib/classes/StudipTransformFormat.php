@@ -23,9 +23,13 @@ class StudipTransformFormat extends TextFormat
         ,'nop' => array(
             'start'    => '\[nop\](.*?)\[\/nop\]',
             'callback' => 'StudipTransformFormat::markupNoFormat'
+        ),
+        'opengraph' => array(
+            'start'    => '(?<=\s|^|\>)(?:(?:\[([^\n\f\]]+?)\])?)(\w+?:\/\/.+?)(?=\s|$)',
+            'callback' => 'StudipTransformFormat::initOpenGraphURL'
         )
+        
     );
-
     /**
      * Returns the list of global Stud.IP markup rules as an array.
      * Each entry has the following attributes: 'start', 'end' and
@@ -91,5 +95,27 @@ class StudipTransformFormat extends TextFormat
     protected static function markupNoFormat($markup, $matches)
     {
         return '[nop]' . $markup->quote($matches[1]) . '[/nop]';
+    }
+    
+    /**
+     * 
+     * @param TextFormat $markup : markup object
+     * @param array $matches : matches of the regular expression beginning with the whole string
+     * @return string
+     */
+    protected static function initOpenGraphURL($markup, $matches) 
+    {
+        $url = $matches[2];
+        $intern = isLinkIntern($url);
+        $ogurl = new OpenGraphURL($url);
+        if (!$intern && ($ogurl->isNew() || $ogurl['last_update'] < time() - 86400)) {
+            $ogurl->fetch();
+            $ogurl['last_update'] = time();
+            $ogurl->store();
+        } elseif(!$ogurl->isNew()) {
+            $ogurl['chdate'] = time();
+            $ogurl->store();
+        }
+        return $matches[0];
     }
 }

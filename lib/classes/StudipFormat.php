@@ -560,6 +560,9 @@ class StudipFormat extends TextFormat
         $title = $matches[1] ? $matches[1] : $url;
         
         $intern = isLinkIntern($url);
+        if (!$intern) {
+            OpenGraphURL::$tempURLStorage[] = $url;
+        }
         
         $url = TransformInternalLinks($url);
 

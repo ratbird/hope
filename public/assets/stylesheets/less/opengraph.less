@@ -1,0 +1,48 @@
+.opengraph {
+    font-size: 0.8em; 
+    border: thin solid lightgrey; 
+    padding: 10px; 
+    margin-top: 10px;
+    opacity: 0.5;
+    min-height: 120px;
+    
+    &.video { opacity: 1; }
+    
+    &:hover {
+        opacity: 1;
+        transition: opacity;
+        transition-duration: 300ms;
+    }
+    .audio {
+        text-align: center;
+    }
+}
+a.opengraph_info {
+    display: block; 
+    word-break: normal !important;
+    color: black;
+}
+a.opengraph_info:hover {
+    color: black;
+}
+.opengraph_info_image {
+    transition: margin, padding, width, height;
+    transition-duration: 100ms;
+    float:left; 
+    width:100px; 
+    height:100px; 
+    margin: 10px;
+    margin-right: 20px;
+    padding: 0px;
+    background-size: 100% auto; 
+    background-position: center center; 
+    background-repeat: no-repeat;
+}
+.opengraph:hover .opengraph_info_image {
+    transition: margin, padding, width, height;
+    transition-duration: 100ms;
+    width: 120px;
+    height: 120px;
+    margin: 0px;
+    margin-right: 10px;
+}

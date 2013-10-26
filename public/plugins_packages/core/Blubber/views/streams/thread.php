@@ -155,6 +155,14 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
             <a href="<?= $link ?>"><?= htmlReady("#".$tag) ?></a>
             <? endif ?>
         <? endforeach ?></div>
+        <div class="opengraph_area"><? 
+            if (count(OpenGraphURL::$tempURLStorage)) {
+                $og = new OpenGraphURL(OpenGraphURL::$tempURLStorage[0]);
+                if (!$og->isNew()) {
+                    echo $og->render();
+                } 
+            } 
+        ?></div>
     </div>
     <ul class="comments">
     <? $postings = $thread->getChildren(0, 4) ?>

@@ -100,13 +100,27 @@ class OpenGraphURL extends SimpleORMap {
     
     public function getAudioFiles() {
         $files = array();
-        foreach ($this['data'] as $meta) {
-            foreach ($meta as $key => $value) {
-                if ($key === "og:audio") {
-                    $files[] = array($value);
+        if ($_SERVER['HTTPS'] === 'on') {
+            foreach ($this['data'] as $meta) {
+                foreach ($meta as $key => $value) {
+                    if ($key === "og:audio:secure_url") {
+                        $files[] = array($value);
+                    }
+                    if ($key === "og:audio:type") {
+                        $files[count($files) - 1][] = $value;
+                    }
                 }
-                if ($key === "og:audio:type") {
-                    $files[count($files) - 1][] = $value;
+            }
+        }
+        if (!count($files)) {
+            foreach ($this['data'] as $meta) {
+                foreach ($meta as $key => $value) {
+                    if ($key === "og:audio") {
+                        $files[] = array($value);
+                    }
+                    if ($key === "og:audio:type") {
+                        $files[count($files) - 1][] = $value;
+                    }
                 }
             }
         }
@@ -115,13 +129,27 @@ class OpenGraphURL extends SimpleORMap {
     
     public function getVideoFiles() {
         $files = array();
-        foreach ($this['data'] as $meta) {
-            foreach ($meta as $key => $value) {
-                if ($key === "og:video") {
-                    $files[] = array($value);
+        if ($_SERVER['HTTPS'] === 'on') {
+            foreach ($this['data'] as $meta) {
+                foreach ($meta as $key => $value) {
+                    if ($key === "og:video:secure_url") {
+                        $files[] = array($value);
+                    }
+                    if ($key === "og:video:type") {
+                        $files[count($files) - 1][] = $value;
+                    }
                 }
-                if ($key === "og:video:type") {
-                    $files[count($files) - 1][] = $value;
+            }
+        }
+        if (!count($files)) {
+            foreach ($this['data'] as $meta) {
+                foreach ($meta as $key => $value) {
+                    if ($key === "og:video") {
+                        $files[] = array($value);
+                    }
+                    if ($key === "og:video:type") {
+                        $files[count($files) - 1][] = $value;
+                    }
                 }
             }
         }

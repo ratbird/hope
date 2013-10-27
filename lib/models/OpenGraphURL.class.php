@@ -45,6 +45,11 @@ class OpenGraphURL extends SimpleORMap {
             $ogTags = array();
             $data = array();
             foreach ($metatags as $tag) {
+                if ($tag->hasAttribute('charset')) {
+                    $currentEncoding = $tag->getAttribute('charset');
+                }
+            }
+            foreach ($metatags as $tag) {
                 $key = false;
                 if ($tag->hasAttribute('property') &&
                         strpos($tag->getAttribute('property'), 'og:') === 0) {
@@ -60,9 +65,6 @@ class OpenGraphURL extends SimpleORMap {
                     $data[] = array('og:'.$key => $content);
                     $ogTags[$key] = $content;
                     $isOpenGraph = true;
-                }
-                if ($tag->hasAttribute('charset')) {
-                    $currentEncoding = $tag->getAttribute('charset');
                 }
             }
             foreach ($ogTags as $key => $tag) {

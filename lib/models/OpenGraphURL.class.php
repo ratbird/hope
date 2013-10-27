@@ -106,7 +106,7 @@ class OpenGraphURL extends SimpleORMap {
                     if ($key === "og:audio:secure_url") {
                         $files[] = array($value);
                     }
-                    if ($key === "og:audio:type") {
+                    if ($key === "og:audio:type" && count($files)) {
                         $files[count($files) - 1][] = $value;
                     }
                 }
@@ -135,7 +135,7 @@ class OpenGraphURL extends SimpleORMap {
                     if ($key === "og:video:secure_url") {
                         $files[] = array($value);
                     }
-                    if ($key === "og:video:type") {
+                    if ($key === "og:video:type" && count($files)) {
                         $files[count($files) - 1][] = $value;
                     }
                 }

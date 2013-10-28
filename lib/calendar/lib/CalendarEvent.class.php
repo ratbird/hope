@@ -408,10 +408,33 @@ class CalendarEvent extends Event
         $cat_event = explode(',', $this->properties['CATEGORIES']);
         foreach ($cat_event as $category) {
             if ($index = array_search(strtolower(trim($category)), $categories))
-                return++$index;
+                return ++$index;
         }
 
         return 0;
+    }
+    
+    /**
+     * Returns all categories (internal categories defined in
+     * config.inc.php $PERS_TERMIN_KAT and imported or user entered categories)
+     * as an array of category names.
+     * 
+     * @return array An array of category names.
+     */
+    function getAllCategories()
+    {
+        $user_categories = explode(',', $this->properties['CATEGORIES']);
+        $studip_category = $this->getCategory();
+        $categories =
+                array($GLOBALS['PERS_TERMIN_KAT'][$studip_category]['name']);
+        foreach ($user_categories as $user_category) {
+            $user_category = trim($user_category);
+            if (strtolower($GLOBALS['PERS_TERMIN_KAT'][$studip_category]['name'])
+                    != strtolower($user_category)) {
+                $categories[] = $user_category;
+            }
+        }
+        return $categories;
     }
 
     /**

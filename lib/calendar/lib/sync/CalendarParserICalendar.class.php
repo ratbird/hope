@@ -63,7 +63,7 @@ class CalendarParserICalendar extends CalendarParser
         $studip_categories = array();
         $i = 1;
         foreach ($PERS_TERMIN_KAT as $cat) {
-            $studip_categories[$cat['name']] = $i++;
+            $studip_categories[strtolower($cat['name'])] = $i++;
         }
 
         // Unfold any folded lines
@@ -134,12 +134,25 @@ class CalendarParserICalendar extends CalendarParser
                         case 'DESCRIPTION':
                         case 'SUMMARY':
                         case 'LOCATION':
-                        case 'CATEGORIES';
                             $value = preg_replace('/\\\\,/', ',', $value);
                             $value = preg_replace('/\\\\n/', "\n", $value);
                             $properties[$tag] = trim($value);
                             break;
 
+                        case 'CATEGORIES':
+                            $categories = array();
+                            $properties['STUDIP_CATEGORY'] = null;
+                            foreach (explode(',', $value) as $category) {
+                                if (!$studip_categories[strtolower($category)]) {
+                                    $categories[] = $category;
+                                } else if (!$properties['STUDIP_CATEGORY']) {
+                                    $properties['STUDIP_CATEGORY']
+                                            = $studip_categories[strtolower($category)];
+                                }
+                            }
+                            $properties[$tag] = implode(',', $categories);
+                            break;
+                        
                         // Date fields
                         case 'DCREATED': // vCalendar property name for "CREATED"
                             $tag = "CREATED";
@@ -302,10 +315,13 @@ class CalendarParserICalendar extends CalendarParser
                     $properties['CLASS'] = 'PRIVATE';
                 }
 
+                /*
                 if (isset($studip_categories[$properties['CATEGORIES']])) {
                     $properties['STUDIP_CATEGORY'] = $studip_categories[$properties['CATEGORIES']];
                     $properties['CATEGORIES'] = '';
                 }
+                 * 
+                 */
 
                 $this->components[] = $properties;
             } else {
@@ -610,7 +626,7 @@ class CalendarParserICalendar extends CalendarParser
         }
         return TRUE;
     }
-
+    
     function getClientIdentifier($data = NULL)
     {
         if (!is_null($data)) {

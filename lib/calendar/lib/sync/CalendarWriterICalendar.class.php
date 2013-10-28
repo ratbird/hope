@@ -109,7 +109,6 @@ class CalendarWriteriCalendar extends CalendarWriter
                 // not supported event properties
                 case 'SEMNAME':
                 case 'EXPIRE':
-                case 'STUDIP_CATEGORY':
                 case 'STUDIP_AUTHOR_ID':
                 case 'STUDIP_EDITOR_ID':
                 case 'STUDIP_ID':
@@ -130,8 +129,16 @@ class CalendarWriteriCalendar extends CalendarWriter
                     $value = str_replace($match_pattern_1, $replace_pattern_1, $event->getLocation());
                     break;
 
+                case 'STUDIP_CATEGORY':
+                    if ($event instanceof SeminarEvent) {
+                        $value = str_replace($match_pattern_1,
+                                $replace_pattern_1, $GLOBALS['TERMIN_TYP'][$value]['name']);
+                        // export studip category as iCalendar property "CATEGORIES"
+                        $name = 'CATEGORIES';
+                    }
+                    break;
                 case 'CATEGORIES':
-                    $value = str_replace($match_pattern_1, $replace_pattern_1, $event->getCategory());
+                    $value = $this->_exportCategories($event);
                     break;
 
                 // Date fields
@@ -504,6 +511,11 @@ class CalendarWriteriCalendar extends CalendarWriter
         }
 
         return implode(',', $exdates);
+    }
+    
+    function _exportCategories($event)
+    {
+        return implode(',' ,$event->getAllCategories());
     }
 
     /**

@@ -10,6 +10,7 @@
  */
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
+require_once 'lib/models/OpenGraphURL.class.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/SmileyFormat.php';

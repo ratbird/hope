@@ -820,7 +820,7 @@ class IndexController extends StudipController
                 case 1:  $msg = _('Sie haben diesen Bereich abonniert.');break;
                 default: $msg = _('Sie haben dieses Thema abonniert');break;
             }
-            $this->flash['messages'] = array('success' => $msg .' '. _('Jeder neue Beitrag wird Ihnen nun als Nachricht zugestellt.'));
+            $this->flash['messages'] = array('success' => $msg .' '. _('Sie werden nun über jeden neuen Beitrag informiert.'));
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
         }
     }

@@ -2,7 +2,7 @@
 
 class OpenGraphURL extends SimpleORMap {
     
-    static private $desiredEncoding = "Windows-1252";
+    static private $desiredEncoding = "WINDOWS-1252";
     static public $tempURLStorage = array();
     
     static public function setEncoding($encoding) {
@@ -28,7 +28,7 @@ class OpenGraphURL extends SimpleORMap {
         if (!get_config("OPENGRAPH_ENABLE")) {
             return;
         }
-        $desiredEncoding || $desiredEncoding = self::$desiredEncoding;
+        $desiredEncoding || $desiredEncoding = strtoupper(self::$desiredEncoding);
         $content = file_get_contents($this['url']);
         if ($content) {
             $currentEncoding = mb_detect_encoding($content);

@@ -486,6 +486,20 @@ class BlubberPosting extends SimpleORMap {
             $thread = $this->isThread() ? $this : BlubberPosting::find($this['root_id']);
             $thread['chdate'] = time();
             $thread->store();
+            if (!$thread['external_contact']) {
+                $url = URLHelper::getURL(
+                    "plugins.php/blubber/streams/thread/".$thread->getId(),
+                    array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null, 'reshared' => 1),
+                    true
+                );
+                PersonalNotifications::add(
+                    $thread['user_id'],
+                    $url,
+                    sprintf(_("%s hat Ihren Blubber weitergesagt"), get_fullname()),
+                    "posting_".$thread->getId(), 
+                    Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)
+                );
+            }
         }
         return $success;
     }

@@ -105,9 +105,9 @@ class ForumAbo {
             // create subject and content
             setTempLanguage(get_userid($user_id));
             
-            // check if user wants an email for selected messages only
+            // check if user wants an email for all or selected messages only
             $force_email = false;
-            if ($messaging->user_wants_email($user_id) == 3) {
+            if ($messaging->user_wants_email($user_id)) {
                 $force_email = true;
             }
             $parent_id = ForumEntry::getParentTopicId($topic['topic_id']);

@@ -19,15 +19,19 @@ class OpenGraphURL extends SimpleORMap {
         $this->data = (array) studip_utf8decode(json_decode($this->data));
     }
 
+
     public function fetch() {
         if (!get_config("OPENGRAPH_ENABLE")) {
             return;
         }
         $response = parse_link($this['url']);
-        if ($response['response_code'] == 200) {
+        if ($response['response_code'] == 200 && strpos($response['Content-Type'],'html') !== false) {
+            if (preg_match('/(?<=charset=)[^;]*/i', $response['Content-Type'], $match)) {
+                $currentEncoding = $match[0];
+            } else {
+                $currentEncoding = "ISO-8859-1";
+            }
             $content = file_get_contents($this['url']);
-            $currentEncoding = mb_detect_encoding($content);
-            $currentEncoding || $currentEncoding = "UTF-8";
             $content = mb_encode_numericentity($content, array(0x80, 0xffff, 0, 0xffff), $currentEncoding);
             $old_libxml_error = libxml_use_internal_errors(true);
             $doc = new DOMDocument();

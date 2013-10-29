@@ -345,7 +345,7 @@ class ForumEntry {
                 'content'         => formatReady(ForumEntry::parseEdit($data['content'], $data['anonymous'])),
                 'content_raw'     => ForumEntry::killEdit($data['content']),
                 'content_short'   => $desc_short,
-                'opengraph'       => OpenGraphURL::$tempURLStorage[0] ? OpenGraphURL::find(OpenGraphURL::$tempURLStorage[0])->render() : "",
+                'opengraph'       => ($og = OpenGraphURL::find(OpenGraphURL::$tempURLStorage[0])) ? $og->render() : "",
                 'chdate'          => $data['chdate'],
                 'mkdate'          => $data['mkdate'],
                 'owner_id'        => $data['user_id'],

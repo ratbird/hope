@@ -66,6 +66,7 @@
                 <?= ForumHelpers::highlight($post['content'], $highlight) ?>
             </span>
         </div>
+        <div class="opengraph_area"><?= $post['opengraph'] ?></div>
 
         <!-- Buttons for this Posting -->
         <div class="buttons">

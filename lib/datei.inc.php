@@ -205,7 +205,10 @@ function parse_link($link, $level=0) {
         $location_header = $parsed_link["Location"]
                         ?: $parsed_link["location"];
         if (in_array($parsed_link["response_code"], array(300,301,302,303,305,307)) && $location_header) {
-            parse_link($location_header, $level + 1);
+            if (strpos($location_header, 'http') !== 0) {
+                $location_header = $url_parts['scheme'] . '://' . $url_parts['host'] . '/' . $location_header;
+            }
+            $parsed_link = parse_link($location_header, $level + 1);
         }
         return $parsed_link;
     }

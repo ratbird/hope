@@ -95,58 +95,40 @@ class OpenGraphURL extends SimpleORMap {
     }
 
     public function getAudioFiles() {
-        $files = array();
-        if ($_SERVER['HTTPS'] === 'on') {
-            foreach ($this['data'] as $meta) {
-                foreach ($meta as $key => $value) {
-                    if ($key === "og:audio:secure_url") {
-                        $files[] = array($value);
-                    }
-                    if ($key === "og:audio:type" && count($files)) {
-                        $files[count($files) - 1][] = $value;
-                    }
-                }
-            }
-        }
-        if (!count($files)) {
-            foreach ($this['data'] as $meta) {
-                foreach ($meta as $key => $value) {
-                    if ($key === "og:audio") {
-                        $files[] = array($value);
-                    }
-                    if ($key === "og:audio:type") {
-                        $files[count($files) - 1][] = $value;
-                    }
-                }
-            }
-        }
-        return $files;
+        return $this->getMediaFiles("audio");
     }
 
     public function getVideoFiles() {
+        return $this->getMediaFiles("video");
+    }
+    
+    protected function getMediaFiles($type) {
         $files = array();
-        if ($_SERVER['HTTPS'] === 'on') {
-            foreach ($this['data'] as $meta) {
-                foreach ($meta as $key => $value) {
-                    if ($key === "og:video:secure_url") {
-                        $files[] = array($value);
-                    }
-                    if ($key === "og:video:type" && count($files)) {
-                        $files[count($files) - 1][] = $value;
-                    }
+        $media = array();
+        $secure_media = array();
+        $media_types = array();
+        foreach ($this['data'] as $meta) {
+            foreach ($meta as $key => $value) {
+                switch ($key) {
+                    case "og:$type":
+                        $media[] = $value;
+                        break;
+                    case "og:$type:secure_url":
+                        $secure_media[] = $value;
+                        break;
+                    case "og:$type:type":
+                        $media_types[] = $value;
+                        break;
                 }
             }
         }
-        if (!count($files)) {
-            foreach ($this['data'] as $meta) {
-                foreach ($meta as $key => $value) {
-                    if ($key === "og:video") {
-                        $files[] = array($value);
-                    }
-                    if ($key === "og:video:type") {
-                        $files[count($files) - 1][] = $value;
-                    }
-                }
+        if ($_SERVER['HTTPS'] === 'on' && count($secure_media)) {
+            foreach ($secure_media as $index => $url) {
+                $files[] = array($url, $media_types[$index]);
+            }
+        } else {
+            foreach ($media as $index => $url) {
+                $files[] = array($url, $media_types[$index]);
             }
         }
         return $files;

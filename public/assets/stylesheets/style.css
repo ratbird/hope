@@ -2915,6 +2915,9 @@ textarea.wiki-editor {
   margin-top: 10px;
   opacity: 0.5;
   min-height: 120px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 700px;
 }
 .opengraph.video {
   opacity: 1;

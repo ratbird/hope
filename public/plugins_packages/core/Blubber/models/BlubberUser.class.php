@@ -79,19 +79,23 @@ class BlubberUser extends User implements BlubberContact {
      */
     public function mention($posting) {
         $messaging = new messaging();
+        setTempLanguage($this->getId());
         $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/streams/thread/"
             . $posting['root_id']
             . ($posting['context_type'] === "course" ? '?cid='.$posting['Seminar_id'] : "");
+        $body = sprintf(
+            gettext("%s hat Sie in einem Blubber erwähnt. Zum Beantworten klicken auf Sie auf folgenen Link:\n\n%s\n"),
+            get_fullname(),
+            $url
+        );
+        $mention_text = _("Sie wurden erwähnt.");
+        restoreLanguage();
         $messaging->insert_message(
-            sprintf(
-                _("%s hat Sie in einem Blubber erwähnt. Zum Beantworten klicken auf Sie auf folgenen Link:\n\n%s\n"),
-                get_fullname(),
-                $url
-            ),
+            $body,
             $this['username'],
             $GLOBALS['user']->id,
             null, null, null, null,
-            _("Sie wurden erwähnt.")
+            $mention_text
         );
     }
 }

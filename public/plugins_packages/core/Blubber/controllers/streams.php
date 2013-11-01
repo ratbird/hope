@@ -371,6 +371,7 @@ class StreamsController extends ApplicationController {
             }
         } elseif(!$new_content) {
             if ($posting['user_id'] !== $GLOBALS['user']->id) {
+                setTempLanguage($posting['user_id']);
                 $messaging->insert_message(
                     sprintf(
                         _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum GELÖSCHT.\n\nDer alte Beitrag lautete:\n\n%s\n"),
@@ -381,6 +382,7 @@ class StreamsController extends ApplicationController {
                     null, null, null, null,
                     _("Ihr Posting wurde gelöscht.")
                 );
+                restoreLanguage();
             }
             $posting->delete();
         }
@@ -457,28 +459,33 @@ class StreamsController extends ApplicationController {
                 $output['posting_id'] = $posting->getId();
 
                 //Notifications:
-                if (class_exists("PersonalNotifications")) {
-                    $user_ids = array();
-                    if ($thread['user_id'] && $thread['user_id'] !== $GLOBALS['user']->id) {
-                        $user_ids[] = $thread['user_id'];
+                $user_ids = array();
+                if ($thread['user_id'] && $thread['user_id'] !== $GLOBALS['user']->id) {
+                    $user_ids[] = $thread['user_id'];
+                }
+                foreach ((array) $thread->getChildren() as $comment) {
+                    if ($comment['user_id'] && ($comment['user_id'] !== $GLOBALS['user']->id) && (!$comment['external_contact'])) {
+                        $user_ids[] = $comment['user_id'];
                     }
-                    foreach ((array) $thread->getChildren() as $comment) {
-                        if ($comment['user_id'] && ($comment['user_id'] !== $GLOBALS['user']->id) && (!$comment['external_contact'])) {
-                            $user_ids[] = $comment['user_id'];
-                        }
-                    }
-                    $user_ids = array_unique($user_ids);
+                }
+                $user_ids = array_unique($user_ids);
+                foreach ($user_ids as $user_id) {
+                    setTempLanguage($user_id);
+                    $avatar = Visibility::verify('picture', $GLOBALS['user']->id, $user_id)
+                            ? Avatar::getAvatar($GLOBALS['user']->id)
+                            : Avatar::getNobody();
                     PersonalNotifications::add(
-                        $user_ids,
+                        $user_id,
                         PluginEngine::getURL(
                             $this->plugin,
                             array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null),
                             "streams/thread/".$thread->getId()
                         ),
-                        get_fullname()." hat einen Kommentar geschrieben",
+                        sprintf(_("%s hat einen Kommentar geschrieben"), get_fullname()),
                         "posting_".$posting->getId(),
-                        Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)
+                        $avatar->getURL(Avatar::MEDIUM)
                     );
+                    restoreLanguage();
                 }
             }
             $this->render_json($output);

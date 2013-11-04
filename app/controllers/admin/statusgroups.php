@@ -297,11 +297,14 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * Inst statusgroup but could be extended
      */
     private function setType() {
-        if ($_SESSION['SessionSeminar'] && (Request::get('type') == null || get_object_type($_SESSION['SessionSeminar']) == Request::get('type'))) {
-            $types = $this->types();
-            $this->type = $types[get_object_type($_SESSION['SessionSeminar'])];
+        if (get_object_type($_SESSION['SessionSeminar'], array('inst', 'fak'))) {
+            $type = 'inst';
+        }
+        $types = $this->types();
+        if (!$type || Request::submitted('type') && $type != Request::get('type')) {
+            $this->redirect($types[Request::get('type')]['redirect']);
         } else {
-            $this->redirect('admin/statusgroups/selectInstitute');
+            $this->type = $types[$type];
         }
     }
 
@@ -337,6 +340,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 'edit' => function ($user_id) {
                     return $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessionSeminar']);
                 },
+                'redirect' => 'admin/statusgroups/selectInstitute',
                 'groups' => array(
                     'members' => array(
                         'name' => _('Mitglieder'),

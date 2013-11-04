@@ -19,7 +19,7 @@
             <col width="10%">
         </colgroup>
         <caption class="nodrag">
-            <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?><?= formatReady($group->position) ?>
+            <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?>
             <?= $group->getPlaces() ?> 
             <? if ($tutor): ?>
                 <? if ($group->selfassign): ?>

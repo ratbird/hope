@@ -159,7 +159,7 @@ function selectSem ($sem_id)
     closeObject();
 
     $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time,
-                     status, Lesezugriff, Schreibzugriff, Passwort
+                     status, Lesezugriff, Schreibzugriff, Passwort, aux_lock_rule_forced
               FROM seminare
               WHERE Seminar_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -172,6 +172,14 @@ function selectSem ($sem_id)
             $SemUserStatus = "nobody";
             if ($SemSecLevelRead > 0 || !get_config('ENABLE_FREE_ACCESS')) {
                 throw new AccessDeniedException(_("Keine Berechtigung."));
+            }
+        }
+        // if the aux data is forced for this seminar forward all user that havent made an input to this site
+        if ($row["aux_lock_rule_forced"] && !$perm->have_perm('root') && !$perm->have_studip_perm('tutor', $row["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/aux_input') {
+        $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
+        $statement->execute(array($GLOBALS['user']->id, $row["Seminar_id"]));
+        if (!$statement->rowCount()) {
+            header('location: ' . URLHelper::getURL('dispatch.php/course/members/aux_input'));
             }
         }
         $SessionSeminar = $row["Seminar_id"];

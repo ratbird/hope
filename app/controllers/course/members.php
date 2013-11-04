@@ -1,7 +1,7 @@
 <?php
 
 /*
- * MembersConrtoller
+ * MembersController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -70,9 +70,6 @@ class Course_MembersController extends AuthenticatedController
         PageLayout::setTitle(sprintf('%s - %s', $this->header_line, _("TeilnehmerInnen")));
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
-
-        Navigation::activateItem('/course/members');
-        Navigation::activateItem('/course/members/view');
 
         if (Request::isXhr()) {
             $this->set_layout(null);
@@ -154,7 +151,7 @@ class Course_MembersController extends AuthenticatedController
             $this->invisibles = count($filtered_members['autor']->findBy('visible', 'no')) + count($filtered_members['user']->findBy('visible', 'no'));
             $current_user_id = $this->user_id;
             $exclude_invisibles =
-                function ($user) use ($current_user_id) {
+                    function ($user) use ($current_user_id) {
                         return ($user['visible'] != 'no' || $user['user_id'] == $current_user_id);
                     };
             $filtered_members['autor'] = $filtered_members['autor']->filter($exclude_invisibles);
@@ -539,7 +536,6 @@ class Course_MembersController extends AuthenticatedController
         }
     }
 
-
     /**
      * Send Stud.IP-Message to selected users
      */
@@ -591,7 +587,6 @@ class Course_MembersController extends AuthenticatedController
                 }
             }
         }
-
 
         if (Request::get('csv_import')) {
             // remove duplicate users from csv-import
@@ -962,8 +957,8 @@ class Course_MembersController extends AuthenticatedController
 
         // create a usable array
         $users = array_filter($this->flash['users'], function ($user) {
-                        return $user;
-                    });
+                    return $user;
+                });
 
         if ($users) {
             $msgs = $this->members->insertAdmissionMember($users, 'autor', Request::get('consider_contingent'), $status == 'accepted');
@@ -1139,6 +1134,66 @@ class Course_MembersController extends AuthenticatedController
         }
 
         $this->redirect('course/members/index');
+    }
+
+    /**
+     * Displays all members of the course and their aux data
+     * @return int fake return to stop after redirect;
+     */
+    function aux_action($format = null) {
+
+        // Users get forwarded to aux_input
+        if (!($this->is_dozent || $this->is_tutor)) {
+            $this->redirect('course/members/aux_input');
+            return 0;
+        }
+
+        // fetch course and aux data
+        $course = new Course($_SESSION['SessionSeminar']);
+        if (Request::submitted('save')) {
+            foreach ($course->members->findBy('status', 'autor') as $member) {
+                $course->aux->updateMember($member, Request::getArray($member->user_id));
+            }
+        }       
+        if (Request::submitted('export')) {
+            $aux = $course->aux->getCourseData($course, true);
+            $doc = new exportDoc();
+            $table = $doc->add('table');
+            $table->header = $aux['head'];
+            $table->content = $aux['rows'];
+            $doc->export('xls');
+        } else {
+            $this->aux = $course->aux->getCourseData($course);
+        }
+    }
+
+    /**
+     * Aux input for users
+     */
+    function aux_input_action() {
+
+        // Activate the autoNavi otherwise we dont find this page in navi
+        Navigation::activateItem('/course/members/aux');
+
+        // Fetch datafields for the user
+        $course = new Course($_SESSION['SessionSeminar']);
+        $member = $course->members->findOneBy('user_id', $GLOBALS['user']->id);
+        $this->datafields = $course->aux->getMemberData($member);
+
+        // Update em if they got submittet
+        if (Request::submitted('save')) {
+            $datafields = SimpleCollection::createFromArray($this->datafields);
+            foreach (Request::getArray('aux') as $aux => $value) {
+                $datafield = $datafields->findOneBy('datafield_id', $aux);
+                if ($datafield) {
+                    $typed = $datafield->getTypedDatafield();
+                    if ($typed->isEditable()) {
+                        $typed->setValueFromSubmit($value);
+                        $typed->store();
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -11,7 +11,7 @@ use Studip\Button, Studip\LinkButton;
 
 <form action="<?= $controller->url_for('admin/specification/edit') ?><?= ($rule) ? '/' . $rule['lock_id'] : '' ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default">
+    <table class="nohover default">
     <caption>
         <? if($rule) : ?>
             <?= sprintf(_('Regel "%s" editieren'), htmlReady($rule['name'])) ?>
@@ -22,14 +22,14 @@ use Studip\Button, Studip\LinkButton;
     <tbody>
        <tr>
             <td><?= _("Name der Regel:") ?> <span style="color: red; font-size: 1.6em">*</span></td>
-            <td colspan="2">
+            <td>
                 <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>" style="width: 350px;" required="required">
             </td>
         </tr>
         <tr>
             <td><?= _("Beschreibung:") ?> </td>
-            <td colspan="2">
-                <textarea cols="60" rows="5" name="description"" style="width: 350px;"><?= htmlReady(Request::get('description', $rule['description'])) ?></textarea>
+            <td>
+                <textarea cols="60" rows="5" name="description" style="width: 350px;"><?= htmlReady(Request::get('description', $rule['description'])) ?></textarea>
             </td>
         </tr>
     </tbody>

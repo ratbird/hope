@@ -49,6 +49,12 @@ class Statusgruppen extends SimpleORMap {
         }
     }
     
+    /**
+     * Finds all statusgroups by a course id
+     * 
+     * @param string The course id
+     * @return array Statusgroups
+     */
     static public function findBySeminar_id ($course_id) {
         return self::findBySQL("range_id = ?", array($course_id));
     }

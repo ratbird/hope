@@ -11,31 +11,6 @@
     <?= _('Es wurden noch keine Gruppen angelegt') ?>
 <? endif; ?>
 <? foreach ($unfolded as $group): ?>
-    <div class="edit_dialog" id="edit_<?= $group->id ?>" title="<?= formatReady($group->name) ?> ">
-        <form action="" id="form_<?= $group->id ?>" method="POST">
-            <input type="hidden" name="id" value="<?= $group->id ?>">
-            <label class="caption"><?= _('Gruppenname') ?>
-                <input name="name" class="groupname" type="text" size="30" placeholder="<?= _('Mitarbeiter(in)') ?>" value="<?= formatReady($group->name) ?>" >
-            </label>
-            <label class="caption"><?= _('Weiblicher Name') ?>
-                <input name="name_w" type="text" size="30" placeholder="<?= _('Mitarbeiterin') ?>" value="<?= formatReady($group->name_w) ?>" >
-            </label>
-            <label class="caption"><?= _('Männlicher Name') ?>
-                <input name="name_m" type="text" size="30" placeholder="<?= _('Mitarbeiter') ?>" value="<?= formatReady($group->name_m) ?>" >
-            </label>
-            <label class="caption"><?= _('Größe') ?>
-                <input name="size" type="text" size="30" placeholder="<?= _('Unbegrenzt') ?>" value="<?= formatReady($group->size) ?>" >
-            </label>
-            <label class="caption"><?= _('Selbsteintrag') ?>
-                <input name="selfassign" type="checkbox" value="1" <?= $group->selfassign ? "CHECKED" : "" ?>>
-            </label>
-            <label class="caption"><?= _('Gruppe löschen') ?>
-                <input name="delete" type="checkbox" value="1" >
-            </label>
-        </form>
-    </div>
-
-
     <table id="<?= $group->id ?>" class="default moveable dropable">
         <colgroup>
             <col width="1">
@@ -44,7 +19,7 @@
             <col width="10%">
         </colgroup>
         <caption class="nodrag">
-            <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?>
+            <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?><?= formatReady($group->position) ?>
             <?= $group->getPlaces() ?> 
             <? if ($tutor): ?>
                 <? if ($group->selfassign): ?>
@@ -52,9 +27,8 @@
                 <? else: ?> 
                     <?= Assets::img("icons/16/grey/lock-locked.png") ?>
                 <? endif; ?>
-                <a class="edit">
+                <a class='modal' title="<?= _('Gruppe ändern') ?>" href="<?= $controller->url_for("admin/statusgroups/editGroup/{$group->id}") ?>">
                     <?= Assets::img("icons/16/blue/admin.png") ?>
-
                 </a>
             <? else: ?>
                 <? if ($group->isMember() && $group->selfassign): ?>
@@ -81,54 +55,10 @@
             </tr>
         </thead>
         <tbody>
-            <?= $this->render_partial("admin/statusgroups/move.php", array('users' => $group->members)) ?>
+            <?= $this->render_partial("admin/statusgroups/_members.php", array('group' => $group)) ?>
         </tbody>
         <tfoot>
         </tfoot>
     </table>
 <? endforeach; ?>
-
-<!-- Dialog for new groups -->
-
-<div class="edit_dialog" id="edit_newgroup" title="<?= _('Neue Gruppe anlegen') ?>">
-    <form action="" id="form_newgroup" method="POST">
-        <input type="hidden" name="id" value="newgroup">
-        <label class="caption"><?= _('Gruppenname') ?>
-            <input name="name" class="groupname" type="text" size="30" placeholder="<?= _('Mitarbeiter(in)') ?>" >
-        </label>
-        <label class="caption"><?= _('Weiblicher Name') ?>
-            <input name="name_w" type="text" size="30" placeholder="<?= _('Mitarbeiterin') ?>" >
-        </label>
-        <label class="caption"><?= _('Männlicher Name') ?>
-            <input name="name_m" type="text" size="30" placeholder="<?= _('Mitarbeiter') ?>" >
-        </label>
-        <label class="caption"><?= _('Größe') ?>
-            <input name="size" type="text" size="30" placeholder="<?= _('Unbegrenzt') ?>" >
-        </label>
-        <label class="caption"><?= _('Selbsteintrag') ?>
-            <input name="selfassign" type="checkbox" >
-        </label>
-    </form>
-</div>
-
-<!-- Dialog for ordering -->
-
-<div class="order_dialog" id="edit_order" title="<?= _('Gruppenreihenfolge ändern') ?>">
-    <div class="dd">
-        <? createLi($groups) ?>
-    </div>
-</div>
-
-<?
-
-function createLi($item) {
-    echo '<ol class="dd-list">';
-    foreach ($item as $group) {
-        echo '<li class="dd-item" data-id="' . $group->id . '">
-        <div class="dd-handle">' . formatReady($group->name) . '</div>';
-        createLi($group->children);
-        echo '</li>';
-    }
-    echo '</ol>';
-}
-?>
+<?= $this->render_partial("admin/statusgroups/_javascript.php") ?>

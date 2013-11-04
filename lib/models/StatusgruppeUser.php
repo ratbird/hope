@@ -19,9 +19,15 @@
 class StatusgruppeUser extends SimpleORMap {
 
     protected $db_table = "statusgruppe_user";
-    protected $belongs_to = array('group' => array('class_name' => 'Statusgruppen',
+    protected $belongs_to = array(
+        'group' => array(
+            'class_name' => 'Statusgruppen',
             'foreign_key' => 'range_id'
-    ));
+        ),
+        'user' => array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id')
+    );
 
     /**
      * Prevents invisible users from being displayed

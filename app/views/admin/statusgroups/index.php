@@ -22,10 +22,12 @@
             <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?>
             <?= $group->getPlaces() ?> 
             <? if ($tutor): ?>
-                <? if ($group->selfassign): ?>
-                    <?= Assets::img("icons/16/grey/lock-unlocked.png") ?>
-                <? else: ?> 
-                    <?= Assets::img("icons/16/grey/lock-locked.png") ?>
+                <? if ($type['needs_self_assign']): ?>
+                    <? if ($group->selfassign): ?>
+                        <?= Assets::img("icons/16/grey/lock-unlocked.png") ?>
+                    <? else: ?> 
+                        <?= Assets::img("icons/16/grey/lock-locked.png") ?>
+                    <? endif; ?>
                 <? endif; ?>
                 <a class='modal' title="<?= _('Gruppe ändern') ?>" href="<?= $controller->url_for("admin/statusgroups/editGroup/{$group->id}") ?>">
                     <?= Assets::img("icons/16/blue/admin.png") ?>

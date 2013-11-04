@@ -337,6 +337,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                     return true;
                 },
                 'needs_size' => false,
+                'needs_self_assign' => false,        
                 'edit' => function ($user_id) {
                     return $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessionSeminar']);
                 },

@@ -9,19 +9,21 @@
     <label class="caption"><?= _('Männlicher Name') ?>
         <input name="name_m" type="text" size="50" placeholder="<?= _('Mitarbeiter') ?>" value="<?= formatReady($group->name_m) ?>" >
     </label>
-    <? if($type['needs_size']): ?>
-    <label class="caption"><?= _('Größe') ?>
-        <input name="size" type="text" size="10" placeholder="<?= _('Unbegrenzt') ?>" value="<?= formatReady($group->size) ?>" >
-    </label>
+    <? if ($type['needs_size']): ?>
+        <label class="caption"><?= _('Größe') ?>
+            <input name="size" type="text" size="10" placeholder="<?= _('Unbegrenzt') ?>" value="<?= formatReady($group->size) ?>" >
+        </label>
     <? endif; ?>
     <? foreach ($group->getDatafields() as $field): ?>
         <label class="caption"><?= $field->getName() ?>
             <?= $field->getHTML('datafields') ?>
         </label>
     <? endforeach; ?>
-    <label class="caption"><?= _('Selbsteintrag') ?>
-        <input name="selfassign" type="checkbox" value="1" <?= $group->selfassign ? "CHECKED" : "" ?>>
-    </label>
+    <? if ($type['needs_self_assign']): ?>
+        <label class="caption"><?= _('Selbsteintrag') ?>
+            <input name="selfassign" type="checkbox" value="1" <?= $group->selfassign ? "CHECKED" : "" ?>>
+        </label>
+    <? endif; ?>
     <label class="caption"><?= _('Gruppe löschen') ?>
         <input name="delete" type="checkbox" value="1" >
     </label>

@@ -174,7 +174,7 @@ class Statusgruppen extends SimpleORMap {
      * @return string displaystring
      */
     public function getPlaces() {
-        return $this->size ? "( " . min(count($this->getUsers()), $this->size) . " / {$this->size} )" : "";
+        return $this->size ? "( " . min(count($this->members), $this->size) . " / {$this->size} )" : "";
     }
 
     /**

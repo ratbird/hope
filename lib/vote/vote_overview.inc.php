@@ -38,13 +38,10 @@ include_once("lib/vote/view/vote_overview.lib.php");
 /*                                                                            *
 /* ************************************************************************* */
 $voteaction                                 = Request::option('voteaction');
-$showrangeID                                = Request::option('rangeID');
-    if(empty($showrangeID)) $showrangeID    = Request::option('cid');
-    if(empty($showrangeID)) $showrangeID    = Request::option('showrangeID');
-    //<workaround author='anoack'>
-    if( empty($showrangeID)
-        && isset($SessSemName[1]))
-                            $showrangeID    = $SessSemName[1];
+$showrangeID                                = Request::username('showrangeID');
+if(empty($showrangeID)) $showrangeID        = Request::username('rangeID');
+if(empty($showrangeID)) $showrangeID        = $SessionSeminar;
+
 $voteID                                     = Request::option('voteID');
 $openID                                     = Request::option('openID');
     if(empty($openID))          $openID     = Request::option('voteopenID');
@@ -94,7 +91,7 @@ if (($showrangeID) && ($voteaction != "search")){
 }
 elseif ($voteaction != "search"){
     //TODO: MessageBox verwenden
-    $safeguard = printSafeguard("ausruf",_("Es werden Umfragen und Tests Ihrer Profilseite angezeigt."));
+    //$safeguard = printSafeguard("ausruf",_("Es werden Umfragen und Tests Ihrer Profilseite angezeigt."));
     $showrangeID = get_username ($userID);
     }
 
@@ -167,7 +164,8 @@ printSelections($range,$searchRange,$safeguard);
 
 // starting waiting votes
 $voteDB = new VoteDB();
-$voteDB->startWaitingVotes ($showrangeID);
+
+$voteDB->startWaitingVotes (get_username($userID) == $showrangeID ? $userID : $showrangeID);
     if ($voteDB->isError ())
         printSafeguard("ausruf",_("Fehler beim Starten der wartenden Umfragen und Tests."));
 

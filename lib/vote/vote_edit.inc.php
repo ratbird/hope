@@ -60,7 +60,7 @@ if (isset($voteID)) {
    $vote = new Vote ($voteID);
    $rangeID = $vote->getRangeID ();
 }
-if( !$rangeID ) $rangeID = Request::option("rangeID");
+if( !$rangeID ) $rangeID = Request::username("rangeID");
 
 if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) ||
         $auth->auth["uname"] == $rangeID || (isDeputyEditAboutActivated() &&
@@ -102,14 +102,14 @@ if( ! $referer ) {
     $referer = removeArgFromURL( $referer, "voteaction" );
     $referer = removeArgFromURL( $referer, "voteID" );
     $referer = removeArgFromURL( $referer, "showrangeID" );
-    if( Request::option('rangeID') )
-    $referer .= "&showrangeID=". Request::option('rangeID');
-    elseif(  Request::option('showrangeID') )
+    if( Request::username('rangeID') )
+    $referer .= "&showrangeID=". Request::username('rangeID');
+    elseif(  Request::username('showrangeID') )
     $referer .= "&showrangeID=".$showrangeID;
 }
 
 $voteID = Request::option('voteID');
-$rangeID = Request::option('rangeID');
+$rangeID = Request::username('rangeID');
 $type = Request::option('type');
 if( empty($type) ) $type = "vote";
 $makeACopy = Request::option('makecopy');
@@ -156,19 +156,6 @@ $co_visibility     = Request::get('co_visibility');
 $anonymous         = Request::get('anonymous');
 $namesVisibility   = Request::get('namesVisibility');
 $changeable        = Request::get('changeable');
-
-// undo damage done by magic quotes
-if (isset($title)) {
-    $title = stripslashes($title);
-}
-if (isset($question)) {
-    $question = stripslashes($question);
-}
-if (is_array($answers)) {
-    for ($index = 0; $index < count($answers); ++$index) {
-        $answers[$index]['text'] = stripslashes($answers[$index]['text']);
-    }
-}
 
 if( empty ($changeable) && !empty($title) )
      $changeable = NO;

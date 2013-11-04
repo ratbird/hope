@@ -99,7 +99,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    $link .= (Request::option('openAllVotes')) ? "&openAllVotes=".YES : "";
 
    $link .= (Request::option('openStoppedVotes')) ? "&openStoppedVotes=".YES : "";
-   $link .= (Request::option('showrangeID')) ? "&showrangeID=".Request::option('showrangeID') : "";
+   $link .= (Request::username('showrangeID')) ? "&showrangeID=".Request::username('showrangeID') : "";
    $link .= ($isPreview) ? "&previewResults=".YES : "";
    $link .= (Request::username('username')) ? "&username=".Request::username('username') : "";
 
@@ -133,14 +133,14 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
        ! Request::submitted('changeAnswerButton') &&
        ! $vote->isError()
        ) {
-      $html .= Button::create(_('Antwort ändern'), 'changeAnswerButton', array('title' => _('Hier können Sie Ihre Antwort nochmal ändern.')));       
+      $html .= Button::create(_('Antwort ändern'), 'changeAnswerButton', array('title' => _('Hier können Sie Ihre Antwort nochmal ändern.')));
 #      $html_extra = "<br>";
    }
    /* ---------------------------------------------------------------------- */
 
    /* Backbutton ----------------------------------------------------------- */
    elseif ($isPreview) {
-      $html .= Button::create('<< ' . _('Zurück'), 'escapePreviewButton', array('title' => _('Zurück zum Abstimmen.'))); 
+      $html .= Button::create('<< ' . _('Zurück'), 'escapePreviewButton', array('title' => _('Zurück zum Abstimmen.')));
 #      $html_extra = "<br>";
    }
    /* ---------------------------------------------------------------------- */
@@ -201,8 +201,8 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    if ($haveFullPerm) {
       if (!$vote->isStopped())
      $html .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL(VOTE_FILE_ADMIN
-                                    . "?page=edit&type=" . $vote->x_instanceof() 
-                                    . "&voteID=".$vote->getObjectID()), 
+                                    . "?page=edit&type=" . $vote->x_instanceof()
+                                    . "&voteID=".$vote->getObjectID()),
                                     array('title' => ( $vote->x_instanceof() == INSTANCEOF_TEST
                                             ? _('Diesen Test bearbeiten.')
                                             : _('Diese Umfrage bearbeiten.'))));
@@ -217,9 +217,9 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
       $html .= LinkButton::create(_('Löschen'), URLHelper::getURL(VOTE_FILE_ADMIN."?page=overview&voteID="
                                     . $vote->getObjectID () . "&voteaction=delete_request&referer=1&showrangeID="
                                     . $vote->getRangeID()),
-                                    array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST 
-                                            ? _('Diesen Test löschen.') 
-                                            : _('Diese Umfrage löschen.'))));    
+                                    array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST
+                                            ? _('Diesen Test löschen.')
+                                            : _('Diese Umfrage löschen.'))));
       $html .= "<br>";
    }
    /* ---------------------------------------------------------------------- */

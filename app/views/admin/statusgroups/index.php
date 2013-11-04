@@ -20,7 +20,9 @@
         </colgroup>
         <caption class="nodrag">
             <?= $numbers[$group->id] ?> <?= formatReady($group->name) ?>
-            <?= $group->getPlaces() ?> 
+            <? if ($type['needs_size']): ?>
+                <?= $group->getPlaces() ?> 
+            <? endif; ?>
             <? if ($tutor): ?>
                 <? if ($type['needs_self_assign']): ?>
                     <? if ($group->selfassign): ?>
@@ -33,15 +35,17 @@
                     <?= Assets::img("icons/16/blue/admin.png") ?>
                 </a>
             <? else: ?>
-                <? if ($group->isMember() && $group->selfassign): ?>
-                    <a href="<?= $group->path['leave'] ?>">
-                        <?= Assets::img("icons/16/blue/door-leave.png") ?>
-                    </a>
-                <? endif; ?>
-                <? if ($group->userMayJoin($user_id)): ?>
-                    <a href="<?= $group->path['join'] ?>">
-                        <?= Assets::img("icons/16/blue/door-enter.png") ?>
-                    </a>
+                <? if ($type['needs_self_assign']): ?>
+                    <? if ($group->isMember() && $group->selfassign): ?>
+                        <a href="<?= $group->path['leave'] ?>">
+                            <?= Assets::img("icons/16/blue/door-leave.png") ?>
+                        </a>
+                    <? endif; ?>
+                    <? if ($group->userMayJoin($user_id)): ?>
+                        <a href="<?= $group->path['join'] ?>">
+                            <?= Assets::img("icons/16/blue/door-enter.png") ?>
+                        </a>
+                    <? endif; ?>
                 <? endif; ?>
             <? endif; ?>
         </caption>

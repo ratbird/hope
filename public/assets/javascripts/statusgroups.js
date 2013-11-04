@@ -192,7 +192,7 @@ function afterReload() {
                 data: {group: table.id, user: row.id, pos: newposition},
                 async: false
             }).done(function(data) {
-                table.tBodies[0].innerHTML = unescape(data);
+                //table.tBodies[0].innerHTML = data;
                 afterReload();
             });
         }

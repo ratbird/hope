@@ -81,20 +81,7 @@
             </tr>
         </thead>
         <tbody>
-            <? foreach ($group->members->orderBy('position') as $user): ?>
-                <tr class="drag" id="<?= $user->user_id ?>" style="<?= $group->isMember($user->user_id) ? "" : "color: #aaaaaa;" ?>">
-                    <td><?= $user->position + 1 ?></td>
-                    <td><?= $user->avatar() ?></td>
-                    <td><?= $user->name() ?></td>
-                    <td style="text-align: right">
-                        <? if ($tutor): ?>
-                            <a class="delete" href="javascript: void()">
-                                <?= Assets::img("icons/16/blue/trash.png") ?>
-                            </a>
-                        <? endif; ?>
-                    </td>
-                </tr>
-            <? endforeach; ?>
+            <?= $this->render_partial("admin/statusgroups/move.php", array('users' => $group->members)) ?>
         </tbody>
         <tfoot>
         </tfoot>

@@ -264,6 +264,14 @@ class VoteDB extends StudipObject
         $query="DELETE FROM vote WHERE vote_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($voteID));
+        
+        // If the user has no more votes delete his visibility setting
+        $query = "SELECT 1 FROM vote WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($GLOBALS['user']->id));
+        if (!$statement->rowCount()) {
+            Visibility::removePrivacySetting('votes');
+        }
    }
 
     /**
@@ -671,6 +679,9 @@ class VoteDB extends StudipObject
                 $resultvisibility, $namesvisibility,
                 $multiplechoice, $anonymous, $changeable, $co_visibility,
             ));
+            
+            // Add visibility for votes
+            Visibility::addPrivacySetting(_('Umfragen'), 'votes', 'commondata');
 
             if (!$statement->rowCount()) {
                 $error = $statement->errorInfo();

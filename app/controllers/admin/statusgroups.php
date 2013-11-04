@@ -61,6 +61,11 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      */
     public function editGroup_action($group_id = null) {
         $this->group = new Statusgruppen($group_id);
+        
+        // We have to do this for the users without javascript! yay!
+        $this->groups = Statusgruppen::findByRange_id($_SESSION['SessionSeminar']);
+        $this->unfolded = array();
+        $this->unfoldGroup($this->unfolded, $this->groups);
     }
 
     /**
@@ -271,6 +276,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $group->name_w = Request::get('name_w');
                 $group->name_m = Request::get('name_m');
                 $group->size = Request::get('size');
+                $group->range_id = Request::get('range_id') ? : $group->range_id;
+                $group->position = Request::get('position') ? : $group->position;
                 $group->selfassign = Request::get('selfassign') ? 1 : 0;
                 $group->store();
                 $group->setDatafields(Request::getArray('datafields') ? : array());

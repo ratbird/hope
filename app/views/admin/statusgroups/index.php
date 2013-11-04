@@ -1,5 +1,5 @@
 <style>
-    .person {
+    .person, .dd {
         cursor: move;
     }
 </style>

@@ -8,6 +8,8 @@
                 autoOpen: false,
                 autoResize: true,
                 resizable: false,
+                position: 'center',
+                close: function() { $(this).remove() },
                 width:'auto',
                 title: $(this).attr('title'),
                 modal: true

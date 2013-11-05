@@ -644,9 +644,28 @@ class MetaDate
 
         // This variable is used to check if a given singledate shall be created in a bi-weekly seminar.
         if ($start_woche == -1) $start_woche = 0;
-        $odd_or_even = 1 - ($start_woche % 2);
 
         $week = 0;
+        
+        // get the first presence date after sem_begin
+        $day_of_week = date('l', strtotime('Sunday + ' . $this->cycles[$metadate_id]->day . ' days'));
+        $stamp = strtotime('this '. $day_of_week, $sem_begin);
+        
+        $start_time = mktime (
+                (int)$this->cycles[$metadate_id]->start_stunde,     // Hour
+                (int)$this->cycles[$metadate_id]->start_minute,     // Minute
+                0,                                                  // Second
+                date("n", $stamp),                                  // Month
+                date("j", $stamp),                                  // Day
+                date("Y", $stamp));                                 // Year
+
+        $end_time = mktime (
+                (int)$this->cycles[$metadate_id]->end_stunde,       // Hour
+                (int)$this->cycles[$metadate_id]->end_minute,       // Minute
+                0,                                                  // Second
+                date("n", $stamp),                                  // Month
+                date("j", $stamp),                                  // Day
+                date("Y", $stamp));                                 // Year
 
         // loop through all possible singledates for this regular time-entry
         do {
@@ -654,22 +673,14 @@ class MetaDate
             // if dateExists is true, the singledate will not be created. Default is of course to create the singledate
             $dateExists = false;
 
-            // (TODO: This code an the code below should be perfomance optimized. Many follow up check's are unecessary, if $dateExists gets true.)
-
-
             // do not create singledates, if they are earlier then the chosen start-week
             if ($start_woche > $week) $dateExists = true;
 
             // bi-weekly check
             if ($turnus > 0 && ($week - $start_woche) > 0 && (($week - $start_woche) % ($turnus + 1)) ) {
                 $dateExists = true;
-            }
-            //create timestamps for the new singledate
-            $start_time = mktime ((int)$this->cycles[$metadate_id]->start_stunde, (int)$this->cycles[$metadate_id]->start_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
-
-            $end_time = mktime ((int)$this->cycles[$metadate_id]->end_stunde, (int)$this->cycles[$metadate_id]->end_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
-
-
+            }            
+            
             /*
              * We only create dates, which do not already exist, so we do not overwrite existing dates.
              *
@@ -697,14 +708,9 @@ class MetaDate
                 }
             }
 
-            if (!($end_time < $sem_end)) {
-                $dateExists = true;
-            }
-
             if ($start_time < $startAfterTimeStamp) {
                 $dateExists = true;
             }
-
 
             if (!$dateExists) {
 
@@ -733,11 +739,14 @@ class MetaDate
                 $dates[$termin->getTerminID()] = $termin;
             }
 
-            //inc the week
+            //inc the week, create timestamps for the next singledate
+            $start_time = strtotime('+1 week', $start_time);
+            $end_time = strtotime('+1 week', $end_time);
+
             $week++;
 
         } while ($end_time < $sem_end);
-
+        
         return array('dates' => $dates, 'dates_to_delete' => $dates_to_delete);
     }
 

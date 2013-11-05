@@ -1,14 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.6
+-- version 4.0.8
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 25. Apr 2013 um 11:35
--- Server Version: 5.1.69-0ubuntu0.10.04.1
--- PHP-Version: 5.3.2-1ubuntu4.19
+-- Erstellungszeit: 05. Nov 2013 um 16:01
+-- Server Version: 5.5.34-32.0
+-- PHP-Version: 5.3.10-1ubuntu3.8
 
 --
--- Datenbank: `studip_24`
+-- Datenbank: `studip_25`
 --
 
 -- --------------------------------------------------------
@@ -176,7 +176,8 @@ DROP TABLE IF EXISTS `auto_insert_sem`;
 CREATE TABLE IF NOT EXISTS `auto_insert_sem` (
   `seminar_id` char(32) NOT NULL,
   `status` enum('autor','tutor','dozent') NOT NULL DEFAULT 'autor',
-  PRIMARY KEY (`seminar_id`,`status`)
+  `domain_id` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`seminar_id`,`status`,`domain_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -254,12 +255,12 @@ CREATE TABLE IF NOT EXISTS `blubber` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `external_contact` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`topic_id`),
-  KEY `root_id` (`root_id`),
-  KEY `Seminar_id` (`Seminar_id`),
   KEY `parent_id` (`parent_id`),
   KEY `chdate` (`chdate`),
   KEY `mkdate` (`mkdate`),
-  KEY `user_id` (`user_id`,`Seminar_id`)
+  KEY `user_id` (`user_id`,`Seminar_id`),
+  KEY `root_id` (`root_id`,`mkdate`),
+  KEY `Seminar_id` (`Seminar_id`,`context_type`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -327,6 +328,48 @@ CREATE TABLE IF NOT EXISTS `blubber_mentions` (
   UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`),
   KEY `topic_id` (`topic_id`),
   KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_streams`
+--
+
+DROP TABLE IF EXISTS `blubber_streams`;
+CREATE TABLE IF NOT EXISTS `blubber_streams` (
+  `stream_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `sort` enum('activity','age') NOT NULL DEFAULT 'age',
+  `defaultstream` tinyint(2) NOT NULL DEFAULT '0',
+  `pool_courses` text,
+  `pool_groups` text,
+  `pool_hashtags` text,
+  `filter_type` text,
+  `filter_courses` text,
+  `filter_groups` text,
+  `filter_users` text,
+  `filter_hashtags` text,
+  `filter_nohashtags` text,
+  `chdate` bigint(20) NOT NULL,
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`stream_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_tags`
+--
+
+DROP TABLE IF EXISTS `blubber_tags`;
+CREATE TABLE IF NOT EXISTS `blubber_tags` (
+  `topic_id` varchar(32) NOT NULL,
+  `tag` varchar(128) NOT NULL,
+  PRIMARY KEY (`topic_id`,`tag`),
+  KEY `tag` (`tag`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1466,7 +1509,7 @@ CREATE TABLE IF NOT EXISTS `personal_notifications` (
   `html_id` varchar(64) NOT NULL DEFAULT '',
   `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`personal_notification_id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -1500,7 +1543,7 @@ CREATE TABLE IF NOT EXISTS `plugins` (
   `navigationpos` int(10) unsigned NOT NULL DEFAULT '0',
   `dependentonid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`pluginid`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1778,7 +1821,7 @@ CREATE TABLE IF NOT EXISTS `resources_temporary_events` (
   `end` int(20) NOT NULL DEFAULT '0',
   `mkdate` int(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`event_id`),
-  KEY `resource_id` (`resource_id`, `begin`),
+  KEY `resource_id` (`resource_id`,`begin`),
   KEY `assign_object_id` (`assign_id`,`resource_id`)
 ) ENGINE=MyISAM;
 
@@ -1934,6 +1977,7 @@ CREATE TABLE IF NOT EXISTS `scm` (
   `content` text,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
+  `position` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`scm_id`),
   KEY `chdate` (`chdate`),
   KEY `range_id` (`range_id`)
@@ -2169,7 +2213,7 @@ CREATE TABLE IF NOT EXISTS `sem_classes` (
   `chdate` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2206,7 +2250,7 @@ CREATE TABLE IF NOT EXISTS `sem_types` (
   `mkdate` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2237,7 +2281,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_details` (
   `name` varchar(255) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`detail_id`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2251,7 +2295,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
   `position` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`rubric_id`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2422,7 +2466,7 @@ CREATE TABLE IF NOT EXISTS `stm_element_types` (
   `abbrev` varchar(5) DEFAULT NULL COMMENT 'Kurzname',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT 'Name',
   PRIMARY KEY (`element_type_id`,`lang_id`)
-) ENGINE=MyISAM COMMENT='Typen von möglichen Bestandteilen eines abstrakten Moduls';
+) ENGINE=MyISAM COMMENT='Typen von müglichen Bestandteilen eines abstrakten Moduls';
 
 -- --------------------------------------------------------
 
@@ -2744,6 +2788,28 @@ CREATE TABLE IF NOT EXISTS `user_visibility` (
   `default_homepage_visibility` int(11) NOT NULL DEFAULT '0',
   `mkdate` int(20) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user_visibility_settings`
+--
+
+DROP TABLE IF EXISTS `user_visibility_settings`;
+CREATE TABLE IF NOT EXISTS `user_visibility_settings` (
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  `visibilityid` int(32) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(32) NOT NULL,
+  `category` varchar(128) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `state` int(2) DEFAULT NULL,
+  `plugin` int(11) DEFAULT NULL,
+  `identifier` varchar(64) NOT NULL,
+  PRIMARY KEY (`visibilityid`),
+  KEY `parent_id` (`parent_id`),
+  KEY `identifier` (`identifier`),
+  KEY `userid` (`user_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------

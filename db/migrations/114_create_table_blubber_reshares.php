@@ -14,6 +14,7 @@ class CreateTableBlubberReshares extends Migration
             `user_id` varchar(32) NOT NULL,
             `external_contact` tinyint(4) NOT NULL DEFAULT '0',
             `chdate` int(11) NOT NULL,
+            UNIQUE KEY `unique_reshares` (`topic_id`,`user_id`,`external_contact`),
             KEY `topic_id` (`topic_id`),
             KEY `user_id` (`user_id`)
         ) ENGINE=MyISAM";

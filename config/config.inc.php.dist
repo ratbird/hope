@@ -85,7 +85,7 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 2.4 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 2.5 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
 /* $SEM_CLASS and $SEM_TYPE configuration moved to database
@@ -228,9 +228,8 @@ $INST_MODULES["default"] = array(
             "forum"=>TRUE,              //forum, this module is stud_ip core; always available
             "documents"=>TRUE,          //documents, this module is stud_ip core; always available
             "personal"=>TRUE,           //personal, this module is stud_ip core; always available
-            "literature"=>TRUE,         //literature, this module is stud_ip core; always available
+            "literature"=>FALSE,         //literature, this module is stud_ip core; always available
             "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
-            "chat"=>TRUE,               //chat, only, if the module is global activated; see config_local.inc.php
             "wiki"=>FALSE,              //wikiwiki-web, this module is stud_ip core; always available
             );
 //you can add more specific presets for the different types

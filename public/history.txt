@@ -1,3 +1,34 @@
+__07.11.2013 V 2.5__
+- Automatisiertes Eintragen von Benutzern brücksichtigt Domänen
+- Benutzerdefinierte Blubberströme
+- Redesign der Seite "Teilnehmer/-innen" in Lehrveranstaltungen
+- Konsistenter Datumspicker
+- Avatare und Icons in Retinauflösung
+- Persönliche Benachrichtigungen im Benachrichtigungscenter
+- Erweiterung der Plugin-Administration
+
+__20.06.2013 V 2.4__
+- Chat, Gästebuch und Messenger entfernt
+- Blubber 
+- Neues Forum
+- Erweiterung der Seminarklassen für flexible Veranstaltungsvorlagen
+- Datenfelder können Pflichtangaben enthalten
+- Ausfalltermine in Lehrveranstaltungen
+- Module und Plugins lassen sich nur für Admins verfügbar machen
+- Anwendern können auf ihrer Homepage selbst Plugins einschalten
+- Cronjobs lassen sich über die Weboberfläche anlegen und konfigurieren
+- Neues Mailsystem, dass besser mit Massenmailversand klarkommt
+- Verwendung von MathJAX für LaTex-Befehle 
+- "Alles gelesen"-Button auf der Veranstaltungsübersichtsseite
+- Einführung Blattdesign
+- Hoovern auf Terminen im Kalender
+- PDF-Export eines vollständigen Wikis
+
+__02.08.2012 V 2.3__
+- iCal-Export zum Einbinden der Termine in externe Kalenderanwendungen per Webadresse  
+- Anpassung der Buttons an überarbeitetes Rahmendesign
+- Neuer Blockveranstaltungsassistent
+
 __17.01.2012 v 2.2__
 - Raumanfragen für einzelne regelmäßige Zeiten
 - Adminseiten um Möglichkeit zum Blättern durch Veranstaltungen erweitern

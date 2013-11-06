@@ -1100,12 +1100,10 @@ if ($show == "funktion") {
         }
     }
 }
-
-if (get_config('EXPORT_ENABLE') && (count($institut_members) > 0) && $perm->have_perm('tutor')) {
+if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
     include_once($GLOBALS['PATH_EXPORT'] . "/export_linking_func.inc.php");
-    echo "<tr><td colspan=$colspan><br>" . export_form($auswahl, "person", $SessSemName[0]) . "</td></tr>";
+    echo "<tfoot><tr><td colspan=$colspan><br>" . export_form($auswahl, "person", $SessSemName[0]) . "</td></tr></tfoot>";
 }
-echo "<tr><td class=\"blank\" colspan=\"$colspan\">&nbsp;</td></tr>\n";
 echo "</table></td></tr></table>\n";
 echo "</body></html>";
 

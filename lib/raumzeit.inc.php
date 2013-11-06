@@ -321,7 +321,7 @@ function raumzeit_doAddSingleDate($sem) {
 }
 
 function raumzeit_editDeletedSingleDate($sem) {
-    if (!$GLOBALS['perm']->have_perm('dozent')) {
+    if (!$GLOBALS['perm']->have_perm('tutor')) {
         $sem->createError(_("Ihnen fehlt die Berechtigung um den Kommentar von gelöschten Terminen zu ändern!"));
         return;
     }

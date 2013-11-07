@@ -169,6 +169,21 @@ class SimpleORMapCollection extends SimpleCollection
     }
 
     /**
+     * magic version of sendMessage
+     * calls undefineds methods on all elements
+     * of the collection
+     * But beware of the dark side...
+     *
+     * @param string $method methodname to call
+     * @param array $params parameters for methodcall
+     * @return array of all return values
+     */
+    function __call($method, $params)
+    {
+        return $this->sendMessage($method, $params);
+    }
+
+    /**
      * returns element with given primary key value
      *
      * @param string $value primary key value to search for

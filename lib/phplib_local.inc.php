@@ -130,7 +130,7 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
 } else {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
-
+//include 'tools/debug/StudipDebugPDO.class.php';
 /**
  * @deprecated
  */
@@ -347,6 +347,7 @@ class Seminar_Session extends Session {
 class Seminar_User {
     public $cfg = null; //UserConfig object
     private $user = null; //User object
+    private $last_online_time = null;
 
     function __construct($user = null)
     {
@@ -360,6 +361,7 @@ class Seminar_User {
             $this->user->user_id = 'nobody';
         }
         $this->cfg = UserConfig::get($this->user->user_id);
+        $this->last_online_time = $this->get_last_action();
     }
 
     function get_last_action()
@@ -375,6 +377,9 @@ class Seminar_User {
     {
         if ($this->id && $this->id != 'nobody') {
             if ($timestamp <= 0) {
+                if ((time() - $this->last_online_time) < 180) {
+                    return 0;
+                }
                 $timestamp = time();
             }
             try {

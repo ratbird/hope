@@ -1295,25 +1295,30 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
  */
 function get_users_online_count($active_time = 5)
 {
-    $query = "SELECT COUNT(*) FROM user_online
-              WHERE last_lifesign > ?";
-    $statement = DBManager::get()->prepare($query);
-    try {
-        $statement->execute(array(time() - $active_time * 60));
-    } catch (PDOException $e) {
-        require_once 'lib/migrations/db_schema_version.php';
-        $version = new DBSchemaVersion('studip');
-        if ($version->get() < 98) {
-            Log::ALERT('get_users_online_count() failed. Check migration no. 98!');
-        } else {
-            throw $e;
+    $cache = StudipCacheFactory::getCache();
+    $online_count = $cache->read('online_count');
+    if ($online_count === false) {
+        $query = "SELECT COUNT(*) FROM user_online
+                  WHERE last_lifesign > ?";
+        $statement = DBManager::get()->prepare($query);
+        try {
+            $statement->execute(array(time() - $active_time * 60));
+        } catch (PDOException $e) {
+            require_once 'lib/migrations/db_schema_version.php';
+            $version = new DBSchemaVersion('studip');
+            if ($version->get() < 98) {
+                Log::ALERT('get_users_online_count() failed. Check migration no. 98!');
+            } else {
+                throw $e;
+            }
         }
+        $online_count = $statement->fetchColumn();
+        $cache->write('online_count', $online_count, 180);
     }
-    $count = $statement->fetchColumn();
     if ($GLOBALS['user']->id && $GLOBALS['user']->id != 'nobody') {
-        --$count;
+        --$online_count;
     }
-    return $count > 0 ? $count : 0;
+    return $online_count > 0 ? $online_count : 0;
 }
 
 /**

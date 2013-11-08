@@ -44,7 +44,7 @@ class UserModel
             $row = $db->fetch(PDO::FETCH_ASSOC);
             return $row[$field];
 
-        // all fields + optional user_info and user_data
+        // all fields + optional user_info and user_online
         } else {
             if ($full) {
                 $dbquery = "SELECT ui.*,au.*, last_lifesign as changed_timestamp,IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 au"
@@ -182,9 +182,9 @@ class UserModel
         if (!is_null($inaktiv) && $inaktiv[0] != 'nie') {
             $comp = in_array(trim($inaktiv[0]), array('=', '>', '<=')) ? $inaktiv[0] : '=';
             $days = (int)$inaktiv[1];
-            $query .= "AND FROM_UNIXTIME(uo.last_lifesign) {$comp} TIMESTAMPADD(DAY, -{$days}, NOW()) ";
+            $query .= "AND uo.last_lifesign {$comp} UNIX_TIMESTAMP(TIMESTAMPADD(DAY, -{$days}, NOW())) ";
         } elseif (!is_null($inaktiv)) {
-            $query .= "AND uo.changed IS NULL ";
+            $query .= "AND uo.last_lifesign IS NULL ";
         }
 
         //datafields

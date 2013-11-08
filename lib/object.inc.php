@@ -66,10 +66,10 @@ function object_set_visit($object_id, $type, $user_id = '')
         $last_visit = 0;
     }
 
-    $query = "REPLACE INTO object_user_visits (object_id, user_id, type, visitdate, last_visitdate)
-              VALUES (?, ?, ?, UNIX_TIMESTAMP(), ?)";
+    $query = "INSERT INTO object_user_visits (object_id, user_id, type, visitdate, last_visitdate)
+              VALUES (?, ?, ?, UNIX_TIMESTAMP(), ?) ON DUPLICATE KEY UPDATE visitdate=UNIX_TIMESTAMP(), last_visitdate=?";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id, $user_id, $type, $last_visit));
+    $statement->execute(array($object_id, $user_id, $type, $last_visit, $last_visit));
 
     return object_get_visit($object_id, $type, FALSE, false, $user_id, true);
 }

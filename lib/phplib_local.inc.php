@@ -383,8 +383,9 @@ class Seminar_User {
                 $timestamp = time();
             }
             try {
-                $query = "REPLACE INTO user_online (user_id, last_lifesign)
-                          VALUES (:user_id, UNIX_TIMESTAMP() - :time_delta)";
+                $query = "INSERT INTO user_online (user_id, last_lifesign)
+                          VALUES (:user_id, UNIX_TIMESTAMP() - :time_delta)
+                          ON DUPLICATE KEY UPDATE last_lifesign = UNIX_TIMESTAMP() - :time_delta";
                 $stmt = DBManager::get()->prepare($query);
                 $stmt->bindValue(':user_id', $this->id);
                 $stmt->bindValue(':time_delta', time() - $timestamp, PDO::PARAM_INT);

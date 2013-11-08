@@ -18,6 +18,7 @@ class CT_Sql {
     
     var $database_table = "";
     var $gzip_level = 0;
+    var $exists = '';
     
     ## end of configuration
     
@@ -44,8 +45,12 @@ class CT_Sql {
         if ($this->gzip_level){
             $str = gzcompress($str, $this->gzip_level);
         }
-        $stmt = $db->prepare(sprintf("REPLACE INTO %s ( sid, val ) VALUES (?, ?)", $this->database_table));
-        $stmt->execute(array($id, $str));
+        if ($this->exists === $id) {
+            $stmt = $db->prepare(sprintf("UPDATE %s SET val = ? WHERE sid = ?", $this->database_table));
+        } else {
+            $stmt = $db->prepare(sprintf("INSERT INTO %s ( val, sid ) VALUES (?, ?)", $this->database_table));
+        }
+        $stmt->execute(array($str, $id));
         return $stmt->rowCount();
     }
     
@@ -63,6 +68,7 @@ class CT_Sql {
         if ($this->gzip_level){
             $str = @gzuncompress($str);
         }
+        if ($str) $this->exists = $id;
         return $str;
     }
     

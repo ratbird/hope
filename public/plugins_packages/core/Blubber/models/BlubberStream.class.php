@@ -426,9 +426,12 @@ class BlubberStream extends SimpleORMap {
     protected function getUsersByGroups($groups) {
         if ($groups[0] === "all") {
             $statement = DBManager::get()->prepare(
-                "SELECT DISTINCT user_id " .
-                "FROM contact " .
-                "WHERE owner_id = :me " .
+                "SELECT DISTINCT user_id, '0' AS external_contact " .
+                    "FROM contact " .
+                    "WHERE owner_id = :me " .
+                "UNION SELECT DISTINCT external_contact_id AS user_id, '1' AS external_contact " .
+                    "FROM blubber_follower " .
+                    "WHERE left_follows_right = '1' " .
             "");
             $statement->execute(array('me' => $GLOBALS['user']->id));
             return $statement->fetchAll(PDO::FETCH_COLUMN, 0);

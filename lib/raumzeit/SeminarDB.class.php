@@ -51,7 +51,7 @@ class SeminarDB
 
     function getSingleDates($seminar_id, $start = 0, $end = 0)
     {
-        $query = "SELECT termine.*, resources_assign.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons,  GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
+        $query = "SELECT termine.*, resources_assign.resource_id, GROUP_CONCAT(DISTINCT trp.user_id) AS related_persons,  GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                   FROM termine
                   LEFT JOIN termin_related_persons AS trp ON (termine.termin_id = trp.range_id)
                   LEFT JOIN termin_related_groups AS trg ON (termine.termin_id = trg.termin_id)
@@ -299,7 +299,7 @@ class SeminarDB
     {
         $ret = array();
         if (($start != 0) || ($end != 0)) {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
                         LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
                         LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)
@@ -310,7 +310,7 @@ class SeminarDB
                       ORDER BY date";
             $parameters = array($seminar_id, $start, $end);
         } else {
-            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
                         LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
                         LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)

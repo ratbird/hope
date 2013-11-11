@@ -180,7 +180,7 @@ class SingleDateDB
 
         $query = "SELECT ex_termine.*, 1 AS ex_termin,
                          GROUP_CONCAT(trp.user_id) AS related_persons,
-                         GROUP_CONCAT(trg.statusgruppe_id) AS related_groups
+                         GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                   FROM ex_termine
                     LEFT JOIN termin_related_persons AS trp ON (ex_termine.termin_id = trp.range_id)
                     LEFT JOIN termin_related_groups AS trg ON (ex_termine.termin_id = trg.termin_id)

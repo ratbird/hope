@@ -48,7 +48,7 @@ class CT_Sql {
         if ($this->exists === $id) {
             $stmt = $db->prepare(sprintf("UPDATE %s SET val = ? WHERE sid = ?", $this->database_table));
         } else {
-            $stmt = $db->prepare(sprintf("INSERT INTO %s ( val, sid ) VALUES (?, ?)", $this->database_table));
+            $stmt = $db->prepare(sprintf("REPLACE INTO %s ( val, sid ) VALUES (?, ?)", $this->database_table));
         }
         $stmt->execute(array($str, $id));
         return $stmt->rowCount();

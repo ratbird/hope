@@ -1,9 +1,26 @@
 <?php
+/*
+ * Copyright (C) 2013 - Rasmus Fuhse <fuhse@data-quest.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ */
 
+/**
+ * A model class to handle the database table "opengraphdata", fetch data from
+ * an Opengraph-URL and render a fitting box with the opengraph information to
+ * the user.
+ */
 class OpenGraphURL extends SimpleORMap {
 
-    static public $tempURLStorage = array();
+    static public $tempURLStorage = array(); //place to store opengraph-urls from a text.
 
+    /**
+     * constructor
+     * @param string $url : the url that represents the opengraph-information
+     */
     public function __construct($url = null) {
         $this->db_table = "opengraphdata";
         $this->registerCallback('before_store', 'serializeData');
@@ -11,15 +28,29 @@ class OpenGraphURL extends SimpleORMap {
         parent::__construct($url);
     }
 
+    /**
+     * Serialize the data field as a json-object before you store it in the database.
+     */
     protected function serializeData() {
         $this->data = json_encode(studip_utf8encode((array) $this->data));
     }
 
+    /**
+     * Unserialize the data field when it comes from the database. So you can 
+     * expect $url['data'] to be an array.
+     */
     protected function unserializeData() {
         $this->data = (array) studip_utf8decode(json_decode($this->data));
     }
 
 
+    /**
+     * Fetches information from the url by getting the contents of the webpage, 
+     * parse the webpage and extract the information from the opengraph meta-tags.
+     * If the site doesn't have any opengraph-metatags it is in fact no opengraph
+     * node and thus no data will be stored in the database. Only $url['is_opengraph'] === '0'
+     * indicates that the site is no opengraph node at all.
+     */
     public function fetch() {
         if (!get_config("OPENGRAPH_ENABLE")) {
             return;
@@ -85,6 +116,11 @@ class OpenGraphURL extends SimpleORMap {
         $this['is_opengraph'] = (int) $isOpenGraph;
     }
 
+    /**
+     * Renders a small box with the information of the opengraph url. Used in 
+     * blubber and in the forum.
+     * @return string : html output of the box.
+     */
     public function render() {
         if (!get_config("OPENGRAPH_ENABLE") || !$this->getValue('is_opengraph')) {
             return "";

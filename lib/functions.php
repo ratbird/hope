@@ -344,15 +344,17 @@ function checkObjectModule($module)
     if ($SessSemName[1]) {
         $modules = new Modules();
         $local_modules = $modules->getLocalModules($SessSemName[1], $SessSemName['class']);
-        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
-        $new_module_name = "Core".ucfirst($module);
-        $mandatory = false;
         $checkslot = $module;
-        foreach (SemClass::getSlots() as $slot) {
-            if ($sem_class->getSlotModule($slot) === $new_module_name) {
-                $checkslot = $slot;
-                if ($sem_class->isModuleMandatory($new_module_name)) {
-                    $mandatory = true;
+        if ($SessSemName['class'] == 'sem' && $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']]) {
+            $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']];
+            $new_module_name = "Core".ucfirst($module);
+            $mandatory = false;
+            foreach (SemClass::getSlots() as $slot) {
+                if ($sem_class->getSlotModule($slot) === $new_module_name) {
+                    $checkslot = $slot;
+                    if ($sem_class->isModuleMandatory($new_module_name)) {
+                        $mandatory = true;
+                    }
                 }
             }
         }

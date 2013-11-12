@@ -2199,7 +2199,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
             $_SESSION['resources_data']["schedule_mode"] = "graphical";
         }
 
-        if (Request::get('group_schedule_choose_group')){
+        if (Request::submitted('group_schedule_choose_group')){
             $_SESSION['resources_data']['actual_room_group'] = Request::int('group_schedule_choose_group');
         }
     }

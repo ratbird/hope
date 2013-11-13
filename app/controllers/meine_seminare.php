@@ -137,6 +137,29 @@ class MeineSeminareController extends AuthenticatedController
         $this->addToInfobox(_('Informationen'),
                             _('Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend '
                              .'den Gruppen sortiert bzw. entsprechend der gewählten Kategorie gegliedert.'));
+        $groupables = array(
+    'sem_number'  => _('Semester'),
+    'sem_tree_id' => _('Studienbereich'),
+    'sem_status'  => _('Typ'),
+    'gruppe'      => _('Farbgruppen'),
+    'dozent_id'   => _('Dozenten'),
+);
+        $groupselect = '<form action="'.URLHelper::getLink('meine_seminare.php').'" method="post"><select name="select_group_field">';
+            if ($no_grouping_allowed) {
+                $groupselect .= '<option value="not_grouped" '.($group_field == 'not_grouped' ? 'selected' : '').'>';
+                 $groupselect .= _('keine Gliederung');
+                $groupselect .= '</option>';
+                }
+            foreach ($groupables as $key => $label) {
+               $groupselect .= "<option value='$key'".($group_field == $key ? 'selected':'').">
+                    $label
+                </option>";
+            }
+            $groupselect .= '</select>';
+        $groupselect .= Assets::input('icons/16/blue/accept.png', array('class' => 'middle', 'title' => _('Gruppierung ändern')));
+        $groupselect .= '<input type="hidden" name="gruppesent" value="1">';
+        $groupselect .= '<form>';
+        $this->addToInfobox(_('Kategorie zur Gliederung'), $groupselect);
     }
 
     /**

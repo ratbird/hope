@@ -37,6 +37,7 @@ class NewsController extends StudipController
 
         // allow only "word" characters in arguments
         $this->validate_args($args);
+        $this->set_content_type('text/html; charset=windows-1252');
     }
 
     /**

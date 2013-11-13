@@ -14,5 +14,5 @@ if (!Request::isXhr()) :
         </div>
     </div>
 <? endif ?>
-<?= studip_utf8encode($content) ?>
+<?= $content ?>
 

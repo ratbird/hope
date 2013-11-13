@@ -2,7 +2,7 @@
 
 /*
  *  Copyright (c) 2012  Rasmus Fuhse <fuhse@data-quest.de>
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -31,33 +31,33 @@ require_once 'lib/modules/CoreElearningInterface.class.php';
 
 /**
  * Class to define and manage attributes of seminar classes (or seminar categories).
- * Usually all sem-classes are stored in a global variable $SEM_CLASS which is 
- * an array of SemClass objects. 
- * 
+ * Usually all sem-classes are stored in a global variable $SEM_CLASS which is
+ * an array of SemClass objects.
+ *
  * SemClass::getClasses() gets you all seminar classes in an array.
- * 
- * You can access the attributes of a sem-class like an associative 
+ *
+ * You can access the attributes of a sem-class like an associative
  * array with $sem_class['default_read_level']. The uinderlying data is stored
  * in the database in the table sem_classes.
- * 
+ *
  * If you want to have a name of a sem-class like "Lehre", please use
  * $sem_class['name'] and you will get a fully localized name and not the pure
  * database entry.
- * 
- * This class manages also which modules are contained in which course-slots, 
- * like "what module is used as a forum in my seminars". In the database stored 
+ *
+ * This class manages also which modules are contained in which course-slots,
+ * like "what module is used as a forum in my seminars". In the database stored
  * is the name of the module like "CoreForum" or a classname of a plugin or null
- * if the forum is completely disabled by root for this sem-class. Core-modules 
+ * if the forum is completely disabled by root for this sem-class. Core-modules
  * can only be used within a standard slot. Plugins may also be used as optional
  * modules not contained in a slot.
- * 
+ *
  * In the field 'modules' in the database is for each modules stored in a json-string
  * if the module is activatable by the teacher or not and if it is activated as
  * a default. Please use the methods SemClass::isSlotModule, SemClass::getSlotModule,
  * SemClass::isModuleAllowed, SemClass::isModuleMandatory, SemClass::isSlotMandatory
  * or even more simple SemClass::getNavigationForSlot (see documentation there).
  */
-class SemClass implements ArrayAccess 
+class SemClass implements ArrayAccess
 {
     protected $data = array();
     static protected $slots = array(
@@ -112,11 +112,11 @@ class SemClass implements ArrayAccess
         );
         return new SemClass($data);
     }
-    
+
     /**
      * Constructor can be set with integer of sem_class_id or an array of
      * the old $SEM_CLASS style.
-     * @param integer | array $data 
+     * @param integer | array $data
      */
     public function __construct($data)
     {
@@ -134,10 +134,10 @@ class SemClass implements ArrayAccess
             $this->data['modules'] = array();
         }
     }
-    
+
     /**
      * Returns the number of seminars of this sem_class in Stud.IP
-     * @return integer 
+     * @return integer
      */
     public function countSeminars()
     {
@@ -150,12 +150,12 @@ class SemClass implements ArrayAccess
         }
         return $sum;
     }
-    
+
     /**
-     * Returns the name of the module of the slot or the module itself, if it 
+     * Returns the name of the module of the slot or the module itself, if it
      * is a plugin.
      * @param string $slot
-     * @return string 
+     * @return string
      */
     public function getSlotModule($slot)
     {
@@ -177,7 +177,7 @@ class SemClass implements ArrayAccess
             $this->data[$slot] = $module ? $module : null;
         }
     }
-    
+
     /**
      * Returns the metadata of a module regarding this sem_class object.
      * @param string $modulename
@@ -187,7 +187,7 @@ class SemClass implements ArrayAccess
     {
         return $this->data['modules'][$modulename];
     }
-    
+
     /**
      * Sets the metadata for each module at once.
      * @param array $module_array: array($module_name => array('sticky' => (bool), 'activated' => (bool)), ...)
@@ -196,7 +196,7 @@ class SemClass implements ArrayAccess
     {
         $this->data['modules'] = $module_array;
     }
-    
+
     /**
      * Returns all metadata of the modules at once.
      * @return array: array($module_name => array('sticky' => (bool), 'activated' => (bool)), ...)
@@ -205,24 +205,24 @@ class SemClass implements ArrayAccess
     {
         return $this->data['modules'];
     }
-    
+
     /**
      * Returns if a module is allowed to be displayed for this sem_class.
      * @param string $modulename
-     * @return boolean 
+     * @return boolean
      */
     public function isModuleAllowed($modulename)
     {
-        return !$this->data['modules'][$modulename] 
+        return !$this->data['modules'][$modulename]
             || !$this->data['modules'][$modulename]['sticky']
             ||  $this->data['modules'][$modulename]['activated']
             ||  $this->isModuleMandatory($modulename);
     }
-    
+
     /**
      * Returns if a module is mandatory for this sem_class.
      * @param string $module
-     * @return boolean 
+     * @return boolean
      */
     public function isModuleMandatory($module)
     {
@@ -230,24 +230,24 @@ class SemClass implements ArrayAccess
             && ($this->data['modules'][$module]['activated']
                 || $this->isSlotModule($module));
     }
-    
+
     /**
      * Returns if the slot is mandatory, which it is if the module in this
      * slot is mandatory.
      * @param string  $slot
-     * @return boolean 
+     * @return boolean
      */
     public function isSlotMandatory($slot)
     {
         $module = $this->getSlotModule($slot);
         return $module && $this->isModuleMandatory($module);
     }
-    
+
     /**
      * Returns if a module is a slot module. Good for plugins that should be
      * displayed on a specific place only if they are no slot modules.
      * @param string $module
-     * @return boolean 
+     * @return boolean
      */
     public function isSlotModule($module)
     {
@@ -258,7 +258,7 @@ class SemClass implements ArrayAccess
         }
         return false;
     }
-    
+
     /**
      * returns an instance of the module of a given slotname or pluginclassname
      * @param string $slot_or_plugin
@@ -276,9 +276,9 @@ class SemClass implements ArrayAccess
             }
         }
     }
-    
+
     /**
-     * Returns an array of navigation-objects. Those are for the tabs. 
+     * Returns an array of navigation-objects. Those are for the tabs.
      * And yes, a slot can contain more than one tab, but usually contains
      * only one. The keys of the array are the names within the navigation-tree.
      * @param string $slot
@@ -304,9 +304,9 @@ class SemClass implements ArrayAccess
         }
         return $types;
     }
-    
+
     /**
-     * stores all data in the database 
+     * stores all data in the database
      * @return boolean success
      */
     public function store()
@@ -383,23 +383,23 @@ class SemClass implements ArrayAccess
             'calendar' => $this->data['calendar'],
             'elearning_interface' => $this->data['elearning_interface'],
             'modules' => json_encode((object) $this->data['modules']),
-            'title_dozent' => $this->data['title_dozent'] 
-                ? $this->data['title_dozent'] 
+            'title_dozent' => $this->data['title_dozent']
+                ? $this->data['title_dozent']
                 : null,
-            'title_dozent_plural' => $this->data['title_dozent_plural'] 
-                ? $this->data['title_dozent_plural'] 
+            'title_dozent_plural' => $this->data['title_dozent_plural']
+                ? $this->data['title_dozent_plural']
                 : null,
-            'title_tutor' => $this->data['title_tutor'] 
-                ? $this->data['title_tutor'] 
+            'title_tutor' => $this->data['title_tutor']
+                ? $this->data['title_tutor']
                 : null,
-            'title_tutor_plural' => $this->data['title_tutor_plural'] 
-                ? $this->data['title_tutor_plural'] 
+            'title_tutor_plural' => $this->data['title_tutor_plural']
+                ? $this->data['title_tutor_plural']
                 : null,
-            'title_autor' => $this->data['title_autor'] 
-                ? $this->data['title_autor'] 
+            'title_autor' => $this->data['title_autor']
+                ? $this->data['title_autor']
                 : null,
-            'title_autor_plural' => $this->data['title_autor_plural'] 
-                ? $this->data['title_autor_plural'] 
+            'title_autor_plural' => $this->data['title_autor_plural']
+                ? $this->data['title_autor_plural']
                 : null,
             'admission_prelim_default' => (int)$this->data['admission_prelim_default'],
             'admission_type_default' => (int)$this->data['admission_type_default']
@@ -433,37 +433,37 @@ class SemClass implements ArrayAccess
             return false;
         }
     }
-    
+
     /**
      * Sets an attribute of sem_class->data
      * @param string $offset
-     * @param mixed $value 
+     * @param mixed $value
      */
     public function set($offset, $value)
     {
         $this->data[$offset] = $value;
     }
-    
+
     /***************************************************************************
      *                          ArrayAccess methods                            *
      ***************************************************************************/
-    
+
     /**
      * deprecated, does nothing, should not be used
      * @param string $offset
-     * @param mixed $value 
+     * @param mixed $value
      */
     public function offsetSet($offset, $value)
     {
     }
-    
+
     /**
-     * Compatibility function with old $SEM_CLASS variable for plugins. Maps the 
+     * Compatibility function with old $SEM_CLASS variable for plugins. Maps the
      * new array-structure to the old boolean values.
      * @param integer $offset: name of attribute
      * @return boolean|(localized)string
      */
-    public function offsetGet($offset) 
+    public function offsetGet($offset)
     {
         switch ($offset) {
             case "name":
@@ -508,33 +508,33 @@ class SemClass implements ArrayAccess
         //ansonsten
         return $this->data[$offset];
     }
-    
+
     /**
      * ArrayAccess method to check if an attribute exists.
      * @param type $offset
-     * @return type 
+     * @return type
      */
-    public function offsetExists($offset) 
+    public function offsetExists($offset)
     {
         return isset($this->data[$offset]);
     }
-    
+
     /**
      * deprecated, does nothing, should not be used
      * @param string $offset
      */
-    public function offsetUnset($offset) 
+    public function offsetUnset($offset)
     {
     }
-    
+
     /***************************************************************************
      *                            static methods                               *
      ***************************************************************************/
-    
+
     /**
      * Returns an array of all SemClasses in Stud.IP. Equivalent to global
      * $SEM_CLASS variable. This variable is statically stored in this class.
-     * @return array of SemClass 
+     * @return array of SemClass
      */
     static public function getClasses()
     {
@@ -550,12 +550,16 @@ class SemClass implements ArrayAccess
                 foreach ($class_array as $sem_class) {
                     self::$sem_classes[$sem_class['id']] = new SemClass($sem_class);
                 }
-            } catch(Exception $e) {
+            } catch (PDOException $e) {
                 //for use without or before migration 92
                 $class_array = $GLOBALS['SEM_CLASS_OLD_VAR'];
-                ksort($class_array);
-                foreach ($class_array as $id => $class) {
-                    self::$sem_classes[$id] = new SemClass($class);
+                if (is_array($class_array)) {
+                    ksort($class_array);
+                    foreach ($class_array as $id => $class) {
+                        self::$sem_classes[$id] = new SemClass($class);
+                    }
+                } else {
+                    self::$sem_classes[1] = self::getDefaultSemClass();
                 }
             }
         }
@@ -564,18 +568,18 @@ class SemClass implements ArrayAccess
 
     /**
      * Refreshes the internal $sem_classes cache-variable.
-     * @return array of SemClass 
+     * @return array of SemClass
      */
     static public function refreshClasses()
     {
         self::$sem_classes = null;
         return self::getClasses();
     }
-    
+
     /**
      * Static method to recursively transform an object into an associative array.
      * @param mixed $obj: should be of class StdClass
-     * @return array 
+     * @return array
      */
     static public function object2array($obj)
     {
@@ -594,9 +598,9 @@ class SemClass implements ArrayAccess
     static public function getSlots() {
         return self::$slots;
     }
-    
+
     /**
-     * Static method only to keep the translationstrings of the values. It is 
+     * Static method only to keep the translationstrings of the values. It is
      * never used within the system.
      */
     static private function localization()
@@ -607,7 +611,7 @@ class SemClass implements ArrayAccess
         _("Community");
         _("Arbeitsgruppen");
         _("importierte Kurse");
-        
+
         _("Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen");
         _("Verwenden Sie diese Kategorie, um normale Lehrveranstaltungen anzulegen");
         _("Hier finden Sie virtuelle Veranstaltungen zum Thema Forschung an der Universit&auml;t");
@@ -619,6 +623,6 @@ class SemClass implements ArrayAccess
         _("Hier finden Sie verschiedene Arbeitsgruppen an der %s");
         _("Verwenden Sie diese Kategorie, um unterschiedliche Arbeitsgruppen anzulegen.");
     }
-    
+
 }
 

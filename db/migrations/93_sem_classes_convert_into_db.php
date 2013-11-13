@@ -121,7 +121,12 @@ class SemClassesConvertIntoDb extends Migration
         //import default language version
         setTempLanguage();
         include 'config.inc.php';
-
+        if (!(is_array($SEM_CLASS) && count($SEM_CLASS))) {
+            throw new Exception('Migration 93 kann nicht durchgeführt werden,
+                da die vorhandenen Einstellungen für $SEM_CLASS und $SEM_TYPE
+                nicht aus der Datei config.inc.php ausgelesen werden können. Entfernen
+                sie diese Einstellungen erst, nachdem diese Migration durchgeführt wurde!');
+        }
         $studygroup_settings = $this->getStudygroupSettings();
         $core_modules = array('forum','documents','literature','wiki','documents_folder_permissions','participants','schedule','scm','elearning_interface','calendar');
 

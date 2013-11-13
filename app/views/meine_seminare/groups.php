@@ -10,7 +10,7 @@ use Studip\Button;
             <thead>
                 <tr>
                     <th><?= _('Veranstaltung') ?></th>
-                    <th colspan="0"><?= _('Gruppen/Farbe') ?></th>
+                    <th colspan="100%"><?= _('Gruppen/Farbe') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -18,7 +18,7 @@ use Studip\Button;
     <? if ($group_field !== 'not_grouped'): ?>
         
             <tr>
-                <th colspan="0">
+                <th  colspan='100%'>
                 <? if (isset($_my_sem_open[$group_id])): ?>
                     <a class="tree" style="font-weight:bold" name="<?= $group_id ?>" href="<?= $controller->url_for('meine_seminare/groups?close_my_sem=' . $group_id . '#' .$group_id) ?>">
                         <?= Assets::img('icons/16/blue/arr_1down', tooltip2(_('Gruppierung schließen'))) ?>
@@ -58,10 +58,10 @@ use Studip\Button;
 <? endif; ?>
 <? endforeach; ?>
         </tbody>
-        </table>
-
-    <p style="text-align: center;">
+        <tfoot><tr><td colspan='100%'>
         <?= Button::createAccept(_('Speichern')) ?>
         <input type="hidden" name="gruppesent" value="1">
-    </p>
+        </td></tr>
+        </tfoot>
+        </table>
 </form>

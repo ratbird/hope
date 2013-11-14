@@ -3116,12 +3116,6 @@ h5,
 h6 {
   border-bottom: none;
 }
-h1 + br,
-h2 + br,
-h3 + br,
-h4 + br,
-h5 + br,
-h6 + br,
 ul + br,
 table + br {
   display: none;

@@ -67,4 +67,3 @@
         </tfoot>
     </table>
 <? endforeach; ?>
-<?= $this->render_partial("admin/statusgroups/_javascript.php") ?>

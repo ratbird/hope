@@ -1,23 +1,23 @@
-
-<script>
-    $(document).ready(function() {
+$(document).ready(function() {
 
     $('a.modal').click(function() {
-        var dialog =  $("<div></div>");
-                dialog.dialog({
-                autoOpen: false,
-                autoResize: true,
-                resizable: false,
-                position: 'center',
-                close: function() { $(this).remove() },
-                width:'auto',
-                title: $(this).attr('title'),
-                modal: true
-            });
-            dialog.load($(this).attr('href'));
-            dialog.dialog("open");
-            return false;
+        var dialog = $("<div></div>");
+        dialog.dialog({
+            autoOpen: false,
+            autoResize: true,
+            resizable: false,
+            position: 'center',
+            close: function() {
+                $(this).remove()
+            },
+            width: 'auto',
+            title: $(this).attr('title'),
+            modal: true
         });
+        dialog.load($(this).attr('href'));
+        dialog.dialog("open");
+        return false;
+    });
 
     //do everything you would do after a reload
     afterReload();
@@ -52,26 +52,26 @@
                 }
             });
             if (found < 10) {
-                delay(function(){
-                $.ajax({
-                    type: 'POST',
-                    url: $('#ajax_search').val(),
-                    dataType: 'json',
-                    data: {query: search, limit: 10 - found},
-                    async: true
-                }).done(function(data) {
-                    $('#search_result').empty();
-                    if (data.length > 0) {
-                        jQuery.each(data, function(i, val) {
-                            if ($('#' + val.id).length === 0) {
-                                $('#search_result').append('<p id="' + (val.id) + '" style="margin: 0px;" class="person">' + val.name + '</p>');
-                            }
-                        });
-                        afterReload();
-                    }
-                });
-                $('#free_search, #search_result').fadeIn(fadeSpeed);
-                }, 800 );
+                delay(function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#ajax_search').val(),
+                        dataType: 'json',
+                        data: {query: search, limit: 10 - found},
+                        async: true
+                    }).done(function(data) {
+                        $('#search_result').empty();
+                        if (data.length > 0) {
+                            jQuery.each(data, function(i, val) {
+                                if ($('#' + val.id).length === 0) {
+                                    $('#search_result').append('<p id="' + (val.id) + '" style="margin: 0px;" class="person">' + val.name + '</p>');
+                                }
+                            });
+                            afterReload();
+                        }
+                    });
+                    $('#free_search, #search_result').fadeIn(fadeSpeed);
+                }, 800);
             } else {
                 $('#free_search, #search_result').fadeOut(fadeSpeed);
             }
@@ -86,12 +86,12 @@
  * commands
  */
 
-var delay = (function(){
-  var timer = 0;
-  return function(callback, ms){
-    clearTimeout (timer);
-    timer = setTimeout(callback, ms);
-  };
+var delay = (function() {
+    var timer = 0;
+    return function(callback, ms) {
+        clearTimeout(timer);
+        timer = setTimeout(callback, ms);
+    };
 })();
 
 //reattach all jQuery stuff after ajax reload
@@ -116,7 +116,7 @@ function afterReload() {
             $('.dropable').fadeTo(400, 1);
         },
         revertDuration: 0
-        });
+    });
 
 //make tables droppable
     $(".dropable").droppable({
@@ -173,4 +173,3 @@ function afterReload() {
         user.remove();
     });
 }
-</script>

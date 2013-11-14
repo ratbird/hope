@@ -187,6 +187,178 @@ class StudipPDO extends PDO
     {
         return parent::prepare($statement, $driver_options);
     }
+
+    /**
+     * Executes sql statement with given parameters,
+     * returns number of affected rows, use only for INSERT,UPDATE etc
+     * 
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @return integer number of affected rows
+     */
+    public function execute($statement, $input_parameters = null)
+    {
+        $st = $this->prepare($statement);
+        $ok = $st->execute($input_parameters);
+        if ($ok === true) {
+            return $st->rowCount();
+        }
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch results
+     * as sequential array, each row as associative array
+     * optionally apply given callable on each row, with current row and key as parameter
+     * 
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param callable $callable callable to be applied to each of the rows
+     * @return array result set as array of assoc arrays
+     */
+    public function fetchAll($statement, $input_parameters = null, $callable = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        $data = $st->fetchAll(PDO::FETCH_ASSOC);
+        if (is_callable($callable)) {
+            $data = array();
+            foreach ($data as $key => $row) {
+                $data[$key] = call_user_func($callable, $row, $key);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch only 
+     * the values from first column as sequential array
+     * optionally apply given callable on each row, with current value and key as parameter
+     *
+     * @see StudipPDOStatement::fetchFirst()
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param callable $callable callable to be applied to each of the rows
+     * @return array result set 
+     */
+    public function fetchFirst($statement, $input_parameters = null, $callable = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        $data = $st->fetchFirst();
+        if (is_callable($callable)) {
+            foreach ($data as $key => $row) {
+                $data[$key] = call_user_func($callable, $row, $key);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch results
+     * as associative array, first columns value is used as a key, the others are grouped
+     * optionally apply given callable on each grouped row, with current row and key as parameter
+     * if no callable is given, 'current' is used, to return the first entry of the grouped row
+     * 
+     * @see StudipPDOStatement::fetchGrouped()
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param callable $callable callable to be applied to each of the rows
+     * @return array result set 
+     */
+    public function fetchGrouped($statement, $input_parameters = null, $callable = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        $data = $st->fetchGrouped(PDO::FETCH_ASSOC, is_null($callable) ? 'current' : null);
+        if (is_callable($callable)) {
+            foreach ($data as $key => $row) {
+                $data[$key] = call_user_func($callable, $row, $key);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch results
+     * as associative array, first columns value is used as a key, the other one is grouped
+     * use only when selecting 2 columns
+     * optionally apply given callable on each grouped row, with current row and key as parameter
+     *
+     * @see StudipPDOStatement::fetchGroupedPairs()
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param callable $callable callable to be applied to each of the rows
+     * @return array result set
+     */
+    public function fetchGroupedPairs($statement, $input_parameters = null, $callable = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        $data = $st->fetchGroupedPairs();
+        if (is_callable($callable)) {
+            foreach ($data as $key => $row) {
+                $data[$key] = call_user_func($callable, $row, $key);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch results
+     * as associative array, first columns value is used as a key, the other one as the value
+     * use only when selecting 2 columns
+     * optionally apply given callable on each grouped row, with current row and key as parameter
+     *
+     * @see StudipPDOStatement::fetchGroupedPairs()
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param callable $callable callable to be applied to each of the rows
+     * @return array result set
+     */
+    public function fetchPairs($statement, $input_parameters = null, $callable = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        $data = $st->fetchPairs();
+        if (is_callable($callable)) {
+            foreach ($data as $key => $row) {
+                $data[$key] = call_user_func($callable, $row, $key);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch only the first row
+     * as associative array
+     *
+     * @see StudipPDOStatement::fetchOne()
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @return array first row of result set
+     */
+    public function fetchOne($statement, $input_parameters = null)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        return $st->fetchOne();
+    }
+
+    /**
+     * Executes sql statement with given parameters, and fetch only the value of one column
+     * third param denotes the column, zero indexed
+     *
+     * @param string $statement SQL statement to execute
+     * @param array $input_parameters parameters for statement
+     * @param integer $column number of column to fetch
+     * @return string value of chosen column
+     */
+    public function fetchColumn($statement, $input_parameters = null, $column = 0)
+    {
+        $st = $this->prepare($statement);
+        $st->execute($input_parameters);
+        return $st->fetchColumn($column);
+    }
 }
 
 /**
@@ -363,22 +535,68 @@ class StudipPDOStatement implements IteratorAggregate
 
     /**
      * Returns the result set rows as a grouped associative array. The first field
-     * of each row is used as the array's keys.
-     *
+     * of each row is used as the array's keys. 
+     * optionally apply given callable on each grouped row to aggregate results
+     * if no callable is given, 'current' is used, to return the first entry of the grouped row
+     * 
      * @param int   $fetch_style    Either PDO::FETCH_ASSOC or PDO::FETCH_COLUMN
-     * @param mixed $fetch_argument Unused for FETCH_ASSOC, field index to fetch
-     *                              for FETCH_COLUMN
+     * @param callable $group_func  function to aggregate grouped rows
+     * @return array grouped result set
      */
-    public function fetchGrouped($fetch_style = PDO::FETCH_ASSOC, $fetch_argument = 0) {
+    public function fetchGrouped($fetch_style = PDO::FETCH_ASSOC, $group_func = 'current') {
         if (!($fetch_style & (PDO::FETCH_ASSOC | PDO::FETCH_COLUMN))) {
             throw new PDOException('Fetch style not supported, try FETCH_ASSOC or FETCH_COLUMN');
         }
 
         $fetch_style |= PDO::FETCH_GROUP;
-        $rows = ($fetch_style & PDO::FETCH_ASSOC)
-            ? $this->fetchAll($fetch_style)
-            : $this->fetchAll($fetch_style, $fetch_argument);
+        $rows = $this->fetchAll($fetch_style);
 
-        return array_map('reset', $rows);
+        return is_callable($group_func) ? array_map($group_func, $rows) : $rows;
+    }
+
+    /**
+     * Returns the result set rows as a grouped associative array. The first field
+     * of each row is used as the array's keys, the other one is grouped
+     * use only when selecting 2 columns
+     * optionally apply given callable on each grouped row to aggregate results
+     *
+     * @param callable $group_func  function to aggregate grouped rows
+     * @return array grouped result set
+     */
+    public function fetchGroupedPairs($group_func = null)
+    {
+        return $this->fetchGrouped(PDO::FETCH_COLUMN, $group_func);
+    }
+
+    /**
+     * Returns result rows as associative array, first colum as key,
+     * second as value. Use only when selecting 2 columns
+     * 
+     * @return array result set
+     */
+    public function fetchPairs()
+    {
+        return $this->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
+    /**
+     * Returns sequential array with values from first colum
+     * 
+     * @return array first row result set
+     */
+    public function fetchFirst()
+    {
+        return $this->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Returns only first row of result set as associative array
+     * 
+     * @return array first row result set
+     */
+    public function fetchOne()
+    {
+        $data = $this->fetch(PDO::FETCH_ASSOC);
+        return $data ?: array();
     }
 }

@@ -46,12 +46,16 @@ $step = Request::int('step');
 // set up user session
 include 'lib/seminar_open.php';
 
-if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN']))) {
+if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])) || $auth->auth["uid"] != "nobody") {
     require_once ('lib/msg.inc.php');
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
-    $message = _("Das Anfordern eines neuen Passwortes durch den Benutzer ist in dieser Stud.IP-Installation nicht möglich.");
+    if($auth->auth["uid"] != "nobody") {
+        $message = _("Sie können kein neues Passwort anfordern, wenn Sie bereits eingeloggt sind.");
+    } else {
+        $message = _("Das Anfordern eines neuen Passwortes durch den Benutzer ist in dieser Stud.IP-Installation nicht möglich.");
+    }
     parse_window ("error§$message", "§", _("Passwortanforderung nicht möglich!"));
     include ('lib/include/html_end.inc.php');
     die();

@@ -256,6 +256,7 @@ STUDIP.Forum = {
                 // set the new name and content
                 jQuery('span[data-topic-name=' + topic_id +']').html(json.name);
                 jQuery('span[data-topic-content=' + topic_id +']').html(json.content);
+                STUDIP.Markup.element('span[data-topic-content=' + topic_id +']');
                 
                 // hide the other stuff
                 jQuery('div[id*=preview]').parent().hide();

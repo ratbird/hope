@@ -1557,10 +1557,10 @@ td.infoboxrahmen {
   background-color: #dee2e8;
   border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
-.badge {
+#header .badge {
   position: relative;
 }
-.badge:after {
+#header .badge:after {
   content: attr(data-badge-number);
   position: absolute;
   top: 0px;
@@ -1573,7 +1573,6 @@ td.infoboxrahmen {
   padding: 1px 5px;
   /* border: 2px solid white; */
 
-  cursor: pointer;
   background-color: #D60000;
   color: white;
   font-size: 10px;

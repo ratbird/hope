@@ -1140,11 +1140,11 @@ class Course_MembersController extends AuthenticatedController
      * Displays all members of the course and their aux data
      * @return int fake return to stop after redirect;
      */
-    function aux_action($format = null) {
+    function additional_action($format = null) {
 
         // Users get forwarded to aux_input
         if (!($this->is_dozent || $this->is_tutor)) {
-            $this->redirect('course/members/aux_input');
+            $this->redirect('course/members/additional_input');
             return 0;
         }
 
@@ -1170,10 +1170,10 @@ class Course_MembersController extends AuthenticatedController
     /**
      * Aux input for users
      */
-    function aux_input_action() {
+    function additional_input_action() {
 
         // Activate the autoNavi otherwise we dont find this page in navi
-        Navigation::activateItem('/course/members/aux');
+        Navigation::activateItem('/course/members/additional');
 
         // Fetch datafields for the user
         $course = new Course($_SESSION['SessionSeminar']);

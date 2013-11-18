@@ -58,9 +58,9 @@ class CoreAdmin implements StudipModule {
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);
 
-                $item = new AutoNavigation(_('Zusatzangaben'), 'dispatch.php/admin/aux');
+                $item = new AutoNavigation(_('Zusatzangaben'), 'dispatch.php/admin/additional');
                 $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern auswählen.'));
-                $navigation->addSubNavigation('aux_data', $item);
+                $navigation->addSubNavigation('additional_data', $item);
 
                 if ($GLOBALS['perm']->have_perm($sem_create_perm)) {
                     if (!LockRules::check($course_id, 'seminar_copy')) {

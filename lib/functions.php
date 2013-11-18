@@ -175,11 +175,11 @@ function selectSem ($sem_id)
             }
         }
         // if the aux data is forced for this seminar forward all user that havent made an input to this site
-        if ($row["aux_lock_rule_forced"] && !$perm->have_perm('root') && !$perm->have_studip_perm('tutor', $row["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/aux_input') {
+        if ($row["aux_lock_rule_forced"] && !$perm->have_perm('root') && !$perm->have_studip_perm('tutor', $row["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
         $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
         $statement->execute(array($GLOBALS['user']->id, $row["Seminar_id"]));
         if (!$statement->rowCount()) {
-            header('location: ' . URLHelper::getURL('dispatch.php/course/members/aux_input'));
+            header('location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
             }
         }
         $SessionSeminar = $row["Seminar_id"];

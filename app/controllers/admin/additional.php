@@ -3,7 +3,7 @@
 require_once 'app/controllers/authenticated_controller.php';
 
 /**
- * aux.php - controller class for the aux data
+ * additonal.php - controller class for the additonal data
  * 
  * Admin of a Seminar can chose his required aux data and decide if it is
  * forced from the user
@@ -19,7 +19,7 @@ require_once 'app/controllers/authenticated_controller.php';
  * @package     admin
  * @since       3.0
  */
-class Admin_AuxController extends AuthenticatedController
+class Admin_AdditionalController extends AuthenticatedController
 {
     public function before_filter(&$action, &$args)
     {

@@ -386,7 +386,7 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
         $title = sprintf('%s (%s%s)', $course['Name'], $course['startsem'],
                                       $course['startsem'] != $course['endsem'] ? ' - ' . $course['endsem'] : '');
         $title = sprintf('<a href="%s" class="tree">%s</a>',
-                         URLHelper::getLink('seminar_main.php?redirect_to=dispatch.php/course/members/index#' . $_SESSION['_user_activities']['username'], 
+                         URLHelper::getLink('seminar_main.php', 
                                             array('auswahl' => $course['Seminar_id'])),
                         htmlReady($title));
 

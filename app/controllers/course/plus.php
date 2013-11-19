@@ -62,6 +62,7 @@ class Course_PlusController extends AuthenticatedController
         $this->available_plugins = PluginEngine::getPlugins('StandardPlugin');
         $this->modules           = new AdminModules();
         $this->save_url          = "?";
+        $this->registered_modules = $this->modules->registered_modules;
         
         if (!Request::submitted('uebernehmen')) {
             $_SESSION['admin_modules_data']["modules_list"] = $this->modules->getLocalModules($id);
@@ -72,6 +73,11 @@ class Course_PlusController extends AuthenticatedController
             $_SESSION['plugin_toggle'] = array();
         }
 
+        require_once 'lib/resources/resourcesFunc.inc.php';
+        if (!checkAvailableResources($id)) {
+            unset($this->registered_modules['resources']);
+        }
+        
         if (isset($_SESSION['admin_modules_data']['msg'])) {
             $this->msg = $_SESSION['admin_modules_data']['msg'];
             unset($_SESSION['admin_modules_data']['msg']);

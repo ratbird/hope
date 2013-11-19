@@ -29,7 +29,7 @@ use Studip\Button, Studip\LinkButton;
     </colgroup>
     <tbody>
 <?
-foreach ($modules->registered_modules as $key => $val) {
+foreach ($registered_modules as $key => $val) {
     if ($sem_class) {
         $mod = $sem_class->getSlotModule($key);
         $slot_editable = $mod 

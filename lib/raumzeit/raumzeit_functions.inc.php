@@ -70,7 +70,15 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 
     // entscheidet, ob der aktuelle Termin ausgewählt ist oder nicht
     if (Request::option('cycle_id') == $cycle_id) {
-        $tpl['checked'] = in_array($val->getSingleDateId(), Request::optionArray('singledate'));
+        $options =  Request::optionArray('singledate');
+        
+        if (empty($options)) {
+            if ($val->getStartTime() >= time()) {
+                $tpl['checked'] = true;
+            }
+        } else {
+            $tpl['checked'] = in_array($val->getSingleDateId(), Request::optionArray('singledate'));
+        }
     } else if ($cycle_id != '') {
         if ($val->getStartTime() >= time()) {
             $tpl['checked'] = true;

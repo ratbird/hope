@@ -38,6 +38,9 @@ global  $_fullname_sql,
         $SessSemName,
         $view_mode;
 
+// clear session data of seminar-assi, otherwise the navigation item "back to seminar" will vanish
+$_SESSION['links_admin_data']['assi'] = false;
+
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     require_once 'lib/dates.inc.php';

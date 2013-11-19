@@ -32,7 +32,7 @@ class AdminNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $SessSemName, $archive_kill, $perm;
+        global $SessionSeminar, $SessSemName, $archive_kill, $perm;
 
         parent::initSubNavigation();
 
@@ -57,6 +57,11 @@ class AdminNavigation extends Navigation
         // course administration
         $navigation = new Navigation(_('Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
+        if ($SessionSeminar == null) {
+            $navigation->addSubNavigation('adminarea_start', new Navigation(_('Veranstaltung auswählen'),
+                                          'adminarea_start.php', array('list' => 'TRUE')));
+        }
+        
         $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'),
                                       'dispatch.php/course/basicdata/view/', array('list' => 'TRUE')));
         $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),

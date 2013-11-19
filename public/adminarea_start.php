@@ -39,7 +39,11 @@ require_once 'lib/admin_search.inc.php';
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwalten");
 PageLayout::setTitle(_('Verwaltung von Veranstaltungen'));
-Navigation::activateItem('/admin/course');
+if (Navigation::hasItem('/admin/course/adminarea_start')) {
+    Navigation::activateItem('/admin/course/adminarea_start');
+} else {
+    Navigation::activateItem('/admin/course');
+}
 
 // Start of Output
 include 'lib/include/html_head.inc.php'; // Output of html head

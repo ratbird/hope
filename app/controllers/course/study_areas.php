@@ -83,6 +83,7 @@ class Course_StudyAreasController extends AuthenticatedController
 
             PageLayout::setTitle(_('Studienbereichsauswahl'));
 
+            $GLOBALS['view_mode'] = "sem";
             require_once 'lib/admin_search.inc.php';
 
             include 'lib/include/html_head.inc.php';

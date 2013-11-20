@@ -156,7 +156,7 @@ class ProfileModel
         foreach($institutes as $id =>$inst_result) {
 
             if($inst_result['visible'] == 1) {
-                $entries = DataFieldEntry::getDataFieldEntries(array($this->current_user->user_id, $inst_result['Institut']));
+                $entries = DataFieldEntry::getDataFieldEntries(array($this->current_user->user_id, $inst_result['Institut_id']));
 
                 if (!empty($entries)) {
                     foreach ($entries as $entry) {
@@ -172,8 +172,10 @@ class ProfileModel
                             }
 
                             if (trim($entry->getValue()) && $view) {
-                                $institutes[$id]['datafield'][]['name']  = $entry->getName();
-                                $institutes[$id]['datafield'][]['value'] = $entry->getDisplayValue();
+                                $institutes[$id]['datafield'][] = array(
+                                    'name'  => $entry->getName(),
+                                    'value' => $entry->getDisplayValue()
+                                );
 
                                 if ($show_star) $institutes[$id]['datafield'][]['show_star'] = true;
                             }

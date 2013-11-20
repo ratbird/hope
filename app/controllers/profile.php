@@ -37,7 +37,7 @@ class ProfileController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         // Checks if user is logged in
-        $GLOBALS['auth']->login_if(($GLOBALS['auth']->auth['uid'] === 'nobody'));
+        $GLOBALS['auth']->login_if($GLOBALS['auth']->auth['uid'] === 'nobody');
 
         // Checks if voting is enabled
         if (get_config('VOTE_ENABLE')) {
@@ -45,6 +45,8 @@ class ProfileController extends AuthenticatedController
         }
 
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+
+        UrlHelper::bindLinkParam('about_data', $this->about_data);
 
         Navigation::activateItem('/profile/index');
         PageLayout::setHelpKeyword('Basis.Homepage');
@@ -75,15 +77,15 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
-        process_news_commands($about_data);
+        process_news_commands($this->about_data);
 
         //opening and closing for dates
         if (Request::option('dopen')) {
-            $about_data['dopen'] = Request::option('dopen');
+            $this->about_data['dopen'] = Request::option('dopen');
         }
 
         if (Request::option('dclose')) {
-            $about_data['dopen']='';
+            $this->about_data['dopen']='';
         }
 
         if ($_SESSION['sms_msg']) {
@@ -173,7 +175,7 @@ class ProfileController extends AuthenticatedController
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
 
         if (($this->show_news = $this->profile->checkVisibility('news')) === true) {
-            $this->profile_data = $about_data;
+            $this->profile_data = $this->about_data;
             $this->show_admin   = $show_admin;
         }
 
@@ -182,7 +184,7 @@ class ProfileController extends AuthenticatedController
             if (!in_array($this->current_user->perms, words('admin root'))) {
                 if (($this->terms = $this->profile->checkVisibility('termine'))) {
                     $this->show_admin   = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id);
-                    $this->profile_data = $about_data;
+                    $this->profile_data = $this->about_data;
                 }
             }
         }

@@ -75,13 +75,14 @@ class AddSeminarIdToFolder extends Migration
         $stmt->execute(array());
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+        $updated = 0;
         $stmt = $db->prepare("UPDATE folder SET seminar_id = ? WHERE folder_id = ?");
         foreach ($rows as $row) {
             $stmt->execute(array($row['seminar_id'], $row['folder_id']));
+            $updated += $stmt->rowCount();
         }
 
-        return $len;
+        return $updated;
     }
 
     /**

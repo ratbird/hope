@@ -158,15 +158,12 @@ switch ($submitted_task) {
         $module_list = $Modules->getLocalModules($i_id, 'inst', $institute->modules, $institute->type);
 
         if (isset($module_list['documents'])) {
-            $query = "INSERT INTO folder (folder_id, range_id, name, description, mkdate, chdate)
-                      VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                md5(uniqid('folder')),
-                $i_id,
+            create_folder(
                 _('Allgemeiner Dateiordner'),
                 _('Ablage für allgemeine Ordner und Dokumente der Einrichtung'),
-            ));
+                $i_id,
+                7,
+                $i_id);
         }
 
         $message = sprintf(_('Die Einrichtung "%s" wurde erfolgreich angelegt.'), htmlReady(Request::get('Name')));

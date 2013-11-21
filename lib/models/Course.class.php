@@ -161,17 +161,12 @@ class Course extends SimpleORMap
                         $course->duration_time = 0;
                     }
                 };
-        $notification_map['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
-        $notification_map['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
-        $notificator = function($course, $cb_type) use ($notification_map) {
-            if (isset($notification_map[$cb_type])) {
-                foreach(words($notification_map[$cb_type]) as $notification) {
-                    NotificationCenter::postNotification($notification, $course);
-                }
-            }
-        };
-        $this->registerCallback(array_keys($notification_map), $notificator);
-        
+
+        $this->notification_map['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
+        $this->notification_map['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
+        $this->notification_map['before_create'] = 'CourseWillCreate';
+        $this->notification_map['before_store'] = 'CourseWillUpdate';
+
         parent::__construct($id);
     }
 }

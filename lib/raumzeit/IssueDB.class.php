@@ -65,7 +65,7 @@ class IssueDB {
                     $issue->issue_id
                 ));
             } else {
-                $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate)
+                $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate, seminar_id)
                           VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array(
@@ -73,7 +73,8 @@ class IssueDB {
                     $issue->issue_id,
                     $user->id,
                     $issue->toString(),
-                    _('Themenbezogener Dateiordner')
+                    _('Themenbezogener Dateiordner'),
+                    $issue->seminar_id
                 ));
             }
         } else {

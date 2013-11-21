@@ -72,7 +72,7 @@ if ($section == 'index') {
     if (ForumPerm::has('pdfexport', $seminar_id)) {
         $eintraege[] = array(
             'icon' => 'icons/16/black/export/file-pdf.png',
-            'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'">' . _('Beiträge als PDF exportieren') .'</a>'
+            'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'" target="_blank">' . _('Beiträge als PDF exportieren') .'</a>'
         );
     }
 
@@ -202,7 +202,7 @@ endif;
             <? endif ?>
 
             <? if (ForumPerm::has('pdfexport', $seminar_id) && $section == 'index') : ?>
-                <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), PluginEngine::getLink('coreforum/index/pdfexport')) ?>
+                <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), PluginEngine::getLink('coreforum/index/pdfexport'), array('target' => '_blank')) ?>
             <? endif ?>
         </div>
     </div>
@@ -253,7 +253,7 @@ endif;
                 <? endif ?>
                 
                 <? if (ForumPerm::has('pdfexport', $seminar_id)) : ?>
-                <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), PluginEngine::getLink('coreforum/index/pdfexport/' . $topic_id)) ?>
+                <?= Studip\LinkButton::create(_('Beiträge als PDF exportieren'), PluginEngine::getLink('coreforum/index/pdfexport/' . $topic_id), array('target' => '_blank')) ?>
                 <? endif ?>
             </div>
         </div>

@@ -35,6 +35,7 @@ class Navigation implements IteratorAggregate
 
     protected $active;
     protected $enabled;
+    protected $initialized = false;
 
     protected $active_image;
     protected $badgeNumber;
@@ -166,6 +167,15 @@ class Navigation implements IteratorAggregate
     }
 
     /**
+     * used to defer initialization of item metadata, override in subclasses
+     * if initialization is costly
+     */
+    protected function initItem()
+    {
+        $this->initialized = true;
+    }
+
+    /**
      * Return the current image attributes associated with this
      * navigation item. Attributes are returned as an array with
      * at least the 'src' key set.
@@ -174,6 +184,9 @@ class Navigation implements IteratorAggregate
      */
     public function getImage()
     {
+        if ($this->initialized === false) {
+            $this->initItem();
+        }
         if (isset($this->active_image) && $this->isActive()) {
             return $this->active_image;
         } else {
@@ -188,6 +201,9 @@ class Navigation implements IteratorAggregate
      */
     public function getTitle()
     {
+        if ($this->initialized === false) {
+            $this->initItem();
+        }
         return $this->title;
     }
 
@@ -198,6 +214,9 @@ class Navigation implements IteratorAggregate
      */
     public function getDescription()
     {
+        if ($this->initialized === false) {
+            $this->initItem();
+        }
         return $this->description;
     }
 
@@ -210,6 +229,9 @@ class Navigation implements IteratorAggregate
      */
     public function getURL()
     {
+        if ($this->initialized === false) {
+            $this->initItem();
+        }
         if (isset($this->url)) {
             if (isset($this->params)) {
                 return URLHelper::getURL($this->url, $this->params);
@@ -285,7 +307,7 @@ class Navigation implements IteratorAggregate
      */
     public function isVisible($needs_image = false)
     {
-        if ($needs_image && !isset($this->image)) {
+        if ($needs_image && !is_array($this->getImage())) {
             return false;
         }
 

@@ -22,7 +22,10 @@ class CommunityNavigation extends Navigation
     public function __construct()
     {
         parent::__construct(_('Community'));
+    }
 
+    protected function initItem()
+    {
         $onlinetip = _('Nur Sie sind online');
         $user_count = get_users_online_count(10); // Should be the same value as in public/index.php
 

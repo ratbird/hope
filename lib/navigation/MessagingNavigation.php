@@ -22,10 +22,15 @@ class MessagingNavigation extends Navigation
      */
     public function __construct()
     {
-        global $user, $neux;
 
         parent::__construct(_('Nachrichten'));
+    }
 
+    protected function initItem()
+    {
+        global $user, $neux;
+
+        parent::initItem();
         $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
 
         $neum = count_messages_from_user('in', ' AND message_user.readed = 0 ');
@@ -47,6 +52,7 @@ class MessagingNavigation extends Navigation
         } else {
             $tip = _('Sie haben keine alten empfangenen Nachrichten');
         }
+
 
         $this->setImage('header/mail.png', array('title' => $tip, "@2x" => TRUE));
     }

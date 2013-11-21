@@ -26,10 +26,14 @@ class ProfileNavigation extends Navigation
      */
     public function __construct()
     {
-        global $user, $auth;
 
         parent::__construct(_('Profil'));
-
+    }
+    
+    protected function initItem()
+    {
+        global $user;
+        parent::initItem();
         $db = DBManager::get();
 
         $time = $user->cfg->PROFILE_LAST_VISIT ? $user->cfg->PROFILE_LAST_VISIT : $user->cfg->LAST_LOGIN_TIMESTAMP;
@@ -37,7 +41,7 @@ class ProfileNavigation extends Navigation
         $hp_txt = _('Zu Ihrer Profilseite');
         $hp_link = 'dispatch.php/profile';
         
-        $hp_txt .= sprintf(' (%s, %s)', $auth->auth['uname'], $auth->auth['perm']);
+        $hp_txt .= sprintf(' (%s, %s)', $user->username, $user->perms);
         $this->setURL($hp_link);
         $this->setImage('header/profile.png', array('title' => $hp_txt, 'class' => $hp_class, "@2x" => TRUE));
     }

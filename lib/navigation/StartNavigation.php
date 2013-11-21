@@ -20,9 +20,16 @@ class StartNavigation extends Navigation
      */
     public function __construct()
     {
-        global $user;
 
         parent::__construct(_('Start'), 'index.php');
+
+    }
+
+    protected function initItem()
+    {
+        global $user;
+
+        parent::initItem();
 
         $db = DBManager::get();
 

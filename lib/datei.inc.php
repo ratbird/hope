@@ -586,6 +586,11 @@ function move_item($item_id, $new_parent, $change_sem_to = false)
                 $statement->execute(array($new_parent, $cid, $item_id));
 
                 if ($change_sem_to) {
+                    if (is_array($folder) && count($folder)) {
+                        $query = "UPDATE folder SET seminar_id = ? WHERE folder_id IN (?)";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($cid, $folder));
+                    }
                     $folder[] = $item_id;
                     // TODO (mlunzena): notify these documents
                     $query = "UPDATE dokumente SET seminar_id = ? WHERE range_id IN (?)";

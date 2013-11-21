@@ -580,9 +580,10 @@ function move_item($item_id, $new_parent, $change_sem_to = false)
             }
 
             if (!$target_is_child){
-                $query = "UPDATE folder SET range_id = ? WHERE folder_id = ?";
+                $query = "UPDATE folder SET range_id = ?, seminar_id = ? WHERE folder_id = ?";
                 $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($new_parent, $item_id));
+                $cid = $change_sem_to ?: $SessionSeminar;
+                $statement->execute(array($new_parent, $cid, $item_id));
 
                 if ($change_sem_to) {
                     $folder[] = $item_id;
@@ -644,7 +645,8 @@ function copy_item($item_id, $new_parent, $change_sem_to = false)
             $seed = md5(uniqid('blaofuasof',1));
 
             if (!$target_is_child) {
-                if (!($folder_count = copy_folder($item_id, $new_parent, $seed))) {
+                $cid = $change_sem_to ?: $SessionSeminar;
+                if (!($folder_count = copy_folder($item_id, $new_parent, $seed, $cid))) {
                     return false;
                 }
                 $folder[] = $item_id;
@@ -696,7 +698,7 @@ function copy_doc($doc_id, $new_range, $new_sem = false)
     return $doc->store();
 }
 
-function copy_folder($folder_id, $new_range, $seed = false)
+function copy_folder($folder_id, $new_range, $seed = false, $seminar_id = null)
 {
     if (!$seed) {
         $seed = md5(uniqid('blaofuasof', 1));
@@ -714,8 +716,8 @@ function copy_folder($folder_id, $new_range, $seed = false)
     // Prepare insert statement
     $query = "INSERT INTO folder
                 (folder_id, range_id, user_id, name, description, mkdate,
-                 chdate, permission)
-              VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?)";
+                 chdate, permission, seminar_id)
+              VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)";
     $insert_statement = DBManager::get()->prepare($query);
 
     // Execute select statement
@@ -732,7 +734,8 @@ function copy_folder($folder_id, $new_range, $seed = false)
             $temp['name'],
             $temp['description'],
             $temp['mkdate'],
-            $temp['permission']
+            $temp['permission'],
+            $seminar_id
         ));
         if (!$insert_statement->rowCount()){
             return false;
@@ -755,7 +758,8 @@ function copy_folder($folder_id, $new_range, $seed = false)
                         $temp['name'],
                         $temp['description'],
                         $temp['mkdate'],
-                        $temp['permission']
+                        $temp['permission'],
+                        $seminar_id
                     ));
 
                     $count += $insert_statement->rowCount();

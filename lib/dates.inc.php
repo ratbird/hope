@@ -358,7 +358,7 @@ function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem
             $statement->execute(array($termin_id));
             $folder_id = $statement->fetchColumn();
 
-            move_item($folder_id, $sem_id, true);
+            move_item($folder_id, $sem_id, $sem_id);
 
             $query = "UPDATE folder SET name = ?, description = ? WHERE folder_id = ?";
             $statement = DBManager::get()->prepare($query);

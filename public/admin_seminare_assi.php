@@ -2060,16 +2060,12 @@ if (($form == 6) && (Request::submitted('jump_next')))
 
             //Standard Ordner im Foldersystem anlegen, damit Studis auch ohne Zutun des Dozenten Uploaden k&ouml;nnen
             if ($_SESSION['sem_create_data']["modules_list"]["documents"]) {
-                $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate)
-                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array(
-                    md5(uniqid('sommervogel', true)),
-                    $_SESSION['sem_create_data']['sem_id'],
-                    $user_id,
+                create_folder(
                     _('Allgemeiner Dateiordner'),
-                    _('Ablage für allgemeine Ordner und Dokumente der Veranstaltung')
-                ));
+                    _('Ablage für allgemeine Ordner und Dokumente der Veranstaltung'),
+                    $_SESSION['sem_create_data']['sem_id'],
+                    7,
+                    $_SESSION['sem_create_data']['sem_id']);
             }
 
             //Vorbesprechung, falls vorhanden, in Termintabelle eintragen

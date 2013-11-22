@@ -739,17 +739,17 @@ class SingleDate {
     }
     
     /**
-     * adds a given user_id as a related person to the date
-     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     * adds a given statusgruppe_id as a related group to the date
+     * @param string $statusgruppe_id  statusgruppe_id from statusgruppen of the group to be added
      */
-    public function addRelatedGroup($user_id) {
-        $this->related_groups[] = $user_id;
+    public function addRelatedGroup($statusgruppe_id) {
+        $this->related_groups[] = $statusgruppe_id;
         $this->related_groups = array_unique($this->related_groups);
     }
 
     /**
-     * unsets a given user_id from the array of related persons
-     * @param string $user_id  user_id from auth_user_md5 of the person to be added
+     * unsets a given statusgruppe_id from the array of related statusgruppen
+     * @param string $statusgruppe_id  statusgruppe_id from statusgruppen of the group to be removed
      */
     public function deleteRelatedGroup($statusgruppe_id) {
         if (!$this->related_groups) {
@@ -764,8 +764,8 @@ class SingleDate {
     }
 
     /**
-     * gets all user_ids of related persons of this date
-     * @return array of user_ids
+     * gets all statusgruppe_ids of related groups of this date
+     * @return array of statusgruppe_ids
      */
     public function getRelatedGroups() {
         if (count($this->related_groups)) {
@@ -777,8 +777,7 @@ class SingleDate {
     }
 
     /**
-     * clears all related persons (in the interface this means that all dozents are
-     * marked as related to the date)
+     * clears all related groups
      */
     public function clearRelatedGroups() {
         $this->related_groups = array();

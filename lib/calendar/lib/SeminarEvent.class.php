@@ -235,4 +235,19 @@ class SeminarEvent extends Event
     {
         return (($this->getEnd() - $this->getStart()) / 60 / 60) > 23;
     }
+    
+    /**
+     * Returns all related groups.
+     * 
+     * @return array An array of statusgruppen objects or an empty array, 
+     */
+    function getRelatedGroups()
+    {
+        $groups = array();
+        foreach (SingleDate::getInstance($this->getId())->getRelatedGroups()
+                as $group_id) {
+            $groups[$group_id] = new Statusgruppen($group_id);
+        }
+        return $groups;
+    }
 }

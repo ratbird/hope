@@ -782,9 +782,7 @@ function js_hover(Event $aterm)
                 . htmlReady($aterm->toStringAccessibility()) . '<br>';
         $jscript_text .= '<b>' . _("Wiederholung:") . ' </b>'
                 . htmlReady($aterm->toStringRecurrence()) . '<br>';
-    }
-
-    if (!($aterm instanceof SeminarEvent)) {
+        
         if (get_config('CALENDAR_GROUP_ENABLE')) {
             $jscript_text .= sprintf(_('<span style="font-weight: bold;">Eingetragen am:</span> %s von %s'),
                 strftime('%x, %X', $aterm->getMakeDate()),
@@ -804,7 +802,17 @@ function js_hover(Event $aterm)
                     strftime('%x, %X', $aterm->getChangeDate())) . '<br>';
             }
         }
+    } else {
+        // related groups
+        $related_groups = $aterm->getRelatedGroups();
+        if (sizeof($related_groups)) {
+            $jscript_text .= '<b>' . _("Betroffene Gruppen:") . ' </b>'
+                    . htmlReady(implode(', ', array_map(
+                            function ($group) { return $group->name; },
+                            $related_groups))) . '<br>';
+        }
     }
+    
     $jscript_text .= '<br>';
 
     return " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($aterm->toStringDate('SHORT_DAY'), 'inline-single') . "', '" . JSReady($jscript_text, 'inline-single') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";

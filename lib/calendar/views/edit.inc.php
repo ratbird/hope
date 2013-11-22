@@ -81,6 +81,16 @@ if (!$set_recur_x) {
         echo _("Veranstaltung") . ":&nbsp; ";
         echo htmlReady($_calendar->event->getSemName());
         echo "</td>\n</tr>\n";
+        // related groups
+        $related_groups = $_calendar->event->getRelatedGroups();
+        if (sizeof($related_groups)) {
+            echo "<tr>\n<td width=\"100%\">\n";
+            echo _('Betroffene Gruppen') . ":&nbsp; ";
+            echo htmlReady(implode(', ', array_map(
+                    function ($group) { return $group->name; },
+                    $related_groups)));
+            echo "</td>\n</tr>\n";
+        }
     }
 
     echo "<tr>\n<td width=\"100%\">\n";

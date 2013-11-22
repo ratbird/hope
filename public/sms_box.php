@@ -89,7 +89,7 @@ if (Request::option('readingconfirmation')) {
         $subject = sprintf (_("Lesebestätigung von %s"), $user->getFullName());
         $message = sprintf (_("Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen."), "%%".$user->getFullName()."%%", "%%".$orig_subject."%%", "%%".$date."%%");
         restoreLanguage();
-        $msging->insert_message(mysql_escape_string($message), $uname_snd, "____%system%____", FALSE, FALSE, 1, FALSE, mysql_escape_string($subject));
+        $msging->insert_message($message, $uname_snd, "____%system%____", FALSE, FALSE, 1, FALSE, $subject);
     }
 }
 

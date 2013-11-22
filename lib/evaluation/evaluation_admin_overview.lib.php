@@ -977,7 +977,7 @@ class EvalOverview {
 
                     $sms = new messaging();
                     $sms->insert_message(
-                            mysql_escape_string(sprintf(_("Benutzer **%s** hat versucht eine unzulässige Änderung an Ihrer Evaluation **%s** vorzunehmen."), get_username($auth->auth["uid"]), $eval->getTitle())), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Versuchte Änderung an Ihrer Evaluation"));
+                            sprintf(_("Benutzer **%s** hat versucht eine unzulässige Änderung an Ihrer Evaluation **%s** vorzunehmen."), get_username($auth->auth["uid"]), $eval->getTitle()), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Versuchte Änderung an Ihrer Evaluation"));
                 }
             }
         } else if ($eval->isTemplate() &&
@@ -987,7 +987,7 @@ class EvalOverview {
 
             $sms = new messaging();
             $sms->insert_message(
-                    mysql_escape_string(sprintf(_("Benutzer **%s** hat versucht eine unzulässige Änderung an Ihrem Template **%s** vorzunehmen."), get_username($auth->auth["uid"]), $eval->getTitle())), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Versuchte Änderung an Ihrem Template"));
+                    sprintf(_("Benutzer **%s** hat versucht eine unzulässige Änderung an Ihrem Template **%s** vorzunehmen."), get_username($auth->auth["uid"]), $eval->getTitle()), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Versuchte Änderung an Ihrem Template"));
             return $this->createSafeguard("ausruf", sprintf(_("Sie besitzen keine Rechte für das Tempate <b>%s</b>. Der Besitzer wurde durch eine systeminterne Nachricht informiert."), $evalName));
         }
         /* ----------------------------------------- end: check for permissions */
@@ -1534,7 +1534,7 @@ class EvalOverview {
         if (($evalChanged) && ($eval->getAuthorID() != $auth->auth["uid"])) {
 
             $sms = new messaging();
-            $sms->insert_message(mysql_escape_string(sprintf(_("An Ihrer Evaluation \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), $eval->getTitle(), get_username($auth->auth["uid"]))), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1");
+            $sms->insert_message(sprintf(_("An Ihrer Evaluation \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), $eval->getTitle(), get_username($auth->auth["uid"])), get_username($eval->getAuthorID()), "____%system%____", FALSE, FALSE, "1");
         }
         /* ------------------------------------------------------ end: send SMS */
 

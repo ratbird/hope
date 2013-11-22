@@ -240,7 +240,7 @@ class messaging
 
         setTempLanguage($rec_user_id);
 
-        $title = "[Stud.IP - " . $GLOBALS['UNI_NAME_CLEAN'] . "] ".stripslashes(kill_format(str_replace(array("\r","\n"), '', $subject)));
+        $title = "[Stud.IP - " . $GLOBALS['UNI_NAME_CLEAN'] . "] ".kill_format(str_replace(array("\r","\n"), '', $subject));
 
         if ($snd_user_id != "____%system%____") {
             $sender = User::find($snd_user_id);
@@ -250,13 +250,13 @@ class messaging
         }
 
         $template = $GLOBALS['template_factory']->open('mail/text');
-        $template->set_attribute('message', kill_format(stripslashes($message)));
+        $template->set_attribute('message', kill_format($message));
         $template->set_attribute('rec_fullname', $rec_fullname);
         $mailmessage = $template->render();
 
         $template = $GLOBALS['template_factory']->open('mail/html');
         $template->set_attribute('lang', getUserLanguagePath($rec_user_id));
-        $template->set_attribute('message', stripslashes($message));
+        $template->set_attribute('message', $message);
         $template->set_attribute('rec_fullname', $rec_fullname);
         $mailhtml = $template->render();
 

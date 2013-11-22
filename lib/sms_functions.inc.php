@@ -437,7 +437,7 @@ function print_rec_message($prm) {
                                         '%%' . $user_fullname . '%%',
                                         '%%' . $prm['message_subject'] . '%%',
                                         '%%' . date('d.m.y, H:i', $prm['mkdate']) . '%%');
-                    $msging->insert_message(mysql_escape_string($message), $prm['uname_snd'], '____%system%____', FALSE, FALSE, 1, FALSE, mysql_escape_string($subject));
+                    $msging->insert_message($message, $prm['uname_snd'], '____%system%____', FALSE, FALSE, 1, FALSE, $subject);
                 }
             }
         }

@@ -605,7 +605,7 @@ if ($seminar_id
                         if ($delete_statement->rowCount()) {
                             setTempLanguage($row['user_id']);
                             $message= sprintf(_('Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden.'), $admin_admission_data['name']);
-                            $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('nicht zugelassen in Veranstaltung'), TRUE);
+                            $messaging->insert_message($message, $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('nicht zugelassen in Veranstaltung'), TRUE);
                             restoreLanguage();
                         }
                     }
@@ -649,7 +649,7 @@ if ($seminar_id
                     $delete_statement->execute(array($row['user_id'], $row['Seminar_id']));
 
                     $message=sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **vorläufig akzeptiert** befördert, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
-                    $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('vorläufig akzeptiert'), TRUE);
+                    $messaging->insert_message($message, $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('vorläufig akzeptiert'), TRUE);
                     RemovePersonStatusgruppe($row['username'], $admin_admission_data['sem_id']);
                 }
 
@@ -674,7 +674,7 @@ if ($seminar_id
                 if ($deleted > 0) {
                     foreach ($usernames as $username) {
                         $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.'), $admin_admission_data['name']);
-                        $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
+                        $messaging->insert_message($message, $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
                          RemovePersonStatusgruppe($username, $admin_admission_data['sem_id']);
                     }
                 }
@@ -727,7 +727,7 @@ if ($seminar_id
                         ));
 
                         $message = sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **Autor** versetzt, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
-                        $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Statusänderung'), TRUE);
+                        $messaging->insert_message($message, $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Statusänderung'), TRUE);
                     }
 
                     // Prepare and execute statement that updates the admission
@@ -848,7 +848,7 @@ if ($seminar_id
             if ($statement->rowCount()) {
                 foreach ($usernames as $username) {
                     $message = sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an."), $admin_admission_data['name']);
-                    $messaging->insert_message (addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
+                    $messaging->insert_message($message, $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
                     RemovePersonStatusgruppe($username, $admin_admission_data['sem_id']);
                 }
             }
@@ -888,7 +888,7 @@ if ($seminar_id
                 ));
 
                 $message = sprintf(_('Sie wurden in die Veranstaltung **%s** eingetragen, da das Anmeldeverfahren aufgehoben wurde. Damit sind Sie als Teilnehmer der Präsenzveranstaltung zugelassen.'), $admin_admission_data['name']);
-                $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
+                $messaging->insert_message($message, $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
 
                 $inserted += 1;
             }

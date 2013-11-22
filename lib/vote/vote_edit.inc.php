@@ -335,7 +335,7 @@ if(Request::submitted('saveButton')) {
         $smsText = sprintf( _("An Ihrer Umfrage '%s' wurden von dem/der Administrator/in %s Änderungen vorgenommen."),
                 $vote->getTitle(),
                 $vote->voteDB->getAuthorRealname($auth->auth["uid"]) );
-            $sms->insert_message(mysql_escape_string( $smsText ), $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Umfrage/Test geändert"));
+            $sms->insert_message($smsText, $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Umfrage/Test geändert"));
             restoreLanguage();
     }
     }

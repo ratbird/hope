@@ -2101,8 +2101,8 @@ if ($_sendMessage) {
         $reqObj->store();
         foreach ($users as $userid) {
             setTempLanguage($userid);
-            $messaging->insert_message(addslashes($message), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE,
-                addslashes(_("Raumanfrage abgelehnt:") .' '. implode(', ', $title)), TRUE, 'high');
+            $messaging->insert_message($message, get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE,
+                _("Raumanfrage abgelehnt:") .' '. implode(', ', $title), TRUE, 'high');
             restoreLanguage();
         }
     }
@@ -2122,7 +2122,7 @@ if ($_sendMessage) {
         {
             foreach ($users as $userid) {
                 setTempLanguage($userid);
-                $messaging->insert_message(addslashes($message) . strip_tags(str_ireplace('<br>', "\n", $GLOBALS['messageForUsers'])), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE, _("Raumanfrage bearbeitet"), TRUE);
+                $messaging->insert_message($message . strip_tags(str_ireplace('<br>', "\n", $GLOBALS['messageForUsers'])), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE, _("Raumanfrage bearbeitet"), TRUE);
                 restoreLanguage();
             }
         }

@@ -1233,9 +1233,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         if ($reset) {
             $this->content_db = $this->content;
-            foreach (array_keys($this->relations) as $one) {
-                $this->relations[$one] = null;
-            }
             $this->applyCallbacks('after_initialize');
         }
         return $count;
@@ -1298,7 +1295,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         }
         if (!$where_query || count($pk_not_set)){
-            return false;
+            if ($this->isNew()) {
+                return false;
+            } else {
+                throw new UnexpectedValueException(sprintf("primary key incomplete: %s must not be null", join(',',$pk_not_set)));
+            }
         }
         return $where_query;
     }
@@ -1342,67 +1343,64 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return false;
         }
 
-        $where_query = $this->getWhereQuery();
-        if ($where_query) {
-            if ($this->isDirty() || $this->isNew()) {
-                if ($this->isNew()) {
-                    if ($this->applyCallbacks('before_create') === false) {
-                        return false;
-                    }
-                } else {
-                    if ($this->applyCallbacks('before_update') === false) {
-                        return false;
-                    }
+        if ($this->isDirty() || $this->isNew()) {
+            if ($this->isNew()) {
+                if ($this->applyCallbacks('before_create') === false) {
+                    return false;
                 }
-                foreach ($this->db_fields as $field => $meta) {
-                    $value = $this->content[$field];
-                    if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
-                        $value = time();
-                    }
-                    if ($field == 'mkdate') {
-                        if ($this->isNew()) {
-                            if (!$this->isFieldDirty($field)) {
-                                $value = time();
-                            }
-                        } else {
-                            continue;
-                        }
-                    }
-                    if ($value === null && $meta['null'] == 'NO') {
-                        $value = $this->default_values[$field];
-                        if ($value === null) {
-                            throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
-                        }
-                    }
-                    if (is_float($value)) {
-                        $value = str_replace(',','.', $value);
-                    }
-                    $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
-                }
-                if (!$this->isNew()) {
-                    $query = "UPDATE `{$this->db_table}` SET "
-                    . implode(',', $query_part);
-                    $query .= " WHERE ". join(" AND ", $where_query);
-                } else {
-                    $query = "INSERT INTO `{$this->db_table}` SET "
-                    . implode(',', $query_part);
-                }
-                $ret = DBManager::get()->exec($query);
-                if ($this->isNew()) {
-                    $this->applyCallbacks('after_create');
-                } else {
-                    $this->applyCallbacks('after_update');
+            } else {
+                if ($this->applyCallbacks('before_update') === false) {
+                    return false;
                 }
             }
-            $rel_ret = $this->storeRelations();
-            $this->applyCallbacks('after_store');
-            if ($ret || $rel_ret) {
-                $this->restore();
+            foreach ($this->db_fields as $field => $meta) {
+                $value = $this->content[$field];
+                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
+                    $value = time();
+                }
+                if ($field == 'mkdate') {
+                    if ($this->isNew()) {
+                        if (!$this->isFieldDirty($field)) {
+                            $value = time();
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+                if ($value === null && $meta['null'] == 'NO') {
+                    $value = $this->default_values[$field];
+                    if ($value === null) {
+                        throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
+                    }
+                }
+                if (is_float($value)) {
+                    $value = str_replace(',','.', $value);
+                }
+                $this->content[$field] = $value;
+                $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
             }
-            return $ret + $rel_ret;
-        } else {
-            return false;
+            if (!$this->isNew()) {
+                $where_query = $this->getWhereQuery();
+                $query = "UPDATE `{$this->db_table}` SET "
+                . implode(',', $query_part);
+                $query .= " WHERE ". join(" AND ", $where_query);
+            } else {
+                $query = "INSERT INTO `{$this->db_table}` SET "
+                . implode(',', $query_part);
+            }
+            $ret = DBManager::get()->exec($query);
+            if ($this->isNew()) {
+                $this->applyCallbacks('after_create');
+            } else {
+                $this->applyCallbacks('after_update');
+            }
         }
+        $rel_ret = $this->storeRelations();
+        $this->applyCallbacks('after_store');
+        if ($ret || $rel_ret) {
+            $this->restore();
+        }
+        return $ret + $rel_ret;
     }
 
     /**
@@ -1559,6 +1557,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             } else {
                 throw new UnexpectedValueException(sprintf('Column %s not found for alias %s', $field, $alias));
             }
+        }
+        foreach (array_keys($this->relations) as $one) {
+            $this->relations[$one] = null;
         }
     }
 

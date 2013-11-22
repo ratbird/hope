@@ -68,14 +68,12 @@
                     </td>
                     <td>
                         <? if (count($contact_groups)) : ?>
-                        <label>
-                        <?= _("An Kontaktgruppe(n)") ?><br>
-                        <select multiple name="contact_group[]" id="contact_groups" style="width: 100%" size="<?= count($contact_groups) <= 4 ? count($contact_groups) : "4"  ?>">
+                        <?= _("An Kontaktgruppe(n)") ?>
+                        <div style="width: 50%; max-height: 200px; overflow-y: auto;">
                             <? foreach ($contact_groups as $group) : ?>
-                            <option value="<?= htmlReady($group['statusgruppe_id']) ?>"><?= htmlReady($group['name']) ?></option>
+                            <div><label><input type="checkbox" name="contact_group[]" class="contact_group" value="<?= htmlReady($group['statusgruppe_id']) ?>"><?= htmlReady($group['name']) ?></label></div>
                             <? endforeach ?>
-                        </select>
-                        </label>
+                        </div>
                         <? else : ?>
                         <a href="<?= URLHelper::getLink("contact_statusgruppen.php") ?>"><?= _("Legen Sie eine Kontaktgruppe an, um an mehrere Kontakte zugleich zu blubbern.") ?></a>
                         <? endif ?>

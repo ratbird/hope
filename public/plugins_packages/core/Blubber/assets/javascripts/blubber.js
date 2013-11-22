@@ -56,6 +56,10 @@ STUDIP.Blubber = {
             STUDIP.Blubber.alreadyThreadWriting = true;
             var content = jQuery("#new_posting").val();
             var context_type = jQuery("#context_type").val();
+            var contact_groups = [];
+            jQuery("input[type=checkbox].contact_group:checked").each(function (index, input) {
+                contact_groups.push(jQuery(input).val());
+            });
             if (!context_type) {
                 context_type = jQuery("#context_selector input[name=context_type]").val();
             }
@@ -65,7 +69,7 @@ STUDIP.Blubber = {
                     'context_type': context_type,
                     'context': jQuery("#context_selector [name=context]").val(),
                     'content': content,
-                    'contact_groups': jQuery("#contact_groups").val(),
+                    'contact_groups': contact_groups,
                     'anonymous_name': jQuery("#anonymous_name").val(),        //nobody only
                     'anonymous_email': jQuery("#anonymous_email").val(),      //nobody only
                     'anonymous_security': jQuery("#anonymous_security").val() //nobody only

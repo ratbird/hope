@@ -394,4 +394,8 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
 
     include 'lib/include/html_end.inc.php';
   }
+
+    static function getDescription() {
+        return '';
+    }
 }

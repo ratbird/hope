@@ -191,4 +191,8 @@ abstract class StudIPPlugin {
         }
         PageLayout::addStylesheet($this->getPluginURL() . '/' . $filename);
     }
+
+    static function getDescription() {
+        return '';
+    }
 }

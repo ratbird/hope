@@ -47,4 +47,13 @@ class CoreLiterature implements StudipModule {
     {
         return null;
     }
+
+    static function getDescription() {
+        return _('Je nach Anbindung kann im tatsächlichen Buchbestand der '.
+            'Hochschule recherchiert werden. Darüber hinaus haben Sie die '.
+            'Möglichkeit, veranstaltungsspezifische Literaturlisten entweder '.
+            'zu erstellen oder bestehende Listen aus anderen '.
+            'Literaturverwaltungsprogrammen hochzuladen. Diese Listen können '.
+            'in Lehrveranstaltungen kopiert und sichtbar geschaltet werden.');
+     }
 }

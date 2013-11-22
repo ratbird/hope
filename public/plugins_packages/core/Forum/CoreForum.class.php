@@ -215,4 +215,11 @@ class CoreForum extends StudipPlugin implements ForumModule
     {
         ForumEntry::getDump($seminar_id);
     }
+
+    static function getDescription() {
+        return _('Textbasierte und zeit- und ortsunabhängige '.
+            'Diskursmöglichkeit. Lehrende können parallel zu '.
+            'Veranstaltungsthemen Fragen stellen, die von den Studierenden '.
+            'per Meinungsaustausch besprochen werden.');
+    }
 }

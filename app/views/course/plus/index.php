@@ -79,7 +79,13 @@ foreach ($registered_modules as $key => $val) {
                     print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $modules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $modules->registered_modules[$key]["msg_activate"]);
             } else
                 print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $modules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $modules->registered_modules[$key]["msg_activate"]);
+            if (method_exists ($mod, 'getDescription')) {
             ?>
+                <br/>
+                <i><?= formatReady($mod::getDescription()) ?></i>
+            <?php
+            }
+            ?>            
         </td>
     </tr>
     <? }
@@ -117,6 +123,8 @@ foreach ($available_plugins as $plugin) {
                 <? else: ?>
                     <?= _('Dieses Plugin kann jederzeit deaktiviert werden.') ?>
                 <? endif ?>
+                <br/>
+                <i><?= formatReady($plugin::getDescription()) ?></i>
             </td>
         </tr>
         <?php

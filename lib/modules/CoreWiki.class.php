@@ -86,4 +86,12 @@ class CoreWiki implements StudipModule {
         
         return $items;
     }
+
+    static function getDescription() { 
+        return _('Im Wiki können verschiedene AutorInnen gemeinsam an Texten, '. 
+            'Konzepten und anderen schriftlichen Arbeiten arbeiten. Alle können '. 
+            'an diesem Text arbeiten. Im Wiki kann eine Vielzahl verschiedener '. 
+            'Texte hinterlegt werden, die von allen Veranstaltungsteilnehmenden '. 
+            'verändert, ergänzt und miteinander verknüpft werden'); 
+    }
 }

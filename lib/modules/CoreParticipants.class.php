@@ -71,4 +71,8 @@ class CoreParticipants implements StudipModule {
         
         return $items;
     }
+
+    static function getDescription() {
+         return '';
+     }
 }

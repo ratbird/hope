@@ -199,15 +199,15 @@ jQuery(function () {
         dialog_height = 400;
 
     jQuery('a[rel~="get_dialog"]').live('click', function (event) {
+	    event.preventDefault();
         var from_x = jQuery(this).position().left + (jQuery(this).outerWidth() / 2);
         var from_y = jQuery(this).position().top + (jQuery(this).outerHeight() / 2) - jQuery(document).scrollTop();
 		STUDIP.News.get_dialog('news_dialog', jQuery(this).attr('href'), from_x, from_y);
-	    event.preventDefault();
     });
 
     jQuery('a[rel~="close_dialog"]').live('click', function (event) {
-	    jQuery('#news_dialog').dialog('close');
 	    event.preventDefault();
+	    jQuery('#news_dialog').dialog('close');
     });
 
     // open/close categories without ajax-request

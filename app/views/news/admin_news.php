@@ -108,7 +108,6 @@
         </form><br><br></p></td>
     </tr>
 </table>
-<div id="news_dialog" class="invisible" title="<?=_('Dialog wird geladen...')?>"></div>
 <script>
     jQuery('.news_date').datepicker();
 </script>

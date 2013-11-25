@@ -1,3 +1,8 @@
+<? if(!empty($question_text)) : ?>
+    <?= createQuestion($question_text, 
+            $question_param,
+            array()); ?>
+<? endif ?>
 <table id="news_box" role="article" class="index_box" <? if ($width): ?>style="width: <?= $width ?>;"<? endif; ?>>
     <tr>
         <td class="table_header_bold">
@@ -16,20 +21,20 @@
             </a>
         <? endif; ?>
         <? if ($show_admin): ?>
-            <a href="<?= URLHelper::getLink('admin_news.php?' . $admin_link . '&modus=admin&cmd=show') ?>">
-                <img src="<?= Assets::image_path('icons/16/white/admin.png') ?>"
-                     <?= tooltip(_('Ankündigungen bearbeiten')) ?>>
+            <a href="<?= URLHelper::getURL('dispatch.php/news/edit_news/new/'.$range_id)?>" rel="get_dialog" target="_blank">
+                <img src="<?= Assets::image_path('icons/16/white/add.png') ?>" 
+                     <?= tooltip(_('Ank&uuml;ndigung erstellen')) ?>>
             </a>
         <? endif; ?>
         </td>
     </tr>
     <tr>
         <td class="blank" colspan="2">
-<? foreach ($news as $id => $news_item): ?>
+        <? foreach ($news as $id => $news_item): ?>
             <div id="news_item_<?= $id ?>" class="news_item" role="article">
                 <?= show_news_item($news_item, $cmd_data, $show_admin, $admin_link) ?>
             </div>
-<? endforeach; ?>
+        <? endforeach; ?>
         </td>
     </tr>
 </table>

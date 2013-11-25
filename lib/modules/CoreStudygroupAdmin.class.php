@@ -30,10 +30,6 @@ class CoreStudygroupAdmin implements StudipModule {
             $navigation->addSubNavigation('avatar', new Navigation(_('Avatar'), 'dispatch.php/course/avatar/update/'.$course_id));
             
             if (!$GLOBALS['perm']->have_perm('admin')) {
-                $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
-                $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
-                $navigation->addSubNavigation('news', $item);
-
                 if (get_config('VOTE_ENABLE')) {
                     $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem');
                     $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));

@@ -27,6 +27,7 @@ require_once 'lib/object.inc.php';
  *
  *
  * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
  * @property string news_id database column
@@ -93,6 +94,99 @@ class StudipNews extends SimpleORMap {
                 $objects[$id] = new StudipNews();
                 $objects[$id]->setData($result, true);
                 $objects[$id]->setNew(false);
+            }
+        }
+        return $objects;
+    }
+
+    public static function GetNewsRangesByFilter($user_id, $area = '', $term = '', $startdate = 0, $enddate = 0, $as_objects = false, $limit = 100)
+    {
+        $news_result = array();
+        if ($limit <= 0)
+            return $news_result;
+        $where_querypart = 'news.user_id = ?';
+        $query_vars = array($user_id);
+        if ($startdate) {
+            $where_querypart .= " AND (date+expire) > ?";
+            $query_vars[] = $startdate;
+        }
+        if ($enddate) {
+            $where_querypart .= " AND date < ?";
+            $query_vars[] = $enddate;
+        }
+        if ($term) {
+            $where_querypart .= " AND topic LIKE CONCAT('%', ?, '%')";
+            $query_vars[] = $term;
+        }
+        switch ($area) {
+            case 'global': 
+                $select_querypart = 'CONCAT(news_id, "_studip") AS idx, range_id, news.* ';
+                $from_querypart = 'news_range INNER JOIN news USING(news_id)';
+                $where_querypart .= ' AND range_id = ?';
+                $order_querypart = 'news.date DESC, news.chdate DESC';
+                $query_vars[] = 'studip';
+                break;
+            case 'sem': 
+                $select_querypart = 'CONCAT(news_id, "_", range_id) AS idx, range_id, seminare.Name AS title, ' 
+                    .'seminare.start_time AS start, news.*, seminare.start_time, sd1.name AS startsem, ' 
+                    .'IF(seminare.duration_time=-1, "'._("unbegrenzt").'", sd2.name) AS endsem ';
+                $from_querypart = 'news INNER JOIN news_range USING(news_id) INNER JOIN seminare ON Seminar_id = range_id '
+                    .'LEFT JOIN semester_data sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende) '
+                    .'LEFT JOIN semester_data sd2 ON (start_time + duration_time BETWEEN sd2.beginn AND sd2.ende)';
+                $order_querypart = 'seminare.Name, news.date DESC, news.chdate DESC';
+                //$semester = new SemesterData();
+                break;
+            case 'inst': 
+                $select_querypart = 'CONCAT(news_id, "_", range_id) AS idx, range_id, Institute.Name AS title, news.* ';
+                $from_querypart = 'Institute INNER JOIN news_range ON Institut_id = range_id INNER JOIN news USING(news_id)';
+                $order_querypart = 'Institute.Name, news.date DESC, news.chdate DESC';
+                break;
+            case 'user': 
+                $select_querypart = 'CONCAT(news_id, "_", auth_user_md5.user_id) AS idx, range_id, auth_user_md5.user_id AS userid, news.* ';
+                $from_querypart = 'auth_user_md5 INNER JOIN news_range ON auth_user_md5.user_id = range_id INNER JOIN news USING(news_id)';
+                $order_querypart = 'auth_user_md5.Nachname, news.date DESC, news.chdate DESC';
+                break;
+            default: 
+                foreach (array('global', 'inst', 'sem', 'user') as $type) {
+                    $add_news = StudipNews::GetNewsRangesByFilter($user_id, $type, $term, $startdate, $enddate, $as_objects, $limit);
+                    if (is_array($add_news)) {
+                        $limit = $limit - count($add_news[$type]);
+                        $news_result = array_merge($news_result, $add_news);
+                    }
+                }
+                return $news_result;
+        }
+        $query = "SELECT $select_querypart
+                  FROM $from_querypart
+                  WHERE $where_querypart
+                  ORDER BY $order_querypart LIMIT 0, ?";
+        $query_vars[] = $limit;
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($query_vars);
+        $news_result = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        if (is_array($news_result)) {
+            foreach($news_result as $id => $result) {
+                //if (StudipNews::haveRangePermission($result['range_id'], 'edit')) {
+                    $objects[$area][$id]['range_id'] = $result['range_id'];
+                    $objects[$area][$id]['title'] = mila($result['title'], 40);
+                    if ($area == 'sem') {
+                        $objects[$area][$id]['title'] .= sprintf(' (%s%s)',
+                        $result['startsem'],
+                        $result['startsem'] != $result['endsem'] ? ' - ' . $result['endsem'] : '');
+                    } elseif ($area == 'user') {
+                        if ($GLOBALS['auth']->auth['uid'] == $result['userid'])
+                            $objects[$area][$id]['title'] = _('Ankündigungen auf Ihrer Profilseite');
+                        else
+                            $objects[$area][$id]['title'] = sprintf(_('Ankündigungen auf der Profilseite von %s'), get_fullname($result['userid']));
+                    } elseif ($area == 'global') {
+                        $objects[$area][$id]['title'] = _('Ankündigungen auf der Stud.IP Startseite');
+                    }
+                    if ($as_objects) {
+                        $objects[$area][$id]['object'] = new StudipNews();
+                        $objects[$area][$id]['object']->setData($result, true);
+                        $objects[$area][$id]['object']->setNew(false);
+                    }
+                //}
             }
         }
         return $objects;
@@ -220,6 +314,44 @@ class StudipNews extends SimpleORMap {
         return $deleted;
     }
 
+    public static function haveRangePermission($range_id, $operation, $user_id = '') {
+        static $news_range_perm_cache;
+        if (isset($news_range_perm_cache[$user_id.$range_id.$operation]))
+            return $news_range_perm_cache[$user_id.$range_id.$operation];
+        if (!$user_id)
+            $user_id = $GLOBALS['auth']->auth['uid'];
+        if ($GLOBALS['perm']->have_perm('root', $user_id))
+            return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+        $type = get_object_type($range_id, array('global', 'sem', 'inst', 'fak', 'user'));
+        switch($type) {
+            case 'global': 
+                if ($operation == 'view') 
+                    return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                break;
+            case 'fak': 
+            case 'inst':
+            case 'sem':
+                if (($operation == 'view') AND ($_SESSION['SessionSeminar'] == $range_id))
+                    return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                if (($operation == 'edit') OR ($operation == 'copy')) {
+                    if ($GLOBALS['perm']->have_studip_perm('tutor', $range_id))
+                        return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                }
+                break; 
+            case 'user':
+                if ($operation == 'view') {
+                    if (($range_id = $user_id) OR get_visibility_by_id($range_id))
+                        return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                }
+                elseif (($operation == 'edit') OR ($operation == 'copy')) {
+                    if ($GLOBALS['perm']->have_profile_perm('user', $range_id))
+                        return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                }
+                break; 
+        }
+        return $news_range_perm_cache[$user_id.$range_id.$operation] = false;
+    }
+    
     /**
      *
      * @param string $id primary key of table
@@ -286,5 +418,73 @@ class StudipNews extends SimpleORMap {
         object_kill_visits(null, $this->getId());
         object_kill_views($this->getId());
         return parent::delete();
+    }
+
+    function havePermission($operation, $user_id = '') {
+        if (!$user_id)
+            $user_id = $GLOBALS['auth']->auth['uid'];
+        if (!in_array($operation, array('delete', 'unassign', 'edit', 'copy', 'view')))
+            return false;
+        // in order to unassign, there must be more than one range assigned
+        if (($operation == 'unassign') AND (count($this->getRanges()) < 2))
+            return false;
+        // root, owner, and owner's deputy have full permission
+        if ($GLOBALS['perm']->have_perm('root', $user_id) 
+              OR (($user_id == $this->user_id) AND $GLOBALS['perm']->have_perm('autor')) 
+              OR (isDeputyEditAboutActivated() AND isDeputy($user_id, $this->user_id, true)))
+            return true;
+        // check news' ranges for edit, copy or view permission
+        if (($operation == 'unassign') OR ($operation == 'delete'))
+            $range_operation = 'edit';
+        else
+            $range_operation = $operation;
+        foreach ($this->getRanges() as $range_id) {
+            if (StudipNews::haveRangePermission($range_id, $range_operation, $user_id)) {
+                // in order to view, edit, copy, or unassign, access to one of the ranges is sufficient
+                if (($operation == 'view') OR ($operation == 'edit') OR ($operation == 'copy')) {
+                    return true;
+                } elseif ($operation == 'unassign') {
+                    return true;
+                }
+                // in order to delete, access to all ranges is necessary
+                $permission_ranges++;
+            } elseif ($operation == 'delete')
+                return false;
+        }
+        if (($operation == 'delete') AND (count($this->getRanges()) == $permission_ranges))
+            return true;
+        return false;
+    }
+    
+    function validate() {
+        if (!$this->user_id AND $this->isNew()) {
+            $this->user_id = $GLOBALS['auth']->auth['uid'];
+            $this->author = get_fullname(false, 'full', false);
+        }
+        if (!$this->user_id OR !$this->author) {
+            PageLayout::postMessage(MessageBox::error(_('Fehler: Personenangabe unvollständig.')));
+            return false;
+        }
+        if (!$this->topic) {
+            PageLayout::postMessage(MessageBox::error(_('Bitte geben Sie einen Titel für die Ankündigung ein.')));
+            return false;
+        }
+        if (!$this->body) {
+            PageLayout::postMessage(MessageBox::error(_('Bitte geben Sie einen Inhalt für die Ankündigung ein.')));
+            return false;
+        }
+        if (!count($this->getRanges())) {
+            PageLayout::postMessage(MessageBox::error(_('Die Ankündigung muss mindestens einem Bereich zugeordnet sein.')));
+            return false;
+        }
+        if ((int)$this->date < 1) {
+            PageLayout::postMessage(MessageBox::error(_('Ungültiges Einstelldatum.')));
+            return false;
+        }
+        if ((int)$this->expire < 1) {
+            PageLayout::postMessage(MessageBox::error(_('Ungültiges Ablaufdatum.')));
+            return false;
+        }
+        return true;
     }
 }

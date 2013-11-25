@@ -90,10 +90,6 @@ class CoreAdmin implements StudipModule {
             }  // endif modules only seminars
 
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
-                $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $GLOBALS['SessSemName']['class']);
-                $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
-                $navigation->addSubNavigation('news', $item);
-
                 if (get_config('VOTE_ENABLE')) {
                     $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem');
                     $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));

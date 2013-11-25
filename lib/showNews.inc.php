@@ -17,6 +17,7 @@
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author      Arne Schröder <schroeder@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     news
@@ -39,17 +40,10 @@ function process_news_commands(&$cmd_data)
     $cmd_data["comopen"]='';
     $cmd_data["comnew"]='';
     $cmd_data["comsubmit"]='';
-    $cmd_data["comdel"]='';
-    $cmd_data["comdelnews"]='';
     $comsubmit = Request::option('comsubmit');
     if (!empty($comsubmit)) {
         $cmd_data["comsubmit"]=$comsubmit;
         Request::set('comopen',$comsubmit);
-    }
-    $comdelnews = Request::quoted('comdelnews');
-    if (Request::quoted('comdelnews')){
-        $cmd_data["comdelnews"] = $comdelnews;
-        Request::set('comopen',$comdelnews);
     }
     $comopen = Request::quoted('comopen');
     if (Request::quoted('comopen')) {
@@ -58,35 +52,153 @@ function process_news_commands(&$cmd_data)
     }
 
     if (Request::option('nopen')) $cmd_data["nopen"]=Request::option('nopen');
-    if (Request::quoted('nclose'))  $cmd_data["nopen"]='';
+    if (Request::quoted('nclose')) $cmd_data["nopen"]='';
     if (Request::quoted('comnew')) $cmd_data["comnew"]=Request::quoted('comnew');
-    if (Request::quoted('comdel')) $cmd_data["comdel"]=Request::quoted('comdel');
 }
 
 /**
+ * generates proper text for confirmation question and deletes comments
  *
- * @param unknown_type $comment_id
+ *
+ * @param mixed $comment_id (single or array)
+ * @return string text for confirmation question or empty string after deletion
  */
-function delete_comment($comment_id)
+function delete_comments($delete_comments_array = '') 
 {
-    global $auth, $perm;
-
-    $ok = 0;
-    $comment = new StudipComments($comment_id);
-    if (!$comment->isNew()) {
-        if ($perm->have_perm("root")) {
-            $ok = 1;
-        } else {
-            $news = new StudipNews($comment->getValue("object_id"));
-            if (!$news->isNew() && $news->getValue("user_id") == $auth->auth["uid"]) {
-                $ok = 1;
+    $text = '';
+    if (! is_array($delete_comments_array))
+        $delete_comments_array = array($delete_comments_array);
+    if (Request::submitted('yes'))
+        $confirmed = true;
+    if ($confirmed) {
+        foreach ($delete_comments_array as $comment_id) {
+            $delete_comment = new StudipComments($comment_id);
+            if (!$delete_comment->isNew()) {
+                if (!is_object($news[$delete_comment->getValue("object_id")]))
+                    $news[$delete_comment->getValue("object_id")] = new StudipNews($delete_comment->getValue("object_id"));
+                // user has to have delete permission for news
+                if ($news[$delete_comment->getValue("object_id")]->havePermission('delete')) {
+                    $delete_comment->delete();
+                    $delete_counter++;
+                }
+                else
+                    PageLayout::postMessage(MessageBox::error(_('Keine Berechtigung zum Löschen des Kommentars.')));
             }
         }
-        if ($ok) {
-            $ok = $comment->delete();
+        if ($delete_counter > 1)
+            PageLayout::postMessage(MessageBox::success(sprintf(_('%s Kommentare wurden gelöscht.'), $delete_counter)));
+        elseif ($delete_counter == 1)
+            PageLayout::postMessage(MessageBox::success(_('Kommentar wurde gelöscht.')));
+    }
+    else {
+        if (count($delete_comments_array) > 1)
+            $text = sprintf(_('Wollen Sie die %s Komentare jetzt löschen?'), count($delete_comments_array));
+        elseif (count($delete_comments_array) == 1)
+            $text = _('Wollen Sie den Kommentar jetzt löschen?');
+    }
+    return $text;
+}
+
+/**
+ * generates proper text for confirmation question and deletes news
+ *
+ *
+ * @param mixed $delete_news_array (single id or array)
+ * @return string text for confirmation question or empty string after deletion
+ */
+function delete_news($delete_news_array) 
+{
+    $text = '';
+    if (! is_array($delete_news_array))
+        $delete_news_array = array($delete_news_array);
+    if (Request::submitted('yes'))
+        $confirmed = true;
+    foreach ($delete_news_array as $news_id) {
+        if ($news_id) {
+            $delete_news = new StudipNews($news_id);
+            $delete_news_titles[] = $delete_news->getValue('topic');
+            if ($confirmed) {
+                $msg_object = new messaging();
+                if ($delete_news->havePermission('delete')) {
+                    PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde gelöscht.'), $delete_news->getValue('topic'))));
+                    if ($delete_news->getValue('user_id') != $GLOBALS['auth']->auth['uid']) {
+                        setTempLanguage($delete_news->getValue('user_id'));
+                        $msg = sprintf(_('Ihre Ankündigung \"%s\" wurde von einer Administratorin oder einem Administrator gelöscht!.'), $delete_news->getValue('topic'), get_fullname() . ' ('.get_username().')'). "\n";
+                        $msg_object->insert_message($msg, get_username($delete_news->getValue('user_id')) , "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Ankündigung geändert"));
+                        restoreLanguage();
+                    }
+                    $delete_news->delete();
+                }
+                else
+                    PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Löschen der Ankündigung "%s".'), $delete_news->getValue('topic'))));
+            }
         }
     }
-    return $ok;
+    if (! $confirmed) {
+        if (count($delete_news_titles) == 1)
+            $text = sprintf(_('- Die Ankündigung "%s" wird unwiderruflich gelöscht.'), $delete_news_titles[0])."\n";
+        elseif (count($delete_news_titles) > 1)
+            $text = sprintf(_('- Die %s Ankündigungen "%s" werden unwiderruflich gelöscht.'), count($delete_news_titles), implode('", "', $delete_news_titles))."\n";
+    }
+    return $text;
+}
+
+/**
+ * generates proper text for confirmation question and removes range_id from news
+ *
+ *
+ * @param $remove_array array with $news_id as key and array of range_ids as value
+ * @param string $range_id
+ * @return string text for confirmation question or empty string after removal
+ */
+function remove_news($remove_array) 
+{
+    $question_text = array();
+    if (! is_array($remove_array))
+        return false;
+    if (Request::submitted('yes'))
+        $confirmed = true;
+    foreach ($remove_array as $news_id => $ranges) {
+        $remove_news = new StudipNews($news_id);
+        $remove_news_title = $remove_news->getValue('topic');
+        if (! is_array($ranges))
+            $ranges = array($ranges);
+        // should we delete news completely
+        if (count($ranges) == count($remove_news->getRanges())) {                
+            $text = delete_news($news_id);
+            if ($text)
+                $question_text[] = $text;
+        // or just remove range_id(s)?
+        } else {
+            $text = '';
+            if ($confirmed AND ! $remove_news->isNew() AND count($ranges)) {
+                if ($remove_news->havePermission('unassign')) {
+                    foreach ($ranges as $range_id) {
+                        $remove_news->deleteRange($range_id);
+                    }
+                    if (count($ranges) == 1)
+                        PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus dem Bereich entfernt.'), $remove_news->getValue('topic'))));
+                    else
+                        PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus %s Bereichen entfernt.'), $remove_news->getValue('topic'), count($ranges))));
+                    $remove_news->store();
+                } else
+                    PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s".'), $remove_news->getValue('topic'))));
+            } elseif (! $confirmed) {
+                if (count($ranges) == 1)
+                    $text = sprintf(_('- Die Ankündigung "%s" wird aus dem aktiven Bereich entfernt. '
+                                      .'Sie wird dadurch nicht endgültig gelöscht, sondern ausgehängt.'), $remove_news_title)."\n";
+                elseif (count($ranges) > 1)
+                    $text = sprintf(_('- Die Ankündigung "%s" wird aus den %s gewählten Bereichen entfernt. '
+                                      .'Sie wird dadurch nicht endgültig gelöscht, sondern ausgehängt.'), $remove_news_title, count($ranges))."\n";
+            }
+            if ($text)
+               $question_text[] = $text;
+        }
+    }
+    if (count($question_text) > 1)
+        return _('Wollen Sie die folgenden Aktionen jetzt ausführen?') . "\n" . implode($question_text);
+    elseif (count($question_text) == 1)
+        return _('Wollen Sie diese Aktion jetzt ausführen?') . "\n" . implode($question_text);
 }
 
 /**
@@ -109,19 +221,26 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
     $news = StudipNews::GetNewsByRange($range_id, true);
 
+    // delete order?
+    if (is_array($news[Request::option('ndelete')])) {
+        $question_text = delete_news(Request::option('ndelete'));
+        $question_param = array('ndelete' => Request::option('ndelete'), 'yes' => 1);      
+        // reload news items
+        $news = StudipNews::GetNewsByRange($range_id, true);
+        if ($question_text)
+            $question_text = _('Wollen Sie die folgende Aktion jetzt ausführen?') . "\n" . $question_text;
+    }
+    // remove order?
+    elseif ($news[Request::option('nremove')]) {
+        $question_text = remove_news(array(Request::option('nremove') => $range_id));
+        $question_param = array('nremove' => Request::option('nremove'), 'yes' => 1);      
+        // reload news items
+        $news = StudipNews::GetNewsByRange($range_id, true);
+    }
+    
     // Adjust news' open state
     foreach ($news as $id => &$news_item) {
         $news_item['open'] = ($id == $open);
-    }
-
-    if ($SessSemName[1] == $range_id) {
-        $admin_link = sprintf('new_%1$s=TRUE&view=news_%1$s', $SessSemName['class'] == 'sem' ? 'sem' : 'inst');
-    } else if ($range_id == $auth->auth['uid']) {
-        $admin_link = 'range_id=self';
-    } else if ($range_id == 'studip') {
-        $admin_link = 'range_id=studip';
-    } else if (isDeputyEditAboutActivated() && isDeputy($auth->auth['uid'], $range_id, true)) {
-        $admin_link = 'range_id=' . $range_id;
     }
 
     // Leave if there are no news and we are not an admin
@@ -134,17 +253,19 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     if (!count($news)) {
         $template = $GLOBALS['template_factory']->open('news/list-empty');
         $template->width      = $width;
-        $template->admin_link = $admin_link;
+        $template->range_id   = $range_id;
     } else {
         $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE')
                 ? StudipNews::GetRssIdFromRangeId($range_id)
                 : false;
 
         $template = $GLOBALS['template_factory']->open('news/list');
+        $template->question_text = $question_text;
+        $template->question_param = $question_param;
         $template->width      = $width;
+        $template->range_id   = $range_id;
         $template->rss_id     = $rss_id;
         $template->show_admin = $show_admin;
-        $template->admin_link = $admin_link;
         $template->news       = $news;
         $template->cmd_data   = $cmd_data;
     }
@@ -326,11 +447,12 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
             $showcomments = 1;
         }
     }
-
+    $news_object = new StudipNews($news_item['news_id']);
     $template = $GLOBALS['template_factory']->open('news/news-content');
     $template->news          = $news_item;
-    $template->admin_link    = $admin_link;
-    $template->may_edit      = ($auth->auth['uid'] == $news_item['user_id'] || $show_admin);
+    $template->may_edit      = $news_object->havePermission('edit');
+    $template->may_unassign  = $news_object->havePermission('unassign');
+    $template->may_delete    = $news_object->havePermission('delete');
     $template->content       = $content;
     $template->show_comments = $showcomments;
     $template->show_admin    = $show_admin;

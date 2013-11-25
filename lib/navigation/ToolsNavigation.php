@@ -44,7 +44,7 @@ class ToolsNavigation extends Navigation
         $username = $auth->auth['uname'];
 
         // news
-        $navigation = new Navigation(_('Ankündigungen'), 'admin_news.php', array('range_id' => 'self'));
+        $navigation = new Navigation(_('Ankündigungen'), 'dispatch.php/news/admin_news');
         $this->addSubNavigation('news', $navigation);
 
         // votes and tests, evaluations

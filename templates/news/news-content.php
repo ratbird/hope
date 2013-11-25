@@ -1,5 +1,5 @@
 <? use Studip\Button, Studip\LinkButton; ?>
-<table class="default">
+<table cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td class="printcontent" width="22">&nbsp;</td>
         <td class="printcontent">
@@ -9,23 +9,28 @@
         <? endif; ?>
     <? if ($news['allow_comments']): ?>
         <? if ($show_comments): ?>
+            <br>
             <a name="anker"></a>
-            <table border="0" cellpadding="2" cellspacing="0" width="90%" align="center" style="margin-top:10px">
-                <tr align="center">
-                    <td>
-                        <b><?= _('Kommentare') ?><b>
+            <table class="default" style="margin-top:10px; width: 95%;">
+                <tr class="nohover">
+                    <td style="text-align: center" colspan="3">
+                        <b><?= _('Kommentare') ?></b>
+                        <? if ($may_edit): ?>
+                            &nbsp;
+                            <a href="<?=URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id'].'?news_comments_js=toggle&news_basic_js=toggle')?>"
+                                       rel = "get_dialog" target = "_blank">
+                            <img src="<?= Assets::image_path('icons/16/blue/admin.png')?>" aria-label="<?= _('Bearbeiten') ?>">
+                            </a>
+                        <? endif; ?>
                     </td>
                 </tr>
             <? foreach (StudipComments::GetCommentsForObject($news['news_id']) as $index => $comment): ?>
-                <tr>
-                    <td>
-                        <?= $this->render_partial('news/comment-box', compact('index', 'comment')) ?>
-                    </td>
-                </tr>
+                <?= $this->render_partial('news/comment-box', compact('index', 'comment')) ?>
             <? endforeach; ?>
-            </table>
-            <br>
-            <form action="<?= URLHelper::getLink("#anker") ?>" method="POST">
+            <tr>
+                <td style="text-align: center" colspan="3">
+                <br>
+                <form action="<?= URLHelper::getLink("#anker") ?>" method="POST">
                 <?= CSRFProtection::tokenTag() ?>
                 <input type="hidden" name="comsubmit" value="<?= $news['news_id'] ?>">
                 <div align="center">
@@ -41,7 +46,10 @@
                     </a>
                     <br><br>
                 </div>
-            </form>
+                </form>
+                </td>
+            </tr>
+            </table>
             <p></p>
         <? else: ?>
             <p align="center">
@@ -54,15 +62,17 @@
     <? endif; ?>
         <? if ($may_edit): ?>
             <div align="center">
-                <?= LinkButton::create(_('Bearbeiten'),
-                                       URLHelper::getURL('admin_news.php?cmd=edit&edit_news='
-                                                        . $news['news_id'] . '&' . $admin_link)) ?>
-                <?= LinkButton::create(_('Aktualisieren'),
-                                       URLHelper::getURL('?touch_news=' . $news['news_id'] . '#anker')) ?>
-                
+            <?= LinkButton::create(_('Bearbeiten'),
+                                       URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id']),
+                                       array('rel' => 'get_dialog', 'target' => '_blank')) ?>
+            <? if ($may_unassign): ?>
+                <?= LinkButton::create(_('Entfernen'),
+                                       URLHelper::getLink('?nremove='.$news['news_id'].'#anker')) ?>
+                            <? endif; ?>
+            <? if ($may_delete): ?>
                 <?= LinkButton::create(_('Löschen'),
-                                       URLHelper::getURL('admin_news.php?cmd=kill&kill_news='
-                                                        . $news['news_id'] . '&' . $admin_link)) ?>
+                                       URLHelper::getLink('?ndelete='.$news['news_id'].'#anker')) ?>
+            <? endif; ?>
             </div>
         <? endif; ?>
         </td>

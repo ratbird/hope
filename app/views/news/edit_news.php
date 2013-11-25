@@ -122,6 +122,7 @@
                     <? endif ?>
                 <? else : ?>
                     <tr>
+                        <td width="26"></td>
                         <td colspan="2">
                             <?= _('Zu dieser Ankündigung sind keine Kommentare vorhanden.') ?>
                         </td>

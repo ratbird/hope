@@ -244,7 +244,7 @@ class CronjobScheduler
         }
 
         $escalation_time = Config::get()->CRONJOBS_ESCALATION;
-
+        
         // Check whether a previous cronjob worker is still running.
         if ($this->lock->isLocked($data)) {
             // Running but not yet escalated -> let it run
@@ -252,30 +252,36 @@ class CronjobScheduler
                 return;
             }
 
-            // Deactivate schedule
+            // Load locked schedule
             $schedule = CronjobSchedule::find($data['schedule_id']);
-            $schedule->deactivate();
+            
+            // If we discovered a deadlock release it
+            if (!$schedule)
+            {
+                
+                // Deactivate schedule
+                $schedule->deactivate();
 
-            // Adjust log
-            $log = CronjobLog::find($data['log_id']);
-            $log->duration  = time() - $data['timestamp'];
-            $log->exception = new Exception('Cronjob has escalated');
-            $log->store();
+                // Adjust log
+                $log = CronjobLog::find($data['log_id']);
+                $log->duration  = time() - $data['timestamp'];
+                $log->exception = new Exception('Cronjob has escalated');
+                $log->store();
 
-            // Inform roots about the escalated cronjob
-            $subject = sprintf('[Cronjobs] %s: %s',
-                               _('Eskalierte Ausführung'),
-                               $schedule->title);
+                // Inform roots about the escalated cronjob
+                $subject = sprintf('[Cronjobs] %s: %s',
+                                   _('Eskalierte Ausführung'),
+                                   $schedule->title);
 
-            $message = sprintf(_('Der Cronjob "%s" wurde deaktiviert, da '
-                                .'seine Ausführungsdauer die maximale '
-                                .'Ausführungszeit von %u Sekunden '
-                                .'überschritten hat.') . "\n",
-                               $schedule->title,
-                               $escalation_time);
+                $message = sprintf(_('Der Cronjob "%s" wurde deaktiviert, da '
+                                    .'seine Ausführungsdauer die maximale '
+                                    .'Ausführungszeit von %u Sekunden '
+                                    .'überschritten hat.') . "\n",
+                                   $schedule->title,
+                                   $escalation_time);
 
-            $this->sendMailToRoots($subject, $message);
-
+                $this->sendMailToRoots($subject, $message);
+            }
             // Release lock 
             $this->lock->release();
         }

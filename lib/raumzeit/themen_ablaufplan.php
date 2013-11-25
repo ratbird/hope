@@ -74,7 +74,7 @@ $themen =& $sem->getIssues();
 $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
 
 // if all entries are opened, we parse the submitted results into appropriate arrays
-foreach ($_REQUEST as $key => $val) {
+foreach (Request::getInstance() as $key => $val) {
     if (Request::get('allOpen')) {
         if (strstr($key, 'theme_title')) {
             $keys = explode('§', $key);

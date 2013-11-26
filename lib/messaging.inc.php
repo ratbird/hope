@@ -405,22 +405,21 @@ class messaging
         }
 
         // wir bastelen ein neues array, das die user_id statt des user_name enthaelt
-        for ($x=0; $x < sizeof($rec_uname); $x++) {
-            $rec_id[$x] = User::findByUsername($rec_uname[$x])->user_id;
+        $rec_id = array();
+        foreach ($rec_uname as $one) {
+            $rec_id[] = User::findByUsername($one)->user_id;
         }
+        $rec_id = array_filter($rec_id);
         // wir gehen das eben erstellt array durch und schauen, ob irgendwer was weiterleiten moechte.
         // diese user_id schreiben wir in ein tempraeres array
-        for ($x=0; $x<sizeof($rec_id); $x++) {
-            $tmp_forward_id = $this->get_forward_id($rec_id[$x]);
-            if ($tmp_forward_id && User::find($tmp_forward_id)) {
-                // Unused?
-                // $tmp_forward_copy = $this->get_forward_copy($rec_id[$x]);
-                $rec_id_tmp[] = $tmp_forward_id;
+        foreach ($rec_id as $one) {
+            $tmp_forward_id = User::find($this->get_forward_id($one))->user_id;
+            if ($tmp_forward_id) {
+                $rec_id[] = $tmp_forward_id;
             }
         }
 
         // wir mergen die eben erstellten arrays und entfernen doppelte eintraege
-        $rec_id = array_merge((array)$rec_id, (array)$rec_id_tmp);
         $rec_id = array_unique($rec_id);
 
         // hier gehen wir alle empfaenger durch, schreiben das in die db und schicken eine mail
@@ -430,13 +429,13 @@ class messaging
         $snd_name = ($user_id != '____%system%____')
             ? User::find($user_id)->getFullName() . ' (' . User::find($user_id)->username . ')'
             : 'Stud.IP-System';
-        for ($x=0; $x<sizeof($rec_id); $x++) {
-            $insert->execute(array($tmp_message_id, $rec_id[$x]));
+        foreach ($rec_id as $one) {
+            $insert->execute(array($tmp_message_id, $one));
             if ($GLOBALS['MESSAGING_FORWARD_AS_EMAIL']) {
                 // mail to original receiver
-                $mailstatus_original = $this->user_wants_email($rec_id[$x]);
+                $mailstatus_original = $this->user_wants_email($one);
                 if ($mailstatus_original == 2 || ($mailstatus_original == 3 && $email_request == 1) || $force_email) {
-                    $this->sendingEmail($rec_id[$x], $snd_user_id, $message, $subject, $tmp_message_id);
+                    $this->sendingEmail($one, $snd_user_id, $message, $subject, $tmp_message_id);
                 }
             }
         }

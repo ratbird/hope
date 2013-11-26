@@ -114,10 +114,7 @@ STUDIP.News = {
             		route = jQuery(this).attr('action');
             		form_data = jQuery(this).serialize()+'&'+button+'=1';
             		jQuery(this).find('input[name='+button+']').showAjaxNotification('left');
-            		if ((current_time.getTime() - ajax_request_active) > 1000) {
-            			ajax_request_active = current_time.getTime();
-            			STUDIP.News.update_dialog(id, route, form_data);
-            		}
+            		STUDIP.News.update_dialog(id, route, form_data);
                 });
 
                 // fix added elements (as in application.js)
@@ -138,43 +135,48 @@ STUDIP.News = {
     },
 
     update_dialog: function (id, route, form_data) {
-        jQuery.ajax({
-            'url': route,
-            'type': 'POST',
-            'data': form_data,
-            'dataType': 'HTML',
-            'success': function (html) {
-                if (html.length > 0) {
-                	jQuery('#'+id).html(html);
-                	jQuery('#'+id+'_content').css({
-                		'height' : dialog_height-110+"px", 
-                		'maxHeight': dialog_height-110+"px"
-                	});
-                    // scroll to anker
-                	var obj = jQuery('a[name=anker]');
-                    if (obj.length > 0) {
-                        jQuery('#'+id+'_content').scrollTop(obj.position().top);
-                    }                
-                } else {
-                	jQuery('#'+id).dialog('close');
-                	url = location.href.split('?');
-                	location.replace(url[0]+'?nsave=1');
-                }
-                // fix added elements (as in application.js)
-                if (!("autofocus" in document.createElement("input"))) {
-                    jQuery('[autofocus]').first().focus();
-                }
-                jQuery('.add_toolbar').addToolbar();
-                jQuery('textarea.resizable').resizable({
-                    handles: 's',
-                    minHeight: 50,
-                    zIndex: 1
-                });
-            },
-            'fail': function () {
-                alert("Fehler beim Aufruf des News-Controllers");
-            }
-        });
+        if (!pending_ajax_request) {
+        	pending_ajax_request = true;
+        	jQuery.ajax({
+        		'url': route,
+        		'type': 'POST',
+        		'data': form_data,
+        		'dataType': 'HTML',
+        		'success': function (html) {
+        			pending_ajax_request = false;
+        			if (html.length > 0) {
+        				jQuery('#'+id).html(html);
+        				jQuery('#'+id+'_content').css({
+        					'height' : dialog_height-110+"px", 
+        					'maxHeight': dialog_height-110+"px"
+        				});
+        				// scroll to anker
+        				var obj = jQuery('a[name=anker]');
+        				if (obj.length > 0) {
+        					jQuery('#'+id+'_content').scrollTop(obj.position().top);
+        				}                
+        			} else {
+        				jQuery('#'+id).dialog('close');
+        				url = location.href.split('?');
+        				location.replace(url[0]+'?nsave=1');
+        			}
+        			// fix added elements (as in application.js)
+        			if (!("autofocus" in document.createElement("input"))) {
+        				jQuery('[autofocus]').first().focus();
+        			}
+        			jQuery('.add_toolbar').addToolbar();
+        			jQuery('textarea.resizable').resizable({
+        				handles: 's',
+        				minHeight: 50,
+        				zIndex: 1
+        			});
+            	},
+            	'fail': function () {
+            		pending_ajax_request = false;
+            		alert("Fehler beim Aufruf des News-Controllers");
+            	}
+        	});
+        }
     },
     
     toggle_category_view: function (id) {
@@ -196,12 +198,11 @@ STUDIP.News = {
 };
 
 jQuery(function () {
-	ajax_request_active = 0;
-	current_time = new Date();
 	dialog_height = window.innerHeight - 60;
     dialog_width = 550;
     if (dialog_height < 400)
         dialog_height = 400;
+    pending_ajax_request = false;
 
     jQuery('a[rel~="get_dialog"]').live('click', function (event) {
 	    event.preventDefault();

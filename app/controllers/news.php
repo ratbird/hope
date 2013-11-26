@@ -296,7 +296,6 @@ class NewsController extends StudipController
         }
         // delete comment(s)
         if (Request::submitted('delete_marked_comments')) {
-        	CSRFProtection::verifyUnsafeRequest();
             $this->anker = 'news_comments';
             $this->flash['question_text'] = delete_comments(Request::optionArray('mark_comments'));
             $this->flash['question_param'] = array('mark_comments' => Request::optionArray('mark_comments'),
@@ -435,7 +434,6 @@ class NewsController extends StudipController
         }
         // delete news
         if (Request::submitted('remove_marked_news')) {
-        	CSRFProtection::verifyUnsafeRequest();
             $remove_ranges = array();
             foreach (Request::optionArray('mark_news') as $mark_id) {
                 list($news_id, $range_id) = explode('_', $mark_id); 

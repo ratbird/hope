@@ -1,6 +1,7 @@
-<div class="table_header_bold" style="font-weight: bold;"><?= _('Stud.IP-Rangliste')?></div>
-<? if(count($persons) > 0): ?>
-<table class="default zebra">
+<table class="default">
+    <caption>
+        <?= _('Stud.IP-Rangliste')?>
+    </caption>
     <colgroup>
         <col width="3%">
         <col width="1%">
@@ -56,7 +57,7 @@
 <? if (ceil($numberOfPersons / $max_per_page) > 1): ?>
     <tfoot>
         <tr>
-            <td colspan="7" class="content_seperator" style="text-align: right">
+            <td colspan="7" style="text-align: right">
                 <?= $GLOBALS['template_factory']->render('shared/pagechooser', array(
                         'perPage'      => $max_per_page,
                         'num_postings' => $numberOfPersons,
@@ -67,5 +68,3 @@
     </tfoot>
 <? endif ?>
 </table>
-
-<? endif ?>

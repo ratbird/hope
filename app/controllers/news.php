@@ -262,7 +262,7 @@ class NewsController extends StudipController
         if ($GLOBALS['perm']->have_perm('dozent') AND !$GLOBALS['perm']->have_perm('root')) {
             $my_inst = $this->search_area('__MY_INSTITUTES__');
             if (count($my_inst))
-                $this->search_presets['inst'] = _('Meine Einrichtungen').' ('.count($my_inst).')';
+                $this->search_presets['inst'] = _('Meine Einrichtungen').' ('.count($my_inst['inst']).')';
         }
         if ($GLOBALS['perm']->have_perm('root'))
             $this->search_presets['global'] = $this->area_structure['global']['title'];
@@ -296,6 +296,7 @@ class NewsController extends StudipController
         }
         // delete comment(s)
         if (Request::submitted('delete_marked_comments')) {
+        	CSRFProtection::verifyUnsafeRequest();
             $this->anker = 'news_comments';
             $this->flash['question_text'] = delete_comments(Request::optionArray('mark_comments'));
             $this->flash['question_param'] = array('mark_comments' => Request::optionArray('mark_comments'),
@@ -349,6 +350,7 @@ class NewsController extends StudipController
         }
         // prepare to save news
         if (Request::submitted('save_news')) {
+        	CSRFProtection::verifyUnsafeRequest();
             //prepare ranges array for already assigned news_ranges
             foreach($news->getRanges() as $range_id)
                 $this->ranges[$range_id] = get_object_type($range_id, array('global', 'fak', 'inst', 'sem', 'user'));
@@ -433,6 +435,7 @@ class NewsController extends StudipController
         }
         // delete news
         if (Request::submitted('remove_marked_news')) {
+        	CSRFProtection::verifyUnsafeRequest();
             $remove_ranges = array();
             foreach (Request::optionArray('mark_news') as $mark_id) {
                 list($news_id, $range_id) = explode('_', $mark_id); 

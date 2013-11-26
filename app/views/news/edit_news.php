@@ -18,6 +18,7 @@
         URLHelper::getURL('dispatch.php/'.$route.'#anker')); ?>
 <? endif ?>
 <form action="<?=URLHelper::getURL('dispatch.php/'.$route.'#anker')?>" method="POST" rel="<?=Request::isXhr() ? 'update_dialog' : ''?>">
+<? CSRFProtection::tokenTag(); ?>
 <input type="hidden" name="news_basic_js" value=""> 
 <input type="hidden" name="news_comments_js" value=""> 
 <input type="hidden" name="news_areas_js" value=""> 

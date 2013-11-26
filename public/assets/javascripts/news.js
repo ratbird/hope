@@ -59,9 +59,9 @@ STUDIP.News = {
     				height: 40,
     				left: from_x - 50,
     				top: jQuery(document).scrollTop() + from_y - 20,
-    				opacity: 0.2
+    				opacity: 0
     			}, {
-    				duration: 500,
+    				duration: 400,
     				easing: 'swing'
     			});
     		}
@@ -69,7 +69,7 @@ STUDIP.News = {
 	    // show pre-loading dialog animation
     	jQuery('#'+id).html('<div class="ajax_notification" style="text-align: center; padding-right: 24px; padding-top: 55px"><div class="notification"></div></div>');
     	jQuery('#'+id).dialog('option', 'position', [from_x - 50, from_y - 20]);
-        jQuery('#'+id).dialog('widget').css('opacity', 0.2);
+        jQuery('#'+id).dialog('widget').css('opacity', 0);
         jQuery('#'+id).dialog('widget').animate({
             width: dialog_width,
             height: dialog_height,
@@ -77,7 +77,7 @@ STUDIP.News = {
             top: jQuery(document).scrollTop() + (window.innerHeight / 2) - (dialog_height / 2),
 			opacity: 1
         }, {
-            duration: 500,
+            duration: 400,
             easing: 'swing'
         });
         // load actual dialog content
@@ -110,11 +110,14 @@ STUDIP.News = {
                 });
                 jQuery('#'+id+' form').live('submit', function (event) {
                 	event.preventDefault();
-                	button = jQuery(this).data('clicked').attr('name');
-                	route = jQuery(this).attr('action');
-                	form_data = jQuery(this).serialize()+'&'+button+'=1';
-                  	jQuery(this).find('input[name='+button+']').showAjaxNotification('left');
-          	    	STUDIP.News.update_dialog(id, route, form_data);
+            		button = jQuery(this).data('clicked').attr('name');
+            		route = jQuery(this).attr('action');
+            		form_data = jQuery(this).serialize()+'&'+button+'=1';
+            		jQuery(this).find('input[name='+button+']').showAjaxNotification('left');
+            		if ((current_time.getTime() - ajax_request_active) > 1000) {
+            			ajax_request_active = current_time.getTime();
+            			STUDIP.News.update_dialog(id, route, form_data);
+            		}
                 });
 
                 // fix added elements (as in application.js)
@@ -193,7 +196,9 @@ STUDIP.News = {
 };
 
 jQuery(function () {
-    dialog_height = window.innerHeight - 60;
+	ajax_request_active = 0;
+	current_time = new Date();
+	dialog_height = window.innerHeight - 60;
     dialog_width = 550;
     if (dialog_height < 400)
         dialog_height = 400;

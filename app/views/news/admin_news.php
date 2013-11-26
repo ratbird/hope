@@ -11,7 +11,7 @@
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="100%" class="blank"><p class="info">
-        <form action="<?=URLHelper::getLink()?>" method="POST">
+        <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" method="POST">
         <? CSRFProtection::tokenTag(); ?>
         <table class="default">
         <thead>

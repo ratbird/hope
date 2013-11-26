@@ -1,6 +1,8 @@
 <? use Studip\Button; ?>
-
-<table class="settings zebra" id="edit_avatar">
+<table class="default nohover" id="edit_avatar">
+    <caption>
+        <?= _('Avatar') ?>
+    </caption>
     <colgroup>
         <col width="50%">
         <col width="50%">

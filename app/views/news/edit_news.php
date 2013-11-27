@@ -51,7 +51,7 @@
                     <td colspan="2">
                         <label><?= _("Titel") ?><br>
                         <input type="text" name="news_topic" aria-label="<?= _('Titel der Ankündigung') ?>" 
-                               value="<?= htmlReady($news['topic']) ?>" style="width: 45%;"></label>
+                               value="<?= htmlReady($news['topic']) ?>" style="width: 90%;"></label>
                     </td>
                 </tr>
                 <tr>

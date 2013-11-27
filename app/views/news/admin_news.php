@@ -86,9 +86,9 @@
                         <a href="<?=URLHelper::getURL('dispatch.php/news/edit_news/'.$news['object']->news_id)?>" rel="get_dialog" target="_blank" <?=tooltip(_('Ankündigung bearbeiten'))?>>
                         <img src="<?= Assets::image_path('icons/16/blue/edit.png')?>"></a>
                         <a href="<?=URLHelper::getURL('dispatch.php/news/edit_news/new/template/'.$news['object']->news_id)?>" rel="get_dialog" target="_blank" aria-label="<?= _('Kopieren, um neue Ankündigung zu erstellen')?>" <?=tooltip(_('Kopieren, um neue Ankündigung zu erstellen'))?>>
-                        <img src="<?= Assets::image_path('icons/16/blue/export/file.png')?>"></a>
+                        <img src="<?= Assets::image_path('icons/16/blue/export/news.png')?>"></a>
                         <? if ($news['object']->havePermission('unassign', $news['range_id'])) : ?>
-                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/remove.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung entfernen"),false)?>>
+                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/remove.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung aus diesem Bereich entfernen"),false)?>>
                         <? else : ?>
                             <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung löschen"),false)?>>
                         <? endif ?>

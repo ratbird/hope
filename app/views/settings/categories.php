@@ -14,7 +14,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
 
-    <table class="zebra-big settings" style="width: 100%">
+    <table class="default nohover">
         <colgroup>
             <col width="100px">
             <col>
@@ -24,18 +24,18 @@
     <? foreach ($categories as $index => $category): ?>
         <tbody style="vertical-align: top;">
             <tr>
-                <td>
+                <th>
                     <label for="name<?= $index ?>"><?= _('Name') ?>:</label>
-                </td>
-                <td>
+                </th>
+                <th>
                     <input required type="text" name="categories[<?= $category->id ?>][name]" id="name<?= $index ?>"
                            aria-label="<?= _('Name der Kategorie') ?>" style="width: 100%"
                            value="<?= htmlReady($category->name) ?>">
-                </td>
-                <td style="text-align: right;">
+                </th>
+                <th class="actions">
                     <?= $visibilities[$category->id] ?>
-                </td>
-                <td rowspan="2" style="text-align: right; vertical-align: middle;">
+                </th>
+                <th rowspan="2" style="text-align: right; vertical-align: middle;">
                 <? if ($index > 0): ?>
                     <a href="<?= $controller->url_for('settings/categories/swap', $category->id, $last->id) ?>">
                         <?= Assets::img('icons/16/yellow/arr_2up', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) ?>
@@ -55,7 +55,7 @@
                     <a href="<?= $controller->url_for('settings/categories/delete', $category->id) ?>">
                         <?= Assets::img('icons/16/blue/trash', array('class' => 'text-top', 'title' => _('Kategorie löschen'))) ?>
                     </a>
-                </td>
+                </th>
             </tr>
             <tr>
                 <td>

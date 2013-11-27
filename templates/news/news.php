@@ -5,7 +5,7 @@
 </table>
 <div id="news_item_<?= $news_item['news_id'] ?>_content" <? if (!$news_item['open']): ?> style="display:none;"<? endif; ?>>
 <? if ($news_item['open']): ?>
-    <?= show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link) ?>
+    <?= show_news_item_content($news_item, $cmd_data, $range_id) ?>
 <? endif; ?>
 </div>
 

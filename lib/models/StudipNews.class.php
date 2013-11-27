@@ -168,9 +168,9 @@ class StudipNews extends SimpleORMap {
             foreach($news_result as $id => $result) {
                 //if (StudipNews::haveRangePermission($result['range_id'], 'edit')) {
                     $objects[$area][$id]['range_id'] = $result['range_id'];
-                    $objects[$area][$id]['title'] = mila($result['title'], 40);
+                    $objects[$area][$id]['title'] = $result['title'];
                     if ($area == 'sem') {
-                        $objects[$area][$id]['title'] .= sprintf(' (%s%s)',
+                        $objects[$area][$id]['semester'] .= sprintf('(%s%s)',
                         $result['startsem'],
                         $result['startsem'] != $result['endsem'] ? ' - ' . $result['endsem'] : '');
                     } elseif ($area == 'user') {
@@ -288,6 +288,9 @@ class StudipNews extends SimpleORMap {
         }
     }
 
+    /**
+     * DEPRECATED
+     */
     public static function TouchNews($news_id, $touch_stamp = null){
         $ret = false;
         if(!$touch_stamp) $touch_stamp = time();
@@ -314,7 +317,7 @@ class StudipNews extends SimpleORMap {
         return $deleted;
     }
 
-    public static function haveRangePermission($range_id, $operation, $user_id = '') {
+    public static function haveRangePermission($operation, $range_id, $user_id = '') {
         static $news_range_perm_cache;
         if (isset($news_range_perm_cache[$user_id.$range_id.$operation]))
             return $news_range_perm_cache[$user_id.$range_id.$operation];
@@ -420,12 +423,19 @@ class StudipNews extends SimpleORMap {
         return parent::delete();
     }
 
-    function havePermission($operation, $user_id = '') {
+    /**
+     * checks, if user has permission to perform given operation on news object
+     * 
+     * @param string delete, unassign, edit, copy, or view
+     * @param string specified range-id, used only for unassign-operation
+     * @return boolean true or false
+     */
+    function havePermission($operation, $check_range_id = '') {
         if (!$user_id)
             $user_id = $GLOBALS['auth']->auth['uid'];
         if (!in_array($operation, array('delete', 'unassign', 'edit', 'copy', 'view')))
             return false;
-        // in order to unassign, there must be more than one range assigned
+        // in order to unassign, there must be more than one range assigned; $check_range_id must be specified.
         if (($operation == 'unassign') AND (count($this->getRanges()) < 2))
             return false;
         // root, owner, and owner's deputy have full permission
@@ -439,11 +449,12 @@ class StudipNews extends SimpleORMap {
         else
             $range_operation = $operation;
         foreach ($this->getRanges() as $range_id) {
-            if (StudipNews::haveRangePermission($range_id, $range_operation, $user_id)) {
+            if (StudipNews::haveRangePermission($range_operation, $range_id, $user_id)) {
                 // in order to view, edit, copy, or unassign, access to one of the ranges is sufficient
                 if (($operation == 'view') OR ($operation == 'edit') OR ($operation == 'copy')) {
                     return true;
-                } elseif ($operation == 'unassign') {
+                // in order to unassign, access to the specified range is needed
+                } elseif (($operation == 'unassign') AND ($range_id == $check_range_id)) {
                     return true;
                 }
                 // in order to delete, access to all ranges is necessary

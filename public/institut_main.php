@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
@@ -78,10 +79,6 @@ checkObject();
 PageLayout::setHelpKeyword("Basis.Einrichtungen");
 PageLayout::setTitle($SessSemName["header_line"]. " - " ._("Kurzinfo"));
 Navigation::activateItem('/course/main/info');
-
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
 
 include 'lib/showNews.inc.php';
 
@@ -175,5 +172,7 @@ foreach ($plugins as $plugin) {
     }
 }
 
-include ('lib/include/html_end.inc.php');
+$layout = $GLOBALS['template_factory']->open('layouts/base.php');
+$layout->content_for_layout = ob_get_clean();
+echo $layout->render();
 page_close();

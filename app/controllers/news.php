@@ -80,7 +80,6 @@ class NewsController extends StudipController
             $this->set_status(401);
             return $this->render_nothing();
         }
-        $show_admin = $news->havePermission('edit');
         $newscontent = $news->toArray();
 
         // use the same logic here as in show_news_item()
@@ -95,8 +94,7 @@ class NewsController extends StudipController
         $this->news = $newscontent;
         $this->content = show_news_item_content($newscontent,
                                                 array(),
-                                                $show_admin,
-                                                Request::get('admin_link')
+                                                Request::get('range_id')
         );
     }
 
@@ -123,6 +121,7 @@ class NewsController extends StudipController
         $this->ranges = array();
         $this->area_options_selectable = array();
         $this->area_options_selected = array();
+        $this->may_delete = false;
         $this->route = "news/edit_news/$id";
         if ($context_range) {
             $this->route .= "/$context_range";
@@ -217,7 +216,7 @@ class NewsController extends StudipController
             $ranges = $news_template->news_ranges->toArray();
             // remove those ranges for which user doesn't have permission
             foreach ($ranges as $key => $news_range)
-                if (!$news->haveRangePermission($news_range['range_id'], 'edit')) {
+                if (!$news->haveRangePermission('edit', $news_range['range_id'])) {
                     $changed_areas++;
                     $this->news_isvisible['news_areas'] = true;
                     unset($ranges[$key]);
@@ -357,7 +356,7 @@ class NewsController extends StudipController
             foreach ($this->ranges as $range_id => $range_type) {
                 if ((($range_type == 'fak') AND !isset($this->area_options_selected['inst'][$range_id])) OR
                    (($range_type != 'fak') AND !isset($this->area_options_selected[$range_type][$range_id]))) {
-                    if ($news->haveRangePermission($range_id, 'edit')) {
+                    if ($news->havePermission('unassign', $range_id)) {
                         $news->deleteRange($range_id);
                         $changed = true;
                     }
@@ -371,7 +370,7 @@ class NewsController extends StudipController
             foreach ($this->area_options_selected as $type => $area_group)
                 foreach ($area_group as $range_id => $area_title)
                     if (!isset($this->ranges[$range_id])) {
-                        if ($news->haveRangePermission($range_id, 'edit')) {
+                        if ($news->haveRangePermission('edit', $range_id)) {
                             $news->addRange($range_id);
                             $changed = true;
                         }
@@ -402,6 +401,9 @@ class NewsController extends StudipController
                     $this->render_nothing();
             }
         }
+        // check if user has full permission on news object
+        if ($news->havePermission('delete'))
+            $this->may_delete = true;
     }
 
 
@@ -636,7 +638,7 @@ class NewsController extends StudipController
         // prepare result
         if (count($tmp_result)) {
             foreach ($tmp_result as $id => $data) {
-                $result[$data['type'] == 'fak' ? 'inst' : $data['type']][$id] = mila($data['name'], 27);
+                $result[$data['type'] == 'fak' ? 'inst' : $data['type']][$id] = $data['name'];
             }
         } elseif ($term) {
             PageLayout::postMessage(MessageBox::error(_('Zu diesem Suchbegriff wurden keine Bereiche gefunden.')));

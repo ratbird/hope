@@ -71,7 +71,7 @@
                             <? if ($last_title != 'none') : ?>
                             <? endif ?>
                             <? if ($title) : ?>
-                                <tr><th colspan="6"><?=htmlReady($news['title'])?></th></tr>
+                                <tr><th colspan="6"><?=mila(htmlReady($news['title'])) . ' ' . htmlReady($news['semester'])?></th></tr>
                             <? endif ?>
                             <? $last_title = $title ?>
                         <? endif ?>
@@ -87,7 +87,11 @@
                         <img src="<?= Assets::image_path('icons/16/blue/edit.png')?>"></a>
                         <a href="<?=URLHelper::getURL('dispatch.php/news/edit_news/new/template/'.$news['object']->news_id)?>" rel="get_dialog" target="_blank" aria-label="<?= _('Kopieren, um neue Ankündigung zu erstellen')?>" <?=tooltip(_('Kopieren, um neue Ankündigung zu erstellen'))?>>
                         <img src="<?= Assets::image_path('icons/16/blue/export/file.png')?>"></a>
-                        <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung löschen"),false)?>>
+                        <? if ($news['object']->havePermission('unassign', $news['range_id'])) : ?>
+                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/remove.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung entfernen"),false)?>>
+                        <? else : ?>
+                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung löschen"),false)?>>
+                        <? endif ?>
                         </td>
                         </tr>
                     <? endforeach ?>

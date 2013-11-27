@@ -6,18 +6,18 @@
  * ------------------------------------------------------------------------ */
 
 STUDIP.News = {
-    openclose: function (id, admin_link) {
+    openclose: function (id, range_id) {
         if (jQuery("#news_item_" + id + "_content").is(':visible')) {
             STUDIP.News.close(id);
         } else {
-            STUDIP.News.open(id, admin_link);
+            STUDIP.News.open(id, range_id);
         }
     },
 
-    open: function (id, admin_link) {
+    open: function (id, range_id) {
         jQuery("#news_item_" + id + "_content").load(
             STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
-            {admin_link: admin_link},
+            {range_id: range_id},
             function () {
                 jQuery("#news_item_" + id + "_content").slideDown(400);
                 jQuery("#news_item_" + id + " .printhead2 img")
@@ -199,7 +199,9 @@ STUDIP.News = {
 
 jQuery(function () {
 	dialog_height = window.innerHeight - 60;
-    dialog_width = 550;
+	dialog_width = window.innerWidth * 1 / 2;
+	if (dialog_width < 550)
+		dialog_width = 550;
     if (dialog_height < 400)
         dialog_height = 400;
     pending_ajax_request = false;

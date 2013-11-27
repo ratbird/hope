@@ -20,7 +20,7 @@
                      <?= tooltip(_('RSS-Feed')) ?>>
             </a>
         <? endif; ?>
-        <? if ($show_admin): ?>
+        <? if ($may_add): ?>
             <a href="<?= URLHelper::getURL('dispatch.php/news/edit_news/new/'.$range_id)?>" rel="get_dialog" target="_blank">
                 <img src="<?= Assets::image_path('icons/16/white/add.png') ?>" 
                      <?= tooltip(_('Ank&uuml;ndigung erstellen')) ?>>
@@ -32,7 +32,7 @@
         <td class="blank" colspan="2">
         <? foreach ($news as $id => $news_item): ?>
             <div id="news_item_<?= $id ?>" class="news_item" role="article">
-                <?= show_news_item($news_item, $cmd_data, $show_admin, $admin_link) ?>
+                <?= show_news_item($news_item, $cmd_data, $range_id) ?>
             </div>
         <? endforeach; ?>
         </td>

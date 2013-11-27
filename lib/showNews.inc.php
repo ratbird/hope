@@ -172,17 +172,21 @@ function remove_news($remove_array)
         } else {
             $text = '';
             if ($confirmed AND ! $remove_news->isNew() AND count($ranges)) {
-                if ($remove_news->havePermission('unassign')) {
-                    foreach ($ranges as $range_id) {
+                foreach ($ranges as $key => $range_id) {
+                    if ($remove_news->havePermission('unassign', $range_id)) {
                         $remove_news->deleteRange($range_id);
+                    } else {
+                        unset($ranges[$key]);
+                        PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s" aus diesem Bereich.'), $remove_news->getValue('topic'))));                            
                     }
-                    if (count($ranges) == 1)
-                        PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus dem Bereich entfernt.'), $remove_news->getValue('topic'))));
-                    else
-                        PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus %s Bereichen entfernt.'), $remove_news->getValue('topic'), count($ranges))));
-                    $remove_news->store();
-                } else
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s".'), $remove_news->getValue('topic'))));
+                    if (count($ranges)) {
+                        if (count($ranges) == 1)
+                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus dem Bereich entfernt.'), $remove_news->getValue('topic'))));
+                        else
+                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus %s Bereichen entfernt.'), $remove_news->getValue('topic'), count($ranges))));
+                        $remove_news->store();
+                    }
+                }
             } elseif (! $confirmed) {
                 if (count($ranges) == 1)
                     $text = sprintf(_('- Die Ankündigung "%s" wird aus dem aktiven Bereich entfernt. '
@@ -204,7 +208,7 @@ function remove_news($remove_array)
 /**
  *
  * @param unknown_type $range_id
- * @param unknown_type $show_admin
+ * @param unknown_type $show_admin <-deprecated
  * @param unknown_type $limit
  * @param unknown_type $open
  * @param unknown_type $width
@@ -215,11 +219,8 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 {
     global $auth, $SessSemName;
 
-    if ($show_admin && $touch_id = Request::option('touch_news')) {
-        StudipNews::TouchNews($touch_id);
-    }
-
     $news = StudipNews::GetNewsByRange($range_id, true);
+    $may_add = StudipNews::haveRangePermission('edit', $range_id);
 
     // delete order?
     if (is_array($news[Request::option('ndelete')])) {
@@ -244,7 +245,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     }
 
     // Leave if there are no news and we are not an admin
-    if (!count($news) && !$show_admin) {
+    if (!count($news) && !$may_add) {
         return false;
     }
 
@@ -260,14 +261,14 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
                 : false;
 
         $template = $GLOBALS['template_factory']->open('news/list');
-        $template->question_text = $question_text;
+        $template->question_text  = $question_text;
         $template->question_param = $question_param;
-        $template->width      = $width;
-        $template->range_id   = $range_id;
-        $template->rss_id     = $rss_id;
-        $template->show_admin = $show_admin;
-        $template->news       = $news;
-        $template->cmd_data   = $cmd_data;
+        $template->width          = $width;
+        $template->range_id       = $range_id;
+        $template->rss_id         = $rss_id;
+        $template->may_add        = $may_add;
+        $template->news           = $news;
+        $template->cmd_data       = $cmd_data;
     }
     echo $template->render();
 
@@ -344,10 +345,9 @@ function show_rss_news($range_id, $type)
  *
  * @param unknown_type $news_item
  * @param unknown_type $cmd_data
- * @param unknown_type $show_admin
- * @param unknown_type $admin_link
+ * @param unknown_type $range_id
  */
-function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
+function show_news_item($news_item, $cmd_data, $range_id)
 {
     global $auth;
 
@@ -382,7 +382,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 
     $link .= '&username=' . $user->username . '#anker';
     $titel = sprintf('<a href="%s" onclick="STUDIP.News.openclose(\'%s\', \'%s\'); return false;" class="tree">%s</a>',
-                     URLHelper::getLink($link), $id, $admin_link, $titel);
+                     URLHelper::getLink($link), $id, $range_id, $titel);
 
     $template = $GLOBALS['template_factory']->open('news/news');
     $template->link       = $link;
@@ -391,8 +391,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
     $template->titel      = $titel;
     $template->zusatz     = $GLOBALS['template_factory']->render('news/zusatz', compact('user', 'news_item'));
     $template->cmd_data   = $cmd_data;
-    $template->show_admin = $show_admin;
-    $template->admin_link = $admin_link;
+    $template->range_id   = $range_id;
     $template->tempnew    = $tempnew;
 
     return $template->render();
@@ -402,10 +401,9 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
  *
  * @param unknown_type $news_item
  * @param unknown_type $cmd_data
- * @param unknown_type $show_admin
- * @param unknown_type $admin_link
+ * @param unknown_type $range_id
  */
-function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
+function show_news_item_content($news_item, $cmd_data, $range_id)
 {
     global $auth;
 
@@ -451,11 +449,10 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
     $template = $GLOBALS['template_factory']->open('news/news-content');
     $template->news          = $news_item;
     $template->may_edit      = $news_object->havePermission('edit');
-    $template->may_unassign  = $news_object->havePermission('unassign');
+    $template->may_unassign  = $news_object->havePermission('unassign', $range_id);
     $template->may_delete    = $news_object->havePermission('delete');
     $template->content       = $content;
     $template->show_comments = $showcomments;
-    $template->show_admin    = $show_admin;
     $template->admin_msg     = $admin_msg;
 
     return $template->render();

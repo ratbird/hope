@@ -256,9 +256,7 @@ class CronjobScheduler
             $schedule = CronjobSchedule::find($data['schedule_id']);
             
             // If we discovered a deadlock release it
-            if (!$schedule)
-            {
-                
+            if ($schedule) {
                 // Deactivate schedule
                 $schedule->deactivate();
 
@@ -282,6 +280,7 @@ class CronjobScheduler
 
                 $this->sendMailToRoots($subject, $message);
             }
+
             // Release lock 
             $this->lock->release();
         }

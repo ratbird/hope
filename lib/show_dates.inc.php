@@ -413,24 +413,23 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\" style=\"width: 100%;\">";
+        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"default nohover\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
-            echo "\n<tr><td class=\"table_header_bold\"> <img src=\"" . Assets::image_path('icons/16/white/schedule.png') . '" ' . tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . '> <b>';
+            echo "\n<tr><td> <img src=\"" . Assets::image_path('icons/16/blue/schedule.png') . '" ' . tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . '> <b>';
             printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $list->getStart()), strftime("%d. %B %Y", $list->getEnd()));
             echo "</b></td>";
-            echo "\n<td align=\"right\" class=\"table_header_bold\"> $admin_link<img src=\"" . Assets::image_path('icons/16/white/admin.png') . '" ' . tooltip(_("Neuen Termin anlegen")) . '></a></td></tr>';
+            echo "\n<td> $admin_link<img src=\"" . Assets::image_path('icons/16/black/admin.png') . '" ' . tooltip(_("Neuen Termin anlegen")) . '></a></td></tr>';
         }
         else {
-            echo "\n<tr><td class=\"table_header_bold\"> <img src=\"" . Assets::image_path('icons/16/white/schedule.png') . '" ' . tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")) . '><b>  ';
+            echo "\n<thead><tr><th> <img src=\"" . Assets::image_path('icons/16/black/schedule.png') . '" ' . tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")) . '><b>  ';
             printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $list->getStart()), strftime("%d. %B %Y", $list->getEnd()));
-            echo "</b></td></tr>";
+            echo "</b></th></thead></tr>";
         }
         echo "\n";
 
         // Ausgabe der Daten
         echo "\n<tr><td class=\"blank\" colspan=$colspan>";
-        echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr><td class=\"blank\">";
 
         while ($termin = $list->nextEvent()) {
             echo '<div role="article">';
@@ -531,7 +530,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 
 
         }
-        echo "</td></tr></table></td></tr></table>";
+        echo "</td></tr></table>";
         return TRUE;
     }
     // keine Termine da, aber die Moeglichkeit welche einzustellen

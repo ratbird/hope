@@ -1,9 +1,9 @@
 <? if ($msg) : ?>
     <?= parse_msg($msg) ?>
 <? endif ?>
-<table id="user_profile" width="100%" border="0" cellpadding="1" cellspacing="0">
+<table class="default nohover">
     <tr>
-        <td class="table_row_even" valign="top">
+        <td valign="top">
             <?=$avatar?>
             <br>
             <br>
@@ -48,7 +48,7 @@
         </td>
 
 
-        <td class="table_row_even" width="99%" valign="top" style="padding: 10px;">
+        <td width="99%" valign="top" style="padding: 10px;">
             <h1><?= htmlReady($current_user->getFullname()) ?></h1>
 
             <? if(!empty($motto)) : ?>

@@ -12,7 +12,7 @@
     <tr>
         <td width="100%" class="blank"><p class="info">
         <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" method="POST">
-        <? CSRFProtection::tokenTag(); ?>
+        <?=CSRFProtection::tokenTag(); ?>
         <table class="default">
         <thead>
         <tr><th colspan="2">

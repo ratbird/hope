@@ -143,7 +143,7 @@ class CalendarDriver
             } else {
                 $range_id = $this->range_id;
             }
-            
+
             $my_groups_statement = DBManager::get()->prepare(
                 "SELECT DISTINCT statusgruppen.statusgruppe_id " .
                 "FROM statusgruppe_user " .
@@ -154,7 +154,7 @@ class CalendarDriver
             $my_groups_statement->execute(array('user_id' => $range_id));
             $my_groups = $my_groups_statement->fetchAll(PDO::FETCH_COLUMN, 0);
 
-            $query = 
+            $query =
                     "SELECT $select_sem " .
                     "FROM ( " .
                         "SELECT termine.termin_id, range_id, date, end_time, mkdate, chdate, date_typ, content, raum, metadate_id, 0 as ex_termin " .
@@ -186,7 +186,7 @@ class CalendarDriver
             $db_sem->execute(array(
                 'seminar_ids' => $sem_ids ?: '',
                 'statusgruppe_ids' => $my_groups,
-                'start' => $start, 
+                'start' => $start,
                 'end' => $end,
                 'user_id' => $range_id
             ));
@@ -225,7 +225,7 @@ class CalendarDriver
                     'duration' => $result['duration'],
                     'count' => $result['count'],
                     'ts' => $result['ts']),
-                'EXDATE' => $result['exceptions'],
+                'EXDATE' => (string)$result['exceptions'],
                 'CREATED' => $result['mkdate'],
                 'LAST-MODIFIED' => $result['chdate'],
                 'STUDIP_ID' => $result['event_id'],
@@ -265,7 +265,7 @@ class CalendarDriver
                     'duration' => $result['duration'],
                     'count' => $result['count'],
                     'ts' => $result['ts']),
-                'EXDATE' => $result['exceptions'],
+                'EXDATE' => (string)$result['exceptions'],
                 'CREATED' => $result['mkdate'],
                 'LAST-MODIFIED' => $result['chdate'],
                 'DTSTAMP' => time(),

@@ -195,6 +195,23 @@ class Navigation implements IteratorAggregate
     }
 
     /**
+     * Shorthand method for creating an appropriate image tag for display.
+     *
+     * @return string HTML tag snippet for the image
+     */
+    public function getImageTag()
+    {
+        $image = $this->getImage();
+
+        $attributes = array();
+        foreach ($image as $key => $value) {
+            $attributes[] = sprintf('%s="%s"', $key, htmlReady($value));
+        }
+
+        return '<img ' . implode(' ', $attributes) . '>';
+    }
+
+    /**
      * Return the current title associated with this navigation item.
      *
      * @return string   title of item or NULL (no title set)
@@ -260,7 +277,7 @@ class Navigation implements IteratorAggregate
     {
         return $this->badgeNumber;
     }
-    
+
     /**
      * Return the badge number of this navigation item.
      *
@@ -269,7 +286,7 @@ class Navigation implements IteratorAggregate
     public function getBadgeTimestamp()
     {
         return $this->badgeTimestamp;
-    }   
+    }
 
     /**
      * Determines whether this navigation item has a badge number.
@@ -422,7 +439,7 @@ class Navigation implements IteratorAggregate
     {
         $this->badgeNumber = $badgeNumber;
     }
-    
+
     /**
      * Set the badge number of this navigation item.
      *

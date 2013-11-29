@@ -184,6 +184,25 @@ class RSSFeed
 
         return $statement->rowCount() == 2;
     }
+    
+    /**
+     * Loads the requested part of the feed
+     * 
+     * @param  int    $limit Maximum number of displayed item, -1 to display all
+     * @return array elements or false if feed could not be loaded
+     */
+    public function getContent($limit = -1) {
+        $url = TransformInternalLinks($this->url);
+        $feed = self::fetch($url);
+
+        if (!$feed) {
+            return false;
+        }
+        if ($limit) {
+            return array_slice($feed->items, 0, $limit);
+        }
+        return $feed->items;
+    }
 
     /**
      * Renders the contents of the feed

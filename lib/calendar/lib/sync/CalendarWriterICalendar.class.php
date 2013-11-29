@@ -175,10 +175,12 @@ class CalendarWriteriCalendar extends CalendarWriter
                     break;
 
                 case 'EXDATE':
-                    if (array_key_exists('VALUE', $params))
+                    if (array_key_exists('VALUE', $params)) {
                         $value = $this->_exportExdate($value, $params['VALUE']);
-                    else
+                    } else {
                         $value = $this->_exportExdate($value, 'DATE-TIME');
+                    }
+                    $params_str = ';TZID=Europe/Berlin';
                     break;
 
                 case 'RDATE':

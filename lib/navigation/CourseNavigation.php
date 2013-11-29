@@ -54,7 +54,7 @@ class CourseNavigation extends Navigation
         } else {
             $coursetext = _('Freie');
             $courseinfo = _('Freie Veranstaltungen');
-            $courselink = 'freie.php';
+            $courselink = 'dispatch.php/public_courses';
         }
 
         parent::__construct($coursetext, $courselink);

@@ -29,7 +29,7 @@ class BrowseNavigation extends Navigation
         } else {
             $coursetext = _('Freie');
             $courseinfo = _('Freie Veranstaltungen');
-            $courselink = URLHelper::getLink('dispatch.php/public_courses');
+            $courselink = 'dispatch.php/public_courses';
         }
 
         parent::__construct($coursetext, $courselink);

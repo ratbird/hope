@@ -26,6 +26,13 @@ class PublicCoursesController extends StudipController
      */
     public function before_filter(&$action, &$args)
     {
+        page_open(array('sess' => 'Seminar_Session',
+        'auth' => 'Seminar_Default_Auth',
+        'perm' => 'Seminar_Perm',
+        'user' => 'Seminar_User'));
+
+        include 'lib/seminar_open.php';
+
         if (!Config::get()->ENABLE_FREE_ACCESS) {
             throw new AccessDeniedException(_('Öffentliche Veranstaltungen sind nicht aktiviert.'));
         }

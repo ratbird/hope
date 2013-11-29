@@ -46,7 +46,7 @@ class LoginNavigation extends Navigation
         }
 
         if (Config::get()->ENABLE_FREE_ACCESS) {
-            $navigation = new Navigation(_('Freier Zugang'), URLHelper::getLink('dispatch.php/public_courses'));
+            $navigation = new Navigation(_('Freier Zugang'), 'dispatch.php/public_courses');
             $navigation->setDescription(_('ohne Registrierung'));
             $this->addSubNavigation('browse', $navigation);
         }

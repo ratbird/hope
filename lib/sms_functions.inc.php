@@ -193,26 +193,16 @@ function print_snd_message($psm) {
 
     // make message_header
     $x = $psm['num_rec']; // how many receivers are there?
-    if ($psm['dont_delete'] == "1") { // disable the checkbox if message is locked
-        $tmp_cmd = "open_selected";
-        $tmp_picture = "icons/16/blue/lock-locked.png";
-        $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash =  Assets::img('blank.gif', array('width' => '16'));
-    } else {
-        $tmp_cmd = "safe_selected";
-        $tmp_picture = "icons/16/blue/lock-unlocked.png";
-        $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$psm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
-    }
+    $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$psm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
 
     if ($x == 1) { // if only one receiver
         $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"dispatch.php/profile?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        $zusatz .= "<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$psm['message_id'].'#'.$psm['message_id'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= $trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     } else if ($x >= "2") { // if more than one receiver
         $zusatz .= sprintf(_("an %s Empf&auml;nger, %s"), $x, date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        $zusatz .= "<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$psm['message_id'].'#'.$psm['message_id'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= $trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     }
 
     if (have_msgfolder($sms_data['view']) == TRUE) {
@@ -355,17 +345,7 @@ function print_rec_message($prm) {
         $picture = 'icons/16/red/new/mail.png';
         if ($open == "open") $msging->set_read_message($prm['message_id']);
     }
-    if ($prm['dont_delete'] == "1") { // disable the checkbox if message is locked
-        $tmp_cmd = "open_selected";
-        $tmp_picture = "icons/16/blue/lock-locked.png";
-        $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash =  Assets::img('blank.gif', array('width' => '16'));
-    } else {
-        $tmp_cmd = "safe_selected";
-        $tmp_picture = "icons/16/blue/lock-unlocked.png";
-        $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$prm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
-    }
+    $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$prm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {
         $move_option = "<a href=\"".URLHelper::getLink('?move_to_folder[1]='.$prm['message_id'])."\">";
@@ -378,7 +358,7 @@ function print_rec_message($prm) {
         $zusatz .= sprintf(_("von %s, "), "</font><a href=\"dispatch.php/profile?username=".$prm['uname_snd']."\"><font size=-1 color=\"#333399\">".htmlReady($prm['vorname'])."&nbsp;".htmlReady($prm['nachname'])."</font></a><font size=-1>");
     }
     $zusatz .= date("d.m.y, H:i", $prm['mkdate']);
-    $zusatz .= " ".$move_option."<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$prm['message_id'].'#'.$prm['message_id'])."\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+    $zusatz .= " ".$move_option . $trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     $zusatz .= "</font>";
 
     if ($prm["num_attachments"])
@@ -513,7 +493,7 @@ function print_messages() {
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
 
         $query = "SELECT message.*, folder, confirmed_read, answered,
-                         message_user.readed, dont_delete, Vorname, Nachname, username,
+                         message_user.readed, Vorname, Nachname, username,
                          COUNT(dokument_id) AS num_attachments
                   FROM message_user
                   LEFT JOIN message USING (message_id)
@@ -541,7 +521,6 @@ function print_messages() {
             $prm['vorname']         = $row['Vorname'];
             $prm['nachname']        = $row['Nachname'];
             $prm['readed']          = $row['readed'];
-            $prm['dont_delete']     = $row['dont_delete'];
             $prm['uname_snd']       = $row['username'];
             $prm['priority']        = $row['priority'];
             $prm['num_attachments'] = $row['num_attachments'];
@@ -555,7 +534,7 @@ function print_messages() {
     } else if ($sms_data['view'] == "out") { // postbox out
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
 
-        $query = "SELECT message.*, message_user.folder, message_user.dont_delete ,
+        $query = "SELECT message.*, message_user.folder, 
                          auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
                          auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
                          COUNT(DISTINCT mu.user_id) AS num_rec, COUNT(dokument_id) AS num_attachments
@@ -580,7 +559,6 @@ function print_messages() {
             $psm['message_id']      = $row['message_id'];
             $psm['message_subject'] = $row['subject'];
             $psm['message']         = $row['message'];
-            $psm['dont_delete']     = $row['dont_delete'];
             $psm['rec_uid']         = $row['rec_uid'];
             $psm['rec_vorname']     = $row['rec_vorname'];
             $psm['rec_nachname']    = $row['rec_nachname'];
@@ -613,7 +591,7 @@ function ajax_show_body($mid)   {
 
     if ($sms_data['view'] == 'in') {
         $query = "SELECT message.*, folder, confirmed_read, answered, message_user.readed,
-                         dont_delete, Vorname, Nachname, username,
+                         Vorname, Nachname, username,
                          COUNT(dokument_id) AS num_attachments
                   FROM message_user
                   LEFT JOIN message USING (message_id)
@@ -636,7 +614,6 @@ function ajax_show_body($mid)   {
         $prm['vorname']         = $row['Vorname'];
         $prm['nachname']        = $row['Nachname'];
         $prm['readed']          = $row['readed'];
-        $prm['dont_delete']     = $row['dont_delete'];
         $prm['priority']        = $row['priority'];
         $prm['num_attachments'] = $row['num_attachments'];
         $prm['count_2']         = $tmp_move_to_folder - ($n+1);
@@ -657,7 +634,7 @@ function ajax_show_body($mid)   {
     } else if ($sms_data['view'] == 'out') {
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
 
-        $query = "SELECT message.*, message_user.folder, message_user.dont_delete,
+        $query = "SELECT message.*, message_user.folder,
                          auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
                          auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
                          COUNT(mu.message_id) AS num_rec, COUNT(dokument_id) AS num_attachments
@@ -681,7 +658,6 @@ function ajax_show_body($mid)   {
         $psm['message_id']      = $row['message_id'];
         $psm['message_subject'] = $row['subject'];
         $psm['message']         = $row['message'];
-        $psm['dont_delete']     = $row['dont_delete'];
         $psm['rec_uid']         = $row['rec_uid'];
         $psm['rec_vorname']     = $row['rec_vorname'];
         $psm['rec_nachname']    = $row['rec_nachname'];

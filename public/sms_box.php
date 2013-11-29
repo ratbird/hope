@@ -242,28 +242,6 @@ if ($sms_data['view'] == "in") {
     SkipLinks::addIndex(_("Postausgang"), 'main_content', 100);
 }
 
-// memorize del-lock for selected items
-if (Request::option('sel_lock')) {
-    if ($cmd == "safe_selected") { // close del-lock
-        $tmp_dont_delete = "1";
-        $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aktiviert.");
-    } else if ($cmd == "open_selected") { // open del-lock
-        $tmp_dont_delete = "0";
-        $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aufgehoben.");
-    }
-
-    $query = "UPDATE message_user
-              SET dont_delete = ?
-              WHERE user_id = ? AND message_id = ? AND snd_rec = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array(
-        $tmp_dont_delete, $user->id, Request::option('sel_lock'), $tmp_snd_rec,
-    ));
-
-    $tmp_dont_delete = "";
-    $tmp_snd_rec = "";
-}
-
 // do we have selected items for move-to-different-folder-action?
 if (Request::optionArray('move_to_folder')) {
     $sms_data['tmp']['move_to_folder'] = Request::optionArray('move_to_folder');

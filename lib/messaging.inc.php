@@ -90,9 +90,8 @@ class messaging
      *
      * @param $message_id
      * @param $user_id
-     * @param $force
      */
-    function delete_message($message_id, $user_id = FALSE, $force = FALSE)
+    function delete_message($message_id, $user_id = FALSE)
     {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
@@ -101,9 +100,6 @@ class messaging
         $query = "UPDATE message_user
                   SET deleted = '1'
                   WHERE message_id = ? AND user_id = ? AND deleted = '0'";
-        if(!$force) {
-            $query .= " AND dont_delete = '0'";
-        }
 
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($message_id, $user_id));
@@ -154,9 +150,8 @@ class messaging
      * delete all messages from user
      *
      * @param $user_id
-     * @param $force
      */
-    function delete_all_messages($user_id = FALSE, $force = FALSE)
+    function delete_all_messages($user_id = FALSE)
     {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
@@ -168,7 +163,7 @@ class messaging
         $message_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         foreach ($message_ids as $message_id) {
-            $this->delete_message($message_id, $user_id, $force);
+            $this->delete_message($message_id, $user_id);
         }
     }
 

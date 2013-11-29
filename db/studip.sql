@@ -1352,7 +1352,6 @@ CREATE TABLE IF NOT EXISTS `message_user` (
   `readed` tinyint(1) NOT NULL DEFAULT '0',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `snd_rec` enum('rec','snd') NOT NULL DEFAULT 'rec',
-  `dont_delete` tinyint(1) NOT NULL DEFAULT '0',
   `folder` tinyint(4) NOT NULL DEFAULT '0',
   `confirmed_read` tinyint(1) NOT NULL DEFAULT '0',
   `answered` tinyint(1) NOT NULL DEFAULT '0',

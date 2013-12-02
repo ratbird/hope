@@ -259,7 +259,9 @@
 <? else : ?>
     <?= Button::createAccept(_('Ankündigung erstellen'), 'save_news') ?>
 <? endif ?>
-<?= LinkButton::createCancel(_('Schließen'), URLHelper::getURL(''), array('rel' => 'close_dialog')) ?>
+<? if (Request::isXhr()) : ?>
+    <?= LinkButton::createCancel(_('Schließen'), URLHelper::getURL(''), array('rel' => 'close_dialog')) ?>
+<? endif ?>
 </div>
 </form>
 <script>

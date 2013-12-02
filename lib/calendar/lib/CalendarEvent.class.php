@@ -199,8 +199,8 @@ class CalendarEvent extends Event
      */
     function createRepeat($r_rule, $start, $end)
     {
-        $duration = (int) ((mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end), 0)
-                - mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start), 0))
+        $duration = (int) ((mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end))
+                - mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start)))
                 / 86400);
         if (!isset($r_rule['count']))
             $r_rule['count'] = 0;
@@ -209,17 +209,17 @@ class CalendarEvent extends Event
 
             // ts ist hier der Tag des Termins 12:00:00 Uhr
             case 'SINGLE':
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start), 0);
+                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
                 $rrule = array($ts, 0, 0, '', 0, 0, 'SINGLE', $duration);
                 break;
 
             case 'DAILY':
                 $r_rule['linterval'] = $r_rule['linterval'] ? intval($r_rule['linterval']) : 1;
                 // ts ist hier der Tag des ersten Wiederholungstermins 12:00:00 Uhr
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) + $r_rule['linterval'], date('Y', $start), 0);
+                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) + $r_rule['linterval'], date('Y', $start));
                 if ($r_rule['count']) {
                     $r_rule['expire'] = mktime(23, 59, 59, date('n', $start), date('j', $start)
-                            + ($r_rule['count'] - 1) * $r_rule['linterval'], date('Y', $start), 0);
+                            + ($r_rule['count'] - 1) * $r_rule['linterval'], date('Y', $start));
                 }
                 $rrule = array($ts, $r_rule['linterval'], 0, '', 0, 0, 'DAILY', $duration);
                 break;
@@ -229,7 +229,7 @@ class CalendarEvent extends Event
                 // ts ist hier der Montag der ersten Wiederholungswoche 12:00:00 Uhr
                 if (!$r_rule['wdays']) {
                     $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) +
-                            ($r_rule['linterval'] * 7 - (strftime('%u', $start) - 1)), date('Y', $start), 0);
+                            ($r_rule['linterval'] * 7 - (strftime('%u', $start) - 1)), date('Y', $start));
                     if ($r_rule['count']) {
                         $r_rule['expire'] = mktime(23, 59, 59, date('n', $start), date('j', $start) +
                                 ($r_rule['linterval'] * 7 * ($r_rule['count'] - 1)), date('Y', $start));
@@ -237,7 +237,7 @@ class CalendarEvent extends Event
                     $rrule = array($ts, $r_rule['linterval'], 0, strftime('%u', $start), 0, 0, 'WEEKLY', $duration);
                 } else {
                     $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) + (7 - (strftime('%u', $start) - 1))
-                            - ((strftime('%u', $start) <= substr($r_rule['wdays'], -1)) ? 7 : 0), date('Y', $start), 0);
+                            - ((strftime('%u', $start) <= substr($r_rule['wdays'], -1)) ? 7 : 0), date('Y', $start));
 
                     if ($r_rule['count']) {
                         // last week day of the recurrence set
@@ -268,7 +268,7 @@ class CalendarEvent extends Event
                 $r_rule['linterval'] = $r_rule['linterval'] ? intval($r_rule['linterval']) : 1;
                 if (!$r_rule['day'] && !$r_rule['sinterval'] && !$r_rule['wdays']) {
                     $amonth = date('n', $start) + $r_rule['linterval'];
-                    $ts = mktime(12, 0, 0, $amonth, date('j', $start), date('Y', $start), 0);
+                    $ts = mktime(12, 0, 0, $amonth, date('j', $start), date('Y', $start));
                     $rrule = array($ts, $r_rule['linterval'], 0, '', 0, date('j', $start), 'MONTHLY', $duration);
                 } else if (!$r_rule['sinterval'] && !$r_rule['wdays']) {
                     // Ist erste Wiederholung schon im gleichen Monat?
@@ -276,12 +276,12 @@ class CalendarEvent extends Event
                         $amonth = date('n', $start) + $r_rule['linterval'];
                     else
                         $amonth = date('n', $start);
-                    $ts = mktime(12, 0, 0, $amonth, $r_rule['day'], date('Y', $start), 0);
+                    $ts = mktime(12, 0, 0, $amonth, $r_rule['day'], date('Y', $start));
                     $rrule = array($ts, $r_rule['linterval'], 0, '', 0, $r_rule['day'], 'MONTHLY', $duration);
                 } elseif (!$r_rule['day']) {
                     // hier ist ts der erste Wiederholungstermin
                     $amonth = date('n', $start);
-                    $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start), 0) + ($r_rule['sinterval'] - 1) * 604800;
+                    $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
                     $awday = strftime('%u', $adate);
                     $adate -= ( $awday - $r_rule['wdays']) * 86400;
                     if ($r_rule['sinterval'] == 5) {
@@ -296,7 +296,7 @@ class CalendarEvent extends Event
                     if (date('Ymd', $adate) < date('Ymd', $start)) {
                         //Dann muss hier die Berechnung ohne interval wiederholt werden
                         $amonth = date('n', $start) + $r_rule['linterval'];
-                        $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start), 0) + ($r_rule['sinterval'] - 1) * 604800;
+                        $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
                         $awday = strftime('%u', $adate);
                         $adate -= ( $awday - $r_rule['wdays']) * 86400;
                         if ($r_rule['sinterval'] == 5) {
@@ -321,20 +321,20 @@ class CalendarEvent extends Event
             case 'YEARLY':
                 // ts ist hier der erste Wiederholungstermin 12:00:00 Uhr
                 if (!$r_rule['month'] && !$r_rule['day'] && !$r_rule['sinterval'] && !$r_rule['wdays']) {
-                    $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start) + 1, 0);
+                    $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start) + 1);
                     $rrule = array($ts, 1, 0, '', date('n', $start), date('j', $start), 'YEARLY', $duration);
                 } else if (!$r_rule['sinterval'] && !$r_rule['wdays']) {
                     if (!$r_rule['day'])
                         $r_rule['day'] = date('j', $start);
-                    $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start), 0);
-                    if ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start), 0))
-                        $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start) + 1, 0);
+                    $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start));
+                    if ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start)))
+                        $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start) + 1);
                     $rrule = array($ts, 1, 0, '', $r_rule['month'], $r_rule['day'], 'YEARLY', $duration);
                 }
                 else if (!$r_rule['day']) {
                     $ayear = date('Y', $start);
                     do {
-                        $adate = mktime(12, 0, 0, $r_rule['month'], 1 + ($r_rule['sinterval'] - 1) * 7, $ayear, 0);
+                        $adate = mktime(12, 0, 0, $r_rule['month'], 1 + ($r_rule['sinterval'] - 1) * 7, $ayear);
                         $aday = strftime('%u', $adate);
                         $adate -= ( $aday - $r_rule['wdays']) * 86400;
                         if ($r_rule['sinterval'] == 5) {
@@ -347,7 +347,7 @@ class CalendarEvent extends Event
                             $adate += 604800;
                         $ts = $adate;
                         $ayear++;
-                    } while ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start), 0));
+                    } while ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start)));
                     $rrule = array($ts, 1, $r_rule['sinterval'], $r_rule['wdays'], $r_rule['month'], 0, 'YEARLY', $duration);
                 }
 
@@ -357,7 +357,7 @@ class CalendarEvent extends Event
                 break;
 
             default :
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start), 0);
+                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
                 $rrule = array($ts, 0, 0, '', 0, 0, 'SINGLE', $duration);
                 $r_rule['count'] = 0;
         }

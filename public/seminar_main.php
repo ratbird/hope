@@ -41,10 +41,6 @@ require_once('lib/dates.inc.php'); //Funktionen zur Anzeige der Terminstruktur
 require_once('lib/visual.inc.php');
 require_once 'lib/functions.php';
 
-if (get_config('VOTE_ENABLE')) {
-    include_once ("lib/vote/vote_show.inc.php");
-}
-
 $course_id = $_SESSION['SessionSeminar'];
 
 //set visitdate for course, when coming from meine_seminare
@@ -251,9 +247,8 @@ if (!$studygroup_mode) {
 }
 
 // include and show votes and tests
-if (get_config('VOTE_ENABLE')) {
-    show_votes ($course_id, $auth->auth["uid"], $perm, YES);
-}
+    $factory = new Flexi_TemplateFactory($STUDIP_BASE_PATH . '/app/views');
+    echo $factory->render("vote/index", array('votes' => StudipVote::findByRange_id($course_id)));
 
 // display plugins
 $plugins = PluginEngine::getPlugins('StandardPlugin', $course_id);

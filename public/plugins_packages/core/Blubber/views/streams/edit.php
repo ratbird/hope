@@ -55,11 +55,11 @@
     </table>    
 </div>
 
-<table class="default select">
+<table class="default select nohover">
+    <caption><?= _("Sammlung") ?></caption>
     <tbody>
         <tr>
             <th colspan="3">
-                <h3 style="margin: 0px;"><?= _("Sammlung") ?></h3>
                 <p class="info"><?= _("Definiere, welche Postings Dein Stream alle umfassen soll.") ?></p>
             </th>
         </tr>
@@ -131,11 +131,11 @@
         </tr>
     </tbody>
 </table>
-<table class="default select">
+<table class="default select nohover">
+    <caption><?= _("Filterung") ?></caption>
     <tbody>
         <tr>
             <th colspan="5">
-                <h3 style="margin: 0px;"><?= _("Filterung") ?></h3>
                 <p class="info"><?= _("Grenze die oben definierte Sammlung an Postings ein mit Filtermöglichkeiten") ?></p>
             </th>
         </tr>

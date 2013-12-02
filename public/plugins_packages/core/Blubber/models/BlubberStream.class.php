@@ -25,6 +25,7 @@ require_once dirname(__file__)."/StreamAvatar.class.php";
 class BlubberStream extends SimpleORMap {
 
     public $filter_threads = array();
+    public $user_id = null;
 
     static public function create($pool = array(), $filter = array()) {
         $stream = new BlubberStream();
@@ -54,11 +55,13 @@ class BlubberStream extends SimpleORMap {
      * Creates the global-blubberstream and returns it.
      * @return BlubberStream
      */
-    static public function getGlobalStream() {
+    static public function getGlobalStream($user_id = null) {
+        $user_id OR $user_id = $GLOBALS['user']->id;
         $stream = new BlubberStream();
         $stream['pool_courses'] = array("all");
         $stream['pool_groups'] = array("all");
         $stream['sort'] = "activity";
+        $stream->user_id = $user_id;
         return $stream;
     }
 
@@ -106,6 +109,7 @@ class BlubberStream extends SimpleORMap {
         $this->db_table = "blubber_streams";
         $this->registerCallback('before_store', 'serializeData');
         $this->registerCallback('after_store after_initialize', 'unserializeData');
+        $this->user_id = $GLOBALS['user']->id;
         parent::__construct($id);
     }
 
@@ -341,7 +345,7 @@ class BlubberStream extends SimpleORMap {
         }
         if (count($this['pool_groups']) > 0) {
             $pool_users = $this->getUsersByGroups($this['pool_groups']);
-            $pool_users[] = $GLOBALS['user']->id;
+            $pool_users[] = $this->user_id;
             if (count($pool_users)) {
                 $pool_sql[] = "blubber.user_id IN (:pool_users)";
                 $pool_sql[] = "blubber_reshares.user_id IN (:pool_users)";
@@ -355,7 +359,7 @@ class BlubberStream extends SimpleORMap {
 
         // Rights to see the blubber-postings:
         $parameters['seminar_ids'] = $this->getMyCourses();
-        if ($GLOBALS['perm']->have_perm("admin")) {
+        if ($GLOBALS['perm']->have_perm("admin", $this->user_id)) {
             if ((count($this['pool_courses']) && ($this['pool_courses'][0] !== "all")) || count($this['filter_courses'])) {
                 $filter_sql[] =
                     "(blubber.context_type = 'public' " .
@@ -375,7 +379,7 @@ class BlubberStream extends SimpleORMap {
                     (count($parameters['seminar_ids']) ? "OR (blubber.context_type = 'course' AND blubber.Seminar_id IN (:seminar_ids)) " : "") .
                 ")";
         }
-        $parameters['me'] = $GLOBALS['user']->id;
+        $parameters['me'] = $this->user_id;
 
         if (count($this['filter_type']) > 0) {
             $filter_sql[] = "blubber.context_type IN (:filter_type)";
@@ -394,7 +398,7 @@ class BlubberStream extends SimpleORMap {
             $filter_users = array();
             if (count($this['filter_groups']) > 0) {
                 $filter_users = $this->getUsersByGroups($this['filter_groups']);
-                $filter_users[] = $GLOBALS['user']->id;
+                $filter_users[] = $this->user_id;
             }
             if (count($this['filter_users']) > 0) {
                 $filter_users = $filter_users + $this['filter_users'];
@@ -433,7 +437,7 @@ class BlubberStream extends SimpleORMap {
                     "FROM blubber_follower " .
                     "WHERE left_follows_right = '1' " .
             "");
-            $statement->execute(array('me' => $GLOBALS['user']->id));
+            $statement->execute(array('me' => $this->user_id));
             return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         } elseif(count($groups)) {
             $statement = DBManager::get()->prepare(
@@ -444,7 +448,7 @@ class BlubberStream extends SimpleORMap {
                     "AND statusgruppen.statusgruppe_id IN (:groups) " .
             "");
             $statement->execute(array(
-                'me' => $GLOBALS['user']->id,
+                'me' => $this->user_id,
                 'groups' => $groups
             ));
             return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -464,7 +468,7 @@ class BlubberStream extends SimpleORMap {
         if ($courses[0] === "all") {
             return $mycourses;
         } else {
-            if ($GLOBALS['perm']->have_perm("admin")) {
+            if ($GLOBALS['perm']->have_perm("admin", $this->user_id)) {
                 return $courses;
             } else {
                 return array_intersect($courses, $mycourses);
@@ -478,7 +482,7 @@ class BlubberStream extends SimpleORMap {
      * @return array of string : array of Seminar_ids
      */
     protected function getMyCourses() {
-        if ($GLOBALS['perm']->have_perm("admin")) {
+        if ($GLOBALS['perm']->have_perm("admin", $this->user_id)) {
             return array();
         }
         $mandatory_classes = array();
@@ -524,7 +528,7 @@ class BlubberStream extends SimpleORMap {
                 ") " .
                 "AND seminare.status NOT IN (:forbidden_types) " .
         "");
-        $parameter = array('me' => $GLOBALS['user']->id);
+        $parameter = array('me' => $this->user_id);
         $parameter['mandatory_types'] = count($mandatory_types) ? $mandatory_types : null;
         $parameter['standard_types'] = count($standard_types) ? $standard_types : null;
         $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : array(-1);

@@ -57,12 +57,12 @@ class DbCalendarYear extends CalendarYear
                 continue;
 
             $rep = $properties['RRULE'];
-            $duration = (int) ((mktime(12, 0, 0, date('n', $properties['DTEND']), date('j', $properties['DTEND']), date('Y', $properties['DTEND']), 0)
-                    - mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']), 0))
+            $duration = (int) ((mktime(12, 0, 0, date('n', $properties['DTEND']), date('j', $properties['DTEND']), date('Y', $properties['DTEND']))
+                    - mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART'])))
                     / 86400);
 
             // single event or first event
-            $lwst = mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']), 0);
+            $lwst = mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']));
             if ($start_ts > $lwst) {
                 $adate = $start_ts;
             } else {
@@ -115,7 +115,7 @@ class DbCalendarYear extends CalendarYear
                 case 'WEEKLY' :
 
                     if ($properties['DTSTART'] >= $start && $properties['DTSTART'] <= $end) {
-                        $lwst = mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']), 0);
+                        $lwst = mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']));
                         $hgst = $lwst + $duration * 86400;
                         if ($rep['ts'] != $adate) {
                             $md_date = $lwst;

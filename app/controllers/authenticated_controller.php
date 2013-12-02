@@ -37,7 +37,7 @@ abstract class AuthenticatedController extends StudipController {
                     'user' => 'Seminar_User'));
 
     // show login-screen, if authentication is "nobody"
-    $GLOBALS['auth']->login_if($auth->auth["uid"] == "nobody");
+    $GLOBALS['auth']->login_if($GLOBALS['auth']->auth['uid'] == 'nobody');
 
     $this->flash = Trails_Flash::instance();
 

@@ -36,9 +36,6 @@ class ProfileController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        // Checks if user is logged in
-        $GLOBALS['auth']->login_if($GLOBALS['auth']->auth['uid'] === 'nobody');
-
         // Checks if voting is enabled
         if (get_config('VOTE_ENABLE')) {
             include_once ("lib/vote/vote_show.inc.php");

@@ -146,10 +146,8 @@
     </tr>
 </table>
 <br />
-<? if ($show_news): ?>
-    <? show_news($current_user->user_id, $show_admin, 0, $profile_data["nopen"], "100%", 0, $about_data) ?>
-<? endif; ?>
 
+<?= $this->render_partial('news/display', array('range' => $current_user->user_id )); ?>
 <? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, $about_data["dopen"]) ?>
 
 <? if ($show_votes) show_votes($current_user->username, $user->user_id, $perm, YES) ?>

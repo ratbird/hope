@@ -29,10 +29,14 @@ if ($new['allow_comments']):
             <?= Assets::img('icons/16/blue/admin.png'); ?>
         </a>
         <? if ($new->havePermission('unassign', $range)): ?>
-            <?= LinkButton::create(_('Entfernen'), URLHelper::getLink('?nremove=' . $news['news_id'] . '#anker'))
-            ?>
+            <a href=" <?= URLHelper::getLink('', array('remove_news' => $new->id, 'news_range' => $range)) ?>" >
+                <?= Assets::img('icons/16/blue/remove.png'); ?>
+            </a>
         <? endif; ?>
         <? if ($new->havePermission('delete')): ?>
-            <?= Assets::img('icons/16/blue/trash.png'); ?>
-        <? endif; ?>
+            <a href=" <?= URLHelper::getLink('', array('delete_news' => $new->id)) ?>" >
+                <?= Assets::img('icons/16/blue/trash.png'); ?>
+            </a>
+        </a>
     <? endif; ?>
+<? endif; ?>

@@ -404,34 +404,6 @@ class StudipNews extends SimpleORMap {
         }
     }
     
-    /**
-     * Checks if the news are displayed as open
-     * 
-     * @return type
-     */
-    function isOpen() {
-        return Request::get('nopen') == $this->id;
-    }
-    
-    /**
-     * Performs all updates on news
-     * 
-     * @param type $range_id
-     * @return boolean
-     */
-    public static function update() {
-
-        // Check if user wrote a comment
-        if (Request::submitted('accept')) {
-            CSRFProtection::verifySecurityToken();
-            StudipComment::create(array(
-            'object_id' => Request::get('comsubmit'),
-            'user_id' => $GLOBALS['user']->id,
-            'content' => Request::get('comment_content')
-            ));
-        }
-    }
-
     function deleteRange($range_id) {
         if ($this->issetRange($range_id)) {
             return $this->news_ranges->unsetBy('range_id', $range_id);

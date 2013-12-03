@@ -121,7 +121,7 @@
                     <select id="title_front_chooser" name="title_front_chooser"
                             aria-label="<?= _('Titel auswählen') ?>"
                             data-target="#title_front"
-                            <? if (!$controller->shallChange('auth_user_md5.title_front', 'title')) echo 'disabled'; ?>>
+                            <? if (!$controller->shallChange('user_info.title_front', 'title')) echo 'disabled'; ?>>
                     <? foreach ($GLOBALS['TITLE_FRONT_TEMPLATE'] as $title): ?>
                         <option <? if ($user['title_front'] == $title) echo 'selected'; ?>>
                             <?= htmlReady($title) ?>
@@ -133,7 +133,7 @@
                     <input type="text" name="title_front" id="title_front"
                            data-target="#title_front_chooser"
                            value="<?= htmlReady($user['title_front']) ?>"
-                           <? if (!$controller->shallChange('auth_user_md5.title_front', 'title')) echo 'disabled'; ?>>
+                           <? if (!$controller->shallChange('user_info.title_front', 'title')) echo 'disabled'; ?>>
                 </td>
             </tr>
             <tr>
@@ -144,7 +144,7 @@
                     <select name="title_rear_chooser" id="title_rear_chooser"
                             aria-label="<?= _('Titel nachgestellt auswählen') ?>"
                             data-target="#title_rear"
-                            <? if (!$controller->shallChange('auth_user_md5.title_rear', 'title')) echo 'disabled'; ?>>
+                            <? if (!$controller->shallChange('user_info.title_rear', 'title')) echo 'disabled'; ?>>
                     <? foreach ($GLOBALS['TITLE_REAR_TEMPLATE'] as $title): ?>
                         <option <? if ($user['title_rear'] == $title) echo 'selected'; ?>>
                             <?= htmlReady($title) ?>
@@ -156,7 +156,7 @@
                     <input type="text" style="width: 98%;" name="title_rear" id="title_rear"
                            data-target="#title_rear_chooser"
                            value="<?= htmlReady($user['title_rear']) ?>"
-                           <? if (!$controller->shallChange('auth_user_md5.title_rear', 'title')) echo 'disabled'; ?>>
+                           <? if (!$controller->shallChange('user_info.title_rear', 'title')) echo 'disabled'; ?>>
                 </td>
             </tr>
             <tr>
@@ -168,7 +168,7 @@
                     <label>
                         <input type="radio" name="geschlecht" value="<?= $index ?>"
                                <? if ($user['geschlecht'] == $index) echo 'checked'; ?>
-                               <? if (!$controller->shallChange('auth_user_md5.geschlecht', 'gender')) echo 'disabled'; ?>>
+                               <? if (!$controller->shallChange('user_info.geschlecht', 'gender')) echo 'disabled'; ?>>
                         <?= htmlReady($gender) ?>
                     </label>
                 <? endforeach; ?>

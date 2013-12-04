@@ -173,8 +173,8 @@ class NewsController extends StudipController
                 $topic = Request::get('news_topic');
                 $body = Request::get('news_body');
             }
-            $date = $this->getTimeStamp(Request::get('news_startdate'));
-            $expire = $this->getTimeStamp(Request::get('news_enddate')) ? $this->getTimeStamp(Request::get('news_enddate')) - $this->getTimeStamp(Request::get('news_startdate')) : '';
+            $date = $this->getTimeStamp(Request::get('news_startdate'), 'start');
+            $expire = $this->getTimeStamp(Request::get('news_enddate'), 'end') ? $this->getTimeStamp(Request::get('news_enddate'), 'end') - $this->getTimeStamp(Request::get('news_startdate'), 'start') : '';
             $allow_comments = Request::get('news_allow_comments') ? 1 : 0;
             if (Request::submitted('comments_status_deny')) {
                 $this->anker = 'news_comments';
@@ -450,15 +450,15 @@ class NewsController extends StudipController
             $this->news_isvisible['basic'] = $this->news_isvisible['basic'] ? false : true;
             if (Request::get('news_searchterm') AND (strlen(trim(Request::get('news_searchterm'))) < 3))
                 PageLayout::postMessage(MessageBox::error(_('Der Suchbegriff muss mindestens 3 Zeichen lang sein.')));
-            elseif ((Request::get('news_startdate') AND !$this->getTimeStamp(Request::get('news_startdate'))) OR (Request::get('news_enddate') AND !$this->getTimeStamp(Request::get('news_enddate'))))
+            elseif ((Request::get('news_startdate') AND !$this->getTimeStamp(Request::get('news_startdate'), 'start')) OR (Request::get('news_enddate') AND !$this->getTimeStamp(Request::get('news_enddate'), 'end')))
                 PageLayout::postMessage(MessageBox::error(_('Ungültige Datumsangabe. Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein.')));
-            elseif (Request::get('news_enddate') AND Request::get('news_enddate') AND ($this->getTimeStamp(Request::get('news_startdate')) > $this->getTimeStamp(Request::get('news_enddate'))))
+            elseif (Request::get('news_enddate') AND Request::get('news_enddate') AND ($this->getTimeStamp(Request::get('news_startdate'), 'start') > $this->getTimeStamp(Request::get('news_enddate'), 'end')))
                 PageLayout::postMessage(MessageBox::error(_('Das Startdatum muss vor dem Enddatum liegen.')));
 
             if (strlen(trim(Request::get('news_searchterm'))) >= 3)
                 $this->news_searchterm = Request::get('news_searchterm');
-            $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'));
-            $this->news_enddate = $this->getTimeStamp(Request::get('news_enddate'));
+            $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'), 'start');
+            $this->news_enddate = $this->getTimeStamp(Request::get('news_enddate'), 'end');
         }
         // fetch news list
         $this->news_items = StudipNews::getNewsRangesByFilter($GLOBALS["auth"]->auth["uid"], $this->area_type, $this->news_searchterm, $this->news_startdate, $this->news_enddate, true, $limit+1);
@@ -537,14 +537,19 @@ class NewsController extends StudipController
      * checks string for valid date
      * 
      * @param string $date
+     * @param string $mode 'start' for startddate, 'end' for enddate (i.e. 23:59)
      * @return mixed result
      */
-    private function getTimeStamp($date)
+    private function getTimeStamp($date, $mode = 'start')
     {
         if ($date) {
             $date_array = explode('.', $date);
-            if (checkdate($date_array[1], $date_array[0], $date_array[2]))
-                return mktime(12,0,0,$date_array[1], $date_array[0], $date_array[2]);
+            if (checkdate($date_array[1], $date_array[0], $date_array[2])) {
+                if ($mode == 'end')
+                    return mktime(23,59,0,$date_array[1], $date_array[0], $date_array[2]);
+                else
+                    return mktime(0,0,0,$date_array[1], $date_array[0], $date_array[2]);
+            }
         }
         return false;
     }

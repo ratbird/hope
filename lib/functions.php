@@ -131,6 +131,31 @@ function get_object_name($range_id, $object_type)
 }
 
 /**
+ * Returns type and name of a range_id
+ * 
+ * @param string the range_id
+ * @return array [type] and [name]
+ */
+function get_object_type_and_name($object_id) {
+    $sql = "Select 'sem' as type, name FROM seminare WHERE Seminar_id = :test
+            UNION
+            Select IF (Institut_id = fakultaets_id,'fak','inst') as type, name FROM Institute WHERE Institut_id = :test
+            UNION
+            Select 'user' as type, CONCAT_WS(' ', vorname, nachname) FROM auth_user_md5 WHERE user_id = :test 
+            UNION 
+            SELECT 'group' as type, name FROM statusgruppen WHERE statusgruppe_id = :test 
+            UNION 
+            SELECT 'dokument' as type, name FROM dokumente WHERE dokument_id = :test 
+            UNION
+            SELECT 'range_tree' as type, name FROM range_tree WHERE item_id = :test 
+            LIMIT 1";
+    $stmt = DBManager::get()->prepare($sql);
+    $stmt->bindParam(':test', $object_id);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+/**
  * This function "selects" a Veranstaltung to work with it
  *
  * The following variables will bet set:

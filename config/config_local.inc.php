@@ -4,7 +4,7 @@
 you find here the basic system settings. You shouldn't have to touch much of them...
 please note the CONFIG.INC.PHP for the indivual settings of your installation!*/
 
-$UNI_NAME_CLEAN = 'Local';                           //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
+$UNI_NAME_CLEAN = 'Stud.IP 2.4';                           //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
 $STUDIP_INSTALLATION_ID='demo-installation';      //unique identifier for installation
 
 
@@ -15,8 +15,8 @@ please fill in your database connection settings.
 
 // default Stud.IP database (DB_Seminar)
 $DB_STUDIP_HOST = "localhost";
-$DB_STUDIP_USER = "root";
-$DB_STUDIP_PASSWORD = "root";
+$DB_STUDIP_USER = "";
+$DB_STUDIP_PASSWORD = "";
 $DB_STUDIP_DATABASE = "studip";
 
 /*
@@ -126,7 +126,7 @@ $RELATIVE_PATH_SOAP = "lib/soap";
 $PATH_EXPORT = "lib/export";                                //Stud.IP module: export
 
 //caching
-$CACHING_ENABLE = false;
+$CACHING_ENABLE = true;
 $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
 
 /*Stud.IP modules

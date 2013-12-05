@@ -119,7 +119,7 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'inst_admin.php'));
 
                 if ($GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $GLOBALS['perm']->have_perm('admin')) {
-                    $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_roles.php?new_sem=TRUE&range_id='. $SessSemName[1]));
+                    $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'dispatch.php/admin/statusgroups'));
                 }
 
                 $this->addSubNavigation('faculty', $navigation);

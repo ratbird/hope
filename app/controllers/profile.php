@@ -189,8 +189,6 @@ class ProfileController extends AuthenticatedController
         // include and show votes and tests
         $this->show_votes = get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes');
         
-        $this->votes = StudipVote::findByRange_id($this->current_user->user_id);
-        
         // include and show friend-of-a-friend list
         // (direct/indirect connection via buddy list
         if ($GLOBALS['FOAF_ENABLE'] && ($this->user->user_id != $this->current_user->user_id)

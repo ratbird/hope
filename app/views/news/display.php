@@ -49,9 +49,11 @@ $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId
 <div class="content_box">
     <div class="head">
         <div class="actions">
+            <? if(StudipNews::haveRangePermission('edit', $range)): ?>
             <a href="<?= URLHelper::getLink('dispatch.php/news/edit_news/new/' . $range); ?>" rel="get_dialog">
             <?= Assets::img('icons/16/blue/add.png'); ?>
             </a>
+            <? endif; ?>
 <? if ($rss_id): ?>
                 <a href="rss.php?id=<?= $rss_id ?>">
                     <img src="<?= Assets::image_path('icons/16/blue/rss.png') ?>"

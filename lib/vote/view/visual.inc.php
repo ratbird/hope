@@ -76,12 +76,12 @@ function createBoxHeader ($title, $width, $extraTitle = "",
 {
     SkipLinks::addIndex(_("Umfragen"), 'votes_box');
    $html =
-      "<table id=\"votes_box\" role=\"article\" class=\"default nohover\" $width>\n";
+      "<table id=\"votes_box\" role=\"article\" class=\"index_box\" $width>\n";
 
    if ($title) {
 
-      $html .=   " <thead><tr>\n".
-      "  <th colspan=\"2\">";
+      $html .=   " <tr>\n".
+      "  <td class=\"table_header_bold\" colspan=\"2\">";
 
       if ($imgURL) {
           $html .=
@@ -97,8 +97,8 @@ function createBoxHeader ($title, $width, $extraTitle = "",
        }
 
        $html .=
-          "</th>".
-          "<th class='actions' >";
+          "</td>".
+          "<td align=\"right\" class=\"table_header_bold\">";
 
        if ($adminURL) {
             $html .= 
@@ -107,11 +107,11 @@ function createBoxHeader ($title, $width, $extraTitle = "",
        }
 
        $html .=
-          "  </th>\n".
-          " </tr></thead>\n";
+          "  </td>\n".
+          " </tr>\n";
    }
    $html .= " <tr>\n".
-      "  <td colspan=\"3\">\n";
+      "  <td class=\"".$cssClass."\" colspan=\"3\">\n";
 
    return $html;
 }

@@ -76,10 +76,9 @@ if($termin_item['seminar_date'] instanceof SingleDate) {
 }
 if($termin_item['edit'])
     $content .= "<br><div align=\"center\"> " . LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin_item['termin_id'], 'atime' => $termin->date, 'source_page' => URLHelper::getURL()))) ."</div>";
-/*echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
+echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
 printcontent(0,0, $content,false);
 
-echo  "</tr></table> ";*/
-echo $content;
+echo  "</tr></table> ";
 
 ?>

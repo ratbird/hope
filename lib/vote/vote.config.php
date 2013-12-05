@@ -33,11 +33,11 @@ define ("INSTANCEOF_VOTEDB", "VoteDB");
 define ("VOTE_FILE_ADMIN", "admin_vote.php");
 define ("VOTE_FILE_SHOW", "lib/vote/vote_show.inc.php");
 
-define ("VOTE_ICON_BIG",     Assets::image_path('icons/16/black/vote.png'));
+define ("VOTE_ICON_BIG",     Assets::image_path('icons/16/white/vote.png'));
 define ("VOTE_ICON_VOTE",    Assets::image_path('icons/16/grey/vote.png'));
 define ("VOTE_ICON_TEST",    Assets::image_path('icons/16/grey/test.png'));
 define ("VOTE_ICON_STOPPED", Assets::image_path('icons/16/grey/vote-stopped.png'));
-define ("VOTE_ICON_ARROW",   Assets::image_path('icons/16/blue/admin.png'));
+define ("VOTE_ICON_ARROW",   Assets::image_path('icons/16/white/admin.png'));
 define ("VOTE_ICON_SUCCESS", Assets::image_path("icons/16/green/accept.png"));
 define ("VOTE_ICON_ERROR",   Assets::image_path("icons/16/red/decline.png"));
 define ("VOTE_ICON_INFO",    Assets::image_path("icons/16/grey/exclaim.png"));

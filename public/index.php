@@ -164,7 +164,6 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
                 <td class="indexpage" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width="390" height="100" alt=""></td>
             </tr>
         </table>
-        <div style="background-color: white;">
 <?
 
     // display news
@@ -181,17 +180,12 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
             show_dates($start, $end, $index_data['dopen']);
         }
     }
-?>
-     </div><div style="background-color: white;">
-     <?
+
     // display votes
     if (get_config('VOTE_ENABLE')) {
         include 'lib/vote/vote_show.inc.php';
         show_votes('studip', $auth->auth['uid'], $perm);
     }
-    ?>
-     </div>
-     <?
 } else { //displaymodul for nobody
     $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
 

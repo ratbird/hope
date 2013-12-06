@@ -355,7 +355,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                         'name' => _('Mitglieder'),
                         'user' => function() {
                             $inst = new Institute($_SESSION['SessionSeminar']);
-                            return $inst->members->orderBy('nachname');
+                            return $inst->members->findBy('user', null, '<>')->orderBy('nachname');
                         }))
             )
         );

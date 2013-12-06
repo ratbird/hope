@@ -12,6 +12,15 @@
 
 abstract class StudipController extends Trails_Controller
 {
+
+    function before_filter (&$action, &$args)
+    {
+        $this->current_action = $action;
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+        parent::before_filter($action, $args);
+    }
+
     /**
      * Validate arguments based on a list of given types. The types are:
      * 'int', 'float', 'option' and 'string'. If the list of types is NULL
@@ -46,8 +55,11 @@ abstract class StudipController extends Trails_Controller
         reset($args);
     }
 
-    /**
+   /**
     * Returns a URL to a specified route to your Trails application.
+    * without first parameter the current action is used
+    * if route begins with a / then the current controller ist prepended
+    * if second parameter is an array it is passed to URLHeper
     *
     * @param  string   a string containing a controller and optionally an action
     * @param  strings  optional arguments
@@ -55,9 +67,45 @@ abstract class StudipController extends Trails_Controller
     * @return string  a URL to this route
     */
     function url_for($to/*, ...*/) {
-        $url = call_user_func_array("parent::url_for", func_get_args());
-        return URLHelper::getURL($url);
+        $args = func_get_args();
+        if (is_array($args[1])) {
+            $params = $args[1];
+            unset($args[1]);
+        } else {
+            $params = array();
+        }
+        //preserve fragment
+        list($to, $fragment) = explode('#', $to);
+        if (!$to) {
+            $to = '/' . ($this->parent_controller ? $this->parent_controller->current_action : $this->current_action);
+        }
+        if ($to[0] === '/') {
+            $prefix = str_replace('_', '/', strtolower(strstr(get_class($this->parent_controller ? $this->parent_controller : $this), 'Controller', true)));
+            $to = $prefix . $to;
+        }
+        $args[0] = $to;
+        $url = call_user_func_array("parent::url_for", $args);
+        if ($fragment) {
+            $url .= '#' . $fragment;
+        }
+        return URLHelper::getURL($url, $params);
     }
+
+    /**
+     * Returns an escaped URL to a specified route to your Trails application.
+     * without first parameter the current action is used
+     * if route begins with a / then the current controller ist prepended
+     * if second parameter is an array it is passed to URLHeper
+     *
+     * @param  string   a string containing a controller and optionally an action
+     * @param  strings  optional arguments
+     *
+     * @return string  a URL to this route
+     */
+    function link_for($to/*, ...*/) {
+        return htmlReady(call_user_func_array(array($this,'url_for'), func_get_args()));
+    }
+
 
     /**
      * Exception handler called when the performance of an action raises an
@@ -127,4 +175,13 @@ abstract class StudipController extends Trails_Controller
         $this->infobox = $infobox;
     }
 
+    /**
+     * render given data as json, data is converted to utf-8
+     *
+     * @param unknown $data
+     */
+    function render_json($data) {
+        $this->set_content_type('application/json;charset=utf-8');
+        return $this->render_text(json_encode(studip_utf8encode($data)));
+    }
 }

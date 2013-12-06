@@ -30,6 +30,8 @@ abstract class AuthenticatedController extends StudipController {
    */
   function before_filter(&$action, &$args) {
 
+    parent::before_filter($action, $args);
+
     # open session
     page_open(array('sess' => 'Seminar_Session',
                     'auth' => 'Seminar_Auth',
@@ -43,9 +45,6 @@ abstract class AuthenticatedController extends StudipController {
 
     // set up user session
     include 'lib/seminar_open.php';
-
-    // allow only "word" characters in arguments
-    $this->validate_args($args);
 
     # Set base layout
     #

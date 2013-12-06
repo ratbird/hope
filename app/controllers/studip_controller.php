@@ -184,4 +184,65 @@ abstract class StudipController extends Trails_Controller
         $this->set_content_type('application/json;charset=utf-8');
         return $this->render_text(json_encode(studip_utf8encode($data)));
     }
+
+    /**
+     * relays current request to another controller and returns the response
+     * the other controller is given all assigned properties, additional parameters are passed
+     * through
+     *
+     * @param string $to_uri a trails route
+     * @return Trails_Response
+     */
+    function relay($to_uri/*, ...*/)
+    {
+        $args = func_get_args();
+        $uri = array_shift($args);
+        list($controller_path, $unconsumed) =
+        '' === $uri
+        ? $this->dispatcher->default_route()
+        : $this->dispatcher->parse($uri);
+
+        $controller = $this->dispatcher->load_controller($controller_path);
+        $assigns = $this->get_assigned_variables();
+        unset($assigns['controller']);
+        foreach ($assigns as $k => $v) {
+            $controller->$k = $v;
+        }
+        $controller->layout = null;
+        $controller->parent_controller = $this;
+        array_unshift($args, $unconsumed);
+        return call_user_func_array(array($controller, 'perform_relayed'), $args);
+    }
+
+    /**
+     * perform a given action/parameter string from an relayed request
+     * before_filter and after_filter methods are not called
+     *
+     * @see perform
+     * @param string $unconsumed
+     * @return Trails_Response
+     */
+    function perform_relayed($unconsumed/*, ...*/)
+    {
+        $args = func_get_args();
+        $unconsumed = array_shift($args);
+
+        list($action, $extracted_args, $format) = $this->extract_action_and_args($unconsumed);
+        $this->format = isset($format) ? $format : 'html';
+        $this->current_action = $action;
+        $args = array_merge($extracted_args, $args);
+        $callable = $this->map_action($action);
+
+        if (is_callable($callable)) {
+            call_user_func_array($callable, $args);
+        } else {
+            $this->does_not_understand($action, $args);
+        }
+
+        if (!$this->performed) {
+            $this->render_action($action);
+        }
+        return $this->response;
+    }
+
 }

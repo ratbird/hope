@@ -181,7 +181,7 @@
                     <td colspan="3" style="vertical-align: bottom">
                         <div style="display: inline-block; float: left; width: 45%; height: 100%">
                             <label><?=_('Suchergebnis')?><br>
-                            <select name="area_options_selectable[]" style="minWidth: 200px; width: 100%" size="7" multiple 
+                            <select name="area_options_selectable[]" style="minWidth: 200px; width: 100%; height: 116px" style="height: 16px" multiple 
                                     aria-label="<?= _('Gefundene Bereiche, die der Ankündigung hinzugefügt werden können') ?>"
                                     ondblclick="jQuery('input[name=news_add_areas]').click()">
                             <? foreach ($area_structure as $area_key => $area_data) : ?>
@@ -193,7 +193,7 @@
                                     </option>
                                     <? foreach ($area_options_selectable[$area_key] as $area_option_key => $area_option_title) : ?>
                                         <option <?= StudipNews::haveRangePermission('edit', $area_option_key) ? 'value="'.$area_option_key.'"' : 'disabled'?>
-                                                <?=tooltip($area_option_title);?>>
+                                                <?=tooltip($area_option_title);?> style="height: 16px">
                                         <?= htmlReady(mila($area_option_title))?>
                                     </option>
                                     <? endforeach ?>
@@ -227,7 +227,7 @@
                                     <?=sprintf(_('%s Bereiche ausgewählt'), $area_count)?>
                                 <? endif ?>
                             </div>
-                            <select name="area_options_selected[]" style="minWidth: 200px; width: 100%" size="7" multiple 
+                            <select name="area_options_selected[]" style="minWidth: 200px; width: 100%; height: 116px" size="7" multiple 
                                     aria-label="<?= _('Bereiche, in denen die Ankündigung angezeigt wird') ?>"
                                     ondblclick="jQuery('input[name=news_remove_areas]').click()">
                             <? foreach ($area_structure as $area_key => $area_data) : ?>
@@ -239,7 +239,7 @@
                                     </option>
                                     <? foreach ($area_options_selected[$area_key] as $area_option_key => $area_option_title) : ?>
                                         <option <?= (StudipNews::haveRangePermission('edit', $area_option_key) OR $may_delete) ? 'value="'.$area_option_key.'"' : 'disabled'?> 
-                                                <?=tooltip($area_option_title);?>>
+                                                <?=tooltip($area_option_title);?> style="height: 16px">
                                             <?= htmlReady(mila($area_option_title))?>
                                         </option>
                                     <? endforeach ?>

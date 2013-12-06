@@ -199,6 +199,9 @@
                                     <? endforeach ?>
                                 <? endif ?>
                             <? endforeach ?>
+                            <? if (!count($area_options_selectable)) : ?>
+                                <option disabled></option>
+                            <? endif ?>
                             </select>
                             </label>
                         </div>
@@ -242,6 +245,9 @@
                                     <? endforeach ?>
                                 <? endif ?>
                             <? endforeach ?>
+                            <? if (!count($area_options_selected)) : ?>
+                                <option disabled></option>
+                            <? endif ?>
                             </select>
                             </label>
                         </div>

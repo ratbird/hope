@@ -1,65 +1,22 @@
 <?
-/*
- * This should really be controller code
- */
-// Check if user wrote a comment
-if (Request::submitted('accept')) {
-    CSRFProtection::verifySecurityToken();
-    StudipComment::create(array(
-        'object_id' => Request::get('comsubmit'),
-        'user_id' => $GLOBALS['user']->id,
-        'content' => Request::get('comment_content')
-    ));
-}
-
-// Check if user wants to remove a announcement
-if ($news_id = Request::get('remove_news')) {
-    $news = new StudipNews($news_id);
-    $range = Request::get('news_range');
-    if ($news->havePermission('unassign', $range)) {
-        if (Request::get('confirm')) {
-        $news->deleteRange($range);
-        $news->store();
-        } else {
-            $question = createQuestion(_('Ankündigung wirklich aus diesem Bereich entfernen?'), array('remove_news' => $news_id, 'news_range' => $range, 'confirm' => true));
-        }
-    }
-}
-
-// Check if user wants to delete an announcement
-if ($news_id = Request::get('delete_news')) {
-    $news = new StudipNews($news_id);
-    if ($news->havePermission('delete')) {
-        if (Request::get('confirm')) {
-        $news->delete();
-        } else {
-            $question = createQuestion(_('Ankündigung wirklich löschen?'), array('delete_news' => $news_id, 'confirm' => true));
-        }
-    }
-}
-
 use Studip\Button;
-
-$news = StudipNews::GetNewsByRange($range, true, true);
-$perm = StudipNews::haveRangePermission('edit', $range);
-$rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
 ?>
 
 <?= $question ?>
 <div class="content_box">
     <div class="head">
         <div class="actions">
-            <? if(StudipNews::haveRangePermission('edit', $range)): ?>
-            <a href="<?= URLHelper::getLink('dispatch.php/news/edit_news/new/' . $range); ?>" rel="get_dialog">
+            <? if($perm): ?>
+            <a href="<?= $controller->link_for('news/edit_news/new/' . $range); ?>" rel="get_dialog">
             <?= Assets::img('icons/16/blue/add.png'); ?>
             </a>
             <? endif; ?>
 <? if ($rss_id): ?>
-                <a href="rss.php?id=<?= $rss_id ?>">
+                <a href="<?= URLHelper::getLink('rss.php', array('id' => $rss_id)) ?>">
                     <img src="<?= Assets::image_path('icons/16/blue/rss.png') ?>"
                 <?= tooltip(_('RSS-Feed')) ?>>
                 </a>
-        <? endif; ?>      
+        <? endif; ?>
         </div>
         <?= Assets::img('icons/16/black/news.png') ?>
 <?= _('Ankündigungen') ?>
@@ -68,10 +25,11 @@ $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId
 <? foreach ($news as $new): ?>
             <div class="box">
                 <div class="head">
+                    <a name="anker"></a>
                     <div class="actions">
     <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>
                     </div>
-                    <a href="<?= URLHelper::getLink('', array('nopen' => $new->id)) ?>">
+                    <a href="<?= $controller->link_for('#anker', array('nopen' => $new->id == Request::get('nopen') ? '' : $new->id)) ?>">
                         <? if ($new->id == Request::get('nopen')): ?>
                             <?= Assets::img('icons/16/blue/arr_1down.png'); ?>
                         <? else: ?>
@@ -86,12 +44,11 @@ $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId
                         <? if ($new['allow_comments']): ?>
                         <div align="center">
         <? if (Request::get('comments')): ?>
-                                <a name="anker"></a>
                                 <b><?= _('Kommentare') ?></b>
                                 <? foreach (StudipComments::GetCommentsForObject($new['news_id']) as $index => $comment): ?>
                                     <?= $this->render_partial('news/_commentbox', compact('index', 'comment')) ?>
                                     <? endforeach; ?>
-                                <form action="<?= URLHelper::getLink("#anker") ?>" method="POST">
+                                <form action="<?= $controller->link_for('#anker', array('nopen' => $new['news_id'], 'comments' => 1)) ?>" method="POST">
             <?= CSRFProtection::tokenTag() ?>
                                     <input type="hidden" name="comsubmit" value="<?= $new['news_id'] ?>">
                                     <div align="center">
@@ -102,10 +59,10 @@ $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId
                                 </form>
 
                                 <? else: ?>
-                                <a href="<?= URLHelper::getLink('', array('nopen' => $new['news_id'], 'comments' => 1)) ?>">
+                                <a href="<?= $controller->link_for('#anker', array('nopen' => $new['news_id'], 'comments' => 1)) ?>">
                                     <?= sprintf(_('Kommentare lesen (%s) / Kommentar schreiben'), StudipComments::NumCommentsForObject($new['news_id']))
                                     ?>
-                                </a>       
+                                </a>
                         <? endif; ?>
                         </div>
     <? endif; ?>

@@ -147,8 +147,8 @@
 </table>
 <br />
 
-<?= $this->render_partial('news/display', array('range' => $current_user->user_id )); ?>
-<? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, $about_data["dopen"]) ?>
+<?= $show_news ?>
+<? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, Request::option('dopen')) ?>
 
 <? if ($show_votes) show_votes($current_user->username, $user->user_id, $perm, YES) ?>
 
@@ -177,7 +177,7 @@
     <? endforeach ?>
     <? $shared_box->clear_attributes()?>
 <?endif?>
-                    
+
 <?=$hompage_plugin?>
 
 <?if(!empty($categories)) :?>
@@ -186,3 +186,4 @@
     <?endforeach?>
     <? $shared_box->clear_attributes()?>
 <? endif; ?>
+

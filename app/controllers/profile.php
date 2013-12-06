@@ -43,7 +43,6 @@ class ProfileController extends AuthenticatedController
 
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
 
-        UrlHelper::bindLinkParam('about_data', $this->about_data);
 
         Navigation::activateItem('/profile/index');
         PageLayout::setHelpKeyword('Basis.Homepage');
@@ -74,17 +73,6 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
-        process_news_commands($this->about_data);
-
-        //opening and closing for dates
-        if (Request::option('dopen')) {
-            $this->about_data['dopen'] = Request::option('dopen');
-        }
-
-        if (Request::option('dclose')) {
-            $this->about_data['dopen']='';
-        }
-
         if ($_SESSION['sms_msg']) {
             $this->msg = $_SESSION['sms_msg'];
             unset($_SESSION['sms_msg']);
@@ -171,9 +159,9 @@ class ProfileController extends AuthenticatedController
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
 
-        if (($this->show_news = ($this->profile->checkVisibility('news') OR ($show_admin))) === true) {
-            $this->profile_data = $this->about_data;
-            $this->show_admin   = $show_admin;
+        if ($this->profile->checkVisibility('news') OR $show_admin === true) {
+            $response = $this->relay('news/display/' . $this->current_user->user_id);
+            $this->show_news = $response->body;
         }
 
         // calendar
@@ -181,14 +169,13 @@ class ProfileController extends AuthenticatedController
             if (!in_array($this->current_user->perms, words('admin root'))) {
                 if (($this->terms = $this->profile->checkVisibility('termine'))) {
                     $this->show_admin   = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id);
-                    $this->profile_data = $this->about_data;
                 }
             }
         }
 
         // include and show votes and tests
         $this->show_votes = get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes');
-        
+
         // include and show friend-of-a-friend list
         // (direct/indirect connection via buddy list
         if ($GLOBALS['FOAF_ENABLE'] && ($this->user->user_id != $this->current_user->user_id)
@@ -224,7 +211,7 @@ class ProfileController extends AuthenticatedController
 
         // Hompageplugins
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
-        
+
         foreach ($homepageplugins as $homepageplugin) {
             if ($homepageplugin->isActivated($this->current_user->user_id, 'user') && Visibility::verify("plugin" . $homepageplugin->getPluginID(), $this->current_user->user_id)) {
                 // get homepageplugin tempaltes
@@ -295,7 +282,7 @@ class ProfileController extends AuthenticatedController
     public function add_buddy_action()
     {
         $username = Request::username('username');
-        
+
         $msging = new messaging;
         //Buddie hinzufuegen
         $msging->add_buddy($username, 0);
@@ -304,3 +291,4 @@ class ProfileController extends AuthenticatedController
         $this->redirect('profile/index?username=' . $username);
     }
 }
+

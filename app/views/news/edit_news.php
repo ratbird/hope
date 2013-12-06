@@ -200,7 +200,7 @@
                                 <? endif ?>
                             <? endforeach ?>
                             <? if (!count($area_options_selectable)) : ?>
-                                <option disabled></option>
+                                <option disabled style="padding-left: 26px; height: 16px;">&nbsp;</option>
                             <? endif ?>
                             </select>
                             </label>
@@ -246,7 +246,7 @@
                                 <? endif ?>
                             <? endforeach ?>
                             <? if (!count($area_options_selected)) : ?>
-                                <option disabled></option>
+                                <option disabled style="padding-left: 26px; height: 16px;">&nbsp;</option>
                             <? endif ?>
                             </select>
                             </label>

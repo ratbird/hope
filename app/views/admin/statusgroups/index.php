@@ -1,3 +1,4 @@
+<?= $question ?>
 <style>
     .person, .dd {
         cursor: move;
@@ -32,18 +33,18 @@
                     <? endif; ?>
                 <? endif; ?>
                 <a class='modal' title="<?= _('Gruppe ändern') ?>" href="<?= $controller->url_for("admin/statusgroups/editGroup/{$group->id}") ?>">
-                    <?= Assets::img("icons/16/blue/admin.png") ?>
+                    <?= Assets::img("icons/16/blue/edit.png", tooltip2(_('Gruppe ändern'))) ?>
                 </a>
             <? else: ?>
                 <? if ($type['needs_self_assign']): ?>
                     <? if ($group->isMember() && $group->selfassign): ?>
                         <a href="<?= $group->path['leave'] ?>">
-                            <?= Assets::img("icons/16/blue/door-leave.png") ?>
+                            <?= Assets::img("icons/16/blue/door-leave.png", tooltip2(_('Gruppe verlassen'))) ?>
                         </a>
                     <? endif; ?>
                     <? if ($group->userMayJoin($user_id)): ?>
                         <a href="<?= $group->path['join'] ?>">
-                            <?= Assets::img("icons/16/blue/door-enter.png") ?>
+                            <?= Assets::img("icons/16/blue/door-enter.png", tooltip2(_('Gruppe beitreten'))) ?>
                         </a>
                     <? endif; ?>
                 <? endif; ?>
@@ -54,8 +55,8 @@
                 <th colspan="3"><?= _('Mitglieder') ?></th>
                 <th style="text-align: right">
                     <!-- Gruppe leeren icon -->
-                    <a href="<?= $controller->url_for('admin/statusgroups/truncate/' . $group->id) ?>">
-                        <?= Assets::img("icons/16/blue/trash.png") ?>
+                    <a class='modal' title='<?= _('Gruppe leeren') ?>' href="<?= $controller->url_for('admin/statusgroups/truncate/' . $group->id) ?>">
+                        <?= Assets::img("icons/16/blue/trash.png", tooltip2(_('Gruppe leeren'))) ?>
                     </a>
                 </th>
             </tr>

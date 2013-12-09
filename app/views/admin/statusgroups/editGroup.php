@@ -27,19 +27,21 @@
     <label class="caption"><?= _('Gruppe löschen') ?>
         <input name="delete" type="checkbox" value="1" >
     </label>
-    <noscript>
-    <label class="caption"><?= _('Position') ?>
-        <input name="size" type="text" size="10" placeholder="<?= _('0') ?>" value="<?= formatReady($group->position) ?>" >
-    </label>
-    <label class="caption"><?= _('Einordnen nach') ?>
-        <select name='range_id'>
-            <option value='<?= $_SESSION['SessionSeminar'] ?>'>-</option>
-            <? foreach($groups as $g): ?>
-            <? if ($group->id == $g->id) continue; ?>
-                <option value='<?= $g->id ?>' <?= $g->id == $group->range_id ? "selected" : "" ?>><?= htmlReady($g->name) ?></option>
-            <? endforeach; ?>
-        </select>
-    </label>
-    </noscript>
+    <fieldset>
+        <legend><?= _('Einordnung') ?></legend>
+        <label class="caption"><?= _('Position') ?>
+            <input name="size" type="text" size="10" placeholder="<?= _('0') ?>" value="<?= formatReady($group->position) ?>" >
+        </label>
+        <label class="caption"><?= _('Einordnen nach') ?>
+            <select name='range_id'>
+                <option value='<?= $_SESSION['SessionSeminar'] ?>'>-</option>
+                <? foreach ($groups as $g): ?>
+                    <? if ($group->id == $g->id) continue; ?>
+                    <option value='<?= $g->id ?>' <?= $g->id == $group->range_id ? "selected" : "" ?>><?= htmlReady($g->name) ?></option>
+                <? endforeach; ?>
+            </select>
+        </label>
+    </fieldset>
     <?= Studip\Button::create(_('Speichern'), 'save') ?>
+    <?= Studip\Button::create(_('Abbrechen'), 'abort') ?>
 </form>

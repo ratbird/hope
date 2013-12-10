@@ -384,15 +384,15 @@ class SemBrowse {
             SkipLinks::addIndex(_("Suchergebnis"), 'sem_search_result', 90);
 
             list($group_by_data, $sem_data) = $this->get_result();
-            echo "\n<table id=\"sem_search_result\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
-            echo "\n<tr><td class=\"table_row_odd\" colspan=\"4\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\"><b>&nbsp;"
+            echo "\n<table class='default' id=\"sem_search_result\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
+            echo "<caption>"
                 . sprintf(_(" %s Veranstaltungen gefunden %s, Gruppierung: %s"),count($sem_data),
                 (($this->sem_browse_data['sset']) ? _("(Suchergebnis)") : ""),
                 $this->group_by_fields[$this->sem_browse_data['group_by']]['name'])
-                . "</b></font></div></td></tr>";
+                . "</caption>";
 
             foreach ($group_by_data as $group_field => $sem_ids){
-                echo "\n<tr><td class=\"table_header\" colspan=\"4\"><font size=-1><b>";
+                echo "\n<tr><th colspan='5'>";
                 switch ($this->sem_browse_data["group_by"]){
                     case 0:
                     echo htmlReady($this->search_obj->sem_dates[$group_field]['name']);
@@ -418,7 +418,7 @@ class SemBrowse {
                     break;
 
                 }
-                echo "</b></font></td></tr><tr>";
+                echo "</th></tr><tr>";
                 ob_end_flush();
                 ob_start();
                 if (is_array($sem_ids['Seminar_id'])){
@@ -450,7 +450,7 @@ class SemBrowse {
                             } elseif ($this->sem_browse_data["group_by"]) {
                                 $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ")";
                             }
-                            echo '<td width="1%" class="table_row_even">';
+                            echo '<td width="1%">';
                             echo CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => htmlReady($seminar_obj->getName())));
                             echo '</td>';
 
@@ -460,7 +460,7 @@ class SemBrowse {
                                                                                              'cid' => null,
                                                                                              'send_from_search' => 1,
                                                                                              'send_from_search_page' => $send_from_search));
-                        echo '<td class="table_row_even" width="66%" colspan="2">';
+                        echo '<td width="66%" colspan="2">';
                         echo '<a href="' . $send_from_search_link . '">' . htmlReady($sem_name) . '</a><br>';
                         //create Turnus field
                         if ($studygroup_mode) {
@@ -478,7 +478,7 @@ class SemBrowse {
                             echo "<div style=\"margin-left:5px;font-size:smaller\">" . $temp_turnus_string . "</div>";
                         }
                         echo '</td>';
-                        echo "<td class=\"table_row_even\" align=\"right\">(";
+                        echo "<td align=\"right\">(";
                         $doz_name = array();
                         $c = 0;
                         reset($sem_data[$seminar_id]['fullname']);

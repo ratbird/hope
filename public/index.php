@@ -115,6 +115,11 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 
 // display menue
 ?>
+    <style>
+        #layout_container {
+            background-color: transparent;
+        }
+    </style>
     <div class="index_container">
         <table class="index_box">
             <tr>

@@ -317,7 +317,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (count($seminars) == 0) {
         $meldung = "info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"sem_portal.php\">", "</a>") . "§" . $meldung;
     }
-
+    
     foreach ($seminars as $seminar) {
         $my_obj[$seminar['Seminar_id']] = array(
             'name'           => $seminar['Name'],
@@ -333,7 +333,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             'prelim'         => $seminar['admission_prelim'],
             'visitdate'      => $seminar['visitdate'],
             'sem_number'     => $seminar['sem_number'],
-            'sem_number_end' => $seminar['sem_number_end']
+            'sem_number_end' => $seminar['sem_number_end'],
+            'VeranstaltungsNummer' => $seminar['sem_nr']
         );
         if ($group_field){
             fill_groups($groups, $seminar[$group_field], array(
@@ -343,7 +344,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             ));
         }
     }
-
+    
         if (is_array($my_obj)){
             $num_my_sem = count($my_obj);
             if ($group_field == 'sem_number') {
@@ -352,7 +353,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 add_sem_name($my_obj);
             }
         }
-
+        
     $query = "SELECT b.Name, b.Institut_id, b.type, b.Institut_id = b.fakultaets_id AS is_fak,
                      user_inst.inst_perms, modules, IFNULL(visitdate, 0) AS visitdate
               FROM user_inst
@@ -439,7 +440,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         header('Location: ' . URLHelper::getURL());
         die;
     }
-
+    
     // Anzeige der Wartelisten
 
     $stmt = DBManager::get()->prepare(

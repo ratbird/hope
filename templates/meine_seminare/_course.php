@@ -26,6 +26,15 @@ foreach ($group_members as $member) {
                        : Assets::img('icons/20/blue/seminar.png') ?>
             <? endif; ?>
             </td>
+            
+            <? if (Config::get()->IMPORTANT_SEMNUMBER): ?>
+                <td>
+                    <a href="seminar_main.php?auswahl=<?= $semid ?>"
+                   <?= $lastVisit <= $values["chdate"] ? 'style="color: red;"' : '' ?>>
+                        <?= htmlReady($values['VeranstaltungsNummer']) ?>
+                    </a>
+                </td>
+            <? endif; ?>
 
             <td align="left">
                 <a href="seminar_main.php?auswahl=<?= $semid ?>"

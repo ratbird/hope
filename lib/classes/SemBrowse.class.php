@@ -461,7 +461,11 @@ class SemBrowse {
                                                                                              'send_from_search' => 1,
                                                                                              'send_from_search_page' => $send_from_search));
                         echo '<td width="66%" colspan="2">';
-                        echo '<a href="' . $send_from_search_link . '">' . htmlReady($sem_name) . '</a><br>';
+                        echo '<a href="' . $send_from_search_link . '">';
+                        if (Config::get()->IMPORTANT_SEMNUMBER) {
+                            echo htmlReady($seminar_number) ." ";
+                        }
+                        echo htmlReady($sem_name) . '</a><br>';
                         //create Turnus field
                         if ($studygroup_mode) {
                             echo "<div style=\"font-size:smaller\">" . htmlReady(substr($seminar_obj->description,0,100)) . "</div>";
@@ -474,7 +478,9 @@ class SemBrowse {
                             } else {
                                 $temp_turnus_string = htmlReady($temp_turnus_string);
                             }
-                            echo "<div style=\"margin-left:5px;font-size:smaller\">" . htmlReady($seminar_number) . "</div>";
+                            if (!Config::get()->IMPORTANT_SEMNUMBER) {
+                                echo "<div style=\"margin-left:5px;font-size:smaller\">" . htmlReady($seminar_number) . "</div>";
+                            }
                             echo "<div style=\"margin-left:5px;font-size:smaller\">" . $temp_turnus_string . "</div>";
                         }
                         echo '</td>';

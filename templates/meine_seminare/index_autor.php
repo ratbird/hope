@@ -25,6 +25,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     <colgroup>
                         <col width="10px">
                         <col width="25px">
+                        <? if (Config::get()->IMPORTANT_SEMNUMBER): ?>
+                            <col width="25px">
+                        <? endif; ?>
                         <col >
                         <col width="20%">
                         <col width="3%">
@@ -36,6 +39,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                     <?= Assets::img('icons/20/blue/group.png', array('title' => _("Gruppe ändern"), 'class' => 'middle')) ?>
                                 </a>
                             </th>
+                            <? if (Config::get()->IMPORTANT_SEMNUMBER): ?>
+                                <th><?= _("Veranstaltungsnr") ?></th>
+                            <? endif; ?>
                             <th><?= _("Name") ?></th>
                             <th><?= _("Inhalt") ?></th>
                             <th></th>

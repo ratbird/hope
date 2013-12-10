@@ -474,7 +474,7 @@ class SemBrowse {
                             } else {
                                 $temp_turnus_string = htmlReady($temp_turnus_string);
                             }
-                            echo "<div style=\"margin-left:5px;font-size:smaller\">BENIS" . htmlReady($seminar_number) . "</div>";
+                            echo "<div style=\"margin-left:5px;font-size:smaller\">" . htmlReady($seminar_number) . "</div>";
                             echo "<div style=\"margin-left:5px;font-size:smaller\">" . $temp_turnus_string . "</div>";
                         }
                         echo '</td>';

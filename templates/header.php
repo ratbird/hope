@@ -148,3 +148,6 @@
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
 <? endif ?>
+
+<div id="layout_container">
+    <div id="layout_content">

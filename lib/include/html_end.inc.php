@@ -1,5 +1,6 @@
+            </div>
+        </div>
     </div>
-
     <? include 'templates/footer.php'; ?>
 <!-- Ende Page -->
 </div>

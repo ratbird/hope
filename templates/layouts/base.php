@@ -31,8 +31,6 @@
 
     <? include 'lib/include/header.php' ?>
 
-        <div id="layout_container">
-            <div id="layout_content">
                 <?= implode(PageLayout::getMessages()) ?>
                 <?= $content_for_layout ?>
             </div>

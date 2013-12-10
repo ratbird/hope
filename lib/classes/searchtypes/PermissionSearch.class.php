@@ -130,9 +130,9 @@ class PermissionSearch extends SQLSearch {
                             "AND user_inst.inst_perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname";
            break;
-           case "user_not_already_tutor_dozent_deputy":
+           case "user_not_already_in_sem_or_deputy":
                 $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
-                        "FROM auth_user_md5 LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN ('tutor','dozent') " .
+                        "FROM auth_user_md5 LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id " .
                         " LEFT JOIN deputies d ON d.user_id = auth_user_md5.user_id AND range_id=:seminar_id LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id " .
                         "WHERE su.user_id IS NULL AND d.user_id IS NULL AND ( ".$GLOBALS['_fullname_sql']['full_rev_username']." LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .

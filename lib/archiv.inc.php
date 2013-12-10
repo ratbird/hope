@@ -606,7 +606,7 @@ function in_archiv ($sem_id)
     if (get_config('DEPUTIES_ENABLE')) {
         $deputies = getDeputies($seminar_id);
         // Eintragen ins Archiv mit Zugriffsberechtigung "dozent"
-        $query = "INSERT INTO archiv_user SET seminar_id = ?, user_id = ?, status = 'dozent'";
+        $query = "INSERT IGNORE INTO archiv_user SET seminar_id = ?, user_id = ?, status = 'dozent'";
         $statement = DBManager::get()->prepare($query);
         foreach ($deputies as $deputy) {
             $statement->execute(array($seminar_id, $deputy['user_id']));

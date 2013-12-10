@@ -5,6 +5,11 @@
 <? if ($logout) : ?>
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array($GLOBALS['UNI_LOGOUT_ADD'])) ?>
 <? endif; ?>
+<style>
+    #layout_container {
+        background-color: transparent;
+    }
+</style>
 <table class="index_box">
     <tr>
         <td colspan="2" class="table_header_bold">

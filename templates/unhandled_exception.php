@@ -16,11 +16,9 @@ if (Studip\ENV == 'development') {
 
 <?= $this->render_partial('header', compact('current_page')) ?>
 
-<div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
     <?= MessageBox::exception($title, $details) ?>
     <p>
       <?= _('Zurück zur') ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _('Startseite') ?></a>
     </p>
-</div>
 
 <? include 'lib/include/html_end.inc.php'; ?>

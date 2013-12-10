@@ -8,7 +8,6 @@ $current_page = _('Kein Objekt gewählt')
 
 <?= $this->render_partial('header', compact('current_page')) ?>
 
-<div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
     <?= MessageBox::exception(htmlReady($exception->getMessage()), array(
             _('Dieser Teil des Systems kann nur genutzt werden, wenn Sie vorher ein Objekt (Veranstaltung oder Einrichtung) gewählt haben.'),
             sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.')))) ?>
@@ -24,6 +23,5 @@ $current_page = _('Kein Objekt gewählt')
     <p>
       <?= _('Zurück zur') ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _('Startseite') ?></a>
     </p>
-</div>
 
 <? include 'lib/include/html_end.inc.php'; ?>

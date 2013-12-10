@@ -13,6 +13,11 @@ $(function () {
 });
 // -->
 </script>
+<style>
+    #layout_container {
+        background-color: transparent;
+    }
+</style>
 <div class="index_container" style="width: 750px; margin: 0 auto !important;">
 <? if ($loginerror): ?>
     <!-- failed login code -->

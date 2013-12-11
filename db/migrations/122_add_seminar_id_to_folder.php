@@ -65,6 +65,10 @@ class AddSeminarIdToFolder extends Migration
         $this->updateSeminarIds("SELECT f.folder_id, t.seminar_id AS seminar_id ".
                           "FROM `folder` f ".
                           "INNER JOIN `themen` t ON t.issue_id = f.range_id");
+
+        $this->updateSeminarIds("SELECT f.folder_id, a.user_id AS seminar_id
+                            FROM `folder` f
+                            INNER JOIN `auth_user_md5` a ON a.user_id = f.range_id");
     }
 
     function updateSeminarIds($sql)

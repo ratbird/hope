@@ -531,6 +531,7 @@ class StreamsController extends ApplicationController {
                     "INSERT IGNORE INTO folder " .
                     "SET folder_id = ".$db->quote($parent_folder_id).", " .
                         "range_id = ".$db->quote($context).", " .
+                        "seminar_id = ".$db->quote($context).", " .
                         "user_id = ".$db->quote($GLOBALS['user']->id).", " .
                         "name = ".$db->quote("BlubberDateien").", " .
                         "permission = '7', " .
@@ -543,6 +544,7 @@ class StreamsController extends ApplicationController {
                     "INSERT IGNORE INTO folder " .
                     "SET folder_id = ".$db->quote($folder_id).", " .
                         "range_id = ".$db->quote($parent_folder_id).", " .
+                        "seminar_id = ".$db->quote($context).", " .
                         "user_id = ".$db->quote($GLOBALS['user']->id).", " .
                         "name = ".$db->quote(get_fullname()).", " .
                         "permission = '7', " .

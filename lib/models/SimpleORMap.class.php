@@ -134,10 +134,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     protected $reserved_slots = array('value','newid','iterator','tablemetadata', 'relationvalue','wherequery','relationoptions','data','new','id');
 
     /**
-     * assoc array used to map SORM callback to NotificationCenter 
+     * assoc array used to map SORM callback to NotificationCenter
      * keys are SORM callbacks, values notifications
      * eg. 'after_create' => 'FooDidCreate'
-     * 
+     *
      * @var array $notification_map
      */
     protected $notification_map = array();
@@ -995,7 +995,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 }
             }
         } else {
-            throw new InvalidArgumentException($field . ' not found.');
+            throw new InvalidArgumentException(get_class($this) . '::'.$field . ' not found.');
+            
         }
     }
 
@@ -1099,7 +1100,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                  }
              }
          } else {
-             throw new InvalidArgumentException($field . ' not found.');
+             throw new InvalidArgumentException(get_class($this) . '::'. $field . ' not found.');
          }
          return $ret;
      }
@@ -1757,10 +1758,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $this->setId($this->getNewId());
         }
     }
-    
+
     /**
      * default callback used to map specific callbacks to NotificationCenter
-     * 
+     *
      * @param string $type callback type
      * @return boolean
      */

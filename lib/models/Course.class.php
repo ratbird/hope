@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string seminar_id database column
  * @property string id alias column for seminar_id
  * @property string veranstaltungsnummer database column
@@ -99,7 +99,7 @@ class Course extends SimpleORMap
                         'on_store' => 'store'),
                 'datafields' => array(
                         'class_name' => 'DatafieldEntryModel',
-                        'assoc_foreign_key' => 
+                        'assoc_foreign_key' =>
                             function($model,$params) {
                     $model->setValue('range_id', $params[0]->id);
                 },
@@ -110,12 +110,6 @@ class Course extends SimpleORMap
                 function($course) {
                     return array($course);
                 })
-        );
-        $this->has_one = array('aux' => array(
-                'class_name' => 'AuxLockRule',
-                'assoc_func' => 'findByLock_id',
-                'foreign_key' => 'aux_lock_rule'
-            )
         );
 
         $this->belongs_to = array(
@@ -132,7 +126,10 @@ class Course extends SimpleORMap
             'home_institut' => array(
                 'class_name' => 'Institute',
                 'foreign_key' => 'institut_id',
-                'assoc_func' => 'find')
+                'assoc_func' => 'find'),
+            'aux' => array(
+                'class_name' => 'AuxLockRule',
+                'foreign_key' => 'aux_lock_rule')
         );
         $this->has_and_belongs_to_many = array(
             'study_areas' => array(

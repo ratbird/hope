@@ -117,7 +117,7 @@ if (!$grouping) {
         $groups_ids ?: '',
         $range_id
     ));
-    $rows = $statement->fetchAll(PDO::FETCH_COLUMN);
+    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // Ensure the main loop will only get executed once since we already
     // have all the neccessary data

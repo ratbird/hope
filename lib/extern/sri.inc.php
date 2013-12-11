@@ -190,8 +190,8 @@ if ($page_url != $sri_url || !sri_is_enabled($module_obj->config->range_id)) {
 }
 
 $args = $module_obj->getArgs();
-for ($i = 0; $i < sizeof($args); $i++) {
-    $arguments[$args[$i]] = $$args[$i];
+foreach ($args as $arg) {
+    $arguments[$arg] = Request::quoted($arg);
 }
 
 echo $sri_matches[1];

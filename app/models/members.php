@@ -222,26 +222,7 @@ class MembersModel
         $user = UserModel::getUser($user_id);
         $messaging = new messaging;
 
-        $query = "SELECT DISTINCT user_id
-                  FROM seminar_inst
-                  LEFT JOIN user_inst USING (Institut_id)
-                  WHERE user_id = ? AND seminar_id = ? AND inst_perms NOT IN ('user', 'autor')";
-        $db = DBManager::get()->prepare($query);
-
-        if ($SEM_CLASS[$SEM_TYPE[$_SESSION['SessSemName']['art_num']]['class']]['workgroup_mode']
-                && $perm->have_studip_perm('dozent', $this->course_id)
-                && ($user['perms'] == 'tutor' || $user['perms'] == 'dozent')) {
-
-            if (!$SEM_CLASS[$SEM_TYPE[$_SESSION['SessSemName']['art_num']]['class']]['only_inst_user']) {
-                $status = 'tutor';
-            } else {
-                $db->execute(array($user_id, $this->course_id));
-                $status = $db->fetchColumn() ? 'tutor' : 'autor';
-                $db->closeCursor();
-            }
-        } else {
-            $status = 'autor';
-        }
+        $status = 'autor';
 
         // insert
         $copy_course = ($accepted || $consider_contingent) ? TRUE : FALSE;

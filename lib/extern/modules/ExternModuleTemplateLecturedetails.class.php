@@ -396,6 +396,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
         $query = "SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id = ?";
         $parameters = array($this->seminar_id);
         $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($row['count_user']) {
@@ -413,7 +414,9 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
         $query = "SELECT count(*) as count_documents FROM dokumente WHERE seminar_id = ?";
         $parameters = array($this->seminar_id);
         $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
+
         if ($row['count_documents']) {
             $content['STUDIP-DATA']['COUNT-DOCUMENTS'] = $row['count_documents'];
         } else {

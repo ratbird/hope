@@ -73,14 +73,17 @@ class AutoInsert {
 
 
     private function getUserSeminars($user_id,$seminare) {
-        $statement = DBManager::get()->prepare("SELECT Seminar_id,s.name,s.Schreibzugriff,s.start_time FROM seminar_user su INNER JOIN seminare s USING(Seminar_id) WHERE user_id = ? AND Seminar_id IN('".implode("','",$seminare)."')");
-        $statement->execute(array($user_id));
+        $statement = DBManager::get()->prepare("SELECT Seminar_id,s.name,s.Schreibzugriff,s.start_time,su.status
+            FROM seminar_user su
+            INNER JOIN seminare s USING(Seminar_id)
+            WHERE user_id = ? AND Seminar_id IN(?)");
+        $statement->execute(array($user_id, $seminare));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
      * Trägt den Benutzer in den Eingestellten veranstaltungen automatisch ein.
-     * @param type $user_id 
+     * @param type $user_id
      * @param type $status Wenn Status nicht angegeben wird, wird der Status des Users aus user_id genommen
      * @return array 'added' Namen der Seminare in die der User eingetragen wurde
      *         array 'removed' Namen der Seminare aus denen der User ausgetragen wurde
@@ -121,16 +124,21 @@ class AutoInsert {
                 }
             }
         }
-        
+
         $seminare = array();
+        $seminare_tutor_dozent = array();
         foreach ($this->getUserSeminars($user_id,array_keys($all_seminare)) as $sem) {
             $seminare[$sem['Seminar_id']] = $sem;
+            if (in_array($sem['status'], array('tutor','dozent'))) {
+                    $seminare_tutor_dozent[$sem['Seminar_id']] = $sem;
+            }
         }
         $toAdd = array_diff_key($settings, $seminare);
-        $toRemove = array_diff_key($all_seminare, $toAdd, $settings);
+        $toRemove = array_diff_key($all_seminare, $toAdd, $settings, $seminare_tutor_dozent);
+
         $added = array();
         $removed = array();
-     
+
         foreach ($toAdd as $id => $seminar) {
             if ($this->addUser($user_id, $seminar))
                 $added[] = $seminar['name'];
@@ -139,10 +147,10 @@ class AutoInsert {
             if ($this->removeUser($user_id, $seminar))
                 $removed[] = $seminar['name'];
         }
-         
+
         return array('added' => $added, 'removed' => $removed);
     }
-  
+
     /**
      * Check if at least one seminar is used by the autoinsert functions
      * @return bool Indicating whether at least one seminar is used
@@ -171,7 +179,7 @@ class AutoInsert {
     }
 
     private function addUser($user_id, $seminar) {
-    
+
             $query = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe, mkdate)";
             $query .= " VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
             $statement = DBManager::get()->prepare($query);
@@ -182,13 +190,13 @@ class AutoInsert {
             ));
              $rows = $statement->rowCount();
              if($rows > 0) return true;
-         
+
             return false;
-         
+
     }
 
     private function removeUser($user_id, $seminar) {
-    
+
             $query = "DELETE FROM seminar_user "
                     . "WHERE user_id = ? "
                     . "AND Seminar_id = ? ";
@@ -199,7 +207,7 @@ class AutoInsert {
                 $seminar['Seminar_id']
             ));
                    $rows = $statement->rowCount();
-                   
+
             $query = "DELETE FROM statusgruppe_user "
             ."WHERE user_id = ? "
             ."AND statusgruppe_id IN (SELECT statusgruppe_id FROM statusgruppen WHERE range_id = ?)";
@@ -210,22 +218,22 @@ class AutoInsert {
             ));
                    $statusgruppe_rows = $statusgruppe_stmt->rowCount();
              if($rows > 0 || $statusgruppe_rows > 0) return true;
-         
+
             return false;
     }
     /**
-     * 
+     *
      * @param type $user_id
      */
     public function deleteUserSeminare($user_id){
           $db = DBManager::get();
- 
+
 
             $db->exec("DELETE FROM seminar_user " .
                    "WHERE user_id = ".$db->quote($user_id));
-          
 
-  
+
+
     }
 
     /**
@@ -434,7 +442,7 @@ class AutoInsert {
         return $result > 0;
     }
 
- 
+
 
 
 

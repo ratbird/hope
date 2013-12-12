@@ -849,8 +849,6 @@ function show_msgform() {
     $template->messagesubject = $messagesubject;
     $template->message        = $temp_message;
     $template->show_submit    = count($receiver) > 0;
-    // Redirect to specified page, defaults to message inbox
-    $template->return_to      = Request::get('sms_source_page', 'sms_box.php');
     return $template->render();
 
 }

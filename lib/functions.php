@@ -1958,7 +1958,7 @@ function addHiddenFields($variable, $data, $parent = array())
             if (is_array($value)) {
                 $ret .= addHiddenFields($variable, $value, array_merge($parent, array($key)));
             } else {
-                $ret.= '<input type="hidden" name="'. $variable .'['. implode('][', array_merge($parent, array($key))) .']" value="'. $value .'">' ."\n";
+                $ret.= '<input type="hidden" name="'. $variable .'['. implode('][', array_merge($parent, array($key))) .']" value="'. htmlReady($value) .'">' ."\n";
             }
         }
     }

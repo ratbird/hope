@@ -52,16 +52,16 @@ function () use (&$my_messaging_settings, $my_messaging_hash, $user) {
 };
 NotificationCenter::addObserver($my_messaging_observer, '__invoke', 'PageCloseDidExecute');
 
-$cmd = Request::option('cmd');
 # ACTION
 ###########################################################
 // start new message
-if ($cmd == 'new') {
+if (Request::option('cmd') == 'new') {
     unset($sms_data["p_rec"]);
     unset($sms_data["tmp_save_snd_folder"]);
     unset($sms_data["tmpreadsnd"]);
     $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
     unset($cmd);
+    unset($receiver);
 
     if ($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"] = "1";
 }
@@ -71,6 +71,11 @@ if ($cmd == 'new') {
    $quote = Request::option('quote');
    $signature = Request::get('signature');
    $forward = Request::option('forward');
+   if (Request::isPost()) {
+       $receiver = Request::usernameArray('receiver');
+   } else {
+       $receiver = is_array($sms_data["p_rec"]) ? $sms_data["p_rec"] : array();
+   }
 
 //wurde eine Datei hochgeladen?
 if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
@@ -144,21 +149,22 @@ if (Request::submitted('add_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = 1;
 
 // send message
 if (Request::submitted('cmd_insert')) {
+    CSRFProtection::verifyUnsafeRequest();
     if (empty($messagesubject)) {
         $msg = 'error§' . _('Bitte geben Sie einen Betreff an.');
+    } else if (empty($receiver)) {
+        $msg = 'error§' . _('Bitte geben Sie mindestens einen Empfänger an.');
     } else {
         $count = 0;
-        if (!empty($sms_data["p_rec"])) {
-            $time = date("U");
-            $tmp_message_id = md5(uniqid("321losgehtes"));
-            $msging->provisonal_attachment_id = Request::option('attachment_message_id');
-            $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
-        }
+        $time = date("U");
+        $tmp_message_id = md5(uniqid("321losgehtes"));
+        $msging->provisonal_attachment_id = Request::option('attachment_message_id');
+        $count = $msging->insert_message($message, $receiver, FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
 
         if ($count) {
 
             $msg = "msg§";
-            if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br>";
+            if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($receiver[0],'full',true))."<br>";
             if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empfänger verschickt!"), $count)."<br>";
             unset($signature);
             unset($message);
@@ -180,23 +186,8 @@ if (Request::submitted('cmd_insert')) {
         } else if ((!$count) && (!$group_count)) {
             $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden.');
         }
-
-        // redirect to source_page if set
-        $sms_source_page = Request::get('sms_source_page');
-        if (!preg_match('§^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$sms_source_page)) $sms_source_page = '';
-
-        if ($sms_source_page) {
-            $_SESSION['sms_msg'] = $msg;
-            if ($sms_source_page == "dispatch.php/profile") {
-                $header_info = "Location: ".$sms_source_page."?username=".$sms_data["p_rec"][0];
-            } else {
-                $header_info = "Location: ".$sms_source_page;
-            }
-            header ($header_info);
-            die;
-        }
-
         unset($sms_data["p_rec"]);
+        unset($receiver);
         unset($sms_data["tmp_save_snd_folder"]);
         unset($sms_data["tmpreadsnd"]);
         $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
@@ -204,6 +195,30 @@ if (Request::submitted('cmd_insert')) {
         $attachments = array();
 
         if($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"]  = "1";
+        // redirect to source_page if set
+        $redirect_to = Request::get('sms_source_page');
+    }
+}
+
+if (Request::submitted('cancel')) {
+    CSRFProtection::verifyUnsafeRequest();
+    $redirect_to = Request::get('sms_source_page', 'sms_box.php');
+    unset($sms_data["p_rec"]);
+    unset($sms_data["tmp_save_snd_folder"]);
+    unset($sms_data["tmpreadsnd"]);
+    unset($messagesubject);
+    unset($message);
+    unset($receiver);
+    $attachments = array();
+}
+
+if ($redirect_to) {
+    if (!preg_match('§^([a-zA-Z0-9/_.-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$redirect_to)) $redirect_to = '';
+    if ($redirect_to) {
+        $_SESSION['sms_msg'] = $msg;
+        header ("Location: ". URLHelper::getUrl($redirect_to));
+        page_close();
+        die;
     }
 }
 
@@ -221,7 +236,7 @@ if (Request::option('answer_to') && Request::isGet()) {
         if($quote) {
             $quote_username = $u_name;
         }
-        $sms_data['p_rec'] = array($u_name);
+        $receiver = array($u_name);
 
     }
     $sms_data['sig'] = $my_messaging_settings['addsignature'];
@@ -243,11 +258,11 @@ if (isset($rec_uname)) {
 
             if (!$statement->fetchColumn()) {
                 $rec_uname = "";
-                $sms_data["p_rec"] = "";
+                $receiver = "";
             }
         } else {
             $rec_uname = "";
-            $sms_data["p_rec"] = "";
+            $receiver = "";
         }
     }
 }
@@ -261,7 +276,7 @@ if (Request::option('msgid')) {
     $statement->execute(array(Request::option('msgid')));
     $rec_uname = $statement->fetchColumn();
 
-    $sms_data['p_rec'] = '';
+    $receiver = '';
 }
 
 // send message at group of a study profession
@@ -282,12 +297,12 @@ if (Request::option('sp_id') && $perm->have_perm('root')) {
     $statement->execute(array(Request::option('sp_id')));
     $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data['p_rec'] = '';
+    $receiver = '';
     if (!empty($add_group_members)) {
-        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
+        $receiver = array_add_value($add_group_members, $receiver);
     } else {
         $msg = 'error§' . _('Das gewählte Studienfach enthält keine Mitglieder.');
-        unset($sms_data['p_rec']);
+        unset($receiver);
     }
 
     // append signature
@@ -316,12 +331,12 @@ if (Request::option('sd_id') && $perm->have_perm('root')) {
     $statement->execute(array(Request::option('sd_id')));
     $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data['p_rec'] = '';
+    $receiver = '';
     if (!empty($add_group_members)) {
-        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
+        $receiver = array_add_value($add_group_members, $receiver);
     } else {
         $msg = 'error§' . _('Der gewählte Studienabschluss enthält keine Mitglieder.');
-        unset($sms_data['p_rec']);
+        unset($receiver);
     }
 
     // append signature
@@ -352,12 +367,12 @@ if (Request::option('prof_id') && Request::option('deg_id') && $perm->have_perm(
     ));
     $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data['p_rec'] = '';
+    $receiver = '';
     if (!empty($add_group_members)) {
-        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
+        $receiver = array_add_value($add_group_members, $receiver);
     } else {
         $msg = 'error§' . _('Der gewählte Studiengang enthält keine Mitglieder.');
-        unset($sms_data['p_rec']);
+        unset($receiver);
     }
 
     // append signature
@@ -385,12 +400,12 @@ if (Request::option('group_id')) {
     $statement->execute(array(Request::option('group_id')));
     $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data['p_rec'] = '';
+    $receiver = '';
     if (!empty($add_group_members)) {
-        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data["p_rec"]);
+        $receiver = array_add_value($add_group_members, $receiver);
     } else {
         $msg = 'error§' . _('Die gewählte Adressbuchgruppe enthält keine Mitglieder.');
-        unset($sms_data['p_rec']);
+        unset($receiver);
     }
 
     // append signature
@@ -406,7 +421,7 @@ $rec_unames = Request::usernameArray('rec_uname') ?: array_filter(array(Request:
 if (count($rec_unames) > 0  || Request::get('filter'))
 {
     //$sms_data für neue Nachricht vorbereiten
-    unset($sms_data['p_rec']);
+    unset($receiver);
     unset($sms_data['tmp_save_snd_folder']);
     unset($sms_data['tmpreadsnd']);
     $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
@@ -472,7 +487,7 @@ if (count($rec_unames) > 0  || Request::get('filter'))
         $usernames = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         // Ergebnis der Query als Empfänger setzen
-        $sms_data['p_rec'] = array_add_value($usernames, $sms_data['p_rec']);
+        $receiver = array_add_value($usernames, $receiver);
 
         if (Request::int('emailrequest') == 1) {
             $sms_data['tmpemailsnd'] = 1;
@@ -481,7 +496,7 @@ if (count($rec_unames) > 0  || Request::get('filter'))
     //Nachricht wurde nur an bestimmte User versendet
     foreach ($rec_unames as $var) {
         if (get_userid($var) != '') {
-            $sms_data['p_rec'][] = $var;
+            $receiver[] = $var;
         }
     }
     // append signature
@@ -510,7 +525,7 @@ if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::opti
     $statement->execute(array(Request::option('inst_id')));
     $add_course_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data['p_rec'] = array_add_value($add_course_members, $sms_data['p_rec']);
+    $receiver = array_add_value($add_course_members, $receiver);
 
     // append signature
     $sms_data['sig'] = $my_messaging_settings['addsignature'];
@@ -527,7 +542,7 @@ if (!isset($sms_data["sig"])) {
 }
 // add a reciever from adress-members
 if (Request::submitted('add_receiver_button') && Request::usernameArray('add_receiver')) {
-    $sms_data["p_rec"] = array_add_value(Request::usernameArray('add_receiver'), $sms_data["p_rec"]);
+    $receiver = array_add_value(Request::usernameArray('add_receiver'), $receiver);
 
 }
 
@@ -542,32 +557,32 @@ if (Request::submitted('add_allreceiver_button')) {
     $statement->execute(array($user->id));
 
     while ($username = $statement->fetchColumn()) {
-        if (empty($sms_data['p_rec'])) {
+        if (empty($receiver)) {
             $add_rec[] = $username;
-        } else if (!in_array($username, $sms_data['p_rec'])) {
+        } else if (!in_array($username, $receiver)) {
             $add_rec[] = $username;
         }
     }
 
-    $sms_data['p_rec'] = array_add_value($add_rec, $sms_data['p_rec']);
+    $receiver = array_add_value($add_rec, $receiver);
     unset($add_rec);
 }
 
 
 // add receiver from freesearch
 if (Request::submitted('add_freesearch') && Request::username("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::username("adressee")), $sms_data["p_rec"]);
+    $receiver = array_add_value(array(Request::username("adressee")), $receiver);
 }
 
 
 // remove all from receiverlist
-if (Request::submitted('del_allreceiver_button')) { unset($sms_data["p_rec"]); }
+if (Request::submitted('del_allreceiver_button')) { unset($receiver); }
 
 
 // aus empfaengerliste loeschen
 if (Request::submitted('del_receiver_button')) {
     foreach (Request::usernameArray('del_receiver') as $a) {
-        $sms_data["p_rec"] = array_delete_value($sms_data["p_rec"], $a);
+        $receiver = array_delete_value($receiver, $a);
     }
 }
 
@@ -621,9 +636,10 @@ $txt['008'] = _("Lesebestätigung");
     if(Request::option('answer_to')) {
          echo '<input type="hidden" name="answer_to" value="'. htmlReady(Request::option('answer_to')). '">';
     }
-
-    echo '<input type="hidden" name="sms_source_page" value="'. htmlReady(Request::get('sms_source_page')) .'">';
-    echo '<input type="hidden" name="cmd" value="'.htmlReady($cmd).'">';
+    if (Request::get('sms_source_page')) {
+        echo '<input type="hidden" name="sms_source_page" value="'. htmlReady(Request::get('sms_source_page')) .'">';
+    }
+    echo addHiddenFields('receiver', $receiver);
 
     // we like to quote something
     if ($quote) {

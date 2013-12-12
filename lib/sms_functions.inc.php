@@ -534,7 +534,7 @@ function print_messages() {
     } else if ($sms_data['view'] == "out") { // postbox out
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
 
-        $query = "SELECT message.*, message_user.folder, 
+        $query = "SELECT message.*, message_user.folder,
                          auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
                          auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
                          COUNT(DISTINCT mu.user_id) AS num_rec, COUNT(dokument_id) AS num_attachments
@@ -715,7 +715,7 @@ function CheckAllAdded($adresses_array, $rec_array) {
 
 function show_precform() {
 
-    global $sms_data, $user, $my_messaging_settings, $receiver;
+    global $sms_data, $user, $my_messaging_settings, $receiver, $_fullname_sql;
 
     $tmp_01 = min(sizeof($receiver), 12);
     $tmp = "";
@@ -725,8 +725,13 @@ function show_precform() {
     } else {
         $tmp .= "<select size=\"$tmp_01\" id=\"del_receiver\" name=\"del_receiver[]\" multiple style=\"width: 250\">";
         if ($receiver) {
-            foreach ($receiver as $a) {
-                $tmp .= "<option value=\"$a\">".get_fullname_from_uname($a,'full',true)."</option>";
+             $query = "SELECT username, {$_fullname_sql['full_rev']} AS fullname
+                       FROM auth_user_md5
+                       LEFT JOIN user_info USING (user_id)
+                       WHERE username IN (?)
+                       ORDER BY Nachname ASC";
+            foreach (DBManager::get()->fetchPairs($query, array($receiver)) as $a_username => $a_fullname) {
+                $tmp .= "<option value=\"". htmlReady($a_username) . "\">" . htmlReady($a_fullname) . "</option>";
             }
         }
         $tmp .= "</select><br>";

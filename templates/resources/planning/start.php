@@ -103,11 +103,11 @@
                             <select name="resolve_requests_one_res" style="margin-left:20px;"
                                     onchange="$('input[name=resolve_requests_mode][value=one_res]').attr('checked', true);">
                                 <option value=""><?= _(' -keine Auswahl - ') ?></option>
-                            <? if(!empty($my_rooms)) foreach ($my_rooms as $room): ?>
-                                <option value="<?= $one['resource_id'] ?>">
-                                    <?= htmlready($one['name']) ?>
-                                <? if ($one['anzahl'] > 0): ?>
-                                    (<?= $one['anzahl'] ?>)
+                            <? if (count($rooms)) foreach ($rooms as $room): ?>
+                                <option value="<?= $room['resource_id'] ?>">
+                                    <?= htmlready($room['name']) ?>
+                                <? if ($room['anzahl'] > 0): ?>
+                                    (<?= $room['anzahl'] ?>)
                                 <? endif; ?>
                                 </option>
                             <? endforeach; ?>

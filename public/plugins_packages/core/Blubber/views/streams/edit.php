@@ -282,6 +282,6 @@ $infobox = array(
     (count($action['eintrag']) > 0 ? $action : null)
 );
 $infobox = array(
-    'picture' => StreamAvatar::getAvatar($stream->getId())->getURL(Avatar::NORMAL),
+    'picture' => StreamAvatar::getAvatar($stream->getId()),
     'content' => $infobox
 );

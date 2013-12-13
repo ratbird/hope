@@ -14,14 +14,13 @@
     <? if ($picture) : ?>
 
       <tr>
-          <?
-            $dimensions = Assets::getImageSize($picture);
-            $height = $dimensions
-                ? min(floor(($dimensions['height'] / $dimensions['width']) * 250), 190)
-                : 190;
-          ?>
         <td class="infobox-img">
-            <div style="background-image: url('<?= Assets::image_path($picture) ?>'); min-height: <?= $height ?>px;"></div>
+          <? if (is_object($picture) && $picture instanceof Avatar) : ?>
+            <? $picture_size = $picture->getDimension(Avatar::NORMAL) ?>
+            <div style="background-image: url('<?= $picture->getURL(Avatar::NORMAL) ?>'); height: <?= $picture_size[1] ?>px;"></div>
+          <? else : ?>
+            <div style="background-image: url('<?= Assets::image_path($picture) ?>');"></div>
+          <? endif ?>
         </td>
       </tr>
 

@@ -437,38 +437,5 @@ class Assets {
 
     return $attributes;
   }
-
-    /**
-     * Returns the dimensions for the passed image.
-     *
-     * $source can be supplied as a...
-     *
-     * full path,
-     *   like "/my_images/image.gif"
-     *
-     * file name,
-     *   like "rss.png", that gets expanded to "/images/rss.png"
-     *
-     * file name without extension,
-     *   like "logo", that gets expanded to "/images/logo.png"
-     *
-     * @param string $source path to the image
-     *
-     * @return array an array containing width and height for the passed image
-     */
-    public static function getImageSize($source)
-    {
-        $image_path = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', Assets::image_path($source));
-        if (strpos($image_path, "?") !== false) {
-            $image_path = substr($image_path, 0, strpos($image_path, "?"));
-        }
-        $image_size = getimagesize($GLOBALS['STUDIP_BASE_PATH'] . '/public/' . $image_path);
-
-        if ($image_size) {
-            return array('height' => $image_size[1], 'width' => $image_size[0]);
-        }
-
-        return false;
-    }
 }
 

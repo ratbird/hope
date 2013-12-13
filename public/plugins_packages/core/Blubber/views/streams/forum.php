@@ -125,6 +125,6 @@ if (count($tags) && $tags[0]) {
     );
 }
 $infobox = array(
-    'picture' => CourseAvatar::getAvatar($course_id)->getURL(Avatar::NORMAL),
+    'picture' => CourseAvatar::getAvatar($course_id),
     'content' => $infobox
 );

@@ -95,6 +95,6 @@ $infobox = array(
     )
 );
 $infobox = array(
-    'picture' => $user->getAvatar()->getURL(Avatar::NORMAL),
+    'picture' => $user->getAvatar(),
     'content' => $infobox
 );

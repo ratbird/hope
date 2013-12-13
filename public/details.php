@@ -312,7 +312,7 @@ echo $template_factory->render(
     'infobox/infobox_generic_content',
     array(
         'content' => $infobox,
-        'picture' => CourseAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL)
+        'picture' => CourseAvatar::getAvatar($sem_id)
 ));
 // ende Infobox
 

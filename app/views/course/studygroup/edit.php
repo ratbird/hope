@@ -3,7 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 
 $infobox = array();
-$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
+$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id);
 
 $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',

@@ -579,7 +579,7 @@ if ($i_view != 'new') {
                 'eintrag'   => $aktionen
             )
         ),
-        'picture' => InstituteAvatar::getAvatar($institute['Institut_id'])->getUrl(Avatar::NORMAL),
+        'picture' => InstituteAvatar::getAvatar($institute['Institut_id']),
     );
 } else {
     $template->set_layout('layouts/base_without_infobox');

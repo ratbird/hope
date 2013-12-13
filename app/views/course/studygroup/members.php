@@ -25,7 +25,7 @@ if ($rechte) {
 }
 
 $infobox = array();
-$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
+$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id);
 
 $infobox['content'] = array(
     array(

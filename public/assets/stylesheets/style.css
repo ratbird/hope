@@ -1547,7 +1547,7 @@ table.infobox td.infobox-img {
 }
 .infobox-img > div {
   min-height: 108px;
-  min-width: 250px;
+  width: 250px;
   border-top-left-radius: 16px;
   background-size: 100%;
   background-repeat: no-repeat;

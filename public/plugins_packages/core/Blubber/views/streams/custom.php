@@ -177,6 +177,6 @@ $infobox = array(
     )
 );
 $infobox = array(
-    'picture' => StreamAvatar::getAvatar($stream->getId())->getURL(Avatar::NORMAL),
+    'picture' => StreamAvatar::getAvatar($stream->getId()),
     'content' => $infobox
 );

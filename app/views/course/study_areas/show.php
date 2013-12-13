@@ -25,7 +25,7 @@ if ($adminList) {
     );
 }
 $infobox = array('content' => $infobox,
-                 'picture' => CourseAvatar::getAvatar($course_id)->getUrl(Avatar::NORMAL)
+                 'picture' => CourseAvatar::getAvatar($course_id)
 );
 
 ?>

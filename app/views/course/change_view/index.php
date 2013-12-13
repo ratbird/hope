@@ -18,7 +18,7 @@ use Studip\Button, Studip\LinkButton;
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = CourseAvatar::getAvatar($SessSemName[1])->getUrl(Avatar::NORMAL);
+$infobox['picture'] = CourseAvatar::getAvatar($SessSemName[1]);
 
 $infobox['content'][] = array(
     'kategorie' => _("Information"),

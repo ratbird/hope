@@ -31,7 +31,7 @@ namespace Studip\Squeeze {
 
     /**
      * Write all packages specified in $configFile to $outputDir.
-     * The default $outputDir is "$STUDIP_BASE_PATH/config/assets.yml"
+     * The default $configFile is "$STUDIP_BASE_PATH/config/assets.yml"
      *
      * @param string $configFile  path to the config file
      * @param string $outputDir   path to the output directory
@@ -46,7 +46,11 @@ namespace Studip\Squeeze {
         $packager->cacheAll($outputDir);
 
         $compressor = new Compressor($configuration);
-        if (is_array($configuration['css']) && $compressor->shouldCompress() && $compressor->hasJava()) {
+        if (is_array($configuration['css']) && $compressor->shouldCompress()) {
+            if (!$compressor->hasJava()) {
+                trigger_error('CSS could not be compressed, since Java is missing.', E_USER_WARNING);
+            }
+            
             $config_time = filemtime($configFile);
 
             foreach ($configuration['css'] as $package => $files) {
@@ -54,7 +58,11 @@ namespace Studip\Squeeze {
                     $src  = $configuration['assets_root'] . '/stylesheets/' . $file;
                     $dest = $configuration['package_path'] . '/' . $package . '-' . $file;
                     if (!file_exists($dest) || (max($config_time, filemtime($src)) > filemtime($dest))) {
-                        $contents = $compressor->callCompressor(file_get_contents($src), 'css');
+                        if ($compressor->hasJava()) {
+                            $contents = $compressor->callCompressor(file_get_contents($src), 'css');
+                        } else {
+                            $contents = file_get_contents($src);
+                        }
                         file_put_contents($dest, $contents);
                     }
                 }

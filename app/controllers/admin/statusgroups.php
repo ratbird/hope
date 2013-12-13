@@ -54,10 +54,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->setInfobox();
         $this->setAjaxPaths();
 
-        // Collect all groups and unfold them for a clear display
-        $this->groups = Statusgruppen::findByRange_id($_SESSION['SessionSeminar']);
-        $this->unfolded = array();
-        $this->unfoldGroup($this->unfolded, $this->groups);
+        // Collect all groups
+        $this->loadGroups();
 
         // Check if the viewing user should get the admin interface
         $this->tutor = $this->type['edit']($this->user_id);
@@ -68,11 +66,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      */
     public function editGroup_action($group_id = null) {
         $this->group = new Statusgruppen($group_id);
-
-        // We have to do this for the users without javascript! yay!
-        $this->groups = Statusgruppen::findByRange_id($_SESSION['SessionSeminar']);
-        $this->unfolded = array();
-        $this->unfoldGroup($this->unfolded, $this->groups);
+        $this->loadGroups();
     }
 
     /**
@@ -81,7 +75,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     public function sortGroups_action() {
         PageLayout::addStylesheet('jquery-nestable.css');
         PageLayout::addScript('jquery/jquery.nestable.js');
-        $this->groups = Statusgruppen::findByRange_id($_SESSION['SessionSeminar']);
+        $this->loadGroups();
     }
 
     /**
@@ -205,6 +199,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /*     * ********************************
      * ***** PRIVATE HELP FUNCTIONS ****
      * ******************************** */
+    
+    private function loadGroups() {
+        $this->groups = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($_SESSION['SessionSeminar']));
+    }
 
     private function updateRecoursive($obj, $parent) {
         $i = 0;
@@ -238,13 +236,11 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * Since we dont want an ugly tree display but we want numberation we
      * "unfold" the groups tree
      */
-    private function unfoldGroup(&$list, $groups, $preset = array()) {
+    private function unfoldGroup(&$list, $groups) {
         if (is_array($groups)) {
             $groups = SimpleORMapCollection::createFromArray($groups);
         }
         foreach ($groups->orderBy('position') as $group) {
-            // Numberating groups LIKE A BOSS!
-            $this->numbers[$group->id] = join(".", $newpre = array_merge($preset, array(++$i)));
             $list[] = $group;
             $this->unfoldGroup($list, $group->children, $newpre);
         }

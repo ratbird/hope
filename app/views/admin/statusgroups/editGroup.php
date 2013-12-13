@@ -32,13 +32,10 @@
         <label class="caption"><?= _('Position') ?>
             <input name="size" type="text" size="10" placeholder="<?= _('0') ?>" value="<?= formatReady($group->position) ?>" >
         </label>
-        <label class="caption"><?= _('Einordnen nach') ?>
+        <label class="caption"><?= _('Einordnen unter') ?>
             <select name='range_id'>
                 <option value='<?= $_SESSION['SessionSeminar'] ?>'>-</option>
-                <? foreach ($groups as $g): ?>
-                    <? if ($group->id == $g->id) continue; ?>
-                    <option value='<?= $g->id ?>' <?= $g->id == $group->range_id ? "selected" : "" ?>><?= htmlReady($g->name) ?></option>
-                <? endforeach; ?>
+                <?= $this->render_partial("admin/statusgroups/_edit_subgroupselect.php", array('groups' => $groups, 'selected' => $group)) ?>
             </select>
         </label>
     </fieldset>

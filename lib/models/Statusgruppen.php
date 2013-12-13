@@ -22,10 +22,11 @@ class Statusgruppen extends SimpleORMap {
 
     protected $db_table = "statusgruppen";
     protected $has_many = array(
-        'children' => array(
-            'class_name' => 'Statusgruppen',
-            'on_delete' => 'delete',
-            'assoc_foreign_key' => 'range_id'),
+        /* Deprecated since we need to order them right away
+          'children' => array(
+          'class_name' => 'Statusgruppen',
+          'on_delete' => 'delete',
+          'assoc_foreign_key' => 'range_id'), */
         'members' => array(
             'class_name' => 'StatusgruppeUser',
             'on_delete' => 'delete',
@@ -34,28 +35,35 @@ class Statusgruppen extends SimpleORMap {
     protected $belongs_to = array('parent' => array('class_name' => 'Statusgruppen',
             'foreign_key' => 'range_id'
     ));
+
     public function __construct($id = null) {
+        $this->additional_fields['children'] = true;
         parent::__construct($id);
     }
     
+    public function getChildren() {
+        $result = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($this->id));
+        return $result ? : array();
+    }
+
     public function getDatafields() {
         return DataFieldEntry::getDataFieldEntries(array($this->range_id, $this->statusgruppe_id), 'roleinstdata');
     }
-    
+
     public function setDatafields($data) {
         foreach ($this->getDatafields() as $field) {
-               $field->setValueFromSubmit($data[$field->getId()]);
-               $field->store();
+            $field->setValueFromSubmit($data[$field->getId()]);
+            $field->store();
         }
     }
-    
+
     /**
      * Finds all statusgroups by a course id
      * 
      * @param string The course id
      * @return array Statusgroups
      */
-    static public function findBySeminar_id ($course_id) {
+    static public function findBySeminar_id($course_id) {
         return self::findBySQL("range_id = ?", array($course_id));
     }
 
@@ -279,7 +287,7 @@ class Statusgruppen extends SimpleORMap {
         $stmt2 = $db->prepare($sql2);
         $stmt2->execute(array($pos, $this->id, $statususer->user_id));
     }
-    
+
     public function store() {
         if ($this->isNew()) {
             $sql = "SELECT MAX(position)+1 FROM statusgruppen WHERE range_id = ?";

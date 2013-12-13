@@ -38,7 +38,7 @@
         </caption>
         <thead class="nodrag">
             <tr>
-                <th colspan="3"><?= count($group->members) ?> <?= _('Mitglieder') ?></th>
+                <th colspan="3"><?= count($group->members) ?> <?= count($group->members) != 1 ? _('Mitglieder') : _('Mitglied'); ?></th>
                 <th style="text-align: right">
                     <!-- Gruppe leeren icon -->
                     <a class='modal' title='<?= _('Gruppe leeren') ?>' href="<?= $controller->url_for('admin/statusgroups/truncate/' . $group->id) ?>">

@@ -48,7 +48,7 @@ namespace Studip\Squeeze {
         $compressor = new Compressor($configuration);
         if (is_array($configuration['css']) && $compressor->shouldCompress()) {
             if (!$compressor->hasJava()) {
-                trigger_error('CSS could not be compressed, since Java is missing.', E_USER_WARNING);
+                error_log('CSS could not be compressed, since Java is missing.');
             }
             
             $config_time = filemtime($configFile);

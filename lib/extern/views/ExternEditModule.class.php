@@ -154,7 +154,7 @@ class ExternEditModule extends ExternEditHtml {
                 // visible
                 if ($visible[$order[$i]]) {
                 $out .= "\n";
-                $out .= Assets::input("icons/16/yellow/blue/checkbox-checked.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_hide[{$order[$i]}]", 'title' => _('Datenfeld ausblenden')));
+                $out .= Assets::input("icons/16/blue/checkbox-checked.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_hide[{$order[$i]}]", 'title' => _('Datenfeld ausblenden')));
                 } else {
                     $out .= "\n";
                     $out .= Assets::input("icons/16/blue/checkbox-unchecked.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_show[{$order[$i]}]", 'title' => _('Datenfeld einblenden')));

@@ -107,7 +107,7 @@ class SemClass implements ArrayAccess
             'resources' => "CoreResources",
             'calendar' => "CoreCalendar",
             'elearning_interface' => "CoreElearningInterface",
-            'modules' => '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}}',
+            'modules' => '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}, "CoreResources":{"activated":1,"sticky":0}}',
             'visible' => 1
         );
         return new SemClass($data);

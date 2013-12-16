@@ -1275,8 +1275,8 @@ if ($view == "search") {
 
     if (Request::option('check_assigns') == "FALSE")
         $_SESSION['resources_data']["check_assigns"]=FALSE;
-    if (Request::get('search_only_rooms'))
-        $_SESSION['resources_data']["search_only_rooms"] = Request::quoted('search_only_rooms');
+    if (Request::get('search_only_rooms') !== null)
+        $_SESSION['resources_data']["search_only_rooms"] = Request::int('search_only_rooms');
 
     if ((Request::submitted('start_search')) || (Request::option('search_send'))) {
         unset($_SESSION['resources_data']["search_array"]);

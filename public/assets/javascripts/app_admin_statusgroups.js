@@ -2,19 +2,29 @@ $(document).ready(function() {
 
     $('a.modal').click(function() {
         var dialog = $("<div></div>");
+        dialog.load($(this).attr('href'), function() {
+            dialog.find('.abort').click(function(e) {
+                e.preventDefault();
+                dialog.remove();
+            });
+            dialog.dialog({position: 'center'});
+
+        });
+        $('<img/>', {
+            src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
+        }).appendTo(dialog);
         dialog.dialog({
             autoOpen: false,
             autoResize: true,
             resizable: false,
             position: 'center',
             close: function() {
-                $(this).remove()
+                $(this).remove();
             },
             width: 'auto',
             title: $(this).attr('title'),
             modal: true
         });
-        dialog.load($(this).attr('href'));
         dialog.dialog("open");
         return false;
     });

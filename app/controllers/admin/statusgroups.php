@@ -157,6 +157,29 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->afterFilter();
         }
     }
+    
+    /**
+     * Delete a group
+     */
+    public function deleteGroup_action($group_id) {
+        $this->check('edit');
+        $this->group = new Statusgruppen($group_id);
+        if (Request::submitted('confirm')) {
+            CSRFProtection::verifySecurityToken();
+            
+            // move all subgroups to the parent
+            $children = SimpleORMapCollection::createFromArray($this->group->children);
+            $children->setValue('range_id', $this->group->range_id);
+            $children->store();
+            
+            //remove users
+            $this->group->removeAllUsers();
+            
+            //goodbye group
+            $this->group->delete();
+            $this->redirect('admin/statusgroups/index');
+        }
+    }
 
     /**
      * Ajaxaction to look for people
@@ -263,7 +286,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 . _('Freie Suche') . "</h4><div id='search_result'></div>";
 
         $this->addToInfobox(_('Aktionen'), "<a title='" . _('Neue Gruppe anlegen') . "' class='modal' href='" . $this->url_for("admin/statusgroups/editGroup") . "'>" . _('Neue Gruppe anlegen') . "</a>", 'icons/16/black/add/group3.png');
-        $this->addToInfobox(_('Aktionen'), "<a title='" . _('Reihenfolge ändern') . "' class='modal' href='" . $this->url_for("admin/statusgroups/sortGroups") . "'>" . _('Reihenfolge ändern') . "</a>", 'icons/16/black/refresh.png');
+        $this->addToInfobox(_('Aktionen'), "<a title='" . _('Gruppenreihenfolge ändern') . "' class='modal' href='" . $this->url_for("admin/statusgroups/sortGroups") . "'>" . _('Gruppenreihenfolge ändern') . "</a>", 'icons/16/black/refresh.png');
         $this->addToInfobox(_('Aktionen'), "<a href='" . $this->url_for("admin/statusgroups/memberAdd") . "'>" . _('Mehrere Mitglieder hinzufügen') . "</a>", 'icons/16/black/add/community.png');
         $this->addToInfobox('Personensuche', $infobox_search);
     }
@@ -271,7 +294,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /*
      * Checks if a group should be updated from a request
      */
-
     private function checkForChangeRequests() {
         if (Request::submitted('save')) {
             $this->check('edit');
@@ -279,9 +301,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             if ($group->isNew()) {
                 $group->range_id = $_SESSION['SessionSeminar'];
             }
-            if (Request::get('delete')) {
-                $group->delete();
-            } else {
                 $group->name = Request::get('name');
                 $group->name_w = Request::get('name_w');
                 $group->name_m = Request::get('name_m');
@@ -291,7 +310,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $group->selfassign = Request::get('selfassign') ? 1 : 0;
                 $group->store();
                 $group->setDatafields(Request::getArray('datafields') ? : array());
-            }
         }
         if (Request::submitted('order')) {
             $this->check('edit');

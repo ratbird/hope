@@ -9,7 +9,7 @@
 <form action="<?= $controller->url_for('course/scm/edit/' . $scm->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table class="default scm">
+    <table class="default scm nohover">
         <colgroup>
             <col>
             <col width="25%">

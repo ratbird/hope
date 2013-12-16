@@ -4,7 +4,7 @@
     <?= $verification ?>
 <? endif; ?>
 
-<table class="default scm">
+<table class="default scm nohover">
     <colgroup>
         <col>
         <col width="25%">

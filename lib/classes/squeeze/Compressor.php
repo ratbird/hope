@@ -102,7 +102,7 @@ class Compressor
             array("file", $err, "a")
         );
 
-        $process = proc_open($command, $descriptorspec, $pipes, $cwd, array());
+        $process = proc_open($command, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
 
@@ -120,6 +120,7 @@ class Compressor
                                     file_get_contents($err));
             }
 
+            unlink($err);
             return $output;
         }
 

@@ -224,7 +224,7 @@ class Statusgruppe {
     }
     
     function checkData() {
-        global $datafields, $invalidEntries;
+        global $invalidEntries;
 
         // check the standard role data
         if (!Request::get('new_name') && Request::get('presetName') != 'none') {
@@ -271,22 +271,16 @@ class Statusgruppe {
 
         if (!$this->isSeminar()) {
             // check the datafields
-            if (!$this->isSeminar() && is_array($datafields)) {
-                foreach ($datafields as $id=>$data) {
-                    $struct = new DataFieldStructure(array("datafield_id"=>$id));
-                    $struct->load();
-                    $entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->range_id, $this->statusgruppe_id));
-                    $entry->setValueFromSubmit($data);
-                    if ($entry->isValid()) {
-                        $entry->store();
-                    } else {
-                        $invalidEntries[$struct->getID()] = $entry;
-                    }
+            foreach (Request::quotedArray('datafields') as $id=>$data) {
+                $struct = new DataFieldStructure(array("datafield_id"=>$id));
+                $struct->load();
+                $entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->range_id, $this->statusgruppe_id));
+                $entry->setValueFromSubmit($data);
+                if ($entry->isValid()) {
+                    $entry->store();
+                } else {
+                    $invalidEntries[$struct->getID()] = $entry;
                 }
-                /*// change visibility of role data
-                    foreach ($group_id as $groupID)
-                    setOptionsOfStGroup($groupID, $u_id, ($visible[$groupID] == '0') ? '0' : '1');*/
-                //$msgs[] = 'error§<b>'. _("Fehlerhafte Eingaben (s.u.)") .'</b>';
             }
 
             // a group cannot be its own vather!

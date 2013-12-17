@@ -24,7 +24,7 @@
             </th>
         </tr>
         <? foreach ($groups as $group) : ?>
-            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+            <tr>
                 <td>
                    <?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getImageTag(Avatar::SMALL)?>
                 </td>
@@ -34,7 +34,7 @@
                     <? else: ?>
                        <a href="<?=URLHelper::getlink("dispatch.php/course/studygroup/details/".$group['Seminar_id'])?>">
                     <? endif; ?>
-                       <?=htmlready($group['Name'])?></a>
+                       <?=htmlready($group['Name'])?></a> <?= $group['visible'] ? '' : "["._('versteckt')."]" ?>
                  </td>
                  <td><?=strftime('%x', $group['mkdate'])?>
                 </td>
@@ -61,10 +61,13 @@
                 </td>
             </tr>
     <? endforeach ; ?>
-
+            <? if ($anzahl > 20) : ?>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="actions">
+                            <?= $GLOBALS['template_factory']->render('shared/pagechooser', array("perPage" => 20, "num_postings" => $anzahl, "page" => $page, "pagelink" => $link)) ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            <? endif; ?>
     </table>
-    <? if($anzahl>20) :?>
-    <div style="text-align:right;" class="table_foot">
-    <?= $GLOBALS['template_factory']->render('shared/pagechooser', array("perPage" => 20, "num_postings" => $anzahl, "page" => $page, "pagelink" => $link)) ?>
-    </div>
-    <? endif;?>

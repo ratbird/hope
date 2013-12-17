@@ -250,6 +250,9 @@ class StudygroupModel
         $sql = "SELECT *
                 FROM seminare AS s
                 WHERE status IN (?)";
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            $sql .= "AND visible = 1";
+        }
         $parameters[] = array($status);
 
         if (isset($search)) {

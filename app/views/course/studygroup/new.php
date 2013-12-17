@@ -77,6 +77,9 @@ $infobox['content'] = array(
       <select name="groupaccess" id="groupaccess">
          <option <?= ($groupaccess == 'all') ? 'selected="selected"':'' ?> value="all"><?= _("Offen für alle") ?></option>
          <option <?= ($groupaccess == 'invite') ? 'selected="selected"':'' ?> value="invite"><?= _("Auf Anfrage") ?></option>
+         <? if (Config::get()->STUDYGROUPS_INVISIBLE_ALLOWED): ?>
+             <option <?= ($groupaccess == 'invisible') ? 'selected="selected"':'' ?> value="invisible"><?= _('Unsichtbar') ?></option>
+         <? endif; ?>
       </select>
   </td>
 </tr>

@@ -2139,13 +2139,13 @@ div.clear {
   padding: 4px 0 4px 0;
   width: 100%;
 }
-#tabs2 a {
+#tabs2 a,
+#tabs2 span.quiet {
   color: #6e6e6e;
   display: block;
   background: no-repeat left center;
   background-image: url("../images//icons/16/grey/arr_1right.png");
   background-image: -webkit-image-set(url("../images//icons/16/grey/arr_1right.png") 1x, url("../images//icons/32/grey/arr_1right.png") 2x);
-  cursor: pointer;
   line-height: 20pt;
   margin-left: 1em;
   padding-left: 20px;

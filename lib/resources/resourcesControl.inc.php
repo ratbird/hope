@@ -42,6 +42,7 @@ if (empty($_SESSION['resources_data'])) {
         'view'                     => 'search',
         'view_mode'                => false,
         'sem_schedule_semester_id' => $temp_semester['semester_id'],
+        'sem_schedule_timespan'    => 'course_time'
     );
 }
 

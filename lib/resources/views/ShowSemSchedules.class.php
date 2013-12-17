@@ -107,12 +107,14 @@ class ShowSemSchedules extends ShowSchedules {
             </tr>
             <tr>
             <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="middle">
-                <font size="-1">
+                <label>
                 <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'course_time' ? 'checked' : '')?> name="sem_time_choose" value="course_time">
                 <?=_("Vorlesungszeit")?>
+                </label>
+                <label>
                 <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'sem_time' ? 'checked' : '')?> name="sem_time_choose" value="sem_time">
                 <?=_("vorlesungsfreie Zeit")?>
-                </font>
+                </label>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="middle"><font size="-1">
                     <?=_("<i>oder</i> ein Semester grafisch ausgeben")?>

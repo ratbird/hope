@@ -75,10 +75,14 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                     <?= SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
                     <?= Button::create(_('Auswählen'), 'jump') ?><br>
+                    <label>
                     <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'course_time' ? 'checked' : '')?> name="sem_time_choose" value="course_time">
                     <?=_("Vorlesungszeit")?>
+                    </label>
+                    <label>
                     <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'sem_time' ? 'checked' : '')?> name="sem_time_choose" value="sem_time">
                     <?=_("vorlesungsfreie Zeit")?>
+                    </label>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
                     <?=_("Eine Raumgruppe ausw&auml;hlen")?>:<br>

@@ -35,7 +35,7 @@
     <? endforeach ?>
 <? endif ?>
     <div id="news_basic">
-        <table class="default collapsable news_category_header" style="padding: 0px; margin: 0px">
+        <table class="default news_category_header" style="padding: 0px; margin: 0px">
             <thead><tr>
                 <th width="26">
                     <input name="toggle_news_basic" type="image" aria-label="<?= _('Formular für Grunddaten der Ankündigung einblenden oder ausblenden') ?>"
@@ -45,7 +45,7 @@
             </tr></thead>
         </table>
         <div id="news_basic_content" style="<?=$news_isvisible['news_basic'] ? '' : 'display: none'?>">
-            <table class="default collapsable">
+            <table class="default">
             <tbody>
                 <tr>
                     <td colspan="2">
@@ -58,7 +58,7 @@
                     <td colspan="2">
                         <label><?= _("Inhalt") ?><br>
                         <? list ($body, $admin_msg) = explode("<admin_msg>", $news['body']); ?>
-                        <textarea class="add_toolbar" name="news_body" style="resize: vertical; width: 90%" rows="6" 
+                        <textarea class="add_toolbar" name="news_body" style="resize: vertical; width: 90%; font-size: 10pt;" rows="6" 
                             wrap="virtual" placeholder="<?= _('Geben Sie hier den Ankündigungstext ein') ?>" 
                             aria-label="<?= _('Inhalt der Ankündigung') ?>"><?= htmlReady($body) ?></textarea></label>
                     </td>
@@ -82,7 +82,7 @@
         <? if ($anker == 'news_comments') : ?>
             <a name='anker'></a>
         <? endif ?>
-        <table class="default collapsable news_category_header" style="padding: 0px; margin: 0px">
+        <table class="default news_category_header" style="padding: 0px; margin: 0px">
         <thead>
             <tr>
                 <th width="26">
@@ -100,7 +100,7 @@
         </thead>
         </table>
         <div id="news_comments_content" style="<?=$news_isvisible['news_comments'] ? '' : 'display: none'?>">
-            <table class="default collapsable">
+            <table class="default">
             <tbody>
                 <tr>
                     <td width="26"></td>
@@ -139,7 +139,7 @@
         <? if ($anker == 'news_areas') : ?>
             <a name='anker'></a>
         <? endif ?>
-        <table class="default collapsable news_category_header" style="padding: 0px; margin: 0px">
+        <table class="default news_category_header" style="padding: 0px; margin: 0px">
         <thead>
             <tr>
                 <th width="26">
@@ -151,7 +151,7 @@
         </thead>
         </table>
         <div id="news_areas_content" style="<?=$news_isvisible['news_areas'] ? '' : 'display: none'?>">
-            <table class="default collapsable">
+            <table class="default">
             <tbody>
                 <tr>
                     <td colspan="3">
@@ -261,9 +261,9 @@
 </div>
 <div style="margin-right: 15px; border-top: 1px solid #d1d1d1">
 <?  if ($news["mkdate"]) : ?>    
-    <?= Button::createAccept(_('Änderungen speichern'), 'save_news') ?>
+    <?= Button::createAccept(_('Änderungen speichern'), 'save_news', array('autofocus' => 'autofocus')) ?>
 <? else : ?>
-    <?= Button::createAccept(_('Ankündigung erstellen'), 'save_news') ?>
+    <?= Button::createAccept(_('Ankündigung erstellen'), 'save_news', array('autofocus' => 'autofocus')) ?>
 <? endif ?>
 <? if (Request::isXhr()) : ?>
     <?= LinkButton::createCancel(_('Schließen'), URLHelper::getURL(''), array('rel' => 'close_dialog')) ?>
@@ -272,4 +272,15 @@
 </form>
 <script>
     jQuery('.news_date').datepicker();
+    jQuery('input[type=text]').keydown(function(event) {
+        if (event.which === 13) {
+            event.preventDefault();
+        }
+    });
+    jQuery('input[name=area_search_term]').keydown(function(event) {
+        if (event.which === 13) {
+            jQuery('input[name=area_search]').click(); 
+            event.preventDefault();
+        }
+    });
 </script>

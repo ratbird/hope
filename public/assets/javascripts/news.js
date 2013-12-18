@@ -119,7 +119,7 @@ STUDIP.News = {
 
                 // fix added elements (as in application.js)
                 if (!("autofocus" in document.createElement("input"))) {
-                    jQuery('[autofocus]').first().focus();
+                    jQuery('[autofocus]').last().focus();
                 }
                 jQuery('.add_toolbar').addToolbar();
                 jQuery('textarea.resizable').resizable({
@@ -161,9 +161,9 @@ STUDIP.News = {
         				location.replace(url[0]+'?nsave=1');
         			}
         			// fix added elements (as in application.js)
-        			if (!("autofocus" in document.createElement("input"))) {
-        				jQuery('[autofocus]').first().focus();
-        			}
+                    if (!("autofocus" in document.createElement("input"))) {
+                        jQuery('[autofocus]').last().focus();
+                    }
         			jQuery('.add_toolbar').addToolbar();
         			jQuery('textarea.resizable').resizable({
         				handles: 's',

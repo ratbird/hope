@@ -1,4 +1,5 @@
-<table id="<?= $group->id ?>" class="default moveable dropable">
+<a name="group-<?= $group->id ?>"></a>
+<table id="<?= $group->id ?>" class="default moveable dropable" style="margin-top: 30px;">
     <colgroup>
         <col width="1">
         <col width="10">
@@ -21,11 +22,11 @@
             <a class='modal' title="<?= _('Gruppe ändern') ?>" href="<?= $controller->url_for("admin/statusgroups/editGroup/{$group->id}") ?>">
                 <?= Assets::img("icons/16/blue/edit.png", tooltip2(_('Gruppe ändern'))) ?>
             </a>
+            <a class='modal' title="<?= _('Mitglieder hinzufügen') ?>" href="<?= $controller->url_for("admin/statusgroups/memberAdd/{$group->id}") ?>">
+                <?= Assets::img("icons/16/blue/add/community.png", tooltip2(_('Mitglieder hinzufügen'))) ?>
+            </a>
             <a class='modal' title="<?= _('Gruppe löschen') ?>" href="<?= $controller->url_for("admin/statusgroups/deleteGroup/{$group->id}") ?>">
                 <?= Assets::img("icons/16/blue/trash.png", tooltip2(_('Gruppe löschen'))) ?>
-            </a>
-            <a class='modal' title="<?= _('Mitglieder hinzufügen') ?>" href="<?= $controller->url_for("admin/statusgroups/memberAdd/{$group->id}") ?>">
-                <?= Assets::img("icons/16/blue/add.png", tooltip2(_('Mitglieder hinzufügen'))) ?>
             </a>
         <? else: ?>
             <? if ($type['needs_self_assign']): ?>

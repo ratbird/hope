@@ -1,4 +1,4 @@
-<form class="studip_form" action="<?= $controller->url_for('admin/statusgroups') ?>" method="POST">
+<form class="studip_form" action="<?= $controller->url_for('admin/statusgroups') ?>#group-<?= $group->id ?>" method="POST">
     <input type="hidden" name="id" value="<?= $group->id ?>">
     <label class="caption"><?= _('Gruppenname') ?>
         <input name="name" required="true" class="groupname" type="text" size="50" placeholder="<?= _('Mitarbeiterinnen und Mitarbeiter') ?>" value="<?= formatReady($group->name) ?>" >

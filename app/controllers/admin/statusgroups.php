@@ -104,7 +104,9 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         // Search
         $this->search = Request::isXHR() ? utf8_decode(Request::get('freesearch')) : Request::get('freesearch');
         $lastSearch = Request::isXHR() ? utf8_decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
-        if (Request::get('search_preset') == "inst" || Request::get('not_first_call') != true) { // ugly
+        $this->searchPreset = Request::get('search_preset');
+        $lastSearchPreset= Request::isXHR() ? utf8_decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
+        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst")|| Request::get('not_first_call') != true) { // ugly
             // search with preset
             foreach ($this->type['groups'] as $group) {
                 $this->selectablePersons = array();
@@ -117,6 +119,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         } elseif ($this->search != $lastSearch || Request::submitted('submit_search')) {
             // search with free text input
             $this->selectablePersons = User::search($this->search, 0);
+            // reset preset
+            $this->searchPreset = "";
         } else {
             // otherwise restore selectable persons
             $this->selectablePersonsHidden = unserialize(studip_utf8decode(Request::get('search_persons_selectable_hidden')));
@@ -204,7 +208,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $this->selectedPersons[] = $user;
             }
             PageLayout::postMessage(MessageBox::success(_('Die Mitglieder wurden gespeichert.')));
-            $this->redirect('admin/statusgroups/index');
+            $this->redirect('admin/statusgroups/index#group-'.$group_id);
         }
         
         

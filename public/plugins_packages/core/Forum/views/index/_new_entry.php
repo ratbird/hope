@@ -1,7 +1,7 @@
 <?/*  $this->flash['new_entry_title'] */ ?>
 <div id="new_entry_box" <?= $this->flash['edit_entry'] ? '' : 'style="display: none;"' ?>>
     <a name="create"></a>
-    <form action="<?= PluginEngine::getLink('coreforum/index/add_entry') ?>" method="post" id="forum_new_entry">
+    <form action="<?= PluginEngine::getLink('coreforum/index/add_entry') ?>" method="post" id="forum_new_entry" onSubmit="$(window).off('beforeunload')">
         <div class="posting bg2">
             <div class="postbody" <?= $constraint['depth'] == 0 ? 'style="width: 97%"' : '' ?>>
             <? if ($constraint['depth'] == 1) : ?>

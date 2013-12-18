@@ -274,4 +274,21 @@ class ForumHelpers {
 
         return Request::option('cid');
     }
+    
+    /**
+     * replace in the passed text every %%% with <% and every ### with %>
+     * This is used to work around a limitation of the Button-API in combination
+     * with the underscore.js way of inserting template vars.
+     * 
+     * The Button-API correctly replaces < > with tags, but underscore.js is 
+     * unable to find them in their tag-represenation
+     * 
+     * @param string $text the text to apply the replacements on
+     * 
+     * @return string the modified text
+     */
+    static function replace($text)
+    {
+        return str_replace('%%%', '<%', str_replace('###', '%>', $text));
+    }
 }

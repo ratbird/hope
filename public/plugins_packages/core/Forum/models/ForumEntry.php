@@ -665,6 +665,27 @@ class ForumEntry {
                 break;
         }
     }
+    
+    /**
+     * Get the latest forum entries for the passed entries childs
+     * 
+     * @param string $parent_id
+     * @param int $since  timestamp
+     * 
+     * @return array list of postings
+     */
+    function getLatestSince($parent_id, $since)
+    {
+        $constraint = ForumEntry::getConstraints($parent_id);
+                
+        $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
+            WHERE lft > ? AND rgt < ? AND seminar_id = ?
+                AND mkdate >= ?
+            ORDER BY name ASC");
+        $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id'], $since));
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     /**
      ** returns a list of postings for the passed search-term

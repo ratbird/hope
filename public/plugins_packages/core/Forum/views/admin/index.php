@@ -17,7 +17,7 @@ $infobox_content[] = array(
 $infobox = array('picture' => 'infobox/schedules.jpg', 'content' => $infobox_content);
 ?>
 <div id="forum">
-    <ul style="margin: 0; padding-left: 20px;">
+    <ul style="margin: 0; padding-left: 20px;" class="js">
     <? foreach ($list as $category_id => $entries) : ?>
         <li data-id="<?= $category_id ?>">
             <a class="tooltip2"></a>
@@ -27,8 +27,11 @@ $infobox = array('picture' => 'infobox/schedules.jpg', 'content' => $infobox_con
             </a>    
             <br>
 
-            <?= $this->render_partial('index/_admin_entries', compact('entries')) ?>
+            <?= $this->render_partial('admin/childs', compact('entries')) ?>
         </li>
     <? endforeach ?>
     </ul>
 </div>
+<noscript>
+    <?= MessageBox::error(_('Die Forenadministration funktioniert nur mit eingeschaltetem JavaScript!')) ?>
+</noscript>

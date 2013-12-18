@@ -1,4 +1,4 @@
-<? if ($has_perms) : ?>
+<? if (ForumPerm::has('add_category', $seminar_id)) : ?>
 <a name="create"></a>
 <form action="<?= PluginEngine::getLink('coreforum/index/add_category') ?>" method="post" id="tutorAddCategory">
     <?= CSRFProtection::tokenTag() ?>

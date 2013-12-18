@@ -3,8 +3,6 @@
     <a name="create"></a>
     <form action="<?= PluginEngine::getLink('coreforum/index/add_entry') ?>" method="post" id="forum_new_entry">
         <div class="posting bg2">
-            <span class="corners-top"><span></span></span>
-
             <div class="postbody" <?= $constraint['depth'] == 0 ? 'style="width: 97%"' : '' ?>>
             <? if ($constraint['depth'] == 1) : ?>
                 <span class="title"><?= _('Neues Thema erstellen') ?></span>
@@ -42,8 +40,8 @@
                 <div class="button-group">
                     <?= Studip\Button::createAccept(_('Beitrag erstellen'), array('tabindex' => '3')) ?>
 
-                    <?= Studip\LinkButton::createCancel(_('Abbrechen'), 'javascript:', array(
-                        'onClick' => "STUDIP.Forum.cancelNewEntry();",
+                    <?= Studip\LinkButton::createCancel(_('Abbrechen'), '', array(
+                        'onClick' => "return STUDIP.Forum.cancelNewEntry();",
                         'tabindex' => '4')) ?>
 
                     <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
@@ -56,8 +54,6 @@
                     <? endif; ?>
                 </div>
             </div>
-            
-            <span class="corners-bottom"><span></span></span>
         </div>
 
         <?= $this->render_partial('index/_preview', array('preview_id' => 'new_entry_preview')) ?>

@@ -40,6 +40,7 @@ class ForumPerm {
      *   forward_entry     - Forwarding an existing entry as a message<br>
      *   pdfexport         - Exporting parts of the forum as PDF<br>
      *   admin             - Allowed to mass-administrate the forum<br>
+     *   view              - Allowed to view the forum at all<br>
      * 
      * @param string $perm        one of the modular permissions
      * @param string $seminar_id  the seminar to check for
@@ -95,16 +96,16 @@ class ForumPerm {
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '
-            . 'make_sticky close_thread abo forward_entry pdfexport')
+            . 'make_sticky close_thread abo forward_entry pdfexport view')
         ) !== false) {
             return true;
-        } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport')) !== false) {
+        } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport view')) !== false) {
             return true;
-        } else if ($status == 'user' && in_array($perm, words('search add_entry forward_entry pdfexport')) !== false) {
+        } else if ($status == 'user' && in_array($perm, words('search add_entry forward_entry pdfexport view')) !== false) {
             return true;
-        } else if ($status == 'nobody_write' && in_array($perm, words('search add_entry pdfexport')) !== false) {
+        } else if ($status == 'nobody_write' && in_array($perm, words('search add_entry pdfexport view')) !== false) {
             return true;
-        } else if ($status == 'nobody_read' && in_array($perm, words('search pdfexport')) !== false) {
+        } else if ($status == 'nobody_read' && in_array($perm, words('search pdfexport view')) !== false) {
             return true;
         }
         

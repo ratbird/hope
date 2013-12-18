@@ -1,4 +1,4 @@
-<script id="confirm_dialog" type="text/html">
+<script type="text/html" class="confirm_dialog">
 <div class="modaloverlay">
     <div class="messagebox">
         <div class="content">

@@ -6,7 +6,7 @@
     });
 </script>
 
-<?= $this->render_partial('index/_confirm_dialog') ?>
+<?= $this->render_partial('index/_js_templates') ?>
 
 <!-- set a CSS "namespace" for Forum -->
 <div id="forum">
@@ -158,10 +158,6 @@ endif;
     <?= $link  ?>
 </div>
 <br style="clear: both">
-
-<div class="searchbar">
-    <?= $this->render_partial('index/_search', array('id' => 'tutorSearch')); ?>
-</div>
 
 <!-- Message area -->
 <div id="message_area">

@@ -2,11 +2,9 @@
 
 <? if (trim($constraint['content'])) : ?>
 <div class="posting">
-    <span class="corners-top"><span></span></span>
     <div class="postbody">
         <div class="content"><?= formatReady(ForumEntry::killEdit($constraint['content'])) ?></div>
     </div>
-    <span class="corners-bottom"><span></span></span>
 </div>
 <? endif ?>
 
@@ -79,7 +77,7 @@
 
                 <span class="action-icons">
                     <? if (ForumPerm::has('move_thread', $seminar_id)) : ?>
-                    <a href="javascript:STUDIP.Forum.moveThreadDialog('<?= $entry['topic_id'] ?>');">
+                    <a href="javascript:STUDIP.Forum.moveThreadDialog('<?= $entry['topic_id'] ?>');" class="js">
                         <?= Assets::img('icons/16/blue/move_right/folder-full.png',
                             array('class' => 'move-thread', 'title' => _('Dieses Thema verschieben'))) ?>
                     </a>

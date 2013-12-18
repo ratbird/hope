@@ -7,8 +7,6 @@
     <?= CSRFProtection::tokenTag() ?>
     
 <div class="posting<?= $highlight_topic == $post['topic_id'] ? ' highlight' : '' ?>" style="position: relative;" id="forumposting_<?= htmlReady($post['topic_id']) ?>">
-    <span class="corners-top"><span></span></span>
-
     <a class="marked" href="<?= PluginEngine::getLink('coreforum/index/unset_favorite/'. $post['topic_id']) ?>"
             onClick="STUDIP.Forum.unsetFavorite('<?= $post['topic_id'] ?>'); return false;" title="<?= _('Beitrag nicht mehr merken') ?>"
             <?= ($post['fav']) ?: 'style="display: none;"' ?> data-topic-id="<?= $post['topic_id'] ?>">
@@ -230,7 +228,7 @@
         <? endif ?>  
     </span>
 
-    <span class="corners-bottom"><span></span></span>
+    <div class="clear"></div>
 </div>
 </form>
 

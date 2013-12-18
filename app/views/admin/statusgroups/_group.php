@@ -24,6 +24,9 @@
             <a class='modal' title="<?= _('Gruppe löschen') ?>" href="<?= $controller->url_for("admin/statusgroups/deleteGroup/{$group->id}") ?>">
                 <?= Assets::img("icons/16/blue/trash.png", tooltip2(_('Gruppe löschen'))) ?>
             </a>
+            <a class='modal' title="<?= _('Mitglieder hinzufügen') ?>" href="<?= $controller->url_for("admin/statusgroups/memberAdd/{$group->id}") ?>">
+                <?= Assets::img("icons/16/blue/add.png", tooltip2(_('Mitglieder hinzufügen'))) ?>
+            </a>
         <? else: ?>
             <? if ($type['needs_self_assign']): ?>
                 <? if ($group->isMember() && $group->selfassign): ?>
@@ -43,10 +46,6 @@
         <tr>
             <th colspan="3"><?= count($group->members) ?> <?= count($group->members) != 1 ? _('Mitglieder') : _('Mitglied'); ?></th>
             <th style="text-align: right">
-                <!-- Gruppe leeren icon -->
-                <a class='modal' title='<?= _('Gruppe leeren') ?>' href="<?= $controller->url_for('admin/statusgroups/truncate/' . $group->id) ?>">
-                    <?= Assets::img("icons/16/blue/trash.png", tooltip2(_('Gruppe leeren'))) ?>
-                </a>
             </th>
         </tr>
     </thead>

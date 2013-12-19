@@ -203,7 +203,7 @@ endif;
         </div>
     </div>
 
-    <? if (ForumPerm::has('add_category', $seminar_id)) : ?>
+    <? if ($section == 'index' && $constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) : ?>
         <?= $this->render_partial('index/_new_category') ?>
     <? endif ?>
 <? else : ?>

@@ -195,6 +195,8 @@ class AdminNavigation extends Navigation
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
             }
+
+            $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
         }
 
         $this->addSubNavigation('config', $navigation);

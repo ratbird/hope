@@ -88,6 +88,8 @@ class StudipComment extends SimpleORMap
     {
         $this->db_table = 'comments';
         $this->default_values['content'] = '';
+        $this->belongs_to['news'] = array('class_name' => 'StudipNews',
+                                          'foreign_key' => 'object_id');
         parent::__construct($id);
     }
 }

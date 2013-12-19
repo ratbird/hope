@@ -69,7 +69,7 @@ class StudipDocument extends SimpleORMap {
      */
     static function findByFolderId($folder_id)
     {
-         return self::findByFolder_id($folder_id);
+         return self::findByRange_id($folder_id);
     }
 
     /**

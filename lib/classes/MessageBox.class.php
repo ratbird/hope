@@ -36,7 +36,7 @@ class MessageBox
     /**
      * type and contents of the message box
      */
-    protected $class, $message, $details, $close_details;
+    public $class, $message, $details, $close_details;
 
     /**
      * This function returns an exception message box. Use it only for system errors

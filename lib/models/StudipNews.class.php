@@ -334,7 +334,7 @@ class StudipNews extends SimpleORMap {
             case 'fak': 
             case 'inst':
             case 'sem':
-                if (($operation == 'view') AND ($_SESSION['SessionSeminar'] == $range_id))
+                if (($operation == 'view') AND $GLOBALS['perm']->have_studip_perm('user', $range_id))
                     return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
                 if (($operation == 'edit') OR ($operation == 'copy')) {
                     if ($GLOBALS['perm']->have_studip_perm('tutor', $range_id))
@@ -426,11 +426,14 @@ class StudipNews extends SimpleORMap {
     /**
      * checks, if user has permission to perform given operation on news object
      * 
-     * @param string delete, unassign, edit, copy, or view
-     * @param string specified range-id, used only for unassign-operation
+     * @param string $operation       delete, unassign, edit, copy, or view
+     * @param string $check_range_id  specified range-id, used only for unassign-operation
+     * @param string $user_id         optional; check permission for
+     *                                given user ID; otherwise for the
+     *                                global $user's ID
      * @return boolean true or false
      */
-    function havePermission($operation, $check_range_id = '') {
+    function havePermission($operation, $check_range_id = '', $user_id = null) {
         if (!$user_id)
             $user_id = $GLOBALS['auth']->auth['uid'];
         if (!in_array($operation, array('delete', 'unassign', 'edit', 'copy', 'view')))

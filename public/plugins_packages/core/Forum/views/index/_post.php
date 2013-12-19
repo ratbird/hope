@@ -184,7 +184,7 @@
             <dd>
                 Beiträge:
                 <?= ForumEntry::countUserEntries($post['owner_id']) ?>,
-                <abbr title="<?= _("Anzahl 'Gefällt mir!' erhalten") ?>">Kudos:</abbr>
+                <abbr title="<?= _("Anzahl 'Gefällt mir!' erhalten") ?>"><?= _('Kudos:') ?></abbr>
                 <?= ForumLike::countForUser($post['owner_id']) ?>
             </dd>
             <? endif ?>

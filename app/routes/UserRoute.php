@@ -95,58 +95,22 @@ class UserRoute extends RouteMap
      *
      * @delete /user/:uid
      */
-    public function deleteUser()
+    public function deleteUser($user_id)
     {
-
-        
-        if (false) {
-            $this->halt(401);
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            $this->error(401);
         }
+        
+        if (!$GLOBALS['user']->id === $user_id) {
+            $this->error(400, 'Must not delete yourself');
+        }
+
+        $user = User::find($user_id);
+        $user->delete();
 
         $this->status(204);
     }
 
-
-
-    /**
-     * returns courses for a given user
-     *
-     * @get /user/:id/courses
-     * @return Collection
-     */
-    public function getCourses($user_id)
-    {
-        $query = "SELECT Seminar_id AS course_id, su.status AS perms,
-                         Veranstaltungsnummer AS event_number,
-                         s.Name AS name, Untertitel AS subtitle,
-                         sd.semester_id, sd.name AS semester_name
-                  FROM seminar_user AS su
-                  JOIN seminare AS s USING (Seminar_id)
-                  LEFT JOIN semester_data AS sd ON (s.start_time BETWEEN sd.beginn AND sd.ende)
-                  WHERE user_id = :user_id AND su.visible != 'no'
-                  ORDER BY s.start_time DESC";
-        $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':user_id', $user_id);
-        $statement->execute();
-
-        $courses = array();
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            // TODO: work / study seperation has to be refined    
-            //$index = $row['perms'] === 'user'
-            //       ? 'study'
-            //       : 'work';
-            $courses[] = $row;
-        }
-
-
-        $this->paginate('/user/' . $user_id . '/courses?offset=%u&limit=%u', count($courses));
-
-        $result = array_slice($courses, $this->offset, $this->limit);
-        
-        return $this->collect($result);
-    }
-    
-    
     
     /**
      * returns institutes for a given user
@@ -176,12 +140,13 @@ class UserRoute extends RouteMap
             'work'  => array(),
             'study' => array(),
         );
+        
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-          // TODO: work / study seperation has to be refined    
-          //  $index = $row['inst_perms'] === 'user'
-          //          ? 'study'
-          //           : 'work';
-         $institutes[] = $row;
+            if ($row['perms'] === 'user') {
+                $institutes['study'][] = $row;
+            } else {
+                $institutes['work'][] = $row;
+            }
         }
         
         $this->paginate('/user/' . $user_id . '/institutes?offset=%u&limit=%u', count($institutes));

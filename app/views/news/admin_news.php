@@ -8,6 +8,7 @@
         array(),
         $controller->url_for('news/admin_news/'.$area_type)); ?>
 <? endif ?>
+<div class="news_admin">
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="100%" class="blank"><p class="info">
@@ -25,13 +26,14 @@
         <label><?= _("bis:") ?>
         <input class="news_date" type="text" size="12" name="news_enddate" aria-label="<?= _('Anzeige anzeigen, die vor diesem Datum sichtbar sind') ?>" value="<?= ($news_enddate) ? date('d.m.Y', $news_enddate) : '' ?>"></label>
         &nbsp;&nbsp;
-        <?=Button::create(_('Filter Anwenden'), 'apply_news_filter', array('style' => 'vertical-align:middle;', 'aria-label' => _('Liste mit Suchbegriff und/oder Zeitraum filtern')))?>
+        <?=Button::create(_('Filter Anwenden'), 'apply_news_filter', array('aria-label' => _('Liste mit Suchbegriff und/oder Zeitraum filtern')))?>
         </th></tr></thead>
         <? if ($filter_text) : ?>
-            <tfoot><tr><td colspan="1" style="text-align: left; vertical-align:middle;">
+            <tfoot><tr><td colspan="1">
             <?=$filter_text?>
-            </td><td style="text-align: right; vertical-align:middle;">
-            <?=Button::create(_('Auswahl aufheben'), 'reset_filter', array('style' => 'vertical-align:middle;', 'aria-label' => _('Auswahl aufheben')))?>
+            </td><td><div class="news_reset_filter">
+            <?=Button::create(_('Auswahl aufheben'), 'reset_filter')?>
+            </div>
             </td></tr></tfoot>
         <? endif ?>
         </table>
@@ -41,11 +43,11 @@
                 <? if (count($news_items[$type])) : ?>
                     <br>
                     <br>
-                    <table class="default collapsable tablesorter">
+                    <table class="default">
                     <? if (!$area_type) : ?>
                         <caption>
-                            <img src="<?=Assets::image_path('icons/32/grey/'.$area_data['icon'])?>" style="vertical-align: middle">&nbsp;
-                            <div style="display: inline; height: 32px; vertical-align: middle;"><?=htmlReady($area_data['title'])?></div>
+                            <img src="<?=Assets::image_path('icons/32/grey/'.$area_data['icon'])?>" class="news_area_icon">&nbsp;
+                            <div class="news_area_title"><?=htmlReady($area_data['title'])?></div>
                         </caption>
                     <? endif ?>
                     <colgroup>
@@ -101,10 +103,10 @@
             <? endforeach ?>
             <br>
             <br>
-            <table class="default collapsable tablesorter">
+            <table class="default">
             <tfoot>
             <tr><td colspan="6">
-            <?=Button::create(_('Alle markierten Ankündigungen entfernen'), 'remove_marked_news', array('style' => 'vertical-align:middle;', 'title' => _('Alle markierten Ankündigungen löschen'), 'aria-label' => _('Alle markierten Ankündigungen löschen'))) ?>
+            <?=Button::create(_('Alle markierten Ankündigungen entfernen'), 'remove_marked_news') ?>
             </td></tr></tfoot></table>
         <? else : ?>
             <?=_('Keine Ankündigungen vorhanden.')?>
@@ -112,6 +114,7 @@
         </form><br><br></p></td>
     </tr>
 </table>
+</div>
 <script>
     jQuery('.news_date').datepicker();
 </script>

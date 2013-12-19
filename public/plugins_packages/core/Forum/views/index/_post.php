@@ -184,8 +184,10 @@
             <dd>
                 Beiträge:
                 <?= ForumEntry::countUserEntries($post['user_id']) ?>,
-                <abbr title="<?= _("Anzahl 'Gefällt mir!' erhalten") ?>"><?= _('Kudos:') ?></abbr>
-                <?= ForumLike::countForUser($post['user_id']) ?>
+                <abbr title="<?= _("Anzahl 'Gefällt mir!' erhalten / gegeben") ?>"><?= _('Kudos:') ?></abbr>
+                <span style="white-space: nowrap">
+                <?= ForumLike::receivedForUser($post['user_id']) ?> / <?= ForumLike::givenForUser($post['user_id']) ?>
+                </span>
             </dd>
             <? endif ?>
             <? endif; ?>

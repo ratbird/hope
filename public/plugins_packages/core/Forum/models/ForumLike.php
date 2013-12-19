@@ -78,7 +78,7 @@ class ForumLike {
      * 
      * @return int  the number of likes received
      */
-    static function countForUser($user_id)
+    static function receivedForUser($user_id)
     {
         static $entries;
 
@@ -96,4 +96,28 @@ class ForumLike {
 
         return $entries[$user_id];
     }
+    
+    /**
+     * count the number of likes the user has given - system-wide
+     * 
+     * @staticvar type $entries
+     * @param string $user_id  the user's id to count the given likes for
+     * 
+     * @return int  the number of likes received
+     */
+    static function givenForUser($user_id)
+    {
+        static $entries;
+
+        if (!$entries[$user_id]) {
+            $stmt = DBManager::get()->prepare("SELECT COUNT(*)
+                FROM forum_likes
+                WHERE user_id = ?");
+            $stmt->execute(array($user_id));
+
+            $entries[$user_id] = $stmt->fetchColumn();
+        }
+
+        return $entries[$user_id];
+    }    
 }

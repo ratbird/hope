@@ -206,6 +206,13 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']) ?>">
                     <?= Assets::img('icons/16/blue/group.png', array('title' => _('Link zu diesem Beitrag'))) ?>
                 </a>
+                <br>
+
+                <!-- Like -->
+                <span class="likes" id="like_<?= $post['topic_id'] ?>">
+                    <?= $this->render_partial('index/_like', array('topic_id' => $post['topic_id'])) ?>
+                </span>
+            </dd>
 
             <? foreach (PluginEngine::sendMessage('PostingApplet', 'getHTML', $post['name_raw'], $post['content_raw'],
                     PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']),
@@ -214,11 +221,6 @@
                 <?= $applet_data ?>
             </dd>
             <? endforeach ?>
-
-            <!-- Like -->
-            <span class="likes" id="like_<?= $post['topic_id'] ?>">
-                <?= $this->render_partial('index/_like', array('topic_id' => $post['topic_id'])) ?>
-            </span>
         </dl>
         
         <? if ($is_new): ?>

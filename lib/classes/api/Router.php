@@ -415,7 +415,7 @@ class Router
             $result = $result->toArray();
         }
 
-        // TODO (mlunzena): result ist stÃ¤rker als body, soll das so?
+        // TODO (mlunzena): result ist stärker als body, soll das so?
         if (isset($result)) {
             $handler[0]->response->body = $result;
         }

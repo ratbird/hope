@@ -92,7 +92,7 @@ abstract class RouteMap
     }
 
     // TODO (mlunzena): Ist hier der richtige Ort? Sollte die Funktion
-    // nicht anders hei√üen und mglweise in Request stehen?
+    // nicht anders heiﬂen und mglweise in Request stehen?
     public static function sanitized($param)
     {
         $value = Request::get($param);

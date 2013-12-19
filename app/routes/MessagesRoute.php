@@ -18,7 +18,7 @@ class MessagesRoute extends RouteMap
 
     /**
      * Liefert die vorhandenen Nachrichtenordner des autorisierten
-     * Nutzers zurÃ¼ck. Der Parameter bestimmt je nach Wert, auf
+     * Nutzers zurück. Der Parameter bestimmt je nach Wert, auf
      * welchen Bereich zugegriffen werden soll.
      *
      * @get /user/:id/:box
@@ -41,7 +41,7 @@ class MessagesRoute extends RouteMap
 
     /**
      * Liefert die vorhandenen Nachrichten eines Ordners des
-     * autorisierten Nutzers zurÃ¼ck.
+     * autorisierten Nutzers zurück.
      *
      * @get /user/:id/:box/:folder
      */
@@ -106,7 +106,7 @@ class MessagesRoute extends RouteMap
 
 
     /**
-     * Liefert die Daten der angegebenen Nachricht zurÃ¼ck.
+     * Liefert die Daten der angegebenen Nachricht zurück.
      *
      * @get /message/:id
      */
@@ -181,7 +181,7 @@ class MessagesRoute extends RouteMap
 
 
     /**
-     * LÃ¶scht eine Nachricht.
+     * Löscht eine Nachricht.
      *
      * @delete /message/:id
      */

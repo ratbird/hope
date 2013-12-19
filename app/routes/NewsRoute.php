@@ -59,7 +59,7 @@ class NewsRoute extends RouteMap
     }
 
     /**
-     * News lÃ¶schen
+     * News löschen
      *
      * @delete /news/:news_id
      */
@@ -221,7 +221,7 @@ class NewsRoute extends RouteMap
     }
 
     /**
-     * News-Comment lÃ¶schen
+     * News-Comment löschen
      *
      * @delete /comment/:comment_id
      */

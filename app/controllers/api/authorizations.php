@@ -27,7 +27,7 @@ class Api_AuthorizationsController extends AuthenticatedController
         $this->store = new OAuthConsumer;
         $this->types = array(
             'website' => _('Website'),
-            'program' => _('HerkÃ¶mmliches Desktopprogramm'),
+            'program' => _('Herkömmliches Desktopprogramm'),
             'app'     => _('Mobile App')
         );
     }
@@ -40,7 +40,7 @@ class Api_AuthorizationsController extends AuthenticatedController
         $this->consumers = OAuthUser::getConsumers($GLOBALS['user']->id);
         $this->types = array(
             'website' => _('Website'),
-            'program' => _('HerkÃ¶mmliches Desktopprogramm'),
+            'program' => _('Herkömmliches Desktopprogramm'),
             'app'     => _('Mobile App')
         );
 

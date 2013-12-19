@@ -223,12 +223,12 @@ class ForumRoute extends RouteMap
             $this->error(401);
         }
 
-        // TODO: ist subject wirklich nÃ¶tig
+        // TODO: ist subject wirklich nötig
         if (!isset($this->data['subject']) || !strlen($subject = trim($this->data['subject']))) {
             $this->error(400, 'Subject required.');
         }
 
-        // TODO: ist content wirklich nÃ¶tig
+        // TODO: ist content wirklich nötig
         if (!isset($this->data['content']) || !strlen($content = trim($this->data['content']))) {
             $this->error(400, 'Content required.');
         }

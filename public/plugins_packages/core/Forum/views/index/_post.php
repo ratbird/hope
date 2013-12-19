@@ -17,11 +17,11 @@
         <div class="title">
 
             <div class="small_screen" style="margin-bottom: 5px">
-                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
-                    <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::SMALL,
-                        array('title' => get_username($post['owner_id']))) ?>
+                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
+                    <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::SMALL,
+                        array('title' => get_username($post['user_id']))) ?>
 
-                    <?= htmlReady(get_fullname($post['owner_id'])) ?>,
+                    <?= htmlReady(get_fullname($post['user_id'])) ?>,
                     <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
                 </a>
 
@@ -142,25 +142,25 @@
             <? if ($post['anonymous']): ?>
                 <dd class="anonymous_post" data-profile="<?= $post['topic_id'] ?>"><strong><?= _('Anonym') ?></strong></dd>
             <? endif; ?>
-            <? if (!$post['anonymous'] || $post['owner_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
+            <? if (!$post['anonymous'] || $post['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <dt>
-                <? if ($post['owner_id'] != 'nobody' && $post['owner_id']) : ?>
-                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
-                    <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::MEDIUM,
-                        array('title' => get_username($post['owner_id']))) ?>
+                <? if ($post['user_id'] != 'nobody' && $post['user_id']) : ?>
+                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
+                    <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::MEDIUM,
+                        array('title' => get_username($post['user_id']))) ?>
                 </a>
                 <br>
                 <? endif ?>
 
-                <? if ($post['owner_id'] == 'nobody') : ?>
+                <? if ($post['user_id'] == 'nobody') : ?>
                     <?= Assets::img('icons/16/black/community.png') ?>
                     <span class="username" data-profile="<?= $post['topic_id'] ?>">
                         <?= htmlReady($post['author']) ?>
                     </span>
-                <? elseif ($post['owner_id']) : ?>
+                <? elseif ($post['user_id']) : ?>
 
                     <!-- Online-Status -->
-                    <? $status = ForumHelpers::getOnlineStatus($post['owner_id']) ?>
+                    <? $status = ForumHelpers::getOnlineStatus($post['user_id']) ?>
                     <? if ($status == 'available') : ?>
                         <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
                     <? elseif ($status == 'away') : ?>
@@ -169,28 +169,28 @@
                         <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
                     <? endif ?>
 
-                    <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
+                    <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
                         <span class="username" data-profile="<?= $post['topic_id'] ?>">
-                            <?= htmlReady(get_fullname($post['owner_id'])) ?>
+                            <?= htmlReady(get_fullname($post['user_id'])) ?>
                         </span>
                     </a>
                 <? endif ?>
             </dt>
 
             <dd>
-                <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['owner_id']))?>
+                <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['user_id']))?>
             </dd>
-            <? if ($post['owner_id']) : ?>
+            <? if ($post['user_id']) : ?>
             <dd>
                 Beiträge:
-                <?= ForumEntry::countUserEntries($post['owner_id']) ?>,
+                <?= ForumEntry::countUserEntries($post['user_id']) ?>,
                 <abbr title="<?= _("Anzahl 'Gefällt mir!' erhalten") ?>"><?= _('Kudos:') ?></abbr>
-                <?= ForumLike::countForUser($post['owner_id']) ?>
+                <?= ForumLike::countForUser($post['user_id']) ?>
             </dd>
             <? endif ?>
             <? endif; ?>
             <dd>
-                <? if (!$post['owner_id']) : ?>
+                <? if (!$post['user_id']) : ?>
                     <?= _('von Stud.IP erstellt') ?><br>
                 <? endif ?>
                 <?= strftime($time_format_string_short, (int) $post['mkdate']) ?>
@@ -209,7 +209,7 @@
 
             <? foreach (PluginEngine::sendMessage('PostingApplet', 'getHTML', $post['name_raw'], $post['content_raw'],
                     PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']),
-                    $post['owner_id']) as $applet_data) : ?>
+                    $post['user_id']) as $applet_data) : ?>
             <dd>
                 <?= $applet_data ?>
             </dd>

@@ -4,7 +4,6 @@ namespace API;
 /**
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
- * @todo
  * @condition course_id ^[a-f0-9]{32}$
  */
 class ForumRoute extends RouteMap
@@ -24,11 +23,15 @@ class ForumRoute extends RouteMap
      */
     public function getForumCategories($course_id)
     {
-        // TODO: how to authorize?
+        if (!\ForumPerm::has('view', $course_id)) {
+            $this->error(401);
+        }
 
-        $categories = $this->findCategories($course_id, $this->offset, $this->limit);
-        $total      = $this->countCategories($course_id);
+        $categories = \ForumCat::getList($course_id, false);
+        $total      = sizeof($categories);
 
+        $categories = array_splice($categories, (int)$this->offset, (int)$this->limit ?: 10);
+        
         $this->paginate('/course/:course_id/forum_categories?offset=%u&limit=%u', $total);
 
         $json = array();
@@ -70,9 +73,14 @@ class ForumRoute extends RouteMap
      */
     public function getForumCategory($category_id)
     {
-        // TODO: how to authorize?
+        $category = $this->findCategory($category_id);
+        $cid = $category['course_id'];
+        
+        if (!\ForumPerm::has('view', $cid)) {
+            $this->error(401);
+        }
 
-        return self::categoryToJson($this->findCategory($category_id));
+        return self::categoryToJson($category);
     }
 
     /**
@@ -119,16 +127,22 @@ class ForumRoute extends RouteMap
     /**
      * Show entries of a category
      *
-     * @get /forum_category/:category_id/topics
+     * @get /forum_category/:category_id/areas
      */
     public function getCategoryEntries($category_id)
     {
-        // TODO: how to authorize?
-        $topics = $this->getTopics($category_id, $this->offset, $this->limit);
-        $this->paginate('/course/:course_id/forum_categories?offset=%u&limit=%u', $this->countTopics($category_id));
+        $category = $this->findCategory($category_id);
+        $cid = $category['course_id'];
+        
+        if (!\ForumPerm::has('view', $cid)) {
+            $this->error(401);
+        }
+        
+        $areas = $this->getAreas($category_id, $this->offset, $this->limit);
+        $this->paginate('/course/:course_id/forum_categories?offset=%u&limit=%u', $this->countAreas($category_id));
 
 
-        return $this->collect($topics);
+        return $this->collect($areas);
     }
 
 
@@ -136,7 +150,7 @@ class ForumRoute extends RouteMap
     /**
      * Add a new forum entry to an existing one
      *
-     * @post /forum_category/:category_id/topics
+     * @post /forum_category/:category_id/areas
      */
     public function appendForumEntry($category_id)
     {
@@ -172,6 +186,13 @@ class ForumRoute extends RouteMap
      */
     public function getForumEntry($entry_id)
     {
+        $entry = \ForumEntry::getConstraints($entry_id);
+        $cid   = $entry['seminar_id'];
+        
+        if (!\ForumPerm::has('view', $cid)) {
+            $this->error(401);
+        }
+        
         return $this->findEntry($entry_id);
     }
 
@@ -185,21 +206,29 @@ class ForumRoute extends RouteMap
         $parent = $this->findEntry($parent_id);
         $cid = $parent['course_id'];
 
-        if (!\ForumPerm::has('add_entry', $cid)) {
+        $perm = self::isArea($entry) ? 'add_area' : 'add_entry';
+        
+        if (!\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
 
-        // TODO: ist das subject wirklich erforderlich?
-        if (!isset($this->data['subject']) || !strlen($subject = trim($this->data['subject']))) {
+        $subject = (string)trim($this->data['subject']);
+        $content = (string)trim($this->data['content']);
+
+        // areas and threads need a subject, postings do not
+        if ($entry['depth'] < 3 && !$subject) {
             $this->error(400, 'Subject required.');
         }
 
-        // TODO: content darf doch leer sein, oder?
-        if (!isset($this->data['content'])) {
+        // all entries besides the area need content
+        if ($entry['depth'] > 1 && !$content) {
             $this->error(400, 'Content required.');
         }
-        $content = trim($this->data['content']);
-
+        
+        if ($entry['depth'] >= 3 && $subject) {
+            $this->error(400, 'Must not have subject here.');
+        }
+        
         $anonymous = isset($this->data['anonymous']) ? intval($this->data['anonymous']) : 0;
 
         $entry_id = $this->createEntry($parent_id, $cid, $subject, $content, $anonymous);
@@ -216,21 +245,28 @@ class ForumRoute extends RouteMap
     {
         $entry = $this->findEntry($entry_id);
         $cid = $entry['course_id'];
-
+        
         $perm = self::isArea($entry) ? 'edit_area' : 'edit_entry';
 
-        if (!\ForumPerm::has($perm, $cid)) {
+        if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
 
-        // TODO: ist subject wirklich nötig
-        if (!isset($this->data['subject']) || !strlen($subject = trim($this->data['subject']))) {
+        $subject = (string)trim($this->data['subject']);
+        $content = (string)trim($this->data['content']);
+
+        // areas and threads need a subject, postings do not
+        if ($entry['depth'] < 3 && !$subject) {
             $this->error(400, 'Subject required.');
         }
 
-        // TODO: ist content wirklich nötig
-        if (!isset($this->data['content']) || !strlen($content = trim($this->data['content']))) {
+        // all entries besides the area need content
+        if ($entry['depth'] > 1 && !$content) {
             $this->error(400, 'Content required.');
+        }
+        
+        if ($entry['depth'] >= 3 && $subject) {
+            $this->error(400, 'Must not have subject here.');
         }
 
         \ForumEntry::update($entry_id, $subject, $content);
@@ -248,8 +284,10 @@ class ForumRoute extends RouteMap
         $entry = $this->findEntry($entry_id);
         $cid = $entry['course_id'];
 
-        $perm = self::isArea($entry) ? 'remove_area' : 'remove_entry';
-
+         if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has('remove_entry', $cid)) {
+            $this->error(401);
+        }
+        
         if (!\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
@@ -275,13 +313,12 @@ class ForumRoute extends RouteMap
 
         $entry = self::convertEntry($raw);
 
-        # TODO offset/limit
         $children = \ForumEntry::getEntries($entry_id, \ForumEntry::WITHOUT_CHILDS, '', 'ASC', 0, false);
 
         if (isset($children['list'][$entry_id])) {
             unset($children['list'][$entry_id]);
         }
-
+        
         $entry['children'] = array_map(function ($entry) {
                 return ForumRoute::convertEntry($entry);
             },
@@ -296,7 +333,7 @@ class ForumRoute extends RouteMap
         foreach(words("topic_id mkdate chdate anonymous depth") as $key) {
             $entry[$key] = $raw[$key];
         }
-
+        
         $entry['subject']      = $raw['name'];
         $entry['user']         = sprintf('/user/%s', htmlReady($raw['user_id']));
         $entry['course']       = sprintf('/course/%s', htmlReady($raw['seminar_id']));
@@ -331,47 +368,18 @@ class ForumRoute extends RouteMap
         return $topic_id;
     }
 
-
-    private function findCategories($course_id, $offset = 0, $limit = 10)
-    {
-        $offset = (int) $offset;
-        $limit  = (int) $limit;
-        $query = "SELECT category_id, seminar_id AS course_id, entry_name AS name, pos AS position
-                  FROM forum_categories
-                  WHERE seminar_id = :course_id
-                  ORDER BY pos ASC, category_id ASC
-                  LIMIT {$offset}, {$limit}";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->bindValue(':course_id', $course_id);
-        $statement->execute();
-
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    private function countCategories($course_id)
-    {
-        $query = "SELECT COUNT(*)
-                  FROM forum_categories
-                  WHERE seminar_id = :course_id";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->bindValue(':course_id', $course_id);
-        $statement->execute();
-
-        return $statement->fetchColumn() ?: 0;
-    }
-
     private function findCategory($category_id)
     {
-        $query = "SELECT category_id, seminar_id AS course_id, entry_name AS name, pos AS position
-                  FROM forum_categories
-                  WHERE category_id = :category_id";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->bindValue(':category_id', $category_id);
-        $statement->execute();
-        $result = $statement->fetch(\PDO::FETCH_ASSOC);
-        if (!$result) {
+        $result = array();
+
+        if ($cat = \ForumCat::get($category_id)) {
+            $result = $cat;
+            $result['course_id'] = $cat['seminar_id'];
+            $result['name']      = $cat['entry_name'];
+        } else {
             $this->error(404);
         }
+        
         return $result;
     }
 
@@ -382,47 +390,30 @@ class ForumRoute extends RouteMap
         $json['course'] = sprintf('/course/%s', htmlReady($json['course_id']));
         unset($json['course_id']);
 
-        $json['topics'] = sprintf('/forum_category/%s/topics', $json['category_id']);
-        $json['topics_count'] = self::countTopics($json['category_id']);
+        $json['areas'] = sprintf('/forum_category/%s/areas', $json['category_id']);
+        $json['areas_count'] = self::countAreas($json['category_id']);
 
         return $json;
     }
 
-    private static function countTopics($category_id)
+    private static function countAreas($category_id)
     {
-        $query = "SELECT COUNT(*)
-                  FROM forum_entries
-                  JOIN forum_categories_entries USING (topic_id)
-                  WHERE category_id = :cat_id AND depth = 1";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->bindValue(':cat_id', $category_id);
-        $statement->execute();
-
-        return $statement->fetchColumn() ?: 0;
+        return sizeof(\ForumCat::getAreas($category_id));
     }
 
-    private function getTopics($category_id, $offset = 0, $limit = 10)
+    private function getAreas($category_id, $offset = 0, $limit = 10)
     {
         $offset = (int) $offset;
         $limit  = (int) $limit;
 
-        $query = "SELECT *
-                  FROM forum_entries
-                  JOIN forum_categories_entries USING (topic_id)
-                  WHERE category_id = :category_id AND depth = 1
-                  ORDER BY mkdate DESC
-                  LIMIT {$offset}, {$limit}";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->bindValue(':category_id', $category_id);
-        $statement->execute();
+        $areas = array();
 
-        $topics = array();
-        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $topic) {
-            $url = sprintf('/forum_entry/%s', htmlReady($topic['topic_id']));
-            $topics[$url] = self::convertEntry($topic);
+        foreach (\ForumCat::getAreas($category_id, $offset, $limit) as $area) {
+            $url = sprintf('/forum_entry/%s', htmlReady($area['topic_id']));
+            $areas[$url] = self::convertEntry($area);
         }
 
-        return $topics;
+        return $areas;
     }
 
     private static function generateID()

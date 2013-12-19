@@ -15,14 +15,14 @@
 class ForumCat {
     
     /**
-     * Return a list of all available categories. Empty categories are excluded 
-     * by default
+     * Return a list of all areas with their categories.
+     * Empty categories are excluded by default
      * 
      * @param string $seminar_id    the seminar_id the retrieve the categories for
      * @param string $exclude_null  if false, empty categories are returned as well
      * @return array list of categories
      */
-    static function getList($seminar_id, $exclude_null = true)
+    static function getListWithAreas($seminar_id, $exclude_null = true)
     {
         $stmt = DBManager::get()->prepare("SELECT * FROM forum_categories AS fc
             LEFT JOIN forum_categories_entries AS fce USING (category_id)
@@ -30,6 +30,21 @@ class ForumCat {
             . ($exclude_null ? 'AND fce.topic_id IS NOT NULL ' : '')
             . "ORDER BY fc.pos ASC, fce.pos ASC");
 
+        $stmt->execute(array($seminar_id));
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * return a list of all categories for the passed seminar
+     * 
+     * @param string $seminar_id  the seminar_id the retrieve the categories for
+     * @return array  list of categories
+     */
+    static function getList($seminar_id)
+    {
+        $stmt = DBManager::get()->prepare("SELECT * FROM forum_categories
+            WHERE seminar_id = ? ORDER BY pos ASC");
         $stmt->execute(array($seminar_id));
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -206,25 +221,32 @@ class ForumCat {
      * Return the areas for the passed category_id
      * 
      * @param type $category_id
+     * @param type $start  limit start (optional)
+     * @param type $limit  number of entries to fetch (optional, default is 20)
      * 
      * @return array the data for the passed category_id
      */
-    static function getAreas($category_id)
+    static function getAreas($category_id, $start = null, $num = 20)
     {
         $category = self::get($category_id);
+        
+        $limit = '';
+        if ($start !== null && $num) {
+            $limit = " LIMIT $start, $num";
+        }
         
         if ($category_id == $category['seminar_id']) {
             $stmt = DBManager::get()->prepare("SELECT fe.* FROM forum_entries AS fe
                 LEFT JOIN forum_categories_entries AS fce USING (topic_id)
                 WHERE seminar_id = ? AND depth = 1 AND (
                     fce.category_id = ? OR fce.category_id IS NULL
-                ) ORDER BY category_id DESC, pos ASC");
+                ) ORDER BY category_id DESC, pos ASC" . $limit);
             $stmt->execute(array($category_id, $category_id));
         } else {
             $stmt = DBManager::get()->prepare("SELECT forum_entries.* FROM forum_categories_entries
                 LEFT JOIN forum_entries USING(topic_id)
                 WHERE category_id = ?
-                ORDER BY pos ASC");
+                ORDER BY pos ASC" . $limit);
     
             $stmt->execute(array($category_id));
         }

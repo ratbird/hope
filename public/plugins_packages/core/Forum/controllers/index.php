@@ -105,7 +105,7 @@ class IndexController extends ForumController
             if ($this->constraint['depth'] == 0) {  // BEREICHE
                 $new_list = array();
                 // iterate over all categories and add the belonging areas to them
-                foreach ($categories = ForumCat::getList($this->getId(), false) as $category) {
+                foreach ($categories = ForumCat::getListWithAreas($this->getId(), false) as $category) {
                     if ($category['topic_id']) {
                         $new_list[$category['category_id']][$category['topic_id']] = $list['list'][$category['topic_id']];
                         unset($list['list'][$category['topic_id']]);

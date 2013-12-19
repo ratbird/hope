@@ -348,14 +348,15 @@ class ForumEntry {
                 'opengraph'       => ($og = OpenGraphURL::find(OpenGraphURL::$tempURLStorage[0])) ? $og->render() : "",
                 'chdate'          => $data['chdate'],
                 'mkdate'          => $data['mkdate'],
-                'owner_id'        => $data['user_id'],
+                'user_id'        => $data['user_id'],
                 'raw_title'       => $data['name'],
                 'raw_description' => ForumEntry::killEdit($data['content']),
                 'fav'             => ($data['fav'] == 'fav'),
                 'depth'           => $data['depth'],
                 'anonymous'       => $data['anonymous'],
                 'closed'          => $data['closed'],
-                'sticky'          => $data['sticky']
+                'sticky'          => $data['sticky'],
+                'seminar_id'      => $data['seminar_id']
             );
         } // retrieve the postings
 
@@ -376,11 +377,14 @@ class ForumEntry {
      *         'content_short'   => 
      *         'chdate'          => 
      *         'mkdate'          => 
-     *         'owner_id'        => 
+     *         'user_id'        => 
      *         'raw_title'       => 
      *         'raw_description' => 
      *         'fav'             => 
      *         'depth'           => 
+     *         'sticky'          =>
+     *         'closed'          =>
+     *         'seminar_id'      =>
      *     )
      *     'count' =>
      * )
@@ -640,11 +644,12 @@ class ForumEntry {
                         'content_short'   => $desc_short,
                         'chdate'          => $data['chdate'],
                         'mkdate'          => $data['mkdate'],
-                        'owner_id'        => $data['user_id'],
+                        'user_id'        => $data['user_id'],
                         'raw_title'       => $data['name'],
                         'raw_description' => ForumEntry::killEdit($data['content']),
                         'fav'             => ($data['fav'] == 'fav'),
-                        'depth'           => $data['depth']
+                        'depth'           => $data['depth'],
+                        'seminar_id'      => $data['seminar_id']
                     );
                 }
 

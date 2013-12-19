@@ -6,7 +6,7 @@
         <? endif ?>
 
         <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
-        <? if ($entry['chdate'] >= $visitdate && $entry['owner_id'] != $GLOBALS['user']->id): ?>
+        <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] != $GLOBALS['user']->id): ?>
             <?= Assets::img('icons/16/red/new/forum.png', array(
                 'title' => _('Dieser Eintrag ist neu!'),
                 'id'    => 'tutorNotificationIcon',

@@ -35,7 +35,7 @@
 
         <td class="icon">
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
-            <? if ($entry['chdate'] >= $visitdate && $entry['owner_id'] != $GLOBALS['user']->id): ?>
+            <? if ($entry['chdate'] >= $visitdate && $entry['user_id'] != $GLOBALS['user']->id): ?>
                 <? $jump_to_topic_id = $entry['topic_id'] ?>
                 <?= Assets::img('icons/16/red/new/forum.png', array(
                     'title' => _('Dieser Eintrag ist neu!')
@@ -153,7 +153,7 @@
                 <?= _('Anonym') ?>
             <? endif; ?>
             <? if (!$entry['anonymous'] || $entry['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
-                <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['owner_id'])) ?>">
+                <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['user_id'])) ?>">
                     <?= htmlReady($entry['author']) ?>
                 </a>
                 <? endif; ?>

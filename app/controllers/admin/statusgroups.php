@@ -87,7 +87,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->addToInfobox(_('Aktionen'), "<a href='" . $this->url_for('admin/statusgroups') . "'>" . _('Zurück') . "</a>", 'icons/16/black/arr_1left.png');
         
         // load current group members on first call
-        if (Request::get('not_first_call') != true) {
+        $this->selectedPersons = array();
+        if (!Request::get('not_first_call')) {
             $this->currentGroupMembers = array();
             foreach ($this->group->members as $member) {
                 $user = new User($member->user_id);
@@ -106,7 +107,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $lastSearch = Request::isXHR() ? utf8_decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
         $this->searchPreset = Request::get('search_preset');
         $lastSearchPreset= Request::isXHR() ? utf8_decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
-        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst")|| Request::get('not_first_call') != true) { // ugly
+        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst")|| !Request::get('not_first_call')) { // ugly
             // search with preset
             foreach ($this->type['groups'] as $group) {
                 $this->selectablePersons = array();
@@ -174,7 +175,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                     }
                 }
                 
-                if ($isRemoved == true) {
+                if ($isRemoved) {
                     //exit("DELETED");
                     $this->group->removeUser($member->user_id);
                     $this->type['after_user_delete']($member->user_id);

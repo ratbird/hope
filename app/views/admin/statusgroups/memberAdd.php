@@ -31,7 +31,7 @@
             <div style="display: inline-block; float: left; width: 44%; height: 100%">
                 <label><?=_('Suchergebnis')?><br>
                 <select id="search_persons_selectable" name="search_persons_selectable[]" style="minWidth: 200px; width: 100%; height: 116px" style="height: 16px" multiple
-                        aria-label="<?= _('Gefundene Bereiche, die der Ankündigung hinzugefügt werden können') ?>"
+                        aria-label="<?= _('Gefundene Personen, die der Gruppe hinzugefügt werden können') ?>"
                         ondblclick="jQuery('#search_persons_add').click()">
                         <? foreach ($selectablePersons as $person): ?>
                             <option value="<?= $person->id ?>" <?= in_array($person->id, $selectedMembers) ? "selected" : "" ; ?>><?= htmlReady($person->getFullName('full_rev')) ?> - <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
@@ -44,9 +44,9 @@
                 <br>
                 <br>
                 <br>
-                <input type="image" id="search_persons_add" class="stay_on_dialog" name="search_persons_add" src="<?= Assets::image_path('icons/16/blue/arr_2right.png')?>" aria-label="<?= _('In den Suchergebnissen markierte Bereiche der Ankündigung hinzufügen') ?>">
+                <input type="image" id="search_persons_add" class="stay_on_dialog" name="search_persons_add" src="<?= Assets::image_path('icons/16/blue/arr_2right.png')?>" aria-label="<?= _('In den Suchergebnissen markierte Bereiche der Gruppe hinzufügen') ?>">
                 <br><br>
-                <input type="image" id="search_persons_remove" class="stay_on_dialog" name="search_persons_remove" src="<?= Assets::image_path('icons/16/blue/arr_2left.png')?>" aria-label="<?= _('Bei den bereits ausgewählten Bereichen die markierten Bereiche entfernen') ?>">
+                <input type="image" id="search_persons_remove" class="stay_on_dialog" name="search_persons_remove" src="<?= Assets::image_path('icons/16/blue/arr_2left.png')?>" aria-label="<?= _('Bei den bereits ausgewählten Personen die markierten Personen entfernen') ?>">
             </div>
             <div style="display: inline-block; float: right; width: 44%">
                 <label>
@@ -61,7 +61,7 @@
                     <? endif ?>
                 </div>
                 <select id="search_persons_selected" name="search_persons_selected[]" style="minWidth: 200px; width: 100%; height: 116px" size="7" multiple
-                        aria-label="<?= _('Bereiche, in denen die Ankündigung angezeigt wird') ?>"
+                        aria-label="<?= _('Personen, die in die Gruppe eingetragen werden') ?>"
                         ondblclick="jQuery('#search_persons_remove').click()">
                     <? foreach ($selectedPersons as $user): ?>
                         <option value="<?= $user->id ?>" <?= in_array($user->id, $selectedMembers) ? "selected" : "" ; ?>><?= htmlReady($user->getFullName('full_rev')) ?> - <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>

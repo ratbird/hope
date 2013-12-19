@@ -43,15 +43,7 @@ class UserRoute extends RouteMap
             return $user[$field];
         };
 
-        $avatar = function ($size) use ($user_id, $visibilities) {
-            static $avatar;
-            if (!$avatar) {
-                $avatar_id = is_element_visible_for_user($GLOBALS['user']->id, $user_id, $visibilities['picture'])
-                           ? $user_id : 'nobody';
-                $avatar = Avatar::getAvatar($avatar_id);
-            }
-            return $avatar->getURL($size);
-        };
+        $avatar = \Avatar::getAvatar($avatar_id);
 
         $user = array(
             'user_id'       => $user_id,
@@ -62,9 +54,9 @@ class UserRoute extends RouteMap
             'lastname'      => $user['Nachname'],
             'title_post'    => $user['title_rear'],
             'email'         => get_visible_email($user_id),
-            'avatar_small'  => $avatar(Avatar::SMALL),
-            'avatar_medium' => $avatar(Avatar::MEDIUM),
-            'avatar_normal' => $avatar(Avatar::NORMAL),
+            'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
+            'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
+            'avatar_normal' => $avatar->getURL(\Avatar::NORMAL),
             'phone'         => $get_field('privatnr', 'private_phone'),
             'homepage'      => $get_field('Home', 'homepage'),
             'privadr'       => strip_tags($get_field('privadr', 'privadr')),

@@ -141,7 +141,11 @@ class User extends AuthUserMd5
                 'foreign_key' =>
                     function($user) {
                         return array($user);
-                    })
+                    }),
+                'contacts' => array(
+                    'class_name' => 'Contact',
+                    'assoc_foreign_key' => 'owner_id'
+                )
         );
         $this->has_one['info'] = array(
                 'class_name' => 'UserInfo',

@@ -185,43 +185,19 @@ class CourseRoute extends RouteMap
     {
         $json = array();
 
-
-
         foreach ($members as $member) {
             $url = sprintf('/user/%s', $member->user_id);
+            $avatar = \Avatar::getAvatar($member->user_id);
             $json[$url] = array(
                 'user_id'       => $member->user_id,
                 'fullname'      => $member->user->getFullName(),
                 'status'        => $member->status,
-                'avatar_small'  => $this->getAvatar($member->user_id, \Avatar::SMALL),
-                'avatar_medium' => $this->getAvatar($member->user_id, \Avatar::MEDIUM),
-                'avatar_normal' => $this->getAvatar($member->user_id, \Avatar::NORMAL)
+                'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
+                'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
+                'avatar_normal' => $avatar->getURL(\Avatar::NORMAL)
             );
         }
 
         return $json;
-    }
-
-    private function getAvatar($user_id, $size)
-    {
-        static $v10s = array();
-
-        if (!isset($v10s[$user_id])) {
-            $v = get_local_visibility_by_id($user_id, 'homepage');
-
-            if (is_array(json_decode($v, true))) {
-                $v10s[$user_id] = json_decode($v, true);
-            } else {
-                $v10s[$user_id] = array();
-            }
-        }
-
-        if (!isset($v10s[$user_id]['avatar'])) {
-            $avatar_id = is_element_visible_for_user($GLOBALS['user']->id, $user_id, $v10s[$user_id]['picture'])
-                         ? $user_id : 'nobody';
-            $v10s[$user_id]['avatar'] = \Avatar::getAvatar($avatar_id);
-        }
-
-        return $v10s[$user_id]['avatar']->getURL($size);
     }
 }

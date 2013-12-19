@@ -69,4 +69,28 @@ class ForumLike {
         
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+    
+    /**
+     * count the number of likes the user has received - system-wide
+     * 
+     * @staticvar type $entries
+     * @param string $user_id  the user's id to count the received likes for
+     * 
+     * @return int  the number of likes received
+     */
+    static function countForUser($user_id)
+    {
+        static $entries;
+
+        if (!$entries[$user_id]) {
+            $stmt = DBManager::get()->prepare("SELECT COUNT(*)
+                FROM forum_likes
+                WHERE user_id = ?");
+            $stmt->execute(array($user_id));
+
+            $entries[$user_id] = $stmt->fetchColumn();
+        }
+
+        return $entries[$user_id];
+    }
 }

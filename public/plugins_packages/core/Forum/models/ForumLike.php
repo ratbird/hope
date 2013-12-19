@@ -84,9 +84,12 @@ class ForumLike {
 
         if (!$entries[$user_id]) {
             $stmt = DBManager::get()->prepare("SELECT COUNT(*)
-                FROM forum_likes
-                WHERE user_id = ?");
-            $stmt->execute(array($user_id));
+                FROM forum_entries
+                LEFT JOIN forum_likes USING (topic_id)
+                WHERE forum_entries.user_id = ?
+                    AND forum_likes.topic_id IS NOT NULL
+                    AND forum_likes.user_id != ?");
+            $stmt->execute(array($user_id, $user_id));
 
             $entries[$user_id] = $stmt->fetchColumn();
         }

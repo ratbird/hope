@@ -111,7 +111,7 @@ class AssignObject {
             if ($argv[13]) {
                 $this->comment_internal = $argv[13];
             }
-
+            
             if (!$this->id)
                 $this->createId();
             $this->isNewObject =TRUE;
@@ -589,14 +589,21 @@ class AssignObject {
                 if ($this->assign_user_id) {
                     $type = $this->getOwnerType();
                     if ($type == 'date') {
-                        $semid = Seminar::GetSemIdByDateId($this->assign_user_id);
+                        log_event("RES_ASSIGN_SEM", $this->resource_id, Seminar::GetSemIdByDateId($this->assign_user_id),
+                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $query);
                     } else if ($type == 'sem') {
-                        $semid = $this->assign_user_id;
+                        log_event("RES_ASSIGN_SEM", $this->resource_id, $this->assign_user_id,
+                            sprintf(($create ? _('%s Neue Buchung') : _('%s, Buchungsupdate')), $this->getFormattedShortInfo()), $query);
+                    } else if ($type == 'user') {
+                        $message = sprintf(($create
+                                ? _('%s, Neue Buchung, eingetrageneR NutzerIn: %s (%s)')
+                                : _('%s, Buchungsupdate, eingetrageneR NutzerIn: %s (%s)')) ,
+                            $this->getFormattedShortInfo(), get_username($this->assign_user_id), $this->assign_user_id);
+                        log_event("RES_ASSIGN_SINGLE", $this->resource_id, null, $message, $query);
                     } else {
                         $semid = null;
                         error_log("unknown type of assign_user_id {$this->assign_user_id}");
                     }
-                    log_event("RES_ASSIGN_SEM",$this->resource_id,$semid,$this->getFormattedShortInfo(). $create ? " Neue Buchung" : " Buchungsupdate",$query);
                 } else {
                     log_event("RES_ASSIGN_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(). $create ? " Neue Buchung" : " Buchungsupdate",$query);
                 }

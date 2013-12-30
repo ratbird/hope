@@ -276,17 +276,18 @@ use Studip\Button,
             </td>
         </tr>
 
-        <? if (!$lockedAssign) : ?>
+        <? if ($ObjectPerms->havePerm('admin')) : ?>
         <tr>
             <td align="left">
                 <?= _("Kommentar (intern)") ?>:<br>
                 <textarea name="comment_internal" rows="4" style="width: 98%;"><?= $resAssign->getCommentInternal() ?></textarea>
+                <input type="hidden" name="change_comment_internal" value="1">
             </td>
             <td></td>
         </tr>
         <? endif ?>
 
-        <? if ($ObjectPerms->havePerm('autor')) : ?>
+        <? if ($ObjectPerms->havePerm('admin') || !$lockedAssign) : ?>
         <tr>
             <td colspan="3" align="center"><br>&nbsp;
                 <?= Button::createAccept(_('Übernehmen'), 'submit') ?>

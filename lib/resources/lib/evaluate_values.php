@@ -425,7 +425,6 @@ if ($change_object_schedules) {
                 } else {
                     $changeAssign->store();
                     $return_schedule = TRUE;
-                    $msg->addMsg(50);
                     header (sprintf("Location:resources.php?quick_view=%s&quick_view_mode=%s&show_msg=38&msg_resource_id=%s", ($view_mode == "oobj") ? "openobject_schedule" : "view_schedule", $view_mode, $select_change_resource));
                 }
             } else {
@@ -454,13 +453,6 @@ if ($change_object_schedules) {
     
     }
 
-    if ($ObjectPerms->havePerm('admin') && Request::submitted('change_comment_internal')) { 
-        $changeAssign =& AssignObject::Factory($change_object_schedules); 
-        $changeAssign->setCommentInternal(Request::get('comment_internal')); 
-        $changeAssign->store(); 
-        $msg->addMsg(50); 
-    }
-
     if ($ObjectPerms->havePerm("autor")) {
         if (Request::submitted('kill_assign')) {
             $killAssign = AssignObject::Factory($change_object_schedules);
@@ -468,113 +460,107 @@ if ($change_object_schedules) {
             $_SESSION['new_assign_object']='';
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $_SESSION['resources_data']['actual_assign'] = FALSE;
+
         } elseif (!$return_schedule && !Request::submitted('search_room') 
-            && !Request::submitted('reset_room_search') && !Request::submitted('change_comment_internal')) {
-            if ($change_object_schedules == "NEW")
-                $change_schedule_id=FALSE;
-            else
-                $change_schedule_id=$change_object_schedules;
-
-            if (Request::submitted('reset_search_user'))
-                Request::set('search_string_search_user',FALSE);
-
-            if ((Request::submitted('send_search_user')) && (!Request::submitted('reset_search_user'))) {
-                //Check if this user is able to reach the resource (and this assign), to provide, that the owner of the resources foists assigns to others
-                $ForeignObjectPerms = ResourceObjectPerms::Factory(Request::option('change_schedule_resource_id'));
-                if ($ForeignObjectPerms->havePerm("autor"))
-                    Request::set('change_schedule_assign_user_id',Request::quoted('submit_search_user'));
-                else
-                    $msg->addMsg(2);
+            && !Request::submitted('reset_room_search')) {
+            if ($change_object_schedules == "NEW") {
+                $changeAssign =& AssignObject::Factory(false); 
+            } else {
+                $changeAssign =& AssignObject::Factory($change_object_schedules); 
             }
 
-            //the user send infinity repeat (until date) as empty field, but it's -1 in the db
-            if ((Request::option('change_schedule_repeat_quantity_infinity')) && (!$change_schedule_repeat_quantity))
-                $change_schedule_repeat_quantity=-1;
+            // check, if this is an assignment for a date, they allow editing of the comment at most
+            if ($changeAssign->getOwnerType() == "sem" || $changeAssign->getOwnerType() == "date") {
+                $changeAssign->setCommentInternal(Request::get('comment_internal'));
+                $msg->addMsg(50);
+            } else {
+                if (Request::submitted('reset_search_user'))
+                    Request::set('search_string_search_user',FALSE);
 
-            //check dates
-            $illegal_dates=FALSE;
-            if ((!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'))) ||
-                (!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute')))) {
-                $illegal_dates=TRUE;
-                $msg -> addMsg(17);
-            }
+                if ((Request::submitted('send_search_user')) && (!Request::submitted('reset_search_user'))) {
+                    //Check if this user is able to reach the resource (and this assign), to provide, that the owner of the resources foists assigns to others
+                    $ForeignObjectPerms = ResourceObjectPerms::Factory(Request::option('change_schedule_resource_id'));
+                    if ($ForeignObjectPerms->havePerm("autor"))
+                        Request::set('change_schedule_assign_user_id',Request::quoted('submit_search_user'));
+                    else
+                        $msg->addMsg(2);
+                }
 
-            //create timestamps
-            if (!$illegal_dates) {
-                $change_schedule_begin=mktime(Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
-                $change_schedule_end=mktime(Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
-                if ($change_schedule_begin > $change_schedule_end) {
-                    if ((Request::option('change_schedule_repeat_mode') != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
+                //the user send infinity repeat (until date) as empty field, but it's -1 in the db
+                if ((Request::option('change_schedule_repeat_quantity_infinity')) && (!$change_schedule_repeat_quantity))
+                    $change_schedule_repeat_quantity=-1;
+
+                //check dates
+                $illegal_dates=FALSE;
+                if ((!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'))) ||
+                    (!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute')))) {
+                    $illegal_dates=TRUE;
+                    $msg -> addMsg(17);
+                }
+
+                //create timestamps
+                if (!$illegal_dates) {
+                    $change_schedule_begin=mktime(Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
+                    $change_schedule_end=mktime(Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
+                    if ($change_schedule_begin > $change_schedule_end) {
+                        if ((Request::option('change_schedule_repeat_mode') != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
+                            $illegal_dates=TRUE;
+                            $msg -> addMsg(20);
+                        }
+                    }
+                }
+
+                if (check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year')))
+                    if (Request::option('change_schedule_repeat_mode') == "sd")
+                        $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
+                    else
+                        $change_schedule_repeat_end=mktime(23, 59, 59, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
+
+                if (Request::option('change_schedule_repeat_sem_end'))
+                    foreach ($all_semester as $a)
+                        if (($change_schedule_begin >= $a["beginn"]) && ($change_schedule_begin <= $a["ende"]))
+                            $change_schedule_repeat_end=$a["vorles_ende"];
+
+                //create repeatdata
+
+                //repeat = none
+
+                $change_schedule_repeat_month_of_year = Request::int('change_schedule_repeat_month_of_year');
+                $change_schedule_repeat_day_of_month  = Request::int('change_schedule_repeat_day_of_month');
+                $change_schedule_repeat_week_of_month = Request::int('change_schedule_repeat_week_of_month');
+                $change_schedule_repeat_day_of_week   = Request::int('change_schedule_repeat_day_of_week');
+                $change_schedule_repeat_day_quantity  = Request::int('change_schedule_repeat_quantity');
+                $change_schedule_repeat_interval      = Request::int('change_schedule_repeat_interval');
+
+                if (Request::submitted('change_schedule_repeat_none')) {
+                    $change_schedule_repeat_end='';
+                    $change_schedule_repeat_month_of_year='';
+                    $change_schedule_repeat_day_of_month='';
+                    $change_schedule_repeat_week_of_month='';
+                    $change_schedule_repeat_day_of_week='';
+                    $change_schedule_repeat_quantity='';
+                    $change_schedule_repeat_interval='';
+                    if (($change_schedule_begin > $change_schedule_end) && (!$illegal_dates)) { //do this check again, if the user select's sevral days and give a repeat end < begin, so we have no repeatation
                         $illegal_dates=TRUE;
                         $msg -> addMsg(20);
                     }
                 }
-            }
-
-            if (check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year')))
-                if (Request::option('change_schedule_repeat_mode') == "sd")
-                    $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
-                else
-                    $change_schedule_repeat_end=mktime(23, 59, 59, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
-
-            if (Request::option('change_schedule_repeat_sem_end'))
-                foreach ($all_semester as $a)
-                    if (($change_schedule_begin >= $a["beginn"]) && ($change_schedule_begin <= $a["ende"]))
-                        $change_schedule_repeat_end=$a["vorles_ende"];
-
-            //create repeatdata
-
-            //repeat = none
-
-            $change_schedule_repeat_month_of_year = Request::int('change_schedule_repeat_month_of_year');
-            $change_schedule_repeat_day_of_month  = Request::int('change_schedule_repeat_day_of_month');
-            $change_schedule_repeat_week_of_month = Request::int('change_schedule_repeat_week_of_month');
-            $change_schedule_repeat_day_of_week   = Request::int('change_schedule_repeat_day_of_week');
-            $change_schedule_repeat_day_quantity  = Request::int('change_schedule_repeat_quantity');
-            $change_schedule_repeat_interval      = Request::int('change_schedule_repeat_interval');
-
-            if (Request::submitted('change_schedule_repeat_none')) {
-                $change_schedule_repeat_end='';
-                $change_schedule_repeat_month_of_year='';
-                $change_schedule_repeat_day_of_month='';
-                $change_schedule_repeat_week_of_month='';
-                $change_schedule_repeat_day_of_week='';
-                $change_schedule_repeat_quantity='';
-                $change_schedule_repeat_interval='';
-                if (($change_schedule_begin > $change_schedule_end) && (!$illegal_dates)) { //do this check again, if the user select's sevral days and give a repeat end < begin, so we have no repeatation
-                    $illegal_dates=TRUE;
-                    $msg -> addMsg(20);
-                }
-            }
 
 
-            //repeat = several days
-            if (Request::submitted('change_schedule_repeat_severaldays')) {
-                $change_schedule_repeat_end = mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, date("n", $change_schedule_begin), date("j", $change_schedule_begin)+1, date("Y", $change_schedule_begin));
-                $change_schedule_repeat_month_of_year='';
-                $change_schedule_repeat_day_of_month='';
-                $change_schedule_repeat_week_of_month='';
-                $change_schedule_repeat_day_of_week='';
-                $change_schedule_repeat_quantity='';
-                $change_schedule_repeat_interval='';
-            }
-
-            //repeat = year
-            if (Request::submitted('change_schedule_repeat_year')) {
-                $change_schedule_repeat_month_of_year=date("n", $change_schedule_begin);
-                $change_schedule_repeat_day_of_month=date("j", $change_schedule_begin);
-                $change_schedule_repeat_week_of_month='';
-                $change_schedule_repeat_day_of_week='';
-                if (!$change_schedule_repeat_quantity   )
-                    $change_schedule_repeat_quantity=-1;
-                if (!$change_schedule_repeat_interval)
-                    $change_schedule_repeat_interval=1;
-            }
-
-            //repeat = month
-            if (Request::submitted('change_schedule_repeat_month'))
-                if (!$change_schedule_repeat_week_of_month) {
+                //repeat = several days
+                if (Request::submitted('change_schedule_repeat_severaldays')) {
+                    $change_schedule_repeat_end = mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, date("n", $change_schedule_begin), date("j", $change_schedule_begin)+1, date("Y", $change_schedule_begin));
                     $change_schedule_repeat_month_of_year='';
+                    $change_schedule_repeat_day_of_month='';
+                    $change_schedule_repeat_week_of_month='';
+                    $change_schedule_repeat_day_of_week='';
+                    $change_schedule_repeat_quantity='';
+                    $change_schedule_repeat_interval='';
+                }
+
+                //repeat = year
+                if (Request::submitted('change_schedule_repeat_year')) {
+                    $change_schedule_repeat_month_of_year=date("n", $change_schedule_begin);
                     $change_schedule_repeat_day_of_month=date("j", $change_schedule_begin);
                     $change_schedule_repeat_week_of_month='';
                     $change_schedule_repeat_day_of_week='';
@@ -584,52 +570,47 @@ if ($change_object_schedules) {
                         $change_schedule_repeat_interval=1;
                 }
 
-            //repeat = week
-            if (Request::submitted('change_schedule_repeat_week')) {
-                $change_schedule_repeat_month_of_year='';
-                $change_schedule_repeat_day_of_month='';
-                $change_schedule_repeat_week_of_month='';
-                $change_schedule_repeat_quantity='';
-                if (!$change_schedule_repeat_day_of_week)
-                    $change_schedule_repeat_day_of_week=1;
-                if (!$change_schedule_repeat_quantity)
-                    $change_schedule_repeat_quantity=-1;
-                if (!$change_schedule_repeat_interval)
-                    $change_schedule_repeat_interval=1;
-            }
+                //repeat = month
+                if (Request::submitted('change_schedule_repeat_month'))
+                    if (!$change_schedule_repeat_week_of_month) {
+                        $change_schedule_repeat_month_of_year='';
+                        $change_schedule_repeat_day_of_month=date("j", $change_schedule_begin);
+                        $change_schedule_repeat_week_of_month='';
+                        $change_schedule_repeat_day_of_week='';
+                        if (!$change_schedule_repeat_quantity   )
+                            $change_schedule_repeat_quantity=-1;
+                        if (!$change_schedule_repeat_interval)
+                            $change_schedule_repeat_interval=1;
+                    }
 
-            //repeat = day
-            if (Request::submitted('change_schedule_repeat_day')) {
-                $change_schedule_repeat_month_of_year='';
-                $change_schedule_repeat_day_of_month='';
-                $change_schedule_repeat_week_of_month='';
-                $change_schedule_repeat_quantity='';
-                $change_schedule_repeat_day_of_week='';
-                if (!$change_schedule_repeat_quantity   )
-                    $change_schedule_repeat_quantity=-1;
-                if (!$change_schedule_repeat_interval)
-                    $change_schedule_repeat_interval=1;
-            }
+                //repeat = week
+                if (Request::submitted('change_schedule_repeat_week')) {
+                    $change_schedule_repeat_month_of_year='';
+                    $change_schedule_repeat_day_of_month='';
+                    $change_schedule_repeat_week_of_month='';
+                    $change_schedule_repeat_quantity='';
+                    if (!$change_schedule_repeat_day_of_week)
+                        $change_schedule_repeat_day_of_week=1;
+                    if (!$change_schedule_repeat_quantity)
+                        $change_schedule_repeat_quantity=-1;
+                    if (!$change_schedule_repeat_interval)
+                        $change_schedule_repeat_interval=1;
+                }
 
-            //give data to the assignobject
-            if (!$change_schedule_id){
-                $changeAssign = AssignObject::Factory(
-                    $change_schedule_id,
-                    Request::option('change_schedule_resource_id'),
-                    Request::option('change_schedule_assign_user_id'),
-                    Request::get('change_schedule_user_free_name'),
-                    $change_schedule_begin,
-                    $change_schedule_end,
-                    $change_schedule_repeat_end,
-                    $change_schedule_repeat_quantity,
-                    $change_schedule_repeat_interval,
-                    $change_schedule_repeat_month_of_year,
-                    $change_schedule_repeat_day_of_month,
-                    $change_schedule_repeat_week_of_month,
-                    $change_schedule_repeat_day_of_week,
-                    Request::get('comment_internal'));
-            } else {
-                $changeAssign = AssignObject::Factory($change_schedule_id);
+                //repeat = day
+                if (Request::submitted('change_schedule_repeat_day')) {
+                    $change_schedule_repeat_month_of_year='';
+                    $change_schedule_repeat_day_of_month='';
+                    $change_schedule_repeat_week_of_month='';
+                    $change_schedule_repeat_quantity='';
+                    $change_schedule_repeat_day_of_week='';
+                    if (!$change_schedule_repeat_quantity   )
+                        $change_schedule_repeat_quantity=-1;
+                    if (!$change_schedule_repeat_interval)
+                        $change_schedule_repeat_interval=1;
+                }
+
+                //give data to the assignobject
                 $changeAssign->setResourceId(Request::option('change_schedule_resource_id'));
                 $changeAssign->setUserFreeName(Request::get('change_schedule_user_free_name'));
                 $changeAssign->setAssignUserId(Request::option('change_schedule_assign_user_id'));
@@ -643,127 +624,127 @@ if ($change_object_schedules) {
                 $changeAssign->setRepeatWeekOfMonth($change_schedule_repeat_week_of_month);
                 $changeAssign->setRepeatDayOfWeek($change_schedule_repeat_day_of_week);
                 $changeAssign->setCommentInternal(Request::get('comment_internal'));
-            }
 
-            //if isset quantity, we calculate the correct end date
-            if ($changeAssign->getRepeatQuantity() >0)
-                $changeAssign->setRepeatEnd($changeAssign->getRepeatEndByQuantity());
+                //if isset quantity, we calculate the correct end date
+                if ($changeAssign->getRepeatQuantity() >0)
+                    $changeAssign->setRepeatEnd($changeAssign->getRepeatEndByQuantity());
 
-            //check repeat_end
-            if (($changeAssign->getRepeatMode() != "na") && (Request::quoted('change_schedule_repeat_end_month')) && (Request::quoted('change_schedule_repeat_end_day')) && (Request::quoted('change_schedule_repeat_end_year'))) {
-                if (!check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'))) {
-                    $illegal_dates=TRUE;
-                    $msg -> addMsg(18);
-                }
-                //repeat end schould not be bevor the begin
-                if (!$illegal_dates) {
-                    if ($changeAssign->getEnd() > $changeAssign->getRepeatEnd()) {
-                        $changeAssign->setRepeatEnd($changeAssign->getBegin());
+                //check repeat_end
+                if (($changeAssign->getRepeatMode() != "na") && (Request::quoted('change_schedule_repeat_end_month')) && (Request::quoted('change_schedule_repeat_end_day')) && (Request::quoted('change_schedule_repeat_end_year'))) {
+                    if (!check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'))) {
+                        $illegal_dates=TRUE;
+                        $msg -> addMsg(18);
                     }
-                }
-                //limit recurrences
-                if (!$illegal_dates) {
-                    switch ($changeAssign->getRepeatMode()) {
-                        case "y" : if ((date("Y",$changeAssign->getRepeatEnd()) - date("Y", $changeAssign->getBegin())) > 10) {
-                                    $illegal_dates=TRUE;
-                                    $msg -> addMsg(21);
-                                }
-                        break;
-                        case "m" : if ((date("Y",$changeAssign->getRepeatEnd()) - date("Y", $changeAssign->getBegin())) > 10) {
-                                    $illegal_dates=TRUE;
-                                    $msg -> addMsg(22);
-                                }
-                        break;
-                        case "w" : if ((($changeAssign->getRepeatEnd() - $changeAssign->getBegin()) / (60 * 60 * 24 *7) / $changeAssign->getRepeatInterval()) > 50) {
-                                    $illegal_dates=TRUE;
-                                    $msg -> addMsg(23);
-                                }
-                        break;
-                        case "d" : if ((int)(($changeAssign->getRepeatEnd() - $changeAssign->getBegin()) / (60 * 60 * 24) / $changeAssign->getRepeatInterval()) > 100) {
-                                    $illegal_dates=TRUE;
-                                    $msg -> addMsg(24);
-                                }
-                        break;
-                    }
-                }
-            }
-
-            if ($illegal_dates) {
-                if ($changeAssign->isNew()){
-                    $_SESSION['new_assign_object']=serialize($changeAssign);
-                } else {
-                    $changeAssign->restore();
-                }
-            }
-
-            // create a new assign
-            elseif ( ($change_object_schedules == "NEW" || $_SESSION['new_assign_object'])){
-
-                if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
-                    $overlaps = $changeAssign->checkOverlap(FALSE);
-                    $locks = $changeAssign->checkLock();
-                }
-                // show hint, that either a user or a free text must be provided
-                else if ($storeAssign) {
-                    $msg->addMsg(46);
-                }
-
-                if ((!$overlaps) && (!$locks)) {
-                    if ($storeAssign && $changeAssign->create()) {
-                        $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
-                        $msg->addMsg(3);
-                        $_SESSION['new_assign_object']='';
-                    } else {
-                        $_SESSION['new_assign_object']=serialize($changeAssign);  // store the submitted form-data
-
-                        if ( $storeAssign && !Request::submitted('do_search_user') && !Request::submitted('reset_search_user')
-                            && !Request::option('change_schedule_assign_user_id') && Request::get('change_schedule_user_free_name')) {
-                                $msg->addMsg(10);
+                    //repeat end schould not be bevor the begin
+                    if (!$illegal_dates) {
+                        if ($changeAssign->getEnd() > $changeAssign->getRepeatEnd()) {
+                            $changeAssign->setRepeatEnd($changeAssign->getBegin());
                         }
                     }
-                } else {
-                    if ($storeAssign) {
-                        if ($overlaps) {  // add error message an store the submitted form-data
-                            $msg->addMsg(11);
+                    //limit recurrences
+                    if (!$illegal_dates) {
+                        switch ($changeAssign->getRepeatMode()) {
+                            case "y" : if ((date("Y",$changeAssign->getRepeatEnd()) - date("Y", $changeAssign->getBegin())) > 10) {
+                                        $illegal_dates=TRUE;
+                                        $msg -> addMsg(21);
+                                    }
+                            break;
+                            case "m" : if ((date("Y",$changeAssign->getRepeatEnd()) - date("Y", $changeAssign->getBegin())) > 10) {
+                                        $illegal_dates=TRUE;
+                                        $msg -> addMsg(22);
+                                    }
+                            break;
+                            case "w" : if ((($changeAssign->getRepeatEnd() - $changeAssign->getBegin()) / (60 * 60 * 24 *7) / $changeAssign->getRepeatInterval()) > 50) {
+                                        $illegal_dates=TRUE;
+                                        $msg -> addMsg(23);
+                                    }
+                            break;
+                            case "d" : if ((int)(($changeAssign->getRepeatEnd() - $changeAssign->getBegin()) / (60 * 60 * 24) / $changeAssign->getRepeatInterval()) > 100) {
+                                        $illegal_dates=TRUE;
+                                        $msg -> addMsg(24);
+                                    }
+                            break;
+                        }
+                    }
+                }
+
+                if ($illegal_dates) {
+                    if ($changeAssign->isNew()){
+                        $_SESSION['new_assign_object']=serialize($changeAssign);
+                    } else {
+                        $changeAssign->restore();
+                    }
+                }
+
+                // create a new assign
+                elseif ( ($change_object_schedules == "NEW" || $_SESSION['new_assign_object'])){
+
+                    if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
+                        $overlaps = $changeAssign->checkOverlap(FALSE);
+                        $locks = $changeAssign->checkLock();
+                    }
+                    // show hint, that either a user or a free text must be provided
+                    else if ($storeAssign) {
+                        $msg->addMsg(46);
+                    }
+
+                    if ((!$overlaps) && (!$locks)) {
+                        if ($storeAssign && $changeAssign->create()) {
+                            $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
+                            $msg->addMsg(3);
+                            $_SESSION['new_assign_object']='';
+                        } else {
+                            $_SESSION['new_assign_object']=serialize($changeAssign);  // store the submitted form-data
+
+                            if ( $storeAssign && !Request::submitted('do_search_user') && !Request::submitted('reset_search_user')
+                                && !Request::option('change_schedule_assign_user_id') && Request::get('change_schedule_user_free_name')) {
+                                    $msg->addMsg(10);
+                            }
+                        }
+                    } else {
+                        if ($storeAssign) {
+                            if ($overlaps) {  // add error message an store the submitted form-data
+                                $msg->addMsg(11);
+                                $_SESSION['new_assign_object']=serialize($changeAssign);
+                            }
+
+                            if ($locks) {
+                                foreach ($locks as $val)
+                                    $locks_txt.=date("d.m.Y, H:i",$val["lock_begin"])." - ".date("d.m.Y, H:i",$val["lock_end"])."<br>";
+                                $msg->addMsg(44, array($locks_txt));
+                            }
+                        } else {  // store the submitted form-data
                             $_SESSION['new_assign_object']=serialize($changeAssign);
                         }
+                    }
+                }
 
+                // change an existing assign
+                else {
+                    if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
+                        $overlaps = $changeAssign->checkOverlap(FALSE);
+                        $locks = $changeAssign->checkLock();
+                    }
+
+                    if ((!$overlaps) && (!$locks)) {
+                        $changeAssign->chng_flag=TRUE;
+                        if ($changeAssign->store()) {
+                            $msg->addMsg(4);
+                            $_SESSION['new_assign_object']='';
+                        }
+                        $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
+                    } else {
+                        if ($overlaps)
+                            $msg->addMsg(11);
                         if ($locks) {
                             foreach ($locks as $val)
                                 $locks_txt.=date("d.m.Y, H:i",$val["lock_begin"])." - ".date("d.m.Y, H:i",$val["lock_end"])."<br>";
                             $msg->addMsg(44, array($locks_txt));
                         }
-                    } else {  // store the submitted form-data
-                        $_SESSION['new_assign_object']=serialize($changeAssign);
+                        $changeAssign->restore();
                     }
-                }
-            }
 
-            // change an existing assign
-            else {
-                if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
-                    $overlaps = $changeAssign->checkOverlap(FALSE);
-                    $locks = $changeAssign->checkLock();
                 }
-
-                if ((!$overlaps) && (!$locks)) {
-                    $changeAssign->chng_flag=TRUE;
-                    if ($changeAssign->store()) {
-                        $msg->addMsg(4);
-                        $_SESSION['new_assign_object']='';
-                    }
-                    $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
-                } else {
-                    if ($overlaps)
-                        $msg->addMsg(11);
-                    if ($locks) {
-                        foreach ($locks as $val)
-                            $locks_txt.=date("d.m.Y, H:i",$val["lock_begin"])." - ".date("d.m.Y, H:i",$val["lock_end"])."<br>";
-                        $msg->addMsg(44, array($locks_txt));
-                    }
-                    $changeAssign->restore();
-                }
-
             }
         }
     } else {

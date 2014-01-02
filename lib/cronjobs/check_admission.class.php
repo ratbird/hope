@@ -42,7 +42,7 @@ class CheckAdmissionJob extends CronJob
       public function setUp()
       {
           require_once 'lib/language.inc.php';
-          require_once 'lib/admission.inc.php';
+          require_once 'lib/classes/admission/CourseSet.class.php';
           if (empty($GLOBALS['ABSOLUTE_URI_STUDIP'])) {
             throw new Exception('To use check_admission job you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!');
         }
@@ -51,20 +51,30 @@ class CheckAdmissionJob extends CronJob
       public function execute($last_result, $parameters = array())
       {
           $verbose = $parameters['verbose'];
-          $seminars = DbManager::get()
-                  ->query("SELECT Seminar_id,Name FROM seminare
-                  WHERE admission_endtime != -1
-                  AND admission_endtime < UNIX_TIMESTAMP()
-                  AND admission_type IN(1,2)
-                  AND (admission_selection_take_place = '0' OR admission_selection_take_place IS NULL)
-                  AND visible='1'")
-                  ->fetchAll();
-          if (count($seminars)) {
-              if ($verbose) echo date('r') . ' - Assigning participants to this courses:' . chr(10);
-              foreach($seminars as $sem) {
-                  if ($verbose) echo ++$i . ' ' . $sem['Seminar_id'] . ' : ' . $sem['Name'] . chr(10);
+          $sets = DbManager::get()
+                  ->fetchFirst("SELECT DISTINCT cr.set_id FROM courseset_rule cr INNER JOIN coursesets USING(set_id)
+                          WHERE type = 'ParticipantRestrictedAdmission' AND algorithm_run = 0");
+          if (count($sets)) {
+              if ($verbose) {
+                  echo date('r') . ' - Starting seat distribution ' . chr(10);
+                  $old_logger = Log::get()->getHandler();
+                  $old_log_level = Log::get()->getLogLevel();
+                  Log::get()->setHandler(function($l) {echo $l['formatted'] ."\n";});
+                  Log::get()->setLogLevel(Log::DEBUG);
               }
-              check_admission($parameters['send_messages']);
+              foreach($sets as $set_id) {
+                  $courseset = new CourseSet($set_id);
+                  if ($courseset->isSeatDistributionEnabled() && !$courseset->hasAlgorithmRun() && $courseset->getSeatDistributionTime() < time()) {
+                      if ($verbose) {
+                          echo ++$i . ' ' . $courseset->getId() . ' : ' . $courseset->getName() . chr(10);
+                      }
+                      $courseset->distributeSeats();
+                  }
+              }
+              if ($verbose) {
+                  Log::get()->setHandler($old_logger);
+                  Log::get()->setLogLevel($old_log_level);
+              }
           } else {
               if ($verbose) echo date('r') . ' - Nothing to do' . chr(10);
           }

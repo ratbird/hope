@@ -22,12 +22,11 @@
             <col width="20">
             <col>
             <col width="15%">
-            <col width="15%">
             <col width="80">
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="5">
+                <th class="table_header_bold" colspan="4">
                 </th>
                 <th class="table_header_bold" style="text-align: right">
                 </th>
@@ -61,11 +60,10 @@
                         <? ($sort_status != $waiting_type) ? $order = 'desc' : $order = $order ?>
                         <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=claiming&order=%s&toggle=%s',
                                 $order, ($sort_by == 'mkdate'))) ?>#awaiting">
-                            <?= _('Anmeldedatum') ?>
+                            <?= _('Priorität') ?>
                         </a>
                     </th>
                 <? endif ?>
-                <th style="text-align: center"><?= _('Kontingent') ?></th>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
         </thead>
@@ -91,14 +89,7 @@
                     </a>
                 </td>
                 <td style="text-align: center">
-                <? if ($waiting_type === 'awaiting') : ?>
                     <?= $waiting['position'] ?>
-                <? else : ?>
-                    <?= strftime('%x %X', $waiting['mkdate'])?>
-                <? endif ?>
-                </td>
-                <td style="text-align: center">
-                    <?= ($waiting['kontingent'] == 'all') ? _('alle Studiengänge') : htmlReady($waiting['kontingent']) ?>
                 </td>
                 <td style="text-align: right">
                     <? if($user_id != $waiting['user_id']) : ?>
@@ -127,7 +118,7 @@
         <? if (!$is_locked) : ?>
         <tfoot>
             <tr>
-                <td colspan="6">
+                <td colspan="5">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade"><?= _('Zu NutzerInnen hochstufen') ?></option>
@@ -135,9 +126,6 @@
                         <option value="message"><?=_('Nachricht senden')?></option>
     <!--                    <option value="copy_to_sem"><?= _('In Seminar verschieben/kopieren') ?></option>-->
                     </select>
-                    <?= tooltipIcon( _('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden.'))?>
-                    <?= _("Kontingent berücksichtigen:"); ?>
-                    <input type="checkbox" value="1" name="consider_contingent" checked="checked" />
                     <input type="hidden" value="<?=$waiting_type?>" name="waiting_type"/>
                     <?= Button::create(_('Ausführen'), 'submit_awaiting') ?>
                 </td>

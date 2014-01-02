@@ -514,5 +514,23 @@ class Request implements ArrayAccess, IteratorAggregate
     {
         return self::isXhr();
     }
-
+    
+    public static function extract($what) {
+        $extract = array();
+        $return = array();
+        foreach (explode(',', $what) as $one) {
+            $extract[] = array_values(array_filter(array_map('trim', explode(' ', $one))));
+        }
+        foreach ($extract as $one) {
+            list($param, $func) = $one;
+            if (!$func) {
+                $func = 'get';
+            }
+            $value = self::$func($param);
+            if ($value !== null) {
+                $return[$param] = $value;
+            }
+        }
+        return $return;
+    }
 }

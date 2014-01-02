@@ -54,7 +54,7 @@ class CoreAdmin implements StudipModule {
                     $navigation->addSubNavigation('room_requests', $item);
                 }
 
-                $item = new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php');
+                $item = new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission');
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);
 

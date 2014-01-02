@@ -81,9 +81,8 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     foreach ($waitlists as $wait) {
                         // wir sind in einer Anmeldeliste und brauchen Prozentangaben
                         if ($wait["status"] == "claiming") {
-                            $admission_chance = Seminar::GetInstance($wait["seminar_id"])->getAdmissionChance($wait["studiengang_id"]);
                             // Grün der Farbe nimmt mit Wahrscheinlichkeit ab
-                            $chance_color = dechex(55 + $admission_chance * 2);
+                            $chance_color = dechex(55 + $wait['admission_chance'] * 2);
                         }
 
                         // wir sind in einer Warteliste
@@ -117,7 +116,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                             </td>
 
                             <td width="10%" align="center">
-                                <?= $wait["status"] == "claiming" ? ($admission_chance . "%") : $wait["position"] ?>
+                                <?= $wait["status"] == "claiming" ? ($wait['admission_chance'] . "%") : $wait["position"] ?>
                             </td>
 
                             <td width="10%" align="center">

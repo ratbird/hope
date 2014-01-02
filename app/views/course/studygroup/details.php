@@ -1,7 +1,7 @@
 <?php
 # Lifter010: TODO
 $icon = 'icons/16/black/schedule.png';
-if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
+if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId()) || $membership_requested) {
     $action = _("Persönlicher Status:");
     if ($membership_requested) {
         $infotext= _("Mitgliedschaft bereits beantragt!");
@@ -17,7 +17,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
 
 } else {
     $action = _("Aktionen:");
-    $infolink = '<a href="'. URLHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
+    $infolink = '<a rel="lightbox" href="'. URLHelper::getLink('dispatch.php/course/enrolment/'. $studygroup->getId()) .'">%s</a>';
     $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }
 

@@ -81,7 +81,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
         }
 
-        $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php?list=TRUE'));
+        $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission', array('list' => 'TRUE')));
         $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'admin_statusgruppe.php?list=TRUE'));
         $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));
 
@@ -195,6 +195,8 @@ class AdminNavigation extends Navigation
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
             }
+
+            $navigation->addSubNavigation('admissionrules', new Navigation(_('Anmelderegeln'), 'dispatch.php/admission/ruleadministration'));
 
             $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
         }

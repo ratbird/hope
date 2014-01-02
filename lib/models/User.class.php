@@ -142,6 +142,11 @@ class User extends AuthUserMd5
                     function($user) {
                         return array($user);
                     }),
+                'studycourses' => array(
+                            'class_name' => 'UserStudyCourse',
+                            'assoc_func' => 'findByUser',
+                            'on_delete' => 'delete',
+                            'on_store' => 'store'),
                 'contacts' => array(
                     'class_name' => 'Contact',
                     'assoc_foreign_key' => 'owner_id'

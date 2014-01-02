@@ -1,0 +1,193 @@
+.studip_form label {
+   display: block;
+}
+
+.studip_form > fieldset > label {
+    padding: 1ex;
+}
+
+.studip_form label input[type=date],
+.studip_form label input[type=email],
+.studip_form label input[type=number],
+.studip_form label input[type=password],
+.studip_form label input[type=text],
+.studip_form label input[type=url],
+.studip_form label textarea,
+.studip_form label select
+{
+   display: block;
+   min-width: 24em;
+   /* margin-left: 1ex; */
+}
+
+
+.studip_form input[type=number] {
+    min-width: 1ex !important;
+}
+
+.studip_form label textarea {
+    min-height: 6em;
+}
+
+.studip_form > fieldset {
+    border: none;
+    padding-left: 0;
+ /*   margin-left: 1ex; */
+
+}
+
+.studip_form > fieldset > legend {
+    background-color: #899ab9;
+    color: white;
+    padding: 5px;
+    width: 100%;
+    font-size: 12pt;
+    font-weight:bold;
+}
+
+.studip_form fieldset fieldset {
+    border: none;
+    margin: 1ex 0;
+}
+
+.studip_form fieldset fieldset legend, .studip_form .caption {
+    font-weight: bold;
+    color: #24437c;
+    font-size: 11pt;
+}
+
+.studip_form fieldset fieldset label {
+    margin-left: 1ex;
+}
+
+.required {
+    color: red;
+    font-size: 1.2em;
+}
+
+/* late me is messin around */
+
+
+.studip_form div input[type=date],
+.studip_form div input[type=email],
+.studip_form div input[type=number],
+.studip_form div input[type=password],
+.studip_form div input[type=text],
+.studip_form div input[type=url],
+.studip_form div textarea,
+.studip_form div select
+{
+   display: inline;
+}
+
+.submit_wrapper {
+    padding: 0;
+    margin-left: 5px;
+    background-color: #d1d1d1;
+    border-top: 1px solid #1e3e70;
+}
+/* concrete style for input types */
+
+.studip_form input[type=text],
+.studip_form input[type=number],
+.studip_form input[type=password],
+.studip_form input[type=email],
+.studip_form input[type=url],
+.studip_form input[type=date],
+.studip_form textarea,
+.studip_form select {
+    display: block;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    transition: all 0.3s ease-out;
+}
+
+.studip_form select {
+    height: 30px;
+}
+
+.studip_form input[type=text]:hover,
+.studip_form input[type=number]:hover,
+.studip_form input[type=password]:hover,
+.studip_form input[type=email]:hover,
+.studip_form input[type=url]:hover,
+.studip_form input[type=date]:hover,
+.studip_form textarea:hover,
+.studip_form select:hover{
+    border-radius: 4px
+}
+
+.studip_form input[type=text]:focus,
+.studip_form input[type=number]:focus,
+.studip_form input[type=password]:focus,
+.studip_form input[type=email]:focus,
+.studip_form input[type=url]:focus,
+.studip_form input[type=date]:focus,
+.studip_form textarea:focus,
+.studip_form select:focus {
+    outline: none;
+    border-radius: 4px;
+    border-color: #24437c;
+}
+
+
+/* checkboxes and stuff */
+
+
+
+/* images */
+
+
+
+input[type="checkbox"].studip_checkbox {
+  display: none;
+
+}
+input[type="checkbox"].studip_checkbox + label {
+  background: url("../images/icons/16/black/checkbox-unchecked.png") left center no-repeat;
+  padding-left: 20px;
+}
+input[type="checkbox"].studip_checkbox:checked + label {
+  background-image: url("../images/icons/16/black/checkbox-checked.png");
+}
+
+.studip_input_wrapper {
+    margin:1ex;
+    padding:1ex;
+}
+
+
+
+
+
+
+
+
+
+
+/* gray divider
+    TODO: add class 'divideable' to make diveder optional
+ */
+
+/*
+.studip_form fieldset fieldset:not(:last-child) {
+    padding-bottom: 1em;
+    border-bottom: 1px solid #cccccc;
+}
+
+.studip_form fieldset fieldset label:not(:last-child), .studip_form fieldset{
+    border-bottom: none;
+}
+
+
+.studip_form label:not(:last-child) {
+
+    border-bottom: 1px solid #cccccc;
+}
+*/
+
+
+
+

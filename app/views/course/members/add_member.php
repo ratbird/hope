@@ -24,20 +24,7 @@
                     <input type="hidden" name="cid" value="<?= $course_id ?>">
                 </td>
                 <td style="width: 20%; text-align: center">
-                    <? if ($semAdmissionEnabled)  :?>
-                        <?= tooltipIcon(_('Hier können Sie auswählen, ob die von Ihnen hinzugefügten TeilnehmerInnen auf die Kontingentplätze angerechnet werden'))?>
-
-                        <label for="kontingent"><?=_("Kontingent berücksichtigen:");?>
-                        <select name="consider_contingent" id="kontingent">
-                            <option value=""><?=_("Kein Kontingent")?></option>
-                            <? if(!empty($admission_studiengang)) :?>
-                                <? foreach($admission_studiengang as $stg => $data) :?>
-                            <option value="<?=$stg?>" <?=($stg == Request::get('consider_contingent')? 'selected="selected"' : '')?>><?= htmlReady($data['name'])?> - <?=  htmlReady($data['freeSeats'])?></option>
-                                <? endforeach ?>
-                            <? endif ?>
-                        </select>
-                        </label>
-                    <? endif ?>
+                    
                 </td>
                 <td style="width: 20%; text-align: right">
                     <?= Button::createAccept(_('Eintragen'), 'add_autor', array('title' => sprintf(_("als %s eintragen"), $decoratedStatusGroups['autor']) )) ?>
@@ -80,28 +67,7 @@
                 </select>
             </td>
         </tr>
-        <? if ($semAdmissionEnabled)  :?>
-        <tr>
-            <td>
-                <?=Assets::img('icons/16/black/info.png',
-                        array('title' => _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.'),
-                            'alt' => _('Kontingent berücksichtigen'),
-                            'style' => 'cursor: pointer',
-                            'onclick' => "alert('" . _('Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden.') ." ')"))?>
-                <?=_("Kontingent berücksichtigen:");?>
-            </td>
-            <td colspan="2">
-                <select name="consider_contingent_csv" id="kontingent_csv">
-                    <option value=""><?=_("Kein Kontingent")?></option>
-                    <? if(!empty($admission_studiengang)) :?>
-                        <? foreach($admission_studiengang as $stg => $data) :?>
-                    <option value="<?=$stg?>" <?=($stg == Request::get('consider_contingent_csv')? 'selected="selected"' : '')?>><?= htmlReady($data['name'])?> - <?=  htmlReady($data['freeSeats'])?></option>
-                        <? endforeach ?>
-                    <? endif ?>
-                </select>
-            </td>
-        </tr>
-        <? endif ?>
+        
         <tr>
             <td style="width: 30%"><?= sprintf(_('<strong>%s</strong> in die Veranstaltung eintragen'), htmlReady($decoratedStatusGroups['autor']))?></td>
             <td style="width: 50%">

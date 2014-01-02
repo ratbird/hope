@@ -173,13 +173,13 @@ class Course_MembersController extends AuthenticatedController
         // Check Seminar
         if ($this->is_tutor && $sem->isAdmissionEnabled()) {
             $this->course = $sem;
-            $this->count = $this->members->getCountedMembers();
-            if ($sem->admission_type == 2 || $sem->admission_selection_take_place == 1) {
+            $distribution_time = $sem->getCourseSet()->getSeatDistributionTime();
+            if ($distribution_time < time()) {
                 $this->waitingTitle = _("Warteliste");
                 $this->semAdmissionEnabled = 2;
                 $this->waiting_type = 'awaiting';
             } else {
-                $this->waitingTitle = sprintf(_("Anmeldeliste (Losverfahren am %s)"), strftime('%x %R', $sem->admission_endtime));
+                $this->waitingTitle = sprintf(_("Anmeldeliste (Losverfahren am %s)"), strftime('%x %R', $distribution_time));
                 $this->semAdmissionEnabled = 1;
                 $this->awaiting = $this->claiming;
                 $this->waiting_type = 'claiming';
@@ -349,7 +349,6 @@ class Course_MembersController extends AuthenticatedController
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
         // get the seminar object
         $sem = Seminar::GetInstance($this->course_id);
-        $sem->restoreAdmissionStudiengang();
 
         // Security Check
         if (!$this->is_tutor) {
@@ -360,20 +359,12 @@ class Course_MembersController extends AuthenticatedController
         if ($this->is_tutor && $sem->isAdmissionEnabled()) {
             $this->semAdmissionEnabled = true;
 
-            if (!empty($sem->admission_studiengang)) {
-                $admission_studiengang = $sem->admission_studiengang;
-                foreach (array_keys($admission_studiengang) as $studiengang) {
-                    $admission_studiengang[$studiengang]['freeSeats'] = $sem->getFreeAdmissionSeats($studiengang);
-                }
-                $this->admission_studiengang = $admission_studiengang;
-            }
         }
         // Damit die QuickSearch funktioniert
         Request::set('new_autor', $this->flash['new_autor']);
         Request::set('new_autor', $this->flash['new_autor_1']);
         Request::set('new_autor_parameter', $this->flash['new_autor_parameter']);
         Request::set('seminar_id', $this->course_id);
-        Request::set('consider_contingent', $this->flash['consider_contingent']);
 
         // new user-search for given status
         $this->search = new SQLSearch("SELECT auth_user_md5.user_id, CONCAT(" . $GLOBALS['_fullname_sql']['full'] .
@@ -509,7 +500,6 @@ class Course_MembersController extends AuthenticatedController
             $this->flash['new_autor'] = Request::get('new_autor');
             $this->flash['new_autor_1'] = Request::get('new_autor_1');
             $this->flash['new_autor_parameter'] = Request::get('new_autor_parameter');
-            $this->flash['consider_contingent'] = Request::get('consider_contingent');
 
             $this->redirect('course/members/add_member');
             return;

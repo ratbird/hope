@@ -62,6 +62,10 @@ if ($GLOBALS['RESOURCES_ENABLE']) {
 
 function redirect_to_course_admin($course_id) {
     $course = new Seminar($course_id);
+    if ($_SESSION['sem_create_data']["sem_admission"]) {
+        header("Location: " . URLHelper::getUrl('dispatch.php/course/admission', array('cid' => $course_id)));
+        return;
+    }
     $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
     if ($sem_class) {
         $nav = array_shift($sem_class->getNavigationForSlot("admin", $course_id));
@@ -255,9 +259,6 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         $_SESSION['sem_create_data']['sem_desc'] = $seminar['Beschreibung'];
         $_SESSION['sem_create_data']['sem_room'] = $seminar['Ort'];
         $_SESSION['sem_create_data']['sem_sonst'] = $seminar['Sonstiges'];
-        $_SESSION['sem_create_data']['sem_pw'] = $seminar['Passwort'];
-        $_SESSION['sem_create_data']['sem_sec_lese'] = $seminar['Lesezugriff'];
-        $_SESSION['sem_create_data']['sem_sec_schreib'] = $seminar['Schreibzugriff'];
         $_SESSION['sem_create_data']['sem_start_time'] = $seminar['start_time'];
         $_SESSION['sem_create_data']['sem_duration_time'] = $seminar['duration_time'];
         $_SESSION['sem_create_data']['sem_art'] = $seminar['art'];
@@ -266,16 +267,9 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         $_SESSION['sem_create_data']['sem_orga'] = $seminar['lernorga'];
         $_SESSION['sem_create_data']['sem_leistnw'] = $seminar['leistungsnachweis'];
         $_SESSION['sem_create_data']['sem_ects'] = $seminar['ects'];
-        //$_SESSION['sem_create_data']['sem_admission_date'] = $seminar['admission_endtime'];
-        $_SESSION['sem_create_data']['sem_admission_date'] = -1;
         $_SESSION['sem_create_data']['sem_turnout'] = $seminar['admission_turnout'];
-        //$_SESSION['sem_create_data']['sem_admission'] = $seminar['admission_type'];
         $_SESSION['sem_create_data']['sem_payment'] = $seminar['admission_prelim'];
         $_SESSION['sem_create_data']['sem_paytxt'] = $seminar['admission_prelim_txt'];
-        //$_SESSION['sem_create_data']['sem_admission_start_date'] = $seminar['admission_starttime'];
-        //$_SESSION['sem_create_data']['sem_admission_end_date'] = $seminar['admission_endtime_sem'];
-        $_SESSION['sem_create_data']['sem_admission_start_date'] = -1;
-        $_SESSION['sem_create_data']['sem_admission_end_date'] = -1;
         $_SESSION['sem_create_data']['timestamp'] = time(); // wichtig, da sonst beim ersten Aufruf sofort sem_create_data resetted wird!
         // eintragen der sem_tree_ids
         $_SESSION['sem_create_data']['sem_bereich'] = get_seminar_sem_tree_entries($cp_id);
@@ -318,10 +312,6 @@ if (($auth->lifetime != 0 && ((time() - $_SESSION['sem_create_data']["timestamp"
     $_SESSION['sem_create_data']["sem_start_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_end_termin"]=-1;
-    $_SESSION['sem_create_data']["sem_admission_date"]=-1;
-    $_SESSION['sem_create_data']["sem_admission_ratios_changed"]=FALSE;
-    $_SESSION['sem_create_data']["sem_admission_start_date"]=-1;
-    $_SESSION['sem_create_data']["sem_admission_end_date"]=-1;
 
     # reset study area selection
     $area_selection = new StudipStudyAreaSelection();
@@ -441,16 +431,8 @@ if ($form == 1 && Request::isPost()) {
     else
         $_SESSION['sem_create_data']["sem_duration_time"]=Request::int('sem_duration_time') - Request::int('sem_start_time');
 
-    $_SESSION['sem_create_data']["sem_turnout"]=Request::quoted('sem_turnout');
-
-    //Anmeldeverfahren festlegen
-    $sem_admission = Request::quoted('sem_admission');
-    if (($_SESSION['sem_create_data']["sem_admission"] = $sem_admission) && $_SESSION['sem_create_data']["sem_admission"] != 3) {
-        if(!is_array($_SESSION['sem_create_data']["sem_studg"]) || !count($_SESSION['sem_create_data']["sem_studg"])) $_SESSION['sem_create_data']["sem_studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
-    } else {
-        $_SESSION['sem_create_data']["sem_studg"] = array();
-    }
-
+    $_SESSION['sem_create_data']["sem_turnout"]=Request::int('sem_turnout');
+    $_SESSION['sem_create_data']["sem_admission"] = Request::int('sem_admission');
     //accept only temporaly?
     $_SESSION['sem_create_data']["sem_payment"]=Request::option('sem_payment');
     $sem_bet_inst = Request::optionArray('sem_bet_inst');
@@ -495,13 +477,12 @@ if ($form == 2 && Request::isPost()) {
 
     $_SESSION['sem_create_data']["sem_bereich"] = $area_selection->getAreaIDs();
 
-
     if (!$_SESSION['sem_create_data']["sem_admission"]) {
-        $_SESSION['sem_create_data']["sem_sec_lese"]=Request::option('sem_sec_lese');
-        $_SESSION['sem_create_data']["sem_sec_schreib"]=Request::option('sem_sec_schreib');
+        $_SESSION['sem_create_data']["sem_sec_lese"] = Request::int('sem_sec_lese');
+        $_SESSION['sem_create_data']["sem_sec_schreib"] = Request::int('sem_sec_schreib');
     } else {
-        $_SESSION['sem_create_data']["sem_sec_lese"]=3;
-        $_SESSION['sem_create_data']["sem_sec_schreib"]=3;
+        $_SESSION['sem_create_data']["sem_sec_lese"] = 1;
+        $_SESSION['sem_create_data']["sem_sec_schreib"] = 1;
     }
     }
 
@@ -736,31 +717,6 @@ if ($form == 4 && Request::isPost()) {
 
 if ($form == 5 && Request::isPost()) {
 
-    if(Request::submitted('toggle_admission_quota')){
-        $_SESSION['sem_create_data']["admission_enable_quota"] = (int)(Request::int("admission_enable_quota"));
-        if(!$_SESSION['sem_create_data']["admission_enable_quota"]){
-            $_SESSION['sem_create_data']["sem_admission_date"] = -1;
-            $_SESSION['sem_create_data']["sem_admission_ratios_changed"] = false;
-        }
-
-    }
-    // create a timestamp for begin and end of the seminar
-        if (!check_and_set_date(Request::option('adm_s_tag'), Request::option('adm_s_monat'), Request::option('adm_s_jahr'), Request::option('adm_s_stunde'), Request::option('adm_s_minute'), $_SESSION['sem_create_data'], "sem_admission_start_date")) {
-        $errormsg=$errormsg."error§"._("Bitte geben Sie ein g&uuml;ltiges Datum f&uuml;r den Start des Anmeldezeitraums ein!")."§";
-    }
-        if (!check_and_set_date(Request::option('adm_e_tag'), Request::option('adm_e_monat'), Request::option('adm_e_jahr'), Request::option('adm_e_stunde'), Request::option('adm_e_minute'), $_SESSION['sem_create_data'], "sem_admission_end_date")) {
-        $errormsg=$errormsg."error§"._("Bitte geben Sie ein g&uuml;ltiges Datum f&uuml;r das Ende des Anmeldezeitraums ein!")."§";
-    }
-    if ($_SESSION['sem_create_data']["sem_admission_end_date"] != -1) {
-        if ($_SESSION['sem_create_data']["sem_admission_end_date"] < time())
-        {
-            $errormsg=$errormsg."error§"._("Bitte geben Sie ein g&uuml;ltiges Datum f&uuml;r das Ende des Teilnahmeverfahrens ein!")."§";
-        }
-        if ($_SESSION['sem_create_data']["sem_admission_end_date"] <= $_SESSION['sem_create_data']["sem_admission_start_date"]) {
-            $errormsg=$errormsg."error§"._("Das Enddatum des Teilnahmeverfahrens muss nach dem Startdatum liegen!")."§";
-        }
-    }
-
     $_SESSION['sem_create_data']["sem_teiln"] = Request::quoted('sem_teiln');
     $_SESSION['sem_create_data']["sem_voraus"] = Request::quoted('sem_voraus');
     $_SESSION['sem_create_data']["sem_orga"] = Request::quoted('sem_orga');
@@ -785,35 +741,6 @@ if ($form == 5 && Request::isPost()) {
            if (! trim($sem_datafields[$id]))
                $errormsg = $errormsg."error§".sprintf(_("Das Feld %s wurde nicht ausgefüllt"), htmlReady($struct->getName()))."§";
         }
-    }
-
-    //Studienbereiche entgegennehmen
-    $sem_studg_id = Request::optionArray('sem_studg_id');
-    if (is_array($sem_studg_id)) {
-        $sem_studg_ratio_old = Request::optionArray('sem_studg_ratio_old');
-        $sem_studg_ratio = Request::optionArray('sem_studg_ratio');
-        foreach ($sem_studg_id as $key=>$val)
-            if ($sem_studg_ratio_old[$key] != $sem_studg_ratio[$key])
-                $_SESSION['sem_create_data']["sem_admission_ratios_changed"]=TRUE;
-        if ($_SESSION['sem_create_data']["sem_admission_ratios_changed"]) {
-            $_SESSION['sem_create_data']["sem_studg"]='';
-            foreach ($sem_studg_id as $key=>$val)
-                $_SESSION['sem_create_data']["sem_studg"][$val]=array("name"=>$sem_studg_name[$key], "ratio"=>(int)$sem_studg_ratio[$key]);
-        }
-    }
-
-    //Datum fuer Ende der Anmeldung umwandeln. Checken muessen wir es auch leider direkt hier, da wir es sonst nicht umwandeln duerfen
-    if (!check_and_set_date(Request::option('adm_tag'), Request::quoted('adm_monat'), Request::quoted('adm_jahr'), Request::quoted('adm_stunde'), Request::quoted('adm_minute'), $_SESSION['sem_create_data'], "sem_admission_date")) {
-            if ($_SESSION['sem_create_data']["sem_admission"] == 1) {
-                $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Werte f&uuml;r das Losdatum ein!")."§";
-            } elseif ($_SESSION['sem_create_data']["sem_admission"] == 2 && $_SESSION['sem_create_data']["admission_enable_quota"] == 1) {
-                $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Werte f&uuml;r das Enddatum der Kontingentierung ein!")."§";
-            }
-            if($_SESSION['sem_create_data']['sem_admission_date'] <
-                    $_SESSION['sem_create_data']['sem_admission_start_date'])
-            {
-                $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
-            }
     }
 
     //Datum fuer ersten Termin umwandeln. Checken muessen wir es auch leider direkt hier, da wir es sonst nicht umwandeln duerfen
@@ -1437,151 +1364,9 @@ if ($level == 4 && $GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROO
 
 }
 
-//Neuen Studiengang zur Begrenzung aufnehmen
-if (Request::submitted('add_studg')) {
-    if ($sem_add_studg && $sem_add_studg != 'all') {
-        $query = "SELECT name FROM studiengaenge WHERE studiengang_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($sem_add_studg));
-        $studiengang_name = $statement->fetchColumn();
-
-        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg] = array(
-            'name'  => $studiengang_name,
-            'ratio' => (int)$sem_add_ratio
-        );
-    } else if ($sem_add_studg == 'all'){
-        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg] = array(
-            'name'  => _('Alle Studiengänge'),
-            'ratio' => (int)$sem_add_ratio
-        );
-    }
-    $level=5;
-}
-
-if(Request::submitted('reset_admission_time')) {
-    $_SESSION['sem_create_data']["sem_admission_end_date"] = -1;
-    $_SESSION['sem_create_data']["sem_admission_start_date"] = -1;
-    $level = 5;
-}
-
-if(Request::submitted('toggle_admission_quota')) {
-    $level = 5;
-}
-//Studiengang zur Begrenzung loeschen
-if (Request::option('sem_delete_studg')) {
-    unset($_SESSION['sem_create_data']["sem_studg"][Request::option('sem_delete_studg')]);
-    $level=5;
-    if(!count($_SESSION['sem_create_data']["sem_studg"])){
-         $_SESSION['sem_create_data']["sem_studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
-    }
-}
-
-//Prozentangabe checken/berechnen wenn neuer Studiengang, einer geloescht oder Seite abgeschickt
-if ((($form == 5) && (Request::submitted('jump_next'))) || (Request::submitted('add_studg')) || (Request::option('sem_delete_studg')) || Request::submitted('toggle_admission_quota')) {
-    if ($_SESSION['sem_create_data']["sem_admission"] && $_SESSION['sem_create_data']["sem_admission"] != 3 && $_SESSION['sem_create_data']["admission_enable_quota"]) {
-        if (!$_SESSION['sem_create_data']["sem_admission_ratios_changed"] && ((Request::submitted('add_studg') && !$sem_add_ratio && $sem_add_studg) || Request::option('sem_delete_studg') || Request::submitted('toggle_admission_quota'))) {//User hat nichts veraendert und neuen Studiengang ohne Wert geschickt oder studiengang gelöscht, wir versuchen automatisch zu rechnen
-            if (is_array($_SESSION['sem_create_data']["sem_studg"])){
-                $ratio = round(100 / (sizeof ($_SESSION['sem_create_data']["sem_studg"]) ));
-                foreach ($_SESSION['sem_create_data']["sem_studg"] as $key=>$val){
-                    $_SESSION['sem_create_data']["sem_studg"][$key]["ratio"] = $ratio;
-                    $cnt += $ratio;
-                }
-                if($cnt < 100){ //letzten Studiengang auffüllen, wg. evtl. Rundungsfehler
-                    $_SESSION['sem_create_data']["sem_studg"][$key]["ratio"] = (100 - $cnt + $ratio);
-                }
-            }
-        }
-        if (is_array($_SESSION['sem_create_data']["sem_studg"])){
-            $cnt = 0;
-            if(count($_SESSION['sem_create_data']["sem_studg"]) > 1){
-                foreach ($_SESSION['sem_create_data']["sem_studg"] as $key => $val){
-                    $cnt += $val["ratio"];
-                }
-                if ($cnt <= 100 && $_SESSION['sem_create_data']["sem_admission_ratios_changed"] && Request::submitted('add_studg') && $sem_add_studg && !$sem_add_ratio){
-                    $_SESSION['sem_create_data']["sem_studg"][$key]["ratio"] = (100 - $cnt + $val["ratio"]);
-                    $cnt = 100;
-                }
-            } else {
-                reset($_SESSION['sem_create_data']["sem_studg"]);
-                $cnt = $_SESSION['sem_create_data']["sem_studg"][key($_SESSION['sem_create_data']["sem_studg"])]["ratio"];
-            }
-        }
-        if($cnt > 100){
-            $errormsg.= "error§". _("Die Summe der Kontigente übersteigt 100%. Bitte ändern Sie die Kontigente!") . "§";
-            $level=5;
-        }
-        if($cnt < 100){
-            $errormsg.= "error§". _("Die Summe der Kontigente liegt unter 100%. Bitte ändern Sie die Kontigente!") . "§";
-            $level=5;
-        }
-    }
-}
-
 //wenn alles stimmt, Sprung auf Schritt 5 (Anlegen)
 if (($form == 5) && (Request::submitted('jump_next')))
     {
-    if (($_SESSION['sem_create_data']["sem_sec_lese"] ==2) ||  ($_SESSION['sem_create_data']["sem_sec_schreib"] ==2))
-        {
-            //Password bei Bedarf dann doch noch verschlusseln
-            if (!Request::quoted('sem_passwd'))
-                $_SESSION['sem_create_data']["sem_pw"] = "";
-            elseif($sem_passwd != "*******") {
-                $_SESSION['sem_create_data']["sem_pw"] = md5(Request::quoted('sem_passwd'));
-                if(Request::quoted('sem_passwd2') != "*******")
-                    $check_pw = md5(Request::quoted('sem_passwd2'));
-            }
-
-        if (($_SESSION['sem_create_data']["sem_pw"]=="") || ($_SESSION['sem_create_data']["sem_pw"] == md5("")))
-                {
-                $errormsg=$errormsg."error§"._("Sie haben kein Passwort eingegeben! Bitte geben Sie ein Passwort ein!")."§";
-                $level=5;
-                }
-              elseif (!empty($check_pw) AND $_SESSION['sem_create_data']["sem_pw"] != $check_pw)
-                {
-            $errormsg=$errormsg."error§"._("Das eingegebene Passwort und das Passwort zur Best&auml;tigung stimmen nicht &uuml;berein!")."§";
-                $_SESSION['sem_create_data']["sem_pw"] = "";
-                $level=5;
-                }
-    }
-
-    //Ende der Anmeldung checken
-    if ($_SESSION['sem_create_data']["sem_admission"] && $_SESSION['sem_create_data']["sem_admission"] != 3) {
-        if ($_SESSION['sem_create_data']["sem_admission_date"] == -1)
-            if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                $errormsg.= "error§"._("Bitte geben Sie einen Termin f&uuml;r das Losdatum an!")."§";
-            elseif ($_SESSION['sem_create_data']["sem_admission"] == 2 && $_SESSION['sem_create_data']["admission_enable_quota"] == 1)
-                $errormsg.= "error§"._("Bitte geben Sie einen Termin f&uuml;r das Enddatum der Kontingentierung an!")."§";
-        elseif ($_SESSION['sem_create_data']["term_art"]==0){
-            $tmp_first_date=veranstaltung_beginn_from_metadata ($_SESSION['sem_create_data']["term_art"], $_SESSION['sem_create_data']["sem_start_time"], $_SESSION['sem_create_data']["term_start_woche"], $_SESSION['sem_create_data']["sem_start_termin"], $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"], "int");
-            if (($_SESSION['sem_create_data']["sem_admission_date"] > $tmp_first_date) && ($tmp_first_date >0)){
-                if ($tmp_first_date > 0)
-                    if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                        $errormsg.= sprintf ("error§"._("Das Losdatum liegt nach dem ersten Veranstaltungstermin am %s. Bitte &auml;ndern Sie das Losdatum!")."§", date ("d.m.Y", $tmp_first_date));
-                    else
-                        $errormsg.= sprintf ("error§"._("Das Enddatum der Kontingentierung liegt nach dem ersten Veranstaltungstermin am %s. Bitte &auml;ndern Sie das Enddatum der Kontingentierung!")."§", date ("d.m.Y", $tmp_first_date));
-                $level=5;
-            }
-        } elseif (($_SESSION['sem_create_data']["sem_admission_date"] > $_SESSION['sem_create_data']["term_first_date"]) && ($_SESSION['sem_create_data']["term_first_date"])) {
-                if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                    $errormsg.=sprintf ("error§"._("Das Losdatum liegt nach dem eingetragenen Veranstaltungsbeginn am %s. Bitte &auml;ndern Sie das Losdatum!")."§", date ("d.m.Y", $_SESSION['sem_create_data']["term_first_date"]));
-                else
-                    $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt nach dem eingetragenen Veranstaltungsbeginn am %s. Bitte &auml;ndern Sie das Enddatum der Kontingentierung!")."§", date ("d.m.Y", $_SESSION['sem_create_data']["term_first_date"]));
-                $level=5;
-        }
-        if (($_SESSION['sem_create_data']["sem_admission_date"] < time()) && ($_SESSION['sem_create_data']["sem_admission_date"] != -1)) {
-                if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                    $errormsg.=sprintf ("error§"._("Das Losdatum liegt in der Vergangenheit. Bitte &auml;ndern Sie das Losdatum!")."§");
-                else
-                    $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt in der Vergangenheit. Bitte &auml;ndern Sie das Enddatum der Kontingentierung!")."§");
-                $level=5;
-        } elseif (($_SESSION['sem_create_data']["sem_admission_date"] < (time() + (24 * 60 *60))) && ($_SESSION['sem_create_data']["sem_admission_date"] != -1)) {
-                if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                    $errormsg.=sprintf ("error§"._("Das Losdatum muss mindestens einen Tag in der Zukunft liegen!")."§");
-                else
-                    $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung muss mindestens einen Tag in der Zukunft liegen!")."§");
-                $level=5;
-        }
-    }
 
     //Erster Termin wenn angegeben werden soll muss er auch da sein
     if (($_SESSION['sem_create_data']["sem_start_termin"] == -1) && ($_SESSION['sem_create_data']["term_start_woche"] ==-1))
@@ -1706,17 +1491,6 @@ if (($form == 6) && (Request::submitted('jump_next')))
             $_SESSION['sem_create_data']["turnus_count"] = 0;
         }
 
-        //for admission it have to always 3
-        if ($_SESSION['sem_create_data']["sem_admission"]) {
-            $_SESSION['sem_create_data']["sem_sec_lese"]=3;
-            $_SESSION['sem_create_data']["sem_sec_schreib"]=3;
-        }
-
-
-
-        if (Request::option('Schreibzugriff') < Request::option('Lesezugriff')) // hier wusste ein Dozent nicht, was er tat
-            $Schreibzugriff = $Lesezugriff;
-
         //Visibility
         if ($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["visible"] !== FALSE)
             $visible = TRUE;
@@ -1781,7 +1555,6 @@ if (($form == 6) && (Request::submitted('jump_next')))
         $sem->description = stripslashes($_SESSION['sem_create_data']['sem_desc']);
         $sem->location = stripslashes($_SESSION['sem_create_data']['sem_room']);
         $sem->misc = stripslashes($_SESSION['sem_create_data']['sem_sonst']);
-        $sem->password = $_SESSION['sem_create_data']['sem_pw'];
         $sem->read_level = $_SESSION['sem_create_data']['sem_sec_lese'];
         $sem->write_level = $_SESSION['sem_create_data']['sem_sec_schreib'];
         $sem->form = stripslashes($_SESSION['sem_create_data']['sem_art']);
@@ -1790,16 +1563,10 @@ if (($form == 6) && (Request::submitted('jump_next')))
         $sem->orga = stripslashes($_SESSION['sem_create_data']['sem_orga']);
         $sem->leistungsnachweis = stripslashes($_SESSION['sem_create_data']['sem_leistnw']);
         $sem->ects = stripslashes($_SESSION['sem_create_data']['sem_ects']);
-        $sem->admission_endtime = $_SESSION['sem_create_data']['sem_admission_date'];
         $sem->admission_turnout = $_SESSION['sem_create_data']['sem_turnout'];
-        $sem->admission_type = (int)$_SESSION['sem_create_data']['sem_admission'];
         $sem->admission_prelim = (int)$_SESSION['sem_create_data']['sem_payment'];
         $sem->admission_prelim_txt = stripslashes($_SESSION['sem_create_data']['sem_paytxt']);
-        $sem->admission_starttime = $_SESSION['sem_create_data']['sem_admission_start_date'];
-        $sem->admission_endtime_sem = $_SESSION['sem_create_data']['sem_admission_end_date'];
-        $sem->admission_enable_quota = $_SESSION['sem_create_data']['admission_enable_quota'];
         $sem->visible = (($visible) ? '1' : '0');
-        $sem->showscore = '0';
         $sem->modules = $_SESSION['sem_create_data']['sem_modules'];
 
         $sem->user_number = ($_SESSION['sem_create_data']['user_number']) ? '1' : '0';
@@ -2012,23 +1779,6 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 $count_bereich = sizeof($_SESSION['sem_create_data']["sem_bereich"]);
             }
 
-            //Eintrag der zugelassen Studiengänge
-            if ($_SESSION['sem_create_data']["sem_admission"] && $_SESSION['sem_create_data']["sem_admission"] != 3) {
-                if (is_array($_SESSION['sem_create_data']["sem_studg"])){
-                    $query = "INSERT INTO admission_seminar_studiengang
-                              VALUES (?, ?, ?)";
-                    $insert_statement = DBManager::get()->prepare($query);
-
-                    foreach($_SESSION['sem_create_data']["sem_studg"] as $key => $val) {
-                        // Studiengang eintragen
-                        $insert_statement->execute(array(
-                            $_SESSION['sem_create_data']['sem_id'],
-                            $key, $val['ratio']
-                        ));
-                    }
-                }
-            }
-
             //Eintrag der beteiligten Institute
             if (is_array($_SESSION['sem_create_data']["sem_bet_inst"])) {
                 $query = "INSERT INTO seminar_inst
@@ -2136,7 +1886,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                     }
                 }
             }
-            
+
             //end of the seminar-creation process
             openSem($_SESSION['sem_create_data']["sem_id"]); //open Veranstaltung to administrate in the admin-area
         } else {
@@ -2453,15 +2203,9 @@ elseif ((!$level) || ($level == 1))
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="30%" colspan=1>
                             &nbsp; <input type="radio" name="sem_admission" value=0 <? if (!$_SESSION['sem_create_data']["sem_admission"]) echo 'checked'?>>
-                            <?=_("keine"); ?> &nbsp; <br>
-                            &nbsp; <input type="radio" name="sem_admission" value=2 <? if ($_SESSION['sem_create_data']["sem_admission"]=="2") echo 'checked'?>>
-                            <?=_("nach Anmeldereihenfolge"); ?> <br>
-                            &nbsp; <input type="radio" name="sem_admission" value=1 <? if ($_SESSION['sem_create_data']["sem_admission"]=="1") echo 'checked'?>>
-                            <?=_("per Losverfahren"); ?>&nbsp;
-                            <?= tooltipIcon(_("Sie können die Anzahl der Teilnehmenden beschränken. Möglich ist die Zulassung von Interessierten über das Losverfahren oder über die Reihenfolge der Anmeldung. Sie können später Angaben über zugelassene Teilnehmer machen.")) ?>
-                            <br>
-                            &nbsp; <input type="radio" name="sem_admission" value=3 <? if ($_SESSION['sem_create_data']["sem_admission"]=="3") echo 'checked'?>>
-                            <?=_("gesperrt"); ?>&nbsp;
+                            <?=_("Nein"); ?> &nbsp; <br>
+                            &nbsp; <input type="radio" name="sem_admission" value=1 <? if ($_SESSION['sem_create_data']["sem_admission"]==1) echo 'checked'?>>
+                            <?=_("Ja"); ?> <br>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                             <?=_("maximale Teilnehmeranzahl:"); ?>
@@ -3041,7 +2785,6 @@ if ($level == 2)
                                 }
                                 ?>
                                 <input type="radio" name="sem_sec_lese" value="1" <?php print $_SESSION['sem_create_data']["sem_sec_lese"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet"); ?> &nbsp;
-                                <input type="radio" name="sem_sec_lese" value="2" <?php print $_SESSION['sem_create_data']["sem_sec_lese"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort"); ?> &nbsp;
                                 <?= tooltipIcon(_("Hier geben Sie an, ob der Lesezugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist.")) ?>
                             <?
                             } else
@@ -3070,7 +2813,6 @@ if ($level == 2)
                                     }
                             ?>
                                 <input type="radio" name="sem_sec_schreib" value="1" <?php print $_SESSION['sem_create_data']["sem_sec_schreib"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet"); ?> &nbsp;
-                                <input type="radio" name="sem_sec_schreib" value="2" <?php print $_SESSION['sem_create_data']["sem_sec_schreib"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort"); ?> &nbsp;
                                 <?= tooltipIcon(_("Hier geben Sie an, ob der Schreibzugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist.")) ?>
                             <?
                             } else
@@ -3749,241 +3491,8 @@ if ($level == 5)
                             &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
-                    <? if ($_SESSION['sem_create_data']["sem_admission"] != 3) { ?>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?= _("Anmeldezeitraum:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                            <font size=-1>&nbsp;
-                                <? print _("Bitte geben Sie hier ein Datum an, ab wann und bis wann sich Teilnehmer für die Veranstaltung eintragen d&uuml;rfen."); ?>
-                                <br>&nbsp;
-                                <? print _("Wenn sich die Teilnehmer sofort nach erstellen dieser Veranstaltung eintragen d&uuml;rfen, lassen Sie das Datum einfach unver&auml;ndert."); ?>
-                                <br>&nbsp;
-                                <? print _("Wenn es kein Ende der Anmeldefrist geben soll, lassen Sie das Enddatum unver&auml;ndert."); ?>
-                                <br><br>
-                            </font>
-                            <table align="right" width="98%" border="0" cellpadding="2" cellspacing="0">
-                                <tr>
-                                    <td class="<? echo $cssSw->getClass() ?>" valign="top" align="right" width="10%">
-                                        <font size=-1><? echo _("Startdatum f&uuml;r Anmeldungen");?>:</font>
-                                    </td>
-                                    <td class="<? echo $cssSw->getClass() ?>" valign="top" width="40%">
-                                        <font size=-1>&nbsp; <input type="text" name="adm_s_tag" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_start_date"]<>-1) echo date("d",$_SESSION['sem_create_data']["sem_admission_start_date"]); else echo _("tt") ?>">.
-                                        <input type="text" name="adm_s_monat" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_start_date"]<>-1) echo date("m",$_SESSION['sem_create_data']["sem_admission_start_date"]); else echo _("mm") ?>">.
-                                        <input type="text" name="adm_s_jahr" size=4 maxlength=4 value="<? if ($_SESSION['sem_create_data']["sem_admission_start_date"]<>-1) echo date("Y",$_SESSION['sem_create_data']["sem_admission_start_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
-                                        <font size=-1>&nbsp; <input type="text" name="adm_s_stunde" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_start_date"]<>-1) echo date("H",$_SESSION['sem_create_data']["sem_admission_start_date"]); else echo _("hh") ?>">:
-                                        <input type="text" name="adm_s_minute" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_start_date"]<>-1) echo date("i",$_SESSION['sem_create_data']["sem_admission_start_date"]); else echo _("mm") ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
-                                        <?=Termin_Eingabe_javascript(20,0,($_SESSION['sem_create_data']["sem_admission_start_date"] != -1 ? $_SESSION['sem_create_data']["sem_admission_start_date"] : 0),'','','','','&form_name=form_5');?>
-                                        <?= tooltipIcon(_("Teilnehmer dürfen sich erst ab diesem Datum in die Veranstaltung eintragen.")) ?>
-                                    </td>
-                                    <td class="<? echo $cssSw->getClass() ?>" valign="top" align="right" width="10%">
-                                        <font size=-1><? echo _("Enddatum f&uuml;r Anmeldungen");?>:</font>
-                                    </td>
-                                    <td class="<? echo $cssSw->getClass() ?>" valign="top" width="40%">
-                                        <font size=-1>&nbsp; <input type="text" name="adm_e_tag" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_end_date"]<>-1) echo date("d",$_SESSION['sem_create_data']["sem_admission_end_date"]); else echo _("tt") ?>">.
-                                        <input type="text" name="adm_e_monat" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_end_date"]<>-1) echo date("m",$_SESSION['sem_create_data']["sem_admission_end_date"]); else echo _("mm") ?>">.
-                                        <input type="text" name="adm_e_jahr" size=4 maxlength=4 value="<? if ($_SESSION['sem_create_data']["sem_admission_end_date"]<>-1) echo date("Y",$_SESSION['sem_create_data']["sem_admission_end_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
-                                        <font size=-1>&nbsp; <input type="text" name="adm_e_stunde" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_end_date"]<>-1) echo date("H",$_SESSION['sem_create_data']["sem_admission_end_date"]); else echo "23" ?>">:
-                                        <input type="text" name="adm_e_minute" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_end_date"]<>-1) echo date("i",$_SESSION['sem_create_data']["sem_admission_end_date"]); else echo "59" ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
-                                        <?=Termin_Eingabe_javascript(21,0,($_SESSION['sem_create_data']["sem_admission_end_date"] != -1 ? $_SESSION['sem_create_data']["sem_admission_end_date"] : 0),'','','','','&form_name=form_5');?>
-                                        <?= tooltipIcon(_("Teilnehmer dürfen sich nur bis zu diesem Datum in die Veranstaltung eintragen.")) ?>
-                                    </td>
-                                    <td class="<? echo $cssSw->getClass() ?>" >
-                                    <?=  Button::create(_('Löschen'), 'reset_admission_time', array('title' => _("Start- und Enddatum zurücksetzen")))?>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <?
-                    if (($_SESSION['sem_create_data']["sem_sec_lese"] ==2) || ($_SESSION['sem_create_data']["sem_sec_schreib"] ==2)) {
-                        ?>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                                <?=_("Passwort f&uuml;r Freischaltung:"); ?>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>&nbsp;
-                                <?
-                                    if (($_SESSION['sem_create_data']["sem_pw"]=="") || ($_SESSION['sem_create_data']["sem_pw"] == md5("")))
-                                        echo "<input type=\"password\" name=\"sem_passwd\" size=12 maxlength=31> <font size='+2' color='red'>*</font>&nbsp; "._("Passwort-Wiederholung:")."&nbsp; <input type=\"password\" name=\"sem_passwd2\" size=12 maxlength=31>";
-                                    else
-                                        echo "<input type=\"password\" name=\"sem_passwd\" size=12 maxlength=31 value=\"*******\"> <font size='+2' color='red'>*</font>&nbsp; "._("Passwort-Wiederholung:")."&nbsp; <input type=\"password\" name=\"sem_passwd2\" size=12 maxlength=31 value=\"*******\">";
-                                ?>
-                                <?= tooltipIcon(_("Bitte geben Sie hier ein Passwort für die Veranstaltung sowie dasselbe Passwort nochmal zur Bestätigung ein. Dieses wird später von den Teilnehmenden benötigt, um die Veranstaltung abonnieren zu können.")) ?>
-                                <font size="+2" color="red">*</font>
-                            </td>
-                        </tr>
-                        <?
-                    }
-                    if ($_SESSION['sem_create_data']["sem_admission"]) {
-                        $num_all = $_SESSION['sem_create_data']["sem_turnout"];
-                        if (is_array($_SESSION['sem_create_data']["sem_studg"]) && $_SESSION['sem_create_data']["sem_turnout"]){
-                            foreach ($_SESSION['sem_create_data']["sem_studg"] as $key => $val){
-                                if ($val["ratio"] && $key != 'all') {
-                                    $num_stg[$key] = round($_SESSION['sem_create_data']["sem_turnout"] * $val["ratio"] / 100);
-                                    $num_all -= $num_stg[$key];
-                                }
-                            }
-                            if ($num_all < 0) $num_all = 0;
-                            $num_stg['all'] = $num_all;
-                        }
-                    ?>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Anmeldeverfahren:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
-                            <font size=-1>&nbsp;<?
-                            if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                                print _("Sie haben vorher das Stud.IP Anmeldeverfahren nach dem Losverfahren aktiviert.");
-                            else
-                                print _("Sie haben vorher das Stud.IP Anmeldeverfahren nach der Reihenfolge der Anmeldungen aktiviert.");
-                            ?><br>
-                            &nbsp;<?
-                            if ($_SESSION['sem_create_data']["sem_admission"] == 1)
-                                print _("Bitte geben Sie hier an, welche Studieng&auml;nge mit welchen Kontingenten zugelassen sind und wann das Losdatum ist:");
-                            elseif (!$_SESSION['sem_create_data']["admission_enable_quota"])
-                                print _("Bitte geben Sie hier an, welche Studieng&auml;nge zugelassen sind:");
-                            else
-                                print _("Bitte geben Sie hier an, welche Studieng&auml;nge mit welchen Kontingenten zugelassen sind und wann das Enddatum der Kontingentierung ist:");
-                            ?><br><br>
-                                <table border="0" cellpadding="2" cellspacing="0">
-                                    <tr>
-                                    <td class="<? echo $cssSw->getClass() ?>" colspan="4" >
-                                    <input style="vertical-align:middle;" type="checkbox" name="admission_enable_quota" <?=($_SESSION['sem_create_data']["admission_enable_quota"] ? 'checked' : '')?> value="1">
-                                    <font size=-1><?=_("Prozentuale Kontingentierung aktivieren.")."</font>"?>
-                                    &nbsp;&nbsp;
-                                    <?= Button::createAccept(_('OK!'), 'toggle_admission_quota', array('title' => _("Kontingentierung aktivieren/deaktivieren"))) ?>
-                                    </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="<? echo $cssSw->getClass() ?>" valign="bottom" width="40%">
-                                        <font size=-1>&nbsp;
-                                        </font>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" valign="bottom"  nowrap width="5%">
-                                        &nbsp;
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" valign="top" align="right" width="25%">
-                                            <font size=-1><? if ($_SESSION['sem_create_data']["sem_admission"] == 1) echo _("Losdatum").':'; elseif($_SESSION['sem_create_data']["admission_enable_quota"]) echo _("Enddatum der Kontingentierung").':';?>&nbsp;</font>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" valign="top" width="45%">
-                                        <?if($_SESSION['sem_create_data']["sem_admission"] == 1 || $_SESSION['sem_create_data']["admission_enable_quota"]){?>
-                                            <font size=-1>&nbsp; <input type="text" name="adm_tag" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_date"]<>-1) echo date("d",$_SESSION['sem_create_data']["sem_admission_date"]); else echo _("tt") ?>">.
-                                            <input type="text" name="adm_monat" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_date"]<>-1) echo date("m",$_SESSION['sem_create_data']["sem_admission_date"]); else echo _("mm") ?>">.
-                                            <input type="text" name="adm_jahr" size=4 maxlength=4 value="<? if ($_SESSION['sem_create_data']["sem_admission_date"]<>-1) echo date("Y",$_SESSION['sem_create_data']["sem_admission_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
-                                            <font size=-1>&nbsp; <input type="text" name="adm_stunde" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_date"]<>-1) echo date("H",$_SESSION['sem_create_data']["sem_admission_date"]); else echo"23" ?>">:
-                                            <input type="text" name="adm_minute" size=2 maxlength=2 value="<? if ($_SESSION['sem_create_data']["sem_admission_date"]<>-1) echo date("i",$_SESSION['sem_create_data']["sem_admission_date"]); else echo"59" ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
-                                            <?=Termin_Eingabe_javascript(22,0,($_SESSION['sem_create_data']["sem_admission_date"] != -1 ? $_SESSION['sem_create_data']["sem_admission_date"] : 0),'','','','','&form_name=form_5');?>
-                                            <?
-                                            if ($_SESSION['sem_create_data']["sem_admission"] == 1) {
-                                            ?>
-                                            <?= tooltipIcon(_("Bitte geben Sie hier ein, wann die Anwärter auf der Anmeldeliste in die Veranstaltung gelost werden. Freigebliebene Plätze werden nach diesem Termin per Warteliste an andere interessierte Personen vergeben.")) ?>
-                                            <?
-                                            } else {
-                                            ?>
-                                            <?= tooltipIcon(_("Bitte geben Sie hier ein, wann das Anmeldeverfahren die Kontingentierung aufheben soll. Ab diesem Zeitpunkt werden freie Plätze an interessierten Personen aus der Warteliste vergeben.")) ?>
-                                            <?
-                                            }
-                                        } else echo '&nbsp;';
-                                        ?>
-                                        </td>
-                                    </tr>
-                                    <?
-                                    if (count($_SESSION['sem_create_data']["sem_studg"])) {
-                                        foreach ($_SESSION['sem_create_data']["sem_studg"] as $key=>$val) {
-                                    ?>
-                                    <tr>
-                                        <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                        <font size=-1>&nbsp;
-                                        <?
-                                        echo (htmlReady(my_substr($val["name"], 0, 40)));
-                                        ?>
-                                        </font>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
-                                        <input type="hidden" name="sem_studg_id[]" value="<? echo $key ?>">
-                                        <input type="hidden" name="sem_studg_name[]" value="<? echo $val["name"] ?>">
-                                        <?
-                                        if($_SESSION['sem_create_data']["admission_enable_quota"]){
-                                            printf ("<input type=\"HIDDEN\" name=\"sem_studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
-                                            printf ("<input type=\"TEXT\" name=\"sem_studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".Assets::image_path('icons/16/blue/trash.png')."\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
-                                        } else {
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".Assets::image_path('icons/16/blue/trash.png')."\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
-                                        }
-                                        ?>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" width="70%" colspan=2>&nbsp;
-                                        </td>
-                                    </tr>
-                                    <?
-                                        }
-                                    }
-                                    $stg = array();
-                                    if(!isset($_SESSION['sem_create_data']["sem_studg"]['all'])){
-                                        $stg[] = array('name' => _("Alle Studiengänge"), 'studiengang_id' => 'all');
-                                    }
 
-                                    $query = "SELECT *
-                                              FROM studiengaenge
-                                              WHERE studiengang_id NOT IN (?)
-                                              ORDER BY name";
-                                    $statement = DBManager::get()->prepare($query);
-                                    $statement->execute(array(
-                                        array_keys($_SESSION['sem_create_data']['sem_studg']) ?: array('')
-                                    ));
-                                    $studiengaenge = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                    $stg = array_merge($stg, $studiengaenge);
-
-                                    if (count($stg)) {
-                                    ?>
-                                    <tr>
-                                        <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                        <font size=-1>&nbsp;
-                                        <select name="sem_add_studg">
-                                        <option value="">-- <?=_("bitte ausw&auml;hlen"); ?> --</option>
-                                    <?
-                                    foreach($stg as $s) {
-                                    printf ("<option value=%s>%s</option>", $s["studiengang_id"], htmlReady(my_substr($s["name"], 0, 40)));
-                                    }
-                                    ?>
-                                        </select>
-                                        </font>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
-                                        <?if($_SESSION['sem_create_data']["admission_enable_quota"]){?>
-                                            <input type="text" name="sem_add_ratio" size=5 maxlength=5><font size=-1> %</font>
-                                        <?} else echo '&nbsp;';?>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                            <?= Button::create(_('Hinzufügen'), 'add_studg') ?>&nbsp;
-                                            <?= tooltipIcon(_("Bitte geben Sie hier ein, für welche Studiengänge die Veranstaltung mit welchen Kontingenten beschränkt sein soll und bis wann eine Anmeldung über das Stud.IP Anmeldeverfahren möglich ist.")) ?>
-                                        </td>
-                                        <td class="<? echo $cssSw->getClass() ?>" width="40%">&nbsp;
-                                        </td>
-                                    </tr>
-                                    <?
-                                    }
-                                    ?>
-                                </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
-                            <?
-                            printf (_("%sAchtung: %sWenn Sie ein Anmeldeverfahren starten, so kann dieser Schritt sp&auml;ter nicht r&uuml;ckg&auml;ngig gemacht werden.")." <br>&nbsp; "._("Sie k&ouml;nnen jedoch die Anzahl der Teilnehmer jederzeit unter <i>Grunddaten</i> anpassen.")."</font> ", "<font size=-1 color=\"red\">&nbsp; ", "</font><font size=-1>");
-                            ?>
-                        </td>
-                    </tr>
-                    <?
-                    }
-
-                    if ($_SESSION['sem_create_data']["sem_payment"]=="1") { ?>
+                    <? if ($_SESSION['sem_create_data']["sem_payment"]=="1") { ?>
                     <tr<?$cssSw->switchClass()?>>
                         <td class ="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                             <? echo _("Hinweistext bei vorl&auml;ufigen Eintr&auml;gen:"); ?>
@@ -3995,7 +3504,7 @@ if ($level == 5)
                     </tr>
                     <?
                     }
-                    }
+
                     if (!$SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["compact_mode"]) {
                     ?>
                     <tr <? $cssSw->switchClass() ?>>

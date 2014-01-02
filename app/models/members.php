@@ -15,37 +15,6 @@ class MembersModel
         $this->course_title = $course_title;
     }
 
-    public function getCountedMembers()
-    {
-        $count = array();
-
-        $query1 = "SELECT COUNT(user_id) AS members, SUM(admission_studiengang_id != '') AS members_contingent
-                   FROM seminar_user
-                   WHERE Seminar_id = ? AND status IN ('user','autor','tutor')";
-
-        $stm = DBManager::get()->prepare($query1);
-        $stm->execute(array($this->course_id));
-
-        $temp = $stm->fetch(PDO::FETCH_ASSOC);
-
-        $count['members'] = $temp['members'];
-        $count['members_contingent'] = $temp['members_contingent'];
-
-        $query2 = "SELECT COUNT(user_id) AS members, SUM(studiengang_id != '') AS members_contingent
-                   FROM admission_seminar_user
-                   WHERE seminar_id = ? AND status = 'accepted'";
-
-        $stm2 = DBManager::get()->prepare($query2);
-        $stm2->execute(array($this->course_id));
-        $temp2 = $stm->fetch(PDO::FETCH_ASSOC);
-
-        $count['members'] += $temp2['members'];
-        $count['members_contingent'] += $temp2['members_contingent'];
-
-
-        return $count;
-    }
-
     public function setAdmissionVisibility($user_id, $status)
     {
         $query = "UPDATE admission_seminar_user SET visible = '?' WHERE user_id = ? AND seminar_id = ?";
@@ -149,10 +118,14 @@ class MembersModel
         $messaging = new messaging;
         $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ? AND user_id = ? AND status = ?";
         $db = DBManager::get()->prepare($query);
+        $cs = Seminar::GetInstance($this->course_id)->getCourseSet();
         foreach ($users as $user_id) {
             $temp_user = UserModel::getUser($user_id);
+            if ($cs) {
+                $prio_delete = AdmissionPriority::unsetPriority($cs->getId(), $user_id, $this->course_id);
+            }
             $db->execute(array($this->course_id, $user_id, $status));
-            if ($db->rowCount() > 0) {
+            if ($db->rowCount() > 0 || $prio_delete) {
                 setTempLanguage($user_id);
                 if ($status !== 'accepted') {
                     $message = sprintf(_("Sie wurden von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn von der Warteliste der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden."), get_title_for_status('dozent', 1),  $this->course_title);
@@ -355,7 +328,6 @@ class MembersModel
     function getMembers($sort_status = 'autor', $order_by = 'nachname asc')
     {
         $query = "SELECT su.user_id,username,vorname,nachname,email,status,position,su.mkdate,su.visible,
-                IF(admission_studiengang_id='all', admission_studiengang_id,studiengaenge.name) as kontingent,
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING (user_id)
@@ -385,8 +357,21 @@ class MembersModel
      */
     function getAdmissionMembers($sort_status = 'autor', $order_by = 'nachname asc')
     {
+        $cs = CourseSet::getSetForCourse($this->course_id);
+        $claiming = array();
+        if (is_object($cs) && $cs->getSeatDistributionTime() > time()) {
+            foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $this->course_id) as $user_id => $p) {
+                $user = User::find($user_id);
+                $data = $user->toArray('user_id username vorname nachname email');
+                $data['fullname'] = $user->getFullname();
+                $data['position'] = $p;
+                $data['visible'] = 'unknown';
+                $data['status'] = 'claiming';
+                $claiming[] = $data;
+            }
+        }
+
         $query = "SELECT asu.user_id,username,vorname,nachname,email,status,position,asu.mkdate,asu.visible,
-                IF(asu.studiengang_id='all', asu.studiengang_id,studiengaenge.name) as kontingent,
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM admission_seminar_user asu INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING(user_id)
@@ -396,7 +381,7 @@ class MembersModel
         $st->execute(array(
             $this->course_id
         ));
-        $application_members = SimpleCollection::createFromArray($st->fetchAll(PDO::FETCH_ASSOC));
+        $application_members = SimpleCollection::createFromArray(array_merge($claiming, $st->fetchAll(PDO::FETCH_ASSOC)));
         $filtered_members = array();
         foreach (words('awaiting accepted claiming') as $status) {
             $filtered_members[$status] = $application_members->findBy('status', $status);

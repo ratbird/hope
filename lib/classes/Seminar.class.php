@@ -34,14 +34,13 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/classes/StudipLitList.class.php';
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ObjectConnections.class.php";
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php";
-
+require_once 'app/models/studygroup.php';
+require_once 'lib/classes/admission/CourseSet.class.php';
 
 class Seminar
 {
-    var $id = null;                     // ID of the seminar
     var $issues = null;                 // Array of Issue
     var $irregularSingleDates = null;   // Array of SingleDates
-    var $metadate = null;               // MetaDate
     var $messages = array();            // occured errors, infos, and warnings
     var $semester = null;
     var $filterStart = 0;
@@ -49,26 +48,50 @@ class Seminar
     var $hasDatesOutOfDuration = -1;
     var $message_stack = array();
 
-    var $user_number = 0;
+    var $user_number = 0;//?
+    var $old_settings; //?
+    var $commands; //?
+    var $BookedRoomsStatTemp; //???
+
+    private $_metadate = null;               // MetaDate
+
+    private $alias = array(
+            'seminar_number' => 'VeranstaltungsNummer',
+            'subtitle' => 'Untertitel',
+            'description' => 'Beschreibung',
+            'location' => 'Ort',
+            'misc' => 'Sonstiges',
+            'read_level' => 'Lesezugriff',
+            'write_level' => 'Schreibzugriff',
+            'semester_start_time' => 'start_time',
+            'semester_duration_time' => 'duration_time',
+            'form' => 'art',
+            'participants' => 'teilnehmer',
+            'requirements' => 'vorrausetzungen',
+            'orga' => 'lernorga',
+    );
+
+    private $course = null;
+
+    private static $seminar_object_pool;
 
     static function GetInstance($id = false, $refresh_cache = false)
     {
-        static $seminar_object_pool;
-
-        if ($id){
-            if ($refresh_cache){
-                $seminar_object_pool[$id] = null;
+        if ($id) {
+            if ($refresh_cache) {
+                self::$seminar_object_pool[$id] = null;
             }
-            if (is_object($seminar_object_pool[$id]) && $seminar_object_pool[$id]->getId() == $id){
-                return $seminar_object_pool[$id];
+            if (is_object(self::$seminar_object_pool[$id]) && self::$seminar_object_pool[$id]->getId() == $id) {
+                return self::$seminar_object_pool[$id];
             } else {
-                $seminar_object_pool[$id] = new Seminar($id);
-                return $seminar_object_pool[$id];
+                self::$seminar_object_pool[$id] = new Seminar($id);
+                return self::$seminar_object_pool[$id];
             }
         } else {
             return new Seminar(false);
         }
     }
+
     /**
     * Constructor
     *
@@ -76,22 +99,61 @@ class Seminar
     * @access   public
     * @param    string  $seminar_id the seminar to be retrieved
     */
-    function Seminar($id = FALSE)
+    function __construct($course_or_id = FALSE)
     {
-        $this->semester = new SemesterData();
-
-        if ($id) {
-            $this->id = $id;
-            $this->restore();
-        }
-        if (!$this->id) {
-            $this->id = $this->createId();
-            $this->is_new = TRUE;
-            $this->metadate = new MetaDate($this->id);
+        $course = Course::toObject($course_or_id);
+        if ($course) {
+            $this->course = $course;
+        } elseif ($course_or_id === false) {
+            $this->course = new Course();
+            $this->course->setId($this->course->getNewId());
+        } else { //hmhmhm
+            throw new Exception(sprintf(_('Fehler: Konnte das Seminar mit der ID %s nicht finden!'), $course_or_id));
         }
     }
 
-    function GetSemIdByDateId($date_id)
+    function __get($field)
+    {
+        if ($field == 'is_new') {
+            return $this->course->isNew();
+        }
+        if ($field == 'metadate') {
+            if ($this->_metadate === null) {
+                $this->_metadate = new MetaDate($this->id);
+                $this->_metadate->setSeminarStartTime($this->start_time);
+                $this->_metadate->setSeminarDurationTime($this->duration_time);
+            }
+            return $this->_metadate;
+        }
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        return $this->course->$field;
+    }
+
+    function __set($field, $value)
+    {
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        if ($field == 'metadate') {
+            $this->_metadate = $value;
+        }
+        return $this->course->$field = $value;
+    }
+
+    function __isset($field)
+    {
+        if ($field == 'metadate') {
+            is_object($this->_metadate);
+        }
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        return isset($this->course->$field);
+    }
+
+    static function GetSemIdByDateId($date_id)
     {
         $stmt = DBManager::get()->prepare("SELECT range_id FROM termine WHERE termin_id = ? LIMIT 1");
         $stmt->execute(array($date_id));
@@ -106,63 +168,42 @@ class Seminar
     */
     function createId()
     {
-        return md5(uniqid("Seminar"));
+        return $this->course->getNewId();
     }
 
     function getMembers($status = 'dozent')
     {
-        if (!isset($this->members[$status])){
-            $this->restoreMembers($status);
+        $ret = array();
+        foreach($this->course->members->findBy('status', $status)->orderBy('position nachname') as $m) {
+            $ret[$m->user_id]['user_id'] = $m->user_id;
+            $ret[$m->user_id]['username'] = $m->username;
+            $ret[$m->user_id]['Vorname'] = $m->vorname;
+            $ret[$m->user_id]['Nachname'] = $m->nachname;
+            $ret[$m->user_id]['Email'] = $m->email;
+            $ret[$m->user_id]['position'] = $m->position;
+            $ret[$m->user_id]['label'] = $m->label;
+            $ret[$m->user_id]['status'] = $m->status;
+            $ret[$m->user_id]['mkdate'] = $m->mkdate;
+            $ret[$m->user_id]['fullname'] = $m->user->getFullname();
         }
-        return $this->members[$status];
-    }
-
-    function restoreMembers($status = 'dozent')
-    {
-        // user_id needs to be be defined twice so it can be used both as
-        // a key for the associative array and as a regular field in the array
-        $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
-                         {$GLOBALS['_fullname_sql']['full']} AS fullname, su.position,
-                         admission_studiengang_id, su.status, su.label, su.mkdate, su.visible, stg.name AS studiengang
-                  FROM seminar_user AS su
-                  INNER JOIN auth_user_md5 USING (user_id)
-                  LEFT JOIN user_info USING (user_id)
-                  LEFT JOIN studiengaenge AS stg ON (su.admission_studiengang_id = stg.studiengang_id)
-                  WHERE status = ? AND su.seminar_id = ?
-                  ORDER BY su.position, Nachname";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($status, $this->getId()));
-        $this->members[$status] = $statement->fetchGrouped(PDO::FETCH_ASSOC);
-
-        return count($this->members[$status]);
+        return $ret;
     }
 
     function getAdmissionMembers($status = 'awaiting')
     {
-        if (!isset($this->admission_members[$status])) {
-            $this->restoreAdmissionMembers($status);
+        $ret = array();
+        foreach($this->course->admission_applicants->findBy('status', $status)->orderBy('position nachname') as $m) {
+            $ret[$m->user_id]['user_id'] = $m->user_id;
+            $ret[$m->user_id]['username'] = $m->username;
+            $ret[$m->user_id]['Vorname'] = $m->vorname;
+            $ret[$m->user_id]['Nachname'] = $m->nachname;
+            $ret[$m->user_id]['Email'] = $m->email;
+            $ret[$m->user_id]['position'] = $m->position;
+            $ret[$m->user_id]['status'] = $m->status;
+            $ret[$m->user_id]['mkdate'] = $m->mkdate;
+            $ret[$m->user_id]['fullname'] = $m->user->getFullname();
         }
-        return $this->admission_members[$status];
-    }
-
-    function restoreAdmissionMembers($status = 'awaiting')
-    {
-        // user_id needs to be be defined twice so it can be used both as
-        // a key for the associative array and as a regular field in the array
-        $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
-                         {$GLOBALS['_fullname_sql']['full']} AS fullname, su.position,
-                         studiengang_id, su.status, su.mkdate, su.visible, stg.name AS studiengang
-                  FROM admission_seminar_user AS su
-                  INNER JOIN auth_user_md5 USING (user_id)
-                  LEFT JOIN user_info USING (user_id)
-                  LEFT JOIN studiengaenge stg USING (studiengang_id)
-                  WHERE status = ? AND su.seminar_id = ?
-                  ORDER BY su.position, Nachname";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($status, $this->getId()));
-        $this->admission_members[$status] = $statement->fetchGrouped(PDO::FETCH_ASSOC);
-
-        return count($this->admission_members[$status]);
+        return $ret;
     }
 
     function getId()
@@ -402,64 +443,12 @@ class Seminar
     */
     function restore()
     {
+        $this->course->restore();
         $this->irregularSingleDates = null;
         $this->issues = null;
+        $this->_metadate = null;
 
-        $stmt = DBManager::get()->prepare("SELECT * FROM seminare WHERE Seminar_id=? LIMIT 1");
-        $stmt->execute(array($this->id));
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$row) {
-            throw new Exception(sprintf(_('Fehler: Konnte das Seminar mit der ID %s nicht finden!'), $this->id));
-        }
-
-        $this->seminar_number         = $row["VeranstaltungsNummer"];
-        $this->institut_id            = $row["Institut_id"];
-        $this->name                   = $row["Name"];
-        $this->subtitle               = $row["Untertitel"];
-        $this->status                 = $row["status"];
-        $this->description            = $row["Beschreibung"];
-        $this->location               = $row["Ort"];
-        $this->misc                   = $row["Sonstiges"];
-        $this->password               = $row["Passwort"];
-        $this->read_level             = $row["Lesezugriff"];
-        $this->write_level            = $row["Schreibzugriff"];
-        $this->semester_start_time    = $row["start_time"];
-        $this->semester_duration_time = $row["duration_time"];
-        $this->form                   = $row["art"];
-        $this->participants           = $row["teilnehmer"];
-        $this->requirements           = $row["vorrausetzungen"];
-        $this->orga                   = $row["lernorga"];
-        $this->leistungsnachweis      = $row["leistungsnachweis"];
-
-        $this->metadate = new MetaDate($this->id);
-        $this->metadate->setSeminarStartTime($row['start_time']);
-        $this->metadate->setSeminarDurationTime($row['duration_time']);
-
-        $this->mkdate                         = $row["mkdate"];
-        $this->chdate                         = $row["chdate"];
-        $this->ects                           = $row["ects"];
-        $this->admission_endtime              = $row["admission_endtime"];
-        $this->admission_turnout              = $row["admission_turnout"];
-        $this->admission_binding              = $row["admission_binding"];
-        $this->admission_type                 = $row["admission_type"];
-        $this->admission_selection_take_place = $row["admission_selection_take_place"];
-        $this->admission_group                = $row["admission_group"];
-        $this->admission_prelim               = $row["admission_prelim"];
-        $this->admission_prelim_txt           = $row["admission_prelim_txt"];
-        $this->admission_starttime            = $row["admission_starttime"];
-        $this->admission_endtime_sem          = $row["admission_endtime_sem"];
-        $this->admission_disable_waitlist     = $row["admission_disable_waitlist"];
-        $this->admission_enable_quota         = $row["admission_enable_quota"];
-        $this->visible                        = $row["visible"];
-        $this->showscore                      = $row["showscore"];
-        $this->modules                        = $row["modules"];
-        $this->is_new                         = false;
-        $this->members                        = array();
-        $this->admission_members              = array();
-        $this->admission_studiengang          = null;
-
-        $this->old_settings = $this->getSettings();
+       $this->old_settings = $this->getSettings();
 
         return TRUE;
     }
@@ -471,12 +460,7 @@ class Seminar
      * @return  array
      */
     function getSettings() {
-        $settings = get_object_vars($this);
-        foreach ($settings as $key => $val) {
-            if (is_object($val) || is_array($val)) unset($settings[$key]);
-        }
-
-        return $settings;
+        return $this->course->toArray();
     }
 
     function store($trigger_chdate = true)
@@ -501,131 +485,12 @@ class Seminar
             }
         }
 
-        $metadate_changed = $this->metadate->store();
-
-        $query = "INSERT INTO seminare SET Seminar_id = :Seminar_id,
-                                           VeranstaltungsNummer = :VeranstaltungsNummer,
-                                           Institut_id = :Institut_id,
-                                           Name = :Name,
-                                           Untertitel = :Untertitel,
-                                           status = :status,
-                                           Beschreibung = :Beschreibung,
-                                           Ort = :Ort,
-                                           Sonstiges = :Sonstiges,
-                                           Passwort = :Passwort,
-                                           Lesezugriff = :Lesezugriff,
-                                           Schreibzugriff = :Schreibzugriff,
-                                           start_time = :start_time,
-                                           duration_time = :duration_time,
-                                           art = :art,
-                                           teilnehmer = :teilnehmer,
-                                           vorrausetzungen = :vorrausetzungen,
-                                           lernorga = :lernorga,
-                                           leistungsnachweis = :leistungsnachweis,
-                                           mkdate = UNIX_TIMESTAMP(),
-                                           chdate = UNIX_TIMESTAMP(),
-                                           ects = :ects,
-                                           admission_endtime = :admission_endtime,
-                                           admission_turnout = :admission_turnout,
-                                           admission_binding = NULL,
-                                           admission_type = :admission_type,
-                                           admission_selection_take_place = 0,
-                                           admission_group = NULL,
-                                           admission_prelim = :admission_prelim,
-                                           admission_prelim_txt = :admission_prelim_txt,
-                                           admission_starttime = :admission_starttime,
-                                           admission_endtime_sem = :admission_endtime_sem,
-                                           admission_disable_waitlist = :admission_disable_waitlist,
-                                           admission_enable_quota = :admission_enable_quota,
-                                           visible = :visible,
-                                           showscore = 0,
-                                           modules = :modules
-                  ON DUPLICATE KEY UPDATE  VeranstaltungsNummer = VALUES(VeranstaltungsNummer),
-                                           Institut_id = VALUES(Institut_id),
-                                           Name = VALUES(Name),
-                                           Untertitel = VALUES(Untertitel),
-                                           status = VALUES(status),
-                                           Beschreibung = VALUES(Beschreibung),
-                                           Ort = VALUES(Ort),
-                                           Sonstiges = VALUES(Sonstiges),
-                                           Passwort = VALUES(Passwort),
-                                           Lesezugriff = VALUES(Lesezugriff),
-                                           Schreibzugriff = VALUES(Schreibzugriff),
-                                           start_time = VALUES(start_time),
-                                           duration_time = VALUES(duration_time),
-                                           art = VALUES(art),
-                                           teilnehmer = VALUES(teilnehmer),
-                                           vorrausetzungen = VALUES(vorrausetzungen),
-                                           lernorga = VALUES(lernorga),
-                                           leistungsnachweis = VALUES(leistungsnachweis),
-                                           ects = VALUES(ects),
-                                           admission_endtime = VALUES(admission_endtime),
-                                           admission_turnout = VALUES(admission_turnout),
-                                           admission_binding = :admission_binding,
-                                           admission_type = VALUES(admission_type),
-                                           admission_selection_take_place = :admission_selection_take_place,
-                                           admission_group = :admission_group,
-                                           admission_prelim = VALUES(admission_prelim),
-                                           admission_prelim_txt = VALUES(admission_prelim_txt),
-                                           admission_starttime = VALUES(admission_starttime),
-                                           admission_endtime_sem = VALUES(admission_endtime_sem),
-                                           admission_disable_waitlist = VALUES(admission_disable_waitlist),
-                                           admission_enable_quota = VALUES(admission_enable_quota),
-                                           visible = VALUES(visible),
-                                           showscore = :showscore,
-                                           modules = VALUES(modules)";
-        $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':Seminar_id', $this->id);
-        $statement->bindValue(':VeranstaltungsNummer', $this->seminar_number);
-        $statement->bindValue(':Institut_id', $this->institut_id);
-        $statement->bindValue(':Name', $this->name);
-        $statement->bindValue(':Untertitel', $this->subtitle);
-        $statement->bindValue(':status', $this->status ?: '');
-        $statement->bindValue(':Beschreibung', $this->description ?: '');
-        $statement->bindValue(':Ort', $this->location);
-        $statement->bindValue(':Sonstiges', $this->misc);
-        $statement->bindValue(':Passwort', $this->password);
-        $statement->bindValue(':Lesezugriff', $this->read_level);
-        $statement->bindValue(':Schreibzugriff', $this->write_level);
-        $statement->bindValue(':start_time', $this->semester_start_time);
-        $statement->bindValue(':duration_time', $this->semester_duration_time);
-        $statement->bindValue(':art', $this->form);
-        $statement->bindValue(':teilnehmer', $this->participants);
-        $statement->bindValue(':vorrausetzungen', $this->requirements);
-        $statement->bindValue(':lernorga', $this->orga);
-        $statement->bindValue(':leistungsnachweis', $this->leistungsnachweis);
-        $statement->bindValue(':ects', $this->ects);
-        $statement->bindValue(':admission_endtime', $this->admission_endtime);
-        $statement->bindValue(':admission_turnout', $this->admission_turnout);
-        $statement->bindValue(':admission_binding', $this->admission_binding);
-        $statement->bindValue(':admission_type', $this->admission_type);
-        $statement->bindValue(':admission_selection_take_place', $this->admission_selection_take_place);
-        $statement->bindValue(':admission_group', $this->admission_group);
-        $statement->bindValue(':admission_prelim', $this->admission_prelim);
-        $statement->bindValue(':admission_prelim_txt', $this->admission_prelim_txt);
-        $statement->bindValue(':admission_starttime', $this->admission_starttime);
-        $statement->bindValue(':admission_endtime_sem', $this->admission_endtime_sem);
-        $statement->bindValue(':admission_disable_waitlist', (int)$this->admission_disable_waitlist);
-        $statement->bindValue(':admission_enable_quota', (int)$this->admission_enable_quota);
-        $statement->bindValue(':visible', $this->visible);
-        $statement->bindValue(':showscore', $this->showscore);
-        $statement->bindValue(':modules', $this->modules);
-        $statement->execute();
-        if ($statement->rowCount() > 0) {
-            NotificationCenter::postNotification("CourseDidCreateOrUpdate", $this);
-            if ($statement->rowCount() > 1) {
-                NotificationCenter::postNotification("CourseDidUpdate", $this);
-            } else {
-                NotificationCenter::postNotification("CourseDidCreate", $this);
-            }
-        }
-
-        if (($statement->rowCount() > 0 || $metadate_changed) && $trigger_chdate) {
-            $statement = DBManager::get()->prepare("UPDATE seminare SET chdate = UNIX_TIMESTAMP() WHERE Seminar_id = ?");
-            $statement->execute(array($this->id));
-            return $statement->rowCount() > 0;
+        $metadate_changed = isset($this->metadate) ? $this->metadate->store() : 0;
+        $course_changed = $this->course->store();
+        if ($metadate_changed && $trigger_chdate) {
+            return $this->course->triggerChdate();
         } else {
-            return false;
+            return $course_changed ?: false;
         }
     }
 
@@ -712,13 +577,7 @@ class Seminar
                 // special case: if the previous selection was 'one semester' and the new one is 'eternal',
                 // than we have to find out the end of the only semester, the start-semester
                 if ($previousEndSemester == 0) {
-                    $all_semester = $this->semester->getAllSemesterData();
-                    foreach ($all_semester as $val) {
-                        if ($val['beginn'] == $this->getStartSemester()) {
-                            $startAfterTimeStamp = $val['ende'];
-                            break;
-                        }
-                    }
+                    $startAfterTimeStamp = $this->course->start_semester->ende;
                 } else {
                     $startAfterTimeStamp = $previousEndSemester;
                 }
@@ -746,28 +605,11 @@ class Seminar
 
     function getEndSemesterVorlesEnde()
     {
-        if ($this->semester_duration_time == 0) {
-            $all_semester = $this->semester->getAllSemesterData();
-            foreach ($all_semester as $val) {
-                if ($val['beginn'] == $this->semester_start_time) {
-                    return $val['vorles_ende'];
-                }
-            }
-        } else if ($this->semester_duration_time == -1) {
-            $all_semester = $this->semester->getAllSemesterData();
-            foreach ($all_semester as $val) {
-                $ende = $val['vorles_ende'];
-            }
-            return $ende;
-        } else {
-            $ende = $this->semester_start_time + $this->semester_duration_time;
-            $all_semester = $this->semester->getAllSemesterData();
-            foreach ($all_semester as $val) {
-                if (($ende >= $val['beginn']) && ($ende <= $val['ende'])) {
-                    return $val['vorles_ende'];
-                }
-            }
+        if ($this->semester_duration_time == -1) {
+            $very_last_semester = array_pop(Semester::getAll());
+            return $very_last_semester->vorles_ende;
         }
+        return $this->course->end_semester->vorles_ende;
     }
 
     /**
@@ -777,11 +619,7 @@ class Seminar
      */
     function getStartSemesterName()
     {
-        if ($data = $this->semester->getSemesterDataByDate($this->semester_start_time)) {
-            return $data['name'];
-        }
-
-        return false;
+        return $this->course->start_semester->name;
     }
 
     /**
@@ -1951,107 +1789,6 @@ class Seminar
         return $participant_count;
     }
 
-    function isAdmissionEnabled()
-    {
-        return in_array($this->admission_type, array(1,2));
-    }
-
-    function isAdmissionQuotaChecked()
-    {
-        return $this->admission_selection_take_place < 1  && ($this->admission_type == 1 || ($this->admission_enable_quota && $this->admission_type == 2));
-    }
-
-    function isAdmissionQuotaEnabled()
-    {
-        return ($this->isAdmissionEnabled() && $this->admission_selection_take_place != 1  && $this->admission_enable_quota );
-    }
-
-    function restoreAdmissionStudiengang()
-    {
-        $this->admission_studiengang = null;
-        if(!$this->isAdmissionEnabled()) return false;
-        $count = 0;
-        $admission_turnout = $this->admission_turnout;
-        $dont_check_quota = !$this->isAdmissionQuotaEnabled();
-
-        $query = "SELECT quota, name, ass.studiengang_id
-                  FROM admission_seminar_studiengang AS ass
-                  LEFT JOIN studiengaenge AS st USING (studiengang_id)
-                  WHERE seminar_id = ?
-                  ORDER BY ass.studiengang_id <> 'all', name";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($this->getId()));
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $ret[$row['studiengang_id']]['name'] = $row['studiengang_id'] == 'all' ? _('Alle Studiengänge') : $row['name'];
-            if ($row['studiengang_id'] != 'all' && !$dont_check_quota) {
-                $ret[$row['studiengang_id']]['num_total'] = round($admission_turnout * ($row['quota'] / 100));
-                $count += $ret[$row['studiengang_id']]['num_total'];
-            } else {
-                $ret[$row['studiengang_id']]['num_total'] = $admission_turnout;
-            }
-        }
-        if(!$dont_check_quota && isset($ret['all'])) {
-            $ret['all']['num_total'] = $admission_turnout - $count;
-            if($ret['all']['num_total'] < 0) $ret['all']['num_total'] = 0;
-        }
-        if (is_array($ret)) foreach($ret as $studiengang_id => $data){
-            $ret[$studiengang_id]['num_occupied'] = 0;
-
-            $query = "SELECT COUNT(user_id)
-                      FROM seminar_user
-                      WHERE seminar_id = ? AND admission_studiengang_id = ? AND status != 'dozent'";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($this->getId(), $studiengang_id));
-            $ret[$studiengang_id]['num_occupied'] += $statement->fetchColumn();
-
-            $query = "SELECT SUM(status = 'accepted') AS accepted,
-                             SUM(status = 'claiming') AS claiming,
-                             SUM(status = 'awaiting') AS awaiting
-                      FROM admission_seminar_user
-                      WHERE seminar_id = ? AND studiengang_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($this->getId(), $studiengang_id));
-            $temp = $statement->fetch(PDO::FETCH_ASSOC);
-
-            $ret[$studiengang_id]['num_occupied'] += $temp['accepted'];
-            $ret[$studiengang_id]['num_claiming'] += $temp['claiming'];
-            $ret[$studiengang_id]['num_awaiting'] += $temp['awaiting'];
-        }
-        $this->admission_studiengang = $ret;
-        return true;
-    }
-
-    function getFreeAdmissionSeats($studiengang_id = null)
-    {
-        if (is_null($this->admission_studiengang) && !$this->restoreAdmissionStudiengang()) {
-            return false;
-        }
-        if ($studiengang_id && $this->isAdmissionQuotaEnabled()) {
-            $free = $this->admission_studiengang[$studiengang_id]['num_total'] - $this->admission_studiengang[$studiengang_id]['num_occupied'];
-        } else {
-            $occupied = 0;
-            if (is_array($this->admission_studiengang)) foreach($this->admission_studiengang as $st) {
-                $occupied += $st['num_occupied'];
-            }
-            $free = $this->admission_turnout - $occupied;
-        }
-        return $free > 0 ? $free : 0;
-    }
-
-    function getAdmissionChance($studiengang_id = null)
-    {
-        $free = $this->getFreeAdmissionSeats($studiengang_id);
-        if ($studiengang_id && $this->isAdmissionQuotaEnabled()) {
-            $waiting = $this->admission_studiengang[$studiengang_id]['num_claiming'];
-        } else {
-            foreach ($this->admission_studiengang as $st) {
-                $waiting += $st['num_claiming'];
-            }
-        }
-        if($free <= 0) return 0;
-        else if($free >= $waiting) return 100;
-        else return round(($free / $waiting) * 100);
-    }
 
     /**
      * Returns the IDs of this course's study areas.
@@ -2291,13 +2028,8 @@ class Seminar
         AutoInsert::deleteSeminar($s_id);
 
         // und das Seminar loeschen.
-        $query = "DELETE FROM seminare WHERE Seminar_id=  ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($s_id));
-        if ($statement->rowCount() == 0) {
-            throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
-        }
-        NotificationCenter::postNotification("CourseDidDelete", $this);
+        $this->course->delete();
+        $this->restore();
         return true;
     }
 
@@ -2377,42 +2109,10 @@ class Seminar
      */
     function getData()
     {
-        $data = array();
-        $data['seminar_number'] = $this->seminar_number;
-        $data['institut_id'] = $this->institut_id;
-        $data['name'] = $this->name;
-        $data['subtitle'] = $this->subtitle;
-        $data['status'] = $this->status;
-        $data['description'] = $this->description;
-        $data['location'] = $this->location;
-        $data['misc'] = $this->misc;
-        $data['read_level'] = $this->read_level;
-        $data['write_level'] = $this->write_level;
-        $data['semester_start_time'] = $this->semester_start_time;
-        $data['semester_duration_time'] = $this->semester_duration_time;
-        $data['form'] = $this->form;
-        $data['participants'] = $this->participants;
-        $data['requirements'] = $this->requirements;
-        $data['orga'] = $this->orga;
-        $data['leistungsnachweis'] = $this->leistungsnachweis;
-
-        $data['mkdate'] = $this->mkdate;
-        $data['chdate'] = $this->chdate;
-        $data['ects'] = $this->ects;
-        $data['admission_endtime'] = $this->admission_endtime;
-        $data['admission_turnout'] = $this->admission_turnout;
-        $data['admission_binding'] = $this->admission_binding;
-        $data['admission_type'] = $this->admission_type;
-        $data['admission_selection_take_place'] = $this->admission_selection_take_place;
-        $data['admission_group'] = $this->admission_group;
-        $data['admission_prelim'] = $this->admission_prelim;
-        $data['admission_prelim_txt'] = $this->admission_prelim_txt;
-        $data['admission_starttime'] = $this->admission_starttime;
-        $data['admission_endtime_sem'] = $this->admission_endtime_sem;
-        $data['admission_disable_waitlist'] = $this->admission_disable_waitlist;
-        $data['admission_enable_quota'] = $this->admission_enable_quota;
-        $data['visible'] = $this->visible;
-        $data['showscore'] = $this->showscore;
+        $data = $this->course->toArray();
+        foreach($this->alias as $a => $o) {
+            $data[$a] = $this->course->$o;
+        }
         return $data;
     }
 
@@ -2561,10 +2261,16 @@ class Seminar
                 //renumber the waiting/accepted/lot list, a user was deleted from it
                 renumber_admission($this->getId());
             }
+            $cs = $this->getCourseSet();
+            if ($cs) {
+                $prio_delete = AdmissionPriority::unsetPriority($cs->getId(), $user_id, $this->getId());
+            }
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             NotificationCenter::postNotification("CourseDidGetMember", $this, $user_id);
             NotificationCenter::postNotification('UserDidEnterCourse', $this->id, $user_id);
             log_event('SEM_USER_ADD', $this->id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen');
+            $this->course->resetRelation('members');
+            $this->course->resetRelation('admission_applicants');
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
@@ -2594,6 +2300,8 @@ class Seminar
                 }
             }
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
+            $this->course->resetRelation('members');
+            $this->course->resetRelation('admission_applicants');
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
@@ -2640,6 +2348,7 @@ class Seminar
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
             NotificationCenter::postNotification('UserDidLeaveCourse', $this->id, $user_id);
             log_event('SEM_USER_DEL', $this->id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
+            $this->course->resetRelation('members');
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
@@ -2684,4 +2393,138 @@ class Seminar
             NotificationCenter::postNotification("CourseDidChangeMemberLabel", $this);
         }
     }
+
+    public function getEnrolmentInfo($user_id)
+    {
+        $info = array();
+        $user = User::find($user_id);
+        if ($this->read_level === 0 && get_config('ENABLE_FREE_ACCESS')) {
+            $info['enrolment_allowed'] = true;
+            $info['cause'] = 'free_access';
+            $info['description'] = _("Für die Veranstaltung ist keine Anmeldung erforderlich.");
+            return $info;
+        }
+        if (!$user) {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'nobody';
+            $info['description'] = _("Sie sind nicht angemeldet.");
+            return $info;
+        }
+        if ($GLOBALS['perm']->have_perm('root', $user_id)) {
+            $info['enrolment_allowed'] = true;
+            $info['cause'] = 'root';
+            $info['description'] = _("Sie dürfen ALLES.");
+            return $info;
+        }
+        if ($GLOBALS['perm']->have_studip_perm('admin', $this->getId(), $user_id)) {
+            $info['enrolment_allowed'] = true;
+            $info['cause'] = 'courseadmin';
+            $info['description'] = _("Sie sind Administrator_in der Veranstaltung.");
+            return $info;
+        }
+        if ($GLOBALS['perm']->have_perm('admin', $user_id)) {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'admin';
+            $info['description'] = _("Als Administrator_in können Sie sich nicht für eine Veranstaltung anmelden.");
+            return $info;
+        }
+        //Ist bereits Teilnehmer
+        if ($GLOBALS['perm']->have_studip_perm('user', $this->getId(), $user_id)) {
+            $info['enrolment_allowed'] = true;
+            $info['cause'] = 'member';
+            $info['description'] = _("Sie sind als TeilnehmerIn der Veranstaltung eingetragen.");
+            return $info;
+        }
+        $admission_status = $user->admission_applications->findBy('seminar_id', $this->getId())->val('status');
+        if ($admission_status == 'accepted') {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'accepted';
+            $info['description'] = _("Sie wurden für diese Veranstaltung vorläufig akzeptiert.");
+            return $info;
+        }
+        if ($admission_status == 'awaiting') {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'awaiting';
+            $info['description'] = _("Sie stehen auf der Warteliste für diese Veranstaltung.");
+            return $info;
+        }
+        //falsche Nutzerdomäne
+        $same_domain = true;
+        $user_domains = UserDomain::getUserDomainsForUser($user_id);
+        if (count($user_domains) > 0) {
+            $seminar_domains = UserDomain::getUserDomainsForSeminar($this->getId());
+            $same_domain = count(array_intersect($seminar_domains, $user_domains)) > 0;
+        }
+        if (!$same_domain && !$this->isStudygroup()) {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'domain';
+            $info['description'] = _("Sie sind nicht in einer zugelassenenen Nutzerdomäne, Sie können sich nicht eintragen!");
+            return $info;
+        }
+        //Teilnehmerverwaltung mit Sperregel belegt
+        if (LockRules::Check($this->getId(), 'participants')) {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'locked';
+            $info['description'] = _("In diese Veranstaltung können Sie sich nicht eintragen!") . ($lockdata['description'] ? '<br>' . formatLinks($lockdata['description']) : '');
+            return $info;
+        }
+        //Veranstaltung unsichtbar für aktuellen Nutzer
+        if (!$this->visible && !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'), $user_id)) {
+            $info['enrolment_allowed'] = false;
+            $info['cause'] = 'invisible';
+            $info['description'] = _("Die Veranstaltung ist gesperrt, Sie können sich nicht eintragen!");
+            return $info;
+        }
+        if ($courseset = CourseSet::getSetForCourse($this->getId())) {
+            $info['enrolment_allowed'] = true;
+            $info['cause'] = 'courseset';
+            $info['description'] = _("Die Anmeldung zu dieser Veranstaltung folgt speziellen Regeln. Lesen Sie den Hinweistext.");
+            return $info;
+        }
+        $info['enrolment_allowed'] = true;
+        $info['cause'] = 'normal';
+        $info['description'] = '';
+        return $info;
+    }
+
+    function addPreliminaryMember($user_id)
+    {
+        $new_admission_member = new AdmissionApplication();
+        $new_admission_member->user_id = $user_id;
+        $new_admission_member->position = 0;
+        $new_admission_member->status = 'accepted';
+        $this->course->admission_applicants[] = $new_admission_member;
+        $ok = $new_admission_member->store();
+        if ($ok && $this->isStudygroup()) {
+            StudygroupModel::applicationNotice($this->getId(), $user_id);
+        }
+        $cs = $this->getCourseSet();
+        if ($cs) {
+            $prio_delete = AdmissionPriority::unsetPriority($cs->getId(), $user_id, $this->getId());
+        }
+        // LOGGING
+        log_event('SEM_USER_ADD', $this->getId(), $user_id, 'accepted', 'Vorläufig akzeptiert');
+        return $ok;
+    }
+
+    function getCourseSet()
+    {
+        return CourseSet::getSetForCourse($this->id);
+    }
+
+    function isAdmissionEnabled()
+    {
+       $cs = $this->getCourseSet();
+       return ($cs && $cs->isSeatDistributionEnabled());
+    }
+
+    function getFreeAdmissionSeats()
+    {
+        if ($this->isAdmissionEnabled()) {
+            return $this->course->getFreeSeats();
+        } else {
+            return true;
+        }
+    }
+
 }

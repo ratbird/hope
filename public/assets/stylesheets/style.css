@@ -59,6 +59,13 @@
  * @category    Stud.IP
  * @since       2.4
  */
+.hover_box .hover_symbols {
+  display: none;
+}
+.hover_box:hover .hover_symbols {
+  display: inline;
+  padding-left: 5px;
+}
 /* --- Links ---------------------------------------------------------------- */
 a,
 a:link,
@@ -3266,6 +3273,147 @@ a.opengraph_info:hover {
 }
 .pagination .next a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
+}
+.admission_buttons {
+  padding: 10px;
+  text-align: center;
+  width: 90%;
+}
+.admission_data {
+  padding: 10px;
+  width: 90%;
+}
+.admission_label {
+  display: inline-block;
+  font-weight: bold;
+  text-align: right;
+  vertical-align: top;
+  width: 20%;
+}
+.admission_value {
+  display: inline-block;
+  vertical-align: top;
+  width: 70%;
+}
+.admissionrule {
+  margin-bottom: 5px;
+  margin-left: 20px;
+  margin-top: 5px;
+  clear: both;
+}
+.admissionrule_actions {
+  margin-left: 10px;
+  position: relative;
+  top: 0px;
+  left: 25px;
+}
+.admissionrule_data {
+  padding: 10px;
+  width: 95%;
+}
+.admissionrule_display {
+  float: left;
+}
+.admissionrule_label {
+  display: inline-block;
+  font-weight: bold;
+  text-align: right;
+  vertical-align: top;
+  width: 45%;
+}
+.admissionrule_label_fullsize {
+  display: inline-block;
+  font-weight: bold;
+  text-align: left;
+  vertical-align: top;
+  width: 70%;
+}
+.admissionrule_value {
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+}
+.admissionrules_available {
+  padding: 5px;
+}
+.admissionrules_buttons {
+  padding: 5px;
+  text-align: center;
+}
+.admissionrules_config {
+  padding: 10px;
+  text-align: center;
+  width: 95%;
+}
+.admissionrules_description {
+  font-style: italic;
+  padding-left: 25px;
+}
+.condition {
+  margin-left: 20px;
+}
+.userlist_user a {
+  visibility: hidden;
+}
+.userlist_user:hover a {
+  visibility: visible;
+}
+#enrollment ul {
+  list-style: none inside;
+  margin: 0px;
+  border-top: 1px solid #1E3E70;
+  padding: 0px;
+  cursor: move;
+}
+#enrollment ul li {
+  padding: 5px;
+  border-bottom: 1px solid #1E3E70;
+}
+#selected-courses li {
+  list-style-type: decimal;
+}
+#enrollment ul li.empty {
+  cursor: no-drop;
+  list-style-type: none;
+}
+#enrollment .ui-draggable.ui-draggable-dragging,
+#enrollment .ui-sortable-helper {
+  background-color: #CED8F2;
+  padding: 5px;
+  border: 1px solid #1E3E70;
+  list-style: none inside;
+  width: auto;
+}
+#enrollment ul li.ui-sortable-helper {
+  list-style-type: none;
+}
+#enrollment .ui-sortable-helper .delete {
+  display: none;
+}
+#enrollment ul li .delete {
+  cursor: pointer;
+  float: right;
+}
+#enrollment ul li .delete:after {
+  clear: both;
+}
+#enrollment ul#avaliable-courses li.visible:hover,
+#enrollment ul#selected-courses li:hover {
+  background-color: #CED8F2;
+}
+#enrollment ul#avaliable-courses li.visible:nth-child(even),
+#enrollment ul#selected-courses li:nth-child(even) {
+  background-color: #F8F8F8;
+}
+#enrollment ul#avaliable-courses li.visible:nth-child(odd),
+#enrollment ul#selected-courses li:nth-child(odd) {
+  background-color: #EEEEEE;
+}
+#enrollment .ui-state-highlight {
+  padding: 10px;
+  background: #CB1800;
+  border: 0px;
+  height: 30px;
 }
 /* --- Schrift (Vorgaben: Typ, Gr��e, Farbe) -------------------------------- */
 body,

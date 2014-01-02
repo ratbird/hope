@@ -109,7 +109,12 @@ class Course extends SimpleORMap
                 'foreign_key' =>
                 function($course) {
                     return array($course);
-                })
+                }),
+                'cycles' => array(
+                        'class_name' => 'SeminarCycleDate',
+                        'assoc_func' => 'findBySeminar',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
         );
 
         $this->belongs_to = array(
@@ -158,12 +163,45 @@ class Course extends SimpleORMap
                         $course->duration_time = 0;
                     }
                 };
-
         $this->notification_map['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
         $this->notification_map['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
         $this->notification_map['before_create'] = 'CourseWillCreate';
         $this->notification_map['before_store'] = 'CourseWillUpdate';
-
+        $this->notification_map['after_delete'] = 'CourseDidDelete';
+        $this->notification_map['before_delete'] = 'CourseWillDelete';
+        
         parent::__construct($id);
+    }
+    
+    function getFreeSeats()
+    {
+        $free_seats = $this->admission_turnout - $this->getNumParticipants();
+        return $free_seats > 0 ? $free_seats : 0;
+    }
+    
+    function isWaitlistAvailable()
+    {
+        if ($this->admission_disable_waitlist) {
+            return false;
+        } else if ($this->admission_waitlist_max) {
+            return ($this->admission_waitlist_max - $this->getNumWaiting()) > 0 ? true : false;
+        } else {
+            return true;
+        }
+    }
+    
+    function getNumParticipants()
+    {
+        return $this->members->findBy('status', words('user autor'))->count() + $this->getNumPrelimParticipants();
+    }
+    
+    function getNumPrelimParticipants()
+    {
+        return $this->admission_applicants->findBy('status', 'accepted')->count();
+    }
+    
+    function getNumWaiting()
+    {
+        return $this->admission_applicants->findBy('status', 'awaiting')->count();
     }
 }

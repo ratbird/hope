@@ -77,6 +77,13 @@ class messaging
 {
     var $sig_string; //String, der Signaturen vom eigentlichen Text abgrenzt
 
+    public static function sendSystemMessage($recipient, $message_title, $message_body)
+    {
+        $m = new messaging();
+        $user = User::toObject($recipient);
+        return $m->insert_message($message_body, $user['username'], '____%system%____', FALSE, FALSE, '1', FALSE, $message_title);
+    }
+
     /**
      * Konstruktor
      */

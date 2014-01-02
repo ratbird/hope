@@ -32,16 +32,8 @@
                 <col>
                 <col width="15%">
                 <? $cols = 6 ?>
-                <? if ($semAdmissionEnabled) : ?>
-                    <? $cols = 7?>
-                    <? $cols_foot = 7?>
-                    <? $cols_head = 2?>
-                    <col width="25%">
-                    <col width="15%">
-                <? else : ?>
-                    <col width="25%">
-                    <? $cols_foot = 6?>
-                <? endif ?>
+                <col width="25%">
+                <? $cols_foot = 6?>
             <? else : ?>
                 <col>
                 <? $cols = 3 ?>
@@ -73,9 +65,6 @@
                     </a>
                 </th>
                 <th><?= _('Studiengang') ?></th>
-                    <? if ($semAdmissionEnabled) : ?>
-                    <th><?= _('Kontingent') ?></th>
-                    <? endif ?>
                 <? endif ?>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
@@ -113,11 +102,6 @@
                     <td>
                         <?= $this->render_partial("course/members/_studycourse.php", array('study_courses' => UserModel::getUserStudycourse($autor['user_id']))) ?>
                     </td>
-                    <? if ($semAdmissionEnabled) : ?>
-                        <td>
-                            <?= ($autor['kontingent'] == 'all') ? _('alle Studiengänge') : htmlReady($autor['kontingent']) ?>
-                        </td>
-                    <? endif ?>
                 <? endif ?>
 
                 <td style="text-align: right">

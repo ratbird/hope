@@ -132,7 +132,7 @@ function get_object_name($range_id, $object_type)
 
 /**
  * Returns a sorm object for a given range_id
- * 
+ *
  * @param string the range_id
  * @return SimpleORMap Course/Institute/User/Statusgruppen/
  */
@@ -175,7 +175,7 @@ function selectSem ($sem_id)
     closeObject();
 
     $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time,
-                     status, Lesezugriff, Schreibzugriff, Passwort, aux_lock_rule_forced
+                     status, Lesezugriff, Schreibzugriff, aux_lock_rule_forced
               FROM seminare
               WHERE Seminar_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -599,53 +599,6 @@ function my_substr($what, $start, $end)
         $what=studip_substr($what, $start, round(($length / 3) * 2))."[...]".studip_substr($what, $what_length - round($length / 3), $what_length);
     }
     return $what;
-}
-
-
-/**
- * The function determines, if the current user have write perm in a Veranstaltung or Einrichtung
- *
- * It uses the Variables $SemSecLevelWrite, $SemUserStatus and $rechte, which are created in the
- * modul check_sem_entry.inc.php and $perm from PHP-lib
- *
- * @global string  $SemSecLevelWrite
- * @global string  $SemUserStatus
- * @global array   $perm
- * @global boolean $rechte
- *
- * @return string  the error msg. If no msg is returned, the user has write permission
- *
- */
-function have_sem_write_perm ()
-{
-    global $SemSecLevelWrite, $SemUserStatus, $perm, $rechte;
-
-    $error_msg="";
-    if (!($perm->have_perm("root"))) {
-        if (!($rechte || ($SemUserStatus=="autor") || ($SemUserStatus=="tutor") || ($SemUserStatus=="dozent"))) {
-            //Auch eigentlich uberfluessig...
-            //$error_msg = "<br><b>Sie haben nicht die Berechtigung in dieser Veranstaltung zu schreiben!</b><br><br>";
-            switch ($SemSecLevelWrite) {
-                case 2 :
-                    $error_msg=$error_msg."error§" . _("In dieser Veranstaltung ist ein Passwort f&uuml;r den Schreibzugriff n&ouml;tig.") . "<br>" . sprintf(_("Zur %sPassworteingabe%s"), "<a href=\"sem_verify.php\">", "</a>") . "§";
-                    break;
-                case 1 :
-                    if ($perm->have_perm("autor"))
-                        $error_msg=$error_msg."info§" . _("Sie müssen sich erneut für diese Veranstaltung anmelden, um Dateien hochzuladen und Beitr&auml;ge im Forum schreiben zu können!") . "<br>" . sprintf(_("Hier kommen Sie zur %sFreischaltung%s der Veranstaltung."), "<a href=\"sem_verify.php\">", "</a>") . "§";
-                    elseif ($perm->have_perm("user"))
-                        $error_msg=$error_msg."info§" . _("Bitte folgen Sie den Anweisungen in der Registrierungsmail.") . "§";
-                    else
-                        $error_msg=$error_msg."info§" . _("Bitte melden Sie sich an.") . "<br>" . sprintf(_("Hier geht es zur %sRegistrierung%s wenn Sie noch keinen Account im System haben."), "<a href=\"register1.php\">", "</a>") . "§";
-                    break;
-                default :
-                    //Wenn Schreiben fuer Nobody jemals wieder komplett verboten werden soll, diesen Teil bitte wieder einkommentieren (man wei&szlig; ja nie...)
-                    //$error_msg=$error_msg."Bitte melden Sie sich an.<br><br><a href=\"register1.php\"><b>Registrierung</b></a> wenn Sie noch keinen Account im System haben.<br><a href=\"index.php?again=yes\"><b>Login</b></a> f&uuml;r registrierte Benutzer.<br><br>";
-                    break;
-                }
-            $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . "§";
-            }
-        }
-    return $error_msg;
 }
 
 /**
@@ -1958,9 +1911,11 @@ function addHiddenFields($variable, $data, $parent = array())
             if (is_array($value)) {
                 $ret .= addHiddenFields($variable, $value, array_merge($parent, array($key)));
             } else {
-                $ret.= '<input type="hidden" name="'. $variable .'['. implode('][', array_merge($parent, array($key))) .']" value="'. htmlReady($value) .'">' ."\n";
+                $ret.= '<input type="hidden" name="'. htmlReady($variable .'['. implode('][', array_merge($parent, array($key))) .']').'" value="'. htmlReady($value) .'">' ."\n";
             }
         }
+    } else {
+        $ret.= '<input type="hidden" name="'. htmlReady($variable) .'" value="'. htmlReady($data) .'">' ."\n";
     }
 
     return $ret;

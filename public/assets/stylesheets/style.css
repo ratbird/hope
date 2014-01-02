@@ -2808,15 +2808,15 @@ div.news_area_title {
   vertical-align: middle;
 }
 input.news_topic {
-	width:90%;
+  width: 90%;
 }
 textarea.news_body {
-  resize:vertical;
-	width: 90%;
-	font-size: 10pt;
+  resize: vertical;
+  width: 90%;
+  font-size: 10pt;
 }
 select.news_area_options {
-  minWidth: 200px;
+  min-width: 200px;
   width: 100%;
   height: 116px;
 }

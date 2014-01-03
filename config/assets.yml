@@ -75,6 +75,25 @@ javascripts:
 
   settings:
     - javascripts/settings.js
+
+  tree: &tree
+    - javascripts/jquery/jstree/jquery.jstree.js
+
+  dialogs: &dialogs
+    - javascripts/dialogs.js
+
+  userfilter: &userfilter
+    - *dialogs
+    - javascripts/userfilter.js
+
+  admission:
+    - *userfilter
+    - *tree
+    - javascripts/admission.js
+
+  enrolment:
+    - javascripts/enrolment.js
+
 css:
   base:
     # filename : media

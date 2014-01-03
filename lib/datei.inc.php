@@ -2904,9 +2904,10 @@ function check_protected_download($document_id)
             $range_id = $doc->getValue('seminar_id');
             if(get_object_type($range_id) == 'sem'){
                 $seminar = Seminar::GetInstance($range_id);
-                if( $seminar->read_level > 1 ||
-                    $seminar->admission_type == 3
-                    || ($seminar->admission_endtime_sem > 0 && $seminar->admission_endtime_sem < time())){
+                $timed_admission = $seminar->getAdmissionTimeFrame();
+                if( $seminar->isPasswordProtected() ||
+                    $seminar->isAdmissionLocked()
+                    || ($timed_admission['start_time'] > 0 && $timed_admission['end_time'] < time())){
                     $ok = true;
                 }
             }

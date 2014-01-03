@@ -72,6 +72,8 @@ class Seminar
     );
 
     private $course = null;
+    
+    private $course_set = null;
 
     private static $seminar_object_pool;
 
@@ -447,8 +449,9 @@ class Seminar
         $this->irregularSingleDates = null;
         $this->issues = null;
         $this->_metadate = null;
+        $this->course_set = null;
 
-       $this->old_settings = $this->getSettings();
+        $this->old_settings = $this->getSettings();
 
         return TRUE;
     }
@@ -2509,7 +2512,13 @@ class Seminar
 
     function getCourseSet()
     {
-        return CourseSet::getSetForCourse($this->id);
+        if ($this->course_set === null) {
+            $this->course_set = CourseSet::getSetForCourse($this->id);
+            if ($this->course_set === null) {
+                $this->course_set = false;
+            }
+        }
+        return $this->course_set ?: null;
     }
 
     function isAdmissionEnabled()
@@ -2525,6 +2534,26 @@ class Seminar
         } else {
             return true;
         }
+    }
+    
+    function isAdmissionLocked()
+    {
+        $cs = $this->getCourseSet();
+        return ($cs && $cs->hasAdmissionRule('LockedAdmission'));
+    }
+    
+    function isPasswordProtected()
+    {
+        $cs = $this->getCourseSet();
+        return ($cs && $cs->hasAdmissionRule('PasswordAdmission'));
+    }
+    
+    function getAdmissionTimeFrame()
+    {
+        $cs = $this->getCourseSet();
+        return ($cs && $cs->hasAdmissionRule('TimedAdmission')) ?
+            array(array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime()),
+                  array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
     }
 
 }

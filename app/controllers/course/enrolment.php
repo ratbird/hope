@@ -42,7 +42,13 @@ class Course_EnrolmentController extends AuthenticatedController
         $enrolment_info = $course->getEnrolmentInfo($GLOBALS['user']->id);
         //Ist bereits Teilnehmer/Admin/freier Zugriff -> gleich weiter
         if ($enrolment_info['enrolment_allowed'] && in_array($enrolment_info['cause'], words('root courseadmin member free_access'))) {
-            $this->redirect(UrlHelper::getUrl('seminar_main.php', array('auswahl' => $this->course_id)));
+            $redirect_url = UrlHelper::getUrl('seminar_main.php', array('auswahl' => $this->course_id));
+            if (Request::isXhr()) {
+                $this->response->add_header('X-Location', $redirect_url);
+                $this->render_nothing();
+            } else {
+                $this->redirect($redirect_url);
+            }
             return false;
         }
         //Grundsätzlich verboten

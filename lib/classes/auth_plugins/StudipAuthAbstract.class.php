@@ -296,7 +296,11 @@ class StudipAuthAbstract {
         $this->dbv->params[] = mysql_escape_string($username);
         $db = $this->dbv->get_query("view:AUTH_USER_UNAME");
         if ($db->next_record()){
-            $auth_plugin = is_null($db->f("auth_plugin")) ? "standard" : $db->f("auth_plugin");
+            $auth_plugin = $db->f("auth_plugin");
+            if ($auth_plugin === null) {
+                $this->error_msg = _("Dies ist ein vorläufiger Benutzer.") . "<br>";
+                return false;
+            }
             if ($auth_plugin != $this->plugin_name){
                 $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$auth_plugin) . "<br>";
                 return false;

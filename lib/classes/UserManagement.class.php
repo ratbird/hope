@@ -25,7 +25,6 @@
 // Imports
 require_once 'lib/functions.php';
 require_once 'lib/language.inc.php';
-require_once 'config.inc.php';      // We need the uni name for emails
 require_once 'lib/admission.inc.php';   // remove user from waiting lists
 require_once 'lib/datei.inc.php';   // remove documents of user
 require_once 'lib/statusgruppe.inc.php';    // remove user from statusgroups
@@ -50,17 +49,106 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')){
 }
 
 /**
- * Enter description here...
+ * Adapter to fake user_data property in UserManagement
+ * 
+ * @author noack
+ *
+ */
+class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
+{
+    private $user;
+    
+    function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+    
+    /**
+     * @param string $offset
+     * @return string
+     */
+    function adaptOffset($offset)
+    {
+        $adapted = trim(strstr($offset, '.'), '.');
+        return $adapted ?: $offset;
+    }
+    
+    /**
+    * ArrayAccess: Check whether the given offset exists.
+    */
+    function offsetExists($offset)
+    {
+        
+        return $this->user->offsetExists($this->adaptOffset($offset));
+    }
+    
+    /**
+     * ArrayAccess: Get the value at the given offset.
+     */
+    function offsetGet($offset)
+    {
+        return $this->user->offsetGet($this->adaptOffset($offset));
+    }
+    
+    /**
+     * ArrayAccess: Set the value at the given offset.
+     */
+    function offsetSet($offset, $value)
+    {
+        return $this->user->offsetSet($this->adaptOffset($offset), $value);
+    }
+    
+    /**
+     * ArrayAccess: unset the value at the given offset.
+     */
+    function offsetUnset($offset)
+    {
+        return $this->user->offsetUnset($this->adaptOffset($offset));
+    }
+    
+    /** 
+     * @see Countable::count()
+     */
+    function count()
+    {
+        return $this->user->count();
+    }
+    
+    /** 
+     * @see IteratorAggregate::getIterator()
+     */
+    function getIterator()
+    {
+        return $this->user->getIterator();
+    }
+    
+    /**
+      * @param array $data
+      * @param bool $reset
+      */
+    function setData($data, $reset = false)
+    {
+        $adapted_data = array();
+        foreach ($data as $k => $v) {
+            $adapted_data[$this->adaptOffset($k)] = $v;
+        }
+        $this->user->setData($adapted_data, $reset);
+    }
+}
+
+/**
+ * UserManagement.class.php
+ *
+ * Management for the Stud.IP global users
  *
  */
 class UserManagement
 {
-    var $user_data = array();       // associative array, contains userdata from tables auth_user_md5 and user_info
-    var $msg = "";      // contains all messages
-    var $db;                // database connection1
-    var $db2;           // database connection2
-    var $validator;     // object used for checking input
-    var $hash_secret = "jdfiuwenxclka";  // set this to something, just something different...
+    private $user;
+    private $validator;
+    private $user_data;
+
+    public $msg;
 
     /**
     * Constructor
@@ -69,17 +157,29 @@ class UserManagement
     * @access   public
     * @param    string  $user_id    the user which should be retrieved
     */
-    function UserManagement($user_id = FALSE) {
-
+    function UserManagement($user_id = FALSE)
+    {
         $this->validator = new email_validation_class;
         $this->validator->timeout = 10;                 // How long do we wait for response of mailservers?
-        $mail = new StudipMail();
-        $this->abuse_email = $mail->getReplyToEmail();
-        if ($user_id) {
-            $this->getFromDatabase($user_id);
+        $this->getFromDatabase($user_id);
+    }
+    
+    function __get($attr)
+    {
+        if ($attr === 'user_data') {
+            return $this->user_data;
         }
     }
 
+    function __set($attr, $value)
+    {
+        if ($attr === 'user_data') {
+            if (!is_array($value)) {
+                throw InvalidArgumentException('user_data only accepts array');
+            }
+            return $this->user_data->setData($value, true);
+        }
+    }
 
     /**
     * load user data from database into internal array
@@ -89,31 +189,12 @@ class UserManagement
     */
     function getFromDatabase($user_id)
     {
-        $query = "SELECT * FROM auth_user_md5 WHERE user_id = ?"; //ein paar userdaten brauchen wir schon mal
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $temp = $statement->fetch(PDO::FETCH_ASSOC);
-
-        if ($temp) {
-            foreach ($temp as $key => $value) {
-                $this->user_data['auth_user_md5.' . $key] = $value;
-            }
+        $this->user = User::toObject($user_id);
+        if (!$this->user) {
+            $this->user = new User();
         }
-
-        $query = "SELECT * FROM user_info WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $temp = $statement->fetch(PDO::FETCH_ASSOC);
-
-        if ($temp) {
-            foreach ($temp as $key => $value) {
-                $this->user_data['user_info.' . $key] = $value;
-            }
-        }
-
-        $this->original_user_data = $this->user_data; // save original setting for logging purposes
+        $this->user_data = new UserDataAdapter($this->user);
     }
-
 
     /**
     * store user data from internal array into database
@@ -123,134 +204,88 @@ class UserManagement
     */
     function storeToDatabase()
     {
-        if (!$this->user_data['auth_user_md5.user_id']) {
-            $this->user_data['auth_user_md5.user_id'] = md5(uniqid($this->hash_secret));
-
-            $query = "INSERT INTO auth_user_md5 (user_id, username, password) VALUES (?, ?, 'dummy')";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $this->user_data['auth_user_md5.user_id'],
-                $this->user_data['auth_user_md5.username'],
-            ));
-            if ($statement->rowCount() == 0) {
-                return FALSE;
+        if ($this->user->isNew()) {
+            if ($this->user->store()) {
+                log_event("USER_CREATE", $this->user->id, null, join(';', $this->user->toArray('username vorname nachname perms email')));
+                return true;
+            } else {
+                return false;
             }
-
-            $query = "INSERT INTO user_info (user_id, mkdate) VALUES (?, UNIX_TIMESTAMP())";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $this->user_data['auth_user_md5.user_id']
-            ));
-            if ($statement->rowCount() == 0) {
-                return FALSE;
-            }
-            log_event("USER_CREATE",$this->user_data['auth_user_md5.user_id']);
         }
 
-        if (!$this->user_data['auth_user_md5.auth_plugin']) {
-            $this->user_data['auth_user_md5.auth_plugin'] = "standard"; // just to be sure
-        }
-
-        $table = $field = $value = null; // Prepare variables
-
-        // Prepare queries
-        $query = "UPDATE :table SET :column = :value WHERE user_id = :user_id";
-        $update = DBManager::get()->prepare($query);
-        $update->bindValue(':user_id', $this->user_data['auth_user_md5.user_id']);
-        $update->bindParam(':table', $table, StudipPDO::PARAM_COLUMN);
-        $update->bindParam(':column', $field, StudipPDO::PARAM_COLUMN);
-        $update->bindParam(':value', $value);
-
-        $query = "DELETE FROM user_inst WHERE user_id = ? AND inst_perms = 'user'";
-        $institute_delete = DBManager::get()->prepare($query);
-
-        $query = "UPDATE auth_user_md5 SET visible = 'yes' WHERE user_id = ?";
-        $visibility_update = DBManager::get()->prepare($query);
-
-        $changed = 0;
         $nperms = array(
             'user' => 0,
             'autor' => 1,
             'tutor' => 2,
             'dozent' => 3
         );
-        foreach ($this->user_data as $key => $value) {
-            // update changed fields only
-            if ($this->original_user_data[$key] != $value) {
-                list($table, $field) = explode('.', $key, 2);
-
-                $update->execute();
-
-                // remove all 'user' entries to institutes if global status becomes 'dozent'
-                // (cf. http://develop.studip.de/trac/ticket/484 )
-                if ($field=='perms' && $this->user_data['auth_user_md5.perms']=='dozent' && in_array($this->original_user_data['auth_user_md5.perms'],array('user','autor','tutor'))) {
-                    $this->logInstUserDel($this->user_data['auth_user_md5.user_id'], "inst_perms = 'user'");
-                    $institute_delete->execute(array($this->user_data['auth_user_md5.user_id']));
-                    // make user visible globally if dozent may not be invisible (StEP 00158)
-                    if (get_config('DOZENT_ALWAYS_VISIBLE')) {
-                        $visibility_update->execute(array($this->user_data['auth_user_md5.user_id']));
-                    }
+        
+        if ($this->user->isDirty('perms')) {
+            if ($this->user->perms == 'dozent' && in_array($this->user->getPrstineValue('perms'), array('user','autor','tutor'))) {
+                $this->logInstUserDel($this->user->id, "inst_perms = 'user'");
+                $this->user->institute_memberships->unsetBy('inst_perms', 'user');
+                // make user visible globally if dozent may not be invisible (StEP 00158)
+                if (get_config('DOZENT_ALWAYS_VISIBLE')) {
+                    $this->user->visible = 'yes';
                 }
-                if ($field == 'perms' && $nperms[$this->user_data['auth_user_md5.perms']] < $nperms[$this->original_user_data['auth_user_md5.perms']]) {
+                if ($nperms[$this->user->perms] < $nperms[$this->user->getPristineValue('perms')]) {
                     $downgrade = DBManager::get()->prepare(
-                        "UPDATE seminar_user " .
+                            "UPDATE seminar_user " .
                             "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
-                        "SET seminar_user.status = :new_max_status " .
-                        "WHERE seminar_user.user_id = :user_id " .
+                            "SET seminar_user.status = :new_max_status " .
+                            "WHERE seminar_user.user_id = :user_id " .
                             "AND seminar_user.status IN (:old_status) " .
                             "AND seminare.status NOT IN (:studygroups) " .
-                    "");
+                            "");
                     $old_status = array();
                     foreach ($nperms as $status => $n) {
-                        if ($n > $nperms[$this->user_data['auth_user_md5.perms']] && $n <= $nperms[$this->original_user_data['auth_user_md5.perms']]) {
+                        if ($n > $nperms[$this->user->perms] && $n <= $nperms[$this->user->getPristineValue('perms')]) {
                             $old_status[] = $status;
                         }
                     }
                     $downgrade->execute(array(
-                        'user_id' => $this->user_data['auth_user_md5.user_id'],
-                        'old_status' => $old_status,
-                        'studygroups' => studygroup_sem_types(),
-                        'new_max_status' => $this->user_data['auth_user_md5.perms']
+                            'user_id' => $this->user->id,
+                            'old_status' => $old_status,
+                            'studygroups' => studygroup_sem_types(),
+                            'new_max_status' => $this->user->perms
                     ));
                 }
-
-                // logging
-                if ($update->rowCount() != 0) {
-                    ++$changed;
-                    switch ($field) {
-                        case 'username':
-                            log_event("USER_CHANGE_USERNAME",$this->user_data['auth_user_md5.user_id'],NULL,$this->original_user_data['auth_user_md5.username']." -> ".$value);
-                            break;
-                        case 'Vorname':
-                            log_event("USER_CHANGE_NAME",$this->user_data['auth_user_md5.user_id'],NULL,"Vorname: ".$this->original_user_data['auth_user_md5.Vorname']." -> ".$value);
-                            break;
-                        case 'Nachname':
-                            log_event("USER_CHANGE_NAME",$this->user_data['auth_user_md5.user_id'],NULL,"Nachname: ".$this->original_user_data['auth_user_md5.Nachname']." -> ".$value);
-                            break;
-                        case 'perms':
-                            log_event("USER_CHANGE_PERMS",$this->user_data['auth_user_md5.user_id'],NULL,$this->original_user_data['auth_user_md5.perms']." -> ".$value);
-                            break;
-                        case 'Email':
-                            log_event("USER_CHANGE_EMAIL",$this->user_data['auth_user_md5.user_id'],NULL,$this->original_user_data['auth_user_md5.Email']." -> ".$value);
-                            break;
-                        case 'title_front':
-                            log_event("USER_CHANGE_TITLE",$this->user_data['auth_user_md5.user_id'],NULL,"title_front: ".$this->original_user_data['user_info.title_front']." -> ".$value);
-                            break;
-                        case 'title_rear':
-                            log_event("USER_CHANGE_TITLE",$this->user_data['auth_user_md5.user_id'],NULL,"title_rear: ".$this->original_user_data['user_info.title_front']." -> ".$value);
-                        case 'password':
-                            log_event("USER_CHANGE_PASSWORD",$this->user_data['auth_user_md5.user_id'],NULL,"password: ".$this->original_user_data['user_info.password']." -> ".$value);
-                            break;
-                    }
+            }
+        }
+        foreach (words('username vorname nachname perms email title_front title_rear password') as $field) {
+            // logging
+            if ($this->user->isFieldDirty($field)) {
+                $old_value = $this->user->getPristineValue($field);
+                $value = $this->user->getValue($field);
+                switch ($field) {
+                    case 'username':
+                        log_event("USER_CHANGE_USERNAME",$this->user->id,NULL,$old_value." -> ".$value);
+                        break;
+                    case 'vorname':
+                        log_event("USER_CHANGE_NAME",$this->user->id,NULL,"Vorname: ".$old_value." -> ".$value);
+                        break;
+                    case 'nachname':
+                        log_event("USER_CHANGE_NAME",$this->user->id,NULL,"Nachname: ".$old_value." -> ".$value);
+                        break;
+                    case 'perms':
+                        log_event("USER_CHANGE_PERMS",$this->user->id,NULL,$old_value." -> ".$value);
+                        break;
+                    case 'email':
+                        log_event("USER_CHANGE_EMAIL",$this->user->id,NULL,$old_value." -> ".$value);
+                        break;
+                    case 'title_front':
+                        log_event("USER_CHANGE_TITLE",$this->user->id,NULL,"title_front: ".$old_value." -> ".$value);
+                        break;
+                    case 'title_rear':
+                        log_event("USER_CHANGE_TITLE",$this->user->id,NULL,"title_rear: ".$old_value." -> ".$value);
+                    case 'password':
+                        log_event("USER_CHANGE_PASSWORD",$this->user->id,NULL,"password: ".$old_value." -> ".$value);
+                        break;
                 }
             }
+        }
 
-        }
-        if ($changed) {
-            $query = "UPDATE user_info SET chdate = UNIX_TIMESTAMP() WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
-        }
+        $changed = $this->user->store();
         return (bool)$changed;
     }
 
@@ -341,14 +376,20 @@ class UserManagement
         if (!$this->checkMail($newuser['auth_user_md5.Email'])) {
             return FALSE;
         }
-
+        
+        if (!$newuser['auth_user_md5.auth_plugin']) {
+            $newuser['auth_user_md5.auth_plugin'] = 'standard';
+        }
+        
         // Store new values in internal array
         foreach ($newuser as $key => $value) {
             $this->user_data[$key] = $value;
         }
-
-        $password = $this->generate_password(6);
-        $this->user_data['auth_user_md5.password'] = md5($password);
+        
+        if ($this->user_data['auth_user_md5.auth_plugin'] == 'standard') {
+            $password = $this->generate_password(6);
+            $this->user_data['auth_user_md5.password'] = md5($password);
+        }
 
         // Does the user already exist?
         // NOTE: This should be a transaction, but it is not...
@@ -357,7 +398,6 @@ class UserManagement
             $this->msg .= "error§" . sprintf(_("BenutzerIn <em>%s</em> ist schon vorhanden!"), $newuser['auth_user_md5.username']) . "§";
             return FALSE;
         }
-
 
         if (!$this->storeToDatabase()) {
             $this->msg .= "error§" . sprintf(_("BenutzerIn \"%s\" konnte nicht angelegt werden."), $newuser['auth_user_md5.username']) . "§";
@@ -390,6 +430,68 @@ class UserManagement
         return TRUE;
     }
 
+    /**
+     * Create a new preliminary studip user with the given parameters
+     *
+     * @access   public
+     * @param    array   structure: array('string table_name.field_name'=>'string value')
+     * @return   bool Creation successful?
+     */
+    function createPreliminaryUser($newuser) {
+        global $perm;
+        
+        $this->getFromDatabase(null);
+        $this->user_data->setData($newuser);
+        // Do we have permission to do so?
+        if (!$perm->have_perm("admin")) {
+            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts anzulegen.") . "§";
+            return FALSE;
+        }
+        if (in_array($this->user->perms, words('root admin'))) {
+            $this->msg .= "error§" . _("Es können keine vorläufigen Administrationsaccounts angelegt werden.") . "§";
+            return FALSE;
+        }
+        if (!$this->user->id) {
+            $this->user->setId($this->user->getNewId());
+        }
+        if (!$this->user->username) {
+            $this->user->username = $this->user->id;
+        }
+        $this->user->auth_plugin = null;
+        $this->user->visible = 'never';
+
+        // Do we have all necessary data?
+        if (empty ($this->user->perms) || empty ($this->user->vorname) || empty ($this->user->nachname)) {
+            $this->msg .= "error§" . _("Bitte geben Sie <em>Status</em>, <em>Vorname</em> und <em>Nachname</em> an!") . "§";
+            return FALSE;
+        }
+    
+        // Is the username correct?
+        if (!$this->validator->ValidateUsername($this->user->username)) {
+            $this->msg .= "error§" .  _("Der gewählte Benutzername ist zu kurz oder enthält unzulässige Zeichen!") . "§";
+            return FALSE;
+        }
+
+        // Does the user already exist?
+        // NOTE: This should be a transaction, but it is not...
+        $temp = User::findByUsername($this->user->username);
+        if ($temp) {
+            $this->msg .= "error§" . sprintf(_("BenutzerIn <em>%s</em> ist schon vorhanden!"), $this->user->username) . "§";
+            return FALSE;
+        }
+
+        if (!$this->storeToDatabase()) {
+            $this->msg .= "error§" . sprintf(_("BenutzerIn \"%s\" konnte nicht angelegt werden."), $this->user->username) . "§";
+            return FALSE;
+        }
+
+        $this->msg .= "msg§" . sprintf(_("BenutzerIn \"%s\" (vorläufig) angelegt."), $this->user->username) . "§";
+
+        // add default visibility settings
+        Visibility::createDefaultCategories($this->user->id);
+
+        return TRUE;
+    }
 
     /**
     * Change an existing studip user according to the given parameters
@@ -399,7 +501,7 @@ class UserManagement
     * @return   bool Change successful?
     */
     function changeUser($newuser) {
-        global $perm, $auth, $SEM_TYPE, $SEM_CLASS;
+        global $perm;
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
@@ -517,23 +619,23 @@ class UserManagement
         }
 
         $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";
-
-        // Automated entering new users, based on their status (perms)
-        $result = AutoInsert::instance()->saveUser( $this->user_data['auth_user_md5.user_id'],$newuser['auth_user_md5.perms']);
-        foreach ($result['added'] as $item) {
-            $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+        if ($auth_plugin !== null) {
+            // Automated entering new users, based on their status (perms)
+            $result = AutoInsert::instance()->saveUser( $this->user_data['auth_user_md5.user_id'],$newuser['auth_user_md5.perms']);
+            foreach ($result['added'] as $item) {
+                $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+            }
+            foreach ($result['removed'] as $item) {
+                $this->msg .= "msg§".sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+            }
+            // include language-specific subject and mailbody
+            $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
+            $Zeit=date("H:i:s, d.m.Y",time());
+            include("locale/$user_language/LC_MAILS/change_mail.inc.php");
+    
+            // send mail
+            StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
         }
-        foreach ($result['removed'] as $item) {
-            $this->msg .= "msg§".sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
-        }
-        // include language-specific subject and mailbody
-        $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
-        $Zeit=date("H:i:s, d.m.Y",time());
-        include("locale/$user_language/LC_MAILS/change_mail.inc.php");
-
-        // send mail
-        StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
-
         // Upgrade to admin or root?
         if ($newuser['auth_user_md5.perms'] == "admin" || $newuser['auth_user_md5.perms'] == "root") {
 
@@ -624,7 +726,7 @@ class UserManagement
     */
     function setPassword()
     {
-        global $perm, $auth;
+        global $perm;
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
@@ -680,7 +782,7 @@ class UserManagement
     */
     function deleteUser($delete_documents = true)
     {
-        global $perm, $auth;
+        global $perm;
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
@@ -1063,7 +1165,7 @@ class UserManagement
     */
     function changePassword($password)
     {
-        global $perm, $auth;
+        global $perm;
 
         $this->user_data['auth_user_md5.password'] = md5($password);
         $this->storeToDatabase();

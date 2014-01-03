@@ -95,6 +95,7 @@ use Studip\Button, Studip\LinkButton;
         <td width="35%">
             <select name="auth_plugins">
                <option value=""><?= _("Alle")?></option>
+               <option value="preliminary"><?= _("vorläufig")?></option>
                <? foreach($available_auth_plugins as $one) : ?>
                 <option <?= ($user['auth_plugins'] == $one) ? 'selected' : ''?>><?= htmlready($one) ?></option>
                 <? endforeach ?>

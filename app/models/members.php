@@ -266,7 +266,8 @@ class MembersModel
                  LEFT JOIN user_info USING (user_id)
                  LEFT JOIN seminar_user AS b ON (b.user_id = a.user_id AND b.Seminar_id = ?)
                  WHERE perms IN ('autor', 'tutor', 'dozent')
-                   AND Nachname LIKE ? AND (? IS NULL OR Vorname LIKE ?)
+                 AND a.visible <> 'never'
+                 AND Nachname LIKE ? AND (? IS NULL OR Vorname LIKE ?)
                  ORDER BY Nachname";
         $db = DBManager::get()->prepare($query);
 
@@ -289,6 +290,7 @@ class MembersModel
                  LEFT JOIN user_info USING (user_id)
                  LEFT JOIN seminar_user AS b ON (b.user_id = a.user_id AND b.Seminar_id = ?)
                  WHERE perms IN ('autor', 'tutor', 'dozent')
+                 AND a.visible <> 'never'
                    AND username LIKE ?
                  ORDER BY Nachname";
         $db = DBManager::get()->prepare($query);
@@ -312,6 +314,7 @@ class MembersModel
                  LEFT JOIN user_info USING (user_id)
                  LEFT JOIN seminar_user AS b ON (b.user_id = a.user_id AND b.Seminar_id = ?)
                  WHERE perms IN ('autor', 'tutor', 'dozent')
+                 AND a.visible <> 'never'
                    AND de.datafield_id = ? AND de.content = ?
                  ORDER BY Nachname";
         $db = DBManager::get()->prepare($query);

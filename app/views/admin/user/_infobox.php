@@ -11,6 +11,10 @@ if(in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
     );
 }
 $aktionen[] = array(
+        "text" => '<a href="'.$controller->url_for('admin/user/new/prelim').'">'._('Neuen vorläufigen Benutzer anlegen').'</a>',
+        "icon" => "icons/16/black/add/person.png"
+);
+$aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('admin/user/migrate').'">'._('Benutzer zusammenführen').'</a>',
     "icon" => "icons/16/black/move_right/persons.png"
 );

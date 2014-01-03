@@ -66,7 +66,11 @@
                     </p>
                 <? endif ?>
             <? endif ?>
-
+            <? if ($current_user->auth_plugin === null) : ?>
+                <p>
+                    <font color="red"><?= _("(vorläufiger Benutzer)") ?></font>
+                </p>
+            <? endif ?>
             <? if ($public_email != '') : ?>
                 <b><?= _("E-Mail:") ?></b>
                 <a href="mailto:<?= htmlReady($public_email) ?>"><?= htmlReady($public_email) ?></a>

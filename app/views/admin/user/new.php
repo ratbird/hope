@@ -5,16 +5,18 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <h2><?= _('Einen neuen Benutzer anlegen') ?></h2>
 
-<form method="post" action="<?= $controller->url_for('admin/user/new') ?>">
+<form method="post" action="<?= $controller->url_for('admin/user/new/' . $prelim) ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td width="25%">
             <?= _("Benutzername:") ?>
-            <span style="color: red; font-size: 1.6em">*</span>
+            <? if (!$prelim) : ?>
+                <span style="color: red; font-size: 1.6em">*</span>
+            <? endif ?>
         </td>
         <td>
-            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>" required >
+            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>" <?= (!$prelim ? 'required' : '')?> >
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
@@ -28,8 +30,10 @@ use Studip\Button, Studip\LinkButton;
                 <option <? if (!$user['perm'] || $user['perm'] == 'autor') echo 'selected'; ?>>autor</option>
                 <option <? if ($user['perm'] == 'tutor') echo 'selected'; ?>>tutor</option>
                 <option <? if ($user['perm'] == 'dozent') echo 'selected'; ?>>dozent</option>
-                <option <? if ($user['perm'] == 'admin') echo 'selected'; ?>>admin</option>
-                <option <? if ($user['perm'] == 'root') echo 'selected'; ?>>root</option>
+                <? if (!$prelim) : ?>
+                    <option <? if ($user['perm'] == 'admin') echo 'selected'; ?>>admin</option>
+                    <option <? if ($user['perm'] == 'root') echo 'selected'; ?>>root</option>
+                <? endif ?>
             </select>
         </td>
     </tr>
@@ -38,7 +42,11 @@ use Studip\Button, Studip\LinkButton;
             <?= _("Sichtbarkeit:") ?>
         </td>
         <td>
+        <? if (!$prelim) : ?>
             <?= vis_chooser($user['visible'], true) ?>
+        <? else : ?>
+            <?= _("niemals") ?>
+        <? endif ?>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
@@ -101,10 +109,12 @@ use Studip\Button, Studip\LinkButton;
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("E-Mail:") ?>
-            <span style="color: red; font-size: 1.6em">*</span>
+            <? if (!$prelim) : ?>
+                <span style="color: red; font-size: 1.6em">*</span>
+            <? endif ?>
         </td>
         <td>
-            <input class="user_form" type="email" name="Email" value="<?= htmlReady($user['Email']) ?>" required>
+            <input class="user_form" type="email" name="Email" value="<?= htmlReady($user['Email']) ?>" <?= (!$prelim ? 'required' : '')?>>
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
                 <input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
                 <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>
@@ -179,3 +189,9 @@ $infobox = array(
         )
     )
 );
+if ($prelim) {
+    $infobox['content'][1]['eintrag'][] = array(
+                      "icon" => "icons/16/black/info.png",
+                      "text" => _("Sie erstellen einen vorläufigen Benutzer. Vorläufige Benutzer können sich nicht anmelden und sind nicht öffentlich sichtbar.")
+                );
+}

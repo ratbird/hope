@@ -1608,6 +1608,23 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * returns unmodified value of given field
+     * 
+     * @param string $field
+     * @throws InvalidArgumentException
+     * @return mixed 
+     */
+    public function getPristineValue($field)
+    {
+        $field = strtolower($field);
+        if (array_key_exists($field, $this->content_db)) {
+            return $this->content_db[$field];
+        } else {
+            throw new InvalidArgumentException(get_class($this) . '::'. $field . ' not found.');
+        }
+    }
+
+    /**
      * intitalize a relationship and get related record(s)
      *
      * @param string $relation name of relation

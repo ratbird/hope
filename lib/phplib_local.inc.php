@@ -808,6 +808,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         $new_user->geschlecht = Request::int('geschlecht');
         $new_user->title_front = trim(Request::get('title_front', Request::get('title_front_chooser')));
         $new_user->title_rear = trim(Request::get('title_rear', Request::get('title_rear_chooser')));
+        $new_user->auth_plugin = 'standard';
         $new_user->store();
         if ($new_user->user_id) {
             // Abschicken der Bestaetigungsmail

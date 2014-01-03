@@ -97,7 +97,7 @@ use Studip\Button, Studip\LinkButton;
         <td>
             <?= ($user["mkdate"]) ? date("d.m.Y", $user["mkdate"]) : _('unbekannt') ?>
         </td>
-        <td><?= htmlReady($user['auth_plugin']) ?></td>
+        <td><?= htmlReady($user['auth_plugin'] == 'preliminary' ? _("vorläufig") : $user['auth_plugin']) ?></td>
         <td class="actions" nowrap>
             <a href="<?= $controller->url_for('admin/user/edit/'.$user['user_id']) ?>" title="<?= _('Detailansicht des Benutzers anzeigen')?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diesen Benutzer bearbeiten'))) ?>

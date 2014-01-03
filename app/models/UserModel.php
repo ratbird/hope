@@ -37,7 +37,7 @@ class UserModel
     {
         //single field
         if(!is_null($field)) {
-            $dbquery = "SELECT *,IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 au WHERE au.user_id = ?";
+            $dbquery = "SELECT *,IFNULL(auth_plugin, 'preliminary') as auth_plugin FROM auth_user_md5 au WHERE au.user_id = ?";
 
             $db = DBManager::get()->prepare($dbquery);
             $db->execute(array($user_id));
@@ -47,7 +47,7 @@ class UserModel
         // all fields + optional user_info and user_online
         } else {
             if ($full) {
-                $dbquery = "SELECT ui.*,au.*, last_lifesign as changed_timestamp,IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 au"
+                $dbquery = "SELECT ui.*,au.*, last_lifesign as changed_timestamp,IFNULL(auth_plugin, 'preliminary') as auth_plugin FROM auth_user_md5 au"
                          . " LEFT JOIN user_info ui ON (au.user_id = ui.user_id)"
                          . " LEFT JOIN user_online uo ON au.user_id = uo.user_id";
             } else {
@@ -139,7 +139,7 @@ class UserModel
                 }
             }
         }
-        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, uo.last_lifesign as changed_timestamp, ui.mkdate, "
+        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'preliminary') as auth_plugin, uo.last_lifesign as changed_timestamp, ui.mkdate, "
                 ." GROUP_CONCAT(DISTINCT uds.name) as userdomains "
                 ."FROM auth_user_md5 au "
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
@@ -195,7 +195,7 @@ class UserModel
         }
 
         if ($auth_plugins) {
-            $query .= "AND IFNULL(auth_plugin, 'standard') = " . $db->quote($auth_plugins) . " ";
+            $query .= "AND IFNULL(auth_plugin, 'preliminary') = " . $db->quote($auth_plugins) . " ";
         }
 
         if ($userdomains) {

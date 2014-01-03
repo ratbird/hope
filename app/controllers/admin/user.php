@@ -304,6 +304,9 @@ class Admin_UserController extends AuthenticatedController
 
         // Änderungen speichern
         if (Request::submitted('edit')) {
+            if (Request::get('auth_plugin') == 'preliminary') {
+                Request::set('auth_plugin', null);
+            }
             $editPerms = Request::getArray('perms');
             $um = new UserManagement($user_id);
 
@@ -467,6 +470,13 @@ class Admin_UserController extends AuthenticatedController
         //get user informations
         $this->user = UserModel::getUser($user_id, NULL, true);
         $this->perm = $perm;
+        $this->prelim = $this->user['auth_plugin'] == 'preliminary';
+        if ($this->prelim) {
+            $this->available_auth_plugins['preliminary'] = _("vorläufig");
+        }
+        foreach ($GLOBALS['STUDIP_AUTH_PLUGIN'] as $ap) {
+            $this->available_auth_plugins[strtolower($ap)] = $ap;
+        }
         $this->about = new about($this->user['username'], '');
         $this->studycourses = UserModel::getUserStudycourse($user_id);
         $this->student_institutes = UserModel::getUserInstitute($user_id, true);
@@ -483,14 +493,15 @@ class Admin_UserController extends AuthenticatedController
     /*
      * Adding a new user to Stud.IP
      */
-    public function new_action()
+    public function new_action($prelim = false)
     {
         global $perm, $auth;
 
         $this->perm = $perm;
-
+        $this->prelim = $prelim;
+        
         //check auth_plugins
-        if (!in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
+        if (!in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN']) && !$prelim) {
             PageLayout::postMessage(MessageBox::info(_("Die Standard-Authentifizierung ist ausgeschaltet. Das Anlegen von neuen Benutzern ist nicht möglich!")));
             $this->redirect('admin/user');
         }
@@ -537,7 +548,12 @@ class Admin_UserController extends AuthenticatedController
 
             //create new user
             $UserManagement = new UserManagement();
-            if ($UserManagement->createNewUser($newuser)) {
+            if (!$prelim) {
+                $created = $UserManagement->createNewUser($newuser);
+            } else {
+                $created = $UserManagement->createPreliminaryUser($newuser);
+            }
+            if ($created) {
 
                 //get user_id
                 $user_id = $UserManagement->user_data['auth_user_md5.user_id'];

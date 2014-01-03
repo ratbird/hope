@@ -102,11 +102,6 @@ class User extends AuthUserMd5
     }
 
     /**
-     * @var string a test
-     */
-    private $test1;
-
-    /**
      *
      * @param string $id a user id
      */
@@ -165,6 +160,14 @@ class User extends AuthUserMd5
                 $this->additional_fields[$field] = array('get' => $info_getter, 'set' => $info_setter);
             }
         }
+        
+        $this->notification_map['after_create'] = 'UserDidCreate';
+        $this->notification_map['after_store'] = 'UserDidUpdate';
+        $this->notification_map['after_delete'] = 'UserDidDelete';
+        $this->notification_map['before_create'] = 'UserWillCreate';
+        $this->notification_map['before_store'] = 'UserWillUpdate';
+        $this->notification_map['before_delete'] = 'UserWillDelete';
+        
         parent::__construct($id);
     }
 

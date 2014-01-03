@@ -1,7 +1,6 @@
 <?
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
-
 ?>
 <? if ($flash['delete']) : ?>
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
@@ -9,6 +8,7 @@ use Studip\Button, Studip\LinkButton;
 
 <h2>
     <?= _('Benutzerverwaltung für ') ?><?= htmlReady($user['Vorname']) ?> <?= htmlReady($user['Nachname']) ?>
+    <?= ($prelim ? ' (' . _("vorläufiger Benutzer") . ')' : '')?>
     <?= ($user['locked']) ? '<br><span style="color: red">(' . _('gesperrt von') . ' ' . htmlReady(get_fullname($user['locked_by'])) : '' ?>
     <?= ($user['lock_comment']) ? ', Kommentar: '. htmlReady($user['lock_comment']) : '' ?>
     <?= ($user['locked']) ? ')</span>' : '' ?>
@@ -49,7 +49,7 @@ use Studip\Button, Studip\LinkButton;
             <?= _("Sichtbarkeit:") ?>
         </td>
         <td colspan="2">
-            <?= vis_chooser($user['visible']) ?> <small>(<?= $user['visible'] ?>)</small>
+            <?= (!$prelim ? vis_chooser($user['visible']) : '') ?> <small>(<?= $user['visible'] ?>)</small>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
@@ -146,7 +146,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
 
-    <? if ($perm->have_perm('root') && get_config('ALLOW_ADMIN_USERACCESS') && !StudipAuthAbstract::CheckField("auth_user_md5.password", $user['auth_plugin'])) : ?>
+    <? if ($perm->have_perm('root') && get_config('ALLOW_ADMIN_USERACCESS') && !StudipAuthAbstract::CheckField("auth_user_md5.password", $user['auth_plugin']) && !$prelim) : ?>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Neues Passwort:") ?>
@@ -169,13 +169,15 @@ use Studip\Button, Studip\LinkButton;
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("E-Mail:") ?>
-            <span style="color: red; font-size: 1.6em">*</span>
+            <? if (!$prelim) : ?>
+                <span style="color: red; font-size: 1.6em">*</span>
+            <? endif ?>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($user['user_id'], 'email')) : ?>
             <?= htmlReady($user["Email"]) ?>
         <? else : ?>
-            <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>" required>
+            <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>" <?= (!$prelim ? 'required' : '')?>>
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
                 <input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
                 <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>
@@ -215,8 +217,8 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td colspan="2">
             <select name="auth_plugin">
-            <? foreach ($GLOBALS['STUDIP_AUTH_PLUGIN'] as $val): ?>
-                <option value="<?= strtolower($val) ?>" <?= strcasecmp($val, $user['auth_plugin']) == 0 ? 'selected' : '' ?>><?= $val ?></option>
+            <? foreach ($available_auth_plugins as $key => $val) : ?>
+                <option value="<?= strtolower($key) ?>" <?= strcasecmp($key, $user['auth_plugin']) == 0 ? 'selected' : '' ?>><?= $val ?></option>
             <? endforeach ?>
             </select>
         </td>
@@ -501,7 +503,7 @@ if ($user['locked']) {
         "text" => '<a href="' . $controller->url_for('admin/user/unlock/' . $user['user_id'] . '') . '">' . _('Benutzer entsperren') . '</a>',
         "icon" => "icons/16/black/lock-unlocked.png");
 }
-if ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user['perms'], words('root admin'))) {
+if (!$prelim && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user['perms'], words('root admin')))) {
     $paktionen[] = array(
         "text" => '<a href="' . $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') . '">' . _('Neues Passwort setzen') . '</a>',
         "icon" => "icons/16/black/lock-locked.png");

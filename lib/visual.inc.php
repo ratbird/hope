@@ -15,6 +15,8 @@ require_once 'lib/classes/LinkButton.class.php';
 require_once 'lib/classes/Button.class.php';
 require_once 'lib/classes/ResetButton.class.php';
 require_once 'lib/wiki.inc.php';
+require_once 'lib/purifier.php';
+require_once 'lib/utils.php';
 
 /**
  * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.
@@ -267,28 +269,25 @@ function quotes_encode($description,$author)
     return $description;
 }
 
-/**
-* universal and very usable functions to get all the special stud.ip formattings
-*
-*
-* @access       public
-* @param        string $what        what to format
-* @param        boolean $trim       should the output trimmed?
-* @param        boolean $extern TRUE if called from external pages ('externe Seiten')
-* @param    boolean $wiki       if TRUE format for wiki
-* @param    string  $show_comments  Comment mode (none, all, icon), used for Wiki comments
-* @return       string
-*/
-function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
-    OpenGraphURL::$tempURLStorage = array();
-    $markup = new StudipFormat();
-    
-    $what = preg_replace("/\r\n?/", "\n", $what);
-    $what = htmlReady($what, $trim);
+//// Functions for processing marked-up text.
+// TODO Maybe move these functions to their own file (markup.inc.php)?
 
-    $what = $markup->format($what);
-    $what = symbol(smile($what, false));
-    return str_replace("\n", '<br>', $what);
+/**
+ * Common function to get all special Stud.IP formattings.
+ *
+ * @access public
+ * @param string  $what    what to format
+ * @param boolean $trim    should the output trimmed?
+ * @param boolean $extern  TRUE if called from external pages ('externe Seiten')
+ * @param boolean $wiki    if TRUE format for wiki
+ * @param string  $show_comments  Comment mode (none, all, icon), used for Wiki comments
+ * @return string
+ */
+function formatReady($what, $trim=TRUE, $extern=FALSE, $wiki=FALSE, $show_comments="icon"){
+    // TODO remove unused function arguments
+    // TODO figure out if next line is needed and if, add a comment why it is
+    OpenGraphURL::$tempURLStorage = array();
+    return applyMarkup(new StudipFormat(), $what, $trim);
 }
 
 /**
@@ -307,43 +306,130 @@ function formatLinks($what, $nl2br = true)
         $link_markup_rule['end'],
         $link_markup_rule['callback']
     );
-    return $markup->format(htmlReady($what, true, $nl2br));
+    if ($nl2br) { // fix newlines
+        $what = nl2br($what, false);
+    }
+    $what = $markup->format(trim($what));
+    return Purifier\purify($what);
 }
 
 /**
-* the special version of formatReady for Wiki-Webs
-*
-*
-* @access       public
-* @param        string $what        what to format
-* @param        string $trim        should the output trimmed?
-* @param        boolean $extern TRUE if called from external pages ('externe Seiten')
-* @return       string
-*/
-function wikiReady ($what, $trim = TRUE) {
-    $markup = new WikiFormat();
-    $what = preg_replace("/\r\n?/", "\n", $what);
-    $what = htmlReady($what, $trim);
-
-    $what = $markup->format($what);
-    $what = symbol(smile($what, false));
-    return str_replace("\n", '<br>', $what);
-}
-
-
-/**
- * Transform the argument using the replace-before-save rules defined
- * by StudipTransformFormat.
+ * The special version of formatReady for Wiki-Webs.
  *
- * @param string $what the original string
+ * @access public
  *
- * @return the result of applying the replace-before-save
- * transformations to the argument of the function
+ * @param string  $what   What to format
+ * @param string  $trim   Should the output be trimmed?
+ *
+ * @return string
  */
-function transformBeforeSave($what)
-{
+function wikiReady($what, $trim=TRUE){
+    return applyMarkup(new WikiFormat(), $what, $trim);
+}
+
+/**
+ * Apply markup rules and clean the text up.
+ *
+ * @param TextFormat $markup  Markup rules applied on marked-up text.
+ * @param string     $text    Marked-up text on which rules are applied.
+ * @param boolean    $trim    Trim text before applying markup rules, if TRUE.
+ *
+ * @return string  HTML code computed from marked-up text.
+ */
+function applyMarkup($markup, $text, $trim){
+    if (isHtml($text)){
+        return markupAndPurify($markup, $text, $trim);
+    }
+    return markupHtmlReady($markup, $text, $trim);
+}
+
+/**
+ * Return True for HTML code and False for plain text.
+ *
+ * A fairly simple heuristic is used: Every text that begins with '<'
+ * and ends with '>' is considered to be HTML code. Leading and trailing 
+ * whitespace characters are ignored.
+ *
+ * @param string $text  HTML code or plain text.
+ *
+ * @return boolean  TRUE for HTML code, FALSE for plain text.
+ */
+function isHtml($text){
+    // TODO compare trimming-and-comparing runtime to using regexp
+    $trimmed = trim($text);
+    return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+}
+
+/**
+ * Apply markup rules after running text through HTML ready.
+ *
+ * @param TextFormat $markup  Markup rules applied on marked-up text.
+ * @param string     $text    Marked-up text on which rules are applied.
+ * @param boolean    $trim    Trim text before applying markup rules, if TRUE.
+ *
+ * @return string  HTML code computed from marked-up text.
+ */
+function markupHtmlReady($markup, $text, $trim){
+    return markup($markup, htmlReady(unixEOL($text), $trim));
+}
+
+/**
+ * Run text through HTML purifier after applying markup rules.
+ *
+ * @param TextFormat $markup  Markup rules applied on marked-up text.
+ * @param string     $text    Marked-up text on which rules are applied.
+ * @param boolean    $trim    Trim text before applying markup rules, if TRUE.
+ *
+ * @return string  HTML code computed from marked-up text.
+ */
+function markupAndPurify($markup, $text, $trim){
+    $text = unixEOL($text);
+    if ($trim) {
+        $text = trim($text);
+    }
+    return Purifier\purify(markup($markup, $text));
+}
+
+/**
+ * Convert line break to Unix format.
+ *
+ * @param string $text  Text with possibly mixed line breaks (Win, Mac, Unix).
+ *
+ * @return string  Text with Unix line breaks only.
+ */
+function unixEOL($text){
+    return preg_replace("/\r\n?/", "\n", $text);
+}
+
+/**
+ * Apply markup rules on plain text.
+ *
+ * @param TextFormat $markup  Markup rules applied on marked-up text.
+ * @param string     $text    Marked-up text on which rules are applied.
+ *
+ * @return string  HTML code computed from marked-up text.
+ */
+function markup($markup, $text){
+    $text = $markup->format($text);
+    $text = symbol(smile($text, false));
+    return str_replace("\n", '<br>', $text);
+}
+
+/**
+ * Apply replace-before-save rules to marked-up text.
+ *
+ * Replace-before-save rules are defined by StudipTransformFormat.
+ *
+ * After rules have been applied to marked-up text, the resulting HTML code is 
+ * run through HTML Purifier before returning it.
+ *
+ * @param string $text  Marked-up text.
+ *
+ * @return string  HTML code computed by applying replace-before-save rules.
+ */
+function transformBeforeSave($text) {
     $markup = new StudipTransformFormat();
-    return $markup->format($what);
+    return Purifier\purify($markup->format($text));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

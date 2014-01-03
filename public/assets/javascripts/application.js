@@ -43,19 +43,14 @@ jQuery('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
 // Any included link with a rel value containing "option" in the response
 // will be transformed into a button of the lightbox and removed from the
 // response. A close button is always present.
-jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (event) {
+jQuery('a[rel~="lightbox"]').live('click', function (event) {
     var $that     = jQuery(this),
         href      = $that.attr('href'),
         container = jQuery('<div/>');
-    if ($that.prop('form') !== undefined) {
-       var that_form = jQuery($that.prop('form'));
-       var that_params = that_form.serializeArray();
-       that_params.push({'name' : $that.attr('name'), 'value' : 1});
-       href = that_form.attr('action');
-    }
+
     // Load response into a helper container, open dialog after loading
     // has finished.
-    container.load(href, that_params || {}, function (response, status, xhr) {
+    container.load(href, function (response, status, xhr) {
         var width   = jQuery('body').width() * 2 / 3,
             height  = jQuery('body').height() * 2 / 3,
             buttons = {},
@@ -63,65 +58,28 @@ jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (ev
             scripts = jQuery(response).filter('script');
 
         // Create buttons
-        if (!xhr.getResponseHeader('X-No-Buttons')) {
-            jQuery('a[rel~="option"]', this).remove().each(function () {
-                var label = jQuery(this).text(),
-                    href  = jQuery(this).attr('href');
-                buttons[label] = function () {
-                    location.href = href;
-                };
-            });
-            buttons["Schliessen".toLocaleString()] = function () {
-                jQuery(this).dialog('close');
+        jQuery('a[rel~="option"]', this).remove().each(function () {
+            var label = jQuery(this).text(),
+                href  = jQuery(this).attr('href');
+            buttons[label] = function () {
+                location.href = href;
             };
-        }
-        jQuery('a[rel~="close"]', this).live('click', function (event) {
-            event.preventDefault();
-            container.dialog('close');
         });
-        jQuery('form button[rel~="lightbox"]', this).live('click', function (event) {
-            event.preventDefault();
-            jQuery(this).attr('disabled', true);
-            var form = jQuery(this).closest('form');
-            var params = form.serializeArray();
-            params.push({'name' : jQuery(this).attr('name'), 'value' : 1});
-            jQuery.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: jQuery.param(params), 
-                success: function (data, status, xhr) {
-                    var title = xhr.getResponseHeader('X-Title') || '',
-                        location = xhr.getResponseHeader('X-Location');
-                    if (location) {
-                        container.dialog('close');
-                        document.location.replace(location);
-                    } else {
-                        if (title) {
-                            container.dialog('option', 'title', title); 
-                        }
-                        container.html(data);
-                    }
-                },
-            });
+        buttons["Schliessen".toLocaleString()] = function () {
+            jQuery(this).dialog('close');
+        };
+
+        // Create dialog
+        jQuery(this).dialog({
+            width :  width,
+            height:  height,
+            buttons: buttons,
+            title:   title,
+            modal:   true,
+            open: function () {
+                jQuery('head').append(scripts);
+            }
         });
-        if (xhr.getResponseHeader('X-Location')) {
-            document.location.replace(xhr.getResponseHeader('X-Location'));
-        } else {
-            // Create dialog
-            jQuery(this).dialog({
-                width :  width,
-                height:  height,
-                buttons: buttons,
-                title:   title,
-                modal:   true,
-                open: function () {
-                    jQuery('head').append(scripts);
-                },
-                close: function() {
-                    jQuery(this).remove();
-                },
-            });
-        }
     });
 
     event.preventDefault();
@@ -163,7 +121,10 @@ jQuery(function () {
         jQuery('[autofocus]').first().focus();
     }
 
-    jQuery('.add_toolbar').addToolbar();
+    if (!STUDIP.WYSIWYG) {
+        // add toolbar only if WYSIWYG editor is not activated
+        jQuery('.add_toolbar').addToolbar();
+    }
 
     if (document.createElement('textarea').style.resize === undefined) {
         jQuery('textarea.resizable').resizable({

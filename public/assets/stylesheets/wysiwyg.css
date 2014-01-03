@@ -1,0 +1,109 @@
+/**
+ * styles.css - CSS styles for WYSIWYG editor.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Robert Costa <zabbarob@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
+
+/* configure look and feel of CKEditor's content area and toolbar */
+textarea + .cke_chrome:hover {
+    -moz-box-shadow: 0 3px 15px #7788AA !important;
+    -webkit-box-shadow: 0 3px 15px #7788AA !important;
+    box-shadow: 0 3px 15px #7788AA !important;
+    overflow: hidden;               /* cut child element corners off */
+}
+.cke_chrome {                       /* content area and toolbar */
+    border: 0 !important;
+/*    border-radius: 5px;*/
+/*    box-shadow: 0 0 15px #7788AA !important;
+    overflow: hidden;               /* cut child element corners off */
+}
+.cke_wysiwyg_div, .cke_source {     /* content area */
+    padding: 8px !important;        /* NOTE <p>s have an additional margin */
+}
+.animated-height-change {           /* content area in HTML source view mode */
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    transition: height 0.2s;
+}
+#cktoolbar {                        /* toolbar */
+/*    display: none;
+    position: fixed;*/
+    padding: 0;
+    margin: 0;
+    margin-bottom: 5px;
+    z-index: 10000;
+    opacity: 0.95;
+    -webkit-box-shadow: 0 1px 2px -1px #7788AA;
+    -moz-box-shadow: 0 1px 2px -1px #7788AA;
+    box-shadow: 0 1px 2px -1px #7788AA;
+}
+.cke_top, .cke_combo_button, .cke_toolgroup {
+    background-image: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+/*
+.cke_toolbox:hover, .cke_top:hover {
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+.cke_toolbox:active, .cke_top:active {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}
+/*#toolbar-handle {
+    height: 0;
+    text-align: right;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: grab;
+}
+#toolbar-handle:active {
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: grabbing;
+}*/
+
+/* drop zone effects */
+
+.drag .dropzone {
+    display: block;
+}
+.dropzone {
+    pointer-events: none;
+    display: none;
+    position:absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    border: 2px dashed lightgrey;
+    background-color: white;
+    z-index:9999;
+    opacity: 0.7;
+
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* other settings */
+
+.wiki-link {
+    background-image: url(../javascripts/ckeditor/plugins/studip-wiki/icons/wikilink-grey.png);
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 8px;
+    padding-right: 9px;
+}

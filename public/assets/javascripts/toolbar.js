@@ -5,6 +5,9 @@
  * jQuery plugin "addToolbar"
  * ------------------------------------------------------------------------ */
 (function ($) {
+    if (STUDIP.WYSIWYG) {
+        return; // don't add button toolbar if WYSIWYG editor is activated
+    }
 
     STUDIP.Toolbar = {
 

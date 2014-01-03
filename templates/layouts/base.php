@@ -20,6 +20,7 @@
       STUDIP.jsupdate_enable = true;
       <? endif ?>
       STUDIP.URLHelper.parameters = <?= json_encode(URLHelper::getLinkParams()) ?>;
+      STUDIP.WYSIWYG = <?= \Config::GetInstance()->getValue('WYSIWYG') ? 'true' : 'false' ?>;
     </script>
 </head>
 

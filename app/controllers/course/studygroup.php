@@ -259,7 +259,6 @@ class Course_StudygroupController extends AuthenticatedController {
                 $sem->institut_id    = Config::Get()->STUDYGROUP_DEFAULT_INST;
                 $mods                = new Modules();
                 $bitmask             = 0;
-                $sem->admission_type = 0;
                 $sem->visible        = 1;
                 if (Request::get('groupaccess') == 'all') {
                     $sem->admission_prelim = 0;
@@ -270,10 +269,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     }
                     $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.");
                 }
-                $sem->admission_endtime     = -1;
                 $sem->admission_binding     = 0;
-                $sem->admission_starttime   = -1;
-                $sem->admission_endtime_sem = -1;
                 
                 $semdata                     = new SemesterData();
                 $this_semester               = $semdata->getSemesterDataByDate(time());

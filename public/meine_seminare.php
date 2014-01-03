@@ -126,9 +126,10 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
             $meldung = "error§" . sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
             if($lockdata['description']) $meldung .= '§info§' . formatLinks($lockdata['description']);
         } else {
-            if ($current_seminar->admission_type || $current_seminar->admission_prelim == 1) {
+            $admission_time = $current_seminar->getAdmissionTimeFrame();
+            if ($current_seminar->isAdmissionEnabled() || $current_seminar->isAdmissionLocked() || $current_seminar->admission_prelim == 1) {
                 $meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
-            } else if ($current_seminar->admission_endtime_sem != -1 && $current_seminar->admission_endtime_sem < time()) {
+            } else if (isset($admission_time['end_time']) && $admission_time['end_time'] < time()) {
                 $meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->getName());
             } else {
                 $meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->getName());

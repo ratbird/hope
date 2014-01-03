@@ -427,7 +427,7 @@ table.default {
     }
     thead {
       th {
-        background-color: #f4f7f9;
+        background-color: @content-color-20;
         border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
         border-top: 1px solid @brand-color-darker;
         font-size: 1.0em;
@@ -435,7 +435,7 @@ table.default {
     }
     tbody {
         th {
-            background-color: #f0f4ff;
+            background-color: @content-color-20;
             border-top: 1px solid @brand-color-darker;
             border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
             text-align: left;
@@ -450,11 +450,11 @@ table.default {
     }
     // Hover effect
     &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-        background-color: fadeout(@brand-color-lighter, 75%);
+        background-color: @light-gray-color-20;
     }
     tfoot {
         td {
-            background-color: #f4f7f9;
+            background-color: @content-color-20;
             border-top: 1px solid @brand-color-darker;
         }
     }

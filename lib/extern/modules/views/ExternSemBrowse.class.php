@@ -326,9 +326,9 @@ class ExternSemBrowse extends SemBrowse {
                         break;
                         
                         case 1:
-                        $range_path_level = $this->config->getValue("Main", "rangepathlevel");
                         if ($the_tree->tree_data[$group_field]) {
-                            echo htmlReady($the_tree->getShortPath($group_field,$range_path_level));
+                            $range_path_level = $this->config->getValue("Main", "rangepathlevel");
+                            echo htmlReady($the_tree->getShortPath($group_field, NULL, '>', $range_path_level ? $range_path_level - 1 : 0));
                         } else {
                             echo $this->config->getValue("Main", "textnogroups");
                         }

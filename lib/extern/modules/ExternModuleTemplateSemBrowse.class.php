@@ -783,7 +783,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                                 $this->sem_tree = TreeAbstract::GetInstance("StudipSemTree");
                             }
                             if ($this->sem_tree->tree_data[$group_field]) {
-                                $content['RESULT']['GROUP'][$j]['GROUP_NAME'] = ExternModule::ExtHtmlReady($this->sem_tree->getShortPath($group_field, $this->config->getValue('Main', 'rangepathlevel')));
+                                $range_path_level = $this->config->getValue('Main', 'rangepathlevel');
+                                $content['RESULT']['GROUP'][$j]['GROUP_NAME'] = ExternModule::ExtHtmlReady($this->sem_tree->getShortPath($group_field, NULL, '>', $range_path_level ? $range_path_level - 1 : 0));
                                 /*
                                 if ($this->sem_tree->isModuleItem($group_field) && $studienmodulmanagement = PluginEngine::getPlugin('StudienmodulManagement')) {
                                     $content['RESULT']['GROUP'][$j]['GROUP_INFO'] = $studienmodulmanagement->getModuleDescription($group_field, SemesterData::GetSemesterIdByIndex($this->sem_browse_data['sem']));

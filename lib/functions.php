@@ -855,7 +855,7 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
     $view->params[0] = $seminar_id;
     $rs = $view->get_query("view:SEMINAR_SEM_TREE_GET_IDS");
     while ($rs->next_record()){
-        $ret[$rs->f('sem_tree_id')] = $the_tree->getShortPath($rs->f('sem_tree_id'),$depth,$delimeter);
+        $ret[$rs->f('sem_tree_id')] = $the_tree->getShortPath($rs->f('sem_tree_id'), NULL, $delimeter, $depth ? $depth - 1 : 0);
     }
     return $ret;
 }
@@ -877,7 +877,7 @@ function get_range_tree_path($institut_id, $depth = false, $delimeter = ">")
     $view->params[0] = $institut_id;
     $rs = $view->get_query("view:TREE_ITEMS_OBJECT");
     while ($rs->next_record()){
-        $ret[$rs->f('item_id')] = $the_tree->getShortPath($rs->f('item_id'),$depth,$delimeter);
+        $ret[$rs->f('item_id')] = $the_tree->getShortPath($rs->f('item_id'), NULL, $delimeter, $depth ? $depth - 1 : 0);
     }
     return $ret;
 }

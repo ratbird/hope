@@ -539,11 +539,12 @@ class ExternSemBrowseTemplate extends SemBrowse {
                 break;
 
             case 1:
-                if ($the_tree->tree_data[$group_field])
-                    $content = htmlReady($the_tree->getShortPath($group_field,
-                    $this->module->config->getValue('Main', 'rangepathlevel')));
-                else
+                if ($the_tree->tree_data[$group_field]) {
+                    $range_path_level = $this->module->config->getValue('Main', 'rangepathlevel');
+                    $content = htmlReady($the_tree->getShortPath($group_field, NULL, '>', $range_path_level ? $range_path_level - 1 : 0));
+                } else {
                     $content = $this->module->config->getValue('Main', 'textnogroups');
+                }
                 break;
 
             case 2:

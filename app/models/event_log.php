@@ -23,11 +23,8 @@ class EventLog
      */
     function cleanup_log_events ()
     {
-        $db = DBManager::get();
-
-        $sql = 'DELETE log_events FROM log_events JOIN log_actions USING(action_id)
-                WHERE expires > 0 AND mkdate + expires < UNIX_TIMESTAMP()';
-        return $db->exec($sql);
+        return LogEvent::deleteBySQL(
+                'expires > 0 AND mkdate + expires < UNIX_TIMESTAMP()');
     }
 
     /**
@@ -39,24 +36,27 @@ class EventLog
             'course'    => _('Veranstaltung'),
             'institute' => _('Einrichtung'),
             'user'      => _('BenutzerIn'),
-            'resource'  => _('Ressource')
+            'resource'  => _('Ressource'),
+            'other'     => _('Sonstige (von Aktion abhängig)')
         );
     }
 
     /**
      * find objects matching the given string
      */
-    function find_objects ($type, $string)
+    function find_objects ($type, $string, $action_name = null)
     {
         switch ($type) {
             case 'course':
-                return showlog_search_seminar(addslashes($string));
+                return StudipLog::searchSeminar(addslashes($string));
             case 'institute':
-                return showlog_search_inst(addslashes($string));
+                return StudipLog::searchInstitute(addslashes($string));
             case 'user':
-                return showlog_search_user(addslashes($string));
+                return StudipLog::searchUser(addslashes($string));
             case 'resource':
-                return showlog_search_resource(addslashes($string));
+                return StudipLog::searchResource(addslashes($string));
+            case 'other':
+                return StudipLog::searchObjectByAction($string, $action_name);
         }
 
         return NULL;
@@ -77,7 +77,7 @@ class EventLog
             $parameters[':object_id'] = $object_id;
         }
 
-        return count($filter) ? 'WHERE '.join(' AND ', $filter) : '';
+        return count($filter) ? join(' AND ', $filter) : '';
     }
 
     /**
@@ -85,12 +85,8 @@ class EventLog
      */
     function count_log_events ($action_id, $object_id)
     {
-        $query = "SELECT COUNT(*) FROM log_events ";
-        $query .= $this->sql_event_filter($action_id, $object_id, $parameters);
-
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute($parameters);
-        return $statement->fetchColumn();
+        $filter = $this->sql_event_filter($action_id, $object_id, $parameters);
+        return LogEvent::countBySql($filter ?: '1', $parameters);
     }
 
     /**
@@ -99,32 +95,21 @@ class EventLog
     function get_log_events ($action_id, $object_id, $offset)
     {
         $offset = (int)$offset;
-        $filter = $this->sql_event_filter($action_id, $object_id, $parameters);
+        $filter = $this->sql_event_filter($action_id, $object_id, $parameters) ?: '1';
 
-        $query = "SELECT action_id, user_id, info, dbg_info, mkdate,
-                         affected_range_id, coaffected_range_id
-                  FROM log_events
-                  {$filter}
-                  ORDER BY mkdate DESC, event_id DESC
-                  LIMIT {$offset}, 50";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute($parameters);
+        $log_events = LogEvent::findBySQL($filter . " LIMIT {$offset}, 50",
+                $parameters);
 
-        $log_events = array();
-
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $action = get_log_action($row['action_id']);
-            $info = showlog_format_infotemplate($action, $row['user_id'], $row['affected_range_id'],
-                                                $row['coaffected_range_id'], $row['info'], $row['dbg_info']);
-            $log_events[] = array(
-                'time'   => $row['mkdate'],
-                'info'   => $info,
-                'detail' => $row['info'],
-                'debug'  => $row['dbg_info']
+        foreach ($log_events as $log_event) {
+            $events[] = array(
+                'time'   => $log_event->mkdate,
+                'info'   => $log_event->formatEvent(),
+                'detail' => $log_event->info,
+                'debug'  => $log_event->dbg_info
             );
         }
 
-        return $log_events;
+        return $events;
     }
 
     /**
@@ -132,17 +117,13 @@ class EventLog
      */
     function get_log_actions ()
     {
-        $query = "SELECT action_id, COUNT(*) FROM log_events GROUP BY action_id";
-        $statement = DBManager::get()->query($query);
-        $log_count = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-
-        $query = "SELECT * FROM log_actions ORDER BY name";
-        $statement = DBManager::get()->query($query);
-
+        $log_count = LogEvent::countByActions();
+        $actions = LogAction::findBySQL('1 ORDER BY name');
         $log_actions = array();
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $row['log_count'] = (int) $log_count[$row['action_id']];
-            $log_actions[] = $row;
+        foreach ($actions as $action) {
+            $log_actions[$action->getId()] = $action->toArray();
+            $log_actions[$action->getId()]['log_count']
+                    = (int) $log_count[$action->getId()];
         }
 
         return $log_actions;
@@ -153,15 +134,7 @@ class EventLog
      */
     function get_used_log_actions ()
     {
-        $db = DBManager::get();
-
-        $sql = "SELECT action_id, description, SUBSTRING_INDEX(name, '_', 1) AS log_group
-                FROM log_actions WHERE EXISTS
-                (SELECT * FROM log_events WHERE log_events.action_id = log_actions.action_id)
-                ORDER BY log_group, description";
-
-        $result = $db->query($sql);
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        return LogAction::getUsed();
     }
 
     /**
@@ -169,8 +142,6 @@ class EventLog
      */
     function update_log_action ($action_id, $description, $info_template, $active, $expires)
     {
-        $db = DBManager::get();
-
         if ($description === '') {
             throw new InvalidArgumentException(_('Keine Beschreibung angegeben.'));
         } else if ($info_template === '') {
@@ -178,17 +149,16 @@ class EventLog
         } else if ($expires < 0) {
             throw new InvalidArgumentException(_('Ablaufzeit darf nicht negativ sein.'));
         }
-
-        $sql = "UPDATE log_actions
-                SET description = ?, info_template = ?, active = ?, expires = ?
-                WHERE action_id = ?";
-        $stmt = $db->prepare($sql);
-        $stmt->execute(array(
-            $description,
-            $info_template,
-            $active,
-            $expires,
-            $action_id
-        ));
+        
+        $action = LogAction::find($action_id);
+        if (!$action) {
+            throw new InvalidArgumentException(_('Unbekannte Aktion.'));
+        }
+        
+        $action->description = $description;
+        $action->info_template = $info_template;
+        $action->active = $active;
+        $action->expires = $expires;
+        $action->store();
     }
 }

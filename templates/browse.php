@@ -139,15 +139,14 @@ $infobox = array(
                     "text" => _("Wählen Sie den gewünschten Bereich aus oder suchen Sie nach einem Namen!")
                 )
             )
-        ),
-        array("kategorie" => _("Ansichten:"),
-            "eintrag" => array(
-                array(
-                    "icon" => 'icons/16/black/crown.png',
-                    "text" => '<a href="'.URLHelper::getLink('dispatch.php/score').'">'._("Zur Stud.IP-Rangliste").'</a>'
-                )
-            )
         )
-    )
-);
-?>
+      )
+    );
+
+if (get_config('SCORE_ENABLE')) {
+    $infobox['content'][] = array("kategorie" => _("Ansichten:"),
+                                  "eintrag" => array( array(
+                                                 "icon" => 'icons/16/black/crown.png',
+                                                 "text" => '<a href="'.URLHelper::getLink('dispatch.php/score').'">'._("Zur Stud.IP-Rangliste").'</a>'
+                            ) ) );
+}

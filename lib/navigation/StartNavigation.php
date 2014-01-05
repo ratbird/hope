@@ -189,9 +189,11 @@ class StartNavigation extends Navigation
             $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse'));
         }
         // ranking
-        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
-        $this->addSubNavigation('community', $navigation);
-
+        if (get_config('SCORE_ENABLE')) {
+            $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
+            $this->addSubNavigation('community', $navigation);
+        }
+        
         // calendar / home page
         if (!$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Mein Profil'), 'dispatch.php/profile');

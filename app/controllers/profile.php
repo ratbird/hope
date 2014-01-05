@@ -102,15 +102,17 @@ class ProfileController extends AuthenticatedController
         $this->avatar   = Avatar::getAvatar($this->current_user->user_id)->getImageTag(Avatar::NORMAL);
 
         // GetScroreList
-        $score  = new Score($this->current_user->user_id);
-        if ($score->IsMyScore()) {
-            $this->score        = $score->ReturnMyScore();
-            $this->score_title  = $score->ReturnMyTitle();
-        } elseif ($score->ReturnPublik()) {
-            $this->score         = $score->GetScore($this->current_user->user_id);
-            $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
+        if (get_config('SCORE_ENABLE')) {
+            $score  = new Score($this->current_user->user_id);
+            if ($score->IsMyScore()) {
+                $this->score        = $score->ReturnMyScore();
+                $this->score_title  = $score->ReturnMyTitle();
+            } elseif ($score->ReturnPublik()) {
+                $this->score         = $score->GetScore($this->current_user->user_id);
+                $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
+            }
         }
-
+        
         // Additional user information
         $this->public_email = get_visible_email($this->current_user->user_id);
         $this->motto        = $this->profile->getVisibilityValue('motto');
@@ -147,11 +149,13 @@ class ProfileController extends AuthenticatedController
         }
 
         // get kings informations
-        if ($score->IsMyScore() || $score->ReturnPublik()) {
-            $kings = $this->profile->getKingsInformations();
-
-            if ($kings != null) {
-                $this->kings = $kings;
+        if (Config::Get()->SCORE_ENABLE) {
+            if ($score->IsMyScore() || $score->ReturnPublik()) {
+                $kings = $this->profile->getKingsInformations();
+    
+                if ($kings != null) {
+                    $this->kings = $kings;
+                }
             }
         }
 

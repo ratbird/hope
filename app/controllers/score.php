@@ -45,6 +45,10 @@ class ScoreController extends AuthenticatedController
         }
 
         parent::before_filter($action, $args);
+        
+        if (!Config::Get()->SCORE_ENABLE) {
+            throw new AccessDeniedException(_('Die Rangliste und die Score-Funktion sind nicht aktiviert.'));
+        }
 
         PageLayout::setHelpKeyword('Basis.VerschiedenesScore'); // external help keyword
         PageLayout::setTitle(_('Rangliste'));

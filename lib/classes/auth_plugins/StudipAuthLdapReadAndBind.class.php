@@ -51,16 +51,16 @@ class StudipAuthLdapReadAndBind extends StudipAuthLdap {
     * @access public
     * 
     */
-    function StudipAuthLdapReadAndBind() {
+    function __construct() {
         //calling the baseclass constructor
-        parent::StudipAuthLdap();
+        parent::__construct();
     }
     
                 
     function getUserDn($username){
-        if ($this->send_utf8_credentials){
-            $username = utf8_encode($username);
-            $reader_password = utf8_encode($this->reader_password);
+        if ($this->send_utf8_credentials) {
+            $username = studip_utf8encode($username);
+            $reader_password = studip_utf8encode($this->reader_password);
         }
         $user_dn = "";
         if (!($r = @ldap_bind($this->conn, $this->reader_dn, $this->reader_password))){
@@ -87,7 +87,7 @@ class StudipAuthLdapReadAndBind extends StudipAuthLdap {
     }
     
     function isUsedUsername($username){
-        if (!$this->doLdapConnect()){
+        if (!$this->doLdapConnect()) {
             return false;
         }
         $ret = (bool)$this->getUserDn($username);

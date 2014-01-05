@@ -84,16 +84,6 @@ class StudipAuthAbstract {
     var $user_data_mapping = null;
 
     /**
-    * database connection
-    *
-    * database connection to the Stud.IP DB
-    *
-    * @access   public
-    * @var      object DbView
-    */
-    var $dbv;
-
-    /**
     * name of the plugin
     *
     * name of the plugin (last part of class name) is set in the constructor
@@ -111,6 +101,8 @@ class StudipAuthAbstract {
     */
     var $error_head;
 
+    private static $plugin_instances;
+    
     /**
     * static method to instantiate and retrieve a reference to an object (singleton)
     *
@@ -121,17 +113,16 @@ class StudipAuthAbstract {
     * @param    string  name of plugin, if omitted an array with all plugin objects will be returned
     * @return   mixed   either a reference to the plugin with the passed name, or an array with references to all plugins
     */
-
-    function GetInstance( $plugin_name = false){
-        static $plugin_instance;    //container to hold the plugin objects
-        if (!is_array($plugin_instance)){
-            foreach($GLOBALS['STUDIP_AUTH_PLUGIN'] as $plugin){
+    static function getInstance($plugin_name = false)
+    {
+        if (!is_array(self::$plugin_instances)) {
+            foreach($GLOBALS['STUDIP_AUTH_PLUGIN'] as $plugin) {
                 $plugin = "StudipAuth" . $plugin;
                 include_once "lib/classes/auth_plugins/" . $plugin . ".class.php";
-                $plugin_instance[strtoupper($plugin)] = new $plugin;
+                self::$plugin_instances[strtoupper($plugin)] = new $plugin;
             }
         }
-        return ($plugin_name) ? $plugin_instance[strtoupper("StudipAuth" . $plugin_name)] : $plugin_instance;
+        return ($plugin_name) ? self::$plugin_instances[strtoupper("StudipAuth" . $plugin_name)] : self::$plugin_instances;
     }
 
     /**
@@ -144,42 +135,38 @@ class StudipAuthAbstract {
     * @static
     * @param    string  the username to check
     * @param    string  the password to check
-    * @param    bool    indicates if javascript was enabled/disabled during the login process
     * @return   array   structure: array('uid'=>'string <Stud.IP user id>','error'=>'string <error message>','is_new_user'=>'bool')
     */
-    function CheckAuthentication($username,$password,$jscript = false){
+    static function CheckAuthentication($username,$password) 
+    {
 
         $plugins = StudipAuthAbstract::GetInstance();
         $error = false;
         $uid = false;
-        foreach($plugins as $object){
+        foreach ($plugins as $object) {
             // SSO plugins can't be used
-            if ($object instanceof StudipAuthSSO){
+            if ($object instanceof StudipAuthSSO) {
                 continue;
             }
-            if ($uid = $object->authenticateUser($username,$password,$jscript)){
-                $query = "SELECT user_id, locked, validation_key FROM auth_user_md5 WHERE username = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($username));
-                $user = $statement->fetch(PDO::FETCH_ASSOC);
-
+            if ($user = $object->authenticateUser($username,$password)) {
                 if ($user) {
+                    $uid = $user->id;
                     $locked = $user['locked'];
                     $key = $user['validation_key'];
 
                     $exp_d = UserConfig::get($user['user_id'])->EXPIRATION_DATE;
 
-                    if($exp_d > 0 && $exp_d < time()){
+                    if ($exp_d > 0 && $exp_d < time()) {
                         $error .= _("Dieses Benutzerkonto ist abgelaufen.<br> Wenden Sie sich bitte an die Administration.")."<BR>";
                         return array('uid' => false,'error' => $error);
-                    }else if($locked=="1"){
+                    }else if ($locked=="1") {
                         $error .= _("Dieser Benutzer ist gesperrt! Wenden Sie sich bitte an die Administration.")."<BR>";
                         return array('uid' => false,'error' => $error);
-                    }else if($key != '') {
-                        return array('uid' => $uid,'error' => $error,'need_email_activation' => $uid);
+                    }else if ($key != '') {
+                        return array('uid' => $uid, 'user' => $user, 'error' => $error,'need_email_activation' => $uid);
                     }
                 }
-                return array('uid' => $uid,'error' => $error, 'is_new_user' => $object->is_new_user);
+                return array('uid' => $uid, 'user' => $user, 'error' => $error, 'is_new_user' => $object->is_new_user);
             } else {
                 $error .= (($object->error_head) ? ("<b>" . $object->error_head . ":</b> ") : "") . $object->error_msg . "<br>";
             }
@@ -197,12 +184,13 @@ class StudipAuthAbstract {
     * @param    string the username
     * @return   array
     */
-    function CheckUsername($username){
+    static function CheckUsername($username)
+    {
         $plugins = StudipAuthAbstract::GetInstance();
         $error = false;
         $found = false;
-        foreach($plugins as $object){
-            if ($found = $object->isUsedUsername($username)){
+        foreach ($plugins as $object) {
+            if ($found = $object->isUsedUsername($username)) {
                 return array('found' => $found,'error' => $error);
             } else {
                 $error .= (($object->error_head) ? ("<b>" . $object->error_head . ":</b> ") : "") . $object->error_msg . "<br>";
@@ -222,8 +210,9 @@ class StudipAuthAbstract {
     * @param    string  the name of the plugin to check
     * @return   bool    true if the field is mapped, else false
     */
-    function CheckField($field_name,$plugin_name){
-        if (!$plugin_name){
+    static function CheckField($field_name,$plugin_name)
+    {
+        if (!$plugin_name) {
             return false;
         }
         $plugin = StudipAuthAbstract::GetInstance($plugin_name);
@@ -242,17 +231,17 @@ class StudipAuthAbstract {
     * @access private
     *
     */
-    function StudipAuthAbstract() {
+    function __construct()
+    {
         $this->plugin_name = strtolower(substr(get_class($this),10));
         //get configuration array set in local inc
         $config_var = $GLOBALS["STUDIP_AUTH_CONFIG_" . strtoupper($this->plugin_name)];
         //assign each key in the config array as a member of the plugin object
-        if (isset($config_var)){
-            foreach ($config_var as $key => $value){
+        if (isset($config_var)) {
+            foreach ($config_var as $key => $value) {
                 $this->$key = $value;
             }
         }
-        $this->dbv = new DbView();
     }
 
     /**
@@ -265,20 +254,20 @@ class StudipAuthAbstract {
     * @access private
     * @param    string  the username to check
     * @param    string  the password to check
-    * @param    bool    indicates if javascript was enabled/disabled during the login process
-    * @return   string  if authentication succeeds the Stud.IP user id, else false
+    * @return   string  if authentication succeeds the Stud.IP user , else false
     */
-    function authenticateUser($username, $password, $jscript = false){
+    function authenticateUser($username, $password)
+    {
         $username = $this->verifyUsername($username);
-        if ($this->isAuthenticated($username, $password, $jscript)){
-            if ($uid = $this->getStudipUserid($username)){
-                $this->doDataMapping($uid);
+        if ($this->isAuthenticated($username, $password)) {
+            if ($user = $this->getStudipUser($username)) {
+                $this->doDataMapping($user);
                 if ($this->is_new_user){
-                    $this->doNewUserInit($uid);
+                    $this->doNewUserInit($user);
                 }
-                $this->setUserDomains($uid);
+                $this->setUserDomains($user);
             }
-            return $uid;
+            return $user;
         } else {
             return false;
         }
@@ -290,13 +279,13 @@ class StudipAuthAbstract {
     *
     * @access   private
     * @param    string  the username
-    * @return   string  the Stud.IP user id or false if an error occurs
+    * @return   User  the Stud.IP or false if an error occurs
     */
-    function getStudipUserid($username){
-        $this->dbv->params[] = mysql_escape_string($username);
-        $db = $this->dbv->get_query("view:AUTH_USER_UNAME");
-        if ($db->next_record()){
-            $auth_plugin = $db->f("auth_plugin");
+    function getStudipUser($username)
+    {
+        $user = User::findByUsername($username);
+        if ($user) {
+            $auth_plugin = $user->auth_plugin;
             if ($auth_plugin === null) {
                 $this->error_msg = _("Dies ist ein vorläufiger Benutzer.") . "<br>";
                 return false;
@@ -305,48 +294,45 @@ class StudipAuthAbstract {
                 $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$auth_plugin) . "<br>";
                 return false;
             }
-            $uid = $db->f("user_id");
-            return $uid;
+            return $user;
         }
-        $uid = md5(uniqid($username,1));
-        $this->dbv->params = array($uid,mysql_escape_string($username),"autor","","","","",$this->plugin_name);
-        $db = $this->dbv->get_query("view:AUTH_USER_INSERT");
-        $this->dbv->params = array($uid,time(),time(),$GLOBALS['_language']);
-        $db = $this->dbv->get_query("view:USER_INFO_INSERT");
-        $this->is_new_user = true;
-        return $uid;
+        $new_user = new User();
+        $new_user->username = $username;
+        $new_user->perms = 'autor';
+        $new_user->auth_plugin = $this->plugin_name;
+        $new_user->preferred_language = $_SESSION['_language'];
+        if ($new_user->store()) {
+            $this->is_new_user = true;
+            return $new_user;
+        }
     }
 
-   /**
-    * initialize a new user
-    *
-    * this method is invoked for one time, if a new user logs in ($this->is_new_user is true)
-    * place special treatment of new users here
-    * @access   private
-    * @param    string  the user id
-    * @return   bool
-    */
-    function doNewUserInit($uid) {
-
-       // auto insertion of new users, according to $AUTO_INSERT_SEM[] (defined in local.inc)
-        $this->dbv->params[] = $uid;
-        $db = $this->dbv->get_query("view:AUTH_USER_UID");
-        if ($db->next_record()) {
-            AutoInsert::instance()->saveUser($uid, $db->f("perms"));
-            return true;
-        }
-        return false;
+    /**
+     * initialize a new user
+     *
+     * this method is invoked for one time, if a new user logs in ($this->is_new_user is true)
+     * place special treatment of new users here
+     * 
+     * @access private
+     * @param
+     *            User the user object
+     * @return bool
+     */
+    function doNewUserInit($user)
+    {
+        // auto insertion of new users, according to $AUTO_INSERT_SEM[] (defined in local.inc)
+        AutoInsert::instance()->saveUser($user->id, $user->perms);
     }
 
     /**
      * This method sets the user domains for the current user.
      *
      * @access  private
-     * @param   string  the user id
+     * @param   User  the user object
      */
-    function setUserDomains ($uid) {
+    function setUserDomains ($user) {
         $user_domains = $this->getUserDomains();
-
+        $uid = $user->id;
         if (isset($user_domains)) {
             $old_domains = UserDomain::getUserDomainsForUser($uid);
 
@@ -375,7 +361,8 @@ class StudipAuthAbstract {
     /**
      * Get the user domains to assign to the current user.
      */
-    function getUserDomains () {
+    function getUserDomains ()
+    {
         return $this->user_domains;
     }
 
@@ -387,22 +374,26 @@ class StudipAuthAbstract {
     * in the key of the array
     *
     * @access   private
-    * @param    string  the user_id
+    * @param    User  the user object
     * @return   bool
     */
-    function doDataMapping($uid){
-        if (is_array($this->user_data_mapping)){
+    function doDataMapping($user)
+    {
+        if ($user && is_array($this->user_data_mapping)) {
             foreach($this->user_data_mapping as $key => $value){
-                if (method_exists($this, $value['callback'])){
+                if (method_exists($this, $value['callback'])) {
                     $split = explode(".",$key);
                     $table = $split[0];
                     $field = $split[1];
-                    $mapped_value = call_user_method($value['callback'],$this,$value['map_args']);
-                    $this->dbv->params = array($table,$field,mysql_escape_string($mapped_value),$uid);
-                    $db = $this->dbv->get_query("view:GENERIC_UPDATE");
+                    if($table == 'auth_user_md5' || $table == 'user_info') {
+                        $mapped_value = call_user_func(array($this, $value['callback']),$value['map_args']);
+                        $user->setValue($field, $mapped_value);
+                    } else {
+                        call_user_func(array($this, $value['callback']),array($table,$field,$user,$value['map_args']));
+                    }
                 }
             }
-            return true;
+            return $user->store();
         }
         return false;
     }
@@ -415,7 +406,8 @@ class StudipAuthAbstract {
     * @param    string  the name of the db field (<table_name>.<field_name>)
     * @return   bool    true if the field is mapped
     */
-    function isMappedField($name){
+    function isMappedField($name)
+    {
         return isset($this->user_data_mapping[$name]);
     }
 
@@ -427,7 +419,8 @@ class StudipAuthAbstract {
     * @param    string  the username
     * @return   string  the username
     */
-    function verifyUsername($username){
+    function verifyUsername($username)
+    {
         if($this->username_case_insensitiv) $username = strtolower($username);
         if ($this->bad_char_regex){
             return preg_replace($this->bad_char_regex, '', $username);
@@ -445,7 +438,8 @@ class StudipAuthAbstract {
     * @param    string  the username
     * @return   bool    true if the username exists
     */
-    function isUsedUsername($username){
+    function isUsedUsername($username)
+    {
         $this->error_msg = sprintf(_("Methode %s nicht implementiert!"),get_class($this) . "::isUsedUsername()");
         return false;
     }
@@ -458,10 +452,9 @@ class StudipAuthAbstract {
     * @access private
     * @param    string  the username
     * @param    string  the password
-    * @param    bool    is javascript used to hash password ?
     * @return   bool    true if authentication succeeds
     */
-    function isAuthenticated($username, $password, $jscript){
+    function isAuthenticated($username, $password) {
         $this->error = sprintf(_("Methode %s nicht implementiert!"),get_class($this) . "::isAuthenticated()");
         return false;
     }

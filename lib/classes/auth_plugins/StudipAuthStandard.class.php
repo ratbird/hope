@@ -35,23 +35,21 @@ require_once ("lib/classes/auth_plugins/StudipAuthAbstract.class.php");
 * @author   André Noack <noack@data-quest.de>
 * @package
 */
-class StudipAuthStandard extends StudipAuthAbstract {
-
-    var $dbv_auth;
+class StudipAuthStandard extends StudipAuthAbstract
+{
 
     var $bad_char_regex =  false;
 
     /**
-    * Constructor
-    *
-    *
-    * @access public
-    *
-    */
-    function StudipAuthStandard() {
-        //calling the baseclass constructor
-        parent::StudipAuthAbstract();
-        $this->dbv_auth = $this->dbv;
+     * Constructor
+     *
+     *
+     * @access public
+     *        
+     */
+    function __construct()
+    {
+        parent::__construct();
     }
 
     /**
@@ -61,21 +59,20 @@ class StudipAuthStandard extends StudipAuthAbstract {
     * @access public
     *
     */
-    function isAuthenticated($username, $password, $jscript){
-        $this->dbv_auth->params[] = mysql_escape_string($username);
-        $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
-        if (!$db->next_record()){
+    function isAuthenticated($username, $password)
+    {
+        $user = User::findByUsername($username);
+        if (!$user) {
             $this->error_msg= _("Ungültige Benutzername/Passwort-Kombination!") ;
             return false;
-        } elseif ($db->f("username") != $username) {
+        } elseif ($user->username != $username) {
             $this->error_msg = _("Bitte achten Sie auf korrekte Gro&szlig;-Kleinschreibung beim Username!");
             return false;
-        } elseif (!is_null($db->f("auth_plugin")) && $db->f("auth_plugin") != "standard"){
+        } elseif (!is_null($user->auth_plugin) && $user->auth_plugin != "standard") {
             $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$db->f("auth_plugin")) ;
             return false;
         } else {
-            $uid   = $db->f("user_id");
-            $pass  = $db->f("password");   // Password is stored as a md5 hash
+            $pass = $user->password;   // Password is stored as a md5 hash
         }
         if (md5($password) != $pass) {
             $this->error_msg= _("Das Passwort ist falsch!");
@@ -85,15 +82,9 @@ class StudipAuthStandard extends StudipAuthAbstract {
         }
     }
 
-    function isUsedUsername($username){
-        $this->dbv_auth->params[] = mysql_escape_string($username);
-        $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
-        if (!$db->next_record()){
-            $this->error_msg = _("Der Benutzername wurde nicht gefunden.");
-            return false;
-        } else {
-            return true;
-        }
+    function isUsedUsername($username)
+    {
+        return User::findByUsername($username) ? true : false;
     }
 
 }

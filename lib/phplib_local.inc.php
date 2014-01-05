@@ -525,14 +525,13 @@ class Seminar_Auth extends Auth {
             if ( ($authplugin = StudipAuthAbstract::GetInstance($provider)) ) {
                 $authplugin->authenticateUser("","","");
                 if ($authplugin->getUser()){
-                    $uid = $authplugin->getStudipUserid($authplugin->getUser());
-                    $user = User::find($uid);
+                    $user = $authplugin->getStudipUser($authplugin->getUser());
                     $this->auth["jscript"] = true;
                     $this->auth["perm"]  = $user->perms;
                     $this->auth["uname"] = $user->username;
                     $this->auth["auth_plugin"]  = $user->auth_plugin;
                     $this->auth_set_user_settings($user);
-                    return $uid;
+                    return $user->id;
                 }
             } else {
                 return false;
@@ -621,7 +620,7 @@ class Seminar_Auth extends Auth {
                 $_SESSION['semi_logged_in'] = $uid;
                 return false;
             }
-            $user = User::find($uid);
+            $user = $check_auth['user'];
             $this->auth["perm"]  = $user->perms;
             $this->auth["uname"] = $user->username;
             $this->auth["auth_plugin"]  = $user->auth_plugin;

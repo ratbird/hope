@@ -330,7 +330,7 @@ class MembersModel
      */
     function getMembers($sort_status = 'autor', $order_by = 'nachname asc')
     {
-        $query = "SELECT su.user_id,username,vorname,nachname,email,status,position,su.mkdate,su.visible,
+        $query = "SELECT su.user_id,username,vorname,nachname,email,status,position,su.mkdate,su.visible,su.comment,
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING (user_id)
@@ -374,7 +374,7 @@ class MembersModel
             }
         }
 
-        $query = "SELECT asu.user_id,username,vorname,nachname,email,status,position,asu.mkdate,asu.visible,
+        $query = "SELECT asu.user_id,username,vorname,nachname,email,status,position,asu.mkdate,asu.visible, asu.comment,
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM admission_seminar_user asu INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING(user_id)

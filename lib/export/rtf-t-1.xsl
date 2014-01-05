@@ -16,7 +16,7 @@
 \par\trowd \trgaph70\trleft-70\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 \clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr
 \brdrs\brdrw10 \cltxlrtb \cellx2233\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr\brdrs\brdrw10 \cltxlrtb \cellx4536\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr
 \brdrs\brdrw10 \cltxlrtb \cellx5839\clvertalt\clbrdrt\brdrs\brdrw10 \clbrdrl\brdrs\brdrw10 \clbrdrb\brdrs\brdrw10 \clbrdrr\brdrs\brdrw10 \cltxlrtb \cellx6839\pard \nowidctlpar\widctlpar\intbl\adjustright {Name\cell Telefon\cell E-Mail\cell Kontingent
-\cell}\pard \nowidctlpar\widctlpar\intbl\adjustright {\row }\pard</xsl:text>
+\cell Bemerkung\cell }\pard \nowidctlpar\widctlpar\intbl\adjustright {\row }\pard</xsl:text>
 
 						<xsl:choose>
 							<xsl:when test="personen/gruppe">
@@ -80,8 +80,10 @@
 				<xsl:if test="kontingent">
 					<xsl:value-of select="kontingent"/>
 				</xsl:if>
-
-				
+<xsl:text>\cell </xsl:text>
+				<xsl:if test="bemerkung">
+					<xsl:value-of select="bemerkung"/>
+				</xsl:if>
 <xsl:text>\cell }\pard \nowidctlpar\widctlpar\intbl\adjustright {\row }\pard</xsl:text>
 	</xsl:for-each>
 </xsl:template>

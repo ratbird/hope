@@ -60,6 +60,7 @@
 				<xsl:text>";</xsl:text>
 			</xsl:for-each>
 		</xsl:if>
+		<xsl:text>Bemerkung</xsl:text>
 		<xsl:text>
 </xsl:text>
 
@@ -142,6 +143,9 @@
 				<xsl:with-param name="daten" select="zusatzangaben"/>
 			</xsl:call-template>
 
+			<xsl:if test="bemerkung">
+				<xsl:value-of select="bemerkung"/>
+			</xsl:if>
 			<xsl:text>"</xsl:text>
 
 			<xsl:text>

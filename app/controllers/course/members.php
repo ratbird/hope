@@ -68,6 +68,7 @@ class Course_MembersController extends AuthenticatedController
 
         // Layoutsettings
         PageLayout::setTitle(sprintf('%s - %s', $this->header_line, _("TeilnehmerInnen")));
+        PageLayout::addScript('members.js');
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
 
@@ -336,6 +337,61 @@ class Course_MembersController extends AuthenticatedController
             'sem_perm' => array('dozent', 'tutor'),
             'institute' => $sem_institutes)
         );
+    }
+
+    /**
+     * Show dialog to enter a comment for this user
+     * @param String $user_id
+     * @throws AccessDeniedException
+     */
+    function add_comment_action($user_id = null) {
+        // Security Check
+        if (!$this->is_tutor) {
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+        }
+
+        if (is_null($user_id)) {
+            $this->redirect('course/members/index');
+            return;
+        }
+        $this->comment = CourseMember::find(array($this->course_id, $user_id))->comment;
+        $this->user = User::find($user_id);
+        $this->title = sprintf(_('Bemerkung für %s eintragen'), $this->user->getFullName());
+
+        // Output as dialog (Ajax-Request) or as Stud.IP page?
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->comment = studip_utf8encode($this->comment);
+            header('X-Title: ' . $this->title);
+        }
+    }
+
+    /**
+     * Store a comment for this user
+     * @param String $user_id
+     * @throws AccessDeniedException
+     */
+    function set_comment_action($user_id = null) {
+        // Security Check
+        if (!$this->is_tutor) {
+            throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+        }
+
+        if (!Request::submitted('save') || is_null($user_id)) {
+            $this->redirect('course/members/index');
+            return;
+        }
+        CSRFProtection::verifyUnsafeRequest();
+        $course = CourseMember::find(array($this->course_id, $user_id));
+        $course->comment = Request::get('comment');
+
+        if ($course->store() !== false) {
+            PageLayout::postMessage(MessageBox::success(_('Bemerkung wurde erfolgreich gespeichert.')));
+        } else {
+            PageLayout::postMessage(MessageBox::error(_('Bemerkung konnte nicht erfolgreich gespeichert werden.')));
+        }
+
+        $this->redirect('course/members/index');
     }
 
     /**

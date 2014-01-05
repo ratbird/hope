@@ -92,6 +92,9 @@
                        (<?= _('unsichtbar') ?>)
                    <? endif ?>
                     </a>
+                    <? if ($is_tutor && $autor['comment'] != '') : ?>
+                        <?= tooltipIcon(sprintf('<strong>%s</strong><br>%s', _('Bemerkung'), $autor['comment']), false, true) ?>
+                    <? endif ?>
                 </td>
                 <? if ($is_tutor) : ?>
                     <td>
@@ -105,6 +108,11 @@
                 <? endif ?>
 
                 <td style="text-align: right">
+                    <? if ($is_tutor) : ?>
+                        <a rel="comment_dialog" title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $autor['user_id']) ?>">
+                            <?= Assets::img('icons/16/blue/comment.png') ?>
+                        </a>
+                    <? endif ?>
                     <? if($user_id != $autor['user_id']) : ?>
                         <a href="<?= URLHelper::getLink('sms_send.php',
                                     array('filter' => 'send_sms_to_all',

@@ -46,8 +46,16 @@
                             array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                 </a>
+                <? if ($is_tutor && $dozent['comment'] != '') : ?>
+                    <?= tooltipIcon(sprintf('<strong>%s</strong><br>%s', _('Bemerkung'), $dozent['comment']), false, true) ?>
+                <? endif ?>
             </td>
             <td style="text-align: right">
+                <? if ($is_tutor) : ?>
+                    <a rel="comment_dialog" title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $dozent['user_id']) ?>">
+                        <?= Assets::img('icons/16/blue/comment.png') ?>
+                    </a>
+                <? endif ?>
                 <? if($user_id != $dozent['user_id']) : ?>
                 <a href="<?= URLHelper::getLink('sms_send.php',
                             array('filter' => 'send_sms_to_all',

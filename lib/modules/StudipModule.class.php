@@ -56,11 +56,11 @@ interface StudipModule {
     function getNotificationObjects($course_id, $since, $user_id);
 
     /** 
-     * Provides a descriptional text for this module that is shown on the 
-     * course "+" page to inform users about what the module acutally does. The 
-     * text can be customized to fit the local scenarios. 
+     * Provides metadata like a descriptional text for this module that
+     * is shown on the course "+" page to inform users about what the
+     * module acutally does. Additionally, a URL can be specified.
      *  
-     * @return string some description text 
+     * @return array    metadata containg description and/or url
      */ 
-    static function getDescription();
+    function getMetadata();
 }

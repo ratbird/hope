@@ -51,7 +51,8 @@ class PluginAdministration
         }
 
         // load the manifest
-        $manifest = $this->getPluginManifest($packagedir);
+        $plugin_manager = PluginManager::getInstance();
+        $manifest = $plugin_manager->getPluginManifest($packagedir);
 
         if ($manifest === NULL) {
             rmdirr($packagedir);
@@ -76,7 +77,6 @@ class PluginAdministration
         $pluginpath = $origin . '/' . $pluginclass;
         $plugindir = $basepath . '/' . $pluginpath;
 
-        $plugin_manager = PluginManager::getInstance();
         $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);
 
         // is the plugin already installed?
@@ -183,7 +183,7 @@ class PluginAdministration
 
         $plugin_manager->unregisterPlugin($plugin['id']);
         $plugindir = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
-        $manifest = $this->getPluginManifest($plugindir);
+        $manifest = $plugin_manager->getPluginManifest($plugindir);
 
         // delete database if needed
         $this->deleteDBSchema($plugindir, $manifest);
@@ -192,41 +192,6 @@ class PluginAdministration
         Visibility::removePlugin($plugin['id']);
 
         rmdirr($plugindir);
-    }
-
-    /**
-     * Read the manifest of the plugin in the given directory.
-     * Returns NULL if the manifest cannot be found.
-     *
-     * @return array    containing the manifest information
-     */
-    public function getPluginManifest($plugindir)
-    {
-        $manifest = @file($plugindir . '/plugin.manifest');
-        $result = array();
-
-        if ($manifest === false) {
-            return NULL;
-        }
-
-        foreach ($manifest as $line) {
-            list($key, $value) = explode('=', $line);
-            $key = trim($key);
-            $value = trim($value);
-
-            // skip empty lines and comments
-            if ($key === '' || $key[0] === '#') {
-                continue;
-            }
-
-            if ($key === 'pluginclassname' && isset($result[$key])) {
-                $result['additionalclasses'][] = $value;
-            } else {
-                $result[$key] = $value;
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -364,12 +329,13 @@ class PluginAdministration
     public function getUpdateInfo($plugins)
     {
         $default_repository = new PluginRepository();
+        $plugin_manager = PluginManager::getInstance();
         $update_info = array();
 
         foreach ($plugins as $plugin) {
             $repository = $default_repository;
             $plugindir = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
-            $manifest = $this->getPluginManifest($plugindir);
+            $manifest = $plugin_manager->getPluginManifest($plugindir);
 
             if (isset($manifest['updateURL'])) {
                 $repository = new PluginRepository($manifest['updateURL']);
@@ -451,7 +417,7 @@ class PluginAdministration
                             new RecursiveDirectoryIterator($basepath, FilesystemIterator::FOLLOW_SYMLINKS | FilesystemIterator::UNIX_PATHS)),
                         '/plugin\.manifest$/', RecursiveRegexIterator::MATCH);
         foreach ($iterator as $manifest_file) {
-            $manifest = $this->getPluginManifest($manifest_file->getPath());
+            $manifest = $plugin_manager->getPluginManifest($manifest_file->getPath());
             $pluginpath = $basepath . '/' . $manifest['origin'] . '/' . $manifest['pluginclassname'];
             if (!$plugin_manager->getPluginInfo($manifest['pluginclassname'])
                 && $pluginpath === $manifest_file->getPath()) {
@@ -470,7 +436,8 @@ class PluginAdministration
      */
     public function registerPlugin($plugindir)
     {
-        $manifest = $this->getPluginManifest($plugindir);
+        $plugin_manager = PluginManager::getInstance();
+        $manifest = $plugin_manager->getPluginManifest($plugindir);
         if (!$manifest) {
             throw new PluginInstallationException(_('Das Manifest des Plugins fehlt.'));
         }
@@ -491,7 +458,6 @@ class PluginAdministration
         $basepath = get_config('PLUGINS_PATH');
         $pluginpath = $origin . '/' . $pluginclass;
 
-        $plugin_manager = PluginManager::getInstance();
         $pluginregistered = $plugin_manager->getPluginInfo($pluginclass);
 
         if ($pluginregistered) {

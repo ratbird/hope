@@ -227,15 +227,4 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         $dispatcher->current_plugin = $this;
         $dispatcher->dispatch($unconsumed_path);
     }
-
-    public static function getDescription() {
-        return _('Blubber ist ein Medium, in dem Sie in Echtzeit miteinander '.
-            'kommunizieren können. Anders als im Forum ist es nicht '.
-            'notwendig, die Seiten neu zu laden um die neuesten Einträge '.
-            '(z.B. Antworten auf eigene Postings) sehen zu können, die Seite '.
-            'aktualisiert sich selbst bei neuen Einträgen. Dateien (z.B. '.
-            'Fotos, Audiodateien, Links) können Sie per drag and drop in das '.
-            'Feld ziehen und somit verlinken. Auch Textformatierungen und das '.
-            'Verwenden von Smileys sind möglich.');
-    }
 }

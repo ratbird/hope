@@ -58,15 +58,23 @@ abstract class StudIPPlugin {
     }
 
     /**
+     * Return metadata stored in the manifest of this plugin.
+     */
+    public function getMetadata() {
+        $plugin_manager = PluginManager::getInstance();
+        return $plugin_manager->getPluginManifest($this->getPluginPath());
+    }
+
+    /**
      * Checks if the plugin is a core-plugin. Returns true if this is the case.
-     * 
-     * @return booelan
+     *
+     * @return boolean
      */
     public function isCorePlugin()
     {
        return $this->plugin_info['core'];
     }
-    
+
     /**
      * Get the activation status of this plugin in the given context.
      * This also checks the plugin default activations.
@@ -190,9 +198,5 @@ abstract class StudIPPlugin {
             $filename  = substr($filename, 0, -5) . '.css';
         }
         PageLayout::addStylesheet($this->getPluginURL() . '/' . $filename);
-    }
-
-    static function getDescription() {
-        return '';
     }
 }

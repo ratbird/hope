@@ -48,11 +48,12 @@ class CoreSchedule implements StudipModule {
         return null;
     }
 
-    static function getDescription() {
-        return _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, '.
+    function getMetadata()
+    {
+        return array('description' => _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, '.
             'Exkursions- und sonstige Veranstaltungstermine auf. Lehrende '.
             'können zur besseren Orientierung und zur inhaltlichen Einstimmung '.
             'der Studierenden diese Termine mit Themen versehen. Themen sind '.
-            'kurze Angaben von Inhalten, die vermittelt werden sollen.');
+            'kurze Angaben von Inhalten, die vermittelt werden sollen.'));
     }
 }

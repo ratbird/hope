@@ -84,11 +84,12 @@ class CoreDocuments implements StudipModule {
         return $items;
     }
 
-    static function getDescription() {
-        return _('Im Dateibereich können Sie mit Ihren Studierenden '.
+    function getMetadata()
+    {
+        return array('description' => _('Im Dateibereich können Sie mit Ihren Studierenden '.
             'vereinbaren, ob und wenn ja, in welche Ordner deren Studien- '.
             'und Prüfungsleistungen abgelegt werden können. Die Ordner können '.
             'beliebig benannt werden. Sie können Skripte und Materialien - '.
-            'z.B. Grafiken, Audio-, Video- und Textdateien hochladen.');
+            'z.B. Grafiken, Audio-, Video- und Textdateien hochladen.'));
     }
 }

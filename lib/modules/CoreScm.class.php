@@ -105,8 +105,9 @@ class CoreScm implements StudipModule {
         return $items;
     }
 
-    static function getDescription() {
-        return _('Der Freien Informationsseite können Sie einen '.
-            'selbstgewählten Titel geben und dort eigene Texte präsentieren.');
+    function getMetadata()
+    {
+        return array('description' => _('Der Freien Informationsseite können Sie einen '.
+            'selbstgewählten Titel geben und dort eigene Texte präsentieren.'));
     }
 }

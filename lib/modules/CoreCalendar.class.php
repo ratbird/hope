@@ -44,7 +44,8 @@ class CoreCalendar implements StudipModule {
         return null;
     }
 
-    static function getDescription() {
-        return '';
+    function getMetadata()
+    {
+        return array();
     }
 }

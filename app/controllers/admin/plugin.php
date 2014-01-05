@@ -71,9 +71,10 @@ class Admin_PluginController extends AuthenticatedController
 
             // Read current information from local files
             $update_info = array();
+            $plugin_manager = PluginManager::getInstance();
             foreach ($plugins as $plugin) {
                 $plugin_path = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
-                $manifest    = $this->plugin_admin->getPluginManifest($plugin_path);
+                $manifest    = $plugin_manager->getPluginManifest($plugin_path);
                 $update_info[$plugin['id']] = array('version' => $manifest['version']);
             }
             return $update_info;
@@ -264,7 +265,7 @@ class Admin_PluginController extends AuthenticatedController
 
         // prepare file name for download
         $pluginpath = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
-        $manifest = $this->plugin_admin->getPluginManifest($pluginpath);
+        $manifest = $plugin_manager->getPluginManifest($pluginpath);
         $filename = $plugin['class'] . '-' . $manifest['version'] . '.zip';
         $filepath = get_config('TMP_PATH') . '/' . $filename;
 
@@ -330,7 +331,7 @@ class Admin_PluginController extends AuthenticatedController
 
         // retrieve manifest
         $pluginpath = get_config('PLUGINS_PATH') . '/' . $plugin['path'];
-        $manifest = $this->plugin_admin->getPluginManifest($pluginpath);
+        $manifest = $plugin_manager->getPluginManifest($pluginpath);
 
         $this->plugin   = $plugin;
         $this->manifest = $manifest;

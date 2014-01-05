@@ -623,4 +623,39 @@ class PluginManager
 
         return $plugins;
     }
+    
+    /**
+     * Read the manifest of the plugin in the given directory.
+     * Returns NULL if the manifest cannot be found.
+     *
+     * @return array    containing the manifest information
+     */
+    public function getPluginManifest($plugindir)
+    {
+        $manifest = @file($plugindir . '/plugin.manifest');
+        $result = array();
+
+        if ($manifest === false) {
+            return NULL;
+        }
+
+        foreach ($manifest as $line) {
+            list($key, $value) = explode('=', $line);
+            $key = trim($key);
+            $value = trim($value);
+
+            // skip empty lines and comments
+            if ($key === '' || $key[0] === '#') {
+                continue;
+            }
+
+            if ($key === 'pluginclassname' && isset($result[$key])) {
+                $result['additionalclasses'][] = $value;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
 }

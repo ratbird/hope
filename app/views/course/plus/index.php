@@ -21,12 +21,15 @@ use Studip\Button, Studip\LinkButton;
 
 <form action="<?= URLHelper::getLink($save_url) ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
-<table class="default zebra">
-    <colgroup>
-        <col width="15%">
-        <col width="100px">
-        <col>
-    </colgroup>
+<table class="default">
+    <caption>Inhaltselemente</caption>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Beschreibung</th>
+        </tr>
+    </thead>
     <tbody>
 <?
 foreach ($registered_modules as $key => $val) {
@@ -41,11 +44,17 @@ foreach ($registered_modules as $key => $val) {
         $pre_check = null;
         if (isset($val['preconditions'])){
             $method = 'module' . $key . 'Preconditions';
-            if(method_exists($modules, $method)) $pre_check = $modules->$method($_SESSION['admin_modules_data']["range_id"],$val['preconditions']);
+            if(method_exists($modules, $method)) {
+                $pre_check = $modules->$method($_SESSION['admin_modules_data']["range_id"],$val['preconditions']);
+            }
         }
 
         ?>
-    <tr>
+    <tr <?= $pre_check != null ? 'class="quiet"' : '' ?>>
+        <td>
+            <input type="checkbox" name="<?=$key?>_value" value="TRUE" <?= $pre_check ? 'disabled' : '' ?>
+            <?= $modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"]) ? "checked" : "" ?>>
+        </td>
         <td>
             <b><?=$val["name"]?></b>
             <? if ($sem_class) : ?>
@@ -55,37 +64,31 @@ foreach ($registered_modules as $key => $val) {
                 (<?= htmlReady($studip_module->getPluginName()) ?>)
             <? endif ?>
             <? endif ?>
-            <br>
         </td>
         <td>
-            <label class="no-break">
-                <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "checked" : "" ?>>
-                <?=_("an")?>
-            </label>
-            <label class="no-break">
-                <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "" : "checked" ?>>
-                <?=_("aus")?>
-            </label>
-            <br>
-        </td>
-        <td>
+            <? $info = $studip_module instanceOf StudipModule ? $studip_module->getMetadata() : array() ?>
+            <? if (isset($info['description'])) : ?>
+                <?= formatReady($info['description']) ?>
+            <? else: ?>
+                <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
+            <? endif ?>
+
+            <? if (isset($info['homepage'])) : ?>
+                <p>
+                    <strong><?= _('Weitere Informationen:') ?></strong>
+                    <a href="<?= htmlReady($info['homepage']) ?>"><?= htmlReady($info['homepage']) ?></a>
+                </p>
+            <? endif ?>
             <?
             $getModuleXxExistingItems = "getModule".$key."ExistingItems";
 
             if (method_exists($modules,$getModuleXxExistingItems)) {
-                if (($modules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"])) && ($_SESSION['admin_modules_data']["modules_list"][$key]))
-                    printf ("<font color=\"red\">".$modules->registered_modules[$key]["msg_pre_warning"]."</font>", $modules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"]));
-                else
-                    print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $modules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $modules->registered_modules[$key]["msg_activate"]);
-            } else
-                print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $modules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $modules->registered_modules[$key]["msg_activate"]);
-            if (method_exists ($mod, 'getDescription')) {
-            ?>
-                <br/>
-                <i><?= formatReady($mod::getDescription()) ?></i>
-            <?php
+                if ($modules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"]) &&
+                    $_SESSION['admin_modules_data']["modules_list"][$key] && $registered_modules[$key]["msg_pre_warning"])
+                    printf('<p><strong>' . _('Hinweis') . ':</strong> ' . $registered_modules[$key]["msg_pre_warning"] . '</p>',
+                        $modules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"]));
             }
-            ?>            
+            ?>
         </td>
     </tr>
     <? }
@@ -96,40 +99,39 @@ foreach ($available_plugins as $plugin) {
             ($sem_class && !$sem_class->isModuleMandatory($plugin->getPluginname()) 
                 && $sem_class->isModuleAllowed($plugin->getPluginname())
                 && !$sem_class->isSlotModule(get_class($plugin))
-            )) :
-        $plugin_activated = $plugin->isActivated($_SESSION['SessionSeminar']);
+        )) :
+                $plugin_activated = $plugin->isActivated();
         ?>
         <tr>
             <td>
-                <b><?=$plugin->getPluginname()?></b><br>
+                <input type="checkbox" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
             </td>
             <td>
-                <!-- mark old state -->
-                <label class="no-break">
-                    <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
-                    <?=_("an")?>
-                </label>
-                <label class="no-break">
-                    <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="FALSE" <?= $plugin_activated ? "" : "checked" ?>>
-                    <?=_("aus")?>
-                </label>
-                <br>
+                <strong><?=$plugin->getPluginname()?></strong>
             </td>
             <td>
-                <? if (!$plugin_activated): ?>
-                    <?= _('Dieses Plugin kann jederzeit aktiviert werden.') ?>
-                <? elseif ($warning = $plugin->deactivationWarning($_SESSION['SessionSeminar'])): ?>
-                    <font color="red"><?= $warning ?></font>
+                <? $info = $plugin->getMetadata() ?>
+                <? if (isset($info['description'])) : ?>
+                    <?= formatReady($info['description']) ?>
                 <? else: ?>
-                    <?= _('Dieses Plugin kann jederzeit deaktiviert werden.') ?>
+                    <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
                 <? endif ?>
-                <br/>
-                <i><?= formatReady($plugin::getDescription()) ?></i>
+
+                <? if (isset($info['homepage'])) : ?>
+                    <p>
+                        <strong><?= _('Weitere Informationen:') ?></strong>
+                        <a href="<?= htmlReady($info['homepage']) ?>"><?= htmlReady($info['homepage']) ?></a>
+                    </p>
+                <? endif ?>
+
+                <? $warning = $plugin->deactivationWarning($_SESSION['SessionSeminar']) ?>
+                <? if (isset($warning)) : ?>
+                    <p><strong><?= _('Hinweis') ?>:</strong> <?= formatReady($warning) ?></p>
+                <? endif ?>
             </td>
         </tr>
-        <?php
-    endif;
-}
+    <? endif;
+    }
 ?>
     </tbody>
     <tfoot>

@@ -28,7 +28,7 @@ abstract class StudipAuthSSO extends StudipAuthAbstract
      * Check whether this user can be authenticated. The default
      * implementation just checks whether $username is not empty.
      */
-    function isAuthenticated ($username, $password, $jscript)
+    function isAuthenticated ($username, $password)
     {
         return !empty($username);
     }

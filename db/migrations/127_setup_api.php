@@ -27,7 +27,7 @@ class SetupApi extends Migration
           KEY `ocr_server_uri` (`ocr_server_uri`),
           KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`),
           KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE `oauth_consumer_token` (
@@ -45,7 +45,7 @@ class SetupApi extends Migration
           UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`),
           KEY `oct_token_ttl` (`oct_token_ttl`),
           CONSTRAINT `oauth_consumer_token_ibfk_1` FOREIGN KEY (`oct_ocr_id_ref`) REFERENCES `oauth_consumer_registry` (`ocr_id`) ON DELETE CASCADE ON UPDATE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE `oauth_log` (
@@ -67,7 +67,7 @@ class SetupApi extends Migration
           KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`),
           KEY `olg_oct_token` (`olg_oct_token`,`olg_id`),
           KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE `oauth_server_nonce` (
@@ -78,7 +78,7 @@ class SetupApi extends Migration
           `osn_nonce` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           PRIMARY KEY (`osn_id`),
           UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE `oauth_server_registry` (
@@ -102,7 +102,7 @@ class SetupApi extends Migration
           PRIMARY KEY (`osr_id`),
           UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`),
           KEY `osr_usa_id_ref` (`osr_usa_id_ref`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE `oauth_server_token` (
@@ -123,7 +123,7 @@ class SetupApi extends Migration
           KEY `ost_osr_id_ref` (`ost_osr_id_ref`),
           KEY `ost_token_ttl` (`ost_token_ttl`),
           CONSTRAINT `oauth_server_token_ibfk_1` FOREIGN KEY (`ost_osr_id_ref`) REFERENCES `oauth_server_registry` (`osr_id`) ON DELETE CASCADE ON UPDATE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         // Add api tables

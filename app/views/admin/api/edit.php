@@ -1,70 +1,70 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <h1>
-<?= $consumer['consumer_key']
-    ? sprintf(_('Registrierte Applikation "%s" bearbeiten'), $consumer['application_title'])
-    : _('Neue Applikation registrieren') ?></h1>
+<?= $consumer->id
+    ? sprintf(_('Registrierten Konsumenten "%s" bearbeiten'), $consumer->title)
+    : _('Neuen Konsumenten registrieren') ?></h1>
 
     
-<form class="<?= $consumer['consumer_key'] ? 'horizontal' : '' ?> settings"
-      action="<?= $controller->url_for('admin/api/edit', $consumer['consumer_key']) ?>" method="post">
+<form class="<?= $consumer->id ? 'horizontal' : '' ?> settings"
+      action="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     
     <fieldset>
         <legend><?= _('Grundeinstellungen') ?></legend>
         
         <div class="type-checkbox">
-            <label for="enabled"><?= _('Aktiviert') ?></label>
-            <input type="checkbox" class="switch" id="enabled" name="enabled" value="1"
-                   <?= $consumer['enabled'] ? 'checked' : '' ?>>
+            <label for="active"><?= _('Aktiviert') ?></label>
+            <input type="checkbox" class="switch" id="active" name="active" value="1"
+                   <?= $consumer->active ? 'checked' : '' ?>>
         </div>
 
         <div class="type-text">
-            <label for="application_title"><?= _('Titel')?></label>
-            <input required type="text" id="application_title" name="application_title"
+            <label for="title"><?= _('Titel')?></label>
+            <input required type="text" id="title" name="title"
                    placeholder="<?= _('Beispiel-Applikation') ?>"
-                   value="<?= htmlReady($consumer['application_title']) ?>">
+                   value="<?= htmlReady($consumer->title) ?>">
         </div>
 
         <div class="type-text">
-            <label for="requester_name"><?= _('Kontaktperson') ?></label>
-            <input required type="text" id="requester_name" name="requester_name"
+            <label for="contact"><?= _('Kontaktperson') ?></label>
+            <input required type="text" id="contact" name="contact"
                    placeholder="John Doe"
-                   value="<?= htmlReady($consumer['requester_name']) ?>">
+                   value="<?= htmlReady($consumer->contact) ?>">
         </div>
 
         <div class="type-text">
-            <label for="requester_email"><?= _('Kontaktadresse') ?></label>
-            <input required type="text" id="requester_email" name="requester_email"
+            <label for="email"><?= _('Kontaktadresse') ?></label>
+            <input required type="text" id="email" name="email"
                    placeholder="support@appsite.tld"
-                   value="<?= htmlReady($consumer['requester_email']) ?>">
+                   value="<?= htmlReady($consumer->email) ?>">
         </div>
 
         <div class="type-text">
-            <label for="callback_uri"><?= _('Callback URL')?></label>
-            <input required type="text" id="callback_uri" name="callback_uri"
+            <label for="callback"><?= _('Callback URL')?></label>
+            <input required type="text" id="callback" name="callback"
                    placeholder="http://appsite.tld/auth"
-                   value="<?= htmlReady($consumer['callback_uri']) ?>">
+                   value="<?= htmlReady($consumer->callback) ?>">
         </div>
         
-    <? if ($consumer['consumer_key']): ?>
+    <? if ($consumer->id): ?>
         <div class="type-text">
             <label for="consumer_key"><?= _('Consumer Key')?></label>
             <input readonly type="text" id="consumer_key"
-                   value="<?= htmlReady($consumer['consumer_key']) ?>">
+                   value="<?= htmlReady($consumer->auth_key) ?>">
         </div>
 
         <div class="type-text">
             <label for="consumer_secret"><?= _('Consumer Secret')?></label>
             <input readonly type="text" id="consumer_secret"
-                   value="<?= htmlReady($consumer['consumer_secret']) ?>">
+                   value="<?= htmlReady($consumer->auth_secret) ?>">
         </div>
     <? endif; ?>
 
-        <? if ($consumer['consumer_key']): ?>
+        <? if ($consumer->id): ?>
             <div class="centered">
-                <?= strftime(_('Erstellt am %d.%m.%Y %H:%M:%S'), strtotime($consumer['issue_date'])) ?><br>
-            <? if ($consumer['issue_date'] != $consumer['timestamp']): ?>
-                <?= strftime(_('Zuletzt geändert am %d.%m.%Y %H:%M:%S'), strtotime($consumer['timestamp'])) ?>
+                <?= strftime(_('Erstellt am %d.%m.%Y %H:%M:%S'), $consumer->mkdate) ?><br>
+            <? if ($consumer->mkdate != $consumer->chdate): ?>
+                <?= strftime(_('Zuletzt geändert am %d.%m.%Y %H:%M:%S'), $consumer->chdate) ?>
             <? endif; ?>
             </div>
         <? endif; ?>
@@ -74,30 +74,30 @@
         <legend><?= _('Applikation-Details') ?></legend>
 
         <div class="type-checkbox">
-            <label for="application_commercial"><?= _('Kommerziell') ?></label>
-            <input type="checkbox" class="switch" id="application_commercial" name="application_commercial" value="1"
-                   <?= $consumer['application_commercial'] ? 'checked' : '' ?>>
+            <label for="commercial"><?= _('Kommerziell') ?></label>
+            <input type="checkbox" class="switch" id="commercial" name="commercial" value="1"
+                   <?= $consumer->commercial ? 'checked' : '' ?>>
         </div>
 
         <div class="type-text">
-            <label for="application_descr"><?= _('Beschreibung')?></label>
-            <textarea id="application_descr" name="application_descr"
-                ><?= htmlReady($consumer['application_descr']) ?></textarea>
+            <label for="description"><?= _('Beschreibung')?></label>
+            <textarea id="description" name="description"
+                ><?= htmlReady($consumer->description) ?></textarea>
         </div>
 
         <div class="type-text">
-            <label for="application_uri"><?= _('URL')?></label>
-            <input type="text" id="application_uri" name="application_uri"
+            <label for="url"><?= _('URL')?></label>
+            <input type="text" id="url" name="url"
                    placeholder="http://appsite.tld"
-                   value="<?= htmlReady($consumer['application_uri']) ?>">
+                   value="<?= htmlReady($consumer->url) ?>">
         </div>
 
         <div class="type-select">
-            <label for="application_type"><?= _('Typ')?></label>
-            <select name="application_type" id="application_type">
+            <label for="type"><?= _('Typ')?></label>
+            <select name="type" id="type">
                 <option value="">- <?= _('Keine Angabe') ?> -</option>
             <? foreach ($types as $type => $label): ?>
-                <option value="<?= $type ?>" <?= $consumer['application_type'] == $type ? 'selected' : '' ?>>
+                <option value="<?= $type ?>" <?= $consumer->type == $type ? 'selected' : '' ?>>
                     <?= $label ?>
                 </option>
             <? endforeach; ?>
@@ -105,9 +105,9 @@
         </div>
 
         <div class="type-text">
-            <label for="application_notes"><?= _('Notizen')?></label>
-            <textarea id="application_notes" name="application_notes"
-                ><?= htmlReady($consumer['application_notes']) ?></textarea>
+            <label for="notes"><?= _('Notizen')?></label>
+            <textarea id="notes" name="notes"
+                ><?= htmlReady($consumer->notes) ?></textarea>
         </div>
     </fieldset>
 

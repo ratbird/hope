@@ -1,13 +1,13 @@
 <section class="oauth authorize">
     <p>
         <?= sprintf(_('Die Applikation <strong>%s</strong> möchte auf Ihre Daten zugreifen.'), 
-                    htmlReady($rs['application_title'])) ?>
+                    htmlReady($consumer->title)) ?>
     </p>
 
-    <form action="<?= $controller->url_for('oauth/authorize?oauth_token=' . $rs['token']) ?>" method="post">
+    <form action="<?= $controller->url_for('api/oauth/authorize?oauth_token=' . $token) ?>" method="post">
         <p>
-            <?= Studip\Button::createAccept('erlauben', 'allow') ?>
-            <?= Studip\LinkButton::createCancel('verweigern', $rs['callback_url']) ?>
+            <?= Studip\Button::createAccept(_('Erlauben'), 'allow') ?>
+            <?= Studip\LinkButton::createCancel(_('Verweigern'), $consumer->callback) ?>
         </p>
     </form>
 

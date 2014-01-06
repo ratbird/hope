@@ -1,4 +1,4 @@
-<h1><?= _('Registrierte Applikationen') ?></h1>
+<h1><?= _('Registrierte Konsumenten') ?></h1>
 
 <? if (!empty($consumers)): ?>
 <table class="default">
@@ -14,42 +14,42 @@
     </thead>
     <tbody>
 <? foreach ($consumers as $consumer): ?>
-        <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
-            <td>
-                <a href="<?= $controller->url_for('admin/toggle', $consumer['consumer_key'], $consumer['enabled'] ? 'off' : 'on') ?>">
-                    <?= Assets::img('icons/16/blue/checkbox-' . ($consumer['enabled'] ? '' : 'un') . 'checked') ?>
+        <tr>
+            <td id="<?= $consumer->id ?>">
+                <a href="<?= $controller->url_for('admin/api/toggle', $consumer->id, $consumer->active ? 'off' : 'on') ?>">
+                    <?= Assets::img('icons/16/blue/checkbox-' . ($consumer->active ? '' : 'un') . 'checked') ?>
                 </a>
             </td>
             <td>
-            <? if ($consumer['application_uri']): ?>
-                <a href="<?= $consumer['application_uri'] ?>" target="_blank">
-                    <?= htmlReady($consumer['application_title']) ?>
+            <? if ($consumer->url): ?>
+                <a href="<?= $consumer->url ?>" target="_blank">
+                    <?= htmlReady($consumer->title) ?>
                 </a>
             <? else: ?>
-                <?= htmlReady($consumer['application_title']) ?>
+                <?= htmlReady($consumer->title) ?>
             <? endif; ?>
             </td>
-            <td><?= $types[$consumer['application_type']] ?: '&nbsp;' ?></td>
+            <td><?= $types[$consumer->type] ?: '&nbsp;' ?></td>
             <td>
-                <a href="mailto:<?= $consumer['requester_email'] ?>">
-                    <?= htmlReady($consumer['requester_name']) ?>
+                <a href="mailto:<?= $consumer->email ?>">
+                    <?= htmlReady($consumer->contact) ?>
                 </a>
             </td>
-            <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer['application_commercial'] ? '' : 'un') . 'checked') ?></td>
+            <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked') ?></td>
             <td align="right">
-                <a href="<?= $controller->url_for('admin/api/keys', $consumer['consumer_key']) ?>"
+                <a href="<?= $controller->url_for('admin/api/keys', $consumer->id) ?>"
                    data-behaviour="modal"
-                   title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer['application_title'])) ?>">
+                   title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/info-circle.png') ?>
                 </a>
-                <a href="<?= $controller->url_for('admin/api/edit', $consumer['consumer_key']) ?>" title="<?= _('Applikation bearbeiten') ?>">
+                <a href="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" title="<?= _('Applikation bearbeiten') ?>">
                     <?= Assets::img('icons/16/blue/edit.png') ?>
                 </a>
-                <a href="<?= $controller->url_for('admin/api/permissions', $consumer['consumer_key']) ?>" title="<?= _('Zugriffsberechtigungen verwalten') ?>">
+                <a href="<?= $controller->url_for('admin/api/permissions', $consumer->id) ?>" title="<?= _('Zugriffsberechtigungen verwalten') ?>">
                     <?= Assets::img('icons/16/blue/admin.png') ?>
                 </a>
-                <a data-behaviour="confirm" href="<?= $controller->url_for('admin/api/delete', $consumer['consumer_key']) ?>"
-                   title="<?= htmlReady(sprintf(_('Applikation "%s" entfernen'), $consumer['application_title'])) ?>">
+                <a data-behaviour="confirm" href="<?= $controller->url_for('admin/api/delete', $consumer->id) ?>"
+                   title="<?= htmlReady(sprintf(_('Applikation "%s" entfernen'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/trash.png') ?>
                 </a>
             </td>

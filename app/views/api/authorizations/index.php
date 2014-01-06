@@ -12,28 +12,27 @@
     </thead>
     <tbody>
     <? foreach ($consumers as $consumer): ?>
-        <tr class="<?= $class = TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+        <tr>
             <td>
                 <h2>
-                <? if ($consumer['application_uri']): ?>
-                    <a href="<?= $consumer['application_uri'] ?>" target="_blank">
-                        <?= htmlReady($consumer['application_title']) ?>
+                <? if ($consumer->url): ?>
+                    <a href="<?= htmlReady($consumer->url) ?>" target="_blank">
+                        <?= htmlReady($consumer->title) ?>
                     </a>
                 <? else: ?>
-                    <?= htmlReady($consumer['application_title']) ?>
+                    <?= htmlReady($consumer->title) ?>
                 <? endif; ?>
-                <? if ($type = $types[$consumer['type']]): ?>
+                <? if ($type = $types[$consumer->type]): ?>
                     <small>(<?= htmlReady($type) ?>)</small>
                 <? endif; ?>
                 </h2>
-                <p><?= strftime('Zugriff erteilt am %e.%m.%y %H:%M', strtotime($consumer['timestamp'])) ?></p>
-            <? if ($consumer['application_descr']): ?>
-                <p><?= htmlReady($consumer['application_descr']) ?></p>
+            <? if ($consumer->description): ?>
+                <p><?= htmlReady($consumer->description) ?></p>
             <? endif; ?>
             </td>
             <td>
                 <?= LinkButton::createCancel(_('App entfernen'),
-                                             $controller->url_for('api/authorizations/revoke', $consumer['consumer_key']),
+                                             $controller->url_for('api/authorizations/revoke', $consumer->id),
                                              array('data-behaviour' => 'confirm')) ?>
             </td>
         </tr>

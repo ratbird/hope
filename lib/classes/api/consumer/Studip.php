@@ -8,15 +8,10 @@ namespace API\Consumer;
  */
 class Studip extends Base
 {
-    public function detect()
+    public static function detect()
     {
-        return isset($GLOBALS['auth'])
-               && $GLOBALS['auth']->is_authenticated()
-               && $GLOBALS['user']->id !== 'nobody';
-    }
-
-    public function authenticate()
-    {
-        return $GLOBALS['user']->id;
+        if (isset($GLOBALS['auth']) && $GLOBALS['auth']->is_authenticated() && $GLOBALS['user']->id !== 'nobody') {
+            return new self(null, $GLOBALS['user']->id);
+        }
     }
 }

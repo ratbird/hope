@@ -60,7 +60,7 @@ class Router
      */
     protected function __construct($consumer_id)
     {
-        $this->permissions = Permissions::get($consumer_id);
+        $this->permissions = ConsumerPermissions::get($consumer_id);
         $this->registerRenderer(new Renderer\DefaultRenderer);
     }
 
@@ -207,25 +207,6 @@ class Router
         }
 
         return $this;
-    }
-
-    /**
-     * @todo
-     */
-    public function registerConsumer($name, Consumer\Base $consumer)
-    {
-        $this->consumers[$name] = $consumer;
-    }
-
-    public function detectConsumer()
-    {
-        foreach ($this->consumers as $name => $consumer) {
-            if ($consumer->detect()) {
-                $consumer->authenticate();
-                return $consumer;
-            }
-        }
-        return false;
     }
 
     /**
@@ -415,7 +396,7 @@ class Router
             $result = $result->toArray();
         }
 
-        // TODO (mlunzena): result ist stärker als body, soll das so?
+        // TODO (mlunzena): result ist stÃ¤rker als body, soll das so?
         if (isset($result)) {
             $handler[0]->response->body = $result;
         }

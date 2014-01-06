@@ -9,27 +9,26 @@ use StudipAuthAbstract, API\RouterException;
  */
 class HTTP extends Base
 {
-    public function detect()
+    public static function detect()
     {
-        return (false and isset($_SERVER['HTTP_AUTHORIZATION']))
-            || isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-    }
-
-    public function authenticate()
-    {
-        $user_id = false;
-
-        if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
-            $username = $_SERVER['PHP_AUTH_USER'];
-            $password = $_SERVER['PHP_AUTH_PW'];
+        if (false && isset($_SERVER['HTTP_AUTHORIZATION'])
+            || isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']))
+        {
+            $user_id = false;
+            
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                list($username, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+            } elseif (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+                $username = $_SERVER['PHP_AUTH_USER'];
+                $password = $_SERVER['PHP_AUTH_PW'];
+            }
 
             $check = StudipAuthAbstract::CheckAuthentication($username, $password);
             if (!$check['uid'] || $check['uid'] == 'nobody') {
-                throw new RouterException(401);
+                throw new RouterException(401, 'HTTP Authentication failed');
             }
-            $user_id = $check['uid'];
-        }
 
-        return $user_id;
+            return new self(null, $check['uid']);
+        }
     }
 }

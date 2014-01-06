@@ -1,12 +1,12 @@
 <?php
 
-require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/api/bootstrap.php';
+require_once 'app/controllers/studip_controller.php';
+require_once 'lib/bootstrap-api.php';
 
 /**
  *
  **/
-class Api_OauthController extends Trails_Controller
+class Api_OauthController extends StudipController
 {
     /**
      *
@@ -14,6 +14,12 @@ class Api_OauthController extends Trails_Controller
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+
+        # initialize Stud.IP-Session
+        page_open(array('sess' => 'Seminar_Session',
+                        'auth' => 'Seminar_Default_Auth',
+                        'perm' => 'Seminar_Perm',
+                        'user' => 'Seminar_User'));
 
         $this->set_layout(null);
     }
@@ -57,28 +63,15 @@ class Api_OauthController extends Trails_Controller
             $auth->login_if($user->id === 'nobody');
         }
 
-        $user_id = OAuthUser::getMappedId($user->id);
-
-        // Fetch the oauth store and the oauth server.
-        $store  = OAuthStore::instance();
-        $server = new OAuthServer();
         try {
-            // Check if there is a valid request token in the current request
-            // Returns an array with the consumer key, consumer secret, token, token secret and token type.
-            $rs = $server->authorizeVerify();
-
+            $consumer = API\Consumer\Base::detectConsumer('oauth');
             if (isset($_POST['allow'])) {
-                // See if the user clicked the 'allow' submit button (or whatever you choose)
-                $authorized = array_key_exists('allow', $_POST);
-
-                // Set the request token to be authorized or not authorized
-                // When there was a oauth_callback then this will redirect to the consumer
-                $server->authorizeFinish($authorized, $user_id);
+                $consumer->grantAccess($GLOBALS['user']->id);
 
                 // No oauth_callback, show the user the result of the authorization
                 // ** your code here **
                 PageLayout::postMessage(MessageBox::success(_('Sie haben der Applikation Zugriff auf Ihre Daten gewährt.')));
-                $this->redirect('api/authorizations#' . $rs['consumer_key']);
+                $this->redirect('api/authorizations#' . $consumer->auth_key);
            }
         } catch (OAuthException $e) {
             // No token to be verified in the request, show a page where the user can enter the token to be verified
@@ -87,8 +80,10 @@ class Api_OauthController extends Trails_Controller
         }
 
         PageLayout::disableHeader();
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
-        $this->rs = $rs;
+        PageLayout::setTitle(sprintf(_('"%s" bittet um Zugriff'), $consumer->title));
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        $this->consumer = $consumer;
+        $this->token    = Request::option('oauth_token');
     }
 
     /**

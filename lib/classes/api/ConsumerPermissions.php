@@ -9,7 +9,7 @@ use DBManager, PDO;
  * @license GPL 2 or later
  * @since   Stud.IP 2.6
  */
-class Permissions
+class ConsumerPermissions
 {
     /**
      * Create a permission object (for a certain consumer).
@@ -94,7 +94,7 @@ class Permissions
     protected function loadPermissions($consumer_id, $overwrite = false)
     {
         $query = "SELECT route_id, method, granted
-                  FROM api_permissions
+                  FROM api_consumer_permissions
                   WHERE consumer_id = IFNULL(:consumer_id, 'global')";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':consumer_id', $consumer_id);
@@ -136,7 +136,7 @@ class Permissions
     {
         $result = true;
 
-        $query = "INSERT INTO api_permissions (route_id, consumer_id, method, granted)
+        $query = "INSERT INTO api_consumer_permissions (route_id, consumer_id, method, granted)
                   VALUES (:route, IFNULL(:consumer_id, 'global'), :method, :granted)
                   ON DUPLICATE KEY UPDATE granted = VALUES(granted)";
         $statement = DBManager::get()->prepare($query);

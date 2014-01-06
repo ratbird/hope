@@ -1,7 +1,7 @@
 <?php
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/api/bootstrap.php';
+require_once 'lib/bootstrap-api.php';
 
 /**
  *
@@ -24,7 +24,6 @@ class Api_AuthorizationsController extends AuthenticatedController
         PageLayout::setTabNavigation('/links/settings');
         PageLayout::setTitle(_('Applikationen'));
 
-        $this->store = new OAuthConsumer;
         $this->types = array(
             'website' => _('Website'),
             'program' => _('Herkömmliches Desktopprogramm'),
@@ -37,7 +36,7 @@ class Api_AuthorizationsController extends AuthenticatedController
      **/
     public function index_action()
     {
-        $this->consumers = OAuthUser::getConsumers($GLOBALS['user']->id);
+        $this->consumers = API\UserPermissions::get($GLOBALS['user']->id)->getConsumers();
         $this->types = array(
             'website' => _('Website'),
             'program' => _('Herkömmliches Desktopprogramm'),
@@ -51,10 +50,10 @@ class Api_AuthorizationsController extends AuthenticatedController
     /**
      *
      **/
-    public function revoke_action($consumer_key)
+    public function revoke_action($id)
     {
-        OAuthUser::revokeToken($GLOBALS['user']->id, $consumer_key);
+        API\Consumer\Base::find($id)->revokeAccess($GLOBALS['user']->id);
         PageLayout::postMessage(MessageBox::success(_('Der Applikation wurde der Zugriff auf Ihre Daten untersagt.')));
-        $this->redirect('user/index');
+        $this->redirect('api/authorizations');
     }
 }

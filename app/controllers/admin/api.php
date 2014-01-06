@@ -17,18 +17,16 @@ class Admin_ApiController extends AuthenticatedController
 
         $GLOBALS['perm']->check('root');
 
-        $layout = $GLOBALS['template_factory']->open('layouts/base');
-        $this->set_layout($layout);
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
         Navigation::activateItem('/admin/config/api');
         PageLayout::setTitle(_('API Verwaltung'));
         
-#        $this->store = new OAuthConsumer;
-#        $this->types = array(
-#            'website' => _('Website'),
-#            'program' => _('Herkömmliches Desktopprogramm'),
-#            'app'     => _('Mobile App')
-#        );
+        $this->types = array(
+            'website' => _('Website'),
+            'desktop' => _('Herkömmliches Desktopprogramm'),
+            'app'     => _('Mobile App')
+        );
 
         // Infobox
         $this->setInfoboxImage('infobox/administration.jpg');
@@ -61,49 +59,60 @@ class Admin_ApiController extends AuthenticatedController
      **/
     public function index_action()
     {
-#        $this->consumers = $this->store->getList();
+        $this->consumers = API\Consumer\Base::findAll();
         $this->routes = API\Router::getInstance()->getRoutes(true);
     }
 
     /**
      *
      **/
-    public function render_keys($key, $consumer = null)
+    public function render_keys($id)
     {
-        if ($consumer === null) {
-            $consumer = $this->store->load($key);
-        }
+        $consumer = API\Consumer\Base::find($id);
 
         return array(
-            'Consumer Key = ' . $consumer['consumer_key'],
-            'Consumer Secret = ' . $consumer['consumer_secret'],
+            'Consumer Key = ' . $consumer->auth_key,
+            'Consumer Secret = ' . $consumer->auth_secret,
         );
     }
 
     /**
      *
      **/
-    public function keys_action($key)
+    public function keys_action($id)
     {
-        $details = $this->render_keys($key);
+        $details = $this->render_keys($id);
 
         if (Request::isXhr()) {
             $this->render_text(implode('<br>', $details));
         } else {
             PageLayout::postMessage(MessageBox::info(_('Die Schlüssel in den Details dieser Meldung sollten vertraulich behandelt werden!'), $details, true));
-            $this->redirect('admin/api/#' . $key);
+            $this->redirect('admin/api/#' . $id);
         }
     }
 
     /**
      *
      **/
-    public function edit_action($key = null)
+    public function edit_action($id = null)
     {
-        $this->consumer = $this->store->extractConsumerFromRequest($key);
+        $consumer = $id
+                  ? API\Consumer\Base::find($id)
+                  : API\Consumer\Base::create(Request::option('consumer_type') ?: 'oauth');
 
         if (Request::submitted('store')) {
-            $errors = $this->store->validate($this->consumer);
+            $errors = array();
+
+            $consumer->active = Request::int('active');
+            $consumer->title  = Request::get('title');
+            $consumer->contact = Request::get('contact');
+            $consumer->email = Request::get('email');
+            $consumer->callback = Request::get('callback');
+            $consumer->url = Request::get('url');
+            $consumer->type = Request::get('type');
+            $consumer->commercial = Request::int('commercial');
+            $consumer->notes = Request::get('notes');
+            $consumer->description = Request::get('description');
 
             if (!empty($errors)) {
                 $message = MessageBox::error(_('Folgende Fehler sind aufgetreten:'), $errors);
@@ -111,51 +120,47 @@ class Admin_ApiController extends AuthenticatedController
                 return;
             }
 
-            $consumer = $this->store->store($this->consumer, Request::int('enabled', 0));
+            $consumer->store();
 
-            if ($key) {
+            if ($id) {
                 $message = MessageBox::success(_('Die Applikation wurde erfolgreich gespeichert.'));
             } else {
-                $details  = $this->render_keys($key, $consumer);
+                $details  = $this->render_keys($consumer->id);
                 $message = MessageBox::success(_('Die Applikation wurde erfolgreich erstellt, die Schlüssel finden Sie in den Details dieser Meldung.'), $details, true);
             }
             PageLayout::postMessage($message);
-            $this->redirect('admin/api/index#' . $consumer['consumer_key']);
+            $this->redirect('admin/api/index#' . $consumer->id);
             return;
         }
 
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
-
+        $this->consumer = $consumer;
         $this->id = $id;
     }
 
     /**
      *
      **/
-    public function toggle_action($key, $state = null)
+    public function toggle_action($id, $state = null)
     {
-        $consumer = $this->store->extractConsumerFromRequest($key);
+        $consumer = API\Consumer\Base::find($id);
 
-        $state = $state === null
-               ? !$consumer['enabled']
-               : $state === 'on';
-
-        $consumer = $this->store->store($consumer, $state);
+        $consumer->active = $state === null ? !$consumer->active : ($state === 'on');
+        $consumer->store();
 
         $message = $state
                  ? _('Die Applikation wurde erfolgreich aktiviert.')
                  : _('Die Applikation wurde erfolgreich deaktiviert.');
 
         PageLayout::postMessage(MessageBox::success($message));
-        $this->redirect('admin/api/#' . $consumer['consumer_key']);
+        $this->redirect('admin/api/#' . $consumer->id);
     }
 
     /**
      *
      **/
-    public function delete_action($key)
+    public function delete_action($id)
     {
-        $this->store->delete($key);
+        $this->store->delete($id);
         PageLayout::postMessage(MessageBox::success(_('Die Applikation wurde erfolgreich gelöscht.')));
         $this->redirect('admin/api');
     }
@@ -167,7 +172,7 @@ class Admin_ApiController extends AuthenticatedController
     {
         if (Request::submitted('store')) {
             $perms       = Request::getArray('permission');
-            $permissions = Api\Permissions::get($consumer_id ?: 'global');
+            $permissions = Api\ConsumerPermissions::get($consumer_id ?: 'global');
 
             foreach ($perms as $route => $methods) {
                 foreach ($methods as $method => $granted) {
@@ -178,7 +183,7 @@ class Admin_ApiController extends AuthenticatedController
             $permissions->store();
 
             PageLayout::postMessage(MessageBox::success(_('Die Zugriffsberechtigungen wurden erfolgreich gespeichert')));
-            $this->redirect($consumer_key ? 'admin/api' : 'admin/api/permissions');
+            $this->redirect($consumer_id ? 'admin/api' : 'admin/api/permissions');
             return;
         }
 
@@ -187,10 +192,10 @@ class Admin_ApiController extends AuthenticatedController
         PageLayout::setTitle($title);
 
         $this->consumer_id = $consumer_id;
-        $this->router       = Api\Router::getInstance();
-        $this->routes       = $this->router->getRoutes(true, false);
-        $this->permissions  = Api\Permissions::get($consumer_id ?: 'global');
-        $this->global       = $consumer_id ? Api\Permission::get('global') : false;
+        $this->router      = Api\Router::getInstance();
+        $this->routes      = $this->router->getRoutes(true, false);
+        $this->permissions = Api\ConsumerPermissions::get($consumer_id ?: 'global');
+        $this->global      = $consumer_id ? Api\ConsumerPermissions::get('global') : false;
     }
 
     public function config_action()

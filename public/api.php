@@ -68,17 +68,15 @@ namespace API {
     function setupAuth($router)
     {
         // Detect consumer
-        $consumer = $router->detectConsumer();
+        $consumer = Consumer\Base::detectConsumer();
         if (!$consumer) {
             throw new RouterException(401, 'Unauthorized (no consumer)');
         }
 
         // Set authentication if present
-        if ($user_id = $consumer->authenticate()) {
+        if ($user = $consumer->getUser()) {
             // Skip fake authentication if user is already logged in
-            if ($GLOBALS['user']->id !== $user_id) {
-                // Fake user identity
-                $user = User::find($user_id);
+            if ($GLOBALS['user']->id !== $user->id) {
 
                 $GLOBALS['auth'] = new Seminar_Auth();
                 $GLOBALS['auth']->auth = array(
@@ -95,7 +93,7 @@ namespace API {
             setTempLanguage($GLOBALS['user']->id);
         }
 
-        return $user_id;
+        return $consumer->getUser();
     }
 
 }

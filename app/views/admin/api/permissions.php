@@ -1,5 +1,5 @@
-<form action="<?= $controller->url_for('admin/api/permissions', $consumer_key) ?>" method="post">
-<table class="default zebra-big-hover">
+<form action="<?= $controller->url_for('admin/api/permissions', $consumer_id) ?>" method="post">
+<table class="default">
     <thead>
         <tr>
             <th><?= _('Zugriff') ?></th>

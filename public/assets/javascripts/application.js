@@ -391,11 +391,11 @@ jQuery(function ($) {
 (function ($) {
     $(document).on('change', ':checkbox[data-proxyfor]', function () {
         var proxied = $(this).data('proxyfor');
-        $(proxied).attr('checked', this.checked);
+        $(proxied).filter(':not(:disabled)').attr('checked', this.checked);
     }).on('update.studip', ':checkbox[data-proxyfor]', function () {
         var proxied  = $(this).data('proxyfor'),
             $proxied = $(proxied),
-            $checked = $proxied.filter(':checked');
+            $checked = $proxied.filter(':not(:disabled)').filter(':checked');
         $(this).attr('checked', $proxied.length > 0 && $proxied.length === $checked.length);
         $(this).prop('indeterminate', $checked.length > 0 && $checked.length < $proxied.length);
     }).on('change', ':checkbox[data-proxiedby]', function () {

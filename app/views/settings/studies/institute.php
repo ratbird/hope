@@ -6,7 +6,7 @@
     });
 ?>
 
-<h3 style="text-align: center;"><?= _('Ich studiere an folgenden Einrichtungen:') ?></h3>
+<h3 style="text-align: center;"><?= _('Meine Einrichtungen:') ?></h3>
 
 <? if ($allow_change['in']): ?>
 <form action="<?= $controller->url_for('settings/studies/store_in') ?>" method="post">
@@ -35,8 +35,8 @@
             <td colspan="2" style="background: inherit;">
                 <strong><?= _('Sie haben sich noch keinen Einrichtungen zugeordnet.') ?></strong><br>
                 <br>
-                <?= _('Wenn Sie auf Ihrem Profil die Einrichtungen, an denen Sie studieren, '
-                     .'auflisten wollen, k&ouml;nnen Sie diese Einrichtungen hier entragen.') ?>
+                <?= _('Wenn Sie auf Ihrem Profil Ihre Einrichtungen '
+                     .'auflisten wollen, k&ouml;nnen Sie diese Einrichtungen hier eintragen.') ?>
             </td>
         </tr>
     <? endif; ?>
@@ -58,7 +58,7 @@
             <td colspan="2">
             <? if ($allow_change['in']): ?>
                 <label for="select_new_inst">
-                    <?= _('Um sich als Student einer Einrichtung zuzuordnen, wählen '
+                    <?= _('Um sich einer Einrichtung zuzuordnen, wählen '
                          .'Sie die entsprechende Einrichtung aus der folgenden Liste aus:') ?>
                 </label>
                 <br>

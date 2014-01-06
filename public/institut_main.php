@@ -88,6 +88,43 @@ $modules = $Modules->getLocalModules($institute_id);
 
 URLHelper::bindLinkParam("inst_data", $institut_main_data);
 
+// follow institute
+if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] AND ! $GLOBALS['perm']->have_perm('admin')) {
+    if (! $perm->have_studip_perm('user', $institute_id))            
+        $institute_status = 'nobody';
+    elseif (! $perm->have_studip_perm('autor', $institute_id))            
+        $institute_status = 'user';
+
+    if (($institute_status == 'nobody') AND (Request::option('follow_inst') == 'on')) {
+        $query = "INSERT IGNORE INTO user_inst
+                  (user_id, Institut_id, inst_perms)
+                  VALUES (?, ?, 'user')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $GLOBALS['user']->user_id,
+            $institute_id
+        ));
+        if ($statement->rowCount() > 0) {
+            log_event('INST_USER_ADD', $institute_id, $GLOBALS['user']->user_id, 'user');
+            PageLayout::postMessage(MessageBox::success(_("Sie haben die Einrichtung abonniert.")));
+            $institute_status = 'user';
+        }
+    } elseif (($institute_status == 'user') AND (Request::option('follow_inst') == 'off')) {
+	    $query = "DELETE FROM user_inst
+               WHERE user_id = ?  AND Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $GLOBALS['user']->user_id,
+            $institute_id
+        ));
+        if ($statement->rowCount() > 0) {
+            log_event('INST_USER_DEL', $institute_id, $GLOBALS['user']->user_id, 'user');
+            PageLayout::postMessage(MessageBox::success(_("Sie haben sich aus der Einrichtung ausgetragen.")));
+            $institute_status = 'nobody';
+        }
+    }
+}
+
 //Auf und Zuklappen News
 process_news_commands($institut_main_data);
 
@@ -143,6 +180,12 @@ process_news_commands($institut_main_data);
     </td>
         <td class="blank" align="right" valign="top" style="padding:10px;">
             <?= InstituteAvatar::getAvatar($institute_id)->getImageTag(Avatar::NORMAL) ?>
+            <br>
+            <? if ($institute_status == 'nobody') : ?>
+                <a href="<?= URLHelper::getURL('', array('follow_inst' => 'on'))?>"><?= _('diese Einrichtung abonnieren'); ?></a>
+            <? elseif ($institute_status == 'user') : ?>            
+                <a href="<?= URLHelper::getURL('', array('follow_inst' => 'off'))?>"><?= _('aus dieser Einrichtung austragen'); ?></a>
+            <? endif ?>
         </td>
         </tr>
     </table>

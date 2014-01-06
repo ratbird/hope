@@ -9,13 +9,13 @@ class SetupApi extends Migration
     function up()
     {
         // Add vendor tables
-        $query = "CREATE TABLE `oauth_consumer_registry` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_consumer_registry` (
           `ocr_id` int(11) NOT NULL AUTO_INCREMENT,
           `ocr_usa_id_ref` int(11) DEFAULT NULL,
           `ocr_consumer_key` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           `ocr_consumer_secret` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-          `ocr_signature_methods` varchar(255) NOT NULL DEFAULT 'HMAC-SHA1,PLAINTEXT',
-          `ocr_server_uri` varchar(255) NOT NULL,
+          `ocr_signature_methods` varchar(128) NOT NULL DEFAULT 'HMAC-SHA1,PLAINTEXT',
+          `ocr_server_uri` varchar(128) NOT NULL,
           `ocr_server_uri_host` varchar(128) NOT NULL,
           `ocr_server_uri_path` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           `ocr_request_token_uri` varchar(255) NOT NULL,
@@ -30,13 +30,13 @@ class SetupApi extends Migration
         ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
-        $query = "CREATE TABLE `oauth_consumer_token` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
           `oct_id` int(11) NOT NULL AUTO_INCREMENT,
           `oct_ocr_id_ref` int(11) NOT NULL,
           `oct_usa_id_ref` int(11) NOT NULL,
           `oct_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-          `oct_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-          `oct_token_secret` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+          `oct_token` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+          `oct_token_secret` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           `oct_token_type` enum('request','authorized','access') DEFAULT NULL,
           `oct_token_ttl` datetime NOT NULL DEFAULT '9999-12-31 00:00:00',
           `oct_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -48,7 +48,7 @@ class SetupApi extends Migration
         ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
-        $query = "CREATE TABLE `oauth_log` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_log` (
           `olg_id` int(11) NOT NULL AUTO_INCREMENT,
           `olg_osr_consumer_key` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
           `olg_ost_token` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -70,7 +70,7 @@ class SetupApi extends Migration
         ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
-        $query = "CREATE TABLE `oauth_server_nonce` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
           `osn_id` int(11) NOT NULL AUTO_INCREMENT,
           `osn_consumer_key` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           `osn_token` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -81,7 +81,7 @@ class SetupApi extends Migration
         ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
-        $query = "CREATE TABLE `oauth_server_registry` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
           `osr_id` int(11) NOT NULL AUTO_INCREMENT,
           `osr_usa_id_ref` int(11) DEFAULT NULL,
           `osr_consumer_key` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -105,7 +105,7 @@ class SetupApi extends Migration
         ) DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
-        $query = "CREATE TABLE `oauth_server_token` (
+        $query = "CREATE TABLE IF NOT EXISTS `oauth_server_token` (
           `ost_id` int(11) NOT NULL AUTO_INCREMENT,
           `ost_osr_id_ref` int(11) NOT NULL,
           `ost_usa_id_ref` int(11) NOT NULL,
@@ -127,7 +127,7 @@ class SetupApi extends Migration
         DBManager::get()->exec($query);
 
         // Add api tables
-        $query = "CREATE TABLE `api_consumer_permissions` (
+        $query = "CREATE TABLE IF NOT EXISTS `api_consumer_permissions` (
           `route_id` char(32) NOT NULL,
           `consumer_id` char(32) NOT NULL DEFAULT '',
           `method` char(6) NOT NULL,
@@ -136,7 +136,7 @@ class SetupApi extends Migration
         )";
         DBManager::get()->exec($query);
 
-        $query = "CREATE TABLE `api_consumers` (
+        $query = "CREATE TABLE IF NOT EXISTS `api_consumers` (
           `consumer_id` char(32) NOT NULL DEFAULT '',
           `consumer_type` enum('http','studip','oauth') NOT NULL DEFAULT 'studip',
           `auth_key` varchar(64) DEFAULT NULL,
@@ -159,7 +159,7 @@ class SetupApi extends Migration
         )";
         DBManager::get()->exec($query);
 
-        $query = "CREATE TABLE `api_oauth_user_mapping` (
+        $query = "CREATE TABLE IF NOT EXISTS `api_oauth_user_mapping` (
           `oauth_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `user_id` char(32) NOT NULL DEFAULT '',
           `mkdate` int(11) unsigned NOT NULL,
@@ -167,7 +167,7 @@ class SetupApi extends Migration
         )";
         DBManager::get()->exec($query);
 
-        $query = "CREATE TABLE `api_user_permissions` (
+        $query = "CREATE TABLE IF NOT EXISTS `api_user_permissions` (
           `user_id` char(32) NOT NULL DEFAULT '',
           `consumer_id` char(32) NOT NULL DEFAULT '',
           `granted` tinyint(1) unsigned NOT NULL DEFAULT '0',

@@ -107,7 +107,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 $messages["info"] .= "Kurs wurde angelegt.<br>";
     }
 
-// ggf. bestehenden Ilias4-Kurs zuordnen
+    // ggf. bestehenden Ilias4-Kurs zuordnen
     if (Request::submitted('connect_course')) {
         if ((ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $cms_select)) AND ($perm->have_studip_perm("dozent", Request::option("connect_course_sem_id")))) {
             ObjectConnections::setConnection($SessSemName[1], ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $cms_select), "crs", $cms_select);
@@ -184,10 +184,6 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         echo MessageBox::error($messages["error"]);
     }
 
-    // Wenn Kurs(e) zugeordnet, Einsprungm&ouml;glichkeit(en) hier anzeigen
-    if ($course_output["courses"])
-        echo $course_output["courses"];
-
     echo $page_content;
 
     $module_count = 0;
@@ -237,17 +233,24 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 ELearningUtils::bench("module");
         }
         echo "<br>\n";
-        echo "<br>\n";
     }
 
     if (($module_count == 0) AND ($new_account_cms == "")) {
         if ($SessSemName["class"]=="inst") {
-            echo MessageBox::info(_("Momentan sind dieser Einrichtung keine Lernmodule zugeordnet."));
+            $msg_text = _("Momentan sind dieser Einrichtung keine Lernmodule zugeordnet.");
         } else {
-            echo MessageBox::info(_("Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet."));
+            $msg_text = _("Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet.");
         }
-    }
+                
+        echo MessageBox::info($msg_text);
 
+        // Wenn Kurs(e) zugeordnet, Einsprungmöglichkeit(en) hier anzeigen
+        if ($course_output["courses"])
+            echo '<br><div class="messagebox messagebox_info" style="background-image: none">'.$course_output["courses"].'</div>';
+    }
+    elseif ($course_output["courses"])
+        echo $course_output["courses"];
+    
     $caching_active = false;
     if ($view == "edit")
     {
@@ -372,6 +375,20 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 }
             }
 
+            // ILIAS 4: ggf. weitere Modulformen als Link einbinden
+            elseif (method_exists($connected_cms[$cms_select], "updateConnections") AND count($connected_cms[$cms_select]->types['webr'])) {
+                $crs_data = ObjectConnections::getConnectionModuleId($SessSemName[1], "crs", $cms_select);
+                echo ELearningUtils::getHeader(_("Andere ILIAS-Objekte hinzufügen"));
+                echo "<div align=\"center\">";
+                echo "<br>\n";
+                echo _("Sie können beliebige weitere Objekte hinzufügen, indem Sie im verknüpften Kurs in ILIAS einen internen Link anlegen. "
+                      ."Wechseln Sie dazu in den Kurs, wählen Sie unter \"Neues Objekt hinzufügen\" die Option Weblink und legen "
+                      ."einen Link innerhalb von ILIAS an. Kehren Sie anschließend auf diese Seite zurück und klicken Sie in der Infobox "
+                      ."auf \"Aktualisieren\"");
+                echo "<br><br>\n";
+                echo "</div>";
+            }
+            
             echo ELearningUtils::getCMSFooter($connected_cms[$cms_select]->getLogo());
         }
 

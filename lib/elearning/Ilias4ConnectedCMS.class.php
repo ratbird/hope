@@ -43,6 +43,39 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
     }
 
     /**
+     * Helper function to fetch childs including objects in folders
+     *
+     * @access public
+     * @param string $parent_id
+     * @return array result
+     */
+    function getChilds($parent_id) {
+        $types[] = 'fold';
+        foreach ($this->types as $type => $name) {
+            $types[] = $type;
+        }
+
+        $result = $this->soap_client->getTreeChilds($parent_id, $types, $this->user->getId());
+        if ($result) {
+            $parent_path = $this->soap_client->getRawPath($parent_id) . '_' . $parent_id;
+            foreach($result as $ref_id => $data) { 
+                // Workaround: getTreeChilds() liefert ALLE Referenzen der beteiligten Objekte, hier sollen aber nur die aus dem Kurs geprüft werden. Deshalb Abgleich der Pfade aller gefundenen Objekt-Referenzen.
+                if (($data["accessInfo"] != "granted") OR ($this->soap_client->getRawPath($ref_id) != $parent_path))
+                    unset($result[$ref_id]);
+                elseif ($data['type'] == 'fold') {
+                    unset($result[$ref_id]);
+                    $result = $result + $this->getChilds($ref_id);
+                }
+            }
+        }
+        
+        if (is_array($result))
+            return $result;
+        else 
+            return array();
+    }
+        
+    /**
      * check connected modules and update connections
      *
      * checks if there are modules in the course that are not connected to the seminar
@@ -56,19 +89,13 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 
         $db = DBManager::get();
 
-        $types = array();
-        foreach ($this->types as $type => $name) {
-            $types[] = $type;
-        }
-
-        // Workaround: getTreeChilds() liefert ALLE Referenzen der beteiligten Objekte, hier sollen aber nur die aus dem Kurs geprüft werden. Deshalb Abgleich der Pfade aller gefundenen Objekt-Referenzen.
         $result = $this->soap_client->getObjectByReference($course_id);
-
         if ($result) {
             $course_path = $this->soap_client->getRawPath($course_id) . '_' . $result["ref_id"];
         }
-
-        $result = $this->soap_client->getTreeChilds($course_id, $types, $this->user->getId());
+        $this->soap_client->setCachingStatus(false);
+        // fetch childs
+        $result = $this->getChilds($course_id);
 
         if (is_array($result)) {
             $check = $db->prepare("SELECT 1 FROM object_contentmodules WHERE object_id = ? AND module_id = ? AND system_type = ? AND module_type = ?");
@@ -77,15 +104,13 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
             $deleted = 0;
             $messages["info"] .= "<b>".sprintf(_("Aktualisierung der Zuordnungen zum System \"%s\":"), $this->getName()) . "</b><br>";
             foreach($result as $ref_id => $data) {
-                if (($data["accessInfo"] == "granted") AND ($this->soap_client->getRawPath($ref_id) == $course_path)) {
-                    $check->execute(array($SessSemName[1], $ref_id, $this->cms_type, $data["type"]));
-                    if (!$check->fetch()) {
-                        $messages["info"] .= sprintf(_("Zuordnung zur Lerneinheit \"%s\" wurde hinzugefügt."), ($data["title"])) . "<br>";
-                        ObjectConnections::setConnection($SessSemName[1], $ref_id, $data["type"], $this->cms_type);
-                        $added++;
-                    }
-                    $found[] = $ref_id . '_' . $data["type"];
+                $check->execute(array($SessSemName[1], $ref_id, $this->cms_type, $data["type"]));
+                if (!$check->fetch()) {
+                    $messages["info"] .= sprintf(_("Zuordnung zur Lerneinheit \"%s\" wurde hinzugefügt."), ($data["title"])) . "<br>";
+                    ObjectConnections::setConnection($SessSemName[1], $ref_id, $data["type"], $this->cms_type);
+                    $added++;
                 }
+                $found[] = $ref_id . '_' . $data["type"];
             }
             $to_delete = $db->prepare("SELECT module_id,module_type FROM object_contentmodules WHERE module_type <> 'crs' AND object_id = ? AND system_type = ? AND CONCAT_WS('_', module_id,module_type) NOT IN (?)");
             $to_delete->execute(array($SessSemName[1], $this->cms_type, count($found) ? $found : array('')));

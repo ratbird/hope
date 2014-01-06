@@ -114,10 +114,13 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                 echo ELearningUtils::getHeader(sprintf(_("Mein Benutzeraccount")));
                 if ($connected_cms[$cms]->user->isConnected())
                 {
-                    $account_message = "<b>" . _("Loginname: ") . "</b>" . $connected_cms[$cms]->user->getUsername();
-                    $start_link = $connected_cms[$cms]->link->getStartpageLink(_("Startseite"));
-                    if ($start_link != false)
-                        $account_message .=  "<br><br>" . sprintf(_("Hier gelangen Sie in das angebundene System: %s"), $start_link);
+                    $startpage_message = "";
+                	$account_message = "<b>" . _("Loginname: ") . "</b>" . $connected_cms[$cms]->user->getUsername();
+                    $start_link = $connected_cms[$cms]->link->getStartpageLink(_($connected_cms[$cms]->getName()));
+                    if ($start_link != false) {
+                        $msg_text = _('Hier gelangen Sie direkt zur Startseite im angebundenen System:'). ' ' . $start_link . '<br>';
+                        $startpage_message .= '<div class="messagebox messagebox_info" style="background-image: none">'.$msg_text.'</div>';
+                    }
                 }
                 else
                     $account_message = sprintf(_("Sie haben im System %s bisher keinen Benutzer-Account."), $connected_cms[$cms]->getName());
@@ -126,8 +129,8 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                 {
                     echo ELearningUtils::getMyAccountForm("<font size=\"-1\">" . $account_message . "</font>", $cms);
 
-                    echo "<br>\n";
-
+                    echo $startpage_message."<br>\n";
+                    
                     if ($connected_cms[$cms]->user->isConnected())
                     {
                         echo ELearningUtils::getHeader(sprintf(_("Meine Lernmodule")));

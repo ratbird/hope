@@ -14,7 +14,6 @@
  */
 
 require_once 'lib/visual.inc.php';
-require_once 'lib/show_log.inc.php';
 
 class EventLog
 {

@@ -797,10 +797,11 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }
 
         // alle Checks ok, Benutzer registrieren...
+        $hasher = UserManagement::getPwdHasher();
         $new_user = new User();
         $new_user->username = $username;
         $new_user->perms = 'user';
-        $new_user->password = md5(Request::get('password'));
+        $new_user->password = $hasher->HashPassword(Request::get('password'));
         $new_user->vorname = $Vorname;
         $new_user->nachname = $Nachname;
         $new_user->email = $Email;

@@ -82,7 +82,7 @@ class UserManagementRequestNewPassword extends UserManagement {
         }
 
         $password = $this->generate_password(6);
-        $this->user_data['auth_user_md5.password'] = md5($password);
+        $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
 
         if (!$this->storeToDatabase()) {
             $this->msg .= "error§" . _("Die &Auml;nderung konnte nicht in die Datenbank geschrieben werden.") . "§";

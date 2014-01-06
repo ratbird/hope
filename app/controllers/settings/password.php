@@ -55,14 +55,14 @@ class Settings_PasswordController extends Settings_SettingsController
         $this->check_ticket();
 
         $errors = array();
-
-        if ($this->user['password'] != md5(Request::get('password'))) {
-            $errors[] = _('Das aktuelle Passwort wurde nicht korrekt eingegeben.');
-        }
+        $hasher = UserManagement::getPwdHasher();
+        
 
         $password  = Request::get('new_password');
         $confirm   = Request::get('new_password_confirm');
-
+        if (!($hasher->CheckPassword(md5(Request::get('password')), $this->user['password'] ) || $hasher->CheckPassword(Request::get('password'), $this->user['password'] ))) {
+            $errors[] = _('Das aktuelle Passwort wurde nicht korrekt eingegeben.');
+        }
         if (!$this->validator->ValidatePassword($password)) {
             $errors[] = _('Das Passwort ist zu kurz - es sollte mindestens 4 Zeichen lang sein.');
         } else if ($password !== $confirm) {
@@ -76,7 +76,7 @@ class Settings_PasswordController extends Settings_SettingsController
         if (count($errors) > 0) {
             $this->reportErrorWithDetails(_('Bitte überprüfen Sie Ihre Eingabe:'), $errors);
         } else {
-            $this->user->password = md5($password);
+            $this->user->password = $hasher->HashPassword($password);
             if ($this->user->store()) {
                 $this->reportSuccess(_('Das Passwort wurde erfolgreich geändert.'));
             }

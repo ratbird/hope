@@ -448,6 +448,7 @@ $ENABLE_SELF_REGISTRATION = TRUE;               //should it be possible for an u
 
 $ENABLE_REQUEST_NEW_PASSWORD_BY_USER = TRUE;            //if true, users are able to request a new password themselves
 $REQUEST_NEW_PASSWORD_SECRET = 'jh896fajsb974b4850aMhlf'; // if the above feature is used, set this to somthing different!!!
+$PHPASS_USE_PORTABLE_HASH = true;
 
 $ENABLE_FREE_ACCESS = TRUE;                         //if true, courses with public access are available
 

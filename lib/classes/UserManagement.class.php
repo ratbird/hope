@@ -36,6 +36,7 @@ require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'app/models/studygroup.php';
+require_once 'vendor/phpass/PasswordHash.php';
 
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
@@ -50,19 +51,19 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')){
 
 /**
  * Adapter to fake user_data property in UserManagement
- * 
+ *
  * @author noack
  *
  */
 class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
 {
     private $user;
-    
+
     function __construct(User $user)
     {
         $this->user = $user;
     }
-    
+
     /**
      * @param string $offset
      * @return string
@@ -72,16 +73,16 @@ class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
         $adapted = trim(strstr($offset, '.'), '.');
         return $adapted ?: $offset;
     }
-    
+
     /**
     * ArrayAccess: Check whether the given offset exists.
     */
     function offsetExists($offset)
     {
-        
+
         return $this->user->offsetExists($this->adaptOffset($offset));
     }
-    
+
     /**
      * ArrayAccess: Get the value at the given offset.
      */
@@ -89,7 +90,7 @@ class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
     {
         return $this->user->offsetGet($this->adaptOffset($offset));
     }
-    
+
     /**
      * ArrayAccess: Set the value at the given offset.
      */
@@ -97,7 +98,7 @@ class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
     {
         return $this->user->offsetSet($this->adaptOffset($offset), $value);
     }
-    
+
     /**
      * ArrayAccess: unset the value at the given offset.
      */
@@ -105,23 +106,23 @@ class UserDataAdapter implements ArrayAccess, Countable, IteratorAggregate
     {
         return $this->user->offsetUnset($this->adaptOffset($offset));
     }
-    
-    /** 
+
+    /**
      * @see Countable::count()
      */
     function count()
     {
         return $this->user->count();
     }
-    
-    /** 
+
+    /**
      * @see IteratorAggregate::getIterator()
      */
     function getIterator()
     {
         return $this->user->getIterator();
     }
-    
+
     /**
       * @param array $data
       * @param bool $reset
@@ -150,6 +151,16 @@ class UserManagement
 
     public $msg;
 
+    private static $pwd_hasher;
+
+    public static function getPwdHasher()
+    {
+        if (self::$pwd_hasher === null) {
+            self::$pwd_hasher = new PasswordHash(8, $GLOBALS['PHPASS_USE_PORTABLE_HASH']);
+        }
+        return self::$pwd_hasher;
+    }
+
     /**
     * Constructor
     *
@@ -163,7 +174,7 @@ class UserManagement
         $this->validator->timeout = 10;                 // How long do we wait for response of mailservers?
         $this->getFromDatabase($user_id);
     }
-    
+
     function __get($attr)
     {
         if ($attr === 'user_data') {
@@ -219,7 +230,7 @@ class UserManagement
             'tutor' => 2,
             'dozent' => 3
         );
-        
+
         if ($this->user->isDirty('perms')) {
             if ($this->user->perms == 'dozent' && in_array($this->user->getPrstineValue('perms'), array('user','autor','tutor'))) {
                 $this->logInstUserDel($this->user->id, "inst_perms = 'user'");
@@ -376,19 +387,19 @@ class UserManagement
         if (!$this->checkMail($newuser['auth_user_md5.Email'])) {
             return FALSE;
         }
-        
+
         if (!$newuser['auth_user_md5.auth_plugin']) {
             $newuser['auth_user_md5.auth_plugin'] = 'standard';
         }
-        
+
         // Store new values in internal array
         foreach ($newuser as $key => $value) {
             $this->user_data[$key] = $value;
         }
-        
+
         if ($this->user_data['auth_user_md5.auth_plugin'] == 'standard') {
             $password = $this->generate_password(6);
-            $this->user_data['auth_user_md5.password'] = md5($password);
+            $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
         }
 
         // Does the user already exist?
@@ -439,7 +450,7 @@ class UserManagement
      */
     function createPreliminaryUser($newuser) {
         global $perm;
-        
+
         $this->getFromDatabase(null);
         $this->user_data->setData($newuser);
         // Do we have permission to do so?
@@ -465,7 +476,7 @@ class UserManagement
             $this->msg .= "error§" . _("Bitte geben Sie <em>Status</em>, <em>Vorname</em> und <em>Nachname</em> an!") . "§";
             return FALSE;
         }
-    
+
         // Is the username correct?
         if (!$this->validator->ValidateUsername($this->user->username)) {
             $this->msg .= "error§" .  _("Der gewählte Benutzername ist zu kurz oder enthält unzulässige Zeichen!") . "§";
@@ -632,7 +643,7 @@ class UserManagement
             $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
             $Zeit=date("H:i:s, d.m.Y",time());
             include("locale/$user_language/LC_MAILS/change_mail.inc.php");
-    
+
             // send mail
             StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
         }
@@ -753,7 +764,7 @@ class UserManagement
         }
 
         $password = $this->generate_password(6);
-        $this->user_data['auth_user_md5.password'] = md5($password);
+        $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
 
         if (!$this->storeToDatabase()) {
             $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
@@ -1167,7 +1178,7 @@ class UserManagement
     {
         global $perm;
 
-        $this->user_data['auth_user_md5.password'] = md5($password);
+        $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
         $this->storeToDatabase();
 
         $this->msg .= "msg§" . _("Das Passwort wurde neu gesetzt.") . "§";

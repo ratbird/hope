@@ -24,7 +24,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ("lib/classes/auth_plugins/StudipAuthAbstract.class.php");
+require_once "lib/classes/auth_plugins/StudipAuthAbstract.class.php";
 
 /**
 * Basic Stud.IP authentication, using the Stud.IP database
@@ -62,7 +62,7 @@ class StudipAuthStandard extends StudipAuthAbstract
     function isAuthenticated($username, $password)
     {
         $user = User::findByUsername($username);
-        if (!$user) {
+        if (!$user || strlen($password) > 72) {
             $this->error_msg= _("Ungültige Benutzername/Passwort-Kombination!") ;
             return false;
         } elseif ($user->username != $username) {
@@ -74,7 +74,8 @@ class StudipAuthStandard extends StudipAuthAbstract
         } else {
             $pass = $user->password;   // Password is stored as a md5 hash
         }
-        if (md5($password) != $pass) {
+        $hasher = UserManagement::getPwdHasher();
+        if (!($hasher->CheckPassword(md5($password), $pass) || $hasher->CheckPassword($password, $pass))) {
             $this->error_msg= _("Das Passwort ist falsch!");
             return false;
         } else {

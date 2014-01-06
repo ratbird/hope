@@ -38,7 +38,7 @@ class RolePersistence
      *
      * @return array Roles
      */
-    public function getAllRoles()
+    public static function getAllRoles()
     {
         $cache = StudipCacheFactory::getCache();
 
@@ -69,7 +69,7 @@ class RolePersistence
      * @param Role $role
      * @return the role id
      */
-    public function saveRole($role)
+    public static function saveRole($role)
     {
         // sweep roles cache, see #getAllRoles
         StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
@@ -98,7 +98,7 @@ class RolePersistence
      *
      * @param unknown_type $role
      */
-    public function deleteRole($role)
+    public static function deleteRole($role)
     {
         $cache = StudipCacheFactory::getCache();
         $id = $role->getRoleid();
@@ -134,8 +134,9 @@ class RolePersistence
      *
      * @param StudIPUser $user
      * @param Role $role
+     * @param string $institut_id
      */
-    public function assignRole($user,$role)
+    public static function assignRole($user, $role, $institut_id = '')
     {
         // role is not in database
         // save it to the database first
@@ -146,8 +147,8 @@ class RolePersistence
             $roleid = $role->getRoleid();
         }
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_user ".
-          "(roleid, userid) VALUES (?, ?)");
-        $stmt->execute(array($roleid, $user->getUserid()));
+          "(roleid, userid, institut_id) VALUES (?, ?, ?)");
+        $stmt->execute(array($roleid, $user->getUserid(), $institut_id));
         self::$user_roles = array();
     }
 
@@ -158,20 +159,20 @@ class RolePersistence
      * @param boolean $implicit
      * @return array
      */
-    public function getAssignedRoles($userid, $implicit = false)
+    public static function getAssignedRoles($userid, $implicit = false)
     {
         $key = $userid . (int)$implicit;
         if (!array_key_exists($key, self::$user_roles)) {
             if ($implicit && is_object($GLOBALS['perm'])) {
                 $global_perm = $GLOBALS['perm']->get_perm($userid);
 
-                $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r "
+                $stmt = DBManager::get()->prepare("SELECT DISTINCT r.roleid FROM roles_user r "
                       . "WHERE r.userid=? "
                       . "UNION "
                       . "SELECT rp.roleid FROM roles_studipperms rp WHERE rp.permname = ?");
                 $stmt->execute(array($userid, $global_perm));
             } else {
-                $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r WHERE r.userid=?");
+                $stmt = DBManager::get()->prepare("SELECT DISTINCT r.roleid FROM roles_user r WHERE r.userid=?");
                 $stmt->execute(array($userid));
             }
             self::$user_roles[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -179,24 +180,29 @@ class RolePersistence
         return array_intersect_key(self::getAllRoles(), array_flip(self::$user_roles[$key]));
     }
 
+    public static function getAssignedRoleInstitutes($user_id, $role_id)
+    {
+        return DBManager::get()->fetchFirst("SELECT institut_id FROM roles_user WHERE userid=? AND roleid=?", array($user_id, $role_id));
+    }
+
     /**
      * Checks a role assignment for an user
+     * optionally check for institute
      *
      * @param string $userid
      * @param string $assignedrole
+     * @param string $institut_id
      * @return boolean
      */
-    public static function isAssignedRole($userid, $assignedrole)
+    public static function isAssignedRole($userid, $assignedrole, $institut_id = '')
     {
-        $stmt = DBManager::get()->query("SELECT r.roleid FROM roles_user AS u LEFT JOIN roles AS r ON r.roleid=u.roleid WHERE u.userid='{$userid}' AND r.rolename='{$assignedrole}'")->fetchColumn();
-        if(!empty($stmt))
-        {
-            return true;
+        if ($institut_id) {
+            $faculty_id = Institute::find($institut_id)->fakultaets_id;
         }
-        else
-        {
-            return false;
-        }
+        $assigned = DBManager::get()->fetchColumn("SELECT r.roleid FROM roles_user AS u 
+                                               LEFT JOIN roles AS r ON r.roleid=u.roleid 
+                                               WHERE u.userid=? AND r.rolename=? AND u.institut_id IN (?)", array($userid,$assignedrole,array((string)$institut_id,(string)$faculty_id)));
+        return $assigned != '';
     }
 
     /**
@@ -205,10 +211,15 @@ class RolePersistence
      * @param StudIPUser[] $users
      * @param Role $role
      */
-    public function deleteRoleAssignment($user,$role)
+    public static function deleteRoleAssignment($user,$role, $institut_id = null)
     {
-        $stmt = DBManager::get()->prepare("DELETE FROM roles_user WHERE roleid=? AND userid=?");
-        $stmt->execute(array($role->getRoleid(),$user->getUserid()));
+        if ($institut_id === null) {
+            $stmt = DBManager::get()->prepare("DELETE FROM roles_user WHERE roleid=? AND userid=?");
+            $stmt->execute(array($role->getRoleid(),$user->getUserid()));
+        } else {
+            $stmt = DBManager::get()->prepare("DELETE FROM roles_user WHERE roleid=? AND userid=? AND institut_id=?");
+            $stmt->execute(array($role->getRoleid(),$user->getUserid(),$institut_id));
+        }
         self::$user_roles = array();
     }
 
@@ -219,7 +230,7 @@ class RolePersistence
      * @param StudIPUser $user
      * @return array with roleids and the assigned userids
      */
-    public function getAllRoleAssignments($user=null)
+    public static function getAllRoleAssignments($user=null)
     {
         if ($user == null)
         {
@@ -245,7 +256,7 @@ class RolePersistence
      * @param int $pluginid
      * @param array $roleids
      */
-    public function assignPluginRoles($pluginid,$roleids)
+    public static function assignPluginRoles($pluginid,$roleids)
     {
         StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
 
@@ -261,7 +272,7 @@ class RolePersistence
      * @param int $pluginid
      * @param array $roleids
      */
-    public function deleteAssignedPluginRoles($pluginid,$roleids)
+    public static function deleteAssignedPluginRoles($pluginid,$roleids)
     {
         StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
 
@@ -277,7 +288,7 @@ class RolePersistence
      * @param int $pluginid
      * @return array
      */
-    public function getAssignedPluginRoles($pluginid=-1)
+    public static function getAssignedPluginRoles($pluginid=-1)
     {
         $cache = StudipCacheFactory::getCache();
 

@@ -33,8 +33,9 @@ use Studip\Button, Studip\LinkButton;
         <thead>
             <tr>
                 <th style="width: 3%;"></th>
-                <th style="width: 40%;"><?= _('Name') ?></th>
-                <th><?= _('Status') ?></th>
+                <th style="width: 27%;"><?= _('Name') ?></th>
+                <th style="width: 3%;"><?= _('Status') ?></th>
+                <th><?= _('Einrichtungszuordnung') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -50,6 +51,13 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                     <td>
                         <?= $user['perms'] ?>
+                    </td>
+                    <td>
+                    <? $institutes = join(', ', $user['institutes']); ?>
+                        <?= htmlReady(substr($institutes,0,60)) ?>
+                        <? if (strlen($institutes) > 60) :?>
+                        ...<?= tooltipIcon(join("\n", $user['institutes']))?>
+                        <? endif ?>
                     </td>
                 </tr>
             <? endforeach ?>

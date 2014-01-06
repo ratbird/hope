@@ -59,7 +59,7 @@ class Admin_RoleController extends AuthenticatedController
     private function get_role_stats($roles)
     {
         // Prepare count users statement
-        $query = "SELECT COUNT(*)
+        $query = "SELECT COUNT(DISTINCT userid)
                   FROM roles_user
                   WHERE roleid = ? AND userid != 'nobody'";
         $users_statement = DBManager::get()->prepare($query);
@@ -205,6 +205,10 @@ class Admin_RoleController extends AuthenticatedController
             $this->assignedroles = $this->currentuser->getAssignedRoles();
             $this->all_userroles = $this->currentuser->getAssignedRoles(true);
             $this->roles = RolePersistence::getAllRoles();
+            foreach ($this->assignedroles as $role) {
+                $institutes = SimpleCollection::createFromArray(Institute::findMany(RolePersistence::getAssignedRoleInstitutes($usersel, $role->getRoleid())));
+                $this->assignedroles_institutes[$role->getRoleid()] = $institutes->orderBy('name')->pluck('name');
+            }
         }
     }
 
@@ -308,7 +312,7 @@ class Admin_RoleController extends AuthenticatedController
         $this->roles = RolePersistence::getAllRoles();
 
         if (isset($roleid)) {
-            $sql = "SELECT *
+            $sql = "SELECT DISTINCT Vorname,Nachname,user_id,username,perms
                     FROM auth_user_md5
                     JOIN roles_user ON userid = user_id
                     WHERE roleid = ?
@@ -317,6 +321,10 @@ class Admin_RoleController extends AuthenticatedController
             $statement->execute(array($roleid));
 
             $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($users as $key => $user) {
+                $institutes = new SimpleCollection(Institute::findMany(RolePersistence::getAssignedRoleInstitutes($user['user_id'], $roleid)));
+                $users[$key]['institutes'] = $institutes->orderBy('name')->pluck('name');
+            }
             $plugins = PluginManager::getInstance()->getPluginInfos();
 
             foreach ($plugins as $id => $plugin) {
@@ -329,6 +337,43 @@ class Admin_RoleController extends AuthenticatedController
             $this->plugins = $plugins;
             $this->role = $this->roles[$roleid];
             $this->roleid = $roleid;
+        }
+    }
+    
+    function assign_role_institutes_action($role_id,$user_id)
+    {
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;charset=windows-1252');
+            $this->response->add_header('X-No-Buttons', 1);
+            $this->response->add_header('X-Title', PageLayout::getTitle());
+            foreach (array_keys($_POST) as $param) {
+                Request::set($param, studip_utf8decode(Request::get($param)));
+            }
+        }
+        if (Request::submitted('add_institute') && $institut_id = Request::option('institute_id')) {
+            $roles = RolePersistence::getAllRoles();
+            $role = $roles[$role_id];
+            $user = new StudIPUser($user_id);
+            RolePersistence::assignRole($user, $role, Request::option('institute_id'));
+            PageLayout::postMessage(MessageBox::success(_("Die Einrichtung wurde zugewiesen.")));
+        }
+        if ($remove_institut_id = Request::option('remove_institute')) {
+            $roles = RolePersistence::getAllRoles();
+            $role = $roles[$role_id];
+            $user = new StudIPUser($user_id);
+            RolePersistence::deleteRoleAssignment($user, $role, $remove_institut_id);
+            PageLayout::postMessage(MessageBox::success(_("Die Einrichtung wurde entfernt.")));
+            
+        }
+        $roles = RolePersistence::getAllRoles();
+        $this->role = $roles[$role_id];
+        $this->user = new User($user_id);
+        $this->institutes = SimpleCollection::createFromArray(Institute::findMany(RolePersistence::getAssignedRoleInstitutes($user_id, $role_id)));
+        $this->institutes->orderBy('name');
+        $this->qsearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"));
+        if (Request::isXhr()) {
+            $this->qsearch->withoutButton();
         }
     }
 }

@@ -71,7 +71,21 @@ use Studip\Button, Studip\LinkButton;
             </tr>
         </table>
     </form>
-
+    
+     <h3>
+        <?= _('Einrichtungszuordnungen') ?>
+    </h3>
+    <ul>
+    <? foreach ($assignedroles as $assignedrole): ?>
+        <? if (!$assignedrole->getSystemtype()) : ?>
+        <li>
+              <?= htmlReady($assignedrole->getRolename()) ?>
+              <?= tooltipIcon(join("\n", $assignedroles_institutes[$assignedrole->getRoleid()]))?>
+              <a href="<?= $controller->link_for('/assign_role_institutes/' . $assignedrole->getRoleid() . '/' . $currentuser->getUserid()) ?>" rel="lightbox"><?= Assets::img('icons/16/blue/edit.png') ?></a>
+        </li>
+        <? endif ?>
+    <? endforeach ?>
+    </ul>
     <h3>
         <?= _('Implizit zugewiesene Systemrollen') ?>
     </h3>

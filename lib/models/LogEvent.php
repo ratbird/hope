@@ -49,6 +49,19 @@ class LogEvent extends SimpleORMap
     }
     
     /**
+     * Deletes all expired events.
+     * 
+     * @return int Number of deleted events.
+     */
+    public static function deleteExpired()
+    {
+        $db = DBManager::get(); 
+        $sql = 'DELETE log_events FROM log_events JOIN log_actions USING(action_id) 
+            WHERE expires > 0 AND mkdate + expires < UNIX_TIMESTAMP()';
+        return $db->exec($sql); 
+    }
+    
+    /**
      * Returns the formatted log event. Fills the action template with data
      * of this event.
      * 

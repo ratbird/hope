@@ -22,8 +22,7 @@ class EventLog
      */
     function cleanup_log_events ()
     {
-        return LogEvent::deleteBySQL(
-                'expires > 0 AND mkdate + expires < UNIX_TIMESTAMP()');
+        return LogEvent::deleteExpired();
     }
 
     /**

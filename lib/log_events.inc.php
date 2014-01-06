@@ -28,9 +28,9 @@
  * @param mixed  $dbg_info   Debug information to add to the event
  * @param mixed  $user_id    Provide null for the current user id
  **/
-function log_event($action, $affected=null, $coaffected=null, $info=null,
-        $dbg_info=null, $user_id=null) {
+function log_event($action, $affected = null, $coaffected = null, $info = null,
+        $dbg_info = null, $user_id = null) {
     
-    return EventLog::log($action, $affected, $coaffected, $info,
+    return StudipLog::log($action, $affected, $coaffected, $info,
             $dbg_info, $user_id);
 }

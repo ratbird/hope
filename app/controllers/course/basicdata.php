@@ -453,6 +453,10 @@ class Course_BasicdataController extends AuthenticatedController
                             }
                         }
                     }
+
+                    // unset request parameter in order to reset quicksearch
+                    Request::set('new_doz_parameter', null);
+
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('dozent', 1, $sem->status)));
                 }

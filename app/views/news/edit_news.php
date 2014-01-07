@@ -66,11 +66,11 @@
                 <tr>
                     <td>
                         <label><?=_("Einstelldatum")?><br>
-                        <input type="text" class="news_date news_prevent_submit" name="news_startdate" value="<?=($news['date']) ? strftime('%x', $news['date']) : ""?>" aria-label="<?= _('Einstelldatum') ?>"></label>
+                        <input type="text" class="news_date news_prevent_submit" name="news_startdate" value="<?=($news['date']) ? date('d.m.Y', $news['date']) : ""?>" aria-label="<?= _('Einstelldatum') ?>"></label>
                     </td>
                     <td>
                         <label><?=_("Ablaufdatum")?><br>
-                        <input type="text" class="news_date news_prevent_submit" name="news_enddate" value="<?=($news['expire']) ? strftime('%x', $news['date']+$news['expire']) : ""?>" aria-label="<?= _('Ablaufdatum') ?>"></label>
+                        <input type="text" class="news_date news_prevent_submit" name="news_enddate" value="<?=($news['expire']) ? date('d.m.Y', $news['date']+$news['expire']) : ""?>" aria-label="<?= _('Ablaufdatum') ?>"></label>
                     </td>
                 </tr>
             </tbody>

@@ -165,6 +165,7 @@ $ELEARNING_INTERFACE_MODULES = array(
                         "password" => "<password>",
                         "client" => "<ilias client id>"),
         "types" => array(
+                   "webr" => array("name" => "ILIAS-Link", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
                    "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
                    "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
                    "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),

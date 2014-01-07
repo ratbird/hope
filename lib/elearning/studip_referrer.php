@@ -86,6 +86,11 @@ if(file_exists("./ilias.ini.php")){
                     $_GET['baseClass'] = 'ilLMPresentationGUI';
                     $jump_to = 'ilias.php';
                 break;
+                case 'webr':
+                    $_GET['baseClass'] = 'ilLinkResourceHandlerGUI';
+                    $_GET['cmd'] = 'calldirectlink';
+                    $jump_to = 'ilias.php';
+                break;
                 default:
                     unset($jump_to);
             }
@@ -143,6 +148,11 @@ if(file_exists("./ilias.ini.php")){
                     break;
                     case 'dbk':
                         $_GET['baseClass'] = 'ilLMEditorGUI';
+                        $jump_to = 'ilias.php';
+                    break;
+                    case 'webr':
+                        $_GET['baseClass'] = 'ilLinkResourceHandlerGUI';
+                        $_GET['cmd'] = 'editLinks';
                         $jump_to = 'ilias.php';
                     break;
                     default:

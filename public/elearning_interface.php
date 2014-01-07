@@ -249,7 +249,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             echo '<br><div class="messagebox messagebox_info" style="background-image: none">'.$course_output["courses"].'</div>';
     }
     elseif ($course_output["courses"])
-        echo $course_output["courses"];
+        echo '<br>'.$course_output["courses"];
     
     $caching_active = false;
     if ($view == "edit")
@@ -375,16 +375,17 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 }
             }
 
-            // ILIAS 4: ggf. weitere Modulformen als Link einbinden
+            // ILIAS 4: ggf. Hinweis auf Möglichkeit, weitere Modulformen als Link einzubinden
             elseif (method_exists($connected_cms[$cms_select], "updateConnections") AND count($connected_cms[$cms_select]->types['webr'])) {
                 $crs_data = ObjectConnections::getConnectionModuleId($SessSemName[1], "crs", $cms_select);
-                echo ELearningUtils::getHeader(_("Andere ILIAS-Objekte hinzufügen"));
+                echo ELearningUtils::getHeader(_("Links zu anderen ILIAS-Objekten"));
                 echo "<div align=\"center\">";
                 echo "<br>\n";
-                echo _("Sie können beliebige weitere Objekte hinzufügen, indem Sie im verknüpften Kurs in ILIAS einen internen Link anlegen. "
+                echo _("Sie können beliebige weitere Objekte hinzufügen, indem Sie im verknüpften Kurs in ILIAS einen internen Link zu den entsprechenden Objekten anlegen. "
                       ."Wechseln Sie dazu in den Kurs, wählen Sie unter \"Neues Objekt hinzufügen\" die Option Weblink und legen "
                       ."einen Link innerhalb von ILIAS an. Kehren Sie anschließend auf diese Seite zurück und klicken Sie in der Infobox "
-                      ."auf \"Aktualisieren\"");
+                      ."auf \"Aktualisieren\". Für die auf diese Weise verlinkten Objekte müssen Sie selbst sicherstellen, dass die Teilnehmenden "
+                      ."des Kurses Zugriff darauf haben.");
                 echo "<br><br>\n";
                 echo "</div>";
             }

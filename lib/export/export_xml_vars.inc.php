@@ -5,8 +5,8 @@
 # Lifter010: TODO
 /**
 * Config file for xml-export
-* 
-* This file contains several arrays, that define which names will be used for specific xml-tags in the output-file. 
+*
+* This file contains several arrays, that define which names will be used for specific xml-tags in the output-file.
 * Changes in this file may cause export-problems if the XSLT-Scripts are not changed either!
 *
 * @author       Arne Schroeder <schroeder@data.quest.de>
@@ -23,7 +23,7 @@ $xml_groupnames_fak = array(
     "object"            =>      "fakultaet"
 );
 
-$xml_names_fak = array( 
+$xml_names_fak = array(
     "Name"          =>      "name"
 );
 
@@ -34,7 +34,7 @@ $xml_groupnames_inst = array(
     "childobject2"      =>      "datenfeld"
 );
 
-$xml_names_inst = array( 
+$xml_names_inst = array(
     "type"          =>      "type",
     "Name"          =>      "name",
     "Strasse"           =>      "strasse",
@@ -58,14 +58,14 @@ $xml_groupnames_lecture = array(
     "childobject4"      =>      "datenfeld"
 );
 
-$xml_names_lecture = array( 
+$xml_names_lecture = array(
     "Name"          =>      "titel",
     "Untertitel"        =>      "untertitel",
     "status"            =>      "status",
     "Beschreibung"  =>      "beschreibung",
     "ort"               =>      "raum",
     "Sonstiges"     =>      "sonstiges",
-    "art"               =>      "art", 
+    "art"               =>      "art",
     "teilnehmer"        =>      "teilnehmer",
     "admission_turnout" =>      "teilnehmerzahl",
     "teilnehmer_anzahl_aktuell" =>  "teilnehmer_anzahl_aktuell",
@@ -84,12 +84,12 @@ $xml_groupnames_person = array(
     "subgroup1"     =>      "gruppe",
     "object"            =>      "person",
     "childgroup1"       =>      "datenfelder",
-    "childobject1"      =>      "datenfeld", 
+    "childobject1"      =>      "datenfeld",
     "childgroup2"       =>      "zusatzangaben",
     "childobject2"      =>      "zusatzangabe"
 );
 
-$xml_names_person = array( 
+$xml_names_person = array(
     "title_front"       =>      "titel",
     "Vorname"       =>      "vorname",
     "Nachname"      =>      "nachname",
@@ -105,7 +105,6 @@ $xml_names_person = array(
     "name"          =>      "statusgruppe",
     "privadr"           =>      "adresse",
     "privatnr"          =>      "privatnummer",
-    "admission_studiengang_id"  =>      "kontingent",
     "comment"       =>      "bemerkung",
     "admission_position" => "position_warteliste",
     "registration_date" => "datum_anmeldung",
@@ -117,7 +116,7 @@ $xml_groupnames_studiengaenge = array(
     "object"            =>      "studiengang"
 );
 
-$xml_names_studiengaenge = array( 
+$xml_names_studiengaenge = array(
     "name"      =>      "name",
     "count"     =>      "anzahl"
 );

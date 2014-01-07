@@ -557,15 +557,6 @@ function export_teilis($inst_id, $ex_sem_id = "no")
 
         $gruppe['no'] = _('keiner Funktion oder Gruppe zugeordnet');
     } else {
-        $query = "SELECT studiengang_id, name
-                  FROM studiengaenge
-                  LEFT JOIN admission_seminar_studiengang USING (studiengang_id)
-                  WHERE seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($ex_sem_id));
-        $studiengang = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-
-        $studiengang['all'] = _('Alle Studiengänge');
 
         if ($filter != 'awaiting') {
             if (!$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['workgroup_mode']) {
@@ -689,9 +680,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                         if ($val == '') {
                             $val = $key;
                         }
-                        if ($key == 'admission_studiengang_id' && $row[$key] != '') {
-                            $data_object_tmp .= xml_tag($val, $studiengang[$row[$key]]);
-                        } elseif ($row[$key] != '') {
+                        if ($row[$key] != '') {
                             $data_object_tmp .= xml_tag($val, $row[$key]);
                         }
                     }

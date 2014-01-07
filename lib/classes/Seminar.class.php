@@ -1895,11 +1895,6 @@ class Seminar
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($s_id));
 
-        // Alle Eintraege aus Zuordnungen zu Studiengaenge rauswerfen
-        $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($s_id));
-
         // Alle beteiligten Institute rauswerfen
         $query = "DELETE FROM seminar_inst WHERE Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);

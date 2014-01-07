@@ -8,7 +8,7 @@
 // integrity.view.php
 // Integrity checks for the Stud.IP database
 // This file contains only SQL Queries
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -47,8 +47,6 @@ $_views["USER_OBJECT_USER_VISIT"]= array("pk"=>"user_id","temp_table_type"=>"HEA
 //Seminar
 $_views["SEM_SEMUSER"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.Seminar_id FROM seminar_user a LEFT JOIN seminare b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
-$_views["SEM_ADMISSIONSTUD"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT   a.Seminar_id FROM admission_seminar_studiengang a LEFT JOIN seminare b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
 $_views["SEM_ADMISSIONUSER"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.Seminar_id FROM admission_seminar_user a LEFT JOIN seminare b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
 $_views["SEM_SEMINST"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
@@ -58,7 +56,7 @@ $_views["SEM_TERMINE"]= array("pk"=>"range_id","temp_table_type"=>"HEAP",
 $_views["SEM_SEM_TREE"]= array("pk"=>"seminar_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT a.seminar_id FROM seminar_sem_tree a LEFT JOIN  seminare b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
 $_views["SEM_OBJECT_USER_VISIT"]= array("pk"=>"object_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT object_id FROM `object_user_visits` LEFT JOIN seminare b ON(object_id=Seminar_id ) 
+                            "query"=>"SELECT object_id FROM `object_user_visits` LEFT JOIN seminare b ON(object_id=Seminar_id )
                             WHERE b.Seminar_id is null AND type='sem' ");
 //Institut
 $_views["INST_USER"]= array("pk"=>"Institut_id","temp_table_type"=>"HEAP",
@@ -66,7 +64,7 @@ $_views["INST_USER"]= array("pk"=>"Institut_id","temp_table_type"=>"HEAP",
 $_views["INST_SEM"]= array("pk"=>"Institut_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.Institut_id FROM seminar_inst a LEFT JOIN Institute b USING(Institut_id) WHERE ISNULL(b.Institut_id)");
 $_views["INST_OBJECT_USER_VISIT"]= array("pk"=>"object_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT object_id FROM `object_user_visits` a LEFT JOIN Institute b ON(object_id=Institut_id ) 
+                            "query"=>"SELECT object_id FROM `object_user_visits` a LEFT JOIN Institute b ON(object_id=Institut_id )
                             WHERE b.Institut_id is null AND a.type='inst' ");
 
 
@@ -75,8 +73,6 @@ $_views["ARCHIV_USER"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.Seminar_id FROM archiv_user a LEFT JOIN archiv b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
 
 //Studiengang
-$_views["STUD_ADMISSONSEM"]= array("pk"=>"studiengang_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT   a.studiengang_id FROM admission_seminar_studiengang a LEFT JOIN studiengaenge b USING(studiengang_id) WHERE ISNULL(b.studiengang_id) AND a.studiengang_id NOT LIKE 'all'");
 $_views["STUD_ADMISSONUSER"]= array("pk"=>"studiengang_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.studiengang_id FROM admission_seminar_user a LEFT JOIN studiengaenge b USING(studiengang_id) WHERE ISNULL(b.studiengang_id) AND a.studiengang_id NOT LIKE 'all'");
 $_views["STUD_USER"]= array("pk"=>"studiengang_id","temp_table_type"=>"HEAP",

@@ -7,8 +7,8 @@
 // This file is part of Stud.IP
 // IntegrityCheckStudiengang.class.php
 // Integrity checks for the Stud.IP database
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -30,15 +30,15 @@ require_once $GLOBALS['RELATIVE_PATH_ADMIN_MODULES']."/IntegrityCheckAbstract.cl
 /**
 * integrity check plugin for 'Studiengang'
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <andre.noack@gmx.net>
 * @package  Admin
 * @see      IntegrityCheckAbstract
 */
 class IntegrityCheckStudiengang extends IntegrityCheckAbstract{
-    
+
     /**
     * constructor
     *
@@ -47,11 +47,9 @@ class IntegrityCheckStudiengang extends IntegrityCheckAbstract{
     */
     function IntegrityCheckStudiengang(){
         $baseclass = strtolower(get_parent_class($this));
-        //parent::$baseclass(); //calling the baseclass constructor 
+        //parent::$baseclass(); //calling the baseclass constructor
         $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
         $this->master_table = "studiengaenge";
-        $this->checklist[] = array('detail_table' => 'admission_seminar_studiengang',
-                                    'query' => 'view:STUD_ADMISSONSEM:');
         $this->checklist[] = array('detail_table' => 'admission_seminar_user',
                                     'query' => 'view:STUD_ADMISSONUSER:');
         $this->checklist[] = array('detail_table' => 'user_studiengang',

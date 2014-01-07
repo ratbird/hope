@@ -14,7 +14,6 @@
     <thead>
         <tr>
         <th><a href="<?= $controller->url_for('admin/studycourse/profession/') ?>?sortby=name"><b> <?=_("Name des Studienganges")?></b> <?= (Request::get('sortby', 'name') == 'name') ? Assets::img('dreieck_down.png'): ''?></a></th>
-        <th><a href="<?= $controller->url_for('admin/studycourse/profession/') ?>?sortby=seminars"><b> <?=_("Veranstaltungen")?></b> <?= (Request::get('sortby') == 'seminars') ? Assets::img('dreieck_down.png'): ''?></a></th>
         <th><a href="<?= $controller->url_for('admin/studycourse/profession/') ?>?sortby=users"><b> <?=_("Nutzer")?></b> <?= (Request::get('sortby') == 'users') ? Assets::img('dreieck_down.png'): ''?></a></th>
         <th colspan="3"><b> <?=_("Aktion")?></b></th>
         </tr>
@@ -23,7 +22,6 @@
     <tbody class="<?= count($studycourse['degree'])?'':'empty' ?> collapsed">
     <tr class="table_header header-row" valign="bottom">
         <th class="toggle-indicator"><? if (count($studycourse['degree']) < 1): ?><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?></a><? endif; ?></th>
-        <th><?= $studycourse['count_sem'] ?> </th>
         <th><?= $studycourse['count_user'] ?> </th>
         <th width="20">
             <? if ($studycourse['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sp_id=".$studycourse['studiengang_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name']) ?>">
@@ -36,7 +34,7 @@
             </a>
         </th>
         <th width="20">
-            <? if ($studycourse['count_user'] == 0 && $studycourse['count_sem'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession/' . $studycourse['studiengang_id']) ?>">
+            <? if ($studycourse['count_user'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession/' . $studycourse['studiengang_id']) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Studiengang löschen'), 'class' => 'text-top')) ?>
             </a><? endif;?>
         </th>
@@ -47,7 +45,6 @@
            <?= $fach_id + 1 ?>.<?= $index + 1 ?>
            <?= htmlReady($degree['name']) ?>
         </td>
-        <td></td>
         <td><?= $degree['count_user'] ?></td>
         <td><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&prof_id=".$studycourse['studiengang_id']."&deg_id=".$degree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name'])." (".$degree['name'].")"?>"><?= Assets::img('icons/16/blue/mail.png', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a></td>
         <td></td>

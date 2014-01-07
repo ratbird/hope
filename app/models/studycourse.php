@@ -36,11 +36,9 @@ class StudycourseModel
         if (!is_null($sci)) {
             //one profession with id and count studys
             $query = "SELECT s.studiengang_id, s.name, s.beschreibung,
-                             COUNT(user_studiengang.studiengang_id) AS count_user,
-                             COUNT(admission_seminar_studiengang.seminar_id) AS count_sem
+                             COUNT(user_studiengang.studiengang_id) AS count_user
                       FROM studiengaenge AS s
                       LEFT JOIN user_studiengang USING (studiengang_id)
-                      LEFT JOIN admission_seminar_studiengang USING (studiengang_id)
                       WHERE s.studiengang_id = ?
                       GROUP BY studiengang_id
                       ORDER BY name";
@@ -53,14 +51,10 @@ class StudycourseModel
                     . "FROM studiengaenge ORDER BY name";
               $query2 = "SELECT studiengang_id, count(user_id) AS count_user "
                     . "FROM user_studiengang GROUP BY studiengang_id";
-              $query3 = "SELECT studiengang_id, count(seminar_id) AS count_sem "
-                    . "FROM admission_seminar_studiengang GROUP BY studiengang_id";
             $studycourses = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
             $users = DBManager::get()->query($query2)->fetchGrouped(PDO::FETCH_COLUMN);
-            $seminars = DBManager::get()->query($query3)->fetchGrouped(PDO::FETCH_COLUMN);
             foreach ($studycourses as $index => $course) {
                 $studycourses[$index]['count_user'] = $users[$course['studiengang_id']];
-                $studycourses[$index]['count_sem'] = $seminars[$course['studiengang_id']];
             }
         }
 

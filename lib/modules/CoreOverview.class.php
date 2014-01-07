@@ -40,6 +40,12 @@ class CoreOverview implements StudipModule {
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$course_id));
             $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?cid='.$course_id));
 
+            if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']  && ($GLOBALS['user']->id != 'nobody') && ! $GLOBALS['perm']->have_perm('admin')) {
+                if (! $GLOBALS['perm']->have_studip_perm('user', $course_id))            
+                    $navigation->addSubNavigation('subscribe', new Navigation(_('Einrichtung abonnieren'), 'institut_main.php?follow_inst=on'));
+                elseif (! $GLOBALS['perm']->have_studip_perm('autor', $course_id))            
+                    $navigation->addSubNavigation('unsubscribe', new Navigation(_('Austragen aus der Einrichtung'), 'institut_main.php?follow_inst=off'));
+            }
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && $GLOBALS['perm']->have_perm('admin')) {
                 $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'admin_institut.php?new_inst=TRUE'));
             }

@@ -137,6 +137,7 @@ use Studip\Button,
                 <? else : ?>
                     <br>
                     <?= _('freie Ortsangabe:') ?><br>
+					<input type="hidden" name="action" value="freetext">
 				<? endif ?>
 
                 <input type="text" name="freeRoomText_sd" maxlength="255" value="<?= $tpl['freeRoomText'] ?>" style="margin-left: 25px; width: 90%;"

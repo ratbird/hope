@@ -165,8 +165,6 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
             }
 
-            $navigation->addSubNavigation('member_view', new Navigation(_('Teilnehmeransicht'), 'admin_teilnehmer_view.php'));
-
             if (get_config('EXTERN_ENABLE')) {
                 $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
             }

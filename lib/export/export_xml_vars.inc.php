@@ -84,9 +84,7 @@ $xml_groupnames_person = array(
     "subgroup1"     =>      "gruppe",
     "object"            =>      "person",
     "childgroup1"       =>      "datenfelder",
-    "childobject1"      =>      "datenfeld",
-    "childgroup2"       =>      "zusatzangaben",
-    "childobject2"      =>      "zusatzangabe"
+    "childobject1"      =>      "datenfeld"
 );
 
 $xml_names_person = array(

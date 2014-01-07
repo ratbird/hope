@@ -27,11 +27,11 @@ require_once($RELATIVE_PATH_CALENDAR . '/calendar_visual.inc.php');
 class DbCalendarEventList
 {
 
-    var $start;           // Startzeit als Unix-Timestamp (int)
-    var $end;             // Endzeit als Unix-Timestamp (int)
-    var $ts;              // der "genormte" Timestamp s.o. (int)
-    var $events;          // Termine (Object[])
-    var $show_private;    // Private Termine anzeigen ? (boolean)
+    var $start;            // Startzeit als Unix-Timestamp (int)
+    var $end;              // Endzeit als Unix-Timestamp (int)
+    var $ts;               // der "genormte" Timestamp s.o. (int)
+    var $events = array(); // Termine (Object[])
+    var $show_private;     // Private Termine anzeigen ? (boolean)
     var $wdays;
     var $calendar;
 

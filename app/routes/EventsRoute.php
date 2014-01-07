@@ -9,162 +9,135 @@
  */
 
 namespace API;
-use DBManager,PDO, StudipPDO, User, Calendar, DbCalendarEventList, SingleCalendar, SingleDate, 
-    Seminar, Issue, CalendarExportFile, CalendarWriterICalendar, SemesterData, CalendarScheduleModel, UserConfig;
 
-require_once $GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/sync/CalendarExportFile.class.php';
-require_once $GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/sync/CalendarWriterICalendar.class.php';
+use Calendar, DbCalendarEventList, SingleCalendar, SingleDate, Seminar, Issue,
+    CalendarExportFile, CalendarWriterICalendar, SemesterData;
 
 class EventsRoute extends RouteMap
 {
+    public function before($router, &$handler, &$parameters)
+    {
+        require_once $GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/sync/CalendarExportFile.class.php';
+        require_once $GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/sync/CalendarWriterICalendar.class.php';
+    }
+
     /**
      * returns all upcoming events within the next two weeks for a given user
      *
      * @get /user/:user_id/events
-     *
-     * @return Collection
      */
     public function getEvents($user_id)
     {
-        
+        if ($user_id !== $GLOBALS['user']->id) {
+            $this->error(401);
+        }
+
         $start = time();
         $end   = strtotime('+2 weeks');
-        $list = @new DbCalendarEventList(new SingleCalendar($user_id, Calendar::PERMISSION_OWN), $start, $end, true, Calendar::getBindSeminare());
+        $list  = new DbCalendarEventList(new SingleCalendar($user_id, Calendar::PERMISSION_OWN),
+                                         $start, $end,
+                                         true, Calendar::getBindSeminare());
 
-        $events = array();
-        
-        while ($termin = $list->nextEvent()) {
-            $singledate = new SingleDate($termin->id);
+        $json = array();
+        $events = array_slice($list->getAllEvents(), $this->offset, $this->limit); ;
+        foreach ($events as $event) {
+            $singledate = new SingleDate($event->id);
 
-            $events[] = array(
-                'event_id'    => $termin->id,
-                'course_id'   => (strtolower(get_class($termin)) === 'seminarevent') ? $termin->getSeminarId() : '',
-                'start'       => $termin->getStart(),
-                'end'         => $termin->getEnd(),
-                'title'       => $termin->getTitle(),
-                'description' => $termin->getDescription() ?: '',
-                'categories'  => $termin->toStringCategories() ?: '',
+            $course_uri = sprintf('/course/%s', htmlReady($event->getSeminarId()));
+
+            $json[] = array(
+                'event_id'    => $event->id,
+                'course'      => $course_uri,
+                'start'       => $event->getStart(),
+                'end'         => $event->getEnd(),
+                'title'       => $event->getTitle(),
+                'description' => $event->getDescription() ?: '',
+                'categories'  => $event->toStringCategories() ?: '',
                 'room'        => html_entity_decode(strip_tags($singledate->getRoom() ?: $singledate->getFreeRoomText() ?: '')),
             );
         }
 
-
-        $this->paginate('/events/' . $user_id . '?offset=%u&limit=%u', count($events));
-
-        $result = array_slice($events, $this->offset, $this->limit);
-        
-        return $this->collect($result);
-        
+        $this->paginate(sprintf('/user/%s/events?offset=%%u&limit=%%u', htmlReady($user_id)),
+                        $list->numberOfEvents());
+        return $this->collect($json);
     }
-    
+
     /**
      *  returns an iCAL Export of all events for a given user
-     * 
-     * @get /user/:user_id/events/ical
-     * 
-     * @return .ics file
+     *
+     * @get /user/:user_id/events.ics
      */
     public function getEventsICAL($user_id)
     {
-        global $TMP_PATH;
-        $extype = 'ALL_EVENTS';
-        $export = new CalendarExportFile(new CalendarWriterICalendar());
-        $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS', Calendar::getBindSeminare($GLOBALS['user']->id));
+        if ($user_id !== $GLOBALS['user']->id) {
+            $this->error(401);
+        }
 
-        if ($GLOBALS['_calendar_error']->getMaxStatus(ERROR_CRITICAL)) {
+        $export = new CalendarExportFile(new CalendarWriterICalendar());
+        $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS', Calendar::getBindSeminare($user_id));
+
+        if ($GLOBALS['_calendar_error']->getMaxStatus(\ERROR_CRITICAL)) {
             $this->halt(500);
         }
-        
-        $filename = "$TMP_PATH/export/". $export->getTempFileName();
-        
-        
-        $headers = array(
-            'Content-Type'        => 'text/calendar; windows-1252',
-            'Content-Disposition' => 'attachment; filename="studip.ics"',
-            'Content-Transfer-Encoding' => 'binary',
-            'Pragma' => 'public',
-            'Cache-Control' => 'private'
-        );
-        
-        $this->halt(200, $headers, function () use ($filename) { readfile($filename); });
-    }
-    
-    
-    /**
-     * returns schedule for a given user and semester 
-     *
-     * @get /user/:user_id/schedule/:semester_id
-     *
-     * @return Collection  
-     */
-    
-    public function getSchedule($user_id, $semester_id = '')
-    {
-        $semdata = new SemesterData();
-        $current_semester = $semdata->getSemesterData($semester_id);
-        
-        if (!$current_semester) {
-            $current_semester = $semdata->getCurrentSemesterData();
-        }
-        
-        $schedule_settings = UserConfig::get($user_id)->SCHEDULE_SETTINGS;
-        $days = $schedule_settings['glb_days'];
-        
-        foreach ($days as $key => $day_number) {
-            $days[$key] = ($day_number + 6) % 7;
-        }
 
-       $result = CalendarScheduleModel::getEntries($user_id, $current_semester, 
-                  $schedule_settings['glb_start_time'], $schedule_settings['glb_end_time'], $days);
-       
-       return $this->collect($result);
-   }
-    
+        $filename = sprintf('%s/export/%s', $GLOBALS['TMP_PATH'], $export->getTempFileName());
+
+        $this->sendFile($filename, array(
+                            'type' => 'text/calendar',
+                            'filename' => 'studip.ics'
+                        ));
+    }
+
+
     /**
      * returns events for a given course
      *
      * @get /course/:course_id/events
-     *
-     * @return Collection
      */
     public function getEventsForCourse($course_id)
     {
+        if (!$GLOBALS['perm']->have_studip_perm('user', $course_id, $GLOBALS['user']->id)) {
+            $this->error(401);
+        }
+
         $seminar = new Seminar($course_id);
         $dates = getAllSortedSingleDates($seminar);
+        $count_dates = sizeof($dates);
+
+        // HACK: prevent holiday names in room text
+        global $showSpecialDays;
+        $old_value = $showSpecialDays;
+        $showSpecialDays = false;
 
         $events = array();
-        
-        foreach ($dates as $date) {
+        foreach (array_slice($dates, $this->offset, $this->limit) as $date) {
 
-            $issues = $date->getIssueIDs();
+            // get issue titles
             $issue_titles = array();
-            $description = '';
-            if(is_array($issues)) {
-                foreach($issues as $is) {
+            if (is_array($issues = $date->getIssueIDs())) {
+                foreach ($issues as $is) {
                     $issue = new Issue(array('issue_id' => $is));
                     $issue_titles[] = $issue->getTitle();
                 }
             }
-            
-            $description = implode(', ', $issue_titles);
-            $temp = getTemplateDataForSingleDate($date);
+
+            $template_data = getTemplateDataForSingleDate($date);
             $events[] = array(
                 'event_id'    => $date->getSingleDateID(),
-                'course_id'   => $course_id,
                 'start'       => $date->getStartTime(),
                 'end'         => $date->getEndTime(),
-                'title'       => $temp['date'],
-                'description' => $description,
-                'categories'  => $temp['art'] ?: '',
-                'room'        => html_entity_decode(strip_tags($temp['room'] ?: '')),
+                'title'       => $template_data['date'],
+                'description' => implode(', ', $issue_titles),
+                'categories'  => $template_data['art'] ?: '',
+                'room'        => html_entity_decode(strip_tags($template_data['room'] ?: '')),
+                'deleted'     => $template_data['deleted']
             );
-            
         }
-        
-        $this->paginate('/course/' . $course_id . '/events?offset=%u&limit=%u', count($events));
 
-        $result = array_slice($events, $this->offset, $this->limit);
-        
-        return $this->collect($result);
+        // END OF HACK
+        $showSpecialDays = $old_value;
+
+        $this->paginate('/course/' . $course_id . '/events?offset=%u&limit=%u', $count_dates);
+        return $this->collect($events);
     }
 }

@@ -46,10 +46,12 @@ namespace API {
     $router->registerRoutes(new ContactsRoute);
     $router->registerRoutes(new CourseRoute);
     $router->registerRoutes(new DiscoveryRoute);
+    $router->registerRoutes(new EventsRoute);
     $router->registerRoutes(new FilesRoute);
     $router->registerRoutes(new ForumRoute);
     $router->registerRoutes(new MessagesRoute);
     $router->registerRoutes(new NewsRoute);
+    $router->registerRoutes(new ScheduleRoute);
     $router->registerRoutes(new SemesterRoute);
     $router->registerRoutes(new StudipRoute);
     $router->registerRoutes(new UserRoute);

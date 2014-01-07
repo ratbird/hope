@@ -394,14 +394,14 @@ function export_sem($inst_id, $ex_sem_id = 'all')
     }
 
     if ($ex_only_homeinst) {
-        $query = "SELECT seminare.*, Institute.Name AS heimateinrichtung
+        $query = "SELECT seminare.*,Seminar_id as seminar_id, Institute.Name AS heimateinrichtung
                   FROM seminare
                   LEFT JOIN Institute USING (Institut_id)
                   WHERE Institut_id = :institute_id {$addquery}
                   ORDER BY " . $order;
         $parameters[':institute_id'] = $inst_id;
     } else {
-        $query = "SELECT seminare.*, Institute.Name AS heimateinrichtung
+        $query = "SELECT seminare.*,Seminar_id as seminar_id, Institute.Name AS heimateinrichtung
                   FROM seminar_inst
                   LEFT JOIN seminare USING (Seminar_id)
                   LEFT JOIN Institute ON seminare.Institut_id = Institute.Institut_id

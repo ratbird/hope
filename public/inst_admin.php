@@ -520,7 +520,7 @@ if ($inst_id != '' && $inst_id != '0') {
                       FROM auth_user_md5
                       LEFT JOIN user_info USING (user_id)
                       LEFT JOIN user_inst ON user_inst.user_id = auth_user_md5.user_id AND Institut_id = :ins_id
-                      WHERE perms !='root'
+                      WHERE perms NOT IN ('user', 'root')
                         AND (user_inst.inst_perms = 'user' OR user_inst.inst_perms IS NULL)
                         AND (Vorname LIKE :input OR Nachname LIKE :input OR username LIKE :input)
                       ORDER BY Nachname, Vorname";

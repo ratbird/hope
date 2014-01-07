@@ -232,7 +232,7 @@ class UserManagement
         );
 
         if ($this->user->isDirty('perms')) {
-            if ($this->user->perms == 'dozent' && in_array($this->user->getPrstineValue('perms'), array('user','autor','tutor'))) {
+            if ($this->user->perms == 'dozent' && in_array($this->user->getPristineValue('perms'), array('user','autor','tutor'))) {
                 $this->logInstUserDel($this->user->id, "inst_perms = 'user'");
                 $this->user->institute_memberships->unsetBy('inst_perms', 'user');
                 // make user visible globally if dozent may not be invisible (StEP 00158)

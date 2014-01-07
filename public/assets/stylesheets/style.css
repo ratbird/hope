@@ -1868,31 +1868,31 @@ div.messagebox_details {
   font-weight: normal;
   overflow: hidden;
 }
-div.messagebox_"info" {
+div.messagebox_info {
   color: #000;
   background-color: #d8e3fc;
   background-image: url("../images/messagebox/info.png");
   border-color: #b6c1da;
 }
-div.messagebox_"success" {
+div.messagebox_success {
   color: #000;
   background-color: #dcf1da;
   background-image: url("../images/messagebox/success.png");
   border-color: #bad0b8;
 }
-div.messagebox_"error" {
+div.messagebox_error {
   color: #000;
   background-color: #ffdddc;
   background-image: url("../images/messagebox/error.png");
   border-color: #ddbbba;
 }
-div.messagebox_"exception" {
+div.messagebox_exception {
   color: #d8000c;
   background-color: #ffbaba;
   background-image: url("../images/messagebox/exception.png");
   border-color: #ddbbba;
 }
-div.messagebox_"warning" {
+div.messagebox_warning {
   color: #b06500;
   background-color: #f7e98e;
   background-image: url("../images/messagebox/advice.png");

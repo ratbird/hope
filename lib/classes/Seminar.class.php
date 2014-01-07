@@ -53,6 +53,10 @@ class Seminar
     var $commands; //?
     var $BookedRoomsStatTemp; //???
 
+    var $request_id;//TODO
+    var $requestData;
+    var $room_request;
+
     private $_metadate = null;               // MetaDate
 
     private $alias = array(
@@ -72,7 +76,7 @@ class Seminar
     );
 
     private $course = null;
-    
+
     private $course_set = null;
 
     private static $seminar_object_pool;
@@ -2535,19 +2539,19 @@ class Seminar
             return true;
         }
     }
-    
+
     function isAdmissionLocked()
     {
         $cs = $this->getCourseSet();
         return ($cs && $cs->hasAdmissionRule('LockedAdmission'));
     }
-    
+
     function isPasswordProtected()
     {
         $cs = $this->getCourseSet();
         return ($cs && $cs->hasAdmissionRule('PasswordAdmission'));
     }
-    
+
     function getAdmissionTimeFrame()
     {
         $cs = $this->getCourseSet();

@@ -102,7 +102,8 @@ if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] AND ($GLOBALS['user']->id != 'nobody'
         if ($statement->rowCount() > 0) {
             log_event('INST_USER_ADD', $institute_id, $GLOBALS['user']->user_id, 'user');
             PageLayout::postMessage(MessageBox::success(_("Sie haben die Einrichtung abonniert.")));
-            $institute_status = 'user';
+            header('Location: '.URLHelper::getURL('', array('cid' => $institute_id)));
+            die;
         }
     } elseif (! $perm->have_studip_perm('autor', $institute_id) AND (Request::option('follow_inst') == 'off')) {            
 	    $query = "DELETE FROM user_inst
@@ -115,7 +116,8 @@ if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] AND ($GLOBALS['user']->id != 'nobody'
         if ($statement->rowCount() > 0) {
             log_event('INST_USER_DEL', $institute_id, $GLOBALS['user']->user_id, 'user');
             PageLayout::postMessage(MessageBox::success(_("Sie haben sich aus der Einrichtung ausgetragen.")));
-            $institute_status = 'nobody';
+            header('Location: '.URLHelper::getURL('', array('cid' => $institute_id)));
+            die;
         }
     }
 }

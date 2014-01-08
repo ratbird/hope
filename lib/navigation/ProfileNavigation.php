@@ -93,7 +93,7 @@ class ProfileNavigation extends Navigation
             }
             $navigation->addSubNavigation('details', new Navigation(_('Weitere Daten'), 'dispatch.php/settings/details'));
 
-            if ($current_user->perms != 'admin' && $current_user->perms != 'root') {
+            if (!in_array($current_user->perms, words('user admin root'))) {
                 $navigation->addSubNavigation('studies', new Navigation(_('Studiendaten'), 'dispatch.php/settings/studies'));
             }
 

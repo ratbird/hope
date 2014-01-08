@@ -611,13 +611,13 @@ table.default caption {
   text-align: left;
 }
 table.default thead th {
-  background-color: tint(#899ab9,80%);
+  background-color: #a1aec7;
   border-bottom: 1px solid rgba(137,154,185,0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
-  background-color: tint(#899ab9,80%);
+  background-color: #a1aec7;
   border-top: 1px solid #1e3e70;
   border-bottom: 1px solid rgba(137,154,185,0.2);
   text-align: left;
@@ -630,10 +630,10 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: tint(#69767f,80%);
+  background-color: #879199;
 }
 table.default tfoot td {
-  background-color: tint(#899ab9,80%);
+  background-color: #a1aec7;
   border-top: 1px solid #1e3e70;
 }
 table.default .actions {
@@ -1498,7 +1498,7 @@ li#notification_container:hover .list {
   width: 100%;
 }
 table.infobox td {
-  background-color: tint(#69767f,80%);
+  background-color: #879199;
   text-align: left;
 }
 table.infobox td.infobox-img {

@@ -43,21 +43,43 @@ $infobox = array('content' => $infobox,
             <div id="factor-slider"></div>
             <script>
                 $(function() {
+                	<?php
+                		$factor = 1;
+						$realfactor = 1;
+						if ($userlist) {
+							$realfactor = $userlist->getFactor();
+							if ($userlist->getFactor() < 1) {
+								$factor = intval($realfactor*4);
+							} else if ($realfactor <= 5) {
+								$factor = $realfactor+2;
+							} else {
+								$factor = 8;
+							}
+						}
+                	?>
+                	var factor = <?= $realfactor ?>;
                     $('#factor-slider').slider({
                         range: "max",
-                        min: 0.25,
-                        max: 3,
-                        value: <?= $userlist ? floatval($userlist->getFactor()) : 1 ?>,
-                        step: 0.25,
+                        min: 0,
+                        max: 8,
+                        value: factor,
+                        step: 1,
                         slide: function(event, ui) {
-                            $('#factor').val(ui.value);
-                            $('#factorval').html(ui.value);
+                        	if (ui.value < 3) {
+                        		factor = ui.value/4;
+                    		} else if (ui.value < 8) {
+                        		factor = ui.value-2;
+                        	} else {
+                        		factor = 10;
+                        	}
+                            $('#factor').val(factor);
+                            $('#factorval').html(factor);
                         }
                     });
-                    $('#factor-slider').css('width', 100);
-                    $('#factor').val($('#factor-slider').slider('value'));
+                    $('#factor-slider').css('width', 150);
+                    $('#factor').val(factor);
                     $('#factor').css('display', 'none');
-                    $('#factordiv').prepend('<span id="factorval">'+$('#factor-slider').slider('value')+'</span>');
+                    $('#factordiv').prepend('<span id="factorval">'+factor+'</span>');
                 });
             </script>
         </div>

@@ -93,19 +93,21 @@ class StudipAutoloader
      * directory structure.
      *
      * @param string $class  the name of the class
+     * @param bool   $handle_namespace Should namespaces be handled by
+     *                                 converting into directory structure?
      *
      * @return string|null   the path, if found, otherwise null
      */
-    private static function findFile($class)
+    private static function findFile($class, $handle_namespace = true)
     {
         // Handle possible namespace
-        if (strpos($class, '\\') !== false) {
+        if ($handle_namespace && strpos($class, '\\') !== false) {
             // Convert namespace into directory structure
             $namespaced = str_replace('\\', DIRECTORY_SEPARATOR, $class);
             $namespaced = strtolower(dirname($namespaced)) . DIRECTORY_SEPARATOR . basename($namespaced);
             $class = basename($namespaced);
 
-            if ($filename = self::findFile($namespaced)) {
+            if ($filename = self::findFile($namespaced, false)) {
                 return $filename;
             }
         }

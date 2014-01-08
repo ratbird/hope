@@ -52,7 +52,7 @@ div.messagebox_details {
 
 .messagebox (@name, @color, @background-color, @border-color, @image) {
     // Also generates the neccessary selector not only the rules
-    (~"div.messagebox_@{name}") {
+    div.messagebox_@{name} {
         color: @color;
         background-color: @background-color;
         background-image: url("@{image-path}/messagebox/@{image}.png");
@@ -60,11 +60,11 @@ div.messagebox_details {
     }
 }
 
-.messagebox("info",      #000,    #d8e3fc, #b6c1da);
-.messagebox("success",   #000,    #dcf1da, #bad0b8);
-.messagebox("error",     #000,    #ffdddc, #ddbbba);
-.messagebox("exception", #d8000c, #ffbaba, #ddbbba);
-.messagebox("warning",   #b06500, #f7e98e, #d5c76c, "advice");
+.messagebox(info,      #000,    #d8e3fc, #b6c1da);
+.messagebox(success,   #000,    #dcf1da, #bad0b8);
+.messagebox(error,     #000,    #ffdddc, #ddbbba);
+.messagebox(exception, #d8000c, #ffbaba, #ddbbba);
+.messagebox(warning,   #b06500, #f7e98e, #d5c76c, "advice");
 
 // Define modal messagebox
 .modaloverlay {

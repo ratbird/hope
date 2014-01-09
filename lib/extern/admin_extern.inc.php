@@ -88,7 +88,7 @@ if ($header_line) {
 
 // upload of configuration
 if (Request::option('com') == "do_upload_config") {
-    $file_content = file_get_contents($_FILES['the_file']['name']);
+    $file_content = file_get_contents($_FILES['the_file']['tmp_name']);
 
     // revert the changes done by indentJson
     $file_content_wo_tabs = str_replace("\t", '', str_replace("\n", '', $file_content));

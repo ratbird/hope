@@ -481,7 +481,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $content['PERSONDETAILS']['ROOM'] = ExternModule::ExtHtmlReady($row['raum']);
         $content['PERSONDETAILS']['PHONE'] = ExternModule::ExtHtmlReady($row['Telefon']);
         $content['PERSONDETAILS']['FAX'] = ExternModule::ExtHtmlReady($row['Fax']);
-        if (Visibility::verify('Home', $this->user_id)) {
+        if (Visibility::verify('homepage', $this->user_id)) {
             $content['PERSONDETAILS']['HOMEPAGE-HREF'] = ExternModule::ExtHtmlReady(trim($row['Home']));
         }
         $content['PERSONDETAILS']['OFFICE-HOURS'] = ExternModule::ExtHtmlReady($row['sprechzeiten']);

@@ -297,13 +297,13 @@ class Router
 
         $content_renderer = $this->negotiateContent();
 
-        list($handler, $parameters) = $this->matchHandler($uri, $method, $content_renderer);
-        if (!$handler) {
+        list($route, $parameters) = $this->matchRoute($uri, $method, $content_renderer);
+        if (!$route) {
             throw new RouterException(404);
         }
 
         try {
-            $response = $this->execute($handler, $parameters);
+            $response = $this->execute($route, $parameters);
         } catch(RouterHalt $halt) {
             $response = $halt->response;
         }
@@ -316,13 +316,15 @@ class Router
     /**
      * @todo
      */
-    protected function execute($handler, $parameters)
+    protected function execute($route, $parameters)
     {
+        $handler = $route['handler'];
+
         if (!is_object($handler[0])) {
             throw new RuntimeException("Handler is not a method.");
         }
 
-        $handler[0]->init($this);
+        $handler[0]->init($this, $route);
 
         if (method_exists($handler[0], 'before')) {
             $handler[0]->before($this, $handler, $parameters);
@@ -388,9 +390,9 @@ class Router
         return $content_renderer;
     }
 
-    protected function matchHandler($uri, $method, $content_renderer)
+    protected function matchRoute($uri, $method, $content_renderer)
     {
-        $handler    = false;
+        $route      = null;
         $parameters = array();
         if (isset($this->routes[$method])) {
             if ($content_renderer->extension() && strpos($uri, $content_renderer->extension()) !== false) {
@@ -398,20 +400,21 @@ class Router
             }
 
             foreach ($this->routes[$method] as $uri_template => $route) {
-                $tmpl = new UriTemplate($uri_template, $route['conditions']);
-                if ($tmpl->match($uri, $prmtrs)) {
 
+                if (!isset($route['uri_template'])) {
+                    $route['uri_template'] = new UriTemplate($uri_template, $route['conditions']);
+                }
+
+                if ($route['uri_template']->match($uri, $prmtrs)) {
                     if (FALSE && !$this->permissions->check($uri_template, $method)) {
                         throw new RouterException(403);
                     }
-
-                    $handler    = $route['handler'];
                     $parameters = $prmtrs;
                     break;
                 }
             }
         }
-        return array($handler, $parameters);
+        return array($route, $parameters);
     }
 
     /**

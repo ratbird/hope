@@ -24,14 +24,24 @@ abstract class RouteMap
         $this->limit  = Request::int('limit', Config::get()->ENTRIES_PER_PAGE);
     }
 
-    public function init($router)
+    public function init($router, $route)
     {
         $this->router   = $router;
+        $this->route    = $route;
         $this->response = new Response();
 
         if ($mediaType = $this->getRequestMediaType()) {
             $this->data = studip_utf8decode($this->parseRequestBody($mediaType));
         }
+    }
+
+
+    public function paginated($data, $total, $uri_params = array(), $query_params = array())
+    {
+        $uri = $this->url($this->route['uri_template']->inject($uri_params), $query_params);
+
+        $this->paginate($uri, $total);
+        return $this->collect($data);
     }
 
 
@@ -79,10 +89,16 @@ abstract class RouteMap
             $pagination = compact('total', 'offset', 'limit');
             if ($total > $limit) {
                 $links = array();
-                $links['first']    = sprintf($uri_format, 0, $limit);
-                $links['previous'] = sprintf($uri_format, max(0, $offset - $limit), $limit);
-                $links['next']     = sprintf($uri_format, min($max, $offset + $limit), $limit);
-                $links['last']     = sprintf($uri_format, $max, $limit);
+
+                foreach (array(
+                             'first' => 0,
+                             'previous' => max(0, $offset - $limit),
+                             'next' => min($max, $offset + $limit),
+                             'last' => $max)
+                         as $key => $offset)
+                {
+                    $links[$key] = \URLHelper::getURL($uri_format, compact('offset', 'limit'));
+                }
 
                 $pagination['links'] = $links;
             }
@@ -90,20 +106,6 @@ abstract class RouteMap
         }
         return $collection;
     }
-
-    // TODO (mlunzena): Ist hier der richtige Ort? Sollte die Funktion
-    // nicht anders heiﬂen und mglweise in Request stehen?
-    public static function sanitized($param)
-    {
-        $value = Request::get($param);
-
-        if (isset($value) && mb_detect_encoding($value, 'UTF-8', true)) {
-            $value = utf8_decode($value);
-        }
-
-        return $value;
-    }
-
 
     /************************/
     /* REQUEST BODY METHODS */
@@ -400,8 +402,9 @@ abstract class RouteMap
 
 
     // Generates the absolute URI for a given path
-    public function url($addr)
+    public function url($addr, $params = null)
     {
-        return \URLHelper::getURL("api.php/$addr", null, true);
+        $addr = ltrim($addr, '/');
+        return \URLHelper::getURL("api.php/$addr", $params, true);
     }
 }

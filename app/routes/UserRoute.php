@@ -1,22 +1,21 @@
 <?php
-/**
- * @author  André Klaßen <andre.klassen@elan-ev.de>
- * @license GPL 2 or later
- */
 
 namespace API;
 use DBManager, PDO, StudipPDO, User, Avatar;
 
+/**
+ * @author  André Klaßen <andre.klassen@elan-ev.de>
+ * @license GPL 2 or later
+ * @condition user_id ^[0-9a-f]{32}$
+ */
 class UserRoute extends RouteMap
 {
 
     /**
      * getUser - retrieves data of a user
      *
-     * @get /user/:uid
+     * @get /user/:user_id
      * @get /user
-     *
-     * @return Collection
      */
     public function getUser($user_id = '')
     {
@@ -85,14 +84,14 @@ class UserRoute extends RouteMap
     /**
      * deleteUser - deletes a user
      *
-     * @delete /user/:uid
+     * @delete /user/:user_id
      */
     public function deleteUser($user_id)
     {
         if (!$GLOBALS['perm']->have_perm('root')) {
             $this->error(401);
         }
-        
+
         if (!$GLOBALS['user']->id === $user_id) {
             $this->error(400, 'Must not delete yourself');
         }
@@ -103,16 +102,15 @@ class UserRoute extends RouteMap
         $this->status(204);
     }
 
-    
+
     /**
      * returns institutes for a given user
      *
-     * @get /user/:id/institutes
-     * @return Collection
+     * @get /user/:user_id/institutes
      */
     public function getInstitutes($user_id)
     {
-        
+
         $query = "SELECT i0.Institut_id AS institute_id, i0.Name AS name,
                          inst_perms AS perms, sprechzeiten AS consultation,
                          raum AS room, ui.telefon AS phone, ui.fax,
@@ -132,7 +130,7 @@ class UserRoute extends RouteMap
             'work'  => array(),
             'study' => array(),
         );
-        
+
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
             if ($row['perms'] === 'user') {
                 $institutes['study'][] = $row;
@@ -140,12 +138,8 @@ class UserRoute extends RouteMap
                 $institutes['work'][] = $row;
             }
         }
-        
-        $this->paginate('/user/' . $user_id . '/institutes?offset=%u&limit=%u', count($institutes));
 
         $result = array_slice($institutes, $this->offset, $this->limit);
-        
-        return $this->collect($result);
-
-    } 
+        return $this->paginated($result, count($institutes), compact('user_id'));
+    }
 }

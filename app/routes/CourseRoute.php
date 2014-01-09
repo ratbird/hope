@@ -36,10 +36,11 @@ class CourseRoute extends RouteMap
 
         $memberships = $this->findMembershipsByUserId($user_id, $semester);
 
-        $this->paginate("/user/:id/courses?offset=%u&limit=%u&semester=" . $semester_id, count($memberships));
+        $total = count($memberships);
         $memberships = $memberships->limit($this->offset, $this->limit);
-
-        return $this->collect($this->membershipsToJSON($memberships));
+        return $this->paginated($this->membershipsToJSON($memberships),
+                                $total,
+                                compact('user_id'), array('semester' => $semester_id));
     }
 
     /**
@@ -72,10 +73,11 @@ class CourseRoute extends RouteMap
             $members = $members->findBy('status', $status_filter);
         }
 
-        $this->paginate("/course/:course_id/members?offset=%u&limit=%u&status=" . $status_filter, count($members));
+        $total = count($members);
         $members = $members->limit($this->offset, $this->limit);
-
-        return $this->collect($this->membersToJSON($course, $members));
+        return $this->paginated($this->membersToJSON($course, $members),
+                                $total,
+                                compact('course_id'), array('status' => $status_filter));
     }
 
 

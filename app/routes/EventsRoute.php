@@ -57,9 +57,7 @@ class EventsRoute extends RouteMap
             );
         }
 
-        $this->paginate(sprintf('/user/%s/events?offset=%%u&limit=%%u', htmlReady($user_id)),
-                        $list->numberOfEvents());
-        return $this->collect($json);
+        return $this->paginated($json, $list->numberOfEvents(), compact('user_id'));
     }
 
     /**
@@ -102,7 +100,7 @@ class EventsRoute extends RouteMap
 
         $seminar = new Seminar($course_id);
         $dates = getAllSortedSingleDates($seminar);
-        $count_dates = sizeof($dates);
+        $total = sizeof($dates);
 
         // HACK: prevent holiday names in room text
         global $showSpecialDays;
@@ -137,7 +135,6 @@ class EventsRoute extends RouteMap
         // END OF HACK
         $showSpecialDays = $old_value;
 
-        $this->paginate('/course/' . $course_id . '/events?offset=%u&limit=%u', $count_dates);
-        return $this->collect($events);
+        return $this->paginated($events, $total, compact('course_id'));
     }
 }

@@ -29,8 +29,7 @@ class WikiRoute extends RouteMap
             $this->error(401);
         }
 
-
-        $this->paginate('/course/:course_id/wiki?offset=%u&limit=%u', sizeof($pages));
+        $total = sizeof($pages);
         $pages = $pages->limit($this->offset, $this->limit);
 
         $linked_pages = array();
@@ -39,7 +38,7 @@ class WikiRoute extends RouteMap
             $linked_pages[$url] = self::wikiPageToJson($page, array("content"));
         }
 
-        return $this->collect($linked_pages);
+        return $this->paginated($linked_pages, $total, compact('course_id'));
     }
 
     /**

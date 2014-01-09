@@ -6,7 +6,8 @@ namespace API;
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  *
- * @condition id ^[a-f0-9]{32}$
+ * @condition course_id ^[a-f0-9]{32}$
+ * @condition file_id ^[a-f0-9]{32}$
  */
 class FilesRoute extends RouteMap
 {
@@ -28,7 +29,7 @@ class FilesRoute extends RouteMap
     /**
      * (Meta-)Daten einer Datei bzw. eines Ordners
      *
-     * @get /file/:id
+     * @get /file/:file_id
      */
     public function getFile($file_id) {
 
@@ -49,7 +50,7 @@ class FilesRoute extends RouteMap
     /**
      * Inhalte einer Datei
      *
-     * @get /file/:id/content
+     * @get /file/:file_id/content
      *
      * @see public/sendfile.php
      */
@@ -80,7 +81,7 @@ class FilesRoute extends RouteMap
     /**
      * Datei bzw. Ordner erzeugen
      *
-     * @post /files/:id
+     * @post /file/:file_id
      */
     public function postFiles()
     {
@@ -90,7 +91,7 @@ class FilesRoute extends RouteMap
     /**
      * Update einer Datei bzw. eines Ordners
      *
-     * @put /file/:id
+     * @put /file/:file_id
      */
     public function putFile($id) {
         $this->error(501);
@@ -99,7 +100,7 @@ class FilesRoute extends RouteMap
     /**
      * Löschen einer Datei bzw. eines Ordners
      *
-     * @delete /file/:id
+     * @delete /file/:file_id
      */
     public function deleteFile($file_id) {
         $this->error(501);
@@ -108,7 +109,7 @@ class FilesRoute extends RouteMap
     /**
      * Dateien/Ordner einer Veranstaltung
      *
-     * @get /course/:id/files
+     * @get /course/:course_id/files
      */
     public function getCourseFiles($course_id) {
 
@@ -116,13 +117,12 @@ class FilesRoute extends RouteMap
             \StudipDocumentFolder::findBySeminar_id($course_id))->orderBy('name asc');
 
         // slice according to demanded pagination
-        $this->paginate('/course/:id/files?offset=%u&limit=%u', count($folders));
+        $total = count($folders);
         $folders = $folders->limit($this->offset, $this->limit);
         foreach ($folders as &$folder) {
             $folder = self::folderToJSON($folder, true);
         }
-
-        return $this->collect($folders);
+        return $this->paginated($folders, $total, compact('course_id'));
     }
 
 

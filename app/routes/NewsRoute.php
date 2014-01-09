@@ -23,7 +23,8 @@ class NewsRoute extends RouteMap
      */
     public function getGlobalNews()
     {
-        return $this->getRangedNews('studip', '/studip/news');
+        list($json, $total) = $this->getRangedNews('studip');
+        $this->paginated($json, $total);
     }
 
     /**
@@ -33,7 +34,8 @@ class NewsRoute extends RouteMap
      */
     public function getCourseNews($course_id)
     {
-        return $this->getRangedNews($course_id, '/course/:course_id/news');
+        list($json, $total) = $this->getRangedNews($course_id);
+        $this->paginated($json, $total, compact('course_id'));
     }
 
     /**
@@ -43,7 +45,8 @@ class NewsRoute extends RouteMap
      */
     public function getUserNews($user_id)
     {
-        return $this->getRangedNews($user_id, '/user/:user_id/news');
+        list($json, $total) = $this->getRangedNews($user_id);
+        $this->paginated($json, $total, compact('user_id'));
     }
 
 
@@ -168,17 +171,15 @@ class NewsRoute extends RouteMap
     {
         $comments = $this->requireNews($news_id)->comments->orderBy("mkdate asc");
 
-        $this->paginate('/news/:news_id/comments?offset=%u&limit=%u', count($comments));
-        $comments = $comments->limit($this->offset, $this->limit);
-
+        $total = count($comments);
         $json = array();
-        foreach ($comments as $comment) {
+        foreach ($comments->limit($this->offset, $this->limit) as $comment) {
             $tmp = $comment->toArray("comment_id object_id user_id content mkdate chdate");
             $tmp['content_html'] = htmlReady($comment->content);
             $json[sprintf('/comment/%s', htmlReady($comment->id))] = $tmp;
         }
 
-        return $this->collect($json);
+        return $this->paginated($json, $total, compact('news_id'));
     }
 
     /**
@@ -241,7 +242,7 @@ class NewsRoute extends RouteMap
     /* PRIVATE HELPER METHODS                         */
     /**************************************************/
 
-    private function getRangedNews($range_id, $uri_template)
+    private function getRangedNews($range_id)
     {
 
         $news = \StudipNews::getNewsByRange($range_id, true, true);
@@ -250,7 +251,7 @@ class NewsRoute extends RouteMap
             $this->error(401);
         }
 
-        $this->paginate('/course/:course_id/news?offset=%u&limit=%u', count($news));
+        $total = count($news);
         $news = array_slice($news, $this->offset, $this->limit);
 
         $json = array();
@@ -258,8 +259,7 @@ class NewsRoute extends RouteMap
             $json[sprintf('/news/%s', $n->id)] = self::newsToJson($n);
         }
 
-        return $this->collect($json);
-
+        return array($json, $total);
     }
 
     private function validateNews($news)

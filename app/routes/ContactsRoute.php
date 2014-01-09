@@ -31,10 +31,11 @@ class ContactsRoute extends RouteMap
         // quite degenerated as long as we can only see our own contacts
         $user = $this->requireUser($user_id);
 
-        $this->paginate("/user/:id/contacts?offset=%u&limit=%u", count($user->contacts));
+        $total = count($user->contacts);
         $contacts = $user->contacts->limit($this->offset, $this->limit);
 
-        return $this->collect($this->contactsToJSON($contacts));
+        return $this->paginated($this->contactsToJSON($contacts),
+                                $total, compact('user_id'));
     }
 
     /**
@@ -105,10 +106,10 @@ class ContactsRoute extends RouteMap
 
         $contact_groups = $this->findContactGroupsByUserId($user_id);
 
-        $this->paginate("/user/:id/contact_groups?offset=%u&limit=%u", count($contact_groups));
+        $total = count($contact_groups);
         $contact_groups = array_slice($contact_groups, $this->offset, $this->limit, true);
-
-        return $this->collect($this->contactGroupsToJSON($contact_groups));
+        return $this->paginated($this->contactGroupsToJSON($contact_groups),
+                                $total, compact('user_id'));
     }
 
     /**

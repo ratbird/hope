@@ -18,11 +18,7 @@ class SemesterRoute extends RouteMap
     public function getSemesters()
     {
         $semesters = SemesterData::GetSemesterArray();
-
-        $this->paginate('/semesters?offset=%u&limit=%u', count($semesters));
-
-        $result = array_slice($semesters, $this->offset, $this->limit);
-        return $this->collect($result);
+        return $this->paginated(array_slice($semesters, $this->offset, $this->limit), count($semesters));
     }
 
     /**

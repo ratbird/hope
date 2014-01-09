@@ -5,23 +5,19 @@ namespace API;
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  *
- * @condition id ^[a-f0-9]{32}$
+ * @condition message_id ^[a-f0-9]{32}$
+ * @condition user_id ^[a-f0-9]{32}$
  * @condition box ^(inbox|outbox)$
- * @condition folder ^[0-9]+$
+ * @condition folder_id ^[0-9]+$
  */
 class MessagesRoute extends RouteMap
 {
-    public function before($router, &$handler, &$parameters)
-    {
-    }
-
-
     /**
      * Liefert die vorhandenen Nachrichtenordner des autorisierten
      * Nutzers zurück. Der Parameter bestimmt je nach Wert, auf
      * welchen Bereich zugegriffen werden soll.
      *
-     * @get /user/:id/:box
+     * @get /user/:user_id/:box
      */
     public function indexOfFolders($user_id, $box)
     {
@@ -30,12 +26,11 @@ class MessagesRoute extends RouteMap
         }
 
         $folders = self::getUserFolders($user_id, $box);
+        $total = count($folders);
+        $folders = self::linkFolders($user_id, $box,
+                                     array_slice($folders, $this->offset, $this->limit, true));
 
-        $this->paginate("/user/:id/$box?offset=%u&limit=%u", count($folders));
-        $folders = array_slice($folders, $this->offset, $this->limit, true);
-
-        $folders = self::linkFolders($user_id, $box, $folders);
-        return $this->collect($folders);
+        return $this->paginated($folders, $total, compact('user_id', 'box'));
     }
 
 
@@ -43,7 +38,7 @@ class MessagesRoute extends RouteMap
      * Liefert die vorhandenen Nachrichten eines Ordners des
      * autorisierten Nutzers zurück.
      *
-     * @get /user/:id/:box/:folder
+     * @get /user/:user_id/:box/:folder_id
      */
     public function showFolder($user_id, $box, $folder_id)
     {
@@ -64,8 +59,7 @@ class MessagesRoute extends RouteMap
 
         // get all messages in the user's folder
         $ids = self::folder($user_id, $box === 'inbox' ? 'rec' : 'snd', $folder_id);
-
-        $this->paginate('/user/:id/:box/:folder?offset=%u&limit=%u', count($ids));
+        $total = count($ids);
         $ids = array_slice($ids, $this->offset, $this->limit, true);
 
         $messages = array();
@@ -75,13 +69,13 @@ class MessagesRoute extends RouteMap
             }
         }
 
-        return $this->collect($messages);
+        return $this->paginated($messages, $total, compact('user_id', 'box', 'folder_id'));
     }
 
     /**
      * Legt einen neuen Ordner in der (In|Out)box eines Nutzers an.
      *
-     * @post /user/:id/:box
+     * @post /user/:user_id/:box
      */
     public function createFolder($user_id, $box)
     {
@@ -108,7 +102,7 @@ class MessagesRoute extends RouteMap
     /**
      * Liefert die Daten der angegebenen Nachricht zurück.
      *
-     * @get /message/:id
+     * @get /message/:user_id
      */
     public function showMessage($message_id)
     {
@@ -156,7 +150,7 @@ class MessagesRoute extends RouteMap
      * Eine Nachricht als (un)gelesen markieren oder in einen anderen
      * Ordner verschieben.
      *
-     * @put /message/:id
+     * @put /message/:message_id
      */
     public function updateMessage($message_id)
     {
@@ -183,7 +177,7 @@ class MessagesRoute extends RouteMap
     /**
      * Löscht eine Nachricht.
      *
-     * @delete /message/:id
+     * @delete /message/:message_id
      */
     public function destroyMessage($message_id)
     {
@@ -351,8 +345,9 @@ class MessagesRoute extends RouteMap
         );
 
 
+        $uri_tmpl = new UriTemplate('/user/:user_id/:box/:folder_id');
         foreach ($folders as $folder) {
-            if ($this->router->uriMatchesTemplate($folder, '/user/:user_id/:box/:folder_id', $params)) {
+            if ($uri_tmpl->match($folder, $params)) {
 
                 if ($params["user_id"] !== $user_id) {
                     $this->error(401);

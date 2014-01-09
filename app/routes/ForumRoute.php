@@ -29,10 +29,7 @@ class ForumRoute extends RouteMap
 
         $categories = \ForumCat::getList($course_id, false);
         $total      = sizeof($categories);
-
         $categories = array_splice($categories, (int)$this->offset, (int)$this->limit ?: 10);
-        
-        $this->paginate('/course/:course_id/forum_categories?offset=%u&limit=%u', $total);
 
         $json = array();
         foreach ($categories as $cat) {
@@ -40,7 +37,7 @@ class ForumRoute extends RouteMap
             $json[$uri] = self::categoryToJson($cat);
         }
 
-        return $this->collect($json);
+        return $this->paginated($json, $total, compact('course_id'));
     }
 
     /**
@@ -75,7 +72,7 @@ class ForumRoute extends RouteMap
     {
         $category = $this->findCategory($category_id);
         $cid = $category['course_id'];
-        
+
         if (!\ForumPerm::has('view', $cid)) {
             $this->error(401);
         }
@@ -132,17 +129,14 @@ class ForumRoute extends RouteMap
     public function getCategoryEntries($category_id)
     {
         $category = $this->findCategory($category_id);
-        $cid = $category['course_id'];
-        
-        if (!\ForumPerm::has('view', $cid)) {
+
+        if (!\ForumPerm::has('view', $category['course_id'])) {
             $this->error(401);
         }
-        
+
         $areas = $this->getAreas($category_id, $this->offset, $this->limit);
-        $this->paginate('/course/:course_id/forum_categories?offset=%u&limit=%u', $this->countAreas($category_id));
 
-
-        return $this->collect($areas);
+        return $this->paginated($areas, $this->countAreas($category_id), compact('category_id'));
     }
 
 
@@ -188,11 +182,11 @@ class ForumRoute extends RouteMap
     {
         $entry = \ForumEntry::getConstraints($entry_id);
         $cid   = $entry['seminar_id'];
-        
+
         if (!\ForumPerm::has('view', $cid)) {
             $this->error(401);
         }
-        
+
         return $this->findEntry($entry_id);
     }
 
@@ -207,7 +201,7 @@ class ForumRoute extends RouteMap
         $cid = $parent['course_id'];
 
         $perm = self::isArea($entry) ? 'add_area' : 'add_entry';
-        
+
         if (!\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
@@ -224,11 +218,11 @@ class ForumRoute extends RouteMap
         if ($entry['depth'] > 1 && !$content) {
             $this->error(400, 'Content required.');
         }
-        
+
         if ($entry['depth'] >= 3 && $subject) {
             $this->error(400, 'Must not have subject here.');
         }
-        
+
         $anonymous = isset($this->data['anonymous']) ? intval($this->data['anonymous']) : 0;
 
         $entry_id = $this->createEntry($parent_id, $cid, $subject, $content, $anonymous);
@@ -245,7 +239,7 @@ class ForumRoute extends RouteMap
     {
         $entry = $this->findEntry($entry_id);
         $cid = $entry['course_id'];
-        
+
         $perm = self::isArea($entry) ? 'edit_area' : 'edit_entry';
 
         if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has($perm, $cid)) {
@@ -264,7 +258,7 @@ class ForumRoute extends RouteMap
         if ($entry['depth'] > 1 && !$content) {
             $this->error(400, 'Content required.');
         }
-        
+
         if ($entry['depth'] >= 3 && $subject) {
             $this->error(400, 'Must not have subject here.');
         }
@@ -287,7 +281,7 @@ class ForumRoute extends RouteMap
          if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has('remove_entry', $cid)) {
             $this->error(401);
         }
-        
+
         if (!\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
@@ -318,7 +312,7 @@ class ForumRoute extends RouteMap
         if (isset($children['list'][$entry_id])) {
             unset($children['list'][$entry_id]);
         }
-        
+
         $entry['children'] = array_map(function ($entry) {
                 return ForumRoute::convertEntry($entry);
             },
@@ -333,7 +327,7 @@ class ForumRoute extends RouteMap
         foreach(words("topic_id mkdate chdate anonymous depth") as $key) {
             $entry[$key] = $raw[$key];
         }
-        
+
         $entry['subject']      = $raw['name'];
         $entry['user']         = sprintf('/user/%s', htmlReady($raw['user_id']));
         $entry['course']       = sprintf('/course/%s', htmlReady($raw['seminar_id']));
@@ -379,7 +373,7 @@ class ForumRoute extends RouteMap
         } else {
             $this->error(404);
         }
-        
+
         return $result;
     }
 

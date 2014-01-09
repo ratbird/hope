@@ -9,7 +9,7 @@ namespace API;
 
 class UriTemplate
 {
-    public function __construct($uri_template, $conditions)
+    public function __construct($uri_template, $conditions = array())
     {
         $this->uri_template = $uri_template;
         $this->conditions = $conditions;
@@ -70,5 +70,42 @@ class UriTemplate
         }
 
         return true;
+    }
+
+
+    public function inject($params)
+    {
+        // Initialize parameters array
+        $parameters = array();
+
+        // Split and normalize template
+        $rules = array_filter(explode('/', $this->uri_template));
+
+        foreach ($rules as &$rule) {
+
+            // Rule is a placeholder
+            if ($rule[0] === ':') {
+                $parameter_name = substr($rule, 1);
+
+                if (!isset($params[$parameter_name])) {
+                    $reason = sprintf('UriTemplate parameter :%s missing.',
+                                      htmlReady($parameter_name));
+                    throw new \RuntimeException($reason);
+                }
+
+                $actual = $params[$parameter_name];
+
+                if (isset($this->conditions[$parameter_name])
+                    && !preg_match($this->conditions[$parameter_name], $actual)) {
+                    $reason = sprintf('UriTemplate parameter :%s did not satisfy its condition.',
+                                      htmlReady($parameter_name));
+                    throw new \RuntimeException($reason);
+                }
+
+                $rule = htmlReady($actual);
+            }
+        }
+
+        return join('/', $rules);
     }
 }

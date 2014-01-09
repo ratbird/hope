@@ -157,8 +157,13 @@ STUDIP.News = {
         				}                
         			} else {
         				jQuery('#'+id).dialog('close');
-        				url = location.href.split('?');
-        				location.replace(url[0]+'?nsave=1');
+        				var obj = jQuery('#admin_news_form');
+        				if (obj.length > 0) {
+            				jQuery('#admin_news_form').submit();
+            			} else {
+            				url = location.href.split('?');
+            				location.replace(url[0]+'?nsave=1');
+            			}
         			}
         			// fix added elements (as in application.js)
                     if (!("autofocus" in document.createElement("input"))) {

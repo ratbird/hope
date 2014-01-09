@@ -16,7 +16,7 @@
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="100%" class="blank"><p class="info">
-        <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" method="POST">
+        <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" id="admin_news_form" method="POST">
         <input type="hidden" name="news_filter" value="set">
         <input type="hidden" name="news_filter_term" value="<?=$news_searchterm?>">
         <input type="hidden" name="news_filter_start" value="<?=$news_startdate?>">

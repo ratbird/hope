@@ -47,7 +47,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             placeholder="<?= _('Bitte geben Sie einen Namen für das Anmeldeset an') ?>"/>
         <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : '' ?>/>
         <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar sein.') ?>
-        <label for="institute_id" class="caption">
+        <label for="institutes" class="caption">
             <?= _('Einrichtungszuordnung:') ?>
             <span class="required">*</span>
         </label>
@@ -86,7 +86,9 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
         <label class="caption">
             <?= _('Veranstaltungszuordnung:') ?>
         </label>
+        <div id="instcourses">
         <?= $coursesTpl; ?>
+        </div>
         <? if (count($courseIds)) : ?>
             <div>
                     <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),

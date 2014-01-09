@@ -25,8 +25,6 @@ class Admission_CoursesetController extends AuthenticatedController {
             PageLayout::setTitle(_('Anmeldesets'));
             Navigation::activateItem('/tools/coursesets/sets');
         }
-        // Fetch all lists with special user chances.
-        $this->myUserlists = AdmissionUserList::getUserLists($GLOBALS['user']->id);
         PageLayout::addSqueezePackage('admission');
     }
 
@@ -89,9 +87,9 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $this->courseset = new CourseSet($coursesetId);
                 $selectedInstitutes = $this->courseset->getInstituteIds();
                 foreach ($selectedInstitutes as $id => $selected) {
-                    $this->myInstitutes[$id] = new Institute($id); 
+                    $this->selectedInstitutes[$id] = new Institute($id); 
                 }
-                $this->selectedInstitutes = $this->myInstitutes;
+                //$this->selectedInstitutes = $this->myInstitutes;
                 $allCourses = CoursesetModel::getInstCourses($this->selectedInstitutes, $coursesetId);
                 $selectedCourses = $this->courseset->getCourses();
             } else {
@@ -201,6 +199,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function instcourses_action($coursesetId='') {
+        //CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);
@@ -213,6 +212,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function institutes_action() {
+        CSRFProtection::verifyUnsafeRequest();
         $this->myInstitutes = Institute::getMyInstitutes();
         $this->selectedInstitutes = array();
         foreach(Request::getArray('institutes') as $institute) {

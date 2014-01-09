@@ -507,7 +507,7 @@ class StudipFormat extends TextFormat
         }
         
         if (!$intern && $LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
-            $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
+            $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(decodeHTML(idna_link($url)));
         } else {
             $media_url = idna_link($url);
         }
@@ -519,8 +519,8 @@ class StudipFormat extends TextFormat
             $media = '<object type="application/x-shockwave-flash" id="FlashPlayer" data="'.Assets::url().'flash/player_flv.swf" width="'.$width.'" height="'.$height.'">
                         <param name="movie" value="'.Assets::url().'flash/player_flv.swf">
                         <param name="allowFullScreen" value="true">
-                        <param name="FlashVars" value="flv='.urlencode($media_url).'&amp;startimage='.$link.$flash_config.'">
-                        <embed src="'.Assets::url().'flash/player_flv.swf" movie="$media_url" type="application/x-shockwave-flash" FlashVars="flv='.urlencode($media_url).'&amp;startimage='.$link.$flash_config.'">
+                        <param name="FlashVars" value="flv='.urlencode(decodeHTML($media_url)).'&amp;startimage='.$link.$flash_config.'">
+                        <embed src="'.Assets::url().'flash/player_flv.swf" movie="$media_url" type="application/x-shockwave-flash" FlashVars="flv='.urlencode(decodeHTML($media_url)).'&amp;startimage='.$link.$flash_config.'">
                         </object>';
         } else {
             $media = sprintf($format_strings[$tag],

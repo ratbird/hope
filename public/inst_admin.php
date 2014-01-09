@@ -160,6 +160,7 @@ if ($cmd == 'removeFromInstitute' && $perm->have_studip_perm('admin', $inst_id))
     }
 
     log_event('INST_USER_DEL', $inst_id, $del_user_id);
+    checkExternDefaultForUser($del_user_id);
 }
 
 

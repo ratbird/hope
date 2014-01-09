@@ -284,10 +284,12 @@ switch ($submitted_task) {
         }
 
         // delete users in user_inst
+        $user_ids = array();
         $query = "SELECT user_id FROM user_inst WHERE institut_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($i_id));
         while ($user_id = $statement->fetchColumn()) {
+            $user_ids[] = $user_id;
             log_event('INST_USER_DEL', $i_id, $user_id);
         }
 
@@ -298,6 +300,11 @@ switch ($submitted_task) {
         if (($db_ar = $statement->rowCount()) > 0) {
             $message = sprintf(_('%s Mitarbeiter gelöscht.'), $db_ar);
             PageLayout::postMessage(MessageBox::success($message));
+        }
+
+        // set a suitable default institute for each user
+        foreach ($user_ids as $user_id) {
+            checkExternDefaultForUser($user_id);
         }
 
         // delete participations in seminar_inst

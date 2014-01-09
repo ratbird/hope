@@ -132,6 +132,7 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
                         $statement = DBManager::get()->prepare($query);
                         $statement->execute(array($globalperms, $user_id, $range_id));
                     }
+                    checkExternDefaultForUser($user_id);
                 }
             }
         }

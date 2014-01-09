@@ -1069,13 +1069,45 @@ function getSearchResults ($search_exp, $range_id, $type = 'inst')
     return $statement->fetchAll(PDO::FETCH_ASSOC) ?: false;
 }
 
-function checkExternDefaultForUser($user_id)
-{
-    $stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM user_inst WHERE user_id = ?");
-    $stmt->execute(array($user_id));
-    $result = $stmt->fetchColumn();
-    if ($result == 1) {
-        $stmt = DBManager::get()->prepare("UPDATE user_inst SET externdefault = 1 WHERE user_id = ?");
+/**
+ * Ensure that a user has a valid default institute set if applicable,
+ * i.e. he/she is member of at least one institute and has status 'autor'
+ * or higher.
+ *
+ * @param string $user_id       user id
+ */
+function checkExternDefaultForUser($user_id) {
+    if (!getExternDefaultForUser($user_id)) {
+        $stmt = DBManager::get()->prepare("UPDATE user_inst SET externdefault = 1 WHERE user_id = ? AND inst_perms != 'user' ORDER BY priority LIMIT 1");
         $stmt->execute(array($user_id));
+    }
+}
+
+/**
+ * Return the id of the default institute for a user (if set).
+ *
+ * @param string $user_id       user id
+ *
+ * @return string  institute id or FALSE
+ */
+function getExternDefaultForUser($user_id) {
+    $stmt = DBManager::get()->prepare("SELECT Institut_id FROM user_inst WHERE user_id = ? AND inst_perms != 'user' AND externdefault = 1");
+    $stmt->execute(array($user_id));
+    return $stmt->fetchColumn();
+}
+
+/**
+ * Set the default institute for a user, if possible (i.e. user
+ * is member of this institute and has at least 'autor' status).
+ *
+ * @param string $user_id       user id
+ * @param string $user_id       institute id
+ */
+function setExternDefaultForUser($user_id, $institute_id) {
+    if ($perm->have_studip_perm('autor', $institute_id, $user_id)) {
+        $stmt = DBManager::get()->prepare('UPDATE user_inst SET externdefault = 0 WHERE user_id = ? AND externdefault = 1');
+        $stmt->execute(array($user_id));
+        $stmt = DBManager::get()->prepare('UPDATE user_inst SET externdefault = 1 WHERE user_id = ? AND Institut_id = ?');
+        $stmt->execute(array($user_id, $institute_id));
     }
 }

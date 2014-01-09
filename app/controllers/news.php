@@ -477,8 +477,13 @@ class NewsController extends StudipController
         // initialize
         $news_result = array();
         $limit = 100;
-        if (!$area_type)
+        if (Request::get('news_filter') == 'set') {
+            $this->news_searchterm = Request::option('news_filter_term');
+        	$this->news_startdate = Request::int('news_filter_start');
+            $this->news_enddate = Request::int('news_filter_end');
+        } else {
             $this->news_startdate = time();
+        }
         if (is_array($this->area_structure[$area_type]))
             $this->area_type = $area_type;
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
@@ -486,7 +491,10 @@ class NewsController extends StudipController
         PageLayout::setHelpKeyword('Basis.News');
         Navigation::activateItem('/tools/news');
         if (Request::submitted('reset_filter')) {
-            $this->redirect('news/admin_news/all');
+            $area_type = 'all';
+            $this->news_searchterm = '';
+            $this->news_startdate = '';
+            $this->news_enddate = '';
         }
         // delete news
         if (Request::submitted('remove_marked_news')) {
@@ -517,9 +525,9 @@ class NewsController extends StudipController
         // fetch news list
         $this->news_items = StudipNews::getNewsRangesByFilter($GLOBALS["auth"]->auth["uid"], $this->area_type, $this->news_searchterm, $this->news_startdate, $this->news_enddate, true, $limit+1);
         // build area and filter description
-        if ($this->news_searchterm AND $this->area_type)
+        if ($this->news_searchterm AND $this->area_type AND ($this->area_type != 'all'))
             $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen im Bereich "%s" zum Suchbegriff "%s"'), $this->area_structure[$this->area_type]['title'], $this->news_searchterm);
-        elseif ($this->area_type)
+        elseif ($this->area_type AND ($this->area_type != 'all'))
             $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen im Bereich "%s"'), $this->area_structure[$this->area_type]['title']);
         elseif ($this->news_searchterm)
             $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen zum Suchbegriff "%s"'), $this->news_searchterm);
@@ -528,7 +536,7 @@ class NewsController extends StudipController
         if ($this->news_startdate AND $this->news_enddate)
             $this->filter_text .= sprintf(_(', die zwischen dem %s und dem %s sichtbar sind.'), date('d.m.Y', $this->news_startdate), date('d.m.Y', $this->news_enddate));
         elseif ($this->news_startdate)
-            $this->filter_text .= sprintf(_(', die nach dem %s sichtbar sind.'), date('d.m.Y', $this->news_startdate));
+            $this->filter_text .= sprintf(_(', die ab dem %s sichtbar sind.'), date('d.m.Y', $this->news_startdate));
         elseif ($this->news_enddate)
             $this->filter_text .= sprintf(_(', die vor dem %s sichtbar sind.'), date('d.m.Y', $this->news_enddate));
 

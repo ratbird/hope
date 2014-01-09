@@ -65,7 +65,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <label><?=_("Einstelldatum")?><br>
+                        <label><?=_("Veröffentlichungsdatum")?><br>
                         <input type="text" class="news_date news_prevent_submit" name="news_startdate" value="<?=($news['date']) ? date('d.m.Y', $news['date']) : ""?>" aria-label="<?= _('Einstelldatum') ?>"></label>
                     </td>
                     <td>

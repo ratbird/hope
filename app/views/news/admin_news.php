@@ -2,10 +2,14 @@
 <? if(!empty($flash['question_text'])) : ?>
     <?= createQuestion2($flash['question_text'],
         array_merge($flash['question_param'], 
-        array('news_searchterm' => $news_searchterm,
-              'news_startdate' => $news_startdate,
-              'news_enddate' => $news_enddate)),
-        array(),
+        array('news_filter_term' => $news_searchterm,
+              'news_filter_start' => $news_startdate,
+              'news_filter_end' => $news_enddate,
+              'news_filter' => 'set')),
+        array('news_filter_term' => $news_searchterm,
+              'news_filter_start' => $news_startdate,
+              'news_filter_end' => $news_enddate,
+              'news_filter' => 'set'),
         $controller->url_for('news/admin_news/'.$area_type)); ?>
 <? endif ?>
 <div class="news_admin">
@@ -13,6 +17,10 @@
     <tr>
         <td width="100%" class="blank"><p class="info">
         <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" method="POST">
+        <input type="hidden" name="news_filter" value="set">
+        <input type="hidden" name="news_filter_term" value="<?=$news_searchterm?>">
+        <input type="hidden" name="news_filter_start" value="<?=$news_startdate?>">
+        <input type="hidden" name="news_filter_end" value="<?=$news_enddate?>">
         <?=CSRFProtection::tokenTag(); ?>
         <table class="default">
         <thead>

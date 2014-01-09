@@ -285,68 +285,6 @@ class Router
     }
 
     /**
-     * Tests whether an uri matches a template.
-     *
-     * The template may contain placeholders by prefixing an appropriate,
-     * unique placeholder name with a colon (:).
-     *
-     * <code>$template = '/hello/:name';</code>
-     *
-     * If the uri matches the template, all evaluated placeholders will
-     * be stored in the parameters array.
-     *
-     * @param String $uri        The uri to test
-     * @param String $template   The uri template to test against
-     * @param Array  $parameters Stores evaluated parameters on match (optional)
-     * @param Array  $conditions An associative array with parameter name as key
-     *                           and regexp to match as value (optional)
-     * @return bool Returns true if the uri matches the template
-     */
-    public function uriMatchesTemplate($uri, $template, &$parameters = null, $conditions = array())
-    {
-        // Initialize parameters array
-        $parameters = array();
-
-        // Set conditions (globally and locally, locally has higher priority)
-        $conditions = array_merge($this->conditions, $conditions);
-
-        // Split and normalize uri and template
-        $given = array_filter(explode('/', $uri), 'strlen');
-        $rules = array_filter(explode('/', $template));
-
-        // Leave if uri and template do not contain the same number of
-        // elements
-        if (count($given) !== count($rules)) {
-            return false;
-        }
-
-        // Combine uri and template element-wise (simplifies iteration)
-        $combined = array_combine($rules, $given);
-
-        // Iterate over uri and template and compare element by element
-        foreach ($combined as $rule => $actual) {
-            if ($rule[0] === ':') {
-                // Rule is a placeholder
-                $parameter_name = substr($rule, 1);
-
-                if (isset($conditions[$parameter_name])
-                    && !preg_match($conditions[$parameter_name], $actual))
-                {
-                    return false;
-                }
-
-                $parameters[$parameter_name] = $actual;
-            } elseif ($actual !== $rule) {
-                // Elements do not match
-                $parameters = array();
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Dispatches an uri across the defined routes.
      *
      * @param mixed  $uri    Uri to dispatch (defaults to path info)
@@ -460,7 +398,8 @@ class Router
             }
 
             foreach ($this->routes[$method] as $uri_template => $route) {
-                if ($this->uriMatchesTemplate($uri, $uri_template, $prmtrs, $route['conditions'])) {
+                $tmpl = new UriTemplate($uri_template, $route['conditions']);
+                if ($tmpl->match($uri, $prmtrs)) {
 
                     if (FALSE && !$this->permissions->check($uri_template, $method)) {
                         throw new RouterException(403);

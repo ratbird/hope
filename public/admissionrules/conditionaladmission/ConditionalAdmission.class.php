@@ -160,8 +160,8 @@ class ConditionalAdmission extends AdmissionRule
             $stmt->execute(array($this->id));
             $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($conditions as $condition) {
-                $currentCondition = new UserFilter($condition['condition_id']);
-                $this->conditions[$condition['condition_id']] = $currentCondition;
+                $currentCondition = new UserFilter($condition['filter_id']);
+                $this->conditions[$condition['filter_id']] = $currentCondition;
             }
         }
     }
@@ -239,16 +239,16 @@ class ConditionalAdmission extends AdmissionRule
         $stmt->execute(array($this->id, $this->message, (int)$this->startTime,
             (int)$this->endTime, time(), time()));
         // Delete removed conditions from DB.
-        $stmt = DBManager::get()->prepare("SELECT `condition_id` FROM 
-            `admission_condition` WHERE `rule_id`=? AND `condition_id` NOT IN ('".
+        $stmt = DBManager::get()->prepare("SELECT `filter_id` FROM 
+            `admission_condition` WHERE `rule_id`=? AND `filter_id` NOT IN ('".
             implode("', '", array_keys($this->conditions))."')");
         $stmt->execute(array($this->id));
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $entry) {
-            $current = new UserFilter($entry['condition_id']);
+            $current = new UserFilter($entry['filter_id']);
             $current->delete();
         }
         DBManager::get()->exec("DELETE FROM `admission_condition`
-            WHERE `rule_id`='".$this->id."' AND `condition_id` NOT IN ('".
+            WHERE `rule_id`='".$this->id."' AND `filter_id` NOT IN ('".
             implode("', '", array_keys($this->conditions))."')");
         // Store all conditions.
         $queries = array();
@@ -263,9 +263,9 @@ class ConditionalAdmission extends AdmissionRule
         }
         // Store all assignments between rule and condition.
         $stmt = DBManager::get()->prepare("INSERT INTO `admission_condition`
-            (`rule_id`, `condition_id`, `mkdate`)
+            (`rule_id`, `filter_id`, `mkdate`)
             VALUES ".implode(",", $queries)." ON DUPLICATE KEY UPDATE
-            `condition_id`=VALUES(`condition_id`)");
+            `filter_id`=VALUES(`filter_id`)");
         $stmt->execute($parameters);
         return $this;
     }

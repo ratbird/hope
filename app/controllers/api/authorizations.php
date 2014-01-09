@@ -36,7 +36,7 @@ class Api_AuthorizationsController extends AuthenticatedController
      **/
     public function index_action()
     {
-        $this->consumers = API\UserPermissions::get($GLOBALS['user']->id)->getConsumers();
+        $this->consumers = RESTAPI\UserPermissions::get($GLOBALS['user']->id)->getConsumers();
         $this->types = array(
             'website' => _('Website'),
             'program' => _('Herkömmliches Desktopprogramm'),
@@ -52,7 +52,7 @@ class Api_AuthorizationsController extends AuthenticatedController
      **/
     public function revoke_action($id)
     {
-        API\Consumer\Base::find($id)->revokeAccess($GLOBALS['user']->id);
+        RESTAPI\Consumer\Base::find($id)->revokeAccess($GLOBALS['user']->id);
         PageLayout::postMessage(MessageBox::success(_('Der Applikation wurde der Zugriff auf Ihre Daten untersagt.')));
         $this->redirect('api/authorizations');
     }

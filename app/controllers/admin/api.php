@@ -59,8 +59,8 @@ class Admin_ApiController extends AuthenticatedController
      **/
     public function index_action()
     {
-        $this->consumers = API\Consumer\Base::findAll();
-        $this->routes = API\Router::getInstance()->getRoutes(true);
+        $this->consumers = RESTAPI\Consumer\Base::findAll();
+        $this->routes = RESTAPI\Router::getInstance()->getRoutes(true);
     }
 
     /**
@@ -68,7 +68,7 @@ class Admin_ApiController extends AuthenticatedController
      **/
     public function render_keys($id)
     {
-        $consumer = API\Consumer\Base::find($id);
+        $consumer = RESTAPI\Consumer\Base::find($id);
 
         return array(
             'Consumer Key = ' . $consumer->auth_key,
@@ -97,8 +97,8 @@ class Admin_ApiController extends AuthenticatedController
     public function edit_action($id = null)
     {
         $consumer = $id
-                  ? API\Consumer\Base::find($id)
-                  : API\Consumer\Base::create(Request::option('consumer_type') ?: 'oauth');
+                  ? RESTAPI\Consumer\Base::find($id)
+                  : RESTAPI\Consumer\Base::create(Request::option('consumer_type') ?: 'oauth');
 
         if (Request::submitted('store')) {
             $errors = array();
@@ -142,7 +142,7 @@ class Admin_ApiController extends AuthenticatedController
      **/
     public function toggle_action($id, $state = null)
     {
-        $consumer = API\Consumer\Base::find($id);
+        $consumer = RESTAPI\Consumer\Base::find($id);
 
         $consumer->active = $state === null ? !$consumer->active : ($state === 'on');
         $consumer->store();

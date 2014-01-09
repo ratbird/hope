@@ -5,7 +5,7 @@
         <legend><?= _('Einstellungen') ?></legend>
 
         <div class="type-checkbox">
-            <label for="active"><?= _('API aktiviert') ?></label>
+            <label for="active"><?= _('REST-API aktiviert') ?></label>
             <input type="hidden" name="active" value="0">
             <input type="checkbox" name="active" value="1" <? if ($config['API_ENABLED']) echo 'checked'; ?>>
         </div>

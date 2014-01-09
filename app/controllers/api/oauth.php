@@ -64,7 +64,7 @@ class Api_OauthController extends StudipController
         }
 
         try {
-            $consumer = API\Consumer\Base::detectConsumer('oauth');
+            $consumer = RESTAPI\Consumer\Base::detectConsumer('oauth');
             if (isset($_POST['allow'])) {
                 $consumer->grantAccess($GLOBALS['user']->id);
 

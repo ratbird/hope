@@ -392,7 +392,7 @@ class Router
 
     protected function matchRoute($uri, $method, $content_renderer)
     {
-        $route      = null;
+        $matched    = null;
         $parameters = array();
         if (isset($this->routes[$method])) {
             if ($content_renderer->extension() && strpos($uri, $content_renderer->extension()) !== false) {
@@ -409,12 +409,13 @@ class Router
                     if (FALSE && !$this->permissions->check($uri_template, $method)) {
                         throw new RouterException(403);
                     }
+                    $matched = $route;
                     $parameters = $prmtrs;
                     break;
                 }
             }
         }
-        return array($route, $parameters);
+        return array($matched, $parameters);
     }
 
     /**

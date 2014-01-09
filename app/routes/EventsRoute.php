@@ -8,7 +8,7 @@
  * @condition semester_id ^[a-f0-9]{32}$
  */
 
-namespace API;
+namespace RESTAPI;
 
 use Calendar, DbCalendarEventList, SingleCalendar, SingleDate, Seminar, Issue,
     CalendarExportFile, CalendarWriterICalendar, SemesterData;

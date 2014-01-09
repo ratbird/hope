@@ -1,9 +1,9 @@
 <?php
-namespace API;
+namespace RESTAPI;
 use DBManager, PDO;
 
 /**
- * API routing permissions
+ * REST API routing permissions
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later

@@ -1,5 +1,5 @@
 <?php
-namespace API;
+namespace RESTAPI;
 use Request, Config;
 
 /**
@@ -49,7 +49,8 @@ abstract class RouteMap
      * @param int    $total
      * @param mixed  $offset
      * @param mixed  $limit
-     * @return API\Routemap Returns instance of self to allow chaining
+     *
+     * @return RESTAPI\Routemap Returns instance of self to allow chaining
      */
     public function paginate($uri_format, $total, $offset = null, $limit = null)
     {

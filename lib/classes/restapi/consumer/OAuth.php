@@ -1,14 +1,14 @@
 <?php
-namespace API\Consumer;
+namespace RESTAPI\Consumer;
 use StudipAutoloader, DBManager, OAuthRequestVerifier, OAuthStore, OAuthServer, Exception;
-use \API\UserPermissions;
+use \RESTAPI\UserPermissions;
 
 StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor/oauth-php/library/');
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
- * @todo    documentation
+ * @since   Stud.IP 3.0
  */
 class OAuth extends Base
 {
@@ -18,8 +18,8 @@ class OAuth extends Base
             $user_id = false;
 
             $parameters = (in_array($_SERVER['REQUEST_METHOD'], array('GET', 'POST')))
-                        ? null
-                        : $GLOBALS['_' . $_SERVER['REQUEST_METHOD']];
+            ? null
+            : $GLOBALS['_' . $_SERVER['REQUEST_METHOD']];
 
             $req = new OAuthRequestVerifier(null, null, $parameters);
             $result = $req->verifyExtended('access');
@@ -32,7 +32,7 @@ class OAuth extends Base
             $statement->bindValue(':oauth_id', $result['user_id']);
             $statement->execute();
             $user_id = $statement->fetchColumn();
-            
+
             if (!$user_id) {
                 return;
             }
@@ -61,20 +61,19 @@ class OAuth extends Base
             }
         }
     }
-    
+
     public static function getServer()
     {
         return new OAuthServer();
     }
-    
-    
+
     public function __construct($id = null)
     {
         parent::__construct($id);
-        
+
         $this->registerCallback('before_store', 'before_store');
     }
-    
+
     protected function before_store()
     {
         static $mapping = array(
@@ -105,7 +104,7 @@ class OAuth extends Base
         $statement->bindValue(':secret', $this->auth_secret);
         $statement->execute();
         $consumer['id'] = $statement->fetchColumn();
-        
+
         $consumer_key = OAuthStore::instance('PDO')->updateConsumer($consumer, null, true);
 
         if ($this->isNew()) {
@@ -127,7 +126,7 @@ class OAuth extends Base
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, true)->store();
         self::getServer()->authorizeFinish(true, $this->getOAuthId($user_id));
     }
-    
+
     public function revokeAccess($user_id = null)
     {
         if ($user_id === null && $this->hasUser()) {
@@ -150,7 +149,7 @@ class OAuth extends Base
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, false)->store();
         self::getServer()->authorizeFinish(false, $this->getOAuthId($user_id));
     }
-    
+
     private function getOAuthId($user_id)
     {
         $query = "SELECT oauth_id FROM api_oauth_user_mapping WHERE user_id = :id";
@@ -158,7 +157,7 @@ class OAuth extends Base
         $statement->bindValue(':id', $user_id);
         $statement->execute();
         $oauth_id = $statement->fetchColumn();
-        
+
         if (!$oauth_id) {
             $query = "INSERT INTO api_oauth_user_mapping (user_id, mkdate)
                       VALUES (:id, UNIX_TIMESTAMP())";
@@ -167,7 +166,7 @@ class OAuth extends Base
             $statement->execute();
             $oauth_id = DBManager::get()->lastInsertId();
         }
-        
+
         return $oauth_id;
     }
 }

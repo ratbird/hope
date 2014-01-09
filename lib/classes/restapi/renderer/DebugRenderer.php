@@ -1,13 +1,14 @@
 <?php
+namespace RESTAPI\Renderer;
+
 /**
  * Debug content renderer.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
+ * @since   Stud.IP 3.0
  */
-
-namespace API\Renderer;
-
 class DebugRenderer extends DefaultRenderer
 {
     /**
@@ -29,7 +30,7 @@ class DebugRenderer extends DefaultRenderer
     /**
      * Response transformation function.
      *
-     * @param \API\Response $response  the response to transform
+     * @param \RESTAPI\Response $response  the response to transform
      */
     public function render($response)
     {

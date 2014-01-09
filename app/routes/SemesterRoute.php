@@ -1,5 +1,5 @@
 <?php
-namespace API;
+namespace RESTAPI;
 use Request, SemesterData;
 
 /**

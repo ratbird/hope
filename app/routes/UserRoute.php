@@ -1,6 +1,6 @@
 <?php
 
-namespace API;
+namespace RESTAPI;
 use DBManager, PDO, StudipPDO, User, Avatar;
 
 /**

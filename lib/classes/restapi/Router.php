@@ -1,5 +1,5 @@
 <?php
-namespace API;
+namespace RESTAPI;
 use DocBlock, BadMethodCallException;
 
 /**

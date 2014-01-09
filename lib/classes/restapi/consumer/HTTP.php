@@ -1,11 +1,11 @@
 <?php
-namespace API\Consumer;
-use StudipAuthAbstract, API\RouterException;
+namespace RESTAPI\Consumer;
+use StudipAuthAbstract, RESTAPI\RouterException;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
- * @todo    documentation
+ * @since   Stud.IP 3.0
  */
 class HTTP extends Base
 {
@@ -15,7 +15,7 @@ class HTTP extends Base
             || isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']))
         {
             $user_id = false;
-            
+
             if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
                 list($username, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
             } elseif (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {

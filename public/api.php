@@ -9,14 +9,14 @@ namespace {
                     'user' => 'Seminar_User'));
 }
 
-namespace API {
+namespace RESTAPI {
     use User, Seminar_Auth, Seminar_User, Seminar_Perm, Config;
 
     // A potential api exception will lead to an according response with the
     // exception code and name as the http status.
     try {
         if (!Config::get()->API_ENABLED) {
-            throw new RouterException(503, 'API is not available');
+            throw new RouterException(503, 'REST API is not available');
         }
 
         require 'lib/bootstrap-api.php';
@@ -25,7 +25,7 @@ namespace API {
         $method = $_SERVER['REQUEST_METHOD'];
 
         // Check version
-        if (defined('API\\VERSION') && preg_match('~^/v(\d+)~i', $uri, $match)) {
+        if (defined('RESTAPI\\VERSION') && preg_match('~^/v(\d+)~i', $uri, $match)) {
             $version = $match[1];
             if ($version != VERSION) {
                 throw new RouterException(400, 'Version not supported');

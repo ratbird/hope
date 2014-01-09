@@ -7,7 +7,7 @@
  * @condition semester_id ^[a-f0-9]{32}$
  */
 
-namespace API;
+namespace RESTAPI;
 
 class ScheduleRoute extends RouteMap
 {

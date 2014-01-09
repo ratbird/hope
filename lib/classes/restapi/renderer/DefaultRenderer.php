@@ -1,4 +1,6 @@
 <?php
+namespace RESTAPI\Renderer;
+
 /**
  * Default base content renderer class (outputs text/plain).
  *
@@ -8,11 +10,10 @@
  * certain file extension. This is neccessary for content negotiation.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
+ * @since   Stud.IP 3.0
  */
-
-namespace API\Renderer;
-
 class DefaultRenderer
 {
     /**
@@ -38,7 +39,7 @@ class DefaultRenderer
     /**
      * Response transformation function.
      *
-     * @param \API\Response $response  the response to transform
+     * @param \RESTAPI\Response $response  the response to transform
      */
     public function render($response)
     {

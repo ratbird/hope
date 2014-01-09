@@ -2,7 +2,7 @@
 namespace {
     require_once 'vendor/docblock-parser/docblock-parser.php';
 
-    // Add /lib to autoloader, a bit overkill but this way, we 
+    // Add /lib to autoloader, a bit overkill but this way, we
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'app/routes');
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor/oauth-php/library');
 
@@ -10,7 +10,7 @@ namespace {
     URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
 }
 
-namespace API {
+namespace RESTAPI {
     use Studip, OAuthStore;
 
     // Define api version
@@ -32,11 +32,11 @@ namespace API {
         'username' => $GLOBALS['DB_STUDIP_USER'],
         'password' => $GLOBALS['DB_STUDIP_PASSWORD']
     ));
-            
+
     // Register default consumers
-    Consumer\Base::addType('http', 'API\\Consumer\\HTTP');
-    Consumer\Base::addType('studip', 'API\\Consumer\\Studip');
-    Consumer\Base::addType('oauth', 'API\\Consumer\\OAuth');
+    Consumer\Base::addType('http', 'RESTAPI\\Consumer\\HTTP');
+    Consumer\Base::addType('studip', 'RESTAPI\\Consumer\\Studip');
+    Consumer\Base::addType('oauth', 'RESTAPI\\Consumer\\OAuth');
 
 #    $router->registerConsumer('oauth', new Consumer\OAuth);
 #    $router->registerConsumer('basic', new Consumer\HTTP);

@@ -1,5 +1,5 @@
 <?php
-namespace API;
+namespace RESTAPI;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>

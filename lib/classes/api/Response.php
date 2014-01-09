@@ -1,12 +1,11 @@
 <?php
+namespace API;
+
 /**
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
- * @todo    documentation
+ * @since   Stud.IP 3.0
  */
-
-namespace API;
-
 class Response implements \ArrayAccess
 {
     public $body, $status, $headers;

@@ -1,13 +1,15 @@
 <?php
 namespace API;
-use ReflectionClass, DocBlock, BadMethodCallException;
+use DocBlock, BadMethodCallException;
 
 /**
  * Simple and flexible router. Needs PHP >= 5.3.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  * @see     Inspired by http://blog.sosedoff.com/2009/07/04/simpe-php-url-routing-controller/
+ * @since   Stud.IP 3.0
  */
 class Router
 {
@@ -51,7 +53,7 @@ class Router
 
     // Stores registered consumers
     protected $consumers = array();
-    
+
     // Stores the associated permissions
     protected $permissions = false;
 
@@ -164,7 +166,7 @@ class Router
         // Investigate object, define whether it's located in the core system
         // or a plugin, respect any defined class conditions and iterate
         // through it's methods to find any defined route
-        $ref      = new ReflectionClass($map);
+        $ref      = new \ReflectionClass($map);
         $filename = $ref->getFilename();
         $source   = strpos($filename, 'plugins_packages') !== false
                   ? 'plugin'

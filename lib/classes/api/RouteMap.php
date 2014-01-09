@@ -1,14 +1,13 @@
 <?php
-/**
- * @author  <mlunzena@uos.de>
- * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license GPL 2 or later
- * @todo    documentation
- */
-
 namespace API;
 use Request, Config;
 
+/**
+ * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
+ * @license GPL 2 or later
+ * @since   Stud.IP 3.0
+ */
 abstract class RouteMap
 {
     protected $pagination = false;

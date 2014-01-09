@@ -1,14 +1,12 @@
 <?php
+namespace API;
+
 /**
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
- * @todo
+ * @since   Stud.IP 3.0
  */
-
-namespace API;
-use \Exception;
-
-class RouterHalt extends Exception
+class RouterHalt extends \Exception
 {
     public function __construct($response)
     {

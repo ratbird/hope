@@ -7,7 +7,7 @@ use DBManager, PDO;
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
- * @since   Stud.IP 2.6
+ * @since   Stud.IP 3.0
  */
 class ConsumerPermissions
 {

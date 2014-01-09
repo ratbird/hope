@@ -1,15 +1,15 @@
 <?php
+namespace API;
+use \Exception;
+
 /**
  * Router exception.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
- * @todo
+ * @since   Stud.IP 3.0
  */
-
-namespace API;
-use \Exception;
-
 class RouterException extends Exception
 {
     protected static $error_messages = array(

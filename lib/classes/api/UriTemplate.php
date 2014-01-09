@@ -1,12 +1,12 @@
 <?php
+namespace API;
+
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
+ * @since   Stud.IP 3.0
  */
-
-namespace API;
-
 class UriTemplate
 {
     public function __construct($uri_template, $conditions = array())

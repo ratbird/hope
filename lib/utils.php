@@ -91,7 +91,7 @@
  * @since       File available since Release 3.0
  * @author      Robert Costa <rcosta@uos.de>
  */
-require_once 'bootstrap.php';
+//require_once 'bootstrap.php';
 // TODO replace dependence on bootstrap.php by actually used scripts
 //
 // Partial list of scripts included by bootstrap.php and why they are needed:

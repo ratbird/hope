@@ -336,6 +336,8 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 }
             }
 
+            $content['LECTUREDETAILS']['STUDIP-DATA'] = $this->getStudipData();
+
             // generic data fields
             if ($generic_datafields = $this->config->getValue('Main', 'genericdatafields')) {
                 $localEntries = DataFieldEntry::getDataFieldEntries($this->seminar_id, 'sem');

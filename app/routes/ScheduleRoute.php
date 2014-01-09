@@ -50,7 +50,7 @@ class ScheduleRoute extends RouteMap
            foreach ($schedule_of_day->entries as $entry) {
                $entries[$entry['id']] = self::entryToJson($entry);
            }
-           $json[$number_of_day] = $entries;
+           $json[$number_of_day + 1] = $entries;
        }
 
        return $json;

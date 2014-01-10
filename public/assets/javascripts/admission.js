@@ -174,9 +174,9 @@ STUDIP.Admission = {
     removeUserFromUserlist: function(userId) {
         var parent = $('#user_'+userId).parent();
         $('#user_'+userId).remove();
-        if (parent.children('div').size() == 0) {
+        if (parent.children('li').size() == 0) {
             var nousers = 'Sie haben noch niemanden hinzugefügt.';
-            $(parent).append('<span id="nousers">'+
+            $(parent).parent().append('<span id="nousers">'+
                 '<i>'+nousers+'</i></span>');
         }
         return false;

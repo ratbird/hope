@@ -17,6 +17,7 @@ class Admission_UserListController extends AuthenticatedController {
             Navigation::activateItem('/tools/coursesets/userlists');
         }
         PageLayout::addSqueezePackage('admission');
+		PageLayout::addStylesheet('form.css');
     }
 
     public function index_action() {

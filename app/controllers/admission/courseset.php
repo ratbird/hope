@@ -26,6 +26,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             Navigation::activateItem('/tools/coursesets/sets');
         }
         PageLayout::addSqueezePackage('admission');
+		PageLayout::addStylesheet('form.css');
     }
 
     /**

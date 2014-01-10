@@ -172,7 +172,7 @@ class Admin_ApiController extends AuthenticatedController
     {
         if (Request::submitted('store')) {
             $perms       = Request::getArray('permission');
-            $permissions = Api\ConsumerPermissions::get($consumer_id ?: 'global');
+            $permissions = RESTAPI\ConsumerPermissions::get($consumer_id ?: 'global');
 
             foreach ($perms as $route => $methods) {
                 foreach ($methods as $method => $granted) {
@@ -192,10 +192,10 @@ class Admin_ApiController extends AuthenticatedController
         PageLayout::setTitle($title);
 
         $this->consumer_id = $consumer_id;
-        $this->router      = Api\Router::getInstance();
+        $this->router      = RESTAPI\Router::getInstance();
         $this->routes      = $this->router->getRoutes(true, false);
-        $this->permissions = Api\ConsumerPermissions::get($consumer_id ?: 'global');
-        $this->global      = $consumer_id ? Api\ConsumerPermissions::get('global') : false;
+        $this->permissions = RESTAPI\ConsumerPermissions::get($consumer_id ?: 'global');
+        $this->global      = $consumer_id ? RESTAPI\ConsumerPermissions::get('global') : false;
     }
 
     public function config_action()

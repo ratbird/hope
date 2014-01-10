@@ -65,7 +65,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 					$this->myInstitutes[$id] = new Institute($id); 
 				}
 				$this->selectedInstitutes = $this->myInstitutes;
-				$allCourses = CoursesetModel::getInstCourses($this->selectedInstitutes, $coursesetId);
+				$allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId);
 				$selectedCourses = $this->courseset->getCourses();
 			} else {
 	    		$this->myInstitutes = array();
@@ -89,12 +89,11 @@ class Admission_CoursesetController extends AuthenticatedController {
                 foreach ($selectedInstitutes as $id => $selected) {
                     $this->selectedInstitutes[$id] = new Institute($id); 
                 }
-                //$this->selectedInstitutes = $this->myInstitutes;
-                $allCourses = CoursesetModel::getInstCourses($this->selectedInstitutes, $coursesetId);
+                $allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId);
                 $selectedCourses = $this->courseset->getCourses();
             } else {
                 $this->selectedInstitutes = array();
-                $allCourses = CoursesetModel::getInstCourses($this->myInstitutes, $coursesetId);
+                $allCourses = CoursesetModel::getInstCourses(array_keys($this->myInstitutes), $coursesetId);
                 $selectedCourses = array();
             }
 		}
@@ -199,7 +198,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function instcourses_action($coursesetId='') {
-        //CSRFProtection::verifyUnsafeRequest();
+        CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);
@@ -207,8 +206,8 @@ class Admission_CoursesetController extends AuthenticatedController {
         } else if (Request::getArray('courses')) {
             $this->selectedCourses = Request::getArray('courses');
         }
-        $this->allCourses = CoursesetModel::getInstCourses(
-            array_flip(Request::getArray('institutes')), $coursesetId, $this->selectedCourses);
+        $this->allCourses = CoursesetModel::getInstCourses(Request::getArray('institutes'), 
+        	$coursesetId, $this->selectedCourses);
     }
 
     public function institutes_action() {

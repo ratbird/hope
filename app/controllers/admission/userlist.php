@@ -50,10 +50,13 @@ class Admission_UserListController extends AuthenticatedController {
         $this->search = QuickSearch::get('user_id', $userSearch)
                                     ->withButton()
                                     ->render();
+		if ($this->flash['error']) {
+			$this->error = MessageBox::error($this->flash['error']);
+		}
     }
 
     public function save_action($userlistId='') {
-        if (Request::submitted('submit')) {
+        if (Request::submitted('submit') && Request::get('name')) {
             $userlist = new AdmissionUserList($userlistId);
             $userlist->setName(Request::get('name'))
                 ->setFactor(Request::float('factor'))
@@ -70,6 +73,9 @@ class Admission_UserListController extends AuthenticatedController {
             } else {
                 $this->flash['user_id'] = Request::get('user_id');
                 $this->flash['user_id_parameter'] = Request::get('user_id_parameter');
+	        	if (!Request::get('name')) {
+	        		$this->flash['error'] = _('Bitte geben Sie einen Namen für die Nutzerliste an.');
+	        	}
             }
             $this->redirect($this->url_for('admission/userlist/configure', $userlistId));
         }

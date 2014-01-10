@@ -28,6 +28,7 @@ $infobox = array('content' => $infobox,
 
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
+<?= $error ? $error : '' ?>
 <h2><?= ($userlist && $userlist->getId()) ? _('Nutzerliste bearbeiten') : _('Nutzerliste anlegen') ?></h2>
 <form class="studip_form" action="<?= $controller->url_for('admission/userlist/save', (($userlist && $userlist->getId()) ? $userlist->getId() : '')) ?>" method="post">
     <label class="caption">

@@ -12,14 +12,16 @@ use DBManager, PDO;
 class UserPermissions
 {
     /**
-     * Create a permission object (for a certain consumer).
-     * Permissions object will be cached for each consumer.
+     * Create a permission object (for a certain user).
+     * Permissions object will be cached for each user.
      *
-     * @param mixed $consumer_id Id of consumer (optional, defaults to global)
+     * @param mixed $user_id Id of user (optional, defaults to global)
      * @return Permissions Returns permissions object
      */
     public static function get($user_id = null)
     {
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+        
         static $cache = array();
         if (!isset($cache[$user_id])) {
             $cache[$user_id] = new self($user_id);
@@ -32,9 +34,9 @@ class UserPermissions
     private $permissions = array();
 
     /**
-     * Creates the actual permission object (for a certain consumer).
+     * Creates the actual permission object (for a certain user).
      *
-     * @param mixed $consumer_id Id of consumer (optional, defaults to global)
+     * @param mixed $user_id Id of user (optional, defaults to global)
      */
     private function __construct($user_id = null)
     {
@@ -45,7 +47,7 @@ class UserPermissions
     }
 
     /**
-     * Defines whether access if allowed for the current consumer to the
+     * Defines whether access if allowed for the current user to the
      * passed route via the passed method.
      *
      * @param String $route_id Route template (hash)
@@ -54,20 +56,19 @@ class UserPermissions
      * @param bool   $overwrite May values be overwritten
      * @return bool Indicates if value could be changed.
      */
-    public function set($consumer_id, $granted = true)
+    public function set($user_id, $granted = true)
     {
-        $this->permissions[$consumer_id] = (bool)$granted;
+        $this->permissions[$user_id] = (bool)$granted;
 
         return $this;
     }
 
     /**
-     * Loads permissions for passed consumer.
+     * Loads permissions for passed user.
      *
-     * @param String $consumer_id Id of the consumer in question
-     * @return Permissions Returns instance of self to allow chaining
+     * @return UserPermissions Returns instance of self to allow chaining
      */
-    protected function loadPermissions($user_id)
+    protected function loadPermissions()
     {
         $query = "SELECT consumer_id, granted
                   FROM api_user_permissions
@@ -88,11 +89,9 @@ class UserPermissions
     }
 
     /**
-     * Checks if access to passed route via passed method is allowed for
-     * the current consumer.
+     * Checks if access to consumer is allowed for the current user.
      *
-     * @param String $route  Route template
-     * @param String $method HTTP method
+     * @param String $consumer_id  Id of the consumer
      * @return bool Indicates whether access is allowed
      */
     public function check($consumer_id)
@@ -127,6 +126,11 @@ class UserPermissions
         return $result;
     }
     
+    /**
+     * Get a list of all consumer the user has granted acces to.
+     *
+     * @return Array List of consumer objects
+     */
     public function getConsumers()
     {
         $result = array();

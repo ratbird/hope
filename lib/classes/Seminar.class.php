@@ -737,7 +737,7 @@ class Seminar
         // logging <<<<<<
 
         $cache = StudipCacheFactory::getCache();
-        $cache->expire('course/undecorated_data/'. $this->range_id);
+        $cache->expire('course/undecorated_data/'. $this->getId());
 
         $this->readSingleDates();
         $this->irregularSingleDates[$singledate->getSingleDateID()] =& $singledate;

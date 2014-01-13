@@ -354,16 +354,26 @@ class CourseSet
      * @param String $instituteId
      * @return Array
      */
-    public static function getCoursesetsByInstituteId($instituteId) {
+    public static function getCoursesetsByInstituteId($instituteId, $filter = array()) {
         $query = "SELECT DISTINCT ci.*
             FROM `courseset_institute` ci
             JOIN `coursesets` c ON (ci.`set_id`=c.`set_id`)
+            JOIN courseset_rule cr ON cr.set_id=ci.set_id
             WHERE ci.`institute_id`=?";
         $parameters = array($instituteId);
         if (!$GLOBALS['perm']->have_perm('root')) {
             $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
             $parameters[] = $GLOBALS['user']->id;
         }
+        if ($filter['course_set_name']) {
+            $query .= " AND c.name LIKE ?";
+            $parameters[] = '%' . $filter['course_set_name'];
+        }
+        if (is_array($filter['rule_types'])) {
+            $query .= " AND cr.type IN (?)";
+            $parameters[] = $filter['rule_types'];
+        }
+        $query .= " ORDER BY c.name";
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute($parameters);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

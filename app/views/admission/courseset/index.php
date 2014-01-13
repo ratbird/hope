@@ -30,6 +30,7 @@ $infobox = array('content' => $infobox,
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h2><?= _('Anmeldesets') ?></h2>
+<?= $this->render_partial('admission/courseset/_institute_choose.php') ?>
 <?php
 if ($coursesets) {
 ?>

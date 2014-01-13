@@ -2,6 +2,7 @@
 
 require_once('app/controllers/authenticated_controller.php');
 require_once('app/models/courseset.php');
+require_once('app/models/rule_administration.php');
 require_once('lib/classes/Institute.class.php');
 require_once('lib/classes/admission/CourseSet.class.php');
 require_once('lib/classes/admission/AdmissionUserList.class.php');
@@ -33,22 +34,46 @@ class Admission_CoursesetController extends AuthenticatedController {
      */
     public function index_action() {
         // Fetch the institutes that current user is assigned to...
-        $institutes = Institute::getMyInstitutes();
-        $this->myInstitutes = array();
-        // ... with at least the permission "dozent".
-        foreach ($institutes as $institute) {
-            if (in_array($institute['inst_perms'], array('dozent', 'admin'))) {
-                $this->myInstitutes[$institute['Institut_id']] = $institute;
+        $this->myInstitutes = CoursesetModel::getInstitutes();
+        $this->ruleTypes = RuleAdministrationModel::getAdmissionRuleTypes();
+        $this->coursesets = array();
+        if (Request::submitted('choose_institut')) {
+            $this->current_institut_id = Request::option('choose_institut_id');
+            $this->current_rule_types = Request::getArray('choose_rule_type');
+            $this->set_name_prefix = trim(Request::get('set_name_prefix'));
+        }
+        
+        if (!$this->current_institut_id) {
+            if ($this->myInstitutes['all']['num_sets'] < 100) {
+                $this->current_institut_id = 'all';
+            } else {
+                next($this->myInstitutes);
+                $this->current_institut_id = key($this->myInstitutes);
+                reset($this->myInstitutes);
             }
         }
-        $this->coursesets = array();
-        foreach ($this->myInstitutes as $institute) {
-            $sets = CourseSet::getCoursesetsByInstituteId($institute['Institut_id']);
+        if (!count($this->current_rule_types)) {
+            $this->current_rule_types['ParticipantRestrictedAdmission'] = true;
+        }
+        list($institut_id, $all) = explode('_', $this->current_institut_id);
+        if ($institut_id == 'all') {
+            $institutes = array_keys($this->myInstitutes);
+        } else if ($all == 'all') {
+            $institutes[] = $institut_id;
+            $institutes = array_merge($institutes, Institute::find($institut_id)->sub_institutes->pluck('institut_id'));
+        } else {
+            $institutes = array($institut_id);
+        }
+        $filter['course_set_name'] = $this->set_name_prefix;
+        $filter['rule_types'] = array_keys($this->current_rule_types);
+        foreach ($institutes as $one) {
+            $sets = CourseSet::getCoursesetsByInstituteId($one, $filter);
             foreach ($sets as $set) {
                 $courseset = new CourseSet($set['set_id']);
                 $this->coursesets[$set['set_id']] = $courseset;
             }
         }
+        uasort($this->coursesets, function($a,$b) {return strnatcasecmp($a->getName(), $b->getName());});
     }
 
     /**
@@ -327,6 +352,78 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->data = $data;
         $this->set_id = $courseset->getId();
     }
+    
+    function get_courses($seminare_condition)
+    {
+        global $perm, $user;
+
+        list($institut_id, $all) = explode('_', $this->current_institut_id);
+        // Prepare count statements
+        $query = "SELECT count(*)
+                FROM seminar_user
+                WHERE seminar_id = ? AND status IN ('user', 'autor')";
+        $count0_statement = DBManager::get()->prepare($query);
+
+        $query = "SELECT SUM(status = 'accepted') AS count2,
+                SUM(status = 'awaiting') AS count3
+                FROM admission_seminar_user
+                WHERE seminar_id = ?
+                GROUP BY seminar_id";
+        $count1_statement = DBManager::get()->prepare($query);
+
+        $parameters = array();
+
+        $sql = "SELECT seminare.seminar_id,seminare.Name as course_name,seminare.VeranstaltungsNummer as course_number,
+                admission_prelim, admission_turnout,seminar_courseset.set_id
+                FROM seminar_courseset
+                INNER JOIN courseset_rule csr ON csr.set_id=seminar_courseset.set_id AND csr.type='ParticipantRestrictedAdmission'
+                INNER JOIN seminare ON seminar_courseset.seminar_id=seminare.seminar_id
+                ";
+        if ($institut_id == 'all'  && $perm->have_perm('root')) {
+            $sql .= "WHERE 1 {$seminare_condition} ";
+        } elseif ($all == 'all') {
+            $sql .= "INNER JOIN Institute USING (Institut_id)
+            WHERE Institute.fakultaets_id = ? {$seminare_condition}
+            ";
+            $parameters[] = $institut_id;
+        } else {
+            $sql .= "WHERE seminare.Institut_id = ? {$seminare_condition}
+            ";
+            $parameters[] = $institut_id;
+        }
+        $sql .= "GROUP BY seminare.Seminar_id ORDER BY seminar_courseset.set_id, seminare.Name";
+
+        $statement = DBManager::get()->prepare($sql);
+        $statement->execute($parameters);
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $seminar_id = $row['seminar_id'];
+            $ret[$seminar_id] = $row;
+
+            $count0_statement->execute(array($seminar_id));
+            $count = $count0_statement->fetchColumn();
+
+            $ret[$seminar_id]['count_teilnehmer']     = $count;
+
+            $count1_statement->execute(array($seminar_id));
+            $counts = $count1_statement->fetch(PDO::FETCH_ASSOC);
+
+            $ret[$seminar_id]['count_prelim'] = (int)$counts['count2'];
+            $ret[$seminar_id]['count_waiting']  = (int)$counts['count3'];
+            $cs = new CourseSet($row['set_id']);
+            $ret[$seminar_id]['cs_name'] = $cs->getName();
+            $ret[$seminar_id]['distribution_time'] = $cs->getSeatDistributionTime();
+            if ($ta = $cs->getAdmissionRule('TimedAdmission')) {
+                $ret[$seminar_id]['start_time'] = $ta->getStartTime();
+                $ret[$seminar_id]['end_time'] = $ta->getEndTime();
+            }
+            if (!$cs->hasAlgorithmRun()) {
+                $ret[$seminar_id]['count_claiming'] = $cs->getNumApplicants();
+            }
+        }
+        return $ret;
+    }
+
 }
 
 ?>

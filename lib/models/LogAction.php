@@ -12,17 +12,24 @@
  * @copyright   2013 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ * @since       3.0
  */
 class LogAction extends SimpleORMap
 {
     function __construct($id = null)
     {
         $this->db_table = 'log_actions';
-        $this->has_many = array('events' => array('class_name' => 'LogEvent'));
+        $this->has_many = array(
+            'events' => array('class_name' => 'LogEvent'),
+            'on_delete' => 'delete');
         parent::__construct($id);
     }
     
+    /**
+     * Returns whether this action is active or not.
+     * 
+     * @return boolean TRUE if action is active.
+     */
     public function isActive()
     {
         return $this->active ? true : false;
@@ -46,10 +53,5 @@ class LogAction extends SimpleORMap
 
         $result = $db->query($sql);
         return $result->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-    public static function register()
-    {
-        
     }
 }

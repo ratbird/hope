@@ -1,8 +1,8 @@
 <?php
 /**
  * Loggable
- * Interface to provide necessary function for objects they want to use
- * the Stud.IP internal logging.
+ * This interface provides necessary functions to use the Stud.IP internal
+ * logging.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -13,14 +13,19 @@
  * @copyright   2013 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ * @since       3.0
+ */
+
+/**
+ * Loggable
+ * This interface provides necessary functions to use the Stud.IP internal
+ * logging.
  * 
+ * @see StudipLog
  */
 interface Loggable
 {
     
-    /**
-    * Rückgabe des Namens des Betroffenen Objektes zum Einfügen in das Template des Log-Events.
-    **/
     /**
      * This function is used to format the info_template of the
      * action used by the given event and its properties. It is the first step
@@ -34,7 +39,7 @@ interface Loggable
     public static function logFormat(LogEvent $event);
 
     /**
-     * This function is used to search for objects used by log events.
+     * This function is used to search for objects related to log events.
      * The search has to accept a string as part of the name or the id of the
      * object.
      * See search functions in StudipLog.
@@ -44,6 +49,5 @@ interface Loggable
      * @param string $action_name The name of the action.
      */
     public static function logSearch($needle, $action_name = null);
-    
     
 }

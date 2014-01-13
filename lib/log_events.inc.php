@@ -20,7 +20,7 @@
  * the ids of the range object the action possibly affected. You can provide
  * additional info as well as debug information.
  * 
- * @deprecated use EventLog::log() instead
+ * @deprecated use StudipLog::log() instead
  * @param String $action     Name of the action that took place 
  * @param mixed  $affected   Range id that was affected by the action, if any
  * @param mixed  $coaffected Range id that was possibly affected as well

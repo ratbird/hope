@@ -681,6 +681,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         LinkButton::create(_("Bearbeiten"), $this->url_for('course/admission/index/' . $seminar_id));
                     }
                     break;
+                default:
+                    echo _(PageLayout::getTitle())."<br>";
+                    echo  LinkButton::create(_("Bearbeiten"), URLHelper::getLink('', array("range_id" => $seminar_id)));
+                
             }
             echo "</tr>";
         }

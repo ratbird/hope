@@ -321,6 +321,7 @@ class ResourcesBrowse {
                                 $i=1;
                             $switched = FALSE;
                             foreach ($category['properties'] as $property) {
+                                $value = $this->searchArray['properties'][$property['property_id']] ?: false;
                                 if (!$switched && $i > count($category['properties']) / 2) {
                                     print "</td><td width=\"50%\" valign=\"top\">";
                                     $switched = TRUE;

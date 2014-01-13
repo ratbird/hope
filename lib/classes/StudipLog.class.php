@@ -128,17 +128,24 @@ class StudipLog
      * @param string $name The name of the action.
      * @param string $description The action's description.
      * @param string $info_template The template 
-     * @param string $filename Path to the file with the class.
+     * @param string $filename Path to the file with the class (relative
+     * to Stud.IP root).
      * @param string $class Name of class to be logged.
      */
     public static function registerActionFile($name, $description,
             $info_template, $filename, $class)
     {
+        $path_file = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $filename;
+        if (!file_exists($path_file)) {
+            $message = sprintf('Task class file "%s" does not exist.',
+                    $path_file);
+            throw new InvalidArgumentException($message);
+        }
         $action = new LogAction();
         $action->name = $name;
         $action->description = $description;
         $action->info_template = $info_template;
-        $action->filename = $filename;
+        $action->filename = $path_file;
         $action->class = $class;
         $action->type = 'file';
         $action->store();

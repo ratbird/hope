@@ -4,6 +4,7 @@ $(function() {
     var element = null;
     var canHideElement = false;
     var deleteIcon = $('#enrollment .icons .delete');
+    $('#enrollment .hidden-js').delete();
     function getIdFromClassname(element) {
 	var className = element.attr('class');
 	var classFragments = className.split(' ');

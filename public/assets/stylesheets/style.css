@@ -4101,3 +4101,13 @@ div.info {
 .scm .table_footer td {
   text-align: center;
 }
+
+.no-js .hidden-no-js{
+    display:none;
+}
+.js .hidden-js{
+    display: none;
+}
+.no-js #enrollment ul{
+    cursor: auto;
+}

@@ -31,6 +31,8 @@ class LogEvent extends SimpleORMap
             'user' => array(
                 'class_name' => 'User',
                 'foreign_key' => 'user_id'));
+        $this->notification_map['after_create'] = 'LogEventDidCreate';
+        $this->notification_map['before_create'] = 'LogEventWillCreate';
         parent::__construct($id);
     }
     

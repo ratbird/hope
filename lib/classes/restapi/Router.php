@@ -1,9 +1,39 @@
 <?php
+/** @namespace RESTAPI
+ *
+ * Im Namensraum RESTAPI sind alle Klassen und Funktionen versammelt,
+ * die für die RESTful Web Services von Stud.IP benötigt werden.
+ */
 namespace RESTAPI;
 use DocBlock, BadMethodCallException;
 
 /**
- * Simple and flexible router. Needs PHP >= 5.3.
+ * Die Aufgabe des Routers ist das Anlegen und Auswerten eines
+ * Mappings von sogenannten Routen (Tupel aus HTTP-Methode und Pfad)
+ * auf Code.
+ *
+ * Dazu werden zunächst Routen mittels der Funktion
+ * Router::registerRoutes registriert.
+ *
+ * Wenn dann ein HTTP-Request eingeht, kann mithilfe von
+ * Router::dispatch und HTTP-Methode bzw. Pfad der zugehörige Code
+ * gefunden und ausgeführt werden. Der Router bildet aus dem
+ * Rückgabewert des Codes ein Response-Objekt, das er als Ergebnis
+ * zurück meldet.
+ *
+ * @code
+ * $router = Router::getInstance();
+ *
+ * // register a sample Route
+ * $router->registerRoutes(new ExampleRoute);
+ *
+ * // dispatch to therein defined Routes
+ * $response = $router->dispatch('/example', 'GET');
+ *
+ * // render response
+ * $response->output();
+ *
+ * @endcode
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author  <mlunzena@uos.de>
@@ -338,7 +368,7 @@ class Router
             $result = $result->toArray();
         }
 
-        // TODO (mlunzena): result ist stÃ¤rker als body, soll das so?
+        // TODO (mlunzena): result ist stärker als body, soll das so?
         if (isset($result)) {
             $handler[0]->response->body = $result;
         }

@@ -1,5 +1,5 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  <mlunzena@uos.de>
@@ -9,7 +9,7 @@ namespace RESTAPI;
  * @condition friend_id ^[a-f0-9]{32}$
  * @condition group_id ^[a-f0-9]{32}$
  */
-class ContactsRoute extends RouteMap
+class Contacts extends \RESTAPI\RouteMap
 {
 
     public static function before()

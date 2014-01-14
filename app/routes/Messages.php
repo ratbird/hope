@@ -1,5 +1,5 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  <mlunzena@uos.de>
@@ -10,7 +10,7 @@ namespace RESTAPI;
  * @condition box ^(inbox|outbox)$
  * @condition folder_id ^[0-9]+$
  */
-class MessagesRoute extends RouteMap
+class Messages extends \RESTAPI\RouteMap
 {
     /**
      * Liefert die vorhandenen Nachrichtenordner des autorisierten
@@ -345,7 +345,7 @@ class MessagesRoute extends RouteMap
         );
 
 
-        $uri_tmpl = new UriTemplate('/user/:user_id/:box/:folder_id');
+        $uri_tmpl = new \RESTAPI\UriTemplate('/user/:user_id/:box/:folder_id');
         foreach ($folders as $folder) {
             if ($uri_tmpl->match($folder, $params)) {
 

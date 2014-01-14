@@ -1,11 +1,12 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  */
-class DiscoveryRoute extends RouteMap
+class Discovery extends \RESTAPI\RouteMap
 {
     /**
      * Schnittstellenbeschreibung

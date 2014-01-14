@@ -1,12 +1,12 @@
 <?php
-namespace RESTAPI;
-use SemType, SemClass;
+namespace RESTAPI\Routes;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  */
-class StudipRoute extends RouteMap
+class Studip extends \RESTAPI\RouteMap
 {
     /**
      * Grundlegende Systemeinstellungen
@@ -20,12 +20,12 @@ class StudipRoute extends RouteMap
                 'name'  => $item['name'],
                 'class' => $item['class'],
             );
-        }, SemType::getTypes());
+        }, \SemType::getTypes());
 
         $sem_classes = array_map(function ($item) {
             $item = (array)$item;
             return reset($item);
-        }, SemClass::getClasses());
+        }, \SemClass::getClasses());
 
         return array(
             'ALLOW_CHANGE_USERNAME' => $GLOBALS['ALLOW_CHANGE_USERNAME'],

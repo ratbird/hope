@@ -2,8 +2,6 @@
 namespace {
     require_once 'vendor/docblock-parser/docblock-parser.php';
 
-    // Add /lib to autoloader, a bit overkill but this way, we
-    StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'app/routes');
     StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor/oauth-php/library');
 
     // Set base url for URLHelper class
@@ -38,22 +36,16 @@ namespace RESTAPI {
     Consumer\Base::addType('studip', 'RESTAPI\\Consumer\\Studip');
     Consumer\Base::addType('oauth', 'RESTAPI\\Consumer\\OAuth');
 
-#    $router->registerConsumer('oauth', new Consumer\OAuth);
-#    $router->registerConsumer('basic', new Consumer\HTTP);
-#    $router->registerConsumer('studip', new Consumer\Studip);
+    // $router->registerConsumer('oauth', new Consumer\OAuth);
+    // $router->registerConsumer('basic', new Consumer\HTTP);
+    // $router->registerConsumer('studip', new Consumer\Studip);
 
     // Register default routes
-    $router->registerRoutes(new ContactsRoute);
-    $router->registerRoutes(new CourseRoute);
-    $router->registerRoutes(new DiscoveryRoute);
-    $router->registerRoutes(new EventsRoute);
-    $router->registerRoutes(new FilesRoute);
-    $router->registerRoutes(new ForumRoute);
-    $router->registerRoutes(new MessagesRoute);
-    $router->registerRoutes(new NewsRoute);
-    $router->registerRoutes(new ScheduleRoute);
-    $router->registerRoutes(new SemesterRoute);
-    $router->registerRoutes(new StudipRoute);
-    $router->registerRoutes(new UserRoute);
-    $router->registerRoutes(new WikiRoute);
+    $routes = words('Contacts Course Discovery Events Files Forum Messages News Schedule Semester Studip User Wiki');
+
+    foreach ($routes as $route) {
+        require_once "app/routes/$route.php";
+        $class = "\\RESTAPI\\Routes\\$route";
+        $router->registerRoutes(new $class);
+    }
 }

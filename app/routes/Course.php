@@ -1,5 +1,5 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  <mlunzena@uos.de>
@@ -8,7 +8,7 @@ namespace RESTAPI;
  * @condition course_id ^[a-f0-9]{32}$
  * @condition user_id ^[a-f0-9]{32}$
  */
-class CourseRoute extends RouteMap
+class Course extends \RESTAPI\RouteMap
 {
 
     /**

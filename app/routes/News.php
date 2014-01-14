@@ -1,15 +1,16 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
+ *
  * @condition news_id ^[0-9a-f]{32}$
  * @condition course_id ^[0-9a-f]{32}$
  * @condition user_id ^[0-9a-f]{32}$
  * @condition comment_id ^[0-9a-f]{32}$
  */
-class NewsRoute extends RouteMap
+class News extends \RESTAPI\RouteMap
 {
     public static function before()
     {

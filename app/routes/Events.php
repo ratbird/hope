@@ -1,19 +1,18 @@
 <?php
+namespace RESTAPI\Routes;
+use Calendar, DbCalendarEventList, SingleCalendar, SingleDate, Seminar, Issue,
+    CalendarExportFile, CalendarWriterICalendar, SemesterData;
+
 /**
  * @author  André Klaßen <andre.klassen@elan-ev.de>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  *
  * @condition course_id ^[a-f0-9]{32}$
  * @condition user_id ^[a-f0-9]{32}$
  * @condition semester_id ^[a-f0-9]{32}$
  */
-
-namespace RESTAPI;
-
-use Calendar, DbCalendarEventList, SingleCalendar, SingleDate, Seminar, Issue,
-    CalendarExportFile, CalendarWriterICalendar, SemesterData;
-
-class EventsRoute extends RouteMap
+class Events extends \RESTAPI\RouteMap
 {
     public function before($router, &$handler, &$parameters)
     {

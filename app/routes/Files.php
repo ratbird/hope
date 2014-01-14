@@ -1,5 +1,5 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
@@ -9,7 +9,7 @@ namespace RESTAPI;
  * @condition course_id ^[a-f0-9]{32}$
  * @condition file_id ^[a-f0-9]{32}$
  */
-class FilesRoute extends RouteMap
+class Files extends \RESTAPI\RouteMap
 {
     // Bootstrap:
     // - Check if file exists and if it is accessable

@@ -1,14 +1,14 @@
 <?php
-namespace RESTAPI;
-use Request, SemesterData;
+namespace RESTAPI\Routes;
 
 /**
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
- * @todo
+ *
  * @condition semester_id ^[0-9a-f]{32}$
  */
-class SemesterRoute extends RouteMap
+class Semester extends \RESTAPI\RouteMap
 {
     /**
      * Returns a list of all semesters.
@@ -17,7 +17,7 @@ class SemesterRoute extends RouteMap
      */
     public function getSemesters()
     {
-        $semesters = SemesterData::GetSemesterArray();
+        $semesters = \SemesterData::GetSemesterArray();
         return $this->paginated(array_slice($semesters, $this->offset, $this->limit), count($semesters));
     }
 
@@ -28,9 +28,9 @@ class SemesterRoute extends RouteMap
      */
     public function getSemester($id)
     {
-        $temp = SemesterData::getInstance()->getSemesterData($id);
+        $temp = \SemesterData::getInstance()->getSemesterData($id);
         if (!$temp) {
-            throw new RouterException(404);
+            $this->notFound();
         }
 
         return array(

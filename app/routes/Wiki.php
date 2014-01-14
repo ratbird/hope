@@ -1,12 +1,12 @@
 <?php
-namespace RESTAPI;
+namespace RESTAPI\Routes;
 
 /**
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  * @condition course_id ^[0-9a-f]{32}$
  */
-class WikiRoute extends RouteMap
+class Wiki extends \RESTAPI\RouteMap
 {
     public function before()
     {

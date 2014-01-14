@@ -1,15 +1,15 @@
 <?php
+namespace RESTAPI\Routes;
+
 /**
  * @author  André Klaßen <andre.klassen@elan-ev.de>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  *
  * @condition user_id ^[a-f0-9]{32}$
  * @condition semester_id ^[a-f0-9]{32}$
  */
-
-namespace RESTAPI;
-
-class ScheduleRoute extends RouteMap
+class Schedule extends \RESTAPI\RouteMap
 {
 
     /**

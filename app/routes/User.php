@@ -1,14 +1,13 @@
 <?php
-
-namespace RESTAPI;
-use DBManager, PDO, StudipPDO, User, Avatar;
+namespace RESTAPI\Routes;
 
 /**
  * @author  André Klaßen <andre.klassen@elan-ev.de>
+ * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  * @condition user_id ^[0-9a-f]{32}$
  */
-class UserRoute extends RouteMap
+class User extends \RESTAPI\RouteMap
 {
 
     /**
@@ -21,7 +20,7 @@ class UserRoute extends RouteMap
     {
         $user_id = $user_id ?: $GLOBALS['user']->id;
 
-        $user = User::find($user_id);
+        $user = \User::find($user_id);
         if (!$user) {
             $this->halt(404, sprintf('User %s not found', $user_id));
         }
@@ -64,7 +63,7 @@ class UserRoute extends RouteMap
         $query = "SELECT value
                   FROM user_config
                   WHERE field = ? AND user_id = ?";
-        $statement = DBManager::get()->prepare($query);
+        $statement = \DBManager::get()->prepare($query);
         $statement->execute(array('SKYPE_NAME', $user_id));
         $user['skype'] = $statement->fetchColumn() ?: '';
         $statement->closeCursor();
@@ -96,7 +95,7 @@ class UserRoute extends RouteMap
             $this->error(400, 'Must not delete yourself');
         }
 
-        $user = User::find($user_id);
+        $user = \User::find($user_id);
         $user->delete();
 
         $this->status(204);
@@ -122,7 +121,7 @@ class UserRoute extends RouteMap
                   LEFT JOIN Institute AS i1 ON (i0.fakultaets_id = i1.Institut_id)
                   WHERE visible = 1 AND user_id = :user_id
                   ORDER BY priority ASC";
-        $statement = DBManager::get()->prepare($query);
+        $statement = \DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
         $statement->execute();
 
@@ -131,7 +130,7 @@ class UserRoute extends RouteMap
             'study' => array(),
         );
 
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
             if ($row['perms'] === 'user') {
                 $institutes['study'][] = $row;
             } else {

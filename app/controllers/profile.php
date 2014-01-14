@@ -73,6 +73,8 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
+        process_news_commands($this->about_data);
+        
         if ($_SESSION['sms_msg']) {
             $this->msg = $_SESSION['sms_msg'];
             unset($_SESSION['sms_msg']);

@@ -27,7 +27,7 @@ class JSONRenderer extends DefaultRenderer
             $response['Content-Type'] = $this->contentType() . ';charset=utf-8';
         }
 
-        if ($response->body) {
+        if (isset($response->body)) {
             $response->body = json_encode(studip_utf8encode($response->body));
         }
     }

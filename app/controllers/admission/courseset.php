@@ -229,7 +229,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function instcourses_action($coursesetId='') {
-        CSRFProtection::verifyUnsafeRequest();
+        //CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);

@@ -19,7 +19,7 @@
             }
             ?>
                 <li id="<?= $course['seminar_id'] ?>" rel="course">
-                    <input type="checkbox" class="studip_checkbox" name="courses[]" value="<?= $course['seminar_id'] ?>"<?= $selected ?>/> <a href=""><?= $title ?></a>
+                    <input type="checkbox" class="studip_checkbox" name="courses[]" value="<?= $course['seminar_id'] ?>"<?= $selected ?>/> <a href=""><?= htmlReady($title) ?></a>
                 </li>
         <?php } ?>
             </ul>

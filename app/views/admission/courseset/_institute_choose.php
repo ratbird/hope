@@ -25,7 +25,7 @@
     <input type="text" name="set_name_prefix" value="<?=htmlReady($set_name_prefix)?>" size="40">
     </div>
     <div style="font-weight:bold">
-    <b><?=_("Enthaltene Regeln:")?> </b>
+    <?=_("Enthaltene Regeln:")?> 
     </div>
     <div>
     <? foreach ($ruleTypes as $type => $detail) : ?>
@@ -34,6 +34,12 @@
         <?= htmlReady($detail['name']);?>
         </label>
     <? endforeach; ?>
+    </div>
+    <div style="font-weight:bold">
+    <?=_("Zugewiesene Veranstaltungen aus diesem Semester:")?> 
+    </div>
+    <div>
+    <?=SemesterData::GetSemesterSelector(array('name'=>'select_semester_id'), $current_semester_id, 'semester_id', true)?>
     </div>
     <div>
     <?= Studip\Button::create(_('Auswählen'), 'choose_institut', array('title' => _("Einrichtung auswählen"))) ?>

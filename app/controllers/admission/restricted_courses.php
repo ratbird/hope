@@ -37,20 +37,24 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         if (Request::isPost()) {
             if (Request::submitted('choose_institut')) {
                 $this->current_institut_id = Request::option('choose_institut_id');
-                $this->current_semester_id = Request::get('select_semester_id', $_SESSION['default_sem']);
+                $this->current_semester_id = Request::option('select_semester_id');
                 $this->sem_name_prefix = trim(Request::get('sem_name_prefix'));
-            }
-            $semester = Semester::find($this->current_semester_id);
-            $sem_condition .= "AND seminare.start_time <=" . (int)$semester["beginn"]." AND (" . (int)$semester["beginn"] . " <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
-            if ($this->sem_name_prefix) {
-                $sem_condition .= sprintf('AND (seminare.Name LIKE %1$s OR seminare.VeranstaltungsNummer LIKE %1$s) ', DBManager::get()->quote($this->sem_name_prefix . '%'));
             }
         }
         if (!$this->current_institut_id) {
             $this->current_institut_id = 'all';
         }
-        
-        if ($GLOBALS['perm']->have_perm('admin')) {
+        if (!$this->current_semester_id) {
+            $this->current_semester_id = $_SESSION['_default_sem'];
+        } else {
+            $_SESSION['_default_sem'] = $this->current_semester_id;
+        }
+        $semester = Semester::find($this->current_semester_id);
+        $sem_condition .= "AND seminare.start_time <=" . (int)$semester["beginn"]." AND (" . (int)$semester["beginn"] . " <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+        if ($this->sem_name_prefix) {
+            $sem_condition .= sprintf('AND (seminare.Name LIKE %1$s OR seminare.VeranstaltungsNummer LIKE %1$s) ', DBManager::get()->quote($this->sem_name_prefix . '%'));
+        }
+        if ($GLOBALS['perm']->have_perm('dozent')) {
             $this->my_inst = $this->get_institutes($sem_condition);
         }
         $this->courses = $this->get_courses($sem_condition);

@@ -33,16 +33,26 @@ class Admission_CoursesetController extends AuthenticatedController {
      * Show all coursesets the current user has access to.
      */
     public function index_action() {
-        // Fetch the institutes that current user is assigned to...
-        $this->myInstitutes = CoursesetModel::getInstitutes();
         $this->ruleTypes = RuleAdministrationModel::getAdmissionRuleTypes();
         $this->coursesets = array();
         if (Request::submitted('choose_institut')) {
             $this->current_institut_id = Request::option('choose_institut_id');
             $this->current_rule_types = Request::getArray('choose_rule_type');
             $this->set_name_prefix = trim(Request::get('set_name_prefix'));
+            $this->current_semester_id = Request::option('select_semester_id');
         }
-        
+        if ($this->current_semester_id === null) {
+            $this->current_semester_id = $_SESSION['_default_sem'];
+        } else if ($this->current_semester_id !== '0') {
+            $_SESSION['_default_sem'] = $this->current_semester_id;
+        }
+        if (!count($this->current_rule_types) && !Request::submitted('choose_institut')) {
+            $this->current_rule_types['ParticipantRestrictedAdmission'] = true;
+        }
+        $filter['course_set_name'] = $this->set_name_prefix;
+        $filter['semester_id'] = $this->current_semester_id != 'all' ? $this->current_semester_id : null;
+        $filter['rule_types'] = array_keys($this->current_rule_types);
+        $this->myInstitutes = CoursesetModel::getInstitutes($filter);
         if (!$this->current_institut_id) {
             if ($this->myInstitutes['all']['num_sets'] < 100) {
                 $this->current_institut_id = 'all';
@@ -51,9 +61,6 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $this->current_institut_id = key($this->myInstitutes);
                 reset($this->myInstitutes);
             }
-        }
-        if (!count($this->current_rule_types)) {
-            $this->current_rule_types['ParticipantRestrictedAdmission'] = true;
         }
         list($institut_id, $all) = explode('_', $this->current_institut_id);
         if ($institut_id == 'all') {
@@ -64,8 +71,7 @@ class Admission_CoursesetController extends AuthenticatedController {
         } else {
             $institutes = array($institut_id);
         }
-        $filter['course_set_name'] = $this->set_name_prefix;
-        $filter['rule_types'] = array_keys($this->current_rule_types);
+
         foreach ($institutes as $one) {
             $sets = CourseSet::getCoursesetsByInstituteId($one, $filter);
             foreach ($sets as $set) {

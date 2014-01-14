@@ -65,7 +65,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
                     <?php } else { ?>
                 <input type="hidden" name="institutes[]" value="<?= $institute['Institut_id'] ?>"/>
                     <?php } ?>
-                    <?= $institute['Name'] ?>
+                    <?= htmlReady($institute['Name']) ?>
                 <br/>
                 <?php } ?>
             <?php } ?>
@@ -89,7 +89,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
         <div id="instcourses">
         <?= $coursesTpl; ?>
         </div>
-        <? if (count($courseIds)) : ?>
+        <? if (count($courseIds) && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) : ?>
             <div>
                     <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
                         $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),
@@ -135,44 +135,46 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
     </fieldset>
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
-    <label class="caption">
-        <?= _('Nutzerlisten zuordnen:') ?>
-        </label>
-        <?php if ($myUserlists) { ?>
+    <? if ($courseset && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) :?>
+        <label class="caption">
+            <?= _('Nutzerlisten zuordnen:') ?>
+            </label>
+            <?php if ($myUserlists) { ?>
+                <?php
+                foreach ($myUserlists as $list) {
+                    $checked = '';
+                    if (in_array($list->getId(), $userlistIds)) {
+                        $checked = ' checked="checked"';
+                    }
+                ?>
+                <input type="checkbox" name="userlists[]" value="<?= $list->getId() ?>"<?= $checked ?>/> <?= $list->getName() ?><br/>
+                <?php } ?>
+    
+            <?php } else { ?>
+                <i><?=  _('Sie haben noch keine Nutzerlisten angelegt.') ?></i>
             <?php
-            foreach ($myUserlists as $list) {
-                $checked = '';
-                if (in_array($list->getId(), $userlistIds)) {
-                    $checked = ' checked="checked"';
-                }
+            }?>
+            <? if ($courseset) : ?>
+            <div>
+                    <?= LinkButton::create(_('Liste der Nutzer'),
+                        $controller->url_for('admission/courseset/factored_users/' . $courseset->getId()),
+                        array(
+                            'rel' => 'lightbox'
+                            )
+                        ); ?>
+            </div>
+            <? endif ?>
+            <?php
+            // Keep lists that were assigned by other users.
+            foreach ($userlistIds as $list) {
+                if (!in_array($list, array_keys($myUserlists))) {
             ?>
-            <input type="checkbox" name="userlists[]" value="<?= $list->getId() ?>"<?= $checked ?>/> <?= $list->getName() ?><br/>
-            <?php } ?>
-
-        <?php } else { ?>
-            <i><?=  _('Sie haben noch keine Nutzerlisten angelegt.') ?></i>
-        <?php
-        }?>
-        <? if ($courseset) : ?>
-        <div>
-                <?= LinkButton::create(_('Liste der Nutzer'),
-                    $controller->url_for('admission/courseset/factored_users/' . $courseset->getId()),
-                    array(
-                        'rel' => 'lightbox'
-                        )
-                    ); ?>
-        </div>
-        <? endif ?>
-        <?php
-        // Keep lists that were assigned by other users.
-        foreach ($userlistIds as $list) {
-            if (!in_array($list, array_keys($myUserlists))) {
-        ?>
-        <input type="hidden" name="userlists[]" value="<?= $list ?>"/>
-        <?php
+            <input type="hidden" name="userlists[]" value="<?= $list ?>"/>
+            <?php
+                }
             }
-        }
-        ?>
+            ?>
+        <? endif ?>
         <label for="infotext" class="caption">
             <?= _('weitere Hinweise:') ?>
         </label>

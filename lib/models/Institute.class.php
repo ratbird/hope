@@ -48,7 +48,7 @@ class Institute extends SimpleORMap
      */
     static function findByFaculty($fakultaets_id)
     {
-        return self::findByFakultaets_id($fakultaets_id, "ORDER BY Name ASC");
+        return self::findBySQL("fakultaets_id=? AND fakultaets_id <> institut_id ORDER BY Name ASC", array($fakultaets_id));
     }
     /**
      * returns an array of all institutes ordered by faculties and name
@@ -130,6 +130,7 @@ class Institute extends SimpleORMap
                 'sub_institutes' => array(
                         'class_name' => 'Institute',
                         'assoc_foreign_key' => 'fakultaets_id',
+                        'assoc_func' => 'findByFaculty',
                         'on_delete' => 'delete',
                         'on_store' => 'store'),
                 );

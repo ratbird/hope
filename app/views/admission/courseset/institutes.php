@@ -11,7 +11,7 @@
     <li id="<?= $institute ?>">
         <input type="hidden" name="institutes[]" value="<?= $institute ?>" class="institute">
         <span class="hover_box">
-            <?= $via_ajax ? studip_utf8encode($data['Name']) : $data['Name'] ?>
+            <?= $via_ajax ? studip_utf8encode(htmlReady($data['Name'])) : htmlReady($data['Name']) ?>
             <span class="hover_symbols">
                 <?= Assets::img('icons/16/blue/trash.png', array(
                             'alt' => _('Einrichtung entfernen'),

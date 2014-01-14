@@ -18,7 +18,7 @@
                 $selected = '';
             }
             ?>
-                <li id="<?= $course['seminar_id'] ?>" rel="course">
+                <li id="<?= $course['seminar_id'] ?>" <?= ($course['set_id'] && !$selected ? 'rel="course-forbidden"' : 'rel="course"')?>>
                     <input type="checkbox" class="studip_checkbox" name="courses[]" value="<?= $course['seminar_id'] ?>"<?= $selected ?>/> <a href=""><?= htmlReady($title) ?></a>
                 </li>
         <?php } ?>
@@ -50,6 +50,11 @@
                     }
                 },
                 'course': {
+                    'icon': {
+                        'image': STUDIP.ASSETS_URL+'images/icons/16/blue/seminar.png'
+                    }
+                },
+                'course-forbidden': {
                     'icon': {
                         'image': STUDIP.ASSETS_URL+'images/icons/16/blue/seminar.png'
                     }

@@ -2,64 +2,45 @@
 
 class CoursesetModel {
 
-    public function getInstCourses($instituteIds, $coursesetId='', $selectedCourses=array()) {
+    public function getInstCourses($instituteIds, $coursesetId='', $selectedCourses=array(), $semester_id = null) {
         // Get semester dates for course sorting.
-        $sem = SemesterData::getInstance();
-        $semesters = $sem->GetSemesterArray();
-        $currentSemester = $sem->getCurrentSemesterData();
-        // Construct SQL query.
-        $select = "SELECT DISTINCT s.`seminar_id`";
-        $from = " FROM `seminare` s JOIN `seminar_inst` si ON (s.`Seminar_id`=si.`seminar_id`)";
-        $where = " WHERE (s.`start_time`=-1 OR s.`start_time`+s.`duration_time`>=?) 
-            AND si.`institut_id` IN ('".implode("', '", $instituteIds)."')";
-        $order = " ORDER BY s.`start_time` DESC, s.`VeranstaltungsNummer` ASC, s.`Name` ASC";
-        $parameters = array($currentSemester['beginn']);
-        /*
-         * Course set ID given, we need do include all courses that are already
-         * assigned to the given set.
-         */
+        $currentSemester = $semester_id ? Semester::find($semester_id) : Semester::findCurrent();
+        
+        $db = DBManager::get();
+        $courses = $db->fetchFirst(
+            "SELECT si.seminar_id FROM seminar_inst si
+            INNER JOIN seminare s USING(seminar_id)
+            WHERE  s.start_time <= ? AND (? <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
+            AND si.Institut_id IN(?)", array($currentSemester->beginn, $currentSemester->beginn, $instituteIds));
         if ($coursesetId) {
-            $from .= " JOIN `seminar_courseset` sc ON (s.`Seminar_id`=sc.`seminar_id`)";
-            $where .= " OR sc.`set_id`=?";
-            $parameters[] = $coursesetId;
+            $courses = array_merge($courses, $db->fetchFirst(
+                    "SELECT seminar_id FROM seminar_courseset sc
+                     WHERE set_id = ?", array($coursesetId)));
         }
-        // Courses that have been selected manually in configuration dialogue.
+        
         if ($selectedCourses) {
-            $where .= " OR si.`seminar_id` IN ('".implode("', '", $selectedCourses)."')";
+            $courses = array_merge($courses, $selectedCourses);
         }
-        $query = $select.$from.$where.$order;
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute($parameters);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $courses = array();
-        // Get all found courses...
-        foreach ($data as $entry) {
-            $course = new Course($entry['seminar_id']);
-            // ... set correct semester for multi-semester courses ...
-            if ($course->duration_time == -1) {
-                $semester_id = $currentSemester['semester_id'];
-            } else {
-                $semester_id = $sem->GetSemesterIdByDate($course->start_time+$course->duration_time);
-            }
-            // Check if semester name is already set and set it if necessary.
-            if (!$courses[$semester_id]['name']) {
-                foreach ($semesters as $semester) {
-                    if ($semester['semester_id'] == $semester_id) {
-                        $courses[$semester_id]['name'] = $semester['name'];
-                        break;
-                    }
-                }
-            }
+        
+        $data = array();
+        $callable = function ($course) use (&$data) {
+            $semester = $course->end_semester ?: Semester::findCurrent();
+            $data[$semester->id]['name'] = $semester->name;
+            $set_id = DBManager::get()->fetchColumn(
+                    "SELECT set_id FROM seminar_courseset WHERE seminar_id=?", array($course->id));
             // ... and sort them in at the right semester.
-            $courses[$semester_id]['courses'][$course->Seminar_id] =
-                array(
+            $data[$semester->id]['courses'][$course->id] =
+            array(
                     'seminar_id' => $course->Seminar_id,
                     'VeranstaltungsNummer' => $course->VeranstaltungsNummer,
-                    'Name' => $course->Name,
-                    'admission_turnout' => $course->admission_turnout
-                );
-        }
-        return $courses;
+                    'Name' => $course->Name . ($course->duration_time == -1 ? ' ' . _('(unbegrenzt)') : ''),
+                    'admission_turnout' => $course->admission_turnout,
+                    'set_id' => $set_id
+            );
+        };
+        Course::findEachMany($callable, array_unique($courses),"ORDER BY start_time DESC, VeranstaltungsNummer ASC, Name ASC");
+        
+        return $data;
     }
 
     static function getInstitutes($filter = array())

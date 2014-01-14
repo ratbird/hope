@@ -264,16 +264,24 @@ class StudipLog
         }
 
         // search for deleted users
+        // 
         // The name of the user is part of info field,
-        // old id (still in DB) is in affected column
+        // old id (still in DB) is in affected column.
+        // 
+        // The log action "USER_DEL" was removed from the list of initially
+        // registered log actions in the past.
+        // Search for the user if it is still in database. If not, the search
+        // for deleted users is not possible.
         $log_action_deleted_user = SimpleORMapCollection::createFromArray(
                 LogAction::findByName('USER_DEL'))->first();
-        $log_events_deleted_user = LogEvent::findBySQL(
-                "action_id = ? AND info LIKE CONCAT('%', ?, '%')",
-                array($log_action_deleted_user->getId(), $needle));
-        foreach ($log_events_deleted_user as $log_event) {
-            $name = sprintf('%s (%s)', $log_event->info, _('gelöscht'));
-            $result[] = array($log_event->affected_range_id, $name);
+        if ($log_action_deleted_user) {
+            $log_events_deleted_user = LogEvent::findBySQL(
+                    "action_id = ? AND info LIKE CONCAT('%', ?, '%')",
+                    array($log_action_deleted_user->getId(), $needle));
+            foreach ($log_events_deleted_user as $log_event) {
+                $name = sprintf('%s (%s)', $log_event->info, _('gelöscht'));
+                $result[] = array($log_event->affected_range_id, $name);
+            }
         }
 
         return $result;

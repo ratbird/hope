@@ -59,12 +59,15 @@ namespace RESTAPI {
 
         // Actual dispatch
         $response = $router->dispatch($uri, $method);
-        $response->output();
 
         // Tear down
         if ($user_id) {
             restoreLanguage();
         }
+
+        // Send output
+        $response->output();
+
     } catch (RouterException $e) {
         $status = sprintf('%s %u %s',
                           $_SERVER['SERVER_PROTOCOL'] ?: 'HTTP/1.1',

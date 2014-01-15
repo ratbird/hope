@@ -2,7 +2,7 @@
 
 /**
  * LimitedAdmission.class.php
- * 
+ *
  * Represents rules for admission to a limited number of courses.
  *
  * This program is free software; you can redistribute it and/or
@@ -53,17 +53,17 @@ class LimitedAdmission extends AdmissionRule
     public function delete() {
         parent::delete();
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `limitedadmissions` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `limitedadmissions`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
         // Delete all custom max numbers.
-        $stmt = DBManager::get()->prepare("DELETE FROM `userlimits` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `userlimits`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
     }
 
     /**
-     * Users can specify their own maximal number of courses they want 
+     * Users can specify their own maximal number of courses they want
      * to be registered for. This method gets the specified value for the
      * given user or the max number that has been specified  by the rule if no
      * custom number was set.
@@ -75,7 +75,7 @@ class LimitedAdmission extends AdmissionRule
     {
         // Initially we use the number given per admission rule.
         $maxNumber = $this->maxNumber;
-        $stmt = DBManager::get()->prepare("SELECT `maxnumber` 
+        $stmt = DBManager::get()->prepare("SELECT `maxnumber`
             FROM `userlimits` WHERE rule_id=? AND user_id=?");
         $stmt->execute(array($this->id, $userId));
         // The user has given some custom number.
@@ -87,7 +87,7 @@ class LimitedAdmission extends AdmissionRule
     }
 
     /**
-     * Gets some text that describes what this AdmissionRule (or respective 
+     * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
     public static function getDescription() {
@@ -105,12 +105,12 @@ class LimitedAdmission extends AdmissionRule
     {
         return (int)$this->maxNumber;
     }
-    
+
     public function getMaxNumberForUser($userId)
     {
-        return min($this->maxNumber, $this->getCustomMaxNumber($userId)); 
+        return min($this->maxNumber, $this->getCustomMaxNumber($userId));
     }
-    
+
 
     /**
      * Return this rule's name.
@@ -121,7 +121,7 @@ class LimitedAdmission extends AdmissionRule
 
     /**
      * Gets the template that provides a configuration GUI for this rule.
-     * 
+     *
      * @return String
      */
     public function getTemplate() {
@@ -129,7 +129,7 @@ class LimitedAdmission extends AdmissionRule
         $tpl = $GLOBALS['template_factory']->open('admission/rules/configure');
         $tpl->set_attribute('rule', $this);
         $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        // Now open specific template for this rule and insert base template. 
+        // Now open specific template for this rule and insert base template.
         $tpl2 = $factory->open('configure');
         $tpl2->set_attribute('rule', $this);
         $tpl2->set_attribute('tpl', $tpl->render());
@@ -152,7 +152,7 @@ class LimitedAdmission extends AdmissionRule
     }
 
     /**
-     * Does the current rule allow the given user to register as participant 
+     * Does the current rule allow the given user to register as participant
      * in the given course? That only happens when the user has no more than
      * the given number of registrations at the other courses in the course set.
      *
@@ -166,15 +166,16 @@ class LimitedAdmission extends AdmissionRule
         // Check for rule validity time frame.
         if ($this->checkTimeFrame()) {
             // How many courses from this set has the user already registered for?
-            $stmt = DBManager::get()->prepare("SELECT `user_id`
+            $db = DBManager::get();
+            $number = $db->fetchColumn("SELECT COUNT(*)
                 FROM `seminar_user` WHERE `user_id`=? AND `Seminar_id` IN (
-                    SELECT `Seminar_id` FROM `seminar_courseset` WHERE `set_id`=?)");
-            $stmt->execute(array($userId, $this->courseSetId));
-            $number = sizeof($stmt->fetchAll(PDO::FETCH_ASSOC));
-            // Check if the number is smaller than admission rule limit 
-            // or own user limit.
-            if (!($number < 
-                    $this->getMaxNumberForUser($userId))) {
+                    SELECT `Seminar_id` FROM `seminar_courseset` WHERE `set_id`=?)", array($userId, $this->courseSetId));
+            $number += $db->fetchColumn("SELECT COUNT(*)
+                FROM `admission_seminar_user` WHERE `user_id`=? AND `Seminar_id` IN (
+                    SELECT `Seminar_id` FROM `seminar_courseset` WHERE `set_id`=?)", array($userId, $this->courseSetId));
+            // Check if the number is smaller than admission rule limit
+            if (!($number <
+                    $this->getMaxNumber($userId))) {
                 $errors[] = $this->getMessage($userId);
             }
         }
@@ -185,7 +186,7 @@ class LimitedAdmission extends AdmissionRule
      * Uses the given data to fill the object values. This can be used
      * as a generic function for storing data if the concrete rule type
      * isn't known in advance.
-     * 
+     *
      * @param Array $data
      * @return AdmissionRule This object.
      */
@@ -196,7 +197,7 @@ class LimitedAdmission extends AdmissionRule
     }
 
     /**
-     * Sets a new maximal number of courses that the given user can 
+     * Sets a new maximal number of courses that the given user can
      * register for.
      *
      * @param  String userId
@@ -205,11 +206,11 @@ class LimitedAdmission extends AdmissionRule
      */
     public function setCustomMaxNumber($userId, $maxNumber)
     {
-        $stmt = DBManager::get()->prepare("INSERT INTO `userlimits` 
-            (`rule_id`, `user_id`, `maxnumber`, `mkdate`, `chdate`) 
-            VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE 
+        $stmt = DBManager::get()->prepare("INSERT INTO `userlimits`
+            (`rule_id`, `user_id`, `maxnumber`, `mkdate`, `chdate`)
+            VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
             `maxnumber`=VALUES(`maxnumber`), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $userId, 
+        $stmt->execute(array($this->id, $userId,
             min($this->maxNumber, $maxNumber), time(), time()));
         return $this;
     }
@@ -270,7 +271,7 @@ class LimitedAdmission extends AdmissionRule
         }
         return $errors;
     }
-    
+
     public function getMessage($userId = null)
     {
         $message = parent::getMessage();

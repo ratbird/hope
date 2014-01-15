@@ -191,7 +191,7 @@ class StudipPDO extends PDO
     /**
      * Executes sql statement with given parameters,
      * returns number of affected rows, use only for INSERT,UPDATE etc
-     * 
+     *
      * @param string $statement SQL statement to execute
      * @param array $input_parameters parameters for statement
      * @return integer number of affected rows
@@ -209,7 +209,7 @@ class StudipPDO extends PDO
      * Executes sql statement with given parameters, and fetch results
      * as sequential array, each row as associative array
      * optionally apply given callable on each row, with current row and key as parameter
-     * 
+     *
      * @param string $statement SQL statement to execute
      * @param array $input_parameters parameters for statement
      * @param callable $callable callable to be applied to each of the rows
@@ -221,7 +221,6 @@ class StudipPDO extends PDO
         $st->execute($input_parameters);
         $data = $st->fetchAll(PDO::FETCH_ASSOC);
         if (is_callable($callable)) {
-            $data = array();
             foreach ($data as $key => $row) {
                 $data[$key] = call_user_func($callable, $row, $key);
             }
@@ -230,7 +229,7 @@ class StudipPDO extends PDO
     }
 
     /**
-     * Executes sql statement with given parameters, and fetch only 
+     * Executes sql statement with given parameters, and fetch only
      * the values from first column as sequential array
      * optionally apply given callable on each row, with current value and key as parameter
      *
@@ -238,7 +237,7 @@ class StudipPDO extends PDO
      * @param string $statement SQL statement to execute
      * @param array $input_parameters parameters for statement
      * @param callable $callable callable to be applied to each of the rows
-     * @return array result set 
+     * @return array result set
      */
     public function fetchFirst($statement, $input_parameters = null, $callable = null)
     {
@@ -258,12 +257,12 @@ class StudipPDO extends PDO
      * as associative array, first columns value is used as a key, the others are grouped
      * optionally apply given callable on each grouped row, with current row and key as parameter
      * if no callable is given, 'current' is used, to return the first entry of the grouped row
-     * 
+     *
      * @see StudipPDOStatement::fetchGrouped()
      * @param string $statement SQL statement to execute
      * @param array $input_parameters parameters for statement
      * @param callable $callable callable to be applied to each of the rows
-     * @return array result set 
+     * @return array result set
      */
     public function fetchGrouped($statement, $input_parameters = null, $callable = null)
     {
@@ -535,10 +534,10 @@ class StudipPDOStatement implements IteratorAggregate
 
     /**
      * Returns the result set rows as a grouped associative array. The first field
-     * of each row is used as the array's keys. 
+     * of each row is used as the array's keys.
      * optionally apply given callable on each grouped row to aggregate results
      * if no callable is given, 'current' is used, to return the first entry of the grouped row
-     * 
+     *
      * @param int   $fetch_style    Either PDO::FETCH_ASSOC or PDO::FETCH_COLUMN
      * @param callable $group_func  function to aggregate grouped rows
      * @return array grouped result set
@@ -571,7 +570,7 @@ class StudipPDOStatement implements IteratorAggregate
     /**
      * Returns result rows as associative array, first colum as key,
      * second as value. Use only when selecting 2 columns
-     * 
+     *
      * @return array result set
      */
     public function fetchPairs()
@@ -581,7 +580,7 @@ class StudipPDOStatement implements IteratorAggregate
 
     /**
      * Returns sequential array with values from first colum
-     * 
+     *
      * @return array first row result set
      */
     public function fetchFirst()
@@ -591,7 +590,7 @@ class StudipPDOStatement implements IteratorAggregate
 
     /**
      * Returns only first row of result set as associative array
-     * 
+     *
      * @return array first row result set
      */
     public function fetchOne()

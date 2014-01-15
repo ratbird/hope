@@ -43,3 +43,4 @@
     <? endif ?>
     </div>
 <? endif ?>
+<script>STUDIP.enrollment();</script>

@@ -8,11 +8,11 @@
 </label>
 <div class="form_group">
     <?= _('von') ?>
-    <input type="date" size="8" maxlength="10" name="start_date" 
+    <input type="text" size="8" maxlength="10" name="start_date" 
         id="start_date" value="<?= $rule->getStartTime() ? 
         date('d.m.Y', $rule->getStartTime()) : '' ?>" data-max-date=""/>
     <?= _('bis') ?>
-    <input type="date" size="8" maxlength="10" name="end_date" 
+    <input type="text" size="8" maxlength="10" name="end_date" 
         id="end_date" value="<?= $rule->getEndTime() ? 
         date('d.m.Y', $rule->getEndTime()) : '' ?>" data-min-date=""/>
     <script>

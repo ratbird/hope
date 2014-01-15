@@ -8,10 +8,11 @@
     <?= _('Start des Anmeldezeitraums') ?>:
 </label>
 <div class="form_group">
-    <input type="date" name="startdate" id="startdate" size="8"
-        value="<?= $rule->getStartTime() ? date('d.m.Y', $rule->getStartTime()) : '' ?>"/>
+    <input type="text" size="8" maxlength="10" name="startdate" 
+        id="startdate" value="<?= $rule->getStartTime() ? 
+        date('d.m.Y', $rule->getStartTime()) : '' ?>" data-max-date=""/>
     &nbsp;&nbsp;
-    <input type="time" name="starttime" id="starttime" size="4"
+    <input type="text" name="starttime" id="starttime" size="4"
         value="<?= $rule->getStartTime() ? date('H:i', $rule->getStartTime()) : '' ?>"/>
 </div>
 <br/>
@@ -19,10 +20,11 @@
     <?= _('Ende des Anmeldezeitraums') ?>:
 </label>
 <div class="form_group">
-    <input type="date" name="enddate" id="enddate" size="8"
-        value="<?= $rule->getEndTime() ? date('d.m.Y', $rule->getEndTime()) : '' ?>"/>
+    <input type="text" size="8" maxlength="10" name="enddate" 
+        id="enddate" value="<?= $rule->getEndTime() ? 
+        date('d.m.Y', $rule->getEndTime()) : '' ?>" data-min-date=""/>
     &nbsp;&nbsp;
-    <input type="time" name="endtime" id="endtime" size="4"
+    <input type="text" name="endtime" id="endtime" size="4"
         value="<?= $rule->getEndTime() ? date('H:i', $rule->getEndTime()) : '' ?>"/>
 </div>
 <script>

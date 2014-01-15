@@ -169,16 +169,16 @@ class Course extends SimpleORMap
         $this->notification_map['before_store'] = 'CourseWillUpdate';
         $this->notification_map['after_delete'] = 'CourseDidDelete';
         $this->notification_map['before_delete'] = 'CourseWillDelete';
-        
+
         parent::__construct($id);
     }
-    
+
     function getFreeSeats()
     {
         $free_seats = $this->admission_turnout - $this->getNumParticipants();
         return $free_seats > 0 ? $free_seats : 0;
     }
-    
+
     function isWaitlistAvailable()
     {
         if ($this->admission_disable_waitlist) {
@@ -189,19 +189,28 @@ class Course extends SimpleORMap
             return true;
         }
     }
-    
+
     function getNumParticipants()
     {
         return $this->members->findBy('status', words('user autor'))->count() + $this->getNumPrelimParticipants();
     }
-    
+
     function getNumPrelimParticipants()
     {
         return $this->admission_applicants->findBy('status', 'accepted')->count();
     }
-    
+
     function getNumWaiting()
     {
         return $this->admission_applicants->findBy('status', 'awaiting')->count();
+    }
+
+    function getParticipantStatus($user_id)
+    {
+        $p_status = $this->members->findBy('user_id', $user_id)->val('status');
+        if (!$p_status) {
+            $p_status = $this->admission_applicants->findBy('user_id', $user_id)->val('status');
+        }
+        return $p_status;
     }
 }

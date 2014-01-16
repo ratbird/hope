@@ -16,11 +16,12 @@ class RouterException extends Exception
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',
-        404 => 'Not found',
+        404 => 'Not Found',
+        405 => 'Method Not Allowed',
         500 => 'Internal Server Error',
         501 => 'Not implemented',
     );
-    
+
     public function __construct($code = 500, $message = '', $previous = null)
     {
         $message = $message ?: self::$error_messages[$code] ?: '';

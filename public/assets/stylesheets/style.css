@@ -652,10 +652,6 @@ table.default caption {
   color: #444;
   font-size: 1.4em;
   text-align: left;
-  transition: background-color 0.3s;
-}
-table.default caption:hover {
-  background-color: #e1e4e5;
 }
 table.default thead th {
   background-color: #e7ebf1;
@@ -672,6 +668,10 @@ table.default tbody th {
 table.default tbody td {
   border-bottom: 1px solid #d1d1d1;
   transition: background-color 0.3s;
+}
+table.default tbody td.dragHandle {
+  background: #ffffff url("../images/anfasser_24.png") center no-repeat;
+  cursor: move;
 }
 table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
@@ -792,6 +792,7 @@ table.default2 tbody.togglable th:before {
 }
 .studip_form {
   /* Experimental? Original comment "late me is messin around" */
+
   /* Experimental: gray divider
 
     &.dividable {
@@ -812,6 +813,7 @@ table.default2 tbody.togglable th:before {
         }
     }
 */
+
 }
 .studip_form .caption {
   font-weight: bold;
@@ -1777,6 +1779,7 @@ td.infoboxrahmen {
   margin: 0px;
   padding: 1px 5px;
   /* border: 2px solid white; */
+
   background-color: #D60000;
   color: white;
   font-size: 10px;
@@ -2732,6 +2735,7 @@ td.tddaterowpx {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   padding: 0 0.5em;
 }
@@ -4104,13 +4108,4 @@ div.info {
 }
 .scm .table_footer td {
   text-align: center;
-}
-.no-js .hidden-no-js {
-  display: none;
-}
-.js .hidden-js {
-  display: none;
-}
-.no-js #enrollment ul {
-  cursor: auto;
 }

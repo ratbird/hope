@@ -37,7 +37,7 @@ class StatusgruppeUser extends SimpleORMap {
     public function name() {
         if ($this->visible || $GLOBALS['perm']->have_perm("tutor")) {
             $user = new User($this->user_id);
-            return $user->getFullName();
+            return $user->getFullName("full_rev");
         }
         return _("Unsichtbar");
     }

@@ -1,8 +1,5 @@
 <?= $question ?>
 <style>
-    .person, .dd {
-        cursor: move;
-    }
     .tree-seperator {
         list-style-type:none;
     }

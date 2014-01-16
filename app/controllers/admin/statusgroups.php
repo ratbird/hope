@@ -304,6 +304,19 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->redirect('admin/statusgroups/index');
         }
     }
+    
+    /**
+     * Delete a group
+     */
+    public function sortAlphabetic_action($group_id) {
+        $this->check('edit');
+        $this->group = new Statusgruppen($group_id);
+        if (Request::submitted('confirm')) {
+            CSRFProtection::verifySecurityToken();
+            $this->group->sortMembersAlphabetic();
+            $this->redirect('admin/statusgroups/index');
+        }
+    }
 
     /**
      * Ajaxaction to look for people
@@ -410,7 +423,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 . _('Freie Suche') . "</h4><div id='search_result'></div>";
 
         $this->addToInfobox(_('Aktionen'), "<a title='" . _('Neue Gruppe anlegen') . "' class='modal' href='" . $this->url_for("admin/statusgroups/editGroup") . "'>" . _('Neue Gruppe anlegen') . "</a>", 'icons/16/black/add/group3.png');
-        $this->addToInfobox(_('Aktionen'), "<a title='" . _('Gruppenreihenfolge ändern') . "' class='modal' href='" . $this->url_for("admin/statusgroups/sortGroups") . "'>" . _('Gruppenreihenfolge ändern') . "</a>", 'icons/16/black/refresh.png');
+        $this->addToInfobox(_('Aktionen'), "<a title='" . _('Gruppenreihenfolge ändern') . "' class='modal' href='" . $this->url_for("admin/statusgroups/sortGroups") . "'>" . _('Gruppenreihenfolge ändern') . "</a>", 'icons/16/black/arr_2down.png');
     }
 
     /*

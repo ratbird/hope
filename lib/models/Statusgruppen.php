@@ -256,6 +256,21 @@ class Statusgruppen extends SimpleORMap {
         $stmt->execute(array($this->range_id, $user_id));
         return $stmt->fetchColumn();
     }
+    
+    /**
+     * Sorts the member of a group alphabetic
+     */
+    public function sortMembersAlphabetic() {
+        foreach ($this->members as $member) {
+            $assoc[$member->id] = $member->user->nachname."_".$member->user->vorname;
+        }
+        asort($assoc);
+        foreach ($assoc as $key => $value) {
+            $statusgruppenuser = new StatusgruppeUser(explode('_', $key));
+            $statusgruppenuser->position = $i++;
+            $statusgruppenuser->store();
+        }
+    }
 
     /**
      * Checks if there is free space in this group

@@ -653,6 +653,9 @@ table.default caption {
   font-size: 1.4em;
   text-align: left;
 }
+table.default caption:hover {
+  background-color: #e1e4e5;
+}
 table.default thead th {
   background-color: #e7ebf1;
   border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
@@ -745,9 +748,6 @@ table.default2 caption {
   font-size: 1.2em;
   font-weight: bold;
   text-align: left;
-}
-table.default2 caption:hover {
-  background-color: rgba(137, 154, 185, 0.25);
 }
 table.default2 thead th {
   background-color: #d1d1d1;

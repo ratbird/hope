@@ -344,10 +344,16 @@ class SemBrowse {
                     printf(_(" / %sVorlesungsverzeichnis%s"),"<a href=\"".URLHelper::getLink('?level=vv&cmd=qs&sset=0')."\">","</a>");
                 }
             } else {
-                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\"></a></td>", _("Suche in Einrichtungen"), tooltip(_("Suche im Einrichtungsverzeichnis")));
+                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"%s\"><b>%s</b><br><br>%s</a></td>",
+                        URLHelper::getLink('?level=ev&cmd=qs&sset=0'),
+                        _("Suche in Einrichtungen"),
+                        Assets::img('institute.jpg', tooltip2(_("Suche im Einrichtungsverzeichnis"))));
                 if ($this->show_class()){
                     SkipLinks::addLink(_("Suche im Vorlesungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'vv', 'cmd' => 'qs', 'sset' => '0')));
-                    printf ("<td nowrap align=\"center\"><a href=\"".URLHelper::getLink('?level=vv&cmd=qs&sset=0')."\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\"></a></td>", _("Suche im Vorlesungsverzeichnis"), tooltip(_("Suche im Vorlesungsverzeichnis")));
+                    printf ("<td nowrap align=\"center\"><a href=\"%s\"><b>%s</b><br><br>%s</a></td>",
+                            URLHelper::getLink('?level=vv&cmd=qs&sset=0'),
+                            _("Suche im Vorlesungsverzeichnis"),
+                            Assets::img('kommentar.jpg', tooltip2(_("Suche im Vorlesungsverzeichnis"))));
                 }
                 SkipLinks::addLink(_("Suche im Einrichtungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'ev', 'cmd' => 'qs', 'sset' => '0')));
                 printf ("</tr></table>");

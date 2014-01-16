@@ -43,7 +43,9 @@ class PluginAdministration
         $packagedir = get_config('PLUGINS_PATH') . '/tmp_' . md5($filename);
 
         // extract plugin files
-        mkdir($packagedir);
+        if (mkdir($packagedir) === false) {
+            throw new PluginInstallationException(_('Kann das Plugin-Verzeichnis "' . $packagedir . '" nicht erstellen.'));
+        }
 
         if (unzip_file($filename, $packagedir)) {
             rmdirr($packagedir);

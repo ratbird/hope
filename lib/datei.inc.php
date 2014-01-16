@@ -2627,7 +2627,7 @@ function unzip_file($file_name, $dir_name = '', $testonly = false){
             $prop = $archive->properties();
             $ret = (!is_array($prop));
         } else {
-            $ok = $archive->extract(PCLZIP_OPT_PATH, $dir_name, PCLZIP_CB_PRE_EXTRACT, 'pclzip_convert_filename_cb');
+            $ok = $archive->extract(PCLZIP_OPT_PATH, $dir_name, PCLZIP_CB_PRE_EXTRACT, 'pclzip_convert_filename_cb', PCLZIP_OPT_STOP_ON_ERROR, true);
             $ret = (!is_array($ok));
         }
     } else if (@file_exists($GLOBALS['UNZIP_PATH']) || ini_get('safe_mode')){

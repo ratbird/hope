@@ -86,9 +86,13 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
             </td>
             <? foreach ($calendar_view->getColumns() as $column) : ?>
             <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px; width: <?= $cell_width ?>%">
-                <? $link_or_not = $column->getURL() ? '<a href="'.URLHelper::getLink($column->getURL()).'">%s</a>' : '%s';
-                printf($link_or_not, htmlReady($column->getTitle()));
-                ?>
+            <? if ($column->getURL()): ?>
+                <a href="<?= URLHelper::getLink($column->getURL()) ?>">
+            <? endif; ?>
+                    <?= htmlReady($column->getTitle()) ?>
+            <? if ($column->getURL()): ?>
+                </a>
+            <? endif; ?>
             </td>
             <? endforeach; ?>
         </tr>

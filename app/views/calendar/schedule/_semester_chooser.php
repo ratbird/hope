@@ -4,7 +4,7 @@
         <? if ($semester['ende'] > time() - strtotime('1year 1day')) : ?>
         <option value="<?= $semester['semester_id'] ?>" <?= $current_semester['semester_id'] == $semester['semester_id'] ? 'selected="selected"' : '' ?>>
             <?= htmlReady($semester['name']) ?>
-            <?= $semester['beginn'] < time() && $semester['ende'] > time() ? '('. _('akt. Semester') .')' : '' ?>
+            <?= $semester['beginn'] < time() && $semester['ende'] > time() ?  _('*')  : '' ?>
         </option>
         <? endif ?>
     <? endforeach ?>

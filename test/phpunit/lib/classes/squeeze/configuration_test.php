@@ -74,12 +74,12 @@ class SqueezeConfigurationTest extends \PHPUnit_Framework_TestCase
 
    function providerDefaults()
    {
-       global $ABSOLUTE_PATH_STUDIP, $ABSOLUTE_URI_STUDIP;
+       global $ABSOLUTE_PATH_STUDIP, $ASSETS_URL;
 
        return array(
            array("assets_root",  "${ABSOLUTE_PATH_STUDIP}assets"),
            array("package_path", "${ABSOLUTE_PATH_STUDIP}assets/squeezed"),
-           array("package_url",  "${ABSOLUTE_URI_STUDIP}assets/squeezed"),
+           array("package_url",  "${ASSETS_URL}squeezed"),
            array("compress",     true));
    }
 

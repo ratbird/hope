@@ -36,6 +36,7 @@ class AssetsTestCase extends PHPUnit_Framework_TestCase {
 
 
   function tearDown() {
+    Assets::set_assets_url('');
   }
 
 
@@ -66,6 +67,7 @@ class DynamicAssetsTestCase extends PHPUnit_Framework_TestCase
 
 
   function tearDown() {
+    Assets::set_assets_url('');
   }
 
 
@@ -98,6 +100,7 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
 
 
   function tearDown() {
+    Assets::set_assets_url('');
   }
 
 

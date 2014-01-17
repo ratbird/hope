@@ -44,7 +44,7 @@ $infobox['content'] = array(
 
 $infobox['content'][1]['eintrag'][] = array(
     'text' => $this->render_partial('calendar/schedule/_semester_chooser'),
-    'icon' => 'icons/16/black/add/date.png'
+    'icon' => 'icons/16/black/date.png'
 );
 
 if (!$inst_mode) {

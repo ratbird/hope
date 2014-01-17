@@ -93,7 +93,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         // load semester-data and current semester
         $semdata = new SemesterData();
-        $this->semesters = $semdata->getAllSemesterData();
+        $this->semesters = array_reverse($semdata->getAllSemesterData());
 
         if (Request::option('semester_id')) {
             $this->current_semester = $semdata->getSemesterData(Request::option('semester_id'));

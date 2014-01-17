@@ -181,34 +181,26 @@ class ExternModuleTemplatePersons extends ExternModule {
             $nameformat = 'full_rev';
         }
 
-
-
-
         if(!$grouping) {
-
-            $mrks =  str_repeat('?,', count($this->config->getValue("Main", "groupsvisible")) - 1) . '?';
             $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms, Email, aum.user_id, username, ";
             $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname, aum.Nachname ";
             if ($query_order != '') {
                 $query .= "FROM statusgruppe_user LEFT JOIN auth_user_md5 aum USING(user_id) ";
                 $query .= "LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ";
-                $query .= "WHERE statusgruppe_id IN ($mrks) AND Institut_id = ? AND ".get_ext_vis_query()."$query_order";
+                $query .= "WHERE statusgruppe_id IN (?) AND Institut_id = ? AND ".get_ext_vis_query()."$query_order";
             } else {
                 $query .= "FROM statusgruppen s LEFT JOIN statusgruppe_user su USING(statusgruppe_id) ";
                 $query .= "LEFT JOIN auth_user_md5 aum USING(user_id) ";
                 $query .= "LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ";
-                $query .= "WHERE su.statusgruppe_id IN ($mrks) AND Institut_id = ? ";
+                $query .= "WHERE su.statusgruppe_id IN (?) AND Institut_id = ? ";
                 $query .= "' AND ".get_ext_vis_query()." ORDER BY ";
                 $query .= "s.position ASC, su.position ASC";
             }
-            $parameters = $this->config->getValue("Main", "groupsvisible");
-            $parameters[] = $this->config->range_id;
-
+            $parameters = array($this->config->getValue('Main', 'groupsvisible'), $this->config->range_id);
             $statement = DBManager::get()->prepare($query);
             $statement->execute($parameters);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
-
-            $visible_groups = array("");
+            $visible_groups = array('');
         }
 
         // generic data fields
@@ -220,10 +212,10 @@ class ExternModuleTemplatePersons extends ExternModule {
            $db_out =& $row;
         }
 
-        $out = '';
+        $content = null;
         $i = 0;
+        $aliases_groups = $this->config->getValue('Main', 'groupsalias');
         foreach ($visible_groups as $group_id => $group) {
-
             if ($grouping) {
                 if ($query_order == '') {
                     $query_order = ' ORDER BY su.position';
@@ -240,17 +232,15 @@ class ExternModuleTemplatePersons extends ExternModule {
                 $statement->execute($parameters);
                 $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-                $position = array_search($group_id, $all_groups);
-                if($aliases_groups[$position]) {
-                    $group = $aliases_groups[$position];
+                if($aliases_groups[$group_id]) {
+                    $group = $aliases_groups[$group_id];
                 }
             }
 
 
             if ($row !== false) {
-                $aliases_groups = $this->config->getValue('Main', 'groupsalias');
-                if($aliases_groups[$position]) {
-                    $content['PERSONS']['GROUP'][$i]['GROUPTITLE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($aliases_groups[$position]);
+                if($aliases_groups[$group_id]) {
+                    $content['PERSONS']['GROUP'][$i]['GROUPTITLE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($aliases_groups[$group_id]);
                 }
                 $content['PERSONS']['GROUP'][$i]['GROUPTITLE'] = ExternModule::ExtHtmlReady($group);
                 $content['PERSONS']['GROUP'][$i]['GROUP-NO'] = $i + 1;

@@ -314,6 +314,7 @@ class ExternModule {
     *
     */
     function executeCommand ($element, $command, $value) {
+     //   var_dump($element, $command, $value);
         if ($element == "Main" || in_array($element, $this->registered_elements))
             return $this->elements[$element]->executeCommand($command, $value);
     }

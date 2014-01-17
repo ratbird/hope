@@ -82,9 +82,11 @@ class ExternEdit {
 
             if ($value != "" || $this->faulty_values[$form_name]) {
                 if (is_array($value)) {
-                    // sort the array by keys and fit the values for output in a form
-                    for ($i = 0; $i < sizeof($value); $i++)
-                        $val_tmp[] = htmlReady(stripslashes($value[$i]));
+                    // fit the values for output in a form
+                    //for ($i = 0; $i < sizeof($value); $i++)
+                    foreach ($value as $key => $val) {
+                        $val_tmp[$key] = htmlReady(stripslashes($val));
+                    }
 
                     return $val_tmp;
                 }
@@ -96,8 +98,10 @@ class ExternEdit {
         $value = $this->config->getValue($this->element_name, $attribute);
         if (is_array($value)) {
             // fit the values for output in a form
-            for ($i = 0; $i < sizeof($value); $i++)
-                $val_tmp[] = htmlReady(stripslashes($value[$i]));
+            foreach ($value as $key => $val) {
+            //for ($i = 0; $i < sizeof($value); $i++)
+                $val_tmp[$key] = htmlReady(stripslashes($val));
+            }
 
             return $val_tmp;
         }

@@ -211,24 +211,27 @@ class ExternElement {
     * 
     */
     function executeCommand ($command, $value = "") {
-
+//var_dump($command);
         switch ($command) {
             case "show" :
                 $visible = $this->config->getValue($this->name, "visible");
                 if ($value >= 0 || $value < sizeof($visible)) {
                     $visible[$value] = "1";
                     $this->config->setValue($this->name, "visible", $visible);
+                    
                     Request::set("{$this->name}_visible",$visible);
+                    $_POST["{$this->name}_visible"] = $visible;
                 }
                 break;
                 
             case "hide" :
                 $visible = $this->config->getValue($this->name, "visible");
-                
+                var_dump($visible);
                 if ($value >= 0 || $value < sizeof($visible)) {
                     $visible[$value] = "0";
                     $this->config->setValue($this->name, "visible", $visible);
                     Request::set("{$this->name}_visible",$visible);
+                    $_POST["{$this->name}_visible"] = $visible;
                 }
                 break;
                 
@@ -252,6 +255,7 @@ class ExternElement {
                 break;
                 
             case "move_right" :
+                
                 $order = $this->config->getValue($this->name, "order");
                 if ($value >= 0 || $value < sizeof($order)) {
                     $a = $order[$value];
@@ -271,20 +275,18 @@ class ExternElement {
                 break;
             
             case "show_group" :
-                $visible = $this->config->getValue($this->name, "groupsvisible");
-                if (!is_array($visible))
-                    $visible = array();
-                if ($groups = get_all_statusgruppen($this->config->range_id)) {
-                    $groups = array_keys($groups);
-                    $visible = array_intersect($groups, $visible);
-                }
-                else
-                    break;
-                
-                if (in_array($value, $groups)) {
-                    $visible[] = $value;
-                    $visible = array_unique($visible);
-                    $this->config->setValue($this->name, "groupsvisible", $visible);
+                $groups = get_all_statusgruppen($this->config->range_id);
+                if (!groups) {
+                    $this->config->setValue($this->name, 'groupsvisible', array());
+                } else if (is_array($value)) {
+                    $groups_visible = array();
+                    foreach ($value as $group_id => $checked) {
+                        if ($checked) {
+                            $groups_visible[] = $group_id;
+                        }
+                    }
+                    $visible = array_intersect($groups_visible, array_keys($groups));
+                    $this->config->setValue($this->name, 'groupsvisible', $visible);
                     Request::set("{$this->name}_groupsvisible", array_values($visible));
                 }
                 break;
@@ -336,12 +338,6 @@ class ExternElement {
                         && $_POST["_$form_name"] != "")
                     $_POST[$form_name] = $_POST["_$form_name"];
             }
-            /*
-            hallo
-            if ($attribute = 'template') {
-                $_POST[$form_name] = addslashes($_POST[$form_name]);
-            }
-            */
             if (is_array($_POST[$form_name]))
                 $value = $_POST[$form_name];
             else

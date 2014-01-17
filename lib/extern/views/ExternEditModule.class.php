@@ -265,10 +265,18 @@ class ExternEditModule extends ExternEditHtml {
         $groups_visible = $this->getValue("groupsvisible");
         if (!is_array($groups_visible))
             $groups_visible = array();
-
-        for ($i = 0; $i < sizeof($groups_config); $i++)
-            $groups[$groups_config[$i]] = $groups_aliases[$i];
-
+        
+        if (sizeof(array_intersect(array_keys($groups_aliases),
+                array_keys($groups_db)))) {
+            foreach ($groups_config as $group_config) {
+                $groups[$group_config] = $groups_aliases[$group_config];
+            }
+        } else {
+            for ($i = 0; $i < sizeof($groups_config); $i++) {
+                $groups[$groups_config[$i]] = $groups_aliases[$i];
+            }
+        }
+        
         $this->css->resetClass();
         $this->css->switchClass();
         $out = "<tr><td><table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
@@ -283,32 +291,33 @@ class ExternEditModule extends ExternEditHtml {
         foreach ($groups_db as $id => $name) {
 
             // name of group
+            /*
             if (strlen($name) > 70)
                 $name = substr($name, 0, 34) . "[...]" . substr($name, -30);
+             * 
+             */
             $out .= "<tr" . $this->css->getFullClass() . ">\n";
             $out .= "<td nowrap=\"nowrap\"><font size=\"2\">&nbsp;" . htmlReady($name) . "</font></td>";
 
             // column headline
-            $out .= "<td nowrap=\"nowrap\"><input type=\"text\" name=\"{$this->element_name}_groupsalias[]\"";
+            $out .= '<td nowrap="nowrap"><input type="text" name="'
+                    . $this->element_name . '_groupsalias[' . $id . ']"';
             $out .= "\" size=\"25\" maxlength=\"150\" value=\"";
             $out .= $groups[$id] . "\">";
-            if ($this->faulty_values[$this->element_name . "_groupsalias"][$i])
+            if ($this->faulty_values[$this->element_name . "_groupsalias"][$id])
                     $out .= $this->error_sign;
             $out .= "</td>\n";
 
             // visible
+            $out .= '<td align="center">'
+                    . '<input type="hidden" name="'
+                    . $this->element_name . '_show_group[' . $id . ']" value="0">'
+                    . '<input type="checkbox" name="'
+                    . $this->element_name . '_show_group[' . $id . ']" value="1"';
             if (in_array($id, $groups_visible)) {
-                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_hide_group[$id]\" src=";
-                $out .= Assets::image_path('icons/16/blue/checkbox-checked.png');
-                $out .= " ".tooltip(_("Spalte ausblenden"));
-                $out .= " align=\"middle\">\n</td>\n";
+                $out .= ' checked';
             }
-            else {
-                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_show_group[$id]\" src=";
-                $out .= Assets::image_path('icons/16/blue/checkbox-unchecked.png');
-                $out .= " ".tooltip(_("Spalte einblenden"));
-                $out .= " align=\"middle\">\n</td>\n";
-            }
+            $out .= '></td>';
             $out .= "<td>&nbsp;</td></tr>\n";
             $this->css->switchClass();
             $i++;
@@ -361,65 +370,73 @@ class ExternEditModule extends ExternEditHtml {
         }
 
         for ($i = 0; $i < sizeof($order); $i++) {
-            // name of column
-            $out .= "<tr" . $this->css->getFullClass() . ">\n";
-            $out .= "<td><font size=\"2\">&nbsp;";
-            if (strlen($SEM_TYPE[$order[$i]]["name"]) > 25) {
-                $out .= htmlReady(substr($SEM_TYPE[$order[$i]]["name"], 0, 22)
-                        . "... ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
-            }
-            else {
-                $out .= htmlReady($SEM_TYPE[$order[$i]]["name"]
-                        . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
-            }
-            $out .= "</font></td>";
+            if ($SEM_TYPE[$order[$i]]) {
+                $new_order[] = $order[$i];
+                // name of column
+                $out .= "<tr" . $this->css->getFullClass() . ">\n";
+                $out .= "<td><font size=\"2\">&nbsp;";
+                if (strlen($SEM_TYPE[$order[$i]]["name"]) > 25) {
+                    $out .= htmlReady(substr($SEM_TYPE[$order[$i]]["name"], 0, 22)
+                            . "... ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
+                }
+                else {
+                    $out .= htmlReady($SEM_TYPE[$order[$i]]["name"]
+                            . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
+                }
+                $out .= "</font></td>";
 
-            // column headline
-            $out .= "<td><input type=\"text\" name=\"{$this->element_name}_class_";
-            $out .= $SEM_TYPE[$order[$i]]['class'] . "[{$mapping[$order[$i]]}]\"";
-            $out .= "\" size=\"20\" maxlength=\"100\" value=\"";
-            if (isset($classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]]))
-                $out .= $classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]] . "\">";
-            else {
-                $out .= $SEM_TYPE[$order[$i]]["name"]
-                        . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})\">";
+                // column headline
+                $out .= "<td><input type=\"text\" name=\"{$this->element_name}_class_";
+                $out .= $SEM_TYPE[$order[$i]]['class'] . "[{$mapping[$order[$i]]}]\"";
+                $out .= "\" size=\"20\" maxlength=\"100\" value=\"";
+                if (isset($classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]]))
+                    $out .= $classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]] . "\">";
+                else {
+                    $out .= $SEM_TYPE[$order[$i]]["name"]
+                            . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})\">";
+                }
+                if ($this->faulty_values[$this->element_name
+                        . "_class_{$SEM_TYPE[$order[$i]]['class']}"][$mapping[$order[$i]]]) {
+                    $out .= $this->error_sign;
+                }
+                $out .= "</td>\n";
+
+                    // move up
+                $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
+                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
+                $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
+                $out .= " ".tooltip(_("Datenfeld verschieben"));
+                $out .= "border=\"0\" align=\"middle\">\n";
+
+                // move down
+                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
+                $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
+                $out .= " ".tooltip(_("Datenfeld verschieben"));
+                $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
+                $out .= "</td>\n";
+
+                // visibility
+                $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
+                $out .= "<input type=\"checkbox\" name=\"{$this->element_name}_visibility";
+                $out .= '[' . ($order[$i] - 1) . "]\" value=\"1\"";
+                if ($visibility[$order[$i] - 1] == 1) {
+                    $out .= ' checked="checked"';
+                }
+                $out .= '>';
+
+                $out .= "</td>\n</tr>\n";
+                $this->css->switchClass();
             }
-            if ($this->faulty_values[$this->element_name
-                    . "_class_{$SEM_TYPE[$order[$i]]['class']}"][$mapping[$order[$i]]]) {
-                $out .= $this->error_sign;
-            }
-            $out .= "</td>\n";
-
-                // move up
-            $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
-            $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
-            $out .= " ".tooltip(_("Datenfeld verschieben"));
-            $out .= "border=\"0\" align=\"middle\">\n";
-
-            // move down
-            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
-            $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
-            $out .= " ".tooltip(_("Datenfeld verschieben"));
-            $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
-            $out .= "</td>\n";
-
-            // visibility
-            $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-            $out .= "<input type=\"checkbox\" name=\"{$this->element_name}_visibility";
-            $out .= '[' . ($order[$i] - 1) . "]\" value=\"1\"";
-            if ($visibility[$order[$i] - 1] == 1) {
-                $out .= ' checked="checked"';
-            }
-            $out .= '>';
-
-            $out .= "</td>\n</tr>\n";
-            $this->css->switchClass();
         }
-
+        
         $out .= "</table>\n</td></tr>\n";
         $out .= "<input type=\"hidden\" name=\"count_semtypes\" value=\"$i\">\n";
-
+        
+        // update order
+        if (sizeof(array_diff($order, $new_order))) {
+            $this->config->setValue($this->element_name, 'order', $new_order);
+            $this->config->store();
+        }
         return $out;
     }
 

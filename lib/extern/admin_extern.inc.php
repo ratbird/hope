@@ -171,6 +171,7 @@ if (Request::option('com') == 'info') {
     exit;
 }
 
+/*
 $element_command = FALSE;
 $edit = Request::option('edit');
 if ($edit) {
@@ -178,15 +179,26 @@ if ($edit) {
     foreach ($element_commands as $element_command) {
         $element_command_form = $edit . "_" . $element_command;
         if ($_POST[$element_command_form]) {
-            if (is_array($_POST[$element_command_form])) {
+            if ($element_command == 'show_group') {
+                $pos = $_POST[$element_command_form];
+            } else if (is_array($_POST[$element_command_form])) {
+        //        var_dump($_POST[$element_command_form]);
+        //        var_dump($element_command);
                 $pos_tmp = array_keys($_POST[$element_command_form]);
+              //  $pos_tmp = $_POST[$element_command_form];
                 $pos = $pos_tmp[0];
+        //        var_dump($pos_tmp);
             }
-            $execute_command = $element_command;
+            $module->executeCommand($edit, $element_command, $pos);
+            
+           // $execute_command = $element_command;
+           // var_dump($execute_command);
             Request::set('com','store');
         }
     }
 }
+ * 
+ */
 
 if (Request::option('com') == 'new' || Request::option('com') == 'edit' || Request::option('com') == 'open' ||
         Request::option('com') == 'close' || Request::option('com') == 'store') {

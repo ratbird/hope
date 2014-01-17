@@ -83,9 +83,32 @@ else {
 if (!$module)
     die("Unknown module type");
 
+
+$element_command = FALSE;
+$edit = Request::option('edit');
+if ($edit) {
+    $element_commands = array('show', 'hide', 'move_left', 'move_right', 'show_group', 'hide_group', 'do_search_x');
+    foreach ($element_commands as $element_command) {
+        $element_command_form = $edit . "_" . $element_command;
+        if ($_POST[$element_command_form]) {
+            if ($element_command == 'show_group') {
+                $pos = $_POST[$element_command_form];
+            } else if (is_array($_POST[$element_command_form])) {
+                $pos_tmp = array_keys($_POST[$element_command_form]);
+                $pos = $pos_tmp[0];
+            }
+            $module->executeCommand($edit, $element_command, $pos);
+        }
+    }
+}
 // execute commands they modify attributes of given element
-if ($execute_command)
+/*
+if ($execute_command) {
+    var_dump($edit, $execute_command);
     $module->executeCommand($edit, $execute_command, $pos);
+}
+ * 
+ */
 
 $elements = $module->getAllElements();
 

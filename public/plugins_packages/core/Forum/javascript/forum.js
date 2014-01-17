@@ -52,25 +52,7 @@ STUDIP.Forum = {
             },
 
             stop: function () {
-                // iterate over each category and get the areas there
-                var areas = {};
-                areas.areas = {};
-                jQuery('#sortable_areas').find('table').each(function () {
-                    var category_id = jQuery(this).attr('data-category-id');
-
-                    areas.areas[category_id] = {};
-
-                    jQuery(this).find('tr').each(function () {
-                        var area_id = jQuery(this).attr('data-area-id');
-                        areas.areas[category_id][area_id] = area_id;
-                    });
-                });
-
-                jQuery.ajax({
-                    type: 'POST',
-                    url: STUDIP.URLHelper.getURL('plugins.php/coreforum/area/save_order?cid=' + STUDIP.Forum.seminar_id),
-                    data: areas
-                });
+                STUDIP.Forum.saveAreaOrder();
             }
         });
 
@@ -170,6 +152,28 @@ STUDIP.Forum = {
             data: name
         });
     },
+    
+    saveAreaOrder: function() {
+        // iterate over each category and get the areas there
+        var areas = {};
+        areas.areas = {};
+        jQuery('#sortable_areas').find('table').each(function () {
+            var category_id = jQuery(this).attr('data-category-id');
+
+            areas.areas[category_id] = {};
+
+            jQuery(this).find('tr').each(function () {
+                var area_id = jQuery(this).attr('data-area-id');
+                areas.areas[category_id][area_id] = area_id;
+            });
+        });
+
+        jQuery.ajax({
+            type: 'POST',
+            url: STUDIP.URLHelper.getURL('plugins.php/coreforum/area/save_order?cid=' + STUDIP.Forum.seminar_id),
+            data: areas
+        });
+    },
 
     deleteArea: function (element, area_id) {
         STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' 
@@ -213,6 +217,8 @@ STUDIP.Forum = {
                     
                     // insert the new area at the end of the list (more precisely: add the exact position where the add-form has been)
                     $(data).insertBefore('table[data-category-id=' + values.category_id + '] tr.sort-disabled');
+                    
+                    STUDIP.Forum.saveAreaOrder();
                 }
             });
         }
@@ -457,7 +463,6 @@ STUDIP.Forum = {
         if (highlight_element !== null) {
             // STUDIP.Forum.highlightedElement = highlight_element;
             jQuery(highlight_element).addClass('selected');
-            console.log(highlight_element);
         }
         
         jQuery('body').append(STUDIP.Forum.confirmDialog({

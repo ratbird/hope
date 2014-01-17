@@ -16,13 +16,21 @@ class AreaController extends ForumController
         ForumPerm::check('add_area', $this->getId());
 
         $new_id = md5(uniqid(rand()));
+        
+        if (Request::isXhr()) {
+            $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
+            $content = studip_utf8decode(Request::get('content'));
+        } else {
+            $name    = Request::get('name', _('Kein Titel'));
+            $content = Request::get('content');
+        }
 
         ForumEntry::insert(array(
             'topic_id'    => $new_id,
             'seminar_id'  => $this->getId(),
             'user_id'     => $GLOBALS['user']->id,
-            'name'        => Request::get('name', _('Kein Titel')),
-            'content'     => Request::get('content'),
+            'name'        => $name,
+            'content'     => $content,
             'author'      => get_fullname($GLOBALS['user']->id),
             'author_host' => getenv('REMOTE_ADDR')
         ), $this->getId());

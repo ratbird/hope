@@ -29,7 +29,7 @@ class Configuration implements \ArrayAccess
     function __construct($conf = array(), $path = NULL)
     {
 
-        global $ABSOLUTE_PATH_STUDIP, $ABSOLUTE_URI_STUDIP;
+        global $ABSOLUTE_PATH_STUDIP;
 
         $defaults = array(
 
@@ -37,7 +37,7 @@ class Configuration implements \ArrayAccess
 
             # TODO richtiger Pfad?
             'package_path' => "${ABSOLUTE_PATH_STUDIP}assets/squeezed",
-            'package_url'  => "${ABSOLUTE_URI_STUDIP}assets/squeezed",
+            'package_url'  => \Assets::url('squeezed'),
 
             'javascripts'  => array(),
             'compress'     => true,

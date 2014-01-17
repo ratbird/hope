@@ -305,10 +305,13 @@ class ShowSchedules {
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?> hidden" width="4%" align="center" valign="bottom">&nbsp;
-                    <?
-                    if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == 1))
-                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\">" . Assets::img("icons/16/blue/arr_2up.png", array('alt' => _("Frühere Belegungen anzeigen"), 'title' => _("Frühere Belegungen anzeigen"), "border" => 0)) . "</a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : -1);
-                    ?>
+                <? if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == 1)): ?>
+                    <a href="<?= URLHelper::getLink('', array('quick_view' => $this->used_view,
+                                                              'quick_view_mode' => $view_mode,
+                                                              'time_range' => $_SESSION['resources_data']['schedule_time_range'] ? 'FALSE' : -1)) ?>">
+                        <?= Assets::img('icons/16/blue/arr_2up.png', array('class' => 'middle') + tooltip2(_('Frühere Belegungen anzeigen'))) ?>
+                    </a>
+                <? endif; ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
                     <?

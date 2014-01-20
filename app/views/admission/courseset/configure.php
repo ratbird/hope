@@ -45,6 +45,9 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             value="<?= $courseset ? htmlReady($courseset->getName()) : '' ?>"
             required="required" aria-required="true"
             placeholder="<?= _('Bitte geben Sie einen Namen für das Anmeldeset an') ?>"/>
+        <label for="private" class="caption">
+            <?= _('Sichtbarkeit:') ?>
+        </label>
         <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : '' ?>/>
         <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar sein.') ?>
         <label for="institutes" class="caption">
@@ -60,8 +63,8 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
                     <?php if (sizeof($myInstitutes) != 1) { ?>
                 <input type="checkbox" name="institutes[]" value="<?= $institute['Institut_id'] ?>"
                     <?= $selectedInstitutes[$institute['Institut_id']] ? 'checked="checked"' : '' ?>
-                    class="institute" onclick="STUDIP.Admission.getCourses('institute', 'instcourses',
-                    '<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>', 'courselist')"/>
+                    class="institute" onclick="STUDIP.Admission.getCourses(
+                    '<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')"/>
                     <?php } else { ?>
                 <input type="hidden" name="institutes[]" value="<?= $institute['Institut_id'] ?>"/>
                     <?php } ?>
@@ -83,9 +86,29 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             <?php } ?>
         <?php } ?>
         </div>
+    </fieldset>
+    <fieldset>
+        <legend><?= _('Veranstaltungen') ?></legend>
+        <label class="caption">
+            <?= _('Semester:') ?>
+            <select name="semester" onchange="STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')">
+                <?php foreach(Semester::getAll() as $id => $semester) { ?>
+                <option value="<?= $id ?>"<?= $id == $selectedSemester ? ' selected="selected"' : '' ?>>
+                    <?= htmlReady($semester->name) ?>
+                </option>
+                <?php } ?>
+            </select>
+        </label>
         <label class="caption">
             <?= _('Veranstaltungszuordnung:') ?>
         </label>
+        <div>
+            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'check');"><?= _('alle') ?></a>
+            |
+            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'uncheck');"><?= ('keine') ?></a>
+            |
+            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'invert');"><?= ('Auswahl umkehren') ?></a>
+        </div>
         <div id="instcourses">
         <?= $coursesTpl; ?>
         </div>

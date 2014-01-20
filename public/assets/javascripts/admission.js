@@ -7,21 +7,22 @@
 
 STUDIP.Admission = {
 
-    getCourses: function(source, targetId, targetUrl, courses) {
+    getCourses: function(targetUrl) {
         var query = '';
-        $('.'+source+':checked').each(function(index) {
+        query += '&semester='+$('select[name="semester"]').val();
+        $('input[name="institutes[]"]:checked').each(function(index) {
             query += '&institutes[]='+$(this).val();
         });
-        $('#'+courses+' li.jstree-checked').each(function(index) {
+        $('#courses li.jstree-checked').each(function(index) {
             query += '&courses[]='+$(this).attr('id');
         });
         var loading = 'Wird geladen'.toLocaleString();
-        $('#'+targetId).empty();
+        $('#instcourses').empty();
         $('<img/>', {
             src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
-        }).appendTo('#'+targetId);
-        $('#'+targetId).append(loading);
-        $('#'+targetId).load(targetUrl, query);
+        }).appendTo('#instcourses');
+        $('#instcourses').append(loading);
+        $('#instcourses').load(targetUrl, query);
     },
 
     configureRule: function (ruleType, targetUrl) {
@@ -267,6 +268,27 @@ STUDIP.Admission = {
 
     closeDialog: function(elementId) {
         $('#'+elementId).remove();
+    },
+
+    checkUncheckAll: function(inputName, mode) {
+        switch(mode) {
+            case 'check':
+                $('input[name="'+inputName+'"]').each(function() {
+                    $(this).attr('checked', true);
+                });
+                break;
+            case 'uncheck':
+                $('input[name="'+inputName+'"]').each(function() {
+                    $(this).attr('checked', false);
+                });
+                break;
+            case 'invert':
+                $('input[name="'+inputName+'"]').each(function() {
+                    $(this).attr('checked', !$(this).attr('checked'));
+                });
+                break;
+        }
+        return false;
     }
 
 };

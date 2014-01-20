@@ -92,7 +92,7 @@ class ToolsNavigation extends Navigation
             $this->addSubNavigation('db_integrity_new', new Navigation(_('DB Integrität'), 'dispatch.php/admin/db_integrity_check'));
         }
 
-        if ($perm->have_perm('dozent')) {
+        if ($perm->have_perm('admin') || ($perm->have_perm('dozent') && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))) {
             $navigation = new Navigation(_('Anmeldesets'), 'dispatch.php/admission/courseset/index');
             $this->addSubNavigation('coursesets', $navigation);
             $navigation->addSubNavigation('sets', new Navigation(_('Anmeldesets verwalten'), 'dispatch.php/admission/courseset/index'));

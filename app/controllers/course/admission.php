@@ -396,6 +396,15 @@ class Course_AdmissionController extends AuthenticatedController
                     if ($another_rule) {
                         $course_set->addAdmissionRule($another_rule);
                     }
+                    $currentSemester = Semester::findCurrent();
+                    if ($this->course->duration_time == -1) {
+                        $semester = $currentSemester->semester_id;
+                    } else if ($this->course->end_semester->beginn > $currentSemester->ende) {
+                        $semester = $currentSemester->semester_id;
+                    } else {
+                        $semester = $this->course->end_semester->semester_id;
+                    }
+                    $course_set->setSemester($semester);
                     $course_set->store();
                     PageLayout::postMessage(MessageBox::success(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen.")));
                     $this->redirect($this->url_for('/index'));

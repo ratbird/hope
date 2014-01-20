@@ -112,6 +112,7 @@ class Step00240CourseSets extends Migration
                 `set_id` VARCHAR(32) NOT NULL ,
                 `user_id` VARCHAR(32) NOT NULL ,
                 `name` VARCHAR(255) NOT NULL ,
+                `semester` VARCHAR(32) NOT NULL ,
                 `infotext` TEXT NOT NULL ,
                 `algorithm` VARCHAR(255) NOT NULL ,
                 `algorithm_run` TINYINT(1) NOT NULL DEFAULT 0 ,
@@ -329,7 +330,19 @@ class Step00240CourseSets extends Migration
         $db->exec("ALTER TABLE  `seminare` ADD  `admission_disable_waitlist_move` TINYINT UNSIGNED NOT NULL DEFAULT '0'");
 
         SimpleORMap::expireTableScheme();
-    }
+
+        // Insert global configuration: who may edit course sets?
+		DBManager::get()->execute("INSERT IGNORE INTO `config`
+		    (`config_id`, `parent_id`, `field`, `value`, `is_default`,
+		     `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
+		     `description`, `comment`, `message_template`)
+		VALUES
+		    (MD5('ALLOW_DOZENT_COURSESET_ADMIN'), '',
+		    'ALLOW_DOZENT_COURSESET_ADMIN', '0', '1', 'boolean', 'global',
+		    'coursesets', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
+		    'Sollen Lehrende einrichtungsweite Anmeldesets anlegen und bearbeiten dürfen?',
+		    '', '')");
+	}
 
     function down()
     {

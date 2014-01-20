@@ -2,16 +2,41 @@
 
 class CoursesetModel {
 
-    public function getInstCourses($instituteIds, $coursesetId='', $selectedCourses=array(), $semester_id = null) {
+    /**
+     * Fetches courses at the given institutes.
+     * @param Array  $instituteIds IDs of institutes to check
+     * @param String $coursesetId Get also courses assigned to the given courseset
+     * @param Array  $selectedCourses Courses that have already been selected manually
+     * @param String $smeester_id Get only courses belonging to the given semester
+     * @param bool   $onlyOwn Fetch only courses the current user is lecturer of?
+     * 
+     * @return Array Found courses.
+     */
+    public function getInstCourses($instituteIds, $coursesetId='', $selectedCourses=array(), $semester_id = null, $onlyOwn=false) {
         // Get semester dates for course sorting.
         $currentSemester = $semester_id ? Semester::find($semester_id) : Semester::findCurrent();
         
         $db = DBManager::get();
-        $courses = $db->fetchFirst(
-            "SELECT si.seminar_id FROM seminar_inst si
-            INNER JOIN seminare s USING(seminar_id)
-            WHERE  s.start_time <= ? AND (? <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
-            AND si.Institut_id IN(?)", array($currentSemester->beginn, $currentSemester->beginn, $instituteIds));
+        if ($onlyOwn) {
+            $query = "SELECT su.`Seminar_id` FROM `seminar_user` su
+                INNER JOIN `seminare` s USING(`Seminar_id`)
+                WHERE  s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1) 
+                AND su.`user_id`=?";
+            $parameters = array($currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id);
+            if (get_config('DEPUTIES_ENABLE')) {
+                $query .= " UNION SELECT s.`Seminar_id` FROM `seminare` s
+                    INNER JOIN `deputies` d ON (s.`Seminar_id`=d.`range_id`)
+                    WHERE s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1)
+                    AND d.`user_id`=?";
+                $parameters = array_merge($parameters, array($currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id));
+            }
+            $courses = $db->fetchFirst($query, $parameters);
+        } else {
+            $courses = $db->fetchFirst("SELECT si.seminar_id FROM seminar_inst si
+                INNER JOIN seminare s USING(seminar_id)
+                WHERE  s.start_time <= ? AND (? <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
+                AND si.Institut_id IN(?)", array($currentSemester->beginn, $currentSemester->beginn, $instituteIds));
+        }
         if ($coursesetId) {
             $courses = array_merge($courses, $db->fetchFirst(
                     "SELECT seminar_id FROM seminar_courseset sc
@@ -21,15 +46,15 @@ class CoursesetModel {
         if ($selectedCourses) {
             $courses = array_merge($courses, $selectedCourses);
         }
-        
         $data = array();
         $callable = function ($course) use (&$data) {
-            $semester = $course->end_semester ?: Semester::findCurrent();
-            $data[$semester->id]['name'] = $semester->name;
+            //$semester = $course->end_semester ?: Semester::findCurrent();
+            //$data[$semester->id]['name'] = $semester->name;
             $set_id = DBManager::get()->fetchColumn(
                     "SELECT set_id FROM seminar_courseset WHERE seminar_id=?", array($course->id));
             // ... and sort them in at the right semester.
-            $data[$semester->id]['courses'][$course->id] =
+            //$data[$semester->id]['courses'][$course->id] =
+            $data[$course->id] =
             array(
                     'seminar_id' => $course->Seminar_id,
                     'VeranstaltungsNummer' => $course->VeranstaltungsNummer,

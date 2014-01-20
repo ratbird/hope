@@ -1208,7 +1208,7 @@ class Course_MembersController extends AuthenticatedController
             $table = $doc->add('table');
             $table->header = $aux['head'];
             $table->content = $aux['rows'];
-            $doc->export('xls');
+            $doc->export('XLS');
         } else {
             $this->aux = $course->aux->getCourseData($course);
         }

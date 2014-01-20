@@ -754,7 +754,7 @@ if ($change_object_schedules) {
 
 //Objekteigenschaften aendern
 $change_object_properties = Request::option('change_object_properties');
-if ($change_object_properties) {
+if ($change_object_properties && Request::isPost()) {
     $ObjectPerms = ResourceObjectPerms::Factory($change_object_properties);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $changeObject = ResourceObject::Factory($change_object_properties);

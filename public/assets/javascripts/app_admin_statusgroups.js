@@ -89,14 +89,20 @@ STUDIP.modalDialog = {
     }
 }
 
-// select all persons from selectable box
-function selectAll() {
-    $('#search_persons_selectable option').prop('selected', 'selected');
-    $('#search_persons_add').click();
-}
+STUDIP.statusgroups.addMembers = {
+    init: function() {
+        $('#search_persons_select_all').show();
+        $('#search_persons_deselect_all').show();
+    },
+    // select all persons from selectable box
+    selectAll: function () {
+        $('#search_persons_selectable option').prop('selected', 'selected');
+        $('#search_persons_add').click();
+    },
 
-// deselect all persons from selected box
-function deselectAll() {
-    $('#search_persons_selected option').prop('selected', 'selected');
-    $('#search_persons_remove').click();
+    // deselect all persons from selected box
+    deselectAll: function () {
+        $('#search_persons_selected option').prop('selected', 'selected');
+        $('#search_persons_remove').click();
+    }
 }

@@ -237,8 +237,8 @@ class Step00240CourseSets extends Migration
             PRIMARY KEY (`rule_id`, `user_id`) )
             ENGINE = MyISAM");
 
-        $cs_insert = $db->prepare("INSERT INTO coursesets (set_id,user_id,name,infotext,algorithm,mkdate,chdate)
-                                   VALUES (?,?,?,?,'',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
+        $cs_insert = $db->prepare("INSERT INTO coursesets (set_id,user_id,name,infotext,semester,algorithm,mkdate,chdate)
+                                   VALUES (?,?,?,?,'','',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $cs_i_insert = $db->prepare("INSERT INTO courseset_institute (set_id,institute_id,mkdate,chdate) VALUES (?,?,UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $cs_r_insert = $db->prepare("INSERT INTO courseset_rule (set_id,rule_id,type,mkdate) VALUES (?,?,?,UNIX_TIMESTAMP())");
         $s_cs_insert = $db->prepare("INSERT INTO seminar_courseset (set_id,seminar_id,mkdate) VALUES (?,?,UNIX_TIMESTAMP())");
@@ -300,17 +300,21 @@ class Step00240CourseSets extends Migration
 
         $admission = $db->fetchAll("SELECT seminar_id,seminare.name,institut_id,admission_turnout
             FROM seminare left join admission_group on(group_id=admission_group) WHERE admission_type in (1,2) AND group_id is null");
+        $migrated_per_institute = array();
         foreach ($admission as $course) {
-            $rule_id = md5(uniqid('lockedadmissions',1));
-            $locked_insert->execute(array($rule_id));
-            $set_id = md5(uniqid('coursesets',1));
-            $name = 'Anmeldung gesperrt: ' . $course['name'];
-            $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
-            $info .= "\n" . ' Teilnahmebeschränkt: ' . $course['admission_turnout'];
-            $cs_insert->execute(array($set_id,$GLOBALS['user']->id,$name,$info));
-            $cs_i_insert->execute(array($set_id,$course['institut_id']));
-            $cs_r_insert->execute(array($set_id,$rule_id,'LockedAdmission'));
-            $s_cs_insert->execute(array($set_id, $course['seminar_id']));
+            if (!isset($migrated_per_institute[$course['institut_id']])) {
+                $rule_id = md5(uniqid('lockedadmissions',1));
+                $locked_insert->execute(array($rule_id));
+                $set_id = md5(uniqid('coursesets',1));
+                $inst_name = $db->fetchColumn("SELECT name FROM Institute WHERE Institut_id=?", array($course['institut_id']));
+                $name = 'Anmeldung gesperrt: Einrichtung ' . $inst_name;
+                $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
+                $cs_insert->execute(array($set_id,$GLOBALS['user']->id,$name,$info));
+                $cs_i_insert->execute(array($set_id,$course['institut_id']));
+                $cs_r_insert->execute(array($set_id,$rule_id,'LockedAdmission'));
+                $migrated_per_institute[$course['institut_id']] = $set_id;
+            }
+            $s_cs_insert->execute(array($migrated_per_institute[$course['institut_id']], $course['seminar_id']));
         }
 
         //Warte und Anmeldelisten löschen

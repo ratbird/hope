@@ -167,8 +167,9 @@ class ExternModule {
             return $default_config;
         }
         foreach ($this->elements as $element) {
-            if ($element->isEditable())
+            if ($element->isEditable()) {
                 $default_config[$element->getName()] = $element->getDefaultConfig();
+            }
         }
         
         return $default_config;
@@ -240,9 +241,9 @@ class ExternModule {
         
         foreach ($this->elements as $element) {
             if ($element->isEditable()) {
-                if ($open_elements[$element->getName()])
+                if ($open_elements[$element->getName()]) {
                     $out .= $element->toStringEdit($post_vars, $faulty_values, $edit_form, $anker);
-                else {
+                } else {
                     $edit_form->setElementName($element->getName());
                     $out .= $edit_form->editElementHeadline($element->getRealName(),
                             $this->getName(), $this->config->getId(), FALSE, $anker);
@@ -278,19 +279,20 @@ class ExternModule {
         
         if ($element_name == "") {
             foreach ($this->elements as $element) {
-                if ($faulty = $element->checkFormValues())
+                if ($faulty = $element->checkFormValues()) {
                     $faulty_values = $faulty_values + $faulty;
+                }
             }
         }
         else {
-            if ($faulty_values = $this->elements[$element_name]->checkFormValues()) {
-                    
+            if ($faulty_values = $this->elements[$element_name]->checkFormValues()) {   
                 return $faulty_values;
             }
         }
             
-        if (sizeof($faulty_values))
+        if (sizeof($faulty_values)) {
             return $faulty_values;
+        }
         
         return FALSE;
     }
@@ -314,9 +316,9 @@ class ExternModule {
     *
     */
     function executeCommand ($element, $command, $value) {
-     //   var_dump($element, $command, $value);
-        if ($element == "Main" || in_array($element, $this->registered_elements))
+        if ($element == "Main" || in_array($element, $this->registered_elements)) {
             return $this->elements[$element]->executeCommand($command, $value);
+        }
     }
     
     /**
@@ -334,7 +336,6 @@ class ExternModule {
     *
     */
     function printError () {
-        
         page_close();
         exit;
     }

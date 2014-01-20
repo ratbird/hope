@@ -258,8 +258,9 @@ class ExternEditModule extends ExternEditHtml {
                 = $this->config->getValue($this->element_name, "groupsvisible");
 
         // initialize groups if this value isn't set in the config file
-        if (!$groups_config)
+        if (!$groups_config) {
             $groups_config = array_keys($groups_db);
+        }
 
         $groups_aliases = $this->getValue("groupsalias");
         $groups_visible = $this->getValue("groupsvisible");
@@ -291,11 +292,6 @@ class ExternEditModule extends ExternEditHtml {
         foreach ($groups_db as $id => $name) {
 
             // name of group
-            /*
-            if (strlen($name) > 70)
-                $name = substr($name, 0, 34) . "[...]" . substr($name, -30);
-             * 
-             */
             $out .= "<tr" . $this->css->getFullClass() . ">\n";
             $out .= "<td nowrap=\"nowrap\"><font size=\"2\">&nbsp;" . htmlReady($name) . "</font></td>";
 
@@ -345,8 +341,9 @@ class ExternEditModule extends ExternEditHtml {
             $visibility = array_fill(0, sizeof($order), 1);
         }
 
-        if (!is_array($order))
+        if (!is_array($order)) {
             $order = array_keys($SEM_TYPE);
+        }
 
         $this->css->resetClass();
         $this->css->switchClass();
@@ -363,8 +360,9 @@ class ExternEditModule extends ExternEditHtml {
         foreach ($SEM_CLASS as $class_index => $foo) {
             $i = 0;
             foreach ($SEM_TYPE as $type_index => $type) {
-                if ($type["class"] == $class_index)
+                if ($type["class"] == $class_index) {
                     $mapping[$type_index] = $i++;
+                }
             }
             $classes[$class_index] = $this->getValue("class_$class_index");
         }
@@ -378,8 +376,7 @@ class ExternEditModule extends ExternEditHtml {
                 if (strlen($SEM_TYPE[$order[$i]]["name"]) > 25) {
                     $out .= htmlReady(substr($SEM_TYPE[$order[$i]]["name"], 0, 22)
                             . "... ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
-                }
-                else {
+                } else {
                     $out .= htmlReady($SEM_TYPE[$order[$i]]["name"]
                             . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})");
                 }
@@ -389,9 +386,9 @@ class ExternEditModule extends ExternEditHtml {
                 $out .= "<td><input type=\"text\" name=\"{$this->element_name}_class_";
                 $out .= $SEM_TYPE[$order[$i]]['class'] . "[{$mapping[$order[$i]]}]\"";
                 $out .= "\" size=\"20\" maxlength=\"100\" value=\"";
-                if (isset($classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]]))
+                if (isset($classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]])) {
                     $out .= $classes[$SEM_TYPE[$order[$i]]['class']][$mapping[$order[$i]]] . "\">";
-                else {
+                } else {
                     $out .= $SEM_TYPE[$order[$i]]["name"]
                             . " ({$SEM_CLASS[$SEM_TYPE[$order[$i]]['class']]['name']})\">";
                 }

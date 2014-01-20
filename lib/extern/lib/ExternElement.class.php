@@ -152,8 +152,6 @@ class ExternElement {
         if ($faulty_values == '')
             $faulty_values = array();   
         $out = "";
-        $tag_headline = "";
-        $table = "";
         if ($edit_form == "")
             $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
         
@@ -211,7 +209,6 @@ class ExternElement {
     * 
     */
     function executeCommand ($command, $value = "") {
-//var_dump($command);
         switch ($command) {
             case "show" :
                 $visible = $this->config->getValue($this->name, "visible");
@@ -226,7 +223,6 @@ class ExternElement {
                 
             case "hide" :
                 $visible = $this->config->getValue($this->name, "visible");
-                var_dump($visible);
                 if ($value >= 0 || $value < sizeof($visible)) {
                     $visible[$value] = "0";
                     $this->config->setValue($this->name, "visible", $visible);
@@ -243,8 +239,7 @@ class ExternElement {
                         $b = array_pop($order);
                         array_push($order, $a);
                         $order[0] = $b;
-                    }
-                    else {
+                    } else {
                         $b = $order[$value - 1];
                         $order[$value - 1] = $a;
                         $order[$value] = $b;
@@ -255,7 +250,6 @@ class ExternElement {
                 break;
                 
             case "move_right" :
-                
                 $order = $this->config->getValue($this->name, "order");
                 if ($value >= 0 || $value < sizeof($order)) {
                     $a = $order[$value];
@@ -263,8 +257,7 @@ class ExternElement {
                         $b = $order[0];
                         $order[0] = $a;
                         $order[$value] = $b;
-                    }
-                    else {
+                    } else {
                         $b = $order[$value + 1];
                         $order[$value + 1] = $a;
                         $order[$value] = $b;
@@ -296,13 +289,12 @@ class ExternElement {
                 if ($groups = get_all_statusgruppen($this->config->range_id)) {
                     $groups = array_keys($groups);
                     $visible = array_intersect($groups, $visible);
-                }
-                else
-                    break;
+                } else break;
                 // initialize groupsvisible if it isn't set in the config file
                 // all groups are visible (1)
-                if (!$visible) 
+                if (!$visible) {
                     $visible = array_keys(get_all_statusgruppen($this->config->range_id));
+                }
                 $visible = array_diff($visible, array($value));
                 $this->config->setValue($this->name, "groupsvisible", $visible);
                 Request::set("{$this->name}_groupsvisible", array_values($visible));
@@ -338,16 +330,18 @@ class ExternElement {
                         && $_POST["_$form_name"] != "")
                     $_POST[$form_name] = $_POST["_$form_name"];
             }
-            if (is_array($_POST[$form_name]))
+            if (is_array($_POST[$form_name])) {
                 $value = $_POST[$form_name];
-            else
+            } else {
                 $value = array($_POST[$form_name]);
+            }
                         
             $splitted_attribute = explode("_", $attribute);
-            if (sizeof($splitted_attribute) == 1)
+            if (sizeof($splitted_attribute) == 1) {
                 $html_attribute = $splitted_attribute[0];
-            else
+            } else {
                 $html_attribute = $splitted_attribute[1] . $splitted_attribute[2];
+            }
             
             for ($i = 0; $i < sizeof($value); $i++) {
                 
@@ -381,10 +375,11 @@ class ExternElement {
                         $fault[$form_name][$i] = (!preg_match("/^\d{0,4}$/", $value[$i])
                                 || $value[$i]> 2000 || $value[$i]< 0);
                         if ($_POST["{$form_name}pp"] == "%") {
-                            if (is_array($_POST[$form_name]))
+                            if (is_array($_POST[$form_name])) {
                                 $_POST[$form_name][$i] = $_POST[$form_name][$i] . "%";
-                            else
+                            } else {
                                 $_POST[$form_name] = $_POST[$form_name] . "%";
+                            }
                         }
                         break;
                     case "valign" :
@@ -451,8 +446,9 @@ class ExternElement {
             
         }
         
-        if (in_array(TRUE, $fault))
+        if (in_array(TRUE, $fault)) {
             return $fault;
+        }
         
         return FALSE;
     }
@@ -470,44 +466,55 @@ class ExternElement {
         if ($this->config->getValue($args['main_module'], 'incdata')) {
             $link = $sri_link;
             if ($args['link_args']) {
-                if (strrpos($link, '?'))
+                if (strrpos($link, '?')) {
                     $link .= '&' . $args['link_args'];
-                else
+                } else {
                     $link .= '?' . $args['link_args'];
+                }
             }
-            if ($this->config->global_id)
+            if ($this->config->global_id) {
                 $link .= '&global_id=' . $this->config->global_id;
+            }
         } else {
             if ($sri_link) {
                 $link = $GLOBALS['EXTERN_SERVER_NAME'] . 'extern.php';
-                if ($args['link_args'])
+                if ($args['link_args']) {
                     $link .= '?' . $args['link_args'] . '&';
-                else
+                } else {
                     $link .= '?';
-                if ($this->config->global_id)
+                }
+                if ($this->config->global_id) {
                     $link .= 'global_id=' . $this->config->global_id . '&';
+                }
                 $link .= 'page_url=' . $sri_link;
             } elseif ($extern_link) {
-                if (strrpos($extern_link, '?'))
+                if (strrpos($extern_link, '?')) {
                     $link = "$extern_link&module=$module_name";
-                else
+                } else {
                     $link = "$extern_link?module=$module_name";
-                if ($config = $this->config->getValue($this->getName(), 'config'))
+                }
+                if ($config = $this->config->getValue($this->getName(), 'config')) {
                     $link .= '&config_id=' . $config;
+                }
                 $link .= '&range_id=' . $this->config->range_id;
-                if ($args['link_args'])
+                if ($args['link_args']) {
                     $link .= '&' . $args['link_args'];
-                if ($this->config->global_id)
+                }
+                if ($this->config->global_id) {
                     $link .= '&global_id=' . $this->config->global_id;
+                }
             } else {
                 $link = $GLOBALS['EXTERN_SERVER_NAME'] . "extern.php?module=$module_name";
-                if ($config = $this->config->getValue($this->getName(), 'config'))
+                if ($config = $this->config->getValue($this->getName(), 'config')) {
                     $link .= '&config_id=' . $config;
+                }
                 $link .= '&range_id=' . $this->config->range_id;
-                if ($args['link_args'])
+                if ($args['link_args']) {
                     $link .= '&' . $args['link_args'];
-                if ($this->config->global_id)
+                }
+                if ($this->config->global_id) {
                     $link .= '&global_id=' . $this->config->global_id;
+                }
             }
         }
         return $link;

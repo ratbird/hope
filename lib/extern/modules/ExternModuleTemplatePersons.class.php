@@ -76,14 +76,6 @@ class ExternModuleTemplatePersons extends ExternModule {
     }
 
     function setup () {
-        // extend $data_fields if generic datafields are set
-    //  $config_datafields = $this->config->getValue("Main", "genericdatafields");
-    //  $this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
-
-        // setup module properties
-    //  $this->elements["LinkIntern"]->link_module_type = 2;
-    //  $this->elements["LinkIntern"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-
         $this->elements['TemplateGeneric']->real_name = _("Template");
         // Set internal link to module 'staff details'
         $this->elements['LinkInternTemplate']->link_module_type = array(2, 14);

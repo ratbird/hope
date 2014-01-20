@@ -83,7 +83,6 @@ else {
 if (!$module)
     die("Unknown module type");
 
-
 $element_command = FALSE;
 $edit = Request::option('edit');
 if ($edit) {
@@ -101,14 +100,6 @@ if ($edit) {
         }
     }
 }
-// execute commands they modify attributes of given element
-/*
-if ($execute_command) {
-    var_dump($edit, $execute_command);
-    $module->executeCommand($edit, $execute_command, $pos);
-}
- * 
- */
 
 $elements = $module->getAllElements();
 
@@ -159,8 +150,7 @@ if (Request::option('com') == 'store') {
             my_msg($message, "blank", 1);
             echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
             $module->printoutEdit($edit_open, "", "", $edit);
-        }
-        else {
+        } else {
             $module->store($edit, $_POST);
             $message = _("Die eingegebenen Werte wurden übernommen.");
             my_msg($message, "blank", 1);
@@ -207,30 +197,29 @@ if ($module->getType() != 0) {
     $info_preview .= _("Es werden eventuell nicht alle Einstellungen in der Vorschau angezeigt.");
 
     $info_content = array(
-                                    array("kategorie" => "Information:",
-                                                "eintrag" => array(
-                                                    array("icon" => "icons/16/black/info.png",
-                                                                "text" => $info_edit_element
-                                                    )
-                                    )),
-                                    array("kategorie" => "Aktion:",
-                                            "eintrag" => array(
-                                                    array("icon" => "icons/16/black/info.png",
-                                                                "text" => $info_preview,
-                                                    )
-                                    )));
+            array("kategorie" => "Information:",
+                        "eintrag" => array(
+                            array("icon" => "icons/16/black/info.png",
+                                        "text" => $info_edit_element
+                            )
+            )),
+            array("kategorie" => "Aktion:",
+                    "eintrag" => array(
+                            array("icon" => "icons/16/black/info.png",
+                                        "text" => $info_preview,
+                            )
+            )));
 }
 // the type is Global -> no preview
 else {
     $info_content = array(
-                                    array("kategorie" => "Information:",
-                                                "eintrag" => array(
-                                                    array("icon" => "icons/16/black/info.png",
-                                                                "text" => $info_edit_element
-                                                    )
-                                    )));
+            array("kategorie" => "Information:",
+                        "eintrag" => array(
+                            array("icon" => "icons/16/black/info.png",
+                                        "text" => $info_edit_element
+                            )
+            )));
 }
 
 print_infobox($info_content, "infobox/institutes.jpg");
-
 ?>

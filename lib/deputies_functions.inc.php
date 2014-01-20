@@ -222,7 +222,7 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
         case 'meine_sem':
             $fields = array(
                 "seminare.VeranstaltungsNummer AS sem_nr",
-                "CONCAT(seminare.Name, ' ["._("Vertretung")."]')",
+                "CONCAT(seminare.Name, ' ["._("Vertretung")."]') AS Name",
                 "seminare.Seminar_id",
                 "seminare.status as sem_status",
                 "'dozent'",
@@ -247,7 +247,7 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
         case 'notification':
             $fields = array(
                      "seminare.VeranstaltungsNummer AS sem_nr",
-                     "CONCAT(seminare.Name, ' ["._("Vertretung")."]')",
+                     "CONCAT(seminare.Name, ' ["._("Vertretung")."]') AS Name",
                      "seminare.Seminar_id",
                      "seminare.status as sem_status",
                      "deputies.gruppe",

@@ -78,7 +78,7 @@ class MeineSeminareController extends AuthenticatedController
 
         $dbv = new DbView();
 
-        $query = "SELECT seminare.Seminar_id, seminare.VeranstaltungsNummer AS sem_nr, seminare.Name,
+        $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id, 
                          seminare.status AS sem_status, seminar_user.gruppe, seminare.visible,
                          {$dbv->sem_number_sql} AS sem_number,
                          {$dbv->sem_number_end_sql} AS sem_number_end {$add_fields}

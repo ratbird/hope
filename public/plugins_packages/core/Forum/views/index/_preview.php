@@ -10,4 +10,5 @@
         'title'   => _('Vorschaufenster schließen'))) ?>
 
     <div class="postbody" id="<?= $preview_id ?>"></div>
+    <br style="clear: both">
 </div>

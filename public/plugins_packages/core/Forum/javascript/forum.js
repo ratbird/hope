@@ -306,7 +306,6 @@ STUDIP.Forum = {
     },
     
     editEntry: function (topic_id) {
-        jQuery('div[id*=preview]').parent().hide();
         jQuery('span[data-edit-topic*=]').hide();
         jQuery('span[data-show-topic*=]').show();
         
@@ -443,6 +442,7 @@ STUDIP.Forum = {
             type: 'POST',
             data: posting,
             success: function (html) {
+                jQuery('div[id*=preview]').parent().hide();
                 jQuery('#' + preview_id).html(html);
                 STUDIP.Markup.element('#' + preview_id);
                 jQuery('#' + preview_id).parent().show();

@@ -190,6 +190,30 @@ class Course extends SimpleORMap
         }
     }
 
+    /**
+     * Retrieves all members of a status
+     *
+     * @param String|Array $status  the status to filter with
+     *
+     * @return Array an array of all those members.
+     */
+    function getMembersWithStatus($status)
+    {
+        return CourseMember::findBySQL('seminar_id = ? AND status = ? ORDER BY position', array($this->id, $status));
+    }
+
+    /**
+     * Retrieves the number of all members of a status
+     *
+     * @param String|Array $status  the status to filter with
+     *
+     * @return int the number of all those members.
+     */
+    function countMembersWithStatus($status)
+    {
+        return CourseMember::countBySql('seminar_id = ? AND status = ? ORDER BY position', array($this->id, $status));
+    }
+
     function getNumParticipants()
     {
         return $this->members->findBy('status', words('user autor'))->count() + $this->getNumPrelimParticipants();

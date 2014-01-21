@@ -133,14 +133,8 @@ class Course extends \RESTAPI\RouteMap
         $json['description'] = $course->Beschreibung;
         $json['location'] = $course->Ort;
 
-        // members
-        $members = array();
-        foreach ($course->members as $member) {
-            $members[$member->status][] = $member;
-        }
-
         // lecturers
-        foreach ($members['dozent'] as $lecturer) {
+        foreach ($course->getMembersWithStatus('dozent') as $lecturer) {
             $url = sprintf('/user/%s', htmlReady($lecturer->user_id));
             $json['lecturers'][$url] = $lecturer->user->getFullName();
         }
@@ -148,7 +142,7 @@ class Course extends \RESTAPI\RouteMap
         // other members
         foreach (words("user autor tutor dozent") as $status) {
             $json['members'][$status] = sprintf('/course/%s/members?status=%s', $course->id, $status);
-            $json['members'][$status . '_count'] = sizeof($members[$status]);
+            $json['members'][$status . '_count'] = $course->countMembersWithStatus($status);
         }
 
         foreach (words("start_semester end_semester") as $key) {

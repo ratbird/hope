@@ -213,6 +213,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             $courseset = new CourseSet($coursesetId);
             $courseset->setName(Request::get('name'))
                 ->setInstitutes(Request::getArray('institutes'))
+                ->setSemester(Request::option('semester'))
                 ->setCourses(Request::getArray('courses'))
                 ->setUserLists(Request::getArray('userlists'))
                 ->setPrivate((bool) Request::get('private'))

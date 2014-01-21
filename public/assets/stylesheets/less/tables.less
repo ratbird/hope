@@ -424,11 +424,6 @@ table.default {
         color: #444;
         font-size: 1.4em;
         text-align: left;
-        transition: background-color 0.3s;
-
-        &:hover {
-            background-color: @light-gray-color-20;
-        }
     }
     thead {
       th {
@@ -473,6 +468,12 @@ table.default {
         img {
             vertical-align: middle;
         }
+    }
+    caption .actions {
+        border-left: 1px solid @brand-color-darker;
+        margin-bottom: -5px;
+        padding-bottom: 7px;
+        padding-left: 0.5em;
     }
     td.actions, th.actions {
         float: none;

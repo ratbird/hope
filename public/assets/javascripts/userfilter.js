@@ -39,18 +39,14 @@ STUDIP.UserFilter = {
     addCondition: function(containerId, targetUrl) {
         var children = $('.conditionfield');
         var query = '';
-        for (var i=0 ; i<children.size() ; i++) {
-            var current = $(children[i]);
-            if (query != '') {
-                query += '&';
-            }
-            query += 'field[]='+
-                encodeURIComponent(current.children('.conditionfield_class:first').val())+
+        $('.conditionfield').each(function() {
+            query += '&field[]='+
+                encodeURIComponent($(this).children('.conditionfield_class:first').val())+
                 '&compare_operator[]='+
-                encodeURIComponent(current.children('.conditionfield_compare_op:first').val())+
+                encodeURIComponent($(this).children('.conditionfield_compare_op:first').val())+
                 '&value[]='+
-                encodeURIComponent(current.children('.conditionfield_value:first').val());
-        }
+                encodeURIComponent($(this).children('.conditionfield_value:first').val());
+        });
         $.ajax({
             type: 'post',
             url: targetUrl,

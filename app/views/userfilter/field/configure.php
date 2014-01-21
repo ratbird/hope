@@ -6,7 +6,7 @@
 </select>
 <select name="value[]" size="1" class="conditionfield_value">
     <?php foreach ($field->getValidValues() as $id => $name) { ?>
-    <option value="<?= $id ?>"><?= htmlReady($name) ?></option>
+    <option value="<?= $id ?>"><?= htmlReady($via_ajax ? studip_utf8encode($name) : $name) ?></option>
     <?php } ?>
 </select>
 <?php } else { ?>

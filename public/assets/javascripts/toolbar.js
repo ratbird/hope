@@ -64,17 +64,9 @@
                 toolbar.append(buttons);
             });
 
-            // Render toolbar offscreen in order to obtain it's height
-            temp = $('<div class="editor_toolbar" style="position: absolute; left: -999px; top: -999px;"/>')
-                        .css('width', width)
-                        .html(toolbar.clone().css('position', 'relative'))
-                        .appendTo('body');
-            height = temp.height();
-            temp.remove();
-
             // Attach toolbar to the specified element
             wrap = $('<div class="editor_toolbar"/>').css('width', width);
-            $element.css('width', '100%').wrap(wrap).before(toolbar).css('margin-top', '+=' + height);
+            $element.css('width', '100%').wrap(wrap).before(toolbar);
         }
     };
 

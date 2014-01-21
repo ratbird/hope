@@ -3806,16 +3806,11 @@ div.overdiv div.content {
 .editor_toolbar {
   display: inline-block;
   font-size: 0.75em;
-  position: relative;
 }
 .editor_toolbar .buttons {
   *zoom: 1;
   margin: 0 !important;
   padding: 0 !important;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
   border-spacing: 0;
 }
 .editor_toolbar .buttons:before,

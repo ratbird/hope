@@ -17,6 +17,10 @@
         <div class="title">
 
             <div class="small_screen" style="margin-bottom: 5px">
+                <? if ($post['anonymous']): ?>
+                    <strong><?= _('Anonym') ?></strong>
+                    <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
+                <? else : ?>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
                     <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::SMALL,
                         array('title' => get_username($post['user_id']))) ?>
@@ -24,6 +28,7 @@
                     <?= htmlReady(get_fullname($post['user_id'])) ?>,
                     <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
                 </a>
+                <? endif ?>
 
                 <br>
             </div>
@@ -193,7 +198,6 @@
                 <? if (!$post['user_id']) : ?>
                     <?= _('von Stud.IP erstellt') ?><br>
                 <? endif ?>
-                <?= strftime($time_format_string_short, (int) $post['mkdate']) ?>
             </dd>
             
             <dd class="posting_icons">

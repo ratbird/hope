@@ -24,6 +24,12 @@ if (isset($flash['error'])) {
 } elseif (isset($flash['success'])) {
     echo MessageBox::success($flash['success']);
 }
+// New rules found in file system that are not yet installed.
+if ($newRules) {
+    echo MessageBox::info(_('Es wurden Anmelderegeln gefunden, die zwar im'.
+        'Dateisystem unter lib/admissionrules vorhanden sind, aber noch nicht '.
+        'installiert wurden:'), $newRules);
+}
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <?php

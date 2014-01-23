@@ -47,19 +47,18 @@ class Step00240CourseSets extends Migration
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `ruletype` VARCHAR(255) UNIQUE NOT NULL,
           `active` TINYINT(1) NOT NULL DEFAULT 0,
-          `deleteable` TINYINT(1) NOT NULL DEFAULT 1,
           `mkdate` INT(11) NOT NULL DEFAULT 0,
           PRIMARY KEY (`id`)
         ) ENGINE = MyISAM");
         // Create entries for default admission rule types.
         $db->exec("INSERT IGNORE INTO `admissionrules`
-            (`ruletype`, `active`, `deleteable`, `mkdate`) VALUES
-                ('ConditionalAdmission', 1, 0, UNIX_TIMESTAMP()),
-                ('LimitedAdmission', 1, 0, UNIX_TIMESTAMP()),
-                ('LockedAdmission', 1, 0, UNIX_TIMESTAMP()),
-                ('PasswordAdmission', 1, 0, UNIX_TIMESTAMP()),
-                ('TimedAdmission', 1, 0, UNIX_TIMESTAMP()),
-                ('ParticipantRestrictedAdmission', 1, 0, UNIX_TIMESTAMP());");
+            (`ruletype`, `active`, `mkdate`) VALUES
+                ('ConditionalAdmission', 1, UNIX_TIMESTAMP()),
+                ('LimitedAdmission', 1, UNIX_TIMESTAMP()),
+                ('LockedAdmission', 1, UNIX_TIMESTAMP()),
+                ('PasswordAdmission', 1, UNIX_TIMESTAMP()),
+                ('TimedAdmission', 1, UNIX_TIMESTAMP()),
+                ('ParticipantRestrictedAdmission', 1, UNIX_TIMESTAMP());");
 
         // Admission rules can be available globally or only at selected institutes.
         $db->exec("CREATE TABLE IF NOT EXISTS `admissionrule_inst` (

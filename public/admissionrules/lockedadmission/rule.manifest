@@ -1,4 +1,0 @@
-# LockedAdmissions
-classname=LockedAdmission
-installsql=sql/install.sql
-uninstallsql=sql/uninstall.sql

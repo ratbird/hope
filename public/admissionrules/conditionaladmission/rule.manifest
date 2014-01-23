@@ -1,4 +1,0 @@
-# ConditionalAdmissions
-classname=ConditionalAdmission
-installsql=sql/install.sql
-uninstallsql=sql/uninstall.sql

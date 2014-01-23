@@ -1,4 +1,0 @@
-# ParticipantRestrictedAdmissions
-classname=ParticipantRestrictedAdmission
-installsql=sql/install.sql
-uninstallsql=sql/uninstall.sql

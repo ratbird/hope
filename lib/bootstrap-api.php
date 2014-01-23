@@ -48,4 +48,12 @@ namespace RESTAPI {
         $class = "\\RESTAPI\\Routes\\$route";
         $router->registerRoutes(new $class);
     }
+
+    // Register plugin routes
+    array_walk(
+        array_flatten(\PluginEngine::sendMessage('RESTAPIPlugin', 'getRoutes')),
+        function ($route) use ($router) {
+            $router->registerRoutes($route);
+        }
+    );
 }

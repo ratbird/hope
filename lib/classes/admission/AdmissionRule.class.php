@@ -138,8 +138,8 @@ abstract class AdmissionRule
             $className = $current['ruletype'];
             if (is_dir($GLOBALS['STUDIP_BASE_PATH'].
                    '/lib/admissionrules/'.strtolower($className))) {
-                StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'].
-                    '/lib/admissionrules/'.strtolower($className));
+                require_once($GLOBALS['STUDIP_BASE_PATH'].'/lib/admissionrules/'.
+                    strtolower($className).'/'.$className.'.class.php');
                 try {
                     $rule = new $className();
                     $rules[$className] = array(

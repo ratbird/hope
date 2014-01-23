@@ -55,9 +55,6 @@ include_once 'lib/classes/RSSFeed.class.php';
 // -- wir sind jetzt definitiv in keinem Seminar, also... --
 closeObject();
 
-        	//$tree = TreeAbstract::getInstance('StudipRangeTree', array('visible_only' => 1));
-		//echo 'Tree:<pre>'.print_r($tree, true).'</pre>';
-
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user->id != 'nobody')){
     $rss_id = StudipNews::GetRssIdFromRangeId('studip');
     if ($rss_id) {

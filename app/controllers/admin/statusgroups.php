@@ -21,14 +21,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
         Navigation::activateItem('/admin/institute/groups');
 
-
-        // The logic to select an institute should somehow be moved somewhere else
-        if ($set = Request::get('admin_inst_id')) {
-            $_SESSION['SessionSeminar'] = $set;
-            $this->redirect('admin/statusgroups/index');
-        }
-        if ($action != 'selectInstitute')
-            $this->setType();
+        $this->setType();
 
         // encode
         if (Request::isXhr()) {
@@ -77,15 +70,15 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         PageLayout::addScript('jquery/jquery.nestable.js');
         $this->loadGroups();
     }
-    
+
     public function memberAdd_action($group_id = null) {
         // load selected group
         $this->group = new Statusgruppen($group_id);
-        
+
         // set infobox
         $this->setInfoBoxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Aktionen'), "<a href='" . $this->url_for('admin/statusgroups') . "'>" . _('Zurück') . "</a>", 'icons/16/black/arr_1left.png');
-        
+
         // load current group members on first call
         $this->selectedPersons = array();
         if (!Request::get('not_first_call')) {
@@ -101,13 +94,13 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $this->selectedPersons[] = new User($user_id);
             }
         }
-        
+
         // Search
         $this->search = Request::isXHR() ? utf8_decode(Request::get('freesearch')) : Request::get('freesearch');
         $lastSearch = Request::isXHR() ? utf8_decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
         $this->searchPreset = Request::get('search_preset');
-        $lastSearchPreset= Request::isXHR() ? utf8_decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
-        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst")|| !Request::get('not_first_call')) { // ugly
+        $lastSearchPreset = Request::isXHR() ? utf8_decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
+        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst") || !Request::get('not_first_call')) { // ugly
             // search with preset
             foreach ($this->type['groups'] as $group) {
                 $this->selectablePersons = array();
@@ -129,18 +122,18 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $this->selectablePersons[] = new User($user_id);
             }
         }
-        
+
         // select person
         if (Request::submitted('search_persons_add')) {
             foreach (Request::optionArray('search_persons_selectable') as $user_id) {
                 $this->selectedPersons[] = new User($user_id);
             }
         }
-        
+
         // deselect person
         if (Request::submitted('search_persons_remove')) {
             foreach (Request::optionArray('search_persons_selected') as $user_id) {
-                foreach ($this->selectedPersons as $key=>$value) {
+                foreach ($this->selectedPersons as $key => $value) {
                     if ($value->id == $user_id) {
                         unset($this->selectedPersons[$key]);
                     }
@@ -148,23 +141,23 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $this->selectablePersons[] = new User($user_id);
             }
         }
-        
+
         // remove already selected persons from selectable
         foreach ($this->selectedPersons as $user) {
-            foreach ($this->selectablePersons as $key=>$value) {
+            foreach ($this->selectablePersons as $key => $value) {
                 if ($value->id == $user->id) {
                     // delete from selectable persons
                     unset($this->selectablePersons[$key]);
                 }
             }
         }
-        
+
         // save changes
         if (Request::submitted('save')) {
-            
+
             $this->countRemoved = 0;
             CSRFProtection::verifyUnsafeRequest();
-            
+
             // delete users from group if removed
             $currentMembers = array();
             foreach ($this->group->members as $member) {
@@ -174,7 +167,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                         $isRemoved = false;
                     }
                 }
-                
+
                 if ($isRemoved) {
                     //exit("DELETED");
                     $this->group->removeUser($member->user_id);
@@ -183,10 +176,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                     $this->countRemoved++;
                 }
             }
-            
+
             // add new users
             $this->countNew = 0;
-            
+
             foreach ($this->selectedPersons as $user) {
                 if (!$this->group->isMember($user->id)) {
                     //exit("ADDED");
@@ -194,13 +187,12 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                     $new_user->store();
                     $this->type['after_user_add']($user_id);
                     $this->countNew++;
-                    
                 }
             }
-            
+
             $this->selectedPersons = array();
             $this->selectablePersons = array();
-            
+
             // reload current group members
             $this->group = new Statusgruppen($group_id);
             $this->currentGroupMembers = array();
@@ -209,15 +201,15 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $this->selectedPersons[] = $user;
             }
             PageLayout::postMessage(MessageBox::success(_('Die Mitglieder wurden gespeichert.')));
-            $this->redirect('admin/statusgroups/index#group-'.$group_id);
+            $this->redirect('admin/statusgroups/index#group-' . $group_id);
         }
-        
-        
+
+
         // abort changes
         if (Request::submitted('abort')) {
             $this->redirect('admin/statusgroups/index');
         }
-        
+
         // generate hidden form data to remember current state
         $this->selectablePersonsHidden = array();
         foreach ($this->selectablePersons as $user) {
@@ -227,14 +219,13 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         foreach ($this->selectedPersons as $user) {
             $this->selectedPersonsHidden[] = $user->id;
         }
-        
+
         // set layout
         if (Request::isXhr()) {
             $this->set_layout(null);
         } else {
             $this->title = _('Mitglieder verwalten');
         }
-        
     }
 
     /**
@@ -281,7 +272,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->afterFilter();
         }
     }
-    
+
     /**
      * Delete a group
      */
@@ -290,21 +281,21 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->group = new Statusgruppen($group_id);
         if (Request::submitted('confirm')) {
             CSRFProtection::verifySecurityToken();
-            
+
             // move all subgroups to the parent
             $children = SimpleORMapCollection::createFromArray($this->group->children);
             $children->setValue('range_id', $this->group->range_id);
             $children->store();
-            
+
             //remove users
             $this->group->removeAllUsers();
-            
+
             //goodbye group
             $this->group->delete();
             $this->redirect('admin/statusgroups/index');
         }
     }
-    
+
     /**
      * Delete a group
      */
@@ -316,22 +307,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->group->sortMembersAlphabetic();
             $this->redirect('admin/statusgroups/index');
         }
-    }
-
-    /**
-     * Ajaxaction to look for people
-     */
-    public function search_action() {
-        $searchString = utf8_decode(Request::get('query'));
-        $limit = Request::get('limit') ? : 10;
-        $users = User::search($searchString, $limit);
-        foreach ($users as $user) {
-            $new['name'] = utf8_encode($user->getFullName());
-            $new['id'] = $user->id;
-            $json[] = $new;
-        }
-        echo json_encode($json);
-        $this->render_nothing();
     }
 
     /**
@@ -359,7 +334,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /*     * ********************************
      * ***** PRIVATE HELP FUNCTIONS ****
      * ******************************** */
-    
+
     private function loadGroups() {
         $this->groups = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($_SESSION['SessionSeminar']));
     }
@@ -429,6 +404,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /*
      * Checks if a group should be updated from a request
      */
+
     private function checkForChangeRequests() {
         if (Request::submitted('save')) {
             $this->check('edit');
@@ -436,15 +412,15 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             if ($group->isNew()) {
                 $group->range_id = $_SESSION['SessionSeminar'];
             }
-                $group->name = Request::get('name');
-                $group->name_w = Request::get('name_w');
-                $group->name_m = Request::get('name_m');
-                $group->size = Request::get('size');
-                $group->range_id = Request::get('range_id') ? : $group->range_id;
-                $group->position = Request::get('position') ? : $group->position;
-                $group->selfassign = Request::get('selfassign') ? 1 : 0;
-                $group->store();
-                $group->setDatafields(Request::getArray('datafields') ? : array());
+            $group->name = Request::get('name');
+            $group->name_w = Request::get('name_w');
+            $group->name_m = Request::get('name_m');
+            $group->size = Request::get('size');
+            $group->range_id = Request::get('range_id') ? : $group->range_id;
+            $group->position = Request::get('position') ? : $group->position;
+            $group->selfassign = Request::get('selfassign') ? 1 : 0;
+            $group->store();
+            $group->setDatafields(Request::getArray('datafields') ? : array());
         }
         if (Request::submitted('order')) {
             $this->check('edit');
@@ -467,12 +443,13 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * Inst statusgroup but could be extended
      */
     private function setType() {
+        $_SESSION['SessionSeminar'] = Request::option('admin_inst_id') ? : $_SESSION['SessionSeminar'];
         if (get_object_type($_SESSION['SessionSeminar'], array('inst', 'fak'))) {
             $type = 'inst';
         }
         $types = $this->types();
         if (!$type || Request::submitted('type') && $type != Request::get('type')) {
-            $this->redirect($types[Request::get('type')]['redirect']);
+            $types[Request::get('type')]['redirect']();
         } else {
             $this->type = $types[$type];
         }
@@ -509,9 +486,16 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 'needs_size' => false,
                 'needs_self_assign' => false,
                 'edit' => function ($user_id) {
-            return $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessionSeminar']);
+            return $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessionSeminar']) && !LockRules::Check($_SESSION['SessionSeminar'], 'groups');
         },
-                'redirect' => 'admin/statusgroups/selectInstitute',
+                'redirect' => function () {
+            $GLOBALS['view_mode'] = "inst";
+            require_once 'lib/admin_search.inc.php';
+            include 'lib/include/html_head.inc.php';
+            include 'lib/include/header.php';
+            include 'lib/include/admin_search_form.inc.php';  // will not return
+            die(); //must not return
+        },
                 'groups' => array(
                     'members' => array(
                         'name' => _('Mitglieder'),

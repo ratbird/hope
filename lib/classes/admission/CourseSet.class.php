@@ -842,19 +842,21 @@ class CourseSet
         $tpl = $GLOBALS['template_factory']->open('admission/courseset/info');
         $tpl->set_attribute('courseset', $this);
         $institutes = array();
-        foreach ($this->institutes as $id => $assigned) {
-            $current = new Institute($id);
-            $institutes[$id] = $current['Name'];
+        if (!$short) {
+            foreach ($this->institutes as $id => $assigned) {
+                $current = new Institute($id);
+                $institutes[$id] = $current['Name'];
+            }
+            $courses = array();
+            foreach ($this->courses as $id => $assigned) {
+                $current = new Seminar($id);
+                $name = ($current->getNumber() ? $current->getNumber().' | '.$current->getName() : $current->getName());
+                $name .= ' (' . $current->getStartSemesterName() . ')';
+                $courses[$id] = $name;
+            }
+            $tpl->set_attribute('institutes', $institutes);
+            $tpl->set_attribute('courses', $courses);
         }
-        $tpl->set_attribute('institutes', $institutes);
-        $courses = array();
-        foreach ($this->courses as $id => $assigned) {
-            $current = new Seminar($id);
-            $name = ($current->getNumber() ? $current->getNumber().' | '.$current->getName() : $current->getName());
-            $name .= ' (' . $current->getStartSemesterName() . ')';
-            $courses[$id] = $name;
-        }
-        $tpl->set_attribute('courses', $courses);
         $tpl->set_attribute('short', $short);
         return $tpl->render();
     }

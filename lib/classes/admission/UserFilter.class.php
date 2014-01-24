@@ -88,9 +88,9 @@ class UserFilter
     public function generateId() {
         do {
             $newid = md5(uniqid(get_class($this).microtime(), true));
-            $db = DBManager::get()->query("SELECT `filter_id` 
-                FROM `userfilter` WHERE `filter_id`='.$newid.'");
-        } while ($db->fetch());
+            $id = DBManager::get()->fetchColumn("SELECT `filter_id` 
+                FROM `userfilter` WHERE `filter_id`=?", array($newid));
+        } while ($id);
         return $newid;
     }
 
@@ -191,13 +191,9 @@ class UserFilter
     public function store() {
         // Generate new ID if condition entry doesn't exist in DB yet.
         if (!$this->id) {
-            do {
-                $newid = md5(uniqid('UserFilter', true));
-                $db = DBManager::get()->query("SELECT `filter_id` 
-                    FROM `userfilter` WHERE `filter_id`='.$newid.'");
-            } while ($db->fetch());
-            $this->id = $newid;
+            $this->id = $this->generateId();
         }
+        
         // Store condition data.
         $stmt = DBManager::get()->prepare("INSERT INTO `userfilter` 
             (`filter_id`, `mkdate`, `chdate`)  

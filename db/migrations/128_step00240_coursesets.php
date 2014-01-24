@@ -94,7 +94,8 @@ class Step00240CourseSets extends Migration
                 `institute_id` VARCHAR(32) NOT NULL ,
                 `mkdate` INT NULL ,
                 `chdate` INT NULL ,
-            PRIMARY KEY (`set_id`, `institute_id`) )
+            PRIMARY KEY (`set_id`, `institute_id`),
+            INDEX `institute_id` (`institute_id`,`set_id`))
             ENGINE = MyISAM");
 
         // assign admission rules to course sets
@@ -103,7 +104,8 @@ class Step00240CourseSets extends Migration
                 `rule_id` VARCHAR(32) NOT NULL ,
                 `type` VARCHAR(255) NULL ,
                 `mkdate` INT NULL ,
-            PRIMARY KEY (`set_id`, `rule_id`) )
+            PRIMARY KEY (`set_id`, `rule_id`),
+            INDEX `type` (`set_id`,`type`))
             ENGINE = MyISAM");
 
         // sets of courses with common admission rules
@@ -119,7 +121,7 @@ class Step00240CourseSets extends Migration
                 `mkdate` INT NOT NULL DEFAULT 0,
                 `chdate` INT NOT NULL DEFAULT 0,
             PRIMARY KEY (`set_id`) ,
-            INDEX `set_user` (`set_id` ASC, `user_id` ASC) )
+            INDEX `set_user` (`user_id`, `set_id`) )
             ENGINE = MyISAM");
 
         // admission rules with max number of courses to register for
@@ -172,7 +174,8 @@ class Step00240CourseSets extends Migration
                 `set_id` VARCHAR(32) NOT NULL ,
                 `seminar_id` VARCHAR(32) NOT NULL ,
                 `mkdate` INT NOT NULL DEFAULT 0 ,
-            PRIMARY KEY (`set_id`, `seminar_id`) )
+            PRIMARY KEY (`set_id`, `seminar_id`),
+            INDEX `seminar_id` (`seminar_id`, `set_id` ) )
             ENGINE = MyISAM");
 
         // admission rules concerning time

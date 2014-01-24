@@ -62,7 +62,7 @@ if ($coursesets) {
         </span>
     </div>
     <div id="courseset_details_<?= $courseset->getId() ?>" style="display: none; margin-left: 20px;">
-        <?= $courseset->toString() ?>
+        <?= $courseset->toString(true) ?>
     </div>
     <?php } ?>
 </div>

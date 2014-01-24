@@ -88,13 +88,17 @@ class Admission_CoursesetController extends AuthenticatedController {
         }
 
         foreach ($institutes as $one) {
-            $sets = CourseSet::getCoursesetsByInstituteId($one, $filter);
-            foreach ($sets as $set) {
-                $courseset = new CourseSet($set['set_id']);
-                $this->coursesets[$set['set_id']] = $courseset;
+            if ($this->myInstitutes[$one]['num_sets']) {
+                $sets = CourseSet::getCoursesetsByInstituteId($one, $filter);
+                foreach ($sets as $set) {
+                    $courseset = new CourseSet($set['set_id']);
+                    $this->coursesets[$set['set_id']] = $courseset;
+                }
             }
         }
-        uasort($this->coursesets, function($a,$b) {return strnatcasecmp($a->getName(), $b->getName());});
+        uasort($this->coursesets, function($a,$b) {
+            return strnatcasecmp($a->getName(), $b->getName());
+        });
     }
 
     /**

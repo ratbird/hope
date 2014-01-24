@@ -145,7 +145,8 @@ abstract class AdmissionRule
                     $rules[$className] = array(
                             'id' => $current['id'],
                             'name' => $className::getName(),
-                            'description' => $className::getDescription()
+                            'description' => $className::getDescription(),
+                            'active' => $current['active']
                         );
                 } catch (Exception $e) {
                 }

@@ -98,9 +98,9 @@ class UserFilterField
     public function generateId() {
         do {
             $newid = md5(uniqid(get_class($this).microtime(), true));
-            $db = DBManager::get()->query("SELECT `field_id` 
-                FROM `userfilter_fields` WHERE `field_id`='.$newid.'");
-        } while ($db->fetch());
+            $id = DBManager::get()->fetchColumn("SELECT `field_id` 
+                FROM `userfilter_fields` WHERE `field_id`=?", array($newid));
+        } while ($id);
         return $newid;
     }
 
@@ -275,12 +275,7 @@ class UserFilterField
     public function store() {
         // Generate new ID if field entry doesn't exist in DB yet.
         if (!$this->id) {
-            do {
-                $newid = md5(uniqid('UserFilterField', true));
-                $db = DBManager::get()->query("SELECT `field_id` 
-                    FROM `userfilter_fields` WHERE `field_id`='.$newid.'");
-            } while ($db->fetch());
-            $this->id = $newid;
+            $this->id = $this->generateId();
         }
         // Store field data.
         $stmt = DBManager::get()->prepare("INSERT INTO `userfilter_fields` 

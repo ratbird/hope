@@ -26,7 +26,7 @@ require_once ('lib/user_visible.inc.php');
 require_once ('lib/contact.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/sms_functions.inc.php');
-require_once 'lib/models/MailQueueEntries.class.php';
+require_once 'lib/models/MailQueueEntry.class.php';
 
 //
 function CheckChecked($a, $b)
@@ -287,7 +287,7 @@ class messaging
         if (!get_config("MAILQUEUE_ENABLE")) {
             $mail->send();
         } else {
-            MailQueueEntries::add($mail, $message_id, $rec_user_id);
+            MailQueueEntry::add($mail, $message_id, $rec_user_id);
         }
     }
 

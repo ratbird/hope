@@ -23,6 +23,6 @@ class SendMailQueueJob extends CronJob
 
     public function execute($last_result, $parameters = array())
     {
-        MailQueueEntries::sendAll();
+        MailQueueEntry::sendAll();
     }
 }

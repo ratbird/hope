@@ -9,11 +9,11 @@
  *  the License, or (at your option) any later version.
  */
 
-class MailQueueEntries extends SimpleORMap {
+class MailQueueEntry extends SimpleORMap {
 
     static public function add(StudipMail $mail, $message_id = null, $user_id = null)
     {
-        $queue_entry = new MailQueueEntries();
+        $queue_entry = new MailQueueEntry();
         $queue_entry['mail'] = $mail;
         $queue_entry['message_id'] = $message_id;
         $queue_entry['user_id'] = $user_id;
@@ -25,7 +25,7 @@ class MailQueueEntries extends SimpleORMap {
 
     static public function sendNew()
     {
-        $mail_queue_entries = MailQueueEntries::findBySQL("tries = '0'");
+        $mail_queue_entries = self::findBySQL("tries = '0'");
         foreach ($mail_queue_entries as $mail_queue_entry) {
             $mail_queue_entry->send();
         }
@@ -33,7 +33,7 @@ class MailQueueEntries extends SimpleORMap {
 
     static public function sendAll()
     {
-        $mail_queue_entries = MailQueueEntries::findBySQL(
+        $mail_queue_entries = self::findBySQL(
             "tries = '0' " .
             "OR (last_try > (UNIX_TIMESTAMP() - 60 * 60) AND tries < 25) "
         );

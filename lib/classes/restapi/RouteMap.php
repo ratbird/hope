@@ -3,6 +3,8 @@ namespace RESTAPI;
 use Request, Config;
 
 /**
+ * Route maps define and group routes to resources.
+ *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
@@ -15,7 +17,8 @@ abstract class RouteMap
     protected $limit;
 
     /**
-     *
+     * Constructor of the route map. Initializes neccessary offset and limit
+     * parameters for pagination.
      */
     public function __construct()
     {
@@ -23,6 +26,15 @@ abstract class RouteMap
         $this->limit  = Request::int('limit', Config::get()->ENTRIES_PER_PAGE);
     }
 
+    /**
+     * Initializes the route map by binding it to a router and passing in
+     * the current route.
+     *
+     * @param RESTAPU\Router $router Router to bind this route map to
+     * @param Array          $route  The matched route out of
+     *                               Router::matchRoute; an array with keys
+     *                               'handler', 'conditions' and 'source'
+     */
     public function init($router, $route)
     {
         $this->router   = $router;
@@ -34,7 +46,18 @@ abstract class RouteMap
         }
     }
 
-
+    /**
+     * Marks this chunk of data as a slice of a larger data set with
+     * a sum of "total" entries.
+     *
+     * @param mixed $data         Chunk of data (should be sliced according
+     *                            to current offset and limit parameters).
+     * @param int   $total        The total number of data entries in the
+     *                            according set.
+     * @param array $uri_params   Neccessary parameters when generating uris
+     *                            for the current route.
+     * @param array $query_params Optional query parameters.
+     */
     public function paginated($data, $total, $uri_params = array(), $query_params = array())
     {
         $uri = $this->url($this->route['uri_template']->inject($uri_params), $query_params);

@@ -86,7 +86,7 @@ class Request implements ArrayAccess, IteratorAggregate
      */
     public function getIterator ()
     {
-        return new ArrayIterator($this->params);
+        return new ArrayIterator((array)$this->params);
     }
 
     /**

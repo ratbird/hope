@@ -195,7 +195,7 @@ class ShowList extends ShowTreeRow{
                     }
             }
             $edit .= '</div></div>';
-            
+            $content = $resObject->getDescription();
             //Daten an Ausgabemodul senden
             $this->showRow($icon, $link, $titel, $zusatz, 0, 0, 0, $new, $open, $content, $edit);
         }

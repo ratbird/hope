@@ -79,6 +79,7 @@ class Course_AdmissionController extends AuthenticatedController
         if (!SeminarCategories::GetByTypeId($this->course->status)->write_access_nobody) {
             $this->is_locked['write_level'] = 'disabled readonly';
         }
+        PageLayout::addSqueezePackage('admission');
     }
 
     /**
@@ -428,7 +429,19 @@ class Course_AdmissionController extends AuthenticatedController
             throw new Trails_Exception(400);
         }
     }
-
+    
+    function edit_courseset_action($cs_id)
+    {
+        $cs = new CourseSet($cs_id);
+        if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
+            $this->instant_course_set_view = true;
+            $response = $this->relay('admission/courseset/configure/' . $cs->getId());
+            $this->body = $response->body;
+        } else {
+            throw new Trails_Exception(400);
+        }
+    }
+    
     function after_filter($action, $args)
     {
         if (Request::isXhr()) {

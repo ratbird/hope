@@ -54,81 +54,95 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             <?= _('Einrichtungszuordnung:') ?>
             <span class="required">*</span>
         </label>
-        <div id="institutes">
-        <?php if ($myInstitutes) { ?>
-            <?php if ($instSearch) { ?>
-                <?= $instTpl ?>
-            <?php } else { ?>
-                <?php foreach ($myInstitutes as $institute) { ?>
-                    <?php if (sizeof($myInstitutes) != 1) { ?>
-                <input type="checkbox" name="institutes[]" value="<?= $institute['Institut_id'] ?>"
-                    <?= $selectedInstitutes[$institute['Institut_id']] ? 'checked="checked"' : '' ?>
-                    class="institute" onclick="STUDIP.Admission.getCourses(
-                    '<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')"/>
-                    <?php } else { ?>
-                <input type="hidden" name="institutes[]" value="<?= $institute['Institut_id'] ?>"/>
+        <? if (!$instant_course_set_view) : ?>
+            <div id="institutes">
+            <?php if ($myInstitutes) { ?>
+                <?php if ($instSearch) { ?>
+                    <?= $instTpl ?>
+                <?php } else { ?>
+                    <?php foreach ($myInstitutes as $institute) { ?>
+                        <?php if (sizeof($myInstitutes) != 1) { ?>
+                    <input type="checkbox" name="institutes[]" value="<?= $institute['Institut_id'] ?>"
+                        <?= $selectedInstitutes[$institute['Institut_id']] ? 'checked="checked"' : '' ?>
+                        class="institute" onclick="STUDIP.Admission.getCourses(
+                        '<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')"/>
+                        <?php } else { ?>
+                    <input type="hidden" name="institutes[]" value="<?= $institute['Institut_id'] ?>"/>
+                        <?php } ?>
+                        <?= htmlReady($institute['Name']) ?>
+                    <br/>
                     <?php } ?>
-                    <?= htmlReady($institute['Name']) ?>
-                <br/>
+                <?php } ?>
+            <?php } else { ?>
+                <?php if ($instSearch) { ?>
+                <div id="institutes">
+                    <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2down') ?>"
+                           <?= tooltip(_('Einrichtung hinzufügen')) ?> border="0" name="add_institute">
+                    <?= $instSearch ?>
+                    <br/><br/>
+                </div>
+                <i><?=  _('Sie haben noch keine Einrichtung ausgewählt. Benutzen Sie obige Suche, um dies zu tun.') ?></i>
+                <?php } else { ?>
+                <i><?=  _('Sie sind keiner Einrichtung zugeordnet.') ?></i>
                 <?php } ?>
             <?php } ?>
-        <?php } else { ?>
-            <?php if ($instSearch) { ?>
-            <div id="institutes">
-                <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2down') ?>"
-                       <?= tooltip(_('Einrichtung hinzufügen')) ?> border="0" name="add_institute">
-                <?= $instSearch ?>
-                <br/><br/>
             </div>
-            <i><?=  _('Sie haben noch keine Einrichtung ausgewählt. Benutzen Sie obige Suche, um dies zu tun.') ?></i>
-            <?php } else { ?>
-            <i><?=  _('Sie sind keiner Einrichtung zugeordnet.') ?></i>
-            <?php } ?>
-        <?php } ?>
-        </div>
+        <? else : ?>
+            <? foreach (array_keys($selectedInstitutes) as $institute) : ?>
+                <?= htmlReady($myInstitutes[$institute]['Name']) ?>
+                <br>
+            <?  endforeach ?>
+        <?  endif ?>
     </fieldset>
     <fieldset>
         <legend><?= _('Veranstaltungen') ?></legend>
-        <label class="caption">
-            <?= _('Semester:') ?>
-            <select name="semester" onchange="STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')">
-                <?php foreach(Semester::getAll() as $id => $semester) { ?>
-                <option value="<?= $id ?>"<?= $id == $selectedSemester ? ' selected="selected"' : '' ?>>
-                    <?= htmlReady($semester->name) ?>
-                </option>
-                <?php } ?>
-            </select>
-        </label>
-        <label class="caption">
-            <?= _('Veranstaltungszuordnung:') ?>
-        </label>
-        <div>
-            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'check');"><?= _('alle') ?></a>
-            |
-            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'uncheck');"><?= ('keine') ?></a>
-            |
-            <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'invert');"><?= ('Auswahl umkehren') ?></a>
-        </div>
-        <div id="instcourses">
-        <?= $coursesTpl; ?>
-        </div>
-        <? if (count($courseIds) && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) : ?>
+        <? if (!$instant_course_set_view) : ?>
+            <label class="caption">
+                <?= _('Semester:') ?>
+                <select name="semester" onchange="STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')">
+                    <?php foreach(Semester::getAll() as $id => $semester) { ?>
+                    <option value="<?= $id ?>"<?= $id == $selectedSemester ? ' selected="selected"' : '' ?>>
+                        <?= htmlReady($semester->name) ?>
+                    </option>
+                    <?php } ?>
+                </select>
+            </label>
+            <label class="caption">
+                <?= _('Veranstaltungszuordnung:') ?>
+            </label>
             <div>
-                    <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
-                        $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),
-                        array(
-                            'rel' => 'lightbox'
-                            )
-                        ); ?>
-                    <? if ($num_applicants = $courseset->getNumApplicants()) :?>
-                    <?= LinkButton::create(sprintf(_('Liste der Anmeldungen (%s Nutzer)'), $num_applicants),
-                        $controller->url_for('admission/courseset/applications_list/' . $courseset->getId()),
-                        array(
-                            'rel' => 'lightbox'
-                            )
-                        ); ?>
-                    <? endif ?>
+                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'check');"><?= _('alle') ?></a>
+                |
+                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'uncheck');"><?= ('keine') ?></a>
+                |
+                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'invert');"><?= ('Auswahl umkehren') ?></a>
             </div>
+            <div id="instcourses">
+            <?= $coursesTpl; ?>
+            </div>
+            <? if (count($courseIds) && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) : ?>
+                <div>
+                        <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
+                            $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),
+                            array(
+                                'rel' => 'lightbox'
+                                )
+                            ); ?>
+                        <? if ($num_applicants = $courseset->getNumApplicants()) :?>
+                        <?= LinkButton::create(sprintf(_('Liste der Anmeldungen (%s Nutzer)'), $num_applicants),
+                            $controller->url_for('admission/courseset/applications_list/' . $courseset->getId()),
+                            array(
+                                'rel' => 'lightbox'
+                                )
+                            ); ?>
+                        <? endif ?>
+                </div>
+            <? endif ?>
+        <? else :?>
+            <? foreach ($courseIds as $course_id) : ?>
+                <?= htmlReady(Course::find($course_id)->name) ?>
+                <br>
+            <?  endforeach ?>
         <? endif ?>
     </fieldset>
     <fieldset>

@@ -14,9 +14,13 @@
                     <?= $current_courseset->toString(true) ?>
             </div>
             <div>
-            <? if (!$is_locked['admission_type'] && $current_courseset->isUserAllowedToAssignCourse($user_id, $course_id)) : ?>
-                <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', array('rel' => 'lightbox')) ?>
-                <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->url_for('admission/courseset/configure/' . $current_courseset->getId())); ?>
+            <? if (!$is_locked['admission_type']) : ?>
+                <?  if ($current_courseset->isUserAllowedToAssignCourse($user_id, $course_id)) : ?>
+                    <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', array('rel' => 'lightbox')) ?>
+                <? endif ?>
+                <? if ($current_courseset->isUserAllowedToEdit($user_id)) : ?>
+                    <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->url_for('/edit_courseset/' . $current_courseset->getId()), array('rel' => 'lightbox')); ?>
+                <? endif ?>
             <? endif ?>
             </div>
         </div>

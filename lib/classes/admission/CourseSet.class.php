@@ -873,6 +873,21 @@ class CourseSet
         $is_correct_institute = isset($this->institutes[Course::find($course_id)->institut_id]);
         return $is_dozent && ($is_private || $is_correct_institute);
     }
+    
+    public function isUserAllowedToEdit($user_id)
+    {
+        global $perm;
+        $i_am_the_boss = $perm->have_perm('root', $user_id) || $this->getUserId() == $user_id;
+        if (!$i_am_the_boss && ($perm->have_perm('admin') || ($perm->have_perm('dozent') && get_config('ALLOW_DOZENT_COURSESET_ADMIN')))) {
+            foreach ($this->getInstituteIds() as $one) {
+                if ($perm->have_studip_perm('dozent', $one, $user_id)) {
+                    $i_am_the_boss = !$this->getPrivate();
+                    break;
+                }
+            }
+        }
+        return $i_am_the_boss;
+    }
 
 } /* end of class CourseSet */
 

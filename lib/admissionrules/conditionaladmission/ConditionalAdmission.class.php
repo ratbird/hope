@@ -198,6 +198,9 @@ class ConditionalAdmission extends AdmissionRule
             foreach ($this->conditions as $condition) {
                 if (!$condition->isFulfilled($userId)) {
                     $failed[] = $this->getMessage($condition->toString());
+                } else {
+                    $failed = array();
+                    break;
                 }
             }
         } else {

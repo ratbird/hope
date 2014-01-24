@@ -36,7 +36,7 @@ if ($newRules) {
 if ($ruleTypes) {
 ?>
 <table class="default" id="admissionrules">
-	<caption><?= _('Installierte Anmelderegeln:') ?></caption>
+<caption><?= _('Installierte Anmelderegeln:') ?></caption>
     <thead>
         <th><?= _('aktiv?') ?></th>
         <th><?= _('Art der Anmelderegel') ?></th>
@@ -44,28 +44,28 @@ if ($ruleTypes) {
     <tbody>
     <?php
     foreach ($ruleTypes as $type => $details) {
-    	if ($details['active']) {
-    		$text = _('Diese Regel ist aktiv. Klicken Sie hier, um die Einstellungen zu bearbeiten.');
-			$img = 'checkbox-checked';
-    	} else {
-    		$text = _('Diese Regel ist inaktiv. Klicken Sie hier, um die Einstellungen zu bearbeiten.');
-			$img = 'checkbox-unchecked';
-    	}
+    if ($details['active']) {
+    $text = _('Diese Regel ist aktiv. Klicken Sie hier, um die Einstellungen zu bearbeiten.');
+$img = 'checkbox-checked';
+    } else {
+    $text = _('Diese Regel ist inaktiv. Klicken Sie hier, um die Einstellungen zu bearbeiten.');
+$img = 'checkbox-unchecked';
+    }
     ?>
     <tr id="ruletype_<?= $type ?>">
-		<td>
+<td>
             <a href="<?= $controller->url_for('admission/ruleadministration/check_activation', $type) ?>" rel="lightbox">
                 <?= Assets::img('icons/16/blue/'.$img.'.png', 
                     array(
-                    	'alt' => $text,
-                    	'title' => $text
-					)); ?>
+                    'alt' => $text,
+                    'title' => $text
+)); ?>
             </a>
-		</td>
+</td>
         <td>
-            <b><?= $details['name'] ?></b> (<?= $type ?>)
+            <b><?= htmlReady($details['name']) ?></b> (<?= $type ?>)
             <br/>
-            <?= $details['description'] ?>
+            <?= htmlReady($details['description']) ?>
         </td>
     </tr>
     <?php } ?>

@@ -10,21 +10,24 @@ class Admission_RuleController extends AuthenticatedController {
         if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
         } else {
             $layout = $GLOBALS['template_factory']->open('layouts/base');
             $this->set_layout($layout);
             PageLayout::setTitle(_('Anmeldesets'));
             Navigation::activateItem('/tools/coursesets');
         }
+        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     public function configure_action($ruleType='', $ruleId='') {
         $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules();
         $this->ruleType = $ruleType;
         $this->rule = new $ruleType($ruleId);
-        $this->ruleTemplate = ($this->via_ajax ? 
-            studip_utf8encode($this->rule->getTemplate()) : 
-            $this->rule->getTemplate());
+        $this->ruleTemplate = $this->rule->getTemplate();
     }
 
     public function select_type_action() {
@@ -49,15 +52,7 @@ class Admission_RuleController extends AuthenticatedController {
                 $parsed['month'], $parsed['day'], $parsed['year']);
             $requestData['end_time'] = $timestamp;
         }
-        if ($this->via_ajax) {
-            $decoded = array();
-            foreach ($requestData as $name => $entry) {
-                $decoded[$name] = is_array($entry) ? array_map('studip_utf8decode', $entry) : studip_utf8decode($entry);
-            }
-            $this->rule->setAllData($decoded);
-        } else {
-            $this->rule->setAllData($requestData);
-        }
+        $this->rule->setAllData($requestData);
         $this->rule->store();
     }
 

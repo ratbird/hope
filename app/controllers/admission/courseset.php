@@ -3,7 +3,6 @@
 require_once('app/controllers/authenticated_controller.php');
 require_once('app/models/courseset.php');
 require_once('app/models/rule_administration.php');
-require_once('lib/classes/Institute.class.php');
 require_once('lib/classes/admission/CourseSet.class.php');
 require_once('lib/classes/admission/AdmissionUserList.class.php');
 require_once('lib/classes/admission/RandomAlgorithm.class.php');
@@ -19,6 +18,10 @@ class Admission_CoursesetController extends AuthenticatedController {
         if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
         // Open base layout for normal 
         } else {
             $layout = $GLOBALS['template_factory']->open('layouts/base');
@@ -35,6 +38,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             }
         }
         PageLayout::addSqueezePackage('admission');
+        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     /**

@@ -6,9 +6,9 @@ foreach ($ruleTypes as $className => $classDetail) {
 ?>
     <div id="<?= $className ?>">
         <label>
-        	<input type="radio" name="ruletype" value="<?= $className ?>"/><?= $via_ajax ? studip_utf8encode($classDetail['name']) : $classDetail['name'] ?>
-	        <?= Assets::img('icons/16/blue/question-circle.png', 
-	                tooltip2($via_ajax ? studip_utf8encode($classDetail['description']) : $classDetail['description'], true, true)) ?>
+            <input type="radio" name="ruletype" value="<?= $className ?>"/><?=$classDetail['name'] ?>
+            <?= Assets::img('icons/16/blue/question-circle.png', 
+                    tooltip2($classDetail['description'], true, true)) ?>
         </label>
     </div>
     <br/>

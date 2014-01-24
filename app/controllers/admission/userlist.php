@@ -10,6 +10,10 @@ class Admission_UserListController extends AuthenticatedController {
         if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
         } else {
             $layout = $GLOBALS['template_factory']->open('layouts/base');
             $this->set_layout($layout);
@@ -17,6 +21,7 @@ class Admission_UserListController extends AuthenticatedController {
             Navigation::activateItem('/tools/coursesets/userlists');
         }
         PageLayout::addSqueezePackage('admission');
+        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     public function index_action() {
@@ -49,9 +54,9 @@ class Admission_UserListController extends AuthenticatedController {
         $this->search = QuickSearch::get('user_id', $userSearch)
                                     ->withButton()
                                     ->render();
-		if ($this->flash['error']) {
-			$this->error = MessageBox::error($this->flash['error']);
-		}
+        if ($this->flash['error']) {
+            $this->error = MessageBox::error($this->flash['error']);
+        }
     }
 
     public function save_action($userlistId='') {
@@ -72,9 +77,9 @@ class Admission_UserListController extends AuthenticatedController {
             } else {
                 $this->flash['user_id'] = Request::get('user_id');
                 $this->flash['user_id_parameter'] = Request::get('user_id_parameter');
-	        	if (!Request::get('name')) {
-	        		$this->flash['error'] = _('Bitte geben Sie einen Namen für die Nutzerliste an.');
-	        	}
+                if (!Request::get('name')) {
+                    $this->flash['error'] = _('Bitte geben Sie einen Namen für die Nutzerliste an.');
+                }
             }
             $this->redirect($this->url_for('admission/userlist/configure', $userlistId));
         }

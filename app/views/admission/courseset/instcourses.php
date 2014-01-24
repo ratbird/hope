@@ -1,6 +1,6 @@
 <div id="courselist">
     <?php foreach ($allCourses as $course) {
-        $title = $via_ajax ? studip_utf8encode($course['Name']) : $course['Name'];
+        $title = $course['Name'];
         $title .= " (" . (int)$course['admission_turnout'] . ")";
         if ($course['VeranstaltungsNummer']) {
             $title = $course['VeranstaltungsNummer'].' | '.$title;

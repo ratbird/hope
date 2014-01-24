@@ -14,6 +14,10 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
         if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
         } else {
             $this->via_ajax = false;
             $layout = $GLOBALS['template_factory']->open('layouts/base');
@@ -22,6 +26,7 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
             Navigation::activateItem('/admin/config/admissionrules');
         }
         PageLayout::addSqueezePackage('admission');
+        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     /**
@@ -59,8 +64,7 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
             if ($globally) $globally = false;
             if (!$atInst) $atInst = true;
             $institute = new Institute($current['institute_id']);
-            $this->activated[$current['institute_id']] = (Request::isXhr() ? 
-                studip_utf8encode($institute->name) : $institute->name);
+            $this->activated[$current['institute_id']] = $institute->name;
         }
     }
 

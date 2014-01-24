@@ -32,35 +32,35 @@ $infobox = array('content' => $infobox,
 <h2><?= ($userlist && $userlist->getId()) ? _('Nutzerliste bearbeiten') : _('Nutzerliste anlegen') ?></h2>
 <form class="studip_form" action="<?= $controller->url_for('admission/userlist/save', (($userlist && $userlist->getId()) ? $userlist->getId() : '')) ?>" method="post">
     <label class="caption">
-    	<?= _('Name der Nutzerliste:') ?>
+    <?= _('Name der Nutzerliste:') ?>
         <span class="required">*</span>
         <input type="text" size="60" maxlength="255" name="name" value="<?= $userlist ? htmlReady($userlist->getName()) : '' ?>"/>
     </label>
     <br/>
     <label class="caption" for="factor">
-    	<?= _('Faktor zur Modifikation der Platzverteilung:') ?>
-	</label>
+    <?= _('Faktor zur Modifikation der Platzverteilung:') ?>
+</label>
     <div id="factordiv">
         <input type="text" size="4" maxlength="255" name="factor" id="factor" value="<?= $userlist ? $userlist->getFactor() : '1' ?>"/>
         <div id="factor-slider"></div>
         <script>
             $(function() {
-            	<?php
-            		$factor = 3;
-					$realfactor = 1;
-					if ($userlist) {
-						$realfactor = $userlist->getFactor();
-						if ($userlist->getFactor() < 1) {
-							$factor = intval($realfactor*4);
-						} else if ($realfactor <= 5) {
-							$factor = $realfactor+2;
-						} else {
-							$factor = 8;
-						}
-					}
-            	?>
-            	var factor = <?= $realfactor ?>;
-            	var realfactor = <?= $factor ?>;
+            <?php
+            $factor = 3;
+$realfactor = 1;
+if ($userlist) {
+$realfactor = $userlist->getFactor();
+if ($userlist->getFactor() < 1) {
+$factor = intval($realfactor*4);
+} else if ($realfactor <= 5) {
+$factor = $realfactor+2;
+} else {
+$factor = 8;
+}
+}
+            ?>
+            var factor = <?= $realfactor ?>;
+            var realfactor = <?= $factor ?>;
                 $('#factor-slider').slider({
                     range: "max",
                     min: 0,
@@ -68,13 +68,13 @@ $infobox = array('content' => $infobox,
                     value: realfactor,
                     step: 1,
                     slide: function(event, ui) {
-                    	if (ui.value < 3) {
-                    		factor = ui.value/4;
-                		} else if (ui.value < 8) {
-                    		factor = ui.value-2;
-                    	} else {
-                    		factor = 10;
-                    	}
+                    if (ui.value < 3) {
+                    factor = ui.value/4;
+                } else if (ui.value < 8) {
+                    factor = ui.value-2;
+                    } else {
+                    factor = 10;
+                    }
                         $('#factor').val(factor);
                         $('#factorval').html(factor);
                     }
@@ -88,8 +88,8 @@ $infobox = array('content' => $infobox,
     </div>
     <br/>
     <label class="caption">
-    	<?= _('Personen:') ?>
-	</label>
+    <?= _('Personen:') ?>
+</label>
     <div id="search">
         <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
         <?= CSRFProtection::tokenTag() ?>
@@ -99,20 +99,20 @@ $infobox = array('content' => $infobox,
         <br/><br/>
         <div id="users">
         <?php if ($userlist) { ?>
-    	<ul>
-			<?php foreach ($userlist->getUsers() as $userId => $assigned) { ?>
-	        <li id="user_<?= $userId ?>" class="userlist_user">
-	            <?= get_fullname($userId, 'full_rev').' ('.get_username($userId).')' ?>
-	            <input type="hidden" name="users[]" value="<?= $userId ?>"/>
-	            <a href="<?= $controller->url_for('admission/userlist/delete_user', 
-	                $userId, $userlist->getId()) ?>"
-	                onclick="return STUDIP.Admission.removeUserFromUserlist('<?= $userId ?>')">
-	                <?= Assets::img('icons/16/blue/trash.png', 
-	                    array('alt' => _('Diesen Eintrag löschen'), 
-	                          'title' => _('Diesen Eintrag löschen'))); ?>
-	            </a>
-	        </li>
-        	<?php } ?>
+    <ul>
+<?php foreach ($userlist->getUsers() as $userId => $assigned) { ?>
+        <li id="user_<?= $userId ?>" class="userlist_user">
+            <?= get_fullname($userId, 'full_rev').' ('.get_username($userId).')' ?>
+            <input type="hidden" name="users[]" value="<?= $userId ?>"/>
+            <a href="<?= $controller->url_for('admission/userlist/delete_user', 
+                $userId, $userlist->getId()) ?>"
+                onclick="return STUDIP.Admission.removeUserFromUserlist('<?= $userId ?>')">
+                <?= Assets::img('icons/16/blue/trash.png', 
+                    array('alt' => _('Diesen Eintrag löschen'), 
+                          'title' => _('Diesen Eintrag löschen'))); ?>
+            </a>
+        </li>
+        <?php } ?>
         <?php } else { ?>
             <span id="nousers">
                 <i><?= _('Sie haben noch niemanden hinzugefügt.') ?></i>

@@ -17,7 +17,7 @@
                 <a href="#" onclick="return STUDIP.UserFilter.removeConditionField($(this).parent())"
                     class="conditionfield_delete">
                     <?= Assets::img('icons/16/blue/trash.png'); ?></a>
-                <input type="hidden" name="conditions[]" value="<?= htmlentities(serialize($condition), ENT_COMPAT | ENT_HTML401, 'iso-8859-1') ?>"/>
+                <input type="hidden" name="conditions[]" value="<?= htmlReady(serialize($condition)) ?>"/>
             </div>
         <?php } ?>
     </div>

@@ -9,9 +9,6 @@ use Studip\Button, Studip\LinkButton;
     <?= Assets::img('icons/16/blue/add.png', array('alt' => _('Auswahlfeld hinzufügen'))) ?>
     <?php
         $text = _('Auswahlfeld hinzufügen');
-        if ($via_ajax) {
-            $text = studip_utf8encode($text);
-        }
         echo $text;
     ?>
 </a>

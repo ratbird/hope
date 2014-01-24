@@ -3,18 +3,18 @@
 ?>
 <form class="studip_form" id="rule_activation_form" action="<?= $controller->url_for('admission/ruleadministration/activate', $type) ?>" method="post">
     <div id="enabling">
-    	<label class="caption">
-    		<input type="checkbox" name="enabled" onclick="STUDIP.Admission.checkRuleActivation('rule_activation_form')"<?= $ruleTypes[$type]['active'] ? ' checked="checked"' : '' ?>/>&nbsp;<?= $via_ajax ? studip_utf8encode(_('Regel ist aktiv')) : _('Regel ist aktiv'); ?>
-    	</label>
+        <label class="caption">
+            <input type="checkbox" name="enabled" onclick="STUDIP.Admission.checkRuleActivation('rule_activation_form')"<?= $ruleTypes[$type]['active'] ? ' checked="checked"' : '' ?>/>&nbsp;<?= _('Regel ist aktiv') ?>
+        </label>
     </div>
     <br/>
     <div id="activation">
-    	<label for="activated" class="caption">
-    	    <?= $via_ajax ? studip_utf8encode(_('Regel ist verfügbar')) : _('Regel ist verfügbar') ?>
+        <label for="activated" class="caption">
+            <?= _('Regel ist verfügbar') ?>
         </label>
         <input type="radio" name="activated" value="studip" onclick="STUDIP.Admission.checkRuleActivation('rule_activation_form')"<?= $globally ? ' checked="checked"' : '' ?>/><?= _('systemweit') ?>
         <br/>
-        <input type="radio" name="activated" value="inst" onclick="STUDIP.Admission.checkRuleActivation('rule_activation_form')"<?= $atInst ? ' checked="checked"' : '' ?>/><?= $via_ajax ? studip_utf8encode(_('an ausgewählten Einrichtungen')) : _('an ausgewählten Einrichtungen') ?>
+        <input type="radio" name="activated" value="inst" onclick="STUDIP.Admission.checkRuleActivation('rule_activation_form')"<?= $atInst ? ' checked="checked"' : '' ?>/><?=  _('an ausgewählten Einrichtungen') ?>
     </div>
     <br/>
     <div id="institutes_activation"<?= $globally ? ' style="display:none"' : '' ?>>
@@ -22,7 +22,7 @@
         <?php foreach (Institute::findBySQL("`fakultaets_id`=`Institut_id`") as $fak) { ?>
             <li id="<?= $fak->Institut_id ?>">
                 <input type="checkbox" name="institutes[]" value="<?= $fak->Institut_id ?>"<?= $activated[$fak->Institut_id] ? ' checked="checked"' : ''?>/>
-                <a href=""><?= $via_ajax ? studip_utf8encode($fak->name) : $fak->name ?></a>
+                <a href=""><?= htmlReady($fak->name) ?></a>
                 <?php if ($fak->sub_institutes) { ?>
                 <ul>
                     <?php
@@ -31,7 +31,7 @@
                     ?>
                     <li id="<?= $inst->Institut_id ?>">
                         <input type="checkbox" name="institutes[]" value="<?= $inst->Institut_id ?>"<?= $activated[$inst->Institut_id] ? ' checked="checked"' : ''?>/>
-                        <a href=""><?= $via_ajax ? studip_utf8encode($inst->name) : $inst->name ?></a>
+                        <a href=""><?= htmlReady($inst->name) ?></a>
                     </li>
                     <?php
                         }

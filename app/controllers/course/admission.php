@@ -64,8 +64,9 @@ class Course_AdmissionController extends AuthenticatedController
         if (Request::isXhr()) {
             $this->set_layout(null);
             $this->response->add_header('X-No-Buttons', 1);
-            foreach (array_keys($_POST) as $param) {
-                Request::set($param, studip_utf8decode(Request::get($param)));
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
             }
         } else {
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));

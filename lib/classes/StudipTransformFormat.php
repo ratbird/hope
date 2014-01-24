@@ -10,6 +10,9 @@
  * @category    Stud.IP
  */
 
+/**
+ * Format class to transform text before it is saved into the database.
+ */
 class StudipTransformFormat extends TextFormat
 {
     /**
@@ -98,7 +101,7 @@ class StudipTransformFormat extends TextFormat
     }
     
     /**
-     * 
+     * Scans the text for external urls and saves them as possible opengraph-nodes.
      * @param TextFormat $markup : markup object
      * @param array $matches : matches of the regular expression beginning with the whole string
      * @return string

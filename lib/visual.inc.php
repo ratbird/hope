@@ -318,15 +318,12 @@ function wikiReady($text, $trim=TRUE){
 /**
  * Apply StudipTransformFormat rules to marked-up text.
  *
- * After rules have been applied to marked-up text, the resulting HTML code is 
- * run through HTML Purifier before returning it.
- *
  * @param  string $text  Marked-up text.
  * @return string        HTML code computed by applying markup-rules.
  */
 function transformBeforeSave($text){
     $markup = new StudipTransformFormat();
-    return Markup::purify($markup->format($text));
+    return $markup->format($text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

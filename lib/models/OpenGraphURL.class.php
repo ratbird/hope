@@ -40,7 +40,7 @@ class OpenGraphURL extends SimpleORMap {
      * expect $url['data'] to be an array.
      */
     protected function unserializeData() {
-        $this->data = (array) studip_utf8decode(json_decode($this->data));
+        $this->data = (array) studip_utf8decode(json_decode($this->data, true));
     }
 
 
@@ -130,14 +130,33 @@ class OpenGraphURL extends SimpleORMap {
         return $template->render();
     }
 
+    /**
+     * Returns an array with all audiofiles that are provided by the opengraph-node.
+     * Each array-entry is an array itself with the url as first parameter and the 
+     * content-type (important for <audio/> tags) as the second.
+     * @return array(array($url, $content_type), ...)
+     */
     public function getAudioFiles() {
         return $this->getMediaFiles("audio");
     }
 
+    /**
+     * Returns an array with all videofiles that are provided by the opengraph-node.
+     * Each array-entry is an array itself with the url as first parameter and the 
+     * content-type (important for <video/> tags) as the second.
+     * @return array(array($url, $content_type), ...)
+     */
     public function getVideoFiles() {
         return $this->getMediaFiles("video");
     }
     
+    /**
+     * Returns an array with all mediafiles that are provided by the opengraph-node.
+     * Each array-entry is an array itself with the url as first parameter and the 
+     * content-type (important for <audio/> or <video/> tags) as the second.
+     * @param string $type: "audio" or "video"
+     * @return array(array($url, $content_type), ...)
+     */
     protected function getMediaFiles($type) {
         $files = array();
         $media = array();

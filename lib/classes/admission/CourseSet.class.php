@@ -463,6 +463,10 @@ class CourseSet
     public function getUserId() {
         return $this->user_id;
     }
+    
+    public function setUserId($user_id) {
+        return $this->user_id = $user_id;
+    }
 
     /**
      * Gets the course sets the given course belongs to.

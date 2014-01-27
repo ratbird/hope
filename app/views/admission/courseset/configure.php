@@ -34,7 +34,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h1><?= $courseset ? _('Anmeldeset bearbeiten') : _('Anmeldeset anlegen') ?></h1>
-<form class="studip_form" action="<?= $controller->url_for('admission/courseset/save', ($courseset ? $courseset->getId() : '')) ?>" method="post">
+<form class="studip_form" action="<?= $controller->url_for(!$instant_course_set_view ? 'admission/courseset/save/' . ($courseset ? $courseset->getId() : '') : 'course/admission/save_courseset/' . $courseset->getId()) ?>" method="post">
     <fieldset>
         <legend><?= _('Grunddaten') ?></legend>
         <label for="name" class="caption">
@@ -45,11 +45,13 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             value="<?= $courseset ? htmlReady($courseset->getName()) : '' ?>"
             required="required" aria-required="true"
             placeholder="<?= _('Bitte geben Sie einen Namen für das Anmeldeset an') ?>"/>
-        <label for="private" class="caption">
-            <?= _('Sichtbarkeit:') ?>
-        </label>
-        <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : '' ?>/>
-        <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar sein.') ?>
+        <? if (!$courseset || ($courseset->getUserId() == $GLOBALS['user']->id && !$instant_course_set_view)) : ?>
+            <label for="private" class="caption">
+                <?= _('Sichtbarkeit:') ?>
+            </label>
+            <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : '' ?>/>
+            <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar sein.') ?>
+        <?  endif ?>
         <label for="institutes" class="caption">
             <?= _('Einrichtungszuordnung:') ?>
             <span class="required">*</span>
@@ -219,7 +221,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
         <div class="submit_wrapper">
             <?= CSRFProtection::tokenTag() ?>
             <?= Button::createAccept(_('Speichern'), 'submit') ?>
-            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admission/courseset')) ?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admission/courseset'), array('rel' => 'close')) ?>
         </div>
     </fieldset>
 </form>

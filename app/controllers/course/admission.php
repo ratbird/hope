@@ -324,6 +324,11 @@ class Course_AdmissionController extends AuthenticatedController
                 if (!in_array($this->course_id, $cs->getCourses())) {
                     PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde aufgehoben."), htmlReady($cs->getName()))));
                 }
+                if (!count($cs->getCourses())
+                    && $this->user_id == $cs->getUserId()
+                    && $cs->getPrivate()) {
+                    $cs->delete();
+                }
                 if ($this->course->getNumWaiting()) {
                     $num_moved = 0;
                     foreach ($this->course->admission_applicants->findBy('status', 'awaiting') as $applicant) {
@@ -373,18 +378,22 @@ class Course_AdmissionController extends AuthenticatedController
                 $another_rule = new $another_type($another_rule_id);
             }
             $course_set = CourseSet::getSetForRule($rule_id) ?: new CourseSet();
-            if (Request::isPost() && Request::submitted('save')) {
+            if ((Request::isPost() && Request::submitted('save')) || $rule instanceof LockedAdmission) {
                 CSRFProtection::verifyUnsafeRequest();
-                $rule->setAllData(Request::getInstance());
-                $errors = $rule->validate(Request::getInstance());
-                if ($another_rule) {
-                    $another_rule->setAllData(Request::getInstance());
-                    $errors = array_merge($errors, $another_rule->validate(Request::getInstance()));
-                }
-                if (!strlen(trim(Request::get('instant_course_set_name')))) {
-                    $errors[] = _("Bitte geben Sie einen Namen für die Anmelderegel ein!");
+                if ($rule instanceof LockedAdmission) {
+                     $course_set->setName($rule->getName() . ': ' . $this->course->name);
                 } else {
-                    $course_set->setName(trim(Request::get('instant_course_set_name')));
+                    $rule->setAllData(Request::getInstance());
+                    $errors = $rule->validate(Request::getInstance());
+                    if ($another_rule) {
+                        $another_rule->setAllData(Request::getInstance());
+                        $errors = array_merge($errors, $another_rule->validate(Request::getInstance()));
+                    }
+                    if (!strlen(trim(Request::get('instant_course_set_name')))) {
+                        $errors[] = _("Bitte geben Sie einen Namen für die Anmelderegel ein!");
+                    } else {
+                        $course_set->setName(trim(Request::get('instant_course_set_name')));
+                    }
                 }
                 if (count($errors)) {
                     PageLayout::postMessage(MessageBox::error(_("Speichern fehlgeschlagen"), array_map('htmlready', $errors)));
@@ -433,10 +442,28 @@ class Course_AdmissionController extends AuthenticatedController
     function edit_courseset_action($cs_id)
     {
         $cs = new CourseSet($cs_id);
-        if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
+        if ($cs->isUserAllowedToEdit($this->user_id)) {
             $this->instant_course_set_view = true;
             $response = $this->relay('admission/courseset/configure/' . $cs->getId());
             $this->body = $response->body;
+            if ($response->headers['Location']) {
+                $this->redirect($response->headers['Location']);
+            }
+        } else {
+            throw new Trails_Exception(400);
+        }
+    }
+    
+    function save_courseset_action($cs_id)
+    {
+        $cs = new CourseSet($cs_id);
+        if ($cs->isUserAllowedToEdit($this->user_id)) {
+            $this->instant_course_set_view = true;
+            $response = $this->relay('admission/courseset/save/' . $cs->getId());
+            $this->body = $response->body;
+            if ($response->headers['Location']) {
+                $this->redirect($response->headers['Location']);
+            }
         } else {
             throw new Trails_Exception(400);
         }

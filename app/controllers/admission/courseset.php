@@ -33,8 +33,8 @@ class Admission_CoursesetController extends AuthenticatedController {
                 // We have access to institute-wide course sets, so all courses may be assigned.
                 $this->onlyOwnCourses = false;
                 Navigation::activateItem('/tools/coursesets/sets');
-            } else if (Navigation::hasItem('course')) {
-                Navigation::activateItem('/course/admin/admission');
+            } else {
+                throw new AccessDeniedException();
             }
         }
         PageLayout::addSqueezePackage('admission');
@@ -219,22 +219,37 @@ class Admission_CoursesetController extends AuthenticatedController {
     public function save_action($coursesetId='') {
         if (Request::submitted('submit')) {
             $courseset = new CourseSet($coursesetId);
-            $courseset->setName(Request::get('name'))
-                ->setInstitutes(Request::getArray('institutes'))
-                ->setSemester(Request::option('semester'))
-                ->setCourses(Request::getArray('courses'))
-                ->setUserLists(Request::getArray('userlists'))
-                ->setPrivate((bool) Request::get('private'))
-                ->clearAdmissionRules();
+            if (!$courseset->getUserId()) {
+                $courseset->setUserId($GLOBALS['user']->id);
+            }
+            $courseset->setName(Request::get('name'));
+            if (Request::submitted('institutes')) {
+                $courseset->setInstitutes(Request::getArray('institutes'));
+            }
+            if (Request::submitted('semester')) {
+                $courseset->setSemester(Request::option('semester'));
+                $courseset->setCourses(Request::getArray('courses'));
+            }
+            if (Request::submitted('userlists')) {
+                $courseset->setUserLists(Request::getArray('userlists'));
+            }
+            if (!$this->instant_course_set_view && $courseset->getUserId() == $GLOBALS['user']->id) {
+                $courseset->setPrivate((bool) Request::get('private'));
+            }
+            if (Request::submitted('infotext')) {
+                $courseset->setInfoText(Request::get('infotext'));
+            }
+            $courseset->clearAdmissionRules();
             foreach (Request::getArray('rules') as $serialized) {
                 $rule = unserialize($serialized);
                 $courseset->addAdmissionRule($rule);
             }
             $courseset->store();
-            if ($GLOBALS['perm']->have_perm('admin') || ($GLOBALS['perm']->have_perm('dozent') && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))) {
-                $this->redirect($this->url_for('admission/courseset'));
-            } else if (Navigation::hasItem('course')) {
+            PageLayout::postMessage(MessageBox::success(sprintf(_("Das Anmeldeset: %s wurde gespeichert"), htmlReady($courseset->getName()))));
+            if ($this->instant_course_set_view) {
                 $this->redirect($this->url_for('course/admission'));
+            } else {
+                $this->redirect($this->url_for('admission/courseset'));
             }
         } else {
             $this->flash['name'] = Request::get('name');
@@ -250,10 +265,10 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $this->flash['institute_id'] = Request::get('institute_id');
                 $this->flash['institute_id_parameter'] = Request::get('institute_id_parameter');
             }
-            if ($GLOBALS['perm']->have_perm('admin') || ($GLOBALS['perm']->have_perm('dozent') && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))) {
+            if ($this->instant_course_set_view) {
+                $this->redirect($this->url_for('course/admission/edit_courseset/' . $coursesetId));
+            } else {
                 $this->redirect($this->url_for('admission/courseset/configure', $coursesetId));
-            } else if (Navigation::hasItem('course/admission')) {
-                $this->redirect($this->url_for('course/admission'));
             }
         }
     }

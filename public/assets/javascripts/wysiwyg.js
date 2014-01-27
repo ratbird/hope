@@ -21,6 +21,31 @@ jQuery(function($){
     function replaceTextarea(textarea){
         var uiColor = '#7788AA';  // same as studip's tab navigation background
 
+        // convert plain text entries to html
+        function isHtml(text) {
+            text = text.trim();
+            return text[0] == '<' && text[text.length - 1] == '>';
+        }
+        function encodeHtmlEntities(text) {
+            return $('<div>').text(text).html();
+        }
+        function replaceMultiNewlinesWithP(text) {
+            return '<p>' + text.replace(/(\r?\n|\r){2,}/, '</p><p>') + '</p>';
+        }
+        function replaceNewlineWithBr(text) {
+            return text.replace(/(\r?\n|\r)/g, '<br>\n');
+        }
+        function replaceNewlines(text) {
+            return replaceNewlineWithBr(replaceMultiNewlinesWithP(text));
+        }
+        function convertToHtml(text) {
+            return replaceNewlines(encodeHtmlEntities(text));
+        }
+        function getHtml(text) {
+            return isHtml(text) ? text : convertToHtml(text);
+        }
+        textarea.val(getHtml(textarea.val()));
+    
         // find an unused toolbarId
         // toolbarId is needed for sharedSpaces
         var toolbarPrefix = 'cktoolbar',
@@ -46,7 +71,7 @@ jQuery(function($){
                            + ',forms,iframe,maximize,newpage,preview,resize'
                            + ',showblocks,stylescombo,templates,save,smiley',
             extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
-            studipUpload_url: STUDIP.URLHelper.getURL('upload.php'),
+            studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
     			top: toolbarId
@@ -64,12 +89,9 @@ jQuery(function($){
                 {name: 'about'}
             ],
     
-            // convert special chars to html entities
-            // NOTE use entities_additional: '#1049,...' for other chars
+            // convert special chars except latin ones to html entities
             entities: true,
-            basicEntities: true,
-            entities_greek: true,
-            entities_latin: true,
+            entities_latin: false,
             entities_processNumerical: true,
     
             // configure list of special characters
@@ -214,14 +236,41 @@ jQuery(function($){
                     return false;
                 }
             });
+
+            // focus editor if corresponding textarea is focused
+            textarea.focus(function(){ editor.focus(); });
+
+            // synchronize editor and textarea
+            var textValue = textarea.val();
+            function updateTextArea(){
+                editor.updateElement();
+                textValue = textarea.val();
+            };
+            editor.on('focus', function(){
+                var newValue = textarea.val();
+                if (newValue != textValue) {
+                    editor.setData(getHtml(newValue));
+                    updateTextArea();
+                }
+            });
+            editor.on('blur', function(){
+                // update textarea for other JS code (e.g. Stud.IP Forum)
+                updateTextArea();
+            });
     
+            // TODO find a better solution than blurDelay = 0
+            // it's an ugly hack to be faster than Stud.IP forum's save
+            // function; might produce "strange" behaviour
+            CKEDITOR.focusManager._.blurDelay = 0;
+
             // display shadow when editor area is focused
             var editorArea = textarea.siblings('.cke_chrome');
-            editor.on('focus', function(event){
+            editor.on('focus', function(){
                 // add editor area shadow
                 editorArea.css('box-shadow', '0 3px 15px ' + uiColor);
             });
-            editor.on('blur', function(event){
+
+            editor.on('blur', function(){
                 // remove editor area shadow
                 editorArea.css('box-shadow', '');
                 if (toolbar.has(':focus').length > 0) {
@@ -232,7 +281,9 @@ jQuery(function($){
             // do not scroll toolbar out of viewport
             function stickyTools() {
                 var MARGIN = 30;
-                if($(window).scrollTop() + MARGIN > toolbar_placeholder.offset().top) {
+                // is(':visible'): offset() is wrong for hidden nodes
+                if (($(window).scrollTop() + MARGIN > toolbar_placeholder.offset().top)
+                        && toolbar.is(':visible')) {
                     toolbar.css({
                         position: 'fixed',
                         top: MARGIN
@@ -249,6 +300,8 @@ jQuery(function($){
                 }
             };
             $(window).scroll(stickyTools);
+            // if toolbar is hidden during scrolling it might scroll off screen
+            editor.on('focus', stickyTools);
 
             var editorZ = Number(editorArea.css('z-index')) || 0;
             toolbar.css('z-index', editorZ + 1);
@@ -261,7 +314,6 @@ jQuery(function($){
         });
     }
 
-    $('.editor_toolbar > .buttons').remove();
     $('textarea.add_toolbar').each(function(){
         if (!CKEDITOR.instances[this]) {
             replaceTextarea($(this));

@@ -19,6 +19,7 @@ textarea + .cke_chrome:hover {
     overflow: hidden;               /* cut child element corners off */
 }
 .cke_chrome {                       /* content area and toolbar */
+    margin: 1px !important; /* box-shadow visible if parent overflow=hidden */
     border: 0 !important;
 /*    border-radius: 5px;*/
 /*    box-shadow: 0 0 15px #7788AA !important;

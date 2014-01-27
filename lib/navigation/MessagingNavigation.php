@@ -32,11 +32,11 @@ class MessagingNavigation extends Navigation
 
         parent::initItem();
         $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
-
+        $lastVisitedTimestamp = isset($my_messaging_settings['last_box_visit'])?(int)$my_messaging_settings['last_box_visit']:0;
         $neum = count_messages_from_user('in', ' AND message_user.readed = 0 ');
         $altm = count_messages_from_user('in', ' AND message_user.readed = 1 ');
         $neux = count_x_messages_from_user('in', 'all',
-            'AND mkdate > '.(int)$my_messaging_settings['last_box_visit'].' AND message_user.readed = 0 ');
+            'AND mkdate > '.$lastVisitedTimestamp.' AND message_user.readed = 0 ');
 
         $this->setBadgeNumber($neum);
 

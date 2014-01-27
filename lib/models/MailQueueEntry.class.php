@@ -9,8 +9,23 @@
  *  the License, or (at your option) any later version.
  */
 
+/**
+ * Class to handle entries in the mail-queue in Stud.IP.
+ * Use MailQueueEntry::add($mail, $message_id, $user_id) to add a mail to the queue
+ * and MailQueueEntry::sendAll() or MailQueueEntry::sendNew() to flush the queue 
+ * and send the mails.
+ */
 class MailQueueEntry extends SimpleORMap {
 
+    /**
+     * Add an email to the queue.
+     * @param StudipMail $mail : the mailobject that should be added and sent later.
+     * @param string|null $message_id : the id of the Stud.IP internal message the 
+     * mail is related to. Leave this null if it isn't related to any internal message.
+     * @param string|null $user_id : user_id of the receiver. Leave null if the 
+     * receiver has no account in Stud.IP.
+     * @return MailQueueEntry : object in the mailqueue.
+     */
     static public function add(StudipMail $mail, $message_id = null, $user_id = null)
     {
         $queue_entry = new MailQueueEntry();
@@ -22,7 +37,9 @@ class MailQueueEntry extends SimpleORMap {
         return $queue_entry;
     }
 
-
+    /**
+     * Sends all new mails in the mailqueue (which means they haven't been sent yet).
+     */
     static public function sendNew()
     {
         $mail_queue_entries = self::findBySQL("tries = '0'");
@@ -31,6 +48,13 @@ class MailQueueEntry extends SimpleORMap {
         }
     }
 
+    /**
+     * Sends all mails in the mailqueue. Stud.IP will give each mail 24 tries to
+     * deliver it. If the mail could not be sent after 24 tries (which are 24 
+     * hours) it will stay in the mailqueue table but won't be sent anymore.
+     * Each mail will only be tried to deliver once per hour. So if it fails
+     * Stud.IP will try again next hour.
+     */
     static public function sendAll()
     {
         $mail_queue_entries = self::findBySQL(
@@ -42,6 +66,10 @@ class MailQueueEntry extends SimpleORMap {
         }
     }
 
+    /**
+     * Constructor. Just like any SimpleORMap-constructor. See there for details.
+     * @param string|null $id : id of a queue-entry or null.
+     */
     public function __construct($id = null)
     {
         $this->db_table = 'mail_queue_entries';
@@ -50,6 +78,10 @@ class MailQueueEntry extends SimpleORMap {
         parent::__construct($id);
     }
 
+    /**
+     * Serializes the mail-object to the database.
+     * @return true
+     */
     protected function cbSerializeMail()
     {
         if ($this->content['mail']) {
@@ -61,6 +93,10 @@ class MailQueueEntry extends SimpleORMap {
         return true;
     }
 
+    /**
+     * Unserializes the mail-object from the database.
+     * @return true
+     */
     protected function cbUnserializeMail()
     {
         if ($this->content['mail']) {
@@ -72,6 +108,11 @@ class MailQueueEntry extends SimpleORMap {
         return true;
     }
 
+    /**
+     * Sends the object in the mailqueue. If this succeeds, the object will be 
+     * deleted immediately. Otherwise the field "tries" in the mailqueue table
+     * will be incremented by one.
+     */
     public function send()
     {
         if (is_a($this->mail, "StudipMail")) {

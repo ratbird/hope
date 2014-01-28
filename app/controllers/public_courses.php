@@ -82,7 +82,7 @@ class PublicCoursesController extends StudipController
     {
         foreach ($seminars as $id => $seminar) {
             foreach (PluginEngine::getPlugins('StandardPlugin', $id) as $plugin) {
-                $seminars[$id]['navigations'][] = $plugin->getIconNavigation($id, time());
+                $seminars[$id]['navigations'][] = $plugin->getIconNavigation($id, time(), $GLOBALS['user']->id);
             }
         }
         return $seminars;

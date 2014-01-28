@@ -451,7 +451,7 @@ class CourseSet
     public function getPrivate() {
         return $this->private;
     }
-    
+
 
     public function getSemester() {
         return $this->semester;
@@ -463,7 +463,7 @@ class CourseSet
     public function getUserId() {
         return $this->user_id;
     }
-    
+
     public function setUserId($user_id) {
         return $this->user_id = $user_id;
     }
@@ -485,7 +485,7 @@ class CourseSet
         }
         return null;
     }
-    
+
     /**
      * Gets the course sets the given rule belongs to.
      *
@@ -501,7 +501,7 @@ class CourseSet
         }
         return null;
     }
-    
+
     /**
      * Retrieves the lists of users that are considered specially in
      * seat distribution.
@@ -756,7 +756,7 @@ class CourseSet
             do {
                 $newid = md5(uniqid(get_class($this), true));
                 $db = DBManager::get()->query("SELECT `set_id`
-                    FROM `coursesets` WHERE `set_id`='.$newid.'");
+                    FROM `coursesets` WHERE `set_id`='$newid'");
             } while ($db->fetch());
             $this->id = $newid;
         }
@@ -764,7 +764,10 @@ class CourseSet
             $algorithm = new RandomAlgorithm();
             $this->setAlgorithm($algorithm);
             if (!$this->getSeatDistributionTime()) {
-                $this->setAlgorithmRun($state);
+                $this->setAlgorithmRun(true);
+            }
+            if ($this->getSeatDistributionTime() > time()) {
+                $this->setAlgorithmRun(false);
             }
         }
         // Store basic data.
@@ -773,7 +776,7 @@ class CourseSet
             `private`, `mkdate`, `chdate`)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
             `name`=VALUES(`name`), `semester`=VALUES(`semester`), `infotext`=VALUES(`infotext`),
-            `algorithm`=VALUES(`algorithm`), `algorithm_run`=VALUES(`algorithm_run`), `private`=VALUES(`private`), 
+            `algorithm`=VALUES(`algorithm`), `algorithm_run`=VALUES(`algorithm_run`), `private`=VALUES(`private`),
             `chdate`=VALUES(`chdate`)");
         $stmt->execute(array($this->id, $user->id, $this->name, $this->semester, $this->infoText,
             get_class($this->algorithm), $this->hasAlgorithmRun(), intval($this->private), time(), time()));
@@ -833,6 +836,10 @@ class CourseSet
                 `type`=VALUES(`type`)");
             $stmt->execute(array($this->id, $rule->getId(), get_class($rule), time()));
         }
+        //fix free access courses
+        if (count($this->courses)) {
+            DBManager::get()->execute("UPDATE seminare SET Lesezugriff=1,Schreibzugriff=1 WHERE seminar_id IN(?)", array(array_keys($this->courses)));
+        }
     }
 
     /**
@@ -877,7 +884,7 @@ class CourseSet
         $is_correct_institute = isset($this->institutes[Course::find($course_id)->institut_id]);
         return $is_dozent && ($is_private || $is_correct_institute);
     }
-    
+
     public function isUserAllowedToEdit($user_id)
     {
         global $perm;

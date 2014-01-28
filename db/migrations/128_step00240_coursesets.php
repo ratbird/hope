@@ -319,6 +319,9 @@ class Step00240CourseSets extends Migration
             $s_cs_insert->execute(array($migrated_per_institute[$course['institut_id']], $course['seminar_id']));
         }
 
+        $db->exec("UPDATE seminare SET Lesezugriff=1,Schreibzugriff=1 WHERE Lesezugriff=3");
+        $db->exec("UPDATE seminare SET Lesezugriff=1,Schreibzugriff=1 WHERE Lesezugriff=2");
+
         //Warte und Anmeldelisten löschen
         $db->exec("DELETE FROM admission_seminar_user WHERE status <> 'accepted'");
         $db->exec("DROP TABLE admission_seminar_studiengang");
@@ -338,17 +341,17 @@ class Step00240CourseSets extends Migration
         SimpleORMap::expireTableScheme();
 
         // Insert global configuration: who may edit course sets?
-		DBManager::get()->execute("INSERT IGNORE INTO `config`
-		    (`config_id`, `parent_id`, `field`, `value`, `is_default`,
-		     `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
-		     `description`, `comment`, `message_template`)
-		VALUES
-		    (MD5('ALLOW_DOZENT_COURSESET_ADMIN'), '',
-		    'ALLOW_DOZENT_COURSESET_ADMIN', '0', '1', 'boolean', 'global',
-		    'coursesets', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
-		    'Sollen Lehrende einrichtungsweite Anmeldesets anlegen und bearbeiten dürfen?',
-		    '', '')");
-	}
+        $db->exec("INSERT IGNORE INTO `config`
+            (`config_id`, `parent_id`, `field`, `value`, `is_default`,
+             `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
+             `description`, `comment`, `message_template`)
+        VALUES
+            (MD5('ALLOW_DOZENT_COURSESET_ADMIN'), '',
+            'ALLOW_DOZENT_COURSESET_ADMIN', '0', '1', 'boolean', 'global',
+            'coursesets', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
+            'Sollen Lehrende einrichtungsweite Anmeldesets anlegen und bearbeiten dürfen?',
+            '', '')");
+    }
 
     function down()
     {

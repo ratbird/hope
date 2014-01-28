@@ -14,7 +14,7 @@
                     <?= $current_courseset->toString(true) ?>
             </div>
             <div>
-            <? if (!$is_locked['admission_type']) : ?>
+            <? if (!$is_locked['admission_type'] || $current_courseset->isUserAllowedToEdit($user_id)) : ?>
                 <?  if ($current_courseset->isUserAllowedToAssignCourse($user_id, $course_id)) : ?>
                     <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', array('rel' => 'lightbox')) ?>
                 <? endif ?>
@@ -29,11 +29,11 @@
             <label class="caption">
                 <?=_("Zuordnung zu einem bestehenden Anmeldeset"); ?>
             </label>
-            <select name="course_set_assign" style="display: inline-block;" 
+            <select name="course_set_assign" style="display: inline-block;"
                 onChange="$('#course_set_assign_explain').load('<?= $controller->link_for('/explain_course_set') ?>&set_id=' + $(this).val());">
                 <option></option>
                 <? foreach($available_coursesets as $cs) : ?>
-                    <option value="<?= $cs->getId() ?>"><?= htmlReady($cs->getName()) ?></option>
+                    <option value="<?= $cs->getId() ?>"><?= htmlReady(my_substr($cs->getName(),0,100)) ?></option>
                 <? endforeach ?>
             </select>
             <div id="course_set_assign_explain" style="display: inline-block;padding:1ex;">
@@ -48,14 +48,14 @@
             <div>
             <? if (!$is_locked['passwort']) : ?>
                 <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->url_for('/instant_course_set', array('type' => 'PasswordAdmission')),array('rel' => 'lightbox')) ?>
-            <? endif ?> 
+            <? endif ?>
             <? if (!$is_locked['admission_type']) : ?>
                 <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', array('type' => 'LockedAdmission')),array('rel' => 'lightbox')) ?>
                 <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('rel' => 'lightbox')) ?>
                 <br>
                 <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('rel' => 'lightbox')) ?>
                 <?= Studip\LinkButton::create(_("Zeitgesteurte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('rel' => 'lightbox')) ?>
-            <? endif ?> 
+            <? endif ?>
             </div>
         <? endif ?>
     </fieldset>
@@ -132,18 +132,18 @@
         <div style="display: inline-block;padding:1ex;width:50%">
         <label class="caption"><?= _("Lesezugriff") ?></label>
         <label for="lesezugriff">
-        <input <?=$is_locked['read_level'] ?> id="lesezugriff" type="checkbox" <?= ($course->lesezugriff == 2 ? "checked" : ""); ?> name="read_level"  value="2">
+        <input <?=$is_locked['read_level'] ?> id="lesezugriff" type="checkbox" <?= ($course->lesezugriff == 0 ? "checked" : ""); ?> name="read_level"  value="1">
         <?= _("Lesezugriff für nicht angemeldete Nutzer erlauben") ?></label>
         </div>
         <div style="display: inline-block;padding:1ex;">
         <label class="caption"><?= _("Schreibzugriff") ?></label>
         <label for="schreibzugriff">
-        <input <?=$is_locked['write_level'] ?> id="schreibzugriff" type="checkbox" <?= ($course->schreibzugriff == 2 ? "checked" : ""); ?> name="write_level"  value="2">
+        <input <?=$is_locked['write_level'] ?> id="schreibzugriff" type="checkbox" <?= ($course->schreibzugriff == 0 ? "checked" : ""); ?> name="write_level"  value="1">
         <?= _("Schreibzugriff für nicht angemeldete Nutzer erlauben") ?></label>
         </div>
         <?= Studip\Button::create(_("Freien Zugriff ändern"), 'change_free_access') ?>
     </fieldset>
-    <?  endif ?>
+    <? endif ?>
 </form>
 <? if (count($all_domains)) : ?>
 <form class="studip_form" action="<?= $controller->link_for('/change_domains') ?>" method="post">

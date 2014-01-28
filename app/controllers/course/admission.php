@@ -184,7 +184,7 @@ class Course_AdmissionController extends AuthenticatedController
             $this->render_template('course/admission/_change_admission.php');
         }
     }
-    
+
     function change_free_access_action()
     {
         CSRFProtection::verifyUnsafeRequest();
@@ -193,7 +193,7 @@ class Course_AdmissionController extends AuthenticatedController
             $request = array_diff_key($request, array_filter($this->is_locked));
             if (isset($request['write_level'])) {
                 if ($request['write_level'] === true) {
-                    $this->course->schreibzugriff = 2;
+                    $this->course->schreibzugriff = 0;
                     $request['read_level'] = true;
                 } else {
                     $this->course->schreibzugriff = 1;
@@ -201,7 +201,7 @@ class Course_AdmissionController extends AuthenticatedController
             }
             if (isset($request['read_level'])) {
                 if ($request['read_level'] === true) {
-                    $this->course->lesezugriff = 2;
+                    $this->course->lesezugriff = 0;
                 } else {
                     $this->course->lesezugriff = 1;
                     $this->course->schreibzugriff = 1;
@@ -213,7 +213,7 @@ class Course_AdmissionController extends AuthenticatedController
         }
         $this->redirect($this->url_for('/index'));
     }
-    
+
     function change_admission_turnout_action()
     {
         CSRFProtection::verifyUnsafeRequest();
@@ -262,7 +262,7 @@ class Course_AdmissionController extends AuthenticatedController
                         PageLayout::postMessage(MessageBox::success(sprintf(_("%s Wartende wurden entfernt."), $num_moved)));
                     }
                 }
-                
+
                 if ($this->course->store()) {
                     PageLayout::postMessage(MessageBox::success(_("Die Teilnehmeranzahl wurde geändert.")));
                 }
@@ -278,7 +278,7 @@ class Course_AdmissionController extends AuthenticatedController
             $this->render_template('course/admission/_change_admission.php');
         }
     }
-    
+
     function change_domains_action()
     {
         CSRFProtection::verifyUnsafeRequest();
@@ -365,7 +365,7 @@ class Course_AdmissionController extends AuthenticatedController
             $this->render_nothing();
         }
     }
-    
+
     function instant_course_set_action()
     {
         $this->response->add_header('X-Title', _('Neue Anmelderegel'));
@@ -373,7 +373,7 @@ class Course_AdmissionController extends AuthenticatedController
         list($rule_id, $another_rule_id) = explode('_', Request::option('rule_id'));
         $rule_types = AdmissionRule::getAvailableAdmissionRules(true);
         if (isset($rule_types[$type])) {
-            $rule = new $type($type_id);
+            $rule = new $type($rule_id);
             if (isset($rule_types[$another_type])) {
                 $another_rule = new $another_type($another_rule_id);
             }
@@ -438,7 +438,7 @@ class Course_AdmissionController extends AuthenticatedController
             throw new Trails_Exception(400);
         }
     }
-    
+
     function edit_courseset_action($cs_id)
     {
         $cs = new CourseSet($cs_id);
@@ -453,7 +453,7 @@ class Course_AdmissionController extends AuthenticatedController
             throw new Trails_Exception(400);
         }
     }
-    
+
     function save_courseset_action($cs_id)
     {
         $cs = new CourseSet($cs_id);
@@ -468,7 +468,7 @@ class Course_AdmissionController extends AuthenticatedController
             throw new Trails_Exception(400);
         }
     }
-    
+
     function after_filter($action, $args)
     {
         if (Request::isXhr()) {

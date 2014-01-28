@@ -215,18 +215,4 @@ class User extends AuthUserMd5
         return  $ret;
     }
     
-    /**
-     * Returns a collection of user that match the given searchstring
-     * 
-     * @param String $query Searchstring
-     * @param int $limit Limitates the results. Default 10. 0 means no limit
-     * @param String $order 
-     * @return array User that match the querystring
-     */
-    public static function search($query, $limit = 10, $order = 'nachname,vorname ASC') {
-        $searchString = "%" . $query . "%";
-        $limitSQL = $limit ? " LIMIT $limit " : "";
-        $orderSQL = " ORDER BY $order";
-        return self::findBySQL("(vorname LIKE ? OR nachname LIKE ? OR CONCAT_WS(' ',vorname, nachname) LIKE ?) AND ".get_vis_query()." $orderSQL $limitSQL", array($searchString, $searchString, $searchString));
-    }
 }

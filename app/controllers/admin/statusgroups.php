@@ -96,10 +96,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
 
         // Search
-        $this->search = Request::isXHR() ? utf8_decode(Request::get('freesearch')) : Request::get('freesearch');
-        $lastSearch = Request::isXHR() ? utf8_decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
+        $this->search = Request::isXHR() ? studip_utf8decode(Request::get('freesearch')) : Request::get('freesearch');
+        $lastSearch = Request::isXHR() ? studip_utf8decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
         $this->searchPreset = Request::get('search_preset');
-        $lastSearchPreset = Request::isXHR() ? utf8_decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
+        $lastSearchPreset = Request::isXHR() ? studip_utf8decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
         if (($this->searchPreset == "inst" && $lastSearchPreset != "inst") || !Request::get('not_first_call')) { // ugly
             // search with preset
             foreach ($this->type['groups'] as $group) {
@@ -112,7 +112,20 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->search = "";
         } elseif ($this->search != $lastSearch || Request::submitted('submit_search')) {
             // search with free text input
-            $this->selectablePersons = User::search($this->search, 0);
+            $this->selectablePersons = array();
+            
+            $sql = "SELECT user_id FROM `auth_user_md5` WHERE
+                    (vorname LIKE ? OR nachname LIKE ? OR CONCAT_WS(' ',vorname, nachname) LIKE ?)
+                    AND ".get_vis_query()."
+                    ORDER BY nachname,vorname ASC";
+            
+            $statement = DBManager::get()->prepare($sql);
+            $statement->execute(array($this->search, $this->search, $this->search));
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result as $r) {
+                $this->selectablePersons[] = new User($r['user_id']);
+            }
             // reset preset
             $this->searchPreset = "";
         } else {
@@ -424,7 +437,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
         if (Request::submitted('order')) {
             $this->check('edit');
-            $newOrder = json_decode(Request::get('ordering'));
+            $newOrder = StudipController::render_json(Request::get('ordering'));
             $this->updateRecoursive($newOrder, $_SESSION['SessionSeminar']);
         }
     }

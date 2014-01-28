@@ -1,1 +1,0 @@
-<?= MessageBox::error(_("Ein Fehler beim Laden des Templates ist aufgetreten"), $error); ?>

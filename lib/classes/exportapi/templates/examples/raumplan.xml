@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+    <format>
+        <forced>XLS</forced>
+    </format>
+    <permissions>
+        <usertype>root</usertype>
+    </permissions>
+    <elements>
+        <timetable>
+            <time>
+                <min>8</min>
+                <max>21</max>
+                <steps>0.5</steps>  
+                <format>%H:%M</format>       
+            </time>
+            <date>
+                <from>$0</from>
+                <to>$1</to> 
+                <format>%A</format>          
+            </date>
+            <database>
+                <sql>SELECT *, COUNT( * ) AS teilnehmer FROM resources_objects o
+                    JOIN resources_assign a USING (resource_id)
+                    LEFT JOIN termine t ON t.termin_id = a.assign_user_id
+                    LEFT JOIN seminare s ON t.range_id = s.seminar_id
+                    LEFT JOIN seminar_user u USING (seminar_id) 
+                    LEFT JOIN auth_user_md5 au USING(user_id)
+                    LEFT JOIN seminar_user u2 USING (seminar_id) 
+                    WHERE o.name = '$2' AND u.status = 'dozent'
+                    GROUP BY termin_id
+                </sql>
+                <begin>begin</begin>
+                <end>end</end>
+            </database>
+            <data >#VeranstaltungsNummer\n#Name\n#Nachname\nTeilnehmer: #teilnehmer</data>
+            <header>Raumbelegungsplan</header>
+            <footer>Informationsfeld</footer>  
+        </timetable>
+    </elements>
+</document>

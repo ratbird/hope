@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+    <format>
+        <forced>XLS</forced>
+    </format>
+    <permissions>
+        <usertype>dozent</usertype>
+        <context>$0</context>
+    </permissions>
+    <elements>
+        <text>Teilnehmerliste</text>
+        <newline />
+        <table edit="true">
+            <sql>SELECT aumd5.username as Benutzername, aumd5.perms,aumd5.Vorname, aumd5.Nachname, aumd5.Email FROM seminar_user su 
+                JOIN auth_user_md5 aumd5 USING (user_id) 
+                JOIN user_info ui USING (user_id) 
+                LEFT JOIN user_studiengang us USING (user_id) 
+                LEFT JOIN abschluss a USING (abschluss_id)
+                LEFT JOIN studiengaenge sg USING (studiengang_id)
+                WHERE Seminar_id = '$0'</sql>    
+        </table>
+    </elements>
+</document>

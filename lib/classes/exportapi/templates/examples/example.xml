@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+    <format>
+        <!-- recommended formats will be shown first in the list -->
+        <recommended>PDF</recommended>
+        <recommended>XLS</recommended>
+        <!-- forced formats will hide all other formats. If no forced is given that actually exists, all formats will be displayed -->
+        <forced>JPG</forced>
+    </format>
+    <!-- permissions can block users from entering -->
+    <permissions>
+        <usertype>root</usertype>
+        <!-- maybe you want to add a <context>$0</context> which would mean that the first parameter is taken as the required context -->
+    </permissions>
+    <!-- here is where the export starts now -->
+    <elements>
+        <!-- we add some text -->
+        <text>Export</text>
+        <!-- we add some text with a parameter -->
+        <text>Noch einer $0</text>
+        <!-- we add a new line -->
+        <newline />
+        <!-- and a table -->
+        <table>
+            <!-- table uses sql to gather data -->
+            <sql>SELECT * from config</sql>    
+        </table>
+        <!-- second table which uses alternate syntax for further information check export_table -->
+        <table edit="true">
+            <database>
+                <name>seminar_user</name>
+                <col rename="Benutzer">user_id</col>
+                <col rename="Status">status</col>
+                <where>status = 'dozent'</where>
+            </database>
+        </table>
+        <!-- this text can be modified by the user -->
+        <text edit="true">Hallo, %%wir%% benutzen :studip: -Formatierung.</text>
+    </elements>
+</document>

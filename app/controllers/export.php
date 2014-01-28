@@ -1,84 +1,62 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of export
+ * ExportController - Interface to chose export format or create modified
+ * templates
  *
- * @author flo
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       3.0
  */
+
 require_once 'app/controllers/authenticated_controller.php';
 
-class exportController extends AuthenticatedController {
+class ExportController extends AuthenticatedController {
 
     function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
 
-        //set the title of the page
+        // Set the title of the page
         PageLayout::setTitle(_('Export'));
-
-        //load the default layout
+        
+        // Load the default layout
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        $this->flash['args'] = Request::get("args") ? : serialize($args);
-
-        $this->iconpath = $this->url_for('export/icon');
-
+        // Create argstring to forward
         foreach ($args as $arg) {
             $this->argstring .= "/$arg";
         }
-        $this->exportpath = $this->url_for('export/export') . $this->argstring;
-    }
-
-    /**
-     * Controller to load a png out of the lib folder and display it
-     * 
-     * @param type string name of the format
-     */
-    function icon_action($type) {
-        header("Content-type: image/png");
-        imagePng(exportDoc::image($type));
-        $this->render_nothing();
     }
 
     /**
      * Basic export controller to work on a template
      */
     function index_action() {
-        if (func_num_args() < 1) {
-            $this->error[] = _('Kein Template angegeben');
-            $this->render_action("error");
-            return false;
+
+        // Check if a template was given
+        if (!func_num_args()) {
+            throw new Exception(_('Kein Template angegeben'));
         }
 
-        if ($this->flash['export']) {
-            $export = $this->flash['export'];
-        } else {
-            $export = new exportDoc();
-            if (!$export->loadTemplate(unserialize($this->flash['args']))) {
-                $this->error[] = _('Template konnte nicht geladen werden');
-                $this->render_action("error");
-                return false;
-            }
+        // Save new template if requested
+        if (Request::submitted('create')) {
+            $save = new exportDoc();
+            $save->loadTemplate(func_get_args());
+            $save->editTemplate(Request::getArray('edit'));
+            $name = Request::get('templatename') ? : _("Neue Vorlage");
+            $save->save(Request::get('format'), $name);
         }
 
-        if ($export->getPermission() && !$GLOBALS['perm']->have_perm($export->getPermission())) {
-            $this->error[] = _('Keine Berechtigung');
-            $this->render_action("error");
-            return false;
-        }
-
-        if (!$GLOBALS['perm']->have_studip_perm($export->getPermission(), $export->getContext())) {
-            $this->error[] = $export->getPermission() . " - " . $export->getContext();
-            $this->render_action("error");
-            return false;
-        }
+        // Now actually load the document
+        $export = new exportDoc();
+        $export->loadTemplate(func_get_args());
 
         $this->formats = $export->getFormats();
-        $this->savelink = $this->url_for("export/save/" . $export->template . $export->getParamString());
 
         if ($export->isEditable()) {
             $this->templates = array();
@@ -93,13 +71,12 @@ class exportController extends AuthenticatedController {
             foreach ($this->formats as $format) {
                 $this->exportlink[$format] = $this->url_for("export/export/" . $export->template . $export->getParamString() . "?format=" . $format);
             }
-            //$this->exportlink = $this->url_for("export/export/" . $export->getTemplate() . $export->getParamString());
+            $this->templating = true;
         } else {
             if (count($this->formats) == 1) {
                 $export->export($this->formats[0]);
                 die;
             }
-            $this->render_action("exportOnly");
         }
     }
 
@@ -108,54 +85,30 @@ class exportController extends AuthenticatedController {
      */
     function export_action() {
         $export = new exportDoc();
-        if (!$export->loadTemplate(func_get_args())) {
-            $this->render_action("error");
-                        return false;
-        }
-
-        /* if (Request::getArray('edit')) {
-          $export->editTemplate(Request::getArray('edit'));
-          } */
+        $export->loadTemplate(func_get_args());
         $export->export(Request::get('format'));
         $this->render_nothing();
     }
 
-    function save_action() {
-        $export = new exportDoc();
-        if (!$export->loadTemplate(func_get_args())) {
-            
-            $this->render_action("error");
-                        return false;
-        }
-        $export->editTemplate(Request::getArray('edit'));
-        $name = Request::get('templatename') ? : _("Neue Vorlage");
-        $export->save(Request::get('format'), $name);
-        //$this->flash['export'] = $export;
-        $target = "export/index" . $this->argstring;
-        $this->redirect($target);
-    }
-
+    /**
+     * Action to export a presaved template
+     * 
+     * @param int $id Id of the saved template
+     */
     function exportTemplate_action($id) {
         $export = new exportDoc($id);
-        if ($export->loadSavedTemplate()) {
-            $export->export();
-            $this->render_nothing();
-        } else {
-            $this->redirect("export/error");
-        }
+        $export->loadSavedTemplate();
+        $export->export();
+        $this->render_nothing();
     }
-
-    function error_action() {
-        
-    }
-
+    
+    /**
+     * Action to remove a template
+     */
     function removeTemplate_action($id) {
         $export = new exportDoc($id);
         $export->delete();
-        foreach (array_slice(func_get_args(), 1) as $tmp) {
-            $argstring .= "/$tmp";
-        }
-        $this->redirect("export/index$argstring");
+        $this->redirect("export/index/" . join("/", array_slice(func_get_args(), 1)));
     }
 
 }

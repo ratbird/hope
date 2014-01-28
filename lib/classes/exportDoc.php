@@ -125,13 +125,14 @@ class exportDoc extends SimpleORMap {
         $tmp = $tmp->asXML();
         
         $permissions = $this->getXML()->permissions;
+        var_dump($permissions);die;
         if ($permissions) {
             if ($permissions->context) {
                 if (!$GLOBALS['perm']->have_studip_perm((string) $permissions->usertype, (string) $permissions->context))
-                    return false;
+                    throw new AccessDeniedException();
             } else {
                 if (!$GLOBALS['perm']->have_perm((string) $permissions->usertype))
-                    return false;
+                    throw new AccessDeniedException();
             }
         }
         return true;

@@ -39,7 +39,7 @@ class InstituteMember extends SimpleORMap
 
     public static function findByInstitute($institute_id)
     {
-        return self::findByInstitut_id($institute_id, 'ORDER BY priority');
+        return self::findBySQL("institut_id=? AND inst_perms <> 'user'", array($institute_id));
     }
 
     public static function findByUser($user_id)

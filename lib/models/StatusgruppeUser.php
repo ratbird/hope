@@ -3,9 +3,9 @@
 /**
  * StatusgruppeUser.php
  * model class for statusgroupusers.
- * 
+ *
  * This model should be joined to an user object if nessecary
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -31,27 +31,20 @@ class StatusgruppeUser extends SimpleORMap {
 
     /**
      * Prevents invisible users from being displayed
-     * 
+     *
      * @return string Fullname if visible else string for invisible user
      */
     public function name() {
-        if ($this->visible || $GLOBALS['perm']->have_perm("tutor")) {
-            $user = new User($this->user_id);
-            return $user->getFullName("full_rev");
-        }
-        return _("Unsichtbar");
+        return $this->user->nachname . ', '. $this->user->vorname;
     }
 
     /**
      * Prevents the avatar of invisible users from being displayed
-     * 
+     *
      * @return mixed Useravatar if visible else dummyavatar
      */
     public function avatar() {
-        if ($this->visible || $GLOBALS['perm']->have_perm("tutor")) {
-            return Avatar::getAvatar($this->user_id)->getImageTag(Avatar::SMALL);
-        }
-        return Avatar::getNobody()->getImageTag(Avatar::SMALL);
+        return Avatar::getAvatar($this->user_id, $this->user->username)->getImageTag(Avatar::SMALL, array('title' => htmlReady($this->name())));
     }
 
     /**

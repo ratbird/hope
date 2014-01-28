@@ -83,16 +83,11 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $this->selectedPersons = array();
         if (!Request::get('not_first_call')) {
             $this->currentGroupMembers = array();
-            foreach ($this->group->members as $member) {
-                $user = new User($member->user_id);
-                $this->selectedPersons[] = $user;
-            }
+            $this->selectedPersons = User::findMany($this->group->members->pluck('user_id'));
         } else {
             // Load selected persons
             $this->selectedPersonsHidden = unserialize(studip_utf8decode(Request::get('search_persons_selected_hidden')));
-            foreach ($this->selectedPersonsHidden as $user_id) {
-                $this->selectedPersons[] = new User($user_id);
-            }
+            $this->selectedPersons = User::findMany($this->selectedPersonsHidden);
         }
 
         // Search
@@ -102,30 +97,13 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         $lastSearchPreset = Request::isXHR() ? studip_utf8decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
         if (($this->searchPreset == "inst" && $lastSearchPreset != "inst") || !Request::get('not_first_call')) { // ugly
             // search with preset
-            foreach ($this->type['groups'] as $group) {
-                $this->selectablePersons = array();
-                foreach ($group['user']() as $user) {
-                    $this->selectablePersons[] = $user->user;
-                }
-            }
+            $this->selectablePersons = User::findMany(Institute::find($_SESSION['SessionSeminar'])->members->pluck('user_id'));
             // reset search input, because a preset is used
             $this->search = "";
         } elseif ($this->search != $lastSearch || Request::submitted('submit_search')) {
             // search with free text input
-            $this->selectablePersons = array();
-            
-            $sql = "SELECT user_id FROM `auth_user_md5` WHERE
-                    (vorname LIKE ? OR nachname LIKE ? OR CONCAT_WS(' ',vorname, nachname) LIKE ?)
-                    AND ".get_vis_query()."
-                    ORDER BY nachname,vorname ASC";
-            
-            $statement = DBManager::get()->prepare($sql);
-            $statement->execute(array($this->search, $this->search, $this->search));
-            $statement->execute();
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($result as $r) {
-                $this->selectablePersons[] = new User($r['user_id']);
-            }
+            $result = PermissionSearch::get('user')->getResults($this->search, array('permission' => array('autor','tutor','dozent'), 'exclude_user' => array()));
+            $this->selectablePersons = User::findMany($result);
             // reset preset
             $this->searchPreset = "";
         } else {
@@ -198,7 +176,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                     //exit("ADDED");
                     $new_user = new StatusgruppeUser(array($this->group->id, $user->id));
                     $new_user->store();
-                    $this->type['after_user_add']($user_id);
+                    $this->type['after_user_add']($user->id);
                     $this->countNew++;
                 }
             }
@@ -223,16 +201,13 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->redirect('admin/statusgroups/index');
         }
 
+        $this->selectablePersons = new SimpleCollection($this->selectablePersons);
+        $this->selectedPersons = new SimpleCollection($this->selectedPersons);
         // generate hidden form data to remember current state
-        $this->selectablePersonsHidden = array();
-        foreach ($this->selectablePersons as $user) {
-            $this->selectablePersonsHidden[] = $user->id;
-        }
-        $this->selectedPersonsHidden = array();
-        foreach ($this->selectedPersons as $user) {
-            $this->selectedPersonsHidden[] = $user->id;
-        }
-
+        $this->selectablePersonsHidden = $this->selectablePersons->pluck('id');
+        $this->selectedPersonsHidden = $this->selectedPersons->pluck('id');
+        $this->selectablePersons->orderBy('nachname, vorname');
+        $this->selectedPersons->orderBy('nachname, vorname');
         // set layout
         if (Request::isXhr()) {
             $this->set_layout(null);
@@ -327,7 +302,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * have to do this on EVERY institute page
      */
     public function selectInstitute_action() {
-        
+
     }
 
     /**
@@ -397,19 +372,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     private function setInfoBox() {
         $this->setInfoBoxImage('infobox/groups.jpg');
 
-        //Infobox people Search
-        $infobox_search = "<input type = 'text' id = 'ppl_search' style = 'width: 200px;'>";
-
-        foreach ($this->type['groups'] as $group) {
-            $infobox_search .= "<h4 class='category' style='margin-bottom: 2px;'>{$group['name']}</h4>";
-            foreach ($group['user']() as $user) {
-                $infobox_search .= "<p class='person pre' id='{$user->user->id}' style='margin: 0px;'>{$user->user->getFullName('full_rev')}</p>";
-            }
-        }
-
-        $infobox_search .= "<h4 class='category' id='free_search' style='margin-bottom: 2px; display:none;'>"
-                . _('Freie Suche') . "</h4><div id='search_result'></div>";
-
         $this->addToInfobox(_('Aktionen'), "<a title='" . _('Neue Gruppe anlegen') . "' class='modal' href='" . $this->url_for("admin/statusgroups/editGroup") . "'>" . _('Neue Gruppe anlegen') . "</a>", 'icons/16/black/add/group3.png');
         $this->addToInfobox(_('Aktionen'), "<a title='" . _('Gruppenreihenfolge ändern') . "' class='modal' href='" . $this->url_for("admin/statusgroups/sortGroups") . "'>" . _('Gruppenreihenfolge ändern') . "</a>", 'icons/16/black/arr_2down.png');
     }
@@ -437,7 +399,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
         if (Request::submitted('order')) {
             $this->check('edit');
-            $newOrder = StudipController::render_json(Request::get('ordering'));
+            $newOrder = json_decode(Request::get('ordering'));
             $this->updateRecoursive($newOrder, $_SESSION['SessionSeminar']);
         }
     }
@@ -472,7 +434,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * This is the rest of the idea we could use statusgroups on other pages.
      * navigation and redirect to selection page must move here if the
      * statusgroupspage is reused
-     * 
+     *
      * @return type
      */
     private function types() {
@@ -484,8 +446,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             if ($newInstUser->isNew()) {
                 $user = new User($user_id);
                 $newInstUser->inst_perms = $user->perms;
+                if ($newInstUser->store()) {
+                    StudipLog::INST_USER_ADD($_SESSION['SessionSeminar'], $user->id, $user->perms);
+                }
             }
-            $newInstUser->store();
         },
                 'after_user_delete' => function ($user_id) {
             null;
@@ -512,10 +476,9 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 'groups' => array(
                     'members' => array(
                         'name' => _('Mitglieder'),
-                        'user' => function() {
-                    $inst = new Institute($_SESSION['SessionSeminar']);
-                    return $inst->members->findBy('user', null, '<>')->orderBy('nachname');
-                }))
+
+
+                ))
             )
         );
     }

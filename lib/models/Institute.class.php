@@ -12,7 +12,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.0
- * 
+ *
  * @property string institut_id database column
  * @property string id alias column for institut_id
  * @property string name database column
@@ -121,6 +121,7 @@ class Institute extends SimpleORMap
         $this->has_many = array(
                 'members' => array(
                         'class_name' => 'InstituteMember',
+                        'assoc_func' => 'findByInstitute',
                         'on_delete' => 'delete',
                         'on_store' => 'store'),
                 'home_courses' => array(

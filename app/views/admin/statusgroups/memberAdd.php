@@ -34,7 +34,7 @@
                         aria-label="<?= _('Gefundene Personen, die der Gruppe hinzugefügt werden können') ?>"
                         ondblclick="jQuery('#search_persons_add').click()">
                         <? foreach ($selectablePersons as $person): ?>
-                            <option value="<?= $person->id ?>"><?= htmlReady($person->getFullName('full_rev')) ?> - <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
+                            <option value="<?= $person->id ?>"><?= htmlReady($person->nachname . ', ' . $person->vorname) ?> - <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
                         <? endforeach; ?>
                 </select>
                 <a href="javascript:STUDIP.statusgroups.addMembers.selectAll();" id="search_persons_select_all" style="display: none;"><?= _('Alle hinzufügen'); ?></a>
@@ -64,7 +64,7 @@
                         aria-label="<?= _('Personen, die in die Gruppe eingetragen werden') ?>"
                         ondblclick="jQuery('#search_persons_remove').click()">
                     <? foreach ($selectedPersons as $user): ?>
-                        <option value="<?= $user->id ?>"><?= htmlReady($user->getFullName('full_rev')) ?> - <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
+                        <option value="<?= $user->id ?>"><?= htmlReady($user->nachname . ', ' . $user->vorname) ?> - <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
                     <? endforeach; ?>
                 </select>
                 <a href="javascript:STUDIP.statusgroups.addMembers.deselectAll();" id="search_persons_deselect_all" style="display: none;"><?= _('Alle austragen'); ?></a>

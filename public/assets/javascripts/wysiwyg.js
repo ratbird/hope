@@ -45,7 +45,7 @@ jQuery(function($){
             return isHtml(text) ? text : convertToHtml(text);
         }
         textarea.val(getHtml(textarea.val()));
-    
+
         // find an unused toolbarId
         // toolbarId is needed for sharedSpaces
         var toolbarPrefix = 'cktoolbar',
@@ -62,7 +62,7 @@ jQuery(function($){
         var toolbar_placeholder = $('<div>');
         toolbar_placeholder.insertBefore(textarea);
         toolbar.insertBefore(textarea);
-    
+
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
             customConfig: '',
@@ -74,7 +74,7 @@ jQuery(function($){
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
-    			top: toolbarId
+            top: toolbarId
             },
             toolbarGroups: [
                 {name: 'basicstyles', groups: ['mode', 'basicstyles', 'cleanup']},
@@ -88,31 +88,31 @@ jQuery(function($){
                 {name: 'others'},
                 {name: 'about'}
             ],
-    
+
             // convert special chars except latin ones to html entities
-            entities: true,
+            entities: false,
             entities_latin: false,
             entities_processNumerical: true,
-    
+
             // configure list of special characters
             // NOTE 17 characters fit in one row of special characters dialog
             specialChars: [].concat(
                 [   "&Agrave;", "&Aacute;", "&Acirc;", "&Atilde;", "&Auml;",
                     "&Aring;", "&AElig;", "&Egrave;", "&Eacute;", "&Ecirc;", "&Euml;",
                     "&Igrave;", "&Iacute;", "&Iuml;", "&Icirc;", "", "&Yacute;",
-    
+
                     "&agrave;", "&aacute;", "&acirc;", "&atilde;", "&auml;",
                     "&aring;", "&aelig;", "&egrave;", "&eacute;", "&ecirc;", "&euml;",
                     "&igrave;", "&iacute;", "&iuml;", "&icirc;", "", "&yacute;",
-    
+
                     "&Ograve;", "&Oacute;", "&Ocirc;", "&Otilde;", "&Ouml;",
                     "&Oslash;", "&OElig;", "&Ugrave;", "&Uacute;", "&Ucirc;", "&Uuml;",
                     "", "&Ccedil;", "&Ntilde;", "&#372;", "", "&#374",
-    
+
                     "&ograve;", "&oacute;", "&ocirc;", "&otilde;", "&ouml;",
                     "&oslash;", "&oelig;", "&ugrave;", "&uacute;", "&ucirc;", "&uuml;",
                     "", "&ccedil;", "&ntilde;", "&#373", "", "&#375;",
-    
+
                     "&szlig;", "&ETH;", "&eth;", "&THORN;", "&thorn;", "", "",
                     "`", "&acute;", "^", "&uml;", "", "&cedil;", "~", "&asymp;", "",
                     "&yuml;"
@@ -140,21 +140,21 @@ jQuery(function($){
                     "&frac14;", "&frac12;", "&frac34;",
                     "&lsquo;", "&rsquo;", "&ldquo;", "&rdquo;", "&laquo;", "&raquo;",
                     "&iexcl;", "&iquest;",
-    
+
                     '@', "&sect;", "&para;", "&micro;",
                     "[", "]", '{', '}',
                     '|', "&brvbar;", "&ndash;", "&mdash;", "&macr;",
                     "&sbquo;", "&#8219;", "&bdquo;", "&hellip;",
-    
+
                     "&euro;", "&cent;", "&pound;", "&yen;", "&curren;",
                     "&copy;", "&reg;", "&trade;",
-    
+
                     "&not;", "&middot;", "&times;", "&divide;",
-    
+
                     "&#9658;", "&bull;",
                     "&rarr;", "&rArr;", "&hArr;",
                     "&diams;",
-    
+
                     "&#x00B1", // ±
                     "&#x2229", // ∩ INTERSECTION
                     "&#x222A", // ∪ UNION
@@ -208,11 +208,11 @@ jQuery(function($){
                 ]
             )
         }); // CKEDITOR.replace(textarea[0], {
-    
+
         // handle drag'n'drop events
         CKEDITOR.on('instanceReady', function(event){
             var editor = event.editor;
-    
+
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function(event) {
                 if (event.editor.mode === 'source') {
@@ -224,7 +224,7 @@ jQuery(function($){
                     editor.focus();
                 }
             });
-    
+
             // make CKEditor clean up HTML edited in source mode before submit
             var form = textarea.closest('form');
             form.submit(function(event){
@@ -257,7 +257,7 @@ jQuery(function($){
                 // update textarea for other JS code (e.g. Stud.IP Forum)
                 updateTextArea();
             });
-    
+
             // TODO find a better solution than blurDelay = 0
             // it's an ugly hack to be faster than Stud.IP forum's save
             // function; might produce "strange" behaviour
@@ -277,7 +277,7 @@ jQuery(function($){
                     editor.focus();
                 }
             });
-    
+
             // do not scroll toolbar out of viewport
             function stickyTools() {
                 var MARGIN = 30;
@@ -305,10 +305,10 @@ jQuery(function($){
 
             var editorZ = Number(editorArea.css('z-index')) || 0;
             toolbar.css('z-index', editorZ + 1);
-    
+
             // hide "source" button's text label
             $('.cke_button__source_label').hide();
-    
+
             // focus the editor so the user can immediately hack away...
             editor.focus();
         });

@@ -6,21 +6,21 @@
     <?= CSRFProtection::tokenTag() ?>
     <table id="autor" class="default collapsable tablesorter">
         <caption>
+        <? if ($is_tutor) : ?>
             <span class="actions">
-                <? if ($is_tutor) : ?>
-                        <?=$controller->getEmailLinkByStatus('autor', $autoren)?>
-                        <a href="<?= URLHelper::getLink('sms_send.php',
-                            array('filter' => 'send_sms_to_all',
-                                'who' => 'autor',
-                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
-                                'course_id' => $course_id,
-                                'subject' => $subject))
-                        ?>">
-                            <?= Assets::img('icons/16/blue/inbox.png',
-                                    tooltip2(sprintf(_('Nachricht an alle %s versenden'), htmlReady($status_groups['autor'])))) ?>
-                        </a>
-                <? endif ?>
+                <?=$controller->getEmailLinkByStatus('autor', $autoren)?>
+                <a href="<?= URLHelper::getLink('sms_send.php',
+                    array('filter' => 'send_sms_to_all',
+                        'who' => 'autor',
+                        'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
+                        'course_id' => $course_id,
+                        'subject' => $subject))
+                ?>">
+                    <?= Assets::img('icons/16/blue/inbox.png',
+                            tooltip2(sprintf(_('Nachricht an alle %s versenden'), htmlReady($status_groups['autor'])))) ?>
+                </a>
            </span>
+       <? endif ?>
             <?= $status_groups['autor'] ?>
         </caption>
         <colgroup>

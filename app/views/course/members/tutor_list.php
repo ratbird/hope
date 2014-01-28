@@ -4,24 +4,24 @@
 <form action="<?= $controller->url_for('course/members/edit_tutor') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable">
-	   	<caption>
-	   		<span class="actions">
-	   	   		<? if($is_tutor) : ?>
-                	<?=$controller->getEmailLinkByStatus('tutor', $tutoren)?>
-                    	<a href="<?= URLHelper::getLink('sms_send.php',
-                        	    array('filter' => 'send_sms_to_all',
-                            	    'who' => 'tutor',
-                                	'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
-                                	'course_id' => $course_id,
-                                	'subject' => $subject))
-                    	?>">
-                        	<?= Assets::img('icons/16/blue/inbox.png',
+        <caption>
+        <? if($is_tutor) : ?>
+            <span class="actions">
+                    <?=$controller->getEmailLinkByStatus('tutor', $tutoren)?>
+                        <a href="<?= URLHelper::getLink('sms_send.php',
+                                array('filter' => 'send_sms_to_all',
+                                    'who' => 'tutor',
+                                    'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
+                                    'course_id' => $course_id,
+                                    'subject' => $subject))
+                        ?>">
+                            <?= Assets::img('icons/16/blue/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['tutor'])))?>
-                    	</a>
-             	<? endif ?>
-		   	</span>
-           	<?= $status_groups['tutor'] ?>
-		</caption>
+                        </a>
+            </span>
+        <? endif ?>
+            <?= $status_groups['tutor'] ?>
+        </caption>
         <colgroup>
         <? if($is_dozent && !$tutor_is_locked) : ?>
             <col width="20">

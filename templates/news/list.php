@@ -23,7 +23,7 @@
         <? if ($may_add): ?>
             <a href="<?= URLHelper::getURL('dispatch.php/news/edit_news/new/'.$range_id)?>" rel="get_dialog" target="_blank">
                 <img src="<?= Assets::image_path('icons/16/white/add.png') ?>" 
-                     <?= tooltip(_('Ank&uuml;ndigung erstellen')) ?>>
+                     <?= tooltip(_('Ankündigung erstellen')) ?>>
             </a>
         <? endif; ?>
         </td>

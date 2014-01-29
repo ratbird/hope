@@ -60,7 +60,7 @@
     <tbody>
         <tr>
             <th colspan="3">
-                <p class="info"><?= _("Definiere, welche Postings Dein Stream alle umfassen soll.") ?></p>
+                <p class="info"><?= _("Definiere, welche Postings Dein Stream umfassen soll.") ?></p>
             </th>
         </tr>
         <tr>
@@ -136,7 +136,7 @@
     <tbody>
         <tr>
             <th colspan="5">
-                <p class="info"><?= _("Grenze die oben definierte Sammlung an Postings ein mit Filtermöglichkeiten") ?></p>
+                <p class="info"><?= _("Grenze die oben definierte Sammlung an Postings ein") ?></p>
             </th>
         </tr>
         <tr>

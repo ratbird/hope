@@ -11,9 +11,11 @@
  * the License, or (at your option) any later version.
  */
 
-abstract class StudipController extends Trails_Controller {
+abstract class StudipController extends Trails_Controller
+{
 
-    function before_filter(&$action, &$args) {
+    function before_filter(&$action, &$args)
+    {
         $this->current_action = $action;
         // allow only "word" characters in arguments
         $this->validate_args($args);
@@ -31,8 +33,8 @@ abstract class StudipController extends Trails_Controller {
      * @param array   an array of arguments to the action
      * @param array   list of argument types (optional)
      */
-    function validate_args(&$args, $types = NULL) {
-
+    function validate_args(&$args, $types = NULL)
+    {
         foreach ($args as $i => &$arg) {
             $type = isset($types[$i]) ? $types[$i] : 'option';
 
@@ -66,7 +68,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @return string  a URL to this route
      */
-    function url_for($to = ''/* , ... */) {
+    function url_for($to = ''/* , ... */)
+    {
         $args = func_get_args();
         if (is_array($args[1])) {
             $params = $args[1];
@@ -102,7 +105,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @return string  a URL to this route
      */
-    function link_for($to = ''/* , ... */) {
+    function link_for($to = ''/* , ... */)
+    {
         return htmlReady(call_user_func_array(array($this, 'url_for'), func_get_args()));
     }
 
@@ -112,7 +116,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @param  object     the thrown exception
      */
-    function rescue($exception) {
+    function rescue($exception)
+    {
         throw $exception;
     }
 
@@ -121,7 +126,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @since Stud.IP 2.3
      * */
-    protected function populateInfobox() {
+    protected function populateInfobox()
+    {
         if (!isset($this->infobox)) {
             $this->infobox = array(
                 'picture' => 'blank.gif',
@@ -137,7 +143,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @since Stud.IP 2.3
      * */
-    function setInfoBoxImage($image) {
+    function setInfoBoxImage($image)
+    {
         $this->populateInfobox();
 
         $this->infobox['picture'] = $image;
@@ -157,7 +164,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @since Stud.IP 2.3
      * */
-    function addToInfobox($category, $text, $icon = 'blank.gif') {
+    function addToInfobox($category, $text, $icon = 'blank.gif')
+    {
         $this->populateInfobox();
 
         $infobox = $this->infobox;
@@ -178,7 +186,8 @@ abstract class StudipController extends Trails_Controller {
      *
      * @param unknown $data
      */
-    function render_json($data) {
+    function render_json($data)
+    {
         $this->set_content_type('application/json;charset=utf-8');
         return $this->render_text(json_encode(studip_utf8encode($data)));
     }
@@ -191,7 +200,8 @@ abstract class StudipController extends Trails_Controller {
      * @param string $to_uri a trails route
      * @return Trails_Response
      */
-    function relay($to_uri/* , ... */) {
+    function relay($to_uri/* , ... */)
+    {
         $args = func_get_args();
         $uri = array_shift($args);
         list($controller_path, $unconsumed) = '' === $uri ? $this->dispatcher->default_route() : $this->dispatcher->parse($uri);
@@ -216,7 +226,8 @@ abstract class StudipController extends Trails_Controller {
      * @param string $unconsumed
      * @return Trails_Response
      */
-    function perform_relayed($unconsumed/* , ... */) {
+    function perform_relayed($unconsumed/* , ... */)
+    {
         $args = func_get_args();
         $unconsumed = array_shift($args);
 

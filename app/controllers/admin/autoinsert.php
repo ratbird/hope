@@ -71,11 +71,11 @@ class Admin_AutoinsertController extends AuthenticatedController
         $this->auto_sems = $seminare;
 
         $domains = array();
-        $domains [] = array('id' => 'keine',
+        $domains [] = array('id'   => 'keine',
             'name' => _('Ohne Domain'));
         foreach (UserDomain::getUserDomains() as $domain) {
             $domains[] = array(
-                'id' => $domain->getId(),
+                'id'   => $domain->getId(),
                 'name' => $domain->getName());
         }
 
@@ -220,12 +220,12 @@ class Admin_AutoinsertController extends AuthenticatedController
         }
 
         $this->available_filtertypes = array(
-            'fach' => _('Studienfach'),
-            'abschluss' => _('Studienabschluss'),
+            'fach'         => _('Studienfach'),
+            'abschluss'    => _('Studienabschluss'),
             'fachsemester' => _('Studienfachsemester'),
-            'institut' => _('Einrichtung'),
-            'status' => _('Statusgruppe'),
-            'domain' => _('Domäne')
+            'institut'     => _('Einrichtung'),
+            'status'       => _('Statusgruppe'),
+            'domain'       => _('Domäne')
         );
     }
 

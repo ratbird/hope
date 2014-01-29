@@ -40,7 +40,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 </a>
                             </th>
                             <? if (Config::get()->IMPORTANT_SEMNUMBER): ?>
-                                <th><?= _("Veranstaltungsnr") ?></th>
+                                <th><?= _("Veranstaltungsnummer") ?></th>
                             <? endif; ?>
                             <th><?= _("Name") ?></th>
                             <th><?= _("Inhalt") ?></th>

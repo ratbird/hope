@@ -50,7 +50,7 @@ use Studip\Button, Studip\LinkButton;
         </select>
         <br>
 
-        <select name="related_groups[]" multiple style="vertical-align: top; width: 100%;" aria-label="<?= _("Wählen Sie die Gruppen aus, für die die Termine gelten. Ist keine Gruppen ausgewählt, gilt der Termin für alle Nutzer und Gruppen der Veranstaltung.") ?>">
+        <select name="related_groups[]" multiple style="vertical-align: top; width: 100%;" aria-label="<?= _("Wählen Sie die Gruppen aus, für die die Termine gelten. Ist keine Gruppe ausgewählt, gilt der Termin für alle Nutzer und Gruppen der Veranstaltung.") ?>">
             <? foreach ($gruppen as $gruppe) : ?>
             <option value="<?= htmlReady($gruppe->getId()) ?>"><?= htmlReady($gruppe['name']) ?></option>
             <? endforeach ?>

@@ -8,21 +8,21 @@
 STUDIP.Admission = {
 
     getCourses: function(targetUrl) {
-        var query = '';
-        query += '&semester='+$('select[name="semester"]').val();
-        $('input[name="institutes[]"]:checked').each(function(index) {
-            query += '&institutes[]='+$(this).val();
-        });
-        $('#courses li.jstree-checked').each(function(index) {
-            query += '&courses[]='+$(this).attr('id');
-        });
+        var data = {
+                'courses[]' : _.pluck($('#courses li.jstree-checked'), 'id'),
+                'course_filter' : $('input[name="course_filter"]').val(),
+                'semester' : $('select[name="semester"]').val(),
+                'institutes[]' : $.merge(_.pluck($('input[name="institutes[]"]:hidden'), 'value'), _.pluck($('input[name="institutes[]"]:checked'), 'value'))
+            };
+        console.log(data);
         var loading = 'Wird geladen'.toLocaleString();
         $('#instcourses').empty();
         $('<img/>', {
             src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
         }).appendTo('#instcourses');
         $('#instcourses').append(loading);
-        $('#instcourses').load(targetUrl, query);
+        $('#instcourses').load(targetUrl, data);
+        return false;
     },
 
     configureRule: function (ruleType, targetUrl) {
@@ -250,21 +250,21 @@ STUDIP.Admission = {
         }
     },
 
-	checkRuleActivation: function(target) {
-		var form = $('#'+target);
-		var globalActivation = form.find('input[name=enabled]');
-		if (globalActivation.attr('checked')) {
-		    $('#activation').show();
-		    if (form.find('input[name=activated]:checked').val() == 'studip') {
+    checkRuleActivation: function(target) {
+        var form = $('#'+target);
+        var globalActivation = form.find('input[name=enabled]');
+        if (globalActivation.attr('checked')) {
+            $('#activation').show();
+            if (form.find('input[name=activated]:checked').val() == 'studip') {
                 $('#institutes_activation').hide();
-		    } else {
+            } else {
                 $('#institutes_activation').show();
-		    }
-		} else {
+            }
+        } else {
             $('#activation').hide();
             $('#institutes_activation').hide();
-		}
-	},
+        }
+    },
 
     closeDialog: function(elementId) {
         $('#'+elementId).remove();

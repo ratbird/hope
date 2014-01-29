@@ -102,12 +102,16 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
             <label class="caption">
                 <?= _('Semester:') ?>
                 <select name="semester" onchange="STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')">
-                    <?php foreach(Semester::getAll() as $id => $semester) { ?>
+                    <?php foreach(array_reverse(Semester::getAll(), true) as $id => $semester) { ?>
                     <option value="<?= $id ?>"<?= $id == $selectedSemester ? ' selected="selected"' : '' ?>>
                         <?= htmlReady($semester->name) ?>
                     </option>
                     <?php } ?>
                 </select>
+            </label>
+            <label class="caption">
+                <?= _('Filter auf Name/Nummer/Dozent:') ?>
+                <input type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
             </label>
             <label class="caption">
                 <?= _('Veranstaltungszuordnung:') ?>

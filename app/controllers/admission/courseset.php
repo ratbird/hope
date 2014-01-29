@@ -171,8 +171,8 @@ class Admission_CoursesetController extends AuthenticatedController {
                         $this->selectedInstitutes[$id] = true;
                     }
                 }
-                $allCourses = CoursesetModel::getInstCourses(array_flip($institutes), $coursesetId);
                 $selectedCourses = $this->courseset->getCourses();
+                $allCourses = CoursesetModel::getInstCourses(array_flip($institutes), $coursesetId, $selectedCourses, $this->selectedSemester, $this->onlyOwnCourses);
             }
             if ($this->flash['courses']) {
                 $courses = $this->flash['courses'];
@@ -285,7 +285,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function instcourses_action($coursesetId='') {
-        //CSRFProtection::verifyUnsafeRequest();
+        CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);
@@ -294,7 +294,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             $this->selectedCourses = Request::getArray('courses');
         }
         $this->allCourses = CoursesetModel::getInstCourses(Request::getArray('institutes'), 
-            $coursesetId, $this->selectedCourses, Request::option('semester'), $this->onlyOwnCourses);
+            $coursesetId, $this->selectedCourses, Request::option('semester'), $this->onlyOwnCourses ?: Request::get('course_filter'));
     }
 
     public function institutes_action() {
@@ -348,10 +348,12 @@ class Admission_CoursesetController extends AuthenticatedController {
             $admission_waitlists_max = Request::intArray('configure_courses_waitlist_max');
             $ok = 0;
             foreach($this->courses as $course) {
-                $course->admission_turnout = $admission_turnouts[$course->id];
-                $course->admission_disable_waitlist = isset($admission_waitlists[$course->id]) ? 0 : 1;
-                $course->admission_waitlist_max = $course->admission_disable_waitlist ? 0 : $admission_waitlists_max[$course->id];
-                $ok += $course->store();
+                if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
+                    $course->admission_turnout = $admission_turnouts[$course->id];
+                    $course->admission_disable_waitlist = isset($admission_waitlists[$course->id]) ? 0 : 1;
+                    $course->admission_waitlist_max = $course->admission_disable_waitlist ? 0 : $admission_waitlists_max[$course->id];
+                    $ok += $course->store();
+                }
             }
             if ($ok) {
                 PageLayout::postMessage(MessageBox::success(_("Die zugeordneten Veranstaltungen wurden konfiguriert.")));

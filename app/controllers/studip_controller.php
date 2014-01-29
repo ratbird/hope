@@ -46,7 +46,6 @@ abstract class StudipController extends Trails_Controller {
                     break;
 
                 case 'option':
-                    var_dump($arg);
                     if (preg_match('/[^\\w,-.]/', $arg)) {
                         throw new Trails_Exception(400);
                     }

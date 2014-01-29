@@ -390,7 +390,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                 }
                 if(count($not_deleted)){
                     $this->msg[$item_id] .= '<br>'
-                                         . sprintf(_("Für folgende Veranstaltungen wurde die Zuordnung nicht aufgehoben, da es die einzige ist: %s")
+                                         . sprintf(_("Für folgende Veranstaltungen wurde die Zuordnung nicht aufgehoben, da es die einzige Zuordnung ist: %s")
                                          , '<br>'.htmlready(join(', ', $not_deleted)));
                 }
             }

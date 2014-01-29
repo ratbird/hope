@@ -31,7 +31,7 @@ For this skin, the following tasks are achieved in this file:
 // used on config.skin to tell the editor to use the skin.
 //
 // This is the only mandatory property to be defined in this file.
-CKEDITOR.skin.name = 'moono';
+CKEDITOR.skin.name = 'studip';
 
 // 2. Register browser specific skin files
 // -----------------------------------------
@@ -117,7 +117,7 @@ CKEDITOR.skin.chameleon = ( function() {
 			'filter:progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr=\'{from}\',endColorstr=\'{to}\');' );
 
 		return function( from, to ) {
-			return template.output( { from: from, to: to } );
+			return template.output( { from: '#a1aec7', to: '#a1aec7' } );
 		};
 	} )(),
 

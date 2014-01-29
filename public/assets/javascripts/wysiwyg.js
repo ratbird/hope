@@ -67,6 +67,7 @@ jQuery(function($){
         CKEDITOR.replace(textarea[0], {
             customConfig: '',
             uiColor: uiColor,
+            skin: 'studip',
             removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
                            + ',forms,iframe,maximize,newpage,preview,resize'
                            + ',showblocks,stylescombo,templates,save,smiley',

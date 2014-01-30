@@ -11,6 +11,7 @@ include_once 'vendor/idna_convert/idna_convert.class.php';
 include_once 'lib/classes/searchtypes/SQLSearch.class.php';
 include_once 'lib/classes/searchtypes/StandardSearch.class.php';
 include_once 'lib/classes/searchtypes/PermissionSearch.class.php';
+require_once 'lib/classes/Markup.class.php';
 require_once 'lib/classes/LinkButton.class.php';
 require_once 'lib/classes/Button.class.php';
 require_once 'lib/classes/ResetButton.class.php';

@@ -51,6 +51,13 @@ abstract class AdmissionRule
      * performance reasons).
      */
     public $courseSetId = '';
+    
+    /**
+     * an array of AdmissionRules allowed to be combined with this rule
+     * 
+     * @var array 
+     */
+    protected $allowed_combinations = array();
 
     // --- OPERATIONS ---
 
@@ -363,6 +370,20 @@ abstract class AdmissionRule
      */
     public function __toString() {
         return $this->toString();
+    }
+    
+    /**
+     * checks if given admission rule is allowed to be combined with this rule
+     * 
+     * @param AdmissionRule|string $admission_rule
+     * @return boolean
+     */
+    public function isCombinationAllowed($admission_rule)
+    {
+        if (is_object($admission_rule)) {
+            $admission_rule = get_class($admission_rule);
+        }
+        return in_array($admission_rule, $this->allowed_combinations);
     }
 
 } /* end of abstract class AdmissionRule */

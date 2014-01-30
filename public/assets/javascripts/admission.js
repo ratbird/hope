@@ -71,7 +71,7 @@ STUDIP.Admission = {
                         src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
                     }).appendTo('#configurerule');
                     $('#configurerule').append(loading);
-                    $('#configurerule').load($(source).attr('href'));
+                    $('#configurerule').load($(source).attr('href'), {rules : _.pluck($('#rules input[name="rules[]"]'),'value')});
                 }
             });
        return false;

@@ -31,6 +31,8 @@ class TimedAdmission extends AdmissionRule
      */
     public $startTime = 0;
 
+    protected $allowed_combinations = array('ParticipantRestrictedAdmission', 'LimitedAdmission','ConditionalAdmission','TimedAdmission');
+    
     // --- OPERATIONS ---
 
     /**

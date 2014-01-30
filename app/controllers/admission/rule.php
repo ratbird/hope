@@ -30,8 +30,16 @@ class Admission_RuleController extends AuthenticatedController {
         $this->ruleTemplate = $this->rule->getTemplate();
     }
 
-    public function select_type_action() {
+    public function select_type_action($cs_id = '') {
         $this->ruleTypes = AdmissionRule::getAvailableAdmissionRules();
+        $this->courseset = new CourseSet($cs_id);
+        $this->courseset->clearAdmissionRules();
+        foreach (Request::getArray('rules') as $rule) {
+            $rule = unserialize($rule);
+            if ($rule instanceof AdmissionRule) {
+                $this->courseset->addAdmissionRule($rule);
+            }
+        } 
     }
 
     public function save_action($ruleType, $ruleId='') {

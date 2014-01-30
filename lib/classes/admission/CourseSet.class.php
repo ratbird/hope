@@ -267,11 +267,22 @@ class CourseSet
         return $db->execute("UPDATE coursesets SET algorithm_run = ? WHERE set_id = ?", array($this->hasAlgorithmRun, $this->getId()));
     }
 
+    /**
+     * returns true if the set allows only a limited number of places 
+     * 
+     * @return boolean
+     */
     public function isSeatDistributionEnabled()
     {
         return $this->getSeatDistributionTime() !== null;
     }
 
+    /**
+     * returns timestamp of distribution time or null if no distribution time available
+     * may return 0 if first-come-first-serve is enabled
+     * 
+     * @return integer|null timestamp of distribution
+     */
     public function getSeatDistributionTime()
     {
         $pr_admission = $this->getAdmissionRule('ParticipantRestrictedAdmission');
@@ -283,7 +294,7 @@ class CourseSet
     /**
      * Get all admission rules belonging to the course set.
      *
-     * @return Array
+     * @return AdmissionRule[]
      */
     public function getAdmissionRules()
     {
@@ -876,6 +887,13 @@ class CourseSet
         return $this->toString();
     }
 
+    /**
+     * is user with given user id allowed to assign/unassign given course to courseset
+     * 
+     * @param string $user_id
+     * @param string $course_id
+     * @return boolean
+     */
     public function isUserAllowedToAssignCourse($user_id, $course_id)
     {
         global $perm;
@@ -885,6 +903,12 @@ class CourseSet
         return $is_dozent && ($is_private || $is_correct_institute);
     }
 
+    /**
+     * is user with given user id allowed to edit or delete the courseset
+     * 
+     * @param string $user_id
+     * @return boolean
+     */
     public function isUserAllowedToEdit($user_id)
     {
         global $perm;
@@ -898,6 +922,22 @@ class CourseSet
             }
         }
         return $i_am_the_boss;
+    }
+    
+    /**
+     * checks if given rule is allowed to be added to current set of rules
+     * 
+     * @param AdmissionRule|string $admission_rule
+     * @return boolean
+     */
+    public function isAdmissionRuleAllowed($admission_rule)
+    {
+        foreach ($this->getAdmissionRules() as $one) {
+            if (!$one->isCombinationAllowed($admission_rule)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 } /* end of class CourseSet */

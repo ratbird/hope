@@ -28,6 +28,8 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     
     public $first_come_first_served_allowed = true;
     
+    protected $allowed_combinations = array('LimitedAdmission','ConditionalAdmission','TimedAdmission');
+    
 
     // --- OPERATIONS ---
 

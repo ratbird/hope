@@ -53,6 +53,7 @@ if ($coursesets) {
             <a class="load-in-new-row" href="<?= $controller->link_for('', array('course_set_details' => $courseset->getId())); ?>">
                 <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
             </a>
+            <? if ($courseset->isUserAllowedToEdit($GLOBALS['user']->id)) : ?>
             <a href="<?= $controller->link_for('admission/courseset/configure/'.$courseset->getId()); ?>">
                     <?= Assets::img('icons/16/blue/edit.png',
                         array('alt' => _('Anmeldeset bearbeiten'),
@@ -68,6 +69,7 @@ if ($coursesets) {
                         array('alt' => _('Anmeldeset löschen'),
                               'title' => _('Anmeldeset löschen'))); ?>
                 </a>
+             <? endif ?>
         </div>
         </td>
     </tr>

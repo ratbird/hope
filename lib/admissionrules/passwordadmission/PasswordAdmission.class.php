@@ -32,6 +32,8 @@ class PasswordAdmission extends AdmissionRule
      */
     var $password = '';
 
+    protected $allowed_combinations = array('ConditionalAdmission','TimedAdmission');
+    
     // --- OPERATIONS ---
 
     /**

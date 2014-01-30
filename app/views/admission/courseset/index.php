@@ -34,38 +34,52 @@ $infobox = array('content' => $infobox,
 <?php
 if ($coursesets) {
 ?>
-<div id="coursesets">
-    <?php foreach ($coursesets as $courseset) { ?>
-    <div id="courseset_<?= $courseset->getId() ?>" class="hover_box">
-        <a href="#" onclick="return STUDIP.Admission.toggleDetails('courseset_arrow_<?= $courseset->getId() ?>', 'courseset_details_<?= $courseset->getId() ?>')">
-            <?= Assets::img('icons/16/blue/arr_1right.png',
-                array('id' => 'courseset_arrow_'.$courseset->getId(),
-                'align' => 'top', 'rel' => Assets::image_path('icons/16/blue/arr_1down.png'))) ?>
-            <?= htmlReady($courseset->getName()) ?>
-        </a>
-        <span class="hover_symbols">
-	        <a href="<?= URLHelper::getURL('dispatch.php/admission/courseset/configure/'.$courseset->getId()); ?>">
-	            <?= Assets::img('icons/16/blue/edit.png',
-	                array('alt' => _('Anmeldeset bearbeiten'),
-	                      'title' => _('Anmeldeset bearbeiten'))); ?>
-	        </a>
-	        <a href="<?= $controller->url_for('admission/courseset/delete',
-	            $courseset->getId()) ?>"
-	            onclick="return STUDIP.Dialogs.showConfirmDialog('<?=
-	                sprintf(_('Soll das Anmeldeset %s wirklich gelöscht werden?'), htmlReady($courseset->getName())) ?>', '<?=
-	                URLHelper::getURL('dispatch.php/admission/courseset/delete/'.
-	                $courseset->getId(), array('really' => 1)) ?>')">
-	            <?= Assets::img('icons/16/blue/trash.png',
-	                array('alt' => _('Anmeldeset löschen'),
-	                      'title' => _('Anmeldeset löschen'))); ?>
-	        </a>
-        </span>
-    </div>
-    <div id="courseset_details_<?= $courseset->getId() ?>" style="display: none; margin-left: 20px;">
-        <?= $courseset->toString(true) ?>
-    </div>
-    <?php } ?>
-</div>
+<table class="default zebra nohover">
+    <tr>
+        <th width="60%"><?= _('Name des Sets') ?></th>
+        <th width="25%"><?= _('Besitzer') ?></th>
+        <th width="5%"><?= _('Privat')?></th>
+        <th width="5%"><?= _('Anzahl')?></th>
+        <th style="text-align:center"><?= _('Aktionen') ?></th>
+    </tr>
+    <? foreach ($coursesets as $courseset) : ?>
+    <tr>
+        <td><?= htmlReady(my_substr($courseset->getName(),0,70)) ?></td>
+        <td><?= htmlReady(get_fullname($courseset->getUserId(), 'no_title_rev')) ?></td>
+        <td><?= $courseset->getPrivate() ? _('Ja') : _('Nein') ?></td>
+        <td><?= count($courseset->getCourses()) ?></td>
+        <td>
+        <div style="width:100px;text-align:right;white-space: nowrap">
+            <a class="load-in-new-row" href="<?= $controller->link_for('', array('course_set_details' => $courseset->getId())); ?>">
+                <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
+            </a>
+            <a href="<?= $controller->link_for('admission/courseset/configure/'.$courseset->getId()); ?>">
+                    <?= Assets::img('icons/16/blue/edit.png',
+                        array('alt' => _('Anmeldeset bearbeiten'),
+                              'title' => _('Anmeldeset bearbeiten'))); ?>
+                </a>
+                <a href="<?= $controller->link_for('admission/courseset/delete/'.
+                    $courseset->getId()) ?>"
+                    onclick="return STUDIP.Dialogs.showConfirmDialog('<?=
+                        sprintf(_('Soll das Anmeldeset %s wirklich gelöscht werden?'), htmlReady($courseset->getName())) ?>', '<?=
+                        URLHelper::getURL('dispatch.php/admission/courseset/delete/'.
+                        $courseset->getId(), array('really' => 1)) ?>')">
+                    <?= Assets::img('icons/16/blue/trash.png',
+                        array('alt' => _('Anmeldeset löschen'),
+                              'title' => _('Anmeldeset löschen'))); ?>
+                </a>
+        </div>
+        </td>
+    </tr>
+    <? if ($course_set_details == $courseset->getId()) : ?>
+        <tr>
+            <td colspan="5">
+                <?= $courseset->toString() ?>
+            </td>
+        </tr>
+    <? endif ?>
+    <? endforeach ?>
+</table>
 <?php
 } else {
 ?>

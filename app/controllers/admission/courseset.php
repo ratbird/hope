@@ -45,11 +45,16 @@ class Admission_CoursesetController extends AuthenticatedController {
      * Show all coursesets the current user has access to.
      */
     public function index_action() {
-        // Check for correct permissions.
-        //$allowed = (get_config('ALLOW_DOZENT_COURSESET_ADMIN') ? 'dozent' : 'admin');
-        //$GLOBALS['perm']->check($allowed);
+        $this->course_set_details = Request::option('course_set_details');
+        if ($this->course_set_details && Request::isXhr()) {
+            $courseset = new CourseSet($this->course_set_details);
+            return $this->render_text($courseset->toString());
+        }
         $this->ruleTypes = RuleAdministrationModel::getAdmissionRuleTypes();
         $this->coursesets = array();
+        foreach (words('current_institut_id current_rule_types set_name_prefix current_semester_id current_rule_types') as $param) {
+            $this->$param = $_SESSION[get_class($this)][$param];
+        }
         if (Request::submitted('choose_institut')) {
             $this->current_institut_id = Request::option('choose_institut_id');
             $this->current_rule_types = Request::getArray('choose_rule_type');
@@ -61,7 +66,7 @@ class Admission_CoursesetController extends AuthenticatedController {
         } else if ($this->current_semester_id !== '0') {
             $_SESSION['_default_sem'] = $this->current_semester_id;
         }
-        if (!count($this->current_rule_types) && !Request::submitted('choose_institut')) {
+        if (!isset($this->current_rule_types)) {
             $this->current_rule_types['ParticipantRestrictedAdmission'] = true;
         }
         $filter['course_set_name'] = $this->set_name_prefix;
@@ -99,6 +104,9 @@ class Admission_CoursesetController extends AuthenticatedController {
         uasort($this->coursesets, function($a,$b) {
             return strnatcasecmp($a->getName(), $b->getName());
         });
+        foreach (words('current_institut_id current_rule_types set_name_prefix current_semester_id current_rule_types') as $param) {
+            $_SESSION[get_class($this)][$param] = $this->$param;
+        }
     }
 
     /**

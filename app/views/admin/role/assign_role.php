@@ -33,7 +33,7 @@ use Studip\Button, Studip\LinkButton;
     <form action="<?= $controller->url_for('admin/role/save_role', $currentuser->getUserid()) ?>" method="POST">
         <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
-        <table class="default">
+        <table class="default nohover">
             <tr>
                 <th style="text-align: center;">
                     <?= sprintf(_('Rollen für %s'), htmlReady($currentuser->getGivenname() . ' ' . $currentuser->getSurname())) ?>

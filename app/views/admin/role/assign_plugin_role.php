@@ -26,7 +26,7 @@ use Studip\Button, Studip\LinkButton;
     <form action="<?= $controller->url_for('admin/role/save_plugin_role', $pluginid) ?>" method="POST">
         <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
-        <table class="default">
+        <table class="default nohover">
             <tr>
                 <th style="text-align: center;"><?= _('Gegenwärtig zugewiesene Rollen') ?></th>
                 <th></th>

@@ -72,6 +72,9 @@ class CoreParticipants implements StudipModule {
         return $items;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array();

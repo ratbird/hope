@@ -105,6 +105,9 @@ class CoreScm implements StudipModule {
         return $items;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array('description' => _('Der Freien Informationsseite können Sie einen '.

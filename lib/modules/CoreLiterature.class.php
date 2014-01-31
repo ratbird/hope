@@ -48,6 +48,9 @@ class CoreLiterature implements StudipModule {
         return null;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array('description' => _('Je nach Anbindung kann im tatsächlichen Buchbestand der '.

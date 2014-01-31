@@ -48,6 +48,9 @@ class CoreSchedule implements StudipModule {
         return null;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array('description' => _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, '.

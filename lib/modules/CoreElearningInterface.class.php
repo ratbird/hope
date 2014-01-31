@@ -55,6 +55,9 @@ class CoreElearningInterface implements StudipModule {
         return null;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array();

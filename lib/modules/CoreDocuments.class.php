@@ -84,6 +84,9 @@ class CoreDocuments implements StudipModule {
         return $items;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
         return array('description' => _('Im Dateibereich können Sie mit Ihren Studierenden '.

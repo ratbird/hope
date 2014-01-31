@@ -56,6 +56,9 @@ class CoreStudygroupParticipants implements StudipModule {
         return $items;
     }
 
+    /** 
+     * @see StudipModule::getMetadata()
+     */ 
     function getMetadata()
     {
          return array();

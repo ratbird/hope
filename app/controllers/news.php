@@ -60,6 +60,11 @@ class NewsController extends StudipController
         page_close();
     }
 
+    /**
+     * shows news content
+     *
+     * @param string $id        news id
+     */
     function get_news_action($id)
     {
 
@@ -162,9 +167,9 @@ class NewsController extends StudipController
     /**
      * Builds news dialog for editing / adding news
      *
-     * @param  string  news id (in case news already exists; otherwise set to "new")
-     * @param  string  range id (only for new news; set to 'template' for copied news)
-     * @param  string  template id (source of news template)
+     * @param string $id news           id (in case news already exists; otherwise set to "new")
+     * @param string $context_range     range id (only for new news; set to 'template' for copied news)
+     * @param string $template_id       template id (source of news template)
      *
      */
     function edit_news_action($id = '', $context_range = '', $template_id = '')
@@ -220,12 +225,12 @@ class NewsController extends StudipController
                 $this->area_options_selected = unserialize(studip_utf8decode(Request::get('news_selected_areas')));
                 $this->area_options_selectable = unserialize(studip_utf8decode(Request::get('news_selectable_areas')));
                 $topic = studip_utf8decode(Request::get('news_topic'));
-                $body = studip_utf8decode(Request::get('news_body'));
+                $body = transformBeforeSave(studip_utf8decode(Request::get('news_body')));
             } else {
                 $this->area_options_selected = unserialize(Request::get('news_selected_areas'));
                 $this->area_options_selectable = unserialize(Request::get('news_selectable_areas'));
                 $topic = Request::get('news_topic');
-                $body = Request::get('news_body');
+                $body = transformBeforeSave(Request::get('news_body'));
             }
             $date = $this->getTimeStamp(Request::get('news_startdate'), 'start');
             $expire = $this->getTimeStamp(Request::get('news_enddate'), 'end') ? $this->getTimeStamp(Request::get('news_enddate'), 'end') - $this->getTimeStamp(Request::get('news_startdate'), 'start') : '';
@@ -327,14 +332,14 @@ class NewsController extends StudipController
             if (Request::submitted('area_search'))
                 $this->area_options_selectable = $this->search_area($this->search_term);
             else {
-
-                if (Request::option('search_preset') == 'inst')
+                $this->current_search_preset = Request::option('search_preset');
+                if ($this->current_search_preset == 'inst')
                     $this->area_options_selectable = $my_inst;
-                elseif (Request::option('search_preset') == 'sem')
+                elseif ($this->current_search_preset == 'sem')
                     $this->area_options_selectable = $my_sem;
-                elseif (Request::option('search_preset') == 'user')
+                elseif ($this->current_search_preset == 'user')
                     $this->area_options_selectable = array('user' => array($GLOBALS['auth']->auth['uid'] => get_fullname()));
-                elseif (Request::option('search_preset') == 'global')
+                elseif ($this->current_search_preset == 'global')
                     $this->area_options_selectable = array('global' => array('studip' => _('Stud.IP')));
             }
 
@@ -464,7 +469,7 @@ class NewsController extends StudipController
     /**
      * Show administration page for user's news
      *
-     * @param  string  $area_type area filter
+     * @param string $area_type         area filter
      */
     function admin_news_action($area_type = '')
     {
@@ -572,7 +577,7 @@ class NewsController extends StudipController
                             .'können sie die Ausgabe filtern.'),
                             'icons/16/black/info');
         $this->addToInfobox(_('Aktionen'),
-                            '<a href="'.URLHelper::getURL('dispatch.php/news/edit_news/new').'" rel="get_dialog" target="_blank">'._('Ankündigung Erstellen').'</a>',
+                            '<a href="'.URLHelper::getURL('dispatch.php/news/edit_news/new').'" rel="get_dialog" target="_blank">'._('Ankündigung erstellen').'</a>',
                             'icons/16/black/add/news');
         if ($GLOBALS['perm']->have_perm('tutor')) {
             $this->addToInfobox(_('Bereiche'),
@@ -598,7 +603,7 @@ class NewsController extends StudipController
     /**
      * checks string for valid date
      *
-     * @param string $date
+     * @param string $date date-string to be checked
      * @param string $mode 'start' for startddate, 'end' for enddate (i.e. 23:59)
      * @return mixed result
      */
@@ -619,7 +624,7 @@ class NewsController extends StudipController
     /**
      * Searchs for studip areas using given search term
      *
-     * @param  string  search term
+     * @param string $term search term
      * @return array area data
      */
     function search_area($term) {

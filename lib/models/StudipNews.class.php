@@ -99,6 +99,18 @@ class StudipNews extends SimpleORMap {
         return $objects;
     }
 
+    /**
+     * fetches set of news items from database
+     * 
+     * @param string $user_id         author id for news set
+     * @param string $area            area group for news set (global, inst, sem or user)
+     * @param string $term            search term for news topic
+     * @param int $startdate          return only news (still) visible after this date
+     * @param int $enddate            return only news (still) visible before this date
+     * @param boolean $as_objects     include StudipNews objects in result array
+     * @param int $limit              max size of returned news set
+     * @return array                  set of news items
+     */
     public static function GetNewsRangesByFilter($user_id, $area = '', $term = '', $startdate = 0, $enddate = 0, $as_objects = false, $limit = 100)
     {
         $news_result = array();
@@ -470,6 +482,11 @@ class StudipNews extends SimpleORMap {
         return false;
     }
     
+    /**
+     * checks, if basic news data is complete
+     * 
+     * @return boolean true or false
+     */
     function validate() {
         if (!$this->user_id AND $this->isNew()) {
             $this->user_id = $GLOBALS['auth']->auth['uid'];

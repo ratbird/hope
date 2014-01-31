@@ -13,6 +13,7 @@
         $controller->url_for('news/admin_news/'.$area_type)); ?>
 <? endif ?>
 <div class="news_admin">
+<h2><?= _('Meine Ankündigungen') ?></h2>
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="100%" class="blank"><p class="info">
@@ -34,7 +35,7 @@
         <label><?= _("bis:") ?>
         <input class="news_date" type="text" size="12" name="news_enddate" aria-label="<?= _('Anzeige anzeigen, die vor diesem Datum sichtbar sind') ?>" value="<?= ($news_enddate) ? date('d.m.Y', $news_enddate) : '' ?>"></label>
         &nbsp;&nbsp;
-        <?=Button::create(_('Filter Anwenden'), 'apply_news_filter', array('aria-label' => _('Liste mit Suchbegriff und/oder Zeitraum filtern')))?>
+        <?=Button::create(_('Filter anwenden'), 'apply_news_filter', array('aria-label' => _('Liste mit Suchbegriff und/oder Zeitraum filtern')))?>
         </th></tr></thead>
         <? if ($filter_text) : ?>
             <tfoot><tr><td colspan="1">

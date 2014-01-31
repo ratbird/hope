@@ -73,15 +73,28 @@
                         <input type="text" class="news_date news_prevent_submit" name="news_enddate" value="<?=($news['expire']) ? date('d.m.Y', $news['date']+$news['expire']) : ""?>" aria-label="<?= _('Ablaufdatum') ?>"></label>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                    <? if ($anker == 'news_comments') : ?>
+                        <a name='anker'></a>
+                    <? endif ?>
+                    <? if ($news['allow_comments']): ?>
+                        <input type="hidden" name="news_allow_comments" value="1"> 
+                        <input type="image" name="comments_status_deny" src="<?= Assets::image_path('icons/16/blue/checkbox-checked.png')?>" aria-label="<?= _('Kommentare sperren') ?>">
+                        <?= _('Kommentare zulassen') ?>
+                    <? else : ?>
+                        <input type="image" name="comments_status_allow" src="<?= Assets::image_path('icons/16/blue/checkbox-unchecked.png')?>" aria-label="<?= _('Kommentare zulassen') ?>">
+                        <?= _('Kommentare zulassen') ?>
+                    <? endif ?>
+                    </td>
+                </tr>
             </tbody>
             </table>
         </div>
     </div>
     <br>
+    <? if (count($comments)) : ?>
     <div id="news_comments">
-        <? if ($anker == 'news_comments') : ?>
-            <a name='anker'></a>
-        <? endif ?>
         <table class="default nohover news_category_header">
         <thead>
             <tr>
@@ -91,9 +104,9 @@
                 </th>
                 <th>
                 <? if ($news['allow_comments']) : ?>        
-                    <?=_("Kommentare zu dieser Ankündigung (zugelassen)")?>
+                    <?=_("Kommentare zu dieser Ankündigung")?>
                 <? else : ?>
-                    <?=_("Kommentare zu dieser Ankündigung (gesperrt)")?>
+                    <?=_("Kommentare zu dieser Ankündigung")?>
                 <? endif ?>
                 </th>
             </tr>
@@ -102,17 +115,6 @@
         <div id="news_comments_content" style="<?=$news_isvisible['news_comments'] ? '' : 'display: none'?>">
             <table class="default nohover">
             <tbody>
-                <tr>
-                    <td width="26"></td>
-                    <td colspan="2">
-                    <? if ($news['allow_comments']): ?>
-                        <input type="hidden" name="news_allow_comments" value="1"> 
-                        <?=Button::create(_('Kommentare sperren'), 'comments_status_deny') ?>
-                    <? else : ?>
-                        <?=Button::create(_('Kommentare zulassen'), 'comments_status_allow') ?>
-                    <? endif ?>
-                    </td>
-                </tr>
                 <? if (is_array($comments) AND count($comments)) : ?>
                     <? foreach ($comments as $index => $comment): ?>
                         <?= $this->render_partial('../../templates/news/comment-box', compact('index', 'comment')) ?>
@@ -135,6 +137,7 @@
         </div>
     </div>
     <br>
+    <? endif ?>
     <div id="news_areas">
         <? if ($anker == 'news_areas') : ?>
             <a name='anker'></a>
@@ -159,7 +162,7 @@
                                 onchange="jQuery('input[name=area_search_preset]').click()">
                         <option><?=_('--- Suchvorlagen ---')?></option>
                         <? foreach($search_presets as $value => $title) : ?>
-                            <option value="<?=$value?>">
+                            <option value="<?=$value?>"<?=($this->current_search_preset == $value) ? ' selected' : '' ?>>
                                 <?=htmlReady($title)?>
                             </option>
                         <? endforeach ?>
@@ -229,7 +232,7 @@
                             <? foreach ($area_structure as $area_key => $area_data) : ?>
                                 <? if (count($area_options_selected[$area_key])) : ?>
                                     <option disabled  class="news_area_title" 
-                                            style="background-image: url('<?=Assets::image_path('icons/16/white/'.$area_data['icon'])?>');">
+                                            style="background-image: url('<?=Assets::image_path('icons/16/black/'.$area_data['icon'])?>');">
                                         <?=htmlReady($area_data['title'])?>
                                     </option>
                                     <? foreach ($area_options_selected[$area_key] as $area_option_key => $area_option_title) : ?>

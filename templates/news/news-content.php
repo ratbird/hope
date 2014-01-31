@@ -17,7 +17,7 @@
                         <b><?= _('Kommentare') ?></b>
                         <? if ($may_edit): ?>
                             &nbsp;
-                            <a href="<?=URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id'].'?news_comments_js=toggle&news_basic_js=toggle')?>"
+                            <a href="<?=URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id'].(count(StudipComments::GetCommentsForObject($news['news_id'])) ? '?news_comments_js=toggle&news_basic_js=toggle' : ''))?>"
                                        rel = "get_dialog" target = "_blank">
                             <img src="<?= Assets::image_path('icons/16/blue/admin.png')?>" aria-label="<?= _('Bearbeiten') ?>">
                             </a>

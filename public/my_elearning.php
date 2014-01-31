@@ -119,7 +119,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                     $start_link = $connected_cms[$cms]->link->getStartpageLink(_($connected_cms[$cms]->getName()));
                     if ($start_link != false) {
                         $msg_text = _('Hier gelangen Sie direkt zur Startseite im angebundenen System:'). ' ' . $start_link . '<br>';
-                        $startpage_message .= '<div class="messagebox messagebox_info" style="background-image: none">'.$msg_text.'</div>';
+                        $startpage_message .= '<div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">'.$msg_text.'</div>';
                     }
                 }
                 else

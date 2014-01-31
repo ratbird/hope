@@ -189,7 +189,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     $module_count = 0;
     if ($object_connections->isConnected())
     {
-        $caching_active = true;
+    	$caching_active = true;
         foreach ($connected_modules as $key => $connection)
         {
             if (ELearningUtils::isCMSActive($connection["cms"]))
@@ -205,6 +205,9 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             }
         }
 
+        if ((count($connected_modules) OR ($new_account_cms != "")) AND $course_output["courses"])
+            echo $course_output["courses"];
+    
         array_multisort($class_tmp, SORT_ASC, $type_tmp, SORT_ASC, $title_tmp, SORT_ASC, $connected_modules);
 
         foreach ($connected_modules as $connection)
@@ -242,14 +245,17 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             $msg_text = _("Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet.");
         }
                 
+        // Wenn Kurs(e) zugeordnet, Einsprungmöglichkeit(en) hier anzeigen
+        if ($course_output["courses"]) {
+            if ($view == "edit")
+                echo $course_output["courses"];
+            else
+                echo '<br><div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">'.$course_output["courses"].'</div>';
+        }
+
         echo MessageBox::info($msg_text);
 
-        // Wenn Kurs(e) zugeordnet, Einsprungmöglichkeit(en) hier anzeigen
-        if ($course_output["courses"])
-            echo '<br><div class="messagebox messagebox_info" style="background-image: none">'.$course_output["courses"].'</div>';
     }
-    elseif ($course_output["courses"])
-        echo '<br>'.$course_output["courses"];
     
     $caching_active = false;
     if ($view == "edit")
@@ -262,6 +268,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             ELearningUtils::loadClass($cms_select);
 
             $user_content_modules = $connected_cms[$cms_select]->getUserContentModules();
+            echo "<br>\n";
             echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
             echo "<br>\n";
             if (! ($user_content_modules == false))
@@ -378,6 +385,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             // ILIAS 4: ggf. Hinweis auf Möglichkeit, weitere Modulformen als Link einzubinden
             elseif (method_exists($connected_cms[$cms_select], "updateConnections") AND count($connected_cms[$cms_select]->types['webr'])) {
                 $crs_data = ObjectConnections::getConnectionModuleId($SessSemName[1], "crs", $cms_select);
+                echo "<br>\n";
                 echo ELearningUtils::getHeader(_("Links zu anderen ILIAS-Objekten"));
                 echo "<div align=\"center\">";
                 echo "<br>\n";

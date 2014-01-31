@@ -57,7 +57,7 @@ abstract class AdmissionRule
      * 
      * @var array 
      */
-    protected $allowed_combinations = array();
+    public $allowed_combinations = array();
 
     // --- OPERATIONS ---
 

@@ -14,7 +14,6 @@ STUDIP.Admission = {
                 'semester' : $('select[name="semester"]').val(),
                 'institutes[]' : $.merge(_.pluck($('input[name="institutes[]"]:hidden'), 'value'), _.pluck($('input[name="institutes[]"]:checked'), 'value'))
             };
-        console.log(data);
         var loading = 'Wird geladen'.toLocaleString();
         $('#instcourses').empty();
         $('<img/>', {

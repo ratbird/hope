@@ -113,7 +113,6 @@ class Step00240CourseSets extends Migration
                 `set_id` VARCHAR(32) NOT NULL ,
                 `user_id` VARCHAR(32) NOT NULL ,
                 `name` VARCHAR(255) NOT NULL ,
-                `semester` VARCHAR(32) NOT NULL ,
                 `infotext` TEXT NOT NULL ,
                 `algorithm` VARCHAR(255) NOT NULL ,
                 `algorithm_run` TINYINT(1) NOT NULL DEFAULT 0 ,
@@ -239,8 +238,8 @@ class Step00240CourseSets extends Migration
             PRIMARY KEY (`rule_id`, `user_id`) )
             ENGINE = MyISAM");
 
-        $cs_insert = $db->prepare("INSERT INTO coursesets (set_id,user_id,name,infotext,semester,algorithm,mkdate,chdate)
-                                   VALUES (?,?,?,?,'','',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
+        $cs_insert = $db->prepare("INSERT INTO coursesets (set_id,user_id,name,infotext,algorithm,mkdate,chdate)
+                                   VALUES (?,?,?,?,'',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $cs_i_insert = $db->prepare("INSERT INTO courseset_institute (set_id,institute_id,mkdate,chdate) VALUES (?,?,UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $cs_r_insert = $db->prepare("INSERT INTO courseset_rule (set_id,rule_id,type,mkdate) VALUES (?,?,?,UNIX_TIMESTAMP())");
         $s_cs_insert = $db->prepare("INSERT INTO seminar_courseset (set_id,seminar_id,mkdate) VALUES (?,?,UNIX_TIMESTAMP())");

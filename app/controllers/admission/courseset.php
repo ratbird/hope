@@ -199,9 +199,6 @@ class Admission_CoursesetController extends AuthenticatedController {
             if ($this->flash['privatet']) {
                 $this->courseset->setPrivate($this->flash['private']);
             }
-            if ($this->flash['semester']) {
-                $this->courseset->setSemester($this->flash['semester']);
-            }
         }
         $fac = $this->get_template_factory();
         $tpl = $fac->open('admission/courseset/instcourses');
@@ -235,7 +232,6 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $courseset->setInstitutes(Request::getArray('institutes'));
             }
             if (Request::submitted('semester')) {
-                $courseset->setSemester(Request::option('semester'));
                 $courseset->setCourses(Request::getArray('courses'));
             }
             if (Request::submitted('userlists')) {

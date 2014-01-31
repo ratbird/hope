@@ -72,11 +72,6 @@ class CourseSet
     protected $private = false;
 
     /**
-     * Semester ID.
-     */
-    protected $semester = '';
-
-    /**
      * Who owns this course set?
      */
     protected $user_id = false;
@@ -464,8 +459,22 @@ class CourseSet
     }
 
 
+    /**
+     * returns latest semester id from assigned courses
+     * if no courses are assigned current semester
+     * 
+     * @return string id of semester
+     */
     public function getSemester() {
-        return $this->semester;
+        $db = DBManager::get();
+        $timestamp = $db->fetchColumn("SELECT MAX(start_time + duration_time)
+                 FROM seminare WHERE duration_time <> -1 
+                 AND seminar_id IN(?)", array($this->getCourses()));
+        $semester = Semester::findByTimestamp($timestamp);
+        if (!$semester) {
+            $semester = Semester::findCurrent();
+        }
+        return $semester->id;
     }
 
     /**
@@ -566,7 +575,6 @@ class CourseSet
                 }
             }
             $this->private = (bool) $data['private'];
-            $this->semester = $data['semester'];
             $this->user_id = $data['user_id'];
         }
         // Load institute assigments.
@@ -740,11 +748,6 @@ class CourseSet
         return $this;
     }
 
-    public function setSemester($newSemester) {
-        $this->semester = $newSemester;
-        return $this;
-    }
-
     /**
      * Adds several user list IDs after clearing the existing user list
      * assignments.
@@ -783,13 +786,13 @@ class CourseSet
         }
         // Store basic data.
         $stmt = DBManager::get()->prepare("INSERT INTO `coursesets`
-            (`set_id`, `user_id`, `name`, `semester`, `infotext`, `algorithm`, `algorithm_run`,
+            (`set_id`, `user_id`, `name`, `infotext`, `algorithm`, `algorithm_run`,
             `private`, `mkdate`, `chdate`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
-            `name`=VALUES(`name`), `semester`=VALUES(`semester`), `infotext`=VALUES(`infotext`),
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
+            `name`=VALUES(`name`), `infotext`=VALUES(`infotext`),
             `algorithm`=VALUES(`algorithm`), `algorithm_run`=VALUES(`algorithm_run`), `private`=VALUES(`private`),
             `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $user->id, $this->name, $this->semester, $this->infoText,
+        $stmt->execute(array($this->id, $user->id, $this->name, $this->infoText,
             get_class($this->algorithm), $this->hasAlgorithmRun(), intval($this->private), time(), time()));
         // Delete removed institute assignments from database.
         DBManager::get()->exec("DELETE FROM `courseset_institute`
@@ -898,9 +901,11 @@ class CourseSet
     {
         global $perm;
         $is_dozent = $perm->have_studip_perm('dozent', $course_id, $user_id);
-        $is_private = $this->getUserId() == $user_id && $this->getPrivate();
+        $is_admin = $perm->have_perm('admin') || ($perm->have_perm('dozent') && get_config('ALLOW_DOZENT_COURSESET_ADMIN'));
+        $is_private = $this->getPrivate();
+        $is_my_own = $this->getUserId() == $user_id;
         $is_correct_institute = isset($this->institutes[Course::find($course_id)->institut_id]);
-        return $is_dozent && ($is_private || $is_correct_institute);
+        return $is_dozent && $is_correct_institute && ($is_my_own || $is_admin || !$is_private) || $perm->have_perm('root');
     }
 
     /**

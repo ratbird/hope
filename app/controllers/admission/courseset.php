@@ -327,7 +327,23 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->set_id = $courseset->getId();
         $this->courses = Course::findMany($courseset->getCourses(), "ORDER BY Name");
         $this->applications = AdmissionPriority::getPrioritiesStats($courseset->getId());
-        if ($csv) {
+        $distinct_members = array();
+        $multi_members = array();
+        foreach($this->courses as $course) {
+            $all_members = $course->members->findBy('status', words('user autor'))->pluck('user_id');
+            $all_members = array_merge($all_members, $course->admission_applicants->findBy('status', words('accepted awaiting'))->pluck('user_id'));
+            $all_members = array_unique($all_members);
+            foreach ($all_members as $one) {
+                $multi_members[$one]++;
+            }
+            $distinct_members = array_unique(array_merge($distinct_members, $all_members));
+        }
+        
+        $multi_members = array_filter($multi_members, function($a) {return $a > 1;});
+        $this->count_distinct_members = count($distinct_members);
+        $this->count_multi_members = count($multi_members);
+        
+        if ($csv == 'csv') {
             $captions = array(_("Nummer"), _("Name"), _("Dozenten"), _("max. Teilnehmer"), _("Teilnehmer aktuell"), _("Anzahl Anmeldungen"),_("Anzahl Anmeldungen Prio 1"), _("Warteliste"), _("max. Anzahl Warteliste"));
             $data = array();
             foreach ($this->courses as $course) {
@@ -336,7 +352,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $row[] = $course->name;
                 $row[] = join(', ', $course->members->findBy('status','dozent')->orderBy('position')->pluck('Nachname'));
                 $row[] = $course->admission_turnout;
-                $row[] = count($course->members->findBy('status', words('user autor')));
+                $row[] = $course->getNumParticipants();
                 $row[] = $this->applications[$course->id]['c'];
                 $row[] = $this->applications[$course->id]['h'];
                 $row[] = $course->admission_disable_waitlist ? _("ja") : _("nein");
@@ -349,6 +365,57 @@ class Admission_CoursesetController extends AuthenticatedController {
                 return;
             }
         }
+        if (in_array($csv, words('download_all_members download_multi_members'))) {
+            $liste = array();
+            $multi_members = $all_participants = array();
+            foreach($this->courses as $course) {
+                $participants = $course->members->findBy('status', words('user autor'))->toGroupedArray('user_id', words('username vorname nachname email status'));
+                $participants += $course->admission_applicants->findBy('status', words('accepted awaiting'))->toGroupedArray('user_id', words('username vorname nachname email status'));
+                $all_participants += $participants;
+                foreach (array_keys($participants) as $one) {
+                    $multi_members[$one][] = $course->name . ($course->veranstaltungsnummer ? '|'. $course->veranstaltungsnummer : '');
+                }
+                foreach ($participants as $user_id => $part) {
+                    $liste[] = array($part['username'], $part['vorname'], $part['nachname'], $part['email'], $course->name . ($course->veranstaltungsnummer ? '|'. $course->veranstaltungsnummer : '') , $part['status']);
+                }
+            }
+            if ($csv == 'download_all_members') {
+                $captions = array(_("Nutzername"), _("Vorname"), _("Nachname"), _("Email"), _("Veranstaltung"), _("Status"));
+                if (count($liste)) {
+                    $tmpname = md5(uniqid('tmp'));
+                    if (array_to_csv($liste, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
+                        $this->redirect(GetDownloadLink($tmpname, 'Gesamtteilnehmerliste_' . $courseset->getName() . '.csv', 4, 'force'));
+                        return;
+                    }
+                }
+            } else {
+                $liste = array();
+                $multi_members = array_filter($multi_members, function ($a) {return count($a) > 1;});
+                $c = 0;
+                $max_count = array();
+                foreach ($multi_members as $user_id => $courses) {
+                    $member = $all_participants[$user_id];
+                    $liste[$c] = array($member['username'], $member['vorname'], $member['nachname'], $member['email']);
+                    foreach ($courses as  $one) {
+                        $liste[$c][] = $one;
+                    }
+                    $max_count[] = count($courses);
+                    $c++;
+                }
+                $captions = array(_("Nutzername"), _("Vorname"), _("Nachname"), _("Email"));
+                foreach (range(1,max($max_count)) as $num) {
+                    $captions[] = _("Veranstaltung") . ' ' . $num;
+                }
+            if (count($liste)) {
+                    $tmpname = md5(uniqid('tmp'));
+                    if (array_to_csv($liste, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
+                        $this->redirect(GetDownloadLink($tmpname, 'Mehrfachanmeldungen_' . $courseset->getName() . '.csv', 4, 'force'));
+                        return;
+                    }
+                }
+            }
+        }
+        
         if (Request::submitted('configure_courses_save')) {
             CSRFProtection::verifyUnsafeRequest();
             $admission_turnouts = Request::intArray('configure_courses_turnout');
@@ -369,12 +436,10 @@ class Admission_CoursesetController extends AuthenticatedController {
             $this->redirect($this->url_for('admission/courseset/configure/' . $courseset->getId()));
             return;
         }
-        $this->set_content_type('text/html; charset=windows-1252');
     }
     
     public function factored_users_action($set_id)
     {
-        $this->set_content_type('text/html; charset=windows-1252');
         if (Request::isXhr()) {
             $this->response->add_header('X-Title', _('Liste der Nutzer'));
         }
@@ -388,7 +453,6 @@ class Admission_CoursesetController extends AuthenticatedController {
     
     public function applications_list_action($set_id, $csv = null)
     {
-        $this->set_content_type('text/html; charset=windows-1252');
         if (Request::isXhr()) {
             $this->response->add_header('X-Title', _('Liste der Anmeldungen'));
         }

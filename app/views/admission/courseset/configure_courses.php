@@ -14,12 +14,12 @@
     <? foreach ($courses as $course) : ?>
     <? $editable = !$GLOBALS['perm']->have_studip_perm('admin', $course->id) ? 'disabled' : '' ?>
         <tr>
-            <td><?= htmlReady($course->name)?></td>
+            <td><?= htmlReady(($course->veranstaltungsnummer ? $course->veranstaltungsnummer .'|' : '') . $course->name)?></td>
             <td><?= htmlReady(join(', ', $course->members->findBy('status','dozent')->orderBy('position')->limit(3)->pluck('Nachname')))?></td>
             <td><input <?=$editable?> type="text" size="2" name="configure_courses_turnout[<?= $course->id?>]" value="<?= (int)$course->admission_turnout ?>"></td>
-            <td><?= count($course->members->findBy('status', words('user autor')))?></td>
+            <td><?= $course->getNumParticipants() ?></td>
             <td><?= sprintf("%d / %d", $applications[$course->id]['c'],$applications[$course->id]['h']) ?></td>
-            <td>
+            <td style="white-space:nowrap">
                 <input <?=$editable?> type="checkbox" name="configure_courses_disable_waitlist[<?= $course->id?>]" value="1" <?= $course->admission_disable_waitlist ? '' : 'checked' ?>>
                 <input <?=$editable?> type="text" size="2" name="configure_courses_waitlist_max[<?= $course->id?>]" value="<?= $course->admission_waitlist_max ?: ''?>">
             </td>
@@ -27,6 +27,20 @@
     <? endforeach ?>
     </tbody>
 </table>
+<div>
+    <?=_("Anzahl aller Teilnehmenden:")?> <?=$count_distinct_members?>
+    <?  if ($count_distinct_members) : ?>
+        <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_all_members')?>" title="<?= _("Download")?>">
+        <?= Assets::img('icons/16/blue/file-xls.png')?></a>
+    <? endif ?>
+</div>
+<div>
+    <?=_("Mehrfachteilnahmen:")?> <?=$count_multi_members?>
+    <?  if ($count_multi_members) : ?>
+        <a href="<?= $controller->link_for('admission/courseset/configure_courses/' . $set_id .'/download_multi_members')?>" title="<?= _("Download")?>">
+        <?= Assets::img('icons/16/blue/file-xls.png')?></a>
+    <? endif ?>
+</div>
 <div style="text-align:center">
 <?= Studip\Button::create(_("Speichern"), 'configure_courses_save') ?>
 <?= Studip\LinkButton::create(_("Download"), $controller->url_for('admission/courseset/configure_courses/' . $set_id .'/csv')) ?>

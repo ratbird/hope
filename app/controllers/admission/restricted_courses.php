@@ -33,6 +33,8 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     {
         $this->setInfoboxImage(Assets::image_path('infobox/hoersaal.jpg'));
         $this->addToInfobox(_('Information'), _("Sie können hier alle Veranstaltungen mit eingeschränkter Teilnehmerzahl einsehen."), 'icons/16/black/info');
+        $this->addToInfobox(_('Aktionen'), '<a href="'.$this->link_for('admission/restricted_courses', array('csv' => 1)).'">' . _("Export") . '</a>', 'icons/16/blue/file-xls');
+        
         $sem_condition = "AND EXISTS (SELECT * FROM seminar_courseset INNER JOIN courseset_rule USING(set_id) WHERE type='ParticipantRestrictedAdmission' AND seminar_courseset.seminar_id=seminare.seminar_id) ";
         if (Request::isPost()) {
             if (Request::submitted('choose_institut')) {
@@ -58,6 +60,40 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $this->my_inst = $this->get_institutes($sem_condition);
         }
         $this->courses = $this->get_courses($sem_condition);
+        if (Request::get('csv')) {
+            $captions = array(_("Anmeldeset"),
+                    _("Nummer"),
+                    _("Name"),
+                    _("max. Teilnehmer"),
+                    _("Teilnehmer aktuell"),
+                    _("Anzahl Anmeldungen"),
+                    _("Anzahl vorl. Anmeldungen"),
+                    _("Anzahl Warteliste"),
+                    _("Platzverteilung"),
+                    _("Startzeitpunkt"),
+                    _("Endzeitpunkt"));
+            $data = array();
+            foreach ($this->courses as $course) {
+                $row = array();
+                $row[] = $course['cs_name'];
+                $row[] = $course['course_number'];
+                $row[] = $course['course_name'];
+                $row[] = (int)$course['admission_turnout'];
+                $row[] = $course['count_teilnehmer'] + $course['count_prelim'];
+                $row[] = (int)$course['count_prelim'];
+                $row[] = (int)$course['count_waiting'];
+                $row[] = (int)$course['count_claiming'];
+                $row[] = $course['distribution_time'] ? strftime('%x %R', $course['distribution_time']) : '';
+                $row[] = $course['start_time'] ? strftime('%x %R', $course['start_time']) : '';
+                $row[] = $course['end_time'] ? strftime('%x %R', $course['end_time']) : '';
+                $data[] = $row;
+            }
+            $tmpname = md5(uniqid('tmp'));
+            if (array_to_csv($data, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
+                $this->redirect(GetDownloadLink($tmpname, 'teilnahmebeschraenkteVeranstaltungen.csv', 4, 'force'));
+                return;
+            }
+        }
     }
 
     function get_courses($seminare_condition)

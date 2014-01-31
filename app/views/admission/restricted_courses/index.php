@@ -2,7 +2,7 @@
 <?= $this->render_partial('admission/restricted_courses/_institute_choose.php')?>
 <br>
 <? if (count($courses)) : ?>
-    <table class="default">
+    <table class="default zebra nohover">
         <thead>
             <tr>
                 <th><?= _("Anmeldeset")?></th>
@@ -20,7 +20,7 @@
         <? foreach ($courses as $course) : ?>
             <tr>
                 <td><a href="<?= URLHelper::getLink('dispatch.php/admission/courseset/configure/' . $course['set_id'])?>"><?= htmlReady($course['cs_name'])?></td>
-                <td><a href="<?= URLHelper::getLink('dispatch.php/course/members/index', array('cid' => $course['seminar_id']))?>"><?= htmlReady('(' . $course['course_number'] .') ' . $course['course_name'])?></a></td>
+                <td><a href="<?= URLHelper::getLink('dispatch.php/course/members/index', array('cid' => $course['seminar_id']))?>"><?= htmlReady(($course['course_number'] ? $course['course_number'] .'|' : '') . $course['course_name'])?></a></td>
                 <td><?= htmlReady($course['admission_turnout'])?></td>
                 <td><?= htmlReady($course['count_teilnehmer'] + $course['count_prelim'])?>
                 <? if ($course['admission_prelim'] && $course['count_prelim']) : ?>

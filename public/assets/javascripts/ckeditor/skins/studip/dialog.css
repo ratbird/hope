@@ -1,12 +1,28 @@
+/**
+ * dialog.css - Stud.IP styles for CKEditor dialogs.
+ * 
+ * Based on Moono skin sources:
+ * Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
+ *
+ **
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * @category    Stud.IP
+ * @copyright   (c) 2014 Stud.IP e.V.
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @since       File available since Release 3.0
+ * @author      Robert Costa <rcosta@uos.de> (modifications of Moono skin)
+ */
 /*
-Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.md or http://ckeditor.com/license
-*/
-
-/*
-dialog.css
-============
-
 This file styles dialogs and all widgets available inside of it (tabs, buttons,
 fields, etc.).
 
@@ -40,74 +56,59 @@ Comments in this file will give more details about each of the above blocks.
 */
 
 /* The outer container of the dialog. */
-.cke_dialog
-{
+.cke_dialog {
 	/* Mandatory: Because the dialog.css file is loaded on demand, we avoid
 		showing an unstyled dialog by hidding it. Here, we restore its visibility. */
 	visibility: visible;
+
+    border: 1px solid #A6C9E2;
+    background-color: #FCFDFD;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
 }
 
 /* The inner boundary container. */
-.cke_dialog_body
-{
+.cke_dialog_body {
 	z-index: 1;
-	background: #eaeaea;
-	border: 0px solid #b2b2b2;
-	border-bottom-color: #999;
-
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-
-	-moz-box-shadow: 0 0 15px rgba(0, 0, 0, .45);
-	-webkit-box-shadow: 0 0 15px rgba(0, 0, 0, .45);
-	box-shadow: 0 0 15px rgba(0, 0, 0, .45);
+    padding: 0.2em;
 }
 
 /* This one is required by Firefox 3.6. Without it,
    dialog tabs and resizer float outside of the dialog.
    Although this rule doesn't seem to break anything on other
    browsers, it doesn't work with broken jQueryUI - #9851. */
-.cke_browser_gecko19 .cke_dialog_body
-{
+.cke_browser_gecko19 .cke_dialog_body {
 	position: relative;
 }
 
 /* Due to our reset we have to recover the styles of some elements. */
-.cke_dialog strong
-{
+.cke_dialog strong {
 	font-weight: bold;
 }
 
 /* The dialog title. */
-.cke_dialog_title
-{
-	font-weight: bold;
-	font-size: 13px;
-	cursor: move;
+.cke_dialog_title {
 	position: relative;
+	cursor: move;
 
-	color: #fffefe;
-	padding: 6px 10px;
+	color: #FFF;
+    background-color: #8899B8;
+    border: 1px solid #4297D7;
+	padding: 0.4em 1em;
 
-	-moz-border-radius: 2px 2px 0 0;
-	-webkit-border-radius: 2px 2px 0 0;
-	border-radius: 2px 2px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 /* The outer part of the dialog contants, which contains the contents body
    and the footer. */
-.cke_dialog_contents
-{
-	background-color: #fff;
+.cke_dialog_contents {
 	overflow: auto;
-	padding: 15px 10px 5px 10px;
+	padding: 0.5em 1em;
 	margin-top: 30px;
-	border-top: 1px solid #bfbfbf;
-
-	-moz-border-radius: 0 0 3px 3px;
-	-webkit-border-radius: 0 0 3px 3px;
-	border-radius: 0 0 3px 3px;
+	background-color: #fff;
 }
 
 /* The contents body part, which will hold all elements available in the dialog. */
@@ -122,21 +123,12 @@ Comments in this file will give more details about each of the above blocks.
    well as a resize handler. */
 .cke_dialog_footer
 {
-	text-align: left;
 	position: relative;
 
 	border: none;
-/*	outline: 1px solid #bfbfbf;*/
-
-/*	-moz-box-shadow: 0 1px 0 #fff inset;
-	-webkit-box-shadow: 0 1px 0 #fff inset;
-	box-shadow: 0 1px 0 #fff inset;*/
-
-	-moz-border-radius: 0 0 2px 2px;
-	-webkit-border-radius: 0 0 2px 2px;
-	border-radius: 0 0 2px 2px;
-
+    border-top: 1px solid #D1D1D1;
 	background: #fffefe;
+	text-align: left;
 }
 
 .cke_rtl .cke_dialog_footer
@@ -152,7 +144,7 @@ Comments in this file will give more details about each of the above blocks.
 
 .cke_dialog .cke_resizer
 {
-	margin-top: 22px;
+	margin-top: 32px;
 }
 
 .cke_dialog .cke_resizer_rtl
@@ -300,11 +292,11 @@ a.cke_dialog_tab_disabled
 
 /* The close button at the top of the dialog. */
 
-.cke_dialog_close_button
-{
+.cke_dialog_close_button {
 	background-image: url(images/close.png);
 	background-repeat: no-repeat;
-	background-position: 0 0;
+	background-position: center center;
+    background-size: 13px 13px;
 	position: absolute;
 	cursor: pointer;
 	text-align: center;
@@ -312,6 +304,10 @@ a.cke_dialog_tab_disabled
 	width: 20px;
 	top: 5px;
 	z-index: 5;
+    color: #FFF;
+
+    /* CKEditor's close button is dark, but Stud.IP/jQuery's is light */
+    -webkit-filter: invert(50%) brightness(190%);
 }
 
 .cke_hidpi .cke_dialog_close_button {
@@ -319,13 +315,11 @@ a.cke_dialog_tab_disabled
 	background-size: 16px;
 }
 
-.cke_dialog_close_button span
-{
+.cke_dialog_close_button span {
 	display: none;
 }
 
-.cke_hc .cke_dialog_close_button span
-{
+.cke_hc .cke_dialog_close_button span {
 	display: inline;
 	cursor: pointer;
 	font-weight: bold;
@@ -333,19 +327,18 @@ a.cke_dialog_tab_disabled
 	top: 3px;
 }
 
-.cke_ltr .cke_dialog_close_button
-{
+.cke_ltr .cke_dialog_close_button {
 	right: 5px;
 }
 
-.cke_rtl .cke_dialog_close_button
-{
+.cke_rtl .cke_dialog_close_button {
 	left: 6px;
 }
 
-.cke_dialog_close_button
-{
-	top: 4px;
+.cke_dialog_close_button:hover,
+.cke_dialog_close_button:focus,
+.cke_dialog_close_button:active {
+    -webkit-filter: none;
 }
 
 /*
@@ -507,10 +500,6 @@ textarea.cke_dialog_ui_input_textarea
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-
 	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
 	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
 	box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
@@ -553,35 +542,31 @@ a.cke_dialog_ui_button
 	display: inline-block;
 	*display: inline;
 	*zoom: 1;
-
-	padding: 3px 0;
-	margin: 0;
-
-	text-align: center;
-	color: #333;
-	vertical-align: middle;
 	cursor: pointer;
 
-	border: 1px solid #b6b6b6;
-	border-bottom-color: #999;
+	padding: 5px 0;
+	margin: 3px;
 
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+	text-align: center;
+	vertical-align: middle;
+	color: #1E3E70;
 
-	-moz-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
-	-webkit-box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
-	box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
 
-	background: #e4e4e4;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e4e4e4));
-	background-image: -moz-linear-gradient(top, #ffffff, #e4e4e4);
-	background-image: -webkit-linear-gradient(top, #ffffff, #e4e4e4);
-	background-image: -o-linear-gradient(top, #ffffff, #e4e4e4);
-	background-image: -ms-linear-gradient(top, #ffffff, #e4e4e4);
-	background-image: linear-gradient(top, #ffffff, #e4e4e4);
-	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#e4e4e4');
+	border: 1px solid #899AB9;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
 
+	background: #ccd4e1;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ccd4e1));
+	background-image: -moz-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+	background-image: -webkit-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+	background-image: -o-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+	background-image: -ms-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+	background-image: linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#ccd4e1');
 }
 
 span.cke_dialog_ui_button
@@ -589,36 +574,22 @@ span.cke_dialog_ui_button
 	padding: 0 12px;
 }
 
-a.cke_dialog_ui_button:hover
-{
-	border-color: #9e9e9e;
-
-	background: #ccc;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ccc));
-	background-image: -moz-linear-gradient(top, #f2f2f2, #ccc);
-	background-image: -webkit-linear-gradient(top, #f2f2f2, #ccc);
-	background-image: -o-linear-gradient(top, #f2f2f2, #ccc);
-	background-image: -ms-linear-gradient(top, #f2f2f2, #ccc);
-	background-image: linear-gradient(top, #f2f2f2, #ccc);
-	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#f2f2f2', endColorstr='#cccccc');
+a.cke_dialog_ui_button:hover {
+	background-image: none;
+    filter: none;
 }
 
 /* 	:focus/:active styles for dialog buttons: regular and footer. */
 a.cke_dialog_ui_button:focus,
-a.cke_dialog_ui_button:active
-{
-	border-color: #969696;
-	outline: none;
-	-moz-box-shadow: 0 0 6px rgba(0,0,0,.4) inset;
-	-webkit-box-shadow: 0 0 6px rgba(0,0,0,.4) inset;
-	box-shadow: 0 0 6px rgba(0,0,0,.4) inset;
+a.cke_dialog_ui_button:active {
+	outline-style: 1px dotted #000;
 }
 
 .cke_hc a.cke_dialog_ui_button:hover,
 .cke_hc a.cke_dialog_ui_button:focus,
 .cke_hc a.cke_dialog_ui_button:active
 {
-	border: 3px solid;
+	outline-style: 1px dotted #000;
 	padding-top: 1px;
 	padding-bottom: 1px;
 }
@@ -639,17 +610,13 @@ a.cke_dialog_ui_button[style*="width"]
 }
 */
 /* The inner part of the button (both in dialog tabs and dialog footer). */
-.cke_dialog_footer_buttons a.cke_dialog_ui_button span
-{
+.cke_dialog_footer_buttons a.cke_dialog_ui_button span {
 	color: inherit;
-	font-size: 12px;
-	font-weight: bold;
 	line-height: 20px;
 }
 
 /* Special class appended to the Ok button. */
-a.cke_dialog_ui_button_ok
-{
+a.cke_dialog_ui_button_ok {
 }
 
 a.cke_dialog_ui_button_ok:hover
@@ -659,13 +626,12 @@ a.cke_dialog_ui_button_ok:hover
 /* Default text shadow used for inner parts of all dialog buttons (both in dialog tabs and dialog footer). */
 a.cke_dialog_ui_button span
 {
-	text-shadow: 0 1px 0 #fff;
 }
 
 /* Text shadow used for inner part of OK dialog button in footer. */
 a.cke_dialog_ui_button_ok span
 {
-	text-shadow: 0 -1px 0 #55830c;
+    float: left;
 }
 
 span.cke_dialog_ui_button
@@ -722,14 +688,6 @@ select.cke_dialog_ui_input_select
 	padding: 2px 6px;
 
 	outline: none;
-
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-
-	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
-	box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
 }
 
 .cke_dialog_ui_input_file

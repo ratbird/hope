@@ -290,7 +290,9 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_dozent || $this->dozent_is_locked) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-
+        if (!Request::isXhr()) {
+            Navigation::activateItem('/course/members/view');
+        }
         $sem = Seminar::GetInstance($this->course_id);
         Request::set('new_dozent_parameter', $this->flash['new_dozent_parameter']);
 
@@ -319,6 +321,9 @@ class Course_MembersController extends AuthenticatedController
     {
         if (!$this->is_dozent || $this->is_tutor_locked) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
+        }
+        if (!Request::isXhr()) {
+            Navigation::activateItem('/course/members/view');
         }
         $sem = Seminar::GetInstance($this->course_id);
         Request::set('new_tutor_parameter', $this->flash['new_tutor_parameter']);
@@ -402,6 +407,9 @@ class Course_MembersController extends AuthenticatedController
     function add_member_action()
     {
         global $perm;
+        if (!Request::isXhr()) {
+            Navigation::activateItem('/course/members/view');
+        }
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
         // get the seminar object
         $sem = Seminar::GetInstance($this->course_id);
@@ -1201,7 +1209,7 @@ class Course_MembersController extends AuthenticatedController
             foreach ($course->members->findBy('status', 'autor') as $member) {
                 $course->aux->updateMember($member, Request::getArray($member->user_id));
             }
-        }       
+        }
         if (Request::submitted('export')) {
             $aux = $course->aux->getCourseData($course, true);
             $doc = new exportDoc();
@@ -1241,9 +1249,6 @@ class Course_MembersController extends AuthenticatedController
                 }
             }
         }
-        
-        // We could use the aux for the view
-        $this->aux = $course->aux;
     }
 
     /**

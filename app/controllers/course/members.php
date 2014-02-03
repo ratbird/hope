@@ -1241,6 +1241,9 @@ class Course_MembersController extends AuthenticatedController
                 }
             }
         }
+        
+        // We could use the aux for the view
+        $this->aux = $course->aux;
     }
 
     /**

@@ -1,4 +1,7 @@
 <form class="studip_form" method="post">
+    <fieldset>
+        <legend><?= htmlReady($aux->name) ?></legend>
+        <p><?= htmlReady($aux->description) ?></p>
     <? foreach ($datafields as $field): ?>
         <? if ($field->getTypedDatafield()->isVisible() && $field->getTypedDatafield()->isEditable()): ?>
             <? $editable = true; ?>
@@ -12,4 +15,5 @@
     <? else: ?>
         <?= _('Keine einstellbaren Zusatzdaten vorhanden') ?>
     <? endif; ?>
+    </fieldset>
 </form>

@@ -20,14 +20,13 @@ class CoreParticipants implements StudipModule {
     }
     
     function getTabNavigation($course_id) {
-        $rule = AuxLockRules::getLockRuleBySemId($course_id);
         #$navigation = new AutoNavigation(_('TeilnehmerInnen'));
         $navigation = new Navigation(_('TeilnehmerInnen'), URLHelper::getLink("dispatch.php/course/members/index"));
         $navigation->setImage('icons/16/white/persons.png');
         $navigation->setActiveImage('icons/16/black/persons.png');
         $navigation->addSubNavigation('view', new AutoNavigation(_('TeilnehmerInnen'), URLHelper::getLink("dispatch.php/course/members/index")));
-        if (is_array($rule['attributes']) && in_array(1, $rule['attributes'])) {
-            $navigation->addSubNavigation('additional_data', new AutoNavigation(_('Zusatzangaben'), URLHelper::getLink("dispatch.php/course/members/additional")));
+        if (Course::find($course_id)->aux_lock_rule) {
+            $navigation->addSubNavigation('additional', new AutoNavigation(_('Zusatzangaben'), URLHelper::getLink("dispatch.php/course/members/additional")));
         }
 
         $navigation->addSubNavigation('view_groups', new Navigation(_('Funktionen / Gruppen'), 'statusgruppen.php?view=statusgruppe_sem'));

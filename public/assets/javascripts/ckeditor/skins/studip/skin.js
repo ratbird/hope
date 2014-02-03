@@ -117,7 +117,12 @@ CKEDITOR.skin.chameleon = ( function() {
 			'filter:progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr=\'{from}\',endColorstr=\'{to}\');' );
 
 		return function( from, to ) {
-			return template.output( { from: '#a1aec7', to: '#a1aec7' } );
+            // studip-dialog title bar #7584A9
+            // color get's modified by (probably) CSS effects
+            // thus a different color has to be set here in order to have the
+            // same color as studip's jquery dialog title bar...
+            var studipTitleBar = '#8898b8';
+			return template.output( { from: studipTitleBar, to: studipTitleBar } );
 		};
 	} )(),
 

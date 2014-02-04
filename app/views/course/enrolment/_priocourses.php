@@ -12,6 +12,8 @@
             <tr>
                 <td valign="top">
                     <h2> <?= _("Verfügbare Veranstaltungen") ?></h2>
+                    <input type="text" class="hidden-no-js" name="filter" placeholder="<?= _('Filter')?>">
+                   
                     <ul id="avaliable-courses">
             <?php $prios = array(); ?>
             <?php foreach ($priocourses as $prio => $course): ?>
@@ -29,6 +31,7 @@
         </td>
         <td  valign="top">
             <h2><?= _("Ausgewählte Veranstaltungen") ?></h2>
+                       <input type="text" class="hidden-no-js" name="filter" placeholder="<?= _('Filter')?>">
             <ul id="selected-courses">
             <?php $hasUserPrios = count($user_prio) > 0 ?>
 

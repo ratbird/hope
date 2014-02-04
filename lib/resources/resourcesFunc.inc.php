@@ -99,7 +99,7 @@ function getLockPeriod($type, $timestamp1='', $timestamp2='')
         if ($timestamp1 && $timestamp2) { // This is always true, isn't it? See line 88ff
             $query = "SELECT lock_begin, lock_end, lock_id
                       FROM resources_locks
-                      WHERE type = :type AND :timestamp1 NOT BETWEEN lock_begin AND lock_end";
+                      WHERE type = :type AND :timestamp1 BETWEEN lock_begin AND lock_end";
         } else {
             $query = "SELECT lock_begin, lock_end, lock_id
                       FROM resources_locks

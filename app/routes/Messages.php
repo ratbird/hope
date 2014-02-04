@@ -102,7 +102,7 @@ class Messages extends \RESTAPI\RouteMap
     /**
      * Liefert die Daten der angegebenen Nachricht zurück.
      *
-     * @get /message/:user_id
+     * @get /message/:message_id
      */
     public function showMessage($message_id)
     {

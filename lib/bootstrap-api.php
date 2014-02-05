@@ -51,7 +51,7 @@ namespace RESTAPI {
 
     // Register plugin routes
     array_walk(
-        array_flatten(\PluginEngine::sendMessage('RESTAPIPlugin', 'getRoutes')),
+        array_flatten(\PluginEngine::sendMessage('RESTAPIPlugin', 'getRouteMaps')),
         function ($route) use ($router) {
             $router->registerRoutes($route);
         }

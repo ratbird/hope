@@ -15,7 +15,7 @@ interface RESTAPIPlugin
     /**
      * Returns one or more instances of RESTAPI\RouteMap to register
      * to the Router.
-
+     *
      * @return RouteMap|Array   either a single instance of class
      *                          RouteMap or an array of them
      */

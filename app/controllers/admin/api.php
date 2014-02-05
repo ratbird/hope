@@ -1,7 +1,6 @@
 <?php
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/bootstrap-api.php';
 
 /**
  *
@@ -14,6 +13,8 @@ class Admin_ApiController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+
+        require_once 'lib/bootstrap-api.php';
 
         $GLOBALS['perm']->check('root');
 

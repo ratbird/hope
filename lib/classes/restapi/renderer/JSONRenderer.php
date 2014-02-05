@@ -28,7 +28,7 @@ class JSONRenderer extends DefaultRenderer
         }
 
         if (isset($response->body)) {
-            $response->body = json_encode(studip_utf8encode($response->body));
+            $response->body = json_encode(studip_utf8encode_recursive($response->body));
         }
     }
 }

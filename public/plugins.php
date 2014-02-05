@@ -47,12 +47,12 @@ try {
     throw new AccessDeniedException(_('Sie besitzen keine Rechte zum Aufruf dieses Plugins.'));
   }
 
+  // set default page title
+  PageLayout::setTitle($plugin->getPluginName());
+
   if (is_callable(array($plugin, 'initialize'))) {
     $plugin->initialize();
   }
-
-  // set default page title
-  PageLayout::setTitle($plugin->getPluginName());
 
   # let the show begin
   $plugin->perform($unconsumed);

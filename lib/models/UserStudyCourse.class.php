@@ -12,13 +12,32 @@
  * @copyright   2013 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  */
 class UserStudyCourse extends SimpleORMap
 {
+
+    private $additional_data = array();
+
     public static function findByUser($user_id)
     {
-        return self::findByUser_id($user_id, SimpleORMap::FETCH_ADDITONAL);
+        $db = DbManager::get();
+        $st = $db->prepare("SELECT user_studiengang.*, abschluss.name as degree_name,
+                            studiengaenge.name as studycourse_name
+                            FROM user_studiengang
+                            LEFT JOIN abschluss USING (abschluss_id)
+                            LEFT JOIN studiengaenge USING (studiengang_id)
+                            WHERE user_id = ? ORDER BY studycourse_name");
+        $st->execute(array($user_id));
+        $ret = array();
+        $c = 0;
+        while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $ret[$c] = new self;
+            $ret[$c]->setData($row, true);
+            $ret[$c]->setNew(false);
+            ++$c;
+        }
+        return $ret;
     }
 
     public static function findByStudyCourseAndDegree($study_course_id, $degree_id)
@@ -37,11 +56,31 @@ class UserStudyCourse extends SimpleORMap
                 'studycourse' => array('class_name' => 'StudyCourse',
                                 'foreign_key' => 'studiengang_id')
         );
-        $this->additional_fields['vorname'] = 'user.vorname';
-        $this->additional_fields['nachname'] = 'user.nachname';
-        $this->additional_fields['username'] = 'user.username';
-        $this->additional_fields['degree_name'] = 'degree.name';
-        $this->additional_fields['studycourse_name'] = 'studycourse.name';
+        $this->additional_fields['degree_name']['get'] = 'getAdditionalValue';
+        $this->additional_fields['studycourse_name']['get'] = 'getAdditionalValue';
+        $this->additional_fields['degree_name']['set'] = 'setAdditionalValue';
+        $this->additional_fields['studycourse_name']['set'] = 'setAdditionalValue';
+        $this->registerCallback('before_initialize', 'initializeAdditionalData');
         parent::__construct($id);
     }
+
+    function initializeAdditionalData()
+    {
+        $this->additional_data = array();
+    }
+
+    function getAdditionalValue($field)
+    {
+        if (!array_key_exists($this->additional_data[$field])) {
+            list($relation, $relation_field) = explode('_', $field);
+            $this->setAdditionalValue($field, $this->getRelationValue($relation, $relation_field));
+        }
+        return $this->additional_data[$field];
+    }
+
+    function setAdditionalValue($field, $value)
+    {
+        return $this->additional_data[$field] = $value;
+    }
+
 }

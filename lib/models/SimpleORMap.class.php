@@ -114,6 +114,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                                               'before_update' => array(),
                                               'before_store' => array(),
                                               'before_delete' => array(),
+                                              'before_initialize' => array(),
                                               'after_create' => array(),
                                               'after_update' => array(),
                                               'after_store' => array(),
@@ -1219,6 +1220,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $count = 0;
         if ($reset) {
+            if ($this->applyCallbacks('before_initialize') === false) {
+                return false;
+            }
             $this->initializeContent();
         }
         if (is_array($data) || $data instanceof Traversable) {
@@ -1324,7 +1328,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
             $id = $this->getId();
         }
-        $this->initializeContent();
+        $this->setData(array(), true);
         $this->setNew(true);
         if (isset($id)) {
             $this->setId($id);

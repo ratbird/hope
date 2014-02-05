@@ -75,6 +75,24 @@ class User extends \RESTAPI\RouteMap
             $user['skype_show'] = false;
         }
 
+        // Data fields
+        $datafields = array();
+        foreach (\DataFieldEntry::getDataFieldEntries($user_id, 'user') as $entry) {
+            if (!$entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id, $user_id)) {
+                continue;
+            }
+            if (!\Visibility::verify($entry->structure->getID(), $user_id)) {
+                continue;
+            }
+            $datafields[] = array(
+                'type'  => $entry->getType(),
+                'id'    => $entry->getId(),
+                'name'  => $entry->getName(),
+                'value' => $entry->getValue(),
+            );
+        }
+        $user['datafields'] = $datafields;
+
         return $user;
 
     }

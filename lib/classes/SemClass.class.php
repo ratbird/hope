@@ -207,6 +207,17 @@ class SemClass implements ArrayAccess
     }
 
     /**
+     * Returns true if a module is enabled on default for this sem_class.
+     * @param string $modulename
+     * @return boolean
+     */
+    public function isModuleEnabled($modulename)
+    {
+        return !$this->data['modules'][$modulename]
+           ||  !$this->data['modules'][$modulename]['disabled'];
+    }
+
+    /**
      * Returns if a module is allowed to be displayed for this sem_class.
      * @param string $modulename
      * @return boolean

@@ -55,14 +55,16 @@ STUDIP.admin_sem_class = {
         jQuery("div.plugin").each(function () {
             var activated = jQuery(this).is("#activated_plugins div.plugin, .core_module_slot div.plugin");
             var sticky = (jQuery(this).find("select").val() === "sticky" || jQuery(this).is("#deactivated_modules div.plugin"));
+            var disabled = jQuery(this).find("input[name=disabled]").val() === "1";
             if (sticky || activated) {
                 var module_name = jQuery(this).attr("id");
                 if (module_name) {
                     module_name = module_name.substr(module_name.indexOf("_") + 1);
                 }
                 modules[module_name] = {
-                    'activated': activated ? 1 : 0,
-                    'sticky': sticky ? 1 : 0
+                    'activated': +activated,
+                    'sticky':    +sticky,
+                    'disabled':  +disabled
                 };
             }
         });

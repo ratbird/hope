@@ -16,6 +16,7 @@
             <option value="nonsticky"<?= !$sticky ? " selected" : "" ?>><?= _("änderbar") ?></option>
             <option value="sticky"<?= $sticky ? " selected" : "" ?>><?= _("nicht änderbar") ?></option>
         </select>
+        <input type="hidden" name="disabled" value="<?= (int) $disabled ?>">
         <span class="lock"><?= Assets::img("icons/16/red/lock-locked.png", array('class' => "text-bottom")) ?></span>
     </div>
 </div>

@@ -41,7 +41,7 @@ class User extends \RESTAPI\RouteMap
             return $user[$field];
         };
 
-        $avatar = \Avatar::getAvatar($avatar_id);
+        $avatar = \Avatar::getAvatar($user_id);
 
         $user = array(
             'user_id'       => $user_id,

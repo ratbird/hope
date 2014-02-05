@@ -60,6 +60,15 @@ class CoreElearningInterface implements StudipModule {
      */ 
     function getMetadata()
     {
-        return array();
+        return array(
+            'summary' => _('Zugang zu extern erstellten Lernmodulen'),
+            'description' => _('Über diese Schnittstelle ist es möglich, '.
+                'Selbstlerneinheiten, die in externen Programmen erstellt '.
+                'werden, in Stud.IP zur Verfügung zu stellen. Ein häufig '.
+                'angebundenes System ist ILIAS. Besteht eine Anbindung zu '.
+                'einem ILIAS-System, haben Lehrende die Möglichkeit, in '.
+                'ILIAS Selbstlerneinheiten zu erstellen und in Stud.IP '.
+                'bereit zu stellen.')
+        );
     }
 }

@@ -53,11 +53,16 @@ class CoreLiterature implements StudipModule {
      */ 
     function getMetadata()
     {
-        return array('description' => _('Je nach Anbindung kann im tatsächlichen Buchbestand der '.
-            'Hochschule recherchiert werden. Darüber hinaus haben Sie die '.
-            'Möglichkeit, veranstaltungsspezifische Literaturlisten entweder '.
-            'zu erstellen oder bestehende Listen aus anderen '.
-            'Literaturverwaltungsprogrammen hochzuladen. Diese Listen können '.
-            'in Lehrveranstaltungen kopiert und sichtbar geschaltet werden.'));
+        return array(
+            'summary' => _('Erstellung von Literaturlisten unter Verwendung von Katalogen'),
+            'description' => _('Lehrende haben die Möglichkeit, '.
+                'veranstaltungsspezifische Literaturlisten entweder zu '.
+                'erstellen oder bestehende Listen aus anderen '.
+                'Literaturverwaltungsprogrammen (z. B. Citavi und Endnote) '.
+                'hochzuladen. Diese Listen können in Lehrveranstaltungen '.
+                'kopiert und sichtbar geschaltet werden. Je nach Anbindung '.
+                'kann im tatsächlichen Buchbestand der Hochschule '.
+                'recherchiert werden.')
+        );
      }
 }

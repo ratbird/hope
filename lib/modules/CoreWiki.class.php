@@ -92,10 +92,20 @@ class CoreWiki implements StudipModule {
      */ 
     function getMetadata()
     { 
-        return array('description' => _('Im Wiki können verschiedene AutorInnen gemeinsam an Texten, '. 
-            'Konzepten und anderen schriftlichen Arbeiten arbeiten. Alle können '. 
-            'an diesem Text arbeiten. Im Wiki kann eine Vielzahl verschiedener '. 
-            'Texte hinterlegt werden, die von allen Veranstaltungsteilnehmenden '. 
-            'verändert, ergänzt und miteinander verknüpft werden.')); 
+        return array(
+            'summary' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
+            'description' => _('Im Wiki-Web oder kurz "Wiki" können '.
+                'verschiedene AutorInnen gemeinsam Texte, Konzepte und andere '.
+                'schriftliche Arbeiten erstellen und gestalten, dies '.
+                'allerdings nicht gleichzeitig. Texte können individuell '.
+                'bearbeitet und die Änderungen gespeichert werden. Das '.
+                'Besondere im Wiki ist, dass Studierende und Lehrende '.
+                'annähernd die gleichen Rechte (schreiben, lesen, ändern, '.
+                'löschen) haben, was sich nicht einschränken lässt. Das '.
+                'System erstellt eine Versionshistorie, mit der Änderungen '.
+                'nachvollziehbar werden. Einzelne Versionen können zudem '.
+                'auch gelöscht werden (nur Lehrende). Ein Export als '.
+                'pdf-Datei ist integriert.')
+        );
     }
 }

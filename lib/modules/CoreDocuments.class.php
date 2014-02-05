@@ -89,10 +89,18 @@ class CoreDocuments implements StudipModule {
      */ 
     function getMetadata()
     {
-        return array('description' => _('Im Dateibereich können Sie mit Ihren Studierenden '.
-            'vereinbaren, ob und wenn ja, in welche Ordner deren Studien- '.
-            'und Prüfungsleistungen abgelegt werden können. Die Ordner können '.
-            'beliebig benannt werden. Sie können Skripte und Materialien - '.
-            'z.B. Grafiken, Audio-, Video- und Textdateien hochladen.'));
+        return array(
+            'summary' => _('Austausch von Dateien'),
+            'description' => _('Im Dateibereich können Dateien sowohl von '.
+                'Lehrenden als auch von Studierenden hoch- bzw. '.
+                'heruntergeladen werden. Es können Ordner angelegt und '.
+                'individuell benannt werden (nur Lehrende). Die Dateien '.
+                'können somit strukturiert zur Verfügung gestellt werden. '.
+                'Multimediadateien wie Grafiken, Audio- und Videodateien '.
+                'können sofort angezeigt bzw. abgespielt werden. Über das '.
+                'PlugIn "Dateiordnerberechtigung" können Im Dateibereich '.
+                'bestimmte Rechte für Studierende, wie z.B. das Leserecht, '.
+                'festgelegt werden.')
+        );
     }
 }

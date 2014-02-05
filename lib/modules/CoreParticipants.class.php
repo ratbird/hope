@@ -76,6 +76,15 @@ class CoreParticipants implements StudipModule {
      */ 
     function getMetadata()
     {
-        return array();
+        return array(
+            'summary' => _('Liste aller Teilnehmenden einschließlich Nachrichtenfunktionen'),
+            'description' => _('Die Teilnehmenden werden gruppiert nach ihrer '.
+                'jeweiligen Funktion in einer Tabelle gelistet. Für Lehrende '.
+                'werden sowohl das Anmeldedatum als auch der Studiengang mit '.
+                'Semesterangabe dargestellt. Die Liste kann in verschiedene '.
+                'Formate exportiert werden. Außerdem gibt es die '.
+                'Möglichkeiten, eine Rundmail an alle zu schreiben (nur '.
+                'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.')
+        );
     }
 }

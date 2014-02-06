@@ -95,7 +95,7 @@ class EventLog
         $offset = (int)$offset;
         $filter = $this->sql_event_filter($action_id, $object_id, $parameters) ?: '1';
 
-        $log_events = LogEvent::findBySQL($filter . " LIMIT {$offset}, 50",
+        $log_events = LogEvent::findBySQL($filter . " ORDER BY mkdate DESC LIMIT {$offset}, 50",
                 $parameters);
 
         foreach ($log_events as $log_event) {

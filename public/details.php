@@ -203,16 +203,6 @@ else
                 )
             )
         ),
-        array   ("kategorie" => _("Berechtigungen:"),
-            "eintrag" => array  (
-                array   (   "icon" => "blank.gif",
-                    "text"  => _("Lesen:") . " " . get_ampel_read($mein_status, $admission_status, $seminar['Lesezugriff'], FALSE, $seminar['admission_starttime'], $seminar['admission_endtime_sem'], $seminar['admission_prelim'])
-                ),
-                array   (   "icon" => "blank.gif",
-                    "text"  => _("Schreiben:") . " " . get_ampel_write($mein_status, $admission_status, $seminar['Schreibzugriff'], FALSE, $seminar['admission_starttime'], $seminar['admission_endtime_sem'], $seminar['admission_prelim'])
-                )
-            )
-        )
     );
 
     $infobox[2]["kategorie"] = _("Aktionen:");
@@ -688,20 +678,16 @@ echo $template_factory->render(
             </td>
             <td width="25%" valign="top">
             <?
-            if ($seminar['admission_turnout']){
-                    if(Seminar::GetInstance($sem_id)->isAdmissionEnabled()) {
-                        printf ("<font size=-1><b>" . _("max. Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", $seminar['admission_turnout']);
-                    }
-                    if (isset($all_cont_user) && $all_cont_user !== false){
-                        printf ("<br><font size=-1><b>" . _("Freie Kontingentpl&auml;tze:") . "&nbsp;</b></font><font size=-1>%s </font>",$seminar['admission_turnout'] - $all_cont_user );
-                        if (!$seminar['admission_disable_waitlist'] && ($seminar['admission_turnout'] - $all_cont_user) == 0){
-                            $query = "SELECT COUNT(*) FROM admission_seminar_user WHERE seminar_id = ? AND status != 'accepted'";
-                            $statement = DBManager::get()->prepare($query);
-                            $statement->execute(array($sem_id));
-                            $count = $statement->fetchColumn();
-                            printf ("<br><font size=-1><b>" . _("Wartelisteneintr&auml;ge:") . "&nbsp;</b></font><font size=-1>%s </font>",$count);
-                        }
-                    }
+            if(Seminar::GetInstance($sem_id)->isAdmissionEnabled()) {
+                printf ("<font size=-1><b>" . _("max. Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", $seminar['admission_turnout']);
+                printf ("<br><font size=-1><b>" . _("Freie Plätze:") . "&nbsp;</b></font><font size=-1>%s </font>",Seminar::GetInstance($sem_id)->getFreeAdmissionSeats() );
+                if (!$seminar['admission_disable_waitlist']) {
+                    $query = "SELECT COUNT(*) FROM admission_seminar_user WHERE seminar_id = ? AND status != 'accepted'";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($sem_id));
+                    $count = $statement->fetchColumn();
+                    printf ("<br><font size=-1><b>" . _("Wartelisteneintr&auml;ge:") . "&nbsp;</b></font><font size=-1>%s </font>",$count);
+                }
             }
             ?>
             </td>

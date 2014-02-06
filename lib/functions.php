@@ -1720,7 +1720,7 @@ function studip_utf8encode($data)
  */
 function studip_utf8decode($data)
 {
-    if (is_array($data) || is_object($data) && $data instanceof Traversable) {
+    if (is_array($data)) {
         $new_data = array();
         foreach ($data as $key => $value) {
             $key = studip_utf8decode($key);

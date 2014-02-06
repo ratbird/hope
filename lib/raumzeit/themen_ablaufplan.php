@@ -119,7 +119,7 @@ if ($sem->hasDatesOutOfDuration()) {
  *       I N F O B O X       *
  * * * * * * * * * * * * * * */
 
-if ($sem->metadates->art == 0) {
+if ($sem->getMetaDateCount()) {
     $times_info .= '<b>'._("Typ").':</b> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
     $z = 0;
     if (is_array($turnus = $sem->getFormattedTurnusDates())) {

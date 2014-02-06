@@ -104,12 +104,7 @@ class Settings_PrivacyController extends Settings_SettingsController
             $online, $search, $email
         ));
 
-        if ($success || ($statement->rowCount() > 0)) {
-            $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
-        } else {
-            $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
-        }
-        
+        $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
         $this->redirect('settings/privacy');
     }
 

@@ -1,24 +1,27 @@
-$(document).ready(function() {
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
+$(document).ready(function () {
 
     STUDIP.modalDialog.apply();
     STUDIP.statusgroups.apply();
 });
 
 STUDIP.statusgroups = {
-    apply: function() {
+    apply: function () {
         $('.moveable tbody').sortable({
             axis: "y",
             handle: ".dragHandle",
-            helper: function(e, ui) {
-                ui.children().each(function() {
+            helper: function (e, ui) {
+                ui.children().each(function () {
                     jQuery(this).width(jQuery(this).width());
                 });
                 return ui;
             },
-            start: function(event, ui) {
+            start: function (event, ui) {
                 $(this).closest('table').addClass('nohover');
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
                 $(this).closest('table').removeClass('nohover');
                 var group = $(this).closest('table').attr('id');
                 var user = ui.item.attr('data-userid');
@@ -29,7 +32,7 @@ STUDIP.statusgroups = {
                     dataType: 'html',
                     data: {group: group, user: user, pos: position},
                     async: false
-                }).done(function(data) {
+                }).done(function (data) {
                     $('#' + group + ' tbody').html(data);
                     STUDIP.statusgroups.apply();
                     STUDIP.modalDialog.apply();
@@ -37,13 +40,13 @@ STUDIP.statusgroups = {
             }
         });
     }
-}
+};
 
 STUDIP.modalDialog = {
-    apply: function() {
-        $('a.modal').click(function() {
+    apply: function () {
+        $('a.modal').click(function () {
             var dialog = $("<div></div>");
-            dialog.load($(this).attr('href'), function() {
+            dialog.load($(this).attr('href'), function () {
                 STUDIP.modalDialog.load($(this));
             });
             $('<img/>', {
@@ -54,7 +57,7 @@ STUDIP.modalDialog = {
                 autoResize: true,
                 resizable: false,
                 position: 'center',
-                close: function() {
+                close: function () {
                     $(this).remove();
                 },
                 width: 'auto',
@@ -64,12 +67,12 @@ STUDIP.modalDialog = {
             return false;
         });
     },
-    load: function(dialog) {
-        dialog.find('.abort').click(function(e) {
+    load: function (dialog) {
+        dialog.find('.abort').click(function (e) {
             e.preventDefault();
             dialog.remove();
         });
-        dialog.find('.stay_on_dialog').click(function(e) {
+        dialog.find('.stay_on_dialog').click(function (e) {
             $(this).attr('disabled', 'true');
             e.preventDefault();
             var button = jQuery(this).attr('name');
@@ -78,7 +81,7 @@ STUDIP.modalDialog = {
                 type: "POST",
                 url: form.attr('action'),
                 data: form.serialize() + '&' + button + '=1', // serializes the form's elements.
-                success: function(data)
+                success: function (data)
                 {
                     dialog.html(data); // show response from the php script.
                     STUDIP.modalDialog.load(dialog);
@@ -87,10 +90,10 @@ STUDIP.modalDialog = {
         });
         dialog.dialog({position: 'center'});
     }
-}
+};
 
 STUDIP.statusgroups.addMembers = {
-    init: function() {
+    init: function () {
         $('#search_persons_select_all').show();
         $('#search_persons_deselect_all').show();
     },
@@ -105,4 +108,4 @@ STUDIP.statusgroups.addMembers = {
         $('#search_persons_selected option').prop('selected', 'selected');
         $('#search_persons_remove').click();
     }
-}
+};

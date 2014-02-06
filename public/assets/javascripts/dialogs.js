@@ -7,9 +7,9 @@
 
 STUDIP.Dialogs = {
 
-    showConfirmDialog: function(question, confirm) {
+    showConfirmDialog: function (question, confirm) {
         // compile template
-        var getTemplate = _.memoize(function(name) {
+        var getTemplate = _.memoize(function (name) {
             return _.template(jQuery("#" + name).html());
         });
 
@@ -22,8 +22,8 @@ STUDIP.Dialogs = {
         return false;
     },
 
-    closeConfirmDialog: function() {
+    closeConfirmDialog: function () {
         $('div.modaloverlay').remove();
     }
 
-}
+};

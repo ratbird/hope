@@ -3,11 +3,11 @@
 
 STUDIP.Messaging = {
     addToAdressees: function (username, name) {
-            var form = jQuery("form[name=upload_form]");
-            jQuery('<input type="hidden" name="add_receiver[]"/>').val(username).appendTo(form);
-            jQuery('<input type="hidden" name="add_receiver_button_x" value="1"/>').appendTo(form);
-            form.submit();
+        var form = jQuery("form[name=upload_form]");
+        jQuery('<input type="hidden" name="add_receiver[]"/>').val(username).appendTo(form);
+        jQuery('<input type="hidden" name="add_receiver_button_x" value="1"/>').appendTo(form);
+        form.submit();
 
-            return;
+        return;
     }
 };

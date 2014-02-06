@@ -44,14 +44,16 @@ jQuery('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
 // will be transformed into a button of the lightbox and removed from the
 // response. A close button is always present.
 jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (event) {
-    var $that     = jQuery(this),
-        href      = $that.attr('href'),
-        container = jQuery('<div/>');
+    var $that       = jQuery(this),
+        href        = $that.attr('href'),
+        container   = jQuery('<div/>'),
+        that_form   = null,
+        that_params = null;
     if ($that.prop('form') !== undefined) {
-       var that_form = jQuery($that.prop('form'));
-       var that_params = that_form.serializeArray();
-       that_params.push({'name' : $that.attr('name'), 'value' : 1});
-       href = that_form.attr('action');
+        that_form = jQuery($that.prop('form'));
+        that_params = that_form.serializeArray();
+        that_params.push({'name' : $that.attr('name'), 'value' : 1});
+        href = that_form.attr('action');
     }
     // Load response into a helper container, open dialog after loading
     // has finished.
@@ -101,7 +103,7 @@ jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (ev
                         }
                         container.html(data);
                     }
-                },
+                }
             });
         });
         if (xhr.getResponseHeader('X-Location')) {
@@ -117,9 +119,9 @@ jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (ev
                 open: function () {
                     jQuery('head').append(scripts);
                 },
-                close: function() {
+                close: function () {
                     jQuery(this).remove();
-                },
+                }
             });
         }
     });

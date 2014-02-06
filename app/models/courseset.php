@@ -21,9 +21,9 @@ class CoursesetModel {
         if ($filter === true) {
             $query = "SELECT su.`Seminar_id` FROM `seminar_user` su
                 INNER JOIN `seminare` s USING(`Seminar_id`)
-                WHERE  s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1) 
+                WHERE s.status NOT IN(?) AND s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1) 
                 AND su.`user_id`=?";
-            $parameters = array($currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id);
+            $parameters = array(studygroup_sem_types(), $currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id);
             if (get_config('DEPUTIES_ENABLE')) {
                 $query .= " UNION SELECT s.`Seminar_id` FROM `seminare` s
                     INNER JOIN `deputies` d ON (s.`Seminar_id`=d.`range_id`)
@@ -37,10 +37,11 @@ class CoursesetModel {
                 INNER JOIN seminare s USING(seminar_id)
                 INNER JOIN seminar_user su ON s.seminar_id=su.seminar_id AND su.status='dozent'
                 INNER JOIN auth_user_md5 aum USING(user_id)
-                WHERE  s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
+                WHERE s.status NOT IN(:studygroup_types) AND s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
                 AND si.Institut_id IN(:institutes)
                 AND (s.name LIKE :filter OR s.Veranstaltungsnummer LIKE :filter OR Nachname LIKE :filter)",
-                     array('sembegin' => $currentSemester->beginn,
+                     array('studygroup_types' => studygroup_sem_types(),
+                            'sembegin' => $currentSemester->beginn,
                             'institutes' => $instituteIds,
                             'filter' => '%' . $filter .'%'
             ));

@@ -20,6 +20,11 @@
                 <? if ($post['anonymous']): ?>
                     <strong><?= _('Anonym') ?></strong>
                     <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
+                <? elseif (!$post['user_id']) : ?>
+                    <?= Avatar::getAvatar('nobody')->getImageTag(Avatar::SMALL,
+                        array('title' => _('Stud.IP'))) ?>
+                    <?= _('von Stud.IP erstellt') ?>, 
+                    <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
                 <? else : ?>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['user_id'])) ?>">
                     <?= Avatar::getAvatar($post['user_id'])->getImageTag(Avatar::SMALL,

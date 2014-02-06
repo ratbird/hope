@@ -774,9 +774,11 @@ class CourseSet
             } while ($db->fetch());
             $this->id = $newid;
         }
-        if ($this->isSeatDistributionEnabled() && !$this->getAlgorithm()) {
-            $algorithm = new RandomAlgorithm();
-            $this->setAlgorithm($algorithm);
+        if ($this->isSeatDistributionEnabled()) {
+            if (!$this->getAlgorithm()) {
+                $algorithm = new RandomAlgorithm();
+                $this->setAlgorithm($algorithm);
+            }
             if (!$this->getSeatDistributionTime()) {
                 $this->setAlgorithmRun(true);
             }

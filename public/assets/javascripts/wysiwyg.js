@@ -69,7 +69,6 @@ jQuery(function ($) {
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
             customConfig: '',
-            uiColor: uiColor,
             skin: 'studip',
             removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash' +
                            ',forms,iframe,maximize,newpage,preview,resize' +
@@ -77,6 +76,7 @@ jQuery(function ($) {
             extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
+            autoGrow_minHeight: 500,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
                 top: toolbarId
             },
@@ -213,7 +213,6 @@ jQuery(function ($) {
             )
         }); // CKEDITOR.replace(textarea[0], {
 
-        // handle drag'n'drop events
         CKEDITOR.on('instanceReady', function (event) {
             var editor = event.editor;
 
@@ -267,16 +266,19 @@ jQuery(function ($) {
             // function; might produce "strange" behaviour
             CKEDITOR.focusManager._.blurDelay = 0;
 
-            // display shadow when editor area is focused
+            // get reference to editor area for various tweaks
             var editorArea = textarea.siblings('.cke_chrome');
+
+            // display "focused"-effect when editor area is focused
             editor.on('focus', function(){
-                // add editor area shadow
-                editorArea.css('box-shadow', '0 3px 15px ' + uiColor);
+                editorArea.addClass('cke_chrome_focused');
+            });
+            editor.on('blur', function(){
+                editorArea.removeClass('cke_chrome_focused');
             });
 
+            // keep the editor focused when a toolbar item get's selected
             editor.on('blur', function(){
-                // remove editor area shadow
-                editorArea.css('box-shadow', '');
                 if (toolbar.has(':focus').length > 0) {
                     editor.focus();
                 }
@@ -304,19 +306,17 @@ jQuery(function ($) {
                 }
             };
             $(window).scroll(stickyTools);
-            // if toolbar is hidden during scrolling it might scroll off screen
-            editor.on('focus', stickyTools);
+            editor.on('focus', stickyTools);  // hidden toolbar might scroll off screen
 
             var editorZ = Number(editorArea.css('z-index')) || 0;
             toolbar.css('z-index', editorZ + 1);
-
-            // hide "source" button's text label
-            $('.cke_button__source_label').hide();
 
             // focus the editor so the user can immediately hack away...
             editor.focus();
         });
     }
+
+    STUDIP.addWysiwyg = replaceTextarea; // for jquery dialogs, see toolbar.js
 
     $('textarea.add_toolbar').each(function(){
         if (!CKEDITOR.instances[this]) {

@@ -75,7 +75,12 @@
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
             return this.each(function () {
-                STUDIP.Toolbar.initialize(this, button_set);
+                if (STUDIP.WYSIWYG) {
+                    // fixes wysiwyg insertion for jquery dialogs
+                    STUDIP.addWysiwyg($(this));
+                } else {
+                    STUDIP.Toolbar.initialize(this, button_set);
+                }
             });
         },
         // Obtains the currently selected text from an element

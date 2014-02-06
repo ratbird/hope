@@ -49,6 +49,7 @@ Special outer level classes used in this file:
 .cke_chrome {
 	display: block; /* This is <span>, so transform it into a block.*/
 	padding: 0;
+    min-height: 300;
 }
 .cke_chrome:focus,
 .cke_chrome:active,

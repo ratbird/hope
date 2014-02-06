@@ -12,30 +12,12 @@
  */
 
 /* configure look and feel of CKEditor's content area and toolbar */
-textarea + .cke_chrome:hover {
-    -moz-box-shadow: 0 3px 15px #7788AA !important;
-    -webkit-box-shadow: 0 3px 15px #7788AA !important;
-    box-shadow: 0 3px 15px #7788AA !important;
-    overflow: hidden;               /* cut child element corners off */
-}
-.cke_chrome {                       /* content area and toolbar */
-    margin: 1px !important; /* box-shadow visible if parent overflow=hidden */
-    border: 0 !important;
-/*    border-radius: 5px;*/
-/*    box-shadow: 0 0 15px #7788AA !important;
-    overflow: hidden;               /* cut child element corners off */
-}
-.cke_wysiwyg_div, .cke_source {     /* content area */
-    padding: 8px !important;        /* NOTE <p>s have an additional margin */
-}
 .animated-height-change {           /* content area in HTML source view mode */
     -webkit-transition: height 0.2s;
     -moz-transition: height 0.2s;
     transition: height 0.2s;
 }
 #cktoolbar {                        /* toolbar */
-/*    display: none;
-    position: fixed;*/
     padding: 0;
     margin: 0;
     margin-bottom: 5px;
@@ -45,34 +27,6 @@ textarea + .cke_chrome:hover {
     -moz-box-shadow: 0 1px 2px -1px #7788AA;
     box-shadow: 0 1px 2px -1px #7788AA;
 }
-.cke_top, .cke_combo_button, .cke_toolgroup {
-    background-image: none !important;
-    background: transparent !important;
-    border: none !important;
-}
-/*
-.cke_toolbox:hover, .cke_top:hover {
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
-    cursor: grab;
-}
-.cke_toolbox:active, .cke_top:active {
-    cursor: -webkit-grabbing;
-    cursor: -moz-grabbing;
-    cursor: grabbing;
-}
-/*#toolbar-handle {
-    height: 0;
-    text-align: right;
-    cursor: -webkit-grab;
-    cursor: -moz-grab;
-    cursor: grab;
-}
-#toolbar-handle:active {
-    cursor: -webkit-grabbing;
-    cursor: -moz-grabbing;
-    cursor: grabbing;
-}*/
 
 /* drop zone effects */
 

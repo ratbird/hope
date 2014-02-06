@@ -28,6 +28,26 @@ class User_Visibility_Settings extends SimpleORMap
     public $displayed = false;
 
     /**
+     * Find a User_Visibility_Setting by an id or an identifier and a user
+     * 
+     * @param type $id
+     */
+    public static function find($id = null, $userid = null) {
+        
+        // If we have no id or we have a real int id use standard construction
+        if (!$id || is_int($id)) {
+            parent::find($id);
+        } else {
+            
+            // Rewrite user if nessecary
+            $userid = $userid ? : $GLOBALS['user']->id;
+
+            // Return the first (and only) matching visibility setting
+            return current(self::findBySQL('user_id = ? AND identifier = ? LIMIT 1', array($userid, $id)));
+        }
+    }
+
+    /**
      * Recursive load all Children
      */
     public function loadChildren()

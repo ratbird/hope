@@ -428,10 +428,9 @@ class Visibility
      */
     public static function renamePrivacySetting($id, $new_name, $user = null)
     {
-        $db = DBManager::get();
-        $where = self::prepareWhere($id);
-        $sql = "UPDATE user_visibility_settings set name = '$new_name' $where ";
-        $db->exec($sql);
+        $setting = User_Visibility_Settings::find($id, $user);
+        $setting->name = $new_name;
+        $setting->store();
     }
 
     /**
@@ -497,7 +496,7 @@ class Visibility
             return "WHERE `user_id` = '$userid' AND `identifier` = '$id'";
         }
     }
-
+    
     /**
      * Helpfunction to set default user
      * 

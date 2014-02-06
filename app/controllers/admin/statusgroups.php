@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * statusgroups.php - trails-controller for managing statusgroups
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
+ * @author      Sebastian Hobert <sebastian.hobert@uni-goettingen.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_StatusgroupsController extends AuthenticatedController {
@@ -55,7 +67,9 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     }
 
     /**
-     * Interface to edit a group or create a new one
+     * Interface to edit a group or create a new one.
+     * 
+     * @param string group id
      */
     public function editGroup_action($group_id = null) {
         $this->group = new Statusgruppen($group_id);
@@ -70,7 +84,12 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         PageLayout::addScript('jquery/jquery.nestable.js');
         $this->loadGroups();
     }
-
+    
+    /**
+     * Action to add multiple members to a group.
+     * 
+     * @param string group id
+     */
     public function memberAdd_action($group_id = null) {
         // load selected group
         $this->group = new Statusgruppen($group_id);
@@ -368,7 +387,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->unfoldGroup($list, $group->children, $newpre);
         }
     }
-
+    
+    /**
+     * Sets the content of the infobox.
+     */
     private function setInfoBox() {
         $this->setInfoBoxImage('infobox/groups.jpg');
 

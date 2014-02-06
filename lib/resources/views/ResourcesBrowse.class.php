@@ -198,9 +198,15 @@ class ResourcesBrowse {
                             <input type="text" style="font-size:8pt;" name="search_end_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("i", $this->searchArray["search_assign_end"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
                 <br>
                             <?=_("Datum")?>: &nbsp;
+                            <input name="searchDate" id="searchDate" size="10" value="<?=($this->searchArray["search_assign_begin"]) ? date("j.n.Y", $this->searchArray["search_assign_begin"]) : _(date('j.n.Y', time()))?>">
+                            <script>
+                                jQuery('#searchDate').datepicker();
+                            </script>
+                            <!--
                             <input type="text" style="font-size:8pt;" name="search_day" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("d", $this->searchArray["search_assign_begin"]) : _("tt")?>">
                             .<input type="text" style="font-size:8pt;" name="search_month" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("m", $this->searchArray["search_assign_begin"]) : _("mm")?>">
                             .<input type="text" style="font-size:8pt;" name="search_year" size="4" maxlength="4" value="<?=($this->searchArray["search_assign_begin"]) ? date("Y", $this->searchArray["search_assign_begin"]) : _("jjjj")?>">
+                            -->
                             &nbsp;&nbsp;&nbsp;&nbsp;    <input type="checkbox" style="font-size:8pt;" name="search_repeating" value="1" <?=($this->searchArray["search_repeating"]==1) ? "checked=checked" : ""?>> für restliches Semester prüfen &nbsp; <br>
                             <br>
                         </td>

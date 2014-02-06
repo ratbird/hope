@@ -492,16 +492,17 @@ if ($change_object_schedules) {
 
                 //check dates
                 $illegal_dates=FALSE;
-                if ((!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'))) ||
-                    (!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute')))) {
+                $startTime = explode('.', Request::get('changeTime'));
+                if ((!check_date($startTime[1], $startTime[0], $startTime[2], Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'))) ||
+                    (!check_date($startTime[1], $startTime[0], $startTime[2], Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute')))) {
                     $illegal_dates=TRUE;
                     $msg -> addMsg(17);
                 }
 
                 //create timestamps
                 if (!$illegal_dates) {
-                    $change_schedule_begin=mktime(Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
-                    $change_schedule_end=mktime(Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
+                    $change_schedule_begin=mktime(Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'), 0,$startTime[1], $startTime[0], $startTime[2]);
+                    $change_schedule_end=mktime(Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute'), 0, $startTime[1], $startTime[0], $startTime[2]);
                     if ($change_schedule_begin > $change_schedule_end) {
                         if ((Request::option('change_schedule_repeat_mode') != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
                             $illegal_dates=TRUE;
@@ -509,12 +510,12 @@ if ($change_object_schedules) {
                         }
                     }
                 }
-
-                if (check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year')))
+                $endTime = explode('.', Request::get('changeRepeatTime'));
+                if (check_date($endTime[1], $endTime[0], $endTime[2]))
                     if (Request::option('change_schedule_repeat_mode') == "sd")
-                        $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
+                        $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, $endTime[1], $endTime[0], $endTime[2]);
                     else
-                        $change_schedule_repeat_end=mktime(23, 59, 59, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
+                        $change_schedule_repeat_end=mktime(23, 59, 59, $endTime[1], $endTime[0], $endTime[2]);
 
                 if (Request::option('change_schedule_repeat_sem_end'))
                     foreach ($all_semester as $a)
@@ -524,7 +525,7 @@ if ($change_object_schedules) {
                 //create repeatdata
 
                 //repeat = none
-
+                        //$endTime[1], $endTime[0], $endTime[2]
                 $change_schedule_repeat_month_of_year = Request::int('change_schedule_repeat_month_of_year');
                 $change_schedule_repeat_day_of_month  = Request::int('change_schedule_repeat_day_of_month');
                 $change_schedule_repeat_week_of_month = Request::int('change_schedule_repeat_week_of_month');
@@ -630,8 +631,9 @@ if ($change_object_schedules) {
                     $changeAssign->setRepeatEnd($changeAssign->getRepeatEndByQuantity());
 
                 //check repeat_end
-                if (($changeAssign->getRepeatMode() != "na") && (Request::quoted('change_schedule_repeat_end_month')) && (Request::quoted('change_schedule_repeat_end_day')) && (Request::quoted('change_schedule_repeat_end_year'))) {
-                    if (!check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'))) {
+                //$endTime = explode('.', Request::get('changeRepeatTime'));
+                if (($changeAssign->getRepeatMode() != "na") && (Request::get('changeRepeatTime'))) {
+                    if (!check_date($endTime[1], $endTime[0],$endTime[2])) {
                         $illegal_dates=TRUE;
                         $msg -> addMsg(18);
                     }
@@ -1187,7 +1189,8 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
         $_SESSION['resources_data']["schedule_length_factor"] = Request::quoted('schedule_length_factor');
         $_SESSION['resources_data']["schedule_length_unit"] = Request::quoted('schedule_length_unit');
         $_SESSION['resources_data']["schedule_week_offset"] = 0;
-        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0,Request::quoted('schedule_begin_month'), Request::quoted('schedule_begin_day'), Request::quoted('schedule_begin_year'));
+        $startTime = explode('.', Request::get('startTime'));
+        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0,$startTime[1], $startTime[0], $startTime[2]);
         if (Request::submitted('start_list') || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "list"))) {
             $_SESSION['resources_data']["schedule_mode"] = "list";
             if ($_SESSION['resources_data']["schedule_start_time"] < 1)
@@ -1301,8 +1304,10 @@ if ($view == "search") {
             check_and_set_date (date("d",$date), date("m",$date), date("Y",$date), Request::quoted('search_end_hour_2'), Request::quoted('search_end_minute_2'), $_SESSION['resources_data']["search_array"], "search_assign_end");
             $_SESSION['resources_data']["search_array"]["search_repeating"] = '1';
         } else {
-            check_and_set_date (Request::quoted('search_day'), Request::quoted('search_month'), Request::quoted('search_year'), Request::quoted('search_begin_hour'), Request::quoted('search_begin_minute'), $_SESSION['resources_data']["search_array"], "search_assign_begin");
-            check_and_set_date (Request::quoted('search_day'), Request::quoted('search_month'), Request::quoted('search_year'), Request::quoted('search_end_hour'), Request::quoted('search_end_minute'), $_SESSION['resources_data']["search_array"], "search_assign_end");
+            $searchDate = explode('.',Request::get('searchDate'));
+            //$searchDate[]
+            check_and_set_date ($searchDate[0], $searchDate[1], $searchDate[2], Request::quoted('search_begin_hour'), Request::quoted('search_begin_minute'), $_SESSION['resources_data']["search_array"], "search_assign_begin");
+            check_and_set_date ($searchDate[0], $searchDate[1], $searchDate[2], Request::quoted('search_end_hour'), Request::quoted('search_end_minute'), $_SESSION['resources_data']["search_array"], "search_assign_end");
             $_SESSION['resources_data']["search_array"]["search_repeating"] = Request::int('search_repeating');
         }
                 $_SESSION['resources_data']["search_array"]["search_day_of_week"] = Request::option('search_day_of_week');

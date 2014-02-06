@@ -31,7 +31,7 @@ use Studip\Button,
                         <INPUT type="text" id="end_stunde" name="end_stunde" maxlength="2" size="2" value="<?= htmlReady(Request::get('end_stunde')) ?>">:
                         <INPUT type="text" id="end_minute" name="end_minute" maxlength="2" size="2" value="<?= htmlReady(Request::get('end_minute')) ?>">
                         <?=_("Uhr")?>
-                    <?=Termin_Eingabe_javascript(1);?>
+                    <?=Termin_Eingabe_javascript(3);?>
                 </TD>
             </TR>
             <TR>

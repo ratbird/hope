@@ -997,7 +997,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         } else {
             throw new InvalidArgumentException(get_class($this) . '::'.$field . ' not found.');
-            
+
         }
     }
 
@@ -1163,14 +1163,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->content);
+        return new ArrayIterator($this->toArray());
     }
     /**
      * Countable
      */
     public function count()
     {
-        return count($this->content);
+        return count($this->known_slots) - count($this->relations);
     }
 
     /**
@@ -1613,10 +1613,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * returns unmodified value of given field
-     * 
+     *
      * @param string $field
      * @throws InvalidArgumentException
-     * @return mixed 
+     * @return mixed
      */
     public function getPristineValue($field)
     {

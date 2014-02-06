@@ -69,8 +69,8 @@ if ($args) {
 
             # $options = getopts(':f'); // if f is set, try to execute the plugins sql-scripts (if any)
 
-            $plugin_admin = new PluginAdministration();
-            $manifest = $plugin_admin->getPluginManifest($plugindir);
+            $plugin_manager = PluginManager::getInstance();
+            $manifest = $plugin_manager->getPluginManifest($plugindir);
 
             if (!$manifest) {
                 echo 'Das Plugin-Manifest fehlt!' . "\n";

@@ -9,23 +9,23 @@ STUDIP.UserFilter = {
 
     configureCondition: function (targetId, targetUrl) {
         var loading = 'Wird geladen'.toLocaleString();
-        $('<div id="'+targetId+'" title="Bedingung konfigurieren">'+loading+'</div>')
+        $('<div id="' + targetId + '" title="Bedingung konfigurieren">' + loading + '</div>')
             .dialog({
                 draggable: false,
                 modal: true,
                 resizable: false,
                 position: ['center', 200],
-                width: 0.7*$(window).width(),
-                close: function() {
-                    $('#'+targetId).remove();
+                width: 0.7 * $(window).width(),
+                close: function () {
+                    $('#' + targetId).remove();
                 },
-                open: function() {
-                    $('#'+targetId).empty();
+                open: function () {
+                    $('#' + targetId).empty();
                     $('<img/>', {
                         src: STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif'
-                    }).appendTo('#'+targetId);
-                    $('#'+targetId).append(loading);
-                    $('#'+targetId).load(targetUrl);
+                    }).appendTo('#' + targetId);
+                    $('#' + targetId).append(loading);
+                    $('#' + targetId).load(targetUrl);
                 }
             });
         return false;
@@ -36,15 +36,15 @@ STUDIP.UserFilter = {
      * @param String containerId
      * @param String targetUrl
      */
-    addCondition: function(containerId, targetUrl) {
+    addCondition: function (containerId, targetUrl) {
         var children = $('.conditionfield');
         var query = '';
-        $('.conditionfield').each(function() {
-            query += '&field[]='+
-                encodeURIComponent($(this).children('.conditionfield_class:first').val())+
-                '&compare_operator[]='+
-                encodeURIComponent($(this).children('.conditionfield_compare_op:first').val())+
-                '&value[]='+
+        $('.conditionfield').each(function () {
+            query += '&field[]=' +
+                encodeURIComponent($(this).children('.conditionfield_class:first').val()) +
+                '&compare_operator[]=' +
+                encodeURIComponent($(this).children('.conditionfield_compare_op:first').val()) +
+                '&value[]=' +
                 encodeURIComponent($(this).children('.conditionfield_value:first').val());
         });
         $.ajax({
@@ -52,62 +52,62 @@ STUDIP.UserFilter = {
             url: targetUrl,
             data: query,
             dataType: 'html',
-            success: function(data, textStatus, jqXHR) {
+            success: function (data, textStatus, jqXHR) {
                 var result = '';
-                if ($('#'+containerId).children('.nofilter').length > 0) {
-                    $('#'+containerId).children('.nofilter').remove();
-                    $('#'+containerId).prepend('<div class="userfilter"></div>');
+                if ($('#' + containerId).children('.nofilter').length > 0) {
+                    $('#' + containerId).children('.nofilter').remove();
+                    $('#' + containerId).prepend('<div class="userfilter"></div>');
                 } else {
-                    result += '<b>'+'oder'.toLocaleString()+'</b>';
+                    result += '<b>' + 'oder'.toLocaleString() + '</b>';
                 }
                 result += data;
-                $('#'+containerId).find('.userfilter').append(result);
+                $('#' + containerId).find('.userfilter').append(result);
             }
         });
         $('#condition').remove();
     },
 
-    getConditionFieldConfiguration: function(element, targetUrl) {
+    getConditionFieldConfiguration: function (element, targetUrl) {
         var target = $(element).parent();
         $.ajax({
             type: 'post',
             url: targetUrl,
             data: { 'fieldtype': $(element).val() },
             dataType: 'html',
-            success: function(data, textStatus, jqXHR) {
+            success: function (data, textStatus, jqXHR) {
                 target.children('.conditionfield_compare_op').remove();
                 target.children('.conditionfield_value').remove();
                 target.children('.conditionfield_delete').first().before(data);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('Status: '+textStatus+"\nError: "+errorThrown);
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Status: ' + textStatus + "\nError: " + errorThrown);
             }
         });
         return false;
     },
 
-    addConditionField: function(targetId, targetUrl) {
+    addConditionField: function (targetId, targetUrl) {
         $.ajax({
             type: 'post',
             url: targetUrl,
             dataType: 'html',
-            success: function(data, textStatus, jqXHR) {
-                $('#'+targetId).append(data);
+            success: function (data, textStatus, jqXHR) {
+                $('#' + targetId).append(data);
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                alert('Status: '+textStatus+"\nError: "+errorThrown);
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('Status: ' + textStatus + "\nError: " + errorThrown);
             }
         });
         return false;
     },
 
-    removeConditionField: function(element) {
+    removeConditionField: function (element) {
         element.remove();
         STUDIP.Dialogs.closeConfirmDialog();
         return false;
     },
 
-    closeDialog: function(button) {
+    closeDialog: function (button) {
         var dialog = $(button).parents('div[role=dialog]').first();
         dialog.remove();
         return false;

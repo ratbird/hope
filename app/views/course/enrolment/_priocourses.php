@@ -17,9 +17,19 @@
                     <ul id="avaliable-courses">
             <?php $prios = array(); ?>
             <?php foreach ($priocourses as $prio => $course): ?>
-                <?php $prios[$course->id] = htmlReady($course->name) ?>
+                <?php $prios[$course->id]['name'] = htmlReady(my_substr($course->name,0,50));
+                $tooltxt = array();
+                $tooltxt[] = $course->veranstaltungsnummer;
+                $tooltxt[] = $course->name;
+                $tooltxt[] = join(', ', $course->members->findBy('status','dozent')->orderBy('position')->limit(3)->pluck('Nachname'));
+                $tooltxt[] = join('; ', $course->cycles->toString());
+                $prios[$course->id]['info'] = tooltipicon(join("\n", $tooltxt));
+                ?>
                 <?php $visible = !isset($user_prio[$course->id]); ?>
-                <li class="<?= htmlReady($course->id) ?> <?= $visible ? 'visible' : '' ?>" <?= !$visible ? 'style="display:none"' : '' ?>><input type="checkbox" class="hidden-js" value="0" name="admission_prio[<?= $course->id ?>]"><?= htmlReady($course->name) ?></li>
+                <li class="<?= htmlReady($course->id) ?> <?= $visible ? 'visible' : '' ?>" <?= !$visible ? 'style="display:none"' : '' ?>>
+                    <input type="checkbox" class="hidden-js" value="0" name="admission_prio[<?= $course->id ?>]">
+                    <?= $prios[$course->id]['name'] . '&nbsp;' . $prios[$course->id]['info'] ?>
+                </li>
             <?php endforeach; ?>
                     </ul>
                 </td>
@@ -42,7 +52,9 @@
             if ($hasUserPrios):
                 foreach ($user_prio as $id => $prio):
                 ?>
-                <li class="<?= $id ?>"><?= $prios[$id] ?><input type="hidden" value="<?= $prio ?>" name="admission_prio[<?= $id ?>]"> <?= Assets::img('icons/16/black/trash', array('class' => $id . ' delete hidden-no-js')) ?>
+                <li class="<?= $id ?>">
+                    <?= $prios[$id]['name']  . '&nbsp;' .  $prios[$id]['info'] ?>
+                    <input type="hidden" value="<?= $prio ?>" name="admission_prio[<?= $id ?>]"> <?= Assets::img('icons/16/black/trash', array('class' => $id . ' delete hidden-no-js')) ?>
                     <?= Assets::input('icons/16/black/trash', array('name' => 'admission_prio_delete['.$id.']', 'type' => 'submit', 'class' => 'hidden-js delete')) ?>
 
                     <?php if ($prio != 1): ?>

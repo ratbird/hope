@@ -76,7 +76,8 @@ jQuery(function ($) {
             extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
-            autoGrow_minHeight: 500,
+            autoGrow_minHeight: 300,
+            autoGrow_maxHeight: 500,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
                 top: toolbarId
             },

@@ -1,3 +1,6 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _, CKEDITOR */
+
 /**
  * wysiwyg.js - Replace HTML textareas with WYSIWYG editor.
  *
@@ -10,21 +13,21 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-jQuery(function($){
-    if (!STUDIP.WYSIWYG){
+jQuery(function ($) {
+    if (!STUDIP.WYSIWYG) {
         return;
     }
 
     // workaround: application.js sets base_url too late
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
-    function replaceTextarea(textarea){
+    function replaceTextarea(textarea) {
         var uiColor = '#7788AA';  // same as studip's tab navigation background
 
         // convert plain text entries to html
         function isHtml(text) {
             text = text.trim();
-            return text[0] == '<' && text[text.length - 1] == '>';
+            return text[0] === '<' && text[text.length - 1] === '>';
         }
         function encodeHtmlEntities(text) {
             return $('<div>').text(text).html();
@@ -52,7 +55,7 @@ jQuery(function($){
             toolbarIndex = 0,
             toolbarId = toolbarPrefix + toolbarIndex;
 
-        while ($('#' + toolbarId).length != 0) {
+        while ($('#' + toolbarId).length !== 0) {
             toolbarIndex += 1;
             toolbarId = toolbarPrefix + toolbarIndex;
         }
@@ -68,14 +71,14 @@ jQuery(function($){
             customConfig: '',
             uiColor: uiColor,
             skin: 'studip',
-            removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash'
-                           + ',forms,iframe,maximize,newpage,preview,resize'
-                           + ',showblocks,stylescombo,templates,save,smiley',
+            removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash' +
+                           ',forms,iframe,maximize,newpage,preview,resize' +
+                           ',showblocks,stylescombo,templates,save,smiley',
             extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
-            top: toolbarId
+                top: toolbarId
             },
             toolbarGroups: [
                 {name: 'basicstyles', groups: ['mode', 'basicstyles', 'cleanup']},
@@ -118,8 +121,8 @@ jQuery(function($){
                     "`", "&acute;", "^", "&uml;", "", "&cedil;", "~", "&asymp;", "",
                     "&yuml;"
                 ],
-                (function() {
-                    greek = [];
+                (function () {
+                    var greek = [];
                     for (var i = 913; i <= 929; i++) { // 17 uppercase characters
                         greek.push("&#" + String(i));
                     }
@@ -211,7 +214,7 @@ jQuery(function($){
         }); // CKEDITOR.replace(textarea[0], {
 
         // handle drag'n'drop events
-        CKEDITOR.on('instanceReady', function(event){
+        CKEDITOR.on('instanceReady', function (event) {
             var editor = event.editor;
 
             // auto-resize editor area in source view mode, and keep focus!

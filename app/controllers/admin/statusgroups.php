@@ -338,14 +338,20 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
     }
 
-    /*     * ********************************
+    /* *********************************
      * ***** PRIVATE HELP FUNCTIONS ****
-     * ******************************** */
-
+     * *********************************/
+    
+    /*
+     * Loads groups from the database.
+     */
     private function loadGroups() {
         $this->groups = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($_SESSION['SessionSeminar']));
     }
-
+    
+    /*
+     * Updates groups recursivly.
+     */
     private function updateRecoursive($obj, $parent) {
         $i = 0;
         if ($obj) {
@@ -359,7 +365,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             }
         }
     }
-
+    
+    /*
+     * Renders an action (ajax) or redirects to the statusgroup index page (no ajax).
+     */
     private function afterFilter() {
         if (Request::isXhr()) {
             $this->render_action('_members');
@@ -367,14 +376,17 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->redirect('admin/statusgroups');
         }
     }
-
+    
+    /*
+     * Sets the urls for ajax calls.
+     */
     private function setAjaxPaths() {
         $this->path['ajax_move'] = $this->url_for('admin/statusgroups/move');
         $this->path['ajax_add'] = $this->url_for('admin/statusgroups/add');
         $this->path['ajax_search'] = $this->url_for('admin/statusgroups/search');
     }
 
-    /**
+    /*
      * Since we dont want an ugly tree display but we want numberation we
      * "unfold" the groups tree
      */
@@ -388,7 +400,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
     }
     
-    /**
+    /*
      * Sets the content of the infobox.
      */
     private function setInfoBox() {
@@ -401,7 +413,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /*
      * Checks if a group should be updated from a request
      */
-
     private function checkForChangeRequests() {
         if (Request::submitted('save')) {
             $this->check('edit');
@@ -426,7 +437,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
     }
 
-    /**
+    /*
      * Checks if the current user has the specific $rights
      */
     private function check($rights) {
@@ -435,7 +446,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
     }
 
-    /**
+    /*
      * This sets the type of statusgroup. By now it only supports
      * Inst statusgroup but could be extended
      */
@@ -452,7 +463,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         }
     }
 
-    /**
+    /*
      * This is the rest of the idea we could use statusgroups on other pages.
      * navigation and redirect to selection page must move here if the
      * statusgroupspage is reused

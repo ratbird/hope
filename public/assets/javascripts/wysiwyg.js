@@ -54,18 +54,23 @@ jQuery(function ($) {
             toolbarId = toolbarPrefix + toolbarIndex;
 
         while ($('#' + toolbarId).length !== 0) {
-            toolbarIndex += 1;
+            toolbarIndex++;
             toolbarId = toolbarPrefix + toolbarIndex;
         }
 
         // create new toolbar
-        var toolbar = $('<div>').attr('id', toolbarId);
-        var toolbar_placeholder = $('<div>');
+        var textarea_width = textarea.css('width') || textarea.width(),
+            toolbar = $('<div>')
+                .attr('id', toolbarId)
+                .css('max-width', textarea_width),
+            toolbar_placeholder = $('<div>');
+
         toolbar_placeholder.insertBefore(textarea);
         toolbar.insertBefore(textarea);
 
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
+            width: textarea_width,
             skin: 'studip',
             extraPlugins: 'studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),

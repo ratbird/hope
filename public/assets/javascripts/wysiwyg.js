@@ -74,6 +74,13 @@ jQuery(function ($) {
             skin: 'studip',
             extraPlugins: 'studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
+            codemirror: {
+                showSearchButton: false,
+                showFormatButton: false,
+                showCommentButton: false,
+                showUncommentButton: false,
+                showAutoCompleteButton: false
+            },
             autoGrow_onStartup: true,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
                 top: toolbarId
@@ -215,11 +222,9 @@ jQuery(function ($) {
             var editor = event.editor;
 
             // auto-resize editor area in source view mode, and keep focus!
-            editor.on('mode', function(event) {
-                if (event.editor.mode === 'source') {
-                    source = $(event.editor.container.$).find('.cke_source');
-                    source.addClass('animated-height-change');
-                    source.autosize();
+            editor.on('mode', function() {
+                if (editor.mode === 'source') {
+                    source = $(editor.container.$).find('.cke_source');
                     source.focus();
                 } else {
                     editor.focus();
@@ -306,7 +311,7 @@ jQuery(function ($) {
             editor.on('focus', stickyTools);  // hidden toolbar might scroll off screen
 
             var editorZ = Number(editorArea.css('z-index')) || 0;
-            toolbar.css('z-index', editorZ + 1);
+            toolbar.css('z-index', editorZ + 1000);
 
             // focus the editor so the user can immediately hack away...
             editor.focus();

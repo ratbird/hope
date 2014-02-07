@@ -22,7 +22,6 @@ javascripts:
     - javascripts/smiley-picker.js
 
   wysiwyg: &wysiwyg
-    - javascripts/jquery/jquery.autosize-min.js
     - javascripts/jquery/jquery.fileupload.js
     - javascripts/jquery/jquery.iframe-transport.js
     - javascripts/ckeditor/ckeditor.js

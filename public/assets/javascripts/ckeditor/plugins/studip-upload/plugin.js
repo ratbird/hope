@@ -84,8 +84,8 @@ CKEDITOR.plugins.add('studip-upload', {
                     });
 
                 // drop zone effects
-                $('<div class="dropzone">drop your files</div>')
-                    .appendTo($node);
+                //$('<div class="dropzone">drop your files</div>')
+                //    .appendTo($node);
 
                 $node
                     .css('position', 'relative')

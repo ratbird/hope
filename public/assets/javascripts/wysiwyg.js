@@ -59,7 +59,7 @@ jQuery(function ($) {
         }
 
         // create new toolbar
-        var textarea_width = textarea.css('width') || textarea.width(),
+        var textarea_width = (textarea.width() / textarea.parent().width() * 100) + '%',
             toolbar = $('<div>')
                 .attr('id', toolbarId)
                 .css('max-width', textarea_width),
@@ -294,20 +294,23 @@ jQuery(function ($) {
                         && toolbar.is(':visible')) {
                     toolbar.css({
                         position: 'fixed',
-                        top: MARGIN
+                        top: MARGIN,
+                        width: editor.window.getViewPaneSize().width
                     });
                     toolbar_placeholder
                         .css('height', toolbar.height());
                 } else {
                     toolbar.css({
                         position: 'relative',
-                        top: ''
+                        top: '',
+                        width: textarea_width
                     });
                     toolbar_placeholder
                         .css('height', 0);
                 }
             };
             $(window).scroll(stickyTools);
+            $(window).resize(stickyTools);
             editor.on('focus', stickyTools);  // hidden toolbar might scroll off screen
 
             var editorZ = Number(editorArea.css('z-index')) || 0;

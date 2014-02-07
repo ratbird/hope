@@ -22,8 +22,6 @@ jQuery(function ($) {
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
     function replaceTextarea(textarea) {
-        var uiColor = '#7788AA';  // same as studip's tab navigation background
-
         // convert plain text entries to html
         function isHtml(text) {
             text = text.trim();
@@ -68,16 +66,10 @@ jQuery(function ($) {
 
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
-            customConfig: '',
             skin: 'studip',
-            removePlugins: 'about,anchor,bidi,blockquote,div,elementspath,flash' +
-                           ',forms,iframe,maximize,newpage,preview,resize' +
-                           ',showblocks,stylescombo,templates,save,smiley',
-            extraPlugins: 'autogrow,divarea,sharedspace,studip-wiki,studip-upload',
+            extraPlugins: 'studip-wiki,studip-upload',
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             autoGrow_onStartup: true,
-            autoGrow_minHeight: 300,
-            autoGrow_maxHeight: 500,
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
                 top: toolbarId
             },
@@ -262,9 +254,8 @@ jQuery(function ($) {
                 updateTextArea();
             });
 
-            // TODO find a better solution than blurDelay = 0
-            // it's an ugly hack to be faster than Stud.IP forum's save
-            // function; might produce "strange" behaviour
+            // blurDelay = 0 is an ugly hack to be faster than Stud.IP
+            // forum's save function; might produce "strange" behaviour
             CKEDITOR.focusManager._.blurDelay = 0;
 
             // get reference to editor area for various tweaks
@@ -287,7 +278,7 @@ jQuery(function ($) {
 
             // do not scroll toolbar out of viewport
             function stickyTools() {
-                var MARGIN = 30;
+                var MARGIN = 25;
                 // is(':visible'): offset() is wrong for hidden nodes
                 if (($(window).scrollTop() + MARGIN > toolbar_placeholder.offset().top)
                         && toolbar.is(':visible')) {
@@ -319,9 +310,36 @@ jQuery(function ($) {
 
     STUDIP.addWysiwyg = replaceTextarea; // for jquery dialogs, see toolbar.js
 
-    $('textarea.add_toolbar').each(function(){
-        if (!CKEDITOR.instances[this]) {
-            replaceTextarea($(this));
-        }
-    });
+    // when attaching to hidden textareas, or textareas who's parents are
+    // hidden, the editor does not function properly; therefore attach to
+    // visible textareas only
+    function replaceVisibleTextareas() {
+        $('textarea.add_toolbar').each(function(){
+            var editor = CKEDITOR.dom.element.get(this).getEditor();
+            if ($(this).is(':visible')){
+                if (!editor) {
+                    if (!$(this).attr('id')) {
+                        var id = 0;
+                        while ($('#wysiwyg' + id).length !== 0) {
+                            id++;
+                        }
+                        $(this).attr('id', 'wysiwyg' + id);
+                    }
+                    replaceTextarea($(this));
+                }
+            } else if ($(this).parent().css('display') === 'none') {
+                if (editor && CKEDITOR.instances[$(this).attr('id')]) {
+                    editor.destroy(true);
+                }
+            }
+        });
+    }
+
+    // replace areas visible on page load
+    replaceVisibleTextareas();
+
+    // replace areas that are created or shown after page load
+    // remove editors that become hidden after page load
+    // show, hide and create do not raise an event, use interval timer
+    setInterval(replaceVisibleTextareas, 300);
 }); // jQuery(function($){

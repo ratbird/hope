@@ -295,7 +295,7 @@ jQuery(function ($) {
                     toolbar.css({
                         position: 'fixed',
                         top: MARGIN,
-                        width: editor.window.getViewPaneSize().width
+                        'max-width': editor.window.getViewPaneSize().width
                     });
                     toolbar_placeholder
                         .css('height', toolbar.height());
@@ -303,7 +303,7 @@ jQuery(function ($) {
                     toolbar.css({
                         position: 'relative',
                         top: '',
-                        width: textarea_width
+                        'max-width': textarea_width
                     });
                     toolbar_placeholder
                         .css('height', 0);

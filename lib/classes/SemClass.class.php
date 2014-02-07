@@ -211,10 +211,10 @@ class SemClass implements ArrayAccess
      * @param string $modulename
      * @return boolean
      */
-    public function isModuleEnabled($modulename)
+    public function isModuleActivated($modulename)
     {
         return !$this->data['modules'][$modulename]
-           ||  !$this->data['modules'][$modulename]['disabled'];
+            ||  $this->data['modules'][$modulename]['activated'];
     }
 
     /**

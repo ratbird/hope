@@ -224,6 +224,7 @@
                                     'plugin' => $modules[$sem_class->getSlotModule($container_id)],
                                     'sem_class' => $sem_class,
                                     'plugin_id' => $sem_class->getSlotModule($container_id),
+                                    'activated' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['activated'],
                                     'disabled' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['disabled'],
                                     'sticky' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['sticky']
                                 )
@@ -234,36 +235,18 @@
                 </div>
                 <? endforeach ?>
                 <br>
-                <div container="plugins" id="activated_plugins">
-                    <h2 title="<?= _("Diese Plugins sind standardmäßig bei den Veranstaltungen dieser Klasse aktiviert.") ?>"><?= _("Aktivierte Plugins") ?></h2>
+                <div container="plugins" id="plugins">
+                    <h2 title="<?= _("Diese Plugins sind standardmäßig bei den Veranstaltungen dieser Klasse aktiviert.") ?>"><?= _("Plugins") ?></h2>
                     <div class="droparea">
                         <? foreach ($modules as $module_name => $module_info) : ?>
                         <? $module_attribute = $sem_class->getModuleMetadata($module_name); ?>
-                        <? if ($module_attribute['activated']) : ?>
+                        <? if (is_numeric($module_info['id'])) : ?>
                             <?= $this->render_partial("admin/sem_classes/content_plugin.php",
                                 array(
                                     'plugin' => $module_info,
                                     'sem_class' => $sem_class,
                                     'plugin_id' => $module_name,
-                                    'disabled' => $sem_class['modules'][$module_name]['disabled'],
-                                    'sticky' => $sem_class['modules'][$module_name]['sticky']
-                                )
-                            )?>
-                        <? endif ?>
-                        <? endforeach ?>
-                    </div>
-                </div>
-                <div container="plugins" id="nonactivated_plugins">
-                    <h2 title="<?= _("Diese Plugins sind standardmäßig bei den Veranstaltungen dieser Klasse nicht aktiviert, können vom Dozenten aber aktiviert werden.") ?>"><?= _("Nicht aktivierte Plugins") ?></h2>
-                    <div class="droparea">
-                        <? foreach ($modules as $module_name => $module_info) : ?>
-                        <? $module_attribute = $sem_class->getModuleMetadata($module_name); ?>
-                        <? if (!$module_attribute['activated'] && is_numeric($module_info['id'])) : ?>
-                            <?= $this->render_partial("admin/sem_classes/content_plugin.php",
-                                array(
-                                    'plugin' => $module_info,
-                                    'sem_class' => $sem_class,
-                                    'plugin_id' => $module_name,
+                                    'activated' => $sem_class['modules'][$module_name]['activated'],
                                     'disabled' => $sem_class['modules'][$module_name]['disabled'],
                                     'sticky' => $sem_class['modules'][$module_name]['sticky']
                                 )
@@ -284,6 +267,7 @@
                                         'plugin' => $module_info,
                                         'sem_class' => $sem_class,
                                         'plugin_id' => $module_id,
+                                        'activated' => $sem_class['modules'][$module_id]['activated'],
                                         'disabled' => $sem_class['modules'][$module_id]['disabled'],
                                         'sticky' => $sem_class['modules'][$module_id]['sticky']
                                     )

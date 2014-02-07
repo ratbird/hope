@@ -51,18 +51,18 @@ foreach ($registered_modules as $key => $val) {
 
         ?>
     <tr <?= $pre_check != null ? 'class="quiet"' : '' ?>>
+        <? if ($sem_class) {
+            $studip_module = $sem_class->getModule($mod);
+        } ?>
         <td>
             <input type="checkbox" name="<?=$key?>_value" value="TRUE" <?= $pre_check ? 'disabled' : '' ?>
-            <?= $modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"]) ? "checked" : "" ?>>
+            <?= ($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"]) && (!$sem_class || $sem_class->isModuleActivated($mod))) ? "checked" : "" ?>>
         </td>
         <td>
             <b><?=$val["name"]?></b>
-            <? if ($sem_class) : ?>
-            <? $studip_module = $sem_class->getModule($mod);
-            if ($sem_class && is_a($studip_module, "StandardPlugin")) : ?>
+            <? if ($sem_class && is_a($studip_module, "StandardPlugin")) : ?>
                 <? $already_displayed_plugins[] = $mod ?>
                 (<?= htmlReady($studip_module->getPluginName()) ?>)
-            <? endif ?>
             <? endif ?>
         </td>
         <td>

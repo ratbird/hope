@@ -136,7 +136,7 @@ class Modules {
             if ($range_type == 'sem') {
                 $temp = $SEM_CLASS[$SEM_TYPE[$type]['class']][$key];
                 if ($temp && $val['sem']) {
-                    $temp = $sc->isModuleEnabled($sc->getSlotModule($key));
+                    $temp = $sc->isModuleActivated($sc->getSlotModule($key));
                 }
             } else {
                 $temp = $INST_MODULES[$INST_MODULES[$type] ? $type : 'default'][$key];

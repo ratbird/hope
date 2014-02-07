@@ -31,13 +31,13 @@ STUDIP.admin_sem_class = {
             'revert': 200,
             'update': after_update
         });
-        jQuery("#activated_plugins .droparea, #nonactivated_plugins .droparea").sortable({
+        jQuery("#plugins .droparea").sortable({
             'connectWith': ".droparea:not(.full, #deactivated_modules .droparea)",
             'revert': 200,
             'update': after_update
         });
         jQuery("#deactivated_modules .droparea").sortable({
-            'connectWith': ".droparea:not(.full, #activated_plugins .droparea, #nonactivated_plugins .droparea)",
+            'connectWith': ".droparea:not(.full, #plugins .droparea)",
             'revert': 200,
             'update': after_update
         });
@@ -53,9 +53,9 @@ STUDIP.admin_sem_class = {
         });
         var modules = {};
         jQuery("div.plugin").each(function () {
-            var activated = jQuery(this).is("#activated_plugins div.plugin, .core_module_slot div.plugin");
+            var activated = jQuery(this).find("input[name=active]").is(":checked");
             var sticky = (jQuery(this).find("select").val() === "sticky" || jQuery(this).is("#deactivated_modules div.plugin"));
-            var disabled = jQuery(this).find("input[name=disabled]").val() === "1";
+            //var disabled = !jQuery(this).find("input[name=active]").is(":checked");
             if (sticky || activated) {
                 var module_name = jQuery(this).attr("id");
                 if (module_name) {
@@ -63,8 +63,8 @@ STUDIP.admin_sem_class = {
                 }
                 modules[module_name] = {
                     'activated': +activated,
-                    'sticky':    +sticky,
-                    'disabled':  +disabled
+                    'sticky':    +sticky
+                    //'disabled':  +disabled
                 };
             }
         });

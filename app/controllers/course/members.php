@@ -388,7 +388,7 @@ class Course_MembersController extends AuthenticatedController
         }
         CSRFProtection::verifyUnsafeRequest();
         $course = CourseMember::find(array($this->course_id, $user_id));
-        $course->comment = htmlReady(Request::get('comment'));
+        $course->comment = Request::get('comment');
 
         if ($course->store() !== false) {
             PageLayout::postMessage(MessageBox::success(_('Bemerkung wurde erfolgreich gespeichert.')));

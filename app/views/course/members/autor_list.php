@@ -93,7 +93,7 @@
                    <? endif ?>
                     </a>
                     <? if ($is_tutor && $autor['comment'] != '') : ?>
-                        <?= tooltipIcon(sprintf('<strong>%s</strong><br>%s', _('Bemerkung'), $autor['comment']), false, true) ?>
+                        <?= tooltipIcon(sprintf('<strong>%s</strong><br>%s', _('Bemerkung'), htmlReady($autor['comment'])), false, true) ?>
                     <? endif ?>
                 </td>
                 <? if ($is_tutor) : ?>

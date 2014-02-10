@@ -84,7 +84,8 @@ class CourseNavigation extends Navigation
         }
 
         // general information
-        if ($modules['overview'] || $sem_class->isSlotMandatory("overview")) {
+        if (($modules['overview'] || $sem_class->isSlotMandatory("overview")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("overview"))) {
             foreach ($sem_class->getNavigationForSlot("overview") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -93,7 +94,8 @@ class CourseNavigation extends Navigation
         }
 
         // admin area
-        if ($modules['admin'] || $sem_class->isSlotMandatory("admin")) {
+        if (($modules['admin'] || $sem_class->isSlotMandatory("admin")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("admin"))) {
             foreach ($sem_class->getNavigationForSlot("admin") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -102,7 +104,8 @@ class CourseNavigation extends Navigation
         }
 
         // forum
-        if ($modules['forum'] || $sem_class->isSlotMandatory("forum")) {
+        if (($modules['forum'] || $sem_class->isSlotMandatory("forum")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("forum"))) {
             foreach ($sem_class->getNavigationForSlot("forum") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -135,7 +138,8 @@ class CourseNavigation extends Navigation
         }
 
         // files
-        if ($modules['documents'] || $sem_class->isSlotMandatory("documents")) {
+        if (($modules['documents'] || $sem_class->isSlotMandatory("documents")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("documents"))) {
             foreach ($sem_class->getNavigationForSlot("documents") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -144,7 +148,8 @@ class CourseNavigation extends Navigation
         }
 
         // schedule
-        if ($modules['schedule'] || $sem_class->isSlotMandatory("schedule")) {
+        if (($modules['schedule'] || $sem_class->isSlotMandatory("schedule")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("schedule"))) {
             foreach ($sem_class->getNavigationForSlot("schedule") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -153,25 +158,28 @@ class CourseNavigation extends Navigation
         }
 
         // information page
-        if (get_config('SCM_ENABLE') && ($modules['scm'] || $sem_class->isSlotMandatory("scm"))) {
+        if (($modules['scm'] || $sem_class->isSlotMandatory("scm")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("scm"))) {
             foreach ($sem_class->getNavigationForSlot("scm") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
-            }
+                }
             }
         }
 
         // literature
-        if (get_config('LITERATURE_ENABLE') && ($modules['literature'] || $sem_class->isSlotMandatory("literature"))) {
+        if (($modules['literature'] || $sem_class->isSlotMandatory("literature")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("literature"))) {
             foreach ($sem_class->getNavigationForSlot("literature") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
-            }
+                }
             }
         }
 
         // wiki
-        if (get_config('WIKI_ENABLE') && ($modules['wiki'] || $sem_class->isSlotMandatory("wiki"))) {
+        if (($modules['wiki'] || $sem_class->isSlotMandatory("wiki")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("wiki"))) {
             foreach ($sem_class->getNavigationForSlot("wiki") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -180,7 +188,8 @@ class CourseNavigation extends Navigation
         }
 
         // resources
-        if (get_config('RESOURCES_ENABLE') && ($modules['resources'] || $sem_class->isSlotMandatory("resources"))) {
+        if (($modules['resources'] || $sem_class->isSlotMandatory("resources")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("resources"))) {
             foreach ($sem_class->getNavigationForSlot("resources") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -189,8 +198,8 @@ class CourseNavigation extends Navigation
         }
 
         // calendar
-        if (get_config('CALENDAR_GROUP_ENABLE') && get_config('COURSE_CALENDAR_ENABLE') 
-                && ($modules['calendar'] || $sem_class->isSlotMandatory("calendar") )) {
+        if (($modules['calendar'] || $sem_class->isSlotMandatory("calendar")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("calendar"))) {
             foreach ($sem_class->getNavigationForSlot("calendar") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);
@@ -199,8 +208,8 @@ class CourseNavigation extends Navigation
         }
 
         // content modules
-        if (get_config('ELEARNING_INTERFACE_ENABLE') && $user->id != 'nobody'
-                && ($modules['elearning_interface'] || $sem_class->isSlotMandatory("elearning_interface"))) {
+        if (($modules['elearning_interface'] || $sem_class->isSlotMandatory("elearning_interface")) 
+                && $sem_class->isModuleAllowed($sem_class->getSlotModule("elearning_interface"))) {
             foreach ($sem_class->getNavigationForSlot("elearning_interface") as $nav_name => $navigation) {
                 if ($nav_name && is_a($navigation, "Navigation")) {
                     $this->addSubNavigation($nav_name, $navigation);

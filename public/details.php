@@ -208,7 +208,7 @@ else
     $infobox[2]["kategorie"] = _("Aktionen:");
     if ($abo_msg && $sem_id != $_SESSION['SessionSeminar']) {
         $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/door-enter.png',
-                                    "text"  => "<a rel=\"lightbox\" href=\"".URLHelper::getLink("dispatch.php/course/enrolment/$sem_id")."\">".$abo_msg. "</a>"
+                                    "text"  => "<a rel=\"lightbox\" href=\"".URLHelper::getScriptLink("dispatch.php/course/enrolment/$sem_id")."\">".$abo_msg. "</a>"
                                 );
     }
     if ($delete_msg) {

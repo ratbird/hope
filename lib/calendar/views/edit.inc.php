@@ -796,7 +796,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
         if ($atime && strtolower(get_class($_calendar->event)) == 'calendarevent') {
             if ($count_events < $CALENDAR_MAX_EVENTS) {
-                echo Button::create(_('Termin speichern'), 'store');
+                echo Button::createAccept(_('Termin speichern'), 'store');
             }
         } else {
             echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";

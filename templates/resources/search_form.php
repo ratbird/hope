@@ -1,6 +1,6 @@
 <? if ($search_string): ?>
 
-    <input type="hidden" name="search_string_<?= $name ?>" value="<?= $search_string ?>">
+    <input type="hidden" name="search_string_<?= $name ?>" value="<?= htmlReady($search_string) ?>">
     <input type="image" name="send_<?= $name ?>"
            src="<?= Assets::image_path('icons/16/yellow/arr_2' . $img_dir) ?>"
            value="<?= _('übernehmen') ?>" 
@@ -12,10 +12,10 @@
     <? endif; ?>
 
     <? foreach ($results as $art => $items): ?>
-        <optgroup label="<?= $art ?>">
+        <optgroup label="<?= htmlReady($art) ?>">
         <? foreach ($items as $key => $val): ?>
-            <option value="<?= $key ?>" <?= tooltip($val['name']) ?>>
-                <?= my_substr($val['name'], 0, 30); ?>
+            <option value="<?= htmlReady($key) ?>" <?= tooltip($val['name']) ?>>
+                <?= htmlReady(my_substr($val['name'], 0, 30)) ?>
             </option>
         <? endforeach; ?>
         </optgroup>

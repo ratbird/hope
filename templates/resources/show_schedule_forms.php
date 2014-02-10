@@ -176,7 +176,7 @@ use Studip\Button,
                 <?
                 $user_name=$resAssign->getUsername(FALSE);
                 if ($user_name)
-                    echo "<b>$user_name&nbsp;</b>";
+                    echo "<b>". htmlReady($user_name) . "</b>";
                 else
                     echo "<b>-- "._("keinE Stud.IP NutzerIn eingetragen")." -- &nbsp;</b>";
                 if (!$lockedAssign) : ?>

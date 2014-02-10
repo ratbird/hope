@@ -18,11 +18,15 @@
                 </strong>
             </td>
             <td>
+            <? if ($scm->user): ?>
                 <?= sprintf(_('Zuletzt geändert von %s am %s'),
                             sprintf('<a href="%s">%s</a>',
                                     URLHelper::getLink('dispatch.php/profile?username=' . $scm->user->username),
                                     htmlReady($scm->user->getFullName('full'))),
                             strftime('%x, %X', $scm->chdate)) ?>
+            <? else: ?>
+                <?= sprintf(_('Zuletzt geändert am %s'), strftime('%x, %X', $scm->chdate)) ?>
+            <? endif; ?>
             </td>
         </tr>
     </thead>

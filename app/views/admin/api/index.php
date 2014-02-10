@@ -22,7 +22,7 @@
             </td>
             <td>
             <? if ($consumer->url): ?>
-                <a href="<?= $consumer->url ?>" target="_blank">
+                <a href="<?= htmlReady($consumer->url) ?>" target="_blank">
                     <?= htmlReady($consumer->title) ?>
                 </a>
             <? else: ?>

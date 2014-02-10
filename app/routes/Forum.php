@@ -331,7 +331,7 @@ class Forum extends \RESTAPI\RouteMap
         $entry['subject']      = $raw['name'];
         $entry['user']         = sprintf('/user/%s', htmlReady($raw['user_id']));
         $entry['course']       = sprintf('/course/%s', htmlReady($raw['seminar_id']));
-        $entry['content_html'] = formatReady(\ForumEntry::parseEdit($raw['content']));
+        $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
 
         return $entry;

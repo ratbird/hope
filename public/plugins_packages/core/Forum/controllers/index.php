@@ -312,7 +312,11 @@ class IndexController extends ForumController
             $this->set_content_type('text/html; charset=UTF-8');
             $this->render_text(studip_utf8encode(formatReady(transformBeforeSave(studip_utf8decode(Request::get('posting'))))));
         } else {
-            $this->render_text(formatReady(ForumEntry::parseEdit(transformBeforeSave(Request::get('posting')))));
+            $this->render_text(
+                ForumEntry::getContentAsHtml(
+                    transformBeforeSave(Request::get('posting'))
+                )
+            );
         }
     }
 

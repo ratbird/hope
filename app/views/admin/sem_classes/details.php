@@ -19,7 +19,7 @@
             </td>
             <td width="80%" class="sem_class_name">
                 <div>
-                    <span class="name"><?= $sem_class['name'] ?></span>
+                    <span class="name"><?= htmlReady($sem_class['name']) ?></span>
                     <a href="#" class="sem_class_edit" onClick="jQuery(this).closest('td').children().toggle().find('input:visible').focus(); return false;"><?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?></a>
                 </div>
                 <div class="name_input" style="display: none;">

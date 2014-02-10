@@ -17,7 +17,7 @@
             <th><?= _("Anzahl Veranstaltungstypen") ?></th>
             <th><?= _("Anzahl Veranstaltungen") ?></th>
             <th><?= _("Zuletzt geändert") ?></th>
-            <th></td>
+            <th></th>
         </tr>
     </thead>
     <tbody>

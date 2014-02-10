@@ -290,7 +290,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 //. "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
                 //. "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">";
         $params['content'] .= ">\n&nbsp;" . sprintf(_("Nur Termine vom:%sbis zum:%s"), $text_exstart, $text_exend);
-        $params['button'] = Button::create(_('export'));
+        $params['button'] = Button::create(_('Termine exportieren'));
         $params['expmod'] = "exp";
         print_cell($params);
 
@@ -337,7 +337,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip2, true, true))
                     . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                     . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n"; 
-            $params['button'] = Button::create(_('Senden'), 'create', array('onclick' => 'onClick=\"return STUDIP.OldUpload.upload_start(document.sync_form);'));
+            $params['button'] = Button::create(_('Datei hochladen'), 'create', array('onclick' => 'onClick=\"return STUDIP.OldUpload.upload_start(document.sync_form);'));
             $params['expmod'] = 'sync';
             print_cell($params);
 
@@ -353,9 +353,11 @@ auf diese Nachricht nicht antworten.") . "\n\n";
 
                 echo '<p style="font-weight: bold;"><a href="' . $url . '" target="_blank">' . htmlReady($url) . '</a></p>';
                 echo '<p>';
-                printf(_("%sNeue Adresse generieren.%s (Achtung: Die alte Adresse wird damit ungültig!)"), '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())) . '">', '</a>');
+                echo LinkButton::create(_("Neue Adresse generieren."), URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
+                echo _("(Achtung: Die alte Adresse wird damit ungültig!)");
                 echo '</p><p>';
-                printf(_("%sAdresse löschen.%s (Ein Zugriff auf Ihre Termine über diese Adresse ist dann nicht mehr möglich!)"), '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'delid' => '1', 'ticket' => get_ticket())) . '">', '</a>');
+                echo LinkButton::create(_("Adresse löschen."), URLHelper::getLink('', array('cmd' => 'export', 'delid' => '1', 'ticket' => get_ticket())));
+                echo _("(Ein Zugriff auf Ihre Termine über diese Adresse ist dann nicht mehr möglich!)");
                 echo '</p>';
                 echo '<form action="' . URLHelper::getLink('') . '" method="post">';
                 echo CSRFProtection::tokenTag();
@@ -367,10 +369,9 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             } else {
                 echo '<p>';
                 echo _("Sie können sich eine Adresse generieren lassen, mit der Sie Termine aus Ihrem Stud.IP-Terminkalender in externen Terminkalendern einbinden können.");
-                echo '</p><p>';
-                echo '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())) . '">';
-                echo _("Adresse generieren!");
-                echo '</a></p>';
+                echo '</p><p align="center">';
+                echo LinkButton::create(_("Adresse generieren!"), URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
+                echo '</p>';
             }
             echo "</td></tr>\n";
         }

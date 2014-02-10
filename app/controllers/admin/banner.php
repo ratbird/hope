@@ -129,15 +129,17 @@ class Admin_BannerController extends AuthenticatedController
             if (!$target && $target_type != 'none') {
                 $errors[] = _('Es wurde kein Verweisziel angegeben.');
             }
-
-            if (($x= $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), Request::int('start_day'), Request::int('start_month'), Request::int('start_year'))) == -1) {
+            
+            $startDate = explode('.',Request::get('start_date'));
+            if (($x = $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), $startDate[0],$startDate[1], $startDate[2])) == -1) {
                 $errors[] = _('Bitte geben Sie einen gültiges Startdatum ein.');
             } else {
                 $startdate = $x;
             }
 
-            if (($x= $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), Request::int('end_day'), Request::int('end_month'), Request::int('end_year'))) == -1) {
-                $errors[] = _('Bitte geben Sie einen gültiges Enddatum ein.');
+            $endDate = explode('.',Request::get('end_date'));
+            if (($x = $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), $endDate[0], $endDate[1], $endDate[2])) == -1) {
+                           $errors[] = _('Bitte geben Sie einen gültiges Enddatum ein.');
             } else {
                 $enddate = $x;
             }
@@ -249,14 +251,14 @@ class Admin_BannerController extends AuthenticatedController
             } else {
                $banner_path = $this->bannerupload($upload['tmp_name'], $upload['size'], $upload['name'], $errors);
             }
-
-            if (($x = $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), Request::int('start_day'), Request::int('start_month'), Request::int('start_year'))) == -1) {
+            $startDate = explode('.',Request::get('start_date'));
+            if (($x = $this->valid_date(Request::int('start_hour'), Request::int('start_minute'), $startDate[0],$startDate[1], $startDate[2])) == -1) {
                 $errors[] = _('Bitte geben Sie einen gültiges Startdatum ein.');
             } else {
                 $startdate = $x;
             }
-
-            if (($x = $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), Request::int('end_day'), Request::int('end_month'), Request::int('end_year'))) == -1) {
+            $endDate = explode('.',Request::get('end_date'));
+            if (($x = $this->valid_date(Request::int('end_hour'), Request::int('end_minute'), $endDate[0], $endDate[1], $endDate[2])) == -1) {
                 $errors[] = _('Bitte geben Sie einen gültiges Enddatum ein.');
             } else {
                 $enddate = $x;
@@ -385,7 +387,7 @@ class Admin_BannerController extends AuthenticatedController
         $newfile     = $uploaddir . '/' . $banner_path;
         if(!@move_uploaded_file($img, $newfile)) {
             $errors[] = _('Es ist ein Fehler beim Kopieren der Datei aufgetreten. Das Bild wurde nicht hochgeladen!');
-            return false;
+            return true;
         }
         chmod($newfile, 0666 & ~umask()); // set permissions for uploaded file
 

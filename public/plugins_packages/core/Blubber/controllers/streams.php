@@ -22,7 +22,8 @@ class StreamsController extends ApplicationController {
      * Displays global-stream
      */
     public function global_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle(_("Globaler Blubberstream"));
@@ -72,7 +73,8 @@ class StreamsController extends ApplicationController {
         if (!$this->commentable) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
@@ -96,7 +98,8 @@ class StreamsController extends ApplicationController {
      * Displays the profile-stream with all threads by the given user.
      */
     public function profile_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
 
@@ -221,6 +224,9 @@ class StreamsController extends ApplicationController {
      * Writes a new thread and returns the metadata of the new posting as json.
      */
     public function new_posting_action() {
+        if (!Request::isPost()) {
+            throw new Exception("GET not supported");
+        }
         $context = Request::option("context");
         $context_type = Request::option("context_type");
         if ($context_type === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
@@ -333,6 +339,9 @@ class StreamsController extends ApplicationController {
      * @throws AccessDeniedException
      */
     public function edit_posting_action () {
+        if (!Request::isPost()) {
+            throw new Exception("GET not supported");
+        }
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
         if (($posting['user_id'] !== $GLOBALS['user']->id)
@@ -413,6 +422,9 @@ class StreamsController extends ApplicationController {
      * @throws AccessDeniedException
      */
     public function comment_action() {
+        if (!Request::isPost()) {
+            throw new Exception("GET not supported");
+        }
         $context = Request::option("context");
         $thread = new BlubberPosting(Request::option("thread"));
         if ($thread['context_type'] === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
@@ -598,10 +610,11 @@ class StreamsController extends ApplicationController {
      */
     public function thread_action($thread_id)
     {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-
+        
         $this->thread = new BlubberPosting($thread_id);
         if ($this->thread['context_type'] === "private") {
             if (!in_array($GLOBALS['user']->id, $this->thread->getRelatedUsers())) {
@@ -648,7 +661,6 @@ class StreamsController extends ApplicationController {
         }
         if (Request::get("external_contact")) {
             $user = BlubberExternalContact::find(Request::option("user_id"));
-            echo "hjgjhg";
         } else {
             $user = new BlubberUser(Request::option("user_id"));
         }
@@ -679,10 +691,11 @@ class StreamsController extends ApplicationController {
     }
 
     public function custom_action($stream_id) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-
+        
         $this->stream = new BlubberStream($stream_id);
         if ($this->stream['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException("Not your stream.");
@@ -699,10 +712,11 @@ class StreamsController extends ApplicationController {
      * @param string,null $stream_id
      */
     public function edit_action($stream_id = null) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-
+        
         $this->stream = new BlubberStream($stream_id);
         if ($GLOBALS['user']->id === "nobody") {
             throw new AccessDeniedException("Access denied!");
@@ -887,6 +901,13 @@ class StreamsController extends ApplicationController {
         $output = $template->render();
         echo studip_utf8encode($output);
         $this->render_nothing();
+    }
+    
+    public function get_possible_mentions_action() {
+        $output = array(
+            array('id' => 1, 'name' => "Rasmus", "avatar" => null)
+        );
+        $this->render_text(json_encode(studip_utf8encode($output)));
     }
 
 }

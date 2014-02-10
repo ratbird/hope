@@ -19,11 +19,17 @@
     </li>
 <?php } ?>
 </ul>
-<?php if (!$short) { ?>
+<?php if (!$short || $is_limited) { ?>
     <i><?= _("Veranstaltungszuordnung:") ?></i>
     <ul>
-        <?php foreach ($courses as $course) { ?>
-        <li><?= htmlReady($course) ?></li>
+        <?php foreach ($courses as $course_id => $course) { ?>
+        <li>
+        <? if ($is_limited) : ?>
+            <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $course_id))?>"><?= htmlReady($course) ?></a>
+        <? else : ?>
+            <?= htmlReady($course) ?>
+        <? endif ?>
+        </li>
         <?php } ?>
     </ul>
 <?php } ?>

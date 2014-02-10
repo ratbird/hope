@@ -426,9 +426,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         FROM priorities
         LEFT JOIN seminare USING(seminar_id)
         WHERE user_id = ?", array($user->id));
+    $csets = array();
     foreach ($claiming as $k => $claim) {
-        $cs = new CourseSet($claim['set_id']);
-        if ($cs->getSeatDistributionTime() > time()) {
+        if (!$csets[$claim['set_id']]) {
+            $csets[$claim['set_id']] = new CourseSet($claim['set_id']);
+        }
+        $cs = $csets[$claim['set_id']];
+        if (!$cs->hasAlgorithmRun()) {
             $claiming[$k]['admission_endtime'] = $cs->getSeatDistributionTime();
             $num_claiming = count(AdmissionPriority::getPrioritiesByCourse($claim['set_id'], $claim['seminar_id']));
             $free = Course::find($claim['seminar_id'])->getFreeSeats();

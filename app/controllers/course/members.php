@@ -175,7 +175,7 @@ class Course_MembersController extends AuthenticatedController
         if ($this->is_tutor && $sem->isAdmissionEnabled()) {
             $this->course = $sem;
             $distribution_time = $sem->getCourseSet()->getSeatDistributionTime();
-            if ($distribution_time < time()) {
+            if ($sem->getCourseSet()->hasAlgorithmRun()) {
                 $this->waitingTitle = _("Warteliste");
                 $this->semAdmissionEnabled = 2;
                 $this->waiting_type = 'awaiting';

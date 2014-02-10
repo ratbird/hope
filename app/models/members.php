@@ -362,7 +362,7 @@ class MembersModel
     {
         $cs = CourseSet::getSetForCourse($this->course_id);
         $claiming = array();
-        if (is_object($cs) && $cs->getSeatDistributionTime() > time()) {
+        if (is_object($cs) && !$cs->hasAlgorithmRun()) {
             foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $this->course_id) as $user_id => $p) {
                 $user = User::find($user_id);
                 $data = $user->toArray('user_id username vorname nachname email');

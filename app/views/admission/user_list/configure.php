@@ -102,13 +102,13 @@ $factor = 8;
     <ul>
 <?php foreach ($userlist->getUsers() as $userId => $assigned) { ?>
         <li id="user_<?= $userId ?>" class="userlist_user">
-            <?= get_fullname($userId, 'full_rev').' ('.get_username($userId).')' ?>
+            <?= htmlReady(get_fullname($userId, 'full_rev').' ('.get_username($userId).')') ?>
             <input type="hidden" name="users[]" value="<?= $userId ?>"/>
-            <a href="<?= $controller->url_for('admission/userlist/delete_user', 
+            <a href="<?= $controller->url_for('admission/userlist/delete_user',
                 $userId, $userlist->getId()) ?>"
                 onclick="return STUDIP.Admission.removeUserFromUserlist('<?= $userId ?>')">
-                <?= Assets::img('icons/16/blue/trash.png', 
-                    array('alt' => _('Diesen Eintrag löschen'), 
+                <?= Assets::img('icons/16/blue/trash.png',
+                    array('alt' => _('Diesen Eintrag löschen'),
                           'title' => _('Diesen Eintrag löschen'))); ?>
             </a>
         </li>

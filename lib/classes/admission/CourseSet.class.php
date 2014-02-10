@@ -263,8 +263,8 @@ class CourseSet
     }
 
     /**
-     * returns true if the set allows only a limited number of places 
-     * 
+     * returns true if the set allows only a limited number of places
+     *
      * @return boolean
      */
     public function isSeatDistributionEnabled()
@@ -275,7 +275,7 @@ class CourseSet
     /**
      * returns timestamp of distribution time or null if no distribution time available
      * may return 0 if first-come-first-serve is enabled
-     * 
+     *
      * @return integer|null timestamp of distribution
      */
     public function getSeatDistributionTime()
@@ -462,13 +462,13 @@ class CourseSet
     /**
      * returns latest semester id from assigned courses
      * if no courses are assigned current semester
-     * 
+     *
      * @return string id of semester
      */
     public function getSemester() {
         $db = DBManager::get();
         $timestamp = $db->fetchColumn("SELECT MAX(start_time + duration_time)
-                 FROM seminare WHERE duration_time <> -1 
+                 FROM seminare WHERE duration_time <> -1
                  AND seminar_id IN(?)", array($this->getCourses()));
         $semester = Semester::findByTimestamp($timestamp);
         if (!$semester) {
@@ -874,6 +874,10 @@ class CourseSet
                 $current = new Institute($id);
                 $institutes[$id] = $current['Name'];
             }
+
+            $tpl->set_attribute('institutes', $institutes);
+        }
+        if (!$short || $this->hasAdmissionRule('LimitedAdmission')) {
             $courses = array();
             foreach ($this->courses as $id => $assigned) {
                 $current = new Seminar($id);
@@ -881,7 +885,7 @@ class CourseSet
                 $name .= ' (' . $current->getStartSemesterName() . ')';
                 $courses[$id] = $name;
             }
-            $tpl->set_attribute('institutes', $institutes);
+            $tpl->set_attribute('is_limited', $this->hasAdmissionRule('LimitedAdmission'));
             $tpl->set_attribute('courses', $courses);
         }
         $tpl->set_attribute('short', $short);
@@ -894,7 +898,7 @@ class CourseSet
 
     /**
      * is user with given user id allowed to assign/unassign given course to courseset
-     * 
+     *
      * @param string $user_id
      * @param string $course_id
      * @return boolean
@@ -912,7 +916,7 @@ class CourseSet
 
     /**
      * is user with given user id allowed to edit or delete the courseset
-     * 
+     *
      * @param string $user_id
      * @return boolean
      */
@@ -930,10 +934,10 @@ class CourseSet
         }
         return $i_am_the_boss;
     }
-    
+
     /**
      * checks if given rule is allowed to be added to current set of rules
-     * 
+     *
      * @param AdmissionRule|string $admission_rule
      * @return boolean
      */

@@ -23,18 +23,18 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
      */
     function before_filter (&$action, &$args)
     {
-        
+
         parent::before_filter($action, $args);
         PageLayout::setTitle(_('Anmeldesets'));
         Navigation::activateItem('/tools/coursesets/restricted_courses');
     }
-    
+
     function index_action()
     {
         $this->setInfoboxImage(Assets::image_path('infobox/hoersaal.jpg'));
         $this->addToInfobox(_('Information'), _("Sie können hier alle Veranstaltungen mit eingeschränkter Teilnehmerzahl einsehen."), 'icons/16/black/info');
         $this->addToInfobox(_('Aktionen'), '<a href="'.$this->link_for('admission/restricted_courses', array('csv' => 1)).'">' . _("Export") . '</a>', 'icons/16/blue/file-xls');
-        
+
         $sem_condition = "AND EXISTS (SELECT * FROM seminar_courseset INNER JOIN courseset_rule USING(set_id) WHERE type='ParticipantRestrictedAdmission' AND seminar_courseset.seminar_id=seminare.seminar_id) ";
         if (Request::isPost()) {
             if (Request::submitted('choose_institut')) {
@@ -99,26 +99,26 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     function get_courses($seminare_condition)
     {
         global $perm, $user;
-        
+
         list($institut_id, $all) = explode('_', $this->current_institut_id);
         // Prepare count statements
         $query = "SELECT count(*)
                   FROM seminar_user
                   WHERE seminar_id = ? AND status IN ('user', 'autor')";
         $count0_statement = DBManager::get()->prepare($query);
-        
+
         $query = "SELECT SUM(status = 'accepted') AS count2,
                      SUM(status = 'awaiting') AS count3
                   FROM admission_seminar_user
                   WHERE seminar_id = ?
                   GROUP BY seminar_id";
         $count1_statement = DBManager::get()->prepare($query);
-        
+
         $parameters = array();
-        
+
         $sql = "SELECT seminare.seminar_id,seminare.Name as course_name,seminare.VeranstaltungsNummer as course_number,
                 admission_prelim, admission_turnout,seminar_courseset.set_id
-                FROM seminar_courseset 
+                FROM seminar_courseset
                 INNER JOIN courseset_rule csr ON csr.set_id=seminar_courseset.set_id AND csr.type='ParticipantRestrictedAdmission'
                 INNER JOIN seminare ON seminar_courseset.seminar_id=seminare.seminar_id
                 ";
@@ -135,10 +135,11 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $parameters[] = $institut_id;
         }
         $sql .= "GROUP BY seminare.Seminar_id ORDER BY seminar_courseset.set_id, seminare.Name";
-        
+
         $statement = DBManager::get()->prepare($sql);
         $statement->execute($parameters);
-        
+        $csets = array();
+
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $seminar_id = $row['seminar_id'];
             $ret[$seminar_id] = $row;
@@ -153,7 +154,10 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
 
             $ret[$seminar_id]['count_prelim'] = (int)$counts['count2'];
             $ret[$seminar_id]['count_waiting']  = (int)$counts['count3'];
-            $cs = new CourseSet($row['set_id']);
+            if (!$csets[$row['set_id']]) {
+                $csets[$row['set_id']] = new CourseSet($row['set_id']);
+            }
+            $cs = $csets[$row['set_id']];
             $ret[$seminar_id]['cs_name'] = $cs->getName();
             $ret[$seminar_id]['distribution_time'] = $cs->getSeatDistributionTime();
             if ($ta = $cs->getAdmissionRule('TimedAdmission')) {
@@ -161,13 +165,13 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 $ret[$seminar_id]['end_time'] = $ta->getEndTime();
             }
             if (!$cs->hasAlgorithmRun()) {
-                $ret[$seminar_id]['count_claiming'] = $cs->getNumApplicants();
+                $ret[$seminar_id]['count_claiming'] = count(AdmissionPriority::getPrioritiesByCourse($row['set_id'], $seminar_id));
             }
         }
         return $ret;
     }
 
-    function get_institutes($seminare_condition) 
+    function get_institutes($seminare_condition)
     {
         global $perm, $user;
 

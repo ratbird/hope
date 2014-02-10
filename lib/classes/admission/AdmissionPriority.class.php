@@ -107,20 +107,48 @@ class AdmissionPriority
         return $stmt->rowCount();
     }
 
+    /**
+     * unset priority for given user,set and course
+     * reorder remaining priorities
+     *
+     * @param  String courseSetId
+     * @param  String userId
+     * @param  String courseId
+     * @return int Number of affected rows, if any.
+     */
     public static function unsetPriority($courseSetId, $userId, $courseId)
     {
-        return DBManager::get()
-                ->execute("DELETE FROM priorities WHERE user_id=? AND seminar_id=? AND set_id=? LIMIT 1",
+        $db = DBManager::get();
+        $deleted = $db->execute("DELETE FROM priorities WHERE user_id=? AND seminar_id=? AND set_id=? LIMIT 1",
                  array($userId, $courseId, $courseSetId));
-
+        if ($deleted) {
+            $priovar = md5($courseSetId . $userId);
+            $db->exec("SET @$priovar:=0");
+            $db->execute("UPDATE priorities SET priority = @$priovar:=@$priovar+1 WHERE user_id=? AND set_id=? ORDER BY priority", array($userId, $courseSetId));
+        }
+        return $deleted;
     }
 
+    /**
+     * delete all priorities for one set
+     *
+     * @param  String courseSetId
+     * @return int Number of affected rows, if any.
+     */
     public static function unsetAllPriorities($courseSetId)
     {
         return DBManager::get()
         ->execute("DELETE FROM priorities WHERE set_id=?",
                 array($courseSetId));
     }
+
+    /**
+     * delete all priorities for one set and one user
+     *
+     * @param  String courseSetId
+     * @param  String userId
+     * @return int Number of affected rows, if any.
+     */
     public static function unsetAllPrioritiesForUser($courseSetId, $userId)
     {
         return DBManager::get()
@@ -128,6 +156,12 @@ class AdmissionPriority
                 array($userId, $courseSetId));
     }
 
+    /**
+     * returns statistics of priority selection for a set
+     *
+     * @param  String courseSetId
+     * @return array stats grouped by course id
+     */
     public static function getPrioritiesStats($courseSetId)
     {
         return DBManager::get()
@@ -135,6 +169,12 @@ class AdmissionPriority
                  array($courseSetId));
     }
 
+    /**
+     * returns number of users with priorities for a set
+     *
+     * @param  String courseSetId
+     * @return integer
+     */
     public static function getPrioritiesCount($courseSetId)
     {
         return DBManager::get()
@@ -142,6 +182,12 @@ class AdmissionPriority
                  array($courseSetId));
     }
 
+    /**
+     * return max chosen priority in set
+     *
+     * @param  String courseSetId
+     * @return integer
+     */
     public static function getPrioritiesMax($courseSetId)
     {
         return DBManager::get()

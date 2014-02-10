@@ -178,7 +178,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
     </fieldset>
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
-    <? if ($courseset && $courseset->getAdmissionRule('ParticipantRestrictedAdmission')) :?>
+    <? if ($courseset && $courseset->getSeatDistributionTime()) :?>
         <label class="caption">
             <?= _('Nutzerlisten zuordnen:') ?>
             </label>
@@ -192,7 +192,7 @@ $userlistIds = $courseset ? $courseset->getUserlists() : array();
                 ?>
                 <input type="checkbox" name="userlists[]" value="<?= $list->getId() ?>"<?= $checked ?>/> <?= $list->getName() ?><br/>
                 <?php } ?>
-    
+
             <?php } else { ?>
                 <i><?=  _('Sie haben noch keine Nutzerlisten angelegt.') ?></i>
             <?php

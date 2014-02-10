@@ -536,7 +536,6 @@ class Course_StudygroupController extends AuthenticatedController {
                     $sem->description    = Request::get('groupdescription');  // seminar-class quotes itself
                     $sem->read_level     = 1;
                     $sem->write_level    = 1;
-                    $sem->admission_type = 0;
                     $sem->visible = 1;
                     
                     if (Request::get('groupaccess') == 'all') {

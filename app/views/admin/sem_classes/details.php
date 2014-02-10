@@ -38,7 +38,7 @@
                         <?= Assets::img('icons/16/blue/edit', array('class' => 'text-bottom')) ?></a>
                 </div>
                 <div class="description_input" style="display: none;">
-                    <input id="sem_class_description" type="text" value="<?= htmlReady($sem_class['description']) ?>" onBlur="jQuery(this).closest('td').children().toggle().find('.description').text(this.value);" style="width: 80%;">
+                    <input id="sem_class_description" type="text" value="<?= htmlReady($sem_class['description']) ?>" onBlur="jQuery(this).closest('td.sem_class_name').children().toggle().find('.description').text(this.value);" style="width: 80%;">
                 </div>
             </td>
         </tr>
@@ -189,10 +189,6 @@
         <tr class="sub">
             <td><label for="create_description"><?= _("Kurzer Beschreibungstext zum Anlagen einer Veranstaltung") ?></label></td>
             <td><textarea id="create_description" maxlength="200" style="width: 100%"><?= htmlReady($sem_class['create_description']) ?></textarea></td>
-        </tr>
-        <tr class="sub">
-            <td><label for="description"><?= _("Allgemeiner Beschreibungstext") ?></label></td>
-            <td><textarea id="description" style="width: 100%"><?= htmlReady($sem_class['description']) ?></textarea></td>
         </tr>
         <tr>
             <td>

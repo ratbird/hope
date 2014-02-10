@@ -96,7 +96,6 @@ STUDIP.admin_sem_class = {
                 'visible': jQuery("#visible").is(":checked") ? 1 : 0,
                 'course_creation_forbidden': jQuery("#course_creation_forbidden").is(":checked") ? 1 : 0,
                 'create_description': jQuery("#create_description").val(),
-                'description': jQuery("#description").val(),
                 'admission_prelim_default': jQuery("#admission_prelim_default").val(),
                 'admission_type_default': jQuery("#admission_type_default").val()
             },

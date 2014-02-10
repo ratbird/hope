@@ -16,6 +16,9 @@ use Studip\Button, Studip\LinkButton;
          .'ist die Ladezeit der Startseite für Sie!') ?>
 </p>
 
+<? if (empty($feeds)): ?>
+<?= MessageBox::info(_('Es existieren zur Zeit keine eigenen RSS-Feeds.')) ?>
+<? else: ?>
 <form action="<?= $controller->url_for('admin/rss_feeds/update') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default nohover">
@@ -26,13 +29,6 @@ use Studip\Button, Studip\LinkButton;
             <col width="70px">
         </colgroup>
         <tbody>
-        <? if (empty($feeds)): ?>
-            <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
-                <td colspan="4" style="font-weight: bold;">
-                    <?= _('Es existieren zur Zeit keine eigenen RSS-Feeds.') ?>
-                </td>
-            </tr>
-        <? endif; ?>
         <? foreach ($feeds as $index => $feed): ?>
             <tr class="<?= $cycle = TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
                 <td>
@@ -100,3 +96,4 @@ use Studip\Button, Studip\LinkButton;
     <? endif; ?>
     </table>
 </form>
+<? endif; ?>

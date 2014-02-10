@@ -523,7 +523,7 @@ class NewsController extends StudipController
                 PageLayout::postMessage(MessageBox::error(_('Das Startdatum muss vor dem Enddatum liegen.')));
 
             if (strlen(trim(Request::get('news_searchterm'))) >= 3)
-                $this->news_searchterm = Request::get('news_searchterm');
+                $this->news_searchterm = htmlReady(Request::get('news_searchterm'));
             $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'), 'start');
             $this->news_enddate = $this->getTimeStamp(Request::get('news_enddate'), 'end');
         }

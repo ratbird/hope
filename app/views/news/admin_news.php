@@ -2,11 +2,11 @@
 <? if(!empty($flash['question_text'])) : ?>
     <?= createQuestion2($flash['question_text'],
         array_merge($flash['question_param'], 
-        array('news_filter_term' => $news_searchterm,
+        array('news_filter_term' => htmlReady($news_searchterm),
               'news_filter_start' => $news_startdate,
               'news_filter_end' => $news_enddate,
               'news_filter' => 'set')),
-        array('news_filter_term' => $news_searchterm,
+        array('news_filter_term' => htmlReady($news_searchterm),
               'news_filter_start' => $news_startdate,
               'news_filter_end' => $news_enddate,
               'news_filter' => 'set'),
@@ -19,7 +19,7 @@
         <td width="100%" class="blank"><p class="info">
         <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" id="admin_news_form" method="POST">
         <input type="hidden" name="news_filter" value="set">
-        <input type="hidden" name="news_filter_term" value="<?=$news_searchterm?>">
+        <input type="hidden" name="news_filter_term" value="<?=htmlReady($news_searchterm)?>">
         <input type="hidden" name="news_filter_start" value="<?=$news_startdate?>">
         <input type="hidden" name="news_filter_end" value="<?=$news_enddate?>">
         <?=CSRFProtection::tokenTag(); ?>
@@ -27,7 +27,7 @@
         <thead>
         <tr><th colspan="2">
         <label><?= _("Suchbegriff:") ?>
-        <input type="text" name="news_searchterm" aria-label="<?= _('Suchbegriff') ?>" value="<?= $news_searchterm?>"></label>
+        <input type="text" name="news_searchterm" aria-label="<?= _('Suchbegriff') ?>" value="<?= htmlReady($news_searchterm)?>"></label>
         &nbsp;&nbsp;
         <label><?= _("Anzeige von:") ?>
         <input class="news_date" type="text" size="12" name="news_startdate" aria-label="<?= _('Ankündigungen anzeigen, die ab diesem Datum sichtbar sind') ?>" value="<?= ($news_startdate) ? date('d.m.Y', $news_startdate) : '' ?>"></label>

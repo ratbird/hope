@@ -178,7 +178,7 @@ class Course_AdmissionController extends AuthenticatedController
             $this->redirect($this->url_for('/index'));
         } else {
             $this->button_yes = 'change_admission_prelim_yes';
-            $this->button_yes = 'change_admission_prelim_no';
+            $this->button_no = 'change_admission_prelim_no';
             $this->request = $request;
             PageLayout::postMessage(MessageBox::info($question));
             $this->render_template('course/admission/_change_admission.php');

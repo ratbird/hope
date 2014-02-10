@@ -295,9 +295,9 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
             //calendar jump
             $zusatz .= ' <a href="' . URLHelper::getLink('calendar.php', array('cmd' =>'showweek', 'atime' => $date['date'], 'caluser' => 'self'));
-            $zusatz .= '"><img style="vertical-align:bottom" src="' . Assets::image_path('popupcalendar.png') . '" ';
-            $zusatz .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m.Y", $date['date'])));
-            $zusatz .= '></a>';
+            $zusatz .= '">';
+            $zusatz .= Assets::img('icons/16/blue/schedule.png', tooltip2(sprintf(_('Zum %s in den persönlichen Terminkalender springen'), date('d.m.Y', $date['date']))));;
+            $zusatz .= '</a>';
 
 
             if ($open != $date['termin_id']) {

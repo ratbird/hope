@@ -1,7 +1,7 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 <h1>
 <?= $consumer->id
-    ? sprintf(_('Registrierten Konsumenten "%s" bearbeiten'), $consumer->title)
+    ? sprintf(_('Registrierten Konsumenten "%s" bearbeiten'), htmlReady($consumer->title))
     : _('Neuen Konsumenten registrieren') ?></h1>
 
     

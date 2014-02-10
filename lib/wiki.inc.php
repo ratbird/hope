@@ -1304,18 +1304,24 @@ function getShowPageInfobox($keyword, $latest_version)
 
     // toc
     $toccont=get_toc_content();
+    $toccont_empty = !trim(strip_tags($toccont));
     if ($GLOBALS['perm']->have_studip_perm('autor', $GLOBALS['SessSemName'][1])){
         $toceditlink.="<span class='wikitoc_editlink'>(";
-        if ($toccont) {
-            $toceditlink.="<a href=\"".URLHelper::getLink("?keyword=toc&view=edit")."\">"._("bearbeiten")."</a>";
-        } else {
+        if ($toccont_empty) {
             $toceditlink.="<a href=\"".URLHelper::getLink("?keyword=toc&view=edit")."\">"._("erstellen")."</a>";
+        } else {
+            $toceditlink.="<a href=\"".URLHelper::getLink("?keyword=toc&view=edit")."\">"._("bearbeiten")."</a>";
         }
         $toceditlink.=")</span>";
     }
-    $infobox[] = array("kategorie"=> _("QuickLinks")."&nbsp;".$toceditlink, # disabled toggling: get_toc_toggler(),
-        "eintrag" => array(array('icon' => "icons/16/black/link-intern.png",
-        "text"=>$toccont)));
+    $infobox_item =  array("kategorie"=> _("QuickLinks")."&nbsp;".$toceditlink); # disabled toggling: get_toc_toggler(),
+    if (!$toccont_empty) {
+        $infobox_item['eintrag'] = array(
+            array('icon' => 'icons/16/black/link-intern.png',
+                  'text' => $toccont)
+        );
+    }
+    $infobox[] = $infobox_item;
 
     if (!$latest_version) {
         $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie betrachten eine alte Version, die nicht mehr geändert werden kann. Verwenden Sie dazu die %saktuelle Version%s."), '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">','</a>'))));

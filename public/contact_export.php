@@ -70,17 +70,7 @@ else
 /*                                                                            *
 /* ************************************************************************* */
 if ($mode == "select_group"){
-    // creats the content for the infobox
-    $infobox = array (
-        array ("kategorie"  => "Information:",
-            "eintrag" => array  (
-                array ( "icon" => "icons/16/black/info.png",
-                    "text"  => _("Bitte wählen Sie eine bestimme Gruppe Ihres Adressbuches oder Ihr vollständiges Adressbuch und drücken anschließend auf 'Export'.")
-                ),
-            )
-        ),
-    );
-
+    $infobox = getInfoboxEntry();
     $groups = getContactGroups();
 } elseif ($mode == "export_vcard"){
     $contacts = getContactGroupData($groupid);
@@ -102,7 +92,6 @@ if ($mode == "select_group"){
 /*                                                                            *
 /* ************************************************************************* */
 if ($mode == "select_group"){
-
     printSiteTitle();
     printSelectGroup($infobox,$groups);
 
@@ -111,7 +100,14 @@ if ($mode == "select_group"){
     || ($mode == "ext_export_username")
     || ($mode == "ext_export_group") ){
 
-    exportVCard($contacts);
+    if(empty($contacts[0])) {
+        $groups = getContactGroups();
+        $infobox = getInfoboxEntry();
+        printSiteTitle(true);
+        printSelectGroup($infobox,$groups);
+    } else {
+        exportVCard($contacts);
+    }
 
 }
 page_close ();
@@ -134,8 +130,19 @@ page_close ();
  * @access  private
  *
  */
-function printSiteTitle(){
+function printSiteTitle($empty_contacts=false){
     $html = "";
+
+    if($empty_contacts) {
+        PageLayout::setTitle(_("Adressbuch exportieren"));
+        Navigation::activateItem('/community/contacts/export');
+        // add skip link
+        SkipLinks::addIndex(Navigation::getItem('/community/contacts/export')->getTitle(), 'main_content', 100);
+
+        require_once('lib/include/html_head.inc.php');
+        require_once('lib/include/header.php');
+        $html .= MessageBox::error(_('In dem gewählten Adressbuch sind keine Einträge vorhanden.'));
+    }
     echo $html;
 }
 
@@ -182,10 +189,23 @@ function printSelectGroup($infobox, $groups)
     page_close();
 }
 
+// creats the content for the infobox
+function getInfoBoxEntry() {
+    return array (
+        array ("kategorie"  => "Information:",
+               "eintrag" => array  (
+                   array ( "icon" => "icons/16/black/info.png",
+                           "text"  => _("Bitte wählen Sie eine bestimme Gruppe Ihres Adressbuches oder Ihr vollständiges Adressbuch und drücken anschließend auf 'Export'.")
+                   ),
+               )
+        ),
+    );
+}
 
 /* ************************************************************************** *
 /* db-requests                                                                *
 /* ************************************************************************* */
+
 
 /**
  * collects the contactgroups from user

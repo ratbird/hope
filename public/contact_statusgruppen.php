@@ -344,31 +344,37 @@ function PrintAktualContacts($range_id)
     $size = (count($contacts) > 10) ? 25 : 10;
 
     echo "<label><font size=\"-1\">&nbsp; " . _("Personen im Adressbuch") . "</font><br>";
-    echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
 
-    foreach ($contacts as $contact) {
-        if (!get_visibility_by_id($contact['user_id'])) {
-            continue;
-        }
-        $have_perm = false;
-        if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-            $permission_statement->execute(array($contact['user_id'], $user->id));
-            $have_perm = $permission_statement->fetchColumn();
-            $permission_statement->closeCursor();
-        }
+    if(count($contacts) > 0) {
+        echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
 
-        if ($have_perm) {
-            $tmp_color = in_array($contact['user_id'], $selected) ? '#ff7777' : '#ff0000';
-        } else {
-            $tmp_color = in_array($contact['user_id'], $selected) ? '#777777' : '#000000';
-        }
+        foreach ($contacts as $contact) {
+            if (!get_visibility_by_id($contact['user_id'])) {
+                continue;
+            }
+            $have_perm = false;
+            if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
+                $permission_statement->execute(array($contact['user_id'], $user->id));
+                $have_perm = $permission_statement->fetchColumn();
+                $permission_statement->closeCursor();
+            }
 
-        echo "<option style=\"color:$tmp_color;\" value=\"" . $contact['username'];
-        echo '">';
-        echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
-        echo " - " . $contact['perms'] . "</option>\n";
+            if ($have_perm) {
+                $tmp_color = in_array($contact['user_id'], $selected) ? '#ff7777' : '#ff0000';
+            } else {
+                $tmp_color = in_array($contact['user_id'], $selected) ? '#777777' : '#000000';
+            }
+
+            echo "<option style=\"color:$tmp_color;\" value=\"" . $contact['username'];
+            echo '">';
+            echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
+            echo " - " . $contact['perms'] . "</option>\n";
+        }
+        echo "</select>";
+    } else {
+        echo MessageBox::info(_('Keine Einträge in diesem Bereich.'));
     }
-    echo "</select></label>";
+    echo "</label>";
 }
 
 // Ende Funktionen
@@ -376,7 +382,7 @@ function PrintAktualContacts($range_id)
 // alles ist userbezogen:
 // Abfrage der Formulare und Aktionen
 // neue Statusgruppe hinzufuegen
-$new_statusgruppe_name = Request::get('new_statusgruppe_name');
+$new_statusgruppe_name = htmLReady(Request::get('new_statusgruppe_name'));
 if (($cmd == "add_new_statusgruppe") && ($new_statusgruppe_name != "")) {
     if (Statusgruppe::countByName($new_statusgruppe_name, $range_id) > 0) {
         $msgs[] = 'info§' . sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits eine Gruppe mit demselben Namen!"), '<b>' . htmlReady($new_statusgruppe_name) . '</b>');

@@ -28,7 +28,7 @@ class LimitedAdmission extends AdmissionRule
     public $maxNumber = 1;
 
     public $allowed_combinations = array('ParticipantRestrictedAdmission', 'ConditionalAdmission','TimedAdmission','PasswordAdmission');
-    
+
     // --- OPERATIONS ---
 
     /**
@@ -177,7 +177,7 @@ class LimitedAdmission extends AdmissionRule
                     SELECT `Seminar_id` FROM `seminar_courseset` WHERE `set_id`=?)", array($userId, $this->courseSetId));
             // Check if the number is smaller than admission rule limit
             if (!($number <
-                    $this->getMaxNumber($userId))) {
+                    $this->getMaxNumber())) {
                 $errors[] = $this->getMessage($userId);
             }
         }
@@ -274,10 +274,10 @@ class LimitedAdmission extends AdmissionRule
         return $errors;
     }
 
-    public function getMessage($userId = null)
+    public function getMessage()
     {
         $message = parent::getMessage();
-        $max_number = $userId ? $this->getMaxNumberForUser($userId) : $this->getMaxNumber();
+        $max_number = $this->getMaxNumber();
         return sprintf($message, $max_number);
     }
 } /* end of class LimitedAdmission */

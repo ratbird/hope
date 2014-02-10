@@ -177,6 +177,11 @@ class Course_MembersController extends AuthenticatedController
             $distribution_time = $sem->getCourseSet()->getSeatDistributionTime();
             if ($sem->getCourseSet()->hasAlgorithmRun()) {
                 $this->waitingTitle = _("Warteliste");
+                if (!$sem->admission_disable_waitlist_move) {
+                    $this->waitingTitle .= ' (' . _("automatisches Nachrücken ist eingeschaltet") . ')';
+                } else {
+                    $this->waitingTitle .= ' (' . _("automatisches Nachrücken ist ausgeschaltet") . ')';
+                }
                 $this->semAdmissionEnabled = 2;
                 $this->waiting_type = 'awaiting';
             } else {

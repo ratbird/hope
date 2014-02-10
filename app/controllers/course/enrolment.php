@@ -100,7 +100,7 @@ class Course_EnrolmentController extends AuthenticatedController {
                         }
                         if (StudipLock::get('enrolment' . $this->course_id)) {
                             $course = Course::find($this->course_id);
-                            if ($course->getFreeSeats()) {
+                            if ($course->getFreeSeats() && !$course->getNumWaiting()) {
                                 $enrol_user = true;
                             } else {
                                 if ($course->isWaitlistAvailable()) {

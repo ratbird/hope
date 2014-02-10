@@ -194,16 +194,16 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             while ($dbrow = $dbstatement->fetch(PDO::FETCH_ASSOC)) {
                                 $my_inst[]=$dbrow['Institut_id'];
                                 if ($_SESSION['links_admin_data']['srch_inst'] == $dbrow['Institut_id'])
-                                    echo"<option selected value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
+                                    echo"<option selected value=\"".$dbrow['Institut_id']."\">".htmlReady(substr($dbrow['Name'], 0, 30))."</option>";
                                 else
-                                    echo"<option value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
+                                    echo"<option value=\"".$dbrow['Institut_id']."\">".htmlReady(substr($dbrow['Name'], 0, 30))."</option>";
                                 if ($dbrow['is_fak']) {
                                     $db2query = "SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$dbrow['Institut_id'] . "' AND institut_id!='" .$dbrow['Institut_id'] . "' ORDER BY Name";
                                     foreach (DBManager::get()->query($db2query) as $dbrow2) {
                                         if ($_SESSION['links_admin_data']['srch_inst'] == $dbrow2['Institut_id'])
-                                            echo"<option selected value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".substr($dbrow2['Name'], 0, 30)."</option>";
+                                            echo"<option selected value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".htmlReady(substr($dbrow2['Name'], 0, 30))."</option>";
                                         else
-                                            echo"<option value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".substr($dbrow2['Name'], 0, 30)."</option>";
+                                            echo"<option value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".htmlReady(substr($dbrow2['Name'], 0, 30))."</option>";
                                         $my_inst[]=$dbrow2['Institut_id'];
                                     }
                                 }
@@ -248,9 +248,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
                                 while ($dbrow = $dbstatement->fetch(PDO::FETCH_ASSOC)){
                                     if ($_SESSION['links_admin_data']['srch_fak'] == $dbrow['Institut_id'])
-                                        echo"<option selected value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
+                                        echo"<option selected value=\"".$dbrow['Institut_id']."\">".htmlReady(substr($dbrow['Name'], 0, 30))."</option>";
                                     else
-                                        echo"<option value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
+                                        echo"<option value=\"".$dbrow['Institut_id']."\">".htmlReady(substr($dbrow['Name'], 0, 30))."</option>";
                                 }
                                 ?>
                             </select>

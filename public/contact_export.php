@@ -161,7 +161,7 @@ function printSelectGroup($infobox, $groups)
         . "       &nbsp;<select name=\"groupid\" id=\"groupid\" style=\"vertical-align:middle;\">\n";
     // the groups
     for ($i=0;$i<=sizeof($groups)-1;$i++){
-        $html .= "        <option value=\"".$groups[$i]["id"]."\">".$groups[$i]["name"]."</option>\n";
+        $html .= "        <option value=\"".htmlReady($groups[$i]["id"])."\">".htmlReady($groups[$i]["name"])."</option>\n";
     }
     $html .="       </select>\n"
         . Button::create(_('Export'), 'export_vcard', array('title' => _("Diese Gruppe nun exportieren")))

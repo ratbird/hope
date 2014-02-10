@@ -145,7 +145,7 @@ if ($search_exp) {
     } else {
         $search_results = SearchResults($search_exp);
         if (!$search_results) {
-            $message = sprintf(_('Keine Treffer zum Suchbegriff: %s'), $search_exp);
+            $message = htmlReady(sprintf(_('Keine Treffer zum Suchbegriff: %s'), $search_exp));
             PageLayout::postMessage(MessageBox::info($message));
         }
     }

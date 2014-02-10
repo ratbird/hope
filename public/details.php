@@ -153,7 +153,7 @@ else
                 } elseif ($enrolment_info['enrolment_allowed']) {
                     $abo_msg = _("Zugang zur Veranstaltung");
                 }
-                if (get_config('SCHEDULE_ENABLE') && !$status && Seminar::getInstance($sem_id)->getMetaDateCount()) {
+                if (get_config('SCHEDULE_ENABLE') && !$perm->have_studip_perm("user", $sem_id) && !$perm->have_perm('admin') && Seminar::getInstance($sem_id)->getMetaDateCount()) {
                     $query = "SELECT COUNT(*) FROM schedule_seminare WHERE seminar_id = ? AND user_id = ?";
                     $statement = DBManager::Get()->prepare($query);
                     $statement->execute(array($sem_id, $GLOBALS['user']->id));

@@ -56,7 +56,7 @@ foreach ($registered_modules as $key => $val) {
         } ?>
         <td>
             <input type="checkbox" name="<?=$key?>_value" value="TRUE" <?= $pre_check ? 'disabled' : '' ?>
-            <?= ($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"]) && (!$sem_class || $sem_class->isModuleActivated($mod))) ? "checked" : "" ?>>
+            <?= $modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"]) ? "checked" : "" ?>>
         </td>
         <td>
             <b><?=$val["name"]?></b>

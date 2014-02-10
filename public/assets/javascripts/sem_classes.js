@@ -54,20 +54,17 @@ STUDIP.admin_sem_class = {
         var modules = {};
         jQuery("div.plugin").each(function () {
             var activated = jQuery(this).find("input[name=active]").is(":checked");
-            var sticky = (jQuery(this).find("select").val() === "sticky" || jQuery(this).is("#deactivated_modules div.plugin"));
-            //var disabled = !jQuery(this).find("input[name=active]").is(":checked");
-            if (sticky || activated) {
-                var module_name = jQuery(this).attr("id");
-                if (module_name) {
-                    module_name = module_name.substr(module_name.indexOf("_") + 1);
-                }
-                modules[module_name] = {
-                    'activated': +activated,
-                    'sticky':    +sticky
-                    //'disabled':  +disabled
-                };
+            var sticky = (!jQuery(this).find("input[name=nonsticky]").is(":checked") || jQuery(this).is("#deactivated_modules div.plugin"));
+            var module_name = jQuery(this).attr("id");
+            if (module_name) {
+                module_name = module_name.substr(module_name.indexOf("_") + 1);
             }
+            modules[module_name] = {
+                'activated': +activated,
+                'sticky':    +sticky
+            };
         });
+        console.log(modules);
         jQuery("#message_below").html("");
         jQuery.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/save",

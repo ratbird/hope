@@ -124,7 +124,8 @@ class CourseNavigation extends Navigation
 
                 $this->addSubNavigation('faculty', $navigation);
             }
-            if ($modules['participants'] || $sem_class->isSlotMandatory("participants")) {
+            if (($modules['participants'] || $sem_class->isSlotMandatory("participants")) 
+                    && $sem_class->isModuleAllowed($sem_class->getSlotModule("participants"))) {
                 foreach ($sem_class->getNavigationForSlot("participants") as $nav_name => $navigation) {
                     if ($nav_name && is_a($navigation, "Navigation")) {
                         $this->addSubNavigation($nav_name, $navigation);

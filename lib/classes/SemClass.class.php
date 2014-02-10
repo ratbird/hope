@@ -207,7 +207,7 @@ class SemClass implements ArrayAccess
     }
 
     /**
-     * Returns true if a module is enabled on default for this sem_class.
+     * Returns true if a module is activated on default for this sem_class.
      * @param string $modulename
      * @return boolean
      */
@@ -226,8 +226,7 @@ class SemClass implements ArrayAccess
     {
         return !$this->data['modules'][$modulename]
             || !$this->data['modules'][$modulename]['sticky']
-            ||  $this->data['modules'][$modulename]['activated']
-            ||  $this->isModuleMandatory($modulename);
+            ||  $this->data['modules'][$modulename]['activated'];
     }
 
     /**
@@ -238,8 +237,7 @@ class SemClass implements ArrayAccess
     public function isModuleMandatory($module)
     {
         return $this->data['modules'][$module]['sticky']
-            && ($this->data['modules'][$module]['activated']
-                || $this->isSlotModule($module));
+            && $this->data['modules'][$module]['activated'];
     }
 
     /**

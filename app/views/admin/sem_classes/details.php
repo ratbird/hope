@@ -221,7 +221,6 @@
                                     'sem_class' => $sem_class,
                                     'plugin_id' => $sem_class->getSlotModule($container_id),
                                     'activated' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['activated'],
-                                    'disabled' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['disabled'],
                                     'sticky' => $sem_class['modules'][$sem_class->getSlotModule($container_id)]['sticky']
                                 )
                             )?>
@@ -243,7 +242,6 @@
                                     'sem_class' => $sem_class,
                                     'plugin_id' => $module_name,
                                     'activated' => $sem_class['modules'][$module_name]['activated'],
-                                    'disabled' => $sem_class['modules'][$module_name]['disabled'],
                                     'sticky' => $sem_class['modules'][$module_name]['sticky']
                                 )
                             )?>
@@ -264,7 +262,6 @@
                                         'sem_class' => $sem_class,
                                         'plugin_id' => $module_id,
                                         'activated' => $sem_class['modules'][$module_id]['activated'],
-                                        'disabled' => $sem_class['modules'][$module_id]['disabled'],
                                         'sticky' => $sem_class['modules'][$module_id]['sticky']
                                     )
                                 );

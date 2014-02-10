@@ -63,55 +63,40 @@ CKEDITOR.plugins.add('studip-upload', {
         // TODO integrate jQuery File Upload plugin into studip-upload
         var inputId = 'fileupload';
         editor.on('instanceReady', function(event){
-            function appendTo($node) {
-                $('<input>')
-                    .attr({
-                        id: inputId,
-                        type: 'file',
-                        name: 'files[]',
-                        multiple: true
-                    })
-                    .css('display', 'none')
-                    .appendTo($node)
-                    .fileupload({
-                        url: editor.config.studipUpload_url,
-                        singleFileUploads: false,
-                        dataType: 'json',
-                        dropZone: $node,
-                        done: function(e, data){
-                            handleUploads(data.result.files);
-                        }
-                    });
+            var $container = $(event.editor.container.$),
+                $content = $container.find('iframe').contents();
 
-                // drop zone effects
-                //$('<div class="dropzone">drop your files</div>')
-                //    .appendTo($node);
+            // install upload handler
+            $('<input>') // upload by toolbar button click
+                .attr({
+                    id: inputId,
+                    type: 'file',
+                    name: 'files[]',
+                    multiple: true
+                })
+                .css('display', 'none')
+                .appendTo($container)
+                .fileupload({
+                    url: editor.config.studipUpload_url,
+                    singleFileUploads: false,
+                    dataType: 'json',
+                    dropZone: $content, // upload by drag'n'drop
+                    done: function(e, data){
+                        handleUploads(data.result.files);
+                    }
+                });
 
-                $node
-                    .css('position', 'relative')
-                    .bind('dragover', function(event){
-                        $(body).addClass('drag');
-                        event.preventDefault();
-                    }).bind('dragleave drop', function(event){
-                        $(body).removeClass('drag');
-                        event.preventDefault();
-                    });
+            
+            // drop zone effects
+            var dropzone = $('<div class="dropzone">drop your files</div>')
+                .appendTo($container);
 
-                $node
-                    .find('iframe')
-                    .bind('drop dragover', function(event){
-                        event.preventDefault();
-                    });
-            };
-
-            var container = event.editor.container.$,
-                body = $(event.editor.container.$)
-                    .find('iframe')
-                    .contents()
-                    .find('body');
-
-            appendTo($(container));
-            appendTo(body);
+            $content
+                .bind('dragover', function(event){
+                    dropzone.show();
+                }).bind('dragleave drop', function(event){
+                    dropzone.hide();
+                });
         });
 
         // disable default browser drop action

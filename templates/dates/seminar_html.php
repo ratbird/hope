@@ -1,6 +1,6 @@
 <? if (!$dates['regular']['turnus_data'] && (!sizeof($dates['irregular']))) : ?>
     <? if ($dates['ort'] && $show_room) : ?>
-        <?= $dates['ort'] ?>
+        <?= htmlReady($dates['ort']) ?>
     <? else : ?>
         <?= _("Die Zeiten der Veranstaltung stehen nicht fest."); ?>
     <? endif ?>

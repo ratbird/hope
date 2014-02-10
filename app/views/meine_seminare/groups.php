@@ -2,7 +2,7 @@
 use Studip\Button;
 ?>
 
-<form method="post" action="<?= URLHelper::getLink('meine_seminare.php') ?>">
+<form method="post" action="<?= $controller->url_for('meine_seminare/store_groups') ?>">
     <?= CSRFProtection::tokenTag() ?>
     
         <table class="default">
@@ -58,10 +58,13 @@ use Studip\Button;
 <? endif; ?>
 <? endforeach; ?>
         </tbody>
-        <tfoot><tr><td colspan='100%'>
-        <?= Button::createAccept(_('Speichern')) ?>
-        <input type="hidden" name="gruppesent" value="1">
-        </td></tr>
+        <tfoot>
+            <tr>
+                <td colspan='100%'>
+                    <?= Button::createAccept(_('Speichern')) ?>
+                    <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('meine_seminare/groups')) ?>
+                </td>
+            </tr>
         </tfoot>
-        </table>
+    </table>
 </form>

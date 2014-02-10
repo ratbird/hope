@@ -220,29 +220,6 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
     }
 }
 
-
-// Update der Gruppen
-if (Request::int('gruppesent') == '1'){
-    $user->cfg->store('MY_COURSES_GROUPING', Request::get('select_group_field'));
-    $gruppe = Request::getArray('gruppe');
-    if (!empty($gruppe)){
-        $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
-        $user_statement = DBManager::get()->prepare($query);
-
-        $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
-        $deputy_statement = DBManager::get()->prepare($query);
-
-        foreach($gruppe as $key => $value){
-            $user_statement->execute(array($value, $key, $user->id));
-            $updated = $user_statement->rowCount();
-
-            if ($deputies_enabled && !$updated) {
-                $deputy_statement->execute(array($value, $key, $user->id));
-            }
-        }
-    }
-}
-
 //Anzeigemodul fuer eigene Seminare (nur wenn man angemeldet und nicht root oder admin ist!)
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
 

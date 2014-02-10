@@ -121,6 +121,23 @@ class MeineSeminareController extends AuthenticatedController
 
         sort_groups($group_field, $groups);
 
+        // Ensure that a seminar is never in multiple groups
+        $sem_ids = array();
+        foreach ($groups as $group_id => $seminars) {
+            foreach ($seminars as $index => $seminar) {
+                if (in_array($seminar['seminar_id'], $sem_ids)) {
+                    unset($seminars[$index]);
+                } else {
+                    $sem_ids[] = $seminar['seminar_id'];
+                }
+            }
+            if (empty($seminars)) {
+                unset($groups[$group_id]);
+            } else {
+                $groups[$group_id] = $seminars;
+            }
+        }
+
         $this->no_grouping_allowed = $no_grouping_allowed;
         $this->groups              = $groups;
         $this->group_names         = get_group_names($group_field, $groups);
@@ -138,28 +155,57 @@ class MeineSeminareController extends AuthenticatedController
                             _('Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend '
                              .'den Gruppen sortiert bzw. entsprechend der gewählten Kategorie gegliedert.'));
         $groupables = array(
-    'sem_number'  => _('Semester'),
-    'sem_tree_id' => _('Studienbereich'),
-    'sem_status'  => _('Typ'),
-    'gruppe'      => _('Farbgruppen'),
-    'dozent_id'   => _('Dozenten'),
-);
-        $groupselect = '<form action="'.URLHelper::getLink('meine_seminare.php').'" method="post"><select name="select_group_field">';
-            if ($no_grouping_allowed) {
-                $groupselect .= '<option value="not_grouped" '.($group_field == 'not_grouped' ? 'selected' : '').'>';
-                 $groupselect .= _('keine Gliederung');
-                $groupselect .= '</option>';
-                }
-            foreach ($groupables as $key => $label) {
-               $groupselect .= "<option value='$key'".($group_field == $key ? 'selected':'').">
-                    $label
-                </option>";
-            }
-            $groupselect .= '</select>';
+            'sem_number'  => _('Semester'),
+            'sem_tree_id' => _('Studienbereich'),
+            'sem_status'  => _('Typ'),
+            'gruppe'      => _('Farbgruppen'),
+            'dozent_id'   => _('Dozenten'),
+        );
+        $groupselect = '<form action="'.$this->url_for('meine_seminare/store_groups').'" method="post"><select name="select_group_field">';
+        if ($no_grouping_allowed) {
+            $groupselect .= '<option value="not_grouped" '.($group_field == 'not_grouped' ? 'selected' : '').'>';
+            $groupselect .= _('keine Gliederung');
+            $groupselect .= '</option>';
+        }
+        foreach ($groupables as $key => $label) {
+           $groupselect .= "<option value='$key'".($group_field == $key ? 'selected':'').">$label</option>";
+        }
+        $groupselect .= '</select>';
         $groupselect .= Assets::input('icons/16/blue/accept.png', array('class' => 'middle', 'title' => _('Gruppierung ändern')));
-        $groupselect .= '<input type="hidden" name="gruppesent" value="1">';
+        $groupselect .= CSRFProtection::tokenTag();
         $groupselect .= '<form>';
         $this->addToInfobox(_('Kategorie zur Gliederung'), $groupselect);
+    }
+
+    /**
+     * Storage function for the groups action.
+     * Stores selected grouping category and actual group settings.
+     */
+    public function store_groups_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        if (Request::isPost()) {
+            $GLOBALS['user']->cfg->store('MY_COURSES_GROUPING', Request::get('select_group_field'));
+            $gruppe = Request::getArray('gruppe');
+            if (!empty($gruppe)){
+                $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
+                $user_statement = DBManager::get()->prepare($query);
+
+                $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
+                $deputy_statement = DBManager::get()->prepare($query);
+
+                foreach ($gruppe as $key => $value) {
+                    $user_statement->execute(array($value, $key, $GLOBALS['user']->id));
+                    $updated = $user_statement->rowCount();
+
+                    if ($deputies_enabled && !$updated) {
+                        $deputy_statement->execute(array($value, $key, $GLOBALS['user']->id));
+                    }
+                }
+            }
+            PageLayout::postMessage(MessageBox::success(_('Ihre Einstellungen wurden übernommen.')));
+        }
+        $this->redirect('meine_seminare/groups');
     }
 
     /**

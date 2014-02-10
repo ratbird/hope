@@ -117,6 +117,9 @@ class StreamsController extends ApplicationController {
         if (Request::get("user_id") !== $GLOBALS['user']->id) {
             $this->isBuddy = is_a($this->user, "BlubberExternalContact") ? $this->user->isFollowed() : CheckBuddy($this->user['username']) ;
         }
+        if (count($this->threads) === 0 && Request::get("user_id") !== $GLOBALS['user']->id) {
+            PageLayout::postMessage(MessageBox::info(_("Dieser Nutzer hat noch nicht öffentlich bzw. auf sein Profil geblubbert.")));
+        }
     }
 
     /**

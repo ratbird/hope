@@ -18,7 +18,7 @@ use Studip\Button, Studip\LinkButton;
 
 <form action="<?= $controller->url_for('admin/rss_feeds/update') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default">
+    <table class="default nohover">
         <colgroup>
             <col width="50px">
             <col width="50%">
@@ -49,7 +49,7 @@ use Studip\Button, Studip\LinkButton;
                         <?= _('Namen des Feeds holen') ?>
                     </label>
                 </td>
-                <td rowspan="2">
+                <td>
                 <? if ($index): ?>
                     <a href="<?= $controller->url_for('admin/rss_feeds/move/' . $feed->id. '/up') ?>">
                         <?= Assets::img('icons/16/yellow/arr_2up.png',
@@ -85,7 +85,7 @@ use Studip\Button, Studip\LinkButton;
                         <?= _('Aktiv') ?>
                     </label>
                 </td>
-                </td>
+                <td>&nbsp;</td>
             </tr>
         <? endforeach; ?>
         </tbody>

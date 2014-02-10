@@ -449,7 +449,9 @@ class Seminar
     */
     function restore()
     {
-        $this->course->restore();
+        if ($this->course->id) {
+            $this->course->restore();
+        }
         $this->irregularSingleDates = null;
         $this->issues = null;
         $this->_metadate = null;

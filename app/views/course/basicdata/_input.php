@@ -30,12 +30,12 @@ if ($input['type'] === "select") : ?>
 <? endif;
 
 if ($input['type'] === "multiselect") : ?>
-    <select <?=$is_locked ?> name="<?= htmlReady($input['name']) ?>" style="width: 80%" multiple size="8">
+    <select <?=$is_locked ?> name="<?= $input['name'] ?>" style="width: 80%" multiple size="8">
     <? if ($input['choices']) : foreach ($input['choices'] as $choice_value => $choice_name) : ?>
         <option value="<?= htmlReady($choice_value) ?>"<?=
             in_array($choice_value, is_array($input['value']) ? $input['value'] : array($input['value']))
             ? " selected"
-            : "" ?>><?= htmlReady($choice_name) ?></option>
+            : "" ?>><?= $choice_name ?></option>
     <? endforeach; endif; ?>
     </select>
 <? endif;

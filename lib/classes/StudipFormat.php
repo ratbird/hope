@@ -512,7 +512,7 @@ class StudipFormat extends TextFormat
             $intern = true;
             $checkpath = urldecode(substr($pu['path'], strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
             if (strpos($checkpath, '../') === false) {
-                $pu['first_target'] = strstr($checkpath, '/', true);
+                list($pu['first_target']) = explode('/', $checkpath);
             } else {
                 $pu['first_target'] = false;
             }

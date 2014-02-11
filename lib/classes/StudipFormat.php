@@ -46,8 +46,8 @@ class StudipFormat extends TextFormat
             //              Tables may not contain < symbols (HTML tags).
             //              Lines may end with <br>.
             //
-            // First table line may start with opening HTML tag, before the 
-            // first | character. Should HTML in tables be needed, HTML tables 
+            // First table line may start with opening HTML tag, before the
+            // first | character. Should HTML in tables be needed, HTML tables
             // must be used instead.
             'start'    => '^(?:\s*<\s*\w+(?:\s+\w+\s*=\s*"[^"]")*\s*>\s*)?((?:(?:\|[^\n<]*){2,}(?:(?:<\s*br\s*\/?\s*>)?\n)?)+)',
             'callback' => 'StudipFormat::markupTable'
@@ -198,7 +198,7 @@ class StudipFormat extends TextFormat
      * - $markup    the markup parser object
      * - $matches   match results of preg_match for $start
      * - $contents  (parsed) contents of this markup rule
-     * 
+     *
      * Sometimes you may want your rule to apply before another specific rule
      * will apply. For this case the parameter $before defines a rulename of
      * existing markup, before which your rule should apply.
@@ -223,12 +223,12 @@ class StudipFormat extends TextFormat
             }
         }
         if (!$inserted) {
-            self::$studip_rules[$name] = $end 
+            self::$studip_rules[$name] = $end
                     ? compact('start', 'end', 'callback')
                     : compact('start', 'callback');
         }
     }
-    
+
     /**
      * Returns a single markup-rule if it exists.
      * @return array: array('start' => "...", 'end' => "...", 'callback' => "...")
@@ -236,7 +236,7 @@ class StudipFormat extends TextFormat
     public static function getStudipMarkup($name) {
         return self::$studip_rules[$name];
     }
-    
+
     /**
      * Removes a markup rule from the global Stud.IP markup set.
      *
@@ -446,13 +446,13 @@ class StudipFormat extends TextFormat
      */
     protected static function markupCode($markup, $matches)
     {
-        return '<div class="code_header">'. _('Code') .'<hr></div>' 
+        return '<div class="code_header">'. _('Code') .'<hr></div>'
                . str_replace(
-                   '<code>', '<code class="code_content">', 
+                   '<code>', '<code class="code_content">',
                    highlight_string(decodeHTML(trim($matches[1]), ENT_QUOTES), true)
                );
     }
-    
+
     /**
      * Stud.IP markup for email-adresses
      */
@@ -461,26 +461,26 @@ class StudipFormat extends TextFormat
         $link_text = $matches[1] ?: $matches[2];
         $email = $matches[2];
         $domain = $matches[3];
-        
+
         $intern = $domain === $_SERVER['HTTP_HOST'];
-        
+
         return sprintf('<a class="%s" href="mailto:%s">%s</a>',
             $intern ? "link-intern" : "link-extern",
             $email,
             $link_text
         );
     }
-    
+
     /**
      * Stud.IP markup for images, audio, video and flash-films
      */
-    protected static function markupMedia($markup, $matches) 
+    protected static function markupMedia($markup, $matches)
     {
         $tag = $matches[1];
         $params = explode(":",$matches[2]);
         $url = $matches[3];
         $whitespace = $matches[4];
-        
+
         foreach ($params as $key => $param) {
             if ($param) {
                 if (is_numeric($param)) {
@@ -497,20 +497,25 @@ class StudipFormat extends TextFormat
                 }
             }
         }
-        
+
         $format_strings = array(
             'img' => '<img src="%s" style="%s" title="%s" alt="%s">',
             'audio' => '<audio src="%s" style="%s" title="%s" alt="%s" controls></audio>',
             'video' => '<video src="%s" style="%s" title="%s" alt="%s" controls></video>'
         );
-        
+
         $url = TransformInternalLinks($url);
         $pu = @parse_url($url);
         if (($pu['scheme'] == 'http' || $pu['scheme'] == 'https')
                 && ($pu['host'] == $_SERVER['HTTP_HOST'] || $pu['host'].':'.$pu['port'] == $_SERVER['HTTP_HOST'])
                 && strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {
             $intern = true;
-            list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
+            $checkpath = urldecode(substr($pu['path'], strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
+            if (strpos($checkpath, '../') === false) {
+                $pu['first_target'] = strstr($checkpath, '/', true);
+            } else {
+                $pu['first_target'] = false;
+            }
         }
         $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
         if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {
@@ -518,14 +523,14 @@ class StudipFormat extends TextFormat
         } elseif ((!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') && !$intern) {
             return $matches[0];
         }
-        
+
         //Mediaproxy?
         if (!$intern && $LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
             $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(decodeHTML(idna_link($url)));
         } else {
             $media_url = idna_link($url);
         }
-        
+
         if ($tag === "flash") {
             $width = $width ? $width : 200;
             $height = round($width * 0.75);
@@ -544,12 +549,12 @@ class StudipFormat extends TextFormat
                 $title
             );
         }
-        
+
         if ($tag === 'audio') {
             $random_id = 'audio-' . substr(md5(uniqid('audio', true)), -8);
             $media = str_replace('<audio ', '<audio id="' . $random_id . '" onerror="STUDIP.Audio.handle(this);" ', $media);
         }
-        
+
         if ($link && $tag === "img") {
             $media = sprintf('<a href="%s"%s>%s</a>',
                 $link,
@@ -563,21 +568,21 @@ class StudipFormat extends TextFormat
         $media .= $whitespace;
         return $media;
     }
-    
+
     /**
      * Stud.IP markup for hyperlinks (intern, extern).
      * Has lower priority than [code], [img], etc
      */
-    protected static function markupLinks($markup, $matches) 
+    protected static function markupLinks($markup, $matches)
     {
         $url = $matches[2];
         $title = $matches[1] ? $matches[1] : $url;
-        
+
         $intern = isLinkIntern($url);
         if (!$intern) {
             OpenGraphURL::$tempURLStorage[] = $url;
         }
-        
+
         $url = TransformInternalLinks($url);
 
         $linkmarkup = clone $markup;
@@ -591,5 +596,5 @@ class StudipFormat extends TextFormat
             $linkmarkup->format($title)
         );
     }
-    
+
 }

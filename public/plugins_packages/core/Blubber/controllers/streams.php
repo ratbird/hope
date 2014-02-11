@@ -22,8 +22,7 @@ class StreamsController extends ApplicationController {
      * Displays global-stream
      */
     public function global_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle(_("Globaler Blubberstream"));
@@ -73,8 +72,7 @@ class StreamsController extends ApplicationController {
         if (!$this->commentable) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
@@ -98,8 +96,7 @@ class StreamsController extends ApplicationController {
      * Displays the profile-stream with all threads by the given user.
      */
     public function profile_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
 
@@ -610,8 +607,7 @@ class StreamsController extends ApplicationController {
      */
     public function thread_action($thread_id)
     {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         
@@ -691,8 +687,7 @@ class StreamsController extends ApplicationController {
     }
 
     public function custom_action($stream_id) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         
@@ -712,8 +707,7 @@ class StreamsController extends ApplicationController {
      * @param string,null $stream_id
      */
     public function edit_action($stream_id = null) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.elastic.source.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/jquery.mentionsInput.js"), "");
+        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         

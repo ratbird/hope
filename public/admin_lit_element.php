@@ -41,11 +41,10 @@ if (Request::option('cmd') == "new_entry"){
 } else {
     $_catalog_id = Request::option('_catalog_id', "new_entry");
 }
-if($_catalog_id == "new_entry"){
-   
-   $title = "Literatureintrag anlegen";
+if ($_catalog_id == "new_entry"){
+    $title = _("Literatureintrag anlegen");
 } else {
-    $title = "Literatureintrag bearbeiten";
+    $title = _("Literatureintrag bearbeiten");
 }
 PageLayout::setTitle($title);
 Navigation::activateItem('/tools/literature');
@@ -256,7 +255,7 @@ foreach ($_the_element->fields as $field_name => $field_detail){
     $class_changer->switchClass();
 }
 
- 
+
 $class_changer->switchClass();
 echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\" style=\"font-size:10pt;\">"
     . sprintf(_("Anzahl an Referenzen für diesen Eintrag: %s"), (int)$_the_element->reference_count) ."</td>";

@@ -84,10 +84,10 @@ class StudipLitCatElement {
                                                 'info'  => _("Sonstige an der Erstellung und Veröffentlichung der Ressource beteiligte Personen oder Organisationen"),
                                                 'len'   => 255,
                                                 'type'  => 'text'),
-                        'dc_date'   =>  array(  'caption'=> _("Datum"),
+                       'dc_date' => array( 'caption'=> _("Datum"),
                                                 'info'  => _("Das Datum, an dem die Ressource in der gegenwärtigen Form zugänglich gemacht wurde."),
-                                                'len'   => 10,
-                                                'type'  => 'date',
+                                                'len'   => 11,
+                                                'type'  => 'datepicker',
                                                 'mandatory' => true),
                         'dc_type'   =>  array(  'caption'=> _("Ressourcenart"),
                                                 'info'  => _("Die Art der Ressource, z.B. Homepage, Roman, Gedicht, Arbeitsbericht, technischer Bericht, Essay, Wörterbuch\n(Die Vorgaben entsprechen den EndNote Referenz Typen)"),
@@ -175,9 +175,10 @@ class StudipLitCatElement {
 
     function &getFormObject(){
         if (!is_object($this->form_obj)){
-            $this->setFormObject();
+            $this->setFormObject();    
         }
         return $this->form_obj;
+        
     }
 
     function setFormObject(){
@@ -191,6 +192,7 @@ class StudipLitCatElement {
                                                 'options'=> array_merge(array('---'), (array)StudipLitList::GetListsByRange($GLOBALS['user']->id, 'form_options')));
         }
         foreach ($this->fields as $field_name => $field_detail){
+            
             if ($field_detail['caption']){
                 if ($field_detail['select_list']){
                     $form_fields[$field_name . "_select"] = array('type' => 'select','options' => $field_detail['select_list']);
@@ -248,6 +250,7 @@ class StudipLitCatElement {
     function setValues($fields){
         if (is_array($fields)){
             foreach ($fields as $name => $value){
+                
                 if ($this->fields[$name]) $this->fields[$name]['value'] = $value;
             }
             return true;
@@ -325,8 +328,9 @@ class StudipLitCatElement {
     function checkValues(){
         $missing_fields = false;
         foreach($this->fields as $name => $detail){
+            
             if ($detail['mandatory']){
-                if ($detail['type'] == 'date'){
+                if ($detail['type'] == 'date' || $detail['type'] == 'datepicker'){
                     $this->setValue($name, $this->checkDate($detail['value']));
                 }
                 if (!$this->getValue($name)){

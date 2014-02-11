@@ -219,6 +219,7 @@ echo "</td></tr>";
 echo '<p style="font-size:-1">';
 printf(_('Alle mit einem Sternchen %s markierten Felder müssen ausgefüllt werden.'),'<span style="font-size:1.5em;color:red;font-weigth:bold;">*</span>');
 echo '</p>';
+
 foreach ($_the_element->fields as $field_name => $field_detail){
     if ($field_detail['caption']){
         echo "<tr><td " . $class_changer->getFullClass() . ">";
@@ -233,7 +234,7 @@ foreach ($_the_element->fields as $field_name => $field_detail){
             $attributes['readonly'] = 'readonly';
             $attributes['disabled'] = 'disabled';
         }
-        echo $_the_form->getFormField($field_name, $attributes);
+        echo $_the_form->getFormField($field_name,$attributes);
         if ($field_name == "lit_plugin"){
             echo "&nbsp;&nbsp;<span style=\"font-size:10pt;\">";
             if (($link = $_the_element->getValue("external_link"))){
@@ -247,6 +248,8 @@ foreach ($_the_element->fields as $field_name => $field_detail){
     }
     $class_changer->switchClass();
 }
+
+ 
 $class_changer->switchClass();
 echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\" style=\"font-size:10pt;\">"
     . sprintf(_("Anzahl an Referenzen für diesen Eintrag: %s"), (int)$_the_element->reference_count) ."</td>";

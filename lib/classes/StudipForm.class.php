@@ -82,7 +82,6 @@ class StudipForm {
     }
 
     function __construct($form_fields, $form_buttons, $form_name = "studipform", $persistent_values = true) {
-
         $this->form_name = $form_name;
         $this->persistent_values = $persistent_values;
         $this->form_fields = $form_fields;
@@ -119,6 +118,12 @@ class StudipForm {
                         $new_form_values[$name] = Request::int($this->form_name . "_" . $name . "_year") . "-"
                                                 . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_month")) . "-"
                                                 . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_day"));
+                    }
+                    if($value['type'] == 'datepicker'){
+                        $date = explode('.',Request::get($this->form_name . "_" . $name . "_date"));
+                        $new_form_values[$name] = $date[2] . "-"
+                                                . sprintf('%02s', $date[1]) . "-"
+                                                . sprintf('%02s', $date[0]);
                     }
                     if ($value['type'] == 'time'){
                         $new_form_values[$name] = sprintf('%02s', Request::int($this->form_name . "_" . $name . "_hours")) . ":"
@@ -202,7 +207,7 @@ class StudipForm {
     }
 
     function getFormFieldText($name, $attributes, $default){
-        $ret = "\n<input type=\"text\" name=\"{$this->form_name}_{$name}\" " . (($default) ? "value=\"".htmlReady($default)."\" " : "");
+        $ret = "\n<input type=\"text\" name=\"{$this->form_name}_{$name}\" ". "id=\"{$this->form_name}_{$name}\" " . (($default) ? "value=\"".htmlReady($default)."\" " : "");
         $ret .= $this->getAttributes($attributes);
         $ret .= ">";
         return $ret;
@@ -280,6 +285,17 @@ class StudipForm {
             $ret .= "'dependent=yes, width=210, height=210, left=500, top=150')\">";
         }
         $ret .= '</fieldset>';
+        return $ret;
+    }
+    function getFormFieldDatepicker($name, $attributes, $default)
+    {
+        $date_values = explode("-", $default); //YYYY-MM-DD
+        $value = ''; 
+        if(count($date_values)==3){
+            $value = $date_values[2]. '.' . $date_values[1]. '.' .$date_values[0];
+        }
+        $ret .= $this->getFormFieldText($name . "_date", array_merge(array('size'=>11,'maxlength'=>11), (array)$attributes), $value);
+        $ret .='<script>jQuery("#'.$this->form_name.'_'.$name.'_date").datepicker();</script>';
         return $ret;
     }
 

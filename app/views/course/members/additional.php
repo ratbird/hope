@@ -1,14 +1,17 @@
-<form method="post">
-    <table class="default">
-        <caption><?= _('Zusatzangaben') ?></caption>
-        <thead>
+<h1><?= _('Zusatzangaben') ?></h1>
+
+<? if (!empty($aux['rows'])) : ?>
+    <form method="post">
+        <table class="default">
+            <caption><?= _('Zusatzangaben bearbeiten') ?></caption>
+            <thead>
             <tr>
                 <? foreach ($aux['head'] as $head): ?>
                     <th><?= $head ?></th>
                 <? endforeach; ?>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <? foreach ($aux['rows'] as $entry): ?>
                 <tr>
                     <? foreach ($aux['head'] as $key => $value): ?>
@@ -16,14 +19,18 @@
                     <? endforeach; ?>
                 </tr>
             <? endforeach; ?>
-        </tbody>
-        <tfoot>
+            </tbody>
+            <tfoot>
             <tr>
-                <td colspan="0" >
+                <td colspan="0">
                     <?= \Studip\Button::create(_('Speichern'), 'save') ?>
                     <?= \Studip\Button::create(_('Exportieren'), 'export') ?>
                 </td>
             </tr>
-        </tfoot>
-    </table>
-</form>
+            </tfoot>
+
+        </table>
+    </form>
+<? else : ?>
+    <?= MessageBox::info(_('Keine Zusatzangaben oder TeilnehmerInnen vorhanden.')) ?>
+<? endif ?>

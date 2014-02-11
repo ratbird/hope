@@ -31,8 +31,9 @@ class CoreLiterature implements StudipModule {
             $navigation->setActiveImage('icons/16/black/literature.png');
 
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), "literatur.php?view=literatur_".$object_type));
-            $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $course_id));
-
+            if(StudipLitList::GetFormattedListsByRange($course_id, false, false)){
+                $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $course_id));
+            }
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
                 $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'admin_lit_list.php?view=literatur_'.$object_type.'&new_'.$object_type.'=TRUE&_range_id='. $course_id));
             }

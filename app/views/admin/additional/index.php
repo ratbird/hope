@@ -9,7 +9,7 @@
                     </option>
                     <? foreach ($list as $aux): ?>
                         <option value='<?= $aux->id ?>' <?= $course->aux_lock_rule && $course->aux->id == $aux->id ? "selected" : "" ?>>
-                            <?= $aux->name ?>
+                            <?= htmlReady($aux->name) ?>
                         </option>
                     <? endforeach ?>
                 </select>

@@ -36,13 +36,22 @@ require_once ('lib/classes/StudipLitCatElement.class.php');
 require_once ('lib/classes/StudipLitClipBoard.class.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-PageLayout::setTitle(_("Literatureintrag bearbeiten"));
+if (Request::option('cmd') == "new_entry"){
+    $_catalog_id = "new_entry";
+} else {
+    $_catalog_id = Request::option('_catalog_id', "new_entry");
+}
+if($_catalog_id == "new_entry"){
+   
+   $title = "Literatureintrag anlegen";
+} else {
+    $title = "Literatureintrag bearbeiten";
+}
+PageLayout::setTitle($title);
 Navigation::activateItem('/tools/literature');
-
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
 //html attributes for form
 $_attributes = array();
 $_attributes['text'] = array('style' => 'width:98%');
@@ -53,11 +62,8 @@ $_attributes['combo'] = array('style' => 'width:45%');
 $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:98%');
 
 
-if (Request::option('cmd') == "new_entry"){
-    $_catalog_id = "new_entry";
-} else {
-    $_catalog_id = Request::option('_catalog_id', "new_entry");
-}
+
+
 
 //dump data into db if $_catalog_id points to a search result
 if ($_catalog_id{0} == "_"){
@@ -203,7 +209,8 @@ echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\
 echo "<td " . $class_changer->getFullClass() . " align=\"center\">";
 if ($_the_element->isChangeable()){
     echo $_the_form->getFormButton("send") .  $_the_form->getFormButton("delete") . $_the_form->getFormButton("reset");
-    echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _('Eine Kopie dieses Eintrages anlegen')));
+} elseif ($_catalog_id != "new_entry") {
+    echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen")));
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
 echo LinkButton::create(_('Neu anlegen'), URLHelper::getURL('?cmd=new_entry'), array('title' => _("Neuen Eintrag anlegen")));

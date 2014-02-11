@@ -432,7 +432,7 @@ function ShowUserInfo ($contact_id)
 
     // diese Infos hat jeder
     while(list($key,$value) = each($basicinfo)) {
-        $output .= "<tr><td class=\"table_row_odd\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"table_row_odd\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
+        $output .= "<tr><td class=\"table_row_odd\" ><font size=\"2\">".$key.":</font></td><td class=\"table_row_odd\"><font size=\"2\">".$value."</font></td></tr>";
     }
 
     // hier Zusatzinfos
@@ -442,25 +442,25 @@ function ShowUserInfo ($contact_id)
         $userinfo = GetUserInfo($user_id);
         if (is_array($userinfo)) {
             while(list($key,$value) = each($userinfo)) {
-                $output .= "<tr><td class=\"table_row_even\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"table_row_even\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
+                $output .= "<tr><td class=\"table_row_even\"><font size=\"2\">".$key.":</font></td><td class=\"table_row_even\"><font size=\"2\">".$value."</font></td></tr>";
             }
         }
 
         $userinstinfo = GetInstInfo($user_id);
         for ($i=0; $i <sizeof($userinstinfo); $i++) {
             while(list($key,$value) = each($userinstinfo[$i])) {
-                $output .= "<tr><td class=\"table_row_even\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"table_row_even\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
+                $output .= "<tr><td class=\"table_row_even\"><font size=\"2\">".$key.":</font></td><td class=\"table_row_even\"><font size=\"2\">".$value."</font></td></tr>";
             }
         }
 
         $extra = GetExtraUserinfo ($contact_id);
         if (is_array($extra)) {
             while(list($key,$value) = each($extra)) {
-                $output .= "<tr><td class=\"table_row_even\" width=\"100\"><font size=\"2\">".htmlReady($key).":</font></td><td class=\"table_row_even\" width=\"250\"><font size=\"2\">".formatReady($value)."</font></td></tr>";
+                $output .= "<tr><td class=\"table_row_even\"><font size=\"2\">".htmlReady($key).":</font></td><td class=\"table_row_even\"><font size=\"2\">".formatReady($value)."</font></td></tr>";
             }
         }
 
-        $output .= '<tr><td align="center" class="table_row_even" colspan="2" width="350"><br>'.Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL).'</td>';
+        $output .= '<tr><td align="center" class="table_row_even" colspan="2"><br>'.Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL).'</td>';
         $owner_id = $user->id;
 
         $query = "SELECT DISTINCT name, statusgruppe_id
@@ -472,7 +472,7 @@ function ShowUserInfo ($contact_id)
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($temp as $row) {
-            $output .= "<tr><td class=\"table_row_even\" width=\"100\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"table_row_even\" width=\"250\"><a href=\"".URLHelper::getLink('?view=gruppen&filter='.$row['statusgruppe_id'])."\"><font size=\"2\">".htmlready($row['name'])."</font></a></td></tr>";
+            $output .= "<tr><td class=\"table_row_even\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"table_row_even\"><a href=\"".URLHelper::getLink('?view=gruppen&filter='.$row['statusgruppe_id'])."\"><font size=\"2\">".htmlready($row['name'])."</font></a></td></tr>";
         }
     }
     return $output;
@@ -536,11 +536,11 @@ function ShowContact ($contact_id)
         } else {
             $output = '';
         }
-        $output .= "<table border=\"0\" cellspacing=\"0\" width=\"280\" class=\"blank\">
+        $output .= "<table border=\"0\" cellspacing=\"0\" width=\"100%\" class=\"blank\">
                     <tr>
-                        <td class=\"table_header_bold\" width=\"99%\" style=\"font-weight:bold;\">"
+                        <td class=\"table_header_bold\" style=\"font-weight:bold;\">"
                             . get_fullname($temp['user_id'], $format = "full_rev",true ) . '</td>'
-                            . "<td class=\"table_header_bold\">"
+                            . "<td class=\"table_header_bold\" align=\"right\">"
                             // export to vcf
                             . '<a href="' . URLHelper::getLink('sms_send.php', array('sms_source_page' => 'contact.php', 'rec_uname' => get_username($temp['user_id']))) . '">' . Assets::img('icons/16/white/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
                             . '</td>'
@@ -548,10 +548,14 @@ function ShowContact ($contact_id)
                         </td>
                     </tr>
                     </table>
-                    <table border=\"0\" cellspacing=\"0\" width=\"280\" class=\"blank\">"
+                    <table border=\"0\" cellspacing=\"0\" width=\"100%\" class=\"blank\">
+                        <colgroup>
+                            <col width=\"100px\"><col>
+                        </colgroup>
+                        <tbody>"
                         . ShowUserInfo ($contact_id)
                         . $lastrow
-                . '</table>';
+                . '</tbody></table>';
     } else {
         $output = _("Fehler!");
     }
@@ -850,35 +854,39 @@ function PrintAllContact($filter="")
     $spalten = 0;
     if ($auth->auth['xres'] > 800) { // TODO Remove this
         $maxcolls = 2;
-        $maxwidth = 900;
         $middle[0] = ceil(count($ids) / 3);
         $middle[1] = round(count($ids) / 3);
         $middle[2] = floor(count($ids) / 3);
     } else {
         $maxcolls = 1;
-        $maxwidth = 600;
         $middle[0] = ceil(count($ids) / 2);
+        $middle[1] = floor(count($ids) / 2);
     }
 
     if (!count($ids)) {
-        echo "<table class=\"blank\" width=\"$maxwidth\" align=center cellpadding=\"10\"><tr><td valign=\"top\" width=\"300\" class=\"white\">"._("Keine Einträge in diesem Bereich")."";
-        echo "</td><td valign=\"top\" width=\"300\" class=\"blank\">";
+        echo MessageBox::info(_('Keine Einträge in diesem Bereich'));
     } else {
-        echo "<table class=\"blank\" width=\"$maxwidth\" align=center cellpadding=\"10\"><tr><td valign=\"top\" width=\"280\" class=\"white\">";
+        echo '<table class="blank" width="100%" align="center"" cellpadding="10">';
+        echo '<colgroup>';
+        for ($i = 0; $i < count($middle); $i += 1) {
+            printf('<col width="%01.2F%%">', 100 / count($middle));
+        }
+        echo '</colgroup>';
+        echo '<tbody><tr><td valign="top" class="white">';
 
         $i = 1;
         foreach ($ids as $id) {
             echo ShowContact($id);
             echo '<br>';
             if ($i == $middle[$spalten] && $spalten != $maxcolls) { //Spaltenumbruch
-                echo '</td><td valign="top" width="280" class="white">';
+                echo '</td><td valign="top" class="white">';
                 $i = 0;
                 $spalten++;
             }
             $i += 1;
         }
     }
-    echo "</td></tr></table>";
+    echo "</td></tr></tbody></table>";
 }
 
 // set the permission for the own calendar for the contact with the given user_id

@@ -94,7 +94,7 @@ class Utils
      *
      * @return string  The current URL.
      *
-     * Originally posted on http://stackoverflow.com/a/2820771 by user maƒçek.
+     * Originally posted on http://stackoverflow.com/a/2820771 by user macek.
      */
     static function getUrl() {
         // TODO move condition to function "httpsActive()"
@@ -410,7 +410,7 @@ class Utils
         $GLOBALS['msg'] = ''; // validate_upload will store messages here
         if (!\validate_upload($file)) { // upload is forbidden
             // remove error pattern from message
-            $error_pattern = \utf8_decode('/error¬ß(.+)¬ß/');
+            $error_pattern = '/errorß(.+)ß/';
             $message = \preg_replace($error_pattern, '$1', $GLOBALS['msg']);
     
             // clear global messages and throw exception
@@ -712,8 +712,8 @@ class Utils
      */ 
     static function verifyPermission($permission) { 
         if (!Utils::hasPermission($permission)) { 
-            throw new \AccessDeniedException(\studip_utf8decode( 
-                \_("Es werden mindestens $permission-Zugriffsrechte ben√∂tigt."))); 
+            throw new \AccessDeniedException(
+                \_("Es werden mindestens $permission-Zugriffsrechte benˆtigt.")); 
         } 
     }
      
@@ -723,8 +723,8 @@ class Utils
      */
     static function verifyPostRequest() {
         if (!\Request::isPost()) {
-            throw new \AccessDeniedException(\studip_utf8decode(
-                _('Die Anfrage muss als HTTP POST gestellt werden.')));
+            throw new \AccessDeniedException(
+                _('Die Anfrage muss als HTTP POST gestellt werden.'));
         }
     }
     

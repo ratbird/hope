@@ -31,6 +31,10 @@ $infobox = array('content' => $infobox,
 $courseIds = $courseset ? $courseset->getCourses() : array();
 // Load assigned user list IDs.
 $userlistIds = $courseset ? $courseset->getUserlists() : array();
+
+if ($flash['error']) {
+    echo MessageBox::error($flash['error']);
+}
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h1><?= $courseset ? _('Anmeldeset bearbeiten') : _('Anmeldeset anlegen') ?></h1>

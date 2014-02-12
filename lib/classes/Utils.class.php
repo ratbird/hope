@@ -691,7 +691,7 @@ class Utils
     static function isStudipMediaUrlPath($path) {
         list($path_head) = \explode('/', $path);
         $valid_paths = array('sendfile.php', 'download', 'assets', 'pictures');
-        return \in_array($path_head, $valid_paths);
+        return \strpos(\urldecode($path), '../') === false && \in_array($path_head, $valid_paths);
     }
     
     /**

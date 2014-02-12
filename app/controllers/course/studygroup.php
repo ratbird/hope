@@ -68,6 +68,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
         PageLayout::setHelpKeyword('Basis.StudiengruppenAbonnieren');
+        PageLayout::addSqueezePackage('enrolment');
 
         $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
                     . " WHERE user_id = ? AND seminar_id = ?");
@@ -270,7 +271,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.");
                 }
                 $sem->admission_binding     = 0;
-                
+
                 $semdata                     = new SemesterData();
                 $this_semester               = $semdata->getSemesterDataByDate(time());
                 $sem->semester_start_time    = $this_semester['beginn'];
@@ -480,7 +481,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 if (is_array($plugins)) {
                     $plugin_manager = PluginManager::getInstance();
                     $available_plugins = StudygroupModel::getInstalledPlugins();
-                    
+
                     foreach ($plugins as $class) {
                         $plugin = $plugin_manager->getPlugin($class);
                         // Deaktiviere Plugin
@@ -537,7 +538,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $sem->read_level     = 1;
                     $sem->write_level    = 1;
                     $sem->visible = 1;
-                    
+
                     if (Request::get('groupaccess') == 'all') {
                         $sem->admission_prelim = 0;
                     } else {
@@ -775,7 +776,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['messages'] = $messages;
                 }
                 unset($sem);
-                
+
                 // Weiterleitung auf die "meine Seminare", wenn es kein Admin
                 // ist, ansonsten auf die Studiengruppenseite
                 if (!$perm->have_perm('root')) {

@@ -17,7 +17,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId()) || $members
 
 } else {
     $action = _("Aktionen:");
-    $infolink = '<a rel="lightbox" href="'. URLHelper::getLink('dispatch.php/course/enrolment/'. $studygroup->getId()) .'">%s</a>';
+    $infolink = '<a rel="lightbox" href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
     $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }
 

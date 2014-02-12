@@ -162,12 +162,11 @@ class SemClassesConvertIntoDb extends Migration
                         if ($activated && (!isset($core_module_config) || $GLOBALS[$core_module_config])) {
                             $modules[$slot] = $core_module_name;
                             $settings[$core_module_name] = array(
-                                'activated' => 1,
-                                'sticky'    => 0,
-                                'disabled'  => 1
+                                'activated' => 0,
+                                'sticky'    => 0
                             );
                         }
-                    } else if ($slot != 'chat') {
+                    } else if ($slot !== 'chat') {
                         $settings[$slot] = array(
                             'activated' => 0,
                             'sticky'    => $activated ? 0 : 1
@@ -185,9 +184,8 @@ class SemClassesConvertIntoDb extends Migration
                     if (!isset($core_module_config) || $GLOBALS[$core_module_config]) {
                         $modules[$slot] = $core_module_name;
                         $settings[$core_module_name] = array(
-                            'activated' => 1,
-                            'sticky'    => 0,
-                            'disabled'  => $sem_class[$slot] ? 0 : 1
+                            'activated' => $sem_class[$slot] ? 1 : 0,
+                            'sticky'    => 0
                         );
                     }
                 }

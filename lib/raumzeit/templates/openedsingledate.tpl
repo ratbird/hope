@@ -40,7 +40,7 @@ use Studip\Button,
                 <b><?=_("bis")?></b>
                 <input type="text" id="end_stunde" name="end_stunde" maxlength="2" size="2" value="<?=$tpl['end_stunde']?>">:
                 <input type="text" id="end_minute" name="end_minute" maxlength="2" size="2" value="<?=$tpl['end_minute']?>">&nbsp;<?=_("Uhr")?>
-                <?=Termin_Eingabe_javascript(1,0,mktime(12,0,0,$tpl['month'],$tpl['day'],$tpl['year']),$tpl['start_stunde'],$tpl['start_minute'],$tpl['end_stunde'],$tpl['end_minute']);?>
+                <?=Termin_Eingabe_javascript(3,0,mktime(12,0,0,$tpl['month'],$tpl['day'],$tpl['year']),$tpl['start_stunde'],$tpl['start_minute'],$tpl['end_stunde'],$tpl['end_minute']);?>
                 <br>
                 <br>
                

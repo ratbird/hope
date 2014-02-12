@@ -44,7 +44,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
 class exportTimetable extends ExportElement {
@@ -137,7 +136,7 @@ class exportTimetable extends ExportElement {
     }
 
     /**
-     * Fetches all occuances by a sql statement
+     * Fetches all occuances by a sql statement and saves it inside the timetable
      */
     public function getFromSQL() {
         $db = DBManager::get();

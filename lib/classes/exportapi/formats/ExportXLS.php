@@ -1,13 +1,15 @@
 <?php
-
 /**
- * exportxls - exporttype for xls
+ * ExportXLS - Exporttype for xls
  *
  * Supports:
  * - export_newline
  * - export_table
  * - export_text
  * - export_timetable
+ * 
+ * This class is only a helper class for the exportAPI and should not be called
+ * from anywhere else
  *
  * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
@@ -47,6 +49,8 @@ class ExportXLS {
 
     /**
      * Export of table element
+     * 
+     * @param mixed $content The content of the table
      */
     public function exportTable($content) {
         $rowcount = &$this->rowcount;
@@ -79,6 +83,8 @@ class ExportXLS {
 
     /**
      * Export of text element
+     * 
+     * @param mixed $content The content of the text
      */
     public function exportText($content) {
         $this->worksheet->setCellValueByColumnAndRow($this->colcount, $this->rowcount, utf8_encode($content->content));
@@ -88,6 +94,8 @@ class ExportXLS {
 
     /**
      * Export of newline element
+     * 
+     *  @param mixed $content The content of the newline
      */
     public function exportNewline($content) {
         $this->rowcount++;
@@ -96,6 +104,8 @@ class ExportXLS {
 
     /**
      * Export of timetable element
+     * 
+     *  @param mixed $content The content of the timetable
      */
     public function exportTimetable($content) {
 

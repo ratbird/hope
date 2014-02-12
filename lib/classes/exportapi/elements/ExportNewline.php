@@ -15,7 +15,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
 class exportNewline extends ExportElement {

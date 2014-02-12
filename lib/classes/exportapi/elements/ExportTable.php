@@ -17,6 +17,10 @@
  * 
  * The export table will fill itself by the sql result
  * 
+ * In this case we use the seminar_user database
+ * We select the user_id column and rename it by Benutzer
+ * And we add a where condition with status
+ * 
  * 2)
  * @code
  * <table>
@@ -36,7 +40,7 @@
  *  <head>
  *   <entry>Header 1</entry>
  *   <entry>Header 2</entry>
- * </content>
+ *  </head>
  *  <content>
  *   <entry>Row 1 Entry 1</entry>
  *   <entry>Row 1 Entry 2</entry>
@@ -59,7 +63,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Florian Bieringer <florian.bieringer@uni-passau.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
 class exportTable extends ExportElement {

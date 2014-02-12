@@ -113,6 +113,8 @@ class ExportDoc extends SimpleORMap {
      * Loads a template from the template folder
      * 
      * @param array $args Arguments to substitute all $params
+     * 
+     * @throws Exception If template wasnt found
      */
     public function loadTemplate($args) {
         $this->template = array_shift($args);
@@ -279,7 +281,7 @@ class ExportDoc extends SimpleORMap {
     /**
      * Checks if a loaded template has editable fields
      * 
-     * @return boolean <b>true</b> if it has editable fields, <b>false</b> if
+     * @return boolean true` if it has editable fields, false` if
      * there are no fields to edit
      */
     public function isEditable() {
@@ -421,6 +423,8 @@ class ExportDoc extends SimpleORMap {
      * 
      * @return mixed false if no context is given otherwise the needed
      * context
+     * 
+     * @throws AccessDeniedException If the calling user has no permission to open the template
      */
     public function getContext() {
         if (!$this->context) {

@@ -3,7 +3,126 @@ namespace RESTAPI;
 use Request, Config;
 
 /**
- * Route maps define and group routes to resources.
+ * RouteMaps define and group routes to resources.
+ *
+ * Instances of RouteMaps are registered with the RESTAPI\Router to
+ * participate in the routing business.
+ *
+ * A RouteMap defines at least one handler method which has to be
+ * annotated with one of these annotations correlating to HTTP request
+ * methods:
+ *
+ * @code
+ * /**
+ *  * An example handler method
+ *  *
+ *  * @get /foo
+ *  * @post /bar/:id
+ *  * @put /baz/:id/:other_id
+ *  * @delete /
+ *  * /
+ *  public function anyMethodName($id, $other_id = null) {}
+ * @endcode
+ *
+ * As soon as the Router matches a HTTP request to a handler defined
+ * in a RouteMap, it calls RouteMap::init to initialize it and
+ * especially the instance field `$this->response` of type
+ * RESTAPI\Response. You do not call RouteMap::init on your own.
+ *
+ * After the router has initialized this RouteMap, the router tries to
+ * call a method `before` of this signature:
+ *
+ * @code
+ * public function before(Router $router, Array $handler, Array $parameters);
+ * @endcode
+ *
+ * The parameter `$handler` is a callable (as in function is_callable)
+ * consisting of the instance of this RouteMap and the name of a
+ * method of this instance. You may change the values of this array to
+ * redirect to another handler.
+ *
+ * The parameter `$parameters` is an associative array whose keys
+ * correlate to the placeholders in the matched URI template. The
+ * values are the actual values of that placeholders in regard to the
+ * HTTP request.
+ *
+ *
+ * After calling RouteMap::before control is transfered to the actual
+ * handler method. The values of the placeholders in the URI template
+ * of the annotation are send as arguments to the handler.
+ *
+ * Example: We have got this handler method defined:
+ *
+ * @code
+ * /**
+ *  * @get /foo/:id/bar/:other_id
+ *  * /
+ * public function fooHandler($id, $other_id) {
+ * }
+ * @endcode
+ *
+ * The router receives a request like this: `http://[..]/foo/1/bar/2`
+ * and matches it to our `fooHandler` which is then called something
+ * like that:
+ *
+ * @code
+ * $result = $routeMap->fooHandler(1, 2);
+ * @encode
+ *
+ * In your handler methods you have to process the input and return
+ * some output data, which is then rendered in an appropriate way
+ * after negotiating the content format in the Router.
+ *
+ * Thus the return value of your handler method becomes the body of
+ * the HTTP response.
+ *
+ *
+ * The RouteMap class defines several methods to ease up your work
+ * with the HTTP specifica.
+ *
+ * The methods RouteMap::status, RouteMap::headers and RouteMap::body
+ * correlate to the components of a HTTP response.
+ *
+ * There are helpers for returning paginated collections, see
+ * RouteMap::paginated.
+ *
+ * If you encounter an error or have to stop further processing, see
+ * methods RouteMap::halt, RouteMap::error and RouteMap::notFound.
+ *
+ * These methods are \a DISRUPTIVE as they immediately stop the control
+ * flow in your handler:
+ *
+ * @code
+ * public function fooHandler($id)
+ * {
+ *   // do something
+ *
+ *   $this->halt();
+ *
+ *   // this line will never be reached
+ * }
+ * @endcode
+ *
+ * If you want to simply send a redirection response (HTTP status code
+ * of 302 or 303), you may find calling RouteMap::redirect helpful.
+ *
+ * To generate a URL to a handler, use RouteMap::url
+ *
+ * When you find the need to return the content of a file, please see
+ * RouteMap::sendFile which will help you with streaming it to the
+ * client. For custom streaming just return a Closure from your
+ * handler method.
+ *
+ * There are several other methods which you may find useful each
+ * matching a HTTP header:
+ *
+ *   - RouteMap::contentType
+ *   - RouteMap::etag
+ *   - RouteMap::expires
+ *   - RouteMap::cacheControl
+ *   - RouteMap::lastModified
+ *
+ * TODO: describe the $this->data stuff.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author  <mlunzena@uos.de>
@@ -12,8 +131,22 @@ use Request, Config;
  */
 abstract class RouteMap
 {
+    /**
+     * Internal property which is used by RouteMap::paginated and
+     * contains everything about a paginated collection.
+     */
     protected $pagination = false;
+
+    /**
+     * The offset into a RouteMap::paginated collection as requested
+     * by the client.
+     */
     protected $offset;
+
+    /**
+     * The limit of a RouteMap::paginated collection as requested
+     * by the client.
+     */
     protected $limit;
 
     /**
@@ -30,7 +163,7 @@ abstract class RouteMap
      * Initializes the route map by binding it to a router and passing in
      * the current route.
      *
-     * @param RESTAPU\Router $router Router to bind this route map to
+     * @param RESTAPI\Router $router Router to bind this route map to
      * @param Array          $route  The matched route out of
      *                               Router::matchRoute; an array with keys
      *                               'handler', 'conditions' and 'source'
@@ -68,6 +201,11 @@ abstract class RouteMap
 
 
     /**
+     * Low level method for paginating collections. You better use
+     * RouteMap::paginated instead of this.
+     *
+     * Set the pagination data used by the RouteMap::collect.
+     *
      * @param String $uri_format
      * @param int    $total
      * @param mixed  $offset
@@ -87,9 +225,13 @@ abstract class RouteMap
     }
 
     /**
+     * Low level method for paginating collections. You better use
+     * RouteMap::paginated instead of this.
+     *
      * Adjusts the result set to return a collection. A collection consists
      * of the passed data array and the associated pagination information
      * if available.
+     *
      * Be aware that the passed data has to be already sliced according to
      * the pagination information.
      *
@@ -133,6 +275,8 @@ abstract class RouteMap
     /************************/
     /* REQUEST BODY METHODS */
     /************************/
+
+    // find the requested media type
     private function getRequestMediaType()
     {
         if ($contentType = $_SERVER['CONTENT_TYPE']) {
@@ -141,27 +285,38 @@ abstract class RouteMap
         }
     }
 
-    private static $contentTypes = array(
+    // media-types that we know how to process
+    private static $mediaTypes = array(
         'application/json' => 'parseJson',
         'application/x-www-form-urlencoded' => 'parseFormEncoded');
 
-    private function parseRequestBody($contentType)
+    // cache the request body
+    private static $_request_body;
+
+    // reads the HTTP request body
+    private function parseRequestBody($mediaType)
     {
-        $input = file_get_contents('php://input');
-        if (isset(self::$contentTypes[$contentType])) {
-            $result = call_user_func(array(__CLASS__, self::$contentTypes[$contentType]), $input);
+        // read it only once
+        if (!isset(self::$_request_body)) {
+            self::$_request_body = file_get_contents('php://input');
+        }
+
+        if (isset(self::$mediaTypes[$mediaType])) {
+            $result = call_user_func(array(__CLASS__, self::$mediaTypes[$mediaType]), self::$_request_body);
             if ($result) {
                 return $result;
             }
         }
-        return $input;
+        return self::$_request_body;
     }
 
+    // strategy to decode JSON strings
     private static function parseJson($input)
     {
         return json_decode($input, true);
     }
 
+    // strategy to decode form encoded strings
     private static function parseFormEncoded($input)
     {
         parse_str($input, $result);
@@ -169,15 +324,27 @@ abstract class RouteMap
     }
 
 
-
-
-    // Set the response status.
+    /**
+     * Set the HTTP status of the current response.
+     *
+     * @param integer $status  the HTTP status of the response
+     */
     public function status($status)
     {
         $this->response->status = $status;
     }
 
-    // Set multiple response headers
+    /**
+     * Set multiple response headers of the current response.
+     *
+     * @code
+     * $routemap->headers(array('X-example' => "yep"));
+     * @endcode
+     *
+     * @param array $headers  the headers to set
+     *
+     * @return array  the headers of the current response
+     */
     public function headers($headers = array())
     {
         if (sizeof($headers)) {
@@ -186,7 +353,11 @@ abstract class RouteMap
         return $this->response->headers;
     }
 
-    // set the response body
+    /**
+     * Set the HTTP body of the current response.
+     *
+     * @param string $body  the body to send back
+     */
     public function body($body)
     {
         $this->response->body = $body;

@@ -64,10 +64,12 @@
         <?= $this->render_partial('area/_add_area_form') ?>
     <? endif ?>
     
+    <? if (!$entries): ?>
     <!-- this row allows dropping on otherwise empty categories -->
     <tr class="sort-disabled">
         <td class="areaborder" style="height: 5px; padding: 0px; margin: 0px"colspan="7"> </td>
     </tr>
+    <? endif; ?>
     </tbody>
 
     <tfoot>

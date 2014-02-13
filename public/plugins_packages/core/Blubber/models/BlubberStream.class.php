@@ -520,7 +520,8 @@ class BlubberStream extends SimpleORMap {
             "FROM seminar_user " .
                 "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
                 "LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
-            "WHERE seminar_user.user_id = :me " .
+                "LEFT JOIN deputies ON (deputies.range_id = seminar_user.Seminar_id) " .
+            "WHERE (seminar_user.user_id = :me OR deputies.user_id = :me) " .
                 "AND (" .
                     "seminare.status IN (:mandatory_types) " .
                     "OR (plugins_activated.state = 'on') " .

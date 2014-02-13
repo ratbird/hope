@@ -394,7 +394,7 @@ class Router
         $handler[0]->init($this, $route);
 
         if (method_exists($handler[0], 'before')) {
-            $handler[0]->before($this, $handler, $parameters);
+            $handler[0]->before($this, &$handler, $parameters);
         }
 
         $result = call_user_func_array($handler, $parameters);

@@ -411,10 +411,10 @@ class Admin_UserController extends AuthenticatedController
 
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');
                  foreach ($result['added'] as $item) {
-                    $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                    $details[] = sprintf(_("Das automatische Eintragen in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
             }
                 foreach ($result['removed'] as $item) {
-                    $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                    $details[] = sprintf(_("Das automatische Austragen aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
                 }
             }
 
@@ -680,16 +680,16 @@ class Admin_UserController extends AuthenticatedController
 
 
                     foreach ($result['added'] as $item) {
-                        $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                        $details[] = sprintf(_("Das automatische Eintragen in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
                 }
                     foreach ($result['removed'] as $item) {
-                        $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+                        $details[] = sprintf(_("Das automatische Austragen aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
                     }
                 }
 
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-                PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde erfolgreich angelegt.'), $details));
+                PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde angelegt.'), $details));
                 $this->redirect('admin/user/edit/' . $user_id);
             } else {
                 //get message
@@ -770,7 +770,7 @@ class Admin_UserController extends AuthenticatedController
                     StudipMail::setDefaultTransporter($default_mailer);
                 }
 
-                PageLayout::postMessage(MessageBox::success(_('Die Benutzer wurden erfolgreich migriert.'), $details));
+                PageLayout::postMessage(MessageBox::success(_('Die Benutzer wurden migriert.'), $details));
                 $this->redirect('admin/user/edit/' . $new_id);
             } else {
                 PageLayout::postMessage(MessageBox::error(_("Bitte wählen Sie zwei gültige Benutzer aus.")));
@@ -807,7 +807,7 @@ class Admin_UserController extends AuthenticatedController
         $db = DBManager::get()->prepare("UPDATE auth_user_md5 SET locked = 0, lock_comment = NULL, locked_by = NULL WHERE user_id = ?");
         $db->execute(array($user_id));
         if ($db->rowCount() == 1) {
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde erfolgreich entsperrt.')));
+            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde entsperrt.')));
         } else {
             PageLayout::postMessage(MessageBox::error(_('Der Benutzer konnte nicht entsperrt werden.')));
         }
@@ -848,7 +848,7 @@ class Admin_UserController extends AuthenticatedController
             UserModel::setInstitute($user_id, $institute_id, $values);
 
             //output
-            PageLayout::postMessage(MessageBox::success(_('Die Einrichtungsdaten des Benutzers wurden erfolgreich geändert.')));
+            PageLayout::postMessage(MessageBox::success(_('Die Einrichtungsdaten des Benutzers wurden geändert.')));
             $this->redirect('admin/user/edit/' . $user_id);
         }
 
@@ -871,9 +871,9 @@ class Admin_UserController extends AuthenticatedController
         $db = DBManager::get()->prepare("DELETE FROM user_studiengang WHERE user_id = ? AND studiengang_id = ? AND abschluss_id = ?");
         $db->execute(array($user_id, $fach_id, $abschlus_id));
         if ($db->rowCount() == 1) {
-            PageLayout::postMessage(MessageBox::success(_('Der Studiengang wurde erfolgreich gelöscht.')));
+            PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zum Studiengang wurde gelöscht.')));
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Der Studiengang konnte nicht gelöscht werden.')));
+            PageLayout::postMessage(MessageBox::error(_('Die Zuordnung zum Studiengang konnte nicht gelöscht werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -891,12 +891,12 @@ class Admin_UserController extends AuthenticatedController
             $db->execute(array($user_id, $institut_id));
             if ($db->rowCount() == 1) {
                 checkExternDefaultForUser($user_id);
-                PageLayout::postMessage(MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.')));
+                PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Einrichtung wurde gelöscht.')));
             } else {
-                PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
+                PageLayout::postMessage(MessageBox::error(_('Die Zuordnung zur Einrichtung konnte nicht gelöscht werden.')));
             }
         } else {
-            PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
+            PageLayout::postMessage(MessageBox::error(_('Die Zuordnung zur Einrichtung konnte nicht gelöscht werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -916,10 +916,10 @@ class Admin_UserController extends AuthenticatedController
         $details = array();
 
         foreach ($result['added'] as $item) {
-            $details[] = sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+            $details[] = sprintf(_("Das automatische Eintragen in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
         }
         foreach ($result['removed'] as $item) {
-            $details[] = sprintf(_("Der automatische Austrag aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
+            $details[] = sprintf(_("Das automatische Austragen aus der Veranstaltung <em>%s</em> wurde durchgeführt."), $item);
         }
 
         PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.'), $details));

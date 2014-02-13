@@ -85,7 +85,7 @@ class SimpleORMapCollection extends SimpleCollection
         if (!is_null($index)) {
             $index = (int)$index;
         }
-        if (strtolower(get_class($newval)) !== $this->getClassName()) {
+        if (!is_a($newval, $this->getClassName())) {
             throw new InvalidArgumentException('This collection only accepts objects of type: ' .  $this->getClassName());
         }
         if ($this->related_record && $this->relation_options['type'] === 'has_many') {
@@ -143,7 +143,7 @@ class SimpleORMapCollection extends SimpleCollection
         if (is_callable($this->finder)) {
             $data = call_user_func($this->finder, $this->related_record);
             foreach ($data as $one) {
-                if (strtolower(get_class($one)) !== $this->getClassName()) {
+                if (!is_a($one, $this->getClassName())) {
                     throw new Exception('This collection only accepts objects of type: ' .  $this->getClassName());
                 }
             }

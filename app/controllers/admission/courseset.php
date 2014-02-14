@@ -224,7 +224,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     }
 
     public function save_action($coursesetId='') {
-        if (!Request::submitted('submit') || !Request::option('name') || !Request::getArray('institutes')) {
+        if (!$this->instant_course_set_view && (!Request::submitted('submit') || !Request::get('name') || !Request::getArray('institutes'))) {
             $this->flash['name'] = Request::get('name');
             $this->flash['institutes'] = Request::getArray('institutes');
             $this->flash['courses'] = Request::getArray('courses');
@@ -244,11 +244,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             if (!Request::submitted('add_institute') && !Request::getArray('institutes')) {
                 $this->flash['error'] = _('Bitte geben Sie mindestens eine Einrichtung an, zu der das Anmeldeset gehört!');
             }
-            if ($this->instant_course_set_view) {
-                $this->redirect($this->url_for('course/admission/edit_courseset/' . $coursesetId));
-            } else {
-                $this->redirect($this->url_for('admission/courseset/configure', $coursesetId));
-            }
+            $this->redirect($this->url_for('admission/courseset/configure', $coursesetId));
         } else {
             $courseset = new CourseSet($coursesetId);
             if (!$courseset->getUserId()) {

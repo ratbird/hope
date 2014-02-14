@@ -340,6 +340,7 @@ class Step00240CourseSets extends Migration
         $db->exec("ALTER TABLE `seminar_user` DROP `admission_studiengang_id`");
         $db->exec("ALTER TABLE `admission_seminar_user` DROP `studiengang_id`");
         try {
+            $db->exec("ALTER TABLE `seminar_user` DROP INDEX `Seminar_id`");
             $db->exec("ALTER TABLE `seminar_user` DROP INDEX `user_id`");
         } catch (PDOException $e) {
         }

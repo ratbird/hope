@@ -95,9 +95,9 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
 
     // actually insert the user into the seminar
     $stmt = DBManager::get()->prepare('INSERT INTO seminar_user
-        (Seminar_id, user_id, status, admission_studiengang_id, comment, gruppe, mkdate)
-        VALUES (?, ?, ?, ?, ?, ?, ?)');
-    $stmt->execute(array($seminar_id, $user_id, $status, ($contingent ? $contingent : ''), $admission_comment, $colour_group, $mkdate));
+        (Seminar_id, user_id, status, comment, gruppe, mkdate)
+        VALUES (?, ?, ?, ?, ?, ?)');
+    $stmt->execute(array($seminar_id, $user_id, $status, $admission_comment, $colour_group, $mkdate));
 
     NotificationCenter::postNotification('UserDidEnterCourse', $seminar_id, $user_id);
 
@@ -135,21 +135,6 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
 function removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id)
 {
     CalendarScheduleModel::deleteSeminarEntries($user_id, $seminar_id);
-}
-
-/**
-* This function calculate the remaining places for the "alle"-allocation
-*
-* The function calculate the remaining places for the "alle"-allocation. It considers
-* the places in the other allocations to avoid rounding errors
-*
-* @param        string  seminar_id  the seminar_id of the seminar to calculate
-* @return       integer
-*
-*/
-
-function get_all_quota($seminar_id) {
-    return Seminar::GetInstance($seminar_id)->getFreeAdmissionSeats('all');
 }
 
 /**
@@ -191,7 +176,7 @@ function renumber_admission ($seminar_id, $send_message = TRUE)
                   WHERE seminar_id = ? AND status = 'awaiting'
                   ORDER BY position";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($temp['Seminar_id']));
+        $statement->execute(array($seminar->id));
         $user_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         // Prepare statement that updates the position
@@ -203,7 +188,7 @@ function renumber_admission ($seminar_id, $send_message = TRUE)
         $position = 1;
         //Liste neu numerieren
         foreach ($user_ids as $user_id) {
-            $update_statement->execute(array($position, $user_id, $temp['Seminar_id']));
+            $update_statement->execute(array($position, $user_id, $seminar->id));
 
             //User benachrichten
             if ($update_statement->rowCount() && $send_message) {
@@ -263,7 +248,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
             $count = (int)$seminar->getFreeAdmissionSeats();
 
             //Studis auswaehlen, die jetzt aufsteigen koennen
-            $query = "SELECT user_id, username, studiengang_id
+            $query = "SELECT user_id, username
                       FROM admission_seminar_user
                       LEFT JOIN auth_user_md5 USING (user_id)
                       WHERE seminar_id = ? AND status = 'awaiting'
@@ -279,14 +264,13 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
 
                 if (!$sem_preliminary) {
                     $query = "INSERT INTO seminar_user
-                                (user_id, Seminar_id, status, gruppe, admission_studiengang_id, mkdate)
-                              VALUES (?, ?, 'autor', ?, ?, UNIX_TIMESTAMP())";
+                                (user_id, Seminar_id, status, gruppe, mkdate)
+                              VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
                     $statement = DBManager::get()->prepare($query);
                     $statement->execute(array(
                         $row['user_id'],
                         $seminar->getId(),
-                        $group,
-                        $row['studiengang_id']
+                        $group
                     ));
                     $affected = $statement->rowCount();
 
@@ -356,28 +340,26 @@ function admission_seminar_user_insert($user_id, $seminar_id, $status, $studieng
 {
     if ($status == 'accepted') {
         $query = "INSERT INTO admission_seminar_user
-                    (user_id, seminar_id, status, studiengang_id, mkdate, comment)
-                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), ?)";
+                    (user_id, seminar_id, status, mkdate, comment)
+                  VALUES (?, ?, ?, UNIX_TIMESTAMP(), ?)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $user_id,
             $seminar_id,
             $status,
-            $studiengang_id,
             $comment
         ));
         return $statement->rowCount();
     } elseif ($status == 'awaiting') {
         $query = "INSERT INTO admission_seminar_user
-                    (user_id, seminar_id, studiengang_id, status, mkdate, comment, position)
-                  SELECT ?, ?, ?, 'awaiting', UNIX_TIMESTAMP(), ?, IFNULL(MAX(position), 0) + 1
+                    (user_id, seminar_id, status, mkdate, comment, position)
+                  SELECT ?, ?, 'awaiting', UNIX_TIMESTAMP(), ?, IFNULL(MAX(position), 0) + 1
                   FROM admission_seminar_user
                   WHERE seminar_id = ? AND status != 'accepted'";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $user_id,
             $seminar_id,
-            $studiengang_id,
             $comment,
             $seminar_id
         ));
@@ -406,179 +388,5 @@ function admission_seminar_user_get_position($user_id, $seminar_id)
     $position = $statement->fetchColumn();
 
     return $position == 'na' ? true : $position;
-}
-
-
-/**
- * this function returns a string representation of the differences between two admission_data-arrays
- *
- * @param mixed $aado the array holding the original data
- * @param mixed $aado the array holding the changed data
-
- * @return mixed an array holding each change in its string representation
- */
-function get_readable_admission_difference ($aado, $aad) {
-    $message = array();
-
-    $changes = array_diff_assoc($aad, $aado);
-
-    foreach ($changes as $field => $value) {
-        switch ($field) {
-            case 'admission_type':
-                $message[] = 'Anmeldeverfahren: '. get_admission_description($field, $aado[$field])
-                    .' -> '. get_admission_description($field, $aad[$field]);
-                break;
-
-            case 'sem_admission_start_date':
-                if ( $aado[$field] <= 0 ) $before = 'keine'; else $before = date('d.m.Y H:i', $aado[$field]);
-                if ( $aad[$field]  <= 0 ) $after  = 'keine'; else $after  = date('d.m.Y H:i', $aad[$field]);
-                $message[] = 'Startzeit: '. $before .' -> '. $after;
-                break;
-
-            case 'sem_admission_end_date':
-                if ( $aado[$field] <= 0 ) $before = 'keine'; else $before = date('d.m.Y H:i', $aado[$field]);
-                if ( $aad[$field]  <= 0 ) $after  = 'keine'; else $after  = date('d.m.Y H:i', $aad[$field]);
-                $message[] = 'Endzeit: '. $before .' -> '. $after;
-                break;
-
-            case 'read_level':
-                $message[] = 'Lesezugriff: '. get_admission_description($field, $aado[$field])
-                    .' -> '. get_admission_description($field, $aad[$field]);
-                break;
-
-            case 'write_level':
-                $message[] = 'Schreibzugriff: '. get_admission_description($field, $aado[$field])
-                    .' -> '. get_admission_description($field, $aad[$field]);
-                break;
-
-            case 'passwort':
-                $message[] = 'Passwort: '. $aado[$field] .' -> '. $aad[$field];
-                break;
-
-            case 'admission_prelim':
-                $message[] = 'Anmeldemodus: '. get_admission_description($field, $aado[$field])
-                    .' -> '. get_admission_description($field, $aad[$field]);
-                break;
-
-            case 'admission_prelim_txt':
-                $message[] = 'Hinweistext Anmeldemodus: '. $aado[$field] ."<br> -> ". $aad[$field];
-                break;
-
-            case 'admission_disable_waitlist':
-                $message[] = 'Warteliste wurde '. (($aad[$field] == 0) ? 'aktiviert' : 'deaktiviert');
-                break;
-
-            case 'admission_turnout':
-                $message[] = 'Teilnehmerzahl: '. $aado[$field] .' -> '. $aad[$field];
-                break;
-
-            case 'admission_binding':
-                $message[] = 'Verbindliche Anmeldung wurde '. (($aad[$field] == 1) ? 'aktiviert' : 'deaktiviert');
-                break;
-
-            case 'admission_enable_quota':
-                $message[] = 'Die prozentuale Kontingentierung wurde '. (($value == 1) ? 'aktiviert' : 'deaktiviert');
-                break;
-
-            case 'admission_endtime':
-                $message[] = 'Das Enddatum für die Kontingentierung wurde auf '. date('d.m.Y H:i', $value) .' gesetzt.';
-                break;
-
-        }
-
-    }
-
-    // check, if something has been deleted
-    foreach (array_diff_assoc((array)$aado['studg'], (array)$aad['studg']) as $id => $data) {
-        $message[] = 'Der Studiengang '. $data['name']
-                   . ' wurde aus der Kontingentierung entfernt.';
-    }
-
-    // check, if something has been added
-    foreach (array_diff_assoc((array)$aad['studg'], (array)$aado['studg']) as $id => $data) {
-        $message[] = 'Der Studiengang '. $data['name']
-                   . ($data['ratio'] ? ' ('. $data['ratio'] .'%)' : '')
-                   . ' wurde der Kontingentierung hinzugefügt.';
-    }
-
-    // check for changed ratios
-    if (!empty($aado['studg'])) {
-        foreach ($aado['studg'] as $id => $data) {
-            if  ($aad['studg'][$id] &&  $aad['studg'][$id]['ratio'] != $data['ratio']) {
-                $message[] = 'Der Prozentsatz bei '. $data['name'] .' wurde von '
-                           . $data['ratio'] . '% auf '.  $aad['studg'][$id]['ratio'] .'% geändert.';
-            }
-        }
-    }
-
-    return $message;
-}
-
-
-/**
- * this function returns a readable representation of the following admission_data:
- *  - admission_type
- *  - read_level
- *  - write_level
- *
- * @param string $type one of the possible fields to get the string representation for
- * @param mixed $value the value for the value
- *
- * @return string string representation of $value
- */
-function get_admission_description ($type, $value) {
-    switch ($type) {
-        case 'admission_type':
-            switch ( $value ) {
-                case 0:
-                    $ergebnis = "Ohne";
-                    break;
-                case 1:
-                    $ergebnis = "Los";
-                    break;
-                case 2:
-                    $ergebnis = "Chronologisch";
-                    break;
-                case 3:
-                    $ergebnis = "Gesperrt";
-                    break;
-            }
-        break; // admission_type
-
-        case 'read_level':
-        case 'write_level':
-            switch ( $value ) {
-                case 0:
-                    $ergebnis = 'freier Zugriff';
-                    break;
-
-                case 1:
-                    $ergebnis = 'in Stud.IP angemeldet';
-                    break;
-
-                case 2:
-                    $ergebnis = 'nur mit Passwort';
-                    break;
-
-                default:
-                    $ergebnis = $value;
-                    break;
-            }
-        break;
-
-        case 'admission_prelim':
-            switch ( $value ) {
-                case 0:
-                    $ergebnis = 'Direkter Eintrag';
-                    break;
-
-                case 1:
-                    $ergebnis = 'Vorläufiger Eintrag';
-                    break;
-            }
-        break;
-    }
-
-    return $ergebnis;
 }
 

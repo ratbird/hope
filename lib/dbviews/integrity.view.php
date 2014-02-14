@@ -73,8 +73,6 @@ $_views["ARCHIV_USER"]= array("pk"=>"Seminar_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.Seminar_id FROM archiv_user a LEFT JOIN archiv b USING(Seminar_id) WHERE ISNULL(b.Seminar_id)");
 
 //Studiengang
-$_views["STUD_ADMISSONUSER"]= array("pk"=>"studiengang_id","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT   a.studiengang_id FROM admission_seminar_user a LEFT JOIN studiengaenge b USING(studiengang_id) WHERE ISNULL(b.studiengang_id) AND a.studiengang_id NOT LIKE 'all'");
 $_views["STUD_USER"]= array("pk"=>"studiengang_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.studiengang_id FROM user_studiengang a LEFT JOIN studiengaenge b USING(studiengang_id) WHERE ISNULL(b.studiengang_id)");
 

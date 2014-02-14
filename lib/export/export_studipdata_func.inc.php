@@ -618,7 +618,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
             }
         } // Gruppierung nach Status in der Veranstaltung / Einrichtung
           else if ($key1 == 'accepted') {
-            $query = "SELECT ui.*, aum.*, asu.comment, asu.studiengang_id AS admission_studiengang_id,
+            $query = "SELECT ui.*, aum.*, asu.comment,
                              FROM_UNIXTIME(asu.mkdate) AS registration_date,
                              GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                       FROM admission_seminar_user AS asu
@@ -632,7 +632,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                       ORDER BY Nachname";
             $parameters[':seminar_id'] = $ex_sem_id;
         } elseif ($key1 == 'awaiting') {
-            $query = "SELECT ui.*, aum.*, asu.comment, asu.studiengang_id AS admission_studiengang_id,
+            $query = "SELECT ui.*, aum.*, asu.comment,
                              asu.position AS admission_position,
                              GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
                         FROM admission_seminar_user AS asu

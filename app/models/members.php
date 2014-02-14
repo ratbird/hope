@@ -334,7 +334,6 @@ class MembersModel
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING (user_id)
-                LEFT JOIN studiengaenge ON studiengang_id = admission_studiengang_id
                 WHERE seminar_id = ? ORDER BY position, nachname ASC";
         $st = DBManager::get()->prepare($query);
         $st->execute(array(
@@ -378,7 +377,6 @@ class MembersModel
                 " . $GLOBALS['_fullname_sql']['full_rev'] . " as fullname
                 FROM admission_seminar_user asu INNER JOIN auth_user_md5 USING(user_id)
                 INNER JOIN user_info USING(user_id)
-                LEFT JOIN studiengaenge USING(studiengang_id)
                 WHERE seminar_id = ? ORDER BY position, nachname ASC";
         $st = DBManager::get()->prepare($query);
         $st->execute(array(

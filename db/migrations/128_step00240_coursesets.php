@@ -337,6 +337,14 @@ class Step00240CourseSets extends Migration
         $db->exec("ALTER TABLE  `seminare` ADD  `admission_waitlist_max` INT UNSIGNED NOT NULL DEFAULT  '0'");
         $db->exec("ALTER TABLE  `seminare` ADD  `admission_disable_waitlist_move` TINYINT UNSIGNED NOT NULL DEFAULT '0'");
 
+        $db->exec("ALTER TABLE `seminar_user` DROP `admission_studiengang_id`");
+        $db->exec("ALTER TABLE `admission_seminar_user` DROP `studiengang_id`");
+        try {
+            $db->exec("ALTER TABLE `seminar_user` DROP INDEX `user_id`");
+        } catch (PDOException $e) {
+        }
+        $db->exec("ALTER TABLE `seminar_user` ADD INDEX (`user_id`, `Seminar_id`, `status`)");
+
         SimpleORMap::expireTableScheme();
 
         // Insert global configuration: who may edit course sets?

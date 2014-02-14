@@ -214,23 +214,13 @@ class CourseSet
             WHERE `set_id`=?");
         $stmt->execute(array($this->id));
         /*
-         * Delete waiting lists (users are moved to corresponding course as
-         * participants).
+         * Delete waiting lists
          */
         foreach ($this->courses as $id => $assigned) {
-            // Get waiting list for each course.
-            $list = AdmissionApplication::findBySeminar_id($id);
-            // Move each user into course.
-            foreach ($list as $entry) {
-                $new = new CourseMember(array($id, $entry->user_id));
-                if ($new->isNew()) {
-                    $new->status = 'autor';
-                    $new->admission_studiengang_id = 'all';
-                }
-                $new->store();
-            }
-            AdmissionApplication::deleteBySQL("seminar_id=?", array($id));
+            AdmissionApplication::deleteBySQL("status='awaiting' AND seminar_id=?", array($id));
         }
+        //Delete priorities
+        AdmissionPriority::unsetAllPriorities($this->getId());
     }
 
     /**

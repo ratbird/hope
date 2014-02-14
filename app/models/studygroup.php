@@ -131,8 +131,8 @@ class StudygroupModel
 
             $query = "INSERT INTO seminar_user
                         (user_id, seminar_id, status, position, gruppe,
-                         admission_studiengang_id, notification, mkdate, comment, visible)
-                      VALUES (?, ?, 'autor', 0, 8, 0, 0, UNIX_TIMESTAMP(), '', 'yes')";
+                         notification, mkdate, comment, visible)
+                      VALUES (?, ?, 'autor', 0, 8, 0, UNIX_TIMESTAMP(), '', 'yes')";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($accept_user_id, $sem_id));
 

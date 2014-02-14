@@ -44,7 +44,6 @@
 		<xsl:text>Privatnr;</xsl:text>
 		<xsl:text>E-Mail;</xsl:text>
 		<xsl:text>Anmeldedatum;</xsl:text>
-		<xsl:text>Kontingent;</xsl:text>
 		<xsl:text>Studiengänge;</xsl:text>
 		<xsl:if test="$datafields">
 			<xsl:for-each select="$datafields">
@@ -122,11 +121,6 @@
 
 			<xsl:if test="datum_anmeldung">
 				<xsl:value-of select="datum_anmeldung"/>
-			</xsl:if>
-			<xsl:text>";"</xsl:text>
-
-			<xsl:if test="kontingent">
-				<xsl:value-of select="str:replace(kontingent,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
 

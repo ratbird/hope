@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string user_id database column
  * @property string seminar_id database column
  * @property string studiengang_id database column
@@ -35,7 +35,7 @@
 class AdmissionApplication extends SimpleORMap
 {
 
-    
+
     public static function findByCourse($course_id)
     {
         return self::findBySeminar_id($course_id, 'ORDER BY position');
@@ -53,21 +53,15 @@ class AdmissionApplication extends SimpleORMap
                                                     'foreign_key' => 'user_id'),
                                    'course' => array('class_name' => 'Course',
                                                     'foreign_key' => 'seminar_id'),
-                                   'studycourse' => array('class_name' => 'StudyCourse',
-                                                    'foreign_key' => 'studiengang_id')
         );
         $user_getter = function ($record, $field) { return $record->getRelationValue('user', $field);};
         $this->additional_fields['vorname'] = array('get' => $user_getter);
         $this->additional_fields['nachname'] = array('get' => $user_getter);
         $this->additional_fields['username'] = array('get' => $user_getter);
         $this->additional_fields['email'] = array('get' => $user_getter);
-        $this->additional_fields['course_name'] = array('get' => 
+        $this->additional_fields['course_name'] = array('get' =>
                                                         function ($record, $field) {
                                                             return $record->getRelationValue('course', 'name');
-                                                        });
-        $this->additional_fields['studycourse_name'] = array('get' => 
-                                                        function ($record, $field) {
-                                                            return $record->studiengang_id == 'all' ? _("Alle Studiengänge") : $record->getRelationValue('studycourse', 'name');
                                                         });
         parent::__construct($id);
     }

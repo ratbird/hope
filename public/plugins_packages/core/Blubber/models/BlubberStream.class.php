@@ -288,8 +288,8 @@ class BlubberStream extends SimpleORMap {
                 //filter
                 (count($filter_sql) ? implode(" AND ", $filter_sql)." " : "") .
             "GROUP BY blubber.topic_id " .
-            "ORDER BY " . ($this['sort'] === "activity" 
-                            ? "IF(blubber_reshares.chdate IS NULL OR MAX(comment.mkdate) > MAX(blubber_reshares.chdate), MAX(comment.mkdate), MAX(blubber_reshares.chdate)) DESC" 
+            "ORDER BY " . ($this['sort'] === "activity"
+                            ? "IF(blubber_reshares.chdate IS NULL OR MAX(comment.mkdate) > MAX(blubber_reshares.chdate), MAX(comment.mkdate), MAX(blubber_reshares.chdate)) DESC"
                             : "blubber.mkdate DESC"
                           )." " .
             (($offset or $limit) ? "LIMIT ".(int) $offset.", ".(int) $limit." " : " ") .
@@ -405,7 +405,7 @@ class BlubberStream extends SimpleORMap {
                 $filter_users = array_unique($filter_users);
             }
             $filter_sql[] = "(blubber.user_id IN (:filter_users) OR blubber_reshares.user_id IN (:filter_users))";
-            
+
             $parameters['filter_users'] = $filter_users;
         }
         if (count($this['filter_hashtags']) > 0) {
@@ -514,14 +514,14 @@ class BlubberStream extends SimpleORMap {
                 $forbidden_types[] = $key;
             }
         }
+        $is_deputy = get_config('DEPUTIES_ENABLE') && DBManager::get()->fetchColumn("SELECT 1 FROM deputies WHERE user_id=? LIMIT 1", array($this->user_id));
         $blubber_plugin_info = PluginManager::getInstance()->getPluginInfo('Blubber');
         $statement = DBManager::get()->prepare(
             "SELECT seminare.Seminar_id " .
             "FROM seminar_user " .
                 "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
                 "LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
-                "LEFT JOIN deputies ON (deputies.range_id = seminar_user.Seminar_id) " .
-            "WHERE (seminar_user.user_id = :me OR deputies.user_id = :me) " .
+            "WHERE seminar_user.user_id = :me " .
                 "AND (" .
                     "seminare.status IN (:mandatory_types) " .
                     "OR (plugins_activated.state = 'on') " .
@@ -535,7 +535,25 @@ class BlubberStream extends SimpleORMap {
         $parameter['forbidden_types'] = count($forbidden_types) ? $forbidden_types : array(-1);
         $parameter['blubber_plugin_id'] = $blubber_plugin_info['id'];
         $statement->execute($parameter);
-        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+        $my_courses = $statement->fetchFirst();
+        if ($is_deputy) {
+            $statement = DBManager::get()->prepare(
+                "SELECT deputies.range_id " .
+                "FROM deputies " .
+                    "INNER JOIN seminare ON (seminare.Seminar_id = deputies.range_id) " .
+                    "LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
+                "WHERE deputies.user_id = :me " .
+                    "AND (" .
+                        "seminare.status IN (:mandatory_types) " .
+                        "OR (plugins_activated.state = 'on') " .
+                        "OR (seminare.status IN (:standard_types) AND plugins_activated.state != 'off') " .
+                    ") " .
+                    "AND seminare.status NOT IN (:forbidden_types) " .
+            "");
+            $statement->execute($parameter);
+            $my_courses = array_merge($my_courses, $statement->fetchFirst());
+        }
+        return $my_courses;
     }
 
 }

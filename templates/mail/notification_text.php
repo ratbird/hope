@@ -26,5 +26,5 @@
 
 <? endforeach ?>
 
---
+-- 
 <?= _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.") ?>

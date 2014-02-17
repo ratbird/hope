@@ -62,7 +62,7 @@ use Studip\Button, Studip\LinkButton;
         <td>
             <?
             $tooltxt = _("Sichtbarkeit:") . ' ' . $user['visible'];
-            $tooltxt .= "\n" . _("Domï¿½nen:") . ' ' . $user['userdomains'];
+            $tooltxt .= "\n" . _("Domänen:") . ' ' . $user['userdomains'];
             if ($user['locked'] == '1') {
                 $tooltxt .= "\n" .  _("Nutzer ist gesperrt!");
             }
@@ -97,13 +97,13 @@ use Studip\Button, Studip\LinkButton;
         <td>
             <?= ($user["mkdate"]) ? date("d.m.Y", $user["mkdate"]) : _('unbekannt') ?>
         </td>
-        <td><?= htmlReady($user['auth_plugin'] == 'preliminary' ? _("vorlï¿½ufig") : $user['auth_plugin']) ?></td>
+        <td><?= htmlReady($user['auth_plugin'] == 'preliminary' ? _("vorläufig") : $user['auth_plugin']) ?></td>
         <td class="actions" nowrap>
             <a href="<?= $controller->url_for('admin/user/edit/'.$user['user_id']) ?>" title="<?= _('Detailansicht des Benutzers anzeigen')?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diesen Benutzer bearbeiten'))) ?>
             </a>
             <a href="<?= $controller->url_for('admin/user/delete/'.$user['user_id']) ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diesen Benutzer lï¿½schen'))) ?>
+                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diesen Benutzer löschen'))) ?>
             </a>
         </td>
     </tr>
@@ -111,16 +111,16 @@ use Studip\Button, Studip\LinkButton;
 
     </tbody>
 
-    <tfoot>    
+    <tfoot>
 
     <tr>
         <td colspan="11" align="right">
-            <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswï¿½hlen') ?>">
-            <?= Button::create(_('Lï¿½schen'), array('title' => _('Alle ausgewï¿½hlten Benutzer lï¿½schen')))?>
+            <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
+            <?= Button::create(_('Löschen'), array('title' => _('Alle ausgewählten Benutzer löschen')))?>
         </td>
     </tr>
 
-    </tfoot>    
+    </tfoot>
 
 </table>
 </form>

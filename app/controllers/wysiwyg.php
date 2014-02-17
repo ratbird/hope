@@ -20,10 +20,16 @@
  * @author      Robert Costa <rcosta@uos.de>
  */
 require_once 'authenticated_controller.php';
-use Studip\Utils;
 
-class WysiwygController extends AuthenticatedController
+use Studip\WysiwygRequest;
+use Studip\WysiwygDocument;
+
+class WysiwygController extends \AuthenticatedController
 {
+    const UPLOAD_PERMISSION = 'autor'; // minimum permission level for uploading
+    const FOLDER_NAME = 'Wysiwyg Uploads';
+    const FOLDER_DESCRIPTION = 'Vom WYSIWYG Editor hochgeladene Dateien.';
+
     /**
      * Handle the WYSIWYG editor's file uploads.
      *
@@ -45,43 +51,24 @@ class WysiwygController extends AuthenticatedController
      * Entries with the property "url" correspond to successful uploads.
      * Entries with the property "error" correspond to failed uploads.
      */
-    public function upload_action() {
-        // verify access permissions
-        Utils::verifyPostRequest();
-        CSRFProtection::verifyUnsafeRequest();
-        Utils::verifyPermission('autor'); // minimum permission level for uploading
-
-        // get folder ID
+    public function upload_action()
+    {
         try {
-            $folder_id = Utils::createFolder(
-                _('Wysiwyg Uploads'),
-                _('Vom WYSIWYG Editor hochgeladene Dateien.')
-            );
+            WysiwygRequest::verifyWritePermission(self::UPLOAD_PERMISSION);
+            $folder_id = WysiwygDocument::createFolder(
+                self::FOLDER_NAME, self::FOLDER_DESCRIPTION);
+            $response = WysiwygDocument::storeUploadedFilesIn($folder_id);
         } catch (AccessDeniedException $e) {
-            $this->render_json($e->getMessage());
-            return;
-        }
-    
-        // store uploaded files as StudIP documents
-        $response = array();  // data for HTTP response
-        foreach (Utils::getUploadedFiles() as $file) {
-            try {
-                $newfile = Utils::uploadFile($file, $folder_id);
-                $response['files'][] = Array(
-                    'name' => utf8_encode($newfile['filename']),
-                    'type' => $file['type'],
-                    'url' => Utils::getDownloadLink($newfile->getId()));
-            } catch (AccessDeniedException $e) {  // creation of Stud.IP doc failed
-                $response['files'][] = Array(
-                    'name' => $file['name'],
-                    'type' => $file['type'],
-                    'error' => $e->getMessage());
-            }
+            $response = \studip_utf8encode($e->getMessage());
         }
         $this->render_json($response); // send HTTP response to client
     }
 
-    public function test_action(){
+    /**
+     * TODO remove this method
+     */
+    public function test_action()
+    {
         // studip must be at localhost/~rcosta/step00256 for tests to work
         // LOAD_EXTERNAL_MEDIA must be set to 'proxy'
         $studip_root = '/~rcosta/step00256';

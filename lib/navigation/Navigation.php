@@ -170,7 +170,7 @@ class Navigation implements IteratorAggregate
      * used to defer initialization of item metadata, override in subclasses
      * if initialization is costly
      */
-    protected function initItem()
+    public function initItem()
     {
         $this->initialized = true;
     }

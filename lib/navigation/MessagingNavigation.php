@@ -26,7 +26,7 @@ class MessagingNavigation extends Navigation
         parent::__construct(_('Nachrichten'));
     }
 
-    protected function initItem()
+    public function initItem()
     {
         global $user, $neux;
 

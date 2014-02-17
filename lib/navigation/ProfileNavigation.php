@@ -30,7 +30,7 @@ class ProfileNavigation extends Navigation
         parent::__construct(_('Profil'));
     }
     
-    protected function initItem()
+    public function initItem()
     {
         global $user;
         parent::initItem();

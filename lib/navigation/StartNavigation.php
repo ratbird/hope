@@ -25,7 +25,7 @@ class StartNavigation extends Navigation
 
     }
 
-    protected function initItem()
+    public function initItem()
     {
         global $user;
 

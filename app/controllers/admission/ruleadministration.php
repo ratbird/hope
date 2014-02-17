@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Admission_RuleAdministrationController - Global administration
+ * of available admission rules
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       3.0
+ */
+
 require_once('app/controllers/authenticated_controller.php');
 require_once('app/models/rule_administration.php');
 require_once('lib/classes/admission/AdmissionRule.class.php');
@@ -7,7 +22,7 @@ require_once('lib/classes/admission/AdmissionRule.class.php');
 class Admission_RuleAdministrationController extends AuthenticatedController {
 
     /**
-     * Here go actions that must be done before each page load.
+     * @see AuthenticatedController::before_filter
      */
     public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
@@ -44,6 +59,8 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
     /**
      * Shows where the given admission rule is activated (system wide or
      * only at specific institutes).
+     * 
+     * @param String $ruleType Class name of the rule type to check.
      */
     public function check_activation_action($ruleType) {
         if (Request::isXhr()) {
@@ -161,6 +178,11 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Downloads an admission rule as ZIP file.
+     * @param String $ruleName Class name of the admission rule, is used for file name. 
+     *   
+     */
     public function download_action($ruleName) {
         $dirname = $GLOBALS['ABSOLUTE_PATH_STUDIP'].'admissionrules/'.
             strtolower($ruleName);

@@ -83,7 +83,7 @@ class Course_AdmissionController extends AuthenticatedController
     }
 
     /**
-     *
+     * Shows the current restrictions for course participation.
      */
     function index_action()
     {
@@ -103,6 +103,9 @@ class Course_AdmissionController extends AuthenticatedController
         }
     }
 
+    /**
+     * Change preliminary admission settings.
+     */
     function change_admission_prelim_action()
     {
         CSRFProtection::verifyUnsafeRequest();
@@ -185,6 +188,9 @@ class Course_AdmissionController extends AuthenticatedController
         }
     }
 
+    /**
+     * Change free access settings.
+     */
     function change_free_access_action()
     {
         CSRFProtection::verifyUnsafeRequest();

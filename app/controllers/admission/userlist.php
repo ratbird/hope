@@ -1,10 +1,28 @@
 <?php
 
+/**
+ * userlist.php - Controller for user list administration. User lists
+ * are lists of persons who get different chances at course seat distribution
+ * than "normal" applicants.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
+
 require_once('app/controllers/authenticated_controller.php');
 require_once('lib/classes/admission/AdmissionUserList.class.php');
 
 class Admission_UserListController extends AuthenticatedController {
 
+    /**
+     * @see AuthenticatedController::before_filter
+     */
     public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
         if (Request::isXhr()) {
@@ -24,6 +42,9 @@ class Admission_UserListController extends AuthenticatedController {
         $this->set_content_type('text/html;charset=windows-1252');
     }
 
+    /**
+     * Show the user lists the current user has access to.
+     */
     public function index_action() {
         $this->userlists = array();
         foreach (AdmissionUserList::getUserLists($GLOBALS['user']->id) as $list) {
@@ -31,6 +52,12 @@ class Admission_UserListController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Show a configuration form for the given user list.
+     * 
+     * @param String $userlistId user list to load settings from (or empty
+     * if it is a new user list)
+     */
     public function configure_action($userlistId='') {
         if ($userlistId) {
             $this->userlist = new AdmissionUserList($userlistId);
@@ -59,6 +86,11 @@ class Admission_UserListController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Saves the given user list to database.
+     * 
+     * @param String $userlistId user list to save
+     */
     public function save_action($userlistId='') {
         if (Request::submitted('submit') && Request::get('name')) {
             $userlist = new AdmissionUserList($userlistId);
@@ -85,6 +117,11 @@ class Admission_UserListController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Deletes the given user list.
+     * 
+     * @param String $userlistId the user list to delete
+     */
     public function delete_action($userlistId) {
         $this->userlist = new AdmissionUserList($userlistId);
         if (Request::int('really')) {

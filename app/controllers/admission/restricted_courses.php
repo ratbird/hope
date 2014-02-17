@@ -29,6 +29,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         Navigation::activateItem('/tools/coursesets/restricted_courses');
     }
 
+    /**
+     * Shows a list of courses with restricted participant numbers.
+     */
     function index_action()
     {
         $this->setInfoboxImage(Assets::image_path('infobox/hoersaal.jpg'));

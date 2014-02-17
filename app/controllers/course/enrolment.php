@@ -75,8 +75,8 @@ class Course_EnrolmentController extends AuthenticatedController {
     }
 
     /**
-    *
-    */
+     * A person applies for a course.
+     */
     function apply_action() {
         $user_id = $GLOBALS['user']->id;
         $courseset = CourseSet::getSetForCourse($this->course_id);
@@ -178,6 +178,9 @@ class Course_EnrolmentController extends AuthenticatedController {
         StudipLock::release();
     }
 
+    /**
+     * Prioritize courses.
+     */
     function claim_action() {
         CSRFProtection::verifyUnsafeRequest();
         $user_id = $GLOBALS['user']->id;

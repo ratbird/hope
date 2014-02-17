@@ -1,9 +1,31 @@
 <?php
 
+/**
+ * RandomAlgorithm.class.php - Standard seat distribution algorithm
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      André Noack <noack@data-quest.de>
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       3.0
+ */
+
 require_once('lib/classes/admission/AdmissionAlgorithm.class.php');
 
 class RandomAlgorithm extends AdmissionAlgorithm {
 
+    /**
+     * Runs the algorithm, thus distributing course seats.
+     * 
+     * @param CourseSet $courseSet The course set containing the courses
+     * that seats shall be distributed for.
+     * @see CourseSet
+     */
     public function run($courseSet) {
         if ($courseSet->hasAdmissionRule('LimitedAdmission')) {
             return $this->distributeByPriorities($courseSet);
@@ -12,6 +34,14 @@ class RandomAlgorithm extends AdmissionAlgorithm {
         }
     }
 
+    /**
+     * Distribute seats for several courses in a course set.
+     * No priorities are given.
+     * 
+     * @param CourseSet $courseSet The course set containing the courses
+     * that seats shall be distributed for.
+     * @see CourseSet
+     */
     private function distributeByCourses($courseSet)
     {
         Log::DEBUG('start seat distribution for course set: ' . $courseSet->getId());
@@ -58,6 +88,14 @@ class RandomAlgorithm extends AdmissionAlgorithm {
     }
 
 
+    /**
+     * Distribute seats for several courses in a course set using the given
+     * user priorities.
+     * 
+     * @param CourseSet $courseSet The course set containing the courses
+     * that seats shall be distributed for.
+     * @see CourseSet
+     */
     private function distributeByPriorities($courseSet)
     {
         Log::DEBUG('start seat distribution for course set: ' . $courseSet->getId());
@@ -170,6 +208,14 @@ class RandomAlgorithm extends AdmissionAlgorithm {
         }
     }
 
+    /**
+     * Notify users about the fact that they couldn't get a seat and the
+     * waiting list is disabled in a course.
+     * 
+     * @param Array  $user_list Users to be notified
+     * @param Course $course    The course without waiting list
+     * @param int    $prio      User's priority for the given course.
+     */
     public function notifyRemainingUsers($user_list, $course, $prio = null)
     {
         foreach ($user_list as $chosen_one) {
@@ -185,6 +231,14 @@ class RandomAlgorithm extends AdmissionAlgorithm {
         }
     }
 
+    /**
+     * Notify users that they couldn't get a seat but are now on the waiting
+     * list for a given course.
+     * 
+     * @param Array  $user_list Users to be notified
+     * @param Course $course    The course without waiting list
+     * @param int    $prio      User's priority for the given course.
+     */
     private function addUsersToWaitlist($user_list, $course, $prio = null)
     {
         $maxpos = $course->admission_applicants->findBy('status', 'awaiting')->orderBy('position desc')->val('position');
@@ -210,6 +264,13 @@ class RandomAlgorithm extends AdmissionAlgorithm {
         }
     }
 
+    /**
+     * Add the lucky ones who got a seat to the given course.
+     * 
+     * @param Array  $user_list users to add as members
+     * @param Course $course    course to add users to
+     * @param int    $prio      user's priority for the given course
+     */
     private function addUsersToCourse($user_list, $course, $prio = null)
     {
         $seminar = new Seminar($course->id);
@@ -250,6 +311,11 @@ class RandomAlgorithm extends AdmissionAlgorithm {
         return $user_list;
     }
 
+    /**
+     * How many users have gotten a seat in distribution?
+     * 
+     * @return Number of users who where lucky enough to be course members now.
+     */
     public function countParticipatingUsers($course_ids, $user_ids)
     {
         $distributed_users = array();

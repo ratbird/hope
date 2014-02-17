@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * CoursesetController - Course sets
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       3.0
+ */
+
 require_once('app/controllers/authenticated_controller.php');
 require_once('app/models/courseset.php');
 require_once('app/models/rule_administration.php');
@@ -223,6 +237,12 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->instTpl = $tpl->render();
     }
 
+    /**
+     * Saves the given course set to database.
+     * 
+     * @param String $coursesetId the course set to save or empty if it is a
+     * new course set
+     */
     public function save_action($coursesetId='') {
         if (!$this->instant_course_set_view && (!Request::submitted('submit') || !Request::get('name') || !Request::getArray('institutes'))) {
             $this->flash['name'] = Request::get('name');
@@ -281,6 +301,11 @@ class Admission_CoursesetController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Deletes the given course set.
+     * 
+     * @param String $coursesetId the course set to delete
+     */
     public function delete_action($coursesetId) {
         $this->courseset = new CourseSet($coursesetId);
         if (Request::int('really')) {
@@ -292,6 +317,14 @@ class Admission_CoursesetController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Fetches courses at institutes specified by a given course set, filtered by a
+     * given semester.
+     * 
+     * @param String $coursesetId The courseset to fetch institute assignments
+     * from
+     * @see CoursesetModel::getInstCourses
+     */
     public function instcourses_action($coursesetId='') {
         CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
@@ -305,6 +338,9 @@ class Admission_CoursesetController extends AuthenticatedController {
             $coursesetId, $this->selectedCourses, Request::option('semester'), $this->onlyOwnCourses ?: Request::get('course_filter'));
     }
 
+    /**
+     * Fetches available institutes for the current user.
+     */
     public function institutes_action() {
         CSRFProtection::verifyUnsafeRequest();
         $this->myInstitutes = Institute::getMyInstitutes();
@@ -317,6 +353,12 @@ class Admission_CoursesetController extends AuthenticatedController {
             ->render();
     }
 
+    /**
+     * Configure settings for several courses at once.
+     * 
+     * @param String $set_id course set ID to fetch courses from
+     * @param String $csv    export course members to file
+     */
     public function configure_courses_action($set_id, $csv = null)
     {
         if (Request::isXhr()) {
@@ -438,6 +480,11 @@ class Admission_CoursesetController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Show users who are on an assigned user factor list.
+     * 
+     * @param String $set_id course set to fetch the user lists from  
+     */
     public function factored_users_action($set_id)
     {
         if (Request::isXhr()) {
@@ -451,6 +498,12 @@ class Admission_CoursesetController extends AuthenticatedController {
                                        }, array_keys($factored_users), 'ORDER BY Nachname');
     }
 
+    /**
+     * Gets the list of applicants for the courses belonging to this course set.
+     * 
+     * @param String $set_id course set ID
+     * @param String $csv    export users to file
+     */
     public function applications_list_action($set_id, $csv = null)
     {
         if (Request::isXhr()) {
@@ -489,6 +542,11 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->set_id = $courseset->getId();
     }
 
+    /**
+     * Gets courses fulfilling the given condition.
+     * 
+     * @param String $seminare_condition SQL condition
+     */
     function get_courses($seminare_condition)
     {
         global $perm, $user;

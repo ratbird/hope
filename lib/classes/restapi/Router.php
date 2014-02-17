@@ -302,6 +302,8 @@ class Router
      */
     public function getRoutes($describe = false, $check_access = true)
     {
+        $this->setupRoutes();
+        
         $result = array();
         foreach ($this->routes as $method => $routes) {
             foreach ($routes as $uri => $route) {
@@ -348,6 +350,8 @@ class Router
      */
     public function dispatch($uri = null, $method = null)
     {
+        $this->setupRoutes();
+        
         $uri = $this->normalizeDispatchURI($uri);
         $method = $this->normalizeRequestMethod($method);
 
@@ -367,6 +371,37 @@ class Router
         $response->finish($content_renderer);
 
         return $response;
+    }
+    
+    /**
+     * Searches and registers available routes.
+     */
+    private function setupRoutes()
+    {
+        // A bit ugly, I confess
+        static $was_setup = false;
+        if ($was_setup) {
+            return;
+        }
+        $was_setup = true;
+
+        // Register default routes
+        $routes = words('Contacts Course Discovery Events Files Forum Messages News Schedule Semester Studip User Wiki');
+
+        foreach ($routes as $route) {
+            require_once "app/routes/$route.php";
+            $class = "\\RESTAPI\\Routes\\$route";
+            $this->registerRoutes(new $class);
+        }
+
+        // Register plugin routes
+        $router = $this;
+        array_walk(
+            array_flatten(\PluginEngine::sendMessage('RESTAPIPlugin', 'getRouteMaps')),
+            function ($route) use ($router) {
+                $router->registerRoutes($route);
+            }
+        );
     }
 
     /**

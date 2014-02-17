@@ -39,21 +39,4 @@ namespace RESTAPI {
     // $router->registerConsumer('oauth', new Consumer\OAuth);
     // $router->registerConsumer('basic', new Consumer\HTTP);
     // $router->registerConsumer('studip', new Consumer\Studip);
-
-    // Register default routes
-    $routes = words('Contacts Course Discovery Events Files Forum Messages News Schedule Semester Studip User Wiki');
-
-    foreach ($routes as $route) {
-        require_once "app/routes/$route.php";
-        $class = "\\RESTAPI\\Routes\\$route";
-        $router->registerRoutes(new $class);
-    }
-
-    // Register plugin routes
-    array_walk(
-        array_flatten(\PluginEngine::sendMessage('RESTAPIPlugin', 'getRouteMaps')),
-        function ($route) use ($router) {
-            $router->registerRoutes($route);
-        }
-    );
 }

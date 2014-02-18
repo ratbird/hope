@@ -229,7 +229,7 @@ class Statusgruppen extends SimpleORMap {
         if ($check && !$this->userMayJoin($user_id)) {
             return false;
         }
-        $user = StatusgruppeUser(array($this->id, $user_id));
+        $user = new StatusgruppeUser(array($this->id, $user_id));
         $user->store();
         return true;
     }

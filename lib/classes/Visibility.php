@@ -172,7 +172,7 @@ class Visibility
      * 
      * @return int the created visibilityid 
      */
-    public static function addPrivacySettingForAll($name, $identifier = "", $parent = 0, $category = 1, $default = null, $pluginid = null)
+    public static function addPrivacySettingForAll($name, $identifier = "", $parent_identifier = 0, $category = 1, $default = null, $pluginid = null)
     {
         $db = DBManager::get();
 
@@ -182,15 +182,15 @@ class Visibility
             $default_join = "JOIN `user_visibility` USING (`user_id`)";
         } else {
             $default = "'$default' as state";
-        }
-
+            }
+        
         // parse User and Identifier to format we want to have in the database
         self::getUser($user);
         $parent = self::parseIdentifier($parent, $user);
 
         // sure we could do this less complicated with php but with a single
         // query it's a lot faster
-        $sql = "Insert into `user_visibility_settings`
+        $sql = "REPLACE into `user_visibility_settings`
         (`user_id`, `parent_id`, `identifier`, `category`, `name`, `state`, `plugin`)
             (SELECT user_id, visibilityid as parent_id,
             ? as identifier, 
@@ -200,9 +200,9 @@ class Visibility
             ? as plugin
             FROM `user_visibility_settings` 
             $default_join
-            WHERE `identifier`='plugins' );";
+            WHERE `identifier`= ? );";
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($identifier, $category, $name, $pluginid));
+        $stmt->execute(array($identifier, $category, $name, $pluginid, $parent_identifier));
     }
 
     /**

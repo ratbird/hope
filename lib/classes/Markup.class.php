@@ -40,12 +40,12 @@ class Markup
         }
         return self::markupHtmlReady($markup, $text, $trim);
     }
-    
+
     /**
      * Return True for HTML code and False for plain text.
      *
      * A fairly simple heuristic is used: Every text that begins with '<'
-     * and ends with '>' is considered to be HTML code. Leading and trailing 
+     * and ends with '>' is considered to be HTML code. Leading and trailing
      * whitespace characters are ignored.
      *
      * @param string $text  HTML code or plain text.
@@ -58,7 +58,7 @@ class Markup
         $trimmed = trim($text);
         return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
     }
-    
+
     /**
      * Run text through HTML purifier after applying markup rules.
      *
@@ -91,7 +91,7 @@ class Markup
         return self::markup(
             $markup, self::htmlReady(self::unixEOL($text), $trim));
     }
-    
+
     /**
      * Convert line break to Unix format.
      *
@@ -103,7 +103,7 @@ class Markup
     {
         return preg_replace("/\r\n?/", "\n", $text);
     }
-    
+
     /**
      * Apply markup rules on plain text.
      *
@@ -199,13 +199,13 @@ class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
     {
         try {
             $attr['src'] = MediaProxy\getMediaUrl($attr['src']);
-        } catch (InvalidInternalLinkException $e) {
+        } catch (MediaProxy\InvalidInternalLinkException $e) {
             // invalid internal link ==> remove <img src> attribute
-            $GLOBALS['msg'][] = _('UngÃ¼ltige interne MedienverknÃ¼pfung entfernt: ')
+            $GLOBALS['msg'][] = _('Ungültige interne Medienverknüpfung entfernt: ')
                 . \htmlentities($e->getUrl());
             $attr['src'] = NULL; // remove <img src> attribute
-        } catch (ExternalMediaDeniedException $e) {
-            $GLOBALS['msg'][] = _('Verbotene externe MedienverknÃ¼pfung entfernt: ')
+        } catch (MediaProxy\ExternalMediaDeniedException $e) {
+            $GLOBALS['msg'][] = _('Verbotene externe Medienverknüpfung entfernt: ')
                 . \htmlentities($e->getUrl());
             $attr['src'] = NULL; // remove <img src> attribute
         }
@@ -252,7 +252,7 @@ function getMediaUrl($url) {
     if ($external_media === 'allow') {
         return $url;
     }
-    throw ExternalMediaDeniedException($url);
+    throw new ExternalMediaDeniedException($url);
 }
 
 /**
@@ -308,7 +308,7 @@ function isStudipMediaUrl($url) {
  *
  * Remove scheme, domain and authentication information from internal
  * Stud.IP URLs. Leave external URLs untouched.
- * 
+ *
  * @param string $url   URL from which to remove internal domain.
  * @returns string      URL without internal domain or the exact same
  *                      value as $url for external URLs.
@@ -335,7 +335,7 @@ function removeStudipDomain($url) {
  *      . '/studip/sendfile.php?type=0&file_id=ABC123&file_name=nice.jpg')
  * 'sendfile.php'
  *
- * @param string $url   The URL from which to return the Stud.IP-relative 
+ * @param string $url   The URL from which to return the Stud.IP-relative
  *                      path component.
  * returns string Stud.IP-relative path component of $url.
  */
@@ -429,7 +429,7 @@ function getBasename() {
 /**
  * Like getUrl but exclude base name and everything thereafter.
  *
- * Get the base URL including the directory path, excluding file name, 
+ * Get the base URL including the directory path, excluding file name,
  * query string, etc.
  *
  * return string  Base URL of client request.

@@ -238,7 +238,7 @@ function getMediaUrl($url) {
     }
     if (isStudipUrl($url)) {
         // link is studip-internal, but not to a valid media location
-        throw InvalidInternalLinkException($url);
+        throw new InvalidInternalLinkException($url);
     }
 
     // handle external media links

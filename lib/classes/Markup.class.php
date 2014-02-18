@@ -125,7 +125,7 @@ class Markup
      * @param   string $dirty_html  Unsafe or 'uncleaned' HTML code.
      * @return  string              Clean and safe HTML code.
      */
-    private static function purify($dirty_html)
+    public static function purify($dirty_html)
     {
         // remember created purifier so it doesn't have to be created again
         static $purifier = NULL;

@@ -8,9 +8,13 @@
 STUDIP.Admission = {
 
     getCourses: function (targetUrl) {
+        var courseFilter = $('input[name="course_filter"]').val();
+        if (courseFilter == '') {
+            courseFilter = '%%%';
+        }
         var data = {
                 'courses[]' : _.pluck($('#courses li.jstree-checked'), 'id'),
-                'course_filter' : $('input[name="course_filter"]').val(),
+                'course_filter' : courseFilter,
                 'semester' : $('select[name="semester"]').val(),
                 'institutes[]' : $.merge(_.pluck($('input[name="institutes[]"]:hidden'), 'value'), _.pluck($('input[name="institutes[]"]:checked'), 'value'))
             };
@@ -241,13 +245,7 @@ STUDIP.Admission = {
             $('#instcourses :checked').each(function () {
                 query += '&courses[]=' + this.value;
             });
-            $.post(
-                courseURL,
-                query,
-                function (data) {
-                    $('#instcourses').html(data);
-                }
-            );
+            this.getCourses(courseURL);
         }
     },
 

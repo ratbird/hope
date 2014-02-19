@@ -22,7 +22,7 @@ class CoursesetModel {
      * @param String $coursesetId Get also courses assigned to the given courseset
      * @param Array  $selectedCourses Courses that have already been selected manually
      * @param String $semester_id Get only courses belonging to the given semester
-     * @param bool   $filter Fetch only courses the current user is lecturer of?
+     * @param mixed  $filter Fetch only courses fulfilling a search string or of a certain lecturer?
      * 
      * @return Array Found courses.
      */
@@ -54,7 +54,7 @@ class CoursesetModel {
                 WHERE s.status NOT IN(:studygroup_types) AND s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
                 AND si.Institut_id IN(:institutes)
                 AND (s.name LIKE :filter OR s.Veranstaltungsnummer LIKE :filter OR Nachname LIKE :filter)",
-                     array('studygroup_types' => studygroup_sem_types(),
+                     array('studygroup_types' => studygroup_sem_types() ? studygroup_sem_types() : array(''),
                             'sembegin' => $currentSemester->beginn,
                             'institutes' => $instituteIds,
                             'filter' => '%' . $filter .'%'

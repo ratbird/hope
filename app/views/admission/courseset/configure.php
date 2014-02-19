@@ -82,8 +82,12 @@ if ($flash['error']) {
             <?php } else { ?>
                 <?php if ($instSearch) { ?>
                 <div id="institutes">
-                    <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2down') ?>"
-                           <?= tooltip(_('Einrichtung hinzufügen')) ?> border="0" name="add_institute">
+                    <?= Assets::img('icons/16/yellow/arr_2down.png', array(
+                        'alt' => _('Einrichtung hinzufügen'),
+                        'title' => _('Einrichtung hinzufügen'),
+                        'onclick' => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '". 
+                            $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
+                            $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
                     <?= $instSearch ?>
                     <br/><br/>
                 </div>

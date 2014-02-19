@@ -9,7 +9,8 @@ STUDIP.UserFilter = {
 
     configureCondition: function (targetId, targetUrl) {
         var loading = 'Wird geladen'.toLocaleString();
-        $('<div id="' + targetId + '" title="Bedingung konfigurieren">' + loading + '</div>')
+        var title = 'Bedingung konfigurieren'.toLocaleString();
+        $('<div id="' + targetId + '" title="'+title+'">' + loading + '</div>')
             .dialog({
                 draggable: false,
                 modal: true,

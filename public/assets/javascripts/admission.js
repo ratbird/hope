@@ -30,8 +30,9 @@ STUDIP.Admission = {
 
     configureRule: function (ruleType, targetUrl) {
         var loading = 'Wird geladen'.toLocaleString();
+        var title = 'Anmelderegel konfigurieren'.toLocaleString();
         if ($('#configurerule').length === 0) {
-            $('<div id="configurerule" title="Anmelderegel konfigurieren">' + loading + '</div>')
+            $('<div id="configurerule" title="'+title+'">' + loading + '</div>')
                 .dialog({
                     draggable: false,
                     modal: true,
@@ -58,7 +59,8 @@ STUDIP.Admission = {
 
     selectRuleType: function (source) {
         var loading = 'Wird geladen'.toLocaleString();
-        $('<div id="configurerule" title="Anmelderegel konfigurieren">' + loading + '</div>')
+        var title = 'Anmelderegel konfigurieren'.toLocaleString();
+        $('<div id="configurerule" title="'+title+'">' + loading + '</div>')
             .dialog({
                 draggable: false,
                 modal: true,
@@ -116,7 +118,7 @@ STUDIP.Admission = {
         $('#' + targetId).remove();
         if (parent.children('div').size() === 0) {
             parent.remove();
-            var norules = 'Sie haben noch keine Anmelderegeln festgelegt.';
+            var norules = 'Sie haben noch keine Anmelderegeln festgelegt.'.toLocaleString();
             $('#' + containerId).prepend('<span id="norules">' +
                 '<i>' + norules + '</i></span>');
         }
@@ -179,7 +181,7 @@ STUDIP.Admission = {
         var parent = $('#user_' + userId).parent();
         $('#user_' + userId).remove();
         if (parent.children('li').size() === 0) {
-            var nousers = 'Sie haben noch niemanden hinzugefügt.';
+            var nousers = 'Sie haben noch niemanden hinzugefügt.'.toLocaleString();
             $(parent).parent().append('<span id="nousers">' +
                 '<i>' + nousers + '</i></span>');
         }

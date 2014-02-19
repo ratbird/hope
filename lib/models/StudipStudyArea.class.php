@@ -51,6 +51,7 @@ class StudipStudyArea extends SimpleORMap
 
         $this->has_many = array('_children' => array('class_name' => 'StudipStudyArea',
                                                      'assoc_foreign_key' => 'parent_id',
+                                                     'assoc_func' => 'findByParent',
                                                      'on_delete' => 'delete',
                                                      'on_store' => 'store'));
         $this->has_and_belongs_to_many = array('courses' => array('class_name' => 'Course',
@@ -61,6 +62,14 @@ class StudipStudyArea extends SimpleORMap
                                                       'foreign_key' => 'parent_id'
                                                       ));
         parent::__construct($id);
+    }
+
+    /**
+     * Returns the children of the study area with the specified ID.
+     */
+    static function findByParent($parent_id)
+    {
+        return self::findByparent_id($parent_id, "ORDER BY priority,name");
     }
 
     /**

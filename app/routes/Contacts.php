@@ -61,9 +61,6 @@ class Contacts extends \RESTAPI\RouteMap
         // TODO: only adds contacts to the global $user
         AddNewContact($friend->id);
 
-        // TODO: add/update the buddy to the contacts
-        // TODO: what does the last TODO mean after all?
-
         $this->status(201);
     }
 
@@ -86,9 +83,6 @@ class Contacts extends \RESTAPI\RouteMap
         }
 
         DeleteContact($contact->id);
-
-        // TODO: remove the buddy from the contacts
-        // TODO: what does the last TODO mean after all?
 
         $this->status(204);
     }
@@ -126,13 +120,13 @@ class Contacts extends \RESTAPI\RouteMap
             $this->error(401);
         }
 
-        // TODO: add the new contact group
-
-        if (!$success) {
-            $this->error(500);
+        if (!isset($this->data['name']) || !strlen($name = trim($this->data['name']))) {
+            $this->error(400, 'Contact group name required.');
         }
 
-        $this->redirect('contact_group/' . $contact_group->id, 201, 'ok');
+        $id = AddNewStatusgruppe($name, $GLOBALS['user']->id, $size = 0);
+
+        $this->redirect('contact_group/' . $id, 201, 'ok');
     }
 
     /**
@@ -153,16 +147,8 @@ class Contacts extends \RESTAPI\RouteMap
      */
     public function destroyContactGroup($group_id)
     {
-        // TODO: get contact_group, using #notFound if required
-
-        // TODO: auth
-
-        // TODO: destroy contact group
-
-        if (!$success) {
-            $this->error(500);
-        }
-
+        $group = $this->requireContactGroup($group_id);
+        DeleteStatusgruppe($group_id);
         $this->status(204);
     }
 
@@ -296,79 +282,11 @@ class Contacts extends \RESTAPI\RouteMap
     private function contactGroupToJSON($group)
     {
         $json = array(
-            'id' => $group->id,
-            'name' => $group->name,
-            'contacts' => sprintf('/contact_group/%s/members', htmlReady($group->id)),
+            'id'             => $group->id,
+            'name'           => $group->name,
+            'contacts'       => $this->urlf('/contact_group/%s/members', array(htmlReady($group->id))),
             'contacts_count' => sizeof($group->members)
         );
         return $json;
     }
-
-
-    /*
-
-    private function contactGroupExists($group_id)
-    {
-        $query = "SELECT 1 FROM statusgruppen WHERE statusgruppe_id = ?";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->execute(array($group_id));
-        return $statement->fetchColumn();
-    }
-
-
-    static function load($user_id)
-    {
-        $query = "SELECT statusgruppe_id AS group_id, name FROM statusgruppen WHERE range_id = ? ORDER BY position ASC";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $groups = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        $groups['unassigned'] = self::loadGroup('unassigned');
-        return $groups;
-    }
-
-    static function loadGroup($group_id)
-    {
-        if ($group_id === 'unassigned') {
-            return array(
-                'group_id' => 'unassigned',
-                'name'     => _('Nicht zugeordnet'),
-            );
-        }
-        $query = "SELECT statusgruppe_id AS group_id, name FROM statusgruppen WHERE statusgruppe_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($group_id));
-        return $statement->fetch(PDO::FETCH_ASSOC);
-    }
-
-    static function loadUnassigned($user_id)
-    {
-        $query = "SELECT user_id
-                  FROM contact
-                  WHERE owner_id = :user_id AND user_id NOT IN(
-                      SELECT user_id
-                      FROM statusgruppen
-                      JOIN statusgruppe_user USING (statusgruppe_id)
-                      WHERE range_id = :user_id
-                  )";
-        $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':user_id', $user_id);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_COLUMN);
-    }
-
-    static function loadMembers($user_id, $group_id)
-    {
-        if ($group_id === 'unassigned') {
-            return self::loadUnassigned($user_id);
-        }
-        $query = "SELECT user_id
-                  FROM statusgruppen
-                  JOIN statusgruppe_user USING (statusgruppe_id)
-                  WHERE range_id = ? AND statusgruppe_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id, $group_id));
-        return $statement->fetchAll(PDO::FETCH_COLUMN);
-    }
-    */
 }

@@ -88,10 +88,10 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
     </div>
     <? endif ?>
     <? if ($thread['context_type'] === "public") : ?>
-    <div class="reshares">
-        <? $sharingusers = $thread->getSharingUsers() ?>
+    <? $sharingusers = $thread->getSharingUsers() ?>
+    <? $sharing_user_ids = array_map(function ($v) { return $v['user_id']; }, $sharingusers) ?>
+    <div class="reshares<?= count($sharingusers) > 0 ? " reshared" : "" ?>">
         <? if (count($sharingusers)) : ?>
-            <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von folgenden Personen"))) ?>
             <? foreach ($sharingusers as $key => $user) {
                 $url = $user->getURL();
                 $name = $user->getName();
@@ -99,13 +99,14 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                 echo $user->getAvatar()->getImageTag(Avatar::SMALL, array('title' => $name));
                 if ($url) : ?></a><? endif;
             } ?>
-            <? $sharing_user_ids = array_map(function ($v) { return $v['user_id']; }, $sharingusers) ?>
-            <? if (!in_array($GLOBALS['user']->id, $sharing_user_ids) && $GLOBALS['user']->id !== $thread['user_id']) : ?>
-            <?= Assets::img("icons/16/blue/add", array('class' => "text-bottom reshare_blubber", 'title' => _("Selbst weiterblubbern"))) ?>
-            <? else : ?>
-            &nbsp;&nbsp;&nbsp;
-            <? endif ?>
         <? endif ?>
+        <span class="reshare_link">
+        <? if (!in_array($GLOBALS['user']->id, $sharing_user_ids) && $GLOBALS['user']->id !== $thread['user_id']) : ?>
+        <?= Assets::img("icons/16/blue/blubber", array('class' => "text-bottom reshare_blubber", 'title' => _("Weitersagen"))) ?>
+        <? elseif($GLOBALS['user']->id !== $thread['user_id']) : ?>
+        <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen"))) ?>
+        <? endif ?>
+        </span>
     </div>
     <? endif ?>
     <div class="avatar_column">

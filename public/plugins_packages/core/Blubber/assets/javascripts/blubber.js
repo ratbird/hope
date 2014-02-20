@@ -487,19 +487,19 @@ STUDIP.Blubber = {
     },
     reshareBlubber: function () {
         var thread_id = jQuery(this).closest(".thread").attr("id");
-        var is_window = false;
+        var panel_open = false;
         if (thread_id) {
             thread_id = thread_id.substr(thread_id.lastIndexOf("_") + 1);
         } else {
             thread_id = jQuery(this).attr("data-thread_id");
-            is_window = true;
+            panel_open = true;
         }
         jQuery.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/reshare/" + thread_id,
             'type': "POST",
             'success': function (output) {
-                jQuery("#posting_" + thread_id + " .reshares").html(jQuery(output).find(".reshares").html());
-                if (is_window) {
+                jQuery("#posting_" + thread_id + " .reshares").addClass("reshared").html(jQuery(output).find(".reshares").html());
+                if (panel_open) {
                     jQuery("#blubber_public_panel").dialog("close");
                 }
             }

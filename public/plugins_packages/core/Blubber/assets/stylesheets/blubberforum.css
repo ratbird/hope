@@ -69,29 +69,14 @@
     display: none;
 }
 #blubber_threads li.thread .reshares {
-    background: #e1e4e5; /* Old browsers */
-    background: -moz-linear-gradient(top,  #e1e4e5 0%, #c3c8cc 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e1e4e5), color-stop(100%,#c3c8cc)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #e1e4e5 0%,#c3c8cc 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #e1e4e5 0%,#c3c8cc 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #e1e4e5 0%,#c3c8cc 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #e1e4e5 0%,#c3c8cc 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e1e4e5', endColorstr='#c3c8cc',GradientType=0 ); /* IE6-9 */
-
-    border-radius: 20px;
-    padding: 3px;
+    padding: 0px;
     display: table;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.2;
-    -webkit-transition: all 1s;
-    -moz-transition: all 1s;
-    -ms-transition: all 1s;
-    -o-transition: all 1s;
-    transition: all 1s;
+    margin: 0px;
+    margin-bottom: 5px;
+    visibility: hidden;
 }
-#blubber_threads li.thread:hover .reshares {
-    opacity: 1;
+#blubber_threads li.thread:hover .reshares, #blubber_threads li.thread .reshares.reshared {
+    visibility: visible;
 }
 #blubber_threads .reshare_blubber {
     cursor: pointer;

@@ -1,19 +1,51 @@
 <?php
+/**
+ * wysiwygdocument.php - Manage files uploaded by the WYSIWYG editor.
+ **
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * @category    Stud.IP
+ * @copyright   (c) 2014 Stud.IP e.V.
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @since       File available since Release 3.0
+ * @author      Robert Costa <rcosta@uos.de>
+ */
 namespace Studip;
 
+/**
+ * Info about Stud.IP documents uploaded by the WYSIWYG editor and collection
+ * of static methods for uploading files.
+ */
 class WysiwygDocument
 {
+    /**
+     * Construct new WysiwygDocument for an uploaded Stud.IP document.
+     */
     public function __construct($studipDocument, $mimeType)
     {
         $this->studipDocument = $studipDocument;
         $this->mimeType = $mimeType;
     }
 
+    /**
+     * @return string  The actual file's name without its path.
+     */
     public function filename()
     {
         return $this->studipDocument['filename'];
     }
 
+    /**
+     * @return string  Mime-type of the uploaded document.
+     */
     public function type()
     {
         return $this->mimeType;
@@ -22,13 +54,13 @@ class WysiwygDocument
     /**
      * Return URL for downloading the file.
      *
-     * @params  string $id  File identifier in database table 'dokumente'.
-     * @returns string      Download link, NULL if file doesn't exist.
+     * @param  string $id  File identifier in database table 'dokumente'.
+     * @return string      Download link, NULL if file doesn't exist.
      */
     public function url()
     {
         return \GetDownloadLink($this->studipDocument->getId(),
-                                $this->studipDocument['filename']);
+                                $this->filename());
     }
 
     //// file upload //////////////////////////////////////////////////////////
@@ -130,7 +162,7 @@ class WysiwygDocument
         $GLOBALS['msg'] = ''; // validate_upload will store messages here
         if (! \validate_upload($file)) { // upload is forbidden
             // remove error pattern from message
-            $message = \preg_replace('/errorÂ§(.+)Â§/', '$1', $GLOBALS['msg']);
+            $message = \preg_replace('/error§(.+)§/', '$1', $GLOBALS['msg']);
     
             // clear global messages and throw exception
             $GLOBALS['msg'] = '';
@@ -256,12 +288,12 @@ class WysiwygDocument
     private static function transposeArray($a)
     {
         if (!is_array($a)) {
-            return NULL;
+            return null;
         }
         $b = array();
         foreach($a as $rowKey => $row){
             if (!is_array($row)) {
-                return NULL;
+                return null;
             }
             if (empty($row)) {
                 $b[] = array();

@@ -63,6 +63,10 @@ function MakeUniqueStatusgruppeID ()
 
 function AddNewStatusgruppe ($new_statusgruppe_name, $range_id, $new_statusgruppe_size, $new_selfassign = 0, $new_doc_folder = false, $statusgruppe_id = false)
 {
+    if (!$statusgruppe_id) {
+        $statusgruppe_id = MakeUniqueStatusgruppeID();
+    }
+
     $query = "SELECT position FROM statusgruppen WHERE range_id = ? ORDER BY position DESC";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($range_id));
@@ -73,7 +77,7 @@ function AddNewStatusgruppe ($new_statusgruppe_name, $range_id, $new_statusgrupp
               VALUES (?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
-        $statusgruppe_id ?: MakeUniqueStatusgruppeID(),
+        $statusgruppe_id,
         $new_statusgruppe_name,
         $range_id,
         $position,

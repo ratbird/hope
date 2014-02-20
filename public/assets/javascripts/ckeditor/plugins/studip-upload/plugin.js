@@ -12,7 +12,7 @@ CKEDITOR.plugins.add('studip-upload', {
                 return isString(mime_type) && mime_type === 'image/svg+xml';
             },
             insertNode = function($node){
-                editor.insertHtml($('<div>').append($node).html());
+                editor.insertHtml($('<div>').append($node).html() + ' ');
             },
             insertImage = function(file){
                 insertNode($('<img />').attr({

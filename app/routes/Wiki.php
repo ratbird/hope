@@ -34,7 +34,7 @@ class Wiki extends \RESTAPI\RouteMap
 
         $linked_pages = array();
         foreach ($pages as $page) {
-            $url = sprintf('/course/%s/wiki/%s', $course_id, htmlReady($page['keyword']));
+            $url = $this->urlf('/course/%s/wiki/%s', array($course_id, htmlReady($page['keyword'])));
             $linked_pages[$url] = self::wikiPageToJson($page, array("content"));
         }
 
@@ -82,13 +82,8 @@ class Wiki extends \RESTAPI\RouteMap
 
         $new_version = \WikiPage::findLatestPage($course_id, $keyword);
 
-        $this->status(204);
-        $this->headers(
-            array(
-                'Content-Location' => sprintf('/course/%s/wiki/%s/%d',
-                                              htmlReady($course_id),
-                                              htmlReady($keyword),
-                                              $new_version->version)));
+        $url = sprintf('course/%s/wiki/%s/%d', htmlReady($course_id), htmlReady($keyword), $new_version->version);
+        $this->redirect($url, 201, 'ok');
     }
 
     /**************************************************/

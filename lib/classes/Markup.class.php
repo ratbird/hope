@@ -242,7 +242,7 @@ function getMediaUrl($url) {
     }
 
     // handle external media links
-    $external_media = \Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+    $external_media = \Config::get()->LOAD_EXTERNAL_MEDIA;
     if ($external_media === 'proxy' &&
         \Seminar_Session::is_current_session_authenticated()
     ) {

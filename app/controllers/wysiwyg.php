@@ -24,6 +24,9 @@ require_once 'authenticated_controller.php';
 use Studip\WysiwygRequest;
 use Studip\WysiwygDocument;
 
+use Studip\MarkupPrivate\MediaProxy; // TODO remove debug code
+
+
 class WysiwygController extends \AuthenticatedController
 {
     const UPLOAD_PERMISSION = 'autor'; // minimum permission level for uploading
@@ -99,7 +102,7 @@ class WysiwygController extends \AuthenticatedController
 
         $test_results = '';
         forEach ($tests as $i => $o) {
-            $r = Utils::getMediaUrl($i);
+            $r = MediaProxy\getMediaUrl($i);
             $v = ($r == $o) ? '==' : '!=';
             $test_results .= "Utils::getMediaUrl($i)<br>"
                           .  "                == $r<br>"
@@ -108,14 +111,14 @@ class WysiwygController extends \AuthenticatedController
         }
 
         $this->render_text('<pre>'
-            .'Utils::getUrl():           '.Utils::getUrl().'<br>'
-            .'Utils::getBaseName():      '.Utils::getBaseName().'<br>'
-            .'Utils::getBaseUrl():       '.Utils::getBaseUrl().'<br>'
+            .'MediaProxy\getUrl():       '.MediaProxy\getUrl().'<br>'
+            .'MediaProxy\getBaseName():  '.MediaProxy\getBaseName().'<br>'
+            .'MediaProxy\getBaseUrl():   '.MediaProxy\getBaseUrl().'<br>'
             .'URLHelper::getLink():      '.URLHelper::getLink().'<br>'
             .'URLHelper::getUrl():       '.URLHelper::getUrl().'<br>'
             .'URLHelper::getScriptUrl(): '.URLHelper::getScriptUrl().'<br>'
             .'<br>'
-            .'LOAD_EXTERNAL_MEDIA='.\Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA').'<br>'
+            .'LOAD_EXTERNAL_MEDIA='.\Config::get()->LOAD_EXTERNAL_MEDIA.'<br>'
             .'<br>'
             .$test_results
             .'</pre>');

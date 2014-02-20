@@ -51,7 +51,8 @@
         STUDIP.jsupdate_enable = true;
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
-        STUDIP.WYSIWYG = <?= \Config::GetInstance()->getValue('WYSIWYG') ? 'true' : 'false' ?>;
+        <?php /* set STUDIP.WYSIWYG in templates/layouts/base.php as well */ ?>
+        STUDIP.WYSIWYG = <?= \Config::get()->WYSIWYG ? 'true' : 'false' ?>;
     </script>
 </head>
 

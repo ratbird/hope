@@ -27,8 +27,8 @@ class Messages extends \RESTAPI\RouteMap
 
         $folders = self::getUserFolders($user_id, $box);
         $total = count($folders);
-        $folders = self::linkFolders($user_id, $box,
-                                     array_slice($folders, $this->offset, $this->limit, true));
+        $folders = $this->linkFolders($user_id, $box,
+                                      array_slice($folders, $this->offset, $this->limit, true));
 
         return $this->paginated($folders, $total, compact('user_id', 'box'));
     }
@@ -65,7 +65,8 @@ class Messages extends \RESTAPI\RouteMap
         $messages = array();
         if (sizeof($ids)) {
             foreach (\Message::findMany($ids) as $msg) {
-                $messages[] = self::messageToJSON($msg);
+                $url = $this->urlf('/message/%s', array($msg->id));
+                $messages[$url] = $this->messageToJSON($msg);
             }
         }
 
@@ -95,7 +96,7 @@ class Messages extends \RESTAPI\RouteMap
         $status = \UserConfig::get($user_id)->store('MESSAGING_SETTINGS', $settings);
         page_close();
 
-        $this->redirect(self::folderUrl($user_id, $box, sizeof($settings['folder'][$_box]) - 1), 201);
+        $this->redirect($this->folderUrl($user_id, $box, sizeof($settings['folder'][$_box]) - 1), 201);
     }
 
 
@@ -107,7 +108,7 @@ class Messages extends \RESTAPI\RouteMap
     public function showMessage($message_id)
     {
         $message = $this->requireMessage($message_id);
-        return self::messageToJSON($message);
+        return $this->messageToJSON($message);
     }
 
 
@@ -201,9 +202,9 @@ class Messages extends \RESTAPI\RouteMap
         return $GLOBALS['user']->id;
     }
 
-    private static function folderURL($user_id, $box, $folder_id)
+    private function folderURL($user_id, $box, $folder_id)
     {
-        return sprintf('/user/%s/%s/%s', $user_id, $box, $folder_id);
+        return $this->urlf('/user/%s/%s/%s', array($user_id, $box, $folder_id));
     }
 
     private function requireMessage($message_id)
@@ -255,19 +256,19 @@ class Messages extends \RESTAPI\RouteMap
     }
 
 
-    private static function linkFolders($user_id, $box, $folders)
+    private function linkFolders($user_id, $box, $folders)
     {
         $result = array();
 
         foreach ($folders as $id => $name) {
-            $url = self::folderURL($user_id, $box, $id);
+            $url = $this->folderURL($user_id, $box, $id);
             $result[$url] = $name;
         }
 
         return $result;
     }
 
-    private static function messageToJSON($message)
+    private function messageToJSON($message)
     {
         $user_id = self::currentUser();
 
@@ -285,18 +286,24 @@ class Messages extends \RESTAPI\RouteMap
 
         // sender
         $sender = $message->getSender();
-        $json['sender'] = '/user/' . $message->autor_id;
+        $json['sender'] = $this->urlf('/user/%s', array($message->autor_id));
 
         // recipients
         if ($my_roles['snd']) {
-            $json['recipients'] = array_map(function ($r) { return '/user/' . $r->id;}, $message->getRecipients());
+            $json['recipients'] = array();
+            foreach ($message->getRecipients() as $r) {
+                $json['recipients'][] = $this->urlf('/user/%s', array($r->id));
+            }
         } else {
-            $json['recipients'] = array('/user/' . $user_id);
+            $json['recipients'] = array($this->urlf('/user/%s', array($user_id)));
         }
 
         // attachments
         if (sizeof($message->attachments)) {
-            $json['attachments'] = $message->attachments->map(function ($att) { return '/file/' . $att->id; });
+            $json['attachments'] = array();
+            foreach ($message->attachments as $att) {
+                $json['attachments'][] = $this->urlf('/file/%s', array($att->id));
+            }
         }
 
         // unread only if in inbox
@@ -313,16 +320,16 @@ class Messages extends \RESTAPI\RouteMap
         $json['folders'] = array();
         foreach ($my_mu as $mu) {
             $json['folders'][] =
-                self::folderURL($user_id,
-                                $mu->snd_rec === 'rec' ? 'inbox' : 'outbox',
-                                $mu->folder);
+                $this->folderURL($user_id,
+                                 $mu->snd_rec === 'rec' ? 'inbox' : 'outbox',
+                                 $mu->folder);
         }
 
         return $json;
     }
 
     // TODO: this should be using MessageUser
-    static function folder($user_id, $sndrec, $folder)
+    private static function folder($user_id, $sndrec, $folder)
     {
         $query = "SELECT message_id
                   FROM message_user

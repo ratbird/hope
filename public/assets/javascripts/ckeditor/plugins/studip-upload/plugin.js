@@ -38,17 +38,12 @@ CKEDITOR.plugins.add('studip-upload', {
                 }
             },
             handleUploads = function(fileList){
-                if (!fileList) {
-                    alert('Das Hochladen der Datei(en) ist fehlgeschlagen.');
-                    return;
-                }
-
                 var errors = [];
                 $.each(fileList, function(index, file){
-                    if (file.error) {
-                        errors.push(file.name + ': ' + file.error);
-                    } else {
+                    if (file.url) {
                         insertFile(file);
+                    } else {
+                        errors.push(file.name + ': ' + file.error);
                     }
                 });
                 if (errors.length) {
@@ -82,7 +77,11 @@ CKEDITOR.plugins.add('studip-upload', {
                     dataType: 'json',
                     dropZone: $content, // upload by drag'n'drop
                     done: function(e, data){
-                        handleUploads(data.result.files);
+                        if (data.result.files) {
+                            handleUploads(data.result.files);
+                        } else {
+                            alert('Das Hochladen der Datei(en) ist fehlgeschlagen.\n\n' + data.result);
+                        }
                     }
                 });
 

@@ -78,14 +78,14 @@ class WysiwygDocument
             try {
                 $document = self::fromUpload($file, $folder_id);
                 $results['files'][] = Array(
-                    'name' => \studip_utf8encode($document->filename()),
+                    'name' => $document->filename(),
                     'type' => $document->type(),
                     'url' => $document->url()
                 );
-            } catch (AccessDeniedException $e) { // document creation failed
+            } catch (\AccessDeniedException $e) { // document creation failed
                 $results['files'][] = Array(
-                    'name' => $file['name'],
-                    'type' => $file['type'],
+                    'name' => \studip_utf8decode($file['name']),
+                    'type' => \studip_utf8decode($file['type']),
                     'error' => $e->getMessage()
                 );
             }
@@ -149,7 +149,7 @@ class WysiwygDocument
             throw new \AccessDeniedException(
                 _('Stud.IP-Dokument konnte nicht erstellt werden.'));
         }
-        return new WysiwygDocument($newfile, $file['type']);
+        return new WysiwygDocument($newfile, \studip_utf8decode($file['type']));
     }
 
     /**

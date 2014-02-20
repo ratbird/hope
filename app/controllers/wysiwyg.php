@@ -59,7 +59,7 @@ class WysiwygController extends \AuthenticatedController
                 self::FOLDER_NAME, self::FOLDER_DESCRIPTION);
             $response = WysiwygDocument::storeUploadedFilesIn($folder_id);
         } catch (AccessDeniedException $e) {
-            $response = \studip_utf8encode($e->getMessage());
+            $response = $e->getMessage();
         }
         $this->render_json($response); // send HTTP response to client
     }

@@ -119,7 +119,7 @@ class Course extends \RESTAPI\RouteMap
             // add group color
             $course_json['group'] = (int) $membership->gruppe;
 
-            $json[sprintf("/course/%s", $course->id)] = $course_json;
+            $json[$this->urlf("/course/%s", array($course->id))] = $course_json;
         }
 
         return $json;
@@ -139,18 +139,18 @@ class Course extends \RESTAPI\RouteMap
 
         // lecturers
         foreach ($course->getMembersWithStatus('dozent') as $lecturer) {
-            $url = sprintf('/user/%s', htmlReady($lecturer->user_id));
+            $url = $this->urlf('/user/%s', array(htmlReady($lecturer->user_id)));
             $json['lecturers'][$url] = $lecturer->user->getFullName();
         }
 
         // other members
         foreach (words("user autor tutor dozent") as $status) {
-            $json['members'][$status] = sprintf('/course/%s/members?status=%s', $course->id, $status);
+            $json['members'][$status] = $this->urlf('/course/%s/members?status=%s', array($course->id, $status));
             $json['members'][$status . '_count'] = $course->countMembersWithStatus($status);
         }
 
         foreach (words("start_semester end_semester") as $key) {
-            $json[$key] = $course->$key ? sprintf('/semester/%s', htmlReady($course->$key->id)) : null;
+            $json[$key] = $course->$key ? $this->urlf('/semester/%s', array(htmlReady($course->$key->id))) : null;
         }
 
         $modules = new \Modules;
@@ -161,7 +161,7 @@ class Course extends \RESTAPI\RouteMap
                        'wiki'      => 'wiki') as $module => $uri) {
 
             if ($activated[$module]) {
-                $json['modules'][$module] = sprintf('/course/%s/%s', htmlReady($course->id), $uri);
+                $json['modules'][$module] = $this->urlf('/course/%s/%s', array(htmlReady($course->id), $uri));
             }
         }
 
@@ -186,7 +186,7 @@ class Course extends \RESTAPI\RouteMap
         $json = array();
 
         foreach ($members as $member) {
-            $url = sprintf('/user/%s', $member->user_id);
+            $url = $this->urlf('/user/%s', array($member->user_id));
             $avatar = \Avatar::getAvatar($member->user_id);
             $json[$url] = array(
                 'user_id'       => $member->user_id,

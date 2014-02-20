@@ -42,7 +42,7 @@ class Events extends \RESTAPI\RouteMap
         foreach ($events as $event) {
             $singledate = new SingleDate($event->id);
 
-            $course_uri = sprintf('/course/%s', htmlReady($event->getSeminarId()));
+            $course_uri = $this->urlf('/course/%s', array(htmlReady($event->getSeminarId())));
 
             $json[] = array(
                 'event_id'    => $event->id,
@@ -77,7 +77,7 @@ class Events extends \RESTAPI\RouteMap
             $this->halt(500);
         }
 
-        $filename = sprintf('%s/export/%s', $GLOBALS['TMP_PATH'], $export->getTempFileName());
+        $filename = $this->urlf('%s/export/%s', array($GLOBALS['TMP_PATH'], $export->getTempFileName()));
 
         $this->sendFile($filename, array(
                             'type' => 'text/calendar',

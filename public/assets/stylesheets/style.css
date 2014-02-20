@@ -25,13 +25,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.hover_box .hover_symbols {
-  display: none;
-}
-.hover_box:hover .hover_symbols {
-  display: inline;
-  padding-left: 5px;
-}
 a,
 a:link,
 a:visited {
@@ -3320,80 +3313,10 @@ a.opengraph_info:hover {
 .pagination .next a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
 }
-.admission_buttons {
-  padding: 10px;
-  text-align: center;
-  width: 90%;
-}
-.admission_data {
-  padding: 10px;
-  width: 90%;
-}
-.admission_label {
-  display: inline-block;
-  font-weight: bold;
-  text-align: right;
-  vertical-align: top;
-  width: 20%;
-}
-.admission_value {
-  display: inline-block;
-  vertical-align: top;
-  width: 70%;
-}
-.admissionrule {
-  margin-bottom: 5px;
-  margin-left: 20px;
-  margin-top: 5px;
-  clear: both;
-}
-.admissionrule_actions {
-  margin-left: 10px;
-  position: relative;
-  top: 0px;
-  left: 25px;
-}
-.admissionrule_data {
-  padding: 10px;
-  width: 95%;
-}
-.admissionrule_display {
-  float: left;
-}
-.admissionrule_label {
-  display: inline-block;
-  font-weight: bold;
-  text-align: right;
-  vertical-align: top;
-  width: 45%;
-}
-.admissionrule_label_fullsize {
-  display: inline-block;
-  font-weight: bold;
-  text-align: left;
-  vertical-align: top;
-  width: 70%;
-}
-.admissionrule_value {
-  display: inline-block;
-  text-align: left;
-  vertical-align: top;
-}
-.admissionrules_available {
-  padding: 5px;
-}
-.admissionrules_buttons {
-  padding: 5px;
-  text-align: center;
-}
-.admissionrules_config {
-  padding: 10px;
-  text-align: center;
-  width: 95%;
-}
-.admissionrules_description {
-  font-style: italic;
-  padding-left: 25px;
+#rulelist div.hover_box {
+    display: list-item;
+    list-style-type: disc;
+    margin-left: 25px;
 }
 .condition {
   margin-left: 20px;

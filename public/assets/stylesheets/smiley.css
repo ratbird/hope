@@ -55,13 +55,6 @@
  * @category    Stud.IP
  * @since       2.4
  */
-.hover_box .hover_symbols {
-  display: none;
-}
-.hover_box:hover .hover_symbols {
-  display: inline;
-  padding-left: 5px;
-}
 .smiley-popup #header {
   background: none;
   height: 3em;

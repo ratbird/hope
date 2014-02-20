@@ -25,6 +25,13 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.hover_box div {
+  display: inline;
+}
+.hover_box .hover_symbols {
+  display: inline;
+  margin-left: 15px;
+}
 a,
 a:link,
 a:visited {

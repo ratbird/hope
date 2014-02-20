@@ -275,17 +275,17 @@ STUDIP.Admission = {
     checkUncheckAll: function (inputName, mode) {
         switch (mode) {
         case 'check':
-            $('input[name="' + inputName + '"]').each(function () {
+            $('input[name*="' + inputName + '"]').each(function () {
                 $(this).attr('checked', true);
             });
             break;
         case 'uncheck':
-            $('input[name="' + inputName + '"]').each(function () {
+            $('input[name*="' + inputName + '"]').each(function () {
                 $(this).attr('checked', false);
             });
             break;
         case 'invert':
-            $('input[name="' + inputName + '"]').each(function () {
+            $('input[name*="' + inputName + '"]').each(function () {
                 $(this).attr('checked', !$(this).attr('checked'));
             });
             break;

@@ -18,14 +18,30 @@
     <? endif ?>
     <? endwhile ?>
     </select>
+    <br/><br/>
     <div style="font-weight:bold">
     <?=_("Präfix des Namens:")?>
     </div>
     <div>
     <input type="text" name="set_name_prefix" value="<?=htmlReady($set_name_prefix)?>" size="40">
     </div>
+    <br/>
     <div style="font-weight:bold">
-    <?=_("Enthaltene Regeln:")?> 
+    <?=_("Enthaltene Regeln:")?>
+        <div class="hidden-no-js check_actions">
+            (<?= _('markieren') ?>:
+            <a onclick="STUDIP.Admission.checkUncheckAll('choose_rule_type', 'check')">
+                <?= _('alle') ?>
+            </a>
+            |
+            <a onclick="STUDIP.Admission.checkUncheckAll('choose_rule_type', 'uncheck')">
+                <?= _('keine') ?>
+            </a>
+            |
+            <a onclick="STUDIP.Admission.checkUncheckAll('choose_rule_type', 'invert')">
+                <?= _('Auswahl umkehren') ?>
+            </a>)
+        </div>
     </div>
     <div>
     <? foreach ($ruleTypes as $type => $detail) : ?>
@@ -35,6 +51,7 @@
         </label>
     <? endforeach; ?>
     </div>
+    <br/>
     <div style="font-weight:bold">
     <?=_("Zugewiesene Veranstaltungen aus diesem Semester:")?> 
     </div>

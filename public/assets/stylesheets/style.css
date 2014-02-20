@@ -3334,6 +3334,12 @@ a.opengraph_info:hover {
 .userlist_user:hover a {
   visibility: visible;
 }
+.check_actions {
+  font-weight: normal;
+}
+.check_actions a {
+    cursor: pointer;
+}
 #enrollment ul {
   list-style: none inside;
   margin: 0px;

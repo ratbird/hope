@@ -515,7 +515,28 @@ class Request implements ArrayAccess, IteratorAggregate
         return self::isXhr();
     }
     
-    public static function extract($what) {
+    /**
+     * extracts some params from request, the desired params must be a comma separated list
+     * for each param, the type of used extraction method can be specified after the name, 
+     * default is get
+     * null values are not returned
+     * 
+     * e.g.: 
+     * $data = Request::extract('admission_prelim int, admission_binding submitted, admission_prelim_txt');
+     * will yield
+     * array(3) {
+     *    ["admission_prelim"]=>
+     *    int(1)
+     *    ["admission_binding"]=>
+     *    bool(false)
+     *    ["admission_prelim_txt"]=>
+     *    string(0) ""
+     *  }
+     * @param string $what comma separated list of param names and types
+     * @return array assoc array with extracted data
+     */
+    public static function extract($what)
+    {
         $extract = array();
         $return = array();
         foreach (explode(',', $what) as $one) {

@@ -149,7 +149,8 @@ class Messages extends \RESTAPI\RouteMap
 
     /**
      * Eine Nachricht als (un)gelesen markieren oder in einen anderen
-     * Ordner verschieben.
+     * Ordner verschieben (Ordner werden dabei als Array und vollständig
+     * angegeben, [/user/:user_id/:box/:folder]).
      *
      * @put /message/:message_id
      */

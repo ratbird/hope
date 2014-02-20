@@ -245,10 +245,10 @@ class Contacts extends \RESTAPI\RouteMap
     private function contactsToJSON($contacts) {
         $result = array();
         foreach ($contacts as $contact) {
-            $url = sprintf('/contact/%s', htmlReady($contact->id));
+            $url = $this->urlf('/contact/%s', array(htmlReady($contact->id)));
             $result[$url] = array(
                 'id'            => $contact->id,
-                'owner'         => sprintf('/user/%s', htmlReady($contact->owner_id)),
+                'owner'         => $this->urlf('/user/%s', array(htmlReady($contact->owner_id))),
                 'friend'        => $this->minimalUserToJSON($contact->user_id, array($contact->friend->getFullName())),
                 'buddy'         => (bool) $contact->buddy,
                 'calpermission' => (bool) $contact->calpermission
@@ -261,7 +261,7 @@ class Contacts extends \RESTAPI\RouteMap
     {
         $avatar = \Avatar::getAvatar($id);
         return array('user_id'       => $id,
-                     'url'           => sprintf('/user/%s', htmlReady($id)),
+                     'url'           => $this->urlf('/user/%s', array(htmlReady($id))),
                      'fullname'      => $fullname,
                      'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
                      'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
@@ -273,7 +273,7 @@ class Contacts extends \RESTAPI\RouteMap
     {
         $result = array();
         foreach ($contact_groups as $cg) {
-            $url = sprintf('/contact_group/%s', htmlReady($cg->id));
+            $url = $this->urlf('/contact_group/%s', array(htmlReady($cg->id)));
             $result[$url] = $this->contactGroupToJSON($cg);
         }
         return $result;

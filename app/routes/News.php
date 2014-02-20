@@ -203,6 +203,10 @@ class News extends \RESTAPI\RouteMap
     {
         $news = $this->requireNews($news_id);
 
+        if (!$news->allow_comments) {
+            $this->error(409, 'Comments are not allowed');
+        }
+
         if (!isset($this->data['content']) || !strlen($content = trim($this->data['content']))) {
             $this->error(400, 'Content required.');
         }

@@ -262,7 +262,7 @@ function getMediaUrl($url) {
  * @return string       Media proxy URL for accessing the same resource.
  */
 function encodeMediaProxyUrl($url) {
-    return tranformInternalIdnaLink(
+    return transformInternalIdnaLink(
         getMediaProxyUrl() .'?url=' . \urlencode(\idna_link($url)));
 }
 
@@ -317,7 +317,7 @@ function removeStudipDomain($url) {
     if (!is_internal_url($url)) {
         return $url;
     }
-    $parsed_url = \parse_url(tranformInternalIdnaLink($url));
+    $parsed_url = \parse_url(transformInternalIdnaLink($url));
     $path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
     $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
     $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
@@ -340,7 +340,7 @@ function removeStudipDomain($url) {
  * returns string Stud.IP-relative path component of $url.
  */
 function getStudipRelativePath($url) {
-    $parsed_url = \parse_url(tranformInternalIdnaLink($url));
+    $parsed_url = \parse_url(transformInternalIdnaLink($url));
     $parsed_studip_url = getParsedStudipUrl();
     return String\removePrefix($parsed_url['path'], $parsed_studip_url['path']);
 }
@@ -374,7 +374,7 @@ function isStudipMediaUrlPath($path) {
  * @params string $url  An internal URL.
  * @returns string      Normalized internal URL.
  */
-function tranformInternalIdnaLink($url) {
+function transformInternalIdnaLink($url) {
     return \idna_link(\TransformInternalLinks($url));
 }
 

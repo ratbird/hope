@@ -172,7 +172,6 @@ STUDIP.Admission = {
         }).responseText;
         error = error.replace(/(\r\n|\n|\r)/gm,'');
         if ($.trim(error) != '') {
-        if (error) {
             $('#' + containerId).html(error);
             valid = false;
         }

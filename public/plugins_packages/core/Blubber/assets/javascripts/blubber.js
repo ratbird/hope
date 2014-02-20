@@ -680,13 +680,13 @@ jQuery(window.document).bind('scroll', _.throttle(function (event) {
             },
             dataType: "json",
             success: function (response) {
-                jQuery("#blubber_threads > li.loading").remove();
+                var more_indicator = jQuery("#blubber_threads > li.loading").detach();
                 jQuery("#loaded").val(parseInt(jQuery("#loaded").val(), 10) + 1);
                 jQuery.each(response.threads, function (index, thread) {
                     STUDIP.Blubber.insertThread(thread.posting_id, thread.mkdate, thread.content);
                 });
                 if (response.more) {
-                    jQuery("#blubber_threads").append(jQuery('<li class="more"><img src="' + STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif" alt="loading"></li>'));
+                    jQuery("#blubber_threads").append(more_indicator);
                 }
             }
         });

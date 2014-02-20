@@ -102,7 +102,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
         <? endif ?>
         <span class="reshare_link">
         <? if (!in_array($GLOBALS['user']->id, $sharing_user_ids) && $GLOBALS['user']->id !== $thread['user_id']) : ?>
-        <?= Assets::img("icons/16/blue/blubber", array('class' => "text-bottom reshare_blubber", 'title' => _("Weitersagen"))) ?>
+        <?= Assets::img("icons/16/blue/blubber", array('class' => "text-bottom reshare_blubber", 'title' => _("Diesen Blubber weitersagen"))) ?>
         <? elseif($GLOBALS['user']->id !== $thread['user_id']) : ?>
         <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen"))) ?>
         <? endif ?>

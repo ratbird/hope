@@ -75,7 +75,7 @@
     margin-bottom: 5px;
     visibility: hidden;
 }
-#blubber_threads li.thread:hover .reshares, #blubber_threads li.thread .reshares.reshared {
+#blubber_threads li.thread:hover .reshares, html.touch #blubber_threads li.thread .reshares, #blubber_threads li.thread .reshares.reshared {
     visibility: visible;
 }
 #blubber_threads .reshare_blubber {
@@ -121,7 +121,7 @@
     font-size: 0.8em;
     visibility: hidden;
 }
-#blubber_threads .content_column:hover > .timer {
+#blubber_threads .content_column:hover > .timer, html.touch #blubber_threads .content_column:hover > .timer {
     visibility: visible;
 }
 #blubber_threads .content_column .timer a, #blubber_threads .content_column .timer a:hover {

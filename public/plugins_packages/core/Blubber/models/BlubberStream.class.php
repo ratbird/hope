@@ -270,6 +270,7 @@ class BlubberStream extends SimpleORMap {
         list($pool_sql, $filter_sql, $parameters) = $this->getSqlParts();
         if ($stream_time !== null) {
             $filter_sql[] = "blubber.mkdate <= :stream_time";
+            $filter_sql[] = "(blubber_reshares.chdate <= :stream_time OR blubber_reshares.chdate IS NULL)";
             $parameters['stream_time'] = $stream_time;
         }
         $about_tags = ((count($this['pool_hashtags']) > 0) or (count($this['filter_hashtags']) > 0));

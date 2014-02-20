@@ -64,7 +64,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
                     $template->set_attribute("course_id", $data['Blubber']['seminar_id']);
                     $output['postings'][] = array(
                         'posting_id' => $new_posting['topic_id'],
-                        'mkdate' => $new_posting['mkdate'],
+                        'discussion_time' => $new_posting['discussion_time'],
                         'root_id' => $new_posting['root_id'],
                         'content' => $template->render()
                     );

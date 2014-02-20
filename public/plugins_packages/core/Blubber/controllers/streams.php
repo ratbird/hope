@@ -210,7 +210,7 @@ class StreamsController extends ApplicationController {
             $template->set_attribute('controller', $this);
             $output['threads'][] = array(
                 'content' => studip_utf8encode($template->render()),
-                'mkdate' => $posting['mkdate'],
+                'discussion_time' => $posting['discussion_time'],
                 'posting_id' => $posting->getId()
             );
         }
@@ -309,7 +309,7 @@ class StreamsController extends ApplicationController {
             $template->set_attribute('thread', $thread);
             $template->set_attribute('controller', $this);
             $output['content'] = studip_utf8encode($template->render());
-            $output['mkdate'] = time();
+            $output['discussion_time'] = time();
             $output['posting_id'] = $thread->getId();
         } else {
             $thread->delete();

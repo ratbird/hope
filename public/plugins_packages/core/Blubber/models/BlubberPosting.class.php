@@ -170,10 +170,11 @@ class BlubberPosting extends SimpleORMap {
             if ($posting['topic_id'] === $posting['root_id']) {
                 $db = DBManager::get();
                 return $db->query(
-                    "SELECT mkdate " .
+                    "SELECT GREATEST(MAX(mkdate), MAX(blubber_reshares.chdate)) " .
                     "FROM blubber " .
+                        "LEFT JOIN blubber_reshares ON (blubber_reshares.topic_id = blubber.root_id) " .
                     "WHERE root_id = ".$db->quote($posting->getId())." " .
-                    "ORDER BY mkdate DESC " .
+                    "GROUP BY blubber.root_id DESC " .
                     "LIMIT 1 " .
                 "")->fetch(PDO::FETCH_COLUMN, 0);
             } else {

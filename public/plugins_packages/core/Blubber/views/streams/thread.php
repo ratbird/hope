@@ -47,7 +47,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
 
 <ul id="blubber_threads" class="coursestream singlethread" aria-live="polite" aria-relevant="additions">
 <? endif; ?>
-<li id="posting_<?= htmlReady($thread->getId()) ?>" mkdate="<?= htmlReady($thread['discussion_time']) ?>" class="thread posting<?= $last_visit < $thread['mkdate'] ? " new" : "" ?> <?= $thread['context_type'] ?>" data-autor="<?= htmlReady($thread['user_id']) ?>">
+<li id="posting_<?= htmlReady($thread->getId()) ?>" mkdate="<?= htmlReady($thread['discussion_time']) ?>" data-discussion_time="<?= htmlReady($thread['discussion_time']) ?>" class="thread posting<?= $last_visit < $thread['mkdate'] ? " new" : "" ?> <?= $thread['context_type'] ?>" data-autor="<?= htmlReady($thread['user_id']) ?>">
     <div class="hiddeninfo">
         <input type="hidden" name="context" value="<?= htmlReady($thread['Seminar_id']) ?>">
         <input type="hidden" name="context_type" value="<?= $thread['Seminar_id'] === $thread['user_id'] ? "public" : "course" ?>">

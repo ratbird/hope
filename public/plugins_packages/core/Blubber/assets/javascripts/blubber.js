@@ -25,7 +25,7 @@ STUDIP.Blubber = {
                     STUDIP.Blubber.insertComment(posting.root_id, posting.posting_id, posting.mkdate, posting.content);
                 } else {
                     //thread
-                    STUDIP.Blubber.insertThread(posting.posting_id, posting.mkdate, posting.content);
+                    STUDIP.Blubber.insertThread(posting.posting_id, posting.discussion_time, posting.content);
                 }
             });
             jQuery('#last_check').val(Math.floor(new Date().getTime() / 1000));
@@ -78,7 +78,7 @@ STUDIP.Blubber = {
                 type: "POST",
                 success: function (reply) {
                     jQuery("#new_posting").val("").trigger("keydown");
-                    STUDIP.Blubber.insertThread(reply.posting_id, reply.mkdate, reply.content);
+                    STUDIP.Blubber.insertThread(reply.posting_id, reply.discussion_time, reply.content);
                     jQuery("#submit_button").hide();
                 },
                 complete: function () {
@@ -165,7 +165,7 @@ STUDIP.Blubber = {
     /**
      * Inserts any new thread-postings in the correct order
      */
-    insertThread: function (posting_id, mkdate, content) {
+    insertThread: function (posting_id, discussion_time, content) {
         if (jQuery("#posting_" + posting_id).length) {
             if (jQuery("#posting_" + posting_id + " > .content_column textarea.corrector").length === 0) {
                 var new_version = jQuery(content);
@@ -183,7 +183,7 @@ STUDIP.Blubber = {
             } else {
                 var already_inserted = false;
                 jQuery("#blubber_threads > li[id]").each(function (index, li) {
-                    if (!already_inserted && jQuery(li).attr("mkdate") < mkdate) {
+                    if (!already_inserted && jQuery(li).data("discussion_time") < discussion_time) {
                         var top = jQuery(document).scrollTop();
                         jQuery(content).insertBefore(li).hide().fadeIn();
                         var comment_top = jQuery("#posting_" + posting_id).offset().top;
@@ -683,7 +683,7 @@ jQuery(window.document).bind('scroll', _.throttle(function (event) {
                 var more_indicator = jQuery("#blubber_threads > li.loading").detach();
                 jQuery("#loaded").val(parseInt(jQuery("#loaded").val(), 10) + 1);
                 jQuery.each(response.threads, function (index, thread) {
-                    STUDIP.Blubber.insertThread(thread.posting_id, thread.mkdate, thread.content);
+                    STUDIP.Blubber.insertThread(thread.posting_id, thread.discussion_time, thread.content);
                 });
                 if (response.more) {
                     jQuery("#blubber_threads").append(more_indicator);

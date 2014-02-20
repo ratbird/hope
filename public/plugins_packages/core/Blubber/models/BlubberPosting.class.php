@@ -170,7 +170,7 @@ class BlubberPosting extends SimpleORMap {
             if ($posting['topic_id'] === $posting['root_id']) {
                 $db = DBManager::get();
                 return $db->query(
-                    "SELECT GREATEST(MAX(mkdate), MAX(blubber_reshares.chdate)) " .
+                    "SELECT GREATEST(MAX(blubber.mkdate),  IFNULL(MAX(blubber_reshares.chdate), 0)) " .
                     "FROM blubber " .
                         "LEFT JOIN blubber_reshares ON (blubber_reshares.topic_id = blubber.root_id) " .
                     "WHERE root_id = ".$db->quote($posting->getId())." " .

@@ -33,7 +33,7 @@ class Forum extends \RESTAPI\RouteMap
 
         $json = array();
         foreach ($categories as $cat) {
-            $uri = sprintf('/forum_category/%s', htmlReady($cat['category_id']));
+            $uri = $this->urlf('/forum_category/%s', array(htmlReady($cat['category_id'])));
             $json[$uri] = self::categoryToJson($cat);
         }
 
@@ -329,8 +329,8 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['subject']      = $raw['name'];
-        $entry['user']         = sprintf('/user/%s', htmlReady($raw['user_id']));
-        $entry['course']       = sprintf('/course/%s', htmlReady($raw['seminar_id']));
+        $entry['user']         = $this->urlf('/user/%s', array(htmlReady($raw['user_id'])));
+        $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
 
@@ -381,10 +381,10 @@ class Forum extends \RESTAPI\RouteMap
     {
         $json = $category;
 
-        $json['course'] = sprintf('/course/%s', htmlReady($json['course_id']));
+        $json['course'] = $this->urlf('/course/%s', array(htmlReady($json['course_id'])));
         unset($json['course_id']);
 
-        $json['areas'] = sprintf('/forum_category/%s/areas', $json['category_id']);
+        $json['areas'] = $this->urlf('/forum_category/%s/areas', array($json['category_id']));
         $json['areas_count'] = self::countAreas($json['category_id']);
 
         return $json;
@@ -403,7 +403,7 @@ class Forum extends \RESTAPI\RouteMap
         $areas = array();
 
         foreach (\ForumCat::getAreas($category_id, $offset, $limit) as $area) {
-            $url = sprintf('/forum_entry/%s', htmlReady($area['topic_id']));
+            $url = $this->urlf('/forum_entry/%s', array(htmlReady($area['topic_id'])));
             $areas[$url] = self::convertEntry($area);
         }
 

@@ -25,7 +25,7 @@ class News extends \RESTAPI\RouteMap
     public function getGlobalNews()
     {
         list($json, $total) = $this->getRangedNews('studip');
-        $this->paginated($json, $total);
+        return $this->paginated($json, $total);
     }
 
     /**
@@ -36,7 +36,7 @@ class News extends \RESTAPI\RouteMap
     public function getCourseNews($course_id)
     {
         list($json, $total) = $this->getRangedNews($course_id);
-        $this->paginated($json, $total, compact('course_id'));
+        return $this->paginated($json, $total, compact('course_id'));
     }
 
     /**
@@ -47,7 +47,7 @@ class News extends \RESTAPI\RouteMap
     public function getUserNews($user_id)
     {
         list($json, $total) = $this->getRangedNews($user_id);
-        $this->paginated($json, $total, compact('user_id'));
+        return $this->paginated($json, $total, compact('user_id'));
     }
 
 

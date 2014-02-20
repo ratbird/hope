@@ -335,7 +335,8 @@ abstract class RouteMap
     }
 
     /**
-     * Set multiple response headers of the current response.
+     * Set multiple response headers of the current response by
+     * merging them with already set ones.
      *
      * @code
      * $routemap->headers(array('X-example' => "yep"));
@@ -364,10 +365,32 @@ abstract class RouteMap
     }
 
 
-    // Set the Content-Type of the response body given a media type or
-    // file extension.
-    //
-    // @TODO
+    /**
+     * Set the Content-Type of the HTTP response given a mime type and
+     * optionally further parameters as discusses in RFC 2616 14.17.
+     *
+     * If no charset is given, it defaults to Stud.IP's 'windows-1252'.
+     *
+     * Examples:
+     *
+     * @code
+     * // results in "Content-Type: image/gif"
+     * $this->contentType('image/gif);
+     *
+     * // results in "Content-Type: text/html;charset=ISO-8859-4"
+     * $this->contentType('text/html;charset=ISO-8859-4');
+     *
+     * // results in "Content-Type: text/html;charset=ISO-8859-4"
+     * $this->contentType('text/html', array('charset' => 'ISO-8859-4'));
+     *
+     * // results in "Content-type: multipart/byteranges; boundary=THIS_STRING_SEPARATES"
+     * $this->contentType('multipart/byteranges', array('boundary' => 'THIS_STRING_SEPARATES'));
+     *
+     * @endcode
+     *
+     * @param string $mime_type  a string describing a MIME type like 'application/json'
+     * @param array  $params     optional parameters as described above
+     */
     public function contentType($mime_type, $params = array())
     {
         if (!isset($params['charset'])) {
@@ -390,22 +413,51 @@ abstract class RouteMap
         $this->response['Content-Type'] = $mime_type;
     }
 
-    // Halt processing and return the error status provided.
+    /**
+     * (Nice) sugar for calling RouteMap::halt and therefore
+     * as \a DISRUPTIVE. Code after calling RouteMap::error will not
+     * be evaluated.
+     *
+     * @see RouteMap::halt
+     *
+     * @param integer $status  a number indicating the HTTP status
+     *                         code; probably something 4xx or 5xx-ish
+     * @param string $body     optional; the body of the HTTP response
+     *
+     */
     public function error($status, $body = null)
     {
         $this->halt($status, array(), $body);
     }
 
 
-    // Set the response entity tag (HTTP 'ETag' header) and halt if
-    // conditional GET matches. The value argument is an identifier
-    // that uniquely identifies the current version of the
-    // resource. The strong_etag argument indicates whether the etag
-    // should be used as a strong (default) or weak cache
-    // validator. When the current request includes an 'If-None-Match'
-    // header with a matching etag, execution is immediately
-    // halted. If the request method is safe (GET, HEAD, ...) , a '304
-    // Not Modified' response is sent.
+    /**
+     * Sets the HTTP response's Etag header and halts, if the incoming
+     * HTTP request was a matching conditional GET using an
+     * 'If-None-Match' header. Thus it is a possibly \a DISRUPTIVE
+     * method as it will stop evaluation in that case and send a '304
+     * Not Modified'.
+     *
+     * Detail: If the request contains an If-Match or If-None-Match
+     * header set to `*`, a RouteMap assumes a match on safe
+     * (e.g. GET) and idempotent (e.g. PUT) requests. (In those cases
+     * it thinks that the resource already exists and therefore
+     * matches a wildcard.). This can be changed by passing an
+     * appropriate value for the `$new_resource` parameter.
+
+     * Details of this can be found in RFC 2616 14.24 and 14.26
+     *
+     * @param string $value       an identifier uniquely identifying the
+     *                            current state of a resource
+     * @param bool $strong_etag   optional; indicates whether the etag
+     *                            is a weak or strong (which is the
+     *                            default) cache validator. Have a look
+     *                            at the RFC for details.
+     * @param bool $new_resource  optional; a way to tell the RouteMap
+     *                            that this is a new or existing
+     *                            resource. See above.
+     */
+
     public function etag($value, $strong_etag = true, $new_resource = null)
     {
         // Before touching this code, please double check RFC 2616
@@ -426,7 +478,7 @@ abstract class RouteMap
                 $this->halt($this->isRequestSafe() ? 304 : 412);
             }
             if (isset($_SERVER['HTTP_IF_MATCH'])
-                && !$this->etagMatches($$_SERVER['HTTP_IF_MATCH'], $new_resource)) {
+                && !$this->etagMatches($_SERVER['HTTP_IF_MATCH'], $new_resource)) {
                 $this->halt(412);
             }
         }
@@ -450,10 +502,21 @@ abstract class RouteMap
         return $method === 'GET' or $method === 'HEAD' or $method === 'OPTIONS' or $method === 'TRACE';
     }
 
-    // Set the Expires header and Cache-Control/max-age directive. Amount
-    // can be an integer number of seconds in the future indicating
-    // when the response should be considered "stale". The $cache_control
-    // argument is passed to #cacheControl
+    /**
+     * This sets the `Expires` header and the `Cache-Control`
+     * directive `max-age`.
+     *
+     * Amount is an integer number of seconds in the future indicating
+     * when the response should be considered "stale". The
+     * `$cache_control` parameter is passed to RouteMap#cacheControl
+     * along with the automatically generated `max_age` directive.
+     *
+     * @param int $amount  an integer specifying the number of seconds
+     *                     this resource will go stale.
+     * @param array $cache_control  optional; more directives for
+     *                     RouteMap::cacheControl which is always
+     *                     automatically called using the computed max_age
+     */
     public function expires($amount, $cache_control = array())
     {
         $time = time() + $amount;
@@ -465,6 +528,18 @@ abstract class RouteMap
         $this->response['Expires'] = $this->httpDate($time);
     }
 
+    /**
+     * This sets the Cache-Control header of the HTTP response.
+     *
+     * Example:
+     *
+     * @code
+     * $this->cacheControl(array('public', 'must-revalidate'));
+     * @endcode
+     *
+     * @param array $values  an array containing Cache-Control
+     *                       directives.
+     */
     public function cacheControl($values)
     {
         if (is_array($values) && sizeof($values)) {
@@ -472,22 +547,36 @@ abstract class RouteMap
         }
     }
 
-    // To immediately stop a request within a filter or route use:
-    // $this->halt()
-    //
-    // You can also specify the status when halting:
-    // $this->halt(410)
-    //
-    // Or the body:
-    // $this->halt('this will be the body')
-    //
-    // Or both:
-    // $this->halt(401, 'go away!')
-    //
-    // With headers:
-    // $this->halt(402, array('Content-Type' => 'text/plain'), 'revenge')
-    //
-    // used in #lastModified, #redirect etc.
+    /**
+     * This very important method stops further execution of your
+     * code. You may specify a status code, headers and the body of
+     * the resulting response. As the name implies, this method is \a
+     * DISRUPTIVE and will not return.
+     *
+     * @code
+     * // stops any further code of a route
+     * $this->halt();
+     *
+     * // you may specify an HTTP status
+     * $this->halt(409):
+     *
+     * // you may specify the HTTP response's body
+     * $this->halt('my ethereal body')
+     *
+     * // or even both
+     * $this->halt(100, 'Yes, pleazze!')
+     *
+     * // giving headers
+     * $this->halt(417, array('Content-Type' => 'x-not-a-cat'), 'Cats only!')
+     * @endcode
+     *
+     * This method is called by every single \a DISRUPTIVE method.
+     *
+     * @param integer $status  optional; the response's status code
+     * @param array $headers   optional; (additional) header lines
+     *                           which get merged with already set headers
+     * @param string $body     optional; the response's body
+     */
     public function halt(/* [status], [headers], [body] */)
     {
         $args   = func_get_args();
@@ -507,12 +596,23 @@ abstract class RouteMap
         throw new RouterHalt($this->response);
     }
 
-    // Set the last modified time of the resource (HTTP Last-Modified
-    // header) and halt if conditional GET matches. The time argument
-    // is a Time, DateTime, or other object that responds to to_time.
-    // When the current request includes an 'If-Modified-Since' header
-    // that is equal or later than the time specified, execution is
-    // immediately halted with a '304 Not Modified' response.
+    /**
+     * This method sets the Last-Modified header of the HTTP response
+     * and halts on matching conditional GET requests. Thus this
+     * method is \a DISRUPTIVE in certain circumstances.
+     *
+     * You have to give an integer typed timestamp (in seconds since
+     * epoch) to specify the data of the last modification to the
+     * requested resource.
+     *
+     * If the current HTTP request contains an `If-Modified-Since`
+     * header, its value is compared to the specified `$time`
+     * parameter. Unless the header's value is sooner than the given
+     * `$time`, further execution is precluded and the RouteMap
+     * returns with a '304 Not Modified'.
+     *
+     * @param integer $time  a timestamp described in seconds since epoch
+     */
     public function lastModified($time)
     {
 
@@ -548,13 +648,44 @@ abstract class RouteMap
         return gmdate('D, d M Y H:i:s \G\M\T', (int) $timestamp);
     }
 
-    // Halt processing and return a 404 Not Found.
+    /**
+     * Halts execution and returns a '404 Not Found' response.
+     *
+     * Sugar for calling RouteMap::error(404) and therefore
+     * \a DISRUPTIVE. Code after calling RouteMap::notFound will
+     * not be evaluated.
+     *
+     * @see RouteMap::error
+     * @see RouteMap::halt
+     *
+     * @param string $body     optional; the body of the HTTP response
+     */
     public function notFound($body = null)
     {
         $this->halt(404, $body);
     }
 
-    // Halt processing and redirect to the URI provided.
+    /**
+     * Stops your code and redirects to the URL provided. This method
+     * is \a DISRUPTIVE like RouteMap#halt
+     *
+     * In addition to the URL you may provide the status code,
+     * (additional) headers and a request body as you would when
+     * calling RouteMap#halt.
+     *
+     * @code
+     * $this->redirect('/foo', 201, array('X-Some-Header' => 1234), 'and even a body');
+     * @endcode
+     *
+     * @see RouteMap::halt
+     *
+     * @param string $url the URL to redirect to; it will be filtered
+     *                    using RouteMap#url, so you may call it with
+     *                    those nice and small strings used in the
+     *                    annotations
+     * @param mixed $args optional; any combinations of the three
+     *                    parameters as in RouteMap::halt
+     */
     public function redirect($url, $args = null)
     {
         $this->status($_SERVER["SERVER_PROTOCOL"] === 'HTTP/1.1' && !Request::isGet() ? 303 : 302);
@@ -565,8 +696,28 @@ abstract class RouteMap
     }
 
 
-
-    public function sendFile($_path, $opts=array())
+    /**
+     * Stops execution of your code and starts sending the specified
+     * file. This method is \a DISRUPTIVE.
+     *
+     * Using the `$opts` parameter you may specify the file's mime
+     * content type, sending an appropriate 'Content-Type' header, and
+     * you may specify the 'Content-Disposition' of the file transfer.
+     *
+     * Example:
+     *
+     * @code
+     * $this->sendFile('/tmp/c29tZSB0ZXh0', array(
+     *     'type' => 'image/png',
+     *     'disposition' => 'inline',
+     *     'filename' => 'cutecats.png'));
+     * @endcode
+     *
+     * @param string $_path  the filesystem path to the file to send
+     * @param array  $opts   optional; specify the content type,
+     *                       disposition and filename
+     */
+    public function sendFile($_path, $opts = array())
     {
         $path = realpath($_path);
 
@@ -595,14 +746,46 @@ abstract class RouteMap
     }
 
 
-    // Generates the absolute URI for a given path
+    /**
+     * Generate a URL to a given handler using a URL fragment and URL
+     * parameters.
+     *
+     * Example:
+     * @code
+     * // result in something like "/some/path/api.php/course/123/members?status=student"
+     * $this->url('course/123/members', array('status' => 'student'));
+     * @endcode
+     *
+     * @param string $addr       a URL fragment to a handler
+     * @param array $url_params  optional; URL parameters to add to
+     *                           the generated URL
+     *
+     * @return string  the resulting URL
+     */
     public function url($addr, $url_params = null)
     {
         $addr = ltrim($addr, '/');
         return \URLHelper::getURL("api.php/$addr", $url_params, true);
     }
 
-    // Generates the absolute URI for a given path
+    /**
+     * A `vsprintf` like variant to the RouteMap::url method.
+     *
+     * Example:
+     * @code
+     * // results in "[...]/api.php/foo/some_id?status=student"
+     * $this->urlf("foo/%s", array("some_id"), array('status' => 'student'));
+     * @endcode
+     *
+     * @param string $addr_f        a URL fragment to a handler
+     *                              containing sprintf-ish format sequences
+     * @param array $format_params  values to fill into the format markers
+     * @param array $url_params     optional; URL parameters to add to
+     *                              the generated URL
+     *
+     * @return string  the resulting URL
+     */
+
     public function urlf($addr_f, $format_params, $url_params = null)
     {
         return $this->url(vsprintf($addr_f, $format_params), $url_params);

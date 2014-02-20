@@ -1,5 +1,8 @@
 <h3><?= htmlReady($rule->getName()) ?></h3>
-<?= $tpl ?>
+<label for="message" class="caption">
+    <?= _('Nachricht bei fehlgeschlagener Anmeldung') ?>:
+</label>
+<textarea name="message" rows="4" cols="50"><?= $rule->getMessage() ?></textarea>
 <br/>
 <label for="password1" class="caption">
     <?= _('Zugangspasswort') ?>:

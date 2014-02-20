@@ -236,7 +236,7 @@ class UserManagement
                 $this->logInstUserDel($this->user->id, "inst_perms = 'user'");
                 $this->user->institute_memberships->unsetBy('inst_perms', 'user');
                 // make user visible globally if dozent may not be invisible (StEP 00158)
-                if (get_config('DOZENT_ALWAYS_VISIBLE')) {
+                if (get_config('DOZENT_ALWAYS_VISIBLE') && $this->user->visible != 'never') {
                     $this->user->visible = 'yes';
                 }
                 if ($nperms[$this->user->perms] < $nperms[$this->user->getPristineValue('perms')]) {

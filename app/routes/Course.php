@@ -50,6 +50,10 @@ class Course extends \RESTAPI\RouteMap
      */
     public function getCourse($course_id)
     {
+        if (!$course = \Course::find($course_id)) {
+            $this->notFound("Course not found");
+        }
+
         $course = $this->requireCourse($course_id);
         return $this->courseToJSON($course);
     }

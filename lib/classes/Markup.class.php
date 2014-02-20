@@ -236,7 +236,7 @@ function getMediaUrl($url) {
     if (isStudipMediaUrl($url)) {
         return removeStudipDomain($url);
     }
-    if (isStudipUrl($url)) {
+    if (is_internal_url($url)) {
         // link is studip-internal, but not to a valid media location
         throw new InvalidInternalLinkException($url);
     }
@@ -297,7 +297,7 @@ function getMediaProxyUrl() {
  * @returns boolean  TRUE for internal media link URLs, FALSE otherwise.
  */
 function isStudipMediaUrl($url) {
-    return isStudipUrl($url) &&
+    return is_internal_url($url) &&
         isStudipMediaUrlPath(getStudipRelativePath($url));
 }
 
@@ -314,7 +314,7 @@ function isStudipMediaUrl($url) {
  *                      value as $url for external URLs.
  */
 function removeStudipDomain($url) {
-    if (!isStudipUrl($url)) {
+    if (!is_internal_url($url)) {
         return $url;
     }
     $parsed_url = \parse_url(tranformInternalIdnaLink($url));
@@ -343,32 +343,6 @@ function getStudipRelativePath($url) {
     $parsed_url = \parse_url(tranformInternalIdnaLink($url));
     $parsed_studip_url = getParsedStudipUrl();
     return String\removePrefix($parsed_url['path'], $parsed_studip_url['path']);
-}
-
-/**
- * Test if given URL points to an internal Stud.IP resource.
- *
- * @param string $url  URL that is tested.
- * @return boolean     TRUE if URL points to internal Stud.IP resource.
- */
-function isStudipUrl($url) {
-    $studip_url = getParsedStudipUrl();
-    \assert(\is_array($studip_url)); // otherwise something's wrong with studip
-
-    $parsed_url = \parse_url(tranformInternalIdnaLink($url));
-    if ($parsed_url === FALSE) {
-        return FALSE; // url is seriously malformed
-    }
-
-    $studip_schemes = array($studip_url['scheme'], 'http', 'https', \NULL);
-    $studip_hosts = array($studip_url['host'], \NULL);
-    $studip_ports = array($studip_url['port'], \NULL);
-
-    $is_scheme = \in_array($parsed_url['scheme'], $studip_schemes);
-    $is_host = \in_array($parsed_url['host'], $studip_hosts);
-    $is_port = \in_array($parsed_url['port'], $studip_ports);
-    $is_path = String\startsWith($parsed_url['path'], $studip_url['path']);
-    return $is_scheme && $is_host && $is_port && $is_path;
 }
 
 /**
@@ -402,44 +376,6 @@ function isStudipMediaUrlPath($path) {
  */
 function tranformInternalIdnaLink($url) {
     return \idna_link(\TransformInternalLinks($url));
-}
-
-/**
- * Get the current URL as called by the web client.
- *
- * @return string  The current URL.
- *
- * Originally posted on http://stackoverflow.com/a/2820771 by user macek.
- */
-function getUrl() {
-    // TODO move condition to function "httpsActive()"
-    $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http';
-    return $protocol . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-}
-
-/**
- * Get the file name of the currently executed PHP script.
- *
- * @return string  Filename of currently executed PHP script.
- */
-function getBasename() {
-    return basename($_SERVER['PHP_SELF']);
-}
-
-/**
- * Like getUrl but exclude base name and everything thereafter.
- *
- * Get the base URL including the directory path, excluding file name,
- * query string, etc.
- *
- * return string  Base URL of client request.
- */
-function getBaseUrl() {
-    $url = getUrl();
-    $pos = \strpos($url, getBasename());
-    // remove current script name, query, etc.
-    // only keep host URL and directory part of path
-    return \substr($url, 0, $pos);
 }
 
 //// url exceptions ///////////////////////////////////////////////////////////

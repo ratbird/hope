@@ -74,17 +74,17 @@ class WysiwygController extends \AuthenticatedController
     {
         // studip must be at localhost/~rcosta/step00256 for tests to work
         // LOAD_EXTERNAL_MEDIA must be set to 'proxy'
-        $studip_root = '/~rcosta/step00256';
+        $studip_root = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
 
         $studip_document = $studip_root
-            . '/sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
+            . 'sendfile.php?type=0&file_id=abc123&file_name=test.jpg';
 
         $external_document = 'http://pflanzen-enzyklopaedie.eu'
             . '/wp-content/uploads/2012/11/'
             . 'Sumpfdotterblume-multiplex-120x120.jpg';
 
         $proxy_document = $studip_root
-            . '/dispatch.php/media_proxy?url='
+            . 'dispatch.php/media_proxy?url='
             . 'http%3A%2F%2Fpflanzen-enzyklopaedie.eu'
             . '%2Fwp-content%2Fuploads%2F2012%2F11%2F'
             . 'Sumpfdotterblume-multiplex-120x120.jpg';
@@ -102,7 +102,11 @@ class WysiwygController extends \AuthenticatedController
 
         $test_results = '';
         forEach ($tests as $i => $o) {
-            $r = MediaProxy\getMediaUrl($i);
+            try {
+                $r = MediaProxy\getMediaUrl($i);
+            } catch (MediaProxy\InvalidInternalLinkException $e) {
+                $r = 'InvalidInternalLinkException';
+            }
             $v = ($r == $o) ? '==' : '!=';
             $test_results .= "Utils::getMediaUrl($i)<br>"
                           .  "                == $r<br>"
@@ -110,17 +114,23 @@ class WysiwygController extends \AuthenticatedController
                           . '<br>';
         }
 
+        $internal_link_tests = '';
+        foreach ($tests as $i => $o) {
+            $is = is_internal_url($i) ? 'true' : 'false';
+            $internal_link_tests .= "$is = is_internal_url($i)<br>";
+        }
+
         $this->render_text('<pre>'
-            .'MediaProxy\getUrl():       '.MediaProxy\getUrl().'<br>'
-            .'MediaProxy\getBaseName():  '.MediaProxy\getBaseName().'<br>'
-            .'MediaProxy\getBaseUrl():   '.MediaProxy\getBaseUrl().'<br>'
-            .'URLHelper::getLink():      '.URLHelper::getLink().'<br>'
-            .'URLHelper::getUrl():       '.URLHelper::getUrl().'<br>'
-            .'URLHelper::getScriptUrl(): '.URLHelper::getScriptUrl().'<br>'
-            .'<br>'
-            .'LOAD_EXTERNAL_MEDIA='.\Config::get()->LOAD_EXTERNAL_MEDIA.'<br>'
+            .'URLHelper::getLink():             '.URLHelper::getLink().'<br>'
+            .'URLHelper::getUrl():              '.URLHelper::getUrl().'<br>'
+            .'URLHelper::getScriptUrl():        '.URLHelper::getScriptUrl().'<br>'
+            .'ABSOLUTE_URI_STUDIP               '.$GLOBALS['ABSOLUTE_URI_STUDIP'].'<br>'
+            .'CANONICAL_RELATIVE_PATH_STUDIP    '.$GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'].'<br>'
+            .'LOAD_EXTERNAL_MEDIA               '.\Config::get()->LOAD_EXTERNAL_MEDIA.'<br>'
             .'<br>'
             .$test_results
+            .'<br>'
+            .$internal_link_tests
             .'</pre>');
     }
 }

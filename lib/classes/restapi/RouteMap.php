@@ -596,9 +596,15 @@ abstract class RouteMap
 
 
     // Generates the absolute URI for a given path
-    public function url($addr, $params = null)
+    public function url($addr, $url_params = null)
     {
         $addr = ltrim($addr, '/');
-        return \URLHelper::getURL("api.php/$addr", $params, true);
+        return \URLHelper::getURL("api.php/$addr", $url_params, true);
+    }
+
+    // Generates the absolute URI for a given path
+    public function urlf($addr_f, $format_params, $url_params = null)
+    {
+        return $this->url(vsprintf($addr_f, $format_params), $url_params);
     }
 }

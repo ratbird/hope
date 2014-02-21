@@ -2,6 +2,8 @@
 namespace RESTAPI;
 
 /**
+ * Response class for the rest api
+ *
  * @author  <mlunzena@uos.de>
  * @license GPL 2 or later
  * @since   Stud.IP 3.0
@@ -10,6 +12,14 @@ class Response implements \ArrayAccess
 {
     public $body, $status, $headers;
 
+    /**
+     * Constructor, sets vital information if provided.
+     *
+     * @param String $body    Body contents of the response, optional,
+     *                        defaults to empty string
+     * @param int    $status  HTTP status code, optional, defaults to 200
+     * @param Array  $headers HTTP headers, optional, defaults to no headers
+     */
     public function __construct($body = '', $status = 200, $headers = array())
     {
         $this->body = $body;
@@ -17,12 +27,23 @@ class Response implements \ArrayAccess
         $this->headers = (array) $headers;
     }
 
-    // whether or not the status is set to 2xx
+    /**
+     * Detects whether the response status is of success type (HTTP status 2xx)
+     *
+     * @return bool True if status is of success type, false otherwise
+     */
     public function isSuccess()
     {
         return 200 <= $this->status && $this->status <= 299;
     }
 
+    /**
+     * Finishes the response with the given response renderer.
+     *
+     * @param RESTAPI\Renderer\DefaultRenderer $content_renderer Used response
+     *                                         renderer, only applied if body
+     *                                         is not a callable closure
+     */
     public function finish($content_renderer)
     {
         if (!is_callable($this->body)) {
@@ -30,6 +51,9 @@ class Response implements \ArrayAccess
         }
     }
 
+    /**
+     * Sends the response.
+     */
     public function output()
     {
         if (isset($this->status)) {

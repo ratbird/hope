@@ -22,6 +22,10 @@ jQuery(function ($) {
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
     function replaceTextarea(textarea) {
+        if (! (textarea instanceof jQuery)) {
+            textarea = $(textarea);
+        }
+
         // convert plain text entries to html
         function isHtml(text) {
             text = text.trim();
@@ -338,7 +342,7 @@ jQuery(function ($) {
                         }
                         $(this).attr('id', 'wysiwyg' + id);
                     }
-                    replaceTextarea($(this));
+                    replaceTextarea(this);
                 }
             } else if ($(this).parent().css('display') === 'none') {
                 if (editor && CKEDITOR.instances[$(this).attr('id')]) {

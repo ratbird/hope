@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+$groups = Statusgruppen::findBySeminar_id($_SESSION['SessionSeminar']);
 ?>
 <? if (!$tpl['deleted']) : ?>
 <tr class="dates_headline<?= ($issue_open[$tpl['sd_id']] || $tpl['openall'])? ' dates_opened' : ''?>">
@@ -25,8 +26,14 @@
 
     <td nowrap class="<?=$tpl['class']?>">
         <a class="tree" href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
-                 <i><?= htmlReady($tpl['art']) ?>:</i>
-                <?=$tpl['date']?>&nbsp;
+            <i><?= htmlReady($tpl['art']) ?>:</i>
+            <?=$tpl['date']?>&nbsp;
+            <? if (count($groups) > count($tpl['related_groups'])) : ?>
+            (<? foreach ($tpl['related_groups'] as $key => $statusgruppe_id) {
+                $key < 1 || print ", ";
+                print htmlReady(Statusgruppen::find($statusgruppe_id)->name);
+            }?>)
+            <? endif ?>
         </a>
     </td>
 
@@ -87,10 +94,15 @@
         <? if ($tpl['related_groups'] && count($tpl['related_groups'])) : ?>
         <BR/>
         <B><?=_("Beteiligte Gruppen")?>:</B>
+            <? if (count($groups) > count($tpl['related_groups'])) : ?>
             <? foreach ($tpl['related_groups'] as $key => $statusgruppe_id) {
                 $key < 1 || print ",";
                 print " ".htmlReady(Statusgruppen::find($statusgruppe_id)->name);
-            }?><BR/>
+            }?>
+            <? else : ?>
+            <?= _("alle Teilnehmer") ?>
+            <? endif ?>
+            <BR/>
         <? endif ?>
         <? if ($tpl['additional_themes']) { ?>
         <BR/>

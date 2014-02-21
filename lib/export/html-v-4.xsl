@@ -218,7 +218,9 @@
 					<b>Beschreibung: </b>
 				</td>
 				<td bgcolor="#EEEEEE">
-					<xsl:value-of select="beschreibung"/>
+					<xsl:call-template name="replace-newlines">
+						<xsl:with-param name="str" select="beschreibung"/>
+					</xsl:call-template>
 				</td>
 			</tr>
 		</xsl:if>
@@ -346,4 +348,20 @@
 		</tr>
 	</xsl:for-each>
 </xsl:template>		
+  <!-- replace newline characters with <br> elements -->
+  <xsl:template name="replace-newlines">
+    <xsl:param name="str"/>
+    <xsl:choose>
+      <xsl:when test="contains($str, '&#10;')">
+        <xsl:value-of select="substring-before($str, '&#10;')"/>
+        <br/>
+        <xsl:call-template name="replace-newlines">
+          <xsl:with-param name="str" select="substring-after($str, '&#10;')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$str"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>

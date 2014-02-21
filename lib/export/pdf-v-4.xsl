@@ -305,7 +305,7 @@ MitarbeiterInnenliste
 				</fo:block>
 			</xsl:if>
 			<xsl:if test="beschreibung">
-				<fo:block>
+				<fo:block linefeed-treatment="preserve">
 					<fo:inline font-weight="bold">Beschreibung: </fo:inline>
 					<xsl:value-of select="beschreibung"/>
 				</fo:block>

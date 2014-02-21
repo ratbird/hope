@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:str="http://exslt.org/strings">
 	<xsl:output method="text" encoding='WINDOWS-1252'/>
 	<xsl:template match="/">
 			<xsl:text>{\rtf1\ansi\ansicpg1252\deff0\deflang1031{\fonttbl{\f0\fnil\fcharset0 Times New Roman;}}
@@ -196,7 +196,7 @@
 			</xsl:if>
 			<xsl:if test="beschreibung">
 				<xsl:text>
-\par\b Beschreibung: \b0 </xsl:text><xsl:value-of select="beschreibung"/>
+\par\b Beschreibung: \b0 </xsl:text><xsl:value-of select="str:replace(beschreibung, '&#10;', '\line ')"/>
 			</xsl:if>
 			<xsl:if test="raum">
 				<xsl:text>

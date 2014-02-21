@@ -3,7 +3,7 @@
         <?= $rule->toString() ?>
         <input type="hidden" name="rules[]" value="<?= htmlReady(serialize($rule)) ?>"/>
     </span>
-    <span class="hover_symbols" id="rule_actions_<?= $rule->getId() ?>">
+    <span class="action_icons" id="rule_actions_<?= $rule->getId() ?>">
         <a href="#" onclick="return STUDIP.Admission.configureRule('<?= get_class($rule) ?>', '<?= $controller->url_for('admission/rule/configure', get_class($rule), $rule->getId()) ?>')">
             <?= Assets::img('icons/16/blue/edit.png'); ?></a>
         <a href="#" onclick="return STUDIP.Dialogs.showConfirmDialog('<?= 

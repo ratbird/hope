@@ -12,7 +12,7 @@
         <input type="hidden" name="institutes[]" value="<?= $institute ?>" class="institute">
         <span class="hover_box">
             <?= htmlReady($data['Name']) ?>
-            <span class="hover_symbols">
+            <span class="action_icons">
                 <?= Assets::img('icons/16/blue/trash.png', array(
                             'alt' => _('Einrichtung entfernen'),
                             'title' => _('Einrichtung entfernen'),

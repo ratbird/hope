@@ -6,20 +6,28 @@ use \RESTAPI\UserPermissions;
 StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . DIRECTORY_SEPARATOR . 'vendor/oauth-php/library/');
 
 /**
+ * OAuth consumer for the rest api
+ *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
  * @since   Stud.IP 3.0
  */
 class OAuth extends Base
 {
+    /**
+     * Detects whether the request is authenticated via OAuth.
+     *
+     * @return mixed Instance of self if authentication was detected, false
+     *               otherwise
+     */
     public static function detect()
     {
         if (OAuthRequestVerifier::requestIsSigned()) {
             $user_id = false;
 
             $parameters = (in_array($_SERVER['REQUEST_METHOD'], array('GET', 'POST')))
-            ? null
-            : $GLOBALS['_' . $_SERVER['REQUEST_METHOD']];
+                        ? null
+                        : $GLOBALS['_' . $_SERVER['REQUEST_METHOD']];
 
             $req = new OAuthRequestVerifier(null, null, $parameters);
             $result = $req->verifyExtended('access');
@@ -60,13 +68,26 @@ class OAuth extends Base
             } catch (Exception $e) {
             }
         }
+        return false;
     }
 
+    /**
+     * Returns a singleton instance of the oauth server.
+     *
+     * @return OAuthServer The server object
+     */
     public static function getServer()
     {
-        return new OAuthServer();
+        static $server = null;
+        if ($server === null) {
+            $server = new OAuthServer();
+        }
+        return $server;
     }
 
+    /**
+     * SimpleORMap constructor, registers neccessary callbacks.
+     */
     public function __construct($id = null)
     {
         parent::__construct($id);
@@ -74,6 +95,10 @@ class OAuth extends Base
         $this->registerCallback('before_store', 'before_store');
     }
 
+    /**
+     * "Before store" trigger. Creates a clone of the consumer in the
+     * tables for the vendor oauth library.
+     */
     protected function before_store()
     {
         static $mapping = array(
@@ -114,6 +139,13 @@ class OAuth extends Base
         }
     }
 
+    /**
+     * Grant oauth access for a user.
+     *
+     * @param mixed $user_id Specific user id or null to default to the
+     *                       injected user
+     * @throws Exception If no valid user is present
+     */
     public function grantAccess($user_id = null)
     {
         if ($user_id === null && $this->hasUser()) {
@@ -127,6 +159,13 @@ class OAuth extends Base
         self::getServer()->authorizeFinish(true, $this->getOAuthId($user_id));
     }
 
+    /**
+     * Revoke oauth access from a user.
+     *
+     * @param mixed $user_id Specific user id or null to default to the
+     *                       injected user
+     * @throws Exception If no valid user is present
+     */
     public function revokeAccess($user_id = null)
     {
         if ($user_id === null && $this->hasUser()) {
@@ -150,6 +189,13 @@ class OAuth extends Base
         self::getServer()->authorizeFinish(false, $this->getOAuthId($user_id));
     }
 
+    /**
+     * Maps a user to an oauth id. This is neccessary due to the fact that
+     * the oauth lib works with different ids than Stud.IP.
+     *
+     * @param String $user_id Id of the user to get an oauth id for
+     * @return String The mapped oauth id
+     */
     private function getOAuthId($user_id)
     {
         $query = "SELECT oauth_id FROM api_oauth_user_mapping WHERE user_id = :id";

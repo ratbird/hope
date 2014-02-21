@@ -3,24 +3,37 @@ namespace RESTAPI\Consumer;
 use StudipAuthAbstract, RESTAPI\RouterException;
 
 /**
+ * Basic HTTP Authentication consumer for the rest api
+ *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
  * @since   Stud.IP 3.0
  */
 class HTTP extends Base
 {
+    /**
+     * Detects if a user is authenticated via basic http authentication.
+     * The only supported authentication for now is via the url:
+     *
+     * http://username:password@host/path?query
+     * 
+     * @return mixed Instance of self if authentication was detected, false
+     *               otherwise
+     * @throws RouterException if authentication fails
+     * @todo Integrate and test HTTP_AUTHORIZATION header authentication
+     */
     public static function detect()
     {
-        if (false && isset($_SERVER['HTTP_AUTHORIZATION'])
-            || isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']))
+        if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
+            || (false && isset($_SERVER['HTTP_AUTHORIZATION'])))
         {
             $user_id = false;
 
-            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-                list($username, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-            } elseif (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+            if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
                 $username = $_SERVER['PHP_AUTH_USER'];
                 $password = $_SERVER['PHP_AUTH_PW'];
+            } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                list($username, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
             }
 
             $check = StudipAuthAbstract::CheckAuthentication($username, $password);
@@ -30,5 +43,6 @@ class HTTP extends Base
 
             return new self(null, $check['uid']);
         }
+        return false;
     }
 }

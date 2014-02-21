@@ -13,7 +13,7 @@ use Request, Config;
  * methods:
  *
  * @code
- * /**
+ * / * *
  *  * An example handler method
  *  *
  *  * @get /foo
@@ -54,7 +54,7 @@ use Request, Config;
  * Example: We have got this handler method defined:
  *
  * @code
- * /**
+ * / * *
  *  * @get /foo/:id/bar/:other_id
  *  * /
  * public function fooHandler($id, $other_id) {
@@ -67,7 +67,7 @@ use Request, Config;
  *
  * @code
  * $result = $routeMap->fooHandler(1, 2);
- * @encode
+ * @endcode
  *
  * In your handler methods you have to process the input and return
  * some output data, which is then rendered in an appropriate way
@@ -122,7 +122,20 @@ use Request, Config;
  *   - RouteMap::cacheControl
  *   - RouteMap::lastModified
  *
- * TODO: describe the $this->data stuff.
+ * You can access the data sent in the body of the current HTTP
+ * request using the `$this->data` instance variable.
+ *
+ *   - If the request was of Content-Type `application/json`, the
+ *     body of the request is decoded using `json_decode`.
+ *   - If the request was of Content-Type
+ *     `application/x-www-form-urlencoded`, the body of the request is
+ *     decoded using `parse_str`.
+ *   - Otherwise the request will not be parsed and `$this->data` will
+ *     just contain the raw string.
+ *
+ * NOTE: The result of the described parsing will always contain
+ *       strings encoded in windows-1252. If the original body
+ *       was UTF-8 encoded, it is automatically re-encoded to windows-1252.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author  <mlunzena@uos.de>

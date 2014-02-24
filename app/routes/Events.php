@@ -56,6 +56,8 @@ class Events extends \RESTAPI\RouteMap
             );
         }
 
+        $this->etag(md5(serialize($json)));
+
         return $this->paginated($json, $list->numberOfEvents(), compact('user_id'));
     }
 
@@ -133,6 +135,8 @@ class Events extends \RESTAPI\RouteMap
 
         // END OF HACK
         $showSpecialDays = $old_value;
+
+        $this->etag(md5(serialize($events)));
 
         return $this->paginated($events, $total, compact('course_id'));
     }

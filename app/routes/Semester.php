@@ -32,6 +32,8 @@ class Semester extends \RESTAPI\RouteMap
         if (!$temp) {
             $this->notFound();
         }
+        
+        $this->etag(md5(serialize($temp)));
 
         return array(
             'semester_id'    => $temp['semester_id'],

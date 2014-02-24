@@ -167,6 +167,8 @@ class Contacts extends \RESTAPI\RouteMap
             $json[] = $this->minimalUserToJSON($contact->user_id, $contact->name());
         }
 
+        $this->etag(md5(serialize($json)));
+
         return $this->paginated($json, count($group->members), compact('group_id'));
     }
 
@@ -254,6 +256,9 @@ class Contacts extends \RESTAPI\RouteMap
                 'calpermission' => (bool) $contact->calpermission
             );
         }
+
+        $this->etag(md5(serialize($result)));
+
         return $result;
     }
 
@@ -276,6 +281,9 @@ class Contacts extends \RESTAPI\RouteMap
             $url = $this->urlf('/contact_group/%s', array(htmlReady($cg->id)));
             $result[$url] = $this->contactGroupToJSON($cg);
         }
+
+        $this->etag(md5(serialize($result)));
+
         return $result;
     }
 
@@ -287,6 +295,9 @@ class Contacts extends \RESTAPI\RouteMap
             'contacts'       => $this->urlf('/contact_group/%s/members', array(htmlReady($group->id))),
             'contacts_count' => sizeof($group->members)
         );
+
+        $this->etag(md5(serialize($json)));
+
         return $json;
     }
 }

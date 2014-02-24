@@ -326,6 +326,7 @@ class Messages extends \RESTAPI\RouteMap
                                  $mu->folder);
         }
 
+        $this->etag(md5(serialize($json)));
         return $json;
     }
 

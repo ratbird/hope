@@ -93,6 +93,8 @@ class User extends \RESTAPI\RouteMap
         }
         $user['datafields'] = $datafields;
 
+        $this->etag(md5(serialize($user)));
+
         return $user;
 
     }
@@ -155,6 +157,8 @@ class User extends \RESTAPI\RouteMap
                 $institutes['work'][] = $row;
             }
         }
+
+        $this->etag(md5(serialize($institutes)));
 
         $result = array_slice($institutes, $this->offset, $this->limit);
         return $this->paginated($result, count($institutes), compact('user_id'));

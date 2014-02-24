@@ -53,6 +53,8 @@ class Schedule extends \RESTAPI\RouteMap
            $json[$number_of_day + 1] = $entries;
        }
 
+       $this->etag(md5(serialize($events)));
+
        return $json;
     }
 

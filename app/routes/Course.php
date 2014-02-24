@@ -35,7 +35,7 @@ class Course extends \RESTAPI\RouteMap
         }
 
         $memberships = $this->findMembershipsByUserId($user_id, $semester);
-
+        
         $total = count($memberships);
         $memberships = $memberships->limit($this->offset, $this->limit);
         return $this->paginated($this->membershipsToJSON($memberships),
@@ -55,6 +55,8 @@ class Course extends \RESTAPI\RouteMap
         }
 
         $course = $this->requireCourse($course_id);
+        $this->lastmodified($course->chdate);
+
         return $this->courseToJSON($course);
     }
 
@@ -122,6 +124,8 @@ class Course extends \RESTAPI\RouteMap
             $json[$this->urlf("/course/%s", array($course->id))] = $course_json;
         }
 
+        $this->etag(md5(serialize($json)));
+
         return $json;
     }
 
@@ -165,6 +169,8 @@ class Course extends \RESTAPI\RouteMap
             }
         }
 
+        $this->etag(md5(serialize($json)));
+
         return $json;
     }
 
@@ -197,6 +203,8 @@ class Course extends \RESTAPI\RouteMap
                 'avatar_normal' => $avatar->getURL(\Avatar::NORMAL)
             );
         }
+
+        $this->etag(md5(serialize($json)));
 
         return $json;
     }

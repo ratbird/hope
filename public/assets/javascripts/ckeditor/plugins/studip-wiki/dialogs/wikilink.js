@@ -1,6 +1,6 @@
 CKEDITOR.dialog.add('wikiDialog', function (editor) {
     // studip wiki link specification
-    // * allowed characters: a-z.-:()_Â§/@# Ã¤Ã¶Ã¼ÃŸ
+    // * allowed characters: a-z.-:()_§/@# äöüß
     // * enclose in double-brackets: [[wiki link]]
     // * leading or trailing whitespace is allowed!!
     // * extended: [[wiki link| displayed text]]
@@ -50,17 +50,17 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
 
     var translation = {
         ' ': '%20', '#': '%23', '(': '%28', ')': '%29',
-        '/': '%2F', ':': '%3A', '@': '%40', 'Â§': '%A7',
-        'Ã„': '%C4', 'Ã–': '%D6', 'Ãœ': '%DC', 'ÃŸ': '%DF',
-        'Ã¤': '%E4', 'Ã¶': '%F6', 'Ã¼': '%FC'
+        '/': '%2F', ':': '%3A', '@': '%40', '§': '%A7',
+        'Ä': '%C4', 'Ö': '%D6', 'Ü': '%DC', 'ß': '%DF',
+        'ä': '%E4', 'ö': '%F6', 'ü': '%FC'
     };
     var backtrans = array_flip(translation);
 
     function toWindows1252(text) {
         // replace special chars with windows 1252 encoding
-        // test string: azAZ09_-. #()/:@Â§Ã„Ã–ÃœÃŸÃ¤Ã¶Ã¼
+        // test string: azAZ09_-. #()/:@§ÄÖÜßäöü
         // TODO create regexp from translation keys
-        return text.replace(/[ #()/:@Â§Ã„Ã–ÃœÃŸÃ¤Ã¶Ã¼]/g, function(match) {
+        return text.replace(/[ #()/:@§ÄÖÜßäöü]/g, function(match) {
             return translation[match];
       });
     }
@@ -98,10 +98,10 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                 id: 'wikipage',
                 label: "Titel der Wiki-Seite",
                 validate: CKEDITOR.dialog.validate.regex(
-                    /^[\w\.\-\:\(\)Â§\/@# Ã„Ã–ÃœÃ¤Ã¶Ã¼ÃŸ]+$/i,
+                    /^[\w\.\-\:\(\)§\/@# ÄÖÜäöüß]+$/i,
                     "Der Seitenname muss aus mindestens einem Zeichen bestehen"
                     + " und darf nur folgende Zeichen enthalten:"
-                    + " a-z A-Z Ã„Ã–Ãœ Ã¤Ã¶Ã¼ ÃŸ 0-9 -_:.( )/@#Â§ und das Leerzeichen."),
+                    + " a-z A-Z ÄÖÜ äöü ß 0-9 -_:.( )/@#§ und das Leerzeichen."),
                 setup: function(link) {
                     this.setValue(getWikiPage(link.getAttribute('href')));
                 },
@@ -117,7 +117,7 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
                 label: "Angezeigter Text (optional)",
                 validate: CKEDITOR.dialog.validate.regex(
                     /^[^\]]*$/i,
-                    "Die schlieÃŸende eckige Klammer, ], ist im angezeigten"
+                    "Die schließende eckige Klammer, ], ist im angezeigten"
                     + " Text leider nicht erlaubt."),
                 setup: function(link) {
                     var usertext = link.getText(),

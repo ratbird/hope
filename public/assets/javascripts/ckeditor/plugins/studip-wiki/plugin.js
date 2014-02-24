@@ -15,7 +15,7 @@ CKEDITOR.plugins.add('studip-wiki', {
             command: 'wikiDialog',
             toolbar: 'insert,70'
         });
-        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js.php' );
+        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js');
 
         // add context menu for existing Stud.IP wiki links
         if (editor.contextMenu) {

@@ -74,7 +74,7 @@ class Markup
         if ($trim) {
             $text = trim($text);
         }
-        return self::purify(self::markupText($markup, $text));
+        return self::markupText($markup, self::purify($text));
     }
 
     /**

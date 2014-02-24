@@ -74,7 +74,7 @@ class Markup
         if ($trim) {
             $text = trim($text);
         }
-        return self::purify(Markup::markup($markup, $text));
+        return self::purify(self::markupText($markup, $text));
     }
 
     /**
@@ -88,7 +88,7 @@ class Markup
      */
     private static function markupHtmlReady($markup, $text, $trim)
     {
-        return self::markup(
+        return self::markupText(
             $markup, self::htmlReady(self::unixEOL($text), $trim));
     }
 
@@ -112,7 +112,7 @@ class Markup
      *
      * @return string  HTML code computed from marked-up text.
      */
-    private static function markup($markup, $text)
+    private static function markupText($markup, $text)
     {
         $text = $markup->format($text);
         $text = symbol(smile($text, false));

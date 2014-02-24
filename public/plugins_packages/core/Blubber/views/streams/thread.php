@@ -93,6 +93,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
     <? $sharing_user_ids = array_map(function ($v) { return $v['user_id']; }, $sharingusers) ?>
     <div class="reshares<?= count($sharingusers) > 0 ? " reshared" : "" ?>">
         <? if (count($sharingusers)) : ?>
+            <? if ((!CheckBuddy(get_username($thread['user_id'])) || $thread['external_contact']) && ($GLOBALS['user']->id !== $thread['user_id'])) : ?>
             <? foreach ($sharingusers as $key => $user) {
                 $url = $user->getURL();
                 $name = $user->getName();
@@ -100,12 +101,15 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                 echo $user->getAvatar()->getImageTag(Avatar::SMALL, array('title' => $name));
                 if ($url) : ?></a><? endif;
             } ?>
+            <? else : ?>
+                <a href="#" class="open_reshare_context"><?= sprintf("%s Personen haben das weitergesagt", count($sharingusers)) ?></a>
+            <? endif ?>
         <? endif ?>
         <span class="reshare_link">
         <? if (!in_array($GLOBALS['user']->id, $sharing_user_ids) && $GLOBALS['user']->id !== $thread['user_id']) : ?>
         <?= Assets::img("icons/16/blue/blubber", array('class' => "text-bottom reshare_blubber", 'title' => _("Diesen Blubber weitersagen"))) ?>
         <? elseif($GLOBALS['user']->id !== $thread['user_id']) : ?>
-        <?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen"))) ?>
+        <a href="#" class="open_reshare_context"><?= Assets::img("icons/16/grey/blubber", array('class' => "text-bottom", 'title' => _("Weitergesagt von diesen Personen"))) ?></a>
         <? endif ?>
         </span>
     </div>

@@ -527,6 +527,7 @@ STUDIP.Blubber = {
                 });
             }
         });
+        return false;
     },
     showPrivatePanel: function () {
         var thread_id = jQuery(this).closest(".thread").attr("id");
@@ -550,6 +551,7 @@ STUDIP.Blubber = {
                 });
             }
         });
+        return false;
     }
 };
 
@@ -625,7 +627,7 @@ jQuery("#blubber_threads > li > ul.comments > li.more").live("click", function (
 jQuery("#blubber_threads a.edit").live("click", STUDIP.Blubber.startEditingComment);
 jQuery("#blubber_threads textarea.corrector").live("blur", function () {STUDIP.Blubber.submitEditedPosting(this);});
 jQuery("#blubber_threads .reshare_blubber, .blubber_contacts .want_to_share").live("click", STUDIP.Blubber.reshareBlubber);
-jQuery("#blubber_threads .thread.public .contextinfo").live("click", STUDIP.Blubber.showPublicPanel);
+jQuery("#blubber_threads .thread.public .contextinfo, #blubber_threads .thread.public .open_reshare_context").live("click", STUDIP.Blubber.showPublicPanel);
 jQuery("#blubber_threads .thread.private .contextinfo").live("click", STUDIP.Blubber.showPrivatePanel);
 
 //initialize autoresizer, file-dropper and events

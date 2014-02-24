@@ -22,6 +22,7 @@ jQuery(function ($) {
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
     function replaceTextarea(textarea) {
+        // TODO support jQuery object with multiple textareas
         if (! (textarea instanceof jQuery)) {
             textarea = $(textarea);
         }
@@ -223,70 +224,58 @@ jQuery(function ($) {
         }); // CKEDITOR.replace(textarea[0], {
 
         CKEDITOR.on('instanceReady', function (event) {
-            var editor = event.editor;
+            var editor = event.editor,
+                $textarea = $(editor.element.$);
 
             // auto-resize editor area in source view mode, and keep focus!
-            editor.on('mode', function() {
+            editor.on('mode', function(event) {
+                var editor = event.editor;
                 if (editor.mode === 'source') {
-                    source = $(editor.container.$).find('.cke_source');
-                    source.focus();
+                    $(editor.container.$).find('.cke_source').focus();
                 } else {
                     editor.focus();
                 }
             });
 
-            // make CKEditor clean up HTML edited in source mode before submit
-            var form = textarea.closest('form');
+            // clean up HTML edited in source mode before submit
+            var form = $textarea.closest('form');
             form.submit(function(event){
                 if (editor.mode != 'wysiwyg') {
                     event.preventDefault();
                     editor.setMode('wysiwyg', function(){
-                        form.submit();
+                        // TODO might be reason for double-save in wiki?
+                        // TODO use $(event.editor.element.$).closest('form');
+                        form.submit(); 
                     });
                     return false;
                 }
             });
 
             // focus editor if corresponding textarea is focused
-            textarea.focus(function(){ editor.focus(); });
+            $textarea.focus(function(event){ event.editor.focus(); });
 
-            // synchronize editor and textarea
-            var textValue = textarea.val();
-            function updateTextArea(){
-                editor.updateElement();
-                textValue = textarea.val();
-            };
-            editor.on('focus', function(){
-                var newValue = textarea.val();
-                if (newValue != textValue) {
-                    editor.setData(getHtml(newValue));
-                    updateTextArea();
-                }
-            });
-            editor.on('blur', function(){
-                // update textarea for other JS code (e.g. Stud.IP Forum)
-                updateTextArea();
+            // update textarea on editor blur
+            editor.on('blur', function(event){
+                event.editor.updateElement();
             });
 
             // blurDelay = 0 is an ugly hack to be faster than Stud.IP
             // forum's save function; might produce "strange" behaviour
             CKEDITOR.focusManager._.blurDelay = 0;
 
-            // get reference to editor area for various tweaks
-            var editorArea = textarea.siblings('.cke_chrome');
-
             // display "focused"-effect when editor area is focused
-            editor.on('focus', function(){
-                editorArea.addClass('cke_chrome_focused');
+            editor.on('focus', function(event){
+                event.editor.container.addClass('cke_chrome_focused');
             });
-            editor.on('blur', function(){
-                editorArea.removeClass('cke_chrome_focused');
+            editor.on('blur', function(event){
+                event.editor.container.removeClass('cke_chrome_focused');
             });
 
-            // keep the editor focused when a toolbar item get's selected
-            editor.on('blur', function(){
-                if (toolbar.has(':focus').length > 0) {
-                    editor.focus();
+            // keep the editor focused when a toolbar item gets selected
+            editor.on('blur', function(event){
+                var toolbarContainer = $('#' + event.editor.config.sharedSpaces.top);
+                if (toolbarContainer.has(':focus').length > 0) {
+                    event.editor.focus();
                 }
             });
 
@@ -317,7 +306,9 @@ jQuery(function ($) {
             $(window).resize(stickyTools);
             editor.on('focus', stickyTools);  // hidden toolbar might scroll off screen
 
-            var editorZ = Number(editorArea.css('z-index')) || 0;
+            // set toolbar's z-index higher than editor's
+            // NOTE +1000 because source-view also has higher z-index than editor
+            var editorZ = Number(editor.container.getStyle('z-index')) || 0;
             toolbar.css('z-index', editorZ + 1000);
 
             // focus the editor so the user can immediately hack away...

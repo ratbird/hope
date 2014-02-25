@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * AdminModules.class.php
-* 
+*
 * administrate modules (global and local for institutes and Veranstaltungen)
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -52,7 +52,7 @@ if (get_config('CALENDAR_ENABLE')) {
 }
 
 class AdminModules extends ModulesNotification {
-    
+
     function AdminModules() {
         parent::ModulesNotification();
         //please add here the special messages for modules you need consistency checks (defined below in this class)
@@ -96,7 +96,7 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["elearning_interface"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der Schnittstelle f&uuml;r die Integration von Content-Modulen werden <b>%s</b> Verkn&uuml;pfungen mit Lernmodulen aufgel&ouml;st!");
         $this->registered_modules["elearning_interface"]["msg_activate"] = _("Die Schnittstelle f&uuml;r die Integration von Content-Modulen kann jederzeit aktiviert werden.");
         $this->registered_modules["elearning_interface"]["msg_deactivate"] = _("Die Schnittstelle f&uuml;r die Integration von Content-Modulen kann jederzeit deaktiviert werden.");
-        
+
         $this->registered_modules["documents_folder_permissions"]['name'] = _("Dateiordnerberechtigungen");
         $this->registered_modules["documents_folder_permissions"]["msg_activate"] = _("Die Dateiordnerberechtigungen k&ouml;nnen jederzeit aktiviert werden.");
         $this->registered_modules["documents_folder_permissions"]["msg_warning"] = _("Wollen Sie wirklich die Dateiordnerberechtigungen deaktivieren und damit eventuell versteckte Inhalte zug&auml;nglich machen?");
@@ -117,27 +117,27 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["overview"]['name'] = _("Übersicht");
         $this->registered_modules["overview"]["msg_activate"] = _("Die Veranstaltungsübersicht kann jederzeit aktiviert werden.");
         $this->registered_modules["overview"]["msg_deactivate"] = _("Die Veranstaltungsübersicht kann jederzeit deaktiviert werden.");
-        
+
         $this->registered_modules["admin"]['name'] = _("Verwaltung");
         $this->registered_modules["admin"]["msg_activate"] = _("Wenn die Verwaltungsseite aktiviert wird, kann die Veranstaltung wieder von Admin und Dozenten bearbeitet werden.");
         $this->registered_modules["admin"]["msg_deactivate"] = _("Wenn Sie die Verwaltungsseite deaktivieren, können Sie sie eventuell nicht mehr aktivieren.");
         $this->registered_modules["admin"]["msg_warning"] = _("Wenn die Verwaltungsseite deaktiviert wird, können Dozenten und Admin (Sie eventuell eingeschlossen) die Veranstaltung nicht mehr administrieren.");
-        
+
         $this->registered_modules["resources"]['name'] = _("Ressourcen");
         $this->registered_modules["resources"]["msg_activate"] = _("Sie können die Ressourcenseite jederzeit aktivieren.");
         $this->registered_modules["resources"]["msg_deactivate"] = _("Sie können die Ressourcenseite jederzeit deaktivieren.");
     }
-    
+
     function getDocumentsExistingItems($range_id) { //getModuleDocumentsExistingItems
         $query = "SELECT COUNT(dokument_id) FROM dokumente WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         $items = $statement->fetchColumn();
-                                    
+
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
 
         $items += $folder_tree->getNumKidsKids('root') - $folder_tree->getNumKids('root');
-        return $items; 
+        return $items;
     }
 
     /*function moduleDocumentsDeactivate($range_id) {
@@ -177,7 +177,7 @@ class AdminModules extends ModulesNotification {
         DBManager::get()
             ->prepare("DELETE FROM wiki WHERE range_id = ?")
             ->execute(array($range_id));
-        
+
         DBManager::get()
             ->prepare("DELETE FROM wiki_links WHERE range_id = ?")
             ->execute(array($range_id));
@@ -185,7 +185,7 @@ class AdminModules extends ModulesNotification {
         DBManager::get()
             ->prepare("DELETE FROM wiki_locks WHERE range_id = ?")
             ->execute(array($range_id));
-        
+
     }*/
 
     function getModuleScmExistingItems($range_id) {
@@ -222,7 +222,7 @@ class AdminModules extends ModulesNotification {
 
     function getModuleElearning_interfaceExistingItems($range_id) {
         $object_connections = new ObjectConnections($range_id);
-        return count($object_connections->getConnections());
+        return is_array($object_connections->getConnections()) ? count($object_connections->getConnections()) : 0;
     }
 
     function moduleElearning_interfaceDeactivate($range_id) {
@@ -232,22 +232,22 @@ class AdminModules extends ModulesNotification {
             $connected_cms[$system]->deleteConnectedModules($range_id);
         }
     }
-    
+
     function moduledocuments_folder_permissionsDeactivate($range_id){
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
         foreach($folder_tree->getKidsKids('root') as $folder_id){
             $folder_tree->setDefaultPermission($folder_id);
         }
     }
-    
+
     function moduledocuments_folder_permissionsActivate($range_id){
     }
-    
+
     function getModuledocuments_folder_permissionsExistingItems($range_id) {
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
         return count($folder_tree->getUnreadableFolders('xxx', true));
     }
-    
+
     function moduledocuments_folder_permissionsPreconditions($range_id, $args){
         if (is_array($args)){
             $must_activate = array();
@@ -262,7 +262,7 @@ class AdminModules extends ModulesNotification {
         }
         return null;
     }
-    
+
     function getModuleCalendarExistingItems($range_id)
     {
         $calendar_connect = CalendarDriver::GetInstance($range_id);

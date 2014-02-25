@@ -69,7 +69,7 @@ class Messages extends \RESTAPI\RouteMap
                 $messages[$url] = $this->messageToJSON($msg);
             }
         }
-
+        $this->etag(md5(serialize($messages)));
         return $this->paginated($messages, $total, compact('user_id', 'box', 'folder_id'));
     }
 
@@ -108,7 +108,9 @@ class Messages extends \RESTAPI\RouteMap
     public function showMessage($message_id)
     {
         $message = $this->requireMessage($message_id);
-        return $this->messageToJSON($message);
+        $message_json = $this->messageToJSON($message)
+        $this->etag(md5(serialize($message_json)));
+        return $message_json;
     }
 
 
@@ -325,8 +327,6 @@ class Messages extends \RESTAPI\RouteMap
                                  $mu->snd_rec === 'rec' ? 'inbox' : 'outbox',
                                  $mu->folder);
         }
-
-        $this->etag(md5(serialize($json)));
         return $json;
     }
 

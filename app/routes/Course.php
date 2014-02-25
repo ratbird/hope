@@ -38,7 +38,9 @@ class Course extends \RESTAPI\RouteMap
         
         $total = count($memberships);
         $memberships = $memberships->limit($this->offset, $this->limit);
-        return $this->paginated($this->membershipsToJSON($memberships),
+        $memberships_json = $this->membershipsToJSON($memberships);
+        $this->etag(md5(serialize($memberships_json)));    
+        return $this->paginated($memberships_json,
                                 $total,
                                 compact('user_id'), array('semester' => $semester_id));
     }
@@ -56,8 +58,9 @@ class Course extends \RESTAPI\RouteMap
 
         $course = $this->requireCourse($course_id);
         $this->lastmodified($course->chdate);
-
-        return $this->courseToJSON($course);
+        $course_json = $this->courseToJSON($course);
+        $this->etag(md5(serialize($course_json)));
+        return $course_json;
     }
 
     /**
@@ -81,7 +84,9 @@ class Course extends \RESTAPI\RouteMap
 
         $total = count($members);
         $members = $members->limit($this->offset, $this->limit);
-        return $this->paginated($this->membersToJSON($course, $members),
+        $members_json = $this->membersToJSON($course, $members)
+        $this->etag(md5(serialize($members_json)));
+        return $this->paginated($members_json,
                                 $total,
                                 compact('course_id'), array('status' => $status_filter));
     }
@@ -123,9 +128,6 @@ class Course extends \RESTAPI\RouteMap
 
             $json[$this->urlf("/course/%s", array($course->id))] = $course_json;
         }
-
-        $this->etag(md5(serialize($json)));
-
         return $json;
     }
 
@@ -168,9 +170,6 @@ class Course extends \RESTAPI\RouteMap
                 $json['modules'][$module] = $this->urlf('/course/%s/%s', array(htmlReady($course->id), $uri));
             }
         }
-
-        $this->etag(md5(serialize($json)));
-
         return $json;
     }
 
@@ -203,9 +202,6 @@ class Course extends \RESTAPI\RouteMap
                 'avatar_normal' => $avatar->getURL(\Avatar::NORMAL)
             );
         }
-
-        $this->etag(md5(serialize($json)));
-
         return $json;
     }
 }

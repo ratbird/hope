@@ -25,6 +25,8 @@ class News extends \RESTAPI\RouteMap
     public function getGlobalNews()
     {
         list($json, $total) = $this->getRangedNews('studip');
+
+        $this->etag(md5(serialize($json)));
         return $this->paginated($json, $total);
     }
 
@@ -36,6 +38,8 @@ class News extends \RESTAPI\RouteMap
     public function getCourseNews($course_id)
     {
         list($json, $total) = $this->getRangedNews($course_id);
+
+        $this->etag(md5(serialize($json)));
         return $this->paginated($json, $total, compact('course_id'));
     }
 
@@ -47,6 +51,8 @@ class News extends \RESTAPI\RouteMap
     public function getUserNews($user_id)
     {
         list($json, $total) = $this->getRangedNews($user_id);
+
+        $this->etag(md5(serialize($json)));
         return $this->paginated($json, $total, compact('user_id'));
     }
 
@@ -59,11 +65,13 @@ class News extends \RESTAPI\RouteMap
     public function getNews($news_id)
     {
         $news = $this->requireNews($news_id);
-
+        $news_json = $this->newsToJson($news);
+        
         $this->lastmodified($news->chdate);
         $this->expires($news->expire);
-        
-        return $this->newsToJson($news);
+        $this->etag(md5(serialize($news_json)));
+
+        return $news_json;
     }
 
     /**
@@ -197,10 +205,12 @@ class News extends \RESTAPI\RouteMap
     public function getComment($comment_id)
     {
         $comment = $this->requireComment($comment_id);
-        
-        $this->lastmodified($comment->chdate);
+        $comment_json = $this->commentToJson($comment);
 
-        return $this->commentToJson($comment);
+        $this->lastmodified($comment->chdate);
+        $this->etag(md5(serialize($comment_json)));
+
+        return $comment_json;
     }
 
     /**
@@ -273,7 +283,6 @@ class News extends \RESTAPI\RouteMap
             $json[$this->urlf('/news/%s', array($n->id))] = $this->newsToJson($n);
         }
 
-        $this->etag(md5(serialize($json)));
         return array($json, $total);
     }
 
@@ -339,7 +348,6 @@ class News extends \RESTAPI\RouteMap
                 $json['ranges'][] = $url;
             }
         }
-        $this->etag(md5(serialize($json)));
         return $json;
     }
 
@@ -361,7 +369,6 @@ class News extends \RESTAPI\RouteMap
         $json['content_html'] = formatReady($json['content']);
         $json['author']       = $this->urlf('/user/%s', array($comment->user_id));
         $json['news']         = $this->urlf('/news/%s', array($comment->object_id));
-        $this->etag(md5(serialize($json)));
         return $json;
     }
 }

@@ -35,7 +35,10 @@ class Contacts extends \RESTAPI\RouteMap
         $total = count($user->contacts);
         $contacts = $user->contacts->limit($this->offset, $this->limit);
 
-        return $this->paginated($this->contactsToJSON($contacts),
+        $contacts_json = $this->contactsToJSON($contacts);
+        $this->etag(md5(serialize($contacts_json)));
+
+        return $this->paginated($contacts_json,
                                 $total, compact('user_id'));
     }
 
@@ -105,7 +108,11 @@ class Contacts extends \RESTAPI\RouteMap
 
         $total = count($contact_groups);
         $contact_groups = $contact_groups->limit($this->offset, $this->limit);
-        return $this->paginated($this->contactGroupsToJSON($contact_groups),
+        
+        $contact_groups_json = $this->contactGroupsToJSON($contact_groups);
+        $this->etag(md5(serialize($contact_groups_json)));
+        
+        return $this->paginated($contact_groups_json,
                                 $total, compact('user_id'));
     }
 
@@ -137,7 +144,9 @@ class Contacts extends \RESTAPI\RouteMap
     public function showContactGroup($group_id)
     {
         $group = $this->requireContactGroup($group_id);
-        return $this->contactGroupToJSON($group);
+        $contact_group_json = $this->contactGroupToJSON($group);
+        $this->etag(md5(serialize($contact_group_json)));
+        return $contact_group_json;
     }
 
     /**
@@ -256,9 +265,6 @@ class Contacts extends \RESTAPI\RouteMap
                 'calpermission' => (bool) $contact->calpermission
             );
         }
-
-        $this->etag(md5(serialize($result)));
-
         return $result;
     }
 
@@ -281,9 +287,6 @@ class Contacts extends \RESTAPI\RouteMap
             $url = $this->urlf('/contact_group/%s', array(htmlReady($cg->id)));
             $result[$url] = $this->contactGroupToJSON($cg);
         }
-
-        $this->etag(md5(serialize($result)));
-
         return $result;
     }
 
@@ -295,9 +298,6 @@ class Contacts extends \RESTAPI\RouteMap
             'contacts'       => $this->urlf('/contact_group/%s/members', array(htmlReady($group->id))),
             'contacts_count' => sizeof($group->members)
         );
-
-        $this->etag(md5(serialize($json)));
-
         return $json;
     }
 }

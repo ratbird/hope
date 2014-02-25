@@ -39,7 +39,7 @@ class Visibility
     {
 
         // root sees everything
-        if ($GLOBALS['perm']->have_perm('root')) {
+        if ($GLOBALS['perm']->have_perm('root') || $ownerid === $userid) {
             return true;
         }
 
@@ -63,8 +63,8 @@ class Visibility
             return $vs->verify($result['user_id'], $userid, $result['state']);
         }
 
-        // if db query fails something went wrong anyway so we better display nothing
-        return false;
+        // if db query fails something went wrong anyway so we use the default setting
+        return $vs->verify($result['user_id'], $userid, constant(get_config('HOMEPAGE_VISIBILITY_DEFAULT')));
     }
 
     /**
@@ -219,8 +219,8 @@ class Visibility
         Visibility::addPrivacySetting(_("Studien-/Einrichtungsdaten"), "studdata", 0, 0, $user);
         Visibility::addPrivacySetting(_("Zusätzliche Datenfelder"), "additionaldata", 0, 0, $user);
         Visibility::addPrivacySetting(_("Eigene Kategorien"), "owncategory", 0, 0, $user);
-        Visibility::addPrivacySetting(_("Plugins"), "plugins", 0, 0, $user);
-        self::createHomepagePluginEntries($user);
+        // Visibility::addPrivacySetting(_("Plugins"), "plugins", 0, 0, $user);
+        // self::createHomepagePluginEntries($user);
     }
 
     /**

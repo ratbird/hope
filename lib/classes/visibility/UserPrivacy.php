@@ -3,7 +3,7 @@ require_once 'User_Visibility_Settings.php';
 
 /**
  * UserPrivacy.php - Represents the privacy settings for a user
- * 
+ *
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -21,7 +21,7 @@ class UserPrivacy
      * @var int Userid that owns the privacy settings
      */
     private $userid;
-    
+
     /**
      * @var array Privacysettingstree
      */
@@ -47,9 +47,38 @@ class UserPrivacy
     function getProfileSettings()
     {
         if (!isset($this->profileSettings)) {
-            $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 ", array($this->userid));
+            $this->profileSettings = User_Visibility_Settings::findBySQL("user_id = ? AND parent_id = 0 AND identifier <> 'plugins'", array($this->userid));
             foreach ($this->profileSettings as $vis) {
                 $vis->loadChildren();
+            }
+            $about = new about($GLOBALS['user']->username, '');
+            $elements = $about->get_homepage_elements();
+
+            foreach ($elements as $key => $element) {
+                foreach ($this->profileSettings as $vis) {
+                    if ($vis->name === $element['category']) {
+                        foreach ($vis->children as $child) {
+                            if ($child->identifier === $key) {
+                                break 2;
+                            }
+                        }
+
+                        $child = new User_Visibility_Settings();
+                        $child->setData(array(
+                            'user_id'    => $this->userid,
+                            'parent_id'  => $vis->id,
+                            'category'   => 1,
+                            'name'       => $element['name'],
+                            'state'      => $element['visibility'],
+                            'identifier' => $key
+                        ));
+                        $child->store();
+                        $child->parent = $vis;
+                        $child->setDisplayed();
+                        $vis->children[] = $child;
+                        break;
+                    }
+                }
             }
         }
         return $this->profileSettings;
@@ -78,7 +107,7 @@ class UserPrivacy
 
     /**
      * Updates a PrivacySetting in the DB
-     * 
+     *
      * @param type $key The Settings Identifier
      * @param type $state The wanted state
      * @param type $db Optional an open database connection

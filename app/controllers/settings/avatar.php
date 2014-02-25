@@ -69,7 +69,7 @@ class Settings_AvatarController extends Settings_SettingsController
                 setTempLanguage($this->user->user_id);
                 $this->postPrivateMessage(_("Ein neues Bild wurde hochgeladen.\n"));
                 restoreLanguage();
-                Visibility::addPrivacySetting(_('Avatar'), 'picture', 'privatedata', 1, $this->user->user_id);
+                Visibility::addPrivacySetting(_('Eigenes Bild'), 'picture', 'commondata', 1, $this->user->user_id);
             } catch (Exception $e) {
                 $this->reportError($e->getMessage());
             }

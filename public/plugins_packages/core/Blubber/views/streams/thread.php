@@ -101,7 +101,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                         $url = $user->getURL();
                         $name = $user->getName();
                         if ($url) { 
-                            $sharingcontacts .= '<a href="'.$url.'" title="'.htmlReady($name).'">"'; 
+                            $sharingcontacts .= '<a href="'.$url.'" title="'.htmlReady($name).'">'; 
                         }
                         $sharingcontacts .= $user->getAvatar()->getImageTag(Avatar::SMALL, array('title' => $name));
                         if ($url) {

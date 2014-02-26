@@ -112,6 +112,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                     }
                 } ?>
                 <? if ($sharingcontacts) : ?>
+                <?= $sharingcontacts ?>
                 <a href="#" class="open_reshare_context"><?= $othersharing > 0 ? sprintf(_("und %s weitere haben das weitergesagt"), $othersharing) : _("haben das weitergesagt") ?></a>
                 <? else : ?>
                 <a href="#" class="open_reshare_context"><?= $othersharing > 1 ? sprintf(_("%s Personen haben das weitergesagt"), $othersharing) : _("Eine Person hat das weitergesagt") ?></a>

@@ -1,6 +1,6 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 
-<form action="<?= $controller->url_for('admin/api/config') ?>" method="post">
+<form class="studip_form" action="<?= $controller->url_for('admin/api/config') ?>" method="post">
     <fieldset>
         <legend><?= _('Einstellungen') ?></legend>
 

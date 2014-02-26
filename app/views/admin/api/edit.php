@@ -5,7 +5,7 @@
     : _('Neuen Konsumenten registrieren') ?></h1>
 
     
-<form class="<?= $consumer->id ? 'horizontal' : '' ?> settings"
+<form class="<?= $consumer->id ? 'horizontal' : '' ?> settings studip_form"
       action="<?= $controller->url_for('admin/api/edit', $consumer->id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     

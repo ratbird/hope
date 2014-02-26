@@ -34,7 +34,7 @@ class Forum extends \RESTAPI\RouteMap
         $json = array();
         foreach ($categories as $cat) {
             $uri = $this->urlf('/forum_category/%s', array(htmlReady($cat['category_id'])));
-            $json[$uri] = self::categoryToJson($cat);
+            $json[$uri] = $this->categoryToJson($cat);
         }
 
         $this->etag(md5(serialize($json)));
@@ -79,7 +79,7 @@ class Forum extends \RESTAPI\RouteMap
             $this->error(401);
         }
 
-        $category_json = self::categoryToJson($category);
+        $category_json = $this->categoryToJson($category);
         $this->etag(md5(serialize($category_json)));
         return $category_json;
     }
@@ -313,7 +313,7 @@ class Forum extends \RESTAPI\RouteMap
             $this->notFound();
         }
 
-        $entry = self::convertEntry($raw);
+        $entry = $this->convertEntry($raw);
 
         $children = \ForumEntry::getEntries($entry_id, \ForumEntry::WITHOUT_CHILDS, '', 'ASC', 0, false);
 
@@ -321,15 +321,15 @@ class Forum extends \RESTAPI\RouteMap
             unset($children['list'][$entry_id]);
         }
 
-        $entry['children'] = array_map(function ($entry) {
-                return Forum::convertEntry($entry);
-            },
-            array_values($children['list']));
+        $entry['children'] = array();
+        foreach (array_values($children['list']) as $entry) {
+            $entry['children'][] = $this->convertEntry($entry);
+        }
 
         return $entry;
     }
 
-    public static function convertEntry($raw)
+    public function convertEntry($raw)
     {
         $entry = array();
         foreach(words("topic_id mkdate chdate anonymous depth") as $key) {
@@ -337,8 +337,8 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['subject']      = $raw['name'];
-        $entry['user']         = self::urlf('/user/%s', array(htmlReady($raw['user_id'])));
-        $entry['course']       = self::urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
+        $entry['user']         = $this->urlf('/user/%s', array(htmlReady($raw['user_id'])));
+        $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
 
@@ -351,7 +351,7 @@ class Forum extends \RESTAPI\RouteMap
         return 1 === $entry['depth'];
     }
 
-    private static function createEntry($parent_id, $course_id, $subject, $content, $anonymous)
+    private function createEntry($parent_id, $course_id, $subject, $content, $anonymous)
     {
         $topic_id  = self::generateID();
 
@@ -385,21 +385,20 @@ class Forum extends \RESTAPI\RouteMap
         return $result;
     }
 
-    private static function categoryToJson($category)
+    private function categoryToJson($category)
     {
-        
         $json = $category;
 
-        $json['course'] = self::urlf('/course/%s', array(htmlReady($json['course_id'])));
+        $json['course'] = $this->urlf('/course/%s', array(htmlReady($json['course_id'])));
         unset($json['course_id']);
 
-        $json['areas'] = self::urlf('/forum_category/%s/areas', array($json['category_id']));
-        $json['areas_count'] = self::countAreas($json['category_id']);
+        $json['areas'] = $this->urlf('/forum_category/%s/areas', array($json['category_id']));
+        $json['areas_count'] = $this->countAreas($json['category_id']);
 
         return $json;
     }
 
-    private static function countAreas($category_id)
+    private function countAreas($category_id)
     {
         return sizeof(\ForumCat::getAreas($category_id));
     }
@@ -413,7 +412,7 @@ class Forum extends \RESTAPI\RouteMap
 
         foreach (\ForumCat::getAreas($category_id, $offset, $limit) as $area) {
             $url = $this->urlf('/forum_entry/%s', array(htmlReady($area['topic_id'])));
-            $areas[$url] = self::convertEntry($area);
+            $areas[$url] = $this->convertEntry($area);
         }
 
         return $areas;

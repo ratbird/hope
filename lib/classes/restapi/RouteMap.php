@@ -801,6 +801,6 @@ abstract class RouteMap
 
     public function urlf($addr_f, $format_params, $url_params = null)
     {
-        return self::url(vsprintf($addr_f, $format_params), $url_params);
+        return $this->url(vsprintf($addr_f, $format_params), $url_params);
     }
 }

@@ -45,7 +45,7 @@
     <!-- Stud.IP Logo -->
     <div id="barTopStudip">
         <a href="http://www.studip.de/" title="Studip Homepage">
-            <?= Assets::img('/images/logos/header_logo.png', array('@2x' => TRUE, 'size' => '203@44')); ?>
+            <?= Assets::img('/images/logos/header_logo.png', array('@2x' => TRUE, 'size' => '203@76')); ?>
         </a>
     </div>
 </div>

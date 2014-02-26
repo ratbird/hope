@@ -38,6 +38,8 @@ class Wiki extends \RESTAPI\RouteMap
             $linked_pages[$url] = self::wikiPageToJson($page, array("content"));
         }
 
+        $this->etag(md5(serialize($linked_pages)));
+
         return $this->paginated($linked_pages, $total, compact('course_id'));
     }
 
@@ -50,7 +52,10 @@ class Wiki extends \RESTAPI\RouteMap
     public function getCourseWikiKeyword($course_id, $keyword, $version = null)
     {
         $page = $this->requirePage($course_id, $keyword, $version);
-        return self::wikiPageToJson($page);
+        $wiki_json = self::wikiPageToJson($page);
+        $this->etag(md5(serialize($wiki_json)));
+        $this->lastmodified($page->chdate);
+        return $wiki_json;
     }
 
     /**

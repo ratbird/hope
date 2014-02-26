@@ -84,7 +84,7 @@ class Course extends \RESTAPI\RouteMap
 
         $total = count($members);
         $members = $members->limit($this->offset, $this->limit);
-        $members_json = $this->membersToJSON($course, $members)
+        $members_json = $this->membersToJSON($course, $members);
         $this->etag(md5(serialize($members_json)));
         return $this->paginated($members_json,
                                 $total,

@@ -108,7 +108,7 @@ class Messages extends \RESTAPI\RouteMap
     public function showMessage($message_id)
     {
         $message = $this->requireMessage($message_id);
-        $message_json = $this->messageToJSON($message)
+        $message_json = $this->messageToJSON($message);
         $this->etag(md5(serialize($message_json)));
         return $message_json;
     }

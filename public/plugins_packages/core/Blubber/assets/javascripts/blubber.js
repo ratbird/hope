@@ -281,7 +281,12 @@ STUDIP.Blubber = {
      * files. This function initializes the autoresizer and file-dropper functions.
      */
     makeTextareasAutoresizable: function () {
-        jQuery("#blubber_threads textarea:not(.autoresize), #new_posting:not(.autoresize)").autoResize({
+        jQuery("#blubber_threads textarea:not(.autoresize), #new_posting:not(.autoresize)")
+        .addClass("autoresize")
+            .bind('dragover dragleave', function (event) {
+            jQuery(this).toggleClass('hovered', event.type === 'dragover');
+            return false;
+        }).autoResize({
             // On resize:
             onResize : function() {
                 $(this).css({opacity: 0.8});
@@ -294,10 +299,6 @@ STUDIP.Blubber = {
             animateDuration: 300,
             // More extra space:
             extraSpace: 0
-        }).addClass("autoresize")
-            .bind('dragover dragleave', function (event) {
-            jQuery(this).toggleClass('hovered', event.type === 'dragover');
-            return false;
         }).each(function (index, textarea) {
             //and here the file-dropping function:
             jQuery(textarea).on("drop", function (event) {

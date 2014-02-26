@@ -94,15 +94,30 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
     <div class="reshares<?= count($sharingusers) > 0 ? " reshared" : "" ?>">
         <? if (count($sharingusers)) : ?>
             <? if ((!CheckBuddy(get_username($thread['user_id'])) || $thread['external_contact']) && ($GLOBALS['user']->id !== $thread['user_id'])) : ?>
-            <? foreach ($sharingusers as $key => $user) {
-                $url = $user->getURL();
-                $name = $user->getName();
-                if ($url) : ?><a href="<?= $url ?>" title="<?= htmlReady($name) ?>"><? endif;
-                echo $user->getAvatar()->getImageTag(Avatar::SMALL, array('title' => $name));
-                if ($url) : ?></a><? endif;
-            } ?>
+                <? $sharingcontacts = "" ?>
+                <? $othersharing = 0 ?>
+                <? foreach ($sharingusers as $key => $user) {
+                    if (CheckBuddy(get_username($user))) {
+                        $url = $user->getURL();
+                        $name = $user->getName();
+                        if ($url) { 
+                            $sharingcontacts .= '<a href="'.$url.'" title="'.htmlReady($name).'">"'; 
+                        }
+                        $sharingcontacts .= $user->getAvatar()->getImageTag(Avatar::SMALL, array('title' => $name));
+                        if ($url) {
+                            $sharingcontacts .= '</a>';
+                        }
+                    } else {
+                        $othersharing++;
+                    }
+                } ?>
+                <? if ($sharingcontacts) : ?>
+                <a href="#" class="open_reshare_context"><?= $othersharing > 0 ? sprintf(_("und %s weitere haben das weitergesagt"), $othersharing) : _("haben das weitergesagt") ?></a>
+                <? else : ?>
+                <a href="#" class="open_reshare_context"><?= $othersharing > 1 ? sprintf(_("%s Personen haben das weitergesagt"), $othersharing) : _("Eine Person hat das weitergesagt") ?></a>
+                <? endif ?>
             <? else : ?>
-                <a href="#" class="open_reshare_context"><?= sprintf("%s Personen haben das weitergesagt", count($sharingusers)) ?></a>
+                <a href="#" class="open_reshare_context"><?= count($sharingusers) > 1 ? sprintf(_("%s Personen haben das weitergesagt"), count($sharingusers)) : _("Eine Person hat das weitergesagt") ?></a>
             <? endif ?>
         <? endif ?>
         <span class="reshare_link">

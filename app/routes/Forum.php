@@ -37,6 +37,8 @@ class Forum extends \RESTAPI\RouteMap
             $json[$uri] = self::categoryToJson($cat);
         }
 
+        $this->etag(md5(serialize($json)));
+
         return $this->paginated($json, $total, compact('course_id'));
     }
 
@@ -77,7 +79,9 @@ class Forum extends \RESTAPI\RouteMap
             $this->error(401);
         }
 
-        return self::categoryToJson($category);
+        $category_json = self::categoryToJson($category);
+        $this->etag(md5(serialize($category_json)));
+        return $category_json;
     }
 
     /**
@@ -136,6 +140,7 @@ class Forum extends \RESTAPI\RouteMap
 
         $areas = $this->getAreas($category_id, $this->offset, $this->limit);
 
+        $this->etag(md5(serialize($areas)));
         return $this->paginated($areas, $this->countAreas($category_id), compact('category_id'));
     }
 
@@ -186,8 +191,11 @@ class Forum extends \RESTAPI\RouteMap
         if (!\ForumPerm::has('view', $cid)) {
             $this->error(401);
         }
-
-        return $this->findEntry($entry_id);
+        
+        $entry = $this->findEntry($entry_id);
+        $this->lastmodified($entry->chdate);
+        $this->etag(md5(serialize($entry)));
+        return $entry;
     }
 
     /**
@@ -314,7 +322,7 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['children'] = array_map(function ($entry) {
-                return ForumRoute::convertEntry($entry);
+                return Forum::convertEntry($entry);
             },
             array_values($children['list']));
 
@@ -329,8 +337,8 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['subject']      = $raw['name'];
-        $entry['user']         = $this->urlf('/user/%s', array(htmlReady($raw['user_id'])));
-        $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
+        $entry['user']         = self::urlf('/user/%s', array(htmlReady($raw['user_id'])));
+        $entry['course']       = self::urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
 
@@ -379,12 +387,13 @@ class Forum extends \RESTAPI\RouteMap
 
     private static function categoryToJson($category)
     {
+        
         $json = $category;
 
-        $json['course'] = $this->urlf('/course/%s', array(htmlReady($json['course_id'])));
+        $json['course'] = self::urlf('/course/%s', array(htmlReady($json['course_id'])));
         unset($json['course_id']);
 
-        $json['areas'] = $this->urlf('/forum_category/%s/areas', array($json['category_id']));
+        $json['areas'] = self::urlf('/forum_category/%s/areas', array($json['category_id']));
         $json['areas_count'] = self::countAreas($json['category_id']);
 
         return $json;

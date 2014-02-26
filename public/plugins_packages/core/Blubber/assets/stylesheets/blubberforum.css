@@ -357,6 +357,7 @@ table.select td.selected {
 .blubber_contacts {
     list-style: none;
     padding: 0px;
+    text-align: center;
 }
 .blubber_contacts > li {
     display: inline-block;

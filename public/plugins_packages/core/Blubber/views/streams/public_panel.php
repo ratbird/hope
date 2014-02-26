@@ -6,7 +6,7 @@
 </p>
 <hr>
 <? $i_shared = false ?>
-<?= _("Folgende Personen haben diesen Blubber geteilt:") ?>
+<?= _("Folgende Personen haben diesen Blubber geschrieben bzw. weitergesagt:") ?>
 <ul class="blubber_contacts">
     <li>
         <? $author = $thread->getUser() ?>
@@ -25,7 +25,7 @@
     <? endforeach ?>
     <? if (!$i_shared) : ?>
     <li class="want_to_share" data-thread_id="<?= htmlReady($thread->getId()) ?>">
-        <?= Assets::img("icons/24/blue/add", array('title' => _("Weitersagen / teilen"))) ?>
+        <?= Assets::img("icons/24/blue/add", array('title' => _("Weitersagen"))) ?>
     </li>
     <? endif ?>
 </ul>

@@ -97,7 +97,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
                 <? $sharingcontacts = "" ?>
                 <? $othersharing = 0 ?>
                 <? foreach ($sharingusers as $key => $user) {
-                    if (CheckBuddy(get_username($user))) {
+                    if (CheckBuddy(get_username($user['user_id']))) {
                         $url = $user->getURL();
                         $name = $user->getName();
                         if ($url) { 

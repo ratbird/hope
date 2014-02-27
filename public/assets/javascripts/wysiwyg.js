@@ -44,7 +44,17 @@ jQuery(function ($) {
         function replaceNewlines(text) {
             return replaceNewlineWithBr(replaceMultiNewlinesWithP(text));
         }
+        function getQuote(text) {
+            // matches[1] = quote start  \[quote(=.*?)?\]
+            // matches[2] = quoted text  [\s\S]*   (multiline)
+            // matches[3] = quote end    \[\/quote\]
+            return text.match(/^\s*(\[quote(?:=.*?)?\])([\s\S]*)(\[\/quote\])\s*$/) || null;
+        }
         function convertToHtml(text) {
+            var quote = getQuote(text);
+            if (quote) {
+                return '<p>' + quote[1] + getHtml(quote[2].trim()) + quote[3] + '</p>';
+            }
             return replaceNewlines(encodeHtmlEntities(text));
         }
         function getHtml(text) {

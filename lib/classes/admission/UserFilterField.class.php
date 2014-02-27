@@ -204,7 +204,7 @@ class UserFilterField
      * @return Array All users that are affected by the current condition 
      * field.
      */
-    public function getUsers(&$restrictions=array()) {
+    public function getUsers($restrictions=array()) {
         $db = DBManager::get();
         $users = array();
         // Standard query getting the values without respecting other values.

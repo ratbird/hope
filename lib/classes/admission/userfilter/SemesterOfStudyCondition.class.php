@@ -19,12 +19,30 @@ require_once(realpath(dirname(__FILE__).'/..').'/UserFilterField.class.php');
 
 class SemesterOfStudyCondition extends UserFilterField
 {
+    // --- ATTRIBUTES ---
+    public $valuesDbTable = 'user_studiengang';
+    public $valuesDbIdField = 'semester';
+    public $valuesDbNameField = 'semester';
+    public $userDataDbTable = 'user_studiengang';
+    public $userDataDbField = 'semester';
+
     // --- OPERATIONS ---
 
     /**
-     * Standard constructor.
+     * @see UserFilterField::__construct
      */
-    public function __construct($field_id='') {
+    public function __construct($fieldId='') {
+        $this->relations = array(
+            'DegreeCondition' => array(
+                'local_field' => 'abschluss_id',
+                'foreign_field' => 'abschluss_id'
+            ),
+            'SubjectCondition' => array(
+                'local_field' => 'studiengang_id',
+                'foreign_field' => 'studiengang_id'
+            )
+        );
+        parent::__construct($fieldId);
         $this->validCompareOperators = array(
             '>=' => _('mindestens'),
             '<=' => _('höchstens'),
@@ -34,8 +52,8 @@ class SemesterOfStudyCondition extends UserFilterField
         // Initialize to some value in case there are no semester numbers.
         $maxsem = 15;
         // Calculate the maximal available semester.
-        $stmt = DBManager::get()->query("SELECT MAX(`semester`) AS maxsem ".
-            "FROM `user_studiengang`");
+        $stmt = DBManager::get()->query("SELECT MAX(".$this->valuesDbIdField.") AS maxsem ".
+            "FROM `".$this->valuesDbTable."`");
         if ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($current['maxsem']) {
                 $maxsem = $current['maxsem'];
@@ -43,12 +61,6 @@ class SemesterOfStudyCondition extends UserFilterField
         }
         for ($i=1 ; $i<=$maxsem ; $i++) {
             $this->validValues[$i] = $i;
-        }
-        if ($field_id) {
-            $this->id = $field_id;
-            $this->load();
-        } else {
-            $this->id = $this->generateId();
         }
     }
 
@@ -60,43 +72,6 @@ class SemesterOfStudyCondition extends UserFilterField
     public function getName()
     {
         return _("Fachsemester");
-    }
-
-    /**
-     * Compares all the users' degrees by using the specified compare operator
-     * and returns all users that fulfill the condition. This can be
-     * an important informatione when checking on validity of a combination
-     * of conditions.
-     * 
-     * @return Array All users that are affected by the current condition 
-     * field.
-     */
-    public function getUsers($additional) {
-        $users = array();
-        $query = "SELECT DISTINCT `user_id` ".
-            "FROM `user_studiengang` ".
-            "WHERE `semester`".$this->compareOperator."?"; 
-        $parameters = array($userId);
-        // Additional requirements given...
-        if (is_array($additional)) {
-            // .. such as subject of study...
-            if ($array['studiengang_id']) {
-                $query .= " AND studiengang_id=?";
-                $parameters[] = $array['studiengang_id'];
-            }
-            // ... or degree.
-            if ($array['abschluss_id']) {
-                $query .= " AND abschluss_id=?";
-                $parameters[] = $array['abschluss_id'];
-            }
-        }
-        // Get matching users.
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute($parameters);
-        while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $users[] = $current['user_id'];
-        }
-        return $users;
     }
 
     /**
@@ -112,8 +87,8 @@ class SemesterOfStudyCondition extends UserFilterField
      */
     public function getUserValues($userId, $additional=null) {
         $result = array();
-        $query = "SELECT DISTINCT `semester` ".
-            "FROM `user_studiengang` ".
+        $query = "SELECT DISTINCT `".$this->userDataDbField."` ".
+            "FROM `".$this->userDataDbTable."` ".
             "WHERE `user_id`=?"; 
         $parameters = array($userId);
         // Additional requirements given...
@@ -133,7 +108,7 @@ class SemesterOfStudyCondition extends UserFilterField
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute($parameters);
         while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $current['semester'];
+            $result[] = $current[$this->userDataDbField];
         }
         return $result;
     }

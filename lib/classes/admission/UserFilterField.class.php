@@ -39,7 +39,7 @@ class UserFilterField
     /**
      * The set of valid compare operators.
      */
-    public $validCompareOperators = array('<', '>', '=', '!=');
+    public $validCompareOperators = array();
 
     /**
      * All valid values for this field.
@@ -51,7 +51,45 @@ class UserFilterField
      */
     public $value = null;
 
+    /**
+     * Database tables and fields to get valid values and concrete user values
+     * from.
+     */
+    public $valuesDbTable = '';
+    public $valuesDbIdField = '';
+    public $valuesDbNameField = '';
+    public $userDataDbTable = '';
+    public $userDataDbField = '';
+    public $relations = array();
+
     // --- OPERATIONS ---
+
+    /**
+     * Standard constructor.
+     *
+     * @param String $fieldId If a fieldId is given, the corresponding data is
+     *                        loaded from database.
+     *                                 
+     */
+    public function __construct($fieldId='') {
+        $this->validCompareOperators = array(
+            '=' => _('gleich'),
+            '!=' => _('ungleich')
+        );
+        // Get all available values from database.
+        $stmt = DBManager::get()->query(
+            "SELECT DISTINCT `".$this->valuesDbIdField."`, `".$this->valuesDbNameField."` ".
+            "FROM `".$this->valuesDbTable."` ORDER BY `".$this->valuesDbNameField."` ASC");
+        while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->validValues[$current[$this->valuesDbIdField]] = $current[$this->valuesDbNameField];
+        }
+        if ($fieldId) {
+            $this->id = $fieldId;
+            $this->load();
+        } else {
+            $this->id = $this->generateId();
+        }
+    }
 
     /**
      * Checks whether the given value fits the configured condition. The
@@ -155,28 +193,79 @@ class UserFilterField
     }
 
     /**
-     * Returns all users that fulfill the specified condition. This can be
+     * Compares all the users' degrees by using the specified compare operator
+     * and returns all users that fulfill the condition. This can be
      * an important informatione when checking on validity of a combination
      * of conditions.
      * 
+     * @param Array $restrictions values from other fields that restrict the valid
+     *                            values for a user (e.g. a semester of study in
+     *                            a given subject)
      * @return Array All users that are affected by the current condition 
      * field.
      */
-    public function getUsers() {
-        return array();
+    public function getUsers(&$restrictions=array()) {
+        $db = DBManager::get();
+        $users = array();
+        // Standard query getting the values without respecting other values.
+        $select = "SELECT DISTINCT `".$this->userDataDbTable."`.`user_id` ";
+        $from = "FROM `".$this->userDataDbTable."` ";
+        $where = "WHERE `".$this->userDataDbTable."`.`".$this->userDataDbField.
+            "`".$this->compareOperator."?";
+        $parameters = array($this->value);
+        $joinedTables = array(
+            $this->userDataDbTable => true
+        );
+        // Check if there are restrictions given.
+        foreach ($restrictions as $otherField => $restriction) {
+            // We only take the value into consideration if it represents a valid restriction.
+            if ($this->relations[$otherField]) {
+                // Do we need to join in another table?
+                if (!$joinedTables[$restriction['table']]) {
+                    $joinedTables[$restriction['table']] = true;
+                    $from .= " INNER JOIN `".$restriction['table']."` ON (`".
+                        $this->userDataDbTable."`.`".
+                        $this->relations[$otherField]['local_field']."`=`".
+                        $restriction['table']."`.`".
+                        $this->relations[$otherField]['foreign_field']."`)";
+                }
+                // Expand WHERE statement with the value from restriction.
+                $where .= " AND `".$restriction['table']."`.`".
+                    $restriction['field']."`".$restriction['compare']."?";
+                $parameters[] = $restriction['value'];
+            }
+        }
+        // Get all the users that fulfill the condition.
+        $stmt = $db->prepare($select.$from.$where);
+        $stmt->execute($parameters);
+        while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = $current['user_id'];
+        }
+        return $users;
     }
 
     /**
      * Gets the value for the given user that is relevant for this
-     * condition field. For example, in an SubjectCondition, this
-     * method would look up the subject of study for the user.
+     * condition field. Here, this method looks up the study degree(s) 
+     * for the user. These can then be compared with the required degrees
+     * whether they fit.
      * 
      * @param  String $userId User to check.
      * @param  Array additional conditions that are required for check.
-     * @return Array The value(s) for this user.
+     * @return The value(s) for this user.
      */
     public function getUserValues($userId, $additional=null) {
-        return array();
+        $result = array();
+        // Get degrees for user.
+        $stmt = DBManager::get()->prepare(
+            "SELECT DISTINCT `".$this->userDataDbField."` ".
+            "FROM `".$this->userDataDbTable."` ".
+            "WHERE `user_id`=?");
+        $stmt->execute(array($userId));
+        while ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $current[$this->userDataDbField];
+        }
+        return $result;
     }
 
     /**

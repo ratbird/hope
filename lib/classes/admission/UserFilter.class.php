@@ -123,9 +123,38 @@ class UserFilter
     public function getUsers() {
         $users = array();
         foreach ($this->fields as $field) {
-            $users = array_intersect($users, $field->getAffectedUsers());
+            // Check if restrictions for the field value must be taken into consideration.
+            $restrictions = array();
+            foreach ($field->relations as $className => $related) {
+                if ($other = &$this->hasField($className)) {
+                    $restrictions[$className] = array(
+                        'table' => $other->userDataDbTable,
+                        'field' => $other->userDataDbField,
+                        'compare' => $other->getCompareOperator(),
+                        'value' => $other->getValue()
+                    );
+                }
+            }
+            $users = $users ? array_intersect($users, $field->getUsers($restrictions)) : $field->getUsers($restrictions);
         }
         return $users;
+    }
+
+    /**
+     * Checks whether the current filter object contains a field
+     * of the given type.
+     *
+     * @param String $className the type to check for
+     * @return UserFilterField Return the found field or null if not applicable.
+     */
+    public function hasField($className) {
+        foreach ($this->fields as $field) {
+            if ($field instanceof $className) {
+                return $field;
+                break;
+            }
+        }
+        return null;
     }
 
     /**

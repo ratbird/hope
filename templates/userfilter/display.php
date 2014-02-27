@@ -11,5 +11,6 @@ foreach ($filter->getFields() as $field) {
     $i++;
     
 }
+$fieldText .= ' ('.sizeof($filter->getUsers()).' Personen)';
 echo $fieldText;
 ?>

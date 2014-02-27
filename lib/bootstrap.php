@@ -9,6 +9,8 @@
  * the License, or (at your option) any later version.
  */
 
+global $PHP_SELF, $STUDIP_BASE_PATH;
+
 $PHP_SELF = $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
 $STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/..');
 

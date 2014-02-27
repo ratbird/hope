@@ -11,6 +11,6 @@ foreach ($filter->getFields() as $field) {
     $i++;
     
 }
-$fieldText .= ' ('.sizeof($filter->getUsers()).' Personen)';
+$fieldText .= ' ('.sprintf(_'%s Personen'), sizeof($filter->getUsers())).')';
 echo $fieldText;
 ?>

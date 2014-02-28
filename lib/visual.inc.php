@@ -218,7 +218,7 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 
 use Studip\Markup;
 
-function htmlReady($what, $trim=TRUE, $br=FALSE, $double_encode=FALSE) {
+function htmlReady($what, $trim=TRUE, $br=FALSE, $double_encode=true) {
     return Markup::htmlReady($what, $trim, $br, $double_encode);
 }
 
@@ -864,7 +864,7 @@ function createQuestion($question, $approveParams, $disapproveParams = array(), 
 */
 function createQuestion2($question, $approveParams, $disapproveParams = array(), $baseUrl = '?') {
     $template = $GLOBALS['template_factory']->open('shared/question2');
-    
+
     $template->set_attribute('approvalLink', $baseUrl);
     $template->set_attribute('approvParams', $approveParams);
     $template->set_attribute('disapproveParams', $disapproveParams);

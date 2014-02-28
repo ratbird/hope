@@ -166,9 +166,10 @@ class Markup
      * @return string         The converted string.
      */
     public static function htmlReady(
-        $text, $trim = true, $br = false, $double_encode = false
+        $text, $trim = true, $br = false, $double_encode = true
     ) {
         $text = htmlspecialchars($text, ENT_QUOTES, 'cp1252', $double_encode);
+        $text = preg_replace('/&amp;#([1-9]{1,1}[0-9]{2,});/', '&#$1;', $text);
         if ($trim) {
             $text = trim($text);
         }

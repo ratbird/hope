@@ -94,15 +94,14 @@ jQuery(function ($) {
             toolbarGroups: [
                 {name: 'basicstyles', groups: ['mode', 'basicstyles', 'cleanup']},
                 {name: 'paragraph',   groups: ['list', 'indent', 'blocks', 'align']},
-                {name: 'links'},
                 '/',
                 {name: 'styles'},
                 {name: 'colors'},
                 {name: 'tools'},
-                {name: 'insert'},
-                {name: 'others'},
-                {name: 'about'}
+                {name: 'links'},
+                {name: 'insert'}
             ],
+            removeButtons: 'Font,FontSize,Anchor',
 
             // convert special chars except latin ones to html entities
             entities: false,

@@ -183,10 +183,6 @@ class Visibility
         } else {
             $default = "'$default' as state";
             }
-        
-        // parse User and Identifier to format we want to have in the database
-        self::getUser($user);
-        $parent = self::parseIdentifier($parent, $user);
 
         // sure we could do this less complicated with php but with a single
         // query it's a lot faster

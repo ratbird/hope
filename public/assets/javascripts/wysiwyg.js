@@ -18,74 +18,64 @@ jQuery(function ($) {
         return;
     }
 
-    // workaround: application.js sets base_url too late
-    STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
+    STUDIP.URLHelper.base_url // workaround: application.js sets base_url too late
+        = STUDIP.ABSOLUTE_URI_STUDIP;
+    STUDIP.addWysiwyg = replaceTextarea; // for jquery dialogs, see toolbar.js
+
+    // replace areas visible on page load
+    replaceVisibleTextareas();
+
+    // replace areas that are created or shown after page load
+    // remove editors that become hidden after page load
+    // show, hide and create do not raise an event, use interval timer
+    setInterval(replaceVisibleTextareas, 300);
+
+    // when attaching to hidden textareas, or textareas who's parents are
+    // hidden, the editor does not function properly; therefore attach to
+    // visible textareas only
+    function replaceVisibleTextareas() {
+        $('textarea.add_toolbar').each(function(){
+            var editor = CKEDITOR.dom.element.get(this).getEditor();
+            if ($(this).is(':visible')){
+                if (!editor) {
+                    if (!$(this).attr('id')) {
+                        var id = 0;
+                        while ($('#wysiwyg' + id).length !== 0) {
+                            id++;
+                        }
+                        $(this).attr('id', 'wysiwyg' + id);
+                    }
+                    replaceTextarea(this);
+                }
+            } else if ($(this).parent().css('display') === 'none') {
+                if (editor && CKEDITOR.instances[$(this).attr('id')]) {
+                    editor.destroy(true);
+                }
+            }
+        });
+    }
 
     function replaceTextarea(textarea) {
         // TODO support jQuery object with multiple textareas
         if (! (textarea instanceof jQuery)) {
             textarea = $(textarea);
         }
-
-        // convert plain text entries to html
-        function isHtml(text) {
-            text = text.trim();
-            return text[0] === '<' && text[text.length - 1] === '>';
-        }
-        function encodeHtmlEntities(text) {
-            return $('<div>').text(text).html();
-        }
-        function replaceMultiNewlinesWithP(text) {
-            return '<p>' + text.replace(/(\r?\n|\r){2,}/, '</p><p>') + '</p>';
-        }
-        function replaceNewlineWithBr(text) {
-            return text.replace(/(\r?\n|\r)/g, '<br>\n');
-        }
-        function replaceNewlines(text) {
-            return replaceNewlineWithBr(replaceMultiNewlinesWithP(text));
-        }
-        function getQuote(text) {
-            // matches[1] = quote start  \[quote(=.*?)?\]
-            // matches[2] = quoted text  [\s\S]*   (multiline)
-            // matches[3] = quote end    \[\/quote\]
-            return text.match(/^\s*(\[quote(?:=.*?)?\])([\s\S]*)(\[\/quote\])\s*$/) || null;
-        }
-        function convertToHtml(text) {
-            var quote = getQuote(text);
-            if (quote) {
-                return '<p>' + quote[1] + getHtml(quote[2].trim()) + quote[3] + '</p>';
-            }
-            return replaceNewlines(encodeHtmlEntities(text));
-        }
-        function getHtml(text) {
-            return isHtml(text) ? text : convertToHtml(text);
-        }
-        textarea.val(getHtml(textarea.val()));
-
-        // find an unused toolbarId
-        // toolbarId is needed for sharedSpaces
-        var toolbarPrefix = 'cktoolbar',
-            toolbarIndex = 0,
-            toolbarId = toolbarPrefix + toolbarIndex;
-
-        while ($('#' + toolbarId).length !== 0) {
-            toolbarIndex++;
-            toolbarId = toolbarPrefix + toolbarIndex;
-        }
+        textarea.val(getHtml(textarea.val())); // convert plain text to html
 
         // create new toolbar
-        var textarea_width = (textarea.width() / textarea.parent().width() * 100) + '%',
+        var textareaWidth = (textarea.width() / textarea.parent().width() * 100) + '%',
+            toolbarId = createNewId('cktoolbar'); // needed for sharedSpaces
             toolbar = $('<div>')
                 .attr('id', toolbarId)
-                .css('max-width', textarea_width),
-            toolbar_placeholder = $('<div>');
+                .css('max-width', textareaWidth),
+            toolbarPlaceholder = $('<div>');
 
-        toolbar_placeholder.insertBefore(textarea);
+        toolbarPlaceholder.insertBefore(textarea);
         toolbar.insertBefore(textarea);
 
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
-            width: textarea_width,
+            width: textareaWidth,
             skin: 'studip',
             extraPlugins: 'studip-wiki,studip-upload',
             enterMode: CKEDITOR.ENTER_BR,
@@ -239,7 +229,7 @@ jQuery(function ($) {
                 $textarea = $(editor.element.$);
 
             // auto-resize editor area in source view mode, and keep focus!
-            editor.on('mode', function(event) {
+            editor.on('mode', function (event) {
                 var editor = event.editor;
                 if (editor.mode === 'source') {
                     $(editor.container.$).find('.cke_source').focus();
@@ -259,10 +249,10 @@ jQuery(function ($) {
             });
 
             // focus editor if corresponding textarea is focused
-            $textarea.focus(function(event){ event.editor.focus(); });
+            $textarea.focus(function (event) { event.editor.focus(); });
 
             // update textarea on editor blur
-            editor.on('blur', function(event){
+            editor.on('blur', function (event) {
                 event.editor.updateElement();
             });
 
@@ -271,15 +261,15 @@ jQuery(function ($) {
             CKEDITOR.focusManager._.blurDelay = 0;
 
             // display "focused"-effect when editor area is focused
-            editor.on('focus', function(event){
+            editor.on('focus', function (event) {
                 event.editor.container.addClass('cke_chrome_focused');
             });
-            editor.on('blur', function(event){
+            editor.on('blur', function (event) {
                 event.editor.container.removeClass('cke_chrome_focused');
             });
 
             // keep the editor focused when a toolbar item gets selected
-            editor.on('blur', function(event){
+            editor.on('blur', function (event) {
                 var toolbarContainer = $('#' + event.editor.config.sharedSpaces.top);
                 if (toolbarContainer.has(':focus').length > 0) {
                     event.editor.focus();
@@ -289,29 +279,27 @@ jQuery(function ($) {
             // do not scroll toolbar out of viewport
             function stickyTools() {
                 var MARGIN = 25;
-                // is(':visible'): offset() is wrong for hidden nodes
-                if (($(window).scrollTop() + MARGIN > toolbar_placeholder.offset().top)
+                // is(':visible'): offset() is wrong for hidden elements
+                if (($(window).scrollTop() + MARGIN > toolbarPlaceholder.offset().top)
                         && toolbar.is(':visible')) {
                     toolbar.css({
                         position: 'fixed',
                         top: MARGIN,
                         'max-width': editor.window.getViewPaneSize().width
                     });
-                    toolbar_placeholder
-                        .css('height', toolbar.height());
+                    toolbarPlaceholder.css('height', toolbar.height());
                 } else {
                     toolbar.css({
                         position: 'relative',
                         top: '',
-                        'max-width': textarea_width
+                        'max-width': textareaWidth
                     });
-                    toolbar_placeholder
-                        .css('height', 0);
+                    toolbarPlaceholder.css('height', 0);
                 }
             };
             $(window).scroll(stickyTools);
             $(window).resize(stickyTools);
-            editor.on('focus', stickyTools);  // hidden toolbar might scroll off screen
+            editor.on('focus', stickyTools); // hidden toolbar might scroll off screen
 
             // set toolbar's z-index higher than editor's
             // NOTE +1000 because source-view also has higher z-index than editor
@@ -323,38 +311,48 @@ jQuery(function ($) {
         });
     }
 
-    STUDIP.addWysiwyg = replaceTextarea; // for jquery dialogs, see toolbar.js
-
-    // when attaching to hidden textareas, or textareas who's parents are
-    // hidden, the editor does not function properly; therefore attach to
-    // visible textareas only
-    function replaceVisibleTextareas() {
-        $('textarea.add_toolbar').each(function(){
-            var editor = CKEDITOR.dom.element.get(this).getEditor();
-            if ($(this).is(':visible')){
-                if (!editor) {
-                    if (!$(this).attr('id')) {
-                        var id = 0;
-                        while ($('#wysiwyg' + id).length !== 0) {
-                            id++;
-                        }
-                        $(this).attr('id', 'wysiwyg' + id);
-                    }
-                    replaceTextarea(this);
-                }
-            } else if ($(this).parent().css('display') === 'none') {
-                if (editor && CKEDITOR.instances[$(this).attr('id')]) {
-                    editor.destroy(true);
-                }
-            }
-        });
+    // convert plain text entries to html
+    function getHtml(text) {
+        return isHtml(text) ? text : convertToHtml(text);
+    }
+    function isHtml(text) {
+        text = text.trim();
+        return text[0] === '<' && text[text.length - 1] === '>';
+    }
+    function convertToHtml(text) {
+        var quote = getQuote(text);
+        if (quote) {
+            var quotedHtml = getHtml(quote[2].trim());
+            return '<p>' + quote[1] + quotedHtml + quote[3] + '</p>';
+        }
+        return replaceNewlines(encodeHtmlEntities(text));
+    }
+    function getQuote(text) {
+        // matches[1] = quote start  \[quote(=.*?)?\]
+        // matches[2] = quoted text  [\s\S]*   (multiline)
+        // matches[3] = quote end    \[\/quote\]
+        return text.match(
+            /^\s*(\[quote(?:=.*?)?\])([\s\S]*)(\[\/quote\])\s*$/) || null;
+    }
+    function encodeHtmlEntities(text) {
+        return $('<div>').text(text).html();
+    }
+    function replaceNewlines(text) {
+        return replaceNewlineWithBr(replaceMultiNewlinesWithP(text));
+    }
+    function replaceMultiNewlinesWithP(text) {
+        return '<p>' + text.replace(/(\r?\n|\r){2,}/, '</p><p>') + '</p>';
+    }
+    function replaceNewlineWithBr(text) {
+        return text.replace(/(\r?\n|\r)/g, '<br>\n');
     }
 
-    // replace areas visible on page load
-    replaceVisibleTextareas();
-
-    // replace areas that are created or shown after page load
-    // remove editors that become hidden after page load
-    // show, hide and create do not raise an event, use interval timer
-    setInterval(replaceVisibleTextareas, 300);
+    // create an unused id
+    function createNewId(prefix) {
+        var i = 0;
+        while ($('#' + prefix + i).length > 0) {
+            i++;
+        }
+        return prefix + i;
+    }
 }); // jQuery(function($){

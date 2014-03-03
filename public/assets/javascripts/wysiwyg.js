@@ -252,7 +252,9 @@ jQuery(function ($) {
             var form = $textarea.closest('form');
             form.submit(function (event) {
                 if (!isHtml(editor.getData())) {
-                    editor.setData('<div>' + editor.getData() + '</div>'); 
+                    editor.setData('<div>' + editor.getData() + '</div>');
+                    // update textarea, in case it's accessed by other JS code
+                    editor.updateElement();
                 }
             });
 

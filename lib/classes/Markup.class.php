@@ -36,7 +36,7 @@ class Markup
     public static function apply($markup, $text, $trim)
     {
         if (self::isHtml($text)){
-            return self::markupAndPurify($markup, $text, $trim);
+            return self::markupPurified($markup, $text, $trim);
         }
         return self::markupHtmlReady($markup, $text, $trim);
     }
@@ -60,7 +60,7 @@ class Markup
     }
 
     /**
-     * Run text through HTML purifier after applying markup rules.
+     * Run text through HTML purifier and afterwards apply markup rules.
      *
      * @param TextFormat $markup  Markup rules applied on marked-up text.
      * @param string     $text    Marked-up text on which rules are applied.
@@ -68,7 +68,7 @@ class Markup
      *
      * @return string  HTML code computed from marked-up text.
      */
-    private static function markupAndPurify($markup, $text, $trim)
+    private static function markupPurified($markup, $text, $trim)
     {
         $text = self::unixEOL($text);
         if ($trim) {
@@ -88,8 +88,8 @@ class Markup
      */
     private static function markupHtmlReady($markup, $text, $trim)
     {
-        return self::markupText(
-            $markup, self::htmlReady(self::unixEOL($text), $trim));
+        return str_replace("\n", '<br>', self::markupText(
+            $markup, self::htmlReady(self::unixEOL($text), $trim)));
     }
 
     /**
@@ -114,9 +114,7 @@ class Markup
      */
     private static function markupText($markup, $text)
     {
-        $text = $markup->format($text);
-        $text = symbol(smile($text, false));
-        return str_replace("\n", '<br>', $text);
+        return symbol(smile($markup->format($text), false));
     }
 
     /**

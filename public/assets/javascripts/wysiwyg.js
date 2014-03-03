@@ -88,6 +88,7 @@ jQuery(function ($) {
             width: textarea_width,
             skin: 'studip',
             extraPlugins: 'studip-wiki,studip-upload',
+            enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {
                 showSearchButton: false,

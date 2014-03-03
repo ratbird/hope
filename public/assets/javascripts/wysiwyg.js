@@ -88,6 +88,8 @@ jQuery(function ($) {
                 showAutoCompleteButton: false
             },
             autoGrow_onStartup: true,
+
+            // configure toolbar
             sharedSpaces: { // needed for sticky toolbar (see stickyTools())
                 top: toolbarId
             },
@@ -102,6 +104,11 @@ jQuery(function ($) {
                 {name: 'insert'}
             ],
             removeButtons: 'Font,FontSize,Anchor',
+
+            // configure dialogs
+            removeDialogTabs: 'image:Link;image:advanced;'
+                + 'link:target;link:advanced;'
+                + 'table:advanced',
 
             // convert special chars except latin ones to html entities
             entities: false,

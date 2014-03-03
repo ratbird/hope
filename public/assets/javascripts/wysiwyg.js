@@ -250,15 +250,9 @@ jQuery(function ($) {
 
             // clean up HTML edited in source mode before submit
             var form = $textarea.closest('form');
-            form.submit(function(event){
-                if (editor.mode != 'wysiwyg') {
-                    event.preventDefault();
-                    editor.setMode('wysiwyg', function(){
-                        // TODO might be reason for double-save in wiki?
-                        // TODO use $(event.editor.element.$).closest('form');
-                        form.submit(); 
-                    });
-                    return false;
+            form.submit(function (event) {
+                if (!isHtml(editor.getData())) {
+                    editor.setData('<div>' + editor.getData() + '</div>'); 
                 }
             });
 

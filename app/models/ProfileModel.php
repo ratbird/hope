@@ -182,7 +182,7 @@ class ProfileModel
                         }
                     }
                 }
-                $institutes[$id]['role'] = Statusgruppen::getUserRoles($inst_result['Institut_id'], $this->current_user->user_id);                
+                $institutes[$id]['role'] = Statusgruppen::getUserRoles($inst_result['Institut_id'], $this->current_user->user_id);
             } else {
                 unset($institutes[$id]);
             }
@@ -232,16 +232,13 @@ class ProfileModel
         if (empty($datafields)) {
             return null;
         }
-
         foreach ($datafields['long'] as $entry) {
-            if ($this->checkVisibility($entry->getName())) {
-                $vperms = $entry->structure->getViewPerms();
-                $visible = ('all' == $vperms)
-                         ? '(' . _('sichtbar für alle') . ')'
-                         : '(' . sprintf(_('sichtbar nur für Sie und alle %s'), $this->prettyViewPermString($vperms)) . ')';
-                $array[$entry->getName()]['content'] = $entry->getDisplayValue();
-                $array[$entry->getName()]['visible'] = $visible;
-            }
+            $vperms = $entry->structure->getViewPerms();
+            $visible = ('all' == $vperms)
+                     ? '(' . _('sichtbar für alle') . ')'
+                     : '(' . sprintf(_('sichtbar nur für Sie und alle %s'), $this->prettyViewPermString($vperms)) . ')';
+            $array[$entry->getName()]['content'] = $entry->getDisplayValue();
+            $array[$entry->getName()]['visible'] = $visible;
         }
 
         return $array;

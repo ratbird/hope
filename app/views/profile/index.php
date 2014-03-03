@@ -178,7 +178,7 @@
     <? $shared_box->clear_attributes()?>
 <?endif?>
 
-<? if(!empty($longDatafields) && $GLOBALS['perm']->have_perm('root')) :?>
+<? if(!empty($longDatafields)) :?>
     <? foreach ($longDatafields as $name => $entry) : ?>
     <?=$this->render_partial($shared_box, array('admin_url' => null, 'title' => $name .' '. $entry['visible'], 'content_for_layout' => $entry['content']));?>
     <? endforeach ?>

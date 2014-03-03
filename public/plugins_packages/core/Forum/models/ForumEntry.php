@@ -175,6 +175,7 @@ class ForumEntry {
      */
     static function getConstraints($topic_id)
     {
+        if (!$topic_id) return false; //very bad performance if topic_id is 0 or false
         // look up the range of postings
         $range_stmt = DBManager::get()->prepare("SELECT *
             FROM forum_entries WHERE topic_id = ?");

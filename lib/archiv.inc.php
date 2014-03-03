@@ -120,9 +120,9 @@ function dump_sem($sem_id, $print_view = false)
     if (count($tutors) > 0) {
         $title = get_title_for_status('tutor', count($tutors), $sem_type);
         $dumpRow($title, implode('<br>', array_map('htmlReady', $tutors)));
-    } 
+    }
 
-    if ($seminar['status'] != '') {
+    if ($seminar['status'] != '' && isset($SEM_TYPE[$seminar['status']])) {
         $content  = $SEM_TYPE[$seminar['status']]['name'];
         $content .= ' ' . _('in der Kategorie') . ' ';
         $content .= '<b>' . $SEM_CLASS[$SEM_TYPE[$seminar['status']]['class']]['name'] . '</b>';
@@ -141,7 +141,7 @@ function dump_sem($sem_id, $print_view = false)
     //add the free adminstrable datafields
     $localEntries = DataFieldEntry::getDataFieldEntries($sem_id);
     foreach ($localEntries as $entry) {
-        $dumpRow($entry->getName, $entry->getDisplayValue());
+        $dumpRow($entry->getName(), $entry->getDisplayValue());
     }
 
     $dumpRow(_('Sonstiges:'), $seminar['Sonstiges'], true);
@@ -156,11 +156,11 @@ function dump_sem($sem_id, $print_view = false)
     $statement->execute(array($sem_id));
     $faculties = $statement->fetchAll(PDO::FETCH_COLUMN);
     if (count($faculties) > 0) {
-        $dumpRow(_('Fakult&auml;t(en):'), implode('<br>', array_map('htmlReady', $faculties)));
+        $dumpRow(_('Fakultät(en):'), implode('<br>', array_map('htmlReady', $faculties)));
     }
 
     //Studienbereiche
-    if ($SEM_CLASS[$SEM_TYPE[$seminar['status']]['class']]['bereiche']) {
+    if (isset($SEM_TYPE[$seminar['status']]) && $SEM_CLASS[$SEM_TYPE[$seminar['status']]['class']]['bereiche']) {
         $sem_path = get_sem_tree_path($sem_id) ?: array();
         $dumpRow(_('Studienbereich(e):'), implode('<br>', array_map('htmlReady', $sem_path)));
     }
@@ -198,18 +198,23 @@ function dump_sem($sem_id, $print_view = false)
 
     // number of postings for all forum-modules in this seminar
     $count = 0;
-    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+    $forum_modules = PluginEngine::getPlugins('ForumModule', $sem_id);
+    foreach ($forum_modules as $plugin) {
         $count += $plugin->getNumberOfPostingsForSeminar($sem_id);
     }
     $dumpRow(_('Forenbeiträge:'), $count);
 
     if ($Modules['documents']) {
         //do not show hidden documents
-        if (!$GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
-            $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
-            $unreadable_folders = $folder_tree->getUnReadableFolders($GLOBALS['user']->id);
-        } else {
-            $unreadable_folders = array();
+        $unreadable_folders = array();
+        if ($print_view) {
+            $check_user = $print_view === true ? $GLOBALS['user']->id : $print_view;
+            if ($Modules['documents_folder_permissions'] || StudipDocumentTree::ExistsGroupFolders($sem_id)) {
+                if (!$GLOBALS['perm']->have_studip_perm('tutor', $sem_id, $check_user)) {
+                    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
+                    $unreadable_folders = $folder_tree->getUnReadableFolders($check_user);
+                }
+            }
         }
         $query = "SELECT COUNT(*) FROM dokumente WHERE seminar_id = ?";
         $parameters = array($sem_id);
@@ -262,20 +267,10 @@ function dump_sem($sem_id, $print_view = false)
 
     // Dateien anzeigen
     if ($Modules['documents']) {
-        //do not show hidden documents
-        $unreadable_folders = array();
-        if ($print_view) {
-            if ($Modules['documents_folder_permissions'] || StudipDocumentTree::ExistsGroupFolders($sem_id)) {
-                if (!$GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
-                    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
-                    $unreadable_folders = $folder_tree->getUnReadableFolders($GLOBALS['user']->id);
-                }
-            }
-        }
 
         $link_text = _('Hinweis: Diese Datei wurde nicht archiviert, da sie lediglich verlinkt wurde.');
         $query = "SELECT name, filename, mkdate, filesize, Nachname AS nachname,
-                         IF(url != '', CONCAT('{$link_text}', ' / ', description), description) AS description 
+                         IF(url != '', CONCAT('{$link_text}', ' / ', description), description) AS description
                   FROM dokumente
                   LEFT JOIN auth_user_md5 USING (user_id)
                   WHERE seminar_id = ?";
@@ -285,7 +280,7 @@ function dump_sem($sem_id, $print_view = false)
             $query .= " AND range_id NOT IN (?)";
             $parameters[] = $unreadable_folders;
         }
-        
+
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         $dbresult = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -301,11 +296,11 @@ function dump_sem($sem_id, $print_view = false)
                 $name = ($row['name'] && $row['name'] != $row['filename'])
                       ? $row['name'] . ' (' . $row['filename'] . ')'
                       : $row['filename'];
-                $dump .= sprintf('<tr><td width="100%%"><b>%s</b><br>%s (%u KB)</td><td>%s</td><td>%s</td></tr>' . "\n", 
+                $dump .= sprintf('<tr><td width="100%%"><b>%s</b><br>%s (%u KB)</td><td>%s</td><td>%s</td></tr>' . "\n",
                                  htmlReady($name),
                                  htmlReady($row['description']),
                                  round($row['filesize'] / 1024),
-                                 htmlReady($row['Nachname']),
+                                 htmlReady($row['nachname']),
                                  date('d.m.Y', $row['mkdate']));
             }
 
@@ -321,9 +316,14 @@ function dump_sem($sem_id, $print_view = false)
 
         // Prepare statement that obtains the number of document a specific
         // user has uploaded into a specific seminar
+        $documents_params = array($sem_id, null);
         $query = "SELECT COUNT(*) FROM dokumente WHERE Seminar_id = ? AND user_id = ?";
-        $documents_statement = DBManager::get()->prepare($query);
+        if (count($unreadable_folders) > 0) {
+            $query .= " AND range_id NOT IN (?)";
+            $documents_params[] = $unreadable_folders;
 
+        }
+        $documents_statement = DBManager::get()->prepare($query);
         // Prepare statement that obtains all participants of a specific
         // seminar with a specific status
         $ext_vis_query = get_ext_vis_query('seminar_user');
@@ -339,7 +339,7 @@ function dump_sem($sem_id, $print_view = false)
 
         foreach (words('dozent tutor autor user') as $key) {
             // die eigentliche Teil-Tabelle
-            
+
             $user_statement->execute(array($sem_id, $key));
             $users = $user_statement->fetchAll(PDO::FETCH_ASSOC);
             $user_statement->closeCursor();
@@ -355,14 +355,15 @@ function dump_sem($sem_id, $print_view = false)
                 $dump .= '<th width="10%">' . _('Dokumente') . '</th></tr>' . "\n";
 
                 foreach ($users as $user) {
-                    $documents_statement->execute(array($sem_id, $user['user_id']));
+                    $documents_params[1] = $user['user_id'];
+                    $documents_statement->execute($documents_params);
                     $count = $documents_statement->fetchColumn() ?: 0;
                     $documents_statement->closeCursor();
-                    
+
                     // get number of postings for this user from all forum-modules
                     $postings = 0;
-                    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                        $postings += $plugin->getNumberOfPostingsForUser($user['user_id']);
+                    foreach ($forum_modules as $plugin) {
+                        $postings += $plugin->getNumberOfPostingsForUser($user['user_id'], $sem_id);
                     }
 
                     $dump .= sprintf('<tr><td>%s</td><td align="center">%u</td><td align="center">%u</td></tr>' . "\n",
@@ -436,7 +437,7 @@ function dumpScheduleTable($data, $title)
         $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
         $dump .= dumpDateTableHeader($title);
         $dump .= dumpDateTableRows($data);
-        $dump .= '</table>\n';
+        $dump .= '</table>' . "\n";
     }
 
     return $dump;
@@ -527,7 +528,7 @@ function in_archiv ($sem_id)
     foreach ($all_semester as $sem) {
         if (($start_time >= $sem['beginn']) && ($start_time <= $sem['ende'])) {
             $semester_tmp = $sem['name'];
-        } 
+        }
     }
 
     //Studienbereiche
@@ -582,12 +583,12 @@ function in_archiv ($sem_id)
     $fakultaet = $statement->fetchColumn();
 
     setTempLanguage();  // use $DEFAULT_LANGUAGE for archiv-dumps
-    
+
     //Dump holen
-    $dump = dump_sem($sem_id);
+    $dump = dump_sem($sem_id, 'nobody');
 
     //Forumdump holen
-    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+    foreach (PluginEngine::getPlugins('ForumModule', $sem_id) as $plugin) {
         $forumdump .= $plugin->getDump($sem_id);
     }
 
@@ -595,7 +596,7 @@ function in_archiv ($sem_id)
     $wikidump = getAllWikiPages($sem_id, $name, FALSE);
 
     restoreLanguage();
-    
+
     //OK, naechster Schritt: Kopieren der Personendaten aus seminar_user in archiv_user
     $query = "INSERT INTO archiv_user (seminar_id, user_id, status)
               SELECT Seminar_id, user_id, status FROM seminar_user WHERE Seminar_id = ?";
@@ -626,7 +627,7 @@ function in_archiv ($sem_id)
         $tmp_full_path = "$TMP_PATH/$archiv_file_id";
         mkdir($tmp_full_path, 0700);
 
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
         if($folder_tree->getNumKids('root')) {
             $list = $folder_tree->getKids('root');
         }
@@ -642,7 +643,7 @@ function in_archiv ($sem_id)
                 $folder += 1;
                 $temp_folder = $tmp_full_path . "/[$folder]_" . prepareFilename($row['name'], FALSE);
                 mkdir($temp_folder, 0700);
-                createTempFolder($row['folder_id'], $temp_folder, $seminar_id, 'archiv');
+                createTempFolder($row['folder_id'], $temp_folder, $seminar_id, 'nobody');
             }
 
             //zip all the stuff
@@ -676,7 +677,7 @@ function in_archiv ($sem_id)
         $dozenten ?: '',
         $fakultaet ?: '',
         $dump ?: '',
-        $archiv_file_id, 
+        $archiv_file_id ?: '',
         $forumdump ?: '',
         $wikidump ?: '',
         $studienbereiche ?: '',

@@ -251,7 +251,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     {
         $this->setupAutoload();
         
-        ForumEntry::getDump($seminar_id);
+        return ForumEntry::getDump($seminar_id);
     }
 
     static function getDescription() {

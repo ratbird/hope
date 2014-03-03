@@ -1131,11 +1131,10 @@ function printAllWikiPages($range_id, $header) {
 *
 **/
 function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
-    global $SessSemName;
 
     $query = "SELECT DISTINCT keyword FROM wiki WHERE range_id = ? ORDER BY keyword DESC";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($SessSemName[1]));
+    $statement->execute(array($range_id));
     $allpages = $statement->fetchAll(PDO::FETCH_COLUMN);
     $allpages = array_map('htmlReady', $allpages);
 

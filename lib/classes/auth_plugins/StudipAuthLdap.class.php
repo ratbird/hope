@@ -263,4 +263,3 @@ class StudipAuthLdap extends StudipAuthAbstract {
             return _("<br>LDAP Fehler: ") . ldap_error($this->conn) ." (#" . ldap_errno($this->conn) . ")";
     }
 }
-?>

@@ -158,4 +158,3 @@ class StudipAuthShib extends StudipAuthSSO
         return $data[0];
     }
 }
-?>

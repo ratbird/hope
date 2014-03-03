@@ -41,4 +41,3 @@ abstract class StudipAuthSSO extends StudipAuthAbstract
         return false;
     }
 }
-?>

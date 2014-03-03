@@ -459,4 +459,3 @@ class StudipAuthAbstract {
         return false;
     }
 }
-?>

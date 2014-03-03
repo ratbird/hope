@@ -95,5 +95,3 @@ class StudipAuthLdapReadAndBind extends StudipAuthLdap {
         return $ret;
     }
 }
-
-?>

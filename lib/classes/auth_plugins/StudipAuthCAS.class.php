@@ -71,5 +71,3 @@ class StudipAuthCAS extends StudipAuthSSO {
         $this->cas->logout();
     }
 }
-
-?>

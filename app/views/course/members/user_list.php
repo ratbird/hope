@@ -3,7 +3,7 @@
 
 <form action="<?= $controller->url_for('course/members/edit_user/') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default collapsable zebra-hover">
+    <table class="default collapsable">
         <colgroup>
             <? if($is_tutor) :?>
             <col width="20">
@@ -16,27 +16,24 @@
             <? endif ?>
             <col width="80">
         </colgroup>
+        <caption>
+            <?= $status_groups['user'] ?>
+            <? if($is_tutor) :?>
+            <span class="actions">
+                <?= $controller->getEmailLinkByStatus('user', $users) ?>
+                <a href="<?=
+                URLHelper::getLink('sms_send.php', array('filter' => 'send_sms_to_all',
+                    'who' => 'user',
+                    'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                    'course_id' => $course_id,
+                    'subject' => $subject))
+                ?>">
+                       <?= Assets::img('icons/16/blue/inbox.png', tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user']))) ?>
+                </a>
+            </span>
+            <? endif ?>
+        </caption>
         <thead>
-            <tr>
-                <th class="table_header_bold" colspan="<?=($is_tutor) ? 5 : 2?>">
-                    <?= $status_groups['user'] ?>
-                </th>
-                <th class="table_header_bold" style="text-align: right">
-                <? if($is_tutor) :?>
-                    <?=$controller->getEmailLinkByStatus('user', $users)?>
-                    <a href="<?= URLHelper::getLink('sms_send.php',
-                            array('filter' => 'send_sms_to_all',
-                                'who' => 'user',
-                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                                'course_id' => $course_id,
-                                'subject' => $subject))
-                    ?>">
-                        <?= Assets::img('icons/16/white/inbox.png',
-                                tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user'])))?>
-                    </a>
-                <? endif ?>
-                </th>
-            </tr>
             <tr class="sortable">
                 <? if($is_tutor) :?>
                 <th><input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
@@ -120,7 +117,7 @@
         <? if ($is_tutor) : ?>
         <tfoot>
             <tr>
-                <td class="printhead" colspan="6">
+                <td colspan="6">
                     <select name="action_user" id="user_action" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion auswählen') ?></option>
                         <option value="upgrade"><?= sprintf(_('Zu %s hochstufen'),

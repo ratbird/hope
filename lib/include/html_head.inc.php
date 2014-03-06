@@ -39,6 +39,12 @@
 <head>
     <meta charset="WINDOWS-1252">
     <title><?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?></title>
+    <script>
+        CKEDITOR_BASEPATH='<?=
+            // set CKEDITOR_BASEPATH in templates/layouts/base.php as well
+            $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'assets/javascripts/ckeditor/'
+        ?>';
+    </script>
     <?= PageLayout::getHeadElements() ?>
 
     <script src="<?= URLHelper::getScriptLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>"></script>
@@ -51,8 +57,10 @@
         STUDIP.jsupdate_enable = true;
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
-        <?php /* set STUDIP.WYSIWYG in templates/layouts/base.php as well */ ?>
-        STUDIP.WYSIWYG = <?= \Config::get()->WYSIWYG ? 'true' : 'false' ?>;
+        STUDIP.WYSIWYG = <?=
+            // set STUDIP.WYSIWYG in templates/layouts/base.php as well
+            \Config::get()->WYSIWYG ? 'true' : 'false'
+        ?>;
     </script>
 </head>
 

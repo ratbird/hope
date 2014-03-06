@@ -8,20 +8,28 @@
     <title>
       <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
     </title>
+    <script>
+        CKEDITOR_BASEPATH='<?=
+            // set CKEDITOR_BASEPATH in lib/include/html_head.inc.php as well
+            $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'assets/javascripts/ckeditor/'
+        ?>';
+    </script>
     <?= PageLayout::getHeadElements() ?>
 
     <script src="<?= URLHelper::getScriptLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>"></script>
 
     <script>
-      STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
-      STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
-      String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
-      <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor') && PersonalNotifications::isActivated()) : ?>
-      STUDIP.jsupdate_enable = true;
-      <? endif ?>
-      STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
-      <?php /* set STUDIP.WYSIWYG in lib/include/html_head.inc.php as well */ ?>
-      STUDIP.WYSIWYG = <?= \Config::get()->WYSIWYG ? 'true' : 'false' ?>;
+        STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
+        STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
+        String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
+        <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor') && PersonalNotifications::isActivated()) : ?>
+        STUDIP.jsupdate_enable = true;
+        <? endif ?>
+        STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
+        STUDIP.WYSIWYG = <?=
+            // set STUDIP.WYSIWYG in lib/include/html_head.inc.php as well
+            \Config::get()->WYSIWYG ? 'true' : 'false'
+        ?>;
     </script>
 </head>
 

@@ -57,7 +57,7 @@ jQuery('a[rel~="lightbox"], button[rel~="lightbox"]').live('click', function (ev
     }
     // Load response into a helper container, open dialog after loading
     // has finished.
-    container.load(href, that_params || {}, function (response, status, xhr) {
+    container.load(href, that_params || '', function (response, status, xhr) {
         var width   = jQuery('body').width() * 2 / 3,
             height  = jQuery('body').height() * 2 / 3,
             buttons = {},

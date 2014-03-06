@@ -33,13 +33,13 @@ class SubjectCondition extends UserFilterField
      * @see UserFilterField::__construct
      */
     public function __construct($fieldId='') {
+        parent::__construct($fieldId);
         $this->relations = array(
             'DegreeCondition' => array(
                 'local_field' => 'abschluss_id',
                 'foreign_field' => 'abschluss_id'
                 )
         );
-        parent::__construct($fieldId);
     }
 
     /**

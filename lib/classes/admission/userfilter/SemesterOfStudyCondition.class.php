@@ -32,6 +32,8 @@ class SemesterOfStudyCondition extends UserFilterField
      * @see UserFilterField::__construct
      */
     public function __construct($fieldId='') {
+        parent::__construct($fieldId);
+        $this->validValues = array();
         $this->relations = array(
             'DegreeCondition' => array(
                 'local_field' => 'abschluss_id',
@@ -42,7 +44,6 @@ class SemesterOfStudyCondition extends UserFilterField
                 'foreign_field' => 'studiengang_id'
             )
         );
-        parent::__construct($fieldId);
         $this->validCompareOperators = array(
             '>=' => _('mindestens'),
             '<=' => _('höchstens'),

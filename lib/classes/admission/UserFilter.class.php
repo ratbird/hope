@@ -126,13 +126,15 @@ class UserFilter
             // Check if restrictions for the field value must be taken into consideration.
             $restrictions = array();
             foreach ($field->relations as $className => $related) {
-                if ($other = &$this->hasField($className)) {
-                    $restrictions[$className] = array(
-                        'table' => $other->userDataDbTable,
-                        'field' => $other->userDataDbField,
-                        'compare' => $other->getCompareOperator(),
-                        'value' => $other->getValue()
-                    );
+                if ($other = $this->hasField($className)) {
+                    if ($other->getValue()) {
+                        $restrictions[$className] = array(
+                            'table' => $other->userDataDbTable,
+                            'field' => $other->userDataDbField,
+                            'compare' => $other->getCompareOperator(),
+                            'value' => $other->getValue()
+                        );
+                    }
                 }
             }
             $users = $users ? array_intersect($users, $field->getUsers($restrictions)) : $field->getUsers($restrictions);

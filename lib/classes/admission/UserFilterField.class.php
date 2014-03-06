@@ -193,16 +193,16 @@ class UserFilterField
     }
 
     /**
-     * Compares all the users' degrees by using the specified compare operator
+     * Compares all the users' values by using the specified compare operator
      * and returns all users that fulfill the condition. This can be
-     * an important informatione when checking on validity of a combination
+     * an important information when checking on validity of a combination
      * of conditions.
      * 
      * @param Array $restrictions values from other fields that restrict the valid
      *                            values for a user (e.g. a semester of study in
      *                            a given subject)
      * @return Array All users that are affected by the current condition 
-     * field.
+     *               field.
      */
     public function getUsers($restrictions=array()) {
         $db = DBManager::get();

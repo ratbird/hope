@@ -39,6 +39,12 @@ $path = $GLOBALS['STUDIP_BASE_PATH'].'/db/migrations';
 $verbose = false;
 $target = NULL;
 
+FileLock::setDirectory($GLOBALS['TMP_PATH']);
+$lock = new FileLock('web-migrate');
+if ($lock->isLocked() && Request::int('release_lock')) {
+	$lock->release();
+}
+
 if (Request::int('target')) {
     $target = (int) Request::int('target');
 }
@@ -48,7 +54,9 @@ $migrator = new Migrator($path, $version, $verbose);
 
 if (Request::submitted('start')) {
     set_time_limit(0);
+	$lock->lock(array('timestamp' => time(), 'user_id' => $GLOBALS['user']->id));
     $migrator->migrate_to($target);
+	$lock->release();
 }
 
 $current = $version->get();
@@ -59,7 +67,7 @@ $template->set_attribute('current_page', _('Datenbank-Migration'));
 $template->set_attribute('current', $current);
 $template->set_attribute('target', $target);
 $template->set_attribute('migrations', $migrations);
-
+$template->set_attribute('lock', $lock);
 echo $template->render();
 
 include 'lib/include/html_end.inc.php';

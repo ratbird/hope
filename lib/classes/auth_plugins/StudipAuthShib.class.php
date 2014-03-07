@@ -36,7 +36,7 @@ class StudipAuthShib extends StudipAuthSSO
     {
         parent::__construct();
 
-        if (isset($this->validate_url) && isset($_REQUEST['token'])) {
+        if (Request::option('sso') && isset($this->validate_url) && isset($_REQUEST['token'])) {
             $auth = file_get_contents($this->validate_url.'/'.$_REQUEST['token']);
 
             $this->userdata = json_decode($auth, true);

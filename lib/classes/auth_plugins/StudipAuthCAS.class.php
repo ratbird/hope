@@ -32,12 +32,15 @@ class StudipAuthCAS extends StudipAuthSSO {
     */
     function StudipAuthCAS() {
         parent::__construct();
-        $this->cas = new CASClient(CAS_VERSION_2_0,false,$this->host,$this->port,$this->uri,false);
 
-        if (isset($this->cacert)) {
-            $this->cas->setCasServerCACert($this->cacert);
-        } else {
-            $this->cas->setNoCasServerValidation();
+        if (Request::option('sso')) {
+            $this->cas = new CASClient(CAS_VERSION_2_0,false,$this->host,$this->port,$this->uri,false);
+
+            if (isset($this->cacert)) {
+                $this->cas->setCasServerCACert($this->cacert);
+            } else {
+                $this->cas->setNoCasServerValidation();
+            }
         }
     }
 

@@ -173,13 +173,10 @@ class ShowGroupSchedules extends ShowSemSchedules {
                         ++$num_rep_events;
                     }
                 }
-                //nur zukünftige Einzelbelegungen, print_view braucht noch Sonderbehandlung <!!!>
+                // nur zukünftige Einzelbelegungen
                 if ( ($end_time > time()) && ($_SESSION['resources_data']["show_repeat_mode"] == 'single' || $_SESSION['resources_data']["show_repeat_mode"] == 'all')){
                     $a_start_time = ($start_time > time() ? $start_time : time());
-                    if ($print_view && ($start_time < time())){
-                        $a_start_time = $this->getNextMonday($a_start_time);
-                    }
-                    $a_end_time = ($print_view ? $a_start_time + 86400 * 14 : $end_time);
+                    $a_end_time = $end_time;
                     $assign_events = new AssignEventList ($a_start_time, $a_end_time, $room_id, '', '', TRUE, 'semschedulesingle', $this->dow);
                     while ($event = $assign_events->nextEvent()) {
                         //mehrtägige nur am passenden Tag anzeigen

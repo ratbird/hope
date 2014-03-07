@@ -129,6 +129,9 @@ foreach ($args as $arg) {
     $arguments[$arg] = Request::quoted($arg);
 }
 
+// declare Stud.IP encoding by default
+ini_set('default_charset', 'windows-1252');
+
 if (Request::option('preview')) {
     $module_obj->printoutPreview();
 } else {

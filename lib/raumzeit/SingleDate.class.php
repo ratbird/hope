@@ -227,6 +227,7 @@ class SingleDate {
             if ($issue_ids = $this->getIssueIDs()) {
                 foreach ($issue_ids as $issue_id) {
                     // delete this issue
+                    unset($this->issues[$issue_id]);
                     $issue = new Issue(array('issue_id' => $issue_id));
                     $issue->delete();
                 }

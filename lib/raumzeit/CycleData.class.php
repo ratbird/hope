@@ -227,17 +227,6 @@ class CycleData
                 $this->readSingleDates();
             }
             foreach ($this->termine as $termin) {
-                // delete issues, if the schedule expert view is off
-                if(!$GLOBALS["RESOURCES_ENABLES_EXPERT_SCHEDULE_VIEW"]){
-                    $issue_ids = $termin->getIssueIDs();
-                    if (is_array($issue_ids)) {
-                        foreach($issue_ids as $issue_id){
-                            // delete this issue
-                  $issue = new Issue(array('issue_id' => $issue_id));
-                  $issue->delete();
-                        }
-                    }
-                }
                 $termin->delete();
             }
         }

@@ -29,6 +29,10 @@ class Visibility_Buddies extends VisibilityAbstract
     // When do two users have this state
     function verify($user_id, $other_id)
     {
+        if ($other_id === 'nobody') {
+            return false;
+        }
+
         return CheckBuddy(get_username($other_id), $user_id) || $user_id == $other_id;
     }   
 }

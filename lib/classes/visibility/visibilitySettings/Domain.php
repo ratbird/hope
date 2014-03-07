@@ -28,6 +28,10 @@ class Visibility_Domain extends VisibilityAbstract {
     // When do two users have this state
     function verify($user_id, $other_id)
     {
+        if ($other_id === 'nobody') {
+            return false;
+        }
+
         $user_domains = UserDomain::getUserDomainsForUser($user_id);
         $owner_domains = UserDomain::getUserDomainsForUser($other_id);
         if (count($user_domains) || count($owner_domains)) {

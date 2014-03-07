@@ -206,14 +206,14 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
     $query = "DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ? AND inst_perms = 'user'";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($user->id, $auswahl));
+    $statement->execute(array($user->id, Request::option('auswahl')));
     if ($statement->rowCount() == 0)
         $meldung="error§" . _("Datenbankfehler!");
     else {
 
         $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($auswahl));
+        $statement->execute(array(Request::option('auswahl')));
         $name = $statement->fetchColumn();
 
         $meldung="msg§" . sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>".htmlReady($name)."</b>");

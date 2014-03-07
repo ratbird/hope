@@ -130,7 +130,7 @@ foreach ($args as $arg) {
 }
 
 // declare Stud.IP encoding by default
-ini_set('default_charset', 'windows-1252');
+header('Content-Type: text/html; charset=windows-1252');
 
 if (Request::option('preview')) {
     $module_obj->printoutPreview();

@@ -300,7 +300,7 @@ class Step00240CourseSets extends Migration
         }
 
         // sperre veranstaltungen und ordne sie in jeweils ein set pro heimateinrichtung.
-        $admission = $db->fetchAll("SELECT `seminar_id`,`seminare`.`name`,`start_time`,`duration_time`,`institut_id`,`admission_turnout`,`admission_starttime`,`admission_endtime`,`admission_endtime_sem`
+        $admission = $db->fetchAll("SELECT `seminar_id`,`seminare`.`name`,`start_time`,`duration_time`,`institut_id`,`admission_turnout`,`admission_type`,`admission_starttime`,`admission_endtime`,`admission_endtime_sem`
             FROM `seminare` left join `admission_group` on(`group_id`=`admission_group`) WHERE `admission_type` in (1,2) AND `group_id` is null");
         $migrated_per_institute = array();
         $now = mktime();
@@ -423,6 +423,7 @@ class Step00240CourseSets extends Migration
         $db->exec("ALTER TABLE `seminare` DROP `admission_enable_quota`");
 
         $db->exec("ALTER TABLE  `seminare` ADD  `admission_waitlist_max` INT UNSIGNED NOT NULL DEFAULT  '0'");
+        $db->exec("ALTER TABLE  `seminare` ADD  `admission_disable_waitlist` TINYINT UNSIGNED NOT NULL DEFAULT '0'");
         $db->exec("ALTER TABLE  `seminare` ADD  `admission_disable_waitlist_move` TINYINT UNSIGNED NOT NULL DEFAULT '0'");
 
         $db->exec("ALTER TABLE `seminar_user` DROP `admission_studiengang_id`");

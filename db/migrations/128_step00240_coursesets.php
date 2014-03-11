@@ -336,7 +336,7 @@ class Step00240CourseSets extends Migration
                             }
                             $cs->addAdmissionRule($rule2);
                         }
-                        $cs->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
+                        $cs->setName('Losverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
                     // Chronologische Anmeldung
                     } else {
                         // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
@@ -353,7 +353,7 @@ class Step00240CourseSets extends Migration
                             }
                             $cs->addAdmissionRule($rule2);
                         }
-                        $cs->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
+                        $cs->setName('Chronologisches Anmeldeverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
                     }
                 // Losen oder Anmeldezeitraum vorbei => sperren.
                 } else {
@@ -406,7 +406,7 @@ class Step00240CourseSets extends Migration
             if ($course['admission_endtime_sem'] != -1) {
                 $rule->setEndTime($course['admission_endtime_sem']);
             }
-            $cs->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
+            $cs->setName('Anmeldezeitraum: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->store();
         }
 
         //Warte und Anmeldelisten löschen

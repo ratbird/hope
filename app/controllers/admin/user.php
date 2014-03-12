@@ -887,9 +887,19 @@ class Admin_UserController extends AuthenticatedController
     public function delete_institute_action($user_id, $institut_id)
     {
         if ($GLOBALS['perm']->have_studip_perm("admin", $institut_id)) {
+            $groups = GetAllStatusgruppen($institut_id);
+            $group_list = GetRoleNames($groups, 0, '', true);
+            if (is_array($group_list) && count($group_list) > 0) {
+                $query = "DELETE FROM statusgruppe_user
+                          WHERE statusgruppe_id IN (?) AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(array_keys($group_list), $user_id));
+            }
+
             $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
             $db->execute(array($user_id, $institut_id));
             if ($db->rowCount() == 1) {
+                log_event('INST_USER_DEL', $institut_id, $user_id);
                 checkExternDefaultForUser($user_id);
                 PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Einrichtung wurde gelöscht.')));
             } else {

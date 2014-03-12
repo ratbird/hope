@@ -127,6 +127,7 @@ class CourseSet
      */
     public function addInstitute($newId) {
         $this->institutes[$newId] = true;
+	return $this;
     }
 
     /**

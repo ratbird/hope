@@ -53,7 +53,7 @@ Functions...
 function closeStructure ($resource_id)
 {
     unset($_SESSION['resources_data']['structure_opens'][$resource_id]);
-    
+
     $query = "SELECT resource_id FROM resources_objects WHERE parent_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($resource_id));
@@ -305,7 +305,7 @@ if ($target_object) {
                 if ($parent_id == $_SESSION['resources_data']['move_object']) {
                     $target_is_child = true;
                 }
-                
+
                 $statement->closeCursor();
                 $statement->execute(array($parent_id));
             }
@@ -450,7 +450,7 @@ if ($change_object_schedules) {
                 }
             }
     }
-    
+
     }
 
     if ($ObjectPerms->havePerm("autor")) {
@@ -461,12 +461,12 @@ if ($change_object_schedules) {
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $_SESSION['resources_data']['actual_assign'] = FALSE;
 
-        } elseif (!$return_schedule && !Request::submitted('search_room') 
+        } elseif (!$return_schedule && !Request::submitted('search_room')
             && !Request::submitted('reset_room_search')) {
             if ($change_object_schedules == "NEW") {
-                $changeAssign =& AssignObject::Factory(false); 
+                $changeAssign =& AssignObject::Factory(false);
             } else {
-                $changeAssign =& AssignObject::Factory($change_object_schedules); 
+                $changeAssign =& AssignObject::Factory($change_object_schedules);
             }
 
             // check, if this is an assignment for a date, they allow editing of the comment at most
@@ -975,7 +975,7 @@ if (Request::submittedSome('_add_property', '_send_property_type') || Request::o
                 Request::get('add_property_type')
             ));
         }
-        
+
         if (Request::submitted('_send_property_type')) {
             $change_property_name = Request::getArray('change_property_name');
             $send_property_type = Request::optionArray('send_property_type');
@@ -1229,11 +1229,11 @@ if (Request::option('show_repeat_mode') && (Request::submitted('send_schedule_re
     $_SESSION['resources_data']["show_repeat_mode"] = Request::option('show_repeat_mode');
 }
 
-if (Request::option('time_range')) {
-    if (Request::option('time_range') == "FALSE")
+if (Request::get('time_range')) {
+    if (Request::get('time_range') == "FALSE")
         $_SESSION['resources_data']["schedule_time_range"] = '';
     else
-        $_SESSION['resources_data']["schedule_time_range"] = Request::option('time_range');
+        $_SESSION['resources_data']["schedule_time_range"] = Request::int('time_range');
 }
 
 /*****************************************************************************
@@ -1632,12 +1632,12 @@ if (Request::submitted('save_state')) {
                 }
 
             //create msgs, grouped multi date mode
-            } else { 
+            } else {
                 $i=0;
                 foreach ($result as $key => $val) {
                     if($val["resource_id"]) {
                         $resObj = ResourceObject::Factory($val["resource_id"]);
-                        $zw_msg = '<br>' . sprintf(_("%s, Belegungszeit: %s"), 
+                        $zw_msg = '<br>' . sprintf(_("%s, Belegungszeit: %s"),
                             $resObj->getFormattedLink($assignObjects[$val['termin_id']]->getBegin()),
                             $assignObjects[$val['termin_id']]->getFormattedShortInfo());
 
@@ -1656,7 +1656,7 @@ if (Request::submitted('save_state')) {
                 }
 
             }
-            
+
             //create additional msgs for skipped dates (this ones have got an own request, so the generel request doesn't affect them)
             $skipped_objects = 0;
             if ($skipped_termin_ids) {
@@ -1857,8 +1857,8 @@ if (Request::submitted('request_tool_group')) {
 
 
 //create the (overlap)data for all resources that should checked for a request
-if (Request::submitted('inc_request') || Request::submitted('dec_request') 
-    || $new_session_started || $marked_clip_ids || Request::submitted('save_state') || $auto_inc 
+if (Request::submitted('inc_request') || Request::submitted('dec_request')
+    || $new_session_started || $marked_clip_ids || Request::submitted('save_state') || $auto_inc
     || $auto_dec || $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"]) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/CheckMultipleOverlaps.class.php");
@@ -2151,7 +2151,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     if($view == "view_group_schedule_daily" || $view == 'openobject_group_schedule'){
         if(Request::submitted('jump')) {
             $splitDate = explode('.',  $_REQUEST['schedule_begin_date']);
-            
+
             $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, $splitDate[1], $splitDate[0], $splitDate[2]);
             //$_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, Request::int('schedule_begin_month'), Request::int('schedule_begin_day'), Request::int('schedule_begin_year'));
 
@@ -2208,11 +2208,11 @@ if (Request::option('show_repeat_mode') && Request::submitted('send_schedule_rep
     $_SESSION['resources_data']["show_repeat_mode"] = Request::option('show_repeat_mode');
 }
 
-if (Request::option('time_range')) {
-    if (Request::option('time_range') == "FALSE")
+if (Request::get('time_range')) {
+    if (Request::get('time_range') == "FALSE")
         $_SESSION['resources_data']["schedule_time_range"] = '';
     else
-        $_SESSION['resources_data']["schedule_time_range"] = Request::option('time_range');
+        $_SESSION['resources_data']["schedule_time_range"] = Request::int('time_range');
 }
 
 /*****************************************************************************

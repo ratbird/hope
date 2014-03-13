@@ -39,11 +39,7 @@ jQuery(function ($) {
             if ($(this).is(':visible')){
                 if (!editor) {
                     if (!$(this).attr('id')) {
-                        var id = 0;
-                        while ($('#wysiwyg' + id).length !== 0) {
-                            id++;
-                        }
-                        $(this).attr('id', 'wysiwyg' + id);
+                        $(this).attr('id', createNewId('wysiwyg'));
                     }
                     replaceTextarea(this);
                 }

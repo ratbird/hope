@@ -8,11 +8,10 @@
     <title>
       <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
     </title>
-    <script>
-        CKEDITOR_BASEPATH='<?=
-            // set CKEDITOR_BASEPATH in lib/include/html_head.inc.php as well
-            $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'assets/javascripts/ckeditor/'
-        ?>';
+    <?php
+        // needs to be included in lib/include/html_head.inc.php as well
+        include 'app/views/WysiwygHtmlHeadBeforeJS.php';
+    ?>
     </script>
     <?= PageLayout::getHeadElements() ?>
 
@@ -26,11 +25,11 @@
         STUDIP.jsupdate_enable = true;
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
-        STUDIP.WYSIWYG = <?=
-            // set STUDIP.WYSIWYG in lib/include/html_head.inc.php as well
-            \Config::get()->WYSIWYG ? 'true' : 'false'
-        ?>;
     </script>
+    <?php
+        // needs to be included in lib/include/html_head.inc.php as well
+        include 'app/views/WysiwygHtmlHead.php';
+    ?>
 </head>
 
 <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">

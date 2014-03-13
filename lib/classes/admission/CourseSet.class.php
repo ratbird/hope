@@ -86,6 +86,7 @@ class CourseSet
     public function __construct($setId='') {
         $this->id = $setId;
         $this->name = _("Anmeldeset");
+        $this->algorithm = new RandomAlgorithm();
         // Define autoload function for admission rules.
         spl_autoload_register(array('AdmissionRule', 'getAvailableAdmissionRules'));
         // Define autoload function for admission rules.

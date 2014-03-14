@@ -152,7 +152,7 @@ use Studip\Button, Studip\LinkButton;
             <select class="user_form" name="select_dom_id">
                 <option value="0"><?= _("-- bitte Nutzerdomäne auswählen --") ?></option>
                 <? foreach($domains as $domain) : ?>
-                <option value="<?= $domain->getID() ?>"><?= $domain->getName() ?></option>
+                <option value="<?= $domain->getID() ?>"><?= htmlReady($domain->getName()) ?></option>
                 <? endforeach ?>
             </select>
         </td>

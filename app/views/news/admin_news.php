@@ -33,13 +33,13 @@
         <input class="news_date" type="text" size="12" name="news_startdate" aria-label="<?= _('Ankündigungen anzeigen, die ab diesem Datum sichtbar sind') ?>" value="<?= ($news_startdate) ? date('d.m.Y', $news_startdate) : '' ?>"></label>
         &nbsp;&nbsp;
         <label><?= _("bis:") ?>
-        <input class="news_date" type="text" size="12" name="news_enddate" aria-label="<?= _('Anzeige anzeigen, die vor diesem Datum sichtbar sind') ?>" value="<?= ($news_enddate) ? date('d.m.Y', $news_enddate) : '' ?>"></label>
+        <input class="news_date" type="text" size="12" name="news_enddate" aria-label="<?= _('Ankündigungen anzeigen, die vor diesem Datum sichtbar sind') ?>" value="<?= ($news_enddate) ? date('d.m.Y', $news_enddate) : '' ?>"></label>
         &nbsp;&nbsp;
         <?=Button::create(_('Filter anwenden'), 'apply_news_filter', array('aria-label' => _('Liste mit Suchbegriff und/oder Zeitraum filtern')))?>
         </th></tr></thead>
         <? if ($filter_text) : ?>
             <tfoot><tr><td colspan="1">
-            <?=$filter_text?>
+            <?=htmlReady($filter_text)?>
             </td><td><div class="news_reset_filter">
             <?=Button::create(_('Auswahl aufheben'), 'reset_filter')?>
             </div>
@@ -90,7 +90,7 @@
                         <td><input type="CHECKBOX" name="mark_news[]" value="<?=$news['object']->news_id.'_'.$news['range_id']?>" aria-label="<?= _('Diese Ankündigung zum Entfernen vormerken')?>" <?=tooltip(_("Diese Ankündigung zum Entfernen vormerken"),false)?>></td>
                         <td><?=htmlReady($news['object']->topic)?></td>
                         <? list ($body, $admin_msg) = explode("<admin_msg>", $news['object']->body); ?>
-                        <td><?=htmlready($news['object']->author)?></td>
+                        <td><?=htmlReady($news['object']->author)?></td>
                         <td><?=strftime("%d.%m.%y", $news['object']->date)?></td>
                         <td><?=strftime("%d.%m.%y", $news['object']->date + $news['object']->expire)?></td>
                         <td>

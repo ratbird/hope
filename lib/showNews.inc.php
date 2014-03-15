@@ -66,10 +66,13 @@ function process_news_commands(&$cmd_data)
 function delete_comments($delete_comments_array = '') 
 {
     $text = '';
+    $confirmed = false;
     if (! is_array($delete_comments_array))
         $delete_comments_array = array($delete_comments_array);
-    if (Request::submitted('yes'))
+    if (Request::submitted('yes') AND Request::isPost()) {
+        CSRFProtection::verifySecurityToken();
         $confirmed = true;
+    }
     if ($confirmed) {
         foreach ($delete_comments_array as $comment_id) {
             $delete_comment = new StudipComments($comment_id);
@@ -109,10 +112,13 @@ function delete_comments($delete_comments_array = '')
 function delete_news($delete_news_array) 
 {
     $text = '';
+    $confirmed = false;
     if (! is_array($delete_news_array))
         $delete_news_array = array($delete_news_array);
-    if (Request::submitted('yes'))
+    if (Request::submitted('yes') AND Request::isPost()) {
+        CSRFProtection::verifySecurityToken();
         $confirmed = true;
+    }
     foreach ($delete_news_array as $news_id) {
         if ($news_id) {
             $delete_news = new StudipNews($news_id);
@@ -153,11 +159,14 @@ function delete_news($delete_news_array)
  */
 function remove_news($remove_array) 
 {
+    $confirmed = false;
     $question_text = array();
     if (! is_array($remove_array))
         return false;
-    if (Request::submitted('yes'))
+    if (Request::submitted('yes') AND Request::isPost()) {
+        CSRFProtection::verifySecurityToken();
         $confirmed = true;
+    }
     foreach ($remove_array as $news_id => $ranges) {
         $remove_news = new StudipNews($news_id);
         $remove_news_title = $remove_news->getValue('topic');
@@ -224,6 +233,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
     // delete order?
     if (is_array($news[Request::option('ndelete')])) {
+        CSRFProtection::verifySecurityToken();
         $question_text = delete_news(Request::option('ndelete'));
         $question_param = array('ndelete' => Request::option('ndelete'), 'yes' => 1);      
         // reload news items
@@ -233,6 +243,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     }
     // remove order?
     elseif ($news[Request::option('nremove')]) {
+        CSRFProtection::verifySecurityToken();
         $question_text = remove_news(array(Request::option('nremove') => $range_id));
         $question_param = array('nremove' => Request::option('nremove'), 'yes' => 1);      
         // reload news items

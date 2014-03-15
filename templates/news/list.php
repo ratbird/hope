@@ -1,5 +1,5 @@
 <? if(!empty($question_text)) : ?>
-    <?= createQuestion($question_text, 
+    <?= createQuestion2($question_text, 
             $question_param,
             array()); ?>
 <? endif ?>

@@ -63,15 +63,15 @@
         <? if ($may_edit): ?>
             <div align="center">
             <?= LinkButton::create(_('Bearbeiten'),
-                                       URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id']),
+                                       URLHelper::getURL('dispatch.php/news/edit_news/'.$news['news_id']),
                                        array('rel' => 'get_dialog', 'target' => '_blank')) ?>
             <? if ($may_unassign): ?>
                 <?= LinkButton::create(_('Entfernen'),
-                                       URLHelper::getLink('?nremove='.$news['news_id'].'#anker')) ?>
+                                       URLHelper::getURL('?nremove='.$news['news_id'].'#anker')) ?>
                             <? endif; ?>
             <? if ($may_delete): ?>
                 <?= LinkButton::create(_('Löschen'),
-                                       URLHelper::getLink('?ndelete='.$news['news_id'].'#anker')) ?>
+                                       URLHelper::getURL('?ndelete='.$news['news_id'].'#anker')) ?>
             <? endif; ?>
             </div>
         <? endif; ?>

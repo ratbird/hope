@@ -103,60 +103,6 @@ class NewsController extends StudipController
         );
     }
 
-    function display_action($range_id)
-    {
-        if (!$range_id) {
-            $this->set_status(400);
-            return $this->render_nothing();
-        }
-
-        if (!StudipNews::haveRangePermission('view', $range_id, $GLOBALS['user']->id)) {
-            $this->set_status(401);
-            return $this->render_nothing();
-        }
-
-        // Check if user wrote a comment
-        if (Request::submitted('accept') && trim(Request::get('comment_content'))) {
-            CSRFProtection::verifySecurityToken();
-            StudipComment::create(array(
-            'object_id' => Request::get('comsubmit'),
-            'user_id' => $GLOBALS['user']->id,
-            'content' => trim(Request::get('comment_content'))
-            ));
-        }
-
-        // Check if user wants to remove a announcement
-        if ($news_id = Request::get('remove_news')) {
-            $news = new StudipNews($news_id);
-            $range = Request::get('news_range');
-            if ($news->havePermission('unassign', $range)) {
-                if (Request::get('confirm')) {
-                    $news->deleteRange($range);
-                    $news->store();
-                } else {
-                    $this->question = createQuestion(_('Ankündigung wirklich aus diesem Bereich entfernen?'), array('remove_news' => $news_id, 'news_range' => $range, 'confirm' => true));
-                }
-            }
-        }
-
-        // Check if user wants to delete an announcement
-        if ($news_id = Request::get('delete_news')) {
-            $news = new StudipNews($news_id);
-            if ($news->havePermission('delete')) {
-                if (Request::get('confirm')) {
-                    $news->delete();
-                } else {
-                    $this->question = createQuestion(_('Ankündigung wirklich löschen?'), array('delete_news' => $news_id, 'confirm' => true));
-                }
-            }
-        }
-
-        $this->news = StudipNews::GetNewsByRange($range_id, true, true);
-        $this->perm = StudipNews::haveRangePermission('edit', $range_id);
-        $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
-
-    }
-
     /**
      * @addtogroup notifications
      *
@@ -406,8 +352,8 @@ class NewsController extends StudipController
             }
         }
         // prepare to save news
-        if (Request::submitted('save_news')) {
-        	CSRFProtection::verifyUnsafeRequest();
+        if (Request::submitted('save_news') AND Request::isPost()) {
+        	CSRFProtection::verifySecurityToken();
             //prepare ranges array for already assigned news_ranges
             foreach($news->getRanges() as $range_id)
                 $this->ranges[$range_id] = get_object_type($range_id, array('global', 'fak', 'inst', 'sem', 'user'));
@@ -440,7 +386,7 @@ class NewsController extends StudipController
                     }
             // save news
             if ($news->validate() AND !$error) {
-                if (!id)
+                if (!$id)
                     NotificationCenter::postNotification('NewsDidCreate', $news->getId());
                 elseif (($news->getValue('user_id') != $GLOBALS['auth']->auth['uid'])) {
                     $news->setValue('chdate_uid', $GLOBALS['auth']->auth['uid']);
@@ -523,7 +469,7 @@ class NewsController extends StudipController
                 PageLayout::postMessage(MessageBox::error(_('Das Startdatum muss vor dem Enddatum liegen.')));
 
             if (strlen(trim(Request::get('news_searchterm'))) >= 3)
-                $this->news_searchterm = htmlReady(Request::get('news_searchterm'));
+                $this->news_searchterm = Request::get('news_searchterm');
             $this->news_startdate = $this->getTimeStamp(Request::get('news_startdate'), 'start');
             $this->news_enddate = $this->getTimeStamp(Request::get('news_enddate'), 'end');
         }
@@ -571,7 +517,7 @@ class NewsController extends StudipController
             if (is_array($this->news_items[$type])) {
                 foreach($this->news_items[$type] as $key => $news) {
                     // has trash icon been clicked?
-                    if (Request::submitted('news_remove_'.$news['object']->news_id.'_'.$news['range_id'])) {
+                    if (Request::submitted('news_remove_'.$news['object']->news_id.'_'.$news['range_id']) AND Request::isPost()) {
                         $this->flash['question_text'] = remove_news(array($news['object']->news_id => $news['range_id']));
                         $this->flash['question_param'] = array('mark_news' => array($news['object']->news_id.'_'.$news['range_id']),
                                                                'remove_marked_news' => 1);

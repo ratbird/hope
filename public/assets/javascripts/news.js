@@ -42,7 +42,7 @@ STUDIP.News = {
     },
 
     get_dialog: function (id, route, from_x, from_y) {
-    // initialize dialog
+        // initialize dialog
         jQuery('body').append('<div id="' + id + '"></div>');
         jQuery('#' + id).dialog({ 
             modal: true, 
@@ -71,10 +71,10 @@ STUDIP.News = {
         jQuery('#' + id).dialog('option', 'position', [from_x - 50, from_y - 20]);
         jQuery('#' + id).dialog('widget').css('opacity', 0);
         jQuery('#' + id).dialog('widget').animate({
-            width: dialog_width,
-            height: dialog_height,
-            left: (window.innerWidth / 2) - (dialog_width / 2),
-            top: jQuery(document).scrollTop() + (window.innerHeight / 2) - (dialog_height / 2),
+            width: STUDIP.News.dialog_width,
+            height: STUDIP.News.dialog_height,
+            left: (window.innerWidth / 2) - (STUDIP.News.dialog_width / 2),
+            top: jQuery(document).scrollTop() + (window.innerHeight / 2) - (STUDIP.News.dialog_height / 2),
             opacity: 1
         }, {
             duration: 400,
@@ -89,18 +89,18 @@ STUDIP.News = {
                 jQuery('#' + id).dialog('widget').stop(true, true);
                 // set to full size (even if dialog.close was triggered before)
                 jQuery('#' + id).dialog('widget').animate({
-                    left: (window.innerWidth / 2) - (dialog_width / 2),
-                    top: jQuery(document).scrollTop() + (window.innerHeight / 2) - (dialog_height / 2),
+                    left: (window.innerWidth / 2) - (STUDIP.News.dialog_width / 2),
+                    top: jQuery(document).scrollTop() + (window.innerHeight / 2) - (STUDIP.News.dialog_height / 2),
                     opacity: 1
                 }, 0);
                 jQuery('#' + id).dialog({
-                    height: dialog_height,
-                    width: dialog_width
+                    height: STUDIP.News.dialog_height,
+                    width: STUDIP.News.dialog_width
                 });
                 jQuery('#' + id).html(html);
                 jQuery('#' + id + '_content').css({
-                    'height' : dialog_height - 110 + "px", 
-                    'maxHeight': dialog_height - 110 + "px"
+                    'height' : STUDIP.News.dialog_height - 110 + "px", 
+                    'maxHeight': STUDIP.News.dialog_height - 110 + "px"
                 });
                 jQuery('.ui-dialog-content').css({'padding-right' : '1px'});
 
@@ -110,11 +110,11 @@ STUDIP.News = {
                 });
                 jQuery('#' + id + ' form').live('submit', function (event) {
                     event.preventDefault();
-                    button = jQuery(this).data('clicked').attr('name');
-                    route = jQuery(this).attr('action');
-                    form_data = jQuery(this).serialize() + '&' + button + '=1';
+                    var button = jQuery(this).data('clicked').attr('name');
+                    var form_route = jQuery(this).attr('action');
+                    var form_data = jQuery(this).serialize() + '&' + button + '=1';
                     jQuery(this).find('input[name=' + button + ']').showAjaxNotification('left');
-                    STUDIP.News.update_dialog(id, route, form_data);
+                    STUDIP.News.update_dialog(id, form_route, form_data);
                 });
 
                 // fix added elements (as in application.js)
@@ -135,20 +135,20 @@ STUDIP.News = {
     },
 
     update_dialog: function (id, route, form_data) {
-        if (!pending_ajax_request) {
-            pending_ajax_request = true;
+        if (!STUDIP.News.pending_ajax_request) {
+        	STUDIP.News.pending_ajax_request = true;
             jQuery.ajax({
                 'url': route,
                 'type': 'POST',
                 'data': form_data,
                 'dataType': 'HTML',
                 'success': function (html) {
-                    pending_ajax_request = false;
+            	    STUDIP.News.pending_ajax_request = false;
                     if (html.length > 0) {
                         jQuery('#' + id).html(html);
                         jQuery('#' + id + '_content').css({
-                            'height' : dialog_height - 110 + "px", 
-                            'maxHeight': dialog_height - 110 + "px"
+                            'height' : STUDIP.News.dialog_height - 110 + "px", 
+                            'maxHeight': STUDIP.News.dialog_height - 110 + "px"
                         });
                         // scroll to anker
                         var obj = jQuery('a[name=anker]');
@@ -161,7 +161,7 @@ STUDIP.News = {
                         if (obj.length > 0) {
                             jQuery('#admin_news_form').submit();
                         } else {
-                            url = location.href.split('?');
+                            var url = location.href.split('?');
                             location.replace(url[0] + '?nsave=1');
                         }
                     }
@@ -177,7 +177,7 @@ STUDIP.News = {
                     });
                 },
                 'fail': function () {
-                    pending_ajax_request = false;
+                	STUDIP.News.pending_ajax_request = false;
                     alert("Fehler beim Aufruf des News-Controllers");
                 }
             });
@@ -203,15 +203,15 @@ STUDIP.News = {
 };
 
 jQuery(function () {
-    dialog_height = window.innerHeight - 60;
-    dialog_width = window.innerWidth * 1 / 2;
-    if (dialog_width < 550) {
-        dialog_width = 550;
+    STUDIP.News.dialog_height = window.innerHeight - 60;
+    STUDIP.News.dialog_width = window.innerWidth * 1 / 2;
+    if (STUDIP.News.dialog_width < 550) {
+    	STUDIP.News.dialog_width = 550;
     }
-    if (dialog_height < 400) {
-        dialog_height = 400;
+    if (STUDIP.News.dialog_height < 400) {
+    	STUDIP.News.dialog_height = 400;
     }
-    pending_ajax_request = false;
+    STUDIP.News.pending_ajax_request = false;
 
     jQuery('a[rel~="get_dialog"]').live('click', function (event) {
         event.preventDefault();

@@ -9,8 +9,8 @@
               'news_allow_comments' => $news['allow_comments'],
               'news_topic' => $news['topic'],
               'news_body' => $news['body'],
-              'news_date' => $news['date'],
-              'news_expire' => $news['expire'],
+              'news_startdate' => ($news['date']) ? date('d.m.Y', $news['date']) : "",
+              'news_enddate' => ($news['expire']) ? date('d.m.Y', $news['date']+$news['expire']) : "",
               'news_allow_comments' => $news['allow_comments']) ?>
     <?=createQuestion2($flash['question_text'],
         array_merge($flash['question_param'], $form_content),

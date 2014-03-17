@@ -197,6 +197,7 @@ class Contacts extends \RESTAPI\RouteMap
             $this->error(409, 'Duplicate');
         }
 
+        AddNewContact($user_id);
         $success = InsertPersonStatusgruppe($user_id, $group_id);
 
         if (!$success) {

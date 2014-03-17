@@ -206,7 +206,7 @@ class Forum extends \RESTAPI\RouteMap
     public function addForumEntry($parent_id)
     {
         $parent = $this->findEntry($parent_id);
-        $cid = $parent['course_id'];
+        $cid = substr($parent['course'], strrpos($parent['course'], "/") + 1);
 
         $perm = self::isArea($entry) ? 'add_area' : 'add_entry';
 
@@ -246,11 +246,11 @@ class Forum extends \RESTAPI\RouteMap
     public function updateForumEntry($entry_id)
     {
         $entry = $this->findEntry($entry_id);
-        $cid = $entry['course_id'];
+        $cid = substr($entry['course'], strrpos($entry['course'], "/") + 1);
 
         $perm = self::isArea($entry) ? 'edit_area' : 'edit_entry';
 
-        if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has($perm, $cid)) {
+        if (!\ForumPerm::hasEditPerms($entry_id) || !\ForumPerm::has($perm, $cid)) {
             $this->error(401);
         }
 
@@ -284,13 +284,9 @@ class Forum extends \RESTAPI\RouteMap
     public function deleteForumEntry($entry_id)
     {
         $entry = $this->findEntry($entry_id);
-        $cid = $entry['course_id'];
-
-         if (!\ForumPerm::hasEditPerms($entry_id) && !\ForumPerm::has('remove_entry', $cid)) {
-            $this->error(401);
-        }
-
-        if (!\ForumPerm::has($perm, $cid)) {
+        $cid = substr($entry['course'], strrpos($entry['course'], "/") + 1);
+        
+        if (!\ForumPerm::hasEditPerms($entry_id) || !\ForumPerm::has('remove_entry', $cid)) {
             $this->error(401);
         }
 
@@ -341,7 +337,7 @@ class Forum extends \RESTAPI\RouteMap
         $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
-
+        
         return $entry;
     }
 

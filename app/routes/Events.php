@@ -79,8 +79,8 @@ class Events extends \RESTAPI\RouteMap
             $this->halt(500);
         }
 
-        $filename = $this->urlf('%s/export/%s', array($GLOBALS['TMP_PATH'], $export->getTempFileName()));
-
+        $filename = sprintf('%s/export/%s', $GLOBALS['TMP_PATH'], $export->getTempFileName());
+        
         $this->sendFile($filename, array(
                             'type' => 'text/calendar',
                             'filename' => 'studip.ics'

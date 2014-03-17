@@ -58,7 +58,7 @@ jQuery(function ($) {
         }
         textarea.val(getHtml(textarea.val())); // convert plain text to html
 
-        // create new toolbar
+        // create new toolbar container
         var textareaWidth = (textarea.width() / textarea.parent().width() * 100) + '%',
             toolbarId = createNewId('cktoolbar'); // needed for sharedSpaces
             toolbar = $('<div>')
@@ -73,7 +73,9 @@ jQuery(function ($) {
         CKEDITOR.replace(textarea[0], {
             width: textareaWidth,
             skin: 'studip',
-            extraPlugins: 'studip-wiki,studip-upload',
+            extraPlugins: 'studip-wiki'
+                // only enable uploads in courses with a file section
+                + ($('li#nav_course__files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {

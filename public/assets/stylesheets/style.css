@@ -274,8 +274,8 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 }
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
-  background-image: url("../images//icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images//icons/16/blue/arr_1down.png") 1x,url("../images//icons/32/blue/arr_1down.png") 2x);
+  background-image: url("../images/icons/16/blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x,url("../images/icons/32/blue/arr_1down.png") 2x);
   color: #000;
   cursor: pointer;
 }
@@ -651,8 +651,8 @@ table.default th.actions {
   float: none;
 }
 table.default tbody.toggleable.toggled .toggle-switch {
-  background-image: url("../images//icons/16//blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images//icons/16//blue/arr_1right.png") 1x,url("../images//icons/32//blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/16//blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1right.png") 1x,url("../images/icons/32//blue/arr_1right.png") 2x);
 }
 table.default tbody.toggleable.toggled tr:not(:first-child) {
   display: none;
@@ -663,8 +663,8 @@ table.default tbody.toggleable .toggle-switch {
   text-shadow: none;
   background-color: transparent;
   border: 0;
-  background-image: url("../images//icons/16//blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images//icons/16//blue/arr_1down.png") 1x,url("../images//icons/32//blue/arr_1down.png") 2x);
+  background-image: url("../images/icons/16//blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1down.png") 1x,url("../images/icons/32//blue/arr_1down.png") 2x);
   display: inline-block;
   height: 16px;
   text-align: center;
@@ -856,15 +856,15 @@ input[type=checkbox].studip_checkbox {
   display: none;
 }
 input[type=checkbox].studip_checkbox + label {
-  background-image: url("../images//icons/16//black/checkbox-unchecked.png");
-  background-image: -webkit-image-set(url("../images//icons/16//black/checkbox-unchecked.png") 1x,url("../images//icons/32//black/checkbox-unchecked.png") 2x);
+  background-image: url("../images/icons/16//black/checkbox-unchecked.png");
+  background-image: -webkit-image-set(url("../images/icons/16//black/checkbox-unchecked.png") 1x,url("../images/icons/32//black/checkbox-unchecked.png") 2x);
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
 input[type=checkbox].studip_checkbox:checked + label {
-  background-image: url("../images//icons/16//black/checkbox-checked.png");
-  background-image: -webkit-image-set(url("../images//icons/16//black/checkbox-checked.png") 1x,url("../images//icons/32//black/checkbox-checked.png") 2x);
+  background-image: url("../images/icons/16//black/checkbox-checked.png");
+  background-image: -webkit-image-set(url("../images/icons/16//black/checkbox-checked.png") 1x,url("../images/icons/32//black/checkbox-checked.png") 2x);
 }
 .submit_wrapper {
   padding: 0;
@@ -2225,19 +2225,19 @@ div.clear {
   color: #6e6e6e;
   display: block;
   background: no-repeat left center;
-  background-image: url("../images//icons/16/grey/arr_1right.png");
-  background-image: -webkit-image-set(url("../images//icons/16/grey/arr_1right.png") 1x,url("../images//icons/32/grey/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/grey/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1x,url("../images/icons/32/grey/arr_1right.png") 2x);
   line-height: 20pt;
   margin-left: 1em;
   padding-left: 20px;
 }
 #tabs2 li:hover a {
-  background-image: url("../images//icons/16/black/arr_1right.png");
-  background-image: -webkit-image-set(url("../images//icons/16/black/arr_1right.png") 1x,url("../images//icons/32/black/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/black/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1x,url("../images/icons/32/black/arr_1right.png") 2x);
 }
 #tabs2 li.current a {
-  background-image: url("../images//icons/16/red/arr_1down.png");
-  background-image: -webkit-image-set(url("../images//icons/16/red/arr_1down.png") 1x,url("../images//icons/32/red/arr_1down.png") 2x);
+  background-image: url("../images/icons/16/red/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1down.png") 1x,url("../images/icons/32/red/arr_1down.png") 2x);
 }
 #tabs2 a:hover,
 #tabs2 li:hover a,

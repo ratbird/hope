@@ -194,7 +194,7 @@ class Contacts extends \RESTAPI\RouteMap
         // prevent duplicates
         $exists = $group->members->findBy('user_id', $user_id)->first();
         if ($exists) {
-            $this->error(204);
+            $this->halt(204);
         }
 
         AddNewContact($user_id);

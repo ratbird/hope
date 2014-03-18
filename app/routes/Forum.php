@@ -206,7 +206,7 @@ class Forum extends \RESTAPI\RouteMap
     public function addForumEntry($parent_id)
     {
         $parent = $this->findEntry($parent_id);
-        $cid = substr($parent['course'], strrpos($parent['course'], "/") + 1);
+        $cid = $parent['course_id'];
 
         $perm = self::isArea($entry) ? 'add_area' : 'add_entry';
 
@@ -246,7 +246,7 @@ class Forum extends \RESTAPI\RouteMap
     public function updateForumEntry($entry_id)
     {
         $entry = $this->findEntry($entry_id);
-        $cid = substr($entry['course'], strrpos($entry['course'], "/") + 1);
+        $cid = $parent['course_id'];
 
         $perm = self::isArea($entry) ? 'edit_area' : 'edit_entry';
 
@@ -284,8 +284,8 @@ class Forum extends \RESTAPI\RouteMap
     public function deleteForumEntry($entry_id)
     {
         $entry = $this->findEntry($entry_id);
-        $cid = substr($entry['course'], strrpos($entry['course'], "/") + 1);
-        
+        $cid = $parent['course_id'];
+
         if (!\ForumPerm::hasEditPerms($entry_id) || !\ForumPerm::has('remove_entry', $cid)) {
             $this->error(401);
         }
@@ -334,10 +334,11 @@ class Forum extends \RESTAPI\RouteMap
 
         $entry['subject']      = $raw['name'];
         $entry['user']         = $this->urlf('/user/%s', array(htmlReady($raw['user_id'])));
+        $entry['course_id']    = $raw['seminar_id'];
         $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
-        
+
         return $entry;
     }
 

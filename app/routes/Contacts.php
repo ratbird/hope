@@ -261,7 +261,7 @@ class Contacts extends \RESTAPI\RouteMap
             $result[$url] = array(
                 'id'            => $contact->id,
                 'owner'         => $this->urlf('/user/%s', array(htmlReady($contact->owner_id))),
-                'friend'        => $this->minimalUserToJSON($contact->user_id, array($contact->friend->getFullName())),
+                'friend'        => $this->minimalUserToJSON($contact->user_id, $contact->friend->getFullName()),
                 'buddy'         => (bool) $contact->buddy,
                 'calpermission' => (bool) $contact->calpermission
             );

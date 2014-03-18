@@ -25,13 +25,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.hover_box div {
-  display: inline;
-}
-.hover_box .action_icons {
-  display: inline;
-  margin-left: 15px;
-}
 a,
 a:link,
 a:visited {
@@ -281,8 +274,8 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 }
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x,url("../images/icons/32/blue/arr_1down.png") 2x);
+  background-image: url("../images//icons/16/blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images//icons/16/blue/arr_1down.png") 1x,url("../images//icons/32/blue/arr_1down.png") 2x);
   color: #000;
   cursor: pointer;
 }
@@ -3320,10 +3313,17 @@ a.opengraph_info:hover {
 .pagination .next a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
 }
-#rulelist div.hover_box {
-    display: list-item;
-    list-style-type: disc;
-    margin-left: 25px;
+#rulelist div {
+  display: list-item;
+  list-style-type: disc;
+  margin-left: 25px;
+}
+.hover_box div {
+  display: inline;
+}
+.hover_box .action_icons {
+  display: inline;
+  margin-left: 15px;
 }
 .condition {
   margin-left: 20px;
@@ -3338,7 +3338,7 @@ a.opengraph_info:hover {
   font-weight: normal;
 }
 .check_actions a {
-    cursor: pointer;
+  cursor: pointer;
 }
 #enrollment ul {
   list-style: none inside;

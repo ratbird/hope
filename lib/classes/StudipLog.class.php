@@ -230,7 +230,7 @@ class StudipLog
         // old id (still in DB) is in affected column
         $log_action_delete_institute = SimpleORMapCollection::createFromArray(
                 LogAction::findByName('INST_DEL'))->first();
-        $log_events_delete_institute = LogEvents::findBySQL(
+        $log_events_delete_institute = LogEvent::findBySQL(
                 "actions_id = ? AND info LIKE CONCAT('%', ?, '%')",
                 array($log_action_delete_institute->getId(), $needle));
         foreach ($log_events_delete_institute as $log_event) {

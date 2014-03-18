@@ -282,7 +282,7 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
   background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down") 1x,url("../images/icons/32/blue/arr_1down") 2x);
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x,url("../images/icons/32/blue/arr_1down.png") 2x);
   color: #000;
   cursor: pointer;
 }

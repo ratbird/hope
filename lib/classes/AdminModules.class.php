@@ -157,10 +157,10 @@ class AdminModules extends ModulesNotification {
                       $range_id);
     }
 
-    function getModuleLiteratureExistingItems($range_id) {
+    /*function getModuleLiteratureExistingItems($range_id) {
         $list_count = StudipLitList::GetListCountByRange($range_id);
         return ($list_count["visible_list"] || $list_count["invisible_list"]) ? $list_count["visible_list"] . "/" . $list_count["invisible_list"] : false;
-    }
+    }*/
 
     /*function moduleLiteratureDeactivate($range_id) {
         //return StudipLitList::DeleteListsByRange($range_id);
@@ -188,22 +188,33 @@ class AdminModules extends ModulesNotification {
 
     }*/
 
-    function getModuleScmExistingItems($range_id) {
+    /*function getModuleScmExistingItems($range_id) {
         $query = "SELECT COUNT(scm_id) FROM scm WHERE range_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         return $statement->fetchColumn();
-    }
+    }*/
 
     /*function moduleScmDeactivate($range_id) {
         DBManager::get()
             ->prepare("DELETE FROM scm WHERE range_id = ?")
             ->execute(array($range_id));
     }*/
-
+    
+    /**
+     * prepares the database when activating the scm module.
+     * 
+     * @param $range_id id
+     */
     function moduleScmActivate($range_id) {
+        // check if existing items are available
+        $query = "SELECT COUNT(scm_id) FROM scm WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $existingItems = $statement->fetchColumn();
+        
         global $user, $SCM_PRESET;
-        if ($this->getModuleScmExistingItems($range_id)) {
+        if ($existingItems) {
             return;
         }
         //create a default folder

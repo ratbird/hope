@@ -318,8 +318,8 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['children'] = array();
-        foreach (array_values($children['list']) as $entry) {
-            $entry['children'][] = $this->convertEntry($entry);
+        foreach (array_values($children['list']) as $childentry) {
+            $entry['children'][] = $this->convertEntry($childentry);
         }
 
         return $entry;

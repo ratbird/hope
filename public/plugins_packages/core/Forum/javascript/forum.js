@@ -216,7 +216,7 @@ STUDIP.Forum = {
                     $('table[data-category-id=' + values.category_id +'] tr.add_area').show();
                     
                     // insert the new area at the end of the list (more precisely: add the exact position where the add-form has been)
-                    $(data).insertBefore('table[data-category-id=' + values.category_id + '] tr.sort-disabled');
+                    $(data).appendTo('table[data-category-id=' + values.category_id + ']');
                     
                     STUDIP.Forum.saveAreaOrder();
                 }

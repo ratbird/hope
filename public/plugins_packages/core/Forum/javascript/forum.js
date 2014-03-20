@@ -190,10 +190,10 @@ STUDIP.Forum = {
         this.cancelAddArea();
 
         jQuery('table[data-category-id=' + category_id + '] tr.add_area').hide();
-
+        
         $(template({
             category_id : category_id,
-        })).insertBefore('table[data-category-id=' + category_id + '] tr.sort-disabled');
+        })).appendTo('table[data-category-id=' + category_id + ']');
         
         // #FIXME: there should be a better way to initialize a single form
         STUDIP.Forms.initialize();

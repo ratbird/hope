@@ -189,7 +189,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     $module_count = 0;
     if ($object_connections->isConnected())
     {
-    	$caching_active = true;
+        $caching_active = true;
         foreach ($connected_modules as $key => $connection)
         {
             if (ELearningUtils::isCMSActive($connection["cms"]))

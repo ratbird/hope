@@ -18,7 +18,7 @@
         <?php } ?>
     </select>
     <a href="#" onclick="return STUDIP.UserFilter.removeConditionField($(this).parent())"
-		class="conditionfield_delete">
+        class="conditionfield_delete">
         <?= Assets::img('icons/16/blue/trash.png'); ?></a>
 </div>
 <?php } ?>

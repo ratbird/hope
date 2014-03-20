@@ -106,7 +106,7 @@ if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] AND ($GLOBALS['user']->id != 'nobody'
             die;
         }
     } elseif (! $perm->have_studip_perm('autor', $institute_id) AND (Request::option('follow_inst') == 'off')) {            
-	    $query = "DELETE FROM user_inst
+        $query = "DELETE FROM user_inst
                WHERE user_id = ?  AND Institut_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(

@@ -42,7 +42,7 @@ $target = NULL;
 FileLock::setDirectory($GLOBALS['TMP_PATH']);
 $lock = new FileLock('web-migrate');
 if ($lock->isLocked() && Request::int('release_lock')) {
-	$lock->release();
+    $lock->release();
 }
 
 if (Request::int('target')) {
@@ -54,9 +54,9 @@ $migrator = new Migrator($path, $version, $verbose);
 
 if (Request::submitted('start')) {
     set_time_limit(0);
-	$lock->lock(array('timestamp' => time(), 'user_id' => $GLOBALS['user']->id));
+    $lock->lock(array('timestamp' => time(), 'user_id' => $GLOBALS['user']->id));
     $migrator->migrate_to($target);
-	$lock->release();
+    $lock->release();
 }
 
 $current = $version->get();

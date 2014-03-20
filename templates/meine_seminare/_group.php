@@ -26,7 +26,7 @@ foreach ($groups as $group_id => $group_members):
                         <?= _('Gruppierung öffnen') ?>
                     </a>
                 <? endif; ?>
-				<?
+                <?
                 if (is_array($group_names[$group_id])) {
                     $group_name = $group_names[$group_id][1]
                                   ? $group_names[$group_id][1] . ' > ' . $group_names[$group_id][0]

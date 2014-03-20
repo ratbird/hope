@@ -59,7 +59,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     <caption>
                         <?=_("Anmelde- und Wartelisteneintr&auml;ge") ?>
                     </caption>
-					<colgroup>
+                    <colgroup>
                         <col width="10px">
                         <col width="25px">
                         <col >
@@ -191,7 +191,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 <td style="width:1px"></td>
                                 <td>
                                     <?= (InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) != '' ? Assets::img('icons/20/blue/institute.png') : 
-                                    	InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name'])))) ?>	
+                                        InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name'])))) ?>   
                                 </td>
 
                                 <td align="left">

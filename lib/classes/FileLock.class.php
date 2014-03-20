@@ -48,17 +48,17 @@ class FileLock
     {
         $this->filename = self::$directory . '.' . $id . '.json';
     }
-	
-	/**
-	 * Returns the filename of the lock.
-	 *
-	 * @return String Filename of the lock
-	 */
-	public function getFilename()
-	{
-		return $this->filename;
-	}
-	
+    
+    /**
+     * Returns the filename of the lock.
+     *
+     * @return String Filename of the lock
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+    
     /**
      * Establish or renew the current lock. Provided lock information will
      * be stored with the lock.

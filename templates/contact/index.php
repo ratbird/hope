@@ -18,7 +18,7 @@
         <? endif; ?>
             </td>
             <td align="right">
-			<span class="actions">
+            <span class="actions">
             <? if (!$search_exp || !$search_results): ?>
                     <?=  _('Person zum Eintrag in das Adressbuch suchen:') ?>
                     <input type="text" name="search_exp" value="<?= htmlReady($search_exp) ?>">

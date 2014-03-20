@@ -353,7 +353,7 @@ class NewsController extends StudipController
         }
         // prepare to save news
         if (Request::submitted('save_news') AND Request::isPost()) {
-        	CSRFProtection::verifySecurityToken();
+            CSRFProtection::verifySecurityToken();
             //prepare ranges array for already assigned news_ranges
             foreach($news->getRanges() as $range_id)
                 $this->ranges[$range_id] = get_object_type($range_id, array('global', 'fak', 'inst', 'sem', 'user'));
@@ -430,7 +430,7 @@ class NewsController extends StudipController
         $limit = 100;
         if (Request::get('news_filter') == 'set') {
             $this->news_searchterm = Request::option('news_filter_term');
-        	$this->news_startdate = Request::int('news_filter_start');
+            $this->news_startdate = Request::int('news_filter_start');
             $this->news_enddate = Request::int('news_filter_end');
         } else {
             $this->news_startdate = time();
@@ -492,7 +492,7 @@ class NewsController extends StudipController
                 $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen im Bereich "%s", die ab dem %s sichtbar sind.'), $this->area_structure[$this->area_type]['title'], date('d.m.Y', $this->news_startdate));
             elseif ($this->news_enddate)
                 $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen im Bereich "%s", die vor dem %s sichtbar sind.'), $this->area_structure[$this->area_type]['title'], date('d.m.Y', $this->news_enddate));
-        	else
+            else
                 $this->filter_text = sprintf(_('Angezeigt werden Ankündigungen im Bereich "%s".'), $this->area_structure[$this->area_type]['title']);
         } elseif ($this->news_searchterm) {
             if ($this->news_startdate AND $this->news_enddate)

@@ -115,7 +115,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                 if ($connected_cms[$cms]->user->isConnected())
                 {
                     $startpage_message = "";
-                	$account_message = "<b>" . _("Loginname: ") . "</b>" . $connected_cms[$cms]->user->getUsername();
+                    $account_message = "<b>" . _("Loginname: ") . "</b>" . $connected_cms[$cms]->user->getUsername();
                     $start_link = $connected_cms[$cms]->link->getStartpageLink(_($connected_cms[$cms]->getName()));
                     if ($start_link != false) {
                         $msg_text = _('Hier gelangen Sie direkt zur Startseite im angebundenen System:'). ' ' . $start_link . '<br>';

@@ -223,7 +223,7 @@ else
                 <? } ?>
             </tr>
         </table>
-        <table class="default">
+        <table class="default nohover">
             <tr>
                 <td width="%">&nbsp;
                 <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="25" height="10" border="0">

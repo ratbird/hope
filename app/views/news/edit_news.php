@@ -1,8 +1,8 @@
 <? use Studip\Button, Studip\LinkButton ?>
 <? if(!empty($flash['question_text'])) : ?>
-    <? $form_content = array('news_isvisible' => htmlspecialchars(serialize($news_isvisible)),
-              'news_selectable_areas' => htmlspecialchars(serialize($area_options_selectable)), 
-              'news_selected_areas' => htmlspecialchars(serialize($area_options_selected)), 
+    <? $form_content = array('news_isvisible' => htmlReady(serialize($news_isvisible)),
+              'news_selectable_areas' => htmlReady(serialize($area_options_selectable)), 
+              'news_selected_areas' => htmlReady(serialize($area_options_selected)), 
               'news_basic_js' => '',
               'news_comments_js' => '',
               'news_areas_js' => '',
@@ -22,9 +22,9 @@
 <input type="hidden" name="news_basic_js" value=""> 
 <input type="hidden" name="news_comments_js" value=""> 
 <input type="hidden" name="news_areas_js" value=""> 
-<input type="hidden" name="news_isvisible" value="<?=htmlspecialchars(serialize($news_isvisible))?>"> 
+<input type="hidden" name="news_isvisible" value="<?=htmlReady(serialize($news_isvisible))?>"> 
 <input type="hidden" name="news_selectable_areas" value="<?=htmlReady(serialize($area_options_selectable));?>"> 
-<input type="hidden" name="news_selected_areas" value="<?=htmlspecialchars(serialize($area_options_selected))?>"> 
+<input type="hidden" name="news_selected_areas" value="<?=htmlReady(serialize($area_options_selected))?>"> 
 <div id="news_dialog_content" class="news_dialog_content">
 <? if (count($_SESSION['messages'])) : ?>
     <? $anker = ''; ?>

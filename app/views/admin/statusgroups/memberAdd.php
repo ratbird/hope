@@ -3,9 +3,9 @@
 <? endif; ?>
 <form method="POST" action="<?= $controller->url_for("admin/statusgroups/memberAdd/{$group->id}") ?>">
     <input type="hidden" name="search_persons_selectable_hidden" value="<?=htmlReady(serialize($selectablePersonsHidden));?>">
-    <input type="hidden" name="search_persons_selected_hidden" value="<?=htmlspecialchars(serialize($selectedPersonsHidden))?>">
-    <input type="hidden" name="last_search_hidden" value="<?= $search?>">
-    <input type="hidden" name="last_search_preset" value="<?= $searchPreset?>">
+    <input type="hidden" name="search_persons_selected_hidden" value="<?=htmlReady(serialize($selectedPersonsHidden))?>">
+    <input type="hidden" name="last_search_hidden" value="<?= htmlReady($search)?>">
+    <input type="hidden" name="last_search_preset" value="<?= htmlReady($searchPreset)?>">
     <input type="hidden" name="not_first_call" value="true">
     <?= CSRFProtection::tokenTag() ?>
 
@@ -13,7 +13,7 @@
     <div id="search_persons" style="width: 800px;">
         <label>
             <input name="freesearch" type="text" placeholder="<?=_('Suchen')?>"
-                   aria-label="<?= _('Suchbegriff') ?>" style="width: 45%" value="<?= $search ?>">
+                   aria-label="<?= _('Suchbegriff') ?>" style="width: 45%" value="<?= htmlReady($search) ?>">
             <input type="image" name="submit_search" class="stay_on_dialog" src="<?= Assets::image_path('icons/16/blue/search.png')?>"
                    aria-label="<?= _('Suche starten') ?>">
         </label>

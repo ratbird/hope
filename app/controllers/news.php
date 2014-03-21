@@ -380,7 +380,7 @@ class NewsController extends StudipController
                             $changed = true;
                         }
                         else {
-                            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung für "%s".'), $area_title)));
+                            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung für "%s".'), htmlReady($area_title))));
                             $error++;
                         }
                     }

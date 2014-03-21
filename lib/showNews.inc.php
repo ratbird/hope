@@ -126,7 +126,7 @@ function delete_news($delete_news_array)
             if ($confirmed) {
                 $msg_object = new messaging();
                 if ($delete_news->havePermission('delete')) {
-                    PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde gelöscht.'), $delete_news->getValue('topic'))));
+                    PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde gelöscht.'), htmlReady($delete_news->getValue('topic')))));
                     if ($delete_news->getValue('user_id') != $GLOBALS['auth']->auth['uid']) {
                         setTempLanguage($delete_news->getValue('user_id'));
                         $msg = sprintf(_('Ihre Ankündigung "%s" wurde von einer Administratorin oder einem Administrator gelöscht!.'), $delete_news->getValue('topic'), get_fullname() . ' ('.get_username().')'). "\n";
@@ -136,7 +136,7 @@ function delete_news($delete_news_array)
                     $delete_news->delete();
                 }
                 else
-                    PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Löschen der Ankündigung "%s".'), $delete_news->getValue('topic'))));
+                    PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Löschen der Ankündigung "%s".'), htmlReady($delete_news->getValue('topic')))));
             }
         }
     }
@@ -186,13 +186,13 @@ function remove_news($remove_array)
                         $remove_news->deleteRange($range_id);
                     } else {
                         unset($ranges[$key]);
-                        PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s" aus diesem Bereich.'), $remove_news->getValue('topic'))));                            
+                        PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s" aus diesem Bereich.'), htmlReady($remove_news->getValue('topic')))));                            
                     }
                     if (count($ranges)) {
                         if (count($ranges) == 1)
-                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus dem Bereich entfernt.'), $remove_news->getValue('topic'))));
+                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus dem Bereich entfernt.'), htmlReady($remove_news->getValue('topic')))));
                         else
-                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus %s Bereichen entfernt.'), $remove_news->getValue('topic'), count($ranges))));
+                            PageLayout::postMessage(MessageBox::success(sprintf(_('Ankündigung "%s" wurde aus %s Bereichen entfernt.'), htmlReady($remove_news->getValue('topic')), count($ranges))));
                         $remove_news->store();
                     }
                 }

@@ -63,6 +63,10 @@ class CoreWiki implements StudipModule {
                     AND wiki.chdate > ?';
         }
         
+        $wikipage_stmt = DBManager::get()->prepare("SELECT * FROM wiki
+            WHERE keyword = ? AND range_id = ?
+                AND version = ?");
+        
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($user_id, $course_id, $since));
         
@@ -88,8 +92,9 @@ class CoreWiki implements StudipModule {
 
             $content = '';
             if ($row['version'] > 1) {
-                $diff_right = getWikiPage($row['keyword'], $row['version'] - 1);
-                $content = '<table>' . do_diff($diff_right['body'], $row['body']) .'</table>';
+                $wikipage_stmt->execute(array($row['keyword'], $row['range_id'], $row['version'] - 1));
+                $old_page = $wikipage_stmt->fetch(PDO::FETCH_ASSOC);
+                $content = '<table>' . do_diff($old_page['body'], $row['body']) .'</table>';
             } else {
                 $content = wikiReady($row['body']);
             }

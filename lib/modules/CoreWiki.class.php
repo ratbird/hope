@@ -69,15 +69,33 @@ class CoreWiki implements StudipModule {
         while ($row = $stmt->fetch()) {
             // use correct text depending on type of object
             if ($type == 'sem') {
-                $summary = sprintf('%s hat im Wiki der Veranstaltung "%s" die Seite "%s" geändert.',
-                    $row['fullname'], $row['Name'], $row['keyword']);
+                if ($row['version'] > 1) {
+                    $summary = sprintf('%s hat im Wiki der Veranstaltung "%s" die Seite "%s" geändert.',
+                        $row['fullname'], $row['Name'], $row['keyword']);
+                } else {
+                    $summary = sprintf('%s hat im Wiki der Veranstaltung "%s" die Seite "%s" erstellt.',
+                        $row['fullname'], $row['Name'], $row['keyword']);
+                }
             } else {
-                $summary = sprintf('%s hat im Wiki der Einreichtung "%s" die Seite "%s" geändert.',
-                    $row['fullname'], $row['Name'], $row['keyword']);
+                if ($row['version'] > 1) {
+                    $summary =  sprintf('%s hat im Wiki der Einreichtung "%s" die Seite "%s" geändert.',
+                        $row['fullname'], $row['Name'], $row['keyword']);
+                } else {
+                    $summary =  sprintf('%s hat im Wiki der Einreichtung "%s" die Seite "%s" erstellt.',
+                        $row['fullname'], $row['Name'], $row['keyword']);
+                }
             }
 
+            $content = '';
+            if ($row['version'] > 1) {
+                $diff_right = getWikiPage($row['keyword'], $row['version'] - 1);
+                $content = '<table>' . do_diff($diff_right['body'], $row['body']) .'</table>';
+            } else {
+                $content = wikiReady($row['body']);
+            }
+            
             $items[] = new ContentElement(
-                'Wiki: ' . $row['keyword'], $summary, $row['body'], $row['user_id'], $row['fullname'],
+                'Wiki: ' . $row['keyword'], $summary, $content, $row['user_id'], $row['fullname'],
                 URLHelper::getLink('wiki.php',
                     array('cid' => $row['range_id'], 'keyword' => $row['keyword'])),
                 $row['chdate']

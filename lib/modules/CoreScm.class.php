@@ -92,9 +92,9 @@ class CoreScm implements StudipModule {
                                        array('cid' => $row['range_id']));
 
             $items[] = new ContentElement(
-                'Info: ' . $row['tab_name'],
+                'Freie Informationsseite: ' . $row['tab_name'],
                 $summary,
-                $row['content'] ?: '',
+                formatReady($row['content']),
                 $row['user_id'],
                 $row['fullname'],
                 $link,

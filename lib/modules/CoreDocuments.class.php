@@ -73,7 +73,9 @@ class CoreDocuments implements StudipModule {
                 
                 // create ContentElement
                 $items[] = new ContentElement(
-                    _('Datei') . ': ' . $row['name'], $summary, $row['description'], $row['user_id'], $row['fullname'],
+                    _('Datei') . ': ' . $row['name'], $summary, 
+                    formatReady(GetDownloadLink($row['dokument_id'], $row['name'])),
+                    $row['user_id'], $row['fullname'],
                     URLHelper::getLink('folder.php#anker',
                         array('cid' => $row['seminar_id'], 'cmd' => 'tree', 'open' => $row['dokument_id'])),
                     $row['chdate']

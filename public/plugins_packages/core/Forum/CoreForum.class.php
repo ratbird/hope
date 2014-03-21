@@ -130,7 +130,7 @@ class CoreForum extends StudipPlugin implements ForumModule
                 $contents[] = new ContentElement(
                     _('Forum: ') . $obj['name'],
                     $summary,
-                    $post['content'],
+                    formatReady($post['content']),
                     $post['user_id'],
                     $post['author'],
                     PluginEngine::getURL($this, array(), 'index/index/' . $post['topic_id'] 

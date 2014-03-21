@@ -35,7 +35,7 @@ class OAuth extends Base
             // @todo
             # self::$consumer_key = $result['consumer_key'];
 
-            $query = "SELECT user_id FROM api_oauth_user_Mapping WHERE oauth_id = :oauth_id";
+            $query = "SELECT user_id FROM api_oauth_user_mapping WHERE oauth_id = :oauth_id";
             $statement = DBManager::get()->prepare($query);
             $statement->bindValue(':oauth_id', $result['user_id']);
             $statement->execute();
@@ -61,7 +61,7 @@ class OAuth extends Base
                 $statement->bindValue(':key', $rs['consumer_key']);
                 $statement->execute();
                 $id = $statement->fetchColumn();
-
+                
                 if ($id) {
                     return new self($id);
                 }
@@ -156,7 +156,7 @@ class OAuth extends Base
         }
 
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, true)->store();
-        self::getServer()->authorizeFinish(true, $this->getOAuthId($user_id));
+        self::getServer()->authorizeFinish(true, self::getOAuthId($user_id));
     }
 
     /**
@@ -180,13 +180,13 @@ class OAuth extends Base
                   JOIN oauth_server_registry
                   WHERE ost_usa_id_ref = :id AND osr_consumer_key = :key AND osr_consumer_secret = :secret";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':id', $this->getOAuthId($user_id));
+        $statement->bindValue(':id', self::getOAuthId($user_id));
         $statement->bindValue(':key', $this->auth_key);
         $statement->bindValue(':secret', $this->auth_secret);
         $statement->execute();
 
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, false)->store();
-        self::getServer()->authorizeFinish(false, $this->getOAuthId($user_id));
+        self::getServer()->authorizeFinish(false, self::getOAuthId($user_id));
     }
 
     /**
@@ -196,7 +196,7 @@ class OAuth extends Base
      * @param String $user_id Id of the user to get an oauth id for
      * @return String The mapped oauth id
      */
-    private function getOAuthId($user_id)
+    public static function getOAuthId($user_id)
     {
         $query = "SELECT oauth_id FROM api_oauth_user_mapping WHERE user_id = :id";
         $statement = DBManager::get()->prepare($query);

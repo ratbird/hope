@@ -463,7 +463,7 @@ function showDeleteDialog($keyword, $version) {
     if (!$willvanish) {
         $msg .= _("Diese Version ist derzeit aktuell. Nach dem Löschen wird die nächstältere Version aktuell.") . "<br>";
     } else {
-        $msg .= _("Diese Version ist die derzeit einzige. Nach dem Löschen ist die Seite komplet gelöscht.") . "<br>";
+        $msg .= _("Diese Version ist die derzeit einzige. Nach dem Löschen ist die Seite komplett gelöscht.") . "<br>";
     }
     //TODO: modaler dialog benutzen
     $msg.=LinkButton::create(_('Ja!'), URLHelper::getURL("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest"));

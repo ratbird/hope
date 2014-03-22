@@ -120,9 +120,6 @@ if ($flash['error']) {
                 <?= _('Filter auf Name/Nummer/Dozent:') ?>
                 <input type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
             </label>
-            <label class="caption">
-                <?= _('Veranstaltungszuordnung:') ?>
-            </label>
             <div id="instcourses">
             <?= $coursesTpl; ?>
             </div>

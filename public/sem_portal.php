@@ -237,7 +237,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
                     );
     if ($_SESSION['sem_portal']['bereich'] != 'mod') {
             $infobox[] =    array(  "kategorie" => _("Aktionen:"),
-                            "eintrag" => array(array(   'icon' => "icons/16/blue/download.png",
+                            "eintrag" => array(array(   'icon' => "icons/16/black/download.png",
                                                         "text" => '<a href="'.URLHelper::getLink('?send_excel=1').'">' . _("Download des Ergebnisses") . '</a>'))
                     );
     }

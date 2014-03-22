@@ -47,8 +47,7 @@ if ($flash['error']) {
         </label>
         <input type="text" size="60" maxlength="255" name="name"
             value="<?= $courseset ? htmlReady($courseset->getName()) : '' ?>"
-            required="required" aria-required="true"
-            placeholder="<?= _('Bitte geben Sie einen Namen für das Anmeldeset an') ?>"/>
+            required="required" aria-required="true"/>
         <? if (!$courseset || ($courseset->getUserId() == $GLOBALS['user']->id && !$instant_course_set_view)) : ?>
             <label for="private" class="caption">
                 <?= _('Sichtbarkeit:') ?>
@@ -220,7 +219,7 @@ if ($flash['error']) {
             ?>
         <? endif ?>
         <label for="infotext" class="caption">
-            <?= _('weitere Hinweise:') ?>
+            <?= _('Weitere Hinweise:') ?>
         </label>
         <textarea cols="60" rows="3" name="infotext"><?= $courseset ? htmlReady($courseset->getInfoText()) : '' ?></textarea>
         <div class="submit_wrapper">

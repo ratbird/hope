@@ -125,7 +125,7 @@ class Course_BasicdataController extends AuthenticatedController
             'type' => 'select',
             'value' => htmlReady($data['status']),
             'locked' => LockRules::Check($this->course_id, 'status'),
-            'choices' => $sem_types
+            'choices' => array_map('htmlReady', $sem_types)
         );
         $this->attributes[] = array(
             'title' => _("Art der Veranstaltung"),

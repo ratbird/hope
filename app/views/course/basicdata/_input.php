@@ -23,7 +23,7 @@ if ($input['type'] === "select") : ?>
     <? if ($input['choices']) : foreach ($input['choices'] as $choice_value => $choice_name) : ?>
         <option value="<?= htmlReady($choice_value) ?>"<?
             if ($choice_value == $input['value']) print " selected"
-            ?>><?= htmlReady($choice_name) ?></option>
+            ?>><?= $choice_name ?></option>
     <? endforeach; endif; ?>
     </select>
     <? endif ?>

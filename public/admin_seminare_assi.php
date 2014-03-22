@@ -1038,7 +1038,7 @@ if (Request::submitted('search_doz') || Request::submitted('search_dep') || Requ
         }
     elseif ((!$perm->have_perm("root")) && (!$perm->have_perm("admin")))
         {
-        if (!array_key_exists($user_id, $_SESSION['sem_create_data']['sem_doz'])) {
+        if (!array_key_exists($user_id, $_SESSION['sem_create_data']['sem_doz']) && !array_key_exists($user_id, $_SESSION['sem_create_data']['sem_dep'])) {
             $level=2;
             $errormsg=$errormsg."error§". sprintf(_("Sie m&uuml;ssen wenigstens sich selbst als %s f&uuml;r diese Veranstaltung angeben! Der Eintrag wird automatisch gesetzt."), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
             $_SESSION['sem_create_data']['sem_doz'][$user_id]= count($_SESSION['sem_create_data']['sem_doz']) + 1;

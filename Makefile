@@ -16,7 +16,7 @@ squeeze: less force_update
 	php cli/squeeze.php
 
 doc: force_update
-	doxygen tools/Doxyfile
+	doxygen Doxyfile
 
 test: force_update
 	phpunit -c test/phpunit/phpunit.xml

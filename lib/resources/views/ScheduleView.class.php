@@ -309,7 +309,7 @@ class ScheduleView {
 
         if ($print_view) {
             echo "<tr><td colspan=$glb_colspan><i>"._("Erstellt am")." ",date("d.m.y", time())," um ", date("G:i", time())," Uhr.</i></td>
-            <td align=\"right\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logos/logo2b.gif\"></td></tr></tr>";
+            <td align=\"right\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logos/logo2b.png\"></td></tr></tr>";
         } else {;
             //print view bottom
         }

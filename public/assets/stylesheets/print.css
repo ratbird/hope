@@ -101,7 +101,7 @@ div#layout_footer {
 }
 
 div#layout_footer:after {
-    content: url('../images/logos/logo2b.gif');
+    content: url('../images/logos/logo2b.png');
 }
 
 /* --- print-style for calendar api------------------------------------------ */

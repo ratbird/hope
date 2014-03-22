@@ -243,7 +243,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
     public function setHeaderData($ln = '', $lw = 0, $ht = '', $hs = '') {
         $logo_path = get_config("PDF_LOGO");
         if (!$ln) {
-            $ln = $logo_path ? $logo_path : '../../../public/assets/images/logos/logoklein.gif';
+            $ln = $logo_path ? $logo_path : '../../../public/assets/images/logos/logoklein.png';
         }
         $lw = 30;
         $ht = ($ht == '' ? $this->h_title : $ht);

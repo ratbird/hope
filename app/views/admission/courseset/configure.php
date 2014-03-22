@@ -124,13 +124,6 @@ if ($flash['error']) {
             <label class="caption">
                 <?= _('Veranstaltungszuordnung:') ?>
             </label>
-            <div>
-                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'check');"><?= _('alle') ?></a>
-                |
-                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'uncheck');"><?= ('keine') ?></a>
-                |
-                <a href="#" onclick="return STUDIP.Admission.checkUncheckAll('courses[]', 'invert');"><?= ('Auswahl umkehren') ?></a>
-            </div>
             <div id="instcourses">
             <?= $coursesTpl; ?>
             </div>

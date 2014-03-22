@@ -88,7 +88,7 @@ if ($flash['error']) {
                             $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
                             $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
                     <?= $instSearch ?>
-                    <br/><br/>
+                    <?= Assets::img('icons/16/blue/search.png', array('title' => _("Suche starten")))?>
                 </div>
                 <i><?=  _('Sie haben noch keine Einrichtung ausgewählt. Benutzen Sie obige Suche, um dies zu tun.') ?></i>
                 <?php } else { ?>

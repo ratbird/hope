@@ -148,7 +148,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $this->selectedSemester = Semester::findCurrent()->semester_id;
             }
             $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
-                ->withButton()
+                ->withoutButton()
                 ->render();
         } else {
             $this->myInstitutes = array();
@@ -349,7 +349,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             $this->selectedInstitutes[$institute] = new Institute($institute);
         }
         $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
-            ->withButton()
+            ->withOutButton()
             ->render();
     }
 

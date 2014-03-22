@@ -91,7 +91,7 @@ class ForumEntry {
     {
         $content = formatReady(ForumEntry::killEdit($description));
         $comment = ForumEntry::getEditComment($description, $anonymous);
-        return $content . ($comment ? '<i>' . $comment . '</i>' : '');
+        return $content . ($comment ? '<br><i>' . htmlReady($comment) . '</i>' : '');
     }
 
     /**

@@ -47,9 +47,9 @@
     </tr>
     <? endif; ?>
     <tr>
-        <td class="blank" valign="middle" align="left" style="padding-left:76px">
+        <td class="blank" valign="middle" align="left" style="padding-left:65px">
             <a href="http://www.studip.de">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoklein.gif" border="0"  <?=tooltip(_("Zur Portalseite"))?> >
+            <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoklein@2x.png" border="0" width="215" height="83"  <?=tooltip(_("Zur Portalseite"))?> >
             </a>
         </td>
         <td class="blank" align="right" nowrap valign="middle">

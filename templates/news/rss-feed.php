@@ -4,7 +4,7 @@
         <title><?= htmlReady(studip_utf8encode($title)) ?></title>
         <link><?= htmlReady(studip_utf8encode($studip_url)) ?></link>
         <image>
-            <url><?= Assets::image_path('logos/studipklein.gif') ?></url>
+            <url><?= Assets::image_path('logos/logoklein.png') ?></url>
             <title><?= htmlReady(studip_utf8encode($title)) ?></title>
             <link><?= htmlReady(studip_utf8encode($studip_url)) ?></link>
         </image>

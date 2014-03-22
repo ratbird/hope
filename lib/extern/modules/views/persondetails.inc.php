@@ -613,7 +613,12 @@ function kontakt ($module, $row, $separate = FALSE) {
         if (!$module->config->getValue("Contact", "hidepersname"))
             $out .= "<br><br>" . htmlReady($row['fullname'], TRUE) . "\n";
         if ($module->config->getValue('Contact', 'showinstgroup')) {
-            if ($gruppen = GetRoleNames(GetAllStatusgruppen($module->config->range_id, $row['user_id'])))
+            $allgroups = GetAllStatusgruppen($module->config->range_id, $row['user_id']);
+            array_walk($allgroups, function(&$v, $k, $user_id) {
+                $s = Statusgruppen::find($k);
+                $v['role']->name = htmlReady($s->getGenderedName($user_id));
+            }, $row['user_id']);
+            if ($gruppen = GetRoleNames($allgroups))
                 $out .= "<br>" . htmlReady(join(", ", array_values($gruppen)));
         }
         // display name of institution (as link)

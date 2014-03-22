@@ -62,7 +62,7 @@ class CoreOverview implements StudipModule {
                 $navigation->addSubNavigation('admin', new Navigation(_('Administration dieser Veranstaltung'), 'adminarea_start.php?new_sem=TRUE'));
             }
 
-            if (!$admission_binding && !$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $user->id != 'nobody') {
+            if (!$admission_binding && !$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $GLOBALS['user']->id != 'nobody') {
                 $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'meine_seminare.php?auswahl='.$course_id.'&cmd=suppose_to_kill'));
             }
         }

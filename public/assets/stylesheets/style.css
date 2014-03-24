@@ -774,17 +774,32 @@ table.default2 tbody.togglable th:before {
 .studip_form > fieldset {
   border: none;
   padding-left: 0;
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 10px;
 }
 .studip_form > fieldset > legend {
-  background-color: #899ab9;
-  color: white;
-  padding: 5px;
+  background-color: #E7EBF1;
+  color: #24437c;
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom: none;
+  padding: 0.6ex;
+  margin-left: -0.1ex;
   width: 100%;
   font-size: 12pt;
   font-weight: bold;
+  text-indent: 0.25ex;
 }
-.studip_form > fieldset > label {
+.studip_form > fieldset > label,
+.studip_form > fieldset > div {
+  text-indent: 0.25ex;
   padding: 1ex;
+}
+.studip_form > fieldset > button {
+  margin-left: 1ex;
 }
 .studip_form fieldset fieldset {
   border: none;
@@ -825,6 +840,7 @@ table.default2 tbody.togglable th:before {
   border: 1px solid #ccc;
   border-radius: 4px;
   color: #333;
+  margin-top: 1ex;
   transition: all 0.3s ease-out;
 }
 .studip_form input[type=date]:hover,
@@ -852,27 +868,14 @@ table.default2 tbody.togglable th:before {
 .studip_form select {
   height: 30px;
 }
-input[type=checkbox].studip_checkbox {
-  display: none;
-}
-input[type=checkbox].studip_checkbox + label {
-  background-image: url("../images/icons/16//black/checkbox-unchecked.png");
-  background-image: -webkit-image-set(url("../images/icons/16//black/checkbox-unchecked.png") 1x,url("../images/icons/32//black/checkbox-unchecked.png") 2x);
-  background-position: left center;
-  background-repeat: no-repeat;
-  padding-left: 20px;
-}
-input[type=checkbox].studip_checkbox:checked + label {
-  background-image: url("../images/icons/16//black/checkbox-checked.png");
-  background-image: -webkit-image-set(url("../images/icons/16//black/checkbox-checked.png") 1x,url("../images/icons/32//black/checkbox-checked.png") 2x);
-}
-.submit_wrapper {
+.studip_form .submit_wrapper {
   padding: 0;
-  margin-left: 5px;
+  margin-left: 0.5ex;
   background-color: #d1d1d1;
   border-top: 1px solid #1e3e70;
+  padding-left: 1.5ex;
 }
-.studip_input_wrapper {
+.studip_form .studip_input_wrapper {
   margin: 1ex;
   padding: 1ex;
 }

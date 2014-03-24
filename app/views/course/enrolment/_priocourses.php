@@ -34,8 +34,11 @@ tatsächlich belegen wollen') ?>
                         <?php $prios = array(); ?>
                         <?php foreach ($priocourses as $prio => $course): ?>
                             <?php
-                            $prios[$course->id]['name'] = htmlReady(my_substr($course->name,
-                                            0, 50));
+                            $name = $course->name;
+                            if (get_config('IMPORTANT_SEMNUMBER')) {
+                                $name = $course->veranstaltungsnummer.' '.$name;
+                            }
+                            $prios[$course->id]['name'] = htmlReady(my_substr($name, 0, 50));
                             $tooltxt                    = array();
                             $tooltxt[]                  = $course->veranstaltungsnummer;
                             $tooltxt[]                  = $course->name;

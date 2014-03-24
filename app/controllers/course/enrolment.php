@@ -125,7 +125,12 @@ class Course_EnrolmentController extends AuthenticatedController {
                         if ($limit = $courseset->getAdmissionRule('LimitedAdmission')) {
                             $msg_details[] = sprintf(_("Diese Veranstaltung gehört zu einem Anmeldeset mit %s Veranstaltungen. Sie können maximal %s davon belegen. Bei der Verteilung werden die von Ihnen gewünschten Prioritäten berücksichtigt."), count($courseset->getCourses()), $limit->getMaxNumber());
                             $this->user_max_limit = $limit->getMaxNumberForUser($user_id);
-                            $this->priocourses = Course::findMany($courseset->getCourses(), "ORDER BY Name");
+                            if (get_config('IMPORTANT_SEMNUMBER')) {
+                                $order = "ORDER BY VeranstaltungsNummer, Name";
+                            } else {
+                                $order = "ORDER BY Name";
+                            }
+                            $this->priocourses = Course::findMany($courseset->getCourses(), $order);
                             $this->user_prio = AdmissionPriority::getPrioritiesByUser($courseset->getId(), $user_id);
                             $this->max_limit = $limit->getMaxNumber();
                             $this->prio_stats = AdmissionPriority::getPrioritiesStats($courseset->getId());

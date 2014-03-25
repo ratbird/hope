@@ -71,7 +71,7 @@ class Settings_DetailsController extends Settings_SettingsController
         $changed = false;
 
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
-            $new_skype_name = preg_replace('/[^a-z0-9.,_-]/i', '', Request::get('skype_name'));
+            $new_skype_name = Request::get('skype_name');
             if ($new_skype_name != $this->config->SKYPE_NAME) {
                 $this->config->store('SKYPE_NAME', $new_skype_name);
                 Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1, $this->user->user_id);

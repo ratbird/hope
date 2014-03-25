@@ -113,14 +113,14 @@ class Compressor
             fclose($pipes[1]);
 
             $return_value = proc_close($process);
+            $error_msg = file_get_contents($err);
+            unlink($err);
 
             # an error happened
             if ($return_value) {
-                throw new Exception("Compression Error: " .
-                                    file_get_contents($err));
+                throw new Exception("Compression Error: " . $error_msg);
             }
 
-            unlink($err);
             return $output;
         }
 

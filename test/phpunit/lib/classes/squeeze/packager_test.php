@@ -28,7 +28,7 @@ class SqueezePackagerTest extends \PHPUnit_Framework_TestCase
 
     function getTmpDir()
     {
-        return dirname(tempnam("/dummy17", "squeezetest")) . "/squeeze";
+        return sys_get_temp_dir() . "/squeeze";
     }
 
     function rmTmpDir()

@@ -47,8 +47,8 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
           '<'      => '&lt;',
           '"'      => '&quot;',
           "'"      => '&#039;',
-          '&amp;'  => '&amp;',
-          '&#039;' => '&#039;',
+          '&amp;'  => '&amp;amp;',
+          '&#039;' => '&amp;#039;',
           ''       => '',
           NULL     => NULL
         );

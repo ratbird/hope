@@ -1217,7 +1217,7 @@ function getSearchbox($preselection, $keyword)
 {
     SkipLinks::addIndex(_("Im Wiki suchen"), 'wiki_search');
     // search
-    $search_text = '<form role=\"search\" id="wiki_search" method="post" action="' . URLHelper::getLink('') . '">';
+    $search_text = '<form role="search" id="wiki_search" method="post" action="' . URLHelper::getLink('') . '">';
     $search_text .= CSRFProtection::tokenTag();
     $search_text .= '<input type="hidden" name="view" value="search">';
     $search_text .= '<input type="hidden" name="keyword" value="' . htmlReady($keyword) . '">';

@@ -2,7 +2,12 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 ?>
-<div class="index_container" style="width: 750px;">
+<style>
+    #layout_container {
+        background-color: transparent;
+    }   
+</style>
+<div class="index_container" style="width: 750px; margin: 0 auto !important">
 <?if (sizeof($messages)):?>
 <table width="100%">
     <?=parse_msg_array($messages, '', 1, false)?>

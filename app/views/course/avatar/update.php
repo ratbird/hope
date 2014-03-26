@@ -10,11 +10,7 @@ use Studip\Button, Studip\LinkButton;
 <h1><?= _("Veranstaltungsbild hochladen") ?></h1>
 
 <div style="float: left; padding: 0 1em 1em 0;">
-    <? if ($this->studygroup_mode) : ?>
-    <?= StudygroupAvatar::getAvatar($course_id)->getImageTag(Avatar::NORMAL) ?>
-    <? else: ?>
-    <?= CourseAvatar::getAvatar($course_id)->getImageTag(Avatar::NORMAL) ?>
-    <? endif ?>
+	<?= $avatar->getImageTag(Avatar::NORMAL) ?>
 </div>
 
 <form enctype="multipart/form-data"
@@ -48,11 +44,22 @@ use Studip\Button, Studip\LinkButton;
 <?
 
 $aktionen = array();
-$aktionen[] = array(
-              "icon" => "icons/16/black/trash.png",
-              "text" => '<a href="' .
-$controller->url_for('course/avatar/delete', $course_id) .
-                        '" onClick="return confirm(\''._("Wirklich löschen?").'\');">' . _("Bild löschen") . '</a>');
+if ($avatar->is_customized()) {
+	$link = sprintf('<a href="%s" onclick="return confirm(\'%s\');">%s</a>',
+		 		    $controller->url_for('course/avatar/delete', $course_id),
+		 		    _('Wirklich löschen?'),
+				    _('Bild löschen'));
+	$aktionen[] = array(
+		'icon' => 'icons/16/black/trash.png',
+	    'text' => $link
+	);
+} else {
+	$aktionen[] = array(
+		'icon' => 'icons/16/black/trash.png',
+	    'text' => sprintf('<span style="text-decoration: line-through;">%s</span>',
+						  _('Bild löschen')),
+	);
+}
 
 $infobox = array(
     array("kategorie" => _("Aktionen:"),

@@ -93,14 +93,14 @@ class Course_BasicdataController extends AuthenticatedController
             'name' => "course_name",
             'must' => true,
             'type' => 'text',
-            'value' => htmlReady($data['name']),
+            'value' => $data['name'],
             'locked' => LockRules::Check($this->course_id, 'Name')
         );
         $this->attributes[] = array(
             'title' => _("Untertitel der Veranstaltung"),
             'name' => "course_subtitle",
             'type' => 'text',
-            'value' => htmlReady($data['subtitle']),
+            'value' => $data['subtitle'],
             'locked' => LockRules::Check($this->course_id, 'Untertitel')
         );
         $sem_types = array();
@@ -123,29 +123,29 @@ class Course_BasicdataController extends AuthenticatedController
             'name' => "course_status",
             'must' => true,
             'type' => 'select',
-            'value' => htmlReady($data['status']),
+            'value' => $data['status'],
             'locked' => LockRules::Check($this->course_id, 'status'),
-            'choices' => array_map('htmlReady', $sem_types)
+            'choices' => $sem_types
         );
         $this->attributes[] = array(
             'title' => _("Art der Veranstaltung"),
             'name' => "course_form",
             'type' => 'text',
-            'value' => htmlReady($data['form']),
+            'value' => $data['form'],
             'locked' => LockRules::Check($this->course_id, 'art')
         );
         $this->attributes[] = array(
             'title' => _("Veranstaltungs-Nummer"),
             'name' => "course_seminar_number",
             'type' => 'text',
-            'value' => htmlReady($data['seminar_number']),
+            'value' => $data['seminar_number'],
             'locked' => LockRules::Check($this->course_id, 'VeranstaltungsNummer')
         );
         $this->attributes[] = array(
             'title' => _("ECTS-Punkte"),
             'name' => "course_ects",
             'type' => 'text',
-            'value' => htmlReady($data['ects']),
+            'value' => $data['ects'],
             'locked' => LockRules::Check($this->course_id, 'ects')
         );
         $this->attributes[] = array(
@@ -153,7 +153,7 @@ class Course_BasicdataController extends AuthenticatedController
             'name' => "course_admission_turnout",
             'must' => false,
             'type' => 'number',
-            'value' => htmlReady($data['admission_turnout']),
+            'value' => $data['admission_turnout'],
             'locked' => LockRules::Check($this->course_id, 'admission_turnout'),
             'min' => '0'
         );
@@ -161,7 +161,7 @@ class Course_BasicdataController extends AuthenticatedController
             'title' => _("Beschreibung"),
             'name' => "course_description",
             'type' => 'textarea',
-            'value' => htmlReady($data['description']),
+            'value' => $data['description'],
             'locked' => LockRules::Check($this->course_id, 'Beschreibung')
         );
 

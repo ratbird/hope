@@ -194,12 +194,13 @@ class Course extends \RESTAPI\RouteMap
             $url = $this->urlf('/user/%s', array($member->user_id));
             $avatar = \Avatar::getAvatar($member->user_id);
             $json[$url] = array(
-                'user_id'       => $member->user_id,
-                'fullname'      => $member->user->getFullName(),
-                'status'        => $member->status,
-                'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
-                'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
-                'avatar_normal' => $avatar->getURL(\Avatar::NORMAL)
+                'user_id'         => $member->user_id,
+                'fullname'        => $member->user->getFullName(),
+                'status'          => $member->status,
+                'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
+                'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
+                'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
+                'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
             );
         }
         return $json;

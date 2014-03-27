@@ -272,12 +272,13 @@ class Contacts extends \RESTAPI\RouteMap
     private function minimalUserToJSON($id, $fullname)
     {
         $avatar = \Avatar::getAvatar($id);
-        return array('user_id'       => $id,
-                     'url'           => $this->urlf('/user/%s', array(htmlReady($id))),
-                     'fullname'      => $fullname,
-                     'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
-                     'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
-                     'avatar_normal' => $avatar->getURL(\Avatar::NORMAL)
+        return array('user_id'         => $id,
+                     'url'             => $this->urlf('/user/%s', array(htmlReady($id))),
+                     'fullname'        => $fullname,
+                     'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
+                     'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
+                     'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
+                     'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
         );
     }
 

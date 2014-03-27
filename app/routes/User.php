@@ -44,20 +44,21 @@ class User extends \RESTAPI\RouteMap
         $avatar = \Avatar::getAvatar($user_id);
 
         $user = array(
-            'user_id'       => $user_id,
-            'username'      => $user['username'],
-            'perms'         => $user['perms'],
-            'title_pre'     => $user['title_front'],
-            'forename'      => $user['Vorname'],
-            'lastname'      => $user['Nachname'],
-            'title_post'    => $user['title_rear'],
-            'email'         => get_visible_email($user_id),
-            'avatar_small'  => $avatar->getURL(\Avatar::SMALL),
-            'avatar_medium' => $avatar->getURL(\Avatar::MEDIUM),
-            'avatar_normal' => $avatar->getURL(\Avatar::NORMAL),
-            'phone'         => $get_field('privatnr', 'private_phone'),
-            'homepage'      => $get_field('Home', 'homepage'),
-            'privadr'       => strip_tags($get_field('privadr', 'privadr')),
+            'user_id'         => $user_id,
+            'username'        => $user['username'],
+            'perms'           => $user['perms'],
+            'title_pre'       => $user['title_front'],
+            'forename'        => $user['Vorname'],
+            'lastname'        => $user['Nachname'],
+            'title_post'      => $user['title_rear'],
+            'email'           => get_visible_email($user_id),
+            'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
+            'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
+            'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
+            'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL),
+            'phone'           => $get_field('privatnr', 'private_phone'),
+            'homepage'        => $get_field('Home', 'homepage'),
+            'privadr'         => strip_tags($get_field('privadr', 'privadr')),
         );
 
         $query = "SELECT value

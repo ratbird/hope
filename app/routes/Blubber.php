@@ -4,6 +4,9 @@ namespace RESTAPI\Routes;
 class Blubber extends \RESTAPI\RouteMap
 {
 
+    /**
+     * Some inclusions before the routes can be prcessed
+     */
     public static function before()
     {
         require_once 'public/plugins_packages/core/Blubber/models/BlubberPosting.class.php';
@@ -80,6 +83,7 @@ class Blubber extends \RESTAPI\RouteMap
      * Displays all data to a special blubber
      *
      * @get /blubber/:blubber_id
+     * @param string blubber_id : id of any blubber (comment or thread)
      */
     public function getBlubberData($blubber_id) {
         $blubber = new \BlubberPosting($blubber_id);
@@ -155,7 +159,129 @@ class Blubber extends \RESTAPI\RouteMap
                 ));
             }
         }
+        $this->redirect('blubber/' . $blubber->getId(), 201, "ok");
+    }
 
-        return $blubber->toRestResource();
+    /**
+     * Returns all comments of the blubber starting with the newest.
+     * Returns an empty array if blubber_id is from a comment.
+     *
+     * @get /blubber/:blubber_id/comments
+     * @param string $blubber_id : id of the thread
+     */
+    public function getComments($blubber_id) {
+        $thread = new \BlubberPosting($blubber_id);
+        if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $thread['Seminar_id']))
+            or ($thread['context_type'] === "private" && !$thread->isRelated())) {
+            $this->error(401);
+        }
+        \BlubberPosting::$course_hashes = $thread['context_type'] === "course" ? $thread['Seminar_id'] : false;
+
+        $comments = $thread->getChildren($this->offset, $this->limit);
+
+        $json = array();
+
+        foreach ($comments as $comment) {
+            $json[] = $comment->toRestResource();
+        }
+
+        $this->etag(md5(serialize($json)));
+
+        return $this->paginated($json, $thread->getNumberOfChildren(), array('blubber_id' => $blubber_id));
+    }
+
+    /**
+     * Edits the content of a blubber. Sends a message of the change to the author, if the editing user is not
+     * the author of the blubber, to inform him/her about the change.
+     * If the content is empty the blubber is going to be deleted, because we don't want empty
+     * blubber in the system.
+     *
+     * @put /blubber/:blubber_id
+     * @param $blubber_id
+     *
+     * @param blubbercontent : new content for the blubber
+     */
+    public function editBlubber($blubber_id) {
+        $blubber = new \BlubberPosting($blubber_id);
+        if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
+            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            $this->error(401);
+        }
+        $old_content = $blubber['description'];
+
+        \BlubberPosting::$mention_posting_id = $blubber->getId();
+        \StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "\BlubberPosting::mention");
+        \StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "\BlubberPosting::mention");
+        $content = \transformBeforeSave(\studip_utf8decode($this->data['blubbercontent']));
+        $blubber['name'] = $blubber['description'] = $content;
+
+        if ($blubber['description']) {
+            if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+                $messaging = new \messaging();
+                setTempLanguage($blubber['user_id']);
+                $messaging->insert_message(
+                    sprintf(
+                        _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum editiert.\n\nDie alte Version des Beitrags lautete:\n\n%s\n\nDie neue lautet:\n\n%s\n"),
+                        get_fullname(), $old_content, $blubber['description']
+                    ),
+                    get_username($blubber['user_id']),
+                    $GLOBALS['user']->id,
+                    null, null, null, null,
+                    _("Änderungen an Ihrem Posting.")
+                );
+                restoreLanguage();
+            }
+        } else {
+            if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+                setTempLanguage($blubber['user_id']);
+                $messaging = new \messaging();
+                $messaging->insert_message(
+                    sprintf(
+                        _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum GELÖSCHT.\n\nDer alte Beitrag lautete:\n\n%s\n"),
+                        get_fullname(), $old_content
+                    ),
+                    get_username($blubber['user_id']),
+                    $GLOBALS['user']->id,
+                    null, null, null, null,
+                    _("Ihr Posting wurde gelöscht.")
+                );
+                restoreLanguage();
+            }
+            $blubber->delete();
+        }
+        $this->status(204);
+    }
+
+    /**
+     * Deletes the blubber and informs the author of the blubber if
+     * the current user is not the author of the blubber.
+     *
+     * @delete /blubber/:blubber_id
+     * @param $blubber_id
+     */
+    public function deleteBlubber($blubber_id) {
+        $blubber = new \BlubberPosting($blubber_id);
+        if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
+            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            $this->error(401);
+        }
+
+        if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+            setTempLanguage($blubber['user_id']);
+            $messaging = new \messaging();
+            $messaging->insert_message(
+                sprintf(
+                    _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum GELÖSCHT.\n\nDer alte Beitrag lautete:\n\n%s\n"),
+                    get_fullname(), $blubber['description']
+                ),
+                get_username($blubber['user_id']),
+                $GLOBALS['user']->id,
+                null, null, null, null,
+                _("Ihr Posting wurde gelöscht.")
+            );
+            restoreLanguage();
+        }
+        $blubber->delete();
+        $this->status(204);
     }
 }

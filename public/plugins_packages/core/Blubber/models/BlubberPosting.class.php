@@ -557,22 +557,34 @@ class BlubberPosting extends SimpleORMap {
             'avatar_original' => $user->getAvatar()->getURL(\Avatar::ORIGINAL)
         );
 
-        $sharers = $this->getSharingUsers();
-        $sharer_ids = array();
-        foreach ($sharers as $sharer) {
-            $sharer_ids[] = $sharer['user_id'];
-        }
+        if ($this->isThread()) {
+            $sharers = $this->getSharingUsers();
+            $sharer_ids = array();
+            foreach ($sharers as $sharer) {
+                $sharer_ids[] = $sharer['user_id'];
+            }
 
-        return array(
-            'blubber_id' => $this->getId(),
-            'root_id' => $this['root_id'],
-            'context_type' => $this['context_type'],
-            'content_raw' => $this['description'],
-            'content_html' => formatReady($this['description']),
-            'user' => $user_data,
-            'numberOfChildren' => $this->getNumberOfChildren(),
-            'reshares' => $sharer_ids
-        );
+            return array(
+                'blubber_id' => $this->getId(),
+                'root_id' => $this['root_id'],
+                'context_type' => $this['context_type'],
+                'content_raw' => $this['description'],
+                'content_html' => formatReady($this['description']),
+                'user' => $user_data,
+                'numberOfChildren' => $this->getNumberOfChildren(),
+                'reshares' => $sharer_ids,
+                'tags' => $this->getTags()
+            );
+        } else {
+            return array(
+                'blubber_id' => $this->getId(),
+                'root_id' => $this['root_id'],
+                'context_type' => $this['context_type'],
+                'content_raw' => $this['description'],
+                'content_html' => formatReady($this['description']),
+                'user' => $user_data
+            );
+        }
     }
 
 }

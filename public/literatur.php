@@ -79,7 +79,7 @@ $infobox[1] = array (
     ))
 );
 
-print_infobox ($infobox, "infobox/literaturelist.jpg");
+print_infobox ($infobox, "sidebar/literature-sidebar.png");
 ?>
         <br>
         </td>

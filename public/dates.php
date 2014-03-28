@@ -208,7 +208,7 @@ if (Request::get('export') && $rechte) {
     $cancelled_dates_locked = LockRules::Check($sem->getId(), 'cancelled_dates');
     
     $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
-    $picture = 'infobox/schedules.jpg';
+    $picture = 'sidebar/date-sidebar.png';
     $selectionlist_title = _("Semesterauswahl");
     $selectionlist = $semester_selectionlist;
     $layout = $GLOBALS['template_factory']->open('layouts/base.php');

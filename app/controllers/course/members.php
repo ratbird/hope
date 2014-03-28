@@ -192,7 +192,7 @@ class Course_MembersController extends AuthenticatedController
             }
         }
         // Set the infobox
-        $this->setInfoBoxImage('infobox/groups.jpg');
+        $this->setInfoBoxImage('sidebar/person-sidebar.png');
         if ($this->is_tutor) {
             if ($this->is_dozent) {
                 if (!$this->dozent_is_locked) {

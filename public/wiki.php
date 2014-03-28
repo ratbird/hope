@@ -223,7 +223,7 @@ if ($view=="listall") {
 
 if ($infobox) {
     $layout = $GLOBALS['template_factory']->open('layouts/base');
-    $layout->infobox = array('picture' => 'infobox/wiki.jpg', 'content' => $infobox);
+    $layout->infobox = array('picture' => 'sidebar/wiki-sidebar.png', 'content' => $infobox);
 } else {
     $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
 }

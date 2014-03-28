@@ -222,7 +222,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
         </td>
 
         <td class="blank" width="270" align="right" valign="top">
-            <? print_infobox ($infobox, "infobox/seminars.jpg"); ?>
+            <? print_infobox ($infobox, "sidebar/seminar-sidebar.png"); ?>
         </td>
     </tr>
     <tr>

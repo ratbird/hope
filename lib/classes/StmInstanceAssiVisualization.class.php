@@ -166,7 +166,7 @@ class StmInstanceAssiVisualization{
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('topics', array('rows' => '25', 'style' => 'width: 95%; ')) , array( 'style' => 'width:100%; vertical-align:middle', 'align' => 'center'));
         echo $table->openCell(array('align' => 'center'));
-        print_infobox ($infobox, "infobox/wiki.jpg");
+        print_infobox ($infobox, "sidebar/wiki-sidebar.png");
         echo '<br>Vorschau&nbsp;' . $form->getFormButton('preview');
         echo $table->closeCell();
         echo $table->closeRow();

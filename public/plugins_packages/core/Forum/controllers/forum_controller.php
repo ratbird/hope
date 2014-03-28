@@ -42,14 +42,6 @@ class ForumController extends StudipController {
 
         parent::before_filter($action, $args);
 
-        // Add JS and StyleSheet to header
-        PageLayout::addScript($this->dispatcher->plugin->getPluginURL() . '/javascript/forum.js');
-        PageLayout::addStylesheet($this->dispatcher->plugin->getPluginURL() . '/stylesheets/forum.css');
-
-        // JQuery-Tutor JoyRide JS and CSS
-        PageLayout::addScript($this->dispatcher->plugin->getPluginURL() . '/javascript/jquery.joyride.js');
-        PageLayout::addStylesheet($this->dispatcher->plugin->getPluginURL() . '/stylesheets/joyride.css');
-
         // set correct encoding if this is an ajax-call
         if (Request::isAjax()) {
             header('Content-Type: text/html; charset=Windows-1252');

@@ -15,9 +15,44 @@ class Blubber extends \RESTAPI\RouteMap
     }
 
     /**
+     * Create a blubber in a course and redirects to the new blubber-route
+     *
+     * @post /course/:course_id/blubber
+     * @param :course_id : id of the course
+     */
+    public function createCourseBlubber($course_id)
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("autor", $course_id)) {
+            $this->error(401);
+        }
+        $blubber = new \BlubberPosting();
+        $blubber['user_id'] = $GLOBALS['user']->id;
+        $blubber['external_contact'] = 0;
+        $blubber['author_host'] = $_SERVER['REMOTE_ADDR'];
+        $blubber['context_type'] = "course";
+        $blubber['seminar_id'] = $course_id;
+        $blubber->setId($blubber->getNewId());
+        $blubber['root_id'] = $blubber->getId();
+        $blubber['parent_id'] = 0;
+
+        \BlubberPosting::$mention_posting_id = $blubber->getId();
+        \StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "\BlubberPosting::mention");
+        \StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "\BlubberPosting::mention");
+        $content = \transformBeforeSave(\studip_utf8decode($this->data['blubbercontent']));
+        $blubber['name'] = $blubber['description'] = $content;
+
+        $blubber->store();
+
+        $this->redirect('blubber/' . $blubber->getId(), 201, "ok");
+    }
+
+    /**
      * List blubber in a course
      *
      * @get /course/:course_id/blubber
+     * @param $course_id : id of the course
+     *
+     * @return Array('collection' => array(...), 'pagination' => array())
      */
     public function getCourseBlubber($course_id)
     {
@@ -32,6 +67,9 @@ class Blubber extends \RESTAPI\RouteMap
      * List blubber in a user's profile
      *
      * @get /user/:user_id/blubber
+     * @param $user_id : id of the user
+     *
+     * @return Array('collection' => array(...), 'pagination' => array())
      */
     public function getProfileBlubber($user_id)
     {
@@ -43,6 +81,10 @@ class Blubber extends \RESTAPI\RouteMap
      * List blubber in a custom stream
      *
      * @get /user/:user_id/blubberstreams/:stream_id
+     * @param $user_id : id of the user
+     * @param $stream_id : id of the stream or "global" if you want to access the global stream.
+     *
+     * @return Array('collection' => array(...), 'pagination' => array())
      */
     public function getCustomStreamBlubber($user_id, $stream_id)
     {
@@ -60,8 +102,10 @@ class Blubber extends \RESTAPI\RouteMap
     /**
      * Returns the rest resource of the stream regarding a stream a context-id and the parameters
      * stream-time, limit and offset (all in $this).
+     *
      * @param BlubberStream $stream : the stream
-     * @param $course_id : a context-id of the stream for caching purposes
+     * @param $parameter : an array of context-parameter i.e. array('user_id' => $user_id)
+     *
      * @return Array('collection' => array(...), 'pagination' => array())
      */
     public function getStreamBlubberRestResource($stream, $parameter) {
@@ -84,6 +128,8 @@ class Blubber extends \RESTAPI\RouteMap
      *
      * @get /blubber/:blubber_id
      * @param string blubber_id : id of any blubber (comment or thread)
+     *
+     * @return array of blubber-data
      */
     public function getBlubberData($blubber_id) {
         $blubber = new \BlubberPosting($blubber_id);
@@ -98,7 +144,8 @@ class Blubber extends \RESTAPI\RouteMap
     }
 
     /**
-     * Create a new blubber. Parameters are blubbercontent, context_type, course_id, private_adressees
+     * Create a new blubber. POST-Parameters are blubbercontent, context_type,
+     * course_id, private_adressees.  Redirects to the new blubber afterwards.
      *
      * @post /blubber
      *
@@ -132,6 +179,8 @@ class Blubber extends \RESTAPI\RouteMap
                 break;
         }
         $blubber->setId($blubber->getNewId());
+        $blubber['root_id'] = $blubber->getId();
+        $blubber['parent_id'] = 0;
 
         \BlubberPosting::$mention_posting_id = $blubber->getId();
         \StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "\BlubberPosting::mention");
@@ -168,6 +217,8 @@ class Blubber extends \RESTAPI\RouteMap
      *
      * @get /blubber/:blubber_id/comments
      * @param string $blubber_id : id of the thread
+     *
+     * @return Array('collection' => array(...), 'pagination' => array())
      */
     public function getComments($blubber_id) {
         $thread = new \BlubberPosting($blubber_id);
@@ -188,6 +239,144 @@ class Blubber extends \RESTAPI\RouteMap
         $this->etag(md5(serialize($json)));
 
         return $this->paginated($json, $thread->getNumberOfChildren(), array('blubber_id' => $blubber_id));
+    }
+
+    /**
+     * Create a comment to a blubber
+     *
+     * @post /blubber/:blubber_id
+     * @param $blubber_id : id of the blubber
+     *
+     * @param blubbercontent : content of the comment.
+     */
+    public function createComment($blubber_id)
+    {
+        $thread = new \BlubberPosting($blubber_id);
+        switch($thread['context_type']) {
+            case "course":
+                if (!$GLOBALS['perm']->have_studip_perm("autor", $thread['seminar_id'])) {
+                    $this->error(401);
+                }
+                break;
+            case "private":
+                if (!$thread->isRelated()) {
+                    $this->error(401);
+                }
+                break;
+        }
+        $blubber = new \BlubberPosting();
+        $blubber['root_id'] = $thread['root_id'];
+        $blubber['parent_id'] = $thread->getId();
+        $blubber['user_id'] = $GLOBALS['user']->id;
+        $blubber['external_contact'] = 0;
+        $blubber['author_host'] = $_SERVER['REMOTE_ADDR'];
+        $blubber['context_type'] = $thread['context_type'];
+        $blubber['seminar_id'] = $thread['seminar_id'];
+        $blubber->setId($blubber->getNewId());
+
+        \BlubberPosting::$mention_posting_id = $blubber->getId();
+        \StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "\BlubberPosting::mention");
+        \StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "\BlubberPosting::mention");
+        $content = \transformBeforeSave(\studip_utf8decode($this->data['blubbercontent']));
+        $blubber['name'] = $blubber['description'] = $content;
+
+        $blubber->store();
+
+        $this->redirect('blubber/' . $blubber_id . "/comments/" . $blubber->getId(), 201, "ok");
+    }
+
+    /**
+     * Edit a comment to a blubber
+     *
+     * @put /blubber/:blubber_id/comments/:comment_id
+     * @param $blubber_id : id of the blubber
+     *
+     * @param blubbercontent : new content of the comment.
+     */
+    public function editComment($blubber_id, $comment_id)
+    {
+        $blubber = new \BlubberPosting($comment_id);
+        if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
+            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            $this->error(401);
+        }
+        $old_content = $blubber['description'];
+
+        \BlubberPosting::$mention_posting_id = $blubber->getId();
+        \StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "\BlubberPosting::mention");
+        \StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "\BlubberPosting::mention");
+        $content = \transformBeforeSave(\studip_utf8decode($this->data['blubbercontent']));
+        $blubber['name'] = $blubber['description'] = $content;
+
+        if ($blubber['description']) {
+            if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+                $messaging = new \messaging();
+                setTempLanguage($blubber['user_id']);
+                $messaging->insert_message(
+                    sprintf(
+                        _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum editiert.\n\nDie alte Version des Beitrags lautete:\n\n%s\n\nDie neue lautet:\n\n%s\n"),
+                        get_fullname(), $old_content, $blubber['description']
+                    ),
+                    get_username($blubber['user_id']),
+                    $GLOBALS['user']->id,
+                    null, null, null, null,
+                    _("Änderungen an Ihrem Posting.")
+                );
+                restoreLanguage();
+            }
+        } else {
+            if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+                setTempLanguage($blubber['user_id']);
+                $messaging = new \messaging();
+                $messaging->insert_message(
+                    sprintf(
+                        _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum GELÖSCHT.\n\nDer alte Beitrag lautete:\n\n%s\n"),
+                        get_fullname(), $old_content
+                    ),
+                    get_username($blubber['user_id']),
+                    $GLOBALS['user']->id,
+                    null, null, null, null,
+                    _("Ihr Posting wurde gelöscht.")
+                );
+                restoreLanguage();
+            }
+            $blubber->delete();
+        }
+        $this->status(204);
+    }
+
+    /**
+     * Deletes a comment to a blubber and informs the author of the comment if
+     * the current user is not the author of the blubber.
+     *
+     * @delete /blubber/:blubber_id/comments/:comment_id
+     * @param $blubber_id : a blubber id
+     * @param $comment_id : id of the comment that should be deleted
+     */
+    public function deleteComment($blubber_id, $comment_id) {
+        $blubber = new \BlubberPosting($comment_id);
+        if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
+            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            $this->error(401);
+        }
+
+        if ($blubber['user_id'] !== $GLOBALS['user']->id) {
+            setTempLanguage($blubber['user_id']);
+            $messaging = new \messaging();
+            $messaging->insert_message(
+                sprintf(
+                    _("%s hat als Moderator gerade Ihren Beitrag im Blubberforum GELÖSCHT.\n\nDer alte Beitrag lautete:\n\n%s\n"),
+                    get_fullname(), $blubber['description']
+                ),
+                get_username($blubber['user_id']),
+                $GLOBALS['user']->id,
+                null, null, null, null,
+                _("Ihr Posting wurde gelöscht.")
+            );
+            restoreLanguage();
+        }
+        $blubber->delete();
+        $this->status(204);
     }
 
     /**

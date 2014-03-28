@@ -97,7 +97,8 @@
         <tr>
             <th>
                 <input type="checkbox" name="all" value="1"
-                       data-proxyfor=":checkbox[name='ids[]']">
+                       data-proxyfor=":checkbox[name='ids[]']"
+                       data-activates=".cronjobs select[name=action]">
             </th>
             <th><?= _('Cronjob') ?></th>
             <th><?= _('Aktiv') ?></th>
@@ -162,13 +163,13 @@
     <tfoot>
         <tr>
             <td colspan="2" class="printhead">
-                <select name="action">
+                <select name="action" data-activates=".cronjobs button[name=bulk]">
                     <option value="">- <?= _('Aktion auswählen') ?></option>
                     <option value="activate"><?= _('Aktivieren') ?></option>
                     <option value="deactivate"><?= _('Deaktivieren') ?></option>
                     <option value="cancel"><?= _('Löschen') ?></option>
                 </select>
-                <?= Button::createAccept(_('Ausführen')) ?>
+                <?= Button::createAccept(_('Ausführen'), 'bulk') ?>
             </td>
             <td colspan="8" class="printhead" style="text-align: right; vertical-align: middle;">
                 <?

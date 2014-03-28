@@ -195,4 +195,25 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
         $this->redirect('admin/cronjobs/tasks/index/' . $page);
     }
 
+    /**
+     * Executes a single task
+     *
+     * @param String $task_id Id of the task to be executed
+     */
+    public function execute_action($task_id)
+    {
+        $this->task = new CronjobTask($task_id);
+
+        if (Request::isPost()) {
+            $parameters = Request::getArray('parameters');
+            $parameters = $parameters[$task->id];
+
+            ob_start();
+            $this->task->engage(null, $parameters);
+            $this->result = ob_get_clean();
+        } else {
+            header('X-Title: ' . _('Cronjob-Aufgabe ausführen'));
+            $this->schedule = new CronjobSchedule();
+        }
+    }
 }

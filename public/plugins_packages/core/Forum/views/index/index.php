@@ -137,7 +137,7 @@ if (!empty($eintraege)) {
 
 // show the infobox only if it contains elements
 if (!empty($infobox_content)) :
-    $infobox = array('picture' => 'infobox/schedules.jpg', 'content' => $infobox_content);
+    $infobox = array('picture' => 'sidebar/forum-sidebar.png', 'content' => $infobox_content);
 endif;
 ?>
 

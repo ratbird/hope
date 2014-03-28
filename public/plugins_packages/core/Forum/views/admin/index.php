@@ -14,7 +14,7 @@ $infobox_content[] = array(
     )
 );
 
-$infobox = array('picture' => 'infobox/schedules.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/forum-sidebar.png', 'content' => $infobox_content);
 ?>
 <div id="forum">
     <ul style="margin: 0; padding-left: 20px;" class="js">

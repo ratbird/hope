@@ -64,6 +64,7 @@ javascripts:
     - *header
     - *toolbar
     - *wysiwyg
+    - javascripts/studip-helper-attributes.js
     - javascripts/application.js
 
   raumzeit:

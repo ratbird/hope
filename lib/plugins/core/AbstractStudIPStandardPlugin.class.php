@@ -27,6 +27,43 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     }
 
     /**
+     * Sets the navigation of this plugin.
+     *
+     * @deprecated
+     */
+    function setNavigation(StudipPluginNavigation $navigation) {
+        parent::setNavigation($navigation);
+
+        $navigation->setImage($this->getPluginiconname());
+
+        // prepend copy of navigation to its sub navigation
+        $item_names = array_keys($navigation->getSubNavigation());
+        $navigation_copy = clone $navigation;
+        $navigation_copy->clearSubmenu();
+        $navigation_copy->freezeActivation();
+        $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
+        $navigation->setTitle($this->getDisplayTitle());
+    }
+
+    /**
+     * Return an array of navigation objects representing this plugin
+     * in the course (or institute) navigation or return NULL if you do
+     * not want any navigation for this plugin. The array key is used
+     * as the name in the navigation tree (subelement of "/course").
+     *
+     * @param  string   $course_id   course or institute range id
+     *
+     * @return array    navigation items to render or NULL
+     */
+    function getTabNavigation($course_id) {
+        if ($this->hasNavigation()) {
+            return array($this->getPluginclassname(), $this->getNavigation());
+        }
+
+        return NULL;
+    }
+
+    /**
      * Set the current course id - deprecated, do not use.
      *
      * @deprecated
@@ -87,23 +124,6 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
      */
     function getInfoTemplate($course_id) {
         return NULL;
-    }
-
-    function getTabNavigation($course_id) {
-        if ($this->hasNavigation()) {
-            $navigation = $this->getNavigation();
-            $navigation->setImage($this->getPluginiconname());
-            // prepend copy of navigation to its sub navigation
-            $item_names = array_keys($navigation->getSubNavigation());
-            $navigation_copy = clone $navigation;
-            $navigation_copy->clearSubmenu();
-            $navigation_copy->freezeActivation();
-            $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
-            $navigation->setTitle($this->getDisplayTitle());
-            return array(get_class($this) => $navigation);
-        } else {
-            return null;
-        }
     }
 
     function getNotificationObjects($course_id, $since, $user_id) {

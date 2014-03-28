@@ -145,7 +145,7 @@ function printSearchResults($rangeAR,$searchString){
     reset($typen);
     while(list($typen_key,$typen_value)=each ($typen)){
         $counter = 0;
-        $html .= "<table class=\"default zebra-hover\">\n";
+        $html .= "<table class=\"default\">\n";
         $html .= "<colgroup><col><col width=\"10%\"><col width=\"10%\"><col width=\"10%\"></colgroup>";
         $html .="<thead><tr><th align=\"left\" colspan=\"4\">$typen_value:</th></tr></thead>\n";
         $html .= '<tbody>';

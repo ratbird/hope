@@ -4,7 +4,7 @@
 
 <form action="<?= $controller->url_for('course/members/edit_accepted/') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default collapsable zebra-hover">
+    <table class="default collapsable">
         <caption>
             <span class="actions">
                 <?=$controller->getEmailLinkByStatus('accepted', $accepted)?>

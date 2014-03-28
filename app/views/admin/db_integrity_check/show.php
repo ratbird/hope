@@ -8,7 +8,7 @@
     <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('check/' . $check)) ?>
 </p>
 
-<table class="default zebra-hover" style="font-size:smaller">
+<table class="default" style="font-size:smaller">
     <thead>
         <tr>
         <? foreach ($header as $column): ?>

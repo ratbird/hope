@@ -12,7 +12,7 @@
 </p>
 <? else: ?>
 
-<table class="default zebra tree">
+<table class="default tree">
     <colgroup>
         <col width="10px">
         <col>

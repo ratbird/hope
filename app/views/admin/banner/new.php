@@ -3,7 +3,7 @@
 <h3><?= _('Neues Banner anlegen') ?></h3>
 
 <form action="<?= $controller->url_for('admin/banner/new') ?>" method="post" enctype="multipart/form-data">
-    <table class="default zebra">
+    <table class="default">
         <tbody>
             <tr>
                 <td>

@@ -7,7 +7,7 @@
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 <? endif; ?>
-<table class="zebra-hover settings" id="assigned_userdomains">
+<table class="deafault" id="assigned_userdomains">
     <colgroup>
         <col>
         <col width="100px">

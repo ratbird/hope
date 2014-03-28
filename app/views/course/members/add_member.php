@@ -3,7 +3,7 @@
 <h1><?=sprintf(_('%s hinzufügen'), htmlReady($decoratedStatusGroups['autor']))?></h1>
 <form action="<?=$controller->url_for('course/members/set_autor')?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
-    <table class="default zebra collapsable">
+    <table class="default collapsable">
         <tbody>
             <tr class="table_header header-row">
                 <th class="toggle-indicator" colspan="4">
@@ -36,7 +36,7 @@
 
 <form action="<?= $controller->url_for('course/members/set_autor_csv')?>" method="post" name="user">
 <?= CSRFProtection::tokenTag() ?>
-<table class="default zebra collapsable">
+<table class="default collapsable">
     <tbody class="collapsed">
         <tr class="table_header header-row">
             <th class="toggle-indicator" colspan="3">

@@ -59,15 +59,15 @@ $infobox = array(
 
 <form action="<?= URLHelper::getURL('dispatch.php/profilemodules/update', array('username' => $username)) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="zebra" width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
+    <table class="default" width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
         <colgroup>
             <col width="50%">
             <col width="50%">
         </colgroup>
         <thead>
             <tr>
-                <th align="center"><?= _("Inhaltselement") ?></th>
-                <th align="center"><?= _("Aktiv") ?></th>
+                <th><?= _("Inhaltselement") ?></th>
+                <th><?= _("Aktiv") ?></th>
             </tr>
         </thead>
         <tbody>

@@ -14,7 +14,7 @@
     <b><?= sprintf(_('Bereich: <i>%s</i> der Datenbank wird geprüft!'), $check) ?></b><br>
     <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('index')) ?>
 </p>
-<table class="default zebra">
+<table class="default">
     <thead>
         <tr>
             <th width="20%"><?= _('Tabelle') ?></th>

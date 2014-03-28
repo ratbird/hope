@@ -179,7 +179,7 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
     $export_pagecontent .= CSRFProtection::tokenTag();
     $export_pagecontent .= "";
-    $export_pagecontent .= "<table class=\"zebra-hover\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
+    $export_pagecontent .= "<table class=\"default\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
     $export_pagecontent .= "<thead>";
     $export_pagecontent .= "<tr align=\"center\" valign=\"top\">";
     $export_pagecontent .= "<th width=\"5%\"><b>&nbsp;</b></th>";

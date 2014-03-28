@@ -1888,7 +1888,7 @@ class EvalOverview {
         $table_r->addAttr("cellspacing", "0");
         $table_r->addAttr("cellpadding", "0");
         $table_r->addAttr("width", "100%");
-        $table_r->addAttr('class', 'zebra');
+        $table_r->addAttr('class', 'default');
 
         // Überschriften
         $tr_r = new HTML("tr");
@@ -2211,7 +2211,7 @@ class EvalOverview {
             }
 
             $table = new HTML("table");
-            $table->addAttr("class", "zebra white");
+            $table->addAttr("class", "default");
             $table->addAttr("border", "0");
             $table->addAttr("align", "center");
             $table->addAttr("cellspacing", "0");

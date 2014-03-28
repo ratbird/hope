@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table class="zebra settings">
+    <table class="default">
         <colgroup>
             <col>
         <? if ($edit_about_enabled): ?>

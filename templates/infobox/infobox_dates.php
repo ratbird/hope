@@ -7,7 +7,7 @@
 
   <tr>
     <td class="infobox-img">
-      <img src="<?=$GLOBALS['ASSETS_URL']?>images/<?=$picture?>">
+      <img src="<?=$GLOBALS['ASSETS_URL']?>images/<?=$picture?>" width="250" height ="100">
     </td>
   </tr>
 

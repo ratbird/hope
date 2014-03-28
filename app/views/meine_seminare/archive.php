@@ -7,7 +7,7 @@
     <?= MessageBox::info(_('Es befinden sich zur Zeit keine Veranstaltungen im Archiv, an denen Sie teilgenommen haben.')) ?>
 <? else: ?>
 
-<table class="default zebra-hover">
+<table class="default">
     <colgroup>
         <col width="80%">
         <col width="10%">

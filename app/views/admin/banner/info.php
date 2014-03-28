@@ -1,4 +1,4 @@
-<table class="default zebra">
+<table class="default">
     <tbody>
         <tr>
             <td rowspan="9" colspan="2" style="text-align: center;">

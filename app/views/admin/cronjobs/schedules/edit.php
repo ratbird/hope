@@ -25,7 +25,7 @@
     </h1>
 
     <h2 class="topic"><?= _('Details') ?></h2>
-    <table class="default zebra-hover">
+    <table class="default">
         <colgroup>
             <col width="20%">
             <col width="80%">
@@ -81,7 +81,7 @@
     </table>
 
     <h2 class="topic"><?= _('Aufgabe') ?></h2>
-    <table class="default zebra-big-hover cron-task" cellspacing="0" cellpadding="0">
+    <table class="default cron-task" cellspacing="0" cellpadding="0">
         <colgroup>
             <col width="20px">
             <col width="100px">
@@ -137,7 +137,7 @@
     </table>
 
     <h2 class="topic"><?= _('Zeitplan') ?></h2>
-    <table class="default zebra-horizontal cron-schedule">
+    <table class="default cron-schedule">
         <colgroup>
             <col width="50%">
             <col width="50%">

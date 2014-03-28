@@ -2,7 +2,7 @@
 <?= $this->render_partial('admission/restricted_courses/_institute_choose.php')?>
 <br>
 <? if (count($courses)) : ?>
-    <table class="default zebra nohover">
+    <table class="default nohover">
         <thead>
             <tr>
                 <th><?= _("Anmeldeset")?></th>

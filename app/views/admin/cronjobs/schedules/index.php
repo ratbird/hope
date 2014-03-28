@@ -80,7 +80,7 @@
 <form action="<?= $controller->url_for('admin/cronjobs/schedules/bulk', $page) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="default zebra-hover cronjobs">
+<table class="default cronjobs">
     <colgroup>
         <col width="20px">
         <col>

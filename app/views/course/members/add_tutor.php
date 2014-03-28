@@ -5,7 +5,7 @@
 <form action="<?=$controller->url_for('course/members/set')?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?=$studipticket?>">
-    <table class="default zebra">
+    <table class="default">
         <thead>
             <tr>
                 <th colspan="2"><?=sprintf(_('%s suchen'), htmlReady($decoratedStatusGroups['tutor']))?></th>

@@ -24,9 +24,20 @@ $may_edit_faculty = $perm->is_fak_admin()
 <form method="POST" name="edit" action="<?= URLHelper::getLink() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-    <table class="default admin-institute">
+    <table class="default">
+    	<caption>
+    		<?=_('Verwaltung der Einrichtungsgrunddaten')?>
+    	</caption>
+    	<thead>
+    		<tr>
+	    		<th>&nbsp;
+    	        </th>
+    	        <th>&nbsp;
+        	    </th>
+    		</tr>
+    	</thead>
         <tbody>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Name:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('name', 'readonly disabled') ?> name="Name"
@@ -34,7 +45,7 @@ $may_edit_faculty = $perm->is_fak_admin()
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Fakultät:') ?></td>
                 <td>
                 <? if ($num_institutes): ?>
@@ -64,7 +75,7 @@ $may_edit_faculty = $perm->is_fak_admin()
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Bezeichnung:') ?></td>
                 <td>
                     <select name="type" <?= $lockCheck('type', 'readonly disabled') ?> >
@@ -78,42 +89,42 @@ $may_edit_faculty = $perm->is_fak_admin()
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Straße:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('strasse', 'readonly disabled') ?> name="strasse"
                            value="<?= htmlReady(Request::get('strasse', $institute['Strasse'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Ort:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('plz', 'readonly disabled') ?> name="plz"
                            value="<?= htmlReady(Request::get('plz', $institute['Plz'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Telefonnummer:') ?></td>
                 <td>
                     <input type="tel" <?= $lockCheck('telefon', 'readonly disabled') ?> name="telefon" maxlength=32
                            value="<?= htmlReady(Request::get('telefon', $institute['telefon'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?=_("Faxnummer:")?></td>
                 <td>
                     <input type="tel" <?= $lockCheck('fax', 'readonly disabled') ?> name="fax" maxlength=32
                            value="<?= htmlReady(Request::get('fax', $institute['fax'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('E-Mail-Adresse:') ?></td>
                 <td>
                     <input type="email" <?= $lockCheck('email', 'readonly disabled') ?> name="email"
                            value="<?= htmlReady(Request::get('email', $institute['email'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Homepage:') ?></td>
                 <td>
                     <input type="url" <?= $lockCheck('url', 'readonly disabled') ?> name="home"
@@ -141,7 +152,7 @@ $may_edit_faculty = $perm->is_fak_admin()
 
         <? if ($GLOBALS['perm']->have_perm('root')):
            // Select lockrule to apply ?>
-            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
+            <tr>
                 <td><?= _('Sperrebene') ?></td>
                 <td>
                     <select name="lock_rule">

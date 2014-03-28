@@ -17,7 +17,7 @@
             <input type="hidden" name="role_id" value="<?= $role_id ?>">
             <input type="hidden" name="group_id[]" value="<?= $role_id ?>">
 
-            <table class="zebra settings">
+            <table class="deafault">
                 <thead>
                     <tr>
                         <th colspan="4">

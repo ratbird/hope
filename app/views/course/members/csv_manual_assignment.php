@@ -5,7 +5,7 @@
 <?= (isset($flash['info'])) ? MessageBox::info($flash['info']) : '' ?>
 <form action="<?= $controller->url_for('course/members/set_autor_csv')?>" method="post" name="user">
 <?= CSRFProtection::tokenTag() ?>
-<table class="default zebra">
+<table class="default">
     <thead>
         <tr>
             <th class="topic" colspan="2"><?=sprintf(_('Folgende %s konnten <b>nicht eindeutig</b> zugewiesen werden. Bitte wählen Sie aus der jeweiligen Trefferliste:'), htmlReady($status_groups['autor']))?></th>

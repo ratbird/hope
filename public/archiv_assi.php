@@ -237,7 +237,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <?= MessageBox::$type($message_data['title'], $message_data['details']) ?>
             <? endforeach ?>
         <? endif ?>
-        <table class="zebra" align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
+        <table class="default" align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
             <?
             parse_msg($msg, "§", "blank", 3);
             ?>

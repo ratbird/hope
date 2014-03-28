@@ -6,7 +6,7 @@
 <? endif; ?>
 
 <h3><?= _('Verwaltung von Werbebannern') ?></h3>
-<table class="default zebra-hover">
+<table class="default">
     <thead>
         <tr>
             <th><?= _('Banner') ?></th>

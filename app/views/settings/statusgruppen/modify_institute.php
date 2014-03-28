@@ -15,7 +15,7 @@
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="name" value="<?= htmlReady($institute['Name']) ?>">
 
-            <table class="default zebra settings" style="width:90%">
+            <table class="default settings" style="width:90%">
                 <colgroup>
                     <col width="50%">
                     <col width="50%">

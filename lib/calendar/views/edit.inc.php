@@ -67,7 +67,7 @@ if ($evtype == 'semcal' || (isset($_calendar->event) && ($_calendar->event insta
 
 echo '<form name="edit_event" action="' . URLHelper::getLink('', array('cmd' => 'edit')) . '" method="post">';
 echo CSRFProtection::tokenTag();
-echo "<table class=\"blank zebra\" width=\"99%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
+echo "<table class=\"blank\" width=\"99%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
 echo "<thead><tr><th width=\"100%\" align=\"left\">";
 echo $edit_mode_out;
 echo "\n</th></tr></thead>\n";

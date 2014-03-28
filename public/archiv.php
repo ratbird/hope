@@ -253,7 +253,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
         <? endif ?>
             <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
                 <?= CSRFProtection::tokenTag() ?>
-                <table class="zebra" border=0 cellspacing=0 cellpadding=2>
+                <table class="default" border=0 cellspacing=0 cellpadding=2>
                     <colgroup>
                         <col width="10%">
                         <col width="90%">

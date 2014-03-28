@@ -2,7 +2,7 @@
 <p style="font-weight: bold;">
     <?= _('Folgende Bereiche der Datenbank können geprüft werden:') ?>
 </p>
-<table class="default zebra">
+<table class="default">
     <colgroup>
         <col width="10%">
         <col width="70%">

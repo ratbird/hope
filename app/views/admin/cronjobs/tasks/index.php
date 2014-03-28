@@ -3,7 +3,7 @@
 <form action="<?= $controller->url_for('admin/cronjobs/tasks/bulk', $page) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="default zebra-hover cronjobs">
+<table class="default cronjobs">
     <colgroup>
         <col width="20px">
         <col width="200px">

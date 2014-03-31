@@ -244,7 +244,7 @@ class Blubber extends \RESTAPI\RouteMap
     /**
      * Create a comment to a blubber
      *
-     * @post /blubber/:blubber_id
+     * @post /blubber/:blubber_id/comments
      * @param $blubber_id : id of the blubber
      *
      * @param blubbercontent : content of the comment.
@@ -297,7 +297,8 @@ class Blubber extends \RESTAPI\RouteMap
     {
         $blubber = new \BlubberPosting($comment_id);
         if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
-            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+                or $blubber['user_id'] !== $GLOBALS['user']->id
+                or $blubber['external_contact']) {
             $this->error(401);
         }
         $old_content = $blubber['description'];
@@ -309,6 +310,7 @@ class Blubber extends \RESTAPI\RouteMap
         $blubber['name'] = $blubber['description'] = $content;
 
         if ($blubber['description']) {
+            $blubber->store();
             if ($blubber['user_id'] !== $GLOBALS['user']->id) {
                 $messaging = new \messaging();
                 setTempLanguage($blubber['user_id']);
@@ -356,7 +358,8 @@ class Blubber extends \RESTAPI\RouteMap
     public function deleteComment($blubber_id, $comment_id) {
         $blubber = new \BlubberPosting($comment_id);
         if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
-            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            or $blubber['user_id'] !== $GLOBALS['user']->id
+            or $blubber['external_contact']) {
             $this->error(401);
         }
 
@@ -393,7 +396,8 @@ class Blubber extends \RESTAPI\RouteMap
     public function editBlubber($blubber_id) {
         $blubber = new \BlubberPosting($blubber_id);
         if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
-            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            or $blubber['user_id'] !== $GLOBALS['user']->id
+            or $blubber['external_contact']) {
             $this->error(401);
         }
         $old_content = $blubber['description'];
@@ -405,6 +409,7 @@ class Blubber extends \RESTAPI\RouteMap
         $blubber['name'] = $blubber['description'] = $content;
 
         if ($blubber['description']) {
+            $blubber->store();
             if ($blubber['user_id'] !== $GLOBALS['user']->id) {
                 $messaging = new \messaging();
                 setTempLanguage($blubber['user_id']);
@@ -451,7 +456,8 @@ class Blubber extends \RESTAPI\RouteMap
     public function deleteBlubber($blubber_id) {
         $blubber = new \BlubberPosting($blubber_id);
         if (($blubber['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("tutor", $blubber['Seminar_id']))
-            or ($blubber['user_id'] === $GLOBALS['user']->id && !$blubber['external_contact'])) {
+            or $blubber['user_id'] !== $GLOBALS['user']->id
+            or $blubber['external_contact']) {
             $this->error(401);
         }
 

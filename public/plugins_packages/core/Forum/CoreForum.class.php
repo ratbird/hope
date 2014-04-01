@@ -34,7 +34,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         
         // Add JS and StyleSheet to header
         PageLayout::addScript($this->getPluginURL() . '/javascript/forum.js');
-        $this->addStylesheet('stylesheets/forum.less');
+        PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/forum.css');
 
         // JQuery-Tutor JoyRide JS and CSS
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');

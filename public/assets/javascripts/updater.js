@@ -11,6 +11,7 @@ STUDIP.JSUpdater = {
     lastJsonResult: {},
     dateOfLastCall: new Date(),
     idOfCurrentQueue: "",
+    ajaxRequestPending: false,
 
     processUpdate: function (json) {
         jQuery.each(json, function (index, value) {
@@ -37,30 +38,36 @@ STUDIP.JSUpdater = {
             //stop this queue if there is another one
             return false;
         }
+        if (STUDIP.JSUpdater.ajaxRequestPending) {
+            STUDIP.JSUpdater.nextCall(queue_id);
+            return false;
+        }
+        
+        STUDIP.JSUpdater.ajaxRequestPending = true;
         STUDIP.JSUpdater.dateOfLastCall = new Date();
-        var page = window.location.href.replace(STUDIP.ABSOLUTE_URI_STUDIP, "");
-        var page_info = {};
+        var page = window.location.href.replace(STUDIP.ABSOLUTE_URI_STUDIP, ""),
+            page_info = {},
+            url = STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/jsupdater/get';
         jQuery.each(STUDIP, function (index, element) {
             if (typeof element.periodicalPushData === "function") {
                 page_info[index] = element.periodicalPushData();
             }
         });
-        jQuery.ajax({
-            url: STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/get",
-            dataType: "json",
+        jQuery.ajax(url, {
             data: {
-                'page': page,
-                'page_info': page_info
+                page: page,
+                page_info: page_info
             },
-            success: function (json, textStatus, jqXHR) {
-                STUDIP.JSUpdater.resetJsonMemory(json);
-                STUDIP.JSUpdater.processUpdate(json);
-                STUDIP.JSUpdater.nextCall(queue_id);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                STUDIP.JSUpdater.resetJsonMemory({ 'text' : textStatus, 'error': errorThrown });
-                STUDIP.JSUpdater.nextCall(queue_id);
-            }
+            dataType: 'json',
+            timeout: 5000
+        }).done(function (json) {
+            STUDIP.JSUpdater.resetJsonMemory(json);
+            STUDIP.JSUpdater.processUpdate(json);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            STUDIP.JSUpdater.resetJsonMemory({ 'text' : textStatus, 'error': errorThrown });
+        }).always(function () {
+            STUDIP.JSUpdater.ajaxRequestPending = false;
+            STUDIP.JSUpdater.nextCall(queue_id);
         });
     },
     resetJsonMemory: function (json) {

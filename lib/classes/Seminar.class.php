@@ -2482,7 +2482,7 @@ class Seminar
             return $info;
         }
         //Veranstaltung unsichtbar für aktuellen Nutzer
-        if (!$this->visible && !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'), $user_id)) {
+        if (!$this->visible && !$this->isStudygroup() && !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'), $user_id)) {
             $info['enrolment_allowed'] = false;
             $info['cause'] = 'invisible';
             $info['description'] = _("Die Veranstaltung ist gesperrt, Sie können sich nicht eintragen!");

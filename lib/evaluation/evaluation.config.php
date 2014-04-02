@@ -97,7 +97,7 @@ define ("EVAL_LIB_SHOW", EVAL_PATH."evaluation_show.lib.php");
 define ("EVAL_PIC_ICON", Assets::image_path('icons/16/grey/test.png'));
 define ("EVAL_PIC_PREVIEW", Assets::image_path('icons/16/blue/question-circle.png'));
 define ("EVAL_PIC_ADMIN", Assets::image_path('icons/16/blue/admin.png'));
-define ("EVAL_PIC_LOGO", Assets::image_path('infobox/evaluation.jpg'));
+define ("EVAL_PIC_LOGO", Assets::image_path('sidebar/evaluation-sidebar.png'));
 define ("EVAL_PIC_ARROW", Assets::image_path('icons/16/green/arr_1right.png'));
 define ("EVAL_PIC_ARROW_ACTIVE", Assets::image_path('icons/16/green/arr_1down.png'));
 define ("EVAL_PIC_SUCCESS", Assets::image_path('icons/16/green/accept.png'));

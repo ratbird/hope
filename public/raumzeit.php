@@ -611,7 +611,7 @@ jQuery(function () {
                     $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $_SESSION['raumzeitFilter']);
 
                     // fill attributes
-                    $infobox_template->set_attribute('picture', 'infobox/schedules.jpg');
+                    $infobox_template->set_attribute('picture', 'sidebar/schedule-sidebar.png');
                     $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
                     $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
                     $infobox_template->set_attribute("adminList", $adminList);

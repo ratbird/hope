@@ -50,7 +50,7 @@ class Settings_NotificationController extends Settings_SettingsController
         $infobox_message = _('Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen Ihrer Veranstaltungen automatisch '
                              .'per Email informieren.<br>'
                              .'Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.');
-        $this->setInfoboxImage('infobox/messages.jpg');
+        $this->setInfoboxImage('sidebar/seminar-sidebar.png');
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info');
     }
 

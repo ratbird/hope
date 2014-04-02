@@ -422,7 +422,7 @@ class Admin_BannerController extends AuthenticatedController
      */
     protected function addInfobox()
     {
-        $this->setInfoboxImage('infobox/administration.png');
+        $this->setInfoboxImage('sidebar/admin-sidebar.png');
 
         // :Actions
         $start = sprintf('<a href="%s">%s</a>',

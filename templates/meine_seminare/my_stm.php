@@ -55,7 +55,7 @@
 <? endif; ?>
 <? 
 $infobox = array(
-    'picture' => 'infobox/lectures.jpg',
+    'picture' => 'sidebar/module-sidebar.png',
     'content' => array(
         array(
             'kategorie'  => _('Information:'),

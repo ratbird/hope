@@ -40,7 +40,7 @@ class Settings_DetailsController extends Settings_SettingsController
         $infobox_message = _('Hier können Sie Angaben &uuml;ber Ihre privaten Kontaktdaten '
                             .'sowie Lebenslauf und Hobbys machen.') . '<br>'
                             ._('Alle Angaben die Sie hier machen sind freiwillig!');
-        $this->setInfoBoxImage('infobox/groups.jpg');
+        $this->setInfoBoxImage('sidebar/person-sidebar.png');
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
     }
 

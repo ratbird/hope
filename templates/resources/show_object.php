@@ -50,7 +50,7 @@
                 );
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
-                $infobox->picture = 'infobox/schedules.jpg';
+                $infobox->picture = 'sidebar/resources-sidebar.png';
                 $infobox->content = $content;
 
                 echo $infobox->render();

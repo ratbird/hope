@@ -139,6 +139,6 @@ class Admin_DomainController extends AuthenticatedController
             )
         );
 
-        return array('picture' => 'infobox/board1.jpg', 'content' => $infobox_content);
+        return array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
     }
 }

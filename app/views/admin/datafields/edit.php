@@ -155,7 +155,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? //infobox
 $infobox = array(
-    'picture' => 'infobox/administration.png',
+    'picture' => 'sidebar/admin-sidebar.png',
     'content' => array(
         array(
             'kategorie' => _('Aktionen:'),

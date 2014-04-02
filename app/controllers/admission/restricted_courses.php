@@ -34,7 +34,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
      */
     function index_action()
     {
-        $this->setInfoboxImage(Assets::image_path('infobox/hoersaal.jpg'));
+        $this->setInfoboxImage(Assets::image_path('sidebar/seminar-sidebar.png'));
         $this->addToInfobox(_('Information'), _("Sie können hier alle Veranstaltungen mit eingeschränkter Teilnehmerzahl einsehen."), 'icons/16/black/info');
         $this->addToInfobox(_('Aktionen'), '<a href="'.$this->link_for('admission/restricted_courses', array('csv' => 1)).'">' . _("Export") . '</a>', 'icons/16/blue/file-xls');
 

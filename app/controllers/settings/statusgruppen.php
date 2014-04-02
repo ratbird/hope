@@ -39,7 +39,7 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         Navigation::activateItem('/profile/edit/statusgruppen');
         SkipLinks::addIndex(_('Einrichtungsdaten bearbeiten'), 'layout_content', 100);
 
-        $this->setInfoboxImage('infobox/groups.jpg');
+        $this->setInfoboxImage('sidebar/group-sidebar.png');
         $this->addToInfobox(_('Informationen'),
                             _('Hier können Sie Ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind.'),
                             'icons/16/black/info');

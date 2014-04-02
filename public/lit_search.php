@@ -309,7 +309,7 @@ $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array("icon" => "icons/16/black/literature.png","text"  => "<a href=\"".URLHelper::getLink('admin_lit_list.php')."\">" . _("Literaturlisten bearbeiten") . "</a>" );
 $infobox[1]["eintrag"][] = array("icon" => "icons/16/black/add/literature.png","text"  => "<a href=\"".URLHelper::getLink('admin_lit_element.php',array('_range_id'=>'new_entry'))."\">" . _("Neue Literatur anlegen") . "</a>" );
 
-print_infobox ($infobox, "infobox/board1.jpg");
+print_infobox ($infobox, "sidebar/literature-sidebar.png");
 
 ?>
 <table width="250" border="0" cellpadding="0" cellspacing="0" align="center">

@@ -313,7 +313,7 @@ class Admin_SemesterController extends AuthenticatedController
      */
     private function getInfobox()
     {
-        $infobox = array('picture' => 'infobox/board1.jpg');
+        $infobox = array('picture' => 'sidebar/admin-sidebar.png');
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/semester/edit_semester').'">'._('Neues Semester anlegen').'</a>',
             "icon" => "icons/16/black/add.png");

@@ -69,7 +69,7 @@
 </table>
 
 <?
-$infobox = array('picture' => 'infobox/config.jpg', 'content' => array(
+$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => array(
     array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(

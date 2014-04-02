@@ -58,7 +58,7 @@ include ("lib/include/header.php");   // Output of Stud.IP head
             echo MessageBox::error(_('Diese Funktion ist deaktiviert. Bitte wenden Sie sich an Ihren Systemadministor'));
         } ?>
     </td>
-    <td class="blank" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/infobox/archiv.jpg" border="0"></td>
+    <td class="blank" align="right" valign="top" width="250" height="96"><img src="<?=$GLOBALS['ASSETS_URL']?>images/sidebar/seminar-archive-sidebar.png" border="0"></td>
 </tr>
 </table>
 

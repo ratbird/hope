@@ -122,7 +122,7 @@ use Studip\Button, Studip\LinkButton;
 
 <?
 $infobox = array(
-    'picture' => 'infobox/board2.jpg',
+    'picture' => 'sidebar/person-sidebar.png',
     'content' => array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(

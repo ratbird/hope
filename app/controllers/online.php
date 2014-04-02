@@ -67,7 +67,7 @@ class OnlineController extends AuthenticatedController
         $this->page  = min(Request::int('page', 1), $max_page);
 
         // Infobox
-        $this->setInfoboxImage('infobox/online.jpg');
+        $this->setInfoboxImage('sidebar/person-sidebar.png');
         $this->addToInfobox(_('Information:'),
                             _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
                             'icons/16/black/info.png');

@@ -1692,7 +1692,7 @@ table.infobox td.infobox-img {
   background-color: white;
 }
 .infobox-img > div {
-  min-height: 100px;
+  min-height: 96px;
   width: 250px;
   background-size: 100%;
   background-repeat: no-repeat;

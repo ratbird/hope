@@ -117,7 +117,7 @@ $infobox[1]["kategorie"] = _("Suchen:");
 $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/search.png" ,
                                     "text" => $such_form
                                 );
-print_infobox($infobox, "infobox/institutes.jpg");
+print_infobox($infobox, "sidebar/institute-sidebar.png");
 ?>
 </td></tr>
 </table>

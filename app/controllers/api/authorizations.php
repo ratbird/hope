@@ -43,7 +43,7 @@ class Api_AuthorizationsController extends AuthenticatedController
             'app'     => _('Mobile App')
         );
 
-        $this->setInfoboxImage('infobox/administration.jpg');
+        $this->setInfoboxImage('sidebar/admin-sidebar.png');
         $this->addToInfobox('Informationen', _('Dies sind die Apps, die Zugriff auf Ihren Account haben.'), 'icons/16/black/info-circle.png');
     }
 

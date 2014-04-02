@@ -11,7 +11,7 @@ if ($zoom) {
 }
 
 $infobox = array();
-$infobox['picture'] = 'infobox/schedules.jpg';
+$infobox['picture'] = 'sidebar/schedule-sidebar.png';
 
 $infobox['content'] = array(
     array(

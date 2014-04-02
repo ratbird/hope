@@ -322,4 +322,4 @@ $infobox = array(
         )
     )
 );
-$infobox = array('picture' => "infobox/hoersaal.jpg", 'content' => $infobox);
+$infobox = array('picture' => "sidebar/plugin-sidebar.png", 'content' => $infobox);

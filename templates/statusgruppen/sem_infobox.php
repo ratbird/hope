@@ -7,7 +7,7 @@
 
   <tr>
     <td class="infobox-img">
-      <?= Assets::img('infobox/groups.jpg') ?>
+      <?= Assets::img('sidebar/group-sidebar.png', array('width' => 260, 'height' => 96)) ?>
     </td>
   </tr>
 

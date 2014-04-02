@@ -98,7 +98,7 @@ switch ($view) {
                 )
             )
         );
-        $infopic = "infobox/rooms.jpg";
+        $infopic = "sidebar/resources-sidebar.png";
         $clipboard = TRUE;
     break;
     //Reiter "Listen"
@@ -118,7 +118,7 @@ switch ($view) {
                             "eintrag" => array (
                                 array   ("icon" =>  (!$_SESSION['resources_data']["list_recurse"]) ? "icons/16/black/checkbox-checked.png" : "icons/16/black/checkbox-unchecked.png",
                                     "text"  => ($_SESSION['resources_data']["list_recurse"]) ? sprintf(_("Ressourcen in untergeordneten Ebenen %snicht ausgeben%s."), "<a href=\"".URLHelper::getLink('?nrecurse_list=TRUE')."\">", "</a>") :  sprintf(_("Ressourcen in untergeordneten Ebenen %s(mit) ausgeben%s"), "<a href=\"".URLHelper::getLink('?recurse_list=TRUE')."\">", "</a>")))));
-        $infopic = "infobox/rooms.jpg";
+        $infopic = "sidebar/resources-sidebar.png";
     break;
 
     //Reiter "Objekt"
@@ -250,7 +250,7 @@ switch ($view) {
                    . _('zur Ressourcensuche') . '</a>'
         );
 
-        //$infopic = "infobox/schedules.jpg";
+        //$infopic = "sidebar/resources-sidebar.png";
     break;
     case "view_group_schedule":
         $room_groups = RoomGroups::GetInstance();
@@ -322,7 +322,7 @@ switch ($view) {
                                     "text"  => ($_SESSION['resources_data']["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"".URLHelper::getLink('?skip_closed_requests=FALSE')."\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"".URLHelper::getLink('?skip_closed_requests=TRUE')."\">", "</a>")),
                                 array   ("icon" =>  "icons/16/black/mail.png",
                                     "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"".URLHelper::getLink('?snd_closed_request_sms=TRUE')."\">", "</a>")))));
-        $infopic = "infobox/rooms.jpg";
+        $infopic = "sidebar/resources-sidebar.png";
         $clipboard = TRUE;
     break;
     case 'list_requests':
@@ -344,7 +344,7 @@ switch ($view) {
                                                                                 _("Als Mitarbeiter der Einrichtung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.")) :
                                                 (($SessSemName["class"] == "sem") ? _("Sie können hier die Details und den Belegungsplan der dieser Veranstaltung zugeordneten Ressourcen einsehen.") :
                                                                                 _("Sie können hier den Details und Belegungsplan der dieser Einrichtung zugeordneten Ressourcen einsehen.")))))));
-        $infopic = "infobox/schedules.jpg";
+        $infopic = "sidebar/resources-sidebar.png";
     break;
     case "openobject_details":
     case "view_details":
@@ -403,7 +403,7 @@ switch ($view) {
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>  sprintf("<a href=\"resources.php?actual_object={$_SESSION['resources_data']['resolve_requests_one_res']}&quick_view=view_sem_schedule&quick_view_mode=no_nav\" onclick=\"window.open(this.href,'','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');return false;\">%s</a>", _("Semesterplan")));
 
-        $infopic = "infobox/schedules.jpg";
+        $infopic = "sidebar/resources-sidebar.png";
     break;
     //default
     default:

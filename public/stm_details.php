@@ -204,7 +204,7 @@ if (!$stm_obj->getValue('complete')) {
 
 // print the info_box
 
-print_infobox ($infobox, "infobox/contract.jpg");
+print_infobox ($infobox, "sidebar/module-sidebar.png");
 
 // ende Infobox
 

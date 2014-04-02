@@ -72,7 +72,7 @@ class Settings_DeputiesController extends Settings_SettingsController
                                                'user_id', array('permission'   => getValidDeputyPerms(),
                                                                 'exclude_user' => $exclude_users));
 
-        $this->setInfoboxImage('infobox/groups.jpg');
+        $this->setInfoboxImage('sidebar/person-sidebar.png');
         $this->addToInfobox(_('Informationen'), _('Legen Sie hier fest, wer standardm‰ﬂig als Vertretung in Ihren Veranstaltungen eingetragen sein soll.'), 'icons/16/black/info');
     }
 

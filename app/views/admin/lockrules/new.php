@@ -21,4 +21,4 @@ $infobox_content = array(
             )
 );
 
-$infobox = array('picture' => 'infobox/administration.png', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/lock-sidebar.png', 'content' => $infobox_content);

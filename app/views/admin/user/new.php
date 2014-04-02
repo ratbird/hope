@@ -172,7 +172,7 @@ use Studip\Button, Studip\LinkButton;
 include '_infobox.php';
 
 $infobox = array(
-    'picture' => 'infobox/board1.jpg',
+    'picture' => 'sidebar/person-sidebar.png',
     'content' => array(
         array(
             'kategorie' => _("Aktionen"),

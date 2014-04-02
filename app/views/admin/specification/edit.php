@@ -89,7 +89,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? //infobox
 $infobox = array(
-    'picture' => 'infobox/modules.jpg',
+    'picture' => 'sidebar/admin-sidebar.png',
     'content' => array(
         array(
             'kategorie' => _("Hinweis"),

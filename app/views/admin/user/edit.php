@@ -512,7 +512,7 @@ if (!$prelim && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak
         "icon" => "icons/16/black/trash.png");
 }
 $infobox = array(
-    'picture' => 'infobox/board1.jpg',
+    'picture' => 'sidebar/person-sidebar.png',
     'content' => array(
         array(
             'kategorie' => _("Aktionen"),

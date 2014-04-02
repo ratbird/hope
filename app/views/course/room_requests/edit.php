@@ -40,4 +40,4 @@ if (getGlobalPerms($GLOBALS['user']->id) == 'admin' || ($GLOBALS['perm']->have_p
             'text' => '<a href="'.URLHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $request->getId())).'">'._('Raumanfrage auflösen').'</a>'
         );
 }
-$infobox = array('picture' => 'infobox/board2.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/resources-sidebar.png', 'content' => $infobox_content);

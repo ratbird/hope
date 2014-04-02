@@ -181,7 +181,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         echo "</table\n</td>\n";
 
         echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "pictures/dates.jpg");
+        print_infobox($info['all'], "sidebar/schedule-sidebar.png");
     } else {
 
         // add skip link
@@ -395,7 +395,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         echo "</table>\n</td>\n";
 
         echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "infobox/dates.jpg");
+        print_infobox($info['all'], "sidebar/schedule-sidebar.png");
     }
 
     echo "</td>\n";

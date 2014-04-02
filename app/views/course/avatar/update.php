@@ -79,5 +79,5 @@ if ($adminList) {
     );
 }
 $infobox = array('content' => $infobox,
-                 'picture' => Assets::image_path("infobox/administration.png")
+                 'picture' => Assets::image_path("sidebar/admin-sidebar.png")
 );

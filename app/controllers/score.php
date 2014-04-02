@@ -107,7 +107,7 @@ class ScoreController extends AuthenticatedController
         $this->max_per_page    = $max_per_page;
         
         // Define infobox
-        $this->setInfoboxImage('infobox/board2.jpg');
+        $this->setInfoboxImage('sidebar/medal-sidebar.png');
         $this->addToInfobox(_('Ihre Position:'),
                             _('Ihre Punkte: ') .
                             '<strong>' . number_format($this->score->ReturnMyScore(), 0, ',', '.') . '</strong>');

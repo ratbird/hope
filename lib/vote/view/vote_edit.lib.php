@@ -472,7 +472,7 @@ function printRightRegion ( ) {
               );
 
     echo "<td width=\"270\" align=\"center\" valign=\"top\">\n";
-    print_infobox($infobox, "infobox/voting.jpg");
+    print_infobox($infobox, "sidebar/evaluation-sidebar.png");
 
     echo "</td></tr>";
     echo "</table>";

@@ -24,7 +24,7 @@ class StmInstanceAssiVisualization{
             "<b>" . _("Wahl eines Konkreten Moduls") . "</b><br>
             " . _("Bitte w&auml;hlen Sie die entsprechende Aktion f&uuml;r ein vorhandenes Konkretes Modul aus. Sie k&ouml;nnen alternativ auch ein neues Modul instanziieren.")
             , array('align' => 'center', 'class' => 'blank'));
-            echo $table->cell(Assets::img('infobox/archiv.jpg'));
+            echo $table->cell(Assets::img('sidebar/seminar-archive-sidebar.png'));
         echo $table->close();
 
         echo $table->open(array('class' => 'table_row_odd'));

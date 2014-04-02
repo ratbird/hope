@@ -202,7 +202,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $infobox[1]["eintrag"][] = array (  "icon" => 'icons/16/black/learnmodule.png' ,
                                         "text"  => sprintf(_("Wenn Sie &uuml;ber die entsprechenden Rechte verf&uuml;gen, k&ouml;nnen Sie eigene Lernmodule erstellen."))
                                     );
-            print_infobox($infobox, "infobox/lernmodule.jpg");
+            print_infobox($infobox, "sidebar/learnmodule-sidebar.png");
         ?>
         </td>
     </tr>

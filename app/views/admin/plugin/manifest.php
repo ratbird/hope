@@ -59,5 +59,5 @@ $infobox_content = array(
     )
 );
 
-$infobox = array('picture' => 'infobox/modules.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/plugin-sidebar.png', 'content' => $infobox_content);
 ?>

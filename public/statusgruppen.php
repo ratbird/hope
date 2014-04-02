@@ -315,7 +315,7 @@ if ($rechte) {
 
 $layout = $GLOBALS['template_factory']->open('layouts/base.php');
 
-$layout->infobox = array('content' => $infobox, 'picture' => "infobox/groups.jpg");
+$layout->infobox = array('content' => $infobox, 'picture' => "sidebar/group-sidebar.png");
 $layout->content_for_layout = ob_get_clean();
 
 echo $layout->render();

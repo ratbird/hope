@@ -493,7 +493,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         <br>
         </td>
         <td width="270" class="blank" align="right" valign="top">
-        <? print_infobox($infobox, "infobox/lernmodule.jpg") ?>
+        <? print_infobox($infobox, "sidebar/learnmodule-sidebar.png") ?>
         </td>
     </tr>
 </table>

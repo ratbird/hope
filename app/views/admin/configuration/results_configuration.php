@@ -84,5 +84,5 @@ $infobox_content = array(
     )
 );
 
-$infobox = array('picture' => 'infobox/config.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
 ?>

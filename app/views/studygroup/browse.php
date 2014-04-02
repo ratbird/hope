@@ -2,7 +2,7 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-$infobox['picture'] = 'infobox/studygroup.jpg';
+$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),

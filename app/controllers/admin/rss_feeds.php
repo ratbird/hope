@@ -39,7 +39,7 @@ class Admin_RssFeedsController extends AuthenticatedController
     {
         $this->feeds = RSSFeed::loadByUserId($GLOBALS['user']->id);
 
-        $this->setInfoboxImage('infobox/administration.png');
+        $this->setInfoboxImage('sidebar/rss-sidebar.png');
 
         // Infobox: "Add feed"
         $add = sprintf('<a href="%s">%s</a>',

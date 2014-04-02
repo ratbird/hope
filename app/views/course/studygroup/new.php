@@ -3,7 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 
 $infobox = array();
-$infobox['picture'] = 'infobox/studygroup.jpg';
+$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),

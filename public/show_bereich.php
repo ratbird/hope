@@ -183,7 +183,7 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
 <?php
 $layout = $GLOBALS['template_factory']->open('layouts/base.php');
 
-$layout->infobox = array('content' => $infobox, 'picture' => "infobox/board1.jpg");
+$layout->infobox = array('content' => $infobox, 'picture' => "sidebar/seminar-sidebar.png");
 $layout->content_for_layout = ob_get_clean();
 
 echo $layout->render();

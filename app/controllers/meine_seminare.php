@@ -146,7 +146,7 @@ class MeineSeminareController extends AuthenticatedController
         $this->_my_sem_open        = $_my_sem_open;
 
         // Add infobox
-        $this->setInfoBoxImage('infobox/config.jpg');
+        $this->setInfoBoxImage('sidebar/seminar-sidebar.png');
         $this->addToInfobox(_('Informationen'),
                             _('Hier können Sie Ihre Veranstaltungen in Farbgruppen einordnen und '
                              .'eine Gliederung nach Kategorien festlegen.'),
@@ -239,7 +239,7 @@ class MeineSeminareController extends AuthenticatedController
 
         $count = DBManager::get()->query("SELECT COUNT(*) FROM archiv")->fetchColumn();
 
-        $this->setInfoboxImage('infobox/archiv.jpg');
+        $this->setInfoboxImage('sidebar/seminar-archive-sidebar.png');
         $this->addToInfobox(_('Information:'),
                             sprintf(_('Es befinden sich zur Zeit %s Veranstaltungen im Archiv.'), $count),
                             'icons/16/black/info.png');

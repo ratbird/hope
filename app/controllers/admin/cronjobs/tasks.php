@@ -69,7 +69,7 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
 
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
-        $this->setInfoboxImage(Assets::image_path('infobox/time.jpg'));
+        $this->setInfoboxImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
         // Navigation
         $cronjobs = sprintf('<a href="%s">%s</a>',

@@ -31,7 +31,7 @@ foreach($all_mods as $mod) {
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'infobox/groups.jpg';
+$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
 $infobox['content'] = array(
     array(
         'kategorie' => _("Information"),

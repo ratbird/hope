@@ -91,7 +91,7 @@ function printSelectSemester($infobox,$semestersAR){
           . "  </td>\n"
           . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
     echo $html;
-    print_infobox($infobox, "infobox/folders.jpg");
+    print_infobox($infobox, "sidebar/files-sidebar.png");
     $html = "     <br></td>\n"
           . " </tr>\n"
           . "</table>\n";
@@ -205,7 +205,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     // the right site of the page
     $html .="     <td class=\"blank\" width=\"270\" valign=\"top\" align=\"center\">\n";
     echo $html;
-    print_infobox($infobox, "infobox/folders.jpg");
+    print_infobox($infobox, "sidebar/files-sidebar.png");
     $html = "      <br>\n"
           . Button::create('<< '._('Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
           . Button::create(_('Weiter').' >>', 'collect_information', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
@@ -268,7 +268,7 @@ function printPdfAssortment($infobox,$seminars){
     $html .="     </font></td>\n"
           . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
     echo $html;
-    print_infobox($infobox, "infobox/folders.jpg");
+    print_infobox($infobox, "sidebar/files-sidebar.png");
 //  $html = "     <form action=\"$PHP_SELF\" method=post>"
 //        . "     <center>\n"
 //        . "       <a href=\"recordofstudy.php\">\n"

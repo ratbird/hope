@@ -36,7 +36,7 @@ class Settings_AccountController extends Settings_SettingsController
         $infobox_message = _('Hier k&ouml;nnen Sie Ihre Benutzerdaten ver&auml;ndern.') . '<br>'
                          . sprintf(_('Alle mit einem Sternchen %s markierten Felder m&uuml;ssen ausgef&uuml;llt werden.'),
                                    '<span style="color: red; font-size: 1.5em; font-weight: bold;">*</span>');
-        $this->setInfoBoxImage('infobox/groups.jpg');
+        $this->setInfoBoxImage('sidebar/person-sidebar.png');
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
     }
 

@@ -123,7 +123,7 @@ $graphtypes = array(
 
 <?
 $infobox = array(
-    'picture' => 'infobox/evaluation.jpg',
+    'picture' => 'sidebar/evaluation-sidebar.png',
     'content' => array(
         array(
             'kategorie' => _('Information:'),

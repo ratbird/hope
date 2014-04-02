@@ -84,7 +84,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
-        $this->setInfoboxImage(Assets::image_path('infobox/time.jpg'));
+        $this->setInfoboxImage(Assets::image_path('sidebar/date-sidebar.png'));
 
         // Navigation
         $cronjobs = sprintf('<a href="%s"><strong>%s</strong></a>',
@@ -207,7 +207,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
-        $this->setInfoboxImage(Assets::image_path('infobox/time.jpg'));
+        $this->setInfoboxImage(Assets::image_path('sidebar/date-sidebar.png'));
 
         // Actions
         $back = sprintf('<a href="%s">%s</a>',

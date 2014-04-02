@@ -369,7 +369,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
             </form>
         </td>
         <td class="blank" align="right" valign="top" width="270">
-            <?= print_infobox(array(), 'infobox/archiv.jpg') ?>
+            <?= print_infobox(array(), 'sidebar/seminar-archive-sidebar.png') ?>
         </td>
     </tr>
 

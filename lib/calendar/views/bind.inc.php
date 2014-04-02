@@ -69,7 +69,7 @@ $template->selected_sem               = $selected_sem;
 $template->atime                      = $atime;
 
 $template->infobox = array(
-    'picture' => 'infobox/dates.jpg',
+    'picture' => 'sidebar/schedule-sidebar.png',
     'content' => array(
         array("kategorie" => _("Semesterauswahl:"),
         "eintrag" => array(

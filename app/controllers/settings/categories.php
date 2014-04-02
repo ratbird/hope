@@ -70,7 +70,7 @@ class Settings_CategoriesController extends Settings_SettingsController
                             ? array('action' => $verify_action, 'id' => $verify_id)
                             : false;
 
-        $this->setInfoboxImage('infobox/groups.jpg');
+        $this->setInfoboxImage('sidebar/privacy-sidebar.png');
         $this->addToInfobox(_('Aktionen'),
                             sprintf('<a href="%s">%s</a>',
                                     $this->url_for('settings/categories/create'),

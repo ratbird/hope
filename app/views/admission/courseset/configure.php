@@ -24,7 +24,7 @@ $infobox = array(
     )
 );
 $infobox = array('content' => $infobox,
-                 'picture' => 'infobox/administration.png'
+                 'picture' => 'sidebar/admin-sidebar.png'
 );
 
 // Load assigned course IDs.

@@ -396,7 +396,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
                         ) : FALSE;
 }
 
-print_infobox ($infobox, "infobox/board1.jpg");
+print_infobox ($infobox, "sidebar/seminar-sidebar.png");
 
 ?>
 

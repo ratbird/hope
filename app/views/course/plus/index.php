@@ -159,6 +159,6 @@ $infobox = array(
     
 );
 $infobox = array(
-    'picture' => "infobox/modules.jpg",
+    'picture' => "sidebar/plugin-sidebar.png",
     'content' => $infobox
 );

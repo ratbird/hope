@@ -35,4 +35,4 @@ $infobox_content = array(
         ))
     ),
 );
-$infobox = array('picture' => 'infobox/board2.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'sidebar/resources-sidebar.png', 'content' => $infobox_content);

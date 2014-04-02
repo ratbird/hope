@@ -25,7 +25,7 @@ $infobox = array(
     )
 );
 $infobox = array('content' => $infobox,
-                 'picture' => 'infobox/administration.png'
+                 'picture' => 'sidebar/admin-sidebar.png'
 );
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>

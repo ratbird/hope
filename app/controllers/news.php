@@ -537,7 +537,7 @@ class NewsController extends StudipController
             if (count($this->news_groups[$type]))
                 ksort($this->news_groups[$type]);
 
-        $this->setInfoBoxImage('infobox/config.jpg');
+        $this->setInfoBoxImage('sidebar/news-sidebar.png');
         $this->addToInfobox(_('Informationen'),
                             _('Hier können Sie Ihre Ankündigungen verwalten. Durch '
                             .'die Angabe eines Anzeigezeitraums oder eines Suchbegriffs '

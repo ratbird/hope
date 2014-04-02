@@ -221,5 +221,5 @@ else {
             )));
 }
 
-print_infobox($info_content, "infobox/institutes.jpg");
+print_infobox($info_content, "sidebar/institute-sidebar.png");
 ?>

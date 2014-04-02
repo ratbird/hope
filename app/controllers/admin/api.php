@@ -30,7 +30,7 @@ class Admin_ApiController extends AuthenticatedController
         );
 
         // Infobox
-        $this->setInfoboxImage('infobox/administration.jpg');
+        $this->setInfoboxImage('sidebar/admin-sidebar.png');
 
         if ($action !== 'index') {
             $back = sprintf('<a href="%s">%s</a>',

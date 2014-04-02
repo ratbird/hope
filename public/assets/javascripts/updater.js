@@ -89,15 +89,17 @@ STUDIP.JSUpdater = {
         STUDIP.JSUpdater.currentDelayFactor += 1;
     }
 };
-jQuery(function () {
+
+jQuery(window).load(function () {
     if (STUDIP.jsupdate_enable) {
-        jQuery("body").bind("mousemove", function () {
+        jQuery(document).on('mousemove', function () {
             STUDIP.JSUpdater.currentDelayFactor = 0;
             if (Number(new Date()) - Number(STUDIP.JSUpdater.dateOfLastCall) > 5000) {
                 STUDIP.JSUpdater.idOfCurrentQueue = Math.floor(Math.random() * 1000000);
                 STUDIP.JSUpdater.call(STUDIP.JSUpdater.idOfCurrentQueue);
             }
         });
+
         STUDIP.JSUpdater.idOfCurrentQueue = Math.floor(Math.random() * 1000000);
         STUDIP.JSUpdater.nextCall(STUDIP.JSUpdater.idOfCurrentQueue);
     }

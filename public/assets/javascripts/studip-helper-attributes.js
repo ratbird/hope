@@ -50,4 +50,41 @@
     }).ready(function () {
         $('select[data-activates]').trigger('change');
     });
+
+    // Global handler:
+    // Enable the user to set the checked state on a subset of related
+    // checkboxes by clicking the first checkbox of the subset and then
+    // clicking the last checkbox of the subset while holding down the shift
+    // key, thus toggling all the checkboxes in between.
+    // This only works if the first and last checkbox of the subset are set
+    // to the same state.
+    var last_element = null;
+    $(document).on('click', '[data-shiftcheck] :checkbox', function (event) {
+        if (!event.originalEvent || last_element === event.target) {
+            return;
+        }
+
+        if (last_element !== null && event.shiftKey) {
+            var $this = $(event.target),
+                $form = $this.closest('form'),
+                name  = $this.attr('name'),
+                state = $this.prop('checked'),
+                $last = $(last_element),
+                children, idx0, idx1;
+
+            if ($form.is($last.closest('form')) && name == $last.attr('name') && state == $last.prop('checked')) {
+                children = $form.find(':checkbox[name="' + name + '"]:not(:disabled)');
+                idx0 = children.index(event.target);
+                idx1 = children.index(last_element);
+                if (idx0 > idx1) {
+                    // Swap variables, see http://stackoverflow.com/a/20531819
+                    idx0 = idx1 + (idx1=idx0, 0);
+                }
+                children.slice(idx0, idx1).prop('checked', state);
+            }
+        }
+
+        last_element = event.target;
+    });
+
 }(jQuery));

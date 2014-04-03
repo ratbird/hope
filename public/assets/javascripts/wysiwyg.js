@@ -259,6 +259,9 @@ jQuery(function ($) {
             editor.on('blur', function (event) {
                 event.editor.updateElement();
             });
+            $(editor.container.$).on('blur', '.CodeMirror', function (event) {
+                editor.updateElement(); // also update in source mode
+            });
 
             // blurDelay = 0 is an ugly hack to be faster than Stud.IP
             // forum's save function; might produce "strange" behaviour

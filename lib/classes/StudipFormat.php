@@ -189,13 +189,13 @@ class StudipFormat extends TextFormat
             // unreserved  = [\w\-\.~]
             // pct-encoded = %[0-9a-f]{2}
             // sub-delim   = [!$&\'()*+,;=]
-            'start' => '(?xi) \b
+            'start' => '(?xi)
 
                 # capture 1: displayed text
-                (?:\[( [^\n\f\]] )\])?
+                (?:\[( [^\n\f\]]+ )\])?
 
                 # capture 2: URL
-                (
+                \b(
                     # scheme
                     [a-z][a-z0-9\+\-\.]* : \/\/
 

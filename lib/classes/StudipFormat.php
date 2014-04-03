@@ -170,8 +170,62 @@ class StudipFormat extends TextFormat
             'start'    => '(?<=\s|^|\>)(?:\[([^\n\f\]]+?)\])?([\w.!#%+-]+@([[:alnum:].-]+))(?=\s|$)',
             'callback' => 'StudipFormat::markupEmails'
         ),
+        'htmlAnchor' => array(
+            'start' => '(?xi) <\s* a (?:\s(?:\s* \w+ \s*=\s* "[^"]*" )*)? \s*>',
+            'end' => '(?xi) <\s* \/\s* a \s*>',
+            'callback' => 'StudipFormat::htmlAnchor'
+        ),
         'links' => array(
-            'start'    => '(?<=\s|^|\>)(?:(?:\[([^\n\f\]]+?)\])?)(\w+?:\/\/.+?)(?=\s|$)',
+            // markup: [text]url
+            //
+            // to set URLs apart from normal text, scheme and host are obligatory
+            // URLs are based on http://tools.ietf.org/html/rfc3986
+            //
+            // url = scheme://authority/path?query#fragment
+            // authority = (userinfo @)? host (: port)?
+            //
+            // pchar       = [ :unreserved: :pct-encoded: :sub-delim: :@]
+            //             = ( [\w\-\.~!$&\'()*+,;=:@] | %[0-9a-f]{2} )
+            // unreserved  = [\w\-\.~]
+            // pct-encoded = %[0-9a-f]{2}
+            // sub-delim   = [!$&\'()*+,;=]
+            'start' => '(?xi) \b
+
+                # capture 1: displayed text
+                (?:\[( [^\n\f\]] )\])?
+
+                # capture 2: URL
+                (
+                    # scheme
+                    [a-z][a-z0-9\+\-\.]* : \/\/
+
+                    # userinfo = [ :unreserved: :pct-encoded: :sub-delim: :]*
+                    (?: (?: [\w\-\.~!$&\'()*+,;=:] | %[0-9a-f]{2} )* @ )?
+
+                    # host       = ( ip-literal | ipv4 | reg-name )
+                    # ip-literal = \[( ipv6 | ipv-future )\]
+                    # ipv4       = ( ([01]\d{,2} | 2[0-4]\d | 25[0-5] \.){4}
+                    # reg-name   = [ :unreserved: :pct-encoded: :sub-delim: ]*
+                    #            = ( [\w\-\.~!$&\'()*+,;=] | %[0-9a-f]{2} )*
+                    # NOTES
+                    # * ipv4 is a subset of reg-name
+                    # * our host definition does not allow ip-literals
+                    # * our host string cannot be empty
+                    (?: [\w\-\.~!$&\'()*+,;=] | %[0-9a-f]{2} )+
+
+                    # port
+                    (?: :\d* )?
+
+                    # path = ( \/ :pchar:+ )* \/?
+                    (?: \/(?: [\w\-\.~!$&\'()*+,;=:@] | %[0-9a-f]{2} )+ )* \/?
+
+                    # query = \? [ :pchar: \/ ? ]*
+                    (?: \?(?: [\w\-\.~!$&\'()*+,;=:@\/\?] | %[0-9a-f]{2} )* )?
+
+                    # fragment = # [ :pchar: \/ ? ]*
+                    (?: \#(?: [\w\-\.~!$&\'()*+,;=:@\/\?] | %[0-9a-f]{2} )* )?
+                )
+            ',
             'callback' => 'StudipFormat::markupLinks'
         ),
     );
@@ -575,6 +629,10 @@ class StudipFormat extends TextFormat
      */
     protected static function markupLinks($markup, $matches)
     {
+        if ($markup->isInsideOf('htmlAnchor')) {
+            return $matches[0];
+        }
+
         $url = $matches[2];
         $title = $matches[1] ? $matches[1] : $url;
 
@@ -597,4 +655,8 @@ class StudipFormat extends TextFormat
         );
     }
 
+    protected static function htmlAnchor($markup, $matches, $contents)
+    {
+        return $matches[0] . $contents . '</a>';
+    }
 }

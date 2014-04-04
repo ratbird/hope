@@ -163,7 +163,6 @@ class TextFormat
             $parts = preg_split($pattern, $text, -1, $options);
             if (!is_array($parts)) {
                 $last_error = error_get_last();
-                die($pattern);
                 throw new Exception(__CLASS__ . ': ' . $last_error['message']);
             }
             array_unshift($parts, NULL);

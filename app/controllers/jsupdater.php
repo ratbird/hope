@@ -13,7 +13,7 @@ require_once 'app/controllers/authenticated_controller.php';
 /**
  * Controller called by the main periodical ajax-request. It collects data,
  * converts the textstrings to utf8 and returns it as a json-object to the
- * javascript-function "STUDIP.JSUpdater.processUpdate(json)".
+ * internal javascript-function "STUDIP.JSUpdater.process(json)".
  */
 class JsupdaterController extends AuthenticatedController {
 
@@ -23,13 +23,15 @@ class JsupdaterController extends AuthenticatedController {
      *  'js_function.sub_function': data,
      *  'anotherjs_function.sub_function': moredata
      * }
-     * This action is called by STUDIP.JSUpdater.call and the result processed by
-     * STUDIP.JSUpdater.processUpdate
+     * This action is called by STUDIP.JSUpdater.poll and the result processed
+     * the internal STUDIP.JSUpdater.process method
      */
     public function get_action() {
         $data = UpdateInformation::getInformation();
         $data = array_merge($data, $this->coreInformation());
         $data = studip_utf8encode($data);
+
+        $this->set_content_type('application/json;charset=utf-8');
         $this->render_text(json_encode($data));
     }
 

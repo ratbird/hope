@@ -23,6 +23,40 @@ class UpdateInformation {
 
     static protected $infos = array();
     static protected $collecting = null;
+    static protected $request = null;
+
+    /**
+     * Extracts updater data from request
+     *
+     * @return Array Request data (may be empty if no data is present)
+     */
+    static protected function getRequest() {
+        if (self::$request === null) {
+            self::$request = Request::getArray('page_info');
+        }
+        return self::$request ?: array();
+    }
+
+    /**
+     * Checks whether the request has data for the given index.
+     *
+     * @return bool indicating whether there is data present for the given index
+     */
+    static public function hasData($index) {
+        $request = self::getRequest();
+        return isset($request[$index]);
+    }
+
+    /**
+     * Returns request data for the given index.
+     *
+     * @param String $index Index to get the request data for
+     * @return mixed Array with request data or null if index is invalid
+     */
+    static public function getData($index) {
+        $request = self::getRequest();
+        return $request[$index] ?: null;
+    }
 
     /**
      * Gives information to the buffer for the javascript. The first parameter is

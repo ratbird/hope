@@ -101,7 +101,7 @@ class TextFormat
         }
         $this->start_regexp = NULL;
     }
-    
+
     /**
      * Returns a single markup-rule if it exists.
      * @return array: array('start' => "...", 'end' => "...", 'callback' => "...")
@@ -161,6 +161,11 @@ class TextFormat
 
         if (isset($pattern)) {
             $parts = preg_split($pattern, $text, -1, $options);
+            if (!is_array($parts)) {
+                $last_error = error_get_last();
+                die($pattern);
+                throw new Exception(__CLASS__ . ': ' . $last_error['message']);
+            }
             array_unshift($parts, NULL);
         } else {
             $parts = array(NULL, array($text, 0));

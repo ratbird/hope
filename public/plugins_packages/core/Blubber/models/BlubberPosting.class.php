@@ -21,7 +21,7 @@ class BlubberPosting extends SimpleORMap {
     //One-time variable that is set right before markup
     static public $mention_posting_id = false;
     //regexp for hashtags
-    static public $hashtags_regexp = "(^|\s)#([\w\d_\.\-\?!\+=%]*[\w\d])";
+    static public $hashtags_regexp = "(^|\s)\#([\w\d_\.\-\?!\+=%]*[\w\d])";
 
     /**
      * Special format-function that adds hashtags to the common formatReady-markup.
@@ -29,7 +29,7 @@ class BlubberPosting extends SimpleORMap {
      * @return string : formatted text
      */
     static public function format($text) {
-        StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, "", "BlubberPosting::markupHashtags");
+        StudipFormat::addStudipMarkup("blubberhashtag", BlubberPosting::$hashtags_regexp, null, "BlubberPosting::markupHashtags");
         $output = formatReady($text);
         StudipFormat::removeStudipMarkup("blubberhashtag");
         return $output;
@@ -443,10 +443,10 @@ class BlubberPosting extends SimpleORMap {
             return new BlubberUser($this['user_id']);
         }
     }
-    
+
     /**
      * Returns all known users that have been sharing this thread.
-     * @return array of \BlubberContact 
+     * @return array of \BlubberContact
      */
     public function getSharingUsers() {
         if ($this['context_type'] !== "public") {
@@ -459,15 +459,15 @@ class BlubberPosting extends SimpleORMap {
         $shares = $get_shares->fetchAll(PDO::FETCH_ASSOC);
         $users = array();
         foreach ($shares as $share) {
-            $users[] = $share['external_contact'] 
-                ? BlubberExternalContact::find($share['user_id']) 
+            $users[] = $share['external_contact']
+                ? BlubberExternalContact::find($share['user_id'])
                 : BlubberUser::find($share['user_id']);
         }
         return $users;
     }
-    
+
     /**
-     * Lets the user reshare the posting. If user_id is not given, the current 
+     * Lets the user reshare the posting. If user_id is not given, the current
      * user does the reshare.
      * @param string|null $user_id : md5 user_id of the resharing user.
      * @param int $external_user : is the user an external user?
@@ -504,14 +504,14 @@ class BlubberPosting extends SimpleORMap {
                     $thread['user_id'],
                     $url,
                     sprintf(_("%s hat Ihren Blubber weitergesagt"), get_fullname()),
-                    "posting_".$thread->getId(), 
+                    "posting_".$thread->getId(),
                     Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)
                 );
             }
         }
         return $success;
     }
-    
+
     /**
      * Undo a reshare of a user. Do nothing if there was no reshare.
      * @param string|null $user_id : md5 user_id of the not anymore resharing user.

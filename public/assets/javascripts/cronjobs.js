@@ -49,15 +49,6 @@
     $('.cronjob-filters select').live('change', function () {
         $(this).closest('form').submit();
     });
-    
-    // Cronjob tables:
-    // Disable bulk action unless a valid action has been selected
-    $('.cronjobs tfoot select').live('change', function () {
-        var value  = $(this).val(),
-            button = $(this).next('button');
-        button.attr('disabled', value.length === 0);
-    });
-    
 
     // Active date and time picker as well as the Cron item selector on
     // document ready / page load.

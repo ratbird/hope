@@ -15,7 +15,8 @@
  * ------------------------------------------------------------------------ */
 
 (function ($, STUDIP) {
-    var lastAjaxDuration = 200, //ms of the duration of an ajax-call
+    var active = false,
+        lastAjaxDuration = 200, //ms of the duration of an ajax-call
         currentDelayFactor = 0,
         lastJsonResult = null,
         dateOfLastCall = +(new Date()), // Get milliseconds of date object
@@ -173,22 +174,28 @@
 
     // Starts the updater, also registers the activity handlers
     STUDIP.JSUpdater.start = function () {
-        STUDIP.jsupdate_enable = true;
-        $(document).on('mousemove', userActivityHandler);
-        $(window).on('blur focus', windowActivityHandler);
-        registerNextPoll();
+        if (!active) {
+            STUDIP.jsupdate_enable = true;
+            $(document).on('mousemove', userActivityHandler);
+            $(window).on('blur focus', windowActivityHandler);
+            registerNextPoll();
+        }
+        active = true;
     };
     
     // Stops the updater, also unregisters the activity handlers
     STUDIP.JSUpdater.stop = function () {
-        STUDIP.jsupdate_enable = false;
-        $(document).off('mousemove', userActivityHandler);
-        $(window).off('blur focus', windowActivityHandler);
-        if (ajaxRequest) {
-            ajaxRequest.abort();
-            ajaxRequest = null;
+        if (active) {
+            STUDIP.jsupdate_enable = false;
+            $(document).off('mousemove', userActivityHandler);
+            $(window).off('blur focus', windowActivityHandler);
+            if (ajaxRequest) {
+                ajaxRequest.abort();
+                ajaxRequest = null;
+            }
+            window.clearTimeout(timeout);
         }
-        window.clearTimeout(timeout);
+        active = false;
     };
     
     // Registers a new handler by an index, a callback and an optional data

@@ -76,47 +76,40 @@ class EvaluationObjectDB extends DatabaseObject {
    * @param   boolean  $html_decode     (optional)
    * @return  string                    The name of the range
    */
-  function getRangename ($rangeID, $html_decode = true) {
-    global $user;
+   function getRangename ($rangeID, $html_decode = true) {
+       global $user;
 
-    $db = DBManager::get();
-
-    $sql =
-      "SELECT".
-      " username, user_id ".
-      "FROM".
-      " auth_user_md5 ".
-      "WHERE".
-      " user_id = '".$rangeID."'".
-      " OR".
-      " username = '".$rangeID."'";
-    $result = $db->query($sql);
-
-    if (($row = $result->fetch()) === FALSE) {
-         if ($rangeID == "studip")
-            $rangename = _("Systemweite Evaluationen");
-         else {
-          $name = getHeaderLine ($rangeID);
-         if ($name != NULL){
-            if ( $html_decode )
-               $rangename = decodeHTML ($name);
-            else
+       if ($rangeID == "studip") {
+           return _("Systemweite Evaluationen");
+       }
+       $o_type = get_object_type($rangeID, array('sem','user','inst'));
+       if (in_array($o_type, array('sem','inst','fak'))) {
+           $name = getHeaderLine ($rangeID);
+           if ($name != NULL) {
+               if ( $html_decode )
+                   $rangename = decodeHTML ($name);
+               else
                $rangename = $name;
-         } else
-            $rangename = _("Kein Titel gefunden.");
-      }
-    } else {
-       if ($row['user_id'] != $user->id){
-          $rangename = _("Profil: ")
-            . get_fullname($row['user_id'],'full',1)
-             . " (".$row['username'].")";
+           } else {
+               $rangename = _("Kein Titel gefunden.");
+           }
+           return $rangename;
+       }
+       if ($o_type != 'user') {
+           $user_id = get_userid($rangeID);
+       } else {
+           $user_id = $rangeID;
+       }
 
-       } else
+       if ($user_id != $user->id) {
+           $rangename = _("Profil: ")
+           . get_fullname($user_id,'full',1)
+           . " (".get_username($user_id).")";
+       } else {
            $rangename = _("Profil");
-    }
-
-    return $rangename;
-  }
+       }
+       return $rangename;
+   }
 
   /**
    * Gets the global Studi.IP perm
@@ -282,7 +275,7 @@ class EvaluationObjectDB extends DatabaseObject {
     /* ask database ------------------------------------------------------- */
     $sql =
       "SELECT".
-      " eval_id, author_id ".
+      " eval_id ".
       "FROM".
       " eval ".
       "LEFT JOIN".
@@ -291,30 +284,20 @@ class EvaluationObjectDB extends DatabaseObject {
       " user_id = author_id ".
       "WHERE".
       " shared = 1 ".
-      "AND".
-      " (title LIKE '%".$searchString."%' ".
+      "AND author_id <> :current_user AND ".
+      " (title LIKE :search_string ".
       " OR".
-      "  text LIKE '%".$searchString."%'".
+      "  text LIKE :search_string ".
       " OR".
-      "  Vorname LIKE '%".$searchString."%'".
+      "  Vorname LIKE :search_string ".
       " OR".
-      "  Nachname LIKE '%".$searchString."%'".
+      "  Nachname LIKE :search_string ".
       " OR".
-      "  username LIKE '%".$searchString."%') ".
+      "  username LIKE :search_string ) ".
       "ORDER BY".
       " title";
 
-    $result = $db->query($sql);
-    /* ------------------------------------------------ end: asking database */
-
-    /* Fill up the array with IDs ----------------------------------------- */
-    foreach ($result as $row) {
-      if ($row['author_id'] != $user->id)
-         array_push ($template_ids, $row['eval_id']);
-    }
-    /* ------------------------------------------------------- end: filling */
-
-    return $template_ids;
+    return $db->fetchFirst($sql, array(':current_user' => $user->id, ':search_string' => '%' . $searchString . '%'));
   } // returned templateIDs
 
 
@@ -358,7 +341,8 @@ class EvaluationObjectDB extends DatabaseObject {
       "WHERE".
       " a.eval_id = b.eval_id".
       " AND ".
-      " a.range_id = '".$rangeID."'";
+      " a.range_id = ?";
+      $param = $rangeID;
     } else {
       // Krampf!!! Jetzt klappt's....seufz
       $sql =
@@ -373,7 +357,8 @@ class EvaluationObjectDB extends DatabaseObject {
          "WHERE".
          " eval_range.eval_id IS NULL".
          " AND".
-         " b.author_id = '".$user->id."'";
+         " b.author_id = ?";
+      $param = $user->id;
     }
 
     if ($state == EVAL_STATE_NEW)
@@ -401,15 +386,7 @@ class EvaluationObjectDB extends DatabaseObject {
 
     $sql .= " ORDER BY chdate DESC";
 
-    $result = $db->query($sql);
-    /* -------------------------------------------------------- end: asking */
-
-    /* Fill up the array with IDs ----------------------------------------- */
-    foreach ($result as $row) {
-      array_push ($eval_ids, $row['eval_id']);
-    }
-    /* ------------------------------------------------------- end: filling */
-
+    $eval_ids = $db->fetchFirst($sql, array($param));
 
     return $eval_ids;
   } // returned evalIDs

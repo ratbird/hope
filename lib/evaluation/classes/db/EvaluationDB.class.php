@@ -96,20 +96,11 @@ class EvaluationDB extends EvaluationObjectDB {
    * @throws error
    */
   function load (&$evalObject) {
-    $db = DBManager::get();
-
     /* load evaluation basics ---------------------------------------------- */
-    $sql =
-      "SELECT".
-      " * ".
-      "FROM".
-      " eval ".
-      "WHERE".
-      " eval_id = '".$evalObject->getObjectID ()."'";
 
-    $result = $db->query($sql);
+    $row = DBManager::get()->fetchOne("SELECT * FROM eval WHERE eval_id = ?", array($evalObject->getObjectID()));
 
-    if (($row = $result->fetch()) === FALSE)
+    if (!count($row))
       return $this->throwError (1,
             _("Keine Evaluation mit dieser ID gefunden."));
 
@@ -128,18 +119,11 @@ class EvaluationDB extends EvaluationObjectDB {
 
 
     /* load ranges --------------------------------------------------------- */
-    $sql =
-      "SELECT".
-      " range_id ".
-      "FROM".
-      " eval_range ".
-      "WHERE".
-      " eval_id = '".$evalObject->getObjectID ()."'";
+    $range_ids = DBManager::get()->fetchFirst("SELECT range_id FROM eval_range WHERE eval_id = ?",
+            array($evalObject->getObjectID()));
 
-    $result = $db->query($sql);
-
-    foreach ($result as $row) {
-      $evalObject->addRangeID ($row['range_id']);
+    foreach ($range_ids as $range_id) {
+      $evalObject->addRangeID($range_id);
     }
     /* --------------------------------------------------------- end: ranges */
 
@@ -160,79 +144,47 @@ class EvaluationDB extends EvaluationObjectDB {
    * @throws  error
    */
   function save (&$evalObject) {
-    $db = DBManager::get();
 
     if (EVAL_DEBUGLEVEL >= 1)
       echo "DB: Speichere Evaluationsobjekt<br>\n";
 
-    $startdate = $evalObject->getStartdate() == NULL
-   ? "NULL"
-   : $evalObject->getStartdate();
-
-    $stopdate = $evalObject->getStopdate() == NULL
-   ? "NULL"
-   : $evalObject->getStopdate();
-
-    $timespan = $evalObject->getTimespan() == NULL
-   ? "NULL"
-   : $evalObject->getTimespan();
+    $startdate = $evalObject->getStartdate();
+    $stopdate  = $evalObject->getStopdate();
+    $timespan  = $evalObject->getTimespan();
 
     /* save evaluation ----------------------------------------------------- */
     if ($this->exists ($evalObject->getObjectID ())) {
-      $sql =
-   "UPDATE".
-   " eval ".
-   "SET".
-   " title     = '".$evalObject->getTitle (YES)."',".
-   " text      = '".$evalObject->getText (YES)."',".
-   " startdate =  ".$startdate.",".
-   " stopdate  =  ".$stopdate.",".
-   " timespan  =  ".$timespan.",".
-   " mkdate    = '".$evalObject->getCreationdate ()."',".
-   " chdate    = '".$evalObject->getChangedate ()."',".
-   " anonymous = '".$evalObject->isAnonymous ()."',".
-   " visible   = '".$evalObject->isVisible ()."',".
-   " shared    = '".$evalObject->isShared ()."'".
-   "WHERE".
-   " eval_id   = '".$evalObject->getObjectID ()."'";
+
+        DBManager::get()->execute(
+            "UPDATE eval SET title = ?, text = ?, startdate = ?,
+                stopdate = ?, timespan = ?, mkdate = ?,
+                chdate = ?, anonymous = ?, visible = ?, shared = ?
+             WHERE eval_id = ?",
+                array($evalObject->getTitle(YES), $evalObject->getText(YES),
+                    $startdate, $stopdate, $timespan, $evalObject->getCreationdate(),
+                    $evalObject->getChangedate(), $evalObject->isAnonymous(),
+                    $evalObject->isVisible(), $evalObject->isShared(), $evalObject->getObjectID()));
     } else {
-      $sql =
-   "INSERT INTO".
-   " eval ".
-   "SET".
-   " eval_id   = '".$evalObject->getObjectID ()."',".
-   " author_id = '".$evalObject->getAuthorID ()."',".
-   " title     = '".$evalObject->getTitle (YES)."',".
-   " text      = '".$evalObject->getText (YES)."',".
-   " startdate =  ".$startdate.",".
-   " stopdate  =  ".$stopdate.",".
-   " timespan  =  ".$timespan.",".
-   " mkdate    = '".$evalObject->getCreationdate ()."',".
-   " chdate    = '".$evalObject->getChangedate ()."',".
-   " anonymous = '".$evalObject->isAnonymous ()."',".
-   " visible   = '".$evalObject->isVisible ()."',".
-   " shared    = '".$evalObject->isShared ()."'";
+        DBManager::get()->execute(
+            "INSERT INTO eval SET eval_id = ?,
+                author_id = ?, title = ?, text = ?, startdate = ?,
+                stopdate = ?, timespan = ?, mkdate = ?, chdate = ?,
+                anonymous = ?, visible = ?, shared = ?",
+                array($evalObject->getObjectID(), $evalObject->getAuthorID(),
+                    $evalObject->getTitle(YES), $evalObject->getText(YES),
+                    $startdate, $stopdate, $timespan, $evalObject->getCreationdate(),
+                    $evalObject->getChangedate(), $evalObject->isAnonymous(),
+                    $evalObject->isVisible(), $evalObject->isShared()));
     }
 
-    $db->exec($sql);
     /* ------------------------------------------------------- end: evalsave */
 
     /* connect to ranges --------------------------------------------------- */
-      $sql =
-         "DELETE FROM".
-         " eval_range ".
-         "WHERE".
-         " eval_id  = '".$evalObject->getObjectID ()."'";
-      $db->exec($sql);
+      DBManager::get()->execute("DELETE FROM eval_range WHERE eval_id  = ?", array($evalObject->getObjectID()));
 
       while ($rangeID = $evalObject->getNextRangeID ()) {
-         $sql =
-            "INSERT INTO".
-            " eval_range ".
-            "SET".
-            " eval_id  = '".$evalObject->getObjectID ()."',".
-            " range_id = '".$rangeID."'";
-         $db->exec($sql);
+            DBManager::get()->execute("INSERT INTO eval_range SET eval_id  = ?, range_id = ?",
+                array($evalObject->getObjectID(), $rangeID));
       }
     /* ----------------------------------------------------- end: connecting */
   } //...saved
@@ -245,36 +197,18 @@ class EvaluationDB extends EvaluationObjectDB {
    * @throws  error
    */
   function delete (&$evalObject) {
-    $db = DBManager::get();
-
     /* delete evaluation --------------------------------------------------- */
-    $sql =
-      "DELETE FROM eval WHERE eval_id = '".$evalObject->getObjectID ()."'";
-    $db->exec($sql);
+    DBManager::get()->execute("DELETE FROM eval WHERE eval_id  = ?", array($evalObject->getObjectID()));
     /* ------------------------------------------------------- end: deleting */
 
     /* delete rangeconnects ------------------------------------------------ */
-    $sql =
-      "DELETE FROM".
-      " eval_range ".
-      "WHERE".
-      " eval_id = '".$evalObject->getObjectID ()."'";
-    $db->exec($sql);
+    DBManager::get()->execute("DELETE FROM eval_range WHERE eval_id  = ?", array($evalObject->getObjectID()));
     /* ------------------------------------------------------- end: deleting */
 
     /* delete userconnects ------------------------------------------------- */
-    $sql =
-      "DELETE FROM".
-      " eval_user ".
-      "WHERE".
-      " eval_id = '".$evalObject->getObjectID ()."'";
-    $db->exec($sql);
+    DBManager::get()->execute("DELETE FROM eval_user WHERE eval_id  = ?", array($evalObject->getObjectID()));
     /* ------------------------------------------------------- end: deleting */
-
   } // deleted
-
-
-
 
   /**
    * Checks if evaluation with this ID exists
@@ -283,18 +217,10 @@ class EvaluationDB extends EvaluationObjectDB {
    * @return  bool     YES if exists
    */
   function exists ($evalID) {
-    $db = DBManager::get();
-
-    $sql =
-      "SELECT".
-      " 1 ".
-      "FROM".
-      " eval ".
-      "WHERE".
-      " eval_id = '".$evalID."'";
-    $result = $db->query($sql);
-
-    return $result->rowCount() > 0;
+    $entry = DBManager::get()->fetchOne("SELECT 1 FROM eval WHERE eval_id = ?", array($evalID));
+    if (count($entry) > 0)
+        return true;
+    return false;
   }
 
   /**
@@ -305,23 +231,16 @@ class EvaluationDB extends EvaluationObjectDB {
    * @return  bool     YES if evaluation was used
    */
   function hasVoted ($evalID, $userID = "") {
-    $db = DBManager::get();
-
     /* ask database ------------------------------------------------------- */
-    $sql =
-      "SELECT".
-      " 1 ".
-      "FROM".
-      " eval_user ".
-      "WHERE".
-      " eval_id = '".$evalID."'";
-    if (!empty ($userID))
-      $sql .= " AND user_id = '".$userID."'";
-
-    $result = $db->query($sql);
+    $sql= "SELECT 1 FROM eval_user WHERE eval_id = ?";
+    if (empty($userID))
+        $entry = DBManager::get()->fetchOne($sql, array($evalID));
+    else
+        $entry = DBManager::get()->fetchOne($sql." AND user_id = ?", array($evalID, $userID));
     /* --------------------------------------------------------- end: asking */
-
-    return $result->rowCount() > 0;
+    if (count($entry) > 0)
+        return true;
+    return false;
   }
 
   /**
@@ -334,7 +253,7 @@ class EvaluationDB extends EvaluationObjectDB {
     if ($this->exists ($objectID)) {
       return INSTANCEOF_EVAL;
     } else {
-      $dbObject = new EvaluationGroupDB ();
+      $dbObject = new EvaluationGroupDB();
       return $dbObject->getType ($objectID);
     }
   }
@@ -354,18 +273,9 @@ class EvaluationDB extends EvaluationObjectDB {
    * @param    string   $userID   The user id
    */
   function connectWithUser ($evalID, $userID) {
-    $db = DBManager::get();
-
     if (empty ($userID))
       die ("EvaluationDB::connectWithUser: UserID leer!!");
-
-    $sql =
-      "INSERT IGNORE INTO".
-      " eval_user ".
-      "SET".
-      " eval_id  = '".$evalID."',".
-      " user_id = '".$userID."'";
-    $db->exec($sql);
+    DBManager::get()->execute("INSERT IGNORE INTO eval_user SET eval_id = ?, user_id = ?", array($evalID, $userID));
   }
 
    /**
@@ -375,20 +285,13 @@ class EvaluationDB extends EvaluationObjectDB {
     * @param    string   $userID   The user id
     */
    function removeUser ($evalID, $userID = "") {
-    $db = DBManager::get();
+      $sql = "DELETE FROM eval_user WHERE eval_id  = ?";
 
-      $sql =
-        "DELETE FROM".
-         " eval_user ".
-         "WHERE".
-         " eval_id  = '".$evalID."'";
-
-      if (!empty ($userID)) {
-         $sql .= " AND user_id = '".$userID."'";
-      }
-
-      $db->exec($sql);
-  }
+      if (empty($userID))
+         DBManager::get()->execute($sql, array($evalID));
+      else
+         DBManager::get()->execute($sql." AND user_id = ?", array($evalID, $userID));
+   }
 
   /**
    * Get number of users who participated in the eval
@@ -397,22 +300,8 @@ class EvaluationDB extends EvaluationObjectDB {
    * @return integer  The number of users
    */
    function getNumberOfVotes ($evalID) {
-    $db = DBManager::get();
-
-    $sql =
-      "SELECT".
-      " count(DISTINCT user_id) ".
-      "AS".
-      " number ".
-      "FROM".
-      " eval_user ".
-      "WHERE".
-      " eval_id = '".$evalID."'";
-    /* ------------------------------------------------------------------- */
-    $result = $db->query($sql);
-    $row = $result->fetch();
-    return $row['number'];
-  }
+        return DBManager::get()->fetchColumn("SELECT count(DISTINCT user_id) AS number FROM eval_user WHERE eval_id = ?", array($evalID));
+   }
 
    /**
    * Get users who participated in the eval
@@ -422,47 +311,22 @@ class EvaluationDB extends EvaluationObjectDB {
    * @return integer  The number of users
    */
    function getUserVoted ($evalID, $answerIDs = array (), $questionIDs = array ()) {
-    $db = DBManager::get();
-
-      $user_ids = array ();
+      $sql = "SELECT DISTINCT user_id FROM ";
 
       /* ask database ------------------------------------------------------- */
-      if (empty ($answerIDs) && empty ($questionIDs)) {
-          $sql =
-            "SELECT DISTINCT".
-            " user_id ".
-            "FROM".
-            " eval_user ".
-            "WHERE".
-            " eval_id = '".$evalID."'";
-       } elseif (empty ($questionIDs)) {
-         $sql =
-            "SELECT DISTINCT".
-            " user_id ".
-            "FROM".
-            " evalanswer_user ".
-            "WHERE".
-            " evalanswer_id IN ('".join("','", $answerIDs)."')";
-       } else {
-        $sql =
-            "SELECT DISTINCT".
-            " user_id ".
-            "FROM".
-            " evalanswer INNER JOIN evalanswer_user USING(evalanswer_id) ".
-            "WHERE".
-            " parent_id IN ('".join("','", $questionIDs)."')";
-       }
-       
-      $result = $db->query($sql);
-       /* ------------------------------------------------ end: asking database */
+      if (empty($answerIDs) && empty($questionIDs)) {
+        $sql .= "eval_user WHERE eval_id = ?";
+        $search_criteria = $evalID;
+      } elseif (empty ($questionIDs)) {
+        $sql .= "evalanswer_user WHERE evalanswer_id IN (?)";
+        $search_criteria = $answerIDs;
+      } else {
+        $sql .= "evalanswer INNER JOIN evalanswer_user USING(evalanswer_id) WHERE parent_id IN (?)";
+        $search_criteria = $questionIDs;
+      }
 
-       /* Fill up the array with IDs ----------------------------------------- */
-       foreach ($result as $row) {
-         array_push ($user_ids, $row['user_id']);
-       }
-       /* ------------------------------------------------------- end: filling */
-
-    return $user_ids;
+      return DBManager::get()->fetchFirst($sql, array($search_criteria));
+      /* ------------------------------------------------ end: asking database */
   }
 
 

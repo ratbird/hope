@@ -75,21 +75,10 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @param   EvaluationAnswer   &&$answerObject   The answer object
    */
   function load (&$answerObject) {
-    $db = DBManager::get();
-
     /* load answer --------------------------------------------------------- */
-    $query =
-      "SELECT".
-      " * ".
-      "FROM".
-      " evalanswer ".
-      "WHERE".
-      " evalanswer_id = '".$answerObject->getObjectID ()."'".
-      "ORDER BY".
-      " position ";
-    $result = $db->query($query);
-
-    if (($row = $result->fetch()) === FALSE)
+    $row = DBManager::get()->fetchOne("SELECT * FROM evalanswer
+                                            WHERE evalanswer_id= ?", array($answerObject->getObjectID()));
+    if (!count($row))
       return $this->throwError (2,
             _("Keine Antwort mit dieser ID gefunden."));
 
@@ -111,21 +100,12 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @param    EvaluationAnswer   &$answerObject   The answer object
    */
    function loadVotes (&$answerObject) {
-    $db = DBManager::get();
-
-      /* load users -------------------------------------------------------- */
-      $sql =
-         "SELECT".
-         " user_id ".
-         "FROM".
-         " evalanswer_user ".
-         "WHERE".
-         " evalanswer_id = '".$answerObject->getObjectID ()."'";
-      $result = $db->query($sql);
-
-      foreach ($result as $row) {
-         $answerObject->addUserID ($row['user_id'], NO);
-      }
+        /* load users -------------------------------------------------------- */
+        $result = DBManager::get()->fetchFirst("SELECT user_id FROM evalanswer_user
+                                            WHERE evalanswer_id= ?", array($answerObject->getObjectID()));
+        foreach ($result as $row) {
+            $answerObject->addUserID($row, NO);
+        }
    }
    /* ----------------------------------------------------------- end: users */
 
@@ -141,57 +121,33 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
     if (EVAL_DEBUGLEVEL >= 1)
       echo "DB: Speichere Antwortobjekt<br>\n";
     /* save answers -------------------------------------------------------- */
-    if ($this->exists ($answerObject->getObjectID ())) {
-      $sql =
-   "UPDATE".
-   " evalanswer ".
-   "SET".
-   " parent_id       = '".$answerObject->getParentID()."',".
-   " position        = '".$answerObject->getPosition()."',".
-   " text            = '".$answerObject->getText(YES)."',".
-   " value           = '".$answerObject->getValue()."',".
-   " rows            = '".$answerObject->getRows()."', ".
-   " residual        = '".$answerObject->isResidual()."' ".
-   "WHERE".
-   " evalanswer_id   = '".$answerObject->getObjectID()."'";
-    } else {
-      $sql =
-   "INSERT INTO".
-   " evalanswer ".
-   "SET".
-   " evalanswer_id   = '".$answerObject->getObjectID()."',".
-   " parent_id       = '".$answerObject->getParentID()."',".
-   " position        = '".$answerObject->getPosition()."',".
-   " text            = '".$answerObject->getText(YES)."',".
-   " value           = '".$answerObject->getValue()."',".
-   " rows            = '".$answerObject->getRows()."',".
-   " residual        = '".$answerObject->isResidual()."' ";
-#   " counter         = '".$answerObject->getCounter()."'";
-    }
-    $db->exec($sql);
+    DBManager::get()->execute(
+            "REPLACE INTO evalanswer SET
+                evalanswer_id   = ?,
+                parent_id       = ?,
+                position        = ?,
+                text            = ?,
+                value           = ?,
+                rows            = ?,
+                residual        = ?
+                ",
+            array($answerObject->getObjectID(),
+                    $answerObject->getParentID(),
+                    $answerObject->getPosition(),
+                    $answerObject->getText(YES),
+                    $answerObject->getValue(),
+                    $answerObject->getRows(),
+                    $answerObject->isResidual()));
     /* ----------------------------------------------------- end: answersave */
 
     /* connect answer to users --------------------------------------------- */
     while ($userID = $answerObject->getNextUserID ()) {
-      $sql =
-          "INSERT INTO".
-          " evalanswer_user ".
-          "SET".
-          " evalanswer_id  = '".$answerObject->getObjectID ()."',".
-          " user_id = '".$userID."'";
-       $db->exec($sql);
+            DBManager::get()->execute(
+                "INSERT INTO evalanswer_user SET
+                    evalanswer_id   = ?,
+                    user_id       = ?",
+                array($answerObject->getObjectID(), $userID));
     }
-    /* ----------------------------------------------------- end: connecting */
-
-    /* connect user with evaluation ---------------------------------------- */
-    # Disabled this because of performance problems. Do it with
-    # $eval->connectWithUser ($evalID, $userID)
-    #$answerID = $answerObject->getObjectID ();
-    #$userID = $answerObject->getCurrentUser ();
-    #if (!empty ($userID)) {
-    #  $evalID = EvaluationObjectDB::getEvalID ($answerID);
-    #  EvaluationDB::connectWithUser ($evalID, $userID);
-    #}
     /* ----------------------------------------------------- end: connecting */
 
   } // saved
@@ -202,15 +158,11 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @param    EvaluationAnswer   &$answerObject   The answer object
    */
   function resetVotes (&$answerObject) {
-    $db = DBManager::get();
-
    /* delete userconnects ------------------------------------------------- */
-    $sql =
-      "DELETE FROM".
-      " evalanswer_user ".
-      "WHERE".
-      " evalanswer_id = '".$answerObject->getObjectID ()."'";
-    $db->exec($sql);
+    DBManager::get()->execute("
+        DELETE FROM evalanswer_user
+            WHERE evalanswer_id   = ?",
+        array($answerObject->getObjectID()));
     /* ------------------------------------------------------- end: deleting */
   }
 
@@ -221,18 +173,13 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @throws  error
    */
   function delete (&$answerObject) {
-    $db = DBManager::get();
-
     /* delete answer ----------------------------------------------------- */
-    $sql =
-      "DELETE FROM".
-      " evalanswer ".
-      "WHERE".
-      " evalanswer_id = '".$answerObject->getObjectID ()."'";
-    $db->exec($sql);
+    DBManager::get()->execute("
+        DELETE FROM evalanswer
+            WHERE evalanswer_id   = ?",
+        array($answerObject->getObjectID()));
     /* ------------------------------------------------------- end: deleting */
-
-    $this->resetVotes ($answerObject);
+    $this->resetVotes($answerObject);
   } // deleted
 
 
@@ -243,18 +190,11 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @return  bool     YES if exists
    */
   function exists ($answerID) {
-    $db = DBManager::get();
-
-    $sql =
-      "SELECT".
-      " 1 ".
-      "FROM".
-      " evalanswer ".
-      "WHERE".
-      " evalanswer_id = '".$answerID."'";
-    $result = $db->query($sql);
-
-    return $result->rowCount() > 0;
+    $result = DBManager::get()->fetchOne("SELECT 1 FROM evalanswer
+                                            WHERE evalanswer_id= ?", array($answerID));
+    if (count($result)>0)
+        return true;
+    return false;
   }
 
 
@@ -264,27 +204,16 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @param   EvaluationObject  &$parentObject  The parent object
    */
   function addChildren (&$parentObject) {
-    $db = DBManager::get();
+    $result = DBManager::get()->fetchFirst("SELECT evalanswer_id FROM evalanswer
+                                            WHERE parent_id= ? ORDER by position",
+                                            array($parentObject->getObjectID()));
 
-    $sql =
-      "SELECT".
-      " evalanswer_id ".
-      "FROM".
-      " evalanswer ".
-      "WHERE".
-      " parent_id = '".$parentObject->getObjectID ()."' ".
-      "ORDER BY".
-      " position";
-    $result = $db->query($sql);
-
-    $loadChildren = $parentObject->loadChildren == EVAL_LOAD_ALL_CHILDREN
-         ? EVAL_LOAD_ALL_CHILDREN
-         : EVAL_LOAD_NO_CHILDREN;
+    $loadChildren =
+        $parentObject->loadChildren == EVAL_LOAD_ALL_CHILDREN ? EVAL_LOAD_ALL_CHILDREN : EVAL_LOAD_NO_CHILDREN;
 
     foreach ($result as $row) {
       $parentObject->addChild (new EvaluationAnswer
-                ($row['evalanswer_id'],
-                $parentObject, $loadChildren));
+                ($row, $parentObject, $loadChildren));
     }
   }
 
@@ -295,7 +224,7 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @return string  INSTANCEOF_x, else NO
    */
   function getType ($objectID) {
-    if ($this->exists ($objectID)) {
+    if ($this->exists($objectID)) {
       return INSTANCEOF_EVALANSWER;
     } else {
       return NO;
@@ -309,19 +238,9 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @return string  The id from the parent object
    */
   function getParentID ($objectID) {
-    $db = DBManager::get();
-
-    $sql =
-      "SELECT".
-      " parent_id ".
-      "FROM".
-      " evalanswer ".
-      "WHERE".
-      " evalanswer_id = '".$objectID."'";
-    $result = $db->query($sql);
-    $row = $result->fetch();
-
-    return $row['parent_id'];
+    return DBManager::get()->fetchColumn("SELECT parent_id FROM evalanswer
+                                            WHERE evalanswer_id = ?",
+                                            array($objectID()));
   }
 
    /**
@@ -331,37 +250,15 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
     * @param   string   $userID       The user id
     */
    function getUserAnwerIDs ($questionID, $userID) {
-    $db = DBManager::get();
-
-      $answer_ids = array ();
-
       /* ask database ------------------------------------------------------- */
-      $sql =
-            "SELECT".
-            " a.evalanswer_id as ttt ".
-            "FROM".
-            " evalanswer a, evalanswer_user b ".
-            "WHERE".
-            " a.parent_id = '".$questionID."'".
-            " AND".
-            " a.evalanswer_id = b.evalanswer_id";
-      if (!empty ($userID)) {
-         $sql .=
-            " AND".
-            " b.user_id = '".$userID."'";
-
-      }
-
-      $result = $db->query($sql);
+      $sql = "SELECT a.evalanswer_id as ttt FROM evalanswer a, evalanswer_user b
+                    WHERE a.parent_id = ? AND a.evalanswer_id = b.evalanswer_id";
+      if (empty ($userID))
+        $answer_ids = DBManager::get()->fetchFirst($sql, array($questionID));
+      else
+        $answer_ids = DBManager::get()->fetchFirst($sql." AND b.user_id = ?", array($questionID, $userID));
       /* -------------------------------------------------------- end: asking */
-
-      /* Fill up the array with the result ---------------------------------- */
-       foreach ($result as $row) {
-         array_push ($answer_ids, $row['ttt']);
-       }
-      /* ------------------------------------------------------- end: filling */
-
-       return $answer_ids;
+      return $answer_ids;
   }
 
   /**
@@ -372,37 +269,28 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
    * @return   boolean  YES if user has voted for the answer
    */
   function hasVoted ($answerID, $userID) {
-    $db = DBManager::get();
-
-   $sql =
-      "SELECT".
-      " 1 ".
-      "FROM".
-      " evalanswer_user ".
-      "WHERE".
-      " evalanswer_id = '".$answerID."'".
-      " AND".
-      " user_id = '".$userID."'";
-    $result = $db->query($sql);
-
-    return $result->rowCount() > 0;
+    $result = DBManager::get()->fetchOne("SELECT 1 FROM evalanswer_user
+                                            WHERE evalanswer_id= ? AND user_id", array($answerID, $userID));
+    if (count($result)>0)
+        return true;
+    return false;
   }
-  
-  function getAllAnswers ($question_id, $userID, $only_user_answered = false) {
-    $db = DBManager::get();
 
-   $sql =
-      "SELECT".
-      " evalanswer.*, COUNT(IF(user_id='$userID',1,NULL)) AS has_voted ".
-      "FROM".
-      " evalanswer LEFT JOIN " .
-      " evalanswer_user USING(evalanswer_id) ".
-      "WHERE".
-      " parent_id = '".$question_id."'".
-      ($only_user_answered ?  " AND user_id = '".$userID."' " : "") .
-      " GROUP BY evalanswer.evalanswer_id ORDER BY position";
-    $result = $db->query($sql);
-    return $result->fetchAll();
+  function getAllAnswers ($question_id, $userID, $only_user_answered = false) {
+        if ($only_user_answered)
+            return DBManager::get()->fetchAll("
+                SELECT evalanswer.*, COUNT(IF(user_id=?,1,NULL)) AS has_voted
+                FROM evalanswer LEFT JOIN evalanswer_user USING(evalanswer_id)
+                WHERE parent_id = ? AND user_id = ?
+                GROUP BY evalanswer.evalanswer_id ORDER BY position",
+                array($userID, $question_id, $userID));
+        else
+            return DBManager::get()->fetchAll("
+                SELECT evalanswer.*, COUNT(IF(user_id=?,1,NULL)) AS has_voted
+                FROM evalanswer LEFT JOIN evalanswer_user USING(evalanswer_id)
+                WHERE parent_id = ?
+                GROUP BY evalanswer.evalanswer_id ORDER BY position",
+                array($userID, $question_id));
   }
 }
 ?>

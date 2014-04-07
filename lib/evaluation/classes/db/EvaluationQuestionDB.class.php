@@ -85,12 +85,12 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
       "FROM".
       " evalquestion ".
       "WHERE".
-      " evalquestion_id = '".$questionObject->getObjectID ()."'".
+      " evalquestion_id = ? ".
       "ORDER BY".
       " position ";
-    $result = $db->query($query);
+    $row = $db->fetchOne($query, array($questionObject->getObjectID ()));
 
-    if (($row = $result->fetch()) === FALSE)
+    if (!count($row))
       return $this->throwError (1,
             _("Keine Frage mit dieser ID gefunden."));
 
@@ -125,26 +125,34 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
    "UPDATE".
    " evalquestion ".
    "SET".
-   " parent_id       = '".$questionObject->getParentID()."',".
-   " type            = '".$questionObject->getType()."',".
-   " position        = '".$questionObject->getPosition()."',".
-   " text            = '".$questionObject->getText(YES)."',".
-   " multiplechoice  = '".$questionObject->isMultiplechoice()."' ".
+   " parent_id       = ?,".
+   " type            = ?,".
+   " position        = ?,".
+   " text            = ?,".
+   " multiplechoice  = ? ".
    "WHERE".
-   " evalquestion_id = '".$questionObject->getObjectID()."'";
+   " evalquestion_id = ?";
     } else {
       $sql =
    "INSERT INTO".
    " evalquestion ".
    "SET".
-   " evalquestion_id = '".$questionObject->getObjectID()."',".
-   " parent_id       = '".$questionObject->getParentID()."',".
-   " type            = '".$questionObject->getType()."',".
-   " position        = '".$questionObject->getPosition()."',".
-   " text            = '".$questionObject->getText(YES)."',".
-   " multiplechoice  = '".$questionObject->isMultiplechoice()."'";
+   " parent_id       = ?,".
+   " type            = ?,".
+   " position        = ?,".
+   " text            = ?,".
+   " multiplechoice  = ?,".
+   " evalquestion_id = ?";
+;
     }
-    $db->exec($sql);
+    $db->execute($sql, array(
+        (string)$questionObject->getParentID(),
+        (string)$questionObject->getType(),
+        (int)$questionObject->getPosition(),
+        (string)$questionObject->getText(YES),
+        (int)$questionObject->isMultiplechoice(),
+        $questionObject->getObjectID()
+        ));
   } // saved
 
 
@@ -162,8 +170,8 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
       "DELETE FROM".
       " evalquestion ".
       "WHERE".
-      " evalquestion_id = '".$questionObject->getObjectID ()."'";
-    $db->exec($sql);
+      " evalquestion_id = ?";
+    $db->execute($sql, array($questionObject->getObjectID ()));
     /* ------------------------------------------------------- end: deleting */
   } // deleted
 
@@ -183,10 +191,10 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
       "FROM".
       " evalquestion ".
       "WHERE".
-      " evalquestion_id = '".$questionID."'";
-    $result = $db->query($sql);
+      " evalquestion_id = ?";
+    $result = $db->fetchColumn($sql, array($questionID));
 
-    return $result->rowCount() > 0;
+    return (bool)$result;
   }
 
 /**
@@ -205,13 +213,13 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
        "FROM".
        " evalquestion ".
        "WHERE".
-       " text = '".$questionTitle."'".
+       " text = ? ".
        " AND ".
-       " parent_id = '".$userID."'";
+       " parent_id = ?";
 
-    $result = $db->query($sql);
+    $result = $db->fetchColumn($sql, array($questionTitle,$userID));
 
-    return $result->rowCount() > 0;
+    return (bool)$result;
   }
 
 
@@ -229,18 +237,18 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
       "FROM".
       " evalquestion ".
       "WHERE".
-      " parent_id = '".$parentObject->getObjectID ()."' ".
+      " parent_id = ? ".
       "ORDER BY".
       " position";
-    $result = $db->query($sql);
+    $result = $db->fetchFirst($sql, array($parentObject->getObjectID ()));
 
     $loadChildren = $parentObject->loadChildren == EVAL_LOAD_ALL_CHILDREN
          ? EVAL_LOAD_ALL_CHILDREN
          : EVAL_LOAD_NO_CHILDREN;
 
-    foreach ($result as $row) {
+    foreach ($result as $evalquestion_id) {
       $parentObject->addChild (new EvaluationQuestion
-                ($row['evalquestion_id'],
+                ($evalquestion_id,
                 $parentObject, $loadChildren));
     }
   }
@@ -275,11 +283,9 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
       "FROM".
       " evalquestion ".
       "WHERE".
-      " evalquestion_id = '".$objectID."'";
-    $result = $db->query($sql);
-    $row = $result->fetch();
-
-    return $row['parent_id'];
+      " evalquestion_id = ?";
+    $result = $db->fetchColumn($sql, array($objectID));
+    return $result;
   }
 
   /**
@@ -291,17 +297,16 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
   function getTemplateID ($userID) {
     $db = DBManager::get();
 
-     $array = array();
-
-     if (EvaluationObjectDB::getGlobalPerm()=="root")
+     if (EvaluationObjectDB::getGlobalPerm()=="root") {
          $sql =
             "SELECT".
             " evalquestion_id ".
             "FROM".
             " evalquestion ".
             "WHERE".
-            " parent_id = '0' ";
-      else
+            " parent_id = '0' ORDER BY text";
+            return $db->fetchFirst($sql);
+      } else {
          $sql =
             "SELECT".
             " evalquestion_id ".
@@ -310,16 +315,10 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
             "WHERE".
             " parent_id = '".$userID."' ".
             "OR ".
-            " parent_id = '0' ";
-
-      $sql .= " ORDER BY text";
-
-      $result = $db->query($sql);
-      foreach ($result as $row) {
-         array_push($array, $row['evalquestion_id']);
+            " parent_id = '0' ORDER BY text";
+      $sql .= " ";
+      return $db->fetchFirst($sql, array($userID));
       }
-
-      return $array;
   }
 
 

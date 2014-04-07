@@ -171,8 +171,8 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupEmails'
         ),
         'htmlAnchor' => array(
-            'start' => '(?xi) <\s* a (?:\s(?:\s* \w+ \s*=\s* "[^"]*" )*)? \s*>',
-            'end' => '(?xi) <\s* \/\s* a \s*>',
+            'start' => '(?xi: <\s* a (?:\s(?:\s* \w+ \s*=\s* "[^"]*" )*)? \s*>)',
+            'end' => '(?xi: <\s* \/\s* a \s*>)',
             'callback' => 'StudipFormat::htmlAnchor'
         ),
         'links' => array(
@@ -189,7 +189,7 @@ class StudipFormat extends TextFormat
             // unreserved  = [\w\-\.~]
             // pct-encoded = %[0-9a-f]{2}
             // sub-delim   = [!$&\'()*+,;=]
-            'start' => '(?xi)
+            'start' => '(?xi:
 
                 # capture 1: displayed text
                 (?:\[( [^\n\f\]]+ )\])?
@@ -204,7 +204,7 @@ class StudipFormat extends TextFormat
 
                     # host       = ( ip-literal | ipv4 | reg-name )
                     # ip-literal = \[( ipv6 | ipv-future )\]
-                    # ipv4       = ( ([01]\d{,2} | 2[0-4]\d | 25[0-5] \.){4}
+                    # ipv4       = ( [01]\d{,2} | 2[0-4]\d | 25[0-5] \.){4}
                     # reg-name   = [ :unreserved: :pct-encoded: :sub-delim: ]*
                     #            = ( [\w\-\.~!$&\'()*+,;=] | %[0-9a-f]{2} )*
                     # NOTES
@@ -225,7 +225,7 @@ class StudipFormat extends TextFormat
                     # fragment = # [ :pchar: \/ ? ]*
                     (?: \#(?: [\w\-\.~!$&\'()*+,;=:@\/\?] | %[0-9a-f]{2} )* )?
                 )
-            ',
+            )',
             'callback' => 'StudipFormat::markupLinks'
         ),
     );

@@ -178,52 +178,22 @@ class StudipFormat extends TextFormat
         'links' => array(
             // markup: [text]url
             //
-            // to set URLs apart from normal text, scheme and host are obligatory
-            // URLs are based on http://tools.ietf.org/html/rfc3986
+            // To set URLs apart from normal text, scheme and host are
+            // obligatory. URLs are based on, but allow more than RFC3986 in
+            // order to simplify the regular expression.
             //
-            // url = scheme://authority/path?query#fragment
-            // authority = (userinfo @)? host (: port)?
-            //
-            // pchar       = [ :unreserved: :pct-encoded: :sub-delim: :@]
-            //             = ( [\w\-\.~!$&\'()*+,;=:@] | %[0-9a-f]{2} )
-            // unreserved  = [\w\-\.~]
-            // pct-encoded = %[0-9a-f]{2}
-            // sub-delim   = [!$&\'()*+,;=]
+            // http://tools.ietf.org/html/rfc3986
             'start' => '(?xi:
-
                 # capture 1: displayed text
                 (?:\[( [^\n\f\]]+ )\])?
 
                 # capture 2: URL
                 \b(
                     # scheme
-                    [a-z][a-z0-9\+\-\.]* : \/\/
+                    [a-z][a-z0-9\+\-\.]*:\/\/
 
-                    # userinfo = [ :unreserved: :pct-encoded: :sub-delim: :]*
-                    (?: (?: [\w\-\.~!$&\'()*+,;=:] | %[0-9a-f]{2} )* @ )?
-
-                    # host       = ( ip-literal | ipv4 | reg-name )
-                    # ip-literal = \[( ipv6 | ipv-future )\]
-                    # ipv4       = ( [01]\d{,2} | 2[0-4]\d | 25[0-5] \.){4}
-                    # reg-name   = [ :unreserved: :pct-encoded: :sub-delim: ]*
-                    #            = ( [\w\-\.~!$&\'()*+,;=] | %[0-9a-f]{2} )*
-                    # NOTES
-                    # * ipv4 is a subset of reg-name
-                    # * our host definition does not allow ip-literals
-                    # * our host string cannot be empty
-                    (?: [\w\-\.~!$&\'()*+,;=] | %[0-9a-f]{2} )+
-
-                    # port
-                    (?: :\d* )?
-
-                    # path = ( \/ :pchar:+ )* \/?
-                    (?: \/(?: [\w\-\.~!$&\'()*+,;=:@] | %[0-9a-f]{2} )+ )* \/?
-
-                    # query = \? [ :pchar: \/ ? ]*
-                    (?: \?(?: [\w\-\.~!$&\'()*+,;=:@\/\?] | %[0-9a-f]{2} )* )?
-
-                    # fragment = # [ :pchar: \/ ? ]*
-                    (?: \#(?: [\w\-\.~!$&\'()*+,;=:@\/\?] | %[0-9a-f]{2} )* )?
+                    # user:password@host:port\/path?query#fragment
+                    [\w\-\.~!$&\'\(\)*+,;=%:@\/?#]+
                 )
             )',
             'callback' => 'StudipFormat::markupLinks'

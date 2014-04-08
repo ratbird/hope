@@ -79,8 +79,8 @@ class EvaluationGroupDB extends EvaluationObjectDB {
   function load (&$groupObject) {
     /* load group ---------------------------------------------------------- */
     $row = DBManager::get()->fetchOne("
-        SELECT * FROM evalgroup 
-        WHERE evalgroup_id = ? 
+        SELECT * FROM evalgroup
+        WHERE evalgroup_id = ?
         ORDER BY position ", array($groupObject->getObjectID()));
 
     if (count($row)==0)
@@ -121,46 +121,46 @@ class EvaluationGroupDB extends EvaluationObjectDB {
     if (EVAL_DEBUGLEVEL >= 1)
       echo "DB: Speichere Gruppenobjekt<br>\n";
     /* save group ---------------------------------------------------------- */
-    if ($this->exists ($groupObject->getObjectID ())) {   
+    if ($this->exists ($groupObject->getObjectID ())) {
         DBManager::get()->execute("
-            UPDATE evalgroup SET   
+            UPDATE evalgroup SET
                 title           = ?,
                 text            = ?,
-                child_type      = ?, 
-                position        = ?,                 
-                template_id     = ?, 
-                mandatory       = ? 
+                child_type      = ?,
+                position        = ?,
+                template_id     = ?,
+                mandatory       = ?
             WHERE
                 evalgroup_id    = ?
-            ", array($groupObject->getTitle(YES), 
-                     $groupObject->getText(YES), 
-                     $groupObject->getChildType(), 
-                     $groupObject->getPosition (),
-                     $groupObject->getTemplateID(),
-                     $groupObject->isMandatory(),
-                     $groupObject->getObjectID()
-             ));               
+            ", array((string)$groupObject->getTitle(YES),
+                     (string)$groupObject->getText(YES),
+                     (string)$groupObject->getChildType(),
+                     (int)$groupObject->getPosition (),
+                     (string)$groupObject->getTemplateID(),
+                     (int)$groupObject->isMandatory(),
+                     (string)$groupObject->getObjectID()
+             ));
     } else {
         DBManager::get()->execute("
-            INSERT INTO evalgroup SET 
+            INSERT INTO evalgroup SET
                 evalgroup_id    = ?,
-                parent_id       = ?,                
+                parent_id       = ?,
                 title           = ?,
                 text            = ?,
-                child_type      = ?, 
-                mandatory       = ?, 
-                template_id     = ?, 
-                position        = ?                
+                child_type      = ?,
+                mandatory       = ?,
+                template_id     = ?,
+                position        = ?
             ", array(
-                     $groupObject->getObjectID(),
-                     $groupObject->getParentID(),
-                     $groupObject->getTitle(YES), 
-                     $groupObject->getText(YES), 
-                     $groupObject->getChildType(), 
-                     $groupObject->isMandatory(),       
-                     $groupObject->getTemplateID(),
-                     $groupObject->getPosition()
-            )); 
+                     (string)$groupObject->getObjectID(),
+                     (string)$groupObject->getParentID(),
+                     (string)$groupObject->getTitle(YES),
+                     (string)$groupObject->getText(YES),
+                     (string)$groupObject->getChildType(),
+                     (int)$groupObject->isMandatory(),
+                     (string)$groupObject->getTemplateID(),
+                     (int)$groupObject->getPosition()
+            ));
     }
     /* ------------------------------------------------------ end: groupsave */
   } // saved
@@ -194,8 +194,8 @@ class EvaluationGroupDB extends EvaluationObjectDB {
    */
    function addChildren (&$parentObject) {
       $result = DBManager::get()->fetchFirst("
-        SELECT evalgroup_id FROM evalgroup 
-        WHERE parent_id = ? 
+        SELECT evalgroup_id FROM evalgroup
+        WHERE parent_id = ?
         ORDER BY position", array($parentObject->getObjectID()));
 
       if (($loadChildren = $parentObject->loadChildren) == EVAL_LOAD_NO_CHILDREN)
@@ -244,7 +244,7 @@ class EvaluationGroupDB extends EvaluationObjectDB {
    */
   function getParentID ($objectID) {
     return DBManager::get()->fetchColumn("
-            SELECT parent_id FROM evalgroup WHERE evalgroup_id = ?", array($objectID));      
+            SELECT parent_id FROM evalgroup WHERE evalgroup_id = ?", array($objectID));
   }
 # ===================================================== end: public functions #
 

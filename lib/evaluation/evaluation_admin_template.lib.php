@@ -323,7 +323,8 @@ class EvalTemplateGUI {
    * @param
    */
   function createTemplateForm( &$question, $onthefly = "" ) {
-      global $evalID;
+      global $evalID,$itemID;
+
      $type=$question->getType();
      $tableA = new HTM( "table" );
      $tableA->attr("border", "0");
@@ -369,7 +370,7 @@ class EvalTemplateGUI {
      $tdA = new HTM( "td" );
 
      $form = new HTM( "form" );
-     $form->attr( "action", URLHelper::getLink("?page=edit&evalID=".$evalID) );
+     $form->attr( "action", URLHelper::getLink('', array('page' => 'edit', 'evalID' => $evalID, 'itemID' => $itemID) ));
 
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
@@ -750,7 +751,7 @@ class EvalTemplateGUI {
        $input->attr( "name", "cmd" );
        $input->attr( "value", "QuestionAnswersCreated");
        $form->cont( $input );
-       
+
        $input = Button::create(_('Übernehmen'),
                 'template_save2_button');
     }

@@ -155,13 +155,9 @@ class Course_RoomRequestsController extends AuthenticatedController
     function edit_dialog_action()
     {
         if (Request::isXhr()) {
-            foreach((array)$_REQUEST as $k => $v) {
-                if (is_array($v)) {
-                    array_walk_recursive($v, create_function('$v', 'if (!is_array($v)) $v = studip_utf8decode($v);'));
-                    Request::set($k, $v);
-                } else {
-                    Request::set($k, studip_utf8decode($v));
-                }
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
             }
             if ($this->course_id != '-') {
                 $this->edit_action();

@@ -190,7 +190,9 @@ class Seminar
             $ret[$m->user_id]['label'] = $m->label;
             $ret[$m->user_id]['status'] = $m->status;
             $ret[$m->user_id]['mkdate'] = $m->mkdate;
-            $ret[$m->user_id]['fullname'] = $m->user->getFullname();
+            if ($m->user) {
+                $ret[$m->user_id]['fullname'] = $m->user->getFullname();
+            }
         }
         return $ret;
     }

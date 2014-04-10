@@ -93,7 +93,6 @@ class Files extends \RESTAPI\RouteMap
     {
         $parentFolder = \Folder::find($folder_id);
         if (!$parentFolder) {
-            die("hjgjhggjg");
             $this->error(404);
             return;
         }

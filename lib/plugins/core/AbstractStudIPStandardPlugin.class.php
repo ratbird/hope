@@ -57,7 +57,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
      */
     function getTabNavigation($course_id) {
         if ($this->hasNavigation()) {
-            return array($this->getPluginclassname(), $this->getNavigation());
+            return array($this->getPluginclassname() => $this->getNavigation());
         }
 
         return NULL;

@@ -78,14 +78,60 @@ class Files extends \RESTAPI\RouteMap
         }
     }
 
+
     /**
-     * Datei bzw. Ordner erzeugen
+     * Create file or folder. To create a file just attach a file as multipart request.
+     * If no file is attached, this will create a folder.
      *
-     * @post /file/:file_id
+     * @post /file/:folder_id
+     * @param string $file_id : id of the folder to insert the file or folder to.
+     *
+     * @param string name : if set the document will have this name instead of the filename. For folders this attribute is mandatory.
+     * @param string description : sets the description of the document or folder.
      */
-    public function postFiles()
+    public function addFile($folder_id)
     {
-        $this->error(501);
+        $parentFolder = \Folder::find($folder_id);
+        if (!$parentFolder) {
+            die("hjgjhggjg");
+            $this->error(404);
+            return;
+        }
+        //Rechtecheck
+        if (!$GLOBALS['perm']->have_studip_perm("autor", $parentFolder['Seminar_id'])
+                && ($parentFolder['Seminar_id'] !== $GLOBALS['user']->id)) {
+            $this->error(401);
+        }
+        if (count($_FILES)) {
+            //fileupload
+            $file = null;
+            foreach ($_FILES as $filedata) {
+                $file = $filedata;
+                break; //only once please
+            }
+            if ($file && validate_upload($file)) {
+                upload($file, false, $folder_id);
+            }
+            $document = new \StudipDocument($GLOBALS['dokument_id']);
+            $document['description'] = $this->data['description'];
+            if ($this->data['name']) {
+                $document['name'] = $this->data['name'];
+            }
+
+            $this->redirect('file/' . $document->getId(), 201, "ok");
+        } elseif($this->data['name']) {
+            //create folder
+            $newFolder = new \Folder();
+            $newFolder['range_id'] = $folder_id;
+            $newFolder['seminar_id'] = $parentFolder['seminar_id'];
+            $newFolder['name'] = $this->data['name'];
+            $newFolder['description'] = $this->data['description'];
+            $newFolder['permission'] = $parentFolder['permission'];
+            $newFolder->store();
+            $this->redirect('file/' . $newFolder->getId(), 201, "ok");
+        } else {
+            $this->error(406);
+        }
     }
 
     /**
@@ -94,7 +140,47 @@ class Files extends \RESTAPI\RouteMap
      * @put /file/:file_id
      */
     public function putFile($id) {
-        $this->error(501);
+        $folder = \Folder::find($id);
+        if (!$folder) {
+            $document = \StudipDocument::find($id);
+            $folder = \Folder::find($document['range_id']);
+        }
+        if (!$folder) {
+            $this->error(404);
+            return;
+        }
+        //Rechtecheck
+        if (!$GLOBALS['perm']->have_studip_perm("autor", $folder['Seminar_id'])
+            && ($folder['Seminar_id'] !== $GLOBALS['user']->id)) {
+            $this->error(401);
+        }
+        if ($document) {
+            if (count($_FILES)) {
+                //fileupload
+                $file = null;
+                foreach ($_FILES as $filedata) {
+                    $file = $filedata;
+                    break; //only once please
+                }
+                if ($file && validate_upload($file)) {
+                    upload($file, $id, $folder->getId());
+                }
+            }
+            if ($this->data['name']) {
+                $document['description'] = $this->data['description'];
+            }
+            if ($this->data['name']) {
+                $document['name'] = $this->data['name'];
+            }
+
+            $this->redirect('file/' . $document->getId(), 201, "ok");
+        } else {
+            //create folder
+            $folder['name'] = $this->data['name'];
+            $folder['description'] = $this->data['description'];
+            $folder->store();
+            $this->redirect('file/' . $folder->getId(), 201, "ok");
+        }
     }
 
     /**
@@ -103,7 +189,25 @@ class Files extends \RESTAPI\RouteMap
      * @delete /file/:file_id
      */
     public function deleteFile($file_id) {
-        $this->error(501);
+        $folder = \Folder::find($id);
+        if (!$folder) {
+            $document = \StudipDocument::find($id);
+            $folder = \Folder::find($document['range_id']);
+        }
+        if (!$folder) {
+            $this->error(404);
+            return;
+        }
+        //Rechtecheck
+        if (!$GLOBALS['perm']->have_studip_perm("autor", $folder['Seminar_id'])
+            && ($folder['Seminar_id'] !== $GLOBALS['user']->id)) {
+            $this->error(401);
+        }
+        if ($document) {
+            $document->delete();
+        } else {
+            $folder->delete();
+        }
     }
 
     /**

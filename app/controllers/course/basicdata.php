@@ -125,7 +125,7 @@ class Course_BasicdataController extends AuthenticatedController
             'type' => 'select',
             'value' => $data['status'],
             'locked' => LockRules::Check($this->course_id, 'status'),
-            'choices' => $sem_types
+            'choices' => array_map('htmlReady', $sem_types)
         );
         $this->attributes[] = array(
             'title' => _("Art der Veranstaltung"),
@@ -428,7 +428,7 @@ class Course_BasicdataController extends AuthenticatedController
 
             if ($changemade) {
                 $this->msg[] = array("msg", _("Die Grunddaten der Veranstaltung wurden verändert."));
-            } 
+            }
 
             //Dozenten hinzufügen:
             if (Request::get('new_doz') && Request::submitted('add_dozent_x')

@@ -217,6 +217,9 @@ class StudygroupModel
         $query = "SELECT COUNT(*)
                   FROM seminare
                   WHERE status IN (?)";
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            $query .= "AND visible = 1";
+        }
         $parameters = array($status);
 
         if (isset($search)) {
@@ -274,6 +277,9 @@ class StudygroupModel
             $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user AS su WHERE s.Seminar_id = su.Seminar_id) AS countsems
                     FROM seminare AS s
                     WHERE s.status IN (?)";
+            if (!$GLOBALS['perm']->have_perm('root')) {
+                $sql .= "AND s.visible = 1";
+            }
             $parameters = array($status);
 
             if(!empty($search)) {

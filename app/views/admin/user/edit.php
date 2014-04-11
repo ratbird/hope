@@ -504,9 +504,11 @@ if ($user['locked']) {
         "icon" => "icons/16/black/lock-unlocked.png");
 }
 if (!$prelim && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user['perms'], words('root admin')))) {
-    $paktionen[] = array(
-        "text" => '<a href="' . $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') . '">' . _('Neues Passwort setzen') . '</a>',
-        "icon" => "icons/16/black/lock-locked.png");
+    if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $user['auth_plugin'])) {
+        $paktionen[] = array(
+            "text" => '<a href="' . $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') . '">' . _('Neues Passwort setzen') . '</a>',
+            "icon" => "icons/16/black/lock-locked.png");
+    }
     $paktionen[] = array(
         "text" => '<a href="' . $controller->url_for('admin/user/delete/' . $user['user_id'] . '/edit') . '">' . _('Benutzer löschen') . '</a>',
         "icon" => "icons/16/black/trash.png");

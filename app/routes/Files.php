@@ -91,15 +91,10 @@ class Files extends \RESTAPI\RouteMap
      */
     public function addFile($folder_id)
     {
-        $parentFolder = \Folder::find($folder_id);
-        if (!$parentFolder) {
-            $this->error(404);
-            return;
-        }
-        //Rechtecheck
-        if (!$GLOBALS['perm']->have_studip_perm("autor", $parentFolder['Seminar_id'])
-                && ($parentFolder['Seminar_id'] !== $GLOBALS['user']->id)) {
-            $this->error(401);
+        $parentFolder = $this->loadFolder($id);
+        if (!$folder) {
+            $document = $this->loadFile($id);
+            $parentFolder = $this->loadFolder($document['range_id']);
         }
         if (count($_FILES)) {
             //fileupload
@@ -129,7 +124,7 @@ class Files extends \RESTAPI\RouteMap
             $newFolder->store();
             $this->redirect('file/' . $newFolder->getId(), 201, "ok");
         } else {
-            $this->error(406);
+            $this->error(400);
         }
     }
 
@@ -139,19 +134,14 @@ class Files extends \RESTAPI\RouteMap
      * @put /file/:file_id
      */
     public function putFile($id) {
-        $folder = \Folder::find($id);
+        $folder = $this->loadFolder($id);
         if (!$folder) {
-            $document = \StudipDocument::find($id);
-            $folder = \Folder::find($document['range_id']);
+            $document = $this->loadFile($id);
+            $folder = $this->loadFolder($document['range_id']);
         }
         if (!$folder) {
             $this->error(404);
             return;
-        }
-        //Rechtecheck
-        if (!$GLOBALS['perm']->have_studip_perm("autor", $folder['Seminar_id'])
-            && ($folder['Seminar_id'] !== $GLOBALS['user']->id)) {
-            $this->error(401);
         }
         if ($document) {
             if (count($_FILES)) {
@@ -188,19 +178,14 @@ class Files extends \RESTAPI\RouteMap
      * @delete /file/:file_id
      */
     public function deleteFile($file_id) {
-        $folder = \Folder::find($id);
+        $folder = $this->loadFolder($id);
         if (!$folder) {
-            $document = \StudipDocument::find($id);
-            $folder = \Folder::find($document['range_id']);
+            $document = $this->loadFile($id);
+            $folder = $this->loadFolder($document['range_id']);
         }
         if (!$folder) {
             $this->error(404);
             return;
-        }
-        //Rechtecheck
-        if (!$GLOBALS['perm']->have_studip_perm("autor", $folder['Seminar_id'])
-            && ($folder['Seminar_id'] !== $GLOBALS['user']->id)) {
-            $this->error(401);
         }
         if ($document) {
             $document->delete();

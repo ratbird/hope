@@ -7,19 +7,20 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
+ * @author      Marcus Lunzenauer <mlunzena@uos.de>
  * @author      Rasmus Fuhse <fuhse@data-quest>
- * @author      Suchi & Berg GmbH <info@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.1
  *
  */
 
-class Folder extends SimpleORMap
-{
+class DocumentFolder extends SimpleORMap {
+
     /**
-     *
-     * @param string $id primary key of table
+     * constructor
+     * @param string id: primary key of table dokumente
+     * @return null
      */
     function __construct($id = null)
     {
@@ -34,4 +35,13 @@ class Folder extends SimpleORMap
         parent::__construct($id);
     }
 
+    function getPermissions()
+    {
+        $result = array();
+        foreach (array(1=>'visible', 'writable', 'readable', 'extendable') as $bit => $perm) {
+            if ($this->permission & $bit)
+                $result[] = $perm;
+        }
+        return $result;
+    }
 }

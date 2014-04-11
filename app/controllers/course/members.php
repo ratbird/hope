@@ -1240,6 +1240,9 @@ class Course_MembersController extends AuthenticatedController
         $member = $course->members->findOneBy('user_id', $GLOBALS['user']->id);
         $this->datafields = $course->aux->getMemberData($member);
 
+        // We need aux data in the view
+        $this->aux = $course->aux;
+
         // Update em if they got submittet
         if (Request::submitted('save')) {
             $datafields = SimpleCollection::createFromArray($this->datafields);

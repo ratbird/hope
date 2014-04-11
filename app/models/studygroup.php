@@ -288,6 +288,9 @@ class StudygroupModel
                     LEFT JOIN seminar_user AS su ON (s.Seminar_id = su.Seminar_id AND su.status = 'dozent')
                     LEFT JOIN auth_user_md5 AS aum ON (su.user_id = aum.user_id)
                     WHERE s.status IN (?)";
+            if (!$GLOBALS['perm']->have_perm('root')) {
+                $sql .= "AND s.visible = 1";
+            }
             $parameters = array($status);
 
             if(!empty($search)) {
@@ -300,6 +303,9 @@ class StudygroupModel
                           (SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = ? AND su.Seminar_id = s.Seminar_id ) AS ismember
                     FROM seminare AS s
                     WHERE s.status IN (?)";
+            if (!$GLOBALS['perm']->have_perm('root')) {
+                $sql .= "AND s.visible = 1";
+            }
             $parameters = array(
                 $GLOBALS['user']->id,
                 $status,

@@ -115,7 +115,7 @@ class Files extends \RESTAPI\RouteMap
             $this->redirect('file/' . $document->getId(), 201, "ok");
         } elseif($this->data['name']) {
             //create folder
-            $newFolder = new \Folder();
+            $newFolder = new \DocumentFolder();
             $newFolder['range_id'] = $folder_id;
             $newFolder['seminar_id'] = $parentFolder['seminar_id'];
             $newFolder['name'] = $this->data['name'];
@@ -202,7 +202,7 @@ class Files extends \RESTAPI\RouteMap
     public function getCourseFiles($course_id) {
 
         $folders = \SimpleCollection::createFromArray(
-            \StudipDocumentFolder::findBySeminar_id($course_id))->orderBy('name asc');
+            \DocumentFolder::findBySeminar_id($course_id))->orderBy('name asc');
 
         // slice according to demanded pagination
         $total = count($folders);
@@ -239,7 +239,7 @@ class Files extends \RESTAPI\RouteMap
 
     private function loadFolder($id)
     {
-        $folder = new \StudipDocumentFolder($id);
+        $folder = new \DocumentFolder($id);
 
         // return NULL unless it exists
         if ($folder->isNew()) {

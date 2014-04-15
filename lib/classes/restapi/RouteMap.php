@@ -301,7 +301,9 @@ abstract class RouteMap
     // media-types that we know how to process
     private static $mediaTypes = array(
         'application/json' => 'parseJson',
-        'application/x-www-form-urlencoded' => 'parseFormEncoded');
+        'application/x-www-form-urlencoded' => 'parseFormEncoded',
+        'multipart/form-data' => 'parseMultipartFormdata'
+    );
 
     // cache the request body
     private static $_request_body;
@@ -313,7 +315,7 @@ abstract class RouteMap
         if (!isset(self::$_request_body)) {
             self::$_request_body = file_get_contents('php://input');
         }
-
+        
         if (isset(self::$mediaTypes[$mediaType])) {
             $result = call_user_func(array(__CLASS__, self::$mediaTypes[$mediaType]), self::$_request_body);
             if ($result) {
@@ -334,6 +336,103 @@ abstract class RouteMap
     {
         parse_str($input, $result);
         return $result;
+    }
+    
+    // strategy to decode a multipart message. Used for file-uploads.
+    private static function parseMultipartFormdata($input)
+    {
+        $data = array();
+        if (Request::isPost()) {
+            foreach ($_POST as $key => $value) {
+                $data[$key] = $value;
+            }
+            $data['_FILES'] = $_FILES;
+            return $data;
+        }
+        $boundary = self::getMultipartBoundary();
+        if (!$boundary) {
+            return $data;
+        }
+        $input = explode("--".$boundary, $input);
+        //array_pop($input);
+        //array_shift($input);
+        foreach ($input as $part) {
+            
+            list($head, $body) = preg_split('/(\r?\n|\r)(\r?\n|\r)/', $part, 2);
+            $tmpheaders = array();
+            foreach (preg_split("/(\r?\n|\r)/", $head) as $headline) {
+                if (preg_match('/^[^\s]/', $headline)) {
+                    $lineIsHeader = preg_match('/([^:]+):\s*(.*)$/', $headline, $matches);
+                    if ($lineIsHeader) {
+                        $tmpheaders[] = array('index' => strtolower(trim($matches[1])), 'value' => trim($matches[2]));
+                    }
+                } else {
+                    //noch zur letzten Zeile hinzuzählen
+                    end($tmpheaders);
+                    $lastkey = key($tmpheaders);
+                    $tmpheaders[$lastkey]['value'] .= " ".substr($line, 1);
+                }
+            }
+            foreach ($tmpheaders as $header) {
+                $headers[$header['index']] = $header['value'];
+            }
+            $contentType = "";
+            if (isset($headers['content-type'])) {
+                preg_match("/^([^;\s]*)/", $headers['content-type'], $matches);
+                $contentType = strtolower($matches[1]);
+            }
+            switch ($headers["transfer-encoding"]) {
+                case "quoted-printable":
+                    $body = quoted_printable_decode($body);
+                    break;
+                case "base64":
+                    $body = base64_decode(preg_replace("/(\r?\n|\r)/", "", trim($body)));
+                    break;
+                case "7bit":
+                case "8bit":
+                default:
+                    //nothing to do
+            }
+            var_dump($contentType);
+            switch ($contentType) {
+                case 'application/json':
+                    $data = array_merge($data, self::parseJson($body));
+                    break;
+                case 'application/x-www-form-urlencoded':
+                    $data = array_merge($data, self::parseFormEncoded($body));
+                    break;
+                default:
+                    preg_match("/filename=([^;\s]*)/i", $headers['content-disposition'], $matches);
+                    if (!$matches[1]) {
+                        preg_match('/filename=([^;\s]*)/i', $headers['content-type'], $matches);
+                    }
+                    $filename = str_replace(array("'", '"'), '', $matches[1]);
+                    $tmp_name = $GLOBALS['TMP_PATH']."/uploadfile_".md5(uniqid());
+                    file_put_contents($tmp_name, $body);
+                    $data['_FILES'][] = array(
+                        'name' => $filename,
+                        'type' => $contentType,
+                        'tmp_name' => $tmp_name,
+                        'size' => strlen($body)
+                    );
+            }
+        }
+        var_dump($data);
+        die();
+        return $data;
+    }
+    
+    private static function getMultipartBoundary()
+    {
+        if ($contentType = $_SERVER['CONTENT_TYPE']) {
+            foreach (preg_split('/\s*[;,]\s*/', $contentType) as $part) {
+                if (strtolower(substr($part, 0, 8)) === "boundary") {
+                    $part = explode("=", $part);
+                    return $part[1];
+                }
+            }
+        }
+        return null;
     }
 
 

@@ -96,10 +96,10 @@ class Files extends \RESTAPI\RouteMap
             $document = $this->loadFile($id);
             $parentFolder = $this->loadFolder($document['range_id']);
         }
-        if (count($_FILES)) {
+        if (count($this->data['_FILES'])) {
             //fileupload
             $file = null;
-            foreach ($_FILES as $filedata) {
+            foreach ($this->data['_FILES'] as $filedata) {
                 $file = $filedata;
                 break; //only once please
             }
@@ -144,10 +144,10 @@ class Files extends \RESTAPI\RouteMap
             return;
         }
         if ($document) {
-            if (count($_FILES)) {
+            if (count($this->data['_FILES'])) {
                 //fileupload
                 $file = null;
-                foreach ($_FILES as $filedata) {
+                foreach ($this->data['_FILES'] as $filedata) {
                     $file = $filedata;
                     break; //only once please
                 }

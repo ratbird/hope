@@ -19,18 +19,7 @@
             </td>
             <td align="right">
             <span class="actions">
-            <? if (!$search_exp || !$search_results): ?>
-                    <?=  _('Person zum Eintrag in das Adressbuch suchen:') ?>
-                    <input type="text" name="search_exp" value="<?= htmlReady($search_exp) ?>">
-                    <?= Assets::input('icons/16/blue/search',  array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "search", 'title' => _('Neue Suche'))) ?>
-                &nbsp;
-            <? elseif ($search_results): ?>
-                <?= Assets::input('icons/16/blue/arr_2down',  array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "addsearch", 'title' => _('In Adressbuch eintragen'))) ?>
-              <?= $search_results ?>
-                <a href="<?= URLHelper::getLink() ?>">
-                    <?= Assets::img('icons/16/blue/refresh', tooltip2(_('Neue Suche'))) ?>
-                </a>
-            <? endif; ?>
+            <?= $mp; ?>
             </span>
             </td>
         </tr>

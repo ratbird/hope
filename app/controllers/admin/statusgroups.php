@@ -64,6 +64,8 @@ class Admin_StatusgroupsController extends AuthenticatedController {
 
         // Check if the viewing user should get the admin interface
         $this->tutor = $this->type['edit']($this->user_id);
+        $membersCollection = new SimpleCollection((User::findMany(Institute::find($_SESSION['SessionSeminar'])->members->orderBy('nachname')->pluck('user_id'))));
+        $this->membersOfInstitute = $membersCollection->pluck('id');
     }
 
     /**
@@ -91,150 +93,27 @@ class Admin_StatusgroupsController extends AuthenticatedController {
      * @param string group id
      */
     public function memberAdd_action($group_id = null) {
-        // load selected group
+        $mp = MultiPersonSearch::load("add_statusgroup" . $group_id);
         $this->group = new Statusgruppen($group_id);
-
-        // set infobox
-        $this->setInfoBoxImage('sidebar/group-sidebar.png');
-        $this->addToInfobox(_('Aktionen'), "<a href='" . $this->url_for('admin/statusgroups') . "'>" . _('Zurück') . "</a>", 'icons/16/black/arr_1left.png');
-
-        // load current group members on first call
-        $this->selectedPersons = array();
-        if (!Request::get('not_first_call')) {
-            $this->currentGroupMembers = array();
-            $this->selectedPersons = User::findMany($this->group->members->pluck('user_id'));
-        } else {
-            // Load selected persons
-            $this->selectedPersonsHidden = unserialize(studip_utf8decode(Request::get('search_persons_selected_hidden')));
-            $this->selectedPersons = User::findMany($this->selectedPersonsHidden);
-        }
-
-        // Search
-        $this->search = Request::isXHR() ? studip_utf8decode(Request::get('freesearch')) : Request::get('freesearch');
-        $lastSearch = Request::isXHR() ? studip_utf8decode(Request::get('last_search_hidden')) : Request::get('last_search_hidden');
-        $this->searchPreset = Request::get('search_preset');
-        $lastSearchPreset = Request::isXHR() ? studip_utf8decode(Request::get('last_search_preset')) : Request::get('last_search_preset');
-        if (($this->searchPreset == "inst" && $lastSearchPreset != "inst") || !Request::get('not_first_call')) { // ugly
-            // search with preset
-            $this->selectablePersons = User::findMany(Institute::find($_SESSION['SessionSeminar'])->members->pluck('user_id'));
-            // reset search input, because a preset is used
-            $this->search = "";
-        } elseif ($this->search != $lastSearch || Request::submitted('submit_search')) {
-            // search with free text input
-            $result = PermissionSearch::get('user')->getResults($this->search, array('permission' => array('autor','tutor','dozent'), 'exclude_user' => array()));
-            $this->selectablePersons = User::findMany($result);
-            // reset preset
-            $this->searchPreset = "";
-        } else {
-            // otherwise restore selectable persons
-            $this->selectablePersonsHidden = unserialize(studip_utf8decode(Request::get('search_persons_selectable_hidden')));
-            foreach ($this->selectablePersonsHidden as $user_id) {
-                $this->selectablePersons[] = new User($user_id);
+        $countAdded = 0;
+        foreach ($mp->getAddedUsers() as $a) {
+            if (!$this->group->isMember(new User($a))) {
+                $new_user = new StatusgruppeUser(array($group_id, $a));
+                $new_user->store();
+                $this->type['after_user_add']($a);
+                $countAdded++;
             }
         }
-
-        // select person
-        if (Request::submitted('search_persons_add')) {
-            foreach (Request::optionArray('search_persons_selectable') as $user_id) {
-                $this->selectedPersons[] = new User($user_id);
-            }
+        
+        if ($countAdded == 1) {
+            PageLayout::postMessage(MessageBox::success(_('Es wurde eine Person hinzugefügt.')));
+        } elseif ($countAdded > 1) {
+            PageLayout::postMessage(MessageBox::success(sprintf(_('Es wurden %s MitgliederInnen hinzugefügt.'), $countAdded)));
         }
-
-        // deselect person
-        if (Request::submitted('search_persons_remove')) {
-            foreach (Request::optionArray('search_persons_selected') as $user_id) {
-                foreach ($this->selectedPersons as $key => $value) {
-                    if ($value->id == $user_id) {
-                        unset($this->selectedPersons[$key]);
-                    }
-                }
-                $this->selectablePersons[] = new User($user_id);
-            }
-        }
-
-        // remove already selected persons from selectable
-        foreach ($this->selectedPersons as $user) {
-            foreach ($this->selectablePersons as $key => $value) {
-                if ($value->id == $user->id) {
-                    // delete from selectable persons
-                    unset($this->selectablePersons[$key]);
-                }
-            }
-        }
-
-        // save changes
-        if (Request::submitted('save')) {
-
-            $this->countRemoved = 0;
-            CSRFProtection::verifyUnsafeRequest();
-
-            // delete users from group if removed
-            $currentMembers = array();
-            foreach ($this->group->members as $member) {
-                $isRemoved = true;
-                foreach ($this->selectedPersons as $user) {
-                    if ($member->user_id == $user->id) {
-                        $isRemoved = false;
-                    }
-                }
-
-                if ($isRemoved) {
-                    //exit("DELETED");
-                    $this->group->removeUser($member->user_id);
-                    $this->type['after_user_delete']($member->user_id);
-                    //$this->afterFilter();
-                    $this->countRemoved++;
-                }
-            }
-
-            // add new users
-            $this->countNew = 0;
-
-            foreach ($this->selectedPersons as $user) {
-                if (!$this->group->isMember($user->id)) {
-                    //exit("ADDED");
-                    $new_user = new StatusgruppeUser(array($this->group->id, $user->id));
-                    $new_user->store();
-                    $this->type['after_user_add']($user->id);
-                    $this->countNew++;
-                }
-            }
-
-            $this->selectedPersons = array();
-            $this->selectablePersons = array();
-
-            // reload current group members
-            $this->group = new Statusgruppen($group_id);
-            $this->currentGroupMembers = array();
-            foreach ($this->group->members as $member) {
-                $user = new User($member->user_id);
-                $this->selectedPersons[] = $user;
-            }
-            PageLayout::postMessage(MessageBox::success(_('Die Mitglieder wurden gespeichert.')));
-            $this->redirect('admin/statusgroups/index#group-' . $group_id);
-        }
-
-
-        // abort changes
-        if (Request::submitted('abort')) {
-            $this->redirect('admin/statusgroups/index');
-        }
-
-        $this->selectablePersons = new SimpleCollection($this->selectablePersons);
-        $this->selectedPersons = new SimpleCollection($this->selectedPersons);
-        // generate hidden form data to remember current state
-        $this->selectablePersonsHidden = $this->selectablePersons->pluck('id');
-        $this->selectedPersonsHidden = $this->selectedPersons->pluck('id');
-        $this->selectablePersons->orderBy('nachname, vorname');
-        $this->selectedPersons->orderBy('nachname, vorname');
-        // set layout
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-        } else {
-            $this->title = _('Mitglieder verwalten');
-        }
+        
+        $this->redirect('admin/statusgroups');
     }
-
+    
     /**
      * Ajax action to move a user
      */

@@ -24,9 +24,28 @@
                 <a class='modal' title="<?= _('Gruppe ändern') ?>" href="<?= $controller->url_for("admin/statusgroups/editGroup/{$group->id}") ?>">
                     <?= Assets::img("icons/16/blue/edit.png", tooltip2(_('Gruppe ändern'))) ?>
                 </a>
-                <a class='modal' title="<?= _('Mitglieder hinzufügen') ?>" href="<?= $controller->url_for("admin/statusgroups/memberAdd/{$group->id}") ?>">
-                    <?= Assets::img("icons/16/blue/add/community.png", tooltip2(_('Mitglieder hinzufügen'))) ?>
-                </a>
+                <?
+                $searchType = new SQLSearch("SELECT auth_user_md5.user_id, CONCAT(" . $GLOBALS['_fullname_sql']['full'] .
+                ", \" (\", auth_user_md5.username, \")\") as fullname " .
+                "FROM auth_user_md5 " .
+                "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
+                "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                "OR auth_user_md5.username LIKE :input) " .
+                "AND auth_user_md5.perms IN ('autor', 'tutor', 'dozent') " .
+                " AND auth_user_md5.visible <> 'never' " .
+                "ORDER BY Vorname, Nachname", _("Teilnehmer suchen"), "username");
+                
+                $mp = MultiPersonSearch::get("add_statusgroup" . $group->id)
+                        ->setLinkText()
+                        ->setDefaultSelectedUser($group->members->pluck('user_id'))
+                        ->setTitle(_('MitgliederInnen hinzufügen'))
+                        ->setExecuteURL("admin/statusgroups/memberAdd/{$group->id}")
+                        ->setSearchObject($searchType)
+                        ->addQuickfilter(_("aktuelle Einrichtung"), $membersOfInstitute)
+                        ->render();
+                    //$this->addToInfobox(_('Aktionen'), $mp, 'icons/16/black/add/community.png');
+                    print $mp;
+                    ?>
                 <a class='modal' title="<?= _('Gruppe löschen') ?>" href="<?= $controller->url_for("admin/statusgroups/deleteGroup/{$group->id}") ?>">
                     <?= Assets::img("icons/16/blue/trash.png", tooltip2(_('Gruppe löschen'))) ?>
                 </a>

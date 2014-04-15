@@ -666,12 +666,12 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->moderators       = $sem->getMembers('dozent');
         $this->tutors           = $sem->getMembers('tutor');
         $this->accepted         = $sem->getAdmissionMembers('accepted');
-        $this->inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+        
+        $inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
                                     . "FROM auth_user_md5 "
                                     . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
                                     . "LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id AND seminar_user.Seminar_id = '".addslashes($id)."') "
                                     . "WHERE perms  NOT IN ('root', 'admin') "
-                                    . "AND seminar_user.Seminar_id IS NULL "
                                     . "AND " . get_vis_query()
                                     . " AND (username LIKE :input OR Vorname LIKE :input "
                                     . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
@@ -680,6 +680,32 @@ class Course_StudygroupController extends AuthenticatedController {
                                     . "ORDER BY fullname ASC",
                                     _("Nutzer suchen"), "user_id");
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
+        
+        foreach ($this->cmembers as $m) {
+            $defaultSelectedUser[] = $m['user_id'];
+        }
+        
+        // add addressbook
+        $sql = "SELECT user_id FROM contact WHERE owner_id = ?";
+        $statement = DBManager::get()->prepare($sql, array(PDO::FETCH_NUM));
+        $statement->execute(array($GLOBALS['user']->id));
+        $result = $statement->fetchAll();
+        
+        $userArray = array();
+        foreach ($result as $r) {
+            $userArray[] = $r['user_id'];
+        }
+        
+        $this->mp = MultiPersonSearch::get("studygroup_invite_" . $id)
+                    ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
+                    ->setDefaultSelectedUser($defaultSelectedUser)
+                    ->setLinkIconPath("")
+                    ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
+                    ->setExecuteURL("course/studygroup/execute_invite/" . $id)
+                    ->setSearchObject($inviting_search)
+                    ->addQuickfilter(_("Adressbuch"), $userArray)
+                    ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
+                    ->render();
     }
 
     /**
@@ -708,17 +734,6 @@ class Course_StudygroupController extends AuthenticatedController {
             } elseif ($action == 'deny') {
                 StudygroupModel::deny_user($user,$id);
                 $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user, 'full', true));
-            } elseif ($action == 'add_invites') {
-                if (Request::get('choose_member') && Request::submitted('add_member')) {
-                    $msg = new Messaging();
-                    $receiver = Request::option('choose_member');
-                    $sem = new Seminar($id);
-                    $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n %s"),
-                             get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
-                    $subject = _("Sie wurden in eine Studiengruppe eingeladen");
-                    $msg->insert_message($message, get_username($receiver),'', '', '', '', '', $subject);
-                    $this->flash['success'] = sprintf(_("%s wurde in die Studiengruppe eingeladen."), get_fullname($receiver, 'full', true));
-                }
             } elseif ($perm->have_studip_perm('tutor', $id)) {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote' && $status != 'dozent' && $perm->have_studip_perm('dozent',$id)) {
@@ -751,6 +766,47 @@ class Course_StudygroupController extends AuthenticatedController {
         }   else {
             $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $id));
         }
+    }
+    
+    /**
+     * invites members to a studygroup.
+     */
+    function execute_invite_action($id)
+    {
+        // Security Check
+        global $perm;
+        if (!$perm->have_studip_perm('tutor', $id)) {
+            $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $id));
+            exit;
+        }
+        
+        // load MultiPersonSearch object
+        $mp = MultiPersonSearch::load("studygroup_invite_" . $id);
+        $fail = false;
+        $count = 0;
+        $addedUsers = "";
+        foreach ($mp->getAddedUsers() as $receiver) {
+            $msg = new Messaging();
+            $sem = new Seminar($id);
+            $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n %s"),
+            get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
+            $subject = _("Sie wurden in eine Studiengruppe eingeladen");
+            $msg->insert_message($message, get_username($receiver),'', '', '', '', '', $subject);
+            
+            if ($count > 0) {
+                $addedUsers .= ", ";
+            }
+            $addedUsers .= get_fullname($receiver, 'full', true);
+            $count++;
+            
+        }
+        if ($count == 1) {
+            $this->flash['success'] = sprintf(_("%s wurde in die Studiengruppe eingeladen."), $addedUsers);
+        } else if ($count >= 1) {
+            $this->flash['success'] = sprintf(_("%s wurden in die Studiengruppe eingeladen."), $addedUsers);
+        }
+        
+        $this->redirect('course/studygroup/members/' . $id);
     }
 
     /**

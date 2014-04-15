@@ -77,8 +77,24 @@ if ($contact["view"]=="gruppen" && strlen($filter) < 4)
 
 // adding a contact via search
 
-if (Request::get('Freesearch')) {
-    $open = AddNewContact(get_userid(Request::get('Freesearch')));
+$mp = MultiPersonSearch::load("addressbook_add");
+if (count($mp->getAddedUsers()) !== 0) {
+    
+    $count = 0;
+    $addedUsers = "";
+    foreach ($mp->getAddedUsers() as $u) {
+        AddNewContact($u);
+        $addedUsers .= get_fullname($u, 'full', true);
+        $count++;
+        
+    }
+    if ($count == 1) {
+        PageLayout::postMessage(MessageBox::success(sprintf(_("%s wurde in das Adressbuch eingetragen."), $addedUsers)));
+    } else if ($count >= 1) {
+        PageLayout::postMessage(MessageBox::success(sprintf(_("%s wurden in das Adressbuch eingetragen."), $addedUsers)));
+    }
+    $mp->clearSession();
+    unset($mp);
 }
 
 // deletel a contact
@@ -158,6 +174,37 @@ if (($filter ?: 'all') == 'all') {
     $size_of_book = $sizes[$filter];
 }
 
+
+// dialog to add persons
+$search_obj = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+                        . "FROM auth_user_md5 "
+                        . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+                        . "WHERE "
+                        . "username LIKE :input OR Vorname LIKE :input "
+                        . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
+                        . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
+                        . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
+                        . " ORDER BY fullname ASC",
+                        _("Nutzer suchen"), "user_id");
+$sql = "SELECT user_id FROM contact WHERE owner_id = ?";
+$statement = DBManager::get()->prepare($sql, array(PDO::FETCH_NUM));
+$statement->execute(array($GLOBALS['user']->id));
+$result = $statement->fetchAll();
+
+$defaultSelectedUser = array();
+foreach ($result as $r) {
+    $defaultSelectedUser[] = $r['user_id'];
+}
+$mp = MultiPersonSearch::get("addressbook_add")
+    ->setLinkText(_('Personen in das Adressbuch eintragen'))
+    ->setDefaultSelectedUser($defaultSelectedUser)
+    ->setTitle(_('Personen in das Adressbuch eintragen'))
+    ->setExecuteURL("contact.php")
+    ->setSearchObject($search_obj)
+    ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
+    ->render();
+
+
 $template = $GLOBALS['template_factory']->open('contact/index');
 $template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
 $template->size_of_book           = $size_of_book;
@@ -169,6 +216,7 @@ $template->search_exp             = $search_exp;
 $template->search_results         = $search_results;
 $template->edit_id                = $edit_id;
 $template->contact                = $contact;
+$template->mp                = $mp;
 
 if ($contact['view'] == 'gruppen') {
     $query = "SELECT statusgruppe_id, name FROM statusgruppen WHERE range_id = ? ORDER BY position ASC";

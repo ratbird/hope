@@ -15,7 +15,7 @@
             <? foreach ($aux['rows'] as $entry): ?>
                 <tr>
                     <? foreach ($aux['head'] as $key => $value): ?>
-                        <td><?= $entry[$key] ?></td>
+                        <td><?= htmlReady($entry[$key]) ?></td>
                     <? endforeach; ?>
                 </tr>
             <? endforeach; ?>

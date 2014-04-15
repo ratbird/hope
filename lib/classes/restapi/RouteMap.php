@@ -315,7 +315,7 @@ abstract class RouteMap
         if (!isset(self::$_request_body)) {
             self::$_request_body = file_get_contents('php://input');
         }
-        
+
         if (isset(self::$mediaTypes[$mediaType])) {
             $result = call_user_func(array(__CLASS__, self::$mediaTypes[$mediaType]), self::$_request_body);
             if ($result) {
@@ -337,7 +337,7 @@ abstract class RouteMap
         parse_str($input, $result);
         return $result;
     }
-    
+
     // strategy to decode a multipart message. Used for file-uploads.
     private static function parseMultipartFormdata($input)
     {
@@ -354,13 +354,16 @@ abstract class RouteMap
             return $data;
         }
         $input = explode("--".$boundary, $input);
-        //array_pop($input);
-        //array_shift($input);
+
+        array_pop($input);
+        array_shift($input);
+
         foreach ($input as $part) {
-            
-            list($head, $body) = preg_split('/(\r?\n|\r)(\r?\n|\r)/', $part, 2);
-            $tmpheaders = array();
-            foreach (preg_split("/(\r?\n|\r)/", $head) as $headline) {
+            $part = ltrim($part, "\r\n");
+            list($head, $body) = explode("\r\n\r\n", $part, 2);
+
+            $tmpheaders = $headers = array();
+            foreach (explode("\r\n", $head) as $headline) {
                 if (preg_match('/^[^\s]/', $headline)) {
                     $lineIsHeader = preg_match('/([^:]+):\s*(.*)$/', $headline, $matches);
                     if ($lineIsHeader) {
@@ -370,12 +373,13 @@ abstract class RouteMap
                     //noch zur letzten Zeile hinzuzählen
                     end($tmpheaders);
                     $lastkey = key($tmpheaders);
-                    $tmpheaders[$lastkey]['value'] .= " ".substr($line, 1);
+                    $tmpheaders[$lastkey]['value'] .= " ".substr($headline, 1);
                 }
             }
             foreach ($tmpheaders as $header) {
                 $headers[$header['index']] = $header['value'];
             }
+
             $contentType = "";
             if (isset($headers['content-type'])) {
                 preg_match("/^([^;\s]*)/", $headers['content-type'], $matches);
@@ -393,32 +397,40 @@ abstract class RouteMap
                 default:
                     //nothing to do
             }
-            switch ($contentType) {
-                case 'application/json':
-                    $data = array_merge($data, self::parseJson($body));
-                    break;
-                case 'application/x-www-form-urlencoded':
-                    $data = array_merge($data, self::parseFormEncoded($body));
-                    break;
-                default:
-                    preg_match("/filename=([^;\s]*)/i", $headers['content-disposition'], $matches);
-                    if (!$matches[1]) {
-                        preg_match('/filename=([^;\s]*)/i', $headers['content-type'], $matches);
-                    }
-                    $filename = str_replace(array("'", '"'), '', $matches[1]);
-                    $tmp_name = $GLOBALS['TMP_PATH']."/uploadfile_".md5(uniqid());
-                    file_put_contents($tmp_name, $body);
-                    $data['_FILES'][] = array(
-                        'name' => $filename,
-                        'type' => $contentType,
-                        'tmp_name' => $tmp_name,
-                        'size' => strlen($body)
-                    );
+            $matches = array();
+            preg_match("/name=([^;\s]*)/i", $headers['content-disposition'], $matches);
+            $name = str_replace(array("'", '"'), '', $matches[1]);
+            if (!$contentType) {
+                $data[$name] = substr($body, 0, strlen($body) - 2);
+            } else {
+                switch ($contentType) {
+                    case 'application/json':
+                        $data = array_merge($data, self::parseJson($body));
+                        break;
+                    case 'application/x-www-form-urlencoded':
+                        $data = array_merge($data, self::parseFormEncoded($body));
+                        break;
+                    default:
+                        $matches = array();
+                        preg_match("/filename=([^;\s]*)/i", $headers['content-disposition'], $matches);
+                        if (!$matches[1]) {
+                            preg_match('/filename=([^;\s]*)/i', $headers['content-type'], $matches);
+                        }
+                        $filename = str_replace(array("'", '"'), '', $matches[1]);
+                        $tmp_name = $GLOBALS['TMP_PATH']."/uploadfile_".md5(uniqid());
+                        file_put_contents($tmp_name, substr($body, 0, strlen($body) - 2));
+                        $data['_FILES'][$name] = array(
+                            'name' => $filename,
+                            'type' => $contentType,
+                            'tmp_name' => $tmp_name,
+                            'size' => strlen($body)
+                        );
+                }
             }
         }
         return $data;
     }
-    
+
     private static function getMultipartBoundary()
     {
         if ($contentType = $_SERVER['CONTENT_TYPE']) {

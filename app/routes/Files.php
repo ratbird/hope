@@ -91,9 +91,9 @@ class Files extends \RESTAPI\RouteMap
      */
     public function addFile($folder_id)
     {
-        $parentFolder = $this->loadFolder($id);
+        $parentFolder = $this->loadFolder($folder_id);
         if (!$folder) {
-            $document = $this->loadFile($id);
+            $document = $this->loadFile($folder_id);
             $parentFolder = $this->loadFolder($document['range_id']);
         }
         if (count($this->data['_FILES'])) {
@@ -134,6 +134,7 @@ class Files extends \RESTAPI\RouteMap
      * @put /file/:file_id
      */
     public function putFile($id) {
+
         $folder = $this->loadFolder($id);
         if (!$folder) {
             $document = $this->loadFile($id);

@@ -393,7 +393,6 @@ abstract class RouteMap
                 default:
                     //nothing to do
             }
-            var_dump($contentType);
             switch ($contentType) {
                 case 'application/json':
                     $data = array_merge($data, self::parseJson($body));
@@ -417,8 +416,6 @@ abstract class RouteMap
                     );
             }
         }
-        var_dump($data);
-        die();
         return $data;
     }
     

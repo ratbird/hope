@@ -341,6 +341,7 @@ abstract class RouteMap
     // strategy to decode a multipart message. Used for file-uploads.
     private static function parseMultipartFormdata($input)
     {
+
         $data = array();
         if (Request::isPost()) {
             foreach ($_POST as $key => $value) {
@@ -418,12 +419,14 @@ abstract class RouteMap
                         }
                         $filename = str_replace(array("'", '"'), '', $matches[1]);
                         $tmp_name = $GLOBALS['TMP_PATH']."/uploadfile_".md5(uniqid());
-                        file_put_contents($tmp_name, substr($body, 0, strlen($body) - 2));
+                        $handle = fopen($tmp_name, 'wb');
+                        $filesize = fwrite($handle, $body, (strlen($body) - 2));
+                        fclose($handle);
                         $data['_FILES'][$name] = array(
                             'name' => $filename,
                             'type' => $contentType,
                             'tmp_name' => $tmp_name,
-                            'size' => strlen($body)
+                            'size' => $filesize
                         );
                 }
             }

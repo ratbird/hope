@@ -92,39 +92,52 @@ class Files extends \RESTAPI\RouteMap
     public function addFile($folder_id)
     {
         $parentFolder = $this->loadFolder($folder_id);
-        if (!$folder) {
-            $document = $this->loadFile($folder_id);
-            $parentFolder = $this->loadFolder($document['range_id']);
+        if (!$parentFolder) {
+             $this->error(404, 'folder does not exist');
         }
-        if (count($this->data['_FILES'])) {
-            //fileupload
-            $file = null;
-            foreach ($this->data['_FILES'] as $filedata) {
-                $file = $filedata;
-                break; //only once please
-            }
-            if ($file && validate_upload($file)) {
-                upload($file, false, $folder_id);
-            }
-            $document = new \StudipDocument($GLOBALS['dokument_id']);
-            $document['description'] = $this->data['description'];
-            if ($this->data['name']) {
-                $document['name'] = $this->data['name'];
-            }
-
-            $this->redirect('file/' . $document->getId(), 201, "ok");
+        if (is_array($this->data['_FILES']) && count($this->data['_FILES'])) {
+                //fileupload
+                $file = current($this->data['_FILES']);
+                $GLOBALS['msg'] = '';
+                validate_upload($file);
+                if ($GLOBALS['msg']) {
+                    $this->error(400, decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
+                }
+                if ($file['size']) {
+                    $document = array();
+                    foreach(words('name description protected') as $c) {
+                        if (isset($this->data[$c])) {
+                            $document[$c] = $this->data[$c];
+                        }
+                    }
+                    $document['filename'] = strtolower($file['name']);
+                    $document['name'] = $document['name'] ?: $document['filename'];
+                    $document['user_id'] = $GLOBALS['user']->id;
+                    $document['author_name'] = get_fullname();
+                    $document['filesize'] = $file['size'];
+                    $document['autor_host']  = $_SERVER['REMOTE_ADDR'];
+                    $document['range_id'] = $parentFolder->id;
+                    $document['seminar_id'] = $parentFolder->seminar_id;
+                    $document = \StudipDocument::createWithFile($file['tmp_name'], $document);
+                    @unlink($file['tmp_name']);
+                }
+                if (!$document) {
+                    $this->error(400, 'could not create file');
+                } else {
+                    $this->redirect('file/' . $document->getId(), 201, "ok");
+                }
         } elseif($this->data['name']) {
             //create folder
             $newFolder = new \DocumentFolder();
-            $newFolder['range_id'] = $folder_id;
+            $newFolder['range_id'] = $parentFolder['folder_id'];
             $newFolder['seminar_id'] = $parentFolder['seminar_id'];
             $newFolder['name'] = $this->data['name'];
             $newFolder['description'] = $this->data['description'];
-            $newFolder['permission'] = $parentFolder['permission'];
+            $newFolder['user_id'] = $GLOBALS['user']->id;
             $newFolder->store();
             $this->redirect('file/' . $newFolder->getId(), 201, "ok");
         } else {
-            $this->error(400);
+            $this->error(400, 'name is missing');
         }
     }
 
@@ -141,36 +154,48 @@ class Files extends \RESTAPI\RouteMap
             $folder = $this->loadFolder($document['range_id']);
         }
         if (!$folder) {
-            $this->error(404);
-            return;
+            $this->error(404, 'folder does not exist');
         }
         if ($document) {
-            if (count($this->data['_FILES'])) {
+            foreach(words('name description protected') as $c) {
+                if (isset($this->data[$c])) {
+                    $document[$c] = $this->data[$c];
+                }
+            }
+            if (is_array($this->data['_FILES']) && count($this->data['_FILES'])) {
                 //fileupload
-                $file = null;
-                foreach ($this->data['_FILES'] as $filedata) {
-                    $file = $filedata;
-                    break; //only once please
+                $file = current($this->data['_FILES']);
+                $GLOBALS['msg'] = '';
+                validate_upload($file);
+                if ($GLOBALS['msg']) {
+                    $this->error(400, decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
                 }
-                if ($file && validate_upload($file)) {
-                    upload($file, $id, $folder->getId());
+                if ($file['size']) {
+                    $document['filename'] = strtolower($file['name']);
+                    $document['user_id'] = $GLOBALS['user']->id;
+                    $document['author_name'] = get_fullname();
+                    $document['filesize'] = $file['size'];
+                    $document['autor_host']  = $_SERVER['REMOTE_ADDR'];
+                    $ok = \StudipDocument::createWithFile($file['tmp_name'], $document);
+                    @unlink($file['tmp_name']);
                 }
+                if (!$ok) {
+                    $this->error(400, 'could not create file');
+                }
+            } else {
+                $document->store();
             }
-            if ($this->data['name']) {
-                $document['description'] = $this->data['description'];
-            }
-            if ($this->data['name']) {
-                $document['name'] = $this->data['name'];
-            }
-
-            $this->redirect('file/' . $document->getId(), 201, "ok");
         } else {
-            //create folder
-            $folder['name'] = $this->data['name'];
-            $folder['description'] = $this->data['description'];
+            //update folder
+            foreach(words('name description') as $c) {
+                if (isset($this->data[$c])) {
+                    $folder[$c] = $this->data[$c];
+                }
+            }
             $folder->store();
-            $this->redirect('file/' . $folder->getId(), 201, "ok");
         }
+        $this->status(204);
+        $this->body(null); //no content means no content
     }
 
     /**

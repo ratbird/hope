@@ -22,7 +22,7 @@ class StatusgruppeUser extends SimpleORMap {
     protected $belongs_to = array(
         'group' => array(
             'class_name' => 'Statusgruppen',
-            'foreign_key' => 'range_id'
+            'foreign_key' => 'statusgruppe_id'
         ),
         'user' => array(
             'class_name' => 'User',

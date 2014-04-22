@@ -26,13 +26,16 @@ class MultipersonsearchController extends AuthenticatedController {
         $searchterm = str_replace(",", "", $searchterm);
         $searchterm = str_replace(" ", "", $searchterm);
         
-        // execute searchobject
-        $mp = MultiPersonSearch::load($name);
-        $searchObject = $mp->getSearchObject();
-        $result = $searchObject->getResults($searchterm, array("cid" => Request::get('cid')));
-        $this->result = new SimpleCollection(User::findMany($result));
-        $this->result->orderBy("nachname asc, vorname asc");
-        $this->alreadyMember = $mp->getDefaultSelectedUsersIDs();
+        // execute searchobject if searchterm is at least 3 chars long
+        if (strlen($searchterm) >= 3) {
+            $mp = MultiPersonSearch::load($name);
+            $searchObject = $mp->getSearchObject();
+            $result = $searchObject->getResults($searchterm, array("cid" => Request::get('cid')));
+            $this->result = new SimpleCollection(User::findMany($result));
+            $this->result = $this->result->limit(50);
+            $this->result->orderBy("nachname asc, vorname asc");
+            $this->alreadyMember = $mp->getDefaultSelectedUsersIDs();
+        }
         $this->render_template('multipersonsearch/ajax.php');
     }
     

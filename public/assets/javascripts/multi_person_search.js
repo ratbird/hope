@@ -75,7 +75,7 @@ STUDIP.MultiPersonSearch = {
     search: function () {
         var searchterm = $("#" + this.name + "_searchinput").val();
         var name = this.name;
-        $.getJSON(  STUDIP.URLHelper.getURL("dispatch.php/multipersonsearch/ajax_search/" + this.name + "/"  + searchterm), function( data ) {
+        $.getJSON(  STUDIP.URLHelper.getURL("dispatch.php/multipersonsearch/ajax_search/" + this.name + "?s="  + searchterm), function( data ) {
             STUDIP.MultiPersonSearch.removeAllNotSelected();
             var searchcount = 0;
             $.each( data, function( i, item ) {

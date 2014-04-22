@@ -10,7 +10,7 @@
         <a href="#" class="quickfilter" data-quickfilter="<?= str_replace(" ", "", $title); ?>"><?= $title; ?> (<?= count($users); ?>)</a> 
         <select multiple="multiple" id="<?= $name . '_quickfilter_' . str_replace(" ", "", $title); ?>" style="display: none;">
         <? foreach($users as $user) : ?>
-            <option value="<?= $user->id ?>"><?= Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($user->getFullName('full_rev')) ?> -- <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
+            <option value="<?= $user->id ?>"><?= Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady(studip_utf8encode($user->getFullName('full_rev'))) ?> -- <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
         <? endforeach; ?>
          </select>
     <? endforeach; ?>
@@ -21,10 +21,10 @@
     </select>
     <select multiple="multiple" id="<?= $name . '_selectbox_default'; ?>" style="display: none;">
         <? foreach ($defaultSelectableUsers as $person): ?>
-            <option value="<?= $person->id ?>"><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
+            <option value="<?= $person->id ?>"><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady(studip_utf8encode($person->getFullName('full_rev'))) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
         <? endforeach; ?>
         <? foreach ($defaultSelectedUsers as $person): ?>
-            <option value="<?= $person->id ?>" selected><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
+            <option value="<?= $person->id ?>" selected><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady(studip_utf8encode($person->getFullName('full_rev'))) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
         <? endforeach; ?>
     </select>
     

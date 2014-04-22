@@ -21,7 +21,8 @@ class MultipersonsearchController extends AuthenticatedController {
      * @param $name string name of MultiPersonSearch object
      * @param $searchterm string searchterm
      */
-    public function ajax_search_action($name, $searchterm) {
+    public function ajax_search_action($name) {
+        $searchterm = studip_utf8decode(Request::get("s"));
         $searchterm = str_replace(",", "", $searchterm);
         $searchterm = str_replace(" ", "", $searchterm);
         

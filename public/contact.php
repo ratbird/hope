@@ -201,7 +201,6 @@ $mp = MultiPersonSearch::get("addressbook_add")
     ->setTitle(_('Personen in das Adressbuch eintragen'))
     ->setExecuteURL("contact.php")
     ->setSearchObject($search_obj)
-    ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
     ->render();
 
 

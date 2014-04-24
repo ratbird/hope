@@ -552,10 +552,15 @@ function CheckStatusgruppe ($range_id, $name)
 
 function CheckUserStatusgruppe ($group_id, $object_id)
 {
-    $query = "SELECT 1 FROM statusgruppe_user WHERE statusgruppe_id = ? AND user_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($group_id, $object_id));
-    return $statement->fetchColumn();
+    static $groups = null;
+    if ($groups === null) {
+        $query = "SELECT statusgruppe_id FROM statusgruppe_user WHERE user_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':id', $object_id);
+        $statement->execute();
+        $groups = $statement->fetchAll(PDO::FETCH_COLUMN);
+    }
+    return in_array($group_id, $groups);
 }
 
 function GetRangeOfStatusgruppe ($statusgruppe_id)

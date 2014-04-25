@@ -66,7 +66,7 @@ class IssueDB {
                 ));
             } else {
                 $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate, seminar_id)
-                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?)";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array(
                     md5(uniqid('folder', true)),

@@ -108,7 +108,7 @@ if (Request::get('zipnewest')) {
     $download_ids = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($download_ids as $key => $dl_id) {
-        if ($folder_tree->isReadable($dl_id['range_id'], $user->id)
+        if ($folder_tree->isDownloadFolder($dl_id['range_id'], $user->id)
             && check_protected_download($dl_id['dokument_id']) && $dl_id['url'] == "") {
             $download_ids[$key] = $dl_id['dokument_id'];
         } else {
@@ -1007,13 +1007,14 @@ if ($question) {
     }
 
     $lastvisit = object_get_visit($SessSemName[1], "documents");
+
     $query = "SELECT COUNT(*)
               FROM dokumente
-              WHERE seminar_id = ? AND user_id != ?
-                AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
+              WHERE seminar_id = ? AND user_id != ? AND url=''
+              AND range_id NOT IN(?) AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
-        $range_id, $user->id, $lastvisit ?: null
+        $range_id, $user->id, $folder_tree->getUnreadableFolders($user->id), $lastvisit ?: null
     ));
     $result = $statement->fetchColumn();
     if ($result > 0) {

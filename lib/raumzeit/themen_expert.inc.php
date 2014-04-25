@@ -10,8 +10,7 @@ function themen_autoAssign() {
 }
 
 function themen_changeChronoGroupedFilter() {
-    global $chronoGroupedFilter;
-    $chronoGroupedFilter = Request::quoted('newFilter');
+    $_SESSION['chronoGroupedFilter'] = Request::option('newFilter');
 }
 
 function themen_chronoAutoAssign() {
@@ -63,7 +62,7 @@ function themen_deleteIssueID() {
 
 function themen_changeIssue() {
     global $sem, $themen;
-    
+
     $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[Request::option('issue_id')]->toString())) . '<br>';
     $themen[Request::option('issue_id')]->setDescription(Request::get('theme_description'));
     $themen[Request::option('issue_id')]->setTitle(Request::get('theme_title'));
@@ -98,6 +97,7 @@ function themen_addIssue() {
         for ($i = 1; $i <= $numIssues; $i++) {
             $issue = new Issue(array('seminar_id' => $id));
             $issue->setTitle(_("Thema").' '.$i);
+            $issue->setPriority($i);
             $issue->store();
             $sem->addIssue($issue);
             unset($issue);
@@ -125,7 +125,7 @@ function themen_openAll() {
 
 function themen_saveAll() {
     global $sem, $themen, $changeTitle, $changeFile, $changeForum, $changeDescription;
-    
+
     $msg = _("Folgende Themen wurden bearbeitet:").'<br>';
     foreach ($changeTitle as $key => $val) {    // we use the changeTitle-array for running through all themes ($key = issue_id and $val = title)
         $forumValue = ($changeForum[$key] == 'on') ? TRUE : FALSE;

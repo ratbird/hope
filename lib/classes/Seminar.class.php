@@ -723,6 +723,7 @@ class Seminar
     function readIssues($force = false)
     {
         if (!is_array($this->issues) || $force) {
+            $this->issues = array();
             $data = SeminarDB::getIssues($this->id);
 
             foreach ($data as $val) {
@@ -1260,6 +1261,7 @@ class Seminar
     function renumberIssuePrioritys()
     {
         if (is_array($this->issues)) {
+
             $sorter = array();
             foreach ($this->issues as $id => $issue) {
                 $sorter[$id] = $issue->getPriority();
@@ -2403,11 +2405,11 @@ class Seminar
     /**
      * returns array with information about enrolment to this course for given user_id
      * ['enrolment_allowed'] : true or false
-     * ['cause']: keyword to describe the cause 
-     * ['description'] : readable description of the cause 
-     * 
+     * ['cause']: keyword to describe the cause
+     * ['description'] : readable description of the cause
+     *
      * @param string $user_id
-     * @return array 
+     * @return array
      */
     public function getEnrolmentInfo($user_id)
     {
@@ -2504,7 +2506,7 @@ class Seminar
 
     /**
      * adds user with given id as preliminary member to course
-     * 
+     *
      * @param string $user_id
      * @return integer 1 if successfull
      */
@@ -2530,7 +2532,7 @@ class Seminar
 
     /**
      * returns courseset object for this  course
-     * 
+     *
      * @return CourseSet courseset object or null
      */
     function getCourseSet()
@@ -2546,7 +2548,7 @@ class Seminar
 
     /**
      * returns true if the number of participants of this course is limited
-     * 
+     *
      * @return boolean
      */
     function isAdmissionEnabled()
@@ -2557,8 +2559,8 @@ class Seminar
 
     /**
      * returns the number of free seats in the course or true if not limited
-     * 
-     * @return integer 
+     *
+     * @return integer
      */
     function getFreeAdmissionSeats()
     {
@@ -2571,7 +2573,7 @@ class Seminar
 
     /**
      * returns true if the course is locked
-     * 
+     *
      * @return boolean
      */
     function isAdmissionLocked()
@@ -2579,7 +2581,7 @@ class Seminar
         $cs = $this->getCourseSet();
         return ($cs && $cs->hasAdmissionRule('LockedAdmission'));
     }
-    
+
     /**
      * returns true if the course is password protected
      *
@@ -2594,7 +2596,7 @@ class Seminar
     /**
      * returns array with start and endtime of course enrolment timeframe
      * return null if there is no timeframe
-     * 
+     *
      * @return array assoc array with start_time end_time as keys timestamps as values
      */
     function getAdmissionTimeFrame()

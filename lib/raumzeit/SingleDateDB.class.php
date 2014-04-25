@@ -140,7 +140,7 @@ class SingleDateDB
                 ));
             }
         }
-        
+
         $query = "DELETE FROM termin_related_groups WHERE termin_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin->getTerminId()));
@@ -271,7 +271,7 @@ class SingleDateDB
     {
         $query = "DELETE FROM themen_termine WHERE termin_id = ? AND issue_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $sttement->execute(array($termin_id, $issue_id));
+        $statement->execute(array($termin_id, $issue_id));
 
         return true;
     }

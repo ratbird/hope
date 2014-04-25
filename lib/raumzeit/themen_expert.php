@@ -27,7 +27,6 @@ use Studip\Button, Studip\LinkButton;
 
 // -- here you have to put initialisations for the current page
 
-require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/raumzeit/themen_expert.inc.php');
 require_once 'lib/admin_search.inc.php';
@@ -63,7 +62,7 @@ $themen =& $sem->getIssues();
 
 //workarounds for multiple submit-buttons
 
-foreach ($_REQUEST as $key => $val) {
+foreach (Request::getInstance() as $key => $val) {
     if ( (strlen($key) == 34) && ($key[33] == 'x') ) {
         $keys = explode('_', $key);
         $submitter_id = $keys[0];
@@ -80,7 +79,7 @@ foreach ($_REQUEST as $key => $val) {
         $submitter_id = $keys[0];
         $cycle_id = $keys[1];
     }
-    if (Request::quoted('allOpen')) {
+    if (Request::get('allOpen')) {
         if (strstr($key, 'theme_title')) {
             $keys = explode('§', $key);
             $changeTitle[$keys[1]] = $val;
@@ -158,7 +157,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                                     $tpl['semester'][$val['beginn']] = $val['name'];
                                     if ($_SESSION['raumzeitFilter'] != ($val['beginn'])) {
                                     } else {
-                                        $tpl['seleceted'] = $val['beginn'];
+                                        $tpl['selected'] = $val['beginn'];
                                     }
                                 }
                             }
@@ -181,14 +180,14 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
   </tr>
     <tr>
         <td class="blank" colspan="2">
-        <?php 
+        <?php
             // show messages
             if ($messages = $sem->getStackedMessages()) :
                 foreach ($messages as $type => $message_data) :
                     echo MessageBox::$type( $message_data['title'], $message_data['details'] );
                 endforeach;
             endif;
-        ?>  
+        ?>
         </td>
     </tr>
 
@@ -277,12 +276,12 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         $tpl['last'] = true;
                     }
 
-                    if (Request::option('openAll')) {
+                    if ($openAll) {
                         $tpl['openAll'] = TRUE;
                         $_SESSION['issue_open'][$themen_id] = TRUE;
                     }
 
-                    if (($_SESSION['issue_open'][$themen_id] && Request::option('open_close_id') == $themen_id) || Request::option('openAll')) {
+                    if (($_SESSION['issue_open'][$themen_id] && Request::option('open_close_id') == $themen_id) || $openAll) {
                         $tpl['submit_name'] = 'changeIssue';
                         $tpl['theme_description'] = htmlReady($thema->getDescription());
                         $tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
@@ -293,7 +292,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     }
                     $count++;
                 }
-                if (Request::option('openAll')) {
+                if ($openAll) {
                 ?>
                 <tr>
                     <td class="blank" colspan="3" align="center">

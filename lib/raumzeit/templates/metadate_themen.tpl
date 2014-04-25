@@ -8,7 +8,7 @@ use Studip\Button, Studip\LinkButton;
         <A name="<?=$tpl['md_id']?>" />
         <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['md_id']] ? 'close' : 'open')
             . '&open_close_id=' . $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgrau<?=($_SESSION['issue_open'][$tpl['md_id']]) ? 'runt' : ''?>.gif">
+            <?= Assets::img('icons/16/blue/arr_1' . ($_SESSION['issue_open'][$tpl['md_id']] ? 'down' : 'right') . '.png')?>
             <?=$tpl['date']?>
         </A>
     </TD>

@@ -60,7 +60,7 @@ use Studip\Button, Studip\LinkButton;
                 echo _("Forenthema vorhanden").'<BR/>';
                 echo '<INPUT type="hidden" name="forumFolder" value="on">';
             } else { ?>
-            <INPUT type="checkbox" name="forumFolder<?=$tpl['openAll'] ? '§'.$tpl['issue_id']: ''?>" style="width: 98%"> <?=_("Thema im Forum anlegen")?><BR/>
+            <INPUT type="checkbox" name="forumFolder<?=$tpl['openAll'] ? '§'.$tpl['issue_id']: ''?>"> <?=_("Thema im Forum anlegen")?><BR/>
             <? } ?>
             <? if ($tpl['fileEntry']) {
                 echo _("Dateiordner vorhanden");

@@ -43,8 +43,11 @@ class StudipLitImportPluginGenericXML extends StudipLitImportPluginAbstract {
     }
     
     function parse($data){
+        // Disable entity load
+        $this->loadEntities = libxml_disable_entity_loader(true);
         $domTree = @domxml_open_mem($data);
         if (!is_object($domTree)) {
+           libxml_disable_entity_loader($this->loadEntities);
             $this->addError("error","Error 5: while parsing the document");
             return FALSE;
         }
@@ -117,7 +120,7 @@ class StudipLitImportPluginGenericXML extends StudipLitImportPluginAbstract {
                 if ( $fields["dc_title"] != "") array_push($fields_arr, $fields);
                 
             }
-            
+            libxml_disable_entity_loader($this->loadEntities);
             return (count($fields_arr)>0 ? $fields_arr : FALSE);
         }
         

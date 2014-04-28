@@ -43,6 +43,8 @@ class StudipLitImportPluginEndNote extends StudipLitImportPluginAbstract {
     }
 
     function parse($data){
+        // Disable entity load
+        $this->loadEntities = libxml_disable_entity_loader(true);
         $suche = array ("'<style[^>]*?>'si","'</style>'si");
             $ersetze = array ("","");
         if ($suche && $ersetze && $data)
@@ -50,6 +52,7 @@ class StudipLitImportPluginEndNote extends StudipLitImportPluginAbstract {
 
         if (!$domTree = @domxml_open_mem($data)) {
                         // parent::addError("error","Error 5: while parsing the document");
+                        libxml_disable_entity_loader($this->loadEntities);
                         $this->addError("error","Error 5: while parsing the document");
                         return FALSE;
                 }
@@ -135,7 +138,7 @@ class StudipLitImportPluginEndNote extends StudipLitImportPluginAbstract {
                 if ( $fields["dc_title"] != "") array_push($fields_arr, $fields);
 
                     }
-
+                    libxml_disable_entity_loader($this->loadEntities);
             return (count($fields_arr)>0 ? $fields_arr : FALSE);
             }
 

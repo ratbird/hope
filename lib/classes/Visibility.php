@@ -25,15 +25,15 @@ class Visibility
     /**
      * Basic visibilitycheck to find out if a given user (or the current logged
      * on user) is allowed to view the object that is defined by a visibilityid
-     * 
+     *
      * @param int|string $visibilityid The visibility to check can be defined by
      * the direct id (int) or the predefined identifier (string)
-     * 
+     *
      * @param int $userid The user for whom we check the visibility. If no user
      * is given, the system will take the current logged on user
-     * 
-     * @return boolean true if user is allowed to view content according to the 
-     * current visibilitysetting otherwise false; 
+     *
+     * @return boolean true if user is allowed to view content according to the
+     * current visibilitysetting otherwise false;
      */
     public static function verify($visibilityid, $ownerid = null, $userid = null)
     {
@@ -71,15 +71,15 @@ class Visibility
      * Adds a privacysetting for a user. The user can change the setting in his
      * privacytab. To check back if a user is allowed to see any content use the
      * verify method
-     * 
+     *
      * @param string $name The setting's name, that will be displayed in the
      * user's settingtab (Important: Don't mix the name up with the identifier)
-     * 
+     *
      * @param string $identifier the identifier is used to simplify the usage
      * of the visibilityAPI. An identifier maps a string to a visibilityid
      * (under the usage of a userid) therefore all identifier set for one user
      * MUST be unique.
-     * 
+     *
      * @param int|string $parent Determines the parent of the visibility to add.
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
@@ -87,25 +87,25 @@ class Visibility
      * parent "plugins". Important: If u add a visibility without as a parent
      * and as a category it wont be displayed until it has children that are
      * displayed.
-     * 
+     *
      * @param int $category Sets the type of the visibilitysetting. Currently
      * there are only 2 types available:
      * 0 - The setting is only a header without any options
      * 1 (Default) - Normal setting
-     *       
+     *
      * @param string $user Userid of the user that should be added the visibility.
      * Default: The current logged on user
-     * 
+     *
      * @param int $default int representation of the visibility that should be
      * set. Use with caution since the API provides the easy change of the
      * visibility int representation
-     * 
+     *
      * @param int $pluginid Connects the created visibility with a plugin.
      * Important: If addPrivacySetting is called in a file of a plugin there is
      * no need to set the pluginid manually, because the API will normally find
      * it
-     * 
-     * @return int the created visibilityid 
+     *
+     * @return int the created visibilityid
      */
     public static function addPrivacySetting($name, $identifier = "", $parent = 0, $category = 1, $user = null, $default = null, $pluginid = null)
     {
@@ -119,7 +119,7 @@ class Visibility
         // parse User and Identifier to format we want to have in the database
         self::getUser($user);
         $parent = self::parseIdentifier($parent, $user);
-        
+
         // dont create duplicates
         if (self::exists($identifier, $user)) {
             return false;
@@ -137,40 +137,40 @@ class Visibility
      * Adds a privacysetting for all users. If a parent is given, the function
      * will only add a privacySetting for those users that have an existing
      * parent
-     * 
+     *
      * @param string $name The setting's name, that will be displayed in the
      * user's settingtab (Important: Don't mix the name up with the identifier)
-     * 
+     *
      * @param string $identifier the identifier is used to simplify the usage
      * of the visibilityAPI. An identifier maps a string to a visibilityid
      * (under the usage of a userid) therefore all identifier set for one user
      * MUST be unique.
-     * 
+     *
      * @param int|string $parent Determines the parent of the visibility to add.
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
      * 0. Plugins creating a privacysetting will automaticly be added to the
      * parent "plugins". Important: If u add a visibility without a parent and
      * without beeing a toplevelpoint itself it will NEVER be displayed.
-     * 
+     *
      * @param int $category Sets the type of the visibilitysetting. Currently
      * there are only 2 types available:
      * 0 - The setting is only a header without any options
      * 1 (Default) - Normal setting
-     *       
+     *
      * @param string $user Userid of the user that should be added the visibility.
      * Default: The current logged on user
-     * 
+     *
      * @param int $default int representation of the visibility that should be
      * set. Use with caution since the API provides the easy change of the
      * visibility int representation
-     * 
+     *
      * @param int $pluginid Connects the created visibility with a plugin.
      * Important: If addPrivacySetting is called in a file of a plugin there is
      * no need to set the pluginid manually, because the API will normally find
      * it
-     * 
-     * @return int the created visibilityid 
+     *
+     * @return int the created visibilityid
      */
     public static function addPrivacySettingForAll($name, $identifier = "", $parent_identifier = 0, $category = 1, $default = null, $pluginid = null)
     {
@@ -189,12 +189,12 @@ class Visibility
         $sql = "REPLACE into `user_visibility_settings`
         (`user_id`, `parent_id`, `identifier`, `category`, `name`, `state`, `plugin`)
             (SELECT user_id, visibilityid as parent_id,
-            ? as identifier, 
+            ? as identifier,
             ? as category,
             ? as name,
             $default,
             ? as plugin
-            FROM `user_visibility_settings` 
+            FROM `user_visibility_settings`
             $default_join
             WHERE `identifier`= ? );";
         $stmt = $db->prepare($sql);
@@ -205,7 +205,7 @@ class Visibility
      * Creates all nessesary categories for standard usage
      *
      * @param int $user Userid to define what user should create the categories
-     * default: current logged on user; 
+     * default: current logged on user;
      */
     public static function createDefaultCategories($user = null)
     {
@@ -221,19 +221,19 @@ class Visibility
 
     /**
      * Returns the description for a specific state set on a visibilityID
-     * 
+     *
      * @param int $visibilityid the visibility id
-     * 
-     * @return string Description of the state or false if visibilityid was not found 
+     *
+     * @return string Description of the state or false if visibilityid was not found
      */
     public static function getStateDescription($visibilityid, $owner = null)
     {
         $visibilityid = self::parseIdentifier($visibilityid, $owner);
         $vs = VisibilitySettings::getInstance();
-        $sql = "SELECT state FROM user_visibility_settings WHERE visibilityid = '$visibilityid'";
+        $sql = "SELECT state FROM user_visibility_settings WHERE visibilityid = ?";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(array($visibilityid));
         if ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return $vs->getDescription($result['state']);
         }
@@ -244,40 +244,40 @@ class Visibility
      * Updates a privacySetting. Important: The whole privacySetting gets
      * deleted and recreated. Therefore a new visibilityID is created.
      * If you use the privacyID you will have to update it as well.
-     * 
+     *
      * @param string $name The setting's name, that will be displayed in the
      * user's settingtab (Important: Don't mix the name up with the identifier)
-     * 
+     *
      * @param string $identifier the identifier is used to simplify the usage
      * of the visibilityAPI. An identifier maps a string to a visibilityid
      * (under the usage of a userid) therefore all identifier set for one user
      * MUST be unique.
-     * 
+     *
      * @param int|string $parent Determines the parent of the visibility to add.
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
      * 0. Plugins creating a privacysetting will automaticly be added to the
      * parent "plugins". Important: If u add a visibility without a parent and
      * without beeing a toplevelpoint itself it will NEVER be displayed.
-     * 
+     *
      * @param int $category Sets the type of the visibilitysetting. Currently
      * there are only 2 types available:
      * 0 - The setting is only a header without any options
      * 1 (Default) - Normal setting
-     *       
+     *
      * @param string $user Userid of the user that should be added the visibility.
      * Default: The current logged on user
-     * 
+     *
      * @param int $default int representation of the visibility that should be
      * set. Use with caution since the API provides the easy change of the
      * visibility int representation
-     * 
+     *
      * @param int $pluginid Connects the created visibility with a plugin.
      * Important: If addPrivacySetting is called in a file of a plugin there is
      * no need to set the pluginid manually, because the API will normally find
      * it
-     * 
-     * @return int the created visibilityid 
+     *
+     * @return int the created visibilityid
      */
     public static function updatePrivacySetting($name, $id = "", $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
     {
@@ -290,44 +290,44 @@ class Visibility
      * deleted and recreated if the teststring is not empty. Therefore a new
      * visibilityID is created. If you use the privacyID you will have to update
      * it as well.
-     * 
+     *
      * @param string $test A teststring to determine if the privacySetting is
      * only deleted or if it is deleted and recreated. Use this with a request-
      * string for example.
-     * 
+     *
      * @param string $name The setting's name, that will be displayed in the
      * user's settingtab (Important: Don't mix the name up with the identifier)
-     * 
+     *
      * @param string $identifier the identifier is used to simplify the usage
      * of the visibilityAPI. An identifier maps a string to a visibilityid
      * (under the usage of a userid) therefore all identifier set for one user
      * MUST be unique.
-     * 
+     *
      * @param int|string $parent Determines the parent of the visibility to add.
      * Use the direct visibilityid of the parent visibility or the identifier.
      * If the visibility should be created on the top level the value has to be
      * 0. Plugins creating a privacysetting will automaticly be added to the
      * parent "plugins". Important: If u add a visibility without a parent and
      * without beeing a toplevelpoint itself it will NEVER be displayed.
-     * 
+     *
      * @param int $category Sets the type of the visibilitysetting. Currently
      * there are only 2 types available:
      * 0 - The setting is only a header without any options
      * 1 (Default) - Normal setting
-     *       
+     *
      * @param string $user Userid of the user that should be added the visibility.
      * Default: The current logged on user
-     * 
+     *
      * @param int $default int representation of the visibility that should be
      * set. Use with caution since the API provides the easy change of the
      * visibility int representation
-     * 
+     *
      * @param int $pluginid Connects the created visibility with a plugin.
      * Important: If addPrivacySetting is called in a file of a plugin there is
      * no need to set the pluginid manually, because the API will normally find
      * it
-     * 
-     * @return int the created visibilityid 
+     *
+     * @return int the created visibilityid
      */
     public static function updatePrivacySettingWithTest($test, $name, $id, $parent = null, $category = 1, $user = null, $default = null, $pluginid = null)
     {
@@ -340,20 +340,20 @@ class Visibility
 
     /**
      * Returns the visibilityID by an identifier and a user
-     * 
+     *
      * @param string $ident The identifier for the visibilityid
-     * 
+     *
      * @param string $user The userid. Default: Current logged on user
-     * 
-     * @return int The visibilityID 
+     *
+     * @return int The visibilityID
      */
     public static function getPrivacyIdByIdentifier($ident, $user = null)
     {
         self::getUser($user);
-        $sql = "SELECT `visibilityid` FROM user_visibility_settings WHERE `user_id` = '$user' AND `identifier` = '$ident'";
+        $sql = "SELECT `visibilityid` FROM user_visibility_settings WHERE `user_id` = ? AND `identifier` = ?";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(array($user, $ident));
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['visibilityid'];
@@ -363,11 +363,11 @@ class Visibility
 
     /**
      * Removes a privacysetting via ID or Identifier and user
-     * 
+     *
      * @param int|string $id ID or Identifier
-     * 
+     *
      * @param string $user Userid. Default: Current logged on user
-     * 
+     *
      * @return int state The state the deleted visibility had
      */
     public static function removePrivacySetting($id, $user = null)
@@ -390,36 +390,34 @@ class Visibility
 
     /**
      * Deletes ALL privacySettings for a Identifier (for ALL users!)
-     * 
+     *
      * @param string $ident The Identifier to be removed
      */
     public static function removeAllPrivacySettingForIdentifier($ident)
     {
-
-        $sql = "DELETE FROM user_visibility_settings WHERE `identifier`='$ident'";
         $db = DBManager::get();
+        $sql = "DELETE FROM user_visibility_settings WHERE `identifier`= " . $db->quote($ident);
         $db->exec($sql);
     }
 
     /**
      * Removes all PrivacySetting of the given pluginid
-     * 
+     *
      * @param int $id the pluginid
      */
     public static function removePlugin($id)
     {
         $db = DBManager::get();
-        $sql = "DELETE FROM user_visibility_settings WHERE `plugin`='" . $id . "'";
-        $db->exec($sql);
+        $sql = "DELETE FROM user_visibility_settings WHERE `plugin`= " . $db->quote($id);
     }
 
     /**
      * Renames a PrivacySetting
-     * 
+     *
      * @param int|string $id VisibilityID or Identifier to be renamed
-     * 
+     *
      * @param string $new_name the new name
-     * 
+     *
      * @param string $user Userid. Default: Current logged on user
      */
     public static function renamePrivacySetting($id, $new_name, $user = null)
@@ -431,21 +429,21 @@ class Visibility
 
     /**
      * Removes all PrivacySettings from a user
-     * 
+     *
      * @param string $user_id the given userid
      */
     public static function removeUserPrivacySettings($user_id)
     {
         $db = DBManager::get();
-        $sql = "DELETE FROM user_visibility_settings WHERE `user_id`='" . $user_id . "'";
+        $sql = "DELETE FROM user_visibility_settings WHERE `user_id`= " . $db->quote($user_id);
         $db->exec($sql);
     }
 
     /**
      * Builds up the htmlArgs for display in Settings
-     * 
+     *
      * @param string $userid the userid
-     * 
+     *
      * @return array tree of htmlArgs
      */
     public static function getSettingsArgs($userid)
@@ -456,9 +454,9 @@ class Visibility
 
     /**
      * Takes the updaterequestdata and stores it into the database
-     * 
+     *
      * @param array $data Data produced by the settingspage
-     * 
+     *
      * @param string $userid the userid. Default: current logged on user
      */
     public static function updateUserFromRequest($data, $userid = null)
@@ -476,26 +474,27 @@ class Visibility
     /**
      * Helpfunction to produce a where clause for sql statements by the type
      * given
-     * 
+     *
      * @param int|string $id ID or identifier.
-     * 
+     *
      * @param type $userid Userid. Default: Current logged on user
-     * 
-     * @return string Where clause to use in a sql statement 
+     *
+     * @return string Where clause to use in a sql statement
      */
     private static function prepareWhere($id, $userid = null)
     {
+        $db = DBManager::get();
         if (is_int($id)) {
-            return "WHERE `visibilityid`='$id'";
+            return "WHERE `visibilityid`= " . $db->quote($id);
         } else {
             self::getUser($userid);
-            return "WHERE `user_id` = '$userid' AND `identifier` = '$id'";
+            return "WHERE `user_id` = " . $db->quote($userid) . " AND `identifier` = " . $db->quote($id);
         }
     }
-    
+
     /**
      * Helpfunction to set default user
-     * 
+     *
      * @param type $user Userid input.
      */
     private static function getUser(&$user)
@@ -507,7 +506,7 @@ class Visibility
 
     /**
      * Helpfunction to calculate how many columns the settingstable needs
-     * 
+     *
      * @return int Number of columns
      */
     public static function getColCount()
@@ -517,7 +516,7 @@ class Visibility
 
     /**
      * Helpfunction to get all names for the settingstable
-     * 
+     *
      * @return array all visibility names
      */
     public static function getVisibilities()
@@ -527,7 +526,7 @@ class Visibility
 
     /**
      * Helpfunction to get the data for the settingstable
-     * 
+     *
      * @return array tree of settingelements
      */
     public static function getHTMLArgs()
@@ -538,12 +537,12 @@ class Visibility
 
     /**
      * Helpfunction to determine the visibilityID
-     * 
+     *
      * @param int|string $id ID or identifier.
-     * 
+     *
      * @param string $user The user. Default: Current logged on user
-     * 
-     * @return id The visibilityID 
+     *
+     * @return id The visibilityID
      */
     private static function parseIdentifier($id, $user)
     {
@@ -558,19 +557,20 @@ class Visibility
      * Sets all visibilites of a user to a specific state. This function should
      * ONLY be called from the settingspage or some administration page NOT from
      * a plugin
-     * 
+     *
      * @param type $state The int representation of the state everything should
      * be set to
-     * 
+     *
      * @param type $user The user. Default: current logged on user;
      */
     public static function setAllSettingsForUser($state, $user = null)
     {
         try {
             self::getUser($user);
-            $sql = "UPDATE user_visibility_settings SET `state` = $state WHERE `user_id`='" . $user . "'";
+            $sql = "UPDATE user_visibility_settings SET `state` = ? WHERE `user_id`= ?";
             $db = DBManager::get();
-            $db->exec($sql);
+            $st = $db->prepare($sql);
+            $st->execute(array($state, $user));
             return true;
         } catch (Exception $ex) {
             return false;
@@ -578,10 +578,10 @@ class Visibility
     }
 
     /**
-     * Retrieves the standard visibility level for a homepage element if the user 
-     * hasn't specified anything explicitly. This default can be set via the global 
+     * Retrieves the standard visibility level for a homepage element if the user
+     * hasn't specified anything explicitly. This default can be set via the global
      * configuration (variable "HOMEPAGE_VISIBILITY_DEFAULT").
-     * 
+     *
      * @return int Default visibility level.
      */
     function get_default_homepage_visibility($user_id = null)
@@ -590,7 +590,7 @@ class Visibility
         $query = "SELECT default_homepage_visibility FROM user_visibility WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
-        
+
         /*
          * If we have no default visibility set by the user itself we load the
          * global config set in configuration. Unfortunatelly we have to map
@@ -607,7 +607,7 @@ class Visibility
 
     /**
      * Creates a visibilitySetting for every homepagePlugin
-     * 
+     *
      * @param type $user the user for whom the settings should be created
      */
     private function createHomepagePluginEntries($user)
@@ -622,11 +622,11 @@ class Visibility
     /**
      * Checks if a specific visibilityID or an identifier & userid combination
      * exists
-     * 
+     *
      * @param type $id id or identifier
-     * 
+     *
      * @param type $user user id
-     * 
+     *
      * @return type true if the id exists. false if not
      */
     public static function exists($id, $user = null)

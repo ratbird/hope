@@ -13,7 +13,7 @@
  * @category    Stud.IP
  * @since       2.4
  */
- 
+
 require_once 'settings.php';
 
 class Settings_CategoriesController extends Settings_SettingsController
@@ -32,7 +32,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         PageLayout::setHelpKeyword('Basis.HomepageSonstiges');
         PageLayout::setTitle(_('Eigene Kategorien bearbeiten'));
         SkipLinks::addIndex(_('Eigene Kategorien bearbeiten'), 'layout_content', 100);
-        
+
         if ($action === 'verify') {
             $action = 'index';
         }
@@ -56,7 +56,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         $hidden_count = 0;
         foreach ($categories as $index => $category) {
             $visibilities[$category->kategorie_id] = Visibility::getStateDescription('kat_' . $category->kategorie_id, $this->user->user_id);
-            if ($this->restricted && $GLOBALS['perm']->have_perm('admin') && $visibility == VISIBILITY_ME) {
+            if ($this->restricted && $GLOBALS['perm']->have_perm('admin') && $visibilities[$category->kategorie_id] == VISIBILITY_ME) {
                 $hidden_count += 1;
                 unset($categories[$index]);
             }
@@ -92,7 +92,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         $category->name     = _('neue Kategorie');
         $category->content  = _('Inhalt der Kategorie');
         $category->priority = 0;
-        
+
         if ($category->store()) {
             $this->reportSuccess(_('Neue Kategorie angelegt.'));
             Visibility::addPrivacySetting($category->name, 'kat_' . $category->id, 'owncategory');

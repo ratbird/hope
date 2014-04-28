@@ -98,7 +98,7 @@ class UserPrivacy
          * is performed in about half the time of multiple queries with WHERE
          */
         $sql = "UPDATE `user_visibility_settings` SET `state` = CASE `visibilityid` ";
-        foreach ($data as $key => $ps) {
+        foreach (array_map('addslashes', $data) as $key => $ps) {
             $sql .= "WHEN '$key' THEN '$ps' ";
         }
         $sql .= "ELSE `state` END;";
@@ -118,11 +118,16 @@ class UserPrivacy
         if ($db == null) {
             $db = DBManager::get();
         }
-        $sql = "UPDATE user_visibility_settings SET state = '$state' WHERE visibilityid='$key'";
+        $params = array();
+        $sql = "UPDATE user_visibility_settings SET state = ? WHERE visibilityid = ? ";
+        $params[] = $state;
+        $params[] = $key;
         if ($userid != null) {
-            $sql .= " AND userid = '$userid'";
+            $sql .= " AND userid = ?";
+            $params[] = $userid;
         }
-        $db->exec($sql);
+        $st = $db->prepare($sql);
+        $st->execute($params);
     }
 
     /**

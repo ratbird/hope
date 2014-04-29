@@ -193,7 +193,7 @@ class StudipFormat extends TextFormat
                     [a-z][a-z0-9\+\-\.]*:\/\/
 
                     # user:password@host:port\/path?query#fragment
-                    [\w\-\.~!$&\'\(\)*+,;=%:@\/?#]+
+                    [\w\-\.~!$&\'\(\)\[\]*+,;=%:@\/?#]+
                 )
             )',
             'callback' => 'StudipFormat::markupLinks'

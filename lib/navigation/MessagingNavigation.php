@@ -33,11 +33,18 @@ class MessagingNavigation extends Navigation
         parent::initItem();
         $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
         $lastVisitedTimestamp = isset($my_messaging_settings['last_box_visit'])?(int)$my_messaging_settings['last_box_visit']:0;
-        $neum = count_messages_from_user('in', ' AND message_user.readed = 0 ');
-        $altm = count_messages_from_user('in', ' AND message_user.readed = 1 ');
-        $neux = count_x_messages_from_user('in', 'all',
-            'AND mkdate > '.$lastVisitedTimestamp.' AND message_user.readed = 0 ');
-
+        
+        $query = "SELECT SUM(mkdate > :time AND readed = 0) AS num_new,
+                         SUM(readed = 0) AS num_unread,
+                         SUM(readed = 1) AS num_read
+                  FROM message_user
+                  WHERE snd_rec = 'rec' AND user_id = :user_id AND deleted = 0";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':time', $lastVisitedTimestamp);
+        $statement->bindValue(':user_id', $GLOBALS['user']->id);
+        $statement->execute();
+        list($neux, $neum, $altm) = $statement->fetch(PDO::FETCH_NUM);
+        
         $this->setBadgeNumber($neum);
 
         if ($neux > 0) {

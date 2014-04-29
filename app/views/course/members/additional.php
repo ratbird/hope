@@ -15,14 +15,14 @@
             <? foreach ($aux['rows'] as $entry): ?>
                 <tr>
                     <? foreach ($aux['head'] as $key => $value): ?>
-                        <td><?= htmlReady($entry[$key]) ?></td>
+                        <td><?= $entry[$key] ?></td>
                     <? endforeach; ?>
                 </tr>
             <? endforeach; ?>
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="0">
+                <td colspan="<?= count($aux['head']) ?>">
                     <?= \Studip\Button::create(_('Speichern'), 'save') ?>
                     <?= \Studip\Button::create(_('Exportieren'), 'export') ?>
                 </td>

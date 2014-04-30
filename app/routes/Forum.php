@@ -34,6 +34,7 @@ class Forum extends \RESTAPI\RouteMap
         $json = array();
         foreach ($categories as $cat) {
             $uri = $this->urlf('/forum_category/%s', array(htmlReady($cat['category_id'])));
+            $cat['course_id'] = $cat['seminar_id'];
             $json[$uri] = $this->categoryToJson($cat);
         }
 
@@ -333,9 +334,8 @@ class Forum extends \RESTAPI\RouteMap
         }
 
         $entry['subject']      = $raw['name'];
-        $entry['user']         = $this->urlf('/user/%s', array(htmlReady($raw['user_id'])));
-        $entry['course_id']    = $raw['seminar_id'];
-        $entry['course']       = $this->urlf('/course/%s', array(htmlReady($raw['seminar_id'])));
+        $entry['user']         = $this->urlf('/user/%s', array($raw['user_id']));
+        $entry['course']       = $this->urlf('/course/%s', array($raw['seminar_id']));
         $entry['content_html'] = \ForumEntry::getContentAsHtml($raw['content']);
         $entry['content']      = \ForumEntry::killEdit($raw['content']);
 

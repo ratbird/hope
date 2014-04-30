@@ -1,17 +1,17 @@
 <?php
 /**
- * config.inc.php
- *
- * Configuration file for studip. In this file you can change the options of many
- * Stud.IP Settings.
- * Please note: To setup the system, you have to set the basic settings in the
- * config_local.inc.php in the same directory first.
- *
- * @access       public
- * @package      studip_core
- * @modulegroup  library
- * @module       config.inc.php
- */
+* config.inc.php
+*
+* Configuration file for studip. In this file you can change the options of many
+* Stud.IP Settings.
+* Please note: To setup the system, you have to set the basic settings in the
+* config_local.inc.php in the same directory first.
+*
+* @access       public
+* @package      studip_core
+* @modulegroup  library
+* @module       config.inc.php
+*/
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -35,43 +35,43 @@
 // +---------------------------------------------------------------------------+
 
 global
-$CALENDAR_MAX_EVENTS,
-$export_ex_types,
-$export_icon,
-$export_o_modes,
-$FLASHPLAYER_DEFAULT_CONFIG_MIN,
-$FLASHPLAYER_DEFAULT_CONFIG_MAX,
-$INST_ADMIN_DATAFIELDS_VIEW,
-$INST_MODULES,
-$INST_STATUS_GROUPS,
-$INST_TYPE,
-$LIT_LIST_FORMAT_TEMPLATE,
-$NAME_FORMAT_DESC,
-$output_formats,
-$PERS_TERMIN_KAT,
-$record_of_study_templates,
-$SCM_PRESET,
-$SEM_STATUS_GROUPS,
-$skip_page_3,
-$SMILE_SHORT,
-$SYMBOL_SHORT,
-$TERMIN_TYP,
-$TIME_PRESETS,
-$TITLE_FRONT_TEMPLATE,
-$TITLE_REAR_TEMPLATE,
-$UNI_CONTACT,
-$UNI_INFO,
-$UNI_LOGIN_ADD,
-$UNI_LOGOUT_ADD,
-$UNI_URL,
-$UPLOAD_TYPES,
-$username_prefix,
-$xml_filename,
-$xslt_filename_default,
-$SEM_TREE_TYPES,
-$NOT_HIDEABLE_FIELDS,
-$TEILNEHMER_IMPORT_DATAFIELDS,
-$DEFAULT_TITLE_FOR_STATUS;
+  $CALENDAR_MAX_EVENTS,
+  $export_ex_types,
+  $export_icon,
+  $export_o_modes,
+  $FLASHPLAYER_DEFAULT_CONFIG_MIN,
+  $FLASHPLAYER_DEFAULT_CONFIG_MAX,
+  $INST_ADMIN_DATAFIELDS_VIEW,
+  $INST_MODULES,
+  $INST_STATUS_GROUPS,
+  $INST_TYPE,
+  $LIT_LIST_FORMAT_TEMPLATE,
+  $NAME_FORMAT_DESC,
+  $output_formats,
+  $PERS_TERMIN_KAT,
+  $record_of_study_templates,
+  $SCM_PRESET,
+  $SEM_STATUS_GROUPS,
+  $skip_page_3,
+  $SMILE_SHORT,
+  $SYMBOL_SHORT,
+  $TERMIN_TYP,
+  $TIME_PRESETS,
+  $TITLE_FRONT_TEMPLATE,
+  $TITLE_REAR_TEMPLATE,
+  $UNI_CONTACT,
+  $UNI_INFO,
+  $UNI_LOGIN_ADD,
+  $UNI_LOGOUT_ADD,
+  $UNI_URL,
+  $UPLOAD_TYPES,
+  $username_prefix,
+  $xml_filename,
+  $xslt_filename_default,
+  $SEM_TREE_TYPES,
+  $NOT_HIDEABLE_FIELDS,
+  $TEILNEHMER_IMPORT_DATAFIELDS,
+  $DEFAULT_TITLE_FOR_STATUS;
 
 /*basic settings for Stud.IP
 ----------------------------------------------------------------
@@ -100,7 +100,7 @@ $DEFAULT_TITLE_FOR_STATUS = array(
     'autor'    => array(_('AutorIn'), _('AutorInnen')),
     'user'     => array(_('LeserIn'), _('LeserInnen')),
     'accepted' => array(_('Vorläufig akzeptierte TeilnehmerIn'),
-        _('Vorläufig akzeptierte TeilnehmerInnen')));
+                        _('Vorläufig akzeptierte TeilnehmerInnen')));
 
 
 /*
@@ -123,18 +123,18 @@ $SEM_TREE_TYPES[1] = array("name" => _("Studienmodul") , "editable" => true, "is
 */
 
 $UPLOAD_TYPES=array(    "default" =>
-                            array(  "type"=>"allow",
-                                    "file_types" => array ("exe"),
-                                    "file_sizes" => array ( "root" => 7 * 1048576,
-                                                            "admin" => 7 * 1048576,
-                                                            "dozent" => 7 * 1048576,
-                                                            "tutor" => 7 * 1048576,
-                                                            "autor" => 7 * 1048576,
-                                                            "nobody" => 1.38 * 1048576
-                                    )
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                        "file_sizes" => array ( "root" => 7 * 1048576,
+                                    "admin" => 7 * 1048576,
+                                    "dozent" => 7 * 1048576,
+                                    "tutor" => 7 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
                             ),
 // rules for futher course-types can be added below (please adhere exactly to the structure given above)
-);
+        );
 
 /* Set the allowed and prohibited file types for mail attachments (if activated by ENABLE_MAIL_ATTACHMENTS).
 *
@@ -145,16 +145,16 @@ $UPLOAD_TYPES=array(    "default" =>
 */
 
 $UPLOAD_TYPES["attachments"] =
-    array(  "type"=>"allow",
-            "file_types" => array ("exe"),
-            "file_sizes" => array ( "root" => 7 * 1048576,
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                        "file_sizes" => array ( "root" => 7 * 1048576,
                                     "admin" => 7 * 1048576,
                                     "dozent" => 7 * 1048576,
                                     "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-            )
-    );
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                    );
 
 /* Set the allowed and prohibited file types for personal files (like in blubber-upload).
 *
@@ -165,16 +165,16 @@ $UPLOAD_TYPES["attachments"] =
 */
 
 $UPLOAD_TYPES["personalfiles"] =
-    array(  "type" => "allow",
-            "file_types" => array ("exe"),
-            "file_sizes" => array ( "root" => 7 * 1048576,
+                array(  "type" => "allow",
+                        "file_types" => array ("exe"),
+                        "file_sizes" => array ( "root" => 7 * 1048576,
                                     "admin" => 7 * 1048576,
                                     "tutor" => 7 * 1048576,
                                     "dozent" => 7 * 1048576,
                                     "autor" => 7 * 1048576,
                                     "nobody" => 0
-            )
-    );
+                                    )
+                );
 
 
 /*
@@ -208,20 +208,20 @@ $INST_TYPE[8]=array("name"=>_("Arbeitsgruppe"));
 */
 
 $INST_STATUS_GROUPS["default"] = array ("DirektorIn", "HochschullehrerIn", "Lehrbeauftragte", "Zweitmitglied", "wiss. Hilfskraft","wiss. MitarbeiterIn",
-    "stud. Hilfskraft", "Frauenbeauftragte", "Internetbeauftragte(r)", "StudentIn", "techn. MitarbeiterIn", "Sekretariat / Verwaltung",
-    "stud. VertreterIn");
+                                    "stud. Hilfskraft", "Frauenbeauftragte", "Internetbeauftragte(r)", "StudentIn", "techn. MitarbeiterIn", "Sekretariat / Verwaltung",
+                                    "stud. VertreterIn");
 // ...can be continued accordingly
 
 
 //define the used modules for instiutes
 $INST_MODULES["default"] = array(
-    "forum"=>TRUE,              //forum, this module is stud_ip core; always available
-    "documents"=>TRUE,          //documents, this module is stud_ip core; always available
-    "personal"=>TRUE,           //personal, this module is stud_ip core; always available
-    "literature"=>FALSE,         //literature, this module is stud_ip core; always available
-    "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
-    "wiki"=>FALSE,              //wikiwiki-web, this module is stud_ip core; always available
-);
+            "forum"=>TRUE,              //forum, this module is stud_ip core; always available
+            "documents"=>TRUE,          //documents, this module is stud_ip core; always available
+            "personal"=>TRUE,           //personal, this module is stud_ip core; always available
+            "literature"=>FALSE,         //literature, this module is stud_ip core; always available
+            "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
+            "wiki"=>FALSE,              //wikiwiki-web, this module is stud_ip core; always available
+            );
 //you can add more specific presets for the different types
 
 
@@ -266,14 +266,14 @@ $PERS_TERMIN_KAT[15]=array("name"=>_("Vorlesung"), "color"=>"#627C95");
 
 //standardtimes for date-begin and date-end
 $TIME_PRESETS = array ( //starthour, startminute, endhour, endminute
-    array ('07','45','09','15'), // 07:45 - 09:15
-    array ('09','30','11','00'), // 09:30 - 11:00
-    array ('11','15','12','45'), // 11:15 - 12:45
-    array ('13','30','15','00'), // 13:30 - 15:00
-    array ('15','15','16','45'), // 15:15 - 16:45
-    array ('17','00','18','30'), // 17:00 - 18:30
-    array ('18','45','20','15')  // 18:45 - 20:15
-);
+        array ('07','45','09','15'), // 07:45 - 09:15
+        array ('09','30','11','00'), // 09:30 - 11:00
+        array ('11','15','12','45'), // 11:15 - 12:45
+        array ('13','30','15','00'), // 13:30 - 15:00
+        array ('15','15','16','45'), // 15:15 - 16:45
+        array ('17','00','18','30'), // 17:00 - 18:30
+        array ('18','45','20','15')  // 18:45 - 20:15
+        );
 //$TIME_PRESETS = false;
 
 
@@ -282,12 +282,12 @@ $CALENDAR_MAX_EVENTS = 1000;
 
 //preset for academic titles -  add further titles to the array, if necessary
 $TITLE_FRONT_TEMPLATE = array("","Prof.","Prof. Dr.","Dr.","PD Dr.","Dr. des.","Dr. med.","Dr. rer. nat.","Dr. forest.",
-    "Dr. sc. agr.","Dipl.-Biol.","Dipl.-Chem.","Dipl.-Ing.","Dipl.-Sozw.","Dipl.-Geogr.",
-    "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
-    "Dipl.-Psych.","M. Sc","B. Sc");
+                            "Dr. sc. agr.","Dipl.-Biol.","Dipl.-Chem.","Dipl.-Ing.","Dipl.-Sozw.","Dipl.-Geogr.",
+                            "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
+                            "Dipl.-Psych.","M. Sc","B. Sc");
 $TITLE_REAR_TEMPLATE = array("","M.A.","B.A.","M.S.","MBA","Ph.D.","Dipl.-Biol.","Dipl.-Chem.","Dipl.-Ing.","Dipl.-Sozw.","Dipl.-Geogr.",
-    "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
-    "Dipl.-Psych.","M. Sc","B. Sc");
+                            "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
+                            "Dipl.-Psych.","M. Sc","B. Sc");
 
 // name templates for the list of currently active users ("who is online")
 
@@ -308,11 +308,11 @@ $SCM_PRESET[4] = array("name"=>_("Verschiedenes"));
 
 //preset template for formatting of literature list entries
 $LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
-    . "{dc_title}||\n"
-    . "{dc_identifier}||\n"
-    . "%%{published}%%||\n"
-    . "{note}||\n"
-    . "[{lit_plugin_display_name}]{external_link}|\n";
+                        . "{dc_title}||\n"
+                        . "{dc_identifier}||\n"
+                        . "%%{published}%%||\n"
+                        . "{note}||\n"
+                        . "[{lit_plugin_display_name}]{external_link}|\n";
 
 //Shortcuts for smileys
 $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateiname + ".gif")
@@ -342,7 +342,7 @@ which modules are activated). It's a good idea to leave this settings untouched.
 // Literature-Import Plugins
 $LIT_IMPORT_PLUGINS[1] = array('name' => 'EndNote', 'visual_name' => 'EndNote ab Version 7 / Reference Manager 11', 'description' => _("Exportieren Sie Ihre Literaturliste aus EndNote / Reference Manager als XML-Datei."));
 $LIT_IMPORT_PLUGINS[2] = array('name' => 'GenericXML', 'visual_name' => _("Einfaches XML nach fester Vorgabe"),
-                               'description' => _("Die XML-Datei muss folgende Struktur besitzen:").'[code]
+        'description' => _("Die XML-Datei muss folgende Struktur besitzen:").'[code]
         <?xml version="1.0" encoding="UTF-8"?>
         <xml>
         <eintrag>
@@ -355,7 +355,7 @@ $LIT_IMPORT_PLUGINS[2] = array('name' => 'GenericXML', 'visual_name' => _("Einfa
             <jahr></jahr>
         </eintrag>
         </xml>[/code]'.
-                                   _("Jeder Abschnitt darf mehrfach vorkommen oder kann weggelassen werden, mindestens ein Titel pro Eintrag muss vorhanden sein."));
+        _("Jeder Abschnitt darf mehrfach vorkommen oder kann weggelassen werden, mindestens ein Titel pro Eintrag muss vorhanden sein."));
 $LIT_IMPORT_PLUGINS[3] = array('name' => 'CSV', 'visual_name' => _("CSV mit Semikolon als Trennzeichen"), 'description' => _("Exportieren Sie Ihre Literaturliste in eine mit Trennzeichen getrennte Datei (CSV). Wichtig hierbei ist die Verwendung des Semikolons als Trennzeichen. Folgende Formatierung wird dabei in jeder Zeile erwartet:").'[pre]'._("Titel;Verfasser oder Urheber;Verleger;Herausgeber;Thema und Stichworte;ISBN").'[/pre]');
 $LIT_IMPORT_PLUGINS[4] = array('name' => 'StudipLitList', 'visual_name' => _("Literaturliste im Stud.IP Format"), 'description' => _("Benutzen Sie die Export-Funktion innerhalb von Stud.IP, um eine Literaturliste im Stud.IP Format zu exportieren."));
 

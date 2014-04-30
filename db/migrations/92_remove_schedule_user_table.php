@@ -10,6 +10,6 @@ class RemoveScheduleUserTable extends Migration
     function up ()
     {
         // create new multi-purpose schedule table
-        DBManager::get()->exec("DROP TABLE seminar_user_schedule");
+        DBManager::get()->exec("DROP TABLE IF EXISTS seminar_user_schedule");
     }
 }

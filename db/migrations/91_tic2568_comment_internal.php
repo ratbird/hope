@@ -15,7 +15,7 @@ class Tic2568CommentInternal extends Migration
      */
     function up()
     {
-    #    DBManager::get()->exec("ALTER TABLE `resources_assign` ADD `comment_internal` TEXT NULL DEFAULT NULL");
+        DBManager::get()->exec("ALTER TABLE `resources_assign` ADD `comment_internal` TEXT NULL DEFAULT NULL");
     }
 
     /**

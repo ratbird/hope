@@ -53,7 +53,13 @@ class MultipersonsearchController extends AuthenticatedController {
         if (strpos($mp->getExecuteURL(), '.php') === false) {
             $this->redirect(URLHelper::getLink('dispatch.php/' . $mp->getExecuteURL()));
         } else {
-            $this->redirect(URLHelper::getLink($mp->getExecuteURL()));
+            $params = split("\?", $mp->getExecuteURL());
+            if (count($params) > 1) {
+                $url = URLHelper::getLink($params[0]) . "&" . $params[1];
+            } else {
+                $url = URLHelper::getLink($mp->getExecuteURL());
+            }
+            $this->redirect($url);
         }
     }
     
@@ -66,6 +72,7 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->name = $name;
         $this->description = $mp->getDescription();
         $this->quickfilter = $mp->getQuickfilterIds();
+        $this->additionHTML = $mp->getAdditionHTML();
         foreach ($this->quickfilter as $title => $users) {
             $tmp = new SimpleCollection(User::findMany($users));
             $tmp->orderBy("nachname asc, vorname asc");
@@ -111,7 +118,7 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->selectableUsers = array();
         $this->selectedUsers = array();
         $this->search = Request::get("freesearch");
-        
+        $this->additionHTML = $mp->getAdditionHTML();
         $previousSelectableUsers = unserialize(studip_utf8decode(Request::get('search_persons_selectable_hidden')));
         $previousSelectedUsers = unserialize(studip_utf8decode(Request::get('search_persons_selected_hidden')));
         
@@ -182,7 +189,6 @@ class MultipersonsearchController extends AuthenticatedController {
         }
         // save
         elseif (Request::submitted('save')) {
-            //$_SESSION['multipersonsearch_' . $this->name . '_status'] = 'save';
             // find added users
             $addedUsers = array();
             $defaultSelectedUsersIDs = $searchObject = $mp->getDefaultSelectedUsersIDs();
@@ -206,7 +212,13 @@ class MultipersonsearchController extends AuthenticatedController {
             if (strpos($mp->getExecuteURL(), '.php') === false) {
                 $this->redirect(URLHelper::getLink('dispatch.php/' . $mp->getExecuteURL()));
             } else {
-                $this->redirect(URLHelper::getLink($mp->getExecuteURL()));
+                $params = split("\?", $mp->getExecuteURL());
+                if (count($params) > 1) {
+                    $url = URLHelper::getLink($params[0]) . "&" . $params[1];
+                } else {
+                    $url = URLHelper::getLink($mp->getExecuteURL());
+                }
+                $this->redirect($url);
             }
         }
         // default

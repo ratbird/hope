@@ -111,8 +111,8 @@
         }
       }
       var inputData = $option.text().split('--');
-      if (inputData[1].length > 35) {
-          inputData[1] = inputData[1].substr(0,35) + "&hellip;";
+      if (inputData[1].length > 30) {
+          inputData[1] = inputData[1].substr(0,30) + "&hellip;";
       }
       var selectableLi = $('<li '+attributes+'><img src="' + inputData[0] + '" height="30px" style="float: left; margin-right: 10px;">'+inputData[1]+'<br>'+inputData[2]+'</li>'),
           selectedLi = selectableLi.clone(),

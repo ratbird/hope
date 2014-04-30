@@ -146,7 +146,6 @@ STUDIP.modalDialog2 = {
         $('a.mpsmodal').click(function () {
             var dialog = $("<div></div>");
             var name = $(this).attr('data-dialogname');
-            console.log(name);
             dialog.load($(this).attr('href'), function () {
                 STUDIP.modalDialog2.load($(this));
                 STUDIP.MultiPersonSearch.dialog(name);
@@ -163,7 +162,7 @@ STUDIP.modalDialog2 = {
                 close: function () {
                     $(this).remove();
                 },
-                height: 450,
+                height: 460,
                 width: 720,
                 title: $(this).attr('title'),
                 modal: true

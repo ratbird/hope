@@ -33,6 +33,7 @@ class MultiPersonSearch {
     private $defaultSelectedUsersIDs = array();
     public static $importsAlreadyAdded = false;
     private $searchObject = null;
+    private $additionalHMTL = "";
     
     /**
      * restores a MultiPersonSearch object.
@@ -97,6 +98,7 @@ class MultiPersonSearch {
             }
         }
         $_SESSION['multipersonsearch_' . $this->name . '_added'] = $addedUsers;
+        $_SESSION['multipersonsearch_' . $this->name . '_additional'] = Request::optionArray('additional');
     }
     
     /**
@@ -233,6 +235,20 @@ class MultiPersonSearch {
      */
     public function getSearchObject() {
         return $this->searchObject;
+    }
+    
+    public function setAdditionalHTML($html) {
+        $this->additionalHMTL = $html;
+        
+        return $this;
+    }
+    
+    public function getAdditionHTML() {
+        return $this->additionalHMTL;
+    }
+    
+    public function getAdditionalOptionArray() {
+        return $_SESSION['multipersonsearch_' . $this->name . '_additional'];
     }
     
     /**
@@ -391,12 +407,14 @@ class MultiPersonSearch {
         $_SESSION['multipersonsearch_' . $this->name . '_title'] = $this->title;
         $_SESSION['multipersonsearch_' . $this->name . '_description'] = $this->description;
         $_SESSION['multipersonsearch_' . $this->name . '_quickfilter'] = $this->quickfilterIds;
+        $_SESSION['multipersonsearch_' . $this->name . '_additionalHMTL'] = $this->additionalHMTL;
         $_SESSION['multipersonsearch_' . $this->name . '_executeURL'] = $this->executeURL;
         $_SESSION['multipersonsearch_' . $this->name . '_pageURL'] = Request::url();
         $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'] = $this->defaultSelectableUsersIDs;
         $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'] = $this->defaultSelectedUsersIDs;
         $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'] = $this->quickfilterIds;
         $_SESSION['multipersonsearch_' . $this->name . '_searchObject'] = serialize($this->searchObject);
+        
     }
     
     /**
@@ -407,12 +425,14 @@ class MultiPersonSearch {
         $this->title = $_SESSION['multipersonsearch_' . $this->name . '_title'];
         $this->description = $_SESSION['multipersonsearch_' . $this->name . '_description'];
         $this->quickfilterIds = $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'];
+        $this->additionalHMTL = $_SESSION['multipersonsearch_' . $this->name . '_additionalHMTL'];
         $this->executeURL = $_SESSION['multipersonsearch_' . $this->name . '_executeURL'];
         $this->pageURL = $_SESSION['multipersonsearch_' . $this->name . '_pageURL'];
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'];
         $this->quickfilterIds = $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'];
         $this->searchObject = unserialize($_SESSION['multipersonsearch_' . $this->name . '_searchObject']);
+        
     }
     
     /**
@@ -422,6 +442,7 @@ class MultiPersonSearch {
         unset($_SESSION['multipersonsearch_' . $this->name . '_title']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_description']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds']);
+        unset($_SESSION['multipersonsearch_' . $this->name . '_additional']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_executeURL']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_pageURL']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs']);
@@ -439,7 +460,7 @@ class MultiPersonSearch {
          if (!self::$importsAlreadyAdded) {
             PageLayout::addStylesheet('multi-select.css');
             PageLayout::addScript('jquery/jquery.multi-select.js');
-             PageLayout::addScript('multi_person_search.js');
+            PageLayout::addScript('multi_person_search.js');
             self::$importsAlreadyAdded = true;
         }
     }

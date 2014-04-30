@@ -75,6 +75,7 @@
         </div>
     </div>
     <br>
+    <?= $additionHTML; ?>
     <?= \Studip\Button::create(_('Speichern'), 'save') ?>
     <?= \Studip\Button::create(_('Abbrechen'), 'abort') ?>
 </form>

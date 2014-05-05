@@ -701,7 +701,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     ->setDefaultSelectedUser($defaultSelectedUser)
                     ->setLinkIconPath("")
                     ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
-                    ->setExecuteURL("course/studygroup/execute_invite/" . $id)
+                    ->setExecuteURL(URLHelper::getLink('dispatch.php/course/studygroup/execute_invite/' . $id))
                     ->setSearchObject($inviting_search)
                     ->addQuickfilter(_("Adressbuch"), $userArray)
                     ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))

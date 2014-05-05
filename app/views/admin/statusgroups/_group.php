@@ -39,7 +39,7 @@
                         ->setLinkText()
                         ->setDefaultSelectedUser($group->members->pluck('user_id'))
                         ->setTitle(_('MitgliederInnen hinzufügen'))
-                        ->setExecuteURL("admin/statusgroups/memberAdd/{$group->id}")
+                        ->setExecuteURL(URLHelper::getLink("dispatch.php/admin/statusgroups/memberAdd/{$group->id}"))
                         ->setSearchObject($searchType)
                         ->addQuickfilter(_("aktuelle Einrichtung"), $membersOfInstitute)
                         ->render();

@@ -227,7 +227,7 @@ class Course_MembersController extends AuthenticatedController
                         ->setDefaultSelectedUser($filtered_members['dozent']->pluck('user_id'))
                         ->setLinkIconPath("")
                         ->setTitle(sprintf(_('Neue/n %s eintragen'), $this->status_groups['dozent']))
-                        ->setExecuteURL("course/members/execute_multipersonsearch_dozent")
+                        ->setExecuteURL(URLHelper::getLink("dispatch.php/course/members/execute_multipersonsearch_dozent"))
                         ->setSearchObject($searchtype)
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['dozent']), $membersOfInstitute)
                         ->render();
@@ -264,7 +264,7 @@ class Course_MembersController extends AuthenticatedController
                         ->setDefaultSelectedUser($filtered_members['tutor']->pluck('user_id'))
                         ->setLinkIconPath("")
                         ->setTitle(sprintf(_('Neue/n %s eintragen'), $this->status_groups['tutor']))
-                        ->setExecuteURL("course/members/execute_multipersonsearch_tutor")
+                        ->setExecuteURL(URLHelper::getLink("dispatch.php/course/members/execute_multipersonsearch_tutor"))
                         ->setSearchObject($searchType)
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['tutor']), $membersOfInstitute)
                         ->render();
@@ -296,7 +296,7 @@ class Course_MembersController extends AuthenticatedController
                     ->setDefaultSelectedUser($filtered_members['autor']->pluck('user_id'))
                     ->setLinkIconPath("")
                     ->setTitle(sprintf(_('Neue/n %s eintragen'), $this->status_groups['autor']))
-                    ->setExecuteURL("course/members/execute_multipersonsearch_autor")
+                    ->setExecuteURL(URLHelper::getLink("dispatch.php/course/members/execute_multipersonsearch_autor"))
                     ->setSearchObject($searchType)
                     ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['autor']), $membersOfInstitute)
                     ->render();

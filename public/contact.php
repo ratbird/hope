@@ -195,14 +195,14 @@ $defaultSelectedUser = array();
 foreach ($result as $r) {
     $defaultSelectedUser[] = $r['user_id'];
 }
+URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
 $mp = MultiPersonSearch::get("addressbook_add")
     ->setLinkText(_('Personen in das Adressbuch eintragen'))
     ->setDefaultSelectedUser($defaultSelectedUser)
     ->setTitle(_('Personen in das Adressbuch eintragen'))
-    ->setExecuteURL("contact.php")
+    ->setExecuteURL(URLHelper::getLink("contact.php"))
     ->setSearchObject($search_obj)
     ->render();
-
 
 $template = $GLOBALS['template_factory']->open('contact/index');
 $template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));

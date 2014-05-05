@@ -426,7 +426,7 @@ class MultiPersonSearch {
         $this->description = $_SESSION['multipersonsearch_' . $this->name . '_description'];
         $this->quickfilterIds = $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'];
         $this->additionalHMTL = $_SESSION['multipersonsearch_' . $this->name . '_additionalHMTL'];
-        $this->executeURL = $_SESSION['multipersonsearch_' . $this->name . '_executeURL'];
+        $this->executeURL = html_entity_decode($_SESSION['multipersonsearch_' . $this->name . '_executeURL']);
         $this->pageURL = $_SESSION['multipersonsearch_' . $this->name . '_pageURL'];
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'];

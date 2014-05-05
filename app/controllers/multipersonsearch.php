@@ -50,17 +50,7 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->name = Request::get("name");
         $mp = MultiPersonSearch::load($this->name);
         $mp->saveAddedUsersToSession();
-        if (strpos($mp->getExecuteURL(), '.php') === false) {
-            $this->redirect(URLHelper::getLink('dispatch.php/' . $mp->getExecuteURL()));
-        } else {
-            $params = split("\?", $mp->getExecuteURL());
-            if (count($params) > 1) {
-                $url = URLHelper::getLink($params[0]) . "&" . $params[1];
-            } else {
-                $url = URLHelper::getLink($mp->getExecuteURL());
-            }
-            $this->redirect($url);
-        }
+        $this->redirect($mp->getExecuteURL());
     }
     
     
@@ -209,17 +199,7 @@ class MultipersonsearchController extends AuthenticatedController {
             $_SESSION['multipersonsearch_' . $this->name . '_added'] = $addedUsers;
             $_SESSION['multipersonsearch_' . $this->name . '_removed'] = $removedUsers;
             // redirect to action which handles the form data
-            if (strpos($mp->getExecuteURL(), '.php') === false) {
-                $this->redirect(URLHelper::getLink('dispatch.php/' . $mp->getExecuteURL()));
-            } else {
-                $params = split("\?", $mp->getExecuteURL());
-                if (count($params) > 1) {
-                    $url = URLHelper::getLink($params[0]) . "&" . $params[1];
-                } else {
-                    $url = URLHelper::getLink($mp->getExecuteURL());
-                }
-                $this->redirect($url);
-            }
+            $this->redirect($mp->getExecuteURL());
         }
         // default
         else {

@@ -8,13 +8,23 @@ if (!isset($all_roles)) $all_roles = $roles;
 if (is_array($roles)) foreach ($roles as $id => $role) :
     $topic_class = 'table_header_bold';
     if ($edit_role == $id) $topic_class = 'red_gradient';
+
+// get dialog
+URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+$mp = MultiPersonSearch::get("contacts_statusgroup_" . $id)
+        ->setLinkText("")
+        ->setDefaultSelectedUser(array_keys(getPersonsForRole($id)))
+        ->setTitle(_('Personen in das Adressbuch eintragen'))
+        ->setExecuteURL(URLHelper::getLink("admin_statusgruppe.php"))
+        ->setSearchObject($search_obj)
+        ->addQuickfilter(_("VeranstaltungsteilnehmerInnen"), $quickfilter_sem)
+        ->addQuickfilter(_("MitarbeiterInnen"), $quickfilter_inst) 
+        ->render();
 ?>
 <a name="<?= $id ?>" ></a>
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-    <td class="blank" width="1%" style="padding: 0px 10px 0px 0px">
-        <input type="image" name="role_id[<?= $id ?>]" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" title="<?= _("Markierte Personen dieser Gruppe zuordnen") ?>">
-    </td>
+    <td class="blank" width="1%" style="padding: 0px 10px 0px 0px"></td>
     <td class="<?= $topic_class ?>" nowrap style="padding-left: 5px" width="85%">
         <?= htmlReady($role['role']->getName()) ?>
     </td>
@@ -25,6 +35,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
         <? if ($role['role']->getSelfAssign()) :
             echo Assets::img('icons/16/grey/person.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen")));
         endif; ?>
+        <?= $mp; ?>
         <a href="<?= URLHelper::getLink('?cmd=editRole&role_id='.  $id) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _("Gruppe bearbeiten"))) ?>
         </a>

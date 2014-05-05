@@ -32,7 +32,9 @@ $auth->login_if($auth->auth["uid"] == "nobody");
 
 $hash_secret = "dslkjjhetbjs";
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-
+PageLayout::addStylesheet('multi-select.css');
+PageLayout::addScript('jquery/jquery.multi-select.js');
+PageLayout::addScript('multi_person_search.js');
 $range_id = Request::option('range_id');
 $cmd = Request::option('cmd');
 $view = Request::option('view');
@@ -96,6 +98,24 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
         }
     }
 }
+/**
+ * Add members to a statusgroup.
+ */
+function addToStatusgroup($range_id, $statusgruppe_id) {
+    $mp = MultiPersonSearch::load("contacts_statusgroup_" . $statusgruppe_id);
+    if (count($mp->getAddedUsers()) !== 0) {
+        foreach ($mp->getAddedUsers() as $m) {
+            if (!in_array($m, $mp->getQuickfilterIds[_("Adressbuch")])) {
+                if (InsertPersonStatusgruppe($m, $statusgruppe_id, false)) {
+                    AddNewContact($m, $range_id);
+                }
+            } else {
+                InsertPersonStatusgruppe($m, $statusgruppe_id, false);
+            }
+        }
+    }
+    $mp->clearSession();
+}
 
 // Funktionen zur reinen Augabe von Statusgruppendaten
 
@@ -135,15 +155,55 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     <?
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $statusgruppe_id = $row['statusgruppe_id'];
+        
+    addToStatusgroup($range_id, $statusgruppe_id);
+        
+    // generate MultiPersonSearch
+    // load addressbook
+    $contacts_query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
+                  FROM contact
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE owner_id = ?
+                  ORDER BY Nachname ASC";
+    $contacts_statement = DBManager::get()->prepare($contacts_query);
+    $contacts_statement->execute(array($range_id));
+    $contacts = $contacts_statement->fetchAll();
+    foreach ($contacts as $c) {
+        $quickfilter[] = $c['user_id'];
+    }
+    $search_obj = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+                            . "FROM auth_user_md5 "
+                            . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+                            . "WHERE "
+                            . "username LIKE :input OR Vorname LIKE :input "
+                            . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
+                            . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
+                            . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
+                            . " ORDER BY fullname ASC",
+                            _("Nutzer suchen"), "user_id");
+    $members_statement->execute(array($statusgruppe_id));
+    $member = $members_statement->fetchAll();
+    
+    $defaultSelectedUser = array();
+    foreach ($member as $m) {
+        $defaultSelectedUser[] = $m['user_id'];
+    }
+    URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+    $mp = MultiPersonSearch::get("contacts_statusgroup_" . $statusgruppe_id)
+        ->setLinkText("")
+        ->setDefaultSelectedUser($defaultSelectedUser)
+        ->setTitle(_('Personen in das Adressbuch eintragen'))
+        ->setExecuteURL(URLHelper::getLink("contact_statusgruppen.php"))
+        ->setSearchObject($search_obj)
+        ->addQuickfilter(_("Adressbuch"), $quickfilter)
+        ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id)) 
+        ->render();
         ?>
         <table id="<?= $statusgruppe_id ?>" width="95%" border="0" cellpadding="2" cellspacing="0" class="sortable">
             <tr class="handle">
         <?
-        echo "\n<td width=\"5%\">";
-        echo "<input type=\"IMAGE\" name=\"$statusgruppe_id\" ";
-        echo 'src="' . Assets::image_path('icons/16/yellow/arr_2right.png') . '" ';
-        echo tooltip(_("Markierte Personen dieser Gruppe zuordnen"));
-        echo ">&nbsp; </td>";
+        echo "\n<td width=\"5%\">&nbsp; </td>";
 
         $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $row['calendar_group'];
         echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="table_header';
@@ -163,15 +223,20 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         </td>
 
         <td class="table_header<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
-            <?= $row['count']?>
+            <?= count($member)?>
         </td>
-
+        
+        <td class="table_header<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
+            <?= $mp; ?>
+        </td>
+        
         <?
         echo '<td class="table_header' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" width="1%">';
         if ($cal_group) {
             echo '<img src="' . Assets::image_path('icons/16/blue/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
             echo '</td><td class="table_header ' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="whitespace: width="5%">';
         }
+        
         echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
         echo '<img src="' . Assets::image_path('icons/16/blue/edit.png') . '" ';
         echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
@@ -249,7 +314,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     echo '</a></td>';
 
                 } else {
-                    echo "<td class=\"$class\">&nbsp;</td>\n";
+                    echo "<td class=\"$class\">&nbsp;</td><td class=\"$class\">&nbsp;</td>\n";
                 }
 
                 echo '<td style="text-align: center;" class="' . $class . '">';
@@ -273,109 +338,6 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     <?
 }
 
-function PrintSearchResults($search_exp, $range_id)
-{
-    global $_fullname_sql, $user;
-    $search_exp = '%' . $search_exp . '%';
-
-    $query = "SELECT DISTINCT user_id, {$_fullname_sql['full_rev']} AS fullname, username, perms
-              FROM auth_user_md5
-              LEFT JOIN user_info USING (user_id)
-              WHERE perms != 'user'
-                AND (Vorname LIKE CONCAT('%', :needle, '%') OR
-                    Nachname LIKE CONCAT('%', :needle, '%') OR
-                    username LIKE CONCAT('%', :needle, '%'))
-              ORDER BY Nachname";
-    $statement = DBManager::get()->prepare($query);
-    $statement->bindValue(':needle', $search_exp);
-    $statement->execute();
-    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!$result) {
-        echo "&nbsp; " . _("keine Treffer") . "&nbsp; ";
-        return;
-    } 
-
-    $query = "SELECT COUNT(*) FROM contact WHERE owner_id = ? AND user_id = ? AND calpermission > 1";
-    $statement = DBManager::get()->prepare($query);
-
-    echo "&nbsp; <select name=\"Freesearch[]\" size=\"4\" >";
-    foreach ($result as $row) {
-        if (!get_visibility_by_id($row['user_id'])) {
-            continue;
-        }
-        $have_perm = false;
-        if (get_config('CALENDAR_GROUP_ENABLE')) {
-            $statement->execute(array($row['user_id'], $GLOBALS['user']->id));
-            $have_perm = $statement->fetchColumn() > 0;
-            $statement->closeCursor();
-        }
-        if ($have_perm) {
-            printf("<option style=\"color:#ff0000;\" value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
-        } else {
-            printf("<option value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
-        }
-    }
-    echo "</select>";
-}
-
-function PrintAktualContacts($range_id)
-{
-    global $_fullname_sql, $user;
-    $selected = GetAllSelected($range_id);
-
-    // Prepare calendar permission statement
-    $query = "SELECT calpermission
-              FROM contact
-              WHERE owner_id = ? AND user_id = ? AND calpermission > 1";
-    $permission_statement = DBManager::get()->prepare($query);
-
-    // Prepare and execute contacts query
-    $query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
-              FROM contact
-              LEFT JOIN auth_user_md5 USING (user_id)
-              LEFT JOIN user_info USING (user_id)
-              WHERE owner_id = ?
-              ORDER BY Nachname ASC";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($range_id));
-    $contacts = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-    $size = (count($contacts) > 10) ? 25 : 10;
-
-    echo "<label><font size=\"-1\">&nbsp; " . _("Personen im Adressbuch") . "</font><br>";
-
-    if(count($contacts) > 0) {
-        echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
-
-        foreach ($contacts as $contact) {
-            if (!get_visibility_by_id($contact['user_id'])) {
-                continue;
-            }
-            $have_perm = false;
-            if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-                $permission_statement->execute(array($contact['user_id'], $user->id));
-                $have_perm = $permission_statement->fetchColumn();
-                $permission_statement->closeCursor();
-            }
-
-            if ($have_perm) {
-                $tmp_color = in_array($contact['user_id'], $selected) ? '#ff7777' : '#ff0000';
-            } else {
-                $tmp_color = in_array($contact['user_id'], $selected) ? '#777777' : '#000000';
-            }
-
-            echo "<option style=\"color:$tmp_color;\" value=\"" . $contact['username'];
-            echo '">';
-            echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
-            echo " - " . $contact['perms'] . "</option>\n";
-        }
-        echo "</select>";
-    } else {
-        echo MessageBox::info(_('Keine Einträge in diesem Bereich.'));
-    }
-    echo "</label>";
-}
 
 // Ende Funktionen
 // fehlende Werte holen
@@ -533,57 +495,11 @@ if (is_array($msgs)) {
                 $present = $statement->fetchColumn();
 
                 if ($present) {   // haben wir schon Gruppen? dann Anzeige
-                    ?>
-    <form action="<? echo URLHelper::getLink('?cmd=move_person') ?>" method="post">
-    <?= CSRFProtection::tokenTag() ?>
-        <table width="100%" border="0" cellspacing="0">
-            <tr>
-                <td class="table_row_even" valign="top" width="50%">
-                    <br>
-    <?
-    echo"<input type=\"HIDDEN\" name=\"range_id\" value=\"$range_id\">\n";
-    echo"<input type=\"HIDDEN\" name=\"view\" value=\"$view\">\n";
-
-    $nogroups = 1;
-    PrintAktualContacts($range_id);
-    ?>
-                    <br><br>
-    <?
-    $search_exp = Request::get('search_exp');
-    if ($search_exp) {
-
-        $search_exp = str_replace("%", "\%", $search_exp);
-        $search_exp = str_replace("_", "\_", $search_exp);
-        if (strlen(trim($search_exp)) < 3) {
-            echo "&nbsp; <font size=\"-1\">" . _("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
-            echo "<br><br><label for=\"search_exp\"><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font></label><br>";
-            echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
-            echo Assets::input("icons/16/blue/search.png", array('type' => "image", 'alt' => _("Person suchen"), 'title' => _("Person suchen"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
-        } else {
-            PrintSearchResults($search_exp, $range_id);
-            echo Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'alt' => _("neue Suche"), 'title' => _("neue Suche"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
-        }
-    } else {
-        echo "<label for=\"search_exp\">"._("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "</label><br>";
-        echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
-        echo Assets::input("icons/16/blue/search.png", array('type' => "image", 'alt' => _("Person suchen"), 'title' => _("Person suchen"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
-    }
-    echo "<br><br>\n";
-    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-        printf(_("%sRot%s dargestellte Nutzernamen kennzeichnen Personen, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
-    }
-
-    echo "\n</td>\n";
-    echo '<td class="blank" width="50%" align="center" valign="top">';
-    // Ende Personen-Bereich
+                    
     // Anfang Gruppenuebersicht
     PrintAktualStatusgruppen($range_id, $view, $edit_id);
     ?>
-                    <br>
-                </td>
-            </tr>
-        </table>
-    </form>
+    
                     <?
                 } else { // es sind noch keine Gruppen angelegt, daher Infotext
                     ?>

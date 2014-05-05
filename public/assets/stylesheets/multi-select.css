@@ -97,6 +97,6 @@
 .ms-container .ms-selectable li.disabled,
 .ms-container .ms-selection li.disabled{
   background-color: #eee;
-  color: #aaa;
+  color: #555;
   cursor: text;
 }

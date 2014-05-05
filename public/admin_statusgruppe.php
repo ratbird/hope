@@ -50,6 +50,10 @@ if ($perm->have_perm('admin')) {
     Navigation::activateItem('/course/members/edit_groups');
 }
 
+PageLayout::addStylesheet('multi-select.css');
+PageLayout::addScript('jquery/jquery.multi-select.js');
+PageLayout::addScript('multi_person_search.js');
+
 //get ID, if a object is open
 if ($SessSemName[1])
   $range_id = $SessSemName[1];
@@ -57,6 +61,7 @@ elseif (Request::option('range_id'))
     $range_id = Request::option('range_id');
 
 URLHelper::bindLinkParam('range_id', $range_id);
+URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
 
 //Change header_line if open object
 $header_line = getHeaderLine($range_id);
@@ -155,6 +160,53 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
     }
 }
 
+/*
+ * Add persons to a statusgroup. This function is used by the multi 
+ * person search dialog.
+ */
+function addToStatusgroup($range_id, $statusgruppe_id, $workgroup_mode) {
+    $mp = MultiPersonSearch::load("contacts_statusgroup_" . $statusgruppe_id);
+    if (count($mp->getAddedUsers()) !== 0) {
+        
+        foreach ($mp->getAddedUsers() as $m) {
+            $quickfilters = $mp->getQuickfilterIds();
+            if (in_array($m, $quickfilters[_("VeranstaltungsteilnehmerInnen")])) {
+                InsertPersonStatusgruppe ($m, $statusgruppe_id, false);
+            } elseif (in_array($m, $quickfilters[_("MitarbeiterInnen")])) {
+                $writedone = InsertPersonStatusgruppe ($m, $statusgruppe_id, false);
+                if ($writedone) {
+                    if ($workgroup_mode == TRUE) {
+                        $globalperms = get_global_perm($m);
+                        if ($globalperms == "tutor" || $globalperms == "dozent") {
+                            insert_seminar_user($range_id, $m, "tutor");
+                        } else {
+                            insert_seminar_user($range_id, $m, "autor");
+                        }
+                    } else {
+                        insert_seminar_user($range_id, $m, "autor");
+                    }
+                }
+                checkExternDefaultForUser($m);
+            } else {
+                $writedone = InsertPersonStatusgruppe ($m, $statusgruppe_id, false);
+                if ($writedone) {
+                    if ($workgroup_mode == TRUE) {
+                        $globalperms = get_global_perm($m);
+                        if ($globalperms == "tutor" || $globalperms == "dozent") {
+                            insert_seminar_user($range_id, $m, "tutor");
+                        } else {
+                            insert_seminar_user($range_id, $m, "autor");
+                        }
+                    } else {
+                        insert_seminar_user($range_id, $m, "autor");
+                    }
+                }
+            }
+        }
+    }
+    $mp->clearSession();
+}
+
 /* * * * * * * * * * * * * * * *
  * * * C O N T R O L L E R * * *
  * * * * * * * * * * * * * * * */
@@ -216,40 +268,11 @@ if (Request::option('cmd') == 'sortByName') {
     sortStatusgruppeByName(Request::option('role_id'));
 }
 
-// add a person to a statusgroup
-// if we add persons to a statusgroup, we receive a role_id as an array-element
-$role_id_klicked = Request::optionArray('role_id');
-if (!empty($role_id_klicked)) {
-    $index = key($role_id_klicked);
-    Request::set('role_id', $index);
-
-    $personsAdded = false;
-
-    // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
-    $seminarPersons = Request::getArray('seminarPersons');
-    if (!empty($seminarPersons)) {
-        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'direct', $seminarPersons, $workgroup_mode);
-        $personsAdded = true;
-    }
-
-    // only for seminars - the person is member of the institute the seminar is in
-    $institutePersons = Request::getArray('institutePersons');
-    if (!empty($institutePersons)) {
-        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'indirect', $institutePersons, $workgroup_mode);
-        $personsAdded = true;
-    }
-
-    // the person shall be added via the free search
-    $searchPersons = Request::getArray('searchPersons');
-    if (!empty($searchPersons)) {
-        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'search', $searchPersons, $workgroup_mode);
-        $personsAdded = true;
-    }
-
-    if ($personsAdded) {
-        $msgs['msg'][] = _("Die Personen wurden der Gruppe hinzugefügt.");
-    }
+// add persons to a statusgroup
+foreach (GetAllStatusgruppen($range_id) as $id => $role) {
+    addToStatusgroup($range_id, $id, $workgroup_mode);
 }
+
 // delete a person from a statusgroup
 if (Request::option('cmd') == 'removePerson') {
     $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
@@ -370,6 +393,28 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
         $template->set_attribute('role_data', array('name' => Request::quoted('presetName')));
     }
     $template->set_attribute('show_search_and_members_form', !LockRules::Check($range_id, 'participants'));
+    
+    // quickfilters
+    foreach (getPersons($range_id, 'sem') as $k=>$v) {
+        $quickfilter_sem[] = $k;
+    }
+    $template->set_attribute('quickfilter_sem', $quickfilter_sem);
+    foreach (getPersons($range_id, 'inst') as $k=>$v) {
+        $quickfilter_inst[] = $k;
+    }
+    $template->set_attribute('quickfilter_inst', $quickfilter_inst);
+    // search
+    $search_obj = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+                            . "FROM auth_user_md5 "
+                            . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+                            . "WHERE "
+                            . "username LIKE :input OR Vorname LIKE :input "
+                            . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
+                            . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
+                            . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
+                            . " ORDER BY fullname ASC",
+                            _("Nutzer suchen"), "user_id");
+    $template->set_attribute('search_obj', $search_obj);
     // show the tree-view of the statusgroups
     echo $template->render();
 

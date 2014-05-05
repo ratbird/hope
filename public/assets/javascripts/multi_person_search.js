@@ -83,7 +83,8 @@ STUDIP.MultiPersonSearch = {
             });
             
             if (searchcount == 0) {
-                $("#" + name + "_search_message_box").show();
+                //$("#" + name + "_search_message_box").show();
+                STUDIP.MultiPersonSearch.append('--', 'Es wurden keine neuen Ergebnisse für'.toLocaleString() + ' "' + searchterm + '" ' +  'gefunden.'.toLocaleString(), true)
             } else {
                 $("#" + name + "_search_message_box").hide();
             }

@@ -261,11 +261,12 @@ class MultiPersonSearch {
         $userArray = array_unique($userArray);
         $this->defaultSelectableUsers = array();
         $this->defaultSelectableUsersIDs = array();
-        foreach ($userArray as $userId) {
-            $this->defaultSelectableUsers[]  = new User($userId);
-            $this->defaultSelectableUsersIDs[] = $userId;
+        if (is_array($userArray)) {
+            foreach ($userArray as $userId) {
+                $this->defaultSelectableUsers[]  = new User($userId);
+                $this->defaultSelectableUsersIDs[] = $userId;
+            }
         }
-        
         return $this;
     }
     /**
@@ -287,9 +288,11 @@ class MultiPersonSearch {
         $userArray = array_unique($userArray);
         $this->defaultSelectedUsers = array();
         $this->defaultSelectedUsersIDs = array();
-        foreach ($userArray as $userId) {
-            $this->defaultSelectedUsers[]  = new User($userId);
-            $this->defaultSelectedUsersIDs[]  = $userId;
+        if (is_array($userArray)) {
+            foreach ($userArray as $userId) {
+                $this->defaultSelectedUsers[]  = new User($userId);
+                $this->defaultSelectedUsersIDs[]  = $userId;
+            }
         }
         return $this;
     }
@@ -368,9 +371,11 @@ class MultiPersonSearch {
     public function addQuickfilter($title, $userArray) {
         $users = array();
         $usersIds = array();
-        foreach ($userArray as $userId) {
-            $users[]  = new User($userId);
-            $usersIds[]  = $userId;
+        if (is_array($userArray)) {
+            foreach ($userArray as $userId) {
+                $users[]  = new User($userId);
+                $usersIds[]  = $userId;
+            }
         }
         $this->quickfilter[$title] = $users;
         $this->quickfilterIds[$title] = $usersIds;

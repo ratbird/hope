@@ -592,7 +592,6 @@ if ($inst_id != '' && $inst_id != '0') {
                     ->setAdditionalHTML('<p><strong>' . _('Nur bei Zuordnung eines Admins:') .' </strong> <label>Benachrichtigung der <input name="additional[]" value="admins" type="checkbox">' . _('Admins') .'</label>
                                          <label><input name="additional[]" value="dozenten" type="checkbox">' . _('Dozenten') . '</label></p>')
                     ->render();
-                    var_dump(URLHelper::getLink("inst_admin.php?admin_view=1&ins_id=" . $inst_id));
                 ?>
                 <table width="90%" border="0" cellpadding="2" cellspacing="0">
                     <tr>

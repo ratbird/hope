@@ -87,8 +87,9 @@ $termine = getAllSortedSingleDates($sem);
 
 // Export the dates
 if (Request::get('export') && $rechte) {
+    $filename = prepareFilename($sem->getName() . '-' . _("Ablaufplan")) . '.doc';
     header("Content-type: application/vnd.ms-word");
-    header("Content-Disposition: attachment; filename=ablaufplan.doc");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
     header("Expires: 0");
     header("Cache-Control: private");
     header("Pragma: cache");
@@ -99,22 +100,33 @@ if (Request::get('export') && $rechte) {
         foreach ($termine as $singledate_id => $singledate) {
             if (!$singledate->isExTermin()) {
                 $tmp_ids = $singledate->getIssueIDs();
-                $title = '';
+                $title = $description = '';
                 if (is_array($tmp_ids)) {
-                    $title = $themen[array_pop($tmp_ids)]->getTitle();
+                    $thema_id = array_pop($tmp_ids);
+                    $title = $themen[$thema_id]->getTitle();
+                    $description = $themen[$thema_id]->getDescription();
                 }
 
                 $dates[] = array(
                     'date'  => $singledate->toString(),
                     'title' => $title,
+                    'description' => $description,
                     'start' => $singledate->getStartTime(),
                     'related_persons' => $singledate->getRelatedPersons()
+                );
+            } elseif ($singledate->getComment()) {
+                $dates[] = array(
+                    'date'  => $singledate->toString(),
+                    'title' => _('fällt aus') . ' (' . _('Kommentar:') . ' ' . $singledate->getComment() . ')',
+                    'description' => '',
+                    'start' => $singledate->getStartTime(),
+                    'related_persons' => array()
                 );
             }
         }
     }
-
-    echo $GLOBALS['template_factory']->open('dates_export')->render(compact('dates'));
+    $content = $GLOBALS['template_factory']->open('dates_export')->render(compact('dates'));
+    echo mb_encode_numericentity($content, array(0x80, 0xffff, 0, 0xffff), 'cp1252');
 } else {
     PageLayout::addSqueezePackage('raumzeit');
     PageLayout::addHeadElement('script', array(), "
@@ -203,10 +215,10 @@ if (Request::get('export') && $rechte) {
 
     $template = $GLOBALS['template_factory']->open('dates');
     $infobox = $GLOBALS['template_factory']->open('infobox/infobox_dates');
-    
+
     $issue_open = $_SESSION['issue_open'];
     $cancelled_dates_locked = LockRules::Check($sem->getId(), 'cancelled_dates');
-    
+
     $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
     $picture = 'sidebar/date-sidebar.png';
     $selectionlist_title = _("Semesterauswahl");
@@ -214,7 +226,7 @@ if (Request::get('export') && $rechte) {
     $layout = $GLOBALS['template_factory']->open('layouts/base.php');
     $layout->infobox = $infobox->render(compact('picture', 'selectionlist_title', 'selectionlist', 'rechte', 'raumzeitFilter'));
     $layout->content_for_layout = $template->render(compact('dates', 'sem', 'rechte', 'openAll', 'issue_open', 'raumzeitFilter', 'cancelled_dates_locked'));
-    
+
     echo $layout->render();
 }
 page_close();

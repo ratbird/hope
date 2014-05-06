@@ -3,12 +3,18 @@
 ?>
 <html>
     <head>
-        <title>Ablaufplan</title>
+        <title><?= htmlReady(PageLayout::getTitle())?></title>
     </head>
     <body>
 
 <? if (sizeof($dates)) : ?>
-<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<table cellspacing="0" cellpadding="0" border="1" width="100%">
+
+    <tr>
+        <th colspan="3">
+        <h2><?= htmlReady(PageLayout::getTitle())?></h2>
+        </th>
+    </tr>
 
 <?
 $semester = new SemesterData();
@@ -22,7 +28,7 @@ foreach ($dates as $date) :
                 ?>
                 <tr>
                     <td colspan="3">
-                        <h1><?= $zwsem['name'] ?></h1>
+                        <h3><?= htmlReady($zwsem['name']) ?></h3>
                     </td>
                 </tr>
                 <?
@@ -39,7 +45,15 @@ foreach ($dates as $date) :
             } ?>
         </td>
     </tr>
+    <? if ($date['description']) : ?>
+        <tr>
+        <td>&nbsp;</td>
+        <td colspan="2"><?= formatReady($date['description'])?></td>
+        </tr>
+    <? endif ?>
 <? endforeach ?>
 
 </table>
 <? endif ?>
+</body>
+</html>

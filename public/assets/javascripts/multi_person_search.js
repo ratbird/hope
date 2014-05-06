@@ -54,7 +54,7 @@ STUDIP.MultiPersonSearch = {
         $('#' + this.name + '_quickfilter_' + title + ' option').each(function() {
            count += STUDIP.MultiPersonSearch.append($(this).val(), $(this).text(), STUDIP.MultiPersonSearch.isAlreadyMember($(this).val()));
         });
-        $('#' + this.name + '_selectbox').multiSelect('refresh');
+        STUDIP.MultiPersonSearch.refresh();
         
         if (count == 0) {
             $("#" + this.name + "_quickfilter_message_box").show();
@@ -81,10 +81,11 @@ STUDIP.MultiPersonSearch = {
             $.each( data, function( i, item ) {
                 searchcount += STUDIP.MultiPersonSearch.append(item.user_id, item.avatar + ' -- ' + item.text, item.member)
             });
+            STUDIP.MultiPersonSearch.refresh();
             
             if (searchcount == 0) {
-                //$("#" + name + "_search_message_box").show();
-                STUDIP.MultiPersonSearch.append('--', 'Es wurden keine neuen Ergebnisse für'.toLocaleString() + ' "' + searchterm + '" ' +  'gefunden.'.toLocaleString(), true)
+                STUDIP.MultiPersonSearch.append('--', 'Es wurden keine neuen Ergebnisse für'.toLocaleString() + ' "' + searchterm + '" ' +  'gefunden.'.toLocaleString(), true);
+                STUDIP.MultiPersonSearch.refresh();
             } else {
                 $("#" + name + "_search_message_box").hide();
             }
@@ -124,11 +125,15 @@ STUDIP.MultiPersonSearch = {
                 option = $('<option value="' + value + '">' + text + '</option>');
             }
             $('#' + this.name + '_selectbox').append(option);
-            $('#' + this.name + '_selectbox').multiSelect('refresh');
-            STUDIP.MultiPersonSearch.count();
+            
             return 1;
         }
         return 0;
+    },
+    
+    refresh: function() {
+        $('#' + this.name + '_selectbox').multiSelect('refresh');
+        STUDIP.MultiPersonSearch.count();
     },
     
     count: function () {

@@ -1014,7 +1014,7 @@ if ($question) {
               AND range_id NOT IN(?) AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
-        $range_id, $user->id, $folder_tree->getUnreadableFolders($user->id), $lastvisit ?: null
+        $range_id, $user->id, $folder_tree->getUnreadableFolders($user->id) ?: '', $lastvisit ?: null
     ));
     $result = $statement->fetchColumn();
     if ($result > 0) {

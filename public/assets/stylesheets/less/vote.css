@@ -1,0 +1,18 @@
+.answers .answer .percent {
+  display: inline;
+  font-size: 0.9em;
+}
+.answers .answer .bar {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.answers .answer .text {
+  display: inline;
+}
+.answers .answer .infotext {
+  display: inline;
+  font-size: 0.8em;
+}

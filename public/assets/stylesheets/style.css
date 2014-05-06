@@ -648,14 +648,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -1700,48 +1700,103 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
-/* --- content_box ------------------------------------------------------- */
-.content_box {
-  border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid #1e3e70;
-  margin-bottom: 8px;
+section.contentbox {
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 10px;
 }
-.content_box > .head {
-  background-color: #f4f7f9;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
-  padding: 4px;
+section.contentbox header {
+  padding: 2px;
+  background-color: #E7EBF1;
 }
-.content_box .head .actions {
+section.contentbox header h1 {
+  padding: 0;
+  margin: 0;
+  color: #24437C;
+  border-bottom: none;
+  font-size: medium;
+}
+section.contentbox header nav {
   float: right;
 }
-.content_box .content {
+section.contentbox section,
+section.contentbox p {
   padding: 10px;
 }
-.content_box .content .box > .head {
-  border-top: 1px solid #899ab9;
-  background-color: #e3eaf6;
-  background-image: linear-gradient(#cdd9ed, #e3eaf6 40%, #e3eaf6);
-  padding: 4px;
+section.contentbox article {
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  margin: 10px;
 }
-.content_box .content .box > .head .actions {
+section.contentbox article p,
+section.contentbox article section,
+section.contentbox article footer {
+  padding: 0 10px 0 10px;
+  display: none;
+}
+section.contentbox article section {
+  border-width: 0;
+  margin-bottom: 10px;
+}
+section.contentbox article section header {
+  background: transparent;
+}
+section.contentbox article section header h1 {
+  text-align: center;
+  font-size: small;
+  width: 100%;
+  font-weight: bold;
+  color: black;
+}
+section.contentbox article section article time {
   float: right;
+  font-size: smaller;
+  margin: 2px;
 }
-.content_box .content .box .content {
-  padding: 10px;
+section.contentbox article header h1 a {
+  padding-left: 16px;
+  background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-repeat: no-repeat;
 }
-.content_box .content .box .content .comment {
+section.contentbox article footer {
+  text-align: center;
+  border-color: #D3D9E5;
+  border-top-style: solid;
+  border-width: 1px;
+}
+section.contentbox article footer h1 {
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  padding: 0;
+}
+section.contentbox article footer article.comment {
+  border: 0;
+  border-top: 1px solid #c3c8cc;
+  max-width: 1260px;
+  margin: auto;
+  margin-bottom: 4px;
   text-align: left;
-  padding: 10px;
 }
-.content_box .content .box .content .comment .head {
-  border-top: 1px solid #899ab9;
-  color: #888888;
-  font-size: 0.8em;
+section.contentbox article footer article.comment h1 {
+  margin-bottom: 0px;
 }
-.content_box .content .box .content .comment .date {
+section.contentbox article footer article.comment time {
   float: right;
+  font-size: 0.8em;
+  color: #c3c8cc;
+}
+section.contentbox article.open p,
+section.contentbox article.open section,
+section.contentbox article.open footer {
+  display: inherit;
+}
+section.contentbox article.open header h1 a {
+  background-image: url("../images/icons/16/blue/arr_1down.png");
 }
 #header .badge {
   position: relative;
@@ -1758,6 +1813,7 @@ td.infoboxrahmen {
   margin: 0px;
   padding: 1px 5px;
   /* border: 2px solid white; */
+
   background-color: #D60000;
   color: white;
   font-size: 10px;
@@ -2384,6 +2440,24 @@ a.tooltip span:after {
 a.tooltip:hover span {
   visibility: visible;
 }
+.answers .answer .percent {
+  display: inline;
+  font-size: 0.9em;
+}
+.answers .answer .bar {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.answers .answer .text {
+  display: inline;
+}
+.answers .answer .infotext {
+  display: inline;
+  font-size: 0.8em;
+}
 .drag-and-drop {
   display: none;
 }
@@ -2706,6 +2780,7 @@ td.tddaterowpx {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   padding: 0 0.5em;
 }

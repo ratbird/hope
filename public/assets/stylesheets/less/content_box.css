@@ -1,0 +1,96 @@
+section.contentbox {
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 10px;
+}
+section.contentbox header {
+  padding: 2px;
+  background-color: #E7EBF1;
+}
+section.contentbox header h1 {
+  padding: 0;
+  margin: 0;
+  color: #24437C;
+  border-bottom: none;
+  font-size: medium;
+}
+section.contentbox header nav {
+  float: right;
+}
+section.contentbox section,
+section.contentbox p {
+  padding: 10px;
+}
+section.contentbox article {
+  border-color: #D3D9E5;
+  border-style: solid;
+  border-width: 1px;
+  margin: 10px;
+}
+section.contentbox article p,
+section.contentbox article section,
+section.contentbox article footer {
+  padding: 0 10px 0 10px;
+  display: none;
+}
+section.contentbox article section {
+  border-width: 0;
+  margin-bottom: 10px;
+}
+section.contentbox article section header {
+  background: transparent;
+}
+section.contentbox article section header h1 {
+  text-align: center;
+  font-size: small;
+  width: 100%;
+  font-weight: bold;
+  color: black;
+}
+section.contentbox article section article time {
+  float: right;
+  font-size: smaller;
+  margin: 2px;
+}
+section.contentbox article header h1 a {
+  padding-left: 16px;
+  background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-repeat: no-repeat;
+}
+section.contentbox article footer {
+  text-align: center;
+  border-color: #D3D9E5;
+  border-top-style: solid;
+  border-width: 1px;
+}
+section.contentbox article footer h1 {
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  padding: 0;
+}
+section.contentbox article footer article.comment {
+  border: 0;
+  border-top: 1px solid #c3c8cc;
+  max-width: 1260px;
+  margin: auto;
+  margin-bottom: 4px;
+  text-align: left;
+}
+section.contentbox article footer article.comment h1 {
+  margin-bottom: 0px;
+}
+section.contentbox article footer article.comment time {
+  float: right;
+  font-size: 0.8em;
+  color: #c3c8cc;
+}
+section.contentbox article.open p,
+section.contentbox article.open section,
+section.contentbox article.open footer {
+  display: inherit;
+}
+section.contentbox article.open header h1 a {
+  background-image: url("../images/icons/16/blue/arr_1down.png");
+}

@@ -45,6 +45,7 @@ class ProfileController extends AuthenticatedController
 
 
         Navigation::activateItem('/profile/index');
+        URLHelper::addLinkParam('username', Request::username('username'));
         PageLayout::setHelpKeyword('Basis.Homepage');
         SkipLinks::addIndex(_('Benutzerprofil'), 'user_profile', 100);
 
@@ -73,8 +74,7 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
-        process_news_commands($this->about_data);
-        
+
         if ($_SESSION['sms_msg']) {
             $this->msg = $_SESSION['sms_msg'];
             unset($_SESSION['sms_msg']);
@@ -160,14 +160,13 @@ class ProfileController extends AuthenticatedController
                 }
             }
         }
-
-        /* CODE FOR 3.1!!! show news on profile page
+        
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
         if ($this->profile->checkVisibility('news') OR $show_admin === true) {
             $response = $this->relay('news/display/' . $this->current_user->user_id);
-            $this->show_news = $response->body;
-        }*/
+            $this->news = $response->body;
+        }
         
         // show news on profile page
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
@@ -188,7 +187,10 @@ class ProfileController extends AuthenticatedController
         }
 
         // include and show votes and tests
-        $this->show_votes = get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes');
+        if (get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes')) {
+            $response = $this->relay('vote/display/' . $this->current_user->user_id);
+            $this->votes = $response->body;
+        }
 
         // include and show friend-of-a-friend list
         // (direct/indirect connection via buddy list
@@ -276,7 +278,6 @@ class ProfileController extends AuthenticatedController
         if( !empty($categories)) {
             $this->categories = array_filter($categories, function ($item) { return !empty($item['content']); });
         }
-
     }
 
     /**

@@ -151,46 +151,67 @@
 </table>
 <br />
 
-<? if ($show_news): ?>
-    <? show_news($current_user->user_id, $show_admin, 0, $profile_data["nopen"], "100%", 0, $about_data) ?>
-<? endif; ?>
+<?= $news ?>
 
 <? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, Request::option('dopen')) ?>
 
-<? if ($show_votes) show_votes($current_user->username, $user->user_id, $perm, YES) ?>
+<?= $votes ?>
 
 <? if($foaf) $foaf->show(Request::option ('foaf_open'))?>
 
 
 <? if(!empty($ausgabe_inhalt)) : ?>
-    <? foreach($ausgabe_inhalt as $key => $inhalt) :?>
-        <?=$this->render_partial($shared_box,array('admin_url' => null, 'title' => $key, 'content_for_layout' => formatReady($inhalt)));?>
-        <? $shared_box->clear_attributes()?>
-    <?endforeach?>
+<? foreach($ausgabe_inhalt as $key => $inhalt) :?>
+<section class="contentbox">
+    <header>
+        <h1><?= htmlReady($key) ?></h1>
+    </header>
+    <section>
+        <?= formatReady($inhalt) ?>
+    </section>
+</section>
+<?endforeach?>
 <? endif?>
 
 <? if ($current_user['perms'] == 'dozent' && !empty($seminare)) : ?>
     <?= $this->render_partial("profile/seminare") ?>
 <? endif?>
 
-<?if($show_lit) :?>
-    <?=$this->render_partial($shared_box, array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));?>
-    <? $shared_box->clear_attributes()?>
+<?if($show_lit && $lit_list) :?>
+<section class="contentbox">
+    <header>
+        <h1><?= _('Literaturlisten') ?></h1>
+    </header>
+    <section>
+        <?= formatReady($lit_list) ?>
+    </section>
+</section>
 <?endif?>
 
 <? if(!empty($longDatafields)) :?>
     <? foreach ($longDatafields as $name => $entry) : ?>
-    <?=$this->render_partial($shared_box, array('admin_url' => null, 'title' => $name .' '. $entry['visible'], 'content_for_layout' => $entry['content']));?>
+        <section class="contentbox">
+        <header>
+            <h1><?= htmlReady($name .' '. $entry['visible']) ?></h1>
+        </header>
+        <section>
+            <?= formatReady($entry['content']) ?>
+        </section>
+    </section>
     <? endforeach ?>
-    <? $shared_box->clear_attributes()?>
 <?endif?>
 
 <?=$hompage_plugin?>
 
 <?if(!empty($categories)) :?>
     <? foreach($categories as $cat) : ?>
-        <?=$this->render_partial($shared_box, array('admin_url' => null, 'title' => $cat['head'].$cat['zusatz'], 'content_for_layout' => formatReady($cat['content'])));?>
+    <section class="contentbox">
+        <header>
+            <h1><?= htmlReady($cat['head'].$cat['zusatz']) ?></h1>
+        </header>
+        <section>
+            <?= formatReady($cat['content']) ?>
+        </section>
+    </section>
     <?endforeach?>
-    <? $shared_box->clear_attributes()?>
 <? endif; ?>
-

@@ -61,6 +61,7 @@ javascripts:
     - javascripts/sem_classes.js
     - javascripts/cronjobs.js
     - javascripts/register.js
+    - javascripts/contentbox.js
     - *header
     - *toolbar
     - *wysiwyg

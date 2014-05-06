@@ -59,6 +59,66 @@ class NewsController extends StudipController
     {
         page_close();
     }
+    
+    /**
+     * Widget controller to produce the formally known show_votes()
+     * 
+     * @param String $range_id range id of the news to get displayed
+     * @return array() Array of votes
+     */
+    function display_action($range_id)
+    {
+        if (!$range_id) {
+            $this->set_status(400);
+            return $this->render_nothing();
+        }
+
+        if (!StudipNews::haveRangePermission('view', $range_id, $GLOBALS['user']->id)) {
+            $this->set_status(401);
+            return $this->render_nothing();
+        }
+
+        // Check if user wrote a comment
+        if (Request::submitted('accept') && trim(Request::get('comment_content'))) {
+            CSRFProtection::verifySecurityToken();
+            StudipComment::create(array(
+            'object_id' => Request::get('comsubmit'),
+            'user_id' => $GLOBALS['user']->id,
+            'content' => trim(Request::get('comment_content'))
+            ));
+        }
+
+        // Check if user wants to remove a announcement
+        if ($news_id = Request::get('remove_news')) {
+            $news = new StudipNews($news_id);
+            $range = Request::get('news_range');
+            if ($news->havePermission('unassign', $range)) {
+                if (Request::get('confirm')) {
+                    $news->deleteRange($range);
+                    $news->store();
+                } else {
+                    $this->question = createQuestion(_('Ankündigung wirklich aus diesem Bereich entfernen?'), array('remove_news' => $news_id, 'news_range' => $range, 'confirm' => true));
+                }
+            }
+        }
+
+        // Check if user wants to delete an announcement
+        if ($news_id = Request::get('delete_news')) {
+            $news = new StudipNews($news_id);
+            if ($news->havePermission('delete')) {
+                if (Request::get('confirm')) {
+                    $news->delete();
+                } else {
+                    $this->question = createQuestion(_('Ankündigung wirklich löschen?'), array('delete_news' => $news_id, 'confirm' => true));
+                }
+            }
+        }
+
+        $this->news = StudipNews::GetNewsByRange($range_id, true, true);
+        $this->perm = StudipNews::haveRangePermission('edit', $range_id);
+        $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
+
+    }
 
     /**
      * shows news content

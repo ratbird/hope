@@ -1,15 +1,13 @@
-<table class="index_box">
-    <tr>
-        <td class="table_header_bold" style="font-weight: bold;">
+<section class="contentbox">
+    <header>
+        <h1>
             <?= _('Veranstaltungen') ?>
-        </td>
-    </tr>
+        </h1>
+    </header>
 
-    <tr>
-        <td class="index_box_cell" style="font-weight: bold;">
+    <section>
     <? foreach ($seminare as $semester => $seminar) :?>
-            <?= htmlReady($semester) ?><br>
-            <br>
+    <b><?= htmlReady($semester) ?></b><br>
 
         <? foreach ($seminar as $id => $inhalt) :?>
             <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $id))?>">
@@ -17,6 +15,5 @@
             </a><br>
         <?endforeach?>
     <?endforeach?>
-        </td>
-    </tr>
-</table>
+    </section>
+</section>

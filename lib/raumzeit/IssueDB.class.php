@@ -164,16 +164,6 @@ class IssueDB {
         return (bool)$statement->fetchColumn();
     }
 
-    /*function checkFile($issue_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT range_id FROM folder WHERE range_id = '$issue_id'");
-        if ($db->num_rows() > 0) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }*/
-    
     function getDatesforIssue($issue_id)
     {
         $query = "SELECT termine.*

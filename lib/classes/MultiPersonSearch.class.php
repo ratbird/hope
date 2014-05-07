@@ -178,7 +178,7 @@ class MultiPersonSearch {
      * @return MultiPersonSearch
      * 
      */
-    public function setLinkText($text) {
+    public function setLinkText($text = "") {
         $this->linkText = $text;
         
         return $this;

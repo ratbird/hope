@@ -14,7 +14,7 @@ URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
 $mp = MultiPersonSearch::get("contacts_statusgroup_" . $id)
         ->setLinkText("")
         ->setDefaultSelectedUser(array_keys(getPersonsForRole($id)))
-        ->setTitle(_('Personen in das Adressbuch eintragen'))
+        ->setTitle(_('Personen eintragen'))
         ->setExecuteURL(URLHelper::getLink("admin_statusgruppe.php"))
         ->setSearchObject($search_obj)
         ->addQuickfilter(_("VeranstaltungsteilnehmerInnen"), $quickfilter_sem)

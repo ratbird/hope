@@ -586,7 +586,7 @@ if ($inst_id != '' && $inst_id != '0') {
                     $mp = MultiPersonSearch::get("inst_member_add" . $inst_id)
                     ->setLinkText(_("neue Person der Einrichtung zuordnen"))
                     ->setDefaultSelectedUser($defaultSelectedUser)
-                    ->setTitle(_('Personen in das Adressbuch eintragen'))
+                    ->setTitle(_('Personen in die Einrichtung eintragen'))
                     ->setExecuteURL(URLHelper::getLink("inst_admin.php", array('admin_view' => 1, 'ins_id' => $inst_id)))
                     ->setSearchObject($search_obj)
                     ->setAdditionalHTML('<p><strong>' . _('Nur bei Zuordnung eines Admins:') .' </strong> <label>Benachrichtigung der <input name="additional[]" value="admins" type="checkbox">' . _('Admins') .'</label>

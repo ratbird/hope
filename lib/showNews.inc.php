@@ -442,7 +442,7 @@ function show_news_item_content($news_item, $cmd_data, $range_id)
     if ($news_item['allow_comments']) {
         $showcomments = $cmd_data['comopen'] == $id;
 
-        if ($cmd_data['comsubmit'] == $id) {
+        if (Request::isPost() && $cmd_data['comsubmit'] == $id) {
             $comment_content = trim(Request::get('comment_content'));
             if ($comment_content) {
                 $comment = new StudipComments();

@@ -1783,10 +1783,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * default callback used to map specific callbacks to NotificationCenter
      *
-     * @param string $type callback type
+     * @param string $cb_type callback type
      * @return boolean
      */
-    protected function cbNotificationMapper($type)
+    protected function cbNotificationMapper($cb_type)
     {
         if (isset($this->notification_map[$cb_type])) {
             try {

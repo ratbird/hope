@@ -16,6 +16,8 @@ class Messages extends \RESTAPI\RouteMap
      * Liefert die vorhandenen Nachrichtenordner des autorisierten
      * Nutzers zurück. Der Parameter bestimmt je nach Wert, auf
      * welchen Bereich zugegriffen werden soll.
+     * Die Rückgabe beinhaltet pro Ordner den Namen, die Anzahl
+     * aller Nachrichten sowie die Anzahl der ungelesenen Nachrichten.
      *
      * @get /user/:user_id/:box
      */
@@ -27,6 +29,7 @@ class Messages extends \RESTAPI\RouteMap
 
         $folders = self::getUserFolders($user_id, $box);
         $total = count($folders);
+        $folders = $this->getFoldersMetaData($folders, $user_id, $box);
         $folders = $this->linkFolders($user_id, $box,
                                       array_slice($folders, $this->offset, $this->limit, true));
 
@@ -263,12 +266,25 @@ class Messages extends \RESTAPI\RouteMap
     {
         $result = array();
 
-        foreach ($folders as $id => $name) {
+        foreach ($folders as $id => $content) {
             $url = $this->folderURL($user_id, $box, $id);
-            $result[$url] = $name;
+            $result[$url] = $content;
         }
 
         return $result;
+    }
+    
+    private function getFoldersMetaData($folders, $user_id, $box)
+    {
+        foreach ($folders as $id => $name) {
+            $folders[$id] = array(
+                'name'   => $name,
+                'total'  => count(self::folder($user_id, $box === 'inbox' ? 'rec' : 'snd', $id)),
+                'unread' => count(self::folder($user_id, $box === 'inbox' ? 'rec' : 'snd', $id, true)),
+            );
+        }
+        
+        return $folders;
     }
 
     private function messageToJSON($message)
@@ -330,16 +346,17 @@ class Messages extends \RESTAPI\RouteMap
         return $json;
     }
 
-    // TODO: this should be using MessageUser
-    private static function folder($user_id, $sndrec, $folder)
+    private static function folder($user_id, $sndrec, $folder, $unread = null)
     {
-        $query = "SELECT message_id
-                  FROM message_user
-                  WHERE user_id = ? AND snd_rec = ? AND folder = ? AND deleted = 0
-                  ORDER BY mkdate DESC";
-        $statement = \DBManager::get()->prepare($query);
-        $statement->execute(array($user_id, $sndrec, $folder));
-        return $statement->fetchAll(\PDO::FETCH_COLUMN);
+        $temp = \MessageUser::findBySQL('user_id = ? AND snd_rec = ? AND folder = ? AND deleted = 0',
+                                        array($user_id, $sndrec, $folder));
+        $messages = \SimpleORMapCollection::createFromArray($temp);
+        if ($unread !== null) {
+            $messages = $messages->filter(function ($message) use ($unread) {
+                return $message->readed == ($unread ? 0 : 1);
+            });
+        }
+        return $messages->pluck('message_id');
     }
 
     private function moveMessageToFolders($message, $folders)

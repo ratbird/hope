@@ -11,6 +11,11 @@ namespace RESTAPI\Routes;
 class Course extends \RESTAPI\RouteMap
 {
 
+    public function before()
+    {
+        require_once 'User.php';
+    }
+
     /**
      * Lists all courses of a user including the semesters in which
      * that course is active.
@@ -35,11 +40,11 @@ class Course extends \RESTAPI\RouteMap
         }
 
         $memberships = $this->findMembershipsByUserId($user_id, $semester);
-        
+
         $total = count($memberships);
         $memberships = $memberships->limit($this->offset, $this->limit);
         $memberships_json = $this->membershipsToJSON($memberships);
-        $this->etag(md5(serialize($memberships_json)));    
+        $this->etag(md5(serialize($memberships_json)));
         return $this->paginated($memberships_json,
                                 $total,
                                 compact('user_id'), array('semester' => $semester_id));
@@ -146,7 +151,7 @@ class Course extends \RESTAPI\RouteMap
         // lecturers
         foreach ($course->getMembersWithStatus('dozent') as $lecturer) {
             $url = $this->urlf('/user/%s', array(htmlReady($lecturer->user_id)));
-            $json['lecturers'][$url] = $lecturer->user->getFullName();
+            $json['lecturers'][$url] = User::getMiniUser($this, $lecturer->user);
         }
 
         // other members
@@ -194,13 +199,8 @@ class Course extends \RESTAPI\RouteMap
             $url = $this->urlf('/user/%s', array($member->user_id));
             $avatar = \Avatar::getAvatar($member->user_id);
             $json[$url] = array(
-                'user_id'         => $member->user_id,
-                'fullname'        => $member->user->getFullName(),
-                'status'          => $member->status,
-                'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
-                'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
-                'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
-                'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
+                'member' => User::getMiniUser($this, $member->user),
+                'status' => $member->status
             );
         }
         return $json;

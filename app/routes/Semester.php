@@ -17,8 +17,19 @@ class Semester extends \RESTAPI\RouteMap
      */
     public function getSemesters()
     {
-        $semesters = \SemesterData::GetSemesterArray();
-        return $this->paginated(array_slice($semesters, $this->offset, $this->limit), count($semesters));
+        $semesters = $this->findAllSemesters();
+
+        // paginate
+        $total = count($semesters);
+        $semesters = array_slice($semesters, $this->offset, $this->limit);
+
+        $json = array();
+        foreach ($semesters as $semester) {
+            $url = $this->urlf('/semester/%s', $semester['semester_id']);
+            $json[$url] = $this->semesterToJSON($semester);
+        }
+
+        return $this->paginated($json, $total);
     }
 
     /**
@@ -28,21 +39,44 @@ class Semester extends \RESTAPI\RouteMap
      */
     public function getSemester($id)
     {
-        $temp = \SemesterData::getInstance()->getSemesterData($id);
-        if (!$temp) {
+        $semester = \SemesterData::getInstance()->getSemesterData($id);
+        if (!$semester) {
             $this->notFound();
         }
-        
-        $this->etag(md5(serialize($temp)));
 
+        $this->etag(md5(serialize($semester)));
+
+        return $this->semesterToJSON($semester);
+    }
+
+    private function findAllSemesters()
+    {
+        return $this->filterSemesters(
+            \SemesterData::GetSemesterArray());
+    }
+
+    private function filterSemesters($semesters)
+    {
+        $result = array();
+
+        foreach ($semesters as $semester) {
+            if (isset($semester['semester_id'])) {
+                $result[] = $semester;
+            }
+        }
+        return $result;
+    }
+
+    private function semesterToJSON($semester)
+    {
         return array(
-            'semester_id'    => $temp['semester_id'],
-            'title'          => $temp['name'],
-            'description'    => $temp['description'],
-            'begin'          => $temp['beginn'],
-            'end'            => $temp['ende'],
-            'seminars_begin' => $temp['vorles_beginn'],
-            'seminars_end'   => $temp['vorles_ende'],
+            'id'             => $semester['semester_id'],
+            'title'          => $semester['name'],
+            'description'    => $semester['description'],
+            'begin'          => intval($semester['beginn']),
+            'end'            => intval($semester['ende']),
+            'seminars_begin' => intval($semester['vorles_beginn']),
+            'seminars_end'   => intval($semester['vorles_ende']),
         );
     }
 }

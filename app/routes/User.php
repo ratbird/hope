@@ -9,6 +9,42 @@ namespace RESTAPI\Routes;
  */
 class User extends \RESTAPI\RouteMap
 {
+    /**************************************************/
+    /* PUBLIC STATIC HELPER METHODS                   */
+    /**************************************************/
+
+    public static function getMiniUser($routemap, $user)
+    {
+        $avatar = \Avatar::getAvatar($user->id);
+
+        return array(
+            'id'              => $user->id,
+            'href'            => $routemap->urlf('/user/%s', array(htmlReady($user->id))),
+            'name'            => self::getNamesOfUser($user),
+            'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
+            'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
+            'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
+            'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
+        );
+    }
+
+    public static function getNamesOfUser($user)
+    {
+        $name = array(
+            'formatted' => $user->getFullName(),
+            'family'    => $user->nachname,
+            'given'     => $user->vorname,
+            'prefix'    => $user->title_front,
+            'suffix'    => $user->title_rear
+        );
+        return $name;
+    }
+
+
+    /**************************************************/
+    /* ROUTES                                         */
+    /**************************************************/
+
 
     /**
      * getUser - retrieves data of a user
@@ -46,11 +82,8 @@ class User extends \RESTAPI\RouteMap
         $user = array(
             'user_id'         => $user_id,
             'username'        => $user['username'],
+            'name'            => self::getNamesOfUser($user),
             'perms'           => $user['perms'],
-            'title_pre'       => $user['title_front'],
-            'forename'        => $user['Vorname'],
-            'lastname'        => $user['Nachname'],
-            'title_post'      => $user['title_rear'],
             'email'           => get_visible_email($user_id),
             'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
             'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),

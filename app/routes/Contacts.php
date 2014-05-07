@@ -14,6 +14,7 @@ class Contacts extends \RESTAPI\RouteMap
 
     public static function before()
     {
+        require_once 'User.php';
         require_once 'lib/contact.inc.php';
         require_once 'lib/statusgruppe.inc.php';
     }
@@ -108,10 +109,10 @@ class Contacts extends \RESTAPI\RouteMap
 
         $total = count($contact_groups);
         $contact_groups = $contact_groups->limit($this->offset, $this->limit);
-        
+
         $contact_groups_json = $this->contactGroupsToJSON($contact_groups);
         $this->etag(md5(serialize($contact_groups_json)));
-        
+
         return $this->paginated($contact_groups_json,
                                 $total, compact('user_id'));
     }
@@ -173,7 +174,8 @@ class Contacts extends \RESTAPI\RouteMap
 
         $json = array();
         foreach ($contacts as $contact) {
-            $json[] = $this->minimalUserToJSON($contact->user_id, $contact->name());
+            $url = $this->urlf('/contact_group/%s/members/%s', array($group_id, $contact->user_id));
+            $json[$url] = User::getMiniUser($this, $contact->user);
         }
 
         $this->etag(md5(serialize($json)));
@@ -261,25 +263,12 @@ class Contacts extends \RESTAPI\RouteMap
             $result[$url] = array(
                 'id'            => $contact->id,
                 'owner'         => $this->urlf('/user/%s', array(htmlReady($contact->owner_id))),
-                'friend'        => $this->minimalUserToJSON($contact->user_id, $contact->friend->getFullName()),
+                'friend'        => User::getMiniUser($this, $contact->friend),
                 'buddy'         => (bool) $contact->buddy,
                 'calpermission' => (bool) $contact->calpermission
             );
         }
         return $result;
-    }
-
-    private function minimalUserToJSON($id, $fullname)
-    {
-        $avatar = \Avatar::getAvatar($id);
-        return array('user_id'         => $id,
-                     'url'             => $this->urlf('/user/%s', array(htmlReady($id))),
-                     'fullname'        => $fullname,
-                     'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
-                     'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
-                     'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
-                     'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
-        );
     }
 
     private function contactGroupsToJSON($contact_groups)

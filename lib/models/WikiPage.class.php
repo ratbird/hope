@@ -8,6 +8,7 @@ class WikiPage extends SimpleORMap {
 
         $this->has_one['author'] = array(
             'class_name' => 'User',
+            'assoc_foreign_key' => 'user_id',
             'foreign_key' => 'user_id'
         );
 

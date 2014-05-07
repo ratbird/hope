@@ -296,9 +296,14 @@ class Files extends \RESTAPI\RouteMap
             $result[$word] = $file->getValue($word);
         }
 
+        // string to int conversions as SORM does not know about ints
+        foreach (words("chdate mkdate filesize downloads") as $key) {
+            $result[$key] = intval($result[$key]);
+        }
+
         $result['author']    = $this->urlf('/user/%s', array($file->getValue('user_id')));
         $result['protected'] = !empty($result['protected']);
-        $result['blob']      = $this->urlf('/file/%s/content', array($result['file_id']));
+        $result['content']   = $this->urlf('/file/%s/content', array($result['file_id']));
 
         $this->linkToCourseOrInst($result);
 
@@ -314,6 +319,11 @@ class Files extends \RESTAPI\RouteMap
         $result = array('folder_id' => $folder->getValue('id'));
         foreach (words('range_id seminar_id user_id name description mkdate chdate') as $word) {
             $result[$word] = $folder->getValue($word);
+        }
+
+        // string to int conversions as SORM does not know about ints
+        foreach (words("chdate mkdate") as $key) {
+            $result[$key] = intval($result[$key]);
         }
 
         // transform user_id

@@ -10,6 +10,7 @@ class Wiki extends \RESTAPI\RouteMap
 {
     public function before()
     {
+        require_once 'User.php';
         require_once 'lib/wiki.inc.php';
     }
 
@@ -35,7 +36,7 @@ class Wiki extends \RESTAPI\RouteMap
         $linked_pages = array();
         foreach ($pages as $page) {
             $url = $this->urlf('/course/%s/wiki/%s', array($course_id, htmlReady($page['keyword'])));
-            $linked_pages[$url] = self::wikiPageToJson($page, array("content"));
+            $linked_pages[$url] = $this->wikiPageToJson($page, array("content"));
         }
 
         $this->etag(md5(serialize($linked_pages)));
@@ -52,7 +53,7 @@ class Wiki extends \RESTAPI\RouteMap
     public function getCourseWikiKeyword($course_id, $keyword, $version = null)
     {
         $page = $this->requirePage($course_id, $keyword, $version);
-        $wiki_json = self::wikiPageToJson($page);
+        $wiki_json = $this->wikiPageToJson($page);
         $this->etag(md5(serialize($wiki_json)));
         $this->lastmodified($page->chdate);
         return $wiki_json;
@@ -114,19 +115,29 @@ class Wiki extends \RESTAPI\RouteMap
         return $page;
     }
 
-    private static function wikiPageToJson($page, $without = array())
+    private function wikiPageToJson($page, $without = array())
     {
-        $json = $page->toArray(words("range_id user_id keyword chdate version"));
+        $json = $page->toArray(words("range_id keyword chdate version"));
 
         // (pre-rendered) content
         if (!in_array("content", $without)) {
             $json['content']      = $page->body;
             $json['content_html'] = wikiReady($page->body);
         }
+        if (!in_array("user", $without)) {
+            $json['user'] = User::getMiniUser($this, $page->author);
+        }
 
         foreach ($without as $key) {
             if (isset($json[$key])) {
                 unset($json[$key]);
+            }
+        }
+
+        // string to int conversions as SORM does not know about ints
+        foreach (words("chdate mkdate filesize downloads") as $key) {
+            if (isset($result[$key])) {
+                $result[$key] = intval($result[$key]);
             }
         }
 

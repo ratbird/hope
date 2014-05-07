@@ -17,6 +17,21 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string statusgruppe_id database column
+ * @property string id alias column for statusgruppe_id
+ * @property string name database column
+ * @property string range_id database column
+ * @property string position database column
+ * @property string size database column
+ * @property string selfassign database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string calendar_group database column
+ * @property string name_w database column
+ * @property string name_m database column
+ * @property string children computed column
+ * @property SimpleORMapCollection members has_many StatusgruppeUser
+ * @property Statusgruppen parent belongs_to Statusgruppen
  */
 class Statusgruppen extends SimpleORMap {
 

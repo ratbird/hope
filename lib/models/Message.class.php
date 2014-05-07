@@ -1,4 +1,30 @@
 <?php
+/**
+ * Message.class.php
+ * model class for table message
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author    mlunzena
+ * @copyright (c) Authors
+ *
+ * @property string message_id database column
+ * @property string id alias column for message_id
+ * @property string chat_id database column
+ * @property string autor_id database column
+ * @property string subject database column
+ * @property string message database column
+ * @property string mkdate database column
+ * @property string readed database column
+ * @property string reading_confirmation database column
+ * @property string priority database column
+ * @property SimpleORMapCollection users has_many MessageUser
+ * @property SimpleORMapCollection attachments has_many StudipDocument
+ * @property User author has_one User
+ */
 
 class Message extends SimpleORMap {
 

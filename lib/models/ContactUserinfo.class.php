@@ -4,6 +4,13 @@
  *
  * @author      <mlunzena@uos.de>
  * @license GPL 2 or later
+ * @property string userinfo_id database column
+ * @property string id alias column for userinfo_id
+ * @property string contact_id database column
+ * @property string name database column
+ * @property string content database column
+ * @property string priority database column
+ * @property Contact contact belongs_to Contact
  */
 class ContactUserinfo extends SimpleORMap
 {

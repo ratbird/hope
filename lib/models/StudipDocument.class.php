@@ -29,7 +29,7 @@
  *
  * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
  * @access   public
- * 
+ *
  * @property string dokument_id database column
  * @property string id alias column for dokument_id
  * @property string range_id database column

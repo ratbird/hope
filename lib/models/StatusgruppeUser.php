@@ -15,6 +15,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string statusgruppe_id database column
+ * @property string user_id database column
+ * @property string position database column
+ * @property string visible database column
+ * @property string inherit database column
+ * @property string id computed column read/write
+ * @property Statusgruppen group belongs_to Statusgruppen
+ * @property User user belongs_to User
  */
 class StatusgruppeUser extends SimpleORMap {
 

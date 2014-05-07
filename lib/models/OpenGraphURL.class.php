@@ -12,6 +12,17 @@
  * A model class to handle the database table "opengraphdata", fetch data from
  * an Opengraph-URL and render a fitting box with the opengraph information to
  * the user.
+ * @property string url database column
+ * @property string id alias column for url
+ * @property string is_opengraph database column
+ * @property string title database column
+ * @property string image database column
+ * @property string description database column
+ * @property string type database column
+ * @property string data database column
+ * @property string last_update database column
+ * @property string chdate database column
+ * @property string mkdate database column
  */
 class OpenGraphURL extends SimpleORMap {
 

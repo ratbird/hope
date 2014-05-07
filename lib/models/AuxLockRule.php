@@ -13,6 +13,15 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
+ * @property string lock_id database column
+ * @property string id alias column for lock_id
+ * @property string name database column
+ * @property string description database column
+ * @property string attributes database column
+ * @property string sorting database column
+ * @property string datafields computed column
+ * @property string order computed column
+ * @property Course course belongs_to Course
  */
 class AuxLockRule extends SimpleORMap
 {

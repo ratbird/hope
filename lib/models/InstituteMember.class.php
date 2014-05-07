@@ -31,6 +31,7 @@
  * @property string title_rear computed column
  * @property string institute_name computed column
  * @property string id computed column read/write
+ * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
  * @property User user belongs_to User
  * @property Institute institute belongs_to Institute
  */

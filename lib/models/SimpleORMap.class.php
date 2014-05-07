@@ -1515,20 +1515,22 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = false;
         foreach (array_keys($this->relations) as $relation) {
             $options = $this->getRelationOptions($relation);
-            if ($options['type'] === 'has_one' || $options['type'] === 'has_many') {
-                $this->initRelation($relation);
-            }
             if (isset($options['on_delete']) &&
-            ($options['type'] === 'has_one' ||
-            $options['type'] === 'has_many' ||
-            $options['type'] === 'has_and_belongs_to_many')) {
+                ($options['type'] === 'has_one' ||
+                $options['type'] === 'has_many' ||
+                $options['type'] === 'has_and_belongs_to_many')) {
                 if ($options['on_delete'] instanceof Closure) {
                     $ret += call_user_func($options['on_delete'], $this, $relation);
-                } elseif (isset($this->relations[$relation])) {
-                    if ($options['type'] === 'has_one') {
-                        $ret += call_user_func(array($this->{$relation}, 'delete'));
-                    } elseif ($options['type'] === 'has_many') {
-                        $ret += array_sum(call_user_func(array($this->{$relation}, 'sendMessage'), 'delete'));
+                } else {
+                    if ($options['type'] === 'has_one' || $options['type'] === 'has_many') {
+                        $this->initRelation($relation);
+                        if (isset($this->relations[$relation])) {
+                            if ($options['type'] === 'has_one') {
+                                $ret += call_user_func(array($this->{$relation}, 'delete'));
+                            } elseif ($options['type'] === 'has_many') {
+                                $ret += array_sum(call_user_func(array($this->{$relation}, 'sendMessage'), 'delete'));
+                            }
+                        }
                     } else {
                         $foreign_key_value = call_user_func($options['assoc_func_params_func'], $this);
                         $sql = "DELETE FROM `" . $options['thru_table'] ."` WHERE `" . $options['thru_key'] ."` = ?";

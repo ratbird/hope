@@ -23,7 +23,6 @@
  * @property string beschreibung database column
  * @property string ort database column
  * @property string sonstiges database column
- * @property string passwort database column
  * @property string lesezugriff database column
  * @property string schreibzugriff database column
  * @property string start_time database column
@@ -33,35 +32,32 @@
  * @property string vorrausetzungen database column
  * @property string lernorga database column
  * @property string leistungsnachweis database column
- * @property string metadata_dates database column
  * @property string mkdate database column
  * @property string chdate database column
  * @property string ects database column
- * @property string admission_endtime database column
  * @property string admission_turnout database column
  * @property string admission_binding database column
- * @property string admission_type database column
- * @property string admission_selection_take_place database column
- * @property string admission_group database column
  * @property string admission_prelim database column
  * @property string admission_prelim_txt database column
- * @property string admission_starttime database column
- * @property string admission_endtime_sem database column
  * @property string admission_disable_waitlist database column
- * @property string admission_enable_quota database column
  * @property string visible database column
  * @property string showscore database column
  * @property string modules database column
  * @property string aux_lock_rule database column
+ * @property string aux_lock_rule_forced database column
  * @property string lock_rule database column
- * @property string newsfeed_token database column
+ * @property string admission_waitlist_max database column
+ * @property string admission_disable_waitlist_move database column
  * @property string end_time computed column read/write
  * @property SimpleORMapCollection members has_many CourseMember
+ * @property SimpleORMapCollection statusgruppen has_many Statusgruppen
  * @property SimpleORMapCollection admission_applicants has_many AdmissionApplication
  * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
+ * @property SimpleORMapCollection cycles has_many SeminarCycleDate
  * @property Semester start_semester belongs_to Semester
  * @property Semester end_semester belongs_to Semester
  * @property Institute home_institut belongs_to Institute
+ * @property AuxLockRule aux belongs_to AuxLockRule
  * @property SimpleORMapCollection study_areas has_and_belongs_to_many StudipStudyArea
  * @property SimpleORMapCollection institutes has_and_belongs_to_many Institute
  */

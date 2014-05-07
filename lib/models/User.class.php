@@ -63,6 +63,8 @@
  * @property SimpleORMapCollection admission_applications has_many AdmissionApplication
  * @property SimpleORMapCollection archived_course_memberships has_many ArchivedCourseMember
  * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
+ * @property SimpleORMapCollection studycourses has_many UserStudyCourse
+ * @property SimpleORMapCollection contacts has_many Contact
  * @property UserInfo info has_one UserInfo
  */
 class User extends AuthUserMd5

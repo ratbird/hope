@@ -13,6 +13,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
+ * @property string action_id database column
+ * @property string id alias column for action_id
+ * @property string name database column
+ * @property string description database column
+ * @property string info_template database column
+ * @property string active database column
+ * @property string expires database column
+ * @property string filename database column
+ * @property string class database column
+ * @property string type database column
+ * @property SimpleORMapCollection events has_many LogEvent
+ * @property d on_delete d d
  */
 class LogAction extends SimpleORMap
 {

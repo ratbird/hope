@@ -13,6 +13,12 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string abschluss_id database column
+ * @property string id alias column for abschluss_id
+ * @property string name database column
+ * @property string beschreibung database column
+ * @property string mkdate database column
+ * @property string chdate database column
  */
 class Degree extends SimpleORMap
 {

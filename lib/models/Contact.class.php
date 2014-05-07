@@ -4,19 +4,21 @@
  *
  * @author      <mlunzena@uos.de>
  * @license GPL 2 or later
+ * @property string contact_id database column
+ * @property string id alias column for contact_id
+ * @property string owner_id database column
+ * @property string user_id database column
+ * @property string buddy database column
+ * @property string calpermission database column
+ * @property SimpleORMapCollection infos has_many ContactUserinfo
+ * @property User owner belongs_to User
+ * @property User friend belongs_to User
  */
 class Contact extends SimpleORMap
 {
 
     function __construct($id = array())
     {
-/*
-  `contact_id` varchar(32) NOT NULL DEFAULT '',
-  `owner_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `buddy` tinyint(4) NOT NULL DEFAULT '1',
-  `calpermission` tinyint(2) unsigned NOT NULL DEFAULT '1',
-  */
 
         $this->db_table = 'contact';
         $this->belongs_to['owner'] = array('class_name' => 'User',

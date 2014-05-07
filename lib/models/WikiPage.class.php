@@ -1,4 +1,25 @@
 <?php
+/**
+ * WikiPage.class.php
+ * model class for table wiki
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author    mlunzena
+ * @copyright (c) Authors
+ *
+ * @property string range_id database column
+ * @property string user_id database column
+ * @property string keyword database column
+ * @property string body database column
+ * @property string chdate database column
+ * @property string version database column
+ * @property string id computed column read/write
+ * @property User author has_one User
+ */
 
 class WikiPage extends SimpleORMap {
 

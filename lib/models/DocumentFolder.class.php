@@ -13,6 +13,17 @@
  * @category    Stud.IP
  * @since       3.1
  *
+ * @property string folder_id database column
+ * @property string id alias column for folder_id
+ * @property string range_id database column
+ * @property string seminar_id database column
+ * @property string user_id database column
+ * @property string name database column
+ * @property string description database column
+ * @property string permission database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string priority database column
  */
 
 class DocumentFolder extends SimpleORMap {

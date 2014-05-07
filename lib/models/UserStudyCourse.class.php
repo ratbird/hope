@@ -13,6 +13,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string user_id database column
+ * @property string studiengang_id database column
+ * @property string semester database column
+ * @property string abschluss_id database column
+ * @property string degree_name computed column read/write
+ * @property string studycourse_name computed column read/write
+ * @property string id computed column read/write
+ * @property User user belongs_to User
+ * @property Degree degree belongs_to Degree
+ * @property StudyCourse studycourse belongs_to StudyCourse
  */
 class UserStudyCourse extends SimpleORMap
 {

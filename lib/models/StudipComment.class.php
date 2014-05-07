@@ -38,6 +38,7 @@
  * @property string content database column
  * @property string mkdate database column
  * @property string chdate database column
+ * @property StudipNews news belongs_to StudipNews
  */
 
 class StudipComment extends SimpleORMap

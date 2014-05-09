@@ -59,38 +59,47 @@ $infobox = array(
 
 <form action="<?= URLHelper::getURL('dispatch.php/profilemodules/update', array('username' => $username)) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default" width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
-        <colgroup>
-            <col width="50%">
-            <col width="50%">
-        </colgroup>
+    <table class="default">
+        <caption>Inhaltselemente</caption>
         <thead>
             <tr>
-                <th><?= _("Inhaltselement") ?></th>
-                <th><?= _("Aktiv") ?></th>
+                <th></th>
+                <th>Name</th>
+                <th>Beschreibung</th>
             </tr>
         </thead>
         <tbody>
         <? foreach ($this->controller->modules as $module): ?>
             <tr>
-                <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <label for="module_<?= $module['id'] ?>">
-                        <?= _($module['name']) ?>
-                    </label>
-                    <div class="setting_info">
-                        <?= $module['description'] ? _($module['description']) : '' ?>
-                    </div>
-                </td>
                 <td>
                     <input type="checkbox" name="module_<?= $module['id'] ?>" <?= $module['activated'] ? ' checked="checked"' : '' ?>>
+                </td>
+                <td>
+                    <label for="module_<?= $module['id'] ?>">
+                        <b><?= _($module['name']) ?><b>
+                    </label>
+                </td>
+                <td>
+                    <? if (isset($module['description'])) : ?>
+                        <?= formatReady($module['description']) ?>
+                    <? else: ?>
+                        <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
+                    <? endif ?>
+            
+                    <? if (isset($module['homepage'])) : ?>
+                        <p>
+                            <strong><?= _('Weitere Informationen:') ?></strong>
+                            <a href="<?= htmlReady($module['homepage']) ?>"><?= htmlReady($module['homepage']) ?></a>
+                        </p>
+                    <? endif ?>
                 </td>
             </tr>
         <? endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2" align="middle">
-                    <?= Button::createAccept(_('Speichern'), 'submit') ?>
+                <td colspan="3">
+                    <?= Button::createAccept(_('Übernehmen'), 'submit') ?>
                 </td>
             </tr>
         </tfoot>

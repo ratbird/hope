@@ -80,10 +80,13 @@ class ProfileModulesController extends AuthenticatedController {
             // Check local activation status.
             $id = $plugin->getPluginId();
             $activated = PluginManager::getInstance()->isPluginActivatedForUser($id, $this->user_id);
+            // Load plugin data (e.g. name and description)
+            $metadata = $plugin->getMetadata();
             $this->modules[$id] = array(
                     'id' => $id,
                     'name' => $plugin->getPluginName(),
-                    'description' => $plugin->description,
+                    'description' => $metadata['description'],
+                    'homepage' => $metadata['homepage'],
                     'activated' => $activated
                 );
         }

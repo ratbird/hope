@@ -41,18 +41,45 @@ class CourseMember extends SimpleORMap
 
     public static function findByCourse($course_id)
     {
-        return self::findBySeminar_id($course_id, 'ORDER BY position');
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT seminar_user.*, aum.vorname,aum.nachname,aum.email,
+                             aum.username,ui.title_front,ui.title_rear
+                             FROM seminar_user
+                             LEFT JOIN auth_user_md5 aum USING (user_id)
+                             LEFT JOIN user_info ui USING (user_id)
+                             WHERE seminar_id = ? ORDER BY position,nachname",
+                             array($course_id),
+                             __CLASS__ . '::buildExisting');
+    }
+
+    public static function findByCourseAndStatus($course_id, $status)
+    {
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT seminar_user.*, aum.vorname,aum.nachname,aum.email,
+                             aum.username,ui.title_front,ui.title_rear
+                             FROM seminar_user
+                             LEFT JOIN auth_user_md5 aum USING (user_id)
+                             LEFT JOIN user_info ui USING (user_id)
+                             WHERE seminar_id = ? AND seminar_user.status = ? ORDER BY position,nachname",
+                             array($course_id, $status),
+                             __CLASS__ . '::buildExisting');
     }
 
     public static function findByUser($user_id)
     {
-        return self::findByUser_id($user_id);
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT seminar_user.*, seminare.Name as course_name
+                             FROM seminar_user
+                             LEFT JOIN seminare USING (seminar_id)
+                             WHERE user_id = ? ORDER BY seminare.Name",
+                             array($user_id),
+                             __CLASS__ . '::buildExisting');
     }
 
-    function __construct($id = array())
+    protected static function configure()
     {
-        $this->db_table = 'seminar_user';
-        $this->belongs_to = array(
+        $config['db_table'] = 'seminar_user';
+        $config['belongs_to'] = array(
                 'user' => array(
                         'class_name' => 'User',
                         'foreign_key' => 'user_id'),
@@ -60,7 +87,7 @@ class CourseMember extends SimpleORMap
                         'class_name' => 'Course',
                         'foreign_key' => 'seminar_id'),
         );
-        $this->has_many = array(
+        $config['has_many'] = array(
             'datafields' => array(
                         'class_name' => 'DatafieldEntryModel',
                         'assoc_foreign_key' =>
@@ -77,22 +104,13 @@ class CourseMember extends SimpleORMap
                                 return array($course_member);
                             })
             );
-        $user_getter = function ($record, $field) {
-            return $record->getRelationValue('user', $field);
-        };
-        $this->additional_fields['vorname'] = array('get' => $user_getter);
-        $this->additional_fields['nachname'] = array('get' => $user_getter);
-        $this->additional_fields['username'] = array('get' => $user_getter);
-        $this->additional_fields['email'] = array('get' => $user_getter);
-        $this->additional_fields['title_front'] = array('get' => $user_getter);
-        $this->additional_fields['title_rear'] = array('get' => $user_getter);
-        $course_getter = function ($record, $field) {
-            if (strpos($field, 'course_') !== false) {
-                $field = substr($field,7);
-            }
-            return $record->getRelationValue('course', $field);
-        };
-        $this->additional_fields['course_name'] = array('get' => $course_getter);
-        parent::__construct($id);
+        $config['additional_fields']['vorname'] = array('user', 'vorname');
+        $config['additional_fields']['nachname'] = array('user', 'nachname');
+        $config['additional_fields']['username'] = array('user', 'username');
+        $config['additional_fields']['email'] = array('user', 'email');
+        $config['additional_fields']['title_front'] = array('user', 'title_front');
+        $config['additional_fields']['title_rear'] = array('user', 'title_rear');
+        $config['additional_fields']['course_name'] = array();
+        parent::configure($config);
     }
 }

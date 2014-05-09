@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string seminar_id database column
  * @property string id alias column for seminar_id
  * @property string name database column
@@ -37,26 +37,26 @@
 
 class ArchivedCourse extends SimpleORMap
 {
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'archiv';
-        $this->has_many = array(
+        $config['db_table'] = 'archiv';
+        $config['has_many'] = array(
                 'members' => array(
                         'class_name' => 'ArchivedCourseMember',
                         'on_delete' => 'delete',
                         'on_store' => 'store')
         );
-        $this->belongs_to = array(
+        $config['belongs_to'] = array(
                 'home_institut' => array(
                         'class_name' => 'Institute',
                         'foreign_key' => 'heimat_inst_id')
         );
-        $this->default_values['beschreibung'] = '';
-        $this->default_values['institute'] = '';
-        $this->default_values['dozenten'] = '';
-        $this->default_values['dump'] = '';
-        $this->default_values['forumdump'] = '';
-        $this->default_values['studienbereiche'] = '';
-        parent::__construct($id);
+        $config['default_values']['beschreibung'] = '';
+        $config['default_values']['institute'] = '';
+        $config['default_values']['dozenten'] = '';
+        $config['default_values']['dump'] = '';
+        $config['default_values']['forumdump'] = '';
+        $config['default_values']['studienbereiche'] = '';
+        parent::configure($config);
     }
 }

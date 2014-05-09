@@ -13,7 +13,7 @@
  * @category    Stud.IP
  * @package     admin
  * @since       2.4
- * 
+ *
  * @property string ad_id database column
  * @property string id alias column for ad_id
  * @property string banner_path database column
@@ -32,6 +32,8 @@
 
 class Banner extends SimpleORMap
 {
+
+    protected $db_table = 'banner_ads';
 
     /**
      * Returns a random banner
@@ -91,12 +93,6 @@ class Banner extends SimpleORMap
             $banners[$id] = new Banner($id);
         }
         return $banners;
-    }
-
-    function __construct($id = null)
-    {
-        $this->db_table = 'banner_ads';
-        parent::__construct($id);
     }
 
     /**

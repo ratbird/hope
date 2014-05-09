@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string seminar_id database column
  * @property string user_id database column
  * @property string status database column
@@ -33,10 +33,10 @@ class ArchivedCourseMember extends SimpleORMap
         return self::findByUser_id($user_id);
     }
 
-    function __construct($id = array())
+    protected static function configure()
     {
-        $this->db_table = 'archiv_user';
-        $this->belongs_to = array(
+        $config['db_table'] = 'archiv_user';
+        $config['belongs_to'] = array(
                 'user' => array(
                         'class_name' => 'User',
                         'foreign_key' => 'user_id'),
@@ -44,6 +44,6 @@ class ArchivedCourseMember extends SimpleORMap
                         'class_name' => 'ArchivedCourse',
                         'foreign_key' => 'seminar_id')
         );
-        parent::__construct($id);
+        parent::configure($config);
     }
 }

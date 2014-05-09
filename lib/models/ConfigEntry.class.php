@@ -12,7 +12,7 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string config_id database column
  * @property string id alias column for config_id
  * @property string parent_id database column
@@ -38,14 +38,10 @@ class ConfigEntry extends SimpleORMap
         return self::findBySql("field=" . DbManager::get()->quote($field) . " ORDER BY is_default DESC");
     }
 
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'config';
-        $this->default_values['comment'] = '';
-        parent::__construct($id);
+        $config['db_table'] = 'config';
+        $config['default_values']['comment'] = '';
+        parent::configure($config);
     }
 }

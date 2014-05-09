@@ -1,7 +1,7 @@
 <?php
 /**
  * AuxLockRule.php - SORM for the aux data of a seminar
- * 
+ *
  * Used to filter and sort the datafields of a course member
  *
  * This program is free software; you can redistribute it and/or
@@ -31,22 +31,22 @@ class AuxLockRule extends SimpleORMap
      */
     private $datafieldCache = array();
 
-    public function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'aux_lock_rules';
-        $this->belongs_to = array(
+        $config['db_table'] = 'aux_lock_rules';
+        $config['belongs_to'] = array(
             'course' => array(
                 'class_name' => 'Course',
                 'foreign_key' => 'lock_id',
                 'assoc_foreign_key' => 'aux_lock_rule'));
-        $this->additional_fields['datafields'] = true;
-        $this->additional_fields['order'] = true;
-        parent::__construct($id);
+        $config['additional_fields']['datafields'] = true;
+        $config['additional_fields']['order'] = true;
+        parent::configure($config);
     }
 
     /**
      * Returns the sorted and filtered datafields of an aux
-     * 
+     *
      * return array datafields as keys
      */
     public function getDatafields()
@@ -63,7 +63,7 @@ class AuxLockRule extends SimpleORMap
 
     /**
      * Updates a datafield of a courseMember by the given data
-     * 
+     *
      * @param object $member
      * @param object $data
      */
@@ -80,19 +80,19 @@ class AuxLockRule extends SimpleORMap
 
     /**
      * Returns an array of all entries of aux data in a course
-     * 
+     *
      * @param string $course if the course wasnt set automaticly by getting called
      * from a course it is possible to set it here
      * @return array formatted entries
      */
     public function getCourseData($course = null, $display_only = false)
     {
-        
+
         // set course
         if (!$course) {
             $course = $this->course;
         }
-        
+
         // fetch mapping data
         foreach (SimpleORMapCollection::createFromArray($course->members->findBy('status', 'dozent')->pluck('user')) as $dozent) {
             $dozentenlist[] = $dozent->getFullName();
@@ -112,14 +112,14 @@ class AuxLockRule extends SimpleORMap
 
         // start collecting entries
         $result['head']['name'] = _('Name');
-        
+
         // get all autors and users
         foreach ($course->members->findBy('status', array('autor', 'user'))->orderBy('vorname')->orderBy('nachname') as $member) {
             $new['name'] = $member->user->getFullName('full_rev');
-            
+
             // get all datafields
             foreach ($this->datafields as $field => $useless_value_pls_refactor) {
-                
+
                 // if standard get it from the mapping else get it from the datafield
                 if ($mapping[$field]) {
                     $result['head'][$field] = $head_mapping[$field];
@@ -136,7 +136,7 @@ class AuxLockRule extends SimpleORMap
                     }
                 }
             }
-            
+
             // push the result
             $result['rows'][$member->id] = $new;
         }

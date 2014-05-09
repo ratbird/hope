@@ -27,8 +27,6 @@
 class UserStudyCourse extends SimpleORMap
 {
 
-    private $additional_data = array();
-
     public static function findByUser($user_id)
     {
         $db = DbManager::get();
@@ -40,12 +38,8 @@ class UserStudyCourse extends SimpleORMap
                             WHERE user_id = ? ORDER BY studycourse_name");
         $st->execute(array($user_id));
         $ret = array();
-        $c = 0;
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
-            $ret[$c] = new self;
-            $ret[$c]->setData($row, true);
-            $ret[$c]->setNew(false);
-            ++$c;
+            $ret[] = self::buildExisting($row);
         }
         return $ret;
     }
@@ -55,10 +49,10 @@ class UserStudyCourse extends SimpleORMap
         return self::findBySql("studiengang_id = ? AND abschluss_id = ?", array($study_course_id, $degree_id));
     }
 
-    function __construct($id = array())
+    protected static function configure()
     {
-        $this->db_table = 'user_studiengang';
-        $this->belongs_to = array(
+        $config['db_table'] = 'user_studiengang';
+        $config['belongs_to'] = array(
                 'user' => array('class_name' => 'User',
                                 'foreign_key' => 'user_id'),
                 'degree' => array('class_name' => 'Degree',
@@ -66,31 +60,8 @@ class UserStudyCourse extends SimpleORMap
                 'studycourse' => array('class_name' => 'StudyCourse',
                                 'foreign_key' => 'studiengang_id')
         );
-        $this->additional_fields['degree_name']['get'] = 'getAdditionalValue';
-        $this->additional_fields['studycourse_name']['get'] = 'getAdditionalValue';
-        $this->additional_fields['degree_name']['set'] = 'setAdditionalValue';
-        $this->additional_fields['studycourse_name']['set'] = 'setAdditionalValue';
-        $this->registerCallback('before_initialize', 'initializeAdditionalData');
-        parent::__construct($id);
+        $config['additional_fields']['degree_name'] = array();
+        $config['additional_fields']['studycourse_name'] = array();
+        parent::configure($config);
     }
-
-    function initializeAdditionalData()
-    {
-        $this->additional_data = array();
-    }
-
-    function getAdditionalValue($field)
-    {
-        if (!array_key_exists($this->additional_data[$field])) {
-            list($relation, $relation_field) = explode('_', $field);
-            $this->setAdditionalValue($field, $this->getRelationValue($relation, $relation_field));
-        }
-        return $this->additional_data[$field];
-    }
-
-    function setAdditionalValue($field, $value)
-    {
-        return $this->additional_data[$field] = $value;
-    }
-
 }

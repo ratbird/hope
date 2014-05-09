@@ -17,20 +17,20 @@
 class Contact extends SimpleORMap
 {
 
-    function __construct($id = array())
+    protected static function configure()
     {
 
-        $this->db_table = 'contact';
-        $this->belongs_to['owner'] = array('class_name' => 'User',
+        $config['db_table'] = 'contact';
+        $config['belongs_to']['owner'] = array('class_name' => 'User',
                                            'foreign_key' => 'owner_id');
 
-        $this->belongs_to['friend'] = array('class_name' => 'User',
+        $config['belongs_to']['friend'] = array('class_name' => 'User',
                                             'foreign_key' => 'user_id');
 
-        $this->has_many['infos'] = array('class_name' => 'ContactUserinfo',
+        $config['has_many']['infos'] = array('class_name' => 'ContactUserinfo',
                                          'assoc_foreign_key' => 'contact_id');
 
-        parent::__construct($id);
+        parent::configure($config);
     }
 
     public function findByOwner_id($id, $order = 'ORDER BY contact_id ASC')

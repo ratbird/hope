@@ -105,11 +105,10 @@ class User extends AuthUserMd5
 
     /**
      *
-     * @param string $id a user id
      */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->has_many = array(
+        $config['has_many'] = array(
                 'course_memberships' => array(
                         'class_name' => 'CourseMember',
                         'on_delete' => 'delete',
@@ -149,7 +148,7 @@ class User extends AuthUserMd5
                     'assoc_foreign_key' => 'owner_id'
                 )
         );
-        $this->has_one['info'] = array(
+        $config['has_one']['info'] = array(
                 'class_name' => 'UserInfo',
                 'on_delete' => 'delete',
                 'on_store' => 'store');
@@ -159,18 +158,17 @@ class User extends AuthUserMd5
         $info_meta = $info->getTableMetadata();
         foreach ($info_meta['fields'] as $field => $meta) {
             if ($field !== $info_meta['pk'][0]) {
-                $this->additional_fields[$field] = array('get' => $info_getter, 'set' => $info_setter);
+                $config['additional_fields'][$field] = array('get' => $info_getter, 'set' => $info_setter);
             }
         }
-        
-        $this->notification_map['after_create'] = 'UserDidCreate';
-        $this->notification_map['after_store'] = 'UserDidUpdate';
-        $this->notification_map['after_delete'] = 'UserDidDelete';
-        $this->notification_map['before_create'] = 'UserWillCreate';
-        $this->notification_map['before_store'] = 'UserWillUpdate';
-        $this->notification_map['before_delete'] = 'UserWillDelete';
-        
-        parent::__construct($id);
+
+        $config['notification_map']['after_create'] = 'UserDidCreate';
+        $config['notification_map']['after_store'] = 'UserDidUpdate';
+        $config['notification_map']['after_delete'] = 'UserDidDelete';
+        $config['notification_map']['before_create'] = 'UserWillCreate';
+        $config['notification_map']['before_store'] = 'UserWillUpdate';
+        $config['notification_map']['before_delete'] = 'UserWillDelete';
+        parent::configure($config);
     }
 
     /**
@@ -216,5 +214,5 @@ class User extends AuthUserMd5
         unset($ret['info']);
         return  $ret;
     }
-    
+
 }

@@ -12,7 +12,7 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string user_id database column
  * @property string id alias column for user_id
  * @property string username database column
@@ -36,10 +36,10 @@ class AuthUserMd5 extends SimpleORMap
      *
      * @param string $id primary key of table
      */
-    function __construct($id = null)
+    protected static function configure($config = null)
     {
-        $this->db_table = 'auth_user_md5';
-        $this->default_values['validation_key'] = '';
-        parent::__construct($id);
+        $config['db_table'] = 'auth_user_md5';
+        $config['default_values']['validation_key'] = '';
+        parent::configure($config);
     }
 }

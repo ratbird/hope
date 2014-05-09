@@ -77,43 +77,44 @@ class Course extends SimpleORMap
             : Course::find($GLOBALS['SessSemName'][1]);
     }
 
-    function __construct($id = null)
+    protected static function configure($config = null)
     {
-        $this->db_table = 'seminare';
-        $this->has_many = array(
-                'members' => array(
-                        'class_name' => 'CourseMember',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'statusgruppen' => array(
-                        'class_name' => 'Statusgruppen',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'admission_applicants' => array(
-                        'class_name' => 'AdmissionApplication',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'datafields' => array(
-                        'class_name' => 'DatafieldEntryModel',
-                        'assoc_foreign_key' =>
-                            function($model,$params) {
-                    $model->setValue('range_id', $params[0]->id);
-                },
-                'assoc_func' => 'findByModel',
-                'on_delete' => 'delete',
-                'on_store' => 'store',
-                'foreign_key' =>
-                function($course) {
-                    return array($course);
-                }),
-                'cycles' => array(
-                        'class_name' => 'SeminarCycleDate',
-                        'assoc_func' => 'findBySeminar',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
+        $config = array();
+        $config['db_table'] = 'seminare';
+        $config['has_many'] = array(
+            'members' => array(
+                    'class_name' => 'CourseMember',
+                    'on_delete' => 'delete',
+                    'on_store' => 'store'),
+            'statusgruppen' => array(
+                    'class_name' => 'Statusgruppen',
+                    'on_delete' => 'delete',
+                    'on_store' => 'store'),
+            'admission_applicants' => array(
+                    'class_name' => 'AdmissionApplication',
+                    'on_delete' => 'delete',
+                    'on_store' => 'store'),
+            'datafields' => array(
+                    'class_name' => 'DatafieldEntryModel',
+                    'assoc_foreign_key' =>
+                        function($model,$params) {
+                $model->setValue('range_id', $params[0]->id);
+            },
+            'assoc_func' => 'findByModel',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'foreign_key' =>
+            function($course) {
+                return array($course);
+            }),
+            'cycles' => array(
+                    'class_name' => 'SeminarCycleDate',
+                    'assoc_func' => 'findBySeminar',
+                    'on_delete' => 'delete',
+                    'on_store' => 'store'),
         );
 
-        $this->belongs_to = array(
+        $config['belongs_to'] = array(
             'start_semester' => array(
                 'class_name' => 'Semester',
                 'foreign_key' => 'start_time',
@@ -132,7 +133,7 @@ class Course extends SimpleORMap
                 'class_name' => 'AuxLockRule',
                 'foreign_key' => 'aux_lock_rule')
         );
-        $this->has_and_belongs_to_many = array(
+        $config['has_and_belongs_to_many'] = array(
             'study_areas' => array(
                 'class_name' => 'StudipStudyArea',
                 'thru_table' => 'seminar_sem_tree',
@@ -141,32 +142,36 @@ class Course extends SimpleORMap
                 'class_name' => 'Institute',
                 'thru_table' => 'seminar_inst',
                 'on_delete' => 'delete', 'on_store' => 'store'));
-        $this->default_values['beschreibung'] = '';
-        $this->default_values['lesezugriff'] = 1;
-        $this->default_values['schreibzugriff'] = 1;
-        $this->default_values['duration_time'] = 0;
-        $this->default_values['admission_endtime'] = -1;
+        $config['default_values']['beschreibung'] = '';
+        $config['default_values']['lesezugriff'] = 1;
+        $config['default_values']['schreibzugriff'] = 1;
+        $config['default_values']['duration_time'] = 0;
+        $config['default_values']['admission_endtime'] = -1;
 
-        $this->additional_fields['end_time']['get'] = function($course) {
-                    return $course->duration_time == -1 ? -1 : $course->start_time + $course->duration_time;
-                };
-        $this->additional_fields['end_time']['set'] = function($course, $field, $value) {
-                    if ($value == -1) {
-                        $course->duration_time = -1;
-            } else if (($course->start_time > 0)  && ($value > $course->start_time)) {
-                        $course->duration_time = $value - $course->start_time;
-                    } else {
-                        $course->duration_time = 0;
-                    }
-                };
-        $this->notification_map['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
-        $this->notification_map['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
-        $this->notification_map['before_create'] = 'CourseWillCreate';
-        $this->notification_map['before_store'] = 'CourseWillUpdate';
-        $this->notification_map['after_delete'] = 'CourseDidDelete';
-        $this->notification_map['before_delete'] = 'CourseWillDelete';
+        $config['additional_fields']['end_time'] = true;
+        $config['notification_map']['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
+        $config['notification_map']['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
+        $config['notification_map']['before_create'] = 'CourseWillCreate';
+        $config['notification_map']['before_store'] = 'CourseWillUpdate';
+        $config['notification_map']['after_delete'] = 'CourseDidDelete';
+        $config['notification_map']['before_delete'] = 'CourseWillDelete';
+        parent::configure($config);
+    }
 
-        parent::__construct($id);
+    function getEnd_Time()
+    {
+        return $this->duration_time == -1 ? -1 : $this->start_time + $this->duration_time;
+    }
+
+    function setEnd_Time($value)
+    {
+        if ($value == -1) {
+            $this->duration_time = -1;
+        } else if (($this->start_time > 0)  && ($value > $this->start_time)) {
+            $this->duration_time = $value - $this->start_time;
+        } else {
+            $this->duration_time = 0;
+        }
     }
 
     function getFreeSeats()

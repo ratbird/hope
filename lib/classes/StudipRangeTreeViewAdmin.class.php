@@ -419,9 +419,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
 
     function execCommandUpdateCat(){
         $item_id = Request::option('item_id');
-        $cat_name = Request::quoted('cat_name');
-        $cat_content = Request::quoted('cat_content');
-        $cat_prio = Request::quoted('cat_prio');
+        $cat_name = Request::getArray('cat_name');
+        $cat_content = Request::getArray('cat_content');
+        $cat_prio = Request::getArray('cat_prio');
         $inserted = false;
         $updated = 0;
         if ($this->isItemAdmin($item_id)){

@@ -1,8 +1,8 @@
 <?php use Studip\Button, Studip\LinkButton;
 
 $content = '';
-if ($termin_item['info']) {
-    $content .= formatReady($termin_item['info'], TRUE, FALSE) . "<br><br>";
+if ($termin_item['Info']) {
+    $content .= formatReady($termin_item['Info'], TRUE, FALSE) . "<br><br>";
 } else {
     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
 }

@@ -75,7 +75,6 @@ CKEDITOR.plugins.add('studip-upload', {
                     url: editor.config.studipUpload_url,
                     singleFileUploads: false,
                     dataType: 'json',
-                    dropZone: $content, // upload by drag'n'drop
                     done: function(e, data){
                         if (data.result.files) {
                             handleUploads(data.result.files);
@@ -85,17 +84,19 @@ CKEDITOR.plugins.add('studip-upload', {
                     }
                 });
 
-            
-            // drop zone effects
-            var dropzone = $('<div class="dropzone">drop your files</div>')
-                .appendTo($container);
-
-            $content
-                .bind('dragover', function(event){
-                    dropzone.show();
-                }).bind('dragleave drop', function(event){
-                    dropzone.hide();
-                });
+            // drag'n'drop upload (fileupoad.dropzone duplicates images, see #4288)
+            $content.bind('drop', function (e) {
+                var url = $(e.originalEvent.dataTransfer.getData('text/html')).filter('img').attr('src');
+                if (url) { // ignore urls
+                    // NOTE use this place to implement file uploads from other
+                    //      pages (e.g. drag'n'drop an image from another page)
+                } else { // file upload
+                    e.preventDefault();
+                    $('#fileupload').fileupload('send', {
+                        files: e.originalEvent.dataTransfer.files
+                    });
+                }
+            });
         });
 
         // disable default browser drop action
@@ -106,8 +107,8 @@ CKEDITOR.plugins.add('studip-upload', {
         // ckeditor
         editor.addCommand('upload', {    // command handler
             exec: function(editor){
-                // NOTE upload works only one time, if $('#fileupload') is
-                //      stored in variable
+                // NOTE if  $('#' + inputId) is stored in variable then
+                //      upload works only once
                 $('#' + inputId).click();
             }
         });

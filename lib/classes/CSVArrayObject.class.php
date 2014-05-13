@@ -20,7 +20,7 @@
  * @author      André Noack <noack@data-quest.de>
  * @link http://www.php.net/manual/en/class.arrayobject.php
  */
-class CSVArrayObject extends ArrayObject
+class CSVArrayObject extends StudipArrayObject
 {
     /**
      * Construct an array object from a string of comma separated items
@@ -42,6 +42,6 @@ class CSVArrayObject extends ArrayObject
      */
     function __toString()
     {
-        return implode(',', (array)$this);
+        return implode(',', $this->getArrayCopy());
     }
 }

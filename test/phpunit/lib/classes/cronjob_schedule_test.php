@@ -34,16 +34,14 @@ if (!class_exists('StudipArrayCache')) {
     }
 }
 
-class CronjobTestSchedule extends CronjobSchedule
+class CronjobTestSchedule extends SimpleORMap
 {
-    public $additional_data = null;
-
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->additional_fields['additional']['get'] = function ($record, $field) {return $record->additional_data;};
-        $this->additional_fields['additional']['set'] = function ($record, $field, $data) {return $record->additional_data = $data;};
-        parent::__construct($id);
+        parent::configure();
     }
+
+    function __construct(){parent::__construct(null);}
 }
 
 class ScheduleTest extends PHPUnit_Framework_TestCase
@@ -51,7 +49,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
     function setUp()
     {
         date_default_timezone_set('Europe/Berlin');
-        
+        SimpleORMap::expireTableScheme();
         $testconfig = new Config(array('cache_class' => 'StudipArrayCache'));
         Config::set($testconfig);
         StudipCacheFactory::setConfig($testconfig);
@@ -86,7 +84,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
     function testOnceSchedule()
     {
-        $schedule = new CronjobTestSchedule();
+        $schedule = new CronjobSchedule();
         $schedule->type = 'once';
 
         $this->assertEquals('once', $schedule->type);
@@ -104,7 +102,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
         $schedule->next_execution = $then;
         $schedule->calculateNextExecution();
-        
+
         $this->assertEquals($then, $schedule->next_execution);
     }
 
@@ -137,7 +135,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
     function testPeriodicSchedule()
     {
-        $schedule = new CronjobTestSchedule();
+        $schedule = new CronjobSchedule();
         $schedule->type        = 'periodic';
         $schedule->minute      = null;
         $schedule->hour        = null;
@@ -236,7 +234,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($then, $schedule->next_execution);
     }
-    
+
     /**
      * @depends testPeriodicSchedule
      */
@@ -254,7 +252,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($then, $schedule->next_execution);
     }
-    
+
     /**
      * @depends testPeriodicSchedule
      */

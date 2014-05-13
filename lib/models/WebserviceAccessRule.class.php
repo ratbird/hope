@@ -82,33 +82,11 @@ class WebserviceAccessRule extends SimpleORMap
         return $access;
     }
 
-    /**
-     * Constructor
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'webservice_access_rules';
-        parent::__construct($id);
-        if ($this->isNew() && !$this->content['ip_range'] instanceof CSVArrayObject) {
-            $this->content['ip_range'] = new CSVArrayObject($this->content['ip_range']);
-        }
-    }
-
-    protected function getIp_range()
-    {
-        if (!$this->content['ip_range'] instanceof CSVArrayObject) {
-            $this->content['ip_range'] = new CSVArrayObject((string)$this->content['ip_range']);
-        }
-        return $this->content['ip_range'];
-    }
-
-    protected function setIp_range($value)
-    {
-        if (!$value instanceof CSVArrayObject) {
-            $value = new CSVArrayObject($value);
-        }
-        $this->content['ip_range'] = $value;
+        $config['db_table'] = 'webservice_access_rules';
+        $config['serialized_fields']['ip_range'] = 'CSVArrayObject';
+        parent::configure($config);
     }
 
     /**

@@ -12,7 +12,7 @@
  * $lockrule['attributes']['name'] = 1;
  * $lockrule->store();
  * @endcode
- 
+
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -22,7 +22,7 @@
  * @copyright   2011 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string lock_id database column
  * @property string id alias column for lock_id
  * @property string permission database column
@@ -89,61 +89,12 @@ class LockRule extends SimpleORMap
         return self::findByObject_type($type, " ORDER BY name");
     }
 
-   /**
-     * Constructor
-     *
-     * @param string $id primary key of table lock_rules
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'lock_rules';
-        $this->default_values['description'] = '';
-        parent::__construct($id);
-        if ($this->isNew() && !$this->content['attributes'] instanceof ArrayObject) {
-            $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
-        }
-    }
-
-    /**
-     * @see SimpleORMap::setData()
-     */
-    function setData($data, $reset)
-    {
-        $ret = parent::setData($data, $reset);
-        $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
-        return $ret;
-    }
-
-    /**
-     * @see SimpleORMap::store()
-     */
-    function store()
-    {
-        $this->content['attributes'] = $this->convertArrayToJson($this->content['attributes']);
-        return parent::store();
-    }
-
-    /**
-     * converts a json encoded array to an ArrayObject
-     *
-     * @param string $attributes_json a json encoded array
-     * @return ArrayObject
-     */
-    private function convertJsonToArray($attributes_json)
-    {
-        return new ArrayObject((array)json_decode($attributes_json, true));
-    }
-
-    /**
-     * converts an array (or an ArrayObject) to
-     * a json encoded string
-     *
-     * @param array $attributes_array
-     * @return string
-     */
-    private function convertArrayToJson($attributes_array)
-    {
-        return json_encode((array)$attributes_array);
+        $config['db_table'] = 'lock_rules';
+        $config['default_values']['description'] = '';
+        $config['serialized_fields']['attributes'] = 'JSONArrayObject';
+        parent::configure($config);
     }
 
     /**

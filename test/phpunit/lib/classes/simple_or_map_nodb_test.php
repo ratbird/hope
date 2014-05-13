@@ -16,6 +16,7 @@ require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/models/SimpleORMap.class.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/StudipCache.class.php';
+require_once 'lib/classes/CSVArrayObject.class.php';
 
 if (!class_exists('StudipArrayCache')) {
     class StudipArrayCache implements StudipCache {
@@ -40,13 +41,15 @@ if (!class_exists('StudipArrayCache')) {
 
 class auth_user_md5 extends SimpleORMap
 {
-    public $additional_data = null;
+    public $additional_dummy_data = null;
 
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->additional_fields['additional']['get'] = function ($record, $field) {return $record->additional_data;};
-        $this->additional_fields['additional']['set'] = function ($record, $field, $data) {return $record->additional_data = $data;};
-        parent::__construct($id);
+        $config['db_table'] = 'auth_user_md5';
+        $config['additional_fields']['additional']['get'] = function ($record, $field) {return $record->additional_dummy_data;};
+        $config['additional_fields']['additional']['set'] = function ($record, $field, $data) {return $record->additional_dummy_data = $data;};
+        $config['serialized_fields']['csvdata'] = 'CSVArrayObject';
+        parent::configure($config);
     }
 
     function getPerms()
@@ -58,7 +61,7 @@ class auth_user_md5 extends SimpleORMap
     {
         return $this->content['perms'] = strtolower($perm);
     }
-    
+
     public function registerCallback($types, $cb)
     {
         return parent::registerCallback($types, $cb);
@@ -69,6 +72,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
 {
     function setUp()
     {
+        SimpleORMap::expireTableScheme();
         $testconfig = new Config(array('cache_class' => 'StudipArrayCache'));
         Config::set($testconfig);
         StudipCacheFactory::setConfig($testconfig);
@@ -92,7 +96,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         }
         $cache->write('DB_TABLE_SCHEMES', serialize($schemes));
     }
-    
+
     function tearDown()
     {
         SimpleORMap::expireTableScheme();
@@ -133,6 +137,10 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($mail, $a['email']);
         $a->perms = 'ADMIN';
         $this->assertEquals('ok:admin', $a['perms']);
+        $a->csvdata = '1,2,3,4,5';
+        $this->assertInstanceOf('CSVArrayObject', $a->csvdata);
+        $this->assertEquals('1,2,3,4,5', (string)$a->csvdata);
+        $this->assertEquals(range(1,5), $a['csvdata']->getArrayCopy());
     }
 
     /**
@@ -143,6 +151,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $a->isDirty());
         $this->assertEquals(true, $a->isFieldDirty('email'));
         $this->assertEquals(false, $a->isFieldDirty('vorname'));
+        $this->assertEquals(true, $a->isFieldDirty('csvdata'));
     }
 
     /**
@@ -152,6 +161,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
     {
         $a->revertValue('email');
         $a->revertValue('perms');
+        $a->revertValue('csvdata');
         $this->assertEquals(false, $a->isDirty());
         $this->assertEquals(false, $a->isFieldDirty('email'));
     }
@@ -166,13 +176,15 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $data['vorname'] = 'Rasmus';
         $data['nachname'] = 'Fuhse';
         $data['USERNAME'] = 'krassmus';
+        $data['csvdata'] = range(1,4);
         $a->setData($data, true);
         $this->assertEquals($data['vorname'], $a->vorname);
         $this->assertEquals($data['nachname'], $a->nachname);
         $this->assertEquals($data['email'], $a->email);
         $this->assertEquals($data['USERNAME'], $a->username);
+        $this->assertEquals('1,2,3,4', (string)$a->csvdata);
         $this->assertEquals(false, $a->isDirty());
-        
+
         $data2['vorname'] = 'Krassmus';
         $data2['username'] = 'rasmus';
         $a->setData($data2, false);
@@ -205,7 +217,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
     {
         $this->assertNull($a->additional);
         $a->additional = 'test';
-        $this->assertEquals($a->additional_data, $a->additional);
+        $this->assertEquals($a->additional_dummy_data, $a->additional);
     }
 
     /**
@@ -218,8 +230,9 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(2, $to_array['user_id']);
         $this->assertEquals('test', $to_array['additional']);
         $this->assertEquals('ok:', $to_array['perms']);
+        $this->assertEquals(range(1,4), $to_array['csvdata']);
         $this->assertArrayHasKey('visible', $to_array);
-        $this->assertCount(15, $to_array);
+        $this->assertCount(16, $to_array);
 
         $to_array = $a->toArray('id user_id additional perms');
         $this->assertEquals(2, $to_array['id']);

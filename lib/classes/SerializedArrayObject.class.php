@@ -12,7 +12,7 @@
  * @author      André Noack <noack@data-quest.de>
  * @link http://www.php.net/manual/en/class.arrayobject.php
  */
-class SerializedArrayObject extends StudipArrayObject
+class SerializedArrayObject extends MultiDimArrayObject
 {
     /**
      * Construct an array object from a php serialized string

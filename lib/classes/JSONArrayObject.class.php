@@ -13,7 +13,7 @@
  * @author      André Noack <noack@data-quest.de>
  * @link http://www.php.net/manual/en/class.arrayobject.php
  */
-class JSONArrayObject extends StudipArrayObject
+class JSONArrayObject extends MultiDimArrayObject
 {
     /**
      * Construct an array object from a json string

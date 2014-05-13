@@ -60,8 +60,8 @@ class CourseMember extends SimpleORMap
                              FROM seminar_user
                              LEFT JOIN auth_user_md5 aum USING (user_id)
                              LEFT JOIN user_info ui USING (user_id)
-                             WHERE seminar_id = ? AND seminar_user.status = ? ORDER BY position,nachname",
-                             array($course_id, $status),
+                             WHERE seminar_id = ? AND seminar_user.status IN(?) ORDER BY status,position,nachname",
+                             array($course_id, is_array($status) ? $status : words($status)),
                              __CLASS__ . '::buildExisting');
     }
 
@@ -74,6 +74,18 @@ class CourseMember extends SimpleORMap
                              WHERE user_id = ? ORDER BY seminare.Name",
                              array($user_id),
                              __CLASS__ . '::buildExisting');
+    }
+
+    /**
+     * Retrieves the number of all members of a status
+     *
+     * @param String|Array $status  the status to filter with
+     *
+     * @return int the number of all those members.
+     */
+    public static function countByCourseAndStatus($course_id, $status)
+    {
+        return self::countBySql('seminar_id = ? AND status IN(?)', array($course_id, is_array($status) ? $status : words($status)));
     }
 
     protected static function configure()

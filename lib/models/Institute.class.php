@@ -112,13 +112,12 @@ class Institute extends SimpleORMap
 
     /**
      *
-     * @param string $id primary key of table
      */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'Institute';
-        $this->additional_fields['is_fak']['get'] = function($me) {return $me->fakultaets_id == $me->institut_id;};
-        $this->has_many = array(
+        $config['db_table'] = 'Institute';
+        $config['additional_fields']['is_fak']['get'] = 'isFaculty';
+        $config['has_many'] = array(
                 'members' => array(
                         'class_name' => 'InstituteMember',
                         'assoc_func' => 'findByInstitute',
@@ -135,19 +134,24 @@ class Institute extends SimpleORMap
                         'on_delete' => 'delete',
                         'on_store' => 'store'),
                 );
-        $this->belongs_to = array(
+        $config['belongs_to'] = array(
                 'faculty' => array(
                         'class_name' => 'Institute',
                         'foreign_key' => 'fakultaets_id',
                         )
                 );
-        $this->has_and_belongs_to_many = array(
+        $config['has_and_belongs_to_many'] = array(
                 'courses' => array(
                         'class_name' => 'Course',
                         'thru_table' => 'seminar_inst',
                         'on_delete' => 'delete',
                         'on_store' => 'store'));
-        parent::__construct($id);
+        parent::configure($config);
+    }
+
+    function isFaculty()
+    {
+        return $this->fakultaets_id == $this->institut_id;
     }
 
 }

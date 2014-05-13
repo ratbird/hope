@@ -26,7 +26,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
- * 
+ *
  * @property string task_id database column
  * @property string id alias column for task_id
  * @property string filename database column
@@ -38,22 +38,28 @@
  */
 class CronjobTask extends SimpleORMap
 {
+
+    protected static function configure()
+    {
+        $config['db_table'] = 'cronjobs_tasks';
+        $config['has_many']['schedules'] = array(
+            'class_name' => 'CronjobSchedule',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store'
+        );
+        parent::configure($config);
+    }
+
     /**
      *
      */
     public function __construct($id = null)
     {
-        $this->db_table = 'cronjobs_tasks';
-        $this->has_many['schedules'] = array(
-            'class_name' => 'CronjobSchedule',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store'
-        );
 
         $this->registerCallback('after_initialize', 'loadClass');
 
         parent::__construct($id);
-        
+
 //        $this->loadClass();
     }
 
@@ -75,7 +81,7 @@ class CronjobTask extends SimpleORMap
     }
 
     /**
-     * 
+     *
      */
     public function engage($last_result, $parameters = array())
     {
@@ -87,7 +93,7 @@ class CronjobTask extends SimpleORMap
 
         return $result;
     }
-    
+
     /**
      * Proxy the static methods "getDescription", "getName" and
      * "getParameters" from the task class.

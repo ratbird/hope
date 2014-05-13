@@ -200,7 +200,7 @@ class Course extends SimpleORMap
      */
     function getMembersWithStatus($status)
     {
-        return CourseMember::findBySQL('seminar_id = ? AND status = ? ORDER BY position', array($this->id, $status));
+        return CourseMember::findByCourseAndStatus($this->id, $status);
     }
 
     /**
@@ -212,7 +212,7 @@ class Course extends SimpleORMap
      */
     function countMembersWithStatus($status)
     {
-        return CourseMember::countBySql('seminar_id = ? AND status = ? ORDER BY position', array($this->id, $status));
+        return CourseMember::countByCourseAndStatus($this->id, $status);
     }
 
     function getNumParticipants()

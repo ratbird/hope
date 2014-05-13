@@ -28,30 +28,30 @@
  */
 class LogAction extends SimpleORMap
 {
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'log_actions';
-        $this->has_many = array(
+        $config['db_table'] = 'log_actions';
+        $config['has_many'] = array(
             'events' => array('class_name' => 'LogEvent'),
             'on_delete' => 'delete');
-        parent::__construct($id);
+        parent::configure($config);
     }
-    
+
     /**
      * Returns whether this action is active or not.
-     * 
+     *
      * @return boolean TRUE if action is active.
      */
     public function isActive()
     {
         return $this->active ? true : false;
     }
-    
+
     /**
      * Returns an associative array of all actions with at least one event.
      * The array contains the action_id and the description. It is ordered by
      * the first part of the actions name and the description.
-     * 
+     *
      * @return array Assoc array of actions.
      */
     public static function getUsed()

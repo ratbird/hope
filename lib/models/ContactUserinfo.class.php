@@ -15,14 +15,14 @@
 class ContactUserinfo extends SimpleORMap
 {
 
-    function __construct($id = array())
+    protected static function configure()
     {
 
-        $this->db_table = 'contact_userinfo';
-        $this->belongs_to['contact'] = array('class_name' => 'Contact',
+        $config['db_table'] = 'contact_userinfo';
+        $config['belongs_to']['contact'] = array('class_name' => 'Contact',
                                              'foreign_key' => 'contact_id',
                                              'assoc_foreign_key' => 'contact_id');
 
-        parent::__construct($id);
+        parent::configure($config);
     }
 }

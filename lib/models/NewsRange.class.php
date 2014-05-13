@@ -11,7 +11,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string news_id database column
  * @property string range_id database column
  * @property string type computed column
@@ -24,18 +24,18 @@
 class NewsRange extends SimpleORMap
 {
 
-    function __construct($id = array())
+    protected static function configure()
     {
-        $this->db_table = 'news_range';
-        $this->belongs_to['user'] = array('class_name' => 'User',
+        $config['db_table'] = 'news_range';
+        $config['belongs_to']['user'] = array('class_name' => 'User',
                                            'foreign_key' => 'range_id');
-        $this->belongs_to['course'] = array('class_name' => 'Course',
+        $config['belongs_to']['course'] = array('class_name' => 'Course',
                                            'foreign_key' => 'range_id');
-        $this->belongs_to['institute'] = array('class_name' => 'Institute',
+        $config['belongs_to']['institute'] = array('class_name' => 'Institute',
                                            'foreign_key' => 'range_id');
-        $this->additional_fields['type'] = array('get' => 'getType');
-        $this->additional_fields['name'] = array('get' => 'getName');
-        parent::__construct($id);
+        $config['additional_fields']['type'] = true;
+        $config['additional_fields']['name'] = true;
+        parent::configure($config);
     }
 
     function getType()

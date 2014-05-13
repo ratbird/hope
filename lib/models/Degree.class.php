@@ -22,10 +22,5 @@
  */
 class Degree extends SimpleORMap
 {
-
-    function __construct($id = null)
-    {
-        $this->db_table = 'abschluss';
-        parent::__construct($id);
-    }
+    protected $db_table = 'abschluss';
 }

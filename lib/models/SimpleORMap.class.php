@@ -398,12 +398,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param array parameters for query
      * @return array array of "self" objects
      */
-    public static function findBySQL($where, $params = array())
+    public static function findBySQL($sql, $params = array())
     {
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        $sql = "SELECT * FROM `" .  $record->db_table . "` WHERE " . $where;
+        if (stripos($sql, 'WHERE') === false) {
+            $sql = 'WHERE ' . $sql;
+        }
+        $sql = "SELECT `". $record->db_table ."`.* FROM `" .  $record->db_table . "` " . $sql;
         $st = $db->prepare($sql);
         $st->execute($params);
         $ret = array();

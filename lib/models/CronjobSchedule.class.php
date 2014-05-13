@@ -26,7 +26,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
- * 
+ *
  * @property string schedule_id database column
  * @property string id alias column for schedule_id
  * @property string task_id database column
@@ -56,7 +56,23 @@ class CronjobSchedule extends SimpleORMap
     const PRIORITY_LOW    = 'low';
     const PRIORITY_NORMAL = 'normal';
     const PRIORITY_HIGH   = 'high';
-    
+
+    protected static function configure()
+    {
+        $config['db_table'] = 'cronjobs_schedules';
+
+        $config['belongs_to']['task'] = array(
+            'class_name'  => 'CronjobTask',
+            'foreign_key' => 'task_id',
+        );
+        $config['has_many']['logs'] = array(
+            'class_name' => 'CronjobLog',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store',
+        );
+        parent::configure($config);
+    }
+
     /**
      * Returns a mapped version of the priorities (key = priority value,
      * value = localized priority label).
@@ -69,10 +85,10 @@ class CronjobSchedule extends SimpleORMap
         $mapping[self::PRIORITY_LOW]    = _('niedrig');
         $mapping[self::PRIORITY_NORMAL] = _('normal');
         $mapping[self::PRIORITY_HIGH]   = _('hoch');
-        
+
         return $mapping;
     }
-    
+
     /**
      * Maps a priority value to it's localized label.
      *
@@ -107,30 +123,23 @@ class CronjobSchedule extends SimpleORMap
      *
      * @param mixed $id Id of the schedule entry in question or null for a new
      *                  entry
-     */ 
+     */
     public function __construct($id = null)
     {
-        $this->db_table = 'cronjobs_schedules';
 
-        $this->belongs_to['task'] = array(
-            'class_name'  => 'CronjobTask',
-            'foreign_key' => 'task_id',
-        );
-
-        $this->has_many['logs'] = array(
-            'class_name' => 'CronjobLog',
-            'on_delete'  => 'delete',
-            'on_store'   => 'store',
-        );
-
-        $this->registerCallback('before_store', function ($item, $type) {
-            $item->parameters = json_encode($item->parameters ?: array());
-        });
-        $this->registerCallback('after_store after_initialize', function ($item, $type) {
-            $item->parameters = json_decode($item->parameters, true) ?: array();
-        });
+        $this->registerCallback('before_store after_store after_initialize', 'cbJsonifyParameters');
 
         parent::__construct($id);
+    }
+
+    function cbJsonifyParameters($type)
+    {
+        if ($type === 'before_store' && !is_string($this->parameters)) {
+            $this->parameters = json_encode($this->parameters ?: null);
+        }
+        if (in_array($type, array('after_initialize', 'after_store')) && is_string($this->parameters)) {
+            $this->parameters = json_decode($this->parameters, true) ?: array();
+        }
     }
 
     /**

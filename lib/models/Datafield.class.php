@@ -12,7 +12,7 @@
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string datafield_id database column
  * @property string id alias column for datafield_id
  * @property string name database column
@@ -31,10 +31,10 @@
  */
 class Datafield extends SimpleORMap
 {
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'datafields';
-        $this->has_many = array('entries' => array('class_name' => 'DatafieldEntryModel'));
-        parent::__construct($id);
+        $config['db_table'] = 'datafields';
+        $config['has_many'] = array('entries' => array('class_name' => 'DatafieldEntryModel'));
+        parent::configure($config);
     }
 }

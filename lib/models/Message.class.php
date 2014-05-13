@@ -28,28 +28,23 @@
 
 class Message extends SimpleORMap {
 
-    /**
-     * constructor
-     * @param string id: primary key of table dokumente
-     * @return null
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'message';
-        $this->has_one['author'] = array(
+        $config['db_table'] = 'message';
+        $config['has_one']['author'] = array(
             'class_name' => 'User',
             'foreign_key' => 'autor_id',
             'assoc_foreign_key' => 'user_id'
 
         );
-        $this->has_many['users'] = array(
+        $config['has_many']['users'] = array(
             'class_name' => 'MessageUser'
         );
-        $this->has_many['attachments'] = array(
+        $config['has_many']['attachments'] = array(
             'class_name' => 'StudipDocument',
             'assoc_foreign_key' => 'range_id'
         );
-        parent::__construct($id);
+        parent::configure($config);
     }
 
     public function getSender()

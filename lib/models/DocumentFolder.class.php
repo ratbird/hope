@@ -28,22 +28,17 @@
 
 class DocumentFolder extends SimpleORMap {
 
-    /**
-     * constructor
-     * @param string id: primary key of table dokumente
-     * @return null
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'folder';
-        $this->has_many = array(
+        $config['db_table'] = 'folder';
+        $config['has_many'] = array(
             'files' => array(
                 'class_name' => 'StudipDocument',
                 'on_delete' => 'delete',
                 'on_store' => 'store'
             )
         );
-        parent::__construct($id);
+        parent::configure($config);
     }
 
     function getPermissions()

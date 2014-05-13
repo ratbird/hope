@@ -29,29 +29,29 @@
 
 class LogEvent extends SimpleORMap
 {
-    
+
     protected $formatted_text = '';
-    
-    function __construct($id = null)
+
+    protected static function configure()
     {
-        $this->db_table = 'log_events';
-        $this->belongs_to = array(
+        $config['db_table'] = 'log_events';
+        $config['belongs_to'] = array(
             'action' => array(
                 'class_name' => 'LogAction',
                 'foreign_key' => 'action_id'),
             'user' => array(
                 'class_name' => 'User',
                 'foreign_key' => 'user_id'));
-        $this->notification_map['after_create'] = 'LogEventDidCreate';
-        $this->notification_map['before_create'] = 'LogEventWillCreate';
-        parent::__construct($id);
+        $config['notification_map']['after_create'] = 'LogEventDidCreate';
+        $config['notification_map']['before_create'] = 'LogEventWillCreate';
+        parent::configure($config);
     }
-    
+
     /**
      * Returns the number of log events counted by actions as an array where
      * the ey is the action id and the value is the number of events for
      * this action.
-     * 
+     *
      * @return array Number of loge events for all actions
      */
     public static function countByActions()
@@ -60,24 +60,24 @@ class LogEvent extends SimpleORMap
         $statement = DBManager::get()->query($query);
         return $statement->fetchGrouped(PDO::FETCH_COLUMN);
     }
-    
+
     /**
      * Deletes all expired events.
-     * 
+     *
      * @return int Number of deleted events.
      */
     public static function deleteExpired()
     {
-        $db = DBManager::get(); 
-        $sql = 'DELETE log_events FROM log_events JOIN log_actions USING(action_id) 
+        $db = DBManager::get();
+        $sql = 'DELETE log_events FROM log_events JOIN log_actions USING(action_id)
             WHERE expires > 0 AND mkdate + expires < UNIX_TIMESTAMP()';
-        return $db->exec($sql); 
+        return $db->exec($sql);
     }
-    
+
     /**
      * Returns the formatted log event. Fills the action template with data
      * of this event.
-     * 
+     *
      * @return string The formatted log event.
      */
     public function formatEvent()
@@ -125,11 +125,11 @@ class LogEvent extends SimpleORMap
         );
         return preg_replace($patterns, $replacements, $text);
     }
-    
+
     /**
      * Returns the name of the resource for the resource id found in the
      * given field or the resource id if the resource is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of the resource or resource id.
      */
@@ -143,7 +143,7 @@ class LogEvent extends SimpleORMap
 
     /**
      * Returns the name of the user with the id found in the given field.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of the user.
      */
@@ -157,7 +157,7 @@ class LogEvent extends SimpleORMap
     /**
      * Returns the name of the seminar for the id found in the given
      * field or the id if the seminar is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of seminar or the id.
      */
@@ -179,7 +179,7 @@ class LogEvent extends SimpleORMap
     /**
      * Returns the name of the institute for the id found in the given
      * field or the id if the institute is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of institute or the id.
      */
@@ -200,7 +200,7 @@ class LogEvent extends SimpleORMap
     /**
      * Returns the name of the study area for the id found in the given
      * field or the id if the study area is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of seminar or the id.
      */
@@ -217,7 +217,7 @@ class LogEvent extends SimpleORMap
 
     /**
      * Returns the singledate for the id found in the given field.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The singledate.
      */
@@ -230,7 +230,7 @@ class LogEvent extends SimpleORMap
     /**
      * Returns the name of the plugin for the id found in the given
      * field or the id if the plugin is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of plugin or the id.
      */
@@ -245,7 +245,7 @@ class LogEvent extends SimpleORMap
     /**
      * Returns the name of the semester for the id found in the given
      * field or the id if the seminar is unknown.
-     * 
+     *
      * @param string $field The name of the table field.
      * @return string The name of semester or the id.
      */
@@ -261,7 +261,7 @@ class LogEvent extends SimpleORMap
     }
 
     protected function formatObject()
-    {   
+    {
         if ($this->action) {
             switch ($this->action->type) {
                 case 'plugin':
@@ -291,5 +291,5 @@ class LogEvent extends SimpleORMap
         }
         return $this->action->info_template;
     }
-    
+
 }

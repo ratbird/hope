@@ -11,7 +11,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
- * 
+ *
  * @property string kategorie_id database column
  * @property string id alias column for kategorie_id
  * @property string range_id database column
@@ -25,6 +25,13 @@
 class Kategorie extends SimpleORMap
 {
 
+    protected static function configure()
+    {
+        $config['db_table'] = 'kategorien';
+        $config['default_values']['content'] = '';
+        parent::configure($config);
+    }
+
     /**
      *
      */
@@ -34,7 +41,7 @@ class Kategorie extends SimpleORMap
     }
 
     /**
-     * 
+     *
      */
     public static function increatePrioritiesByUserId($user_id)
     {
@@ -42,16 +49,5 @@ class Kategorie extends SimpleORMap
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
         return $statement->rowCount() > 0;
-    }
-
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
-    {
-        $this->db_table = 'kategorien';
-        $this->default_values['content'] = '';
-        parent::__construct($id);
     }
 }

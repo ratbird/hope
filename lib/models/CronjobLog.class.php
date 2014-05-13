@@ -26,7 +26,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
- * 
+ *
  * @property string log_id database column
  * @property string id alias column for log_id
  * @property string schedule_id database column
@@ -40,28 +40,37 @@
 
 class CronjobLog extends SimpleORMap
 {
+    protected static function configure()
+    {
+        $config['db_table'] = 'cronjobs_logs';
+
+        $config['belongs_to']['schedule'] = array(
+            'class_name'  => 'CronjobSchedule',
+            'foreign_key' => 'schedule_id',
+            );
+        parent::configure($config);
+    }
+
     /**
      * Defines the associated database table, relation to the schedule
      * and appropriate callbacks to encode/decode a possible exception.
      *
      * @param mixed $id Id of the log entry in question or null for a new entry
-     */ 
+     */
     public function __construct($id = null)
     {
-        $this->db_table = 'cronjobs_logs';
-
-        $this->belongs_to['schedule'] = array(
-            'class_name'  => 'CronjobSchedule',
-            'foreign_key' => 'schedule_id',
-        );
-
-        $this->registerCallback('before_store', function ($item, $type) {
-            $item->exception = serialize($item->exception ?: null);
-        });
-        $this->registerCallback('after_initialize', function ($item, $type) {
-            $item->exception = unserialize($item->exception) ?: null;
-        });
-
+        $this->registerCallback('before_store after_store after_initialize', 'cbSerializeException');
         parent::__construct($id);
     }
+
+    function cbSerializeException($type)
+    {
+        if ($type === 'before_store' && !is_string($this->exception)) {
+            $this->exception = serialize($this->exception ?: null);
+        }
+        if (in_array($type, array('after_initialize', 'after_store')) && is_string($this->exception)) {
+            $this->exception = unserialize($this->exception ?: null);
+        }
+    }
+
 }

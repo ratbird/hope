@@ -38,25 +38,15 @@
 class InstituteMember extends SimpleORMap
 {
 
-    public static function findByInstitute($institute_id)
+    protected static function configure()
     {
-        return self::findBySQL("institut_id=? AND inst_perms <> 'user'", array($institute_id));
-    }
-
-    public static function findByUser($user_id)
-    {
-        return self::findByUser_id($user_id);
-    }
-
-    function __construct($id = array())
-    {
-        $this->db_table = 'user_inst';
-        $this->belongs_to = array('user' => array('class_name' => 'User',
+        $config['db_table'] = 'user_inst';
+        $config['belongs_to'] = array('user' => array('class_name' => 'User',
                                                     'foreign_key' => 'user_id'),
                                    'institute' => array('class_name' => 'Institute',
                                                     'foreign_key' => 'institut_id')
         );
-        $this->has_many = array(
+        $config['has_many'] = array(
             'datafields' => array(
                         'class_name' => 'DatafieldEntryModel',
                         'assoc_foreign_key' =>
@@ -72,20 +62,50 @@ class InstituteMember extends SimpleORMap
                                 return array($institute_member);
                             })
             );
-        $user_getter = function ($record, $field) { return $record->getRelationValue('user', $field);};
-        $this->additional_fields['vorname'] = array('get' => $user_getter);
-        $this->additional_fields['nachname'] = array('get' => $user_getter);
-        $this->additional_fields['username'] = array('get' => $user_getter);
-        $this->additional_fields['email'] = array('get' => $user_getter);
-        $this->additional_fields['title_front'] = array('get' => $user_getter);
-        $this->additional_fields['title_rear'] = array('get' => $user_getter);
-        $inst_getter = function ($record, $field) {
-            if (strpos($field, 'institute_') !== false) {
-                $field = substr($field,10);
-            }
-            return $record->getRelationValue('institute', $field);
-        };
-        $this->additional_fields['institute_name'] = array('get' => $inst_getter);
-        parent::__construct($id);
+        $config['additional_fields']['vorname'] = array('user', 'vorname');
+        $config['additional_fields']['nachname'] = array('user', 'nachname');
+        $config['additional_fields']['username'] = array('user', 'username');
+        $config['additional_fields']['email'] = array('user', 'email');
+        $config['additional_fields']['title_front'] = array('user', 'title_front');
+        $config['additional_fields']['title_rear'] = array('user', 'title_rear');
+        $config['additional_fields']['institute_name'] = array();
+        parent::configure($config);
+    }
+
+    public static function findByInstitute($institute_id)
+    {
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT user_inst.*, aum.vorname,aum.nachname,aum.email,
+                             aum.username,ui.title_front,ui.title_rear
+                             FROM user_inst
+                             LEFT JOIN auth_user_md5 aum USING (user_id)
+                             LEFT JOIN user_info ui USING (user_id)
+                             WHERE institut_id = ? AND inst_perms <> 'user' ORDER BY inst_perms,nachname",
+                             array($institute_id),
+                             __CLASS__ . '::buildExisting');
+    }
+
+    public static function findByInstituteAndStatus($institute_id, $status)
+    {
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT user_inst.*, aum.vorname,aum.nachname,aum.email,
+                             aum.username,ui.title_front,ui.title_rear
+                             FROM user_inst
+                             LEFT JOIN auth_user_md5 aum USING (user_id)
+                             LEFT JOIN user_info ui USING (user_id)
+                             WHERE institut_id = ? AND seminar_user.status IN(?) ORDER BY inst_perms,nachname",
+                             array($institute_id, is_array($status) ? $status : words($status)),
+                             __CLASS__ . '::buildExisting');
+    }
+
+    public static function findByUser($user_id)
+    {
+        $db = DbManager::get();
+        return $db->fetchAll("SELECT user_inst.*, Institute.Name as institute_name
+                             FROM user_inst
+                             LEFT JOIN Institute USING (institut_id)
+                             WHERE user_id = ? ORDER BY priority,Institute.Name",
+                             array($user_id),
+                             __CLASS__ . '::buildExisting');
     }
 }

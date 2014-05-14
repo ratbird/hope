@@ -1,28 +1,13 @@
 CKEDITOR.dialog.add('wikiDialog', function (editor) {
     // studip wiki link specification
-    // * allowed characters: a-z.-:()_§/@# äöüß
+    // * allowed characters: a-z.-:()_Â§/@# Ã¤Ã¶Ã¼ÃŸ
     // * enclose in double-brackets: [[wiki link]]
     // * leading or trailing whitespace is allowed!!
     // * extended: [[wiki link| displayed text]]
     // * displayed text characters can be anything but ]
 
     // utilities
-
-    function getParameterByName(name, query) {
-        query = typeof query === 'undefined' ? location.search : query;
-        // http://stackoverflow.com/a/901144/641481
-        name = name.replace(/[\[]/, '\\\[').replace(/[\]]/, '\\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
-            results = regex.exec(query);
-        return results == null ? '' : decodeURIComponent(
-            results[1].replace(/\+/g, ' '));
-    }
-
-    function getQueryString(href) {
-        return href ? ((href.split('?')[1] || '').split('#')[0] || '') : '';
-    }
-
-    function array_flip(trans) {
+/*    function array_flip(trans) {
         // http://phpjs.org/functions/array_flip/
         // http://kevin.vanzonneveld.net
         // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
@@ -50,17 +35,17 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
 
     var translation = {
         ' ': '%20', '#': '%23', '(': '%28', ')': '%29',
-        '/': '%2F', ':': '%3A', '@': '%40', '§': '%A7',
-        'Ä': '%C4', 'Ö': '%D6', 'Ü': '%DC', 'ß': '%DF',
-        'ä': '%E4', 'ö': '%F6', 'ü': '%FC'
+        '/': '%2F', ':': '%3A', '@': '%40', 'Â§': '%A7',
+        'Ã„': '%C4', 'Ã–': '%D6', 'Ãœ': '%DC', 'ÃŸ': '%DF',
+        'Ã¤': '%E4', 'Ã¶': '%F6', 'Ã¼': '%FC'
     };
     var backtrans = array_flip(translation);
 
     function toWindows1252(text) {
         // replace special chars with windows 1252 encoding
-        // test string: azAZ09_-. #()/:@§ÄÖÜßäöü
+        // test string: azAZ09_-. #()/:@Â§Ã„Ã–ÃœÃŸÃ¤Ã¶Ã¼
         // TODO create regexp from translation keys
-        return text.replace(/[ #()/:@§ÄÖÜßäöü]/g, function(match) {
+        return text.replace(/[ #()/:@Â§Ã„Ã–ÃœÃŸÃ¤Ã¶Ã¼]/g, function(match) {
             return translation[match];
       });
     }
@@ -73,90 +58,48 @@ CKEDITOR.dialog.add('wikiDialog', function (editor) {
             return backtrans[match];
         });
     }
-
-    function getWikiPage(href) {
-        return getParameterByName(
-            'keyword', '?' + fromWindows1252(getQueryString(href)));
-    }
-
-    function getWikiLink(wikipage) {
-        return STUDIP.URLHelper.getURL('wiki.php', {
-            cid: getParameterByName('cid')
-        }) + '&keyword=' + toWindows1252(wikipage);
-    }
-
+*/
     // dialog
     return {
-        title: "Stud.IP-Wiki Link",
+        title: 'Stud.IP-Wiki Link',
         minWidth: 400,
         minHeight: 200,
         contents: [{
             id: 'tab-link',
-            label: "Stud.IP-Wiki Link",
+            label: 'Stud.IP-Wiki Link',
             elements: [{
                 type: 'text',
                 id: 'wikipage',
-                label: "Titel der Wiki-Seite",
+                label: 'Titel der Wiki-Seite',
+                // TODO regex encoding is not working correctly
+                // ==> german umlauts cannot be entered using the wiki widget
+                // ==> users have to manually enter wikilinks with umlauts atm.
                 validate: CKEDITOR.dialog.validate.regex(
-                    /^[\w\.\-\:\(\)§\/@# ÄÖÜäöüß]+$/i,
-                    "Der Seitenname muss aus mindestens einem Zeichen bestehen"
-                    + " und darf nur folgende Zeichen enthalten:"
-                    + " a-z A-Z ÄÖÜ äöü ß 0-9 -_:.( )/@#§ und das Leerzeichen."),
-                setup: function(link) {
-                    this.setValue(getWikiPage(link.getAttribute('href')));
+                    /^[\w\.\-\:\(\)Â§\/@# Ã„Ã–ÃœÃ¤Ã¶Ã¼ÃŸ]+$/i,
+                    'Der Seitenname muss aus mindestens einem Zeichen bestehen'
+                    + ' und darf nur folgende Zeichen enthalten:'
+                    + ' a-z A-Z Ã„Ã–Ãœ Ã¤Ã¶Ã¼ ÃŸ 0-9 -_:.( )/@#Â§ und das Leerzeichen.'),
+                setup: function(widget) {
+                    this.setValue(widget.data.link);
                 },
-                commit: function(link) {
-                    var href = getWikiLink(this.getValue());
-                    link.setAttribute('href', href);
-                    link.setAttribute('data-cke-saved-href', href);
-                    link.setAttribute('class', 'wiki-link');
+                commit: function(widget) {
+                    widget.setData('link', this.getValue());
                 }
             }, {
                 type: 'text',
                 id: 'usertext',
-                label: "Angezeigter Text (optional)",
+                label: 'Angezeigter Text (optional)',
                 validate: CKEDITOR.dialog.validate.regex(
                     /^[^\]]*$/i,
-                    "Die schließende eckige Klammer, ], ist im angezeigten"
-                    + " Text leider nicht erlaubt."),
-                setup: function(link) {
-                    var usertext = link.getText(),
-                        wikipage = getWikiPage(link.getAttribute('href'));
-                    this.setValue(usertext === wikipage ? '' : usertext);
+                    'Die schlieÃŸende eckige Klammer, ], ist im angezeigten'
+                    + ' Text leider nicht erlaubt.'),
+                setup: function(widget) {
+                    this.setValue(widget.data.text);
                 },
-                commit: function(link) {
-                    var usertext = this.getValue(),
-                        wikipage = this._.dialog.getValueOf('tab-link', 'wikipage');
-                    link.setText(usertext || wikipage);
+                commit: function(widget) {
+                    widget.setData('text', this.getValue());
                 }
             }]
-        }],
-        onShow: function() {
-            // get selected element
-            var element = editor.getSelection().getStartElement();
-            if (element) {
-                element = element.getAscendant('a', true);
-            }
-
-            // if no link is selected, insert a new one
-            this.insertMode = !element || element.getName() != 'a';
-            if (this.insertMode) {
-                element = editor.document.createElement('a');
-                var text = editor.getSelection().getSelectedText();
-                if (text) {
-                    this.setValueOf('tab-link', 'wikipage', text);
-                }
-            } else {
-                this.setupContent(element);
-            }
-
-            this.link = element;
-        },
-        onOk: function() {
-            this.commitContent(this.link);
-            if (this.insertMode) {
-                editor.insertElement(this.link);
-            }
-        }
+        }]
     };
 });

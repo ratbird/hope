@@ -1,48 +1,32 @@
 CKEDITOR.plugins.add('studip-wiki', {
+    requires: 'widget',
     icons: 'wikilink',
     init: function (editor) {
-        // utilities
-        function isWikiLink(element) {
-            var link = element.getAscendant('a', true);
-            var wiki = STUDIP.URLHelper.getURL('wiki.php');
-            return link && link.getAttribute('href').indexOf(wiki) == 0;
-        }
-
-        // add toolbar button and dialog for editing Stud.IP wiki links
-        editor.addCommand('wikiDialog', new CKEDITOR.dialogCommand('wikiDialog'));
-        editor.ui.addButton('wikilink', {
-            label: 'Stud.IP-Wiki Link einf&uuml;gen',
-            command: 'wikiDialog',
-            toolbar: 'insert,70'
-        });
-        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js');
-
-        // add context menu for existing Stud.IP wiki links
-        if (editor.contextMenu) {
-            editor.addMenuGroup('studipGroup');
-            editor.addMenuItem('wikilinkItem', {
-                label: 'Stud.IP-Wiki Link bearbeiten',
-                icon: this.path + 'icons/wikilink.png', // same as plugin icon
-                command: 'wikiDialog',
-                group: 'studipGroup'
-            });
-            editor.contextMenu.addListener(function(element) {
-                if (isWikiLink(element)) {
-                    return {
-                        wikilinkItem: CKEDITOR.TRISTATE_OFF
-                    };
-                }
-            });
-        }
-
-        // open dialog when double-clicking link
-        editor.on('doubleclick', function(event) {
-            var element = CKEDITOR.plugins.link.getSelectedLink(editor)
-                          || event.data.element;
-
-            if (isWikiLink(element)) {
-                event.data.dialog = 'wikiDialog';
+        editor.widgets.add('wikilink', {
+            // TODO place label in editor.lang.studip-wiki.* to localize it
+            button: 'Stud.IP-Wiki Link einf&uuml;gen',
+            dialog: 'wikiDialog',
+            template: '<span class="wiki-link">[[Wikiseite]]</span>',
+            allowedContent: 'span(!wiki-link)',
+            requiredContent: 'span(wiki-link)',
+            upcast: function (element) {
+               return element.name == 'span' && element.hasClass('wiki-link');
+            },
+            init: function () {
+                // NOTE regex has to accept invalid link-markup to correct
+                //      user errors (e.g. when editing in source mode);
+                //      the dialog however will output valid data only;
+                var matches = this.element.getText().match( // [[link|text]]
+                    /^\s*\[?\[?(.*?)(?:\|(.*?))?\]?\]?\s*$/
+                );
+                this.setData('link', matches[1] || '');
+                this.setData('text', matches[2] || '');
+            },
+            data: function () {
+                var text = this.data.text ? ('|' + this.data.text) : '';
+                this.element.setText('[[' + this.data.link + text + ']]');
             }
         });
+        CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js');
     }
 });

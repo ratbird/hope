@@ -393,9 +393,8 @@ class UserManagement
         }
 
         // Store new values in internal array
-        foreach ($newuser as $key => $value) {
-            $this->user_data[$key] = $value;
-        }
+        $this->getFromDatabase(null);
+        $this->user_data->setData($newuser);
 
         if ($this->user_data['auth_user_md5.auth_plugin'] == 'standard') {
             $password = $this->generate_password(6);

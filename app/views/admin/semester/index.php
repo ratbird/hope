@@ -32,8 +32,8 @@
     <td><?= date("d.m.Y", $single["vorles_beginn"]) ?></td>
     <td><?= date("d.m.Y", $single["vorles_ende"]) ?></td>
     <td>
-        <?= Semester::getAbsolutAndDurationSeminars($single["semester_id"]) ?>
-        <?= sprintf(_('(+ %s implizit)'), Semester::countContinuousSeminars($single["semester_id"])) ?>
+        <?= ($disallow_delete = Semester::countAbsolutSeminars($single["semester_id"])) ?>
+        <?= sprintf(_('(+ %s implizit)'), Semester::countContinuousSeminars($single["semester_id"])+Semester::countDurationSeminars($single["semester_id"])) ?>
     </td>
     <td class="actions">
         <a class="load-in-new-row" href="<?= URLHelper::getLink('dispatch.php/admin/semester/edit_semester/' . $single["semester_id"]) ?>">
@@ -41,7 +41,7 @@
         </a>
     </td>
     <td class="actions">
-        <? if (Semester::getAbsolutAndDurationSeminars($single["semester_id"]) == 0) : ?>
+        <? if (!$disallow_delete) : ?>
         <a href="<?= URLHelper::getLink('dispatch.php/admin/semester/delete/' . $single["semester_id"] . '/semester') ?>">
             <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Semester löschen'))) ?>
         </a>

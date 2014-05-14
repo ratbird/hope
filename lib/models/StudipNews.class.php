@@ -101,7 +101,7 @@ class StudipNews extends SimpleORMap {
 
     /**
      * fetches set of news items from database
-     * 
+     *
      * @param string $user_id         author id for news set
      * @param string $area            area group for news set (global, inst, sem or user)
      * @param string $term            search term for news topic
@@ -131,16 +131,16 @@ class StudipNews extends SimpleORMap {
             $query_vars[] = $term;
         }
         switch ($area) {
-            case 'global': 
+            case 'global':
                 $select_querypart = 'CONCAT(news_id, "_studip") AS idx, range_id, news.* ';
                 $from_querypart = 'news_range INNER JOIN news USING(news_id)';
                 $where_querypart .= ' AND range_id = ?';
                 $order_querypart = 'news.date DESC, news.chdate DESC';
                 $query_vars[] = 'studip';
                 break;
-            case 'sem': 
-                $select_querypart = 'CONCAT(news_id, "_", range_id) AS idx, range_id, seminare.Name AS title, ' 
-                    .'seminare.start_time AS start, news.*, seminare.start_time, sd1.name AS startsem, ' 
+            case 'sem':
+                $select_querypart = 'CONCAT(news_id, "_", range_id) AS idx, range_id, seminare.Name AS title, '
+                    .'seminare.start_time AS start, news.*, seminare.start_time, sd1.name AS startsem, '
                     .'IF(seminare.duration_time=-1, "'._("unbegrenzt").'", sd2.name) AS endsem ';
                 $from_querypart = 'news INNER JOIN news_range USING(news_id) INNER JOIN seminare ON Seminar_id = range_id '
                     .'LEFT JOIN semester_data sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende) '
@@ -148,17 +148,17 @@ class StudipNews extends SimpleORMap {
                 $order_querypart = 'seminare.Name, news.date DESC, news.chdate DESC';
                 //$semester = new SemesterData();
                 break;
-            case 'inst': 
+            case 'inst':
                 $select_querypart = 'CONCAT(news_id, "_", range_id) AS idx, range_id, Institute.Name AS title, news.* ';
                 $from_querypart = 'Institute INNER JOIN news_range ON Institut_id = range_id INNER JOIN news USING(news_id)';
                 $order_querypart = 'Institute.Name, news.date DESC, news.chdate DESC';
                 break;
-            case 'user': 
+            case 'user':
                 $select_querypart = 'CONCAT(news_id, "_", auth_user_md5.user_id) AS idx, range_id, auth_user_md5.user_id AS userid, news.* ';
                 $from_querypart = 'auth_user_md5 INNER JOIN news_range ON auth_user_md5.user_id = range_id INNER JOIN news USING(news_id)';
                 $order_querypart = 'auth_user_md5.Nachname, news.date DESC, news.chdate DESC';
                 break;
-            default: 
+            default:
                 foreach (array('global', 'inst', 'sem', 'user') as $type) {
                     $add_news = StudipNews::GetNewsRangesByFilter($user_id, $type, $term, $startdate, $enddate, $as_objects, $limit);
                     if (is_array($add_news)) {
@@ -339,11 +339,11 @@ class StudipNews extends SimpleORMap {
             return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
         $type = get_object_type($range_id, array('global', 'sem', 'inst', 'fak', 'user'));
         switch($type) {
-            case 'global': 
-                if ($operation == 'view') 
+            case 'global':
+                if ($operation == 'view')
                     return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
                 break;
-            case 'fak': 
+            case 'fak':
             case 'inst':
             case 'sem':
                 if (($operation == 'view') AND $GLOBALS['perm']->have_studip_perm('user', $range_id))
@@ -352,7 +352,7 @@ class StudipNews extends SimpleORMap {
                     if ($GLOBALS['perm']->have_studip_perm('tutor', $range_id))
                         return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
                 }
-                break; 
+                break;
             case 'user':
                 if ($operation == 'view') {
                     if (($range_id = $user_id) OR get_visibility_by_id($range_id))
@@ -362,30 +362,26 @@ class StudipNews extends SimpleORMap {
                     if ($GLOBALS['perm']->have_profile_perm('user', $range_id))
                         return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
                 }
-                break; 
+                break;
         }
         return $news_range_perm_cache[$user_id.$range_id.$operation] = false;
     }
-    
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+
+    protected static function configure()
     {
-        $this->db_table = 'news';
-        $this->has_many['news_ranges'] = array('class_name' => 'NewsRange',
+        $config->db_table = 'news';
+        $config->has_many['news_ranges'] = array('class_name' => 'NewsRange',
                                                             'assoc_foreign_key' => 'news_id',
                                                             'on_delete' => 'delete',
                                                             'on_store' => 'store'
                                                            );
-        $this->has_many['comments'] = array('class_name' => 'StudipComment',
+        $config->has_many['comments'] = array('class_name' => 'StudipComment',
                                             'assoc_foreign_key' => 'object_id',
                                             'on_delete' => 'delete',
                                             'on_store' => 'store');
-        $this->belongs_to['owner'] = array('class_name' => 'User',
+        $config->belongs_to['owner'] = array('class_name' => 'User',
                                             'foreign_key' => 'user_id');
-        parent::__construct($id);
+        parent::configure((array)$config);
     }
 
     function restoreRanges() {
@@ -415,7 +411,7 @@ class StudipNews extends SimpleORMap {
             return false;
         }
     }
-    
+
     function deleteRange($range_id) {
         if ($this->issetRange($range_id)) {
             return $this->news_ranges->unsetBy('range_id', $range_id);
@@ -437,7 +433,7 @@ class StudipNews extends SimpleORMap {
 
     /**
      * checks, if user has permission to perform given operation on news object
-     * 
+     *
      * @param string $operation       delete, unassign, edit, copy, or view
      * @param string $check_range_id  specified range-id, used only for unassign-operation
      * @param string $user_id         optional; check permission for
@@ -454,8 +450,8 @@ class StudipNews extends SimpleORMap {
         if (($operation == 'unassign') AND (count($this->getRanges()) < 2))
             return false;
         // root, owner, and owner's deputy have full permission
-        if ($GLOBALS['perm']->have_perm('root', $user_id) 
-              OR (($user_id == $this->user_id) AND $GLOBALS['perm']->have_perm('autor')) 
+        if ($GLOBALS['perm']->have_perm('root', $user_id)
+              OR (($user_id == $this->user_id) AND $GLOBALS['perm']->have_perm('autor'))
               OR (isDeputyEditAboutActivated() AND isDeputy($user_id, $this->user_id, true)))
             return true;
         // check news' ranges for edit, copy or view permission
@@ -481,10 +477,10 @@ class StudipNews extends SimpleORMap {
             return true;
         return false;
     }
-    
+
     /**
      * checks, if basic news data is complete
-     * 
+     *
      * @return boolean true or false
      */
     function validate() {

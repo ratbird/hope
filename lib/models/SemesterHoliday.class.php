@@ -87,14 +87,10 @@ class SemesterHoliday extends SimpleORMap
         return self::$holiday_cache;
     }
 
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'semester_holiday';
-        $this->default_values['description'] = '';
-        parent::__construct($id);
+        $config['db_table'] = 'semester_holiday';
+        $config['default_values']['description'] = '';
+        parent::configure($config);
     }
 }

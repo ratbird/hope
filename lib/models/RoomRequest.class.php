@@ -16,7 +16,7 @@ require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
  * @author      Suchi & Berg GmbH <info@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string request_id database column
  * @property string id alias column for request_id
  * @property string seminar_id database column
@@ -38,22 +38,21 @@ class RoomRequest extends SimpleORMap
     private $properties_changed = false;
     private $default_seats;
 
+    protected $db_table = "resources_requests";
+
     static function findByCourse($seminar_id)
     {
-        $db = DbManager::get();
-        return array_shift(self::findBySql("termin_id = '' AND metadate_id = '' AND seminar_id = " . $db->quote($seminar_id)));
+        return self::findOneBySql("termin_id = '' AND metadate_id = '' AND seminar_id = ?", array($seminar_id));
     }
 
     static function findByDate($termin_id)
     {
-        $db = DbManager::get();
-        return array_shift(self::findBySql("termin_id = " . $db->quote($termin_id)));
+        return self::findOneBySql("termin_id = ?", array($termin_id));
     }
 
     static function findByCycle($metadate_id)
     {
-        $db = DbManager::get();
-        return array_shift(self::findBySql("metadate_id = " . $db->quote($metadate_id)));
+        return self::findOneBySql("metadate_id = ?", array($metadate_id));
     }
 
     static function existsByCourse($seminar_id, $is_open = false)
@@ -83,14 +82,6 @@ class RoomRequest extends SimpleORMap
         $sql = "SELECT request_id FROM resources_requests WHERE " . $where;
         return $db->query($sql)->fetchColumn();
     }
-
-    //Konstruktor
-    function __construct($id = null)
-    {
-        $this->db_table = "resources_requests";
-        parent::__construct($id);
-    }
-
 
     function getResourceId()
     {

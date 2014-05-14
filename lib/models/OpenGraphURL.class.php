@@ -28,35 +28,15 @@ class OpenGraphURL extends SimpleORMap {
 
     static public $tempURLStorage = array(); //place to store opengraph-urls from a text.
 
-    /**
-     * constructor
-     * @param string $url : the url that represents the opengraph-information
-     */
-    public function __construct($url = null) {
-        $this->db_table = "opengraphdata";
-        $this->registerCallback('before_store', 'serializeData');
-        $this->registerCallback('after_store after_initialize', 'unserializeData');
-        parent::__construct($url);
+    protected static function configure()
+    {
+        $config['db_table'] = 'opengraphdata';
+        $config['serialized_fields']['data'] = 'JSONArrayObject';
+        parent::configure($config);
     }
 
     /**
-     * Serialize the data field as a json-object before you store it in the database.
-     */
-    protected function serializeData() {
-        $this->data = json_encode(studip_utf8encode((array) $this->data));
-    }
-
-    /**
-     * Unserialize the data field when it comes from the database. So you can 
-     * expect $url['data'] to be an array.
-     */
-    protected function unserializeData() {
-        $this->data = (array) studip_utf8decode(json_decode($this->data, true));
-    }
-
-
-    /**
-     * Fetches information from the url by getting the contents of the webpage, 
+     * Fetches information from the url by getting the contents of the webpage,
      * parse the webpage and extract the information from the opengraph meta-tags.
      * If the site doesn't have any opengraph-metatags it is in fact no opengraph
      * node and thus no data will be stored in the database. Only $url['is_opengraph'] === '0'
@@ -128,7 +108,7 @@ class OpenGraphURL extends SimpleORMap {
     }
 
     /**
-     * Renders a small box with the information of the opengraph url. Used in 
+     * Renders a small box with the information of the opengraph url. Used in
      * blubber and in the forum.
      * @return string : html output of the box.
      */
@@ -143,7 +123,7 @@ class OpenGraphURL extends SimpleORMap {
 
     /**
      * Returns an array with all audiofiles that are provided by the opengraph-node.
-     * Each array-entry is an array itself with the url as first parameter and the 
+     * Each array-entry is an array itself with the url as first parameter and the
      * content-type (important for <audio/> tags) as the second.
      * @return array(array($url, $content_type), ...)
      */
@@ -153,17 +133,17 @@ class OpenGraphURL extends SimpleORMap {
 
     /**
      * Returns an array with all videofiles that are provided by the opengraph-node.
-     * Each array-entry is an array itself with the url as first parameter and the 
+     * Each array-entry is an array itself with the url as first parameter and the
      * content-type (important for <video/> tags) as the second.
      * @return array(array($url, $content_type), ...)
      */
     public function getVideoFiles() {
         return $this->getMediaFiles("video");
     }
-    
+
     /**
      * Returns an array with all mediafiles that are provided by the opengraph-node.
-     * Each array-entry is an array itself with the url as first parameter and the 
+     * Each array-entry is an array itself with the url as first parameter and the
      * content-type (important for <audio/> or <video/> tags) as the second.
      * @param string $type: "audio" or "video"
      * @return array(array($url, $content_type), ...)

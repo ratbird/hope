@@ -7,7 +7,7 @@
  * For example if user A subscribed to the changes of a special wiki-page, and
  * another user B changed this wiki-page, you can inform user A about the change
  * by the following one-liner:
- * 
+ *
  * PersonalNotifications::add(
  *      $user_A_user_id, //id of user A or array of ´multiple user_ids
  *      $url_of_wiki_page, //when user A clicks this URL he/she should jump directly to the changed wiki-page
@@ -18,7 +18,7 @@
  *
  * Appearing to the user, deleting by the user and so on of the notification is
  * handled by this class automatically.
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -28,7 +28,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
- * 
+ *
  * @property string personal_notification_id database column
  * @property string id alias column for personal_notification_id
  * @property string url database column
@@ -65,7 +65,7 @@ class PersonalNotifications extends SimpleORMap {
         $notification['text'] = $text;
         $notification['avatar'] = $avatar;
         $notification->store();
-        
+
         foreach ($user_ids as $user_id) {
             if (self::isActivated($user_id)) {
                 $db = DBManager::get();
@@ -76,7 +76,7 @@ class PersonalNotifications extends SimpleORMap {
                         "seen = '0' " .
                 "");
                 $insert_statement->execute(array(
-                    'id' => $notification->getId(), 
+                    'id' => $notification->getId(),
                     'user_id' => $user_id
                 ));
             }
@@ -148,7 +148,7 @@ class PersonalNotifications extends SimpleORMap {
         }
         UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "0");
     }
-    
+
     /**
      * Deactivates personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
@@ -159,7 +159,7 @@ class PersonalNotifications extends SimpleORMap {
         }
         UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "1");
     }
-    
+
     /**
      * Activates audio plopp for new personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
@@ -170,7 +170,7 @@ class PersonalNotifications extends SimpleORMap {
         }
         UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED", "0");
     }
-    
+
     /**
      * Deactivates audio plopp for new personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
@@ -192,9 +192,9 @@ class PersonalNotifications extends SimpleORMap {
         $config = Config::GetInstance();
         return !empty($config['PERSONAL_NOTIFICATIONS_ACTIVATED']);
     }
-    
+
     /**
-     * Checks if a given user should see the personal notification. Either the 
+     * Checks if a given user should see the personal notification. Either the
      * Stud.IP or the user could deactivate personal notification. If neither is
      * the case, this function returns true.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
@@ -204,13 +204,13 @@ class PersonalNotifications extends SimpleORMap {
         if (!PersonalNotifications::isGloballyActivated()) {
             return false;
         }
-        
+
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
         return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_DEACTIVATED") ? false : true;
     }
-    
+
     /**
      * Checks if a given user should hear audio plopp for new personal notification.
      * Either the Stud.IP or the user could deactivate personal notification or
@@ -227,16 +227,12 @@ class PersonalNotifications extends SimpleORMap {
         }
         return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED") ? false : true;
     }
-    
-    /**
-     * Constructor of PersonalNotifications
-     * @param type $id
-     */
-    function __construct($id = null)
+
+    protected static function configure()
     {
-        $this->db_table = "personal_notifications";
-        $this->default_values['text'] = '';
-        parent::__construct($id);
+        $config['db_table'] = "personal_notifications";
+        $config['default_values']['text'] = '';
+        parent::configure($config);
     }
 
     /**

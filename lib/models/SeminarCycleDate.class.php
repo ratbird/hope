@@ -52,24 +52,23 @@ class SeminarCycleDate extends SimpleORMap
      */
     static function findByTermin($termin_id)
     {
-        $found = self::findBySql("metadate_id=(SELECT metadate_id FROM termine WHERE termin_id= ? "
+        return self::findOneBySql("metadate_id=(SELECT metadate_id FROM termine WHERE termin_id= ? "
                                   . "UNION SELECT metadate_id FROM ex_termine WHERE termin_id = ? )", array($termin_id, $termin_id));
-        return is_array($found) ? $found[0] : null;
     }
 
-    /**
-     * constructor
-     * @param string $id primary key of table seminar_cycle_dates
-     * @return null
-     */
-    function __construct($id = null)
+
+    protected static function configure()
     {
-        $this->db_table = 'seminar_cycle_dates';
-        $this->additional_fields['start_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
-        $this->additional_fields['start_minute'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
-        $this->additional_fields['end_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
-        $this->additional_fields['end_minute'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
-        parent::__construct($id);
+        $config->db_table = 'seminar_cycle_dates';
+        $config->belongs_to['course'] = array('class_name' => 'Course');
+        $config->has_one['room_request'] = array('class_name' => 'RoomRequest',
+                                                 'on_store' => 'store',
+                                                 'on_delete' => 'delete');
+        $config->additional_fields['start_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
+        $config->additional_fields['start_minute'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
+        $config->additional_fields['end_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
+        $config->additional_fields['end_minute'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
+        parent::configure((array)$config);
     }
 
     protected function getTimeFraction($field)
@@ -83,7 +82,7 @@ class SeminarCycleDate extends SimpleORMap
             return (int)$$field;
         }
     }
-    
+
     protected function setTimeFraction($field, $value)
     {
         if ($field == 'start_hour') {
@@ -106,7 +105,7 @@ class SeminarCycleDate extends SimpleORMap
 
     /**
      * SWS needs special setter to always store a decimal
-     * 
+     *
      * @param number $value
      */
     protected function setSws($value)
@@ -136,16 +135,5 @@ class SeminarCycleDate extends SimpleORMap
                        $cycles[(int)$this->cycle],
                        $this->week_offset + 1,
                        $this->description ? ' ('.$this->description.')' : '');
-    }
-
-    /**
-     * @see SimpleORMap::delete()
-     */
-    function delete()
-    {
-        if ($rr = RoomRequest::existsByCycle($this->getId())) {
-            RoomRequest::find($rr)->delete();
-        }
-        return parent::delete();
     }
 }

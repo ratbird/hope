@@ -30,7 +30,7 @@
  *
  * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
  * @access   public
- * 
+ *
  * @property string comment_id database column
  * @property string id alias column for comment_id
  * @property string object_id database column
@@ -81,17 +81,13 @@ class StudipComment extends SimpleORMap
         return self::deleteBySQL($where, array($object_ids));
     }
 
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'comments';
-        $this->default_values['content'] = '';
-        $this->belongs_to['news'] = array('class_name' => 'StudipNews',
+        $config->db_table = 'comments';
+        $config->default_values['content'] = '';
+        $config->belongs_to['news'] = array('class_name' => 'StudipNews',
                                           'foreign_key' => 'object_id');
-        parent::__construct($id);
+        parent::configure((array)$config);
     }
 }
 

@@ -284,12 +284,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param array params for query
      * @return number
      */
-    public static function countBySql($where = 1, $params = array())
+    public static function countBySql($sql = 1, $params = array())
     {
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        $sql = "SELECT count(*) FROM `" .  $record->db_table . "` WHERE " . $where;
+        if (stripos($sql, 'WHERE') === false) {
+            $sql = 'WHERE ' . $sql;
+        }
+        $sql = "SELECT count(*) FROM `" .  $record->db_table . "` " . $sql;
         $st = $db->prepare($sql);
         $st->execute($params);
         return $st->fetchColumn();
@@ -406,7 +409,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (stripos($sql, 'WHERE') === false) {
             $sql = 'WHERE ' . $sql;
         }
-        $sql = "SELECT `". $record->db_table ."`.* FROM `" .  $record->db_table . "` " . $sql;
+        $sql = "SELECT `" . $record->db_table . "`.* FROM `" .  $record->db_table . "` " . $sql;
         $st = $db->prepare($sql);
         $st->execute($params);
         $ret = array();
@@ -478,12 +481,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param array sql statement parameters
      * @return integer number of found records
      */
-    public static function findEachBySQL($callable, $where, $params = array())
+    public static function findEachBySQL($callable, $sql, $params = array())
     {
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        $sql = "SELECT * FROM `" .  $record->db_table . "` WHERE " . $where;
+        if (stripos($sql, 'WHERE') === false) {
+            $sql = 'WHERE ' . $sql;
+        }
+        $sql = "SELECT `" . $record->db_table . "`.* FROM `" .  $record->db_table . "` " . $sql;
         $st = $db->prepare($sql);
         $st->execute($params);
         $ret = 0;

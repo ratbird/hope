@@ -106,18 +106,29 @@ class Semester extends SimpleORMap
         return self::$semester_cache;
     }
 
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'semester_data';
-        $this->default_values['description'] = '';
-        $this->additional_fields['first_sem_week']['get'] = function($me) {return (int)strftime('%W', $me['vorles_beginn']);};
-        $this->additional_fields['last_sem_week']['get'] = function($me) {return (int)strftime('%W', $me['vorles_ende']);};
-        $this->additional_fields['past']['get'] = function($me) {return $me['ende'] < time();};
-        parent::__construct($id);
+        $config['db_table'] = 'semester_data';
+        $config['default_values']['description'] = '';
+        $config['additional_fields']['first_sem_week'] = true;
+        $config['additional_fields']['last_sem_week'] = true;
+        $config['additional_fields']['past'] = true;
+        parent::configure($config);
+    }
+
+    function getfirst_sem_week()
+    {
+        return (int)strftime('%W', $this['vorles_beginn']);
+    }
+
+    function getlast_sem_week()
+    {
+        return (int)strftime('%W', $this['vorles_ende']);
+    }
+
+    function getpast()
+    {
+        return $this['ende'] < time();
     }
 
     /**
@@ -151,23 +162,16 @@ class Semester extends SimpleORMap
      */
     public static function countContinuousSeminars($id)
     {
-        $semesters = SemesterData::getInstance()->getAllSemesterData();
-        $seminars = DBManager::get()->query("SELECT start_time FROM seminare WHERE duration_time = -1")->fetchAll(PDO::FETCH_COLUMN);
-        $continuous_seminars = array();
-        foreach ($semesters as $semester) {
-            $continuous_seminars[$semester['semester_id']] = 0;
-        }
+        $semesterdata = self::find($id);
 
-        foreach ($seminars as $seminar) {
-            foreach ($semesters as $i => $semester) {
-                if (($seminar >= $semester["beginn"]) && ($seminar < $semester["ende"])) {
-                    for ($j=$i; $j < count($semesters); $j++) {
-                        $continuous_seminars[$semesters[$j]["semester_id"]]++;
-                    }
-                }
-            }
-        }
-        return $continuous_seminars[$id];
+        $query = "SELECT COUNT(*)
+                  FROM seminare
+                  WHERE duration_time = -1 AND start_time < ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $semesterdata['beginn'],
+        ));
+        return $statement->fetchColumn();
     }
 
     /**
@@ -178,29 +182,18 @@ class Semester extends SimpleORMap
      */
     public static function countDurationSeminars($id)
     {
-        $semesters = SemesterData::getInstance()->getAllSemesterData();
-        $duration_seminars = array();
-        foreach ($semesters as $semester) {
-            $duration_seminars[$semester['semester_id']] = 0;
-        }
+        $semesterdata = self::find($id);
 
-        $sql =  "SELECT start_time, duration_time FROM seminare WHERE ".
-                "duration_time != 0 AND duration_time != -1";
-        $seminars = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($seminars as $seminar) {
-            $endtime = $seminar["start_time"] + $seminar["duration_time"];
-            foreach ($semesters as $i => $semester) {
-                if ($seminar["start_time"] >= $semester["beginn"] && $seminar["start_time"] < $semester["ende"]) {
-                    for ($j=$i; $j<count($semesters); $j++) {
-                        if ($endtime >= $semesters[$j]["beginn"]) {
-                            $duration_seminars[$semesters[$j]["semester_id"]]++;
-                        }
-                    }
-                }
-            }
-        }
-
-        return (int)$duration_seminars[$id];
+        $query = "SELECT COUNT(*)
+                  FROM seminare
+                  WHERE duration_time > 0 AND start_time < ? AND
+                    start_time+duration_time >= ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $semesterdata['beginn'],
+            $semesterdata['ende']
+        ));
+        return $statement->fetchColumn();
     }
 
     /**
@@ -211,16 +204,14 @@ class Semester extends SimpleORMap
      */
     public static function countAbsolutSeminars($id)
     {
-        $semesterdata = SemesterData::getInstance()->getSemesterData($id);
+        $semesterdata = self::find($id);
 
         $query = "SELECT COUNT(*)
                   FROM seminare
-                  WHERE start_time BETWEEN ? AND ?
-                    AND duration_time = 0";
+                  WHERE start_time = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $semesterdata['beginn'],
-            $semesterdata['ende']
         ));
         return $statement->fetchColumn();
     }

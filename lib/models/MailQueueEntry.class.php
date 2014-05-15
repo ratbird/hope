@@ -24,9 +24,13 @@
  * @property string mkdate database column
  * @property string chdate database column
  */
-class MailQueueEntry extends SimpleORMap {
-
-    protected $db_table = 'mail_queue_entries';
+class MailQueueEntry extends SimpleORMap
+{
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'mail_queue_entries';
+        parent::configure($config);
+    }
 
     /**
      * Add an email to the queue.

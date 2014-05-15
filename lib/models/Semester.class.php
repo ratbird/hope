@@ -106,7 +106,7 @@ class Semester extends SimpleORMap
         return self::$semester_cache;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'semester_data';
         $config['default_values']['description'] = '';

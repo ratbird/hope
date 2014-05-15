@@ -49,16 +49,20 @@ class UserStudyCourse extends SimpleORMap
         return self::findBySql("studiengang_id = ? AND abschluss_id = ?", array($study_course_id, $degree_id));
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'user_studiengang';
-        $config['belongs_to'] = array(
-                'user' => array('class_name' => 'User',
-                                'foreign_key' => 'user_id'),
-                'degree' => array('class_name' => 'Degree',
-                                'foreign_key' => 'abschluss_id'),
-                'studycourse' => array('class_name' => 'StudyCourse',
-                                'foreign_key' => 'studiengang_id')
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
+        $config['belongs_to']['degree'] = array(
+            'class_name' => 'Degree',
+            'foreign_key' => 'abschluss_id',
+        );
+        $config['belongs_to']['studycourse'] = array(
+            'class_name' => 'StudyCourse',
+            'foreign_key' => 'studiengang_id',
         );
         $config['additional_fields']['degree_name'] = array();
         $config['additional_fields']['studycourse_name'] = array();

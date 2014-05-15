@@ -23,16 +23,21 @@
  */
 class NewsRange extends SimpleORMap
 {
-
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'news_range';
-        $config['belongs_to']['user'] = array('class_name' => 'User',
-                                           'foreign_key' => 'range_id');
-        $config['belongs_to']['course'] = array('class_name' => 'Course',
-                                           'foreign_key' => 'range_id');
-        $config['belongs_to']['institute'] = array('class_name' => 'Institute',
-                                           'foreign_key' => 'range_id');
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'range_id',
+        );
+        $config['belongs_to']['course'] = array(
+            'class_name' => 'Course',
+            'foreign_key' => 'range_id',
+        );
+        $config['belongs_to']['institute'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'range_id',
+        );
         $config['additional_fields']['type'] = true;
         $config['additional_fields']['name'] = true;
         parent::configure($config);
@@ -62,4 +67,3 @@ class NewsRange extends SimpleORMap
             }
     }
 }
-?>

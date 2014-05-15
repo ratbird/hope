@@ -26,17 +26,15 @@
  * @property string priority database column
  */
 
-class DocumentFolder extends SimpleORMap {
-
-    protected static function configure()
+class DocumentFolder extends SimpleORMap
+{
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'folder';
-        $config['has_many'] = array(
-            'files' => array(
-                'class_name' => 'StudipDocument',
-                'on_delete' => 'delete',
-                'on_store' => 'store'
-            )
+        $config['has_many']['files'] = array(
+            'class_name' => 'StudipDocument',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
         );
         parent::configure($config);
     }

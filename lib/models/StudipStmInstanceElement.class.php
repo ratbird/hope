@@ -41,8 +41,13 @@ define('LANGUAGE_ID',"09c438e63455e3e1b3deabe65fdbc087");
 
 require_once "lib/classes/Seminar.class.php";
 
-class StudipStmInstanceElement extends SimpleORMap {
-
+class StudipStmInstanceElement extends SimpleORMap
+{
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'stm_instances_elements';
+        parent::configure($config);
+    }
 
     static function GetElementsByInstance ($stm_instance_id, $as_objects = false){
         $ret = array();
@@ -82,7 +87,6 @@ class StudipStmInstanceElement extends SimpleORMap {
     }
 
     function __construct ($element_id = null, $stm_instance_id = null, $sem_id = null) {
-        $this->db_table = 'stm_instances_elements';
         parent::__construct(array($stm_instance_id, $element_id, $sem_id));
         if ($this->isNew()) {
             $this->setValue('stm_instance_id', $stm_instance_id);

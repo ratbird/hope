@@ -167,7 +167,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param array $config configuration data
      * @return void
      */
-    protected static function configure($config = null)
+    protected static function configure($config = array())
     {
         if (isset($config['additional_fields'])) {
             foreach ($config['additional_fields'] as $a_field => $a_config) {

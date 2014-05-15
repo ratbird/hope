@@ -15,9 +15,10 @@
  * @category    Stud.IP
  * @since       3.0
  */
-class VoteAnswer extends SimpleORMap {
-
-    protected static function configure() {
+class VoteAnswer extends SimpleORMap
+{
+    protected static function configure($config = array())
+    {
         $config['db_table'] = 'voteanswers';
         $config['has_many']['users'] = array(
             'class_name' => 'VoteAnswerUser'

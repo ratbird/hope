@@ -87,7 +87,7 @@ class SemesterHoliday extends SimpleORMap
         return self::$holiday_cache;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'semester_holiday';
         $config['default_values']['description'] = '';

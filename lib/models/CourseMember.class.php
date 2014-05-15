@@ -88,34 +88,33 @@ class CourseMember extends SimpleORMap
         return self::countBySql('seminar_id = ? AND status IN(?)', array($course_id, is_array($status) ? $status : words($status)));
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'seminar_user';
-        $config['belongs_to'] = array(
-                'user' => array(
-                        'class_name' => 'User',
-                        'foreign_key' => 'user_id'),
-                'course' => array(
-                        'class_name' => 'Course',
-                        'foreign_key' => 'seminar_id'),
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
         );
-        $config['has_many'] = array(
-            'datafields' => array(
-                        'class_name' => 'DatafieldEntryModel',
-                        'assoc_foreign_key' =>
-                            function($model, $params) {
-                                list($sec_range_id, $range_id) = (array)$params[0]->getId();
-                                $model->setValue('range_id', $range_id);
-                                $model->setValue('sec_range_id', $sec_range_id);
-                            },
-                        'assoc_func' => 'findByModel',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store',
-                        'foreign_key' =>
-                            function($course_member) {
-                                return array($course_member);
-                            })
-            );
+        $config['belongs_to']['course'] = array(
+            'class_name' => 'Course',
+            'foreign_key' => 'seminar_id',
+        );
+        $config['has_many']['datafields'] = array(
+            'class_name' => 'DatafieldEntryModel',
+            'assoc_foreign_key' =>
+                function($model, $params) {
+                    list($sec_range_id, $range_id) = (array)$params[0]->getId();
+                    $model->setValue('range_id', $range_id);
+                    $model->setValue('sec_range_id', $sec_range_id);
+                },
+            'assoc_func' => 'findByModel',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'foreign_key' =>
+                function($course_member) {
+                    return array($course_member);
+                }
+        );
         $config['additional_fields']['vorname'] = array('user', 'vorname');
         $config['additional_fields']['nachname'] = array('user', 'nachname');
         $config['additional_fields']['username'] = array('user', 'username');

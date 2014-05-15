@@ -28,12 +28,13 @@
  */
 class LogAction extends SimpleORMap
 {
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'log_actions';
-        $config['has_many'] = array(
-            'events' => array('class_name' => 'LogEvent'),
-            'on_delete' => 'delete');
+        $config['has_many']['events'] = array(
+            'class_name' => 'LogEvent',
+            'on_delete' => 'delete',
+        );
         parent::configure($config);
     }
 

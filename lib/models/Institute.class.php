@@ -113,39 +113,38 @@ class Institute extends SimpleORMap
     /**
      *
      */
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'Institute';
         $config['additional_fields']['is_fak']['get'] = 'isFaculty';
-        $config['has_many'] = array(
-                'members' => array(
-                        'class_name' => 'InstituteMember',
-                        'assoc_func' => 'findByInstitute',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'home_courses' => array(
-                        'class_name' => 'Course',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'sub_institutes' => array(
-                        'class_name' => 'Institute',
-                        'assoc_foreign_key' => 'fakultaets_id',
-                        'assoc_func' => 'findByFaculty',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                );
-        $config['belongs_to'] = array(
-                'faculty' => array(
-                        'class_name' => 'Institute',
-                        'foreign_key' => 'fakultaets_id',
-                        )
-                );
-        $config['has_and_belongs_to_many'] = array(
-                'courses' => array(
-                        'class_name' => 'Course',
-                        'thru_table' => 'seminar_inst',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'));
+        $config['has_many']['members'] = array(
+            'class_name' => 'InstituteMember',
+            'assoc_func' => 'findByInstitute',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['home_courses'] = array(
+            'class_name' => 'Course',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['sub_institutes'] = array(
+            'class_name' => 'Institute',
+            'assoc_foreign_key' => 'fakultaets_id',
+            'assoc_func' => 'findByFaculty',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['belongs_to']['faculty'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'fakultaets_id',
+        );
+        $config['has_and_belongs_to_many']['courses'] = array(
+            'class_name' => 'Course',
+            'thru_table' => 'seminar_inst',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
         parent::configure($config);
     }
 

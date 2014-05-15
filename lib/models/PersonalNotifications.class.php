@@ -228,9 +228,9 @@ class PersonalNotifications extends SimpleORMap {
         return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED") ? false : true;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
-        $config['db_table'] = "personal_notifications";
+        $config['db_table'] = 'personal_notifications';
         $config['default_values']['text'] = '';
         parent::configure($config);
     }

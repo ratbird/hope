@@ -33,29 +33,24 @@
  * @property SimpleORMapCollection members has_many StatusgruppeUser
  * @property Statusgruppen parent belongs_to Statusgruppen
  */
-class Statusgruppen extends SimpleORMap {
-
-    protected $db_table = "statusgruppen";
-    protected $has_many = array(
-        /* Deprecated since we need to order them right away
-          'children' => array(
-          'class_name' => 'Statusgruppen',
-          'on_delete' => 'delete',
-          'assoc_foreign_key' => 'range_id'), */
-        'members' => array(
+class Statusgruppen extends SimpleORMap
+{
+    protected function configure($config = array())
+    {
+        $config['db_table'] = 'statusgruppen';
+        $config['has_many']['members'] = array(
             'class_name' => 'StatusgruppeUser',
             'on_delete' => 'delete',
-            'assoc_foreign_key' => 'statusgruppe_id')
-    );
-    protected $belongs_to = array('parent' => array('class_name' => 'Statusgruppen',
-            'foreign_key' => 'range_id'
-    ));
-
-    public function __construct($id = null) {
-        $this->additional_fields['children'] = true;
-        parent::__construct($id);
+            'assoc_foreign_key' => 'statusgruppe_id',
+        );
+        $config['belongs_to']['parent'] = array(
+            'class_name' => 'Statusgruppen',
+            'foreign_key' => 'range_id',
+        );
+        $config['additional_fields']['children'] = true;
+        parent::configure($config);
     }
-    
+
     public function getChildren() {
         $result = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($this->id));
         return $result ? : array();
@@ -329,5 +324,3 @@ class Statusgruppen extends SimpleORMap {
     }
 
 }
-
-?>

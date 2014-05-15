@@ -25,7 +25,7 @@
 class Kategorie extends SimpleORMap
 {
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'kategorien';
         $config['default_values']['content'] = '';

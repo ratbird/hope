@@ -32,8 +32,11 @@
 
 class Banner extends SimpleORMap
 {
-
-    protected $db_table = 'banner_ads';
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'banner_ads';
+        parent::configure($config);
+    }
 
     /**
      * Returns a random banner

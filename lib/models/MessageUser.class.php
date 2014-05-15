@@ -25,18 +25,19 @@
  * @property Message message has_one Message
  */
 
-class MessageUser extends SimpleORMap {
-
-    protected static function configure()
+class MessageUser extends SimpleORMap
+{
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'message_user';
-        $config['belongs_to'] = array(
-            'user' => array(
-                'class_name' => 'User',
-                'foreign_key' => 'user_id'),
-            'message' => array(
-                'class_name' => 'Message',
-                'foreign_key' => 'message_id'));
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
+        $config['belongs_to']['message'] = array(
+            'class_name' => 'Message',
+            'foreign_key' => 'message_id',
+        );
         parent::configure($config);
     }
 }

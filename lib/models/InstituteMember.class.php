@@ -38,30 +38,32 @@
 class InstituteMember extends SimpleORMap
 {
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'user_inst';
-        $config['belongs_to'] = array('user' => array('class_name' => 'User',
-                                                    'foreign_key' => 'user_id'),
-                                   'institute' => array('class_name' => 'Institute',
-                                                    'foreign_key' => 'institut_id')
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
         );
-        $config['has_many'] = array(
-            'datafields' => array(
-                        'class_name' => 'DatafieldEntryModel',
-                        'assoc_foreign_key' =>
-                            function($model, $params) {
-                                $model->setValue('range_id', $params[0]->user_id);
-                                $model->setValue('sec_range_id', $params[0]->institut_id);
-                            },
-                        'assoc_func' => 'findByModel',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store',
-                        'foreign_key' =>
-                            function($institute_member) {
-                                return array($institute_member);
-                            })
-            );
+        $config['belongs_to']['institute'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'institut_id',
+        );
+        $config['has_many']['datafields'] = array(
+            'class_name' => 'DatafieldEntryModel',
+            'assoc_foreign_key' =>
+                function($model, $params) {
+                    $model->setValue('range_id', $params[0]->user_id);
+                    $model->setValue('sec_range_id', $params[0]->institut_id);
+                },
+            'assoc_func' => 'findByModel',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'foreign_key' =>
+                function($institute_member) {
+                    return array($institute_member);
+                }
+        );
         $config['additional_fields']['vorname'] = array('user', 'vorname');
         $config['additional_fields']['nachname'] = array('user', 'nachname');
         $config['additional_fields']['username'] = array('user', 'username');

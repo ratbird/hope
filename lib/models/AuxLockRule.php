@@ -31,14 +31,14 @@ class AuxLockRule extends SimpleORMap
      */
     private $datafieldCache = array();
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'aux_lock_rules';
-        $config['belongs_to'] = array(
-            'course' => array(
-                'class_name' => 'Course',
-                'foreign_key' => 'lock_id',
-                'assoc_foreign_key' => 'aux_lock_rule'));
+        $config['belongs_to']['course'] = array(
+            'class_name' => 'Course',
+            'foreign_key' => 'lock_id',
+            'assoc_foreign_key' => 'aux_lock_rule',
+        );
         $config['additional_fields']['datafields'] = true;
         $config['additional_fields']['order'] = true;
         parent::configure($config);
@@ -174,4 +174,3 @@ class AuxLockRule extends SimpleORMap
     }
 
 }
-?>

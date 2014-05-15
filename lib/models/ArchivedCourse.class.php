@@ -37,19 +37,17 @@
 
 class ArchivedCourse extends SimpleORMap
 {
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'archiv';
-        $config['has_many'] = array(
-                'members' => array(
-                        'class_name' => 'ArchivedCourseMember',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store')
+        $config['has_many']['members'] = array(
+            'class_name' => 'ArchivedCourseMember',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
         );
-        $config['belongs_to'] = array(
-                'home_institut' => array(
-                        'class_name' => 'Institute',
-                        'foreign_key' => 'heimat_inst_id')
+        $config['belongs_to']['home_institut'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'heimat_inst_id',
         );
         $config['default_values']['beschreibung'] = '';
         $config['default_values']['institute'] = '';
@@ -57,6 +55,7 @@ class ArchivedCourse extends SimpleORMap
         $config['default_values']['dump'] = '';
         $config['default_values']['forumdump'] = '';
         $config['default_values']['studienbereiche'] = '';
+
         parent::configure($config);
     }
 }

@@ -57,13 +57,15 @@ class SeminarCycleDate extends SimpleORMap
     }
 
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'seminar_cycle_dates';
         $config['belongs_to']['course'] = array('class_name' => 'Course');
-        $config['has_one']['room_request'] = array('class_name' => 'RoomRequest',
-                                                 'on_store' => 'store',
-                                                 'on_delete' => 'delete');
+        $config['has_one']['room_request'] = array(
+            'class_name' => 'RoomRequest',
+            'on_store' => 'store',
+            'on_delete' => 'delete',
+        );
         $config['additional_fields']['start_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
         $config['additional_fields']['start_minute'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');
         $config['additional_fields']['end_hour'] = array('get' => 'getTimeFraction', 'set' => 'setTimeFraction');

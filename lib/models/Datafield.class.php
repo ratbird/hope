@@ -31,10 +31,12 @@
  */
 class Datafield extends SimpleORMap
 {
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'datafields';
-        $config['has_many'] = array('entries' => array('class_name' => 'DatafieldEntryModel'));
+        $config['has_many']['entries'] = array(
+            'class_name' => 'DatafieldEntryModel'
+        );
         parent::configure($config);
     }
 }

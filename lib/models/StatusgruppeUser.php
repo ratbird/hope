@@ -24,18 +24,21 @@
  * @property Statusgruppen group belongs_to Statusgruppen
  * @property User user belongs_to User
  */
-class StatusgruppeUser extends SimpleORMap {
-
-    protected $db_table = "statusgruppe_user";
-    protected $belongs_to = array(
-        'group' => array(
+class StatusgruppeUser extends SimpleORMap
+{
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'statusgruppe_user';
+        $config['belongs_to']['group'] = array(
             'class_name' => 'Statusgruppen',
-            'foreign_key' => 'statusgruppe_id'
-        ),
-        'user' => array(
+            'foreign_key' => 'statusgruppe_id',
+        );
+        $config['belongs_to']['user'] = array(
             'class_name' => 'User',
-            'foreign_key' => 'user_id')
-    );
+            'foreign_key' => 'user_id',
+        );
+        parent::configure($config);
+    }
 
     /**
      * Prevents invisible users from being displayed
@@ -81,5 +84,3 @@ class StatusgruppeUser extends SimpleORMap {
     }
 
 }
-
-?>

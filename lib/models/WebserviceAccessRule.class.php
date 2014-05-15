@@ -32,7 +32,6 @@
  */
 class WebserviceAccessRule extends SimpleORMap
 {
-
     /**
      * returns all rules for an given api key
      *
@@ -82,7 +81,7 @@ class WebserviceAccessRule extends SimpleORMap
         return $access;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'webservice_access_rules';
         $config['serialized_fields']['ip_range'] = 'CSVArrayObject';

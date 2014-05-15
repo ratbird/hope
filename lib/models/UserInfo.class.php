@@ -48,8 +48,7 @@ class UserInfo extends SimpleORMap
     const GENDER_FEMALE = 2;
     const GENDER_MALE = 1;
 
-
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'user_info';
         $config['default_values']['publi'] = '';

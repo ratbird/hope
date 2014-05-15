@@ -33,12 +33,16 @@ require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
  */
 class RoomRequest extends SimpleORMap
 {
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'resources_requests';
+        parent::configure($config);
+    }
+
     private $properties = array();          //the assigned property-requests
     public $last_search_result_count;          //the number of found rooms from last executed search
     private $properties_changed = false;
     private $default_seats;
-
-    protected $db_table = "resources_requests";
 
     static function findByCourse($seminar_id)
     {

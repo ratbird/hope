@@ -22,5 +22,9 @@
  */
 class Degree extends SimpleORMap
 {
-    protected $db_table = 'abschluss';
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'abschluss';
+        parent::configure($config);
+    }
 }

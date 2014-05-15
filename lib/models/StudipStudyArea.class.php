@@ -38,24 +38,31 @@ class StudipStudyArea extends SimpleORMap
     const ROOT = 'root';
 
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'sem_tree';
         $config['default_values']['info'] = '';
         $config['default_values']['type'] = 0;
 
-        $config['has_many'] = array('_children' => array('class_name' => 'StudipStudyArea',
-                                                     'assoc_foreign_key' => 'parent_id',
-                                                     'assoc_func' => 'findByParent',
-                                                     'on_delete' => 'delete',
-                                                     'on_store' => 'store'));
-        $config['has_and_belongs_to_many'] = array('courses' => array('class_name' => 'Course',
-                                                                   'thru_table' => 'seminar_sem_tree'));
-        $config['belongs_to'] = array('institute' => array('class_name' => 'Institute',
-                                                        'foreign_key' => 'studip_object_id'),
-                                   '_parent' => array('class_name' => 'StudipStudyArea',
-                                                      'foreign_key' => 'parent_id'
-                                                      ));
+        $config['has_many']['_children'] = array(
+            'class_name' => 'StudipStudyArea',
+            'assoc_foreign_key' => 'parent_id',
+            'assoc_func' => 'findByParent',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_and_belongs_to_many']['courses'] = array(
+            'class_name' => 'Course',
+            'thru_table' => 'seminar_sem_tree',
+        );
+        $config['belongs_to']['institute'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'studip_object_id',
+        );
+        $config['belongs_to']['_parent'] = array(
+            'class_name' => 'StudipStudyArea',
+            'foreign_key' => 'parent_id',
+        );
         parent::configure($config);
     }
 

@@ -38,7 +38,7 @@ class ConfigEntry extends SimpleORMap
         return self::findBySql("field=" . DbManager::get()->quote($field) . " ORDER BY is_default DESC");
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'config';
         $config['default_values']['comment'] = '';

@@ -38,7 +38,7 @@ class UserConfigEntry extends SimpleORMap
         return self::deleteBySQL("user_id = ?", func_get_args());
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'user_config';
         $config['default_values']['comment'] = '';

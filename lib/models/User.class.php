@@ -106,52 +106,58 @@ class User extends AuthUserMd5
     /**
      *
      */
-    protected static function configure()
+    protected static function configure($config = array())
     {
-        $config['has_many'] = array(
-                'course_memberships' => array(
-                        'class_name' => 'CourseMember',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'institute_memberships' => array(
-                        'class_name' => 'InstituteMember',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'admission_applications' => array(
-                        'class_name' => 'AdmissionApplication',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'archived_course_memberships' => array(
-                        'class_name' => 'ArchivedCourseMember',
-                        'on_delete' => 'delete',
-                        'on_store' => 'store'),
-                'datafields' => array(
-                        'class_name' => 'DatafieldEntryModel',
-                        'assoc_foreign_key' =>
-                        function($model, $params) {
-                            $model->setValue('range_id', $params[0]->id);
-                        },
-                'assoc_func' => 'findByModel',
-                'on_delete' => 'delete',
-                'on_store' => 'store',
-                'foreign_key' =>
-                    function($user) {
-                        return array($user);
-                    }),
-                'studycourses' => array(
-                            'class_name' => 'UserStudyCourse',
-                            'assoc_func' => 'findByUser',
-                            'on_delete' => 'delete',
-                            'on_store' => 'store'),
-                'contacts' => array(
-                    'class_name' => 'Contact',
-                    'assoc_foreign_key' => 'owner_id'
-                )
+        $config['has_many']['course_memberships'] = array(
+            'class_name' => 'CourseMember',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['institute_memberships'] = array(
+            'class_name' => 'InstituteMember',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['admission_applications'] = array(
+            'class_name' => 'AdmissionApplication',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['archived_course_memberships'] = array(
+            'class_name' => 'ArchivedCourseMember',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['datafields'] = array(
+            'class_name' => 'DatafieldEntryModel',
+            'assoc_foreign_key' =>
+                function($model, $params) {
+                    $model->setValue('range_id', $params[0]->id);
+                },
+            'assoc_func' => 'findByModel',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'foreign_key' =>
+                function($user) {
+                    return array($user);
+                }
+        );
+        $config['has_many']['studycourses'] = array(
+            'class_name' => 'UserStudyCourse',
+            'assoc_func' => 'findByUser',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['contacts'] = array(
+            'class_name' => 'Contact',
+            'assoc_foreign_key' => 'owner_id'
         );
         $config['has_one']['info'] = array(
-                'class_name' => 'UserInfo',
-                'on_delete' => 'delete',
-                'on_store' => 'store');
+            'class_name' => 'UserInfo',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
+        );
+
         $info = new UserInfo();
         $info_meta = $info->getTableMetadata();
         foreach ($info_meta['fields'] as $field => $meta) {

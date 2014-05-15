@@ -33,16 +33,16 @@ class ArchivedCourseMember extends SimpleORMap
         return self::findByUser_id($user_id);
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'archiv_user';
-        $config['belongs_to'] = array(
-                'user' => array(
-                        'class_name' => 'User',
-                        'foreign_key' => 'user_id'),
-                'course' => array(
-                        'class_name' => 'ArchivedCourse',
-                        'foreign_key' => 'seminar_id')
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
+        $config['belongs_to']['course'] = array(
+            'class_name' => 'ArchivedCourse',
+            'foreign_key' => 'seminar_id',
         );
         parent::configure($config);
     }

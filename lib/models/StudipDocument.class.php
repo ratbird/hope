@@ -72,16 +72,34 @@ class StudipDocument extends SimpleORMap {
          return self::findByRange_id($folder_id);
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'dokumente';
         $config['default_values']['description'] = '';
-        $config['belongs_to']['folder'] = array('class_name' => 'DocumentFolder', 'foreign_key' => 'range_id');
-        $config['belongs_to']['author'] = array('class_name' => 'User', 'foreign_key' => 'user_id');
-        $config['belongs_to']['message'] = array('class_name' => 'Message', 'foreign_key' => 'range_id');
-        $config['belongs_to']['course'] = array('class_name' => 'Course', 'foreign_key' => 'seminar_id');
-        $config['belongs_to']['institute'] = array('class_name' => 'Institute', 'foreign_key' => 'seminar_id');
-        $config['belongs_to']['user'] = array('class_name' => 'User', 'foreign_key' => 'seminar_id');
+        $config['belongs_to']['folder'] = array(
+            'class_name' => 'DocumentFolder',
+            'foreign_key' => 'range_id',
+        );
+        $config['belongs_to']['author'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
+        $config['belongs_to']['message'] = array(
+            'class_name' => 'Message',
+            'foreign_key' => 'range_id',
+        );
+        $config['belongs_to']['course'] = array(
+            'class_name' => 'Course',
+            'foreign_key' => 'seminar_id',
+        );
+        $config['belongs_to']['institute'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'seminar_id',
+        );
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'seminar_id',
+        );
         parent::configure($config);
     }
 

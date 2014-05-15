@@ -32,16 +32,17 @@ class LogEvent extends SimpleORMap
 
     protected $formatted_text = '';
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'log_events';
-        $config['belongs_to'] = array(
-            'action' => array(
-                'class_name' => 'LogAction',
-                'foreign_key' => 'action_id'),
-            'user' => array(
-                'class_name' => 'User',
-                'foreign_key' => 'user_id'));
+        $config['belongs_to']['action'] = array(
+            'class_name' => 'LogAction',
+            'foreign_key' => 'action_id',
+        );
+        $config['belongs_to']['user'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
         $config['notification_map']['after_create'] = 'LogEventDidCreate';
         $config['notification_map']['before_create'] = 'LogEventWillCreate';
         parent::configure($config);

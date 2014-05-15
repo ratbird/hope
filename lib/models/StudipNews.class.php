@@ -367,20 +367,25 @@ class StudipNews extends SimpleORMap {
         return $news_range_perm_cache[$user_id.$range_id.$operation] = false;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'news';
-        $config['has_many']['news_ranges'] = array('class_name' => 'NewsRange',
-                                                            'assoc_foreign_key' => 'news_id',
-                                                            'on_delete' => 'delete',
-                                                            'on_store' => 'store'
-                                                           );
-        $config['has_many']['comments'] = array('class_name' => 'StudipComment',
-                                            'assoc_foreign_key' => 'object_id',
-                                            'on_delete' => 'delete',
-                                            'on_store' => 'store');
-        $config['belongs_to']['owner'] = array('class_name' => 'User',
-                                            'foreign_key' => 'user_id');
+        $config['has_many']['news_ranges'] = array(
+            'class_name' => 'NewsRange',
+            'assoc_foreign_key' => 'news_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['comments'] = array(
+            'class_name' => 'StudipComment',
+            'assoc_foreign_key' => 'object_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['belongs_to']['owner'] = array(
+            'class_name' => 'User',
+            'foreign_key' => 'user_id',
+        );
         parent::configure($config);
     }
 

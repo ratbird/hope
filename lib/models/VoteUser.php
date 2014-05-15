@@ -16,5 +16,9 @@
  */
 class VoteUser extends SimpleORMap
 {
-    protected $db_table = 'vote_user';
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'vote_user';
+        parent::configure($config);
+    }
 }

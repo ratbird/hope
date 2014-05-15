@@ -57,7 +57,7 @@ class CronjobSchedule extends SimpleORMap
     const PRIORITY_NORMAL = 'normal';
     const PRIORITY_HIGH   = 'high';
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'cronjobs_schedules';
 

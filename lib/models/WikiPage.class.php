@@ -23,7 +23,7 @@
 
 class WikiPage extends SimpleORMap {
 
-    protected static function __construct()
+    protected static function __construct($config = array())
     {
         $config['db_table'] = 'wiki';
 

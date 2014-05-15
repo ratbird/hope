@@ -12,7 +12,7 @@
  * $lockrule['attributes']['name'] = 1;
  * $lockrule->store();
  * @endcode
-
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -89,7 +89,7 @@ class LockRule extends SimpleORMap
         return self::findByObject_type($type, " ORDER BY name");
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'lock_rules';
         $config['default_values']['description'] = '';
@@ -131,7 +131,4 @@ class LockRule extends SimpleORMap
             return 0;
         }
     }
-
-
-
 }

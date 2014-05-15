@@ -101,12 +101,16 @@ class DatafieldEntryModel extends SimpleORMap
         return $ret;
     }
 
-    protected static function configure()
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'datafields_entries';
-        $config['belongs_to'] = array('datafield' => array('class_name' => 'Datafield',
-                                                        'foreign_key' => 'datafield_id'));
-        $config['additional_fields']['name'] = array('datafiled' => 'name');
+        $config['belongs_to']['datafield'] = array(
+            'class_name' => 'Datafield',
+            'foreign_key' => 'datafield_id'
+        );
+        $config['additional_fields']['name'] = array(
+            'datafiled' => 'name'
+        );
         parent::configure($config);
     }
 

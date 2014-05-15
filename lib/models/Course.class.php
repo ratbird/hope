@@ -77,73 +77,80 @@ class Course extends SimpleORMap
             : Course::find($GLOBALS['SessSemName'][1]);
     }
 
-    protected static function configure($config = null)
+    protected static function configure($config = array())
     {
-        $config = array();
         $config['db_table'] = 'seminare';
-        $config['has_many'] = array(
-            'members' => array(
-                    'class_name' => 'CourseMember',
-                    'assoc_func' => 'findByCourse',
-                    'on_delete' => 'delete',
-                    'on_store' => 'store'),
-            'statusgruppen' => array(
-                    'class_name' => 'Statusgruppen',
-                    'on_delete' => 'delete',
-                    'on_store' => 'store'),
-            'admission_applicants' => array(
-                    'class_name' => 'AdmissionApplication',
-                    'assoc_func' => 'findByCourse',
-                    'on_delete' => 'delete',
-                    'on_store' => 'store'),
-            'datafields' => array(
-                    'class_name' => 'DatafieldEntryModel',
-                    'assoc_foreign_key' =>
-                        function($model,$params) {
-                $model->setValue('range_id', $params[0]->id);
-            },
+        $config['has_many']['members'] = array(
+            'class_name' => 'CourseMember',
+            'assoc_func' => 'findByCourse',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['statusgruppen'] = array(
+            'class_name' => 'Statusgruppen',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['admission_applicants'] = array(
+            'class_name' => 'AdmissionApplication',
+            'assoc_func' => 'findByCourse',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['datafields'] = array(
+            'class_name' => 'DatafieldEntryModel',
+            'assoc_foreign_key' =>
+                function($model,$params) {
+                    $model->setValue('range_id', $params[0]->id);
+                },
             'assoc_func' => 'findByModel',
             'on_delete' => 'delete',
             'on_store' => 'store',
             'foreign_key' =>
-            function($course) {
-                return array($course);
-            }),
-            'cycles' => array(
-                    'class_name' => 'SeminarCycleDate',
-                    'assoc_func' => 'findBySeminar',
-                    'on_delete' => 'delete',
-                    'on_store' => 'store'),
+                function($course) {
+                    return array($course);
+                }
+        );
+        $config['has_many']['cycles'] = array(
+            'class_name' => 'SeminarCycleDate',
+            'assoc_func' => 'findBySeminar',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
         );
 
-        $config['belongs_to'] = array(
-            'start_semester' => array(
-                'class_name' => 'Semester',
-                'foreign_key' => 'start_time',
-                'assoc_func' => 'findByTimestamp',
-                'assoc_foreign_key' => 'beginn'),
-            'end_semester' => array(
-                'class_name' => 'Semester',
-                'foreign_key' => 'end_time',
-                'assoc_func' => 'findByTimestamp',
-                'assoc_foreign_key' => 'beginn'),
-            'home_institut' => array(
-                'class_name' => 'Institute',
-                'foreign_key' => 'institut_id',
-                'assoc_func' => 'find'),
-            'aux' => array(
-                'class_name' => 'AuxLockRule',
-                'foreign_key' => 'aux_lock_rule')
+        $config['belongs_to']['start_semester'] = array(
+            'class_name' => 'Semester',
+            'foreign_key' => 'start_time',
+            'assoc_func' => 'findByTimestamp',
+            'assoc_foreign_key' => 'beginn',
         );
-        $config['has_and_belongs_to_many'] = array(
-            'study_areas' => array(
-                'class_name' => 'StudipStudyArea',
-                'thru_table' => 'seminar_sem_tree',
-                'on_delete' => 'delete', 'on_store' => 'store'),
-            'institutes' => array(
-                'class_name' => 'Institute',
-                'thru_table' => 'seminar_inst',
-                'on_delete' => 'delete', 'on_store' => 'store'));
+        $config['belongs_to']['end_semester'] = array(
+            'class_name' => 'Semester',
+            'foreign_key' => 'end_time',
+            'assoc_func' => 'findByTimestamp',
+            'assoc_foreign_key' => 'beginn',
+        );
+        $config['belongs_to']['home_institut'] = array(
+            'class_name' => 'Institute',
+            'foreign_key' => 'institut_id',
+            'assoc_func' => 'find',
+        );
+        $config['belongs_to']['aux'] = array(
+            'class_name' => 'AuxLockRule',
+            'foreign_key' => 'aux_lock_rule',
+        );
+        $config['has_and_belongs_to_many']['study_areas'] = array(
+            'class_name' => 'StudipStudyArea',
+            'thru_table' => 'seminar_sem_tree',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_and_belongs_to_many']['institutes'] = array(
+            'class_name' => 'Institute',
+            'thru_table' => 'seminar_inst',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
         $config['default_values']['beschreibung'] = '';
         $config['default_values']['lesezugriff'] = 1;
         $config['default_values']['schreibzugriff'] = 1;
@@ -151,6 +158,7 @@ class Course extends SimpleORMap
         $config['default_values']['admission_endtime'] = -1;
 
         $config['additional_fields']['end_time'] = true;
+
         $config['notification_map']['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
         $config['notification_map']['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
         $config['notification_map']['before_create'] = 'CourseWillCreate';

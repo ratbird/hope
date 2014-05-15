@@ -22,7 +22,9 @@
  */
 class StudyCourse extends SimpleORMap
 {
-
-    protected $db_table = 'studiengaenge';
-
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'studiengaenge';
+        parent::configure($config);
+    }
 }

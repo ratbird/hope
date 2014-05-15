@@ -152,13 +152,11 @@ class User extends AuthUserMd5
                 'class_name' => 'UserInfo',
                 'on_delete' => 'delete',
                 'on_store' => 'store');
-        $info_getter = function ($record, $field) { return $record->info->getValue($field);};
-        $info_setter = function ($record, $field, $value) { return $record->info->setValue($field, $value);};
         $info = new UserInfo();
         $info_meta = $info->getTableMetadata();
         foreach ($info_meta['fields'] as $field => $meta) {
             if ($field !== $info_meta['pk'][0]) {
-                $config['additional_fields'][$field] = array('get' => $info_getter, 'set' => $info_setter);
+                $config['additional_fields'][$field] = array('info', $field);
             }
         }
 
@@ -204,7 +202,7 @@ class User extends AuthUserMd5
         if (!$sql) {
             return $this->vorname . ' ' . $this->nachname;
         }
-        $data = array_map(array($db,'quote'), $this->toArray());
+        $data = array_map(array($db,'quote'), $this->toArray('vorname nachname username title_front title_rear motto perms'));
         return $db->query("SELECT " . strtr(strtolower($sql), $data))->fetchColumn();
     }
 

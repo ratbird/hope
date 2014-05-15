@@ -108,4 +108,9 @@ class InstituteMember extends SimpleORMap
                              array($user_id),
                              __CLASS__ . '::buildExisting');
     }
+
+        function getUserFullname($format = "full")
+    {
+        return User::build(array_merge(array('motto' => ''), $this->toArray('vorname nachname username title_front title_rear')))->getFullname($format);
+    }
 }

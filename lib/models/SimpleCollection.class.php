@@ -652,4 +652,34 @@ class SimpleCollection extends StudipArrayObject
         }
         return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count, true));
     }
+
+     /**
+     * calls the given method on all elements
+     * of the collection
+     * @param string $method methodname to call
+     * @param array $params parameters for methodcall
+     * @return array of all return values
+     */
+    function sendMessage($method, $params = array()) {
+        $results = array();
+        foreach ($this as $record) {
+            $results[] = call_user_func_array(array($record, $method), $params);
+        }
+        return $results;
+    }
+
+    /**
+     * magic version of sendMessage
+     * calls undefineds methods on all elements
+     * of the collection
+     * But beware of the dark side...
+     *
+     * @param string $method methodname to call
+     * @param array $params parameters for methodcall
+     * @return array of all return values
+     */
+    function __call($method, $params)
+    {
+        return $this->sendMessage($method, $params);
+    }
 }

@@ -84,6 +84,7 @@ class Course extends SimpleORMap
         $config['has_many'] = array(
             'members' => array(
                     'class_name' => 'CourseMember',
+                    'assoc_func' => 'findByCourse',
                     'on_delete' => 'delete',
                     'on_store' => 'store'),
             'statusgruppen' => array(
@@ -92,6 +93,7 @@ class Course extends SimpleORMap
                     'on_store' => 'store'),
             'admission_applicants' => array(
                     'class_name' => 'AdmissionApplication',
+                    'assoc_func' => 'findByCourse',
                     'on_delete' => 'delete',
                     'on_store' => 'store'),
             'datafields' => array(

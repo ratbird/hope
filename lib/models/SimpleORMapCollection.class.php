@@ -154,36 +154,6 @@ class SimpleORMapCollection extends SimpleCollection
     }
 
     /**
-     * calls the given method on all elements
-     * of the collection
-     * @param string $method methodname to call
-     * @param array $params parameters for methodcall
-     * @return array of all return values
-     */
-    function sendMessage($method, $params = array()) {
-        $results = array();
-        foreach ($this as $record) {
-            $results[] = call_user_func_array(array($record, $method), $params);
-        }
-        return $results;
-    }
-
-    /**
-     * magic version of sendMessage
-     * calls undefineds methods on all elements
-     * of the collection
-     * But beware of the dark side...
-     *
-     * @param string $method methodname to call
-     * @param array $params parameters for methodcall
-     * @return array of all return values
-     */
-    function __call($method, $params)
-    {
-        return $this->sendMessage($method, $params);
-    }
-
-    /**
      * returns element with given primary key value
      *
      * @param string $value primary key value to search for

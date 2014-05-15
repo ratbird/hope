@@ -125,4 +125,9 @@ class CourseMember extends SimpleORMap
         $config['additional_fields']['course_name'] = array();
         parent::configure($config);
     }
+
+    function getUserFullname($format = "full")
+    {
+        return User::build(array_merge(array('motto' => ''), $this->toArray('vorname nachname username title_front title_rear')))->getFullname($format);
+    }
 }

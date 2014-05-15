@@ -872,19 +872,20 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         } else {
             $options['assoc_func_params_func'] = function($record) use ($name, $options) { return $options['foreign_key'] === 'id' ? $record->getId() : $record->getValue($options['foreign_key']);};
         }
-        $that = $this;
         if ($options['assoc_foreign_key'] instanceof Closure) {
             if ($type === 'belongs_to') {
-                $options['assoc_foreign_key_getter'] = function($record) use ($name, $options, $that) { return call_user_func($options['assoc_foreign_key'], $record, $name, $options, $that);};
+                $options['assoc_foreign_key_getter'] = function($record, $that) use ($name, $options) { return call_user_func($options['assoc_foreign_key'], $record, $name, $options, $that);};
             } else {
                 $options['assoc_foreign_key_setter'] = function($record, $params) use ($name, $options) { return call_user_func($options['assoc_foreign_key'], $record, $params, $name, $options);};
             }
-        } else {
+        } elseif ($options['assoc_foreign_key']) {
             if ($type === 'belongs_to') {
-                $options['assoc_foreign_key_getter'] = function($record) use ($name, $options, $that) { return $record->getValue($options['assoc_foreign_key']);};
+                $options['assoc_foreign_key_getter'] = function($record, $that) use ($name, $options) { return $record->getValue($options['assoc_foreign_key']);};
             } else {
                 $options['assoc_foreign_key_setter'] = function($record, $value) use ($name, $options) { return $record->setValue($options['assoc_foreign_key'], $value);};
             }
+        } else {
+            throw new Exception("Could not determine assoc_foreign_key for relation " . $name);
         }
         return $options;
     }
@@ -915,10 +916,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $options = array();
         foreach(array('has_many', 'belongs_to', 'has_one', 'has_and_belongs_to_many') as $type) {
             if (isset($this->{$type}[$relation])) {
-                $options = $this->{$type}[$relation];
+                $options = self::$config[get_class($this)][$type][$relation];
                 if (!isset($options['type'])) {
-                    $options = $this->parseRelationOptions($type, $relation, $options);
+                    $options = $this->parseRelationOptions($type, $relation, $options, $this->db_table);
                     $options['type'] = $type;
+                    self::$config[get_class($this)][$type][$relation] = $options;
                     $this->{$type}[$relation] = $options;
                 }
                 break;
@@ -1214,7 +1216,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                              $foreign_key_value = call_user_func($options['assoc_func_params_func'], $this);
                              call_user_func($options['assoc_foreign_key_setter'], $value, $foreign_key_value);
                          } else {
-                             $assoc_foreign_key_value = call_user_func($options['assoc_foreign_key_getter'], $value);
+                             $assoc_foreign_key_value = call_user_func($options['assoc_foreign_key_getter'], $value, $this);
                              if ($assoc_foreign_key_value === null) {
                                  throw new InvalidArgumentException(sprintf('trying to set belongs_to object of type: %s, but assoc_foreign_key: %s is null', get_class($value), $options['assoc_foreign_key']));
                              }

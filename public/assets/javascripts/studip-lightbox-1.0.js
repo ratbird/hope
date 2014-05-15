@@ -161,6 +161,13 @@
             url = $(element).closest('form').attr('action');
             method = $(element).closest('form').attr('method');
             data = $(element).closest('form').serializeArray();
+            
+            if ($(element).is('button')) {
+                data.push({
+                    name: $(element).attr('name'),
+                    value: $(element).val()
+                });
+            }
         } else {
             url = $(element).attr('href');
         }
@@ -196,6 +203,10 @@
             options.buttons = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
 
             STUDIP.Lightbox.show(response, options);
+        }).fail(function () {
+            if (STUDIP.Overlay) {
+                STUDIP.Overlay.hide();
+            }
         });
     };
 

@@ -16,14 +16,13 @@
  */
 class VoteAnswerUser extends SimpleORMap
 {
-    public function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'voteanswers_user';
-        $this->has_one['user'] = array (
+        $config['db_table'] = 'voteanswers_user';
+        $config['has_one']['user'] = array (
             'class_name' => 'User',
-            'foreign_key' => 'user_id',
-            'assoc_func' => 'findByUser_id'
+            'foreign_key' => 'user_id'
         );
-        parent::__construct($id);
+        parent::configure($config);
     }
 }

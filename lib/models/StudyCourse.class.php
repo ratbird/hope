@@ -12,7 +12,7 @@
  * @copyright   2013 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string studiengang_id database column
  * @property string id alias column for studiengang_id
  * @property string name database column
@@ -23,9 +23,6 @@
 class StudyCourse extends SimpleORMap
 {
 
-    function __construct($id = null)
-    {
-        $this->db_table = 'studiengaenge';
-        parent::__construct($id);
-    }
+    protected $db_table = 'studiengaenge';
+
 }

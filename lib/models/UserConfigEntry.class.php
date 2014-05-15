@@ -13,7 +13,7 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string userconfig_id database column
  * @property string id alias column for userconfig_id
  * @property string parent_id database column
@@ -30,8 +30,7 @@ class UserConfigEntry extends SimpleORMap
 
     static function findByFieldAndUser($field, $user_id)
     {
-        $found = self::findBySql("field = ? AND user_id = ?", func_get_args());
-        return isset($found[0]) ? $found[0] : null;
+        return self::findOneBySql("field = ? AND user_id = ?", func_get_args());
     }
 
     static function deleteByUser($user_id)
@@ -39,14 +38,10 @@ class UserConfigEntry extends SimpleORMap
         return self::deleteBySQL("user_id = ?", func_get_args());
     }
 
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'user_config';
-        $this->default_values['comment'] = '';
-        parent::__construct($id);
+        $config['db_table'] = 'user_config';
+        $config['default_values']['comment'] = '';
+        parent::configure($config);
     }
 }

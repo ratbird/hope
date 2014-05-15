@@ -38,30 +38,25 @@ class StudipStudyArea extends SimpleORMap
     const ROOT = 'root';
 
 
-    /**
-     * Constructor.
-     *
-     * @return void
-     */
-    function __construct($id = null)
+    protected static function configure()
     {
-        $this->db_table = 'sem_tree';
-        $this->default_values['info'] = '';
-        $this->default_values['type'] = 0;
+        $config['db_table'] = 'sem_tree';
+        $config['default_values']['info'] = '';
+        $config['default_values']['type'] = 0;
 
-        $this->has_many = array('_children' => array('class_name' => 'StudipStudyArea',
+        $config['has_many'] = array('_children' => array('class_name' => 'StudipStudyArea',
                                                      'assoc_foreign_key' => 'parent_id',
                                                      'assoc_func' => 'findByParent',
                                                      'on_delete' => 'delete',
                                                      'on_store' => 'store'));
-        $this->has_and_belongs_to_many = array('courses' => array('class_name' => 'Course',
+        $config['has_and_belongs_to_many'] = array('courses' => array('class_name' => 'Course',
                                                                    'thru_table' => 'seminar_sem_tree'));
-        $this->belongs_to = array('institute' => array('class_name' => 'Institute',
+        $config['belongs_to'] = array('institute' => array('class_name' => 'Institute',
                                                         'foreign_key' => 'studip_object_id'),
                                    '_parent' => array('class_name' => 'StudipStudyArea',
                                                       'foreign_key' => 'parent_id'
                                                       ));
-        parent::__construct($id);
+        parent::configure($config);
     }
 
     /**

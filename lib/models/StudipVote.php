@@ -17,26 +17,27 @@
  */
 class StudipVote extends SimpleORMap {
 
-    public function __construct($id = null) {
-        $this->db_table = 'vote';
-        $this->has_many['answers'] = array(
+    protected static function configure()
+    {
+        $config['db_table'] = 'vote';
+        $config['has_many']['answers'] = array(
             'class_name' => 'VoteAnswer'
         );
-        $this->has_many['anonymous_users'] = array(
+        $config['has_many']['anonymous_users'] = array(
             'class_name' => 'VoteUser'
         );
-        $this->has_one['author'] = array(
+        $config['has_one']['author'] = array(
             'class_name' => 'User',
             'foreign_key' => 'author_id',
             'assoc_func' => 'findByUser_id'
         );
-        $this->additional_fields['users'] = true;
-        $this->additional_fields['count'] = true;
-        $this->additional_fields['maxvotes'] = true;
-        $this->additional_fields['countinfo'] = true;
-        $this->additional_fields['anonymousinfo'] = true;
-        $this->additional_fields['endinfo'] = true;
-        parent::__construct($id);
+        $config['additional_fields']['users'] = true;
+        $config['additional_fields']['count'] = true;
+        $config['additional_fields']['maxvotes'] = true;
+        $config['additional_fields']['countinfo'] = true;
+        $config['additional_fields']['anonymousinfo'] = true;
+        $config['additional_fields']['endinfo'] = true;
+        parent::configure($config);
     }
 
     public function getUsers() {
@@ -122,7 +123,7 @@ class StudipVote extends SimpleORMap {
     }
 
     public function insertVote($answers, $user_id) {
-        
+
         if (!$answers) {
             throw new Exception(_('Sie haben keine Antwort ausgewählt.'));
         }
@@ -133,7 +134,7 @@ class StudipVote extends SimpleORMap {
         if (!$this->multiplechoice && count($answers) != 1) {
             throw new Exception(_('Sie haben zu viele Antwort ausgewählt.'));
         }
-        
+
         /*
          * If we have a changerequest here make sure u delete all the given answers
          */
@@ -186,5 +187,5 @@ class StudipVote extends SimpleORMap {
         }
         return $this->userVoted() || Request::submitted('preview');
     }
-    
+
 }

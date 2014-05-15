@@ -23,17 +23,16 @@
 
 class WikiPage extends SimpleORMap {
 
-    function __construct($id = null)
+    protected static function __construct()
     {
-        $this->db_table = 'wiki';
+        $config['db_table'] = 'wiki';
 
-        $this->has_one['author'] = array(
+        $config['belongs_to']['author'] = array(
             'class_name' => 'User',
-            'assoc_foreign_key' => 'user_id',
             'foreign_key' => 'user_id'
         );
 
-        parent::__construct($id);
+        parent::configure($config);
     }
 
     static function findLatestPages($course_id)

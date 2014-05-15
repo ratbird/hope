@@ -369,19 +369,19 @@ class StudipNews extends SimpleORMap {
 
     protected static function configure()
     {
-        $config->db_table = 'news';
-        $config->has_many['news_ranges'] = array('class_name' => 'NewsRange',
+        $config['db_table'] = 'news';
+        $config['has_many']['news_ranges'] = array('class_name' => 'NewsRange',
                                                             'assoc_foreign_key' => 'news_id',
                                                             'on_delete' => 'delete',
                                                             'on_store' => 'store'
                                                            );
-        $config->has_many['comments'] = array('class_name' => 'StudipComment',
+        $config['has_many']['comments'] = array('class_name' => 'StudipComment',
                                             'assoc_foreign_key' => 'object_id',
                                             'on_delete' => 'delete',
                                             'on_store' => 'store');
-        $config->belongs_to['owner'] = array('class_name' => 'User',
+        $config['belongs_to']['owner'] = array('class_name' => 'User',
                                             'foreign_key' => 'user_id');
-        parent::configure((array)$config);
+        parent::configure($config);
     }
 
     function restoreRanges() {

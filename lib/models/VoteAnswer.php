@@ -17,26 +17,26 @@
  */
 class VoteAnswer extends SimpleORMap {
 
-    public function __construct($id = null) {
-        $this->db_table = 'voteanswers';
-        $this->has_many['users'] = array(
+    protected static function configure() {
+        $config['db_table'] = 'voteanswers';
+        $config['has_many']['users'] = array(
             'class_name' => 'VoteAnswerUser'
         );
-        $this->belongs_to['vote'] = array(
+        $config['belongs_to']['vote'] = array(
             'class_name' => 'StudipVote',
             'foreign_key' => 'vote_id'
         );
-        $this->additional_fields['count'] = true;
-        $this->additional_fields['prepare'] = true;
-        $this->additional_fields['percent'] = true;
-        $this->additional_fields['width'] = true;
-        $this->additional_fields['usernames'] = true;
-        parent::__construct($id);
+        $config['additional_fields']['count'] = true;
+        $config['additional_fields']['prepare'] = true;
+        $config['additional_fields']['percent'] = true;
+        $config['additional_fields']['width'] = true;
+        $config['additional_fields']['usernames'] = true;
+        parent::configure($config);
     }
 
     /**
      * Returns the number of votes for an answer
-     * 
+     *
      * @return int Number of votes
      */
     public function getCount() {
@@ -45,10 +45,10 @@ class VoteAnswer extends SimpleORMap {
         }
         return $this->counter;
     }
-    
+
     /**
      * Returns the percentage
-     * 
+     *
      * @return int
      */
     public function getPercent() {
@@ -57,10 +57,10 @@ class VoteAnswer extends SimpleORMap {
         }
         return round($this->count * 100 / $this->vote->count);
     }
-    
+
     /**
      * Returns the width of the answerbar
-     * 
+     *
      * @return int width
      */
     public function getWidth() {
@@ -69,12 +69,12 @@ class VoteAnswer extends SimpleORMap {
         }
         return $this->count / $this->vote->maxvotes;
     }
-    
+
     /**
      * Deletes a uservote if he voted for this answer
      */
     public function deleteUser($user_id) {
-        
+
         // Search the user to check if we have to decrease the counter
         if ($user = $this->users->findOneBy('user_id', $user_id)) {
             $user->delete();
@@ -82,10 +82,10 @@ class VoteAnswer extends SimpleORMap {
             $this->store();
         }
     }
-        
+
     /**
      * Fetches all user that voted for this anser
-     * 
+     *
      * @return array alls users
      */
     public function getUsernames() {

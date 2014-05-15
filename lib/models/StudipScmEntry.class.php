@@ -6,11 +6,11 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- * 
+ *
  * @author André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
  * @author Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @access public
- * 
+ *
  * @property string scm_id database column
  * @property string id alias column for scm_id
  * @property string range_id database column
@@ -26,14 +26,12 @@
 
 class StudipScmEntry extends SimpleORMap
 {
-    /**
-     * @param mixed $id primary key of table
-     */
-    function __construct($id = null)
-    {
-        $this->db_table = 'scm';
 
-        $this->belongs_to = array(
+    protected static function configure()
+    {
+        $config['db_table'] = 'scm';
+
+        $config['belongs_to'] = array(
             'user' => array(
                 'class_name'  => 'User',
                 'foreign_key' => 'user_id',
@@ -44,6 +42,6 @@ class StudipScmEntry extends SimpleORMap
             ),
         );
 
-        parent::__construct($id);
+        parent::configure($config);
     }
 }

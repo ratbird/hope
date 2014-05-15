@@ -12,7 +12,7 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  * @property string user_id database column
  * @property string id alias column for user_id
  * @property string hobby database column
@@ -40,23 +40,20 @@
  */
 
 class UserInfo extends SimpleORMap
-{ 
+{
     /**
      * Constants for column geschlecht
      */
     const GENDER_UNKNOWN = 0;
     const GENDER_FEMALE = 2;
     const GENDER_MALE = 1;
-    
-    /**
-     *
-     * @param string $id primary key of table
-     */
-    function __construct($id = null)
+
+
+    protected static function configure()
     {
-        $this->db_table = 'user_info';
-        $this->default_values['publi'] = '';
-        $this->default_values['schwerp'] = '';
-        parent::__construct($id);
+        $config['db_table'] = 'user_info';
+        $config['default_values']['publi'] = '';
+        $config['default_values']['schwerp'] = '';
+        parent::configure($config);
     }
 }

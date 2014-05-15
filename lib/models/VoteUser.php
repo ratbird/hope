@@ -16,9 +16,5 @@
  */
 class VoteUser extends SimpleORMap
 {
-    public function __construct($id = null)
-    {
-        $this->db_table = 'vote_user';
-        parent::__construct($id);
-    }
+    protected $db_table = 'vote_user';
 }

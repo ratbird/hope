@@ -648,14 +648,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   text-align: left;
 }
 table.default tbody td {
@@ -817,7 +817,7 @@ table.default2 tbody.togglable th:before {
 .studip_form > fieldset {
   position: relative;
   padding-top: 3em;
-  border-color: #d3d9e5;
+  border-color: #d4dbe5;
   border-style: solid;
   border-width: 1px;
   margin-bottom: 10px;
@@ -1700,7 +1700,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
 }
 section.contentbox {
   border-color: #D3D9E5;
@@ -1813,7 +1813,6 @@ section.contentbox article.open header h1 a {
   margin: 0px;
   padding: 1px 5px;
   /* border: 2px solid white; */
-
   background-color: #D60000;
   color: white;
   font-size: 10px;
@@ -2780,7 +2779,6 @@ td.tddaterowpx {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
-
   *zoom: 1;
   padding: 0 0.5em;
 }
@@ -3553,61 +3551,58 @@ a.opengraph_info:hover {
   height: 30px;
 }
 .ui-widget-overlay {
-  background: #1e3e70;
-  opacity: 0.5;
+  background: rgba(40, 73, 124, 0.5);
+  opacity: 1;
 }
 .ui-dialog {
-  border: 0px;
-  padding: 0px;
-  -webkit-box-shadow: 0px 0px 5px #454545;
-  -moz-box-shadow: 0px 0px 5px #454545;
-  box-shadow: 0px 0px 5px #454545;
+  border: 0;
+  padding: 0;
+  -webkit-box-shadow: 0px 0px 5px #636a71;
+  -moz-box-shadow: 0px 0px 5px #636a71;
+  box-shadow: 0px 0px 5px #636a71;
 }
 .ui-dialog-titlebar {
-  background: #24437c;
-  border: 0px;
+  background: #7e92b0;
+  border: 0;
+  font-size: 1.5em;
 }
 .ui-dialog .ui-dialog-titlebar-close {
-  border: 0px;
-  background: #24437c;
+  border: 0;
+  background: #7e92b0;
   width: 32px;
   height: 32px;
   margin-top: -16px;
   text-align: center;
   line-height: 32px;
+  padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar-close:hover {
-  border: 0px;
-  background: #24437c;
+  border: 0;
+  background: #7e92b0;
   width: 32px;
   height: 32px;
   margin-top: -16px;
+  padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon {
   background-image: url("../images/icons/16/white/decline.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/decline.png") 1x, url("../images/icons/32/white/decline.png") 2x);
-  background-position: 0 0;
+  background-position: 0;
+  margin: 0;
   display: inline-block;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
-  margin: 0;
   background-image: url("../images/icons/16/white/decline.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/decline.png") 1x, url("../images/icons/32/white/decline.png") 2x);
-}
-.ui-widget-header {
-  font-size: 1.5em;
-}
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
-  text-align: center;
-  float: none;
 }
 .ui-dialog .ui-dialog-buttonpane {
   padding: 0.5em 0.4em;
   margin: 0 1em;
   border-color: #d4dbe5;
 }
-.ui-button-text-only .ui-button-text {
-  padding: 0;
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  text-align: center;
+  float: none;
 }
 .ui-dialog .ui-button {
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(20%, #ccd4e1), to(#ccd4e1));
@@ -3669,69 +3664,31 @@ a.opengraph_info:hover {
   cursor: default;
   opacity: 0.65;
 }
-.ui-button.accept,
-.ui-button.cancel {
-  white-space: normal;
-}
-.ui-button.accept:before,
-.ui-button.cancel:before {
-  content: " ";
-  float: left;
-  height: 16px;
-  margin: -2px 8px 0 -4px;
-  width: 16px;
-}
-.ui-button.accept:before {
-  background: no-repeat;
-  background-image: url("../images/icons/16/blue/accept.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1x, url("../images/icons/32/blue/accept.png") 2x);
-}
-.ui-button.cancel:before {
-  background: no-repeat;
-  background-image: url("../images/icons/16/blue/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1x, url("../images/icons/32/blue/decline.png") 2x);
-}
-/****************************************************************************/
-/* Grouped Buttons                                                          */
-/****************************************************************************/
-.button-group {
-  display: inline-block;
-  list-style: none;
-  margin: 0;
+.ui-button-text-only .ui-button-text {
   padding: 0;
 }
-.button-group button,
-.button-group .ui-button {
-  border-left: 1px solid #899ab9;
-  float: left;
-  margin-left: -1px;
-  margin-right: 0;
+.modal-overlay {
+  background: rgba(40, 73, 124, 0.5);
+  opacity: 1;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
 }
-.button-group > button:first-child,
-.button-group > .ui-button:first-child {
-  -webkit-border-bottom-right-radius: 2px;
-  -webkit-border-top-right-radius: 2px;
-  -moz-border-radius-bottomright: 2px;
-  -moz-border-radius-topright: 2px;
-  border-bottom-right-radius: 2px;
-  border-top-right-radius: 2px;
-  border-left: 1px solid #899ab9;
-  margin-left: 0;
+.modal-overlay-local {
+  background-color: rgba(105, 118, 127, 0.5);
+  position: absolute;
 }
-.button-group > button:not(:first-child):not(:last-child),
-.button-group > .ui-button:not(:first-child):not(:last-child) {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
+.modal-overlay-ajax {
+  background-image: url("../images/ajax_indicator_small.gif");
+  background-image: none, url("../images/ajax-indicator-white.svg");
+  background-position: center;
+  background-repeat: no-repeat;
 }
-.button-group > button:last-child,
-.button-group > .ui-button:last-child {
-  -webkit-border-bottom-left-radius: 0;
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  -moz-border-radius-topleft: 0;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
+.modal-overlay-ajax.modal-overlay-dark {
+  background-image: none, url("../images/ajax-indicator-black.svg");
 }
 /* --- Schrift (Vorgaben: Typ, Gr��e, Farbe) -------------------------------- */
 body,

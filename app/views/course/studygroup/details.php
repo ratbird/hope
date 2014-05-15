@@ -13,11 +13,9 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId()) || $members
         $action = _("Hinweis:");
         $infotext= '<font color = red>' . _('Sie sind einE AdministratorIn und können sich daher nicht für Studiengruppen anmelden.') . '</font>';
         $icon = 'icons/16/red/decline.png';
-
-
 } else {
     $action = _("Aktionen:");
-    $infolink = '<a rel="lightbox" href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
+    $infolink = '<a data-lightbox href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
     $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }
 

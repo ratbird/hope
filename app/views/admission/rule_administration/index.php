@@ -54,7 +54,7 @@ $img = 'checkbox-unchecked';
     ?>
     <tr id="ruletype_<?= $type ?>">
 <td>
-            <a href="<?= $controller->url_for('admission/ruleadministration/check_activation', $type) ?>" rel="lightbox">
+            <a href="<?= $controller->url_for('admission/ruleadministration/check_activation', $type) ?>" data-lightbox>
                 <?= Assets::img('icons/16/blue/'.$img.'.png', 
                     array(
                     'alt' => $text,

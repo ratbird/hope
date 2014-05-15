@@ -16,10 +16,10 @@
             <div>
             <? if (!$is_locked['admission_type'] || $current_courseset->isUserAllowedToEdit($user_id)) : ?>
                 <?  if ($current_courseset->isUserAllowedToAssignCourse($user_id, $course_id)) : ?>
-                    <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', array('rel' => 'lightbox')) ?>
+                    <?= Studip\Button::create(_("Zuordnung aufheben"), 'change_course_set_unassign', array('data-lightbox' => '')) ?>
                 <? endif ?>
                 <? if ($current_courseset->isUserAllowedToEdit($user_id)) : ?>
-                    <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->url_for('/edit_courseset/' . $current_courseset->getId()), array('rel' => 'lightbox')); ?>
+                    <?= Studip\LinkButton::create(_("Anmeldeset bearbeiten"), $controller->url_for('/edit_courseset/' . $current_courseset->getId()), array('data-lightbox' => '')); ?>
                 <? endif ?>
             <? endif ?>
             </div>
@@ -47,14 +47,14 @@
             </label>
             <div>
             <? if (!$is_locked['passwort']) : ?>
-                <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->url_for('/instant_course_set', array('type' => 'PasswordAdmission')),array('rel' => 'lightbox')) ?>
+                <?= Studip\LinkButton::create(_("Anmeldung mit Passwort"), $controller->url_for('/instant_course_set', array('type' => 'PasswordAdmission')),array('data-lightbox' => '')) ?>
             <? endif ?>
             <? if (!$is_locked['admission_type']) : ?>
-                <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', array('type' => 'LockedAdmission')),array('rel' => 'lightbox')) ?>
-                <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('rel' => 'lightbox')) ?>
+                <?= Studip\LinkButton::create(_("Anmeldung gesperrt"), $controller->url_for('/instant_course_set', array('type' => 'LockedAdmission')),array('data-lightbox' => '')) ?>
+                <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('data-lightbox' => '')) ?>
                 <br>
-                <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('rel' => 'lightbox')) ?>
-                <?= Studip\LinkButton::create(_("Zeitgesteurte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('rel' => 'lightbox')) ?>
+                <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('data-lightbox' => '')) ?>
+                <?= Studip\LinkButton::create(_("Zeitgesteurte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('data-lightbox' => '')) ?>
             <? endif ?>
             </div>
         <? endif ?>
@@ -87,7 +87,7 @@
         <label for="admission_waitlist_max">
               <input <?=$is_locked['admission_waitlist_max'] ?> type="text" style="display:inline" id="admission_waitlist_max"  name="admission_waitlist_max" value="<?= ($course->admission_waitlist_max ?: '') ?>">
               <?=_("max. Anzahl an Wartenden (optional)")?></label>
-        <?= Studip\Button::create(_("Teilnehmeranzahl ändern"), 'change_admission_turnout', array('rel' => 'lightbox')) ?>
+        <?= Studip\Button::create(_("Teilnehmeranzahl ändern"), 'change_admission_turnout', array('data-lightbox' => '')) ?>
     </fieldset>
     </form>
 <? endif ?>
@@ -117,7 +117,7 @@
               <label for="admission_binding">
               <input <?=$is_locked['admission_binding'] ?> id="admission_binding" type="checkbox" <?= ($course->admission_binding == 1 ? "checked" : ""); ?> name="admission_binding"  value="1">
               <?=_("Anmeldung ist <u>verbindlich</u>. (Teilnehmer können sich nicht austragen.)")?></label>
-              <?= Studip\Button::create(_("Anmeldemodus ändern"), 'change_admission_prelim', array('rel' => 'lightbox')) ?>
+              <?= Studip\Button::create(_("Anmeldemodus ändern"), 'change_admission_prelim', array('data-lightbox' => '')) ?>
     </fieldset>
 </form>
 

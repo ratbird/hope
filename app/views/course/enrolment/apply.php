@@ -12,7 +12,7 @@
     <form name="apply_admission" action="<?= $controller->link_for('/apply/' . $course_id) ?>" method="post">
         <?= $admission_form ?>
         <div>
-        <?= Studip\Button::create(_("OK"), 'apply', array('rel' => 'lightbox')) ?>
+        <?= Studip\Button::create(_("OK"), 'apply', array('data-lightbox' => '')) ?>
         <?= Studip\Button::create(_("Abbrechen"), 'cancel') ?>
         </div>
         <?= CSRFProtection::tokenTag() ?>
@@ -28,7 +28,7 @@
         &nbsp;(<?= sprintf(_("max. Teilnehmeranzahl: %s / Anzahl der Anmeldungen: %s"), $priocourses->admission_turnout, $num_claiming) ?>)
     <? endif ?>
     <div>
-    <?= Studip\Button::create(_("OK"), 'claim', array('rel' => 'lightbox')) ?>
+    <?= Studip\Button::create(_("OK"), 'claim', array('data-lightbox' => '')) ?>
     <?= Studip\Button::create(_("Abbrechen"), 'cancel') ?>
     </div>
     <?= CSRFProtection::tokenTag() ?>

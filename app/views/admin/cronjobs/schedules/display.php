@@ -66,9 +66,11 @@
 <? endif; ?>
 </dl>
 
-<a rel="option" href="<?= $controller->url_for('admin/cronjobs/logs/schedule', $schedule->schedule_id) ?>">
-    <?= _('Log anzeigen') ?>
-</a>
-<a rel="option" href="<?= $controller->url_for('admin/cronjobs/schedules/edit', $schedule->schedule_id) ?>">
-    <?= _('Cronjob bearbeiten') ?>
-</a>
+<div data-lightbox-button>>
+    <a href="<?= $controller->url_for('admin/cronjobs/logs/schedule', $schedule->schedule_id) ?>">
+        <?= _('Log anzeigen') ?>
+    </a>
+    <a href="<?= $controller->url_for('admin/cronjobs/schedules/edit', $schedule->schedule_id) ?>">
+        <?= _('Cronjob bearbeiten') ?>
+    </a>
+</div>

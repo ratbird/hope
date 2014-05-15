@@ -143,7 +143,7 @@
             <?= $this->render_partial('admin/cronjobs/schedules/periodic-schedule', $schedules[$i]->toArray() + array('display' => 'table-cells')) ?>
         <? endif; ?>
             <td style="text-align: right">
-                <a rel="lightbox" href="<?= $controller->url_for('admin/cronjobs/schedules/display', $schedules[$i]->schedule_id) ?>">
+                <a data-lightbox href="<?= $controller->url_for('admin/cronjobs/schedules/display', $schedules[$i]->schedule_id) ?>">
                     <?= Assets::img('icons/16/blue/admin', tooltip2(_('Cronjob anzeigen'))) ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/schedules/edit', $schedules[$i]->schedule_id, $page) ?>">

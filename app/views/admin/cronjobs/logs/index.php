@@ -127,7 +127,7 @@
             <? endif; ?>
             </td>
             <td style="text-align: right">
-                <a rel="lightbox" href="<?= $controller->url_for('admin/cronjobs/logs/display', $logs[$i]->log_id, $page) ?>">
+                <a data-lightbox href="<?= $controller->url_for('admin/cronjobs/logs/display', $logs[$i]->log_id, $page) ?>">
                     <?= Assets::img('icons/16/blue/admin', tooltip2(_('Logeintrag anzeigen'))) ?>
                 </a>
                 <a href="<?= $controller->url_for('admin/cronjobs/logs/delete', $logs[$i]->log_id, $page) ?>">

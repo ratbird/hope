@@ -157,7 +157,9 @@ class Course extends SimpleORMap
         $config['default_values']['duration_time'] = 0;
         $config['default_values']['admission_endtime'] = -1;
 
-        $config['additional_fields']['end_time'] = true;
+        $config['additional_fields'] = array(
+            'end_time' => true,
+            'semtype' => true);
 
         $config['notification_map']['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
         $config['notification_map']['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
@@ -247,5 +249,29 @@ class Course extends SimpleORMap
             $p_status = $this->admission_applicants->findBy('user_id', $user_id)->val('status');
         }
         return $p_status;
+    }
+    
+    /**
+     * Returns the semType object that is defined for the course
+     * 
+     * @return SemType The semTypeObject for the course
+     */
+    public function getSemType() {
+        $semTypes = SemType::getTypes();
+        return $semTypes[$this->status];
+    }
+    
+    /**
+     * Returns the full name of a course. If the important course numbers
+     * (IMPORTANT_SEMNUMBER) is set in global configs it will also display
+     * the coursenumber
+     * 
+     * @return String Fullname
+     */
+    public function getFullname() {
+        if (Config::get()->IMPORTANT_SEMNUMBER) {
+            $name = $this->Veranstaltungsnummer.' ';
+        }
+        return $name.$this->semType['name'].': '.$this->name;
     }
 }

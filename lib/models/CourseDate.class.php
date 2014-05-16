@@ -19,37 +19,28 @@ class CourseDate extends SimpleORMap {
         return self::findBySQL("range_id = ? ORDER BY date ", array($seminar_id));
     }
 
-    function __construct($id = null)
+    protected static function configure($config = array())
     {
-        $this->db_table = 'termine';
-        $this->has_many = array(
-            'topics' => array(
-                'class_name' => 'CourseTopic',
-                /*'assoc_foreign_key' =>
-                    function($model,$params) {
-                        $model->setValue('range_id', $params[0]->id);
-                    },*/
-                'assoc_func' => 'findByTermin_id',
-                'on_delete' => 'delete',
-                'on_store' => 'store',
-                /*'foreign_key' =>
-                    function($course) {
-                        return array($course);
-                    }*/
-            ),
-            'dozenten' => array(
-                'class_name' => 'User',
-                'assoc_func' => 'findDozentenByTermin_id',
-                'on_delete' => 'delete',
-                'on_store' => 'store'
-            ),
-            'groups' => array(
-                'class_name' => 'Statusgruppen',
-                'assoc_func' => 'findByTermin_id',
-                'on_delete' => 'delete',
-                'on_store' => 'store'
-            )
+        $config['db_table'] = 'termine';
+        $config['has_many']['topics'] = array(
+            'class_name' => 'CourseTopic',
+            'assoc_func' => 'findByTermin_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
         );
-        parent::__construct($id);
+        $config['has_many']['statusgruppen'] = array(
+            'class_name' => 'Statusgruppen',
+            'assoc_func' => 'findByTermin_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
+        );
+        $config['has_many']['dozenten'] = array(
+            'class_name' => 'User',
+            'assoc_func' => 'findDozentenByTermin_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
+        );
+        parent::configure($config);
     }
+
 }

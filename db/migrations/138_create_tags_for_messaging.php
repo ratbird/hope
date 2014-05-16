@@ -37,7 +37,6 @@ class CreateTagsForMessaging extends DBMigration
             ");
             foreach ((array) $config['folder']['in'] as $folder_id => $tag) {
                 if ($tag !== "dummy") {
-                    var_dump($tag);
                     $statement->execute(array(
                         'tag' => $tag,
                         'user_id' => $result['user_id'],

@@ -665,7 +665,7 @@ function in_archiv ($sem_id)
               VALUES
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array(
+    $success = $statement->execute(array(
         $seminar_id,
         $name ?: '',
         $untertitel ?: '',
@@ -682,4 +682,7 @@ function in_archiv ($sem_id)
         $wikidump ?: '',
         $studienbereiche ?: '',
     ));
+    if ($success) {
+        NotificationCenter::postNotification('CourseDidArchive', $seminar_id);
+    }
 }

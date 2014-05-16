@@ -35,7 +35,7 @@
  */
 class Statusgruppen extends SimpleORMap
 {
-    protected function configure($config = array())
+    protected static function configure($config = array())
     {
         $config['db_table'] = 'statusgruppen';
         $config['has_many']['members'] = array(

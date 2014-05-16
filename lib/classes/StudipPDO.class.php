@@ -220,6 +220,7 @@ class StudipPDO extends PDO
         $st = $this->prepare($statement);
         $st->execute($input_parameters);
         if (is_callable($callable)) {
+            $data = array();
             $st->setFetchMode(PDO::FETCH_ASSOC);
             foreach ($st as $key => $row) {
                 $data[$key] = call_user_func($callable, $row, $key);

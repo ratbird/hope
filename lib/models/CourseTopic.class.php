@@ -28,9 +28,9 @@ class CourseTopic extends SimpleORMap {
         return self::findBySQL("seminar_id = ? ORDER BY priority ", array($seminar_id));
     }
 
-    function __construct($id = null)
+    protected static function configure($config = array())
     {
-        $this->db_table = 'themen';
-        parent::__construct($id);
+        $config['db_table'] = 'themen';
+        parent::configure($config);
     }
 }

@@ -916,7 +916,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $options = array();
         foreach(array('has_many', 'belongs_to', 'has_one', 'has_and_belongs_to_many') as $type) {
             if (isset($this->{$type}[$relation])) {
-                $options = self::$config[get_class($this)][$type][$relation];
+                $options = self::$config[get_class($this)][$type][$relation] ?: $this->{$type}[$relation];
                 if (!isset($options['type'])) {
                     $options = $this->parseRelationOptions($type, $relation, $options, $this->db_table);
                     $options['type'] = $type;

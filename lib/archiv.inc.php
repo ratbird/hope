@@ -506,6 +506,8 @@ function in_archiv ($sem_id)
 {
     global $SEM_CLASS,$SEM_TYPE, $ARCHIV_PATH, $TMP_PATH, $ZIP_PATH, $ZIP_OPTIONS, $_fullname_sql;
 
+    NotificationCenter::postNotification('CourseWillArchive', $seminar_id);
+
     //Besorgen der Grunddaten des Seminars
     $query = "SELECT Seminar_id, Name, Untertitel, Beschreibung,
                      start_time, Institut_id, status

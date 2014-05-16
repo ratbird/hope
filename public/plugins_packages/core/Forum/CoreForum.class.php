@@ -40,14 +40,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/joyride.css');
 
-        $dispatcher = new Trails_Dispatcher(
-            $this->getPluginPath(),
-            rtrim(PluginEngine::getLink($this, array(), null), '/'),
-            'index'
-        );
-
-        $dispatcher->plugin = $this;
-        $dispatcher->dispatch($unconsumed_path);
+        parent::perform($unconsumed_path);
     }
 
     private function setupAutoload() {

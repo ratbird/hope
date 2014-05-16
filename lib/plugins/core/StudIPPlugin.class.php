@@ -132,7 +132,18 @@ abstract class StudIPPlugin {
         $action = $args[0] !== '' ? array_shift($args).'_action' : 'show_action';
 
         if (!method_exists($this, $action)) {
-            throw new Exception(_('unbekannte Plugin-Aktion: ') . $action);
+            $trails_root = $this->getPluginPath();
+            $dispatcher = new Trails_Dispatcher($trails_root, null, 'index');
+            $dispatcher->current_plugin = $this;
+            try {
+                $dispatcher->dispatch($unconsumed_path);
+            } catch (Trails_UnknownAction $exception) {
+                if (count($args) > 0) {
+                    throw $exception;
+                } else {
+                    throw new Exception(_('unbekannte Plugin-Aktion: ') . $unconsumed_path);
+                }
+            }
         }
 
         call_user_func_array(array($this, $action), $args);

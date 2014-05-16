@@ -294,7 +294,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($seminars) == 0) {
-        $meldung = "info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"sem_portal.php\">", "</a>") . "§" . $meldung;
+        $meldung = "info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"dispatch.php/search/courses\">", "</a>") . "§" . $meldung;
     }
 
     foreach ($seminars as $seminar) {
@@ -495,7 +495,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             array  ("kategorie" => _("Veranstaltungen:"),
                 "eintrag" => array  (
                     array    (  "icon" => 'icons/16/black/search.png',
-                                        "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s."), "<a href=\"sem_portal.php\">", "</a>")
+                                        "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s."), "<a href=\"dispatch.php/search/courses\">", "</a>")
                     ),
                     array    (  "icon" => 'icons/16/black/add/seminar.png',
                                         "text"  => sprintf(_("Um Veranstaltungen anzulegen, nutzen Sie bitte den %sVeranstaltungs-Assistenten%s."), "<a href=\"admin_seminare_assi.php?new_session=TRUE\">", "</a>")
@@ -527,7 +527,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             array  ("kategorie" => _("Aktionen:"),
                 "eintrag" => array  (
                     array    (  "icon" => 'icons/16/black/search.png',
-                                        "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s."), "<a href=\"sem_portal.php\">", "</a>")
+                                        "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s."), "<a href=\"dispatch.php/search/courses\">", "</a>")
                     ),
                     array    (  "icon" => 'icons/16/black/institute.png',
                                         "text"  => sprintf(_("Um Einrichtungen zu suchen und sich Informationen anzeigen zu lassen, nutzen Sie die %sEinrichtungssuche%s."), "<a href=\"institut_browse.php\">", "</a>")

@@ -50,6 +50,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         if (!$sess_id){
             include ('lib/include/html_head.inc.php'); // Output of html head
             include ('lib/include/header.php');   // Output of Stud.IP head
+            include ('lib/include/deprecated_tabs_layout.php');
             parse_window('error§'
                     . sprintf(_("Automatischer Login für das System <b>%s</b> (Nutzername:%s) fehlgeschlagen."), htmlReady($connected_cms[$cms_select]->getName()), $connected_cms[$cms_select]->user->getUsername()),'§'
                     , _("Login nicht m&ouml;glich")

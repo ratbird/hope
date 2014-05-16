@@ -45,8 +45,6 @@ class Course_AdmissionController extends AuthenticatedController
 
             require_once 'lib/admin_search.inc.php';
 
-            include 'lib/include/html_head.inc.php';
-            include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
             die(); //must not return
         }
@@ -87,8 +85,9 @@ class Course_AdmissionController extends AuthenticatedController
      */
     function index_action()
     {
-        $this->setInfoboxImage(Assets::image_path('sidebar/seminar-sidebar.png'));
-        $this->addToInfobox(_('Information'), _("Sie können hier die Zugangsberechtigungen bearbeiten."), 'icons/16/black/info');
+        $this->sidebar = Sidebar::get();
+        $this->sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+        
         $this->all_domains = UserDomain::getUserDomains();
         $this->seminar_domains = array_map(function($d) {return $d->getId();}, UserDomain::getUserDomainsForSeminar($this->course_id));
         $this->current_courseset = CourseSet::getSetForCourse($this->course_id);

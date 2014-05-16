@@ -41,31 +41,30 @@ use Studip\Button, Studip\LinkButton;
     </p>
 </form>
 
-<?
+<?php
 
-$aktionen = array();
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+
 if ($avatar->is_customized()) {
-	$link = sprintf('<a href="%s" onclick="return confirm(\'%s\');">%s</a>',
-		 		    $controller->url_for('course/avatar/delete', $course_id),
-		 		    _('Wirklich löschen?'),
-				    _('Bild löschen'));
-	$aktionen[] = array(
-		'icon' => 'icons/16/black/trash.png',
-	    'text' => $link
-	);
-} else {
-	$aktionen[] = array(
-		'icon' => 'icons/16/black/trash.png',
-	    'text' => sprintf('<span style="text-decoration: line-through;">%s</span>',
-						  _('Bild löschen')),
-	);
+    $actions = new ActionsWidget();
+    $actions->addLink(_('Bild löschen'),
+                      $controller->link_for('course/avatar/delete', $course_id),
+                      'icons/16/black/trash.png',
+                      array('onclick' => sprintf('return confirm(\'%s\');', _('Wirklich löschen?'))))->asDialog(false);
+    $sidebar->addWidget($actions);
 }
 
-$infobox = array(
-    array("kategorie" => _("Aktionen:"),
-          "eintrag"   => $aktionen
-    )
-);
+if ($adminList) {
+    $list = new SelectorWidget();
+    $list->setUrl('?#admin_top_links');
+    foreach ($adminList as $seminar) {
+        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['name']), 'select-' . $seminar->Seminar_id);
+    }
+    $list->setSelection($course_id);
+    $sidebar->addWidget($list);
+}
+
 if ($adminList) {
     $infobox[] = array(
         "kategorie" => _("Veranstaltungsliste:"),
@@ -78,6 +77,3 @@ if ($adminList) {
             )
     );
 }
-$infobox = array('content' => $infobox,
-                 'picture' => Assets::image_path("sidebar/admin-sidebar.png")
-);

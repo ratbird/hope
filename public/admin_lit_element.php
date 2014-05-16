@@ -51,6 +51,7 @@ Navigation::activateItem('/tools/literature');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 //html attributes for form
 $_attributes = array();
 $_attributes['text'] = array('style' => 'width:98%');

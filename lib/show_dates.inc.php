@@ -30,8 +30,8 @@ require_once 'config.inc.php';
 require_once 'lib/msg.inc.php';
 
 if ($GLOBALS["CALENDAR_ENABLE"]) {
-    require_once($RELATIVE_PATH_CALENDAR . "/lib/SingleCalendar.class.php");
-    require_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarEventList.class.php");
+    require_once("lib/calendar/lib/SingleCalendar.class.php");
+    require_once("lib/calendar/lib/DbCalendarEventList.class.php");
 }
 /**
  * TODO: Bedarf eine kompletten Überarbeitung!!!!

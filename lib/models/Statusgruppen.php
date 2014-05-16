@@ -77,6 +77,36 @@ class Statusgruppen extends SimpleORMap
         return self::findBySQL("range_id = ?", array($course_id));
     }
 
+    static public function findByTermin_id($termin_id)
+    {
+        $record = new Statusgruppen();
+        $db = DBManager::get();
+        $sql = "
+            SELECT *
+            FROM `" .  $record->db_table . "`
+                INNER JOIN termin_related_groups USING (statusgruppe_id)
+            WHERE termin_related_groups.termin_id = ?
+            ORDER BY name ASC
+        ";
+        $st = $db->prepare($sql);
+        $st->execute(array($termin_id));
+        $ret = array();
+        $c = 0;
+        while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $ret[$c] = new Statusgruppen();
+            $ret[$c]->setData($row, true);
+            $ret[$c]->setNew(false);
+            ++$c;
+        }
+        return $ret;
+    }
+
+    static public function findContactGroups($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        return self::findBySQL("range_id = ?", array($user_id));
+    }
+
     /**
      * Produces an array of all statusgroups a user is in
      * 

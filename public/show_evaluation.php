@@ -202,6 +202,7 @@ PageLayout::disableHeader();
 //Header
 include ('lib/include/html_head.inc.php');
 include ('lib/include/header.php');
+include ('lib/include/deprecated_tabs_layout.php');
 
 //Content (TODO: besser mit TemplateFactory)
 echo $form->createContent();

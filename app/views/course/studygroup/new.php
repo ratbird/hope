@@ -2,19 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-$infobox = array();
-$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
-$infobox['content'] = array(
-    array(
-        'kategorie'=>_("Information"),
-        'eintrag'=>array(
-            array("text"=>_("Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),"icon"=>"icons/16/black/info.png"),
-            array("text"=>_("Wählen Sie 'Offen für alle', wenn beliebige Nutzer der Gruppe ohne Nachfrage beitreten können sollen. 'Auf Anfrage' erfordert Ihr Eingreifen: Sie müssen jede einzelne Aufnahmeanfrage annehmen oder ablehnen."),"icon"=>"icons/16/black/info.png"),
-            array("text"=>_("Alle Einstellungen können auch später noch unter dem Reiter 'Admin' geändert werden."),"icon"=>"icons/16/black/info.png")
-            )
-    )
-);
-
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>
@@ -102,7 +89,8 @@ $infobox['content'] = array(
     </p>
     <p>
         <label>
-            <input type=checkbox name="grouptermsofuse_ok"> <?= _("Einverstanden") ?>
+            <input type=checkbox name="grouptermsofuse_ok" data-activates=".button.accept">
+            <?= _("Einverstanden") ?>
         </label>
     </p>
   </td>

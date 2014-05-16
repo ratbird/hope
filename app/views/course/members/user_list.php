@@ -21,13 +21,12 @@
             <? if($is_tutor) :?>
             <span class="actions">
                 <?= $controller->getEmailLinkByStatus('user', $users) ?>
-                <a href="<?=
-                URLHelper::getLink('sms_send.php', array('filter' => 'send_sms_to_all',
-                    'who' => 'user',
-                    'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                    'course_id' => $course_id,
-                    'subject' => $subject))
-                ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array(
+                                'filter' => 'send_sms_to_all',
+                                'who' => 'user',
+                                'course_id' => $course_id,
+                                'default_subject' => $subject)
+                ) ?>">
                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['user']))) ?>
                 </a>
             </span>
@@ -91,11 +90,10 @@
                 <? endif ?>
                 <td style="text-align: right">
                     <? if($user_id != $leser['user_id']) : ?>
-                    <a href="<?= URLHelper::getLink('sms_send.php',
+                    <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                                 array('filter' => 'send_sms_to_all',
                                 'rec_uname' => $leser['username'],
-                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
-                                'subject' => $subject))
+                                'default_subject' => $subject))
                             ?>
                     ">
                         <?= Assets::img('icons/16/blue/mail.png',

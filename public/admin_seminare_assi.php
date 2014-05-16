@@ -2017,6 +2017,7 @@ if ($perm->have_perm('admin')) {
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
 
 if (!$_SESSION['sem_create_data']["sem_class"])

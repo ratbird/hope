@@ -31,6 +31,7 @@ class CoreSchedule implements StudipModule {
         $navigation->setImage('icons/16/white/schedule.png');
         $navigation->setActiveImage('icons/16/black/schedule.png');
 
+        $navigation->addSubNavigation('dates', new Navigation(_('Termine'), "dispatch.php/course/dates"));
         $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), "dates.php?date_type=all".$openItem));
         $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), "dates.php?date_type=1".$openItem));
         $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), "dates.php?date_type=other".$openItem));

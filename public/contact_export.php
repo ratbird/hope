@@ -41,8 +41,7 @@ if (!( (Request::submitted('export_vcard'))
     // add skip link
     SkipLinks::addIndex(Navigation::getItem('/community/contacts/export')->getTitle(), 'main_content', 100);
 
-    require_once('lib/include/html_head.inc.php');
-    require_once('lib/include/header.php');
+    ob_start();
 }
 /* **END*of*initialize*post/get*variables*********************************** */
 
@@ -95,6 +94,11 @@ if ($mode == "select_group"){
     printSiteTitle();
     printSelectGroup($infobox,$groups);
 
+    Sidebar::get()->setImage('sidebar/export-sidebar.png');
+    echo $GLOBALS['template_factory']->render('layouts/base.php', array(
+        'content_for_layout' => ob_get_clean(),
+    ));
+
 } elseif (($mode == "export_vcard")
     || ($mode == "ext_export")
     || ($mode == "ext_export_username")
@@ -141,6 +145,7 @@ function printSiteTitle($empty_contacts=false){
 
         require_once('lib/include/html_head.inc.php');
         require_once('lib/include/header.php');
+        include ('lib/include/deprecated_tabs_layout.php');
         $html .= MessageBox::error(_('In dem gewählten Adressbuch sind keine Einträge vorhanden.'));
     }
     echo $html;

@@ -83,13 +83,11 @@ $header_line = getHeaderLine($inst_id);
 if ($header_line)
   PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
-// Start of Output
-include ("lib/include/html_head.inc.php"); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-
 if ($admin_view || !isset($inst_id)) {
     include 'lib/include/admin_search_form.inc.php';
 }
+
+ob_start();
 
 // check the given parameters or initialize them
 if ($perm->have_studip_perm("admin", $inst_id)) {
@@ -275,7 +273,7 @@ function table_body ($members, $range_id, $structure) {
 
         if ($structure["nachricht"]) {
             print "<td align=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n";
-            printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&rec_uname=".$member['username']));
+            printf("<a href=\"%s\">", URLHelper::getLink("dispatch.php/messages/write?rec_uname=".$member['username']));
             printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an Benutzer verschicken"));
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
             echo '</td>';
@@ -1155,9 +1153,10 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
     echo "<tfoot><tr><td colspan=$colspan><br>" . export_form($auswahl, "person", $SessSemName[0]) . "</td></tr></tfoot>";
 }
 echo "</table></td></tr></table>\n";
-echo "</body></html>";
 
 } // Ende Abfrageschleife, ob überhaupt eine Instituts_id gesetzt ist
 
-include('lib/include/html_end.inc.php');
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();

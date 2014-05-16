@@ -62,13 +62,6 @@ $sortby_fields = array('perms', 'status');
 $sortby = Request::option('sortby');
 $sortby = in_array($sortby, $sortby_fields) ? "$sortby, Nachname, Vorname" : 'Nachname, Vorname';
 
-// print success message when returning from sms_send.php
-if ($sms_msg) {
-    $template->set_attribute('sms_msg', $sms_msg);
-    $sms_msg = '';
-    $sess->unregister('sms_msg');
-}
-
 // exclude AUTO_INSERT_SEM courses
 $exclude_sem = "AND Seminar_id NOT IN (SELECT seminar_id FROM auto_insert_sem)";
 

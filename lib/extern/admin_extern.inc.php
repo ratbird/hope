@@ -109,9 +109,9 @@ if (Request::option('com') == "do_upload_config") {
 
 //Output starts here
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 require_once('lib/msg.inc.php'); //Funktionen f&uuml;r Nachrichtenmeldungen
 require_once('lib/classes/cssClassSwitcher.inc.php');
@@ -158,8 +158,12 @@ if (Request::option('com') == 'delete_sec') {
 
     my_info($message, "blank", 1);
     print_footer();
+
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
     page_close();
-    exit;
+    die;
 }
 
 $css_switcher = new cssClassSwitcher();
@@ -167,8 +171,12 @@ $css_switcher = new cssClassSwitcher();
 if (Request::option('com') == 'info') {
     include($RELATIVE_PATH_EXTERN . "/views/extern_info_module.inc.php");
     print_footer();
+
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
     page_close();
-    exit;
+    die;
 }
 
 if (Request::option('com') == 'new' || Request::option('com') == 'edit' || Request::option('com') == 'open' ||
@@ -176,8 +184,12 @@ if (Request::option('com') == 'new' || Request::option('com') == 'edit' || Reque
 
     require_once($RELATIVE_PATH_EXTERN . "/views/extern_edit_module.inc.php");
     print_footer();
+
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
     page_close();
-    exit;
+    die;
 }
 
 // Some browsers don't reload the site by clicking the same link twice again.
@@ -469,3 +481,8 @@ if (sizeof($configurations)) {
 
 print_infobox($info_content, "sidebar/institute-sidebar.png");
 print_footer();
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+page_close();

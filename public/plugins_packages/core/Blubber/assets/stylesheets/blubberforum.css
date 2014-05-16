@@ -25,7 +25,6 @@
     -ms-transition: all 1s;
     -o-transition: all 1s;
     transition: all 1s;
-    border-top-left-radius: 8px;
     
     text-align: center;
     overflow: hidden;

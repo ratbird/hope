@@ -38,10 +38,10 @@
                 </a>
             <? endif; ?>
             <? if ($may_mail): ?>
-                <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=statusgruppen.php&emailrequest=1', compact('group_id', 'subject')) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('emailrequest' => 1, 'group_id' => $group_id, 'default_subject' => $subject)) ?>">
                     <?= Assets::img('icons/16/blue/move_right/mail', tooltip2(_('Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken'))) ?>
                 </a>
-                <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=statusgruppen.php', compact('group_id', 'subject')) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('group_id' => $group_id, 'default_subject' => $subject)) ?>">
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an alle Gruppenmitglieder verschicken'))) ?>
                 </a>
             <? endif; ?>
@@ -72,7 +72,7 @@
                 </a>
             <? endif; ?>
             <? if (($visio[$row['user_id']] || $rechte) && $row['user_id'] != $GLOBALS['user']->id): ?>
-                <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=dispatch.php/course/members/index', array('rec_uname' => $row['username'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>">
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an Benutzer verschicken'))) ?>
                 </a>
             <? endif; ?>

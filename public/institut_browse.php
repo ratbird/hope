@@ -45,6 +45,7 @@ Navigation::activateItem('/search/institutes');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
 $view = new DbView();
 $the_tree = new StudipRangeTreeView();

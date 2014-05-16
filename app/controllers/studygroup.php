@@ -18,8 +18,30 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studygroup.php';
 
-class StudygroupController extends AuthenticatedController {
+class StudygroupController extends AuthenticatedController
+{
+    public function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+        
+        PageLayout::setTitle(_('Studiengruppen suchen'));
+        Navigation::activateItem('/community/studygroups/browse');
+        PageLayout::setHelpKeyword('Basis.SuchenStudiengruppen');
+        // add skip link
+        SkipLinks::addIndex(Navigation::getItem('/community/studygroups/browse')->getTitle(), 'layout_content', 100);
 
+        Sidebar::get()->setImage('sidebar/studygroup-sidebar.png');
+        
+        $helpbar = Helpbar::get();
+        $helpbar->addPlainText(_('Information'),
+                               _('Studiengruppen sind eine einfache Möglichkeit, '
+                                .'mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. '
+                                .'Jeder kann Studiengruppen gründen. Auf dieser Seite haben '
+                                .'können Sie nach Studiengruppen suchen. Klicken Sie auf die '
+                                .'Überschriften der Ergebnistabelle, um die jeweiligen Spalten '
+                                .'zu sortieren.'),
+                               'icons/16/white/info.png');
+    }
     /**
      * Displays a pageable and sortable overview of all studygoups combined with
      * a search form to query for specific studygroup
@@ -29,12 +51,6 @@ class StudygroupController extends AuthenticatedController {
      */
     function browse_action($page = 1, $sort = "founded_asc")
     {
-        PageLayout::setTitle(_('Studiengruppen suchen'));
-        Navigation::activateItem('/community/studygroups/browse');
-        PageLayout::setHelpKeyword('Basis.SuchenStudiengruppen');
-        // add skip link
-        SkipLinks::addIndex(Navigation::getItem('/community/studygroups/browse')->getTitle(), 'layout_content', 100);
-
         $this->sort = preg_replace('/\\W/', '', $sort);
         $this->page = intval($page);
         $this->userid = $GLOBALS['auth']->auth['uid'];

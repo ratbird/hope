@@ -486,7 +486,7 @@ $paktionen[] = array(
     "text" => '<a href="' .URLHelper::getLink('dispatch.php/profile?username=' . $user['username']) .'">' . _('Zum Benutzerprofil') .'</a>',
     "icon" => "icons/16/black/person.png");
 $paktionen[] = array(
-    "text" => '<a href="' .URLHelper::getLink('sms_send.php?rec_uname=' . $user['username']) .'">' . _('Nachricht an Benutzer verschicken') .'</a>',
+    "text" => '<a href="' .URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $user['username']) .'">' . _('Nachricht an Benutzer verschicken') .'</a>',
     "icon" => "icons/16/black/mail.png");
 if ($GLOBALS['perm']->have_perm('root')) {
     $paktionen[] = array(

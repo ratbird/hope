@@ -86,6 +86,21 @@ class JsupdaterController extends AuthenticatedController {
                 $data['PersonalNotifications.newNotifications'] = array();
             }
         }
+        $page_info = Request::getArray("page_info");
+        if (stripos(Request::get("page"), "dispatch.php/messages") !== false) {
+            $messages = Message::findNew(
+                $GLOBALS["user"]->id,
+                $page_info['Messages']['received'],
+                $page_info['Messages']['since'],
+                $page_info['Messages']['tag']
+            );
+            $template_factory = $this->get_template_factory();
+            foreach ($messages as $message) {
+                $data['Messaging.newMessages']['messages'][] = $template_factory
+                        ->open("messages/_message_row.php")
+                        ->render(compact("message"));
+            }
+        }
         return $data;
     }
 

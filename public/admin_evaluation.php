@@ -109,15 +109,18 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
     }
 }
 
-include_once('lib/include/html_head.inc.php');
-include_once('lib/include/header.php');
-
 if ($list || !$isUserrange) {
     include 'lib/include/admin_search_form.inc.php';
 }
+
+ob_start();
 if (Request::option('page') == "edit"){
     include (EVAL_PATH.EVAL_FILE_EDIT);
 }else{
     include (EVAL_PATH.EVAL_FILE_OVERVIEW);
 }
-page_close ();
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+page_close();

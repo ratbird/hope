@@ -1,5 +1,36 @@
-<?
+<?php
 # Lifter010: TODO
+
+$navigation = PageLayout::getTabNavigation();
+if ($navigation) {
+    $subnavigation = $navigation->activeSubNavigation();
+    if ($subnavigation !== null) {
+        $nav_links = new NavigationWidget();
+        foreach ($subnavigation as $path3 => $nav) {
+            if (!$nav->isVisible()) {
+                continue;
+            }
+            $image = $nav->getImage();
+            $link = $nav_links->addLink($nav->getTitle(),
+                                        URLHelper::getUrl($nav->getURL(), array(), true),
+                                        $image ? $image['src'] : null);
+            $link->setActive($nav->isActive());
+            // TODO check $nav->isEnabled() and make link ".quit" if true "<span class="quiet">"
+        }
+        if ($nav_links->hasElements()) {
+            Sidebar::get()->insertWidget($nav_links, ':first');
+        }
+    }
+}
+// Remove help from navigation and set it to help center
+if (Navigation::hasItem('/links/help')) {
+    $nav = Navigation::getItem('/links/help');
+    Navigation::removeItem('/links/help');
+
+    Helpbar::get()->insertLink(_('Hilfe-Wiki'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
+
+    Navigation::removeItem('/footer/help');
+}
 ?>
 <!DOCTYPE html>
 <html class="no-js">
@@ -40,6 +71,19 @@
 
     <? include 'lib/include/header.php' ?>
 
+    <div id="layout_page">
+        <? if (PageLayout::isHeaderEnabled() && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody' && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() && $_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']]) : ?>
+            <?= $this->render_partial('change_view') ?>
+        <? endif ?>
+
+        <? if (PageLayout::isHeaderEnabled() && isset($navigation)) : ?>
+            <?= $this->render_partial('tabs', compact("navigation")) ?>
+        <? endif ?>
+
+        <?= Helpbar::get()->render() ?>
+        <div id="layout_container">
+            <?= Sidebar::get()->render() ?>
+            <div id="layout_content">
                 <?= implode(PageLayout::getMessages()) ?>
                 <?= $content_for_layout ?>
             </div>
@@ -49,7 +93,7 @@
                     <?= is_array($infobox) ? $this->render_partial('infobox/infobox_generic_content', $infobox) : $infobox ?>
                 </div>
             </div>
-            <? endif ?>                
+            <? endif ?>
         </div>
     </div> <? // Closes #layout_page opened in included templates/header.php ?>
 

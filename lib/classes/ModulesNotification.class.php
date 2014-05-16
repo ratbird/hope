@@ -333,7 +333,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuelitlist'] > 0) {
                     $text = _("1 neue Literaturliste angelegt");
                 }
-                $redirect = '&redirect_to=literatur.php';
+                $redirect = '&redirect_to=dispatch.php/course/literatur';
                 $icon = "icons/16/blue/literature.png";
                 break;
             case 'elearning_interface' :

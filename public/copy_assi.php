@@ -50,11 +50,9 @@ $header_line = getHeaderLine($header_object_id);
 if ($header_line)
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
-//Output starts here
-
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 require_once 'lib/visual.inc.php';
 if ($SessSemName[1]) {
@@ -92,6 +90,8 @@ if ($SessSemName[1]) {
     <?php
     }
 }
-include ('lib/include/html_end.inc.php');
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();
-?>

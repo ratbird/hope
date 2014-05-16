@@ -106,35 +106,29 @@ class ScoreController extends AuthenticatedController
         $this->offset          = $offset;
         $this->max_per_page    = $max_per_page;
         
-        // Define infobox
-        $this->setInfoboxImage('sidebar/medal-sidebar.png');
-        $this->addToInfobox(_('Ihre Position:'),
-                            _('Ihre Punkte: ') .
-                            '<strong>' . number_format($this->score->ReturnMyScore(), 0, ',', '.') . '</strong>');
-        $this->addToInfobox(_('Ihre Position:'), _('Ihr Titel: ') . '<strong>' . $this->score->ReturnMyTitle() . '</strong>');
-        $this->addToInfobox(_('Information:'),
-                            _('Auf dieser Seite können Sie abrufen, wie weit Sie in der '
-                             .'Stud.IP-Rangliste aufgestiegen sind. Je aktiver Sie sich '
-                             .'im System verhalten, desto höher klettern Sie!'),
-                            'icons/16/black/info.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Sie erhalten auf der Profilseite von MitarbeiternInnen an '
-                             .'Einrichtungen auch weiterführende Informationen, wie '
-                             .'Sprechstunden und Raumangaben.'),
-                            'icons/16/black/info.png');
+        // Set up sidebar and helpbar
+        
+        $sidebar = Sidebar::get();
+        $sidebar->setImage('sidebar/medal-sidebar.png');
 
-        if ($this->score->ReturnPublik()) {
-            $icon = 'icons/16/black/remove/crown.png';
-            $action = sprintf('<a href="%s">%s</a>',
-                              $this->url_for('score/unpublish'),
-                              _('Ihren Wert von der Liste löschen'));
-        } else {
-            $icon = 'icons/16/black/add/crown.png';
-            $action = sprintf('<a href="%s">%s</a>',
-                              $this->url_for('score/publish'),
-                              _('Diesen Wert auf der Liste veröffentlichen'));
-        }
-        $this->addToInfobox(_('Aktionen:'), $action, $icon);
+        $actions = new ActionsWidget();
+        $published = $this->score->ReturnPublik();
+        $actions->addLink(_('Ihren Wert veröffentlichen'),
+                          $this->url_for($published ? 'score/unpublish' : 'score/publish'),
+                          $published ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+        $sidebar->addWidget($actions);
+
+        $helpbar = Helpbar::get();
+        $helpbar->addPlainText(_('Information:'),
+                               _('Auf dieser Seite können Sie abrufen, wie weit Sie in der '
+                                .'Stud.IP-Rangliste aufgestiegen sind. Je aktiver Sie sich '
+                                .'im System verhalten, desto höher klettern Sie!'),
+                               'icons/16/white/info.png');
+
+        $helpbar->addPlainText('',
+                               _('Sie erhalten auf der Profilseite von MitarbeiternInnen an '
+                                .'Einrichtungen auch weiterführende Informationen, wie '
+                                .'Sprechstunden und Raumangaben.'));
     }
 
     /**

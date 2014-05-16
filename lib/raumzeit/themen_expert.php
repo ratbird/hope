@@ -41,9 +41,9 @@ if (get_config('RESOURCES_ENABLE')) {
 
 //Output starts here
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 if (!$perm->have_studip_perm('tutor', $id)) {
     die;
@@ -555,6 +555,8 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
 </form>
 <?
     $sem->store();
-    include 'lib/include/html_end.inc.php';
+
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
     page_close();
-?>

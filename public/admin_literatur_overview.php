@@ -23,6 +23,7 @@ Navigation::activateItem('/tools/literature');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
+include ('lib/include/deprecated_tabs_layout.php');
 
 function get_lit_admin_ids($user_id = false)
 {

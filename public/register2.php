@@ -34,6 +34,7 @@ page_open(array("sess" => "Seminar_Session", "auth" => $my_auth, "perm" => "Semi
 if (!$GLOBALS['ENABLE_SELF_REGISTRATION']){
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
+    include ('lib/include/deprecated_tabs_layout.php');
     parse_window ("error§" . _("In dieser Installation ist die M&ouml;glichkeit zur Registrierung ausgeschaltet."), "§",
                 _("Registrierung ausgeschaltet"), 
                 '<div style="margin:10px">'.$UNI_LOGIN_ADD.'</div>'
@@ -57,6 +58,7 @@ PageLayout::setTitle(_("Registrierung erfolgreich"));
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
 ?>
 <table width ="100%" border="0" cellspacing="0" cellpadding="0">

@@ -41,9 +41,9 @@ class Course_AvatarController extends AuthenticatedController
         $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"];
 
         if ($this->studygroup_mode) {
-            $this->avatar = StudygroupAvatar::getAvatar($course_id);
+            $this->avatar = StudygroupAvatar::getAvatar($this->course_id);
         } else {
-            $this->avatar = CourseAvatar::getAvatar($course_id);
+            $this->avatar = CourseAvatar::getAvatar($this->course_id);
         }
 
         # choose base layout w/o infobox and set tabs

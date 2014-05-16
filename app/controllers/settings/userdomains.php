@@ -33,6 +33,12 @@ class Settings_UserdomainsController extends Settings_SettingsController
         Navigation::activateItem('/profile/edit/userdomains');
         SkipLinks::addIndex(_('Zugeordnete Nutzerdomänen'), 'assigned_userdomains');
         SkipLinks::addIndex(_('Nutzerdomäne auswählen'), 'select_userdomains');
+
+        Sidebar::get()->setImage('sidebar/admin-sidebar.png');
+        Helpbar::get()
+            ->addPlainText(_('Informationen'),
+                           _('Hier können Sie die Liste Ihrer Nutzerdomänen einsehen.'),
+                           'icons/16/white/info.png');
     }
 
     /**
@@ -42,10 +48,6 @@ class Settings_UserdomainsController extends Settings_SettingsController
     {
         $this->allow_change = !StudipAuthAbstract::CheckField("userdomain_id", $this->user->auth_plugin)
                               && $GLOBALS['perm']->have_perm('admin');
-
-        $infobox_message = _('Hier können Sie die Liste Ihrer Nutzerdomänen einsehen.');
-        $this->setInfoBoxImage('sidebar/admin-sidebar.png');
-        $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
     }
 
     /**

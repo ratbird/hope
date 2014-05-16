@@ -31,13 +31,14 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('lib/visual.inc.php');
 
 PageLayout::setTitle(_("Meine Lernmodule und Benutzer-Accounts"));
+PageLayout::setHelpKeyword("Basis.Ilias");
+
 Navigation::activateItem('/tools/elearning');
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-
-
-if (get_config('ELEARNING_INTERFACE_ENABLE')) {
+$cms_list = array();
+if (!get_config('ELEARNING_INTERFACE_ENABLE')) {
+    PageLayout::postMessage(MessageBox::error(_("Die Schnittstelle für die Integration von Lernmodulen ist nicht aktiviert. Damit Lernmodule verwendet werden können, muss die Verbindung zu einem LCM-System in der Konfigurationsdatei von Stud.IP hergestellt werden. Wenden Sie sich bitte an den/die AdministratorIn.")));
+} else {
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
     ELearningUtils::bench("start");
 
@@ -52,176 +53,96 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     elseif (Request::get('do_close'))
         $_SESSION['elearning_open_close'][Request::get('do_close')] = false;
 
-
-
-    ?><table cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr>
-        <td valign="top" class="blank">
-    <?
-
     if ($new_account_cms != "")
         $new_account_form = ELearningUtils::getNewAccountForm($new_account_cms);
     foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences) {
-        if (ELearningUtils::isCMSActive($cms))
-        {
+        if (ELearningUtils::isCMSActive($cms)) {
             ELearningUtils::loadClass($cms);
             if ( $cms_preferences["auth_necessary"] == true) {
                 $new_module_form[$cms] = ELearningUtils::getNewModuleForm($cms);
             }
             $connection_status = $connected_cms[$cms]->getConnectionStatus($cms);
 
-            foreach ($connection_status as $type => $msg)
-            {
-                if ($msg["error"] != "")
-                {
-                    $messages['error'] = sprintf(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."),$cms);
-                    $errors[] = $msg['error'];
+            foreach ($connection_status as $type => $msg) {
+                if ($msg["error"] != "") {
+                    PageLayout::postMessage(MessageBox::error(sprintf(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."),$cms)));
                 }
             }
         }
     }
-    if ($messages["info"] != "")
-    {
-        echo MessageBox::info($messages["info"]);
-    }
-    if ($messages["error"] != "")
-    {
-        echo MessageBox::error($messages["error"], $errors);
-
-    }
-
     ELearningUtils::bench("init");
 
-    echo $page_content;
-    foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences)
-    {
-        if (ELearningUtils::isCMSActive($cms))
-        {
-            $connected_cms = array();
+    $connected_cms = array();
+    // prepare cms list
+    foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences) {
+        if (ELearningUtils::isCMSActive($cms) AND $cms_preferences["auth_necessary"]) {
             ELearningUtils::loadClass($cms);
-            if (($cms_preferences["auth_necessary"] == true))
-            {
-                if ($GLOBALS["module_type_" . $cms] != "")
-                    echo "<a name='anker'></a>";
-//              ELearningUtils::loadClass($cms);
-//              ELearningUtils::bench("load cms $cms");
-
-                echo ELearningUtils::getCMSHeader($connected_cms[$cms]->getName());
-                echo "<font size=\"-1\">";
-                echo "<br>\n";
-                echo "</font>";
-
-                echo ELearningUtils::getHeader(sprintf(_("Mein Benutzeraccount")));
-                if ($connected_cms[$cms]->user->isConnected())
-                {
-                    $startpage_message = "";
-                    $account_message = "<b>" . _("Loginname: ") . "</b>" . $connected_cms[$cms]->user->getUsername();
-                    $start_link = $connected_cms[$cms]->link->getStartpageLink(_($connected_cms[$cms]->getName()));
-                    if ($start_link != false) {
-                        $msg_text = _('Hier gelangen Sie direkt zur Startseite im angebundenen System:'). ' ' . $start_link . '<br>';
-                        $startpage_message .= '<div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">'.$msg_text.'</div>';
-                    }
-                }
-                else
-                    $account_message = sprintf(_("Sie haben im System %s bisher keinen Benutzer-Account."), $connected_cms[$cms]->getName());
-
-                if ($new_account_cms != $cms)
-                {
-                    echo ELearningUtils::getMyAccountForm("<font size=\"-1\">" . $account_message . "</font>", $cms);
-
-                    echo $startpage_message."<br>\n";
-                    
-                    if ($connected_cms[$cms]->user->isConnected())
-                    {
-                        echo ELearningUtils::getHeader(sprintf(_("Meine Lernmodule")));
-
-                        $connected_cms[$cms]->soap_client->setCachingStatus(false);
-                        $user_content_modules = $connected_cms[$cms]->getUserContentModules();
-                        $connected_cms[$cms]->soap_client->setCachingStatus(true);
-
-                        if (! ($user_content_modules == false))
-                        {
-                            foreach ($user_content_modules as $key => $connection)
-                            {
-                                $connected_cms[$cms]->setContentModule($connection, false);
-                                $connected_cms[$cms]->content_module[$current_module]->view->show();
-                            }
+            $cms_list[$cms] = $cms_preferences;
+            $cms_list[$cms]['name'] = $connected_cms[$cms]->getName();
+            $cms_list[$cms]['logo'] = $connected_cms[$cms]->getLogo();
+            $cms_list[$cms]['modules'] = array();
+            if ($new_account_cms != $cms)
+                $cms_list[$cms]['show_account_form'] = $cms_preferences;
+            if ($GLOBALS["module_type_" . $cms] != "")
+                $cms_list[$cms]['cms_anker_target'] = true;
+            if ($connected_cms[$cms]->user->isConnected())
+                $cms_list[$cms]['start_link'] = $connected_cms[$cms]->link->getStartpageLink();
+                
+            if ($new_account_cms != $cms) {
+                if ($connected_cms[$cms]->user->isConnected()) {
+                    $cms_list[$cms]['user'] = $connected_cms[$cms]->user->getUsername();
+                    $connected_cms[$cms]->soap_client->setCachingStatus(false);
+                    $user_content_modules = $connected_cms[$cms]->getUserContentModules();
+                    $connected_cms[$cms]->soap_client->setCachingStatus(true);
+                    if (! ($user_content_modules == false)) {
+                        foreach ($user_content_modules as $key => $connection) {
+                            $connected_cms[$cms]->setContentModule($connection, false);
+                            $cms_list[$cms]['modules'][] = $connected_cms[$cms]->content_module[$current_module]->view->show();
                         }
-                        else
-                            echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\"><tr><td><font size=\"-1\">" . sprintf(_("Sie haben im System %s keine eigenen Lernmodule."), $connected_cms[$cms]->getName()) . "<br>\n<br>\n</font></td></tr></table>";
-
-                        echo "<br>\n";
-                        echo $new_module_form[$cms];
-
-                    }
+                    } 
+                    $cms_list[$cms]['new_module_form'] = $new_module_form[$cms];
                 }
-                else
-                {
-                    echo $new_account_form;
-                    echo "<br>\n";
-                }
-
-//              echo "<br>\n";
-                echo ELearningUtils::getCMSFooter($connected_cms[$cms]->getLogo());
-                echo "<br>\n";
-                ELearningUtils::bench("fetch data from $cms");
+            } else {
+                $cms_list[$cms]['account_form'] = $new_account_form;
             }
+            ELearningUtils::bench("fetch data from $cms");
         }
      }
 
-// Cachen der SOAP-Daten
+    // Cachen der SOAP-Daten
     if (is_array($connected_cms))
         foreach($connected_cms as $system)
             $system->terminate();
 
-//  ELearningUtils::bench("fetch data");
     if ($debug != "")
         ELearningUtils::showbench();
 
-        $cssSw = new cssClassSwitcher; // Klasse für Zebra-Design
+    // help texts for help center -> to be put into db!
+    $help_text[] = _('Auf dieser Seite sehen Sie Ihre Benutzer-Accounts und Lernmodule in angebundenen Systemen.');
+    $help_text[] = _('Sie können für jedes externe System einen eigenen Benutzer-Account erstellen oder zuordnen.');
+    $help_text[] = _('Wenn Sie über die entsprechenden Rechte verfügen, können Sie eigene Lernmodule erstellen.');
 
-        ?>
-        </td>
-        <td width="270" class="blank" align="right" valign="top">
-        <?
-    // Anzeige, wenn noch keine Account-Zuordnung besteht
-        $infobox = array    (
-        array ("kategorie"  => _("Information:"),
-            "eintrag" => array  (
-                            array ( "icon" => 'icons/16/black/info.png',
-                                    "text"  => _("Auf dieser Seite sehen Sie Ihre Benutzer-Accounts und Lernmodule in angebundenen Systemen.")
-                                 )
-                            )
-            )
-        );
-        $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  "icon" => 'icons/16/black/person.png' ,
-                                        "text"  => _("Sie k&ouml;nnen f&uuml;r jedes externe System einen eigenen Benutzer-Account erstellen oder zuordnen.")
-                                    );
+    $sidebar = Sidebar::get();
+    $sidebar->setImage('sidebar/learnmodule-sidebar.png');
+    $widget = new LinksWidget();
+    $widget->setTitle(_('Aktionen'));
+    
+    if ($GLOBALS['perm']->have_perm('autor') AND count($cms_list)) {
+        foreach($cms_list as $cms_data) {
+            //TODO: target = '_blank' setzen
+            $widget->addLink(sprintf(_('Zur %s Startseite'), $cms_data['name']), $cms_data['start_link'], 'icons/16/black/link-extern.png');
+        }
+    }
+    $sidebar->addWidget('actions', $widget);
 
-            $infobox[1]["eintrag"][] = array (  "icon" => 'icons/16/black/learnmodule.png' ,
-                                        "text"  => sprintf(_("Wenn Sie &uuml;ber die entsprechenden Rechte verf&uuml;gen, k&ouml;nnen Sie eigene Lernmodule erstellen."))
-                                    );
-            print_infobox($infobox, "sidebar/learnmodule-sidebar.png");
-        ?>
-        </td>
-    </tr>
-    </table>
-    <?
-
-// terminate objects
+    // terminate objects
     if (is_array($connected_cms))
         foreach($connected_cms as $system)
             $system->terminate();
-
-}
-else
-{
-    // Start of Output
-    //TODO use messagebox
-    parse_window ("error§" . _("Die Schnittstelle für die Integration von Lernmodulen ist nicht aktiviert. Damit Lernmodule verwendet werden können, muss die Verbindung zu einem LCM-System in der Konfigurationsdatei von Stud.IP hergestellt werden. Wenden Sie sich bitte an den/die AdministratorIn."), "§",
-                _("E-Learning-Schnittstelle nicht eingebunden"));
 }
 
-include ('lib/include/html_end.inc.php');
+$template = $GLOBALS['template_factory']->open('elearning/my_elearning.php');
+$template->set_layout('layouts/base');
+$template->set_attribute('cms_list', $cms_list);
+echo $template->render();
 page_close();

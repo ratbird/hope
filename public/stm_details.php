@@ -65,6 +65,7 @@ if (!$stm_obj->isNew()){
 // Start of Output
     PageLayout::setTitle(_("Studienmodul:") . ' ' . $stm_obj->getValue('title') . " - " . _("Details"));
     include ("lib/include/header.php");  // Output of Stud.IP head
+    include ('lib/include/deprecated_tabs_layout.php');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <?

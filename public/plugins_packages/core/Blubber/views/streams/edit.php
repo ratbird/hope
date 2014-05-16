@@ -253,35 +253,17 @@
 
 </form>
 
-<?
-$action = array(
-    "kategorie" => _("Aktionen"),
-    "eintrag"   => array()
-);
-if (!$stream->isNew()) {
-    $action['eintrag'][] = array(
-        "icon" => "icons/16/black/trash",
-        "text" => '<a href="'.PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global").'">'._("Diesen Stream löschen")."</a>"
-    );
+<?php
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/blubber-sidebar.png"));
+$streamAvatar = StreamAvatar::getAvatar($stream->getId());
+if ($streamAvatar->is_customized()) {
+    $sidebar->setContextAvatar($streamAvatar);
 }
 
-$infobox = array(
-    array("kategorie" => _("Informationen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/info",
-                "text" => _("Benutzerdefinierte Streams sind ideal, damit Sie genau die Blubber sehen, die Sie sehen wollen. Für Vielblubberer ein Muss.")
-            ),
-            array(
-                "icon" => "icons/16/black/activity",
-                "text" => _("Ein Blubberstream ist immer eine Kombination aus Sammlung von Blubbern und eine anschließende Filterung dieser Sammlung.")
-            )
-        )
-    ),
-    (count($action['eintrag']) > 0 ? $action : null)
-);
-$infobox = array(
-    'picture' => StreamAvatar::getAvatar($stream->getId()),
-    'content' => $infobox
-);
+$actions = new LinksWidget();
+$actions->setTitle(_("Aktionen"));
+
+if (!$stream->isNew()) {
+    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global"), "icons/16/black/trash");
+}

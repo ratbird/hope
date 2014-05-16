@@ -11,36 +11,15 @@ use Studip\Button, Studip\LinkButton;
  * the License, or (at your option) any later version.
  */
 
-//Infobox:
-$aktionen = array();
-$aktionen[] = array(
-              "icon" => "icons/16/black/edit.png",
-              "text" => '<a href="' .
-$controller->url_for('course/avatar/update', $course_id) .
-                        '">' . _("Bild ändern") . '</a>');
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
 
-$infobox = array(
-    array("kategorie" => _("Aktionen:"),
-          "eintrag"   => $aktionen
-    ),
-    array("kategorie" => _("Informationen:"),
-          "eintrag"   =>
-        array(
-            array(
-                  "icon" => "icons/16/black/info.png",
-                      "text" => sprintf(_('Angelegt am %s'), "<b>$mkstring</b>")
-            ),
-            array(
-                  "icon" => "icons/16/black/info.png",
-                  "text" => sprintf(_('Letzte Änderung am %s'), "<b>$chstring</b>")
-            ),
-            array(
-                  "icon" => "icons/16/black/info.png",
-                  "text" => _("Mit roten Sternchen markierte Felder sind Pflichtfelder.")
-            )
-        )
-    )
-);
+$widget = new ActionsWidget();
+$widget->addLink(_('Bild ändern'),
+                 $controller->url_for('course/avatar/update', $course_id),
+                 'icons/16/black/edit.png');
+$sidebar->addWidget($widget);
+
 if ($adminList) {
     $infobox[] = array(
         "kategorie" => _("Veranstaltungsliste:"),
@@ -53,9 +32,6 @@ if ($adminList) {
             )
     );
 }
-$infobox = array('content' => $infobox,
-                 'picture' => CourseAvatar::getAvatar($course_id)
-);
 
 $width_column1 = 20;
 $width_namecolumn = 60;
@@ -94,6 +70,8 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
       <? endforeach;
   }
   ?>
+    <tr><td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;"><?= _('Erstellt') ?>:</td><td style="text-align: left"><?= htmlReady($mkstring) ?></td></tr>
+    <tr><td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;"><?= _('Letzte Änderung') ?>:</td><td style="text-align: left"><?= htmlReady($chstring) ?></td></tr>
   </table></div>
 
   <h2 id="bd_inst" class="table_row_odd"><?= _("Einrichtungen") ?></h2>

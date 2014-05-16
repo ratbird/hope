@@ -35,7 +35,7 @@ class Ilias4Soap extends Ilias3Soap
     function Ilias4Soap($cms)
     {
         parent::Ilias3Soap($cms);
-        $this->seperator_string = " &raquo; ";
+        $this->seperator_string = " / ";
     }
 
     /**

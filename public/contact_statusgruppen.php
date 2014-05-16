@@ -65,8 +65,7 @@ if (get_config('CALENDAR_GROUP_ENABLE') && Request::get('nav') == 'calendar') {
     SkipLinks::addIndex(Navigation::getItem('/community/contacts/admin_groups')->getTitle(), 'main_content', 100);
 }
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
+ob_start();
 
 if (get_config('CALENDAR_GROUP_ENABLE')) {
     require_once('lib/calendar/lib/Calendar.class.php');
@@ -519,6 +518,11 @@ if (is_array($msgs)) {
     </table>
     <?
 }
-include ('lib/include/html_end.inc.php');
+
+Sidebar::get()->setImage('sidebar/group-sidebar.png');
+echo $GLOBALS['template_factory']->render('layouts/base.php', array(
+    'content_for_layout' => ob_get_clean(),
+));
+
 page_close();
 

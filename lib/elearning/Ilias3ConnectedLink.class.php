@@ -166,21 +166,17 @@ class Ilias3ConnectedLink extends ConnectedLink
     *
     * returns link to ilias start-page
     * @access public
-    * @return string returns html-code or false
+    * @return string returns url or false
     */
-    function getStartpageLink($name)
+    function getStartpageLink()
     {
-        global $connected_cms, $module_type, $auth;
+        global $connected_cms;
 
-        if ($connected_cms[$this->cms_type]->user->isConnected())
-        {
-            $output = "&nbsp;<a href=\"" . $this->cms_link . "?"
+        if ($connected_cms[$this->cms_type]->user->isConnected()) {
+            $output = $this->cms_link . "?"
                 . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                 . "&cms_select=" . $this->cms_type
-//              . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
-                . "&target=login\" target=\"_blank\">";
-            $output .=  $name;
-            $output .= "</a>";
+                . "&target=login";
         }
         return $output;
     }

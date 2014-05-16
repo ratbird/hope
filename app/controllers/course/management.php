@@ -43,6 +43,7 @@ class Course_ManagementController extends AuthenticatedController
     {
         Navigation::activateItem('course/admin/main');
 
+        //Todo: das sollte in die Hilfelasche
         if ($GLOBALS['SessSemName']['class'] == 'inst') {
             $this->infotext = _('Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden.');
         } else {

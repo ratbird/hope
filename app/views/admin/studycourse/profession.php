@@ -24,7 +24,7 @@
         <th class="toggle-indicator"><? if (count($studycourse['degree']) < 1): ?><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?></a><? endif; ?></th>
         <th><?= $studycourse['count_user'] ?> </th>
         <th width="20">
-            <? if ($studycourse['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sp_id=".$studycourse['studiengang_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name']) ?>">
+            <? if ($studycourse['count_user'] > 0): ?><a href="<?=URLHelper::getLink("dispatch.php/messages/write?sp_id=".$studycourse['studiengang_id']."&emailrequest=1&default_subject="._("Informationen zum Studiengang:")." ". $studycourse['name']) ?>">
                 <?= Assets::img('icons/16/blue/mail.png', array('title' => _('Nachricht an alle Benutzer schicken'), 'class' => 'text-top')) ?>
             </a><? endif;?>
         </th>

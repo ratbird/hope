@@ -22,8 +22,7 @@
         </a>
     <? endif ?>
 
-        <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'dispatch.php/online',
-                                                              'rec_uname' => $user['username'])) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $user['username'])) ?>">
             <?= Assets::img('icons/16/blue/mail.png', array('title' => _('Nachricht an Benutzer verschicken'))) ?>
         </a>
     <? if ($user['is_buddy']): ?>

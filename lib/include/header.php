@@ -55,7 +55,6 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spri
 {
     $header_template = $GLOBALS['template_factory']->open('header');
     $header_template->current_page = PageLayout::getTitle();
-    $header_template->navigation = PageLayout::getTabNavigation();
     $header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
 
     if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {

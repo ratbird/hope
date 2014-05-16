@@ -204,8 +204,10 @@ $mp = MultiPersonSearch::get("addressbook_add")
     ->setSearchObject($search_obj)
     ->render();
 
+Sidebar::get()->setImage('sidebar/group-sidebar.png');
+
 $template = $GLOBALS['template_factory']->open('contact/index');
-$template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+$template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 $template->size_of_book           = $size_of_book;
 $template->sizes                  = array_merge(GetSizeOfBookByLetter(), GetSizeOfBookByGroup());
 $template->open                   = $open;

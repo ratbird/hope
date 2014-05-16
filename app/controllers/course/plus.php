@@ -38,8 +38,6 @@ class Course_PlusController extends AuthenticatedController
         $id = $range_id ?: $_SESSION['SessionSeminar'];
 
         if (!$id) {
-            include 'lib/include/html_head.inc.php';
-            include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
             die(); //must not return
         }

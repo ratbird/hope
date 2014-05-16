@@ -242,7 +242,7 @@ class BlubberStream extends SimpleORMap {
     public function fetchTags($since = null, $limit = null) {
         list($sql, $parameters) = $this->getThreadsSql();
         $statement = DBManager::get()->prepare(
-            "SELECT blubber_tags.tag " .
+            "SELECT blubber_tags.tag, SUM(1) AS counter " .
             "FROM (".$sql.") AS threads " .
                 "INNER JOIN blubber_tags ON (blubber_tags.topic_id = threads.topic_id) " .
             (($since !== null) ? "WHERE threads.chdate >= :tags_since " : "") .
@@ -253,7 +253,7 @@ class BlubberStream extends SimpleORMap {
             $parameters['tags_since'] = $since;
         }
         $statement->execute($parameters);
-        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

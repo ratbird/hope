@@ -25,6 +25,7 @@ class MultiPersonSearch {
     private $title = "";
     private $description = "";
     private $executeURL;
+    private $jsFunction = null;
     private $defaultSelectableUsers = array();
     private $defaultSelectedUsers = array();
     private $quickfilter = array();
@@ -138,7 +139,8 @@ class MultiPersonSearch {
         $template->set_attribute('description', $this->description);
         $template->set_attribute('quickfilter', $this->quickfilter);
         $template->set_attribute('executeURL', $this->executeURL);
-        
+        $template->set_attribute('jsFunction', $this->jsFunction);
+
         $template->set_attribute('defaultSelectableUsers', $this->defaultSelectableUsers);
         $template->set_attribute('defaultSelectedUsers', $this->defaultSelectedUsers);
         
@@ -214,7 +216,28 @@ class MultiPersonSearch {
     public function getExecuteURL() {
         return $this->executeURL;
     }
-    
+
+    /**
+     * sets a JavaScript-function to be fired when the user has pressed the submit-button.
+     * Arguments are:
+     * function fireme(id_of_item, text_of_item)
+     * example setting: MPS->setJSFunctionOnSubmit('fireme');
+     *
+     * @param string $function_name the name of the javascript function
+     *
+     * @return MultiPersonSearch
+     */
+    public function setJSFunctionOnSubmit($function_name)
+    {
+        $this->jsFunction = $function_name;
+        return $this;
+    }
+
+    public function getJSFunctionOnSubmit()
+    {
+        return $this->jsFunction;
+    }
+
     /**
      * sets the search object.
      * 
@@ -414,6 +437,7 @@ class MultiPersonSearch {
         $_SESSION['multipersonsearch_' . $this->name . '_quickfilter'] = $this->quickfilterIds;
         $_SESSION['multipersonsearch_' . $this->name . '_additionalHMTL'] = $this->additionalHMTL;
         $_SESSION['multipersonsearch_' . $this->name . '_executeURL'] = $this->executeURL;
+        $_SESSION['multipersonsearch_' . $this->name . '_jsFunction'] = $this->jsFunction;
         $_SESSION['multipersonsearch_' . $this->name . '_pageURL'] = Request::url();
         $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'] = $this->defaultSelectableUsersIDs;
         $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'] = $this->defaultSelectedUsersIDs;
@@ -432,6 +456,7 @@ class MultiPersonSearch {
         $this->quickfilterIds = $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'];
         $this->additionalHMTL = $_SESSION['multipersonsearch_' . $this->name . '_additionalHMTL'];
         $this->executeURL = html_entity_decode($_SESSION['multipersonsearch_' . $this->name . '_executeURL']);
+        $this->jsFunction = $_SESSION['multipersonsearch_' . $this->name . '_jsFunction'];
         $this->pageURL = $_SESSION['multipersonsearch_' . $this->name . '_pageURL'];
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'];
@@ -449,6 +474,7 @@ class MultiPersonSearch {
         unset($_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_additional']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_executeURL']);
+        unset($_SESSION['multipersonsearch_' . $this->name . '_jsFunction']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_pageURL']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs']);

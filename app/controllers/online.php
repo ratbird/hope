@@ -66,29 +66,37 @@ class OnlineController extends AuthenticatedController
         $max_page    = ceil(count($this->users['users']) / $this->limit);
         $this->page  = min(Request::int('page', 1), $max_page);
 
-        // Infobox
-        $this->setInfoboxImage('sidebar/person-sidebar.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
-                            'icons/16/black/info.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Sie können diesen NutzerInnen eine Nachricht schicken.'),
-                            'icons/16/black/mail.png');
-        $this->addToInfobox(_('Information:'),
-                            _('Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.'),
-                            'icons/16/black/person.png');
+        // Setup sidebar
+        $sidebar = Sidebar::get();
+        $sidebar->setImage('sidebar/person-sidebar.png');
 
-        // Add buddy configuration option to infobox only if the user actually
+        // Add buddy configuration option to sidebar only if the user actually
         // has buddies
         if ($this->buddy_count > 0) {
-            $template = $this->get_template_factory()->open('online/config');
-            $template->show_only_buddys = $this->settings['show_only_buddys'];
-            $template->show_groups      = $this->settings['show_groups'];
-            $template->controller       = $this;
-            $this->addToInfobox(_('Einstellung:'),
-                                $template->render(),
-                                'icons/16/black/admin.png');
+            $actions = new ActionsWidget();
+            
+            $actions->addLink(_('Nur Buddies in der Übersicht der aktiven Benutzer anzeigen'),
+                              $this->url_for('online/config/show_buddies/' . get_ticket()),
+                              $this->settings['show_only_buddys']
+                                  ? 'icons/16/black/checkbox-checked.png'
+                                  : 'icons/16/black/checkbox-unchecked.png');
+
+            $actions->addLink(_('Kontaktgruppen bei der Buddy-Darstellung berücksichtigen'),
+                              $this->url_for('online/config/show_groups/' . get_ticket()),
+                              $this->settings['show_groups']
+                                  ? 'icons/16/black/checkbox-checked.png'
+                                  : 'icons/16/black/checkbox-unchecked.png');
+
+            $sidebar->addWidget($actions);
         }
+        
+        // Setup helpbar
+        $helpbar = Helpbar::get();
+        $helpbar->addPlainText(_('Information:'),
+                               _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
+                               'icons/16/white/info.png');
+        $helpbar->addPlainText('', _('Sie können diesen NutzerInnen eine Nachricht schicken.'));
+        $helpbar->addPlainText('', _('Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.'));
     }
 
     /**

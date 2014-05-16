@@ -86,10 +86,7 @@ class Course_StudyAreasController extends AuthenticatedController
             $GLOBALS['view_mode'] = "sem";
             require_once 'lib/admin_search.inc.php';
 
-            include 'lib/include/html_head.inc.php';
-            include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
-            page_close();
             die(); //must not return
         }
         $this->set_course($course_id);

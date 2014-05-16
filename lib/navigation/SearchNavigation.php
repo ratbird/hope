@@ -40,16 +40,16 @@ class SearchNavigation extends Navigation
         parent::initSubNavigation();
 
         // browse courses
-        $navigation = new Navigation(_('Veranstaltungen'), 'sem_portal.php');
-        $navigation->addSubNavigation('all', new Navigation(_('Alle'), 'sem_portal.php?reset_all=TRUE', array('view' => 'all')));
+        $navigation = new Navigation(_('Veranstaltungen'), 'dispatch.php/search/courses');
+        $navigation->addSubNavigation('all', new Navigation(_('Alle'), 'dispatch.php/search/courses?reset_all=TRUE', array('view' => 'all')));
 
         foreach ($GLOBALS['SEM_CLASS'] as $key => $val) {
-            $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
+            $navigation->addSubNavigation($key, new Navigation($val['name'], 'dispatch.php/search/courses?reset_all=TRUE&cmd=qs', array('view' => $key)));
         }
 
         // browse modules
         if (get_config('STM_ENABLE')) {
-            $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'sem_portal.php?reset_all=TRUE', array('view' => 'mod')));
+            $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'dispatch.php/search/courses?reset_all=TRUE', array('view' => 'mod')));
         }
 
         $this->addSubNavigation('courses', $navigation);

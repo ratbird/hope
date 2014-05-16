@@ -380,8 +380,6 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 'redirect' => function () {
             $GLOBALS['view_mode'] = "inst";
             require_once 'lib/admin_search.inc.php';
-            include 'lib/include/html_head.inc.php';
-            include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
             die(); //must not return
         },

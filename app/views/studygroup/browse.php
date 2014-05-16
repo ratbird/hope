@@ -2,17 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
-$infobox['content'] = array(
-    array(
-        'kategorie'=>_("Information"),
-        'eintrag'=>array(
-            array(
-                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen. Auf dieser Seite haben können Sie nach Studiengruppen suchen. Klicken Sie auf die Überschriften der Ergebnistabelle, um die jeweiligen Spalten zu sortieren."),
-                "icon" => "icons/16/black/info.png")
-        )
-    )
-);
 $base_url = "studygroup/browse/1/";
 $link = "dispatch.php/studygroup/browse/%s/".$sort;
 

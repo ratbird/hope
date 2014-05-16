@@ -91,11 +91,11 @@
             <? endif ?>
             <? if (isset($search_semester_nr)) : ?>
             <li>
-            <form id="quicksearch" role="search" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
+            <form id="quicksearch" role="search" action="<?= URLHelper::getLink('dispatch.php/search/courses', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
               <?= CSRFProtection::tokenTag() ?>
               <script>
                 var selectSem = function (seminar_id, name) {
-                    document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => URLHelper::getURL("sem_portal.php?keep_result_set=1")))  ?>&sem_id=" + seminar_id;
+                    document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => URLHelper::getURL("dispatch.php/search/courses?keep_result_set=1")))  ?>&sem_id=" + seminar_id;
                 };
               </script>
               <?php
@@ -140,14 +140,3 @@
 </div>
 <!-- Ende Header -->
 
-<!-- Beginn Page -->
-<div id="layout_page">
-<? if ($changed_status) : ?>
-    <?= $this->render_partial('change_view') ?>
-<? endif ?>
-<? if (isset($navigation)) : ?>
-    <?= $this->render_partial('tabs') ?>
-<? endif ?>
-
-<div id="layout_container">
-    <div id="layout_content">

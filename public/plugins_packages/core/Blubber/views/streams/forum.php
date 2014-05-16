@@ -65,66 +65,25 @@
     <? endif ?>
 </ul>
 
-<?
+<?php
 
-$infobox = array(
-    array("kategorie" => _("Informationen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/info",
-                "text" => _("Ein Echtzeitkommunikations-Forum.")
-            ),
-            array(
-                "icon" => "icons/16/black/date",
-                "text" => _("Kein Seitenneuladen nötig. Du siehst sofort, wenn sich was getan hat.")
-            )
-        )
-    ),
-    array("kategorie" => _("Profifunktionen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/forum",
-                "text" => _("Drücke Shift-Enter, um einen Absatz einzufügen.")
-            ),
-            array(
-                "icon" => "icons/16/black/smiley",
-                "text" => sprintf(_("Verwende beim Tippen %sTextformatierungen%s und %sSmileys.%s"),
-                        '<a href="'.htmlReady(format_help_url("Basis/VerschiedenesFormat")).'" target="_blank">', '</a>',
-                        '<a href="'.URLHelper::getLink("dispatch.php/smileys").'" target="_blank">', '</a>')
-            ),
-            array(
-                "icon" => "icons/16/black/upload",
-                "text" => _("Ziehe Dateien per Drag & Drop in ein Textfeld, um sie hochzuladen und zugleich zu verlinken.")
-            ),
-            array(
-                "icon" => "icons/16/black/person",
-                "text" => _("Erwähne jemanden mit @username oder @\"Vorname Nachname\". Diese Person wird dann speziell auf Deinen Blubber hingewiesen.")
-            ),
-            array(
-                "icon" => "icons/16/black/hash",
-                "text" => sprintf(_("Schreibe %s#Hashtags%s in Blubber und Kommentare."), '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => "hashtags")).'">', "</a>")
-            )
-        )
-    )
-);
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/blubber-sidebar.png"));
+
 if (count($tags) && $tags[0]) {
-    $text = "";
+    $cloud = new LinkCloudWidget();
+    $cloud->setTitle(_("Hashtags"));
+    $maximum = $tags[0]['counter'];
+    //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
     foreach ($tags as $tag) {
-        $text .= '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)).'">#'.htmlReady($tag).'</a> ';
+        $cloud->addLink(
+            "#".$tag['tag'], 
+            URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)), 
+            ceil(10 * $tag['counter'] / $maximum)
+        );
     }
-    $infobox[] = array(
-        "kategorie" => _("Tagwolke"),
-        "eintrag"   => array(
-            array(
-                'icon' => "icons/16/black/link-intern",
-                'text' => $text
-            )
-        )
-    );
+    $sidebar->addWidget($cloud, 'tagcloud');
 }
-$infobox = array(
-    'picture' => CourseAvatar::getAvatar($course_id),
-    'content' => $infobox
-);
+
+
+

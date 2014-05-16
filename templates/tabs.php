@@ -38,24 +38,3 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
         <? endif ?>
     <? endforeach ?>
 </ul>
-<ul id="tabs2" role="navigation">
-    <? $subnavigation = $navigation->activeSubNavigation() ?>
-    <? if (isset($subnavigation)) : ?>
-        <? foreach ($subnavigation as $path3 => $nav) : ?>
-            <? if ($nav->isVisible()) : ?>
-                <? SkipLinks::addIndex(_("Zweite Reiternavigation"), 'tabs2', 20); ?>
-                <li id="nav_<?= $path1 ?>__<?= $path2 ?>__<?= $path3 ?>"<?= $nav->isActive() ? ' class="current"' : '' ?>>
-                    <? if ($nav->isEnabled()) : ?>
-                        <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
-                            <?= htmlReady($nav->getTitle()) ?>
-                        </a>
-                    <? else: ?>
-                        <span class="quiet">
-                            <?= htmlReady($nav->getTitle()) ?>
-                        </span>
-                    <? endif ?>
-                </li>
-            <? endif ?>
-        <? endforeach ?>
-    <? endif ?>
-</ul>

@@ -86,14 +86,14 @@ class StartNavigation extends Navigation
 
         // my courses
         if ($perm->have_perm('root')) {
-            $navigation = new Navigation(_('Veranstaltungsübersicht'), 'sem_portal.php');
+            $navigation = new Navigation(_('Veranstaltungsübersicht'), 'dispatch.php/search/courses');
         } else if ($perm->have_perm('admin')) {
             $navigation = new Navigation(_('Veranstaltungen an meinen Einrichtungen'), 'meine_seminare.php');
         } else {
             $navigation = new Navigation(_('Meine Veranstaltungen'), 'meine_seminare.php');
 
             if (!$perm->have_perm('dozent')) {
-                $navigation->addSubNavigation('browse', new Navigation(_('Veranstaltung hinzufügen'), 'sem_portal.php'));
+                $navigation->addSubNavigation('browse', new Navigation(_('Veranstaltung hinzufügen'), 'dispatch.php/search/courses'));
 
                 if ($perm->have_perm('autor') && get_config('STUDYGROUPS_ENABLE')) {
                     $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
@@ -175,9 +175,9 @@ class StartNavigation extends Navigation
 
         // messaging
         $navigation = new Navigation(_('Nachrichten'));
-        $navigation->addSubNavigation('in', new Navigation(_('Posteingang'), 'sms_box.php', array('sms_inout' => 'in')));
-        $navigation->addSubNavigation('out', new Navigation(_('Gesendet'), 'sms_box.php', array('sms_inout' => 'out')));
-        $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));
+        $navigation->addSubNavigation('in', new Navigation(_('Posteingang'), 'dispatch.php/messages/overview'));
+        $navigation->addSubNavigation('out', new Navigation(_('Gesendet'), 'dispatch.php/messages/sent'));
+        $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'dispatch.php/messages/write'));
         $this->addSubNavigation('messaging', $navigation);
 
         // community
@@ -224,9 +224,9 @@ class StartNavigation extends Navigation
         }
 
         // global search
-        $navigation = new Navigation(_('Suchen'), 'sem_portal.php');
+        $navigation = new Navigation(_('Suchen'), 'dispatch.php/search/courses');
         $navigation->addSubNavigation('user', new Navigation(_('Personensuche'), 'browse.php'));
-        $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungssuche'), 'sem_portal.php'));
+        $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungssuche'), 'dispatch.php/search/courses'));
         $this->addSubNavigation('search', $navigation);
 
         // tools

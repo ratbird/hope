@@ -382,7 +382,7 @@ class StudipLitList extends TreeAbstract {
                     $ret .=  "<b><u>" . htmlReady($tree->tree_data[$lists[$i]]['name']) . "</u></b>\n<br>\n";
                     $ret .= '</div>';
                 } else {
-                    $ret .= "\n<div align=\"left\"><b><u>" . htmlReady($tree->tree_data[$lists[$i]]['name']) . "</u></b></div>";
+                    $ret .= "\n<h3>" . htmlReady($tree->tree_data[$lists[$i]]['name']) . "</h3>";
                 }
                 if ($copy_link){
                     $ret .= "\n<div align=\"right\" style=\"font-size:10pt\"><a href=\"".URLHelper::getLink("admin_lit_list.php?cmd=CopyUserList&_range_id=self&user_list=".$lists[$i]."#anchor")."\">";
@@ -391,7 +391,7 @@ class StudipLitList extends TreeAbstract {
                 } else {
                     $ret .= "\n<br>\n";
                 }
-                $ret .= "\n<span style=\"font-size:10pt\">\n";
+                $ret .= "\n<ul>\n";
                 if ($tree->hasKids($lists[$i])){
                     $dbv->params[0] = $lists[$i];
                     $rs = $dbv->get_query("view:LIT_LIST_GET_ELEMENTS");
@@ -399,17 +399,17 @@ class StudipLitList extends TreeAbstract {
                         if ( ($tree->tree_data[$rs->f('list_element_id')]['user_id'] != $GLOBALS['auth']->auth['uid'])
                         && ($last_modified_since !== false)
                         && ($tree->tree_data[$rs->f('list_element_id')]['chdate'] > $last_modified_since) ){
-                            $ret .= '<span style="color:red" title="' . htmlReady(sprintf(_("Letzte Änderung am %s von %s"),
+                            $ret .= '<li style="color:red" title="' . htmlReady(sprintf(_("Letzte Änderung am %s von %s"),
                             date('d M Y H:i',$tree->tree_data[$rs->f('list_element_id')]['chdate']),
                             $tree->tree_data[$rs->f('list_element_id')]['fullname'])) . '">';
                             $ret .=  formatReady($tree->getFormattedEntry($rs->f('list_element_id'), $rs->Record), false, true) . "\n<br>\n";
-                            $ret .= '</span>';
+                            $ret .= '</li>';
                         } else {
-                            $ret .=  formatReady($tree->getFormattedEntry($rs->f('list_element_id'), $rs->Record), false, true) . "\n<br>\n";
+                            $ret .= "<li>".formatReady($tree->getFormattedEntry($rs->f('list_element_id'), $rs->Record), false, true) . "</li>";
                         }
                     }
                 }
-                $ret .= "\n</span><br>";
+                $ret .= "\n</ul><br>";
             }
         }
         return $ret;

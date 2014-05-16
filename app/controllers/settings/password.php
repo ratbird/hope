@@ -36,7 +36,7 @@ class Settings_PasswordController extends Settings_SettingsController
 
         PageLayout::setHelpKeyword('Basis.HomepagePersönlicheDaten');
         PageLayout::setTitle(_('Passwort ändern'));
-        Navigation::activateItem('/profile/edit/password');
+        Navigation::activateItem('profile/edit/password');
         SkipLinks::addIndex(_('Passwort ändern'), 'layout_content');
     }
 

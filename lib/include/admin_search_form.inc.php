@@ -41,7 +41,8 @@ global  $_fullname_sql,
 // clear session data of seminar-assi, otherwise the navigation item "back to seminar" will vanish
 $_SESSION['links_admin_data']['assi'] = false;
 
-if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
+if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
+    ob_start();
 
     require_once 'lib/dates.inc.php';
     require_once 'lib/msg.inc.php';
@@ -133,7 +134,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         </tr>
         </table>
         <?
-        include ('lib/include/html_end.inc.php');
+        $template = $GLOBALS['template_factory']->open('layouts/base.php');
+        $template->content_for_layout = ob_get_clean();
+        echo $template->render();
         page_close();
         die;
     }
@@ -729,15 +732,22 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     </tr>
     </table>
     <?
-        include ('lib/include/html_end.inc.php');
+        $template = $GLOBALS['template_factory']->open('layouts/base.php');
+        $template->content_for_layout = ob_get_clean();
+        echo $template->render();
         page_close();
         die;
     }
 }
 
 if ($SessSemName["class"] == "sem" && $SessSemName[1] && !$perm->have_studip_perm('tutor', $SessSemName[1])){
+    ob_start();
+
     parse_window('error§' . _("Sie haben keine ausreichende Zugriffsberechtigung!"), '§', _("Zugriff verweigert"));
-    include ('lib/include/html_end.inc.php');
+
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
     page_close();
-    die();
+    die;
 }

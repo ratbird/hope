@@ -103,6 +103,30 @@ class User extends AuthUserMd5
         return $users;
     }
 
+    public static function findDozentenByTermin_id($termin_id)
+    {
+        $record = new User();
+        $db = DBManager::get();
+        $sql = "
+            SELECT `" .  $record->db_table . "`.*
+            FROM `" .  $record->db_table . "`
+                INNER JOIN termin_related_persons USING (user_id)
+            WHERE termin_related_persons.range_id = ?
+            ORDER BY Nachname, Vorname ASC
+        ";
+        $st = $db->prepare($sql);
+        $st->execute(array($termin_id));
+        $ret = array();
+        $c = 0;
+        while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+            $ret[$c] = new User();
+            $ret[$c]->setData($row, true);
+            $ret[$c]->setNew(false);
+            ++$c;
+        }
+        return $ret;
+    }
+
     /**
      *
      */

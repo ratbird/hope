@@ -70,14 +70,29 @@ class Settings_CategoriesController extends Settings_SettingsController
                             ? array('action' => $verify_action, 'id' => $verify_id)
                             : false;
 
-        $this->setInfoboxImage('sidebar/privacy-sidebar.png');
-        $this->addToInfobox(_('Aktionen'),
-                            sprintf('<a href="%s">%s</a>',
-                                    $this->url_for('settings/categories/create'),
-                                    _('Neue Kategorie anlegen')),
-                            'icons/16/black/add');
-        $this->addToInfobox(_('Informationen'), _('Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen je nach eingestellter Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.'), 'icons/16/black/info');
-        $this->addToInfobox(_('Informationen'), sprintf(_('Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen.'), '<a href="'.URLHelper::getURL('dispatch.php/settings/privacy').'">', '</a>'), 'icons/16/black/visibility-invisible');
+        $sidebar = Sidebar::get();
+        $sidebar->setImage('sidebar/privacy-sidebar.png');
+        
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neue Kategorie anlegen'),
+                          $this->url_for('settings/categories/create'),
+                          'icons/16/black/add');
+        $sidebar->addWidget($actions);
+
+        $helpbar = Helpbar::get();
+        $helpbar->addPlainText(_('Informationen'),
+                               _('Hier können Sie beliebige eigene Kategorien anlegen. '
+                                .'Diese Kategorien erscheinen je nach eingestellter '
+                                .'Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen '
+                                .'können Sie die Reihenfolge, in der die Kategorien angezeigt '
+                                .'werden, verändern.'),
+                               'icons/16/white/info');
+        $helpbar->addPlainText('',
+                               sprintf(_('Für wen Ihre angelegten Kategorien genau sichtbar '
+                                        .'sein sollen, können Sie in Ihren '
+                                        .'[Privatsphäre-Einstellungen]%s festlegen.'),
+                                       URLHelper::getURL('dispatch.php/settings/privacy')),
+                               'icons/16/white/visibility-invisible');
     }
 
     /**

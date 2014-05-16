@@ -1090,7 +1090,7 @@ function validate_upload($the_file, $real_file_name='') {
     if (!$the_file) { # haben wir eine Datei?
         $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
     } else { # pruefen, ob der Typ stimmt
-        if ($i_page == "sms_send.php") {
+        if ($i_page == "dispatch.php/messages/upload_attachment") {
             if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
                     $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
             $active_upload_type = "attachments";
@@ -1240,11 +1240,7 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
 
 
 function JS_for_upload() {
-    if ($GLOBALS['i_page'] == "sms_send.php") {
-        $active_upload_type = "attachments";
-    } else {
-        $active_upload_type = $GLOBALS['SessSemName']["art_num"];
-    }
+    $active_upload_type = $GLOBALS['SessSemName']["art_num"];
     //displays the templates for upload windows now
     //for upload code see application.js : STUDIP.OldUpload
     ?>

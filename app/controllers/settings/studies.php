@@ -42,21 +42,25 @@ class Settings_StudiesController extends Settings_SettingsController {
             && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $GLOBALS['perm']->have_perm('admin')),
             'in' => $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm('admin'),
         );
+
+        Helpbar::get()
+            ->addPlainText(_('Informationen'),
+                           _('Hier können Sie Angaben über Ihre Studienkarriere machen.'),
+                           'icons/16/white/info.png');
     }
 
     /**
      * Displays the study information of a user.
      */
-    public function index_action() {
-        $infobox_message = _('Hier können Sie Angaben &uuml;ber Ihre Studienkarriere machen.');
-        $this->setInfoBoxImage('infobox/groups.jpg');
-        $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
+    public function index_action()
+    {
     }
 
     /**
      * Stores the study information of a user (subject and degree-wise).
      */
-    public function store_sg_action() {
+    public function store_sg_action()
+    {
         $this->check_ticket();
 
         $any_change = false;
@@ -140,7 +144,8 @@ class Settings_StudiesController extends Settings_SettingsController {
     /**
      * Stores the study information of a user (institute-wise).
      */
-    public function store_in_action() {
+    public function store_in_action()
+    {
         $this->check_ticket();
 
         $inst_delete = Request::optionArray('inst_delete');
@@ -188,7 +193,8 @@ class Settings_StudiesController extends Settings_SettingsController {
         $this->redirect('settings/studies');
     }
 
-    private function hasStudiengang() {
+    private function hasStudiengang()
+    {
         $query = "SELECT * FROM user_studiengang
                       WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);

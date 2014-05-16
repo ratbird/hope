@@ -322,13 +322,13 @@ class messaging
      * @param $force_email
      * @param $priority
      */
-    function insert_message($message, $rec_uname, $user_id='', $time='', $tmp_message_id='', $set_deleted='', $signature='', $subject='', $force_email='', $priority='normal')
+    function insert_message($message, $rec_uname, $user_id='', $time='', $tmp_message_id='', $set_deleted='', $signature='', $subject='', $force_email='', $priority='normal', $tags = null)
     {
         global $user;
 
         $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
 
-        if (basename($_SERVER['PHP_SELF']) == 'sms_send.php'){
+        if (basename($_SERVER['PHP_SELF']) == 'dispatch.php/messages/send'){
             $sms_data = $_SESSION['sms_data'];
         } else {
             $sms_data['tmpsavesnd'] = $my_messaging_settings['save_snd'];
@@ -338,7 +338,6 @@ class messaging
         // wenn kein subject uebergeben
         $subject = $subject ?: _('Ohne Betreff');
 
-        $reading_confirmation = ($sms_data['tmpreadsnd'] == 1) ? 1 : 0;
         $email_request = ($sms_data['tmpemailsnd'] == 1) ? 1 : 0;
 
         // wenn keine zeit uebergeben
@@ -382,24 +381,41 @@ class messaging
         }
 
         // insert message
-        $query = "INSERT INTO message (message_id, autor_id, subject, message, reading_confirmation, priority, mkdate)
-                  VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $tmp_message_id, $snd_user_id,
-            $subject, $message,
-            $reading_confirmation, $priority,
-        ));
-        // insert snd
-        $query = "INSERT INTO message_user (message_id, user_id, snd_rec, folder, deleted, mkdate)
-                  VALUES (?, ?, 'snd', ?, ?, UNIX_TIMESTAMP())";
+        $query = "INSERT INTO message (message_id, autor_id, subject, message, priority, mkdate)
+                  VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $tmp_message_id,
             $snd_user_id,
-            $sms_data['tmp_save_snd_folder'] ?: 0, // save in specific folder (sender)
+            $subject,
+            $message,
+            $priority,
+        ));
+        // insert snd
+        $insert_tags = DBManager::get()->prepare("
+            INSERT IGNORE INTO message_tags
+            SET message_id = :message_id,
+                user_id = :user_id,
+                tag = :tag,
+                chdate = UNIX_TIMESTAMP(),
+                mkdate = UNIX_TIMESTAMP()
+        ");
+        $query = "INSERT INTO message_user (message_id, user_id, snd_rec, deleted, mkdate)
+                  VALUES (?, ?, 'snd', ?, UNIX_TIMESTAMP())";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $tmp_message_id,
+            $snd_user_id,
             $set_deleted ? 1 : 0,                  // save message?
         ));
+        is_array($tags) || $tags = explode(" ", (string) $tags);
+        foreach ($tags as $tag) {
+            $insert_tags->execute(array(
+                'message_id' => $tmp_message_id,
+                'user_id' => $snd_user_id,
+                'tag' => strtolower($tag)
+            ));
+        }
 
         // heben wir kein array bekommen, machen wir einfach eins ...
         if (!is_array($rec_uname)) {
@@ -440,12 +456,19 @@ class messaging
                     $this->sendingEmail($one, $snd_user_id, $message, $subject, $tmp_message_id);
                 }
             }
+            foreach ($tags as $tag) {
+                $insert_tags->execute(array(
+                    'message_id' => $tmp_message_id,
+                    'user_id' => $one,
+                    'tag' => strtolower($tag)
+                ));
+            }
         }
         PersonalNotifications::add(
             $rec_id,
-            URLHelper::getUrl("sms_box.php?sms_inout=in&mopen=$tmp_message_id#$tmp_message_id", array('cid' => null)),
+            URLHelper::getUrl("dispatch.php/messages/read/$tmp_message_id", array('cid' => null)),
             sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),
-            'msg_item_'.$tmp_message_id,
+            'message_'.$tmp_message_id,
             Assets::image_path("icons/80/blue/mail")
         );
 

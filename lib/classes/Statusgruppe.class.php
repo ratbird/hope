@@ -324,7 +324,12 @@ class Statusgruppe {
         foreach (array('error', 'info', 'msg') as $type) {
             if (is_array($this->messages[$type])) {
                 foreach ($this->messages[$type] as $msg) {
-                    $msgs[$type][] = $msg;
+                    if ($type === 'msg') {
+                        $message = MessageBox::success($msg);
+                    } else {
+                        $message = MessageBox::$type($msg);
+                    }
+                    PageLayout::postMessage($message);
                 }
             }
         }

@@ -222,7 +222,7 @@ class SemBrowse {
         // add skip link
         SkipLinks::addIndex(_("Suchformular"), 'search_sem_qs', 100);
         // add a skip link for advanced search here
-     //   SkipLinks::addLink(_("Erweiterte Suche"), URLHelper::getLink('sem_portal.php', array('cmd' => 'xts', 'level' => 'f')), 120);
+     //   SkipLinks::addLink(_("Erweiterte Suche"), URLHelper::getLink('dispatch.php/search/courses', array('cmd' => 'xts', 'level' => 'f')), 120);
         //Quicksort Formular... fuer die eiligen oder die DAUs....
         echo $this->search_obj->getFormStart(URLHelper::getLink());
         echo "<table id=\"search_sem_qs\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
@@ -269,7 +269,7 @@ class SemBrowse {
         // add skip link
         SkipLinks::addIndex(_("Suchformular"), 'search_sem_xts', 100);
         // add skip link for simple search here
-        SkipLinks::addLink(_("Schnellsuche"), URLHelper::getURL('sem_portal.php', array('cmd' => 'qs', 'level' => 'f')), 120);
+        SkipLinks::addLink(_("Schnellsuche"), URLHelper::getURL('dispatch.php/search/courses', array('cmd' => 'qs', 'level' => 'f')), 120);
         $this->search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table id=\"search_sem_xts\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
@@ -349,13 +349,13 @@ class SemBrowse {
                         _("Suche in Einrichtungen"),
                         Assets::img('institute.jpg', tooltip2(_("Suche im Einrichtungsverzeichnis"))));
                 if ($this->show_class()){
-                    SkipLinks::addLink(_("Suche im Vorlesungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'vv', 'cmd' => 'qs', 'sset' => '0')));
+                    SkipLinks::addLink(_("Suche im Vorlesungsverzeichnis"), URLHelper::getLink('dispatch.php/search/courses', array('level' => 'vv', 'cmd' => 'qs', 'sset' => '0')));
                     printf ("<td nowrap align=\"center\"><a href=\"%s\"><b>%s</b><br><br>%s</a></td>",
                             URLHelper::getLink('?level=vv&cmd=qs&sset=0'),
                             _("Suche im Vorlesungsverzeichnis"),
                             Assets::img('kommentar.jpg', tooltip2(_("Suche im Vorlesungsverzeichnis"))));
                 }
-                SkipLinks::addLink(_("Suche im Einrichtungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'ev', 'cmd' => 'qs', 'sset' => '0')));
+                SkipLinks::addLink(_("Suche im Einrichtungsverzeichnis"), URLHelper::getLink('dispatch.php/search/courses', array('level' => 'ev', 'cmd' => 'qs', 'sset' => '0')));
                 printf ("</tr></table>");
             }
             echo "</font></div>";

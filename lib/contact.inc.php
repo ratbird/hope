@@ -542,7 +542,7 @@ function ShowContact ($contact_id)
                             . get_fullname($temp['user_id'], $format = "full_rev",true ) . '</td>'
                             . "<td class=\"table_header_bold\" align=\"right\">"
                             // export to vcf
-                            . '<a href="' . URLHelper::getLink('sms_send.php', array('sms_source_page' => 'contact.php', 'rec_uname' => get_username($temp['user_id']))) . '">' . Assets::img('icons/16/white/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
+                            . '<a href="' . URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => get_username($temp['user_id']))) . '">' . Assets::img('icons/16/white/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
                             . '</td>'
                             . "
                         </td>

@@ -58,6 +58,7 @@ include 'lib/seminar_open.php';
 PageLayout::setTitle(_('E-Mail Aktivierung'));
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
+include ('lib/include/deprecated_tabs_layout.php');
 
 $uid = Request::option('uid');
 if(Request::get('key')) {

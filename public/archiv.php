@@ -243,6 +243,7 @@ PageLayout::setHelpKeyword("Basis.SuchenArchiv");
 // dann eben den Rest...
 
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
+include ('lib/include/deprecated_tabs_layout.php');
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <? if ($msg) { parse_msg($msg); } ?>

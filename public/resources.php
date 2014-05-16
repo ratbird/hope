@@ -35,6 +35,7 @@ if (get_config('RESOURCES_ENABLE')) {
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
+    include ('lib/include/deprecated_tabs_layout.php');
     require_once ('lib/msg.inc.php');
     //TODO use MessageBox or Exception
     parse_window ("error§" . _("Die Ressourcenverwaltung ist nicht eingebunden. Bitte aktivieren Sie sie in den Systemeinstellungen, oder wenden Sie sich an die Systemadministratoren."), "§",

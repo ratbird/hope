@@ -8,11 +8,10 @@
         <caption>
             <span class="actions">
                 <?=$controller->getEmailLinkByStatus('accepted', $accepted)?>
-                    <a href="<?= URLHelper::getLink('sms_send.php',
+                    <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                             array('filter' => 'prelim',
-                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
                                 'course_id' => $course_id,
-                                'subject' => $subject))
+                                'default_subject' => $subject))
                     ?>">
                         <?= Assets::img('icons/16/blue/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s versenden'), 'vorläufig akzeptierten NutzerInnen')))?>
@@ -87,11 +86,10 @@
                 </td>
                 <td style="text-align: right">
                     <? if($user_id != $accept['user_id']) : ?>
-                        <a href="<?= URLHelper::getLink('sms_send.php',
+                        <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                                     array('filter' => 'send_sms_to_all',
                                     'rec_uname' => $accept['username'],
-                                    'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
-                                    'subject' => $subject))
+                                    'default_subject' => $subject))
                                 ?>
                         ">
                             <?= Assets::img('icons/16/blue/mail.png',

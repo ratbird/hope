@@ -10,42 +10,25 @@
 
 <!-- set a CSS "namespace" for Forum -->
 <div id="forum">
-<? 
+<?php
 
-$infobox_content[] = array(
-    'kategorie' => _('Informationen'),
-    'eintrag'   => array(
-        array(
-            'icon' => 'icons/16/black/info.png',
-            'text' => sprintf(_('Sie befinden sich hier im Forum. Ausführliche Hilfe finden Sie in der %sDokumentation%s.'),
-                '<a href="'. format_help_url(PageLayout::getHelpKeyword()) .'" target="_blank">', '</a>')
-        )
-    )
-);
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/forum-sidebar.png"));
 
-if (ForumPerm::has('search', $seminar_id)) :
-    $infobox_content[] = array(
-        'kategorie' => _('Suche'),
-        'eintrag'   => array(
-            array(
-                'icon' => $section == 'search' ? 'icons/16/red/arr_1right.png' : 'icons/16/grey/arr_1right.png',
-                'text' => $this->render_partial('index/_search', array('id' => 'tutorSearchInfobox'))
-            )
-        )
+if (ForumPerm::has('search', $seminar_id)) {
+    $search = new SearchWidget();
+    $search->addElement(new WidgetElement(
+        $this->render_partial('index/_search', array('id' => 'tutorSearchInfobox'))),
+        'search' 
     );
-endif;
+    $sidebar->addWidget($search);
+}
 
-if ($constraint['depth'] == 0 && $section == 'index') :
-    $infobox_content[] = array(
-        'kategorie' => _('Tour'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/info.png',
-                'text' => '<a href="javascript:STUDIP.Forum.startTour()">Tour starten</a>'
-            )
-        )
-    );
-endif;
+$actions = new ActionsWidget();
+
+if ($constraint['depth'] == 0 && $section == 'index') {
+    $actions->addLink(_('Tour starten'), "javascript:STUDIP.Forum.startTour();", 'icons/16/black/info.png');
+}
 
 $eintraege = array();
 if ($section == 'index') {
@@ -63,82 +46,84 @@ if ($section == 'index') {
             $abo_url = PluginEngine::getLink('coreforum/index/abo/' . $constraint['topic_id']);
         endif;
         
-        $eintraege[] = array(
-            'icon' => 'icons/16/black/link-intern.png',
-            'text' => '<a href="'. $abo_url .'">' . $abo_text .'</a>'
-        );
+        $actions->addLink($abo_text, $abo_url, 'icons/16/black/link-intern.png');
     }
 
     if (ForumPerm::has('pdfexport', $seminar_id)) {
-        $eintraege[] = array(
-            'icon' => 'icons/16/black/export/file-pdf.png',
-            'text' => '<a href="'. PluginEngine::getLink('coreforum/index/pdfexport/' . $constraint['topic_id']) .'" target="_blank">' . _('Beiträge als PDF exportieren') .'</a>'
-        );
+        $actions->addLink(_('Beiträge als PDF exportieren'), PluginEngine::getURL('coreforum/index/pdfexport/' . $constraint['topic_id']), 'icons/16/black/file-pdf.png');
     }
 
     if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) {
         if ($constraint['closed'] == 0) {
-            $eintraege[] = array(
-                'icon' => 'icons/16/black/lock-locked.png',
-                'text' => '<a class="closeButtons" href="'. PluginEngine::getLink('coreforum/index/close_thread/' 
-                            . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage()) .'" 
-                        onclick="STUDIP.Forum.closeThreadFromThread(\'' . $constraint['topic_id'] . '\', '
-                            . ForumHelpers::getPage() . '); return false;">' 
-                        . _('Thema schließen') . '</a>'
+            $close_url = PluginEngine::getLink('coreforum/index/close_thread/' 
+                            . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage());
+            $close = new LinkElement(
+                _('Thema schließen'), 
+                $close_url, 
+                Assets::image_path('icons/16/black/lock-locked.png'),
+                array(
+                    'onclick' => 'STUDIP.Forum.closeThreadFromThread(\'' . $constraint['topic_id'] . '\', '
+                            . ForumHelpers::getPage() . '); return false;',
+                    'class' => "closeButtons"
+                )
             );
+            $actions->addElement($close, 'closethread');
         } else {
-            $eintraege[] = array(
-                'icon' => 'icons/16/black/lock-unlocked.png',
-                'text' => '<a class="closeButtons" href="'. PluginEngine::getLink('coreforum/index/open_thread/' 
-                                . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage()) .'"
-                            onclick="STUDIP.Forum.openThreadFromThread(\'' . $constraint['topic_id'] . '\', '
-                                . ForumHelpers::getPage() . '); return false;">'
-                        . _('Thema öffnen') . '</a>'
+            $open_url = PluginEngine::getLink('coreforum/index/open_thread/' 
+                            . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage());
+            $open = new LinkElement(
+                _('Thema öffnen'),
+                $open_url,
+                Assets::image_path('icons/16/black/lock-unlocked.png'),
+                array(
+                    'onclick' => 'STUDIP.Forum.openThreadFromThread(\'' . $constraint['topic_id'] . '\', '
+                                . ForumHelpers::getPage() . '); return false;',
+                    'class' => "closeButtons"
+                )
             );
+            $actions->addElement($open, 'closethread');
         }
     }
     
     if (ForumPerm::has('make_sticky', $seminar_id) && $constraint['depth'] > 1) {
         if ($constraint['sticky'] == 0) {
-            $eintraege[] = array(
-                'icon' => 'icons/16/black/staple.png',
-                'text' => '<a id="stickyButton" href="'. PluginEngine::getLink('coreforum/index/make_sticky/' 
-                                . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage()) .'"
-                            onclick="STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
-                                . ForumHelpers::getPage() . '); return false;">'
-                        . _('Thema hervorheben') . '</a>'
+            $emphasize_url = PluginEngine::getLink('coreforum/index/make_sticky/' 
+                                . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage());
+            $emphasize = new LinkElement(
+                _('Thema hervorheben'),
+                $emphasize_url,
+                Assets::image_path('icons/16/black/staple.png'),
+                array(
+                    'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
+                            . ForumHelpers::getPage() . '); return false;',
+                    'id' => "stickyButton"
+                )
             );
+            $actions->addElement($emphasize, 'emphasize');
         } else {
-            $eintraege[] = array(
-                'icon' => 'icons/16/black/staple.png',
-                'text' => '<a id="stickyButton" href="'. PluginEngine::getLink('coreforum/index/make_unsticky/' 
-                                . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage()) .'"
-                            onclick="STUDIP.Forum.makeThreadUnstickyFromThread(\'' . $constraint['topic_id'] . '\', '
-                                . ForumHelpers::getPage() . '); return false;">'
-                        . _('Hervorhebung aufheben') . '</a>'
+            $unemphasize_url = PluginEngine::getLink('coreforum/index/make_unsticky/' 
+                                . $constraint['topic_id'] .'/'. $constraint['topic_id'] .'/'. ForumHelpers::getPage());
+            $emphasize = new LinkElement(
+                _('Hervorhebung aufheben'),
+                $unemphasize_url,
+                Assets::image_path('icons/16/black/staple.png'),
+                array(
+                    'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
+                            . ForumHelpers::getPage() . '); return false;',
+                    'id' => "stickyButton"
+                )
             );
+            $actions->addElement($emphasize, 'emphasize');
         }
     }
 
     if ($constraint['depth'] == 0 && ForumPerm::has('add_category', $seminar_id)) {
-        $eintraege[] = array(
-            'icon' => 'icons/16/black/link-intern.png',
-            'text' => '<a href="#create">' . _('Neue Kategorie erstellen') .'</a>'
-        );
+        $actions->addLink(_('Neue Kategorie erstellen'), "#create", 'icons/16/black/link-intern.png');
     }
 }
 
-if (!empty($eintraege)) {
-    $infobox_content[] = array(
-        'kategorie' => _('Aktionen'),
-        'eintrag'   => $eintraege
-    );
-}
+$sidebar->addWidget($actions);
 
-// show the infobox only if it contains elements
-if (!empty($infobox_content)) :
-    $infobox = array('picture' => 'sidebar/forum-sidebar.png', 'content' => $infobox_content);
-endif;
 ?>
 
 <!-- Breadcrumb navigation -->

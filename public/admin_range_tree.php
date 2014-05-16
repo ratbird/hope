@@ -51,6 +51,7 @@ Navigation::activateItem('/admin/config/range_tree');
 
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen 
+include ('lib/include/deprecated_tabs_layout.php');
 
 ?>
 <table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">

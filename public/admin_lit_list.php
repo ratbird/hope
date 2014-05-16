@@ -87,11 +87,9 @@ $_the_tree =& $_the_treeview->tree;
 
 PageLayout::setTitle($_the_tree->root_name . " - " . PageLayout::getTitle());
 
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 //checking rights
 if (($_the_tree->range_type == "sem" && !$perm->have_studip_perm("tutor", $_range_id)) ||
@@ -239,5 +237,7 @@ print_infobox ($infobox, "sidebar/literature-sidebar.png");
 </tr>
 </table>
 <?
-include ('lib/include/html_end.inc.php');
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();

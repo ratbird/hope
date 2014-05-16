@@ -38,6 +38,7 @@ class StreamsController extends ApplicationController {
         }
 
         $globalstream = BlubberStream::getGlobalStream();
+        $this->tags = $globalstream->fetchTags();
         if (Request::get("hash")) {
             $this->search = Request::get("hash");
             $globalstream = new BlubberStream();
@@ -79,11 +80,11 @@ class StreamsController extends ApplicationController {
         Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
         Navigation::activateItem("/course/blubberforum");
         $coursestream = BlubberStream::getCourseStream($_SESSION['SessionSeminar']);
+        $this->tags = $coursestream->fetchTags();
         if (Request::get("hash")) {
             $this->search = "#".Request::get("hash");
             $coursestream->filter_hashtags = array(Request::get("hash"));
         }
-        $this->tags = $coursestream->fetchTags();
         $this->threads = $coursestream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];
@@ -107,8 +108,9 @@ class StreamsController extends ApplicationController {
         }
         PageLayout::setTitle($this->user->getName()." - Blubber");
 
-        $this->threads = BlubberStream::getProfileStream($this->user->getId())
-                            ->fetchThreads(0, $this->max_threads + 1);
+        $profilestream = BlubberStream::getProfileStream($this->user->getId());
+        $this->tags = $profilestream->fetchTags();
+        $this->threads = $profilestream->fetchThreads(0, $this->max_threads + 1);
         $this->more_threads = count($this->threads) > $this->max_threads;
         $this->course_id = $_SESSION['SessionSeminar'];
         if ($this->more_threads) {
@@ -692,6 +694,7 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         
         $this->stream = new BlubberStream($stream_id);
+        $this->tags = $this->stream->fetchTags();
         if ($this->stream['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException("Not your stream.");
         }

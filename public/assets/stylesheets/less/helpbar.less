@@ -1,0 +1,98 @@
+.helpbar-container {
+    background: #fff;
+    border-radius: 0 2px 0 0;
+    clear: both;
+    padding: 4px 0 4px 0;
+    width: 100%;
+}
+.helpbar {
+    background: @base-color;
+    border-top: 4px solid @base-color;
+    float: right;
+    margin: 0 4px;
+    position: relative;
+    .translate(0, -4px);
+    z-index: 9999;
+}
+.helpbar-header {
+    border: 4px solid #fff;
+    border-top: 2px solid @content-color;
+    padding: 3px;
+    img {
+        display: block;
+    }
+}
+.helpbar-content {
+    .box-sizing(border-box);
+    background: inherit;
+    color: white;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 272px;
+    .helpbar:hover & {
+        display: block;
+    }
+}
+.helpbar-sticky {
+    display: none;
+    &:checked + .helpbar-content {
+        display: block;
+    }
+}
+.helpbar-sticky-toggle {
+    cursor: pointer;
+    .hide-text;
+    position: absolute;
+    right: 9px;
+    top: 9px;
+    width: 16px;
+    height: 16px;
+    .retina-background-icon('white/checkbox-unchecked.png');
+
+    .helpbar-sticky:checked + .helpbar-content & {
+        .retina-background-icon('white/checkbox-checked.png');
+    }
+}
+.helpbar-title {
+    background-color: @content-color;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 0;
+    padding: 6px 6px 9px 6px;
+    
+    &:before {
+        background-repeat: no-repeat;
+        background-position: center;
+        .retina-background-icon('white/question.png');
+        content: ' ';
+        display: inline-block;
+        height: 16px;
+        margin-right: 4px;
+        vertical-align: middle;
+        width: 16px;
+    }
+}
+.helpbar-widgets {  
+    color: #fff;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+
+    a:link, a:visited {
+        color: #fff;
+    }
+    a:hover, a:active {
+        color: @active-color;
+    }
+    li {
+        margin-left: 20px;
+    }
+}
+.helpbar-widget-icon {
+    margin-left: -20px;
+    position: absolute;
+}

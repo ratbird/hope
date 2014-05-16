@@ -77,7 +77,7 @@ $infobox = array(
                 array('icon' => 'icons/16/black/search.png',
                       'text'  => sprintf(_('Um Informationen über alle Studienmodule anzuzeigen nutzen Sie die<br>'
                                           .'%sSuche nach Studienmodulen%s'),
-                                         '<a href="' . URLHelper::getURL('sem_portal.php?view=mod&reset_all=TRUE') . '">',
+                                         '<a href="' . URLHelper::getURL('dispatch.php/search/courses?view=mod&reset_all=TRUE') . '">',
                                          '</a>')
                 )
             )

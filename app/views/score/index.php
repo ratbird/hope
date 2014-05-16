@@ -1,5 +1,10 @@
 <table class="default">
     <caption>
+        <span class="actions" style="font-size: 0.9em;">
+            <?= _('Ihre Punkte:') ?>
+            <strong><?= number_format($score->ReturnMyScore(), 0, ',', '.') ?></strong>
+            (<?= $score->ReturnMyTitle() ?>)
+        </span>
         <?= _('Stud.IP-Rangliste')?>
     </caption>
     <colgroup>

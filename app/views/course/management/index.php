@@ -1,44 +1,28 @@
-<?
+<?php
 # Lifter010: TODO
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
 
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _('Information'),
-            'eintrag'   => array(
-                array(
-                    'icon' => 'icons/16/black/info.png',
-                    'text' => $this->infotext
-                )
-            )
-        )
-    )
-);
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
 
-$items = array();
+$links = new ActionsWidget();
 
 foreach (Navigation::getItem('/course/admin/main') as $nav) {
     if ($nav->isVisible(true)) {
         $image = $nav->getImage();
-        $text = '<a href="' . URLHelper::getLink($nav->getURL()) . '">' . htmlReady($nav->getTitle()). '</a>';
-        $items[] = array('icon' => $image['src'], 'text' => $text);
+        $links->addLink($nav->getTitle(), $nav->getURL(), $image['src']);
     }
 }
-
-if (count($items)) {
-    array_unshift($infobox['content'], array('kategorie' => _('Aktionen'), 'eintrag' => $items));
-}
+$sidebar->addWidget($links);
 ?>
 
-<h1 class="smashbox_kategorie">
+<h1>
     <?= _('Verwaltungsfunktionen') ?>
 </h1>
 
-<div class="smashbox_stripe">
+<div>
     <div style="margin-left: 1.5em;">
 
         <? foreach (Navigation::getItem('/course/admin') as $name => $nav) : ?>

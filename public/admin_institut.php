@@ -458,9 +458,6 @@ if ($header_line) {
 // We need to copy this condition from admin_search_form.inc.php to determine whether
 // we need to include the header, since admin_search_form DIES and thus prevents templating
 if ((!$SessSemName[1] || $SessSemName['class'] == 'sem') && Request::option('list') && ($GLOBALS['view_mode'] == 'inst')) {
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-
     if ($deleted = Request::get('deleted')) {
         $message = sprintf(_('Die Einrichtung "%s" wurde gelöscht!'), htmlReady(Request::get('deleted')));
         echo '<table class="default blank"><tr><td>' . MessageBox::success($message) . '</td></tr></table>';

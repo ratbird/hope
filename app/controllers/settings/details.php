@@ -37,11 +37,14 @@ class Settings_DetailsController extends Settings_SettingsController
         Navigation::activateItem('/profile/edit/details');
         SkipLinks::addIndex(_('Private Daten bearbeiten'), 'layout_content');
 
-        $infobox_message = _('Hier können Sie Angaben &uuml;ber Ihre privaten Kontaktdaten '
-                            .'sowie Lebenslauf und Hobbys machen.') . '<br>'
-                            ._('Alle Angaben die Sie hier machen sind freiwillig!');
-        $this->setInfoBoxImage('sidebar/person-sidebar.png');
-        $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
+        Helpbar::get()
+            ->addPlainText(_('Informationen'),
+                           array(
+                               _('Hier können Sie Angaben über Ihre privaten Kontaktdaten '
+                               .'sowie Lebenslauf und Hobbys machen.'),
+                               _('Alle Angaben die Sie hier machen sind freiwillig!')
+                           ),
+                           'icons/16/white/info.png');
     }
 
     /**

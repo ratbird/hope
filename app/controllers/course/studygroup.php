@@ -52,6 +52,7 @@ class Course_StudygroupController extends AuthenticatedController {
             throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }
 
+        Sidebar::get()->setImage('sidebar/studygroup-sidebar.png');
         $this->set_layout('course/studygroup/layout');
     }
 
@@ -113,8 +114,23 @@ class Course_StudygroupController extends AuthenticatedController {
             if ($sem_class['studygroup_mode']) {
                 $this->sem_class = $sem_class;
                 break;
-    }
+            }
         }
+
+        $helpbar = Helpbar::get();
+        $helpbar->addPlainText(_('Information'),
+                               _('Studiengruppen sind eine einfache Möglichkeit, mit '
+                                .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
+                                .'Jeder kann Studiengruppen gründen.'),
+                               'icons/16/white/info.png');
+        $helpbar->addPlainText('',
+                               _("Wählen Sie 'Offen für alle', wenn beliebige Nutzer der "
+                                ."Gruppe ohne Nachfrage beitreten können sollen. 'Auf Anfrage' "
+                                ."erfordert Ihr Eingreifen: Sie müssen jede einzelne "
+                                ."Aufnahmeanfrage annehmen oder ablehnen."));
+        $helpbar->addPlainText('',
+                               _("Alle Einstellungen können auch später noch unter "
+                                ."dem Reiter 'Admin' geändert werden."));
     }
 
     /**
@@ -407,6 +423,28 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
             }
 
+            $actions = new ActionsWidget();
+            
+            $actions->addLink(_('Neue Studiengruppe anlegen'),
+                              $this->url_for('course/studygroup/new'),
+                              'icons/16/black/add/studygroup.png');
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $id)) {
+                $actions->addLink(_('Bild ändern'),
+                                  $this->url_for('course/avatar/update/' . $id),
+                                  'icons/16/black/edit.png');
+            }
+            $actions->addLink(_('Diese Studiengruppe löschen'),
+                              $this->url_for('course/studygroup/delete/' . $id),
+                              'icons/16/black/trash.png');
+
+            Sidebar::get()->addWidget($actions);
+
+            $helpbar = Helpbar::get();
+            $helpbar->addPlainText(_('Information'),
+                                   _('Studiengruppen sind eine einfache Möglichkeit, mit '
+                                    .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
+                                    .'Jeder kann Studiengruppen gründen.'),
+                                   'icons/16/white/info.png');
         }
         // ... otherwise redirect us to the seminar
         else {
@@ -685,28 +723,54 @@ class Course_StudygroupController extends AuthenticatedController {
         foreach ($this->cmembers as $m) {
             $defaultSelectedUser[] = $m['user_id'];
         }
+
+        if ($this->rechte) {
+            $actions = new ActionsWidget();
+            
+            // add addressbook
+            $sql = "SELECT user_id FROM contact WHERE owner_id = ?";
+            $statement = DBManager::get()->prepare($sql);
+            $statement->execute(array($GLOBALS['user']->id));
+            $userArray = $statement->fetchAll(PDO::FETCH_COLUMN);
         
-        // add addressbook
-        $sql = "SELECT user_id FROM contact WHERE owner_id = ?";
-        $statement = DBManager::get()->prepare($sql, array(PDO::FETCH_NUM));
-        $statement->execute(array($GLOBALS['user']->id));
-        $result = $statement->fetchAll();
-        
-        $userArray = array();
-        foreach ($result as $r) {
-            $userArray[] = $r['user_id'];
+            $mp = MultiPersonSearch::get('studygroup_invite_' . $id)
+                      ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
+                      ->setDefaultSelectedUser($defaultSelectedUser)
+                      ->setLinkIconPath("")
+                      ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
+                      ->setExecuteURL($this->url_for('course/studygroup/execute_invite/' . $id))
+                      ->setSearchObject($inviting_search)
+                      ->addQuickfilter(_('Adressbuch'), $userArray)
+                      ->addQuickfilter(_('Buddies'), GetBuddyIDs($GLOBALS['user']->id))
+                      ->render();
+
+            $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');
+            $actions->addElement($element);
+            
+            $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),
+                              $this->url_for('course/studygroup/message/' . $id),
+                              'icons/16/black/mail.png');
+
+            Sidebar::get()->addWidget($actions);
+
+            $helpbar = Helpbar::get();
+            $helpbar->addPlainText(_('Information'),
+                                   _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.'),
+                                   'icons/16/white/info.png');
+            $helpbar->addPlainText('',
+                                   _('TeilnehmerInnen können je nach Status zu einem Moderator hoch oder '
+                                    .'runtergestuft werden und aus der Studiengruppe entlassen werden.'));
+            $helpbar->addPlainText('',
+                                   _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, '
+                                    .'abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.'));
+        } else {
+            $helpbar = Helpbar::get();
+            $helpbar->addPlainText(_('Information'),
+                                   _('Studiengruppen sind eine einfache Möglichkeit, mit '
+                                    .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
+                                    .'Jeder kann Studiengruppen gründen.'),
+                                   'icons/16/white/info.png');
         }
-        
-        $this->mp = MultiPersonSearch::get("studygroup_invite_" . $id)
-                    ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
-                    ->setDefaultSelectedUser($defaultSelectedUser)
-                    ->setLinkIconPath("")
-                    ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
-                    ->setExecuteURL(URLHelper::getLink('dispatch.php/course/studygroup/execute_invite/' . $id))
-                    ->setSearchObject($inviting_search)
-                    ->addQuickfilter(_("Adressbuch"), $userArray)
-                    ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
-                    ->render();
         
         $this->invitedMembers = StudygroupModel::getInvitations($id);
     }
@@ -996,7 +1060,7 @@ class Course_StudygroupController extends AuthenticatedController {
         else
             $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
 
-        $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => $source, 'course_id' => $id, 'subject' => $subject, 'filter' => 'all')));
+        $this->redirect(URLHelper::getURL('dispatch.php/messages/write', array('course_id' => $id, 'default_subject' => $subject, 'filter' => 'all')));
     }
 
 

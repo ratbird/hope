@@ -1,0 +1,37 @@
+#reloader.more {
+  display: none;
+}
+.unread {
+  font-weight: bold;
+}
+a.drop {
+  background-color: #899AB9;
+  color: white;
+}
+
+#statusbar_container {
+  > .statusbar {
+    border: thin solid lightgrey;
+    min-width: 100%;
+    max-width: 100%;
+    background-color: @content-color-40;
+    > .progress {
+      background-color: @content-color;
+      width: 100%;
+      min-width: 0%;
+      max-width: 0%;
+      height: 20px;
+      line-height: 20px;
+      &.error {
+        background-color: @red;
+      }
+    }
+    > .progresstext {
+      margin-top: -20px;
+      text-align: center;
+      color: white;
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+}

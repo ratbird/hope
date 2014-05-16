@@ -26,7 +26,65 @@
  * @property User author has_one User
  */
 
-class Message extends SimpleORMap {
+class Message extends SimpleORMap
+{
+    static public function getUserTags($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare("
+            SELECT DISTINCT tag FROM message_tags WHERE user_id = :user_id ORDER BY tag ASC
+        ");
+        $statement->execute(array('user_id' => $user_id));
+        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+
+    static public function findNew($user_id, $receiver = true, $since = 0, $tag = null)
+    {
+        if ($tag) {
+            $messages_data = DBManager::get()->prepare("
+                SELECT *
+                FROM message
+                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
+                    INNER JOIN message_tags ON (message_tags.message_id = message.message_id
+                        AND message_user.user_id = message_tags.user_id)
+                WHERE message_user.user_id = :me
+                    AND snd_rec = :sender_receiver
+                    AND message_tags.tag = :tag
+                    AND message.mkdate > :since
+                ORDER BY message.mkdate ASC
+            ");
+            $messages_data->execute(array(
+                'me' => $user_id,
+                'tag' => $tag,
+                'sender_receiver' => $receiver ? "rec" : "snd",
+                'since' => $since
+            ));
+        } else {
+            $messages_data = DBManager::get()->prepare("
+                SELECT *
+                FROM message
+                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
+                WHERE message_user.user_id = :me
+                    AND snd_rec = :sender_receiver
+                    AND message.mkdate > :since
+                ORDER BY message.mkdate ASC
+            ");
+            $messages_data->execute(array(
+                'me' => $user_id,
+                'sender_receiver' => $receiver ? "rec" : "snd",
+                'since' => $since
+            ));
+        }
+        $messages_data = $messages_data->fetchAll(PDO::FETCH_ASSOC);
+        $messages = array();
+        foreach ($messages_data as $data) {
+            $message = new Message();
+            $message->setData($data);
+            $message->setNew(false);
+            $messages[] = $message;
+        }
+        return $messages;
+    }
 
     protected static function configure($config = array())
     {
@@ -35,7 +93,6 @@ class Message extends SimpleORMap {
             'class_name' => 'User',
             'foreign_key' => 'autor_id',
             'assoc_foreign_key' => 'user_id'
-
         );
         $config['has_many']['users'] = array(
             'class_name' => 'MessageUser'
@@ -81,6 +138,15 @@ class Message extends SimpleORMap {
         }
         return $changed;
     }
+    
+    public function isRead($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        foreach ($this->users->findBy('user_id', $user_id) as $mu) {
+            return (bool) $mu->readed;
+        }
+        return false;
+    }
 
     public static function send($sender, $recipients, $subject, $message)
     {
@@ -95,5 +161,55 @@ class Message extends SimpleORMap {
                                              '', // force email
                                              $subject);
         return $result ? self::find($message_id) : null;
+    }
+
+    /**
+     * Returns all tags for the message for the given user.
+     * @param null $user_id : user-id of the user that tags should be related. null if it's the current user.
+     * @return array of string : tags
+     */
+    public function getTags($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare("
+            SELECT tag FROM message_tags WHERE message_id = :message_id AND user_id = :user_id ORDER BY tag ASC
+        ");
+        $statement->execute(array(
+            'message_id' => $this->getId(),
+            'user_id' => $user_id
+        ));
+        return $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+
+    public function addTag($tag, $user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare("
+            INSERT IGNORE INTO message_tags
+            SET message_id = :message_id,
+                user_id = :user_id,
+                tag = :tag
+        ");
+        return $statement->execute(array(
+            'message_id' => $this->getId(),
+            'user_id' => $user_id,
+            'tag' => strtolower($tag)
+        ));
+    }
+
+    public function removeTag($tag, $user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare("
+            DELETE FROM message_tags
+            WHERE message_id = :message_id
+                AND user_id = :user_id
+                AND tag = :tag
+        ");
+        return $statement->execute(array(
+            'message_id' => $this->getId(),
+            'user_id' => $user_id,
+            'tag' => strtolower($tag)
+        ));
     }
 }

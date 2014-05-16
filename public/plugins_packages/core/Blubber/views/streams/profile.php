@@ -42,59 +42,20 @@
 
 <?
 
-$infobox = array(
-    array("kategorie" => _("Informationen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/info",
-                "text" => _("Alle öffentlichen Nachrichten dieses Kontakts als Feed und in Echtzeit.")
-            ),
-            array(
-                "icon" => "icons/16/black/date",
-                "text" => _("Kein Seitenneuladen nötig. Du siehst sofort, wenn sich was getan hat.")
-            )
-        )
-    ),
-    ($isBuddy or !isset($isBuddy)) ? null : array(
-        "kategorie" => _("Aktionen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/add/person",
-                "text" => '<a id="blubber_add_buddy" href="" onClick="STUDIP.Blubber.followUser(); return false;">'._("Füge diesen Kontakt als Buddy hinzu und erhalte seine Nachrichten im globalen Blubberstream").'</a>'
-            )
-        )
-    ),
-    array("kategorie" => _("Profifunktionen"),
-          "eintrag"   =>
-        array(
-            array(
-                "icon" => "icons/16/black/forum",
-                "text" => _("Drücke Shift-Enter, um einen Absatz einzufügen.")
-            ),
-            array(
-                "icon" => "icons/16/black/smiley",
-                "text" => sprintf(_("Verwende beim Tippen %sTextformatierungen%s und %sSmileys.%s"),
-                        '<a href='.htmlReady(format_help_url("Basis/VerschiedenesFormat")).' target="_blank">', '</a>',
-                        '<a href="'.URLHelper::getLink("dispatch.php/smileys").'" target="_blank">', '</a>')
-            ),
-            array(
-                "icon" => "icons/16/black/upload",
-                "text" => _("Ziehe Dateien per Drag & Drop in ein Textfeld, um sie hochzuladen und zugleich zu verlinken.")
-            ),
-            array(
-                "icon" => "icons/16/black/person",
-                "text" => _("Erwähne jemanden mit @username oder @\"Vorname Nachname\". Diese Person wird dann speziell auf Deinen Blubber hingewiesen.")
-            ),
-            array(
-                "icon" => "icons/16/black/hash",
-                "text" => sprintf(_("Schreibe %s#Hashtags%s in Blubber und Kommentare."), '<a href="'.URLHelper::getLink("plugins.php/blubber/streams/global", array('hash' => "hashtags")).'">', "</a>")
-            )
-        )
-    )
-);
-$infobox = array(
-    'picture' => $user->getAvatar(),
-    'content' => $infobox
-);
+$sidebar = Sidebar::get();
+$sidebar->setImage(CourseAvatar::getAvatar($course_id)->getURL(Avatar::NORMAL));
+
+if (count($tags) && $tags[0]) {
+    $cloud = new LinkCloudWidget();
+    $cloud->setTitle(_("Hashtags des Nutzers"));
+    $maximum = $tags[0]['counter'];
+    //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
+    foreach ($tags as $tag) {
+        $cloud->addLink(
+            "#".$tag['tag'], 
+            URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)), 
+            ceil(10 * $tag['counter'] / $maximum)
+        );
+    }
+    $sidebar->addWidget($cloud, 'tagcloud');
+}

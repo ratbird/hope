@@ -43,6 +43,8 @@ Navigation::activateItem('/admin/config/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
+
 $cms_select = Request::get('cms_select');
 
 if (get_config('ELEARNING_INTERFACE_ENABLE'))

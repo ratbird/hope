@@ -27,7 +27,7 @@
                 <?= htmlReady($name) ?>
             </a>
         <? if ($filter == $group_id): ?>
-            <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=contact.php', compact('group_id')) ?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/messages/write?', compact('group_id')) ?>">
                 <?= Assets::img('icons/16/blue/mail', tooltip2(_('Nachricht an alle Personen dieser Gruppe schicken'))) ?>
             </a>
         <? endif; ?>

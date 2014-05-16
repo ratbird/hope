@@ -5,7 +5,7 @@ div.clear
 }
 
 // Common styles for both tab sets
-#tabs, #tabs2 {
+#tabs {
     float: left;
     line-height: 18pt;
     margin: 0;
@@ -51,37 +51,6 @@ div.clear
         padding-right: 1.3em;
         white-space: nowrap;
     }
-}
-
-// Secondary tab set with the tabs being displayed as a horizontal list
-// inside the main content
-#tabs2 {
-    background: #fff;
-    .border-radius(0 2px 0 0);
-    clear: both;
-    padding: 4px 0 4px 0;
-    width: 100%;
-
-    a, span.quiet {
-        color: #6e6e6e;
-        display: block;
-
-        background: no-repeat left center;
-        .retina-background-icon("grey/arr_1right.png");
-
-        line-height: 20pt;
-        margin-left: 1em;
-        padding-left: 20px;
-    }
-
-    li:hover a {
-        .retina-background-icon("black/arr_1right.png");
-    }
-    li.current a {
-        .retina-background-icon("red/arr_1down.png");
-    }
-
-    a:hover, li:hover a, li.current a { color: #000; }
 }
 
 .tab-icon {

@@ -46,32 +46,15 @@ if (Navigation::hasItem('/admin/course/adminarea_start')) {
 }
 
 // Start of Output
-include 'lib/include/html_head.inc.php'; // Output of html head
-include 'lib/include/header.php';   // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
 
 require_once 'lib/visual.inc.php';
 
-if ($SessSemName[1]) {
-    ?>
-    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr><td class="blank" colspan=2>&nbsp;</td></tr>
-    <tr><td class="blank" colspan=2>
-    <p class="info">
-    <?
-    if ($_SESSION['links_admin_data']['referred_from'] == "sem") {
-        printf(_("Hier k&ouml;nnen Sie die Daten der Veranstaltung <b>%s</b> direkt bearbeiten.") . "<br>", htmlReady($SessSemName[0]));
-        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
-    } else {
-        printf(_("Sie haben die Veranstaltung <b>%s</b> vorgew&auml;hlt. Sie k&ouml;nnen nun direkt die einzelnen Bereiche dieser Veranstaltung bearbeiten, indem Sie die entsprechenden Men&uuml;punkte w&auml;hlen.") . "<br>", htmlReady($SessSemName[0]));
-        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
-    }
-    ?>
-    </p>
-    </td></tr>
-    </table>
-<?
-}
-include ('lib/include/html_end.inc.php');
+$template = $GLOBALS['template_factory']->open('adminarea-start.php');
+$template->set_layout('layouts/base.php');
+$template->display = isset($GLOBALS['SessSemName'][1]);
+$template->name    = $GLOBALS['SessSemName'][0];
+$template->refered_from_seminar = $_SESSION['links_admin_data']['referred_from'] === 'sem';
+echo $template->render();
+
 page_close();
-?>

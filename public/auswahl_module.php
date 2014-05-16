@@ -35,6 +35,7 @@ PageLayout::setTitle(_("Studienmodule bearbeiten"));
 // Start of Output
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php");   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
 ?>
 <table width="70%" border=0 cellpadding=0 cellspacing=0 align="center">

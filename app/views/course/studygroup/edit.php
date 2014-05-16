@@ -2,40 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-$infobox = array();
-$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
-
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
-    "icon" => "icons/16/black/add/studygroup.png"
-);
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
-    "icon" => "icons/16/black/trash.png"
-);
-
-if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
-    $aktionen[] = array(
-        "icon" => "icons/16/black/edit.png",
-        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
-    );
-}
-
-$infobox['content'] = array(
-    array(
-        'kategorie' => _("Information"),
-        'eintrag'   => array(
-            array(
-                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),
-                "icon" => "icons/16/black/info.png"
-            )
-        )
-    ),
-    array(
-        'kategorie' => _("Aktionen"),
-        'eintrag'   => $aktionen
-    )
-);
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>

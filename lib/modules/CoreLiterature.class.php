@@ -30,7 +30,7 @@ class CoreLiterature implements StudipModule {
             $navigation->setImage('icons/16/white/literature.png');
             $navigation->setActiveImage('icons/16/black/literature.png');
 
-            $navigation->addSubNavigation('view', new Navigation(_('Literatur'), "literatur.php?view=literatur_".$object_type));
+            $navigation->addSubNavigation('view', new Navigation(_('Literatur'), "dispatch.php/course/literature?view=literatur_".$object_type));
             if(StudipLitList::GetFormattedListsByRange($course_id, false, false)){
                 $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $course_id));
             }

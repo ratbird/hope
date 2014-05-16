@@ -1,32 +1,19 @@
-<?
+<?php
 # Lifter010: TODO
 
 //Infobox:
-$aktionen = array();
-$aktionen[] = array(
-              "icon" => "icons/16/black/edit.png",
-              "text" => _("Navigieren Sie in der rechten Spalte und schieben Sie durch Klick auf den gelben Pfeil den Studienbereich in die linke Spalte.")
-);
-$infobox = array(
-    array("kategorie" => _("Aktionen:"),
-          "eintrag"   => $aktionen
-    )
-);
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+
 if ($adminList) {
-    $infobox[] = array(
-        "kategorie" => _("Veranstaltungsliste:"),
-        "eintrag"   =>
-            array(
-                array(
-                      "icon" => "icons/16/black/link-intern.png",
-                      "text" => $adminList->render()
-                )
-            )
-    );
+    $list = new SelectorWidget();
+    $list->setUrl("?#admin_top_links");
+    foreach ($adminList->adminList as $seminar) {
+        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+    }
+    $list->setSelection($adminList->course_id);
+    $sidebar->addWidget($list);
 }
-$infobox = array('content' => $infobox,
-                 'picture' => CourseAvatar::getAvatar($course_id)
-);
 
 ?>
 <div class="white" style="padding: 0.5em;">

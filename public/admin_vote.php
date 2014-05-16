@@ -75,18 +75,19 @@ if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutAct
     Navigation::activateItem('/tools/vote');
 }
 
-include_once('lib/include/html_head.inc.php');
-include_once('lib/include/header.php');
-
 if (Request::option('list') || Request::option('view')) {
     include 'lib/include/admin_search_form.inc.php';
 }
 
-if (Request::option('page') == "edit")
-    include 'lib/vote/vote_edit.inc.php';
-else
-    include 'lib/vote/vote_overview.inc.php';
+ob_start();
 
-include 'lib/include/html_end.inc.php';
-page_close ();
-?>
+if (Request::option('page') == "edit") {
+    include 'lib/vote/vote_edit.inc.php';
+} else {
+    include 'lib/vote/vote_overview.inc.php';
+}
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+page_close();

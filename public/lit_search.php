@@ -46,6 +46,7 @@ Navigation::activateItem('/search/literature');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+include ('lib/include/deprecated_tabs_layout.php');
 
 $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
 $_attributes['text'] = array('style' => 'width:90%');

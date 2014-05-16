@@ -145,20 +145,7 @@ foreach ($available_plugins as $plugin) {
 </form>
 
 
-<?
-$infobox = array(
-    array(
-        'kategorie' => _("Information"),
-        'eintrag'   => array(
-            array(
-                'icon' => "icons/16/black/info",
-                'text' => _("Sie können hier einzelne Inhaltselemente nachträglich aktivieren oder deaktivieren.")
-            )
-        )
-    )
-    
-);
-$infobox = array(
-    'picture' => "sidebar/plugin-sidebar.png",
-    'content' => $infobox
-);
+
+<?php
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/plugin-sidebar.png"));

@@ -1,4 +1,4 @@
-<?
+<?php
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
@@ -229,94 +229,82 @@ PrintAktualStatusgruppen(GetAllStatusgruppen($SessSemName[1], $user->id));
 $anzahltext = PrintNonMembers($SessSemName[1]);
 
 if ($anzahltext == 1) {
-    $Memberstatus = _("Nicht alle Personen sind einer Funktion / Gruppe zugeordnet.");
+    $infos = _("Nicht alle Personen sind einer Funktion / Gruppe zugeordnet.");
 }
 if ($anzahltext == 2) {
-    $Memberstatus = _("Alle Personen sind mindestens einer Funktion / Gruppe zugeordnet.");
+    $infos = _("Alle Personen sind mindestens einer Funktion / Gruppe zugeordnet.");
 }
 if ($anzahltext == 0) {
-    $Memberstatus = _("Niemand ist einer Funktion / Gruppe zugeordnet.");
+    $infos = _("Niemand ist einer Funktion / Gruppe zugeordnet.");
 }
 if (!$perm->have_studip_perm('tutor', $SessSemName[1])) {
     $my_groups = GetGroupsByCourseAndUser($SessSemName[1], $user->id);
     if (count($my_groups)) {
-        $Memberstatus = _("Sie selbst sind diesen Gruppen zugeordnet:");
-        $Memberstatus .= '<div style="font-weight:bold">' . join('</div><div style="font-weight:bold">', array_map('htmlReady', $my_groups)) . '</div';
+        $infos  = _("Sie selbst sind diesen Gruppen zugeordnet:");
+        $infos .= '<div style="font-weight:bold">' . join('</div><div style="font-weight:bold">', array_map('htmlReady', $my_groups)) . '</div';
     } else {
-        $Memberstatus = _("Sie sind noch keiner Gruppe zugeordnet.");
+        $infos = _("Sie sind noch keiner Gruppe zugeordnet.");
     }
-
 }
 
 list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($SessSemName[1]);
-
-$infobox = array    (
-    array  ("kategorie"  => _("Information:"),
-        "eintrag" => array  (
-            array ( "icon" => "icons/16/black/info.png",
-                "text"  => $Memberstatus
-                )
-            )
-        )
-    );
-
-if($self_assign_exclusive){
-    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/info.png" ,
-        "text"  => _("In dieser Veranstaltung können Sie sich nur in eine der möglichen Gruppen eintragen.")
-        );
-
+if($self_assign_exclusive) {
+    $infos .= '<br>' . _('In dieser Veranstaltung können Sie sich nur in eine der möglichen Gruppen eintragen.');
 }
 
-$infobox[1]["kategorie"] = _("Aktionen:");
-$infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
-    "text"  => _("Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol.")
-    );
-$infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/arr_2right.png" ,
-    "text"  => _("In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen.")
-    );
-$infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/trash.png" ,
-    "text"  => _("Aus diesen Gruppen können Sie sich selbst austragen.")
-    );
+Helpbar::get()->addPlainText(_('Information:'), $infos, 'icons/16/white/info.png');
+
+Helpbar::get()->addPlainText(_('Aktionen:'),
+                             _('Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol.'),
+                             'icons/16/white/mail.png');
+Helpbar::get()->addPlainText('',
+                             _('In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen.'),
+                             'icons/16/white/arr_2right.png');
+Helpbar::get()->addPlainText('',
+                             _('Aus diesen Gruppen können Sie sich selbst austragen.'),
+                             'icons/16/white/trash.png');
+
 if ($rechte) {
-    $adr_all=groupmail($SessSemName[1], "all");
-    $adr_prelim=groupmail($SessSemName[1], "prelim");
-    $adr_waiting=groupmail($SessSemName[1], "waiting");
-    $link_mail_all = $adr_all ? "<a href=\"".URLHelper::getLink("sms_send.php?course_id=".$SessSemName[1]."&emailrequest=1&subject=".rawurlencode($SessSemName[0])."&filter=all")."\">" : NULL;
-    $link_mail_prelim = $adr_prelim ? "<a href=\"".URLHelper::getLink("sms_send.php?course_id=".$SessSemName[1]."&emailrequest=1&subject=".rawurlencode($SessSemName[0])."&filter=prelim")."\">" : NULL;
-    $link_mail_waiting = $adr_waiting ? "<a href=\"".URLHelper::getLink("sms_send.php?course_id=".$SessSemName[1]."&emailrequest=1&subject=".rawurlencode($SessSemName[0])."&filter=waiting")."\">" : NULL;
-    #$link_mail_all = $adr_all ? "<a href=\"mailto:".$adr_all."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
-    #$link_mail_prelim = $adr_prelim ?  "<a href=\"mailto:".$adr_prelim."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
-    #$link_mail_waiting = $adr_waiting ? "<a href=\"mailto:".$adr_waiting."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
-    if ($link_mail_all) {
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
-            "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen der Veranstaltung zu versenden, klicken Sie %shier%s."), $link_mail_all, "</a>")
-            );
+    $sidebar = Sidebar::get();
+    $sidebar->setImage(Assets::image_path('sidebar/group-sidebar.png'));
+
+    $actions = new ActionsWidget();
+    if (groupmail($SessSemName[1], 'all')) {
+        $actions->addLink(_('Nachricht an alle (Rundmail)'), 
+                          URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=all'),
+                          'icons/16/black/mail.png');
     }
-    if ($link_mail_waiting) {
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
-            "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen auf der Warteliste zu versenden, klicken Sie %shier%s."), $link_mail_waiting, "</a>")
-            );
+    if (groupmail($SessSemName[1], 'prelim')) {
+        $actions->addLink(_('Nachricht an alle Teilnehmer auf der Warteliste'),
+                          URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=prelim'),
+                          'icons/16/black/mail.png');
     }
-    if ($link_mail_prelim) {
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
-            "text"  => sprintf(_("Um eine E-Mail an alle vorläufig akzeptierten TeilnehmerInnen zu versenden, klicken Sie %shier%s."), $link_mail_prelim, "</a>")
-            );
+    if (groupmail($SessSemName[1], 'waiting')) {
+        $actions->addLink(_('Nachricht an alle vorläufigen Teilnehmer'),
+                          URLHelper::getLink('dispatch.php/messages/write?course_id=' . $SessSemName[1] . '&emailrequest=1&default_subject=' . rawurlencode($SessSemName[0]) . '&filter=waiting'),
+                          'icons/16/black/mail.png');
     }
-    if (get_config('EXPORT_ENABLE') && $perm->have_studip_perm("tutor", $SessSemName[1])) {
-        include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/export/file-text.png" ,
-            "text"  => export_link($SessSemName[1], "person", _("Gruppenliste") .' ' . $SessSemName[0], "rtf", "rtf-gruppen", "status",  _("Gruppen exportieren als rtf Dokument"), 'passthrough')
-            );
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/export/file-office.png" ,
-            "text"  => export_link($SessSemName[1], "person", _("Gruppenliste") .' ' . $SessSemName[0], "csv", "csv-gruppen", "status",  _("Gruppen exportieren als csv Dokument"), 'passthrough')
-            );
+    $sidebar->addWidget($actions);
+
+    if (Config::get()->EXPORT_ENABLE && $perm->have_studip_perm('tutor', $SessSemName[1])) {
+        include_once $PATH_EXPORT . '/export_linking_func.inc.php';
+        
+        $widget = new ExportWidget();
+
+        $tmp = export_link($SessSemName[1], 'person', _('Gruppenliste') . ' ' . $SessSemName[0], 'rtf', 'rtf-gruppen', 'status',  _('Gruppen exportieren als rtf Dokument'), 'passthrough');
+        $element = LinkElement::fromHTML($tmp, 'icons/16/black/export/file-text.png');
+        $widget->addElement($element);
+
+        $tmp = export_link($SessSemName[1], 'person', _('Gruppenliste') . ' ' . $SessSemName[0], 'csv', 'csv-gruppen', 'status',  _('Gruppen exportieren als csv Dokument'), 'passthrough');
+        $element = LinkElement::fromHTML($tmp, 'icons/16/black/export/file-office.png');
+        $widget->addElement($element);
+
+        $sidebar->addWidget($widget);
     }
 }
 
 $layout = $GLOBALS['template_factory']->open('layouts/base.php');
-
-$layout->infobox = array('content' => $infobox, 'picture' => "sidebar/group-sidebar.png");
 $layout->content_for_layout = ob_get_clean();
-
 echo $layout->render();
+
 page_close();

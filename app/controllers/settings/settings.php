@@ -93,7 +93,9 @@ class Settings_SettingsController extends AuthenticatedController
             $this->reportInfo($message);
         }
 
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+        Sidebar::get()->setImage('sidebar/person-sidebar.png');
+
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
     }
 
     /**

@@ -51,6 +51,7 @@ if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $G
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
+    include ('lib/include/deprecated_tabs_layout.php');
     if($auth->auth["uid"] != "nobody") {
         $message = _("Sie können kein neues Passwort anfordern, wenn Sie bereits eingeloggt sind.");
     } else {

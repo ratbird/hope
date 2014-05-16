@@ -47,10 +47,9 @@ if (Request::submitted('general_lock')) {
 PageLayout::setTitle(_("Sperren von Veranstaltungen"));
 Navigation::activateItem('/admin/course/lock_rules');
 
-// Start of Output
-include ("lib/include/html_head.inc.php"); // Output of html head
-include ("lib/include/header.php"); // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 if (isset($SessSemName[1]) && (!Request::int('make_lock'))) {
     $stmt = DBManager::get()->prepare(
@@ -149,6 +148,8 @@ echo $contentTable->close();
 
 echo $containerTable->blankRow();
 echo $containerTable->close();
-include "lib/include/html_end.inc.php";
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();
-?>

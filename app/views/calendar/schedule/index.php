@@ -1,91 +1,41 @@
-<?
+<?php
 # Lifter010: TODO
 $zoom = $my_schedule_settings['zoom'];
-if ($inst_mode) {
-    $text  = _("Der Stundenplan zeigt die regelmäßigen Veranstaltungen dieser '
-        . 'Einrichtung sowie von Ihnen selbst erstellte Belegungen.");
-} else {
-    $text  = _('Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen'
-        . ' dieses Semesters sowie von Ihnen selbst erstellte Belegungen.');
-}
 
-if (!$show_hidden) {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=1') .'">'
-        . _("Ausgeblendete Veranstaltungen anzeigen") .'</a>';
-} else {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=0') .'">'
-        . _("Ausgeblendete Veranstaltungen verbergen") .'</a>';
-}
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/schedule-sidebar.png"));
 
-$infobox = array();
-$infobox['picture'] = 'sidebar/schedule-sidebar.png';
+$semester_widget = new SidebarWidget();
+$semester_widget->setTitle(_('Angezeigtes Semester'));
+$semester_widget->addElement(new WidgetElement($this->render_partial('calendar/schedule/_semester_chooser')), 'semester');
+$sidebar->addWidget($semester_widget, 'semester');
 
-$infobox['content'] = array(
-    array(
-        'kategorie' => _("Information:"),
-        'eintrag'   => array(
-            array("text" => $text, "icon" => "icons/16/black/info.png"),
-        )
-    ),
-
-    array(
-        'kategorie' => _("Angezeigtes Semester:")
-    ),
-
-    array(
-        'kategorie' => _("Aktionen:")
-    ),
-
-    array(
-        'kategorie' => _("Darstellungsgröße:")
-    )
-
-);
-
-$infobox['content'][1]['eintrag'][] = array(
-    'text' => $this->render_partial('calendar/schedule/_semester_chooser'),
-    'icon' => 'icons/16/black/date.png'
-);
-
+$actions = new ActionsWidget();
 if (!$inst_mode) {
-    $infobox['content'][2]['eintrag'][] = array (
-        'text' => '<a href="'. $controller->url_for('calendar/schedule/entry') .'">'._("Neuer Eintrag") .'</a>',
-        'icon' => 'icons/16/black/add/date.png'
-    );
+    $actions->addLink(_("Neuer Eintrag"), $controller->url_for('calendar/schedule/entry'), 'icons/16/black/add/date.png');
 }
+$link = new LinkElement();
+$link->label = _("Druckansicht");
+$link->url = $controller->url_for('calendar/schedule/index/'. implode(',', $days)
+           .  '?printview=true&semester_id=' . $current_semester['semester_id']);
+$link->setTarget("_blank");
+$link->icon = Assets::image_path("icons/16/black/print.png");
+$actions->addElement($link, 'print');
+$actions->addLink(_("Darstellung ändern"), $controller->url_for('calendar/schedule/index?show_settings=true'), 'icons/16/black/admin.png');
+if (!$show_hidden) {
+    $actions->addLink(_("Ausgeblendete Veranstaltungen anzeigen"), $controller->url_for('calendar/schedule/?show_hidden=1'), 'icons/16/black/visibility-visible.png');
+} else {
+    $actions->addLink(_("Ausgeblendete Veranstaltungen verbergen"), $controller->url_for('calendar/schedule/?show_hidden=0'), 'icons/16/black/visibility-visible.png');
+}
+$sidebar->addWidget($actions);
 
-$infobox['content'][2]['eintrag'][] = array (
-    'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
-           .  '?printview=true&semester_id=' . $current_semester['semester_id'])
-           .  '" target="_blank">'._("Druckansicht") .'</a>',
-    'icon' => "icons/16/black/print.png"
-);
+$views = new LinksWidget();
+$views->setTitle(_("Darstellungsgröße"));
+$views->addLink(_("klein"), URLHelper::getURL('', array('zoom' => 0)), 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png');
+$views->addLink(_("mittel"), URLHelper::getURL('', array('zoom' => 1)), 'icons/16/'. ($zoom == 1 ? 'red' : 'black') . '/schedule.png');
+$views->addLink(_("groß"), URLHelper::getURL('', array('zoom' => 2)), 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png');
+$sidebar->addWidget($views, 'view');
 
-$infobox['content'][2]['eintrag'][] = array (
-    'text' => '<a href="'. $controller->url_for('calendar/schedule/index?show_settings=true') .'">'. _("Darstellung ändern") .'</a>',
-    'icon' => "icons/16/black/admin.png"
-);
-
-$infobox['content'][2]['eintrag'][] = array (
-    'text' => $hidden_text,
-    'icon' => 'icons/16/black/visibility-visible.png'
-);
-
-// Infobox-entries for viewport size
-$infobox['content'][3]['eintrag'] = array (
-    array (
-        'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
-    ),
-    array (
-        'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
-    ),
-    array (
-        'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 4)) .'">'. _("groß") .'</a>'
-    )
-);
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">
     <? if($inst_mode) : ?>

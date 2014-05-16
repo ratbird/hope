@@ -77,7 +77,11 @@ STUDIP.QuickSearch = {
                     jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
                     //and execute a special function defined before by the programmer:
                     if (func) {
-                        func(ui.item.item_id, ui.item.label);
+                        var proceed = func(ui.item.item_id, ui.item.label);
+                        if (!proceed) {
+                            jQuery(this).val("");
+                            return false;
+                        }
                     }
                 }
             });

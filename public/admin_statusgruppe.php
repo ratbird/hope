@@ -50,10 +50,6 @@ if ($perm->have_perm('admin')) {
     Navigation::activateItem('/course/members/edit_groups');
 }
 
-PageLayout::addStylesheet('multi-select.css');
-PageLayout::addScript('jquery/jquery.multi-select.js');
-PageLayout::addScript('multi_person_search.js');
-
 //get ID, if a object is open
 if ($SessSemName[1])
   $range_id = $SessSemName[1];
@@ -70,8 +66,6 @@ if ($header_line)
 
 //Output starts here
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
 // Rechtecheck
@@ -217,17 +211,20 @@ $msgs = array();
 // activation and deactvation of options for the statusgroups
 if (Request::option('cmd') == 'activateSelfAssignAll') {
     SetSelfAssignAll($range_id, true);
-    $msgs['msg'][] = _("Selbsteintrag in allen Gruppen wurde eingeschaltet!");
+    $message = _('Selbsteintrag in allen Gruppen wurde eingeschaltet!');
+    PageLayout::postMessage(MessageBox::success($message));
 }
 
 if (Request::option('cmd') == 'deactivateSelfAssignAll') {
     SetSelfAssignAll($range_id, false);
-    $msgs['msg'][] = _("Selbsteintrag in allen Gruppen wurde ausgeschaltet!");
+    $message = _('Selbsteintrag in allen Gruppen wurde ausgeschaltet!');
+    PageLayout::postMessage(MessageBox::success($message));
 }
 
 if (Request::option('cmd') == 'deactivateSelfAssignExclusive') {
     SetSelfAssignExclusive($range_id, false);
-    $msgs['msg'][] = _("Selbsteintrag in nur einer Gruppe erlauben wurde ausgeschaltet!");
+    $message = _('Selbsteintrag in nur einer Gruppe wurde ausgeschaltet!');
+    PageLayout::postMessage(MessageBox::success($message));
 }
 
 if (Request::option('cmd') == 'activateSelfAssignExclusive') {
@@ -240,11 +237,15 @@ if (Request::option('cmd') == 'activateSelfAssignExclusive') {
             $multis .= '<li>' . htmlReady(get_fullname($one['user_id']) . ' ('. $one['gruppen'] . ')').'</li>';
         }
         $multis .= '</ul>';
-        $msgs['error'][] = _("Achtung, folgende Teilnehmer sind bereits in mehr als einer Gruppe eingetragen. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag einzuschalten.")
-            . '<br>'. $multis;
         SetSelfAssignExclusive($range_id, false);
+
+        $message = _('Achtung, folgende Teilnehmer sind bereits in mehr als einer Gruppe eingetragen. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag einzuschalten.');
+        $message .= '<br>' . $multis;
+        PageLayout::postMessage(MessageBox::error($message));
+
     } else {
-        $msgs['msg'][] = _("Selbsteintrag in nur einer Gruppe erlauben wurde eingeschaltet!");
+        $message = _('Selbsteintrag in nur einer Gruppe erlauben wurde eingeschaltet!');
+        PageLayout::postMessage(MessageBox::success($message));
     }
 }
 
@@ -275,8 +276,10 @@ foreach (GetAllStatusgruppen($range_id) as $id => $role) {
 
 // delete a person from a statusgroup
 if (Request::option('cmd') == 'removePerson') {
-    $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
     RemovePersonStatusgruppe (Request::quoted('username'), Request::option('role_id'));
+
+    $message = _('Die Person wurde aus der Gruppe entfernt!');
+    PageLayout::postMessage(MessageBox::success($message));
 }
 
 // edit the data of a role
@@ -284,24 +287,31 @@ if (Request::option('cmd') == 'doEditRole') {
     $statusgruppe = new Statusgruppe(Request::option('role_id'));
     $name = htmlReady($statusgruppe->getName());
     if ($statusgruppe->checkData()) {
-        $msgs['info'][] = sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
+        $message = sprintf(_('Die Daten der Gruppe %s wurden geändert!'),
+                           '<b>'. htmlReady($name) .'</b>');
+        PageLayout::postMessage(MessageBox::info($message));
     }
     $statusgruppe->store();
-    $msgs = $statusgruppe->getMessages($msgs);
+    $statusgruppe->getMessages(array());
 }
 
 // ask, if the user really intends to delete the role
 if (Request::option('cmd') == 'deleteRole') {
     $statusgruppe = new Statusgruppe(Request::option('role_id'));
     if (Request::get('really')) {
-        $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
         $statusgruppe->delete();
+        $message = sprintf(_('Die Gruppe %s wurde gelöscht!'),
+                           htmlReady($statusgruppe->getName()));
+        PageLayout::postMessage(MessageBox::success($message));
     } else {
-        $msgs['info'][] = sprintf(_("Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?"), '<b>'. htmlReady($statusgruppe->getName()) .'</b>')
-            . '<br>'
-            . LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::option('role_id'))))
-            . '&nbsp;&nbsp;&nbsp;&nbsp;'
-            . LinkButton::createCancel(_('NEIN!'), URLHelper::getURL(''));
+        $message  = sprintf(_('Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?'),
+                            '<b>'. htmlReady($statusgruppe->getName()) .'</b>');
+        $message .= '<br>';
+        $message .= LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::option('role_id'))));
+        $message .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+        $message .= LinkButton::createCancel(_('NEIN!'), URLHelper::getURL(''));
+        
+        PageLayout::postMessage(MessageBox::info($message));
     }
 }
 
@@ -319,9 +329,13 @@ if (Request::option('cmd') == 'addRole' && !Request::submitted('choosePreset')) 
         if ($new_role->checkData()) {
             // show a hint if a role with the same name already exists
             if (Statusgruppe::countByName($new_role->getName(), $new_role->getRange_Id()) > 0) {
-                $msgs['info'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits eine Gruppe mit demselben Namen!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+                $message = sprintf(_('Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits eine Gruppe mit demselben Namen!'),
+                                   '<b>'. htmlReady($new_role->getName()) .'</b>');
+                PageLayout::postMessage(MessageBox::info($message));
             } else {
-                $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+                $message = sprintf(_('Die Gruppe %s wurde hinzugefügt!'),
+                                   '<b>'. htmlReady($new_role->getName()) .'</b>');
+                PageLayout::postMessage(MessageBox::success($message));
             }
 
             $new_role->store();
@@ -345,8 +359,11 @@ if ($self_assign_exclusive) {
             $multis .= '<li>' . htmlReady(get_fullname($one['user_id']) . ' ('. $one['gruppen'] . ')').'</li>';
         }
         $multis .= '</ul>';
-        $msgs['error'][] = _("Achtung, der exklusive Selbsteintrag wurde ausgeschaltet, da folgende Teilnehmer in mehr als einer Gruppe eingetragen sind. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag wieder einzuschalten.")
-            . '<br>'. $multis;
+        
+        $message  = _('Achtung, der exklusive Selbsteintrag wurde ausgeschaltet, da folgende Teilnehmer in mehr als einer Gruppe eingetragen sind. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag wieder einzuschalten.');
+        $message .= '<br>' . $multis;
+        PageLayout::postMessage(MessageBox::error($message));
+
         SetSelfAssignExclusive($range_id, false);
     }
 }
@@ -356,24 +373,41 @@ if ($self_assign_exclusive) {
  * * * *     V I E W     * * * *
  * * * * * * * * * * * * * * * */
 
+Helpbar::get()->addPlainText(_('Information:'),
+                             _('Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.'),
+                             'icons/16/white/info.png');
+
+list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($range_id);
+
+$sidebar = Sidebar::get();
+$sidebar->setImage('sidebar/group-sidebar.png');
+
 // get statusgroups, to check if there are any
 $statusgruppen = GetAllStatusgruppen($range_id);
 
 // do we have some roles already?
 if ($statusgruppen && sizeof($statusgruppen) > 0) {
+    $actions = new ActionsWidget();
+
+    $actions->addLink(_('Selbsteintragung in allen Gruppen aktiviert?'),
+                      URLHelper::getLink($self_assign_all ? '?cmd=deactivateSelfAssignAll' : '?cmd=activateSelfAssignAll'),
+                      $self_assign_all ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+
+    $actions->addLink(_('Selbsteintragung in nur einer Gruppe aktiviert?'),
+                      URLHelper::getLink($self_assign_exclusive ? '?cmd=deactivateSelfAssignExclusive' : '?cmd=activateSelfAssignExclusive'),
+                      $self_assign_exclusive ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+
+    $sidebar->addWidget($actions);
+
     // open the template for tree-view of roles
     $template = $GLOBALS['template_factory']->open('statusgruppen/sem_content');
-
-    // the layout defines where the infobox is located
-    $template->set_layout('statusgruppen/sem_layout.php');
+    $template->set_layout('layouts/base.php');
 
     $template->set_attribute('range_id', $range_id);
 
     // the persons of the institute who can be added directly
     $template->set_attribute('seminar_persons', getPersons($range_id, 'sem'));
     $template->set_attribute('inst_persons', getPersons($range_id, 'inst'));
-
-    $template->set_attribute('messages', $msgs);
 
     // all statusgroups in a tree-structured array
     $template->set_attribute('roles', $statusgruppen);
@@ -424,9 +458,7 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
 // there are no roles yet, so we show some informational text
 else {
     $template = $GLOBALS['template_factory']->open('statusgruppen/sem_no_statusgroups');
-
-    // the layout defines where the infobox is located
-    $template->set_layout('statusgruppen/sem_layout.php');
+    $template->set_layout('layouts/base.php');
 
     $template->set_attribute('range_id', $range_id);
     $template->set_attribute('seminar_class', SeminarCategories::GetBySeminarId($range_id)->id);
@@ -439,8 +471,4 @@ else {
     echo $template->render();
 }
 
-// Ende Gruppenuebersicht
-include ('lib/include/html_end.inc.php');
-
-// Ende Darstellungsteil
 page_close();

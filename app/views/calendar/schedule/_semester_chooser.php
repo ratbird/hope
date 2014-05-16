@@ -1,4 +1,4 @@
-<form method="post" action="<?= $controller->url_for('calendar/schedule/index') ?>">
+<form method="get" action="<?= $controller->url_for('calendar/schedule/index') ?>">
     <select name="semester_id" onchange="jQuery(this).closest('form').submit();">
     <? foreach ($semesters as $semester) : ?>
         <? if ($semester['ende'] > time() - strtotime('1year 1day')) : ?>

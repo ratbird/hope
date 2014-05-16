@@ -73,6 +73,7 @@ PageLayout::setTabNavigation(NULL); // disable display of tabs
 // Start of Output
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
+include ('lib/include/deprecated_tabs_layout.php');
 
 // only for authenticated users
 if ($auth->is_authenticated() && $user->id != 'nobody') {

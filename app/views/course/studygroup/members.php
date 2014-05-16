@@ -2,45 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-if ($rechte) {
-    $text = _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.')
-          . ' ' . _('TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden.');
-    $aktionen = array(
-        'kategorie' => _("Aktionen"),
-        'eintrag'   => array(
-             array(
-                'text' => $mp,
-                'icon' => "icons/16/black/add/community.png"
-            ),
-            array(
-                'text' => '<a href="'. $controller->url_for('course/studygroup/message/' . $sem_id . '/').'">'
-                       . _("Nachricht an alle Gruppenmitglieder verschicken") .'</a>',
-                'icon' => "icons/16/black/mail.png"
-            ),
-            array(
-                'text' => _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.'),
-                'icon' => "icons/16/black/info.png"
-            )
-        )
-    );
-} else {
-    $text = _('Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen anlegen.');
-    $aktionen = array();
-}
-
-$infobox = array();
-$infobox['picture'] = StudygroupAvatar::getAvatar($sem_id);
-
-$infobox['content'] = array(
-    array(
-        'kategorie' => _("Information"),
-        'eintrag'   => array(
-            array("text" => $text, "icon" => "icons/16/black/info.png")
-        )
-    ),
-    $aktionen
-);
-
 if(isset($flash['question']) && isset($flash['candidate'])) {
     $dialog = $GLOBALS['template_factory']->open('shared/question');
     echo $this->render_partial($dialog,array(

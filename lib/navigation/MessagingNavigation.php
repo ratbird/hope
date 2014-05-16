@@ -71,9 +71,13 @@ class MessagingNavigation extends Navigation
     public function initSubNavigation()
     {
         parent::initSubNavigation();
-
-        $this->addSubNavigation('in', new Navigation(_('Posteingang'), 'sms_box.php', array('sms_inout' => 'in')));
-        $this->addSubNavigation('out', new Navigation(_('Gesendet'), 'sms_box.php', array('sms_inout' => 'out')));
-        $this->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));
+        
+        $messages = new Navigation(_('Nachrichten'), 'dispatch.php/messages/overview');
+        $inbox = new Navigation(_('Eingang'), 'dispatch.php/messages/overview');
+        $messages->addSubNavigation('inbox', $inbox);
+        $messages->addSubNavigation('sent', new Navigation(_('Gesendet'), 'dispatch.php/messages/sent'));
+        $messages->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'dispatch.php/messages/write'));
+        $this->addSubNavigation('messages', $messages);
+        
     }
 }

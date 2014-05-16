@@ -12,7 +12,7 @@
 </p>
 <? else: ?>
 
-<table class="default tree">
+<table class="default nohover tree">
     <colgroup>
         <col width="10px">
         <col>

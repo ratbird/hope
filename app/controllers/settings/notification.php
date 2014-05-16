@@ -47,11 +47,14 @@ class Settings_NotificationController extends Settings_SettingsController
         Navigation::activateItem('/links/settings/notification');
         SkipLinks::addIndex(_('Benachrichtigung über neue Inhalte anpassen'), 'layout_content', 100);
 
-        $infobox_message = _('Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen Ihrer Veranstaltungen automatisch '
-                             .'per Email informieren.<br>'
-                             .'Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.');
-        $this->setInfoboxImage('sidebar/seminar-sidebar.png');
-        $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info');
+        Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
+        
+        Helpbar::get()
+            ->addPlainText(_('Informationen'),
+                           _('Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen '
+                            .'Ihrer Veranstaltungen automatisch per Email informieren.<br>'
+                            .'Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.'),
+                           'icons/16/white/info.png');
     }
 
     /**
@@ -91,7 +94,7 @@ class Settings_NotificationController extends Settings_SettingsController
 
         if (!count($seminars)) {
             $message = sprintf(_('Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen.'),
-                               '<a href="sem_portal.php">', '</a>');
+                               '<a href="dispatch.php/search/courses">', '</a>');
             PageLayout::postMessage(MessageBox::info($message));
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
             $this->render_nothing();

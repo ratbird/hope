@@ -262,6 +262,7 @@ if ($mode != 'create_pdf') {
     $out = ob_get_clean();
     require_once('lib/include/html_head.inc.php');
     require_once('lib/include/header.php');
+    include ('lib/include/deprecated_tabs_layout.php');
 }
 echo $out;
 if ($mode != 'create_pdf') {

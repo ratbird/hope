@@ -64,9 +64,9 @@ if ($header_object_id)
 
 //Output starts here
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
+
+ob_start();
 
 function visibility_change_message($old_vis, $new_vis) {
     if ($old_vis) {
@@ -199,5 +199,8 @@ echo $contentTable->close();
 
 echo $containerTable->blankRow();
 echo $containerTable->close();
-include ('lib/include/html_end.inc.php');
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 page_close();

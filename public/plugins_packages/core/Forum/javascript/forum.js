@@ -398,14 +398,12 @@ STUDIP.Forum = {
         var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '
                     + "\n\n" + 'Link zum Beitrag: ' + "\n";
         
-        STUDIP.Forum.postToUrl(STUDIP.URLHelper.getURL('sms_send.php'), {
-            'message' :  text.toLocaleString()
+        STUDIP.Forum.postToUrl(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
+            'default_message' :  text.toLocaleString()
                 + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
                 + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
                 + "\n\n" + content + "\n\n",
-            'sms_source_page' : 'plugins.php/coreforum/index/index/'
-                + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '#' + topic_id,
-            'messagesubject': 'WG: ' + title
+            'default_subject': 'WG: ' + title
         });
     },
 
@@ -615,7 +613,7 @@ STUDIP.Forum = {
         var buttonText = "Thema schließen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.closeThreadFromThread("' + topic_id + '", ' + page + '); return false;');
-        jQuery('.closeButtons').parent().siblings().find('img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/black/lock-locked.png');
+        jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-locked.png' + ")");
         jQuery('.hideWhenClosed').show();
         
         STUDIP.Forum.openThread(topic_id, topic_id, page, true);
@@ -650,7 +648,7 @@ STUDIP.Forum = {
         var buttonText = "Thema öffnen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.openThreadFromThread("' + topic_id + '", '+ page +'); return false;');
-        jQuery('.closeButtons').parent().siblings().find('img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/black/lock-unlocked.png');
+        jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-unlocked.png' + ")");
         jQuery('.hideWhenClosed').hide();
         
         STUDIP.Forum.closeThread(topic_id, topic_id, page, true);

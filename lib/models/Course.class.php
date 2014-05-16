@@ -157,9 +157,8 @@ class Course extends SimpleORMap
         $config['default_values']['duration_time'] = 0;
         $config['default_values']['admission_endtime'] = -1;
 
-        $config['additional_fields'] = array(
-            'end_time' => true,
-            'semtype' => true);
+        $config['additional_fields']['end_time'] = true;
+        $config['additional_fields']['semtype'] = true;
 
         $config['notification_map']['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
         $config['notification_map']['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';

@@ -38,7 +38,7 @@
             <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked') ?></td>
             <td align="right">
                 <a href="<?= $controller->url_for('admin/api/keys', $consumer->id) ?>"
-                   data-behaviour="modal"
+                   data-lightbox="size=auto"
                    title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/info-circle.png') ?>
                 </a>
@@ -48,7 +48,7 @@
                 <a href="<?= $controller->url_for('admin/api/permissions', $consumer->id) ?>" title="<?= _('Zugriffsberechtigungen verwalten') ?>">
                     <?= Assets::img('icons/16/blue/admin.png') ?>
                 </a>
-                <a data-behaviour="confirm" href="<?= $controller->url_for('admin/api/delete', $consumer->id) ?>"
+                <a href="<?= $controller->url_for('admin/api/delete', $consumer->id) ?>"
                    title="<?= htmlReady(sprintf(_('Applikation "%s" entfernen'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/trash.png') ?>
                 </a>

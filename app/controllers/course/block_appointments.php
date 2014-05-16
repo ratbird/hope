@@ -36,7 +36,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
         }
         $this->set_layout(null);
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
-        PageLayout::setTitle(getHeaderLine($this->course_id)." - " . _("Blockveranstaltungstermine anlegen"));
+        PageLayout::setTitle(Course::findCurrent()->getFullname()." - " . _("Blockveranstaltungstermine anlegen"));
     }
 
     function index_action()

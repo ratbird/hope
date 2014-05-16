@@ -53,7 +53,7 @@ class Course_CancelDatesController extends AuthenticatedController
         }
         $this->set_layout(null);
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
-        PageLayout::setTitle(getHeaderLine($this->course_id)." - " . _("Veranstaltungstermine absagen"));
+        PageLayout::setTitle(Course::findCurrent()->getFullname()." - " . _("Veranstaltungstermine absagen"));
     }
 
     function index_action()

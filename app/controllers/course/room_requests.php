@@ -60,7 +60,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             }
 
             PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
-            PageLayout::setTitle(getHeaderLine($this->course_id)." - " ._("Verwaltung von Raumanfragen"));
+            PageLayout::setTitle(Course::findCurrent()->getFullname()." - " ._("Verwaltung von Raumanfragen"));
         }
     }
 

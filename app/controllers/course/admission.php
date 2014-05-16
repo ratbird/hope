@@ -58,7 +58,7 @@ class Course_AdmissionController extends AuthenticatedController
         $this->course = Course::find($this->course_id);
         $this->user_id = $GLOBALS['user']->id;
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenZugangsberechtigungen");
-        PageLayout::setTitle(getHeaderLine($this->course_id)." - " ._("Verwaltung von Zugangsberechtigungen"));
+        PageLayout::setTitle($this->course->getFullname()." - " ._("Verwaltung von Zugangsberechtigungen"));
         if (Request::isXhr()) {
             $this->set_layout(null);
             $this->response->add_header('X-No-Buttons', 1);

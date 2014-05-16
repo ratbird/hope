@@ -55,7 +55,7 @@ class ForumController extends StudipController {
 
         // Set help keyword for Stud.IP's user-documentation and page title
         PageLayout::setHelpKeyword('Basis.Forum');
-        PageLayout::setTitle(getHeaderLine($this->getId()) .' - '. _('Forum'));
+        PageLayout::setTitle(Course::findCurrent()->getFullname() .' - '. _('Forum'));
 
         $this->AVAILABLE_DESIGNS = array('web20', 'studip');
         if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {

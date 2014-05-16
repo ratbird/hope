@@ -92,7 +92,7 @@ class Course_StudyAreasController extends AuthenticatedController
         $this->set_course($course_id);
 
         PageLayout::setTitle(sprintf('%s - %s',
-                                     getHeaderLine($course_id),
+                                     Course::findCurrent()->getFullname(),
                                      _('Studienbereichsauswahl')));
 
         // is locked?

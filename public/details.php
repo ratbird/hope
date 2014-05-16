@@ -69,7 +69,7 @@ if ( $sem->isStudygroup() ) {
 }
 PageLayout::setHelpKeyword("Basis.InVeranstaltungDetails");
 
-PageLayout::setTitle(getHeaderLine($sem_id). " - " . _("Details"));
+PageLayout::setTitle(Course::findCurrent()->getFullname(). " - " . _("Details"));
 
 if ($SessionSeminar == $sem_id) {
     Navigation::activateItem('/course/main/details');

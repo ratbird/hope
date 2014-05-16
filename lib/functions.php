@@ -212,7 +212,8 @@ function selectSem ($sem_id)
         } else {
             $SessSemName["art"] = $SEM_TYPE[$row["status"]]["name"];
         }
-        $SessSemName["header_line"] = getHeaderLine ($sem_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
+        $course = new Course($sem_id);
+        $SessSemName["header_line"] = $course->getFullname();
 
         $_SESSION['SessionSeminar'] =& $SessionSeminar;
         $_SESSION['SessSemName'] =& $SessSemName;

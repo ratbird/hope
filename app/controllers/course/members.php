@@ -35,7 +35,6 @@ class Course_MembersController extends AuthenticatedController
 
         $this->course_id = $_SESSION['SessSemName'][1];
         $this->course_title = $_SESSION['SessSemName'][0];
-        $this->header_line = $_SESSION['SessSemName']['header_line'];
         $this->user_id = $GLOBALS['auth']->auth['uid'];
 
 
@@ -68,7 +67,7 @@ class Course_MembersController extends AuthenticatedController
 
 
         // Layoutsettings
-        PageLayout::setTitle(sprintf('%s - %s', $this->header_line, _("TeilnehmerInnen")));
+        PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("TeilnehmerInnen")));
         PageLayout::addScript('members.js');
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);

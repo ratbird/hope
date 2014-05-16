@@ -35,7 +35,7 @@ class Course_AvatarController extends AuthenticatedController
         }
 
         $this->body_id = 'custom_avatar';
-        PageLayout::setTitle(getHeaderLine($this->course_id) . ' - ' . _('Bild ändern'));
+        PageLayout::setTitle(Course::findCurrent()->getFullname() . ' - ' . _('Bild ändern'));
 
         $sem = Seminar::getInstance($this->course_id);
         $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"];

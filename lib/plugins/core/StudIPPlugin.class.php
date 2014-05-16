@@ -144,9 +144,9 @@ abstract class StudIPPlugin {
                     throw new Exception(_('unbekannte Plugin-Aktion: ') . $unconsumed_path);
                 }
             }
+        } else {
+            call_user_func_array(array($this, $action), $args);
         }
-
-        call_user_func_array(array($this, $action), $args);
     }
 
     /**

@@ -271,9 +271,9 @@ function print_snd_message($psm) {
                . '/'.$psm['message_id']
                . '/'.(int)($open != 'open')
                . '/'.$psm['count']);
-    $custom_data = "data-behaviour=\"'ajaxContent'\" "
-                 . "data-target=\"'#msg_item_{$psm['message_id']}'\" "
-                 . "data-url=\"'{$ajax_link}'\"";
+    $custom_data = "data-behaviour=\"ajaxContent\" "
+                 . "data-target=\"#msg_item_{$psm['message_id']}\" "
+                 . "data-url=\"{$ajax_link}\"";
     $subject = $psm['message_subject'];
     if (strlen($subject) > 80) {
         $custom_data .= sprintf(' title="%s"', htmlReady($subject));
@@ -370,9 +370,9 @@ function print_rec_message($prm) {
                . '/'.$prm['message_id']
                . '/'.(int)($open != 'open')
                . '/'.$prm['count']);
-    $custom_data = "data-behaviour=\"'ajaxContent'\" "
-                 . "data-target=\"'#msg_item_{$prm['message_id']}'\" "
-                 . "data-url=\"'{$ajax_link}'\"";
+    $custom_data = "data-behaviour=\"ajaxContent\" "
+                 . "data-target=\"#msg_item_{$prm['message_id']}\" "
+                 . "data-url=\"{$ajax_link}\"";
     $subject = $prm['message_subject'];
     if (strlen($subject) > 80) {
         $custom_data .= sprintf(' title="%s"', htmlReady($subject));

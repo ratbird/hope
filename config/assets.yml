@@ -3,7 +3,6 @@ javascripts:
   jquery: &jquery
     - javascripts/jquery/jquery-1.8.2.js
     - javascripts/jquery/jquery-ui-1.9.1.custom.js
-    - javascripts/jquery/jquery.metadata.js
     - javascripts/jquery/jquery.placehold-0.3.js
     - javascripts/jquery/jquery-ui-timepicker-1.1.1.js
     - javascripts/jquery/validator.js

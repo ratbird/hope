@@ -23,11 +23,11 @@
 /* ------------------------------------------------------------------------
  * ajax_loader
  * ------------------------------------------------------------------------ */
-jQuery('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
-    var parameters = jQuery(this).metadata(),
-    indicator = ("indicator" in parameters) ? parameters.indicator : this,
-    target    = ("target" in parameters) ? parameters.target : jQuery(this).next(),
-    url       = ("url" in parameters) ? parameters.url : jQuery(this).attr('href');
+jQuery('[data-behaviour="ajaxContent"]').live('click', function () {
+    var parameters = jQuery(this).data(),
+    indicator = parameters.hasOwnProperty('indicator') ? parameters.indicator : this,
+    target    = parameters.hasOwnProperty('target') ? parameters.target : jQuery(this).next(),
+    url       = parameters.hasOwnProperty('url') ? parameters.url : jQuery(this).attr('href');
 
     jQuery(indicator).showAjaxNotification('right');
     jQuery(target).load(url, function () {

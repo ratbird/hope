@@ -76,7 +76,8 @@ class Course_StudygroupController extends AuthenticatedController {
         $data = $stmt->fetch();
 
         if ($data['status'] == 'accepted') $this->membership_requested = true;
-
+        if (StudygroupModel::isInvited($GLOBALS['user']->id, $id)) $this->invited = true;
+        
         if ($perm->have_studip_perm('autor', $id)) {
             $this->participant = true;
         } else {
@@ -706,6 +707,8 @@ class Course_StudygroupController extends AuthenticatedController {
                     ->addQuickfilter(_("Adressbuch"), $userArray)
                     ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
                     ->render();
+        
+        $this->invitedMembers = StudygroupModel::getInvitations($id);
     }
 
     /**
@@ -734,6 +737,9 @@ class Course_StudygroupController extends AuthenticatedController {
             } elseif ($action == 'deny') {
                 StudygroupModel::deny_user($user,$id);
                 $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user, 'full', true));
+            } elseif ($action == 'cancelInvitation') {
+                StudygroupModel::cancelInvitation($user,$id);
+                $this->flash['success'] = sprintf(_("Die Einladung des Nutzers %s wurde gelöscht."), get_fullname_from_uname($user, 'full', true));
             } elseif ($perm->have_studip_perm('tutor', $id)) {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote' && $status != 'dozent' && $perm->have_studip_perm('dozent',$id)) {
@@ -786,6 +792,9 @@ class Course_StudygroupController extends AuthenticatedController {
         $count = 0;
         $addedUsers = "";
         foreach ($mp->getAddedUsers() as $receiver) {
+            // save invite in database
+            StudygroupModel::inviteMember($receiver, $id);
+            // send invite message to user
             $msg = new Messaging();
             $sem = new Seminar($id);
             $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link, um direkt zur Studiengruppe zu gelangen.\n\n %s"),

@@ -472,6 +472,82 @@ class StudygroupModel
 
         return $stmt->fetchAll();
     }
+    
+    /**
+     * invites a member to a given studygroup.
+     *
+     * @param string user id
+     * @param string id of a studygroup
+     *
+     * @return void
+     */
+    function inviteMember($user_id, $sem_id)
+    {
+        $stmt = DBManager::get()->prepare("REPLACE INTO studygroup_invitations "
+              . "(sem_id, user_id, mkdate) VALUES (?, ?, ?)");
+        $stmt->execute(array($sem_id, $user_id, time()));
+    }
+    
+    /**
+     * cancels invitation.
+     *
+     * @param string username
+     * @param string id of a studygroup
+     *
+     * @return void
+     */
+    function cancelInvitation($username, $sem_id)
+    {
+        $query = "DELETE FROM studygroup_invitations
+                  WHERE sem_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $sem_id,
+            get_userid($username)
+        ));
+    }
+    
+    /**
+     * returns invited member of a given studygroup.
+     *
+     * @param string id of a studygroup
+     *
+     * @return array invited members
+     */
+    function getInvitations($sem_id)
+    {
+        $query = "SELECT username,user_id, ". $GLOBALS['_fullname_sql']['full_rev']
+               . " as fullname, studygroup_invitations.mkdate FROM studygroup_invitations "
+               . "LEFT JOIN auth_user_md5 USING (user_id) "
+               . "LEFT JOIN user_info USING (user_id) "
+               . "WHERE studygroup_invitations.sem_id = ? "
+               . "ORDER BY studygroup_invitations.mkdate ASC";
+
+        $stmt = DBManager::get()->prepare($query);
+        $stmt->execute(array($sem_id));
+
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * checks if a user is already invited.
+     *
+     * @param string user id
+     * @param string id of a studygroup
+     *
+     * @return array invited members
+     */
+    function isInvited($user_id, $sem_id)
+    {
+        $query = "SELECT count(*) as count FROM studygroup_invitations "
+               . "WHERE user_id = ? AND sem_id = ?";
+
+        $stmt = DBManager::get()->prepare($query);
+        $stmt->execute(array($user_id, $sem_id));
+        $result = $stmt->fetch();
+        
+        return ($result['count'] != 0) ? true : false;
+    }
 
     /**
      * callback function - used to compare sequences of studygroup statuses

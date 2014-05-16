@@ -159,8 +159,17 @@ class Course_EnrolmentController extends AuthenticatedController {
             if ($course->admission_prelim) {
                 if ($course->addPreliminaryMember($user_id)) {
                     if ($course->isStudygroup()) {
-                        $success = sprintf(_("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $course->getName());
-                        PageLayout::postMessage(MessageBox::success($success));
+                        if (StudygroupModel::isInvited($user_id, $this->course_id)) {
+                            // an invitation exists, so accept the join request automatically
+                            $status = $course->read_level === 1 ? 'user' : 'autor';
+                            StudygroupModel::accept_user(get_username($user_id),$this->course_id);
+                            StudygroupModel::cancelInvitation(get_username($user_id),$this->course_id);
+                            $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
+                            PageLayout::postMessage(MessageBox::success($success));
+                        } else {
+                            $success = sprintf(_("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $course->getName());
+                            PageLayout::postMessage(MessageBox::success($success));
+                        }
                     } else {
                         $success = sprintf(_("Sie wurden in die Veranstaltung %s vorläufig eingetragen."), $course->getName());
                         if ($course->admission_prelim_txt) {
@@ -176,6 +185,11 @@ class Course_EnrolmentController extends AuthenticatedController {
                     $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
                     PageLayout::postMessage(MessageBox::success($success));
                     $this->enrol_user = true;
+                    
+                    if (StudygroupModel::isInvited($user_id, $this->course_id)) {
+                        // delete an existing invitation
+                        StudygroupModel::cancelInvitation(get_username($user_id),$this->course_id);
+                    }
                 }
             }
             unset($this->courset_message);

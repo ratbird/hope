@@ -16,7 +16,14 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId()) || $members
 } else {
     $action = _("Aktionen:");
     $infolink = '<a data-lightbox href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
-    $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
+    // customize link text if user is invited or group access is restricted
+    if ($invited === true) {
+        $infotext= sprintf( $infolink, _("Einladung akzeptieren"));
+    } elseif ($studygroup->admission_prelim) {
+        $infotext= sprintf( $infolink, _("Mitgliedschaft beantragen"));
+    } else {
+        $infotext= sprintf( $infolink, _("Studiengruppe beitreten"));
+    }
 }
 
 $all_mods = $studygroup->getMembers('dozent') + $studygroup->getMembers('tutor');

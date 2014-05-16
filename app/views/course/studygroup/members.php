@@ -131,19 +131,25 @@ list-style-position:outside;list-style-type:none;">
 <br>
 <? if ($rechte) : ?>
     <? if (count($accepted) > 0) : ?>
-        <h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
-        <table cellspacing="0" cellpadding="2" border="0">
+       <table class="default">
+            <caption><?= _("Offene Mitgliedsanträge") ?></caption>
+            <colgroup>
+                <col width="40"></col>
+                <col></col>
+                <col width="80"></col>
+            </colgroup>
             <tr>
-                <th colspan="2" width="70%">
+                <th></th>
+                <th>
                     <?= _("Name") ?>
                 </th>
-                <th width="30%">
+                <th>
                     <?= _("Aktionen") ?>
                 </th>
             </tr>
 
             <? foreach($accepted as $p) : ?>
-            <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+            <tr>
                 <td>
                     <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
                         <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
@@ -157,6 +163,44 @@ list-style-position:outside;list-style-type:none;">
                 <td style='padding-left:1em;white-space:nowrap'>
                     <?= LinkButton::create(_("Eintragen"), $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username'])) ?>
                     <?= LinkButton::createCancel(_("Ablehnen"),$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username'])) ?>
+                </td>
+            </tr>
+            <? endforeach ?>
+        </table>
+    <? endif; ?>
+    
+    <? if (count($invitedMembers) > 0) : ?>
+        <table class="default">
+            <caption><?= _("Verschickte Einladungen") ?></caption>
+            <colgroup>
+                <col width="40"></col>
+                <col></col>
+                <col width="80"></col>
+            </colgroup>
+            <tr>
+                <th></th>
+                <th>
+                    <?= _("Name") ?>
+                </th>
+                <th>
+                    <?= _("Aktionen") ?>
+                </th>
+            </tr>
+
+            <? foreach($invitedMembers as $p) : ?>
+            <tr>
+                <td>
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
+                        <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
+                        <?= htmlReady($p['fullname']) ?>
+                    </a>
+                </td>
+                <td style='padding-left:1em;white-space:nowrap'>
+                    <?= LinkButton::createCancel(_("Löschen"),$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/cancelInvitation?user='.$p['username'])) ?>
                 </td>
             </tr>
             <? endforeach ?>

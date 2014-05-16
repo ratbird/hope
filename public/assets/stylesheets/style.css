@@ -648,14 +648,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -1701,7 +1701,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 .sidebar {
   background: #fff;
@@ -1766,6 +1766,9 @@ td.infoboxrahmen {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   line-height: 16px;
+}
+.widget-links span[disabled] {
+  text-decoration: line-through;
 }
 .widget-links {
   list-style-type: none;

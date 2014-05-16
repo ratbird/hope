@@ -83,12 +83,12 @@ class LinkElement extends WidgetElement implements ArrayAccess
         $this->active = $active;
     }
 
-    public function asDialog($state = true)
+    public function asDialog($state = '')
     {
-        if ($state) {
-            $this->attributes['rel'] = 'lightbox';
+        if ($state !== false) {
+            $this->attributes['data-lightbox'] = $state;
         } else {
-            unset($this->attributes['rel']);
+            unset($this->attributes['data-lightbox']);
         }
     }
 
@@ -110,16 +110,24 @@ class LinkElement extends WidgetElement implements ArrayAccess
     
     public function render()
     {
-        $attributes = '';
         if ($this->active) {
-            $this->addClass("active");
+            $this->addClass('active');
         }
+
+        if (isset($this->attributes['disabled']) && $this->attributes['disabled'] !== false) {
+            $tag = 'span';
+        } else {
+            $tag = 'a';
+            $this->attributes['href'] = $this->url;
+        }
+        
+        $attributes = '';
         foreach ((array) $this->attributes as $key => $value) {
             $attributes .= sprintf(' %s="%s"', $key, htmlReady($value));
         }
 
-        return sprintf('<a href="%s"%s>%s</a>',
-               $this->url,
+        return sprintf('<%1$s%2$s>%3$s</%1$s>',
+               $tag,
                $attributes,
                htmlReady($this->label));
     }

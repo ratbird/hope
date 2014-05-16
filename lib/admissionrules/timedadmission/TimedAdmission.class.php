@@ -2,7 +2,7 @@
 
 /**
  * TimedAdmission.class.php
- * 
+ *
  * Specifies a time frame for course admission.
  *
  * This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ class TimedAdmission extends AdmissionRule
     public $startTime = 0;
 
     public $allowed_combinations = array('ParticipantRestrictedAdmission', 'LimitedAdmission','ConditionalAdmission');
-    
+
     // --- OPERATIONS ---
 
     /**
@@ -57,13 +57,13 @@ class TimedAdmission extends AdmissionRule
     public function delete() {
         parent::delete();
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `timedadmissions` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `timedadmissions`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
     }
 
     /**
-     * Gets some text that describes what this AdmissionRule (or respective 
+     * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
     public static function getDescription() {
@@ -101,12 +101,12 @@ class TimedAdmission extends AdmissionRule
 
     /**
      * Gets the template that provides a configuration GUI for this rule.
-     * 
+     *
      * @return String
      */
     public function getTemplate() {
         $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        // Open specific template for this rule and insert base template. 
+        // Open specific template for this rule and insert base template.
         $tpl = $factory->open('configure');
         $tpl->set_attribute('rule', $this);
         return $tpl->render();
@@ -146,7 +146,7 @@ class TimedAdmission extends AdmissionRule
      * Uses the given data to fill the object values. This can be used
      * as a generic function for storing data if the concrete rule type
      * isn't known in advance.
-     * 
+     *
      * @param Array $data
      * @return AdmissionRule This object.
      */
@@ -201,12 +201,12 @@ class TimedAdmission extends AdmissionRule
      */
     public function store() {
         // Store data.
-        $stmt = DBManager::get()->prepare("INSERT INTO `timedadmissions` 
-            (`rule_id`, `message`, `start_time`, 
-            `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?) 
-            ON DUPLICATE KEY UPDATE `start_time`=VALUES(`start_time`), 
+        $stmt = DBManager::get()->prepare("INSERT INTO `timedadmissions`
+            (`rule_id`, `message`, `start_time`,
+            `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE `start_time`=VALUES(`start_time`),
             `end_time`=VALUES(`end_time`),message=VALUES(message), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $this->message, (int)$this->startTime, 
+        $stmt->execute(array($this->id, $this->message, (int)$this->startTime,
             (int)$this->endTime, time(), time()));
     }
 
@@ -236,7 +236,7 @@ class TimedAdmission extends AdmissionRule
         if (!$data['startdate'] && !$data['enddate']) {
             $errors[] = _('Bitte geben Sie entweder ein Start- oder Enddatum an.');
         }
-        if ($data['startdate'] && strtotime($data['enddate']) < strtotime($data['startdate'])) {
+        if ($data['startdate'] && $data['enddate'] && strtotime($data['enddate'] . ' ' . $data['endtime']) < strtotime($data['startdate']. ' ' . $data['starttime'])) {
             $errors[] = _('Das Enddatum darf nicht vor dem Startdatum liegen.');
         }
         return $errors;

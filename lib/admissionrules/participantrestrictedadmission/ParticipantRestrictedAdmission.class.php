@@ -2,7 +2,7 @@
 
 /**
  * ParticipantRestrictedAdmission.class.php
- * 
+ *
  * Specifies restricted number of participants for course admission.
  *
  * This program is free software; you can redistribute it and/or
@@ -25,11 +25,13 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * Timestamp for execution of seat distribution algorithm
      */
     public $distributionTime = null;
-    
+
     public $first_come_first_served_allowed = true;
-    
+
     public $allowed_combinations = array('LimitedAdmission','ConditionalAdmission','TimedAdmission');
-    
+
+    public $minimum_timespan_to_distribution_time = 120;
+
 
     // --- OPERATIONS ---
 
@@ -60,13 +62,13 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     public function delete() {
         parent::delete();
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `participantrestrictedadmissions` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `participantrestrictedadmissions`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
     }
 
     /**
-     * Gets some text that describes what this AdmissionRule (or respective 
+     * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
     public static function getDescription() {
@@ -92,12 +94,12 @@ class ParticipantRestrictedAdmission extends AdmissionRule
 
     /**
      * Gets the template that provides a configuration GUI for this rule.
-     * 
+     *
      * @return String
      */
     public function getTemplate() {
         $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        // Open specific template for this rule and insert base template. 
+        // Open specific template for this rule and insert base template.
         $tpl = $factory->open('configure');
         $tpl->set_attribute('rule', $this);
         return $tpl->render();
@@ -121,7 +123,7 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * Uses the given data to fill the object values. This can be used
      * as a generic function for storing data if the concrete rule type
      * isn't known in advance.
-     * 
+     *
      * @param Array $data
      * @return AdmissionRule This object.
      */
@@ -137,6 +139,13 @@ class ParticipantRestrictedAdmission extends AdmissionRule
         if ($data['enable_FCFS']) {
             $this->setDistributionTime(0);
         }
+        if ($data['startdate']) {
+             $starttime = strtotime($data['startdate'] . ' ' . $data['starttime']);
+             if ($starttime > time()) {
+                 $this->minimum_timespan_to_distribution_time = $this->minimum_timespan_to_distribution_time + (($starttime - time()) / 60);
+             }
+        }
+
         return $this;
     }
 
@@ -152,19 +161,19 @@ class ParticipantRestrictedAdmission extends AdmissionRule
         return $this;
     }
 
-    
+
     /**
      * Store rule definition to database.
      */
     public function store() {
         // Store data.
-        $stmt = DBManager::get()->prepare("INSERT INTO `participantrestrictedadmissions` 
-            (`rule_id`, `message`, `distribution_time`, 
-             `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?) 
-            ON DUPLICATE KEY UPDATE  
-            `distribution_time`=VALUES(`distribution_time`), 
+        $stmt = DBManager::get()->prepare("INSERT INTO `participantrestrictedadmissions`
+            (`rule_id`, `message`, `distribution_time`,
+             `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            `distribution_time`=VALUES(`distribution_time`),
              message=VALUES(message), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, (string)$this->message,  
+        $stmt->execute(array($this->id, (string)$this->message,
             (int)$this->distributionTime, time(), time()));
     }
 
@@ -195,12 +204,12 @@ class ParticipantRestrictedAdmission extends AdmissionRule
             $data['distributiontime'] = '23:59';
         }
         $ddate = strtotime($data['distributiondate'] . ' ' . $data['distributiontime']);
-        if (!$data['enable_FCFS'] && (!$data['distributiondate'] || $ddate < time())) {
-            $errors[] = _('Bitte geben Sie für die Platzverteilung ein Datum in der Zukunft an.');
+        if (!$data['enable_FCFS'] && (!$data['distributiondate'] || $ddate < (time() + $this->minimum_timespan_to_distribution_time*60))) {
+            $errors[] = sprintf(_('Bitte geben Sie für die Platzverteilung ein Datum an, das weiter in der Zukunft liegt. Das frühestmögliche Datum ist %s.'), strftime('%x %R', time() + $this->minimum_timespan_to_distribution_time*60));
         }
         return $errors;
     }
 
-} 
+}
 
 ?>

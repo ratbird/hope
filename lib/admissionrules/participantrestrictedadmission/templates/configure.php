@@ -7,7 +7,7 @@
         value="<?= $rule->getDistributionTime() ? date('d.m.Y', $rule->getDistributionTime()) : '' ?>"/>
     &nbsp;&nbsp;
     <input type="time" name="distributiontime" id="distributiontime" size="4"
-        value="<?= $rule->getDistributionTime() ? date('H:i', $rule->getDistributionTime()) : '' ?>"/>
+        value="<?= $rule->getDistributionTime() ? date('H:i', $rule->getDistributionTime()) : '23:59' ?>"/>
 </div>
 <? if ($rule->isFCFSallowed()) : ?>
     <label for="enable_FCFS">

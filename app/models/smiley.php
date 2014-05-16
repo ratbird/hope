@@ -44,7 +44,7 @@ class Smiley
      */
     function getFilename($name = null)
     {
-        return sprintf('%s/smile/%s.gif', realpath($GLOBALS['DYNAMIC_CONTENT_PATH']), $name ?: $this->name);
+        return sprintf('%s/smile/%s', realpath($GLOBALS['DYNAMIC_CONTENT_PATH']), $name ?: $this->name);
     }
 
     /**
@@ -512,12 +512,14 @@ class Smiley
         }
 
         foreach ($files as $file) {
+            echo $file." ";
             $image_info = getimagesize($file);
             if ($image_info[2] !== IMAGETYPE_GIF) {
                 continue;
             }
 
-            $name = basename($file, '.gif');
+            $name = substr($file, 0, strrpos("."));
+            //$name = basename($file, '.gif');
             $smiley = Smiley::getByName($name);
 
             $update = false;
@@ -536,7 +538,10 @@ class Smiley
                 $update = true;
                 $counts['update'] += 1;
             }
-
+            
+            //$smiley->width || $smiley->width = 20;
+            //$smiley->height || $smiley->height = 20;
+            
             if ($update) {
                 $smiley->store();
             }

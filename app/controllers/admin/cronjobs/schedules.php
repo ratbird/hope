@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Admin_Cronjobs_SchedulesController - Controller class for the schedules of
  *                                      cronjobs
@@ -341,4 +341,31 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
         $this->redirect('admin/cronjobs/schedules/index/' . $page);
     }
+    
+    /**
+     * Runs a schedule and returns the output.
+     *
+     * @param String $id Id of the schedule
+     */
+    public function testrun_action($id)
+    {
+        error_reporting(22519);
+        set_error_handler(function ($fehlercode, $fehlertext, $fehlerdatei, $fehlerzeile) {
+            switch ($fehlercode) {
+                case E_USER_ERROR:
+                    echo "ERROR: ".$fehlertext."\n in ".$fehlerdatei." , ".$fehlerzeile;
+                    die();
+                    break;
+                case E_USER_WARNING:
+                    echo "WARNING: ".$fehlertext."\n in ".$fehlerdatei." , ".$fehlerzeile;
+                    die();
+                    break;
+            }
+        });
+        $result = CronjobSchedule::find($id)->execute(true);
+        var_dump($result);
+        $this->render_nothing();
+    }
+
+    
 }

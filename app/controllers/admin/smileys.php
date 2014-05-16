@@ -202,14 +202,13 @@ class Admin_SmileysController extends AuthenticatedController
         }
 
         // Correct mime-type?
-        $no_gif = !empty($upload['type']) && $upload['type'] != 'image/gif';
-        if (!$no_gif) {
+        $no_image = !empty($upload['type']) && substr($upload['type'], 0, 5) != 'image';
+        if (!$no_image) {
             $image_info = getimagesize($upload['tmp_name']); // Used later on!
             $no_gif = $image_info[2] != IMAGETYPE_GIF;
         }
-        if ($no_gif) {
-            $error = sprintf(_('Der Dateityp der Bilddatei ist falsch (%s).<br>'
-                              .'Es ist nur die Dateiendung .gif erlaubt!'), htmlReady($upload['type']));
+        if ($no_image) {
+            $error = _('Die Datei ist keine Bilddatei');
             PageLayout::postMessage(MessageBox::error($error));
             return;
         }
@@ -228,7 +227,7 @@ class Admin_SmileysController extends AuthenticatedController
         }
 
         // Copy file into file system
-        $destination = Smiley::getFilename(basename($smiley_file, '.gif'));
+        $destination = Smiley::getFilename($smiley_file);
         if (!move_uploaded_file($upload['tmp_name'], $destination)) {
             $error = _('Es ist ein Fehler beim Kopieren der Datei aufgetreten. Das Bild wurde nicht hochgeladen!');
             PageLayout::postMessage(MessageBox::error($error));

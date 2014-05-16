@@ -50,7 +50,7 @@
         <tr>
             <td><strong><?= _("Beteiligte Gruppen") ?></strong></td>
             <td>
-                <? $groups = $date->groups ?>
+                <? $groups = $date->statusgruppen ?>
                 <? if (count($groups)) : ?>
                 <ul>
                     <? foreach ($groups as $group) : ?>

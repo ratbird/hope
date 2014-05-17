@@ -163,6 +163,19 @@ class Message extends SimpleORMap
         return $result ? self::find($message_id) : null;
     }
 
+    public function permissionToRead($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare("
+            SELECT 1 FROM message_user WHERE message_id = :message_id AND user_id = :user_id
+        ");
+        $statement->execute(array(
+            'message_id' => $this->getId(),
+            'user_id' => $user_id
+        ));
+        return (bool) $statement->fetchColumn();
+    }
+
     /**
      * Returns all tags for the message for the given user.
      * @param null $user_id : user-id of the user that tags should be related. null if it's the current user.

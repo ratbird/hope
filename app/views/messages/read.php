@@ -81,9 +81,9 @@
 
 <div align="center">
     <div class="button-group">
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('cmd' => "write", 'answer_to' => $message->getId())) ?>"><?= \Studip\Button::create(_("Antworten"))?></a>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('cmd' => "write", 'answer_to' => $message->getId(), 'quote' => $message->getId())) ?>"><?= \Studip\Button::create(_("Zitieren"))?></a>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('cmd' => "write", 'answer_to' => $message->getId(), 'forward' => "rec")) ?>"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId())) ?>"><?= \Studip\Button::create(_("Antworten"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'quote' => $message->getId())) ?>"><?= \Studip\Button::create(_("Zitieren"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'forward' => "rec")) ?>"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
         <a href="<?= URLHelper::getLink("dispatch.php/messages/print/".$message->getId()) ?>"><?= \Studip\Button::create(_("Drucken"))?></a>
         <form action="?" method="post" style="display: inline;">
             <input type="hidden" name="delete_message" value="<?= $message->getId() ?>">

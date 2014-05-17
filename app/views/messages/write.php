@@ -55,13 +55,13 @@
     <div>
         <label>
             <h4><?= _("Betreff") ?></h4>
-            <input type="text" name="message_subject" style="width: 100%" required value="<?= htmlReady(Request::get("default_subject")) ?>">
+            <input type="text" name="message_subject" style="width: 100%" required value="<?= htmlReady($default_subject) ?>">
         </label>
     </div>
     <div>
         <label>
             <h4><?= _("Nachricht") ?></h4>
-            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar"><?= htmlReady(Request::get("default_body")) ?></textarea>
+            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar"><?= htmlReady($default_body) ?></textarea>
         </label>
     </div>
     <div>

@@ -158,9 +158,22 @@ class MessagesController extends AuthenticatedController {
             $this->to += DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
         }
         if (Request::option("answer_to")) {
-
+            $old_message = new Message(Request::option("answer_to"));
+            if (!$old_message->permissionToRead()) {
+                throw new AccessDeniedException("Message is not for you.");
+            }
+            if (Request::option("quote") === $old_message->getId()) {
+                $this->default_body = "[quote]\n".$old_message['message']."\n[/quote]";
+            }
+            $this->default_subject = substr($old_message['message'], 0, 4) === "Re: " ? $old_message['subject'] : "Re: ".$old_message['subject'];
+            $this->to[] = $old_message['autor_id'];
         }
-
+        if (Request::get("default_body")) {
+            $this->default_body = Request::get("default_body");
+        }
+        if (Request::get("default_subject")) {
+            $this->default_subject = Request::get("default_subject");
+        }
     }
 
     /**

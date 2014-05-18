@@ -121,17 +121,28 @@ class MessagesController extends AuthenticatedController {
 
         //collect possible default adressees
         $this->to = array();
+        $this->default_message = new Message();
         if (Request::username("rec_uname")) {
-            $this->to[] = get_userid(Request::username("rec_uname"));
+            $user = new MessageUser();
+            $user->setData(array('user_id' => get_userid(Request::username("rec_uname")), 'snd_rec' => "rec"));
+            $this->default_message->users[] = $user;
         }
         if (Request::getArray("rec_uname")) {
-            $this->to = array_map("get_userid", Request::getArray("rec_uname"));
+            foreach (Request::getArray("rec_uname") as $username) {
+                $user = new MessageUser();
+                $user->setData(array('user_id' => get_userid($username), 'snd_rec' => "rec"));
+                $this->default_message->users[] = $user;
+            }
         }
         if (Request::option("group_id")) {
             $group = Statusgruppen::find(Request::option("group_id"));
             if (($group['range_id'] === $GLOBALS['user']->id)
                     || ($GLOBALS['perm']->have_studip_perm("autor", $group['range_id']))) {
-                $this->to += $group->members->map(function ($m) { return $m['user_id']; });
+                foreach ($group->members as $member) {
+                    $user = new MessageUser();
+                    $user->setData(array('user_id' => $member['user_id'], 'snd_rec' => "rec"));
+                    $this->default_message->users[] = $user;
+                }
             }
         }
         if (Request::get("filter") && Request::option("course_id")) {
@@ -155,7 +166,12 @@ class MessagesController extends AuthenticatedController {
                     $query = "SELECT b.user_id FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = '".$course_id."' AND a.user_id = b.user_id AND a.inst_perms = '$who' ORDER BY Nachname, Vorname";
                     break;
             }
-            $this->to += DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
+            $user_ids = DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
+            foreach ($user_ids as $user_id) {
+                $user = new MessageUser();
+                $user->setData(array('user_id' => $user_ids, 'snd_rec' => "rec"));
+                $this->default_message->users[] = $user;
+            }
         }
         if (Request::option("answer_to")) {
             $old_message = new Message(Request::option("answer_to"));
@@ -163,17 +179,20 @@ class MessagesController extends AuthenticatedController {
                 throw new AccessDeniedException("Message is not for you.");
             }
             if (Request::option("quote") === $old_message->getId()) {
-                $this->default_body = "[quote]\n".$old_message['message']."\n[/quote]";
+                $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
             }
-            $this->default_subject = substr($old_message['message'], 0, 4) === "Re: " ? $old_message['subject'] : "Re: ".$old_message['subject'];
-            $this->to[] = $old_message['autor_id'];
+            $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "Re: " ? $old_message['subject'] : "Re: ".$old_message['subject'];
+            $user = new MessageUser();
+            $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
+            $this->default_message->users[] = $user;
         }
         if (Request::get("default_body")) {
-            $this->default_body = Request::get("default_body");
+            $this->default_message['message'] = Request::get("default_body");
         }
         if (Request::get("default_subject")) {
-            $this->default_subject = Request::get("default_subject");
+            $this->default_message['subject'] = Request::get("default_subject");
         }
+        NotificationCenter::postNotification("DefaultMessageForComposerCreated", $this->default_message);
     }
 
     /**

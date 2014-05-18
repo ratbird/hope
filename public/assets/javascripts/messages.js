@@ -178,44 +178,44 @@ jQuery("#message_metadata .remove_tag").live("click", function () {
 });
 
 
-/*********** infinity-scroll in the overview ***********/
-
-if (jQuery("#messages").length > 0) {
-    jQuery(window.document).bind('scroll', _.throttle(function (event) {
-        if ((jQuery(window).scrollTop() + jQuery(window).height() > jQuery(window.document).height() - 500)
-            && (jQuery("#reloader").hasClass("more"))) {
-            //nachladen
-            jQuery("#reloader").removeClass("more").addClass("loading");
-            jQuery.ajax({
-                url: STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/more",
-                data: {
-                    'received': jQuery("#received").val(),
-                    'offset': jQuery("#messages > tbody > tr").length - 1,
-                    'tag': jQuery("#tag").val(),
-                    'limit': 50
-                },
-                dataType: "json",
-                success: function (response) {
-                    var more_indicator = jQuery("#reloader").detach();
-
-                    jQuery("#loaded").val(parseInt(jQuery("#loaded").val(), 10) + 1);
-                    jQuery.each(response.messages, function (index, message) {
-                        jQuery("#messages > tbody").append(message);
-                    });
-
-                    if (response.more) {
-                        jQuery("#messages > tbody").append(more_indicator.addClass("more").removeClass("loading"));
-                    }
-                }
-            });
-        }
-    }, 30));
-}
-
-
-/*********** dragging the messages to the tags ***********/
-
 jQuery(function () {
+
+    /*********** infinity-scroll in the overview ***********/
+    if (jQuery("#messages").length > 0) {
+        jQuery(window.document).bind('scroll', _.throttle(function (event) {
+
+            if ((jQuery(window).scrollTop() + jQuery(window).height() > jQuery(window.document).height() - 500)
+                && (jQuery("#reloader").hasClass("more"))) {
+                //nachladen
+                jQuery("#reloader").removeClass("more").addClass("loading");
+                jQuery.ajax({
+                    url: STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/more",
+                    data: {
+                        'received': jQuery("#received").val(),
+                        'offset': jQuery("#messages > tbody > tr").length - 1,
+                        'tag': jQuery("#tag").val(),
+                        'limit': 50
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        var more_indicator = jQuery("#reloader").detach();
+
+                        jQuery("#loaded").val(parseInt(jQuery("#loaded").val(), 10) + 1);
+                        jQuery.each(response.messages, function (index, message) {
+                            jQuery("#messages > tbody").append(message);
+                        });
+
+                        if (response.more) {
+                            jQuery("#messages > tbody").append(more_indicator.addClass("more").removeClass("loading"));
+                        }
+                    }
+                });
+            }
+        }, 30));
+    }
+
+    /*********** dragging the messages to the tags ***********/
+
     jQuery("#messages > tbody > tr").draggable({
         cursor: "move",
         helper: function () {

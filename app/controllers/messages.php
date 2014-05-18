@@ -15,6 +15,8 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class MessagesController extends AuthenticatedController {
 
+    protected $number_of_displayed_messages = 50;
+
     public function overview_action()
     {
         PageLayout::setTitle(_("Nachrichten"));
@@ -33,7 +35,7 @@ class MessagesController extends AuthenticatedController {
         
         $this->messages = $this->get_messages(
             true,
-            Request::int("limit", 50),
+            Request::int("limit", $this->number_of_displayed_messages),
             Request::int("offset", 0),
             Request::get("tag")
         );
@@ -59,7 +61,7 @@ class MessagesController extends AuthenticatedController {
         
         $this->messages = $this->get_messages(
             false,
-            Request::int("limit", 50),
+            Request::int("limit", $this->number_of_displayed_messages),
             Request::int("offset", 0),
             Request::get("tag")
         );
@@ -73,7 +75,7 @@ class MessagesController extends AuthenticatedController {
     {
         $messages = $this->get_messages(
             Request::int("received") ? true : false,
-            Request::int("limit", 50) + 1,
+            Request::int("limit", $this->number_of_displayed_messages) + 1,
             Request::int("offset", 0),
             Request::get("tag")
         );

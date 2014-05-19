@@ -258,7 +258,7 @@
                 // Execute scripts
                 $('head').append(scripts);
 
-                if (options.onopen.length > 0) {
+                if (options.onopen && options.onopen.length > 0) {
                     var nodes = options.onopen.split('.'),
                         func  = window[nodes.shift()],
                         node = nodes.shift();

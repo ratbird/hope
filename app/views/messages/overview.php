@@ -1,6 +1,10 @@
 <input type="hidden" name="received" id="received" value="<?= (int) $received ?>">
 <input type="hidden" name="since" id="since" value="<?= time() ?>">
 <input type="hidden" name="folder_id" id="tag" value="<?= htmlReady(ucfirst(Request::get("tag"))) ?>">
+<input type="hidden" name="search" id="search" value="<?= htmlReady(Request::get("search")) ?>">
+<input type="hidden" name="search_autor" id="search_autor" value="<?= htmlReady(Request::get("search_autor")) ?>">
+<input type="hidden" name="search_subject" id="search_subject" value="<?= htmlReady(Request::get("search_subject")) ?>">
+<input type="hidden" name="search_content" id="search_content" value="<?= htmlReady(Request::get("search_content")) ?>">
 
 <? if (Request::get("tag")) : ?>
 <h4>
@@ -88,3 +92,10 @@ if (count($tags)) {
     }
     $sidebar->addWidget($folderwidget, 'folder');
 }
+
+$search = new SearchWidget();
+$search->addElement(new WidgetElement(
+    $this->render_partial('messages/_search'),
+    'search'
+));
+$sidebar->addWidget($search);

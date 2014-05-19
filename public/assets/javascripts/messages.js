@@ -205,6 +205,10 @@ jQuery(function () {
                         'received': jQuery("#received").val(),
                         'offset': jQuery("#messages > tbody > tr").length - 1,
                         'tag': jQuery("#tag").val(),
+                        'search': jQuery("#search").val(),
+                        'search_autor': jQuery("#search_autor").val(),
+                        'search_subject': jQuery("#search_subject").val(),
+                        'search_content': jQuery("#search_content").val(),
                         'limit': 50
                     },
                     dataType: "json",

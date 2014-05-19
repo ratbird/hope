@@ -37,7 +37,8 @@ class MessagesController extends AuthenticatedController {
             true,
             Request::int("limit", $this->number_of_displayed_messages),
             Request::int("offset", 0),
-            Request::get("tag")
+            Request::get("tag"),
+            Request::get("search")
         );
         $this->received = 1;
         $this->tags = Message::getUserTags();
@@ -63,7 +64,8 @@ class MessagesController extends AuthenticatedController {
             false,
             Request::int("limit", $this->number_of_displayed_messages),
             Request::int("offset", 0),
-            Request::get("tag")
+            Request::get("tag"),
+            Request::get("search")
         );
         $this->received = 0;
         $this->tags = Message::getUserTags();
@@ -77,7 +79,8 @@ class MessagesController extends AuthenticatedController {
             Request::int("received") ? true : false,
             Request::int("limit", $this->number_of_displayed_messages) + 1,
             Request::int("offset", 0),
-            Request::get("tag")
+            Request::get("tag"),
+            Request::get("search")
         );
         $this->output = array('messages' => array(), "more" => 0);
         if (count($messages) > Request::int("limit")) {
@@ -286,7 +289,7 @@ class MessagesController extends AuthenticatedController {
         }
     }
     
-    protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null)
+    protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null, $search = null)
     {
         if ($tag) {
             $messages_data = DBManager::get()->prepare("
@@ -305,7 +308,63 @@ class MessagesController extends AuthenticatedController {
                 'tag' => $tag,
                 'sender_receiver' => $received ? "rec" : "snd"
             ));
-        } else{
+        } elseif($search) {
+
+            $suchmuster = '/".*"/U';
+            preg_match_all($suchmuster, $search, $treffer);
+            array_walk($treffer[0], function(&$value) { $value = trim($value, '"'); });
+
+            // remove the quoted parts from $_searchfor
+            $_searchfor = trim(preg_replace($suchmuster, '', $search));
+
+            // split the searchstring $_searchfor at every space
+            $parts = explode(' ', $_searchfor);
+            foreach ($parts as $key => $val) {
+                if ($val == '') {
+                    unset($parts[$key]);
+                }
+            }
+            if (!empty($parts)) {
+                $_searchfor = array_merge($parts, $treffer[0]);
+            } else  {
+                $_searchfor = $treffer[0];
+            }
+
+            $search_sql = "";
+            foreach ($_searchfor as $val) {
+                $tmp_sql = array();
+                if (Request::get("search_autor")) {
+                    $tmp_sql[] = "CONCAT(auth_user_md5.Vorname, ' ', auth_user_md5.Nachname) LIKE ".DBManager::get()->quote("%".$val."%")." ";
+                }
+                if (Request::get("search_subject")) {
+                    $tmp_sql[] = "message.subject LIKE ".DBManager::get()->quote("%".$val."%")." ";
+                }
+                if (Request::get("search_content")) {
+                    $tmp_sql[] = "message.message LIKE ".DBManager::get()->quote("%".$val."%")." ";
+                }
+                $search_sql .= "AND (";
+                $search_sql .= implode(" OR ", $tmp_sql);
+                $search_sql .= ") ";
+            }
+
+
+
+            $messages_data = DBManager::get()->prepare("
+                SELECT *
+                FROM message
+                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
+                    INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = message.autor_id)
+                WHERE message_user.user_id = :me
+                    AND snd_rec = :sender_receiver
+                    $search_sql
+                ORDER BY message.mkdate DESC
+                LIMIT ".(int) $offset .", ".(int) $limit ."
+            ");
+            $messages_data->execute(array(
+                'me' => $GLOBALS['user']->id,
+                'sender_receiver' => $received ? "rec" : "snd"
+            ));
+        } else {
             $messages_data = DBManager::get()->prepare("
                 SELECT *
                 FROM message

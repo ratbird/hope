@@ -8,7 +8,7 @@
  */
 class SelectorWidget extends SidebarWidget
 {
-    
+
     /**
      * Constructs the widget by defining a special template.
      */
@@ -16,19 +16,20 @@ class SelectorWidget extends SidebarWidget
     {
         $this->setTitle(_("Veranstaltungen"));
         $this->template = 'sidebar/selector-widget';
+        $this->template_variables['method'] = 'get';
     }
-    
-    public function setUrl($url) 
+
+    public function setUrl($url)
     {
         $this->template_variables['url'] = $url;
     }
-    
-    public function setSelectParameterName($name) 
+
+    public function setSelectParameterName($name)
     {
         $this->template_variables['name'] = $name;
     }
-    
-    public function setSelection($value) 
+
+    public function setSelection($value)
     {
         $this->template_variables['value'] = $value;
     }
@@ -38,4 +39,7 @@ class SelectorWidget extends SidebarWidget
         $this->template_variables['size'] = (int) $size;
     }
 
+    public function setRequestMethod($method) {
+        $this->template_variables['method'] = $method;
+    }
 }

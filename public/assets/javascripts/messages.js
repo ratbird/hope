@@ -22,6 +22,13 @@ STUDIP.Messages = {
         jQuery("#since").val(Math.floor(new Date().getTime() / 1000));
     },
 
+    /**/
+
+    whenMessageIsShown: function (lightbox) {
+        var message_id = jQuery("#message_metadata").data("message_id");
+        jQuery("#message_" + message_id).removeClass("unread");
+    },
+
 
     /*********** helper for the composer-site ***********/
 

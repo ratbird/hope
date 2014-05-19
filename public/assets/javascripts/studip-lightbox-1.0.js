@@ -246,6 +246,8 @@
             width = height = options.size;
         }
 
+        var lightbox = this.element;
+
         dialog_options = {
             width:   width,
             height:  height,
@@ -255,6 +257,19 @@
             open: function () {
                 // Execute scripts
                 $('head').append(scripts);
+
+                if (options.onopen.length > 0) {
+                    var nodes = options.onopen.split('.'),
+                        func  = window[nodes.shift()],
+                        node = nodes.shift();
+                    while (node && func.hasOwnProperty(node)) {
+                        func = func[node];
+                        node = nodes.shift();
+                    }
+                    if (nodes.length === 0 && $.isFunction(func)) {
+                        func(lightbox);
+                    }
+                }
             },
             close: function () {
                 STUDIP.Lightbox.close();

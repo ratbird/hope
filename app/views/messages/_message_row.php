@@ -10,9 +10,9 @@
             </td>
             <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>
             <td>
-                <? foreach ($message->getTags() as $tag) : ?>
-                    <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>"><?= Assets::img("icons/16/blue/star", array('class' => "text-bottom tag")).htmlReady(ucfirst($tag)) ?></a>
-                <? endforeach ?>
+            <? foreach ($message->getTags() as $tag) : ?>
+                <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="tag"><?= Assets::img("icons/16/blue/star", array('class' => "text-bottom tag")).htmlReady(ucfirst($tag)) ?></a>
+            <? endforeach ?>
             </td>
             <td>
                 <form action="?" method="post" style="display: inline;">

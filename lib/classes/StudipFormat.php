@@ -171,9 +171,31 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupEmails'
         ),
         'htmlAnchor' => array(
+            # avoid replacing html links by studip's links-markup
+            # match <a ...="..."> ... </a>
             'start' => '(?xi: <\s* a (?:\s(?:\s* \w+ \s*=\s* "[^"]*" )*)? \s*>)',
             'end' => '(?xi: <\s* \/\s* a \s*>)',
             'callback' => 'StudipFormat::htmlAnchor'
+        ),
+        'htmlImg' => array(
+            # avoid replacing img links by studip's links-markup
+            # match <img ...="..." />
+            'start' => '(?xi:
+                # match tag start: <img
+                <\s*img
+
+                # match optional attributes
+                (\s(\s*
+                    \w+                              # attribute name
+                    (\s*=\s*
+                        ("[^\"]*"|\'[^\']*\'|[^\s]*) # attribute value
+                    )?
+                )+)?
+
+                # match tag end: \/>
+                \s*\/?\s*>
+            )',
+            'callback' => 'StudipFormat::htmlImg'
         ),
         'links' => array(
             // markup: [text]url
@@ -599,7 +621,9 @@ class StudipFormat extends TextFormat
      */
     protected static function markupLinks($markup, $matches)
     {
-        if ($markup->isInsideOf('htmlAnchor')) {
+        if ($markup->isInsideOf('htmlAnchor')
+            || $markup->isInsideOf('htmlImg')
+        ) {
             return $matches[0];
         }
 
@@ -628,5 +652,10 @@ class StudipFormat extends TextFormat
     protected static function htmlAnchor($markup, $matches, $contents)
     {
         return $matches[0] . $contents . '</a>';
+    }
+
+    protected static function htmlImg($markup, $matches, $contents)
+    {
+        return $matches[0];
     }
 }

@@ -33,4 +33,9 @@ class SelectorWidget extends SidebarWidget
         $this->template_variables['value'] = $value;
     }
 
+    public function setSize($size)
+    {
+        $this->template_variables['size'] = (int) $size;
+    }
+
 }

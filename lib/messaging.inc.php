@@ -408,13 +408,15 @@ class messaging
             $snd_user_id,
             $set_deleted ? 1 : 0,                  // save message?
         ));
-        is_array($tags) || $tags = explode(" ", (string) $tags);
-        foreach ($tags as $tag) {
-            $insert_tags->execute(array(
-                'message_id' => $tmp_message_id,
-                'user_id' => $snd_user_id,
-                'tag' => strtolower($tag)
-            ));
+        if ($tags) {
+            is_array($tags) || $tags = explode(" ", (string) $tags);
+            foreach ($tags as $tag) {
+                $insert_tags->execute(array(
+                    'message_id' => $tmp_message_id,
+                    'user_id' => $snd_user_id,
+                    'tag' => strtolower($tag)
+                ));
+            }
         }
 
         // heben wir kein array bekommen, machen wir einfach eins ...
@@ -456,12 +458,14 @@ class messaging
                     $this->sendingEmail($one, $snd_user_id, $message, $subject, $tmp_message_id);
                 }
             }
-            foreach ($tags as $tag) {
-                $insert_tags->execute(array(
-                    'message_id' => $tmp_message_id,
-                    'user_id' => $one,
-                    'tag' => strtolower($tag)
-                ));
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    $insert_tags->execute(array(
+                        'message_id' => $tmp_message_id,
+                        'user_id' => $one,
+                        'tag' => strtolower($tag)
+                    ));
+                }
             }
         }
         PersonalNotifications::add(

@@ -67,8 +67,9 @@
     </tbody>
 </table>
 
-<div style="display: none;">
-    <?= Assets::img("icons/20/blue/mail", array('id' => "move_handle")) ?>
+<div style="display: none; background-color: rgba(255,255,255, 0.3); padding: 3px; border-radius: 5px; border: thin solid black;" id="move_handle">
+    <?= Assets::img("icons/20/blue/mail", array('class' => "text-bottom")) ?>
+    <span class="title"></span>
 </div>
 
 <script>

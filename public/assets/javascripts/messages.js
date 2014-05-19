@@ -228,9 +228,11 @@ jQuery(function () {
     /*********** dragging the messages to the tags ***********/
 
     jQuery("#messages > tbody > tr").draggable({
-        cursor: "move",
+        //cursor: "move",
         helper: function () {
-            return jQuery("#move_handle").clone().show();
+            var handle = jQuery("#move_handle").clone().show();
+            handle.find(".title").text(jQuery(this).find(".title").text());
+            return handle;
         },
         revert: true,
         revertDuration: "200"
@@ -247,8 +249,9 @@ jQuery(function () {
                     'tag': tag
                 },
                 'type': "post",
+                'dataType': "json",
                 'success': function (response) {
-                    location.reload();
+                    jQuery("#message_" + message_id).replaceWith(response.row);
                 }
             });
         }

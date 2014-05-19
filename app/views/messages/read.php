@@ -48,7 +48,7 @@
             <td>
                 <? foreach ($message->getTags() as $tag) : ?>
                     <span class="tag" data-tag="<?= htmlReady($tag) ?>">
-                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>"><?= Assets::img("icons/16/blue/star", array('class' => "text-bottom")).htmlReady($tag) ?></a><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom remove_tag")) ?>
+                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="tag"><?= Assets::img("icons/16/blue/star", array('class' => "text-bottom")).htmlReady($tag) ?></a><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom remove_tag")) ?>
                     </span>
                 <? endforeach ?>
                 <span>

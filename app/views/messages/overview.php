@@ -78,6 +78,9 @@
 
 <script>
 STUDIP.jsupdate_enable = true;
+jQuery(function () {
+    jQuery("#nav__messaging_messages_write").attr("data-lightbox", "buttons=false");
+});
 </script>
 
 <?php

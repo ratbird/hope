@@ -423,6 +423,43 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         return $ret;
     }
 
+    public static function findByObject(SimpleORMap $object)
+    {
+        $lastclass = get_called_class();
+        $lastrecord = new $lastclass();
+
+        $args = func_get_args();
+        array_shift($args);
+        $classes = array_reverse($args);
+        $sql = " ";
+        foreach ($classes as $class) {
+            $record = new $class();
+            $column = null;
+            self::$config[$class];
+            foreach (self::$config[$class]['has_many'] as $config) {
+                if ($config['class_name'] === $lastclass) {
+                    $column = $config['foreign_key'];
+                }
+            }
+            $sql .= "INNER JOIN `". $record->db_table ."` ON (`". $record->db_table ."`.`".$column ."` = `". $lastrecord->db_table ."`.`".$record->pk ."`) ";
+
+            $lastrecord = $record;
+            $lastclass = $class;
+        }
+
+        $column = null;
+        self::$config[get_class($object)];
+        foreach (self::$config[get_class($object)]['has_many'] as $config) {
+            if ($config['class_name'] === $lastclass) {
+                $column = $config['foreign_key'];
+            }
+        }
+        $sql .= "INNER JOIN `". $object->db_table ."` ON (`". $object->db_table ."`.`".$column ."` = `". $lastrecord->db_table ."`.`".$record->pk ."`) ";
+        $sql .= " WHERE `". $object->db_table ."`.`".$record->pk ."` = ? ";
+
+        return self::findBySQL($sql, array($object->getId()));
+    }
+
     /**
      * returns one instance of given class filtered by given sql
      * only first row of query is used

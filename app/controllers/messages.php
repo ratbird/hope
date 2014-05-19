@@ -198,6 +198,12 @@ class MessagesController extends AuthenticatedController {
             $this->default_message['subject'] = Request::get("default_subject");
         }
         NotificationCenter::postNotification("DefaultMessageForComposerCreated", $this->default_message);
+
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;Charset=windows-1252');
+            $this->response->add_header('X-Title', _("Neue Nachricht schreiben"));
+        }
     }
 
     /**

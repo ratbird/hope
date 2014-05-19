@@ -84,7 +84,7 @@
                 <a href="" onClick="jQuery('#settings').toggle('fade');return false;">
                     <?= Assets::img("icons/40/blue/admin") ?>
                     <br>
-                    <strong><?= _("Einstellungen") ?></strong>
+                    <strong><?= _("Optionen") ?></strong>
                 </a>
             </li>
         </ul>
@@ -125,7 +125,7 @@
         </label>
     </div>
     <div id="settings" style="display: none;">
-        <h4><?= _("Einstellungen") ?></h4>
+        <h4><?= _("Optionen") ?></h4>
         <table class="" style="width: 100%">
             <tbody>
                 <tr>
@@ -151,11 +151,12 @@
     </div>
 
     <div style="text-align: center;">
-        <?= \Studip\Button::create(_("abschicken")) ?>
+        <?= \Studip\Button::create(_("abschicken"), null, array('onclick' => "STUDIP.Messages.send(jQuery(this).closest('form')[0]);")) ?>
     </div>
 
 </form>
 
+<br>
 
 <?php
 $sidebar = Sidebar::get();

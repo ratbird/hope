@@ -137,6 +137,10 @@ STUDIP.Messages = {
                 statusbar.bind("click", function() { jQuery(this).fadeOut(300, function () { jQuery(this).remove(); })});
             }
         });
+    },
+    send: function (form) {
+        console.log(form);
+        return false;
     }
 };
 

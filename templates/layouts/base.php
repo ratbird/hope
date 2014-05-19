@@ -1,27 +1,35 @@
 <?php
 # Lifter010: TODO
 
-$navigation = PageLayout::getTabNavigation();
-if ($navigation) {
-    $subnavigation = $navigation->activeSubNavigation();
-    if ($subnavigation !== null) {
-        $nav_links = new NavigationWidget();
-        foreach ($subnavigation as $path3 => $nav) {
-            if (!$nav->isVisible()) {
-                continue;
+foreach (Navigation::getItem('/') as $path1 => $nav1) {
+    if ($nav1->isActive()) {
+        foreach ($nav1->getSubNavigation() as $path2 => $nav2) {
+            if ($nav2->isActive()) {
+                $nav_links = new NavigationWidget();
+                foreach ($nav2->getSubNavigation() as $path3 => $nav3) {
+                    if (!$nav3->isVisible()) {
+                        continue;
+                    }
+                    $image = $nav3->getImage();
+                    $link = $nav_links->addLink(
+                        $nav3->getTitle(),
+                        URLHelper::getUrl($nav3->getURL(), array(), true),
+                        $image ? $image['src'] : null,
+                        array('id' => "nav__".$path1."_".$path2."_".$path3)
+                    );
+                    $link->setActive($nav3->isActive());
+                }
+                if ($nav_links->hasElements()) {
+                    Sidebar::get()->insertWidget($nav_links, ':first');
+                }
             }
-            $image = $nav->getImage();
-            $link = $nav_links->addLink($nav->getTitle(),
-                                        URLHelper::getUrl($nav->getURL(), array(), true),
-                                        $image ? $image['src'] : null);
-            $link->setActive($nav->isActive());
-            // TODO check $nav->isEnabled() and make link ".quit" if true "<span class="quiet">"
-        }
-        if ($nav_links->hasElements()) {
-            Sidebar::get()->insertWidget($nav_links, ':first');
         }
     }
 }
+
+
+$navigation = PageLayout::getTabNavigation();
+
 // Remove help from navigation and set it to help center
 if (Navigation::hasItem('/links/help')) {
     $nav = Navigation::getItem('/links/help');

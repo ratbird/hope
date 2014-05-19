@@ -170,49 +170,41 @@ function get_object_by_range_id($range_id) {
  */
 function selectSem ($sem_id)
 {
-    global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemSecLevelRead, $SemSecLevelWrite, $SemUserStatus, $rechte;
+    global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemUserStatus, $rechte;
 
     closeObject();
-
-    $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time,
-                     status, Lesezugriff, Schreibzugriff, aux_lock_rule_forced
-              FROM seminare
-              WHERE Seminar_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($sem_id));
-    if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $SemSecLevelRead = $row["Lesezugriff"];
-        $SemSecLevelWrite = $row["Schreibzugriff"];
-        $rechte = $perm->have_studip_perm("tutor", $row["Seminar_id"]);
-        if( !($SemUserStatus = $perm->get_studip_perm($row["Seminar_id"])) ){
+    $SessionSeminar = $sem_id;
+    $course = Course::findCurrent();
+    if ($course) {
+        $rechte = $perm->have_studip_perm("tutor", $course["Seminar_id"]);
+        if( !($SemUserStatus = $perm->get_studip_perm($course["Seminar_id"])) ){
             $SemUserStatus = "nobody";
-            if ($SemSecLevelRead > 0 || !get_config('ENABLE_FREE_ACCESS')) {
+            if ($course['lesezugriff'] > 0 || !get_config('ENABLE_FREE_ACCESS')) {
                 throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
         // if the aux data is forced for this seminar forward all user that havent made an input to this site
-        if ($row["aux_lock_rule_forced"] && !$perm->have_perm('root') && !$perm->have_studip_perm('tutor', $row["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
+        if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
         $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
-        $statement->execute(array($GLOBALS['user']->id, $row["Seminar_id"]));
+        $statement->execute(array($GLOBALS['user']->id, $course["Seminar_id"]));
         if (!$statement->rowCount()) {
             header('location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
             }
         }
-        $SessionSeminar = $row["Seminar_id"];
-        $SessSemName[0] = $row["Name"];
-        $SessSemName[1] = $row["Seminar_id"];
-        $SessSemName[3] = $row["Untertitel"];
-        $SessSemName[4] = $row["start_time"];
-        $SessSemName[5] = $row["Institut_id"];
+        $SessionSeminar = $course["Seminar_id"];
+        $SessSemName[0] = $course["Name"];
+        $SessSemName[1] = $course["Seminar_id"];
+        $SessSemName[3] = $course["Untertitel"];
+        $SessSemName[4] = $course["start_time"];
+        $SessSemName[5] = $course["Institut_id"];
         $SessSemName["art_generic"] = _("Veranstaltung");
         $SessSemName["class"] = "sem";
-        $SessSemName["art_num"] = $row["status"];
+        $SessSemName["art_num"] = $course["status"];
         if ($SEM_TYPE[$row["status"]]["name"] == $SEM_TYPE_MISC_NAME) {
             $SessSemName["art"] = _("Veranstaltung");
         } else {
             $SessSemName["art"] = $SEM_TYPE[$row["status"]]["name"];
         }
-        $course = new Course($sem_id);
         $SessSemName["header_line"] = $course->getFullname();
 
         $_SESSION['SessionSeminar'] =& $SessionSeminar;
@@ -221,6 +213,7 @@ function selectSem ($sem_id)
         URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
+        $SessionSeminar = null;
         return false;
     }
 }
@@ -256,30 +249,26 @@ function selectInst ($inst_id)
         throw new AccessDeniedException(_("Keine Berechtigung."));
     }
 
-    $query = "SELECT Name, Institut_id, type,fakultaets_id,
-                     Institut_id = fakultaets_id AS is_fak
-              FROM Institute
-              WHERE Institut_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($inst_id));
-    if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        if ( !($SemUserStatus = $perm->get_studip_perm($row["Institut_id"])) ) {
+    $SessionSeminar = $inst_id;
+    $institute = Institute::findCurrent();
+    if ($institute) {
+        if ( !($SemUserStatus = $perm->get_studip_perm($institute["Institut_id"])) ) {
             $SemUserStatus = 'nobody';
         }
-        $rechte = $perm->have_studip_perm("tutor", $row["Institut_id"]);
-        $SessionSeminar = $row["Institut_id"];
-        $SessSemName[0] = $row["Name"];
-        $SessSemName[1] = $row["Institut_id"];
+        $rechte = $perm->have_studip_perm("tutor", $institute["Institut_id"]);
+        $SessionSeminar = $institute["Institut_id"];
+        $SessSemName[0] = $institute["Name"];
+        $SessSemName[1] = $institute["Institut_id"];
         $SessSemName["art_generic"] = _("Einrichtung");
         $SessSemName["art"] = $INST_TYPE[$row["type"]]["name"];
         if (!$SessSemName["art"]) {
             $SessSemName["art"] = $SessSemName["art_generic"];
         }
         $SessSemName["class"] = "inst";
-        $SessSemName["is_fak"] = $row["is_fak"];
-        $SessSemName["art_num"] = $row["type"];
-        $SessSemName["fak"] = $row["fakultaets_id"];
-        $SessSemName["header_line"] = getHeaderLine ($inst_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
+        $SessSemName["is_fak"] = $institute["is_fak"];
+        $SessSemName["art_num"] = $institute["type"];
+        $SessSemName["fak"] = $institute["fakultaets_id"];
+        $SessSemName["header_line"] = $institute->getFullname();
 
         $_SESSION['SessionSeminar'] =& $SessionSeminar;
         $_SESSION['SessSemName'] =& $SessSemName;
@@ -287,6 +276,7 @@ function selectInst ($inst_id)
         URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
+        $SessionSeminar = null;
         return false;
     }
 }

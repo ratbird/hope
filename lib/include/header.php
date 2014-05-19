@@ -65,7 +65,7 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spri
             // need to handle institutes separately (always visible)
             if ($GLOBALS['SessSemName']['class'] == 'inst') {
                 $header_template->public_hint = _('öffentliche Einrichtung');
-            } else if ($GLOBALS['SemSecLevelRead'] == 0) {
+            } else if (Course::findCurrent()->lesezugriff == 0) {
                 $header_template->public_hint = _('öffentliche Veranstaltung');
             }
         }

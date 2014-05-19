@@ -41,6 +41,28 @@
 class Institute extends SimpleORMap
 {
 
+    private static $current_institute;
+
+    /**
+    * Returns the currently active course or false if none is active.
+    *
+    * @return mixed Course object of currently active course, false otherwise
+    * @since 3.0
+    */
+    public static function findCurrent()
+    {
+        if (empty($GLOBALS['SessionSeminar'])) {
+            return null;
+        }
+        if (isset(self::$current_institute) && $GLOBALS['SessionSeminar'] === self::$current_institute->id) {
+            return self::$current_institute;
+        }
+        $found = Institute::find($GLOBALS['SessionSeminar']);
+        if ($found) {
+            return self::$current_institute = $found;
+        }
+    }
+
     /**
      * returns array of instances of Institutes belonging to given faculty
      * @param string $fakultaets_id
@@ -151,6 +173,26 @@ class Institute extends SimpleORMap
     function isFaculty()
     {
         return $this->fakultaets_id == $this->institut_id;
+    }
+
+    /**
+     * Returns the full name of an institute.
+     *
+     * @param string formatting template name
+     * @return string Fullname
+     */
+    public function getFullname($format = 'default') {
+        $template['type-name'] = '%2$s: %1$s';
+        if ($format === 'default' || !isset($template[$format])) {
+           $format = 'type-name';
+        }
+        $type = $GLOBALS['INST_TYPE'][$this['type']]['name'];
+        if (!$type) {
+            $type = _('Einrichtung');
+        }
+        $data[0] = $this['name'];
+        $data[1] = $type;
+        return trim(vsprintf($template[$format], array_map('trim', $data)));
     }
 
 }

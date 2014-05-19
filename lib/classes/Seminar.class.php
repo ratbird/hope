@@ -98,6 +98,11 @@ class Seminar
         }
     }
 
+    static function setInstance(Seminar $seminar)
+    {
+        return self::$seminar_object_pool[$seminar->id] = $seminar;
+    }
+
     /**
     * Constructor
     *
@@ -2605,4 +2610,8 @@ class Seminar
                   array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
     }
 
+    function getFullname($format = 'default')
+    {
+        return $this->course->getFullname($format);
+    }
 }

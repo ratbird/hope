@@ -64,6 +64,9 @@
 
 class Course extends SimpleORMap
 {
+
+    private static $current_course;
+
     /**
      * Returns the currently active course or false if none is active.
      *
@@ -72,9 +75,18 @@ class Course extends SimpleORMap
      */
     public static function findCurrent()
     {
-        return empty($GLOBALS['SessSemName'][1])
-            ? null
-            : Course::find($GLOBALS['SessSemName'][1]);
+        if (empty($GLOBALS['SessionSeminar'])) {
+            return null;
+        }
+        if (isset(self::$current_course) && $GLOBALS['SessionSeminar'] === self::$current_course->id) {
+            return self::$current_course;
+        }
+        $found = Course::find($GLOBALS['SessionSeminar']);
+        if ($found) {
+            self::$current_course = $found;
+            Seminar::setInstance(new Seminar(self::$current_course));
+            return self::$current_course;
+        }
     }
 
     protected static function configure($config = array())
@@ -158,7 +170,6 @@ class Course extends SimpleORMap
         $config['default_values']['admission_endtime'] = -1;
 
         $config['additional_fields']['end_time'] = true;
-        $config['additional_fields']['semtype'] = true;
 
         $config['notification_map']['after_create'] = 'CourseDidCreateOrUpdate CourseDidCreate';
         $config['notification_map']['after_store'] = 'CourseDidCreateOrUpdate CourseDidUpdate';
@@ -249,28 +260,50 @@ class Course extends SimpleORMap
         }
         return $p_status;
     }
-    
+
     /**
-     * Returns the semType object that is defined for the course
-     * 
-     * @return SemType The semTypeObject for the course
-     */
+    * Returns the semType object that is defined for the course
+    *
+    * @return SemType The semTypeObject for the course
+    */
     public function getSemType() {
         $semTypes = SemType::getTypes();
         return $semTypes[$this->status];
     }
-    
+
+    /**
+     * Returns the SemClass object that is defined for the course
+     *
+     * @return SemClass The SemClassObject for the course
+     */
+     public function getSemClass() {
+        return $this->getSemType()->getClass();
+     }
+
     /**
      * Returns the full name of a course. If the important course numbers
      * (IMPORTANT_SEMNUMBER) is set in global configs it will also display
      * the coursenumber
-     * 
-     * @return String Fullname
+     *
+     * @param string formatting template name
+     * @return string Fullname
      */
-    public function getFullname() {
-        if (Config::get()->IMPORTANT_SEMNUMBER) {
-            $name = $this->Veranstaltungsnummer.' ';
+    public function getFullname($format = 'default') {
+        $template['type-name'] = '%2$s: %1$s';
+        $template['number-type-name'] = '%3$s %2$s: %1$s';
+        $template['number-name'] = '%3$s %1$s';
+        $template['number-name-semester'] = '%3$s %1$s (%4$s)';
+        if ($format === 'default' || !isset($template[$format])) {
+           $format = Config::get()->IMPORTANT_SEMNUMBER ? 'number-type-name' : 'type-name';
         }
-        return $name.$this->semType['name'].': '.$this->name;
+        $sem_type = $this->getSemType();
+        $data[0] = $this->name;
+        $data[1] = $sem_type['name'];
+        $data[2] = $this->veranstaltungsnummer;
+        $data[3] = $this->start_semester->name;
+        if ($this->start_semester !== $this->end_semester) {
+            $data[3] .= ' - ' .  ($this->end_semester ? $this->end_semester->name : _('unbegrenzt'));
+        }
+        return trim(vsprintf($template[$format], array_map('trim', $data)));
     }
 }

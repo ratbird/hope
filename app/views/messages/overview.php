@@ -23,7 +23,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody aria-relevant="additions" aria-live="polite">
         <? if (count($messages) > 0) : ?>
             <? if ($more || (Request::int("offset") > 0)) : ?>
             <noscript>

@@ -283,10 +283,10 @@
     STUDIP.Lightbox.close = function () {
         if (this.element !== null) {
             this.options = {};
-
             try {
                 this.element.dialog('close');
                 this.element.dialog('destroy');
+                this.element.remove();
             } catch (ignore) {
             } finally {
                 this.element = null;

@@ -221,7 +221,7 @@ class MessagesController extends AuthenticatedController {
                 Request::get("message_subject"),
                 Request::get("message_mail") ? true : "",
                 'normal',
-                Request::get("message_tags")
+                trim(Request::get("message_tags")) ?: null
             );
             PageLayout::postMessage(MessageBox::success(_("Nachricht wurde verschickt.")));
         }

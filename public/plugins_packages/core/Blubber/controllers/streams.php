@@ -8,15 +8,28 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once dirname(__file__)."/application.php";
+require_once 'app/controllers/plugin_controller.php';
 require_once 'lib/contact.inc.php';
 
 /**
  * Controller for displaying streams in Blubber and write and edit Blubber-postings
  */
-class StreamsController extends ApplicationController {
+class StreamsController extends PluginController {
 
     protected $max_threads = 10; //how many threads should be displayed in infinity-scroll-stream before it should reload
+
+    function before_filter($action, $args)
+    {
+        parent::before_filter($action, $args);
+        $this->assets_url = $this->plugin->getPluginURL()."/assets/";
+        PageLayout::addHeadElement("link",
+            array(
+                "href" => $this->assets_url.'stylesheets/blubberforum.css',
+                "rel" => "stylesheet"
+            ),
+            "");
+        PageLayout::setHelpKeyword("Basis/InteraktionBlubber");
+    }
 
     /**
      * Displays global-stream
@@ -163,7 +176,7 @@ class StreamsController extends ApplicationController {
             $template->set_attribute('posting', $posting);
             $template->set_attribute('course_id', $thread['Seminar_id']);
             $output['comments'][] = array(
-                'content' => studip_utf8encode($template->render()),
+                'content' => $template->render(),
                 'mkdate' => $posting['mkdate'],
                 'posting_id' => $posting->getId()
             );
@@ -211,7 +224,7 @@ class StreamsController extends ApplicationController {
             $template->set_attribute('course_id', $_SESSION['SessionSeminar']);
             $template->set_attribute('controller', $this);
             $output['threads'][] = array(
-                'content' => studip_utf8encode($template->render()),
+                'content' => $template->render(),
                 'discussion_time' => $posting['discussion_time'],
                 'posting_id' => $posting->getId()
             );
@@ -310,7 +323,7 @@ class StreamsController extends ApplicationController {
             $template = $factory->open("streams/thread.php");
             $template->set_attribute('thread', $thread);
             $template->set_attribute('controller', $this);
-            $output['content'] = studip_utf8encode($template->render());
+            $output['content'] = $template->render();
             $output['discussion_time'] = time();
             $output['posting_id'] = $thread->getId();
         } else {
@@ -468,7 +481,7 @@ class StreamsController extends ApplicationController {
                 $template = $factory->open("comment.php");
                 $template->set_attribute('posting', $posting);
                 $template->set_attribute('course_id', $thread['Seminar_id']);
-                $output['content'] = studip_utf8encode($template->render($template->render()));
+                $output['content'] = $template->render($template->render());
                 $output['mkdate'] = time();
                 $output['posting_id'] = $posting->getId();
 
@@ -574,7 +587,7 @@ class StreamsController extends ApplicationController {
             $GLOBALS['msg'] = '';
             validate_upload($file);
             if ($GLOBALS['msg']) {
-                $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
+                $output['errors'][] = $file['name'] . ': ' . decodeHTML(trim(substr($GLOBALS['msg'],6), '§'));
                 continue;
             }
             if ($file['size']) {
@@ -684,7 +697,7 @@ class StreamsController extends ApplicationController {
         }
         $this->render_json(array(
             'success' => 1,
-            'message' => studip_utf8encode((string)MessageBox::success(_("Kontakt hinzugefügt")))
+            'message' => (string) MessageBox::success(_("Kontakt hinzugefügt"))
         ));
     }
 
@@ -904,7 +917,7 @@ class StreamsController extends ApplicationController {
         $output = array(
             array('id' => 1, 'name' => "Rasmus", "avatar" => null)
         );
-        $this->render_text(json_encode(studip_utf8encode($output)));
+        $this->render_json($output);
     }
 
 }

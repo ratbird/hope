@@ -22,7 +22,7 @@ STUDIP.Messages = {
         jQuery("#since").val(Math.floor(new Date().getTime() / 1000));
     },
 
-    /**/
+    /*********** helper for the overview site ***********/
 
     whenMessageIsShown: function (lightbox) {
         var message_id = jQuery("#message_metadata").data("message_id");
@@ -154,9 +154,11 @@ jQuery("#message_metadata .add_new_tag").live("click", function () {
                 'tag': tag
             },
             'type': "post",
+            'dataType': "json",
             'success': function (response) {
                 if (jQuery(".ui-dialog-content").length) {
-                    jQuery(".ui-dialog-content").html(response);
+                    jQuery(".ui-dialog-content").html(response['full']);
+                    jQuery("#message_" + message_id).replaceWith(response['row']);
                 } else {
                     location.href = STUDIP.ABSOLUTE_URI_STUDIP + "dispatch/messages/read/" + message_id;
                 }
@@ -174,9 +176,11 @@ jQuery("#message_metadata .remove_tag").live("click", function () {
             'tag': tag
         },
         'type': "post",
+        'dataType': "json",
         'success': function (response) {
             if (jQuery(".ui-dialog-content").length) {
-                jQuery(".ui-dialog-content").html(response);
+                jQuery(".ui-dialog-content").html(response['full']);
+                jQuery("#message_" + message_id).replaceWith(response['row']);
             } else {
                 location.href = STUDIP.ABSOLUTE_URI_STUDIP + "dispatch/messages/read/" + message_id;
             }

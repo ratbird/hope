@@ -232,7 +232,18 @@ class MessagesController extends AuthenticatedController {
         if (Request::isPost() && Request::get("tag")) {
             $message = new Message(Request::option("message_id"));
             $message->addTag(Request::get("tag"));
-            $this->redirect("messages/read/".$message->getId());
+
+            $output = array();
+            $factory = $this->get_template_factory();
+            $template = $factory->open($this->get_default_template("read"));
+            $template->set_attribute("message", $message);
+            $output['full'] = $template->render();
+
+            $template = $factory->open($this->get_default_template("_message_row"));
+            $template->set_attribute("message", $message);
+            $output['row'] = $template->render();
+
+            $this->render_text(json_encode(studip_utf8encode($output)));
         } else {
             $this->render_nothing();
         }
@@ -242,7 +253,18 @@ class MessagesController extends AuthenticatedController {
         if (Request::isPost() && Request::get("tag")) {
             $message = new Message(Request::option("message_id"));
             $message->removeTag(Request::get("tag"));
-            $this->redirect("messages/read/".$message->getId());
+
+            $output = array();
+            $factory = $this->get_template_factory();
+            $template = $factory->open($this->get_default_template("read"));
+            $template->set_attribute("message", $message);
+            $output['full'] = $template->render();
+
+            $template = $factory->open($this->get_default_template("_message_row"));
+            $template->set_attribute("message", $message);
+            $output['row'] = $template->render();
+
+            $this->render_text(json_encode(studip_utf8encode($output)));
         } else {
             $this->render_nothing();
         }

@@ -4,9 +4,15 @@ $(document).ready(function () {
         $(this).attr("href", $(this).attr("data-js-form"));
     });
     
+    // init form if it is loaded via ajax
     $(".multi_person_search_link").on('lightbox-open', function (event, parameters) {
         STUDIP.MultiPersonSearch.dialog($(parameters.dialog).find(".mpscontainer").attr('data-dialogname'));
     });
+    
+    // init form if it is loaded without ajax
+    if ($(".mpscontainer").length) {
+        STUDIP.MultiPersonSearch.dialog($(".mpscontainer").attr("data-dialogname"));
+    }
 
 });
 

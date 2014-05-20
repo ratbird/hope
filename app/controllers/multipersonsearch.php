@@ -77,8 +77,9 @@ class MultipersonsearchController extends AuthenticatedController {
         $tmp = new SimpleCollection(User::findMany($mp->getDefaultSelectedUsersIDs()));
         $tmp->orderBy("nachname asc, vorname asc");
         $this->defaultSelectedUsers = $tmp;
+        $this->ajax = Request::isXhr();
         
-        if (Request::isXhr()) {
+        if ($this->ajax) {
             $this->set_layout(null);
         } else {
             $this->title = $mp->getTitle();

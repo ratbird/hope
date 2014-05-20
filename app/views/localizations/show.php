@@ -28,7 +28,17 @@ $translations = array(
   , 'Nur buchbare Räume anzeigen' => _('Nur buchbare Räume anzeigen')
   , 'Jeder Termin muss mindestens eine Person haben, die ihn durchführt!' => _('Jeder Termin muss mindestens eine Person haben, die ihn durchführt!')
   , 'Übernehmen' => _('Übernehmen')
-  , 'Abbrechen' => _('Abbrechen')  
+  , 'Abbrechen' => _('Abbrechen')
+
+  // public/assets/javascripts/register.js
+  , 'Der Benutzername ist zu kurz, er sollte mindestens 4 Zeichen lang sein.' => _('Der Benutzername ist zu kurz, er sollte mindestens 4 Zeichen lang sein.')
+  , 'Der Benutzername enthält unzulässige Zeichen, er darf keine Sonderzeichen oder Leerzeichen enthalten.' => _('Der Benutzername enthält unzulässige Zeichen, er darf keine Sonderzeichen oder Leerzeichen enthalten.')
+  , 'Das Passwort ist zu kurz, es sollte mindestens 4 Zeichen lang sein.' => _('Das Passwort ist zu kurz, es sollte mindestens 4 Zeichen lang sein.')
+  , 'Das Passwort stimmt nicht mit dem Bestätigungspasswort überein!' => _('Das Passwort stimmt nicht mit dem Bestätigungspasswort überein!')
+  , 'Bitte geben Sie Ihren tatsächlichen Vornamen an.' => _('Bitte geben Sie Ihren tatsächlichen Vornamen an.')
+  , 'Bitte geben Sie Ihren tatsächlichen Nachnamen an.' => _('Bitte geben Sie Ihren tatsächlichen Nachnamen an.')
+  , 'Die E-Mail-Adresse ist nicht korrekt!' => _('Die E-Mail-Adresse ist nicht korrekt!')
+
   // add your translations here
 );
 

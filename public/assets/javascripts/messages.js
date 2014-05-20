@@ -192,7 +192,7 @@ jQuery("#message_metadata .remove_tag").live("click", function () {
     });
 });
 
-jQuery(document).on('lightbox-open.studip', '#messages .title a', function () {
+jQuery(document).on('lightbox-open', '#messages .title a', function () {
     STUDIP.Messages.whenMessageIsShown();
 })
 

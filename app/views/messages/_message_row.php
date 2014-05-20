@@ -1,12 +1,14 @@
         <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
             <td><?= count($message->attachments) ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
-            <td class="title"><a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-lightbox="buttons=false"><?= htmlReady($message['subject']) ?></a></td>
+            <td class="title"><a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-lightbox><?= htmlReady($message['subject']) ?></a></td>
             <td>
-                <? if ($message['autor_id'] == "____%system%____") : ?>
+            <? if ($message['autor_id'] == "____%system%____") : ?>
                 <?= _("Systemnachricht") ?>
-                <? else : ?>
-                <?= get_fullname($message['autor_id']) ?>
-                <? endif ?>
+            <? else: ?>
+                <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . get_username($message['autor_id'])) ?>">
+                    <?= get_fullname($message['autor_id']) ?>
+                </a>
+            <? endif; ?>
             </td>
             <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>
             <td>

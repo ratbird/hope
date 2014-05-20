@@ -106,7 +106,7 @@
     function extractButtons(element) {
         var buttons = {};
         // TODO: Remove the rel selector after Stud.IP 3.2 or 3.3 has been released
-        $('[rel~="lightbox-button"],[rel~="option"],[data-lightbox-button]', element).hide().children('a,button').andSelf().filter('a,button').each(function () {
+        $('[rel~="lightbox-button"],[rel~="option"],[data-lightbox-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
             var label = $(this).text(),
                 handler,
                 form,

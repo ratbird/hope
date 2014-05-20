@@ -30,10 +30,8 @@ class LocalizationsController extends Trails_Controller {
     public function before_filter(&$action, &$args)
     {
 
-        // substitute dashes with underscores
-        $action = strtr($action, "-", "_");
-
-        $args = (array) $action;
+        // substitute dashes with underscores, remove things like .UTF-8
+        $args = (array) strtr(current(explode('.', $action)), "-", "_");
 
         // invalid language?
         if (!isset($GLOBALS['INSTALLED_LANGUAGES'][$action])) {

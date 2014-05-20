@@ -3804,20 +3804,17 @@ a.opengraph_info:hover {
   opacity: 1;
 }
 .ui-dialog {
-  border: 0;
+  border: 3px solid white;
   padding: 0;
-  -webkit-box-shadow: 0px 0px 5px #636a71;
-  -moz-box-shadow: 0px 0px 5px #636a71;
-  box-shadow: 0px 0px 5px #636a71;
 }
 .ui-dialog .ui-dialog-titlebar {
-  background: #7e92b0;
+  background: #1e3e70;
   border: 0;
   font-size: 1.5em;
 }
 .ui-dialog .ui-dialog-titlebar-close {
   border: 0;
-  background: #7e92b0;
+  background: #1e3e70;
   width: 32px;
   height: 32px;
   margin-top: -16px;
@@ -3827,7 +3824,7 @@ a.opengraph_info:hover {
 }
 .ui-dialog .ui-dialog-titlebar-close:hover {
   border: 0;
-  background: #7e92b0;
+  background: #1e3e70;
   width: 32px;
   height: 32px;
   margin-top: -16px;

@@ -22,7 +22,12 @@ class Widget
      * Contains additional template variables
      */
     protected $template_variables = array();
-	    
+
+    /**
+     * Layout for this widget
+     */
+    protected $layout = 'widgets/widget-layout';
+
     /**
      * Add an element to the widget.
      *
@@ -144,8 +149,8 @@ class Widget
         $content = '';
 
         if ($this->hasElements()) {
-			$layout = $GLOBALS['template_factory']->open('widgets/widget-layout');
-			
+            $layout = $GLOBALS['template_factory']->open($this->layout);
+
             $template = $GLOBALS['template_factory']->open($this->template);
             $template->set_layout($layout);
             $template->set_attributes($variables + $this->template_variables);

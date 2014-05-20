@@ -1907,6 +1907,13 @@ td.infoboxrahmen {
 .sidebar .sidebar-widget:hover .sidebar-widget-options {
   opacity: 1;
 }
+.sidebar-widget.sidebar-infobox {
+  border-color: #d60000;
+  background: #e1e4e5;
+}
+.sidebar-widget.sidebar-infobox .sidebar-widget-header {
+  background: #ef9999;
+}
 .helpbar-container {
   background: #fff;
   border-radius: 0 2px 0 0;

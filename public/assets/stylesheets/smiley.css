@@ -25,36 +25,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/*
- * studip-mixins.less
- *
- * This file contains all mixins created specifically for Stud.IP
- * while mixins.less should contain a copy of the mixins from
- * twitter's bootstrap.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since       2.4
- */
-/*
- * arrow.less - CSS arrows mixin
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since       2.4
- */
 .smiley-popup #header {
   background: none;
   height: 3em;
@@ -153,13 +123,13 @@
   margin-right: 0.25em;
 }
 .smiley-picker .smiley:hover {
-  background-color: rgba(255, 51, 51, 0.1);
+  background-color: rgba(255,51,51,0.1);
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
-  -webkit-box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
-  -moz-box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
-  box-shadow: 0 -1px 4px rgba(255, 51, 51, 0.1), 0 2px 5px #888888;
+  -webkit-box-shadow: 0 -1px 4px rgba(255,51,51,0.1), 0 2px 5px #888;
+  -moz-box-shadow: 0 -1px 4px rgba(255,51,51,0.1), 0 2px 5px #888;
+  box-shadow: 0 -1px 4px rgba(255,51,51,0.1), 0 2px 5px #888;
 }
 .smiley-picker .navigation {
   border-collapse: collapse;
@@ -178,7 +148,7 @@
   border-top: 1px solid #24437c;
 }
 .smiley-picker .navigation .active a {
-  color: #ff3333;
+  color: #f33;
   font-weight: bold;
 }
 .smiley-picker-dialog .ui-dialog-content {

@@ -472,6 +472,7 @@ if ($change_object_schedules) {
             // check, if this is an assignment for a date, they allow editing of the comment at most
             if ($changeAssign->getOwnerType() == "sem" || $changeAssign->getOwnerType() == "date") {
                 $changeAssign->setCommentInternal(Request::get('comment_internal'));
+                $changeAssign->store();
                 $msg->addMsg(50);
             } else {
                 if (Request::submitted('reset_search_user'))

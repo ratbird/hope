@@ -30,8 +30,7 @@
     
     <?= $additionHTML; ?>
     
-    <?= \Studip\Button::create(_('Speichern'), 'confirm') ?>
-    <?= \Studip\Button::create(_('Abbrechen'), $name . '_button_abort') ?>
+    <?= \Studip\Button::create(_('Speichern'), 'confirm', array('data-lightbox-button' => true)) ?>
     
     <?= CSRFProtection::tokenTag() ?>
     

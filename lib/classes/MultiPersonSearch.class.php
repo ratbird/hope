@@ -460,7 +460,6 @@ class MultiPersonSearch {
         $this->pageURL = $_SESSION['multipersonsearch_' . $this->name . '_pageURL'];
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'];
-        $this->quickfilterIds = $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'];
         $this->searchObject = unserialize($_SESSION['multipersonsearch_' . $this->name . '_searchObject']);
         
     }
@@ -478,7 +477,6 @@ class MultiPersonSearch {
         unset($_SESSION['multipersonsearch_' . $this->name . '_pageURL']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs']);
-        unset($_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_searchObject']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_added']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_removed']);

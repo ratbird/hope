@@ -3804,7 +3804,7 @@ a.opengraph_info:hover {
   opacity: 1;
 }
 .ui-dialog {
-  border: 3px solid white;
+  border: 1px solid white;
   padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar {

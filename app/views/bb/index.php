@@ -24,7 +24,7 @@
 <br><br>
 
 <? foreach ($images as $image) : ?>
-    <div style="float: left; width: 250px; border: 1px solid gray; padding: 5px; text-align: center; font-weight: bold; margin-right: 10px;">
+    <div style="float: left; width: 250px; border: 1px solid gray; padding: 5px; text-align: center; font-weight: bold; margin: 5px;">
         <a href="<?= URLHelper::getLink('dispatch.php/profile?username='. get_username($image['user_id'])) ?>">
             <img border="0" src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $image['file'] ?>">
             <br>

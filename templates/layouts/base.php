@@ -51,7 +51,6 @@ if (Navigation::hasItem('/links/help')) {
         // needs to be included in lib/include/html_head.inc.php as well
         include 'app/views/WysiwygHtmlHeadBeforeJS.php';
     ?>
-    </script>
     <?= PageLayout::getHeadElements() ?>
 
     <script src="<?= URLHelper::getScriptLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>"></script>

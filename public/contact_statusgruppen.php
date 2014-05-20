@@ -103,8 +103,9 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
 function addToStatusgroup($range_id, $statusgruppe_id) {
     $mp = MultiPersonSearch::load("contacts_statusgroup_" . $statusgruppe_id);
     if (count($mp->getAddedUsers()) !== 0) {
+        $quickfilters = $mp->getQuickfilterIds();
         foreach ($mp->getAddedUsers() as $m) {
-            if (!in_array($m, $mp->getQuickfilterIds[_("Adressbuch")])) {
+            if (!in_array($m, $quickfilters[_("Adressbuch")])) {
                 if (InsertPersonStatusgruppe($m, $statusgruppe_id, false)) {
                     AddNewContact($m, $range_id);
                 }

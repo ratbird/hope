@@ -104,8 +104,7 @@
      * Extract buttons from given element.
      */
     function extractButtons(element) {
-        var buttons = {},
-            handled = [];
+        var buttons = {};
         // TODO: Remove the rel selector after Stud.IP 3.2 or 3.3 has been released
         $('[rel~="lightbox-button"],[rel~="option"],[data-lightbox-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
             var label = $(this).text(),
@@ -125,14 +124,12 @@
                 form = $(this).closest('form');
 
                 handler = function () {
-                    console.log(form, this);
                     form.append(input).submit();
                 };
             }
             // Trigger click if element is a link
             if ($(this).is('a')) {
                 handler = function () {
-                    console.log(this);
                     this.click();
                 };
                 handler = handler.bind(this);
@@ -141,7 +138,6 @@
             // Store button and remove from response
             buttons[label] = handler;
         });
-        console.log(buttons);
 
         return buttons;
     }

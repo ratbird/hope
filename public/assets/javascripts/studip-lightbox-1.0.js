@@ -50,6 +50,7 @@
                 index = '',
                 value = '',
                 inval = false,
+                escaped = 0,
                 inquotes = false,
                 l = split.length,
                 token,
@@ -60,24 +61,28 @@
                 token = split[i];
                 write = false;
                 skip = false;
-                if (!inval && token === '=') {
+                if (inval && token === '\\' && escaped <= 0) {
+                    escaped = 2;
+                } else if (!inval && token === '=') {
                     inval = true;
                     skip = true;
                 } else if (inval && value.length === 0 && (token === '"' || token === "'")) {
                     inquotes = token;
-                } else if (inval && inquotes && token === inquotes) {
+                } else if (inval && inquotes && escaped <= 0 && token === inquotes) {
                     inquotes = false;
                 } else if (!inquotes && token === ';') {
                     write = true;
                     skip = true;
                 }
-                if (!skip) {
+                if (!skip && escaped <= 0) {
                     if (inval) {
                         value += token;
                     } else {
                         index += token;
                     }
                 }
+                escaped -= 1;
+                
                 if (write || i === split.length - 1) {
                     if (i === split.length - 1 && inquotes) {
                         throw 'Invalid data, missing closing quote';
@@ -142,6 +147,10 @@
     // Creates a lightbox from an anchor, a button or a form element.
     // Will update the lightbox if it is already open
     STUDIP.Lightbox.fromElement = function (element, options) {
+        if ($(element).is(':disabled')) {
+            return;
+        }
+        
         if (options.close) {
             this.close();
             return;
@@ -150,6 +159,9 @@
         if (!$(element).is('a,button,form')) {
             throw 'Lightbox.fromElement called on an unsupported element.';
         }
+
+        options = options || {};
+        options.origin = element;
 
         var title = options.title || STUDIP.Lightbox.options.title || $(element).attr('title') || $(element).filter('a,button').text(),
             url,
@@ -258,20 +270,11 @@
                 // Execute scripts
                 $('head').append(scripts);
 
-                if (options.onopen && options.onopen.length > 0) {
-                    var nodes = options.onopen.split('.'),
-                        func  = window[nodes.shift()],
-                        node = nodes.shift();
-                    while (node && func.hasOwnProperty(node)) {
-                        func = func[node];
-                        node = nodes.shift();
-                    }
-                    if (nodes.length === 0 && $.isFunction(func)) {
-                        func(lightbox);
-                    }
-                }
+                $(options.origin || document).trigger('lightbox-open', {dialog: this, options: options});
             },
             close: function () {
+                $(options.origin || document).trigger('lightbox-close', {dialog: this, options: options});
+
                 STUDIP.Lightbox.close();
             }
         };
@@ -320,6 +323,9 @@
     $(document)
         .on('click', 'a[data-lightbox],button[data-lightbox]', lightboxHandler)
         .on('submit', 'form[data-lightbox]', lightboxHandler);
+
+    // Extra: Expose parseOptions to STUDIP object
+    STUDIP.parseOptions = parseOptions;
 
     // Legacy handler
     // TODO: Remove this after Stud.IP 3.2 or 3.3 has been released

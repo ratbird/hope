@@ -192,6 +192,12 @@ jQuery("#message_metadata .remove_tag").live("click", function () {
     });
 });
 
+jQuery(document).on('click', '#messages .title a', function () {
+    jQuery(this).closest('tr').removeClass('unread');
+});
+jQuery(document).on('lightbox-open.studip', '#messages .title a', function () {
+    STUDIP.Messages.whenMessageIsShown();
+})
 
 jQuery(function () {
 

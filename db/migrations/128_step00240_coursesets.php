@@ -447,6 +447,17 @@ class Step00240CourseSets extends Migration
             'coursesets', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
             'Sollen Lehrende einrichtungsweite Anmeldesets anlegen und bearbeiten dürfen?',
             '', '')");
+        // Insert global configuration: who may edit course sets?
+        $db->exec("INSERT IGNORE INTO `config`
+            (`config_id`, `parent_id`, `field`, `value`, `is_default`,
+             `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
+             `description`, `comment`, `message_template`)
+        VALUES
+            (MD5('ENABLE_COURSESET_FCFS'), '',
+            'ENABLE_COURSESET_FCFS', '0', '1', 'boolean', 'global',
+            'coursesets', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(),
+            'Soll first-come-first-served (Windhundverfahren) bei der Anmeldung erlaubt sein?',
+            '', '')");
     }
 
     function down()

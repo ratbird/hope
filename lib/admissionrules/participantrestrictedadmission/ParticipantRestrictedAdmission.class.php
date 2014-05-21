@@ -26,7 +26,7 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      */
     public $distributionTime = null;
 
-    public $first_come_first_served_allowed = true;
+    public $first_come_first_served_allowed = false;
 
     public $allowed_combinations = array('LimitedAdmission','ConditionalAdmission','TimedAdmission');
 
@@ -43,6 +43,7 @@ class ParticipantRestrictedAdmission extends AdmissionRule
     public function __construct($ruleId='', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
+        $this->first_come_first_served_allowed = (bool)Config::get()->ENABLE_COURSESET_FCFS;
         $this->default_message = _('Es stehen keine weiteren Plätze zur Verfügung.');
         if ($ruleId) {
             $this->load();

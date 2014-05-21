@@ -174,7 +174,7 @@ class PublicCoursesController extends StudipController
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_ids));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $nav = new Navigation('schedule', 'dates.php');
+            $nav = new Navigation('schedule', 'dispatch.php/course/dates');
             $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $row['count'])));
             $seminars[$row['range_id']]['navigations']['schedule'] = $nav;
         }

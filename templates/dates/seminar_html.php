@@ -119,7 +119,7 @@
     if ($link_to_dates) :
         ?>
         <br>
-        <?= sprintf(_("Details zu allen Terminen im %sAblaufplan%s"), '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $seminar_id, 'redirect_to' => 'dates.php')) . '">', '</a>')
+        <?= sprintf(_("Details zu allen Terminen im %sAblaufplan%s"), '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $seminar_id, 'redirect_to' => 'dispatch.php/course/dates')) . '">', '</a>')
         ?><?
     endif;
 endif;

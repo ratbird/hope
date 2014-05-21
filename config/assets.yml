@@ -6,6 +6,7 @@ javascripts:
     - javascripts/jquery/jquery.placehold-0.3.js
     - javascripts/jquery/jquery-ui-timepicker-1.1.1.js
     - javascripts/jquery/validator.js
+    - javascripts/jquery/jquery.multi-select.js
 
   modernizr: &modernizr
     - javascripts/vendor/modernizr.js
@@ -49,6 +50,7 @@ javascripts:
     - javascripts/termine.js
     - javascripts/quick_search.js
     - javascripts/multi_select.js
+    - javascripts/multi_person_search.js
     - javascripts/browse.js
     - javascripts/tabs.js
     - javascripts/audio.js
@@ -66,6 +68,7 @@ javascripts:
     - javascripts/cronjobs.js
     - javascripts/register.js
     - javascripts/contentbox.js
+    - javascripts/dates.js
     - *header
     - *toolbar
     - *wysiwyg
@@ -107,6 +110,7 @@ css:
     jquery-ui-1.9.1.custom.css: screen, print
     jquery-ui-studip.css: screen, print
     jquery-ui-timepicker-addon.css: screen, print
+    multi-select.css: screen, print
     style.css:  screen
     smiley.css: screen, print
     print.css:  print

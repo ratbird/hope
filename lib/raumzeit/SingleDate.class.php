@@ -755,7 +755,8 @@ class SingleDate {
     public function deleteRelatedGroup($statusgruppe_id) {
         if (!$this->related_groups) {
             $sem = Seminar::getInstance($this->getSeminarID());
-            $this->related_groups = array_keys($sem->getMembers('dozent'));
+            $groups = Statusgruppen::findBySeminar_id($this->getSeminarID());
+            $this->related_groups = array_map(function ($g) { return $g->getId(); }, $groups);
         }
         foreach ($this->related_groups as $key => $related_group) {
             if ($related_group === $statusgruppe_id) {
@@ -773,7 +774,7 @@ class SingleDate {
             return $this->related_groups;
         } else {
             $groups = Statusgruppen::findBySeminar_id($this->getSeminarID());
-            return array_map(function ($group) { return $group->getId(); }, $groups);
+            return array_map(function ($g) { return $g->getId(); }, $groups);
         }
     }
 

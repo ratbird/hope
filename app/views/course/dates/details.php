@@ -1,23 +1,17 @@
-<table style="width: 100%">
+<table style="width: 100%" data-termin_id="<?= htmlReady($date->getId()) ?>">
     <tbody>
         <tr>
             <td><strong><?= _("Thema") ?></strong></td>
             <td>
                 <ul class="themen_list">
                     <? foreach ($date->topics as $topic) : ?>
-                        <li>
-                            <?= Assets::img("icons/16/blue/star", array('class' => "text-bottom")) ?>
-                            <?= htmlReady($topic['title']) ?>
-                            <? if ($GLOBALS['perm']->have_studip_perm("tutor", $topic['seminar_id'])) : ?>
-                            <a href="#" onClick=""><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
-                            <? endif ?>
-                        </li>
+                        <?= $this->render_partial("course/dates/_topic_li", compact("topic")) ?>
                     <? endforeach ?>
                 </ul>
-                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $topic['seminar_id'])) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $date['range_id'])) : ?>
                 <div>
                     <input type="text" name="new_topic" id="new_topic" placeholder="<?= _("Thema hinzufügen") ?>">
-                    <a href="#" onClick=""><?= Assets::img("icons/16/blue/add", array('class' => "text-bottom")) ?></a>
+                    <a href="#" onClick="STUDIP.Dates.addTopic(); return false;"><?= Assets::img("icons/16/blue/add", array('class' => "text-bottom")) ?></a>
                     <script>
                         jQuery(function () {
                             jQuery("#new_topic").autocomplete({

@@ -442,7 +442,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
 
-            $nav = new Navigation('schedule', 'dates.php');
+            $nav = new Navigation('schedule', 'dispatch.php/course/dates');
             $neue = $my_obj[$object_id]["neuetermine"] + $my_obj[$object_id]["neueausfalltermine"];
             $count = $my_obj[$object_id]["termine"] + $my_obj[$object_id]["ausfalltermine"];
             if ($neue) {

@@ -15,7 +15,7 @@ class CoreScm implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('SCM_ENABLE')) {
-            $navigation = new Navigation(_('Ablaufplan'), "seminar_main.php?auswahl=$course_id&redirect_to=dates.php&date_type=all");
+            $navigation = new Navigation(_('Ablaufplan'), URLHelper::getURL("seminar_main.php", array('auswahl' => $course_id, 'redirect_to' => "dispatch.php/course/dates")));
             $navigation->setImage('icons/16/grey/schedule.png');
             return $navigation;
         } else {

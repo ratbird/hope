@@ -14,7 +14,7 @@ require_once 'lib/modules/StudipModule.class.php';
 class CoreSchedule implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
-        $navigation = new Navigation(_('Ablaufplan'), "seminar_main.php?auswahl=$course_id&redirect_to=dates.php&date_type=all");
+        $navigation = new Navigation(_('Ablaufplan'), URLHelper::getURL("seminar_main.php", array('auswahl' => $course_id, 'redirect_to' => "dispatch.php/course/dates")));
         $navigation->setImage('icons/16/grey/schedule.png');
         return $navigation;
     }
@@ -32,6 +32,7 @@ class CoreSchedule implements StudipModule {
         $navigation->setActiveImage('icons/16/black/schedule.png');
 
         $navigation->addSubNavigation('dates', new Navigation(_('Termine'), "dispatch.php/course/dates"));
+        $navigation->addSubNavigation('topics', new Navigation(_('Themen'), "dispatch.php/course/topics"));
         $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), "dates.php?date_type=all".$openItem));
         $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), "dates.php?date_type=1".$openItem));
         $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), "dates.php?date_type=other".$openItem));

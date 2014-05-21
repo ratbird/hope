@@ -324,7 +324,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuetermine'] > 0) {
                     $text = _("1 neuer Termin angelegt:");
                 }
-                $redirect = '&redirect_to=dates.php#a';
+                $redirect = '&redirect_to=dispatch.php/course/dates#a';
                 $icon = "icons/16/blue/date.png";
                 break;
             case 'literature' :

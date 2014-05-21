@@ -38,7 +38,7 @@
             <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked') ?></td>
             <td align="right">
                 <a href="<?= $controller->url_for('admin/api/keys', $consumer->id) ?>"
-                   data-lightbox="size=auto"
+                   data-dialog="size=auto"
                    title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">
                     <?= Assets::img('icons/16/blue/info-circle.png') ?>
                 </a>

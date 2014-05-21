@@ -86,9 +86,9 @@ class LinkElement extends WidgetElement implements ArrayAccess
     public function asDialog($state = '')
     {
         if ($state !== false) {
-            $this->attributes['data-lightbox'] = $state;
+            $this->attributes['data-dialog'] = $state;
         } else {
-            unset($this->attributes['data-lightbox']);
+            unset($this->attributes['data-dialog']);
         }
     }
 

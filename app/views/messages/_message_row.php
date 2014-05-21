@@ -1,6 +1,6 @@
         <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
             <td><?= count($message->attachments) ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
-            <td class="title"><a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-lightbox><?= htmlReady($message['subject']) ?></a></td>
+            <td class="title"><a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-dialog><?= htmlReady($message['subject']) ?></a></td>
             <td>
             <? if ($message['autor_id'] == "____%system%____") : ?>
                 <?= _("Systemnachricht") ?>

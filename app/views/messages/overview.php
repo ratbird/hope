@@ -79,7 +79,7 @@
 <script>
 STUDIP.jsupdate_enable = true;
 jQuery(function () {
-    jQuery("#nav__messaging_messages_write").attr("data-lightbox", "buttons=false");
+    jQuery("#nav__messaging_messages_write").attr("data-dialog", "buttons=false");
 });
 </script>
 
@@ -101,7 +101,7 @@ $actions->addLink(
     _("Neue Nachricht schreiben"),
     URLHelper::getURL("dispatch.php/messages/write"),
     null,
-    array('data-lightbox' => "buttons=false")
+    array('data-dialog' => "buttons=false")
 );
 $sidebar->addWidget($actions);
 

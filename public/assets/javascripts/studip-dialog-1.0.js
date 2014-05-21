@@ -106,7 +106,7 @@
     function extractButtons(element) {
         var buttons = {};
         // TODO: Remove the rel selector after Stud.IP 3.2 or 3.3 has been released
-        $('[rel~="lightbox-button"],[rel~="option"],[data-lightbox-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
+        $('[rel~="lightbox-button"],[rel~="option"],[data-dialog-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
             var label = $(this).text(),
                 handler,
                 form,
@@ -142,31 +142,52 @@
         return buttons;
     }
 
-    STUDIP.Lightbox = {
-        element: null,
-        options: {}
+    STUDIP.Dialog = {
+        instances: {},
+        hasInstance: function (id) {
+            id = id || 'default';
+            return this.instances.hasOwnProperty(id);
+        },
+        getInstance: function (id) {
+            id = id || 'default';
+            if (!this.hasInstance(id)) {
+                this.instances[id] = {
+                    open: false,
+                    element: $('<div>'),
+                    options: {}
+                };
+            }
+            return this.instances[id];
+        },
+        removeInstance: function (id) {
+            id = id || 'default';
+            if (this.hasInstance(id)) {
+                delete this.instances[id];
+            }
+        }
     };
 
-    // Creates a lightbox from an anchor, a button or a form element.
-    // Will update the lightbox if it is already open
-    STUDIP.Lightbox.fromElement = function (element, options) {
+    // Creates a dialog from an anchor, a button or a form element.
+    // Will update the dialog if it is already open
+    STUDIP.Dialog.fromElement = function (element, options) {
+        options = options || {};
+
         if ($(element).is(':disabled')) {
             return;
         }
         
         if (options.close) {
-            this.close();
+            STUDIP.Dialog.close(options);
             return;
         }
 
         if (!$(element).is('a,button,form')) {
-            throw 'Lightbox.fromElement called on an unsupported element.';
+            throw 'Dialog.fromElement called on an unsupported element.';
         }
 
-        options = options || {};
         options.origin = element;
 
-        var title = options.title || STUDIP.Lightbox.options.title || $(element).attr('title') || $(element).filter('a,button').text(),
+        var title = options.title || STUDIP.Dialog.getInstance(options.id).options.title || $(element).attr('title') || $(element).filter('a,button').text(),
             url,
             method = 'get',
             data = {};
@@ -189,8 +210,8 @@
 
         // Append overlay
         if (STUDIP.Overlay) {
-            if (this.element !== null) {
-                STUDIP.Overlay.show(true, this.element.parent());
+            if (STUDIP.Dialog.getInstance(options.id).open) {
+                STUDIP.Overlay.show(true, STUDIP.Dialog.getInstance(options.id).element.parent());
             } else {
                 STUDIP.Overlay.show(true);
             }
@@ -201,23 +222,23 @@
             url: url,
             type: (method || 'get').toUpperCase(),
             data: data || {},
-            headers: {'X-Lightbox': true}
+            headers: {'X-Dialog': true}
         }).done(function (response, status, xhr) {
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
                 document.location = xhr.getResponseHeader('X-Location');
                 return;
             }
-            // Close lightbox if appropriate header is set
-            if (xhr.getResponseHeader('X-Lightbox-Close')) {
-                STUDIP.Lightbox.close();
+            // Close dialog if appropriate header is set
+            if (xhr.getResponseHeader('X-Dialog-Close')) {
+                STUDIP.Dialog.close();
                 return;
             }
 
             options.title   = xhr.getResponseHeader('X-Title') || title;
             options.buttons = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
 
-            STUDIP.Lightbox.show(response, options);
+            STUDIP.Dialog.show(response, options);
         }).fail(function () {
             if (STUDIP.Overlay) {
                 STUDIP.Overlay.hide();
@@ -225,26 +246,25 @@
         });
     };
 
-    // Opens or updates the lightbox
-    STUDIP.Lightbox.show = function (content, options) {
-        options = $.extend({}, STUDIP.Lightbox.options, options);
-        STUDIP.Lightbox.options = options;
-
-        if (this.element === null) {
-            this.element = $('<div>');
-        } else {
-            options.title = options.title || this.element.dialog('option', 'title');
-        }
-
-        // Hide and update container
-        this.element.hide().html(content);
+    // Opens or updates the dialog
+    STUDIP.Dialog.show = function (content, options) {
+        options = $.extend({}, STUDIP.Dialog.options, options);
 
         var scripts = $('<div>' + content + '</div>').filter('script'), // Extract scripts
             dialog_options,
             width  = options.width || $('body').width() * 2 / 3,
             height = options.height || $('body').height()  * 2 / 3,
             temp,
-            helper;
+            helper,
+            instance = STUDIP.Dialog.getInstance(options.id);
+
+        if (instance.open) {
+            options.title = options.title || instance.element.dialog('option', 'title');
+        }
+        instance.options = options;
+
+        // Hide and update container
+        instance.element.hide().html(content);
 
         // Adjust size if neccessary
         if (options.size && options.size === 'auto') {
@@ -261,8 +281,6 @@
             width = height = options.size;
         }
 
-        var lightbox = this.element;
-
         dialog_options = {
             width:   width,
             height:  height,
@@ -270,29 +288,30 @@
             title:   options.title || '',
             modal:   true,
             open: function () {
+                instance.open = true;
                 // Execute scripts
                 $('head').append(scripts);
 
-                $(options.origin || document).trigger('lightbox-open', {dialog: this, options: options});
+                $(options.origin || document).trigger('dialog-open', {dialog: this, options: options});
             },
             close: function () {
-                $(options.origin || document).trigger('lightbox-close', {dialog: this, options: options});
+                $(options.origin || document).trigger('dialog-close', {dialog: this, options: options});
 
-                STUDIP.Lightbox.close();
+                STUDIP.Dialog.close(options);
             }
         };
 
         // Create buttons
         if (!options.hasOwnProperty('buttons') || options.buttons) {
-            dialog_options.buttons = extractButtons.call(this, this.element);
+            dialog_options.buttons = extractButtons.call(this, instance.element);
             // Create 'close' button
             dialog_options.buttons['Abbrechen'.toLocaleString()] = function () {
-                STUDIP.Lightbox.close();
+                STUDIP.Dialog.close(options);
             };
         }
 
         // Create/update dialog
-        this.element.dialog(dialog_options);
+        instance.element.dialog(dialog_options);
 
         // Remove overlay
         if (STUDIP.Overlay) {
@@ -300,47 +319,50 @@
         }
     };
 
-    // Closes the lightbox for good
-    STUDIP.Lightbox.close = function () {
-        if (this.element !== null) {
-            this.options = {};
+    // Closes the dialog for good
+    STUDIP.Dialog.close = function (options) {
+        options = options || {};
+
+        if (STUDIP.Dialog.hasInstance(options.id)) {
+            var instance = STUDIP.Dialog.getInstance(options.id);
+
             try {
-                this.element.dialog('close');
-                this.element.dialog('destroy');
-                this.element.remove();
+                instance.element.dialog('close');
+                instance.element.dialog('destroy');
+                instance.element.remove();
             } catch (ignore) {
             } finally {
-                this.element = null;
+                STUDIP.Dialog.removeInstance(options.id);
             }
         }
     };
 
-    // Actual lightbox handler
-    function lightboxHandler(event) {
-        var options = $(this).data().lightbox;
-        STUDIP.Lightbox.fromElement(this, parseOptions(options));
+    // Actual dialog handler
+    function dialogHandler(event) {
+        var options = $(this).data().dialog;
+        STUDIP.Dialog.fromElement(this, parseOptions(options));
         event.preventDefault();
     }
 
     // Handle links, buttons and forms
     $(document)
-        .on('click', 'a[data-lightbox],button[data-lightbox]', lightboxHandler)
-        .on('submit', 'form[data-lightbox]', lightboxHandler);
+        .on('click', 'a[data-dialog],button[data-dialog]', dialogHandler)
+        .on('submit', 'form[data-dialog]', dialogHandler);
 
     // Extra: Expose parseOptions to STUDIP object
     STUDIP.parseOptions = parseOptions;
 
     // Legacy handler
     // TODO: Remove this after Stud.IP 3.2 or 3.3 has been released
-    function legacyLightboxHandler(event) {
+    function legacyDialogHandler(event) {
         var rel  = $(this).attr('rel');
         if (/\blightbox(\s|\[|$)/.test(rel)) {
-            STUDIP.Lightbox.fromElement(this, parseOptions(rel, 'lightbox'));
+            STUDIP.Dialog.fromElement(this, parseOptions(rel, 'lightbox'));
             event.preventDefault();
         }
     }
     $(document)
-        .on('click', 'a[rel*=lightbox],button[rel*=lightbox]', legacyLightboxHandler)
-        .on('submit', 'form[rel*=lightbox]', legacyLightboxHandler);
+        .on('click', 'a[rel*=lightbox],button[rel*=lightbox]', legacyDialogHandler)
+        .on('submit', 'form[rel*=lightbox]', legacyDialogHandler);
 
 }(jQuery, STUDIP));

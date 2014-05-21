@@ -26,9 +26,9 @@ javascripts:
     - javascripts/ckeditor/ckeditor.js
     - javascripts/wysiwyg.js
 
-  lightbox: &lightbox
+  dialog: &dialog
     - javascripts/studip-overlay-1.0.js
-    - javascripts/studip-lightbox-1.0.js
+    - javascripts/studip-dialog-1.0.js
 
   base:
     - *jquery
@@ -69,7 +69,7 @@ javascripts:
     - *header
     - *toolbar
     - *wysiwyg
-    - *lightbox
+    - *dialog
     - javascripts/studip-helper-attributes.js
     - javascripts/application.js
 

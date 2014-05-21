@@ -66,7 +66,7 @@
 <? endif; ?>
 </dl>
 
-<div data-lightbox-button>>
+<div data-dialog-button>>
     <a href="<?= $controller->url_for('admin/cronjobs/logs/schedule', $schedule->schedule_id) ?>">
         <?= _('Log anzeigen') ?>
     </a>

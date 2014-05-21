@@ -88,7 +88,7 @@
 </ul>
 <? endif ?>
 
-<div align="center" data-lightbox-button>
+<div align="center" data-dialog-button>
     <div class="button-group">
     <? if ($message['autor_id'] !== '____%system%____'): ?>
         <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId())) ?>"><?= \Studip\Button::create(_("Antworten"))?></a>

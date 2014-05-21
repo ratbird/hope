@@ -15,7 +15,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId()) || $members
         $icon = 'icons/16/red/decline.png';
 } else {
     $action = _("Aktionen:");
-    $infolink = '<a data-lightbox href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
+    $infolink = '<a data-dialog href="'. URLHelper::getLink('dispatch.php/course/enrolment/apply/'. $studygroup->getId()) .'">%s</a>';
     // customize link text if user is invited or group access is restricted
     if ($invited === true) {
         $infotext= sprintf( $infolink, _("Einladung akzeptieren"));

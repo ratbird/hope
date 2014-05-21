@@ -127,12 +127,12 @@ if ($flash['error']) {
                 <div>
                         <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
                             $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),
-                            array('data-lightbox' => '')
+                            array('data-dialog' => '')
                             ); ?>
                         <? if ($num_applicants = $courseset->getNumApplicants()) :?>
                         <?= LinkButton::create(sprintf(_('Liste der Anmeldungen (%s Nutzer)'), $num_applicants),
                             $controller->url_for('admission/courseset/applications_list/' . $courseset->getId()),
-                            array('data-lightbox' => '')
+                            array('data-dialog' => '')
                             ); ?>
                         <? endif ?>
                 </div>
@@ -194,7 +194,7 @@ if ($flash['error']) {
             <div>
                     <?= LinkButton::create(_('Liste der Nutzer'),
                         $controller->url_for('admission/courseset/factored_users/' . $courseset->getId()),
-                        array('data-lightbox' => '')
+                        array('data-dialog' => '')
                         ); ?>
             </div>
             <? endif ?>

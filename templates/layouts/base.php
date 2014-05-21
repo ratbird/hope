@@ -49,8 +49,10 @@ if ($infobox && is_array($infobox)) {
     foreach (array_reverse($infobox['content']) as $entry) {
         $widget = new InfoboxWidget();
         $widget->setTitle($entry['kategorie'] . ' (Infobox)');
-        foreach (@$entry['eintrag'] as $row) {
-            $widget->addElement(new InfoboxElement($row['text'], $row['icon']));
+        if (isset($entry['eintrag']) && is_array($entry['eintrag'])) {
+            foreach (@$entry['eintrag'] as $row) {
+                $widget->addElement(new InfoboxElement($row['text'], $row['icon']));
+            }
         }
         $sidebar->insertWidget($widget, ':first');
     }

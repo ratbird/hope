@@ -10,12 +10,14 @@
                 </ul>
                 <? if ($GLOBALS['perm']->have_studip_perm("tutor", $date['range_id'])) : ?>
                 <div>
-                    <input type="text" name="new_topic" id="new_topic" placeholder="<?= _("Thema hinzufügen") ?>">
-                    <a href="#" onClick="STUDIP.Dates.addTopic(); return false;"><?= Assets::img("icons/16/blue/add", array('class' => "text-bottom")) ?></a>
+                    <form onSubmit="STUDIP.Dates.addTopic(); return false;">
+                        <input type="text" name="new_topic" id="new_topic" placeholder="<?= _("Thema hinzufügen") ?>">
+                        <a href="#" onClick="STUDIP.Dates.addTopic(); return false;"><?= Assets::img("icons/16/blue/add", array('class' => "text-bottom")) ?></a>
+                    </form>
                     <script>
                         jQuery(function () {
                             jQuery("#new_topic").autocomplete({
-                                'source': <?= json_encode(studip_utf8encode(array_map(function ($t) { return $t['title']; }, CourseTopic::findBySQL("seminar_id = ?", array($topic['seminar_id']))))) ?>
+                                'source': <?= json_encode(studip_utf8encode(array_map(function ($t) { return $t['title']; }, CourseTopic::findBySQL("seminar_id = ?", array($date['range_id']))))) ?>
                             });
                         });
                     </script>

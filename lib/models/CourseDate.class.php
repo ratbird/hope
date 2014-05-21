@@ -14,6 +14,15 @@
 
 class CourseDate extends SimpleORMap {
 
+    static public function findByIssue_id($issue_id)
+    {
+        return self::findBySQL("INNER JOIN themen_termine USING (termin_id)
+            WHERE themen_termine.issue_id = ?
+            ORDER BY date ASC",
+            array($issue_id)
+        );
+    }
+
     static public function findBySeminar_id($seminar_id)
     {
         return self::findBySQL("range_id = ? ORDER BY date ", array($seminar_id));

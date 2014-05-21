@@ -44,7 +44,7 @@ if (Navigation::hasItem('/links/help')) {
 if ($infobox && is_array($infobox)) {
     $sidebar = Sidebar::get();
     if (!$sidebar->getImage()) {
-        $sidebar->setImage($infobox['picture']);
+        $sidebar->setImage(is_object($infobox['picture']) ? $infobox['picture']->getURL(Avatar::NORMAL) : $infobox['picture']);
     }
     foreach (array_reverse($infobox['content']) as $entry) {
         $widget = new InfoboxWidget();

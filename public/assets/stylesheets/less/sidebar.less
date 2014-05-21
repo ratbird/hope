@@ -146,6 +146,26 @@
     }
 }
 
+.sidebar-widget .widget-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+    .options-checkbox {
+        background-repeat: no-repeat;
+        background-position: left top;
+        display: block;
+        padding-left: 20px;
+        
+        &.options-checked {
+            .retina-background-icon('blue/checkbox-checked.png');
+        }
+        &.options-unchecked {
+            .retina-background-icon('blue/checkbox-unchecked.png');
+        }
+    }
+}
+
 // TODO: Remove this ASAP!
 .sidebar-widget.sidebar-infobox {
     border-color: @red;

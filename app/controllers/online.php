@@ -73,19 +73,15 @@ class OnlineController extends AuthenticatedController
         // Add buddy configuration option to sidebar only if the user actually
         // has buddies
         if ($this->buddy_count > 0) {
-            $actions = new ActionsWidget();
+            $actions = new OptionsWidget();
             
-            $actions->addLink(_('Nur Buddies in der Übersicht der aktiven Benutzer anzeigen'),
-                              $this->url_for('online/config/show_buddies/' . get_ticket()),
-                              $this->settings['show_only_buddys']
-                                  ? 'icons/16/black/checkbox-checked.png'
-                                  : 'icons/16/black/checkbox-unchecked.png');
+            $actions->addCheckbox(_('Nur Buddies in der Übersicht der aktiven Benutzer anzeigen'),
+                                  $this->settings['show_only_buddys'],
+                                  $this->url_for('online/config/show_buddies/' . get_ticket()));
 
-            $actions->addLink(_('Kontaktgruppen bei der Buddy-Darstellung berücksichtigen'),
-                              $this->url_for('online/config/show_groups/' . get_ticket()),
-                              $this->settings['show_groups']
-                                  ? 'icons/16/black/checkbox-checked.png'
-                                  : 'icons/16/black/checkbox-unchecked.png');
+            $actions->addCheckbox(_('Kontaktgruppen bei der Buddy-Darstellung berücksichtigen'),
+                                  $this->settings['show_groups'],
+                                  $this->url_for('online/config/show_groups/' . get_ticket()));
 
             $sidebar->addWidget($actions);
         }

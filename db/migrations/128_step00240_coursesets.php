@@ -12,7 +12,6 @@ class Step00240CourseSets extends Migration
     function up()
     {
         $db = DBManager::get();
-
         //check for future admission
         /*$future_admissions = $db->fetchColumn("SELECT COUNT(*) FROM seminare WHERE admission_type IN (1,2) AND
          (admission_starttime > UNIX_TIMESTAMP() OR start_time > UNIX_TIMESTAMP())");

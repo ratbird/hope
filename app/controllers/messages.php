@@ -122,7 +122,7 @@ class MessagesController extends AuthenticatedController {
     {
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
-        Navigation::activateItem('/messaging/messages/write');
+        Navigation::activateItem('/messaging/messages/sent');
 
         //collect possible default adressees
         $this->to = array();

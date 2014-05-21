@@ -17,7 +17,7 @@
         <tr>
             <th></th>
             <th><?= _("Betreff") ?></th>
-            <th><?= _("Von") ?></th>
+            <th><?= _("Autor") ?></th>
             <th><?= _("Zeit") ?></th>
             <th><?= _("Tags") ?></th>
             <th></th>
@@ -95,6 +95,15 @@ if (count($tags)) {
     }
     $sidebar->addWidget($folderwidget, 'folder');
 }
+
+$actions = new ActionsWidget();
+$actions->addLink(
+    _("Neue Nachricht schreiben"),
+    URLHelper::getURL("dispatch.php/messages/write"),
+    null,
+    array('data-lightbox' => "buttons=false")
+);
+$sidebar->addWidget($actions);
 
 $search = new SearchWidget();
 $search->addElement(new WidgetElement(

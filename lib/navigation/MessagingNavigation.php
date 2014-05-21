@@ -76,7 +76,6 @@ class MessagingNavigation extends Navigation
         $inbox = new Navigation(_('Eingang'), 'dispatch.php/messages/overview');
         $messages->addSubNavigation('inbox', $inbox);
         $messages->addSubNavigation('sent', new Navigation(_('Gesendet'), 'dispatch.php/messages/sent'));
-        $messages->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'dispatch.php/messages/write'));
         $this->addSubNavigation('messages', $messages);
         
     }

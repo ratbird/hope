@@ -1,10 +1,14 @@
+<? if (!Request::isXhr()) : ?>
+    <h1><?= _("Betreff").": ".htmlReady($message["subject"]) ?></h1>
+<? endif ?>
+
 <? if ($message["autor_id"] !== "____%system%____") : ?>
 <div style="float:left;"><?= Avatar::getAvatar($message["autor_id"])->getImageTag(Avatar::MEDIUM) ?></div>
 <? endif ?>
 <table id="message_metadata" data-message_id="<?= $message->getId() ?>">
     <tbody>
         <tr>
-            <td><strong><?= _("Verfasser") ?></strong></td>
+            <td><strong><?= _("Autor") ?></strong></td>
             <td>
             <? if ($message['autor_id'] === '____%system%____'): ?>
                 <?= _('Stud.IP') ?>
@@ -66,7 +70,6 @@
 </table>
 <div class="clear"></div>
 
-<h2><?= _("Betreff").": ".htmlReady($message["subject"]) ?></h2>
 <div class="message_body" style="font-size: 1.2em; margin: 3px; padding: 10px; background-color: #e7ebf1;">
     <?= formatReady($message["message"]) ?>
 </div>

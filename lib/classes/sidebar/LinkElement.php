@@ -69,7 +69,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
     public function __construct($label, $url, $icon = null, $attributes = array())
     {
         parent::__construct();
-        if (!$this->isURL($icon)) {
+        if ($icon && !$this->isURL($icon)) {
             $icon = Assets::image_path($icon);
         }
         $this->label      = $label;
@@ -114,21 +114,23 @@ class LinkElement extends WidgetElement implements ArrayAccess
             $this->addClass('active');
         }
 
+        $attributes = array_map('htmlReady', (array)$this->attributes);
+
         if (isset($this->attributes['disabled']) && $this->attributes['disabled'] !== false) {
             $tag = 'span';
         } else {
             $tag = 'a';
-            $this->attributes['href'] = $this->url;
+            $attributes['href'] = $this->url;
         }
         
-        $attributes = '';
-        foreach ((array) $this->attributes as $key => $value) {
-            $attributes .= sprintf(' %s="%s"', $key, htmlReady($value));
+        $attr_str = '';
+        foreach ($attributes as $key => $value) {
+            $attr_str .= sprintf(' %s="%s"', $key, $value);
         }
 
         return sprintf('<%1$s%2$s>%3$s</%1$s>',
                $tag,
-               $attributes,
+               $attr_str,
                htmlReady($this->label));
     }
     

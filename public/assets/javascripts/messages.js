@@ -16,6 +16,7 @@ STUDIP.Messages = {
         }
     },
     newMessages: function (response) {
+        console.log(response);
         jQuery.each(response.messages, function (index, message) {
             jQuery("#messages > tbody").prepend(message);
         });
@@ -25,8 +26,7 @@ STUDIP.Messages = {
     /*********** helper for the overview site ***********/
 
     whenMessageIsShown: function (lightbox) {
-        var message_id = jQuery("#message_metadata").data("message_id");
-        jQuery("#message_" + message_id).removeClass("unread");
+        jQuery(lightbox).closest("tr").removeClass("unread");
     },
 
 
@@ -192,8 +192,8 @@ jQuery("#message_metadata .remove_tag").live("click", function () {
     });
 });
 
-jQuery(document).on('lightbox-open', '#messages .title a', function () {
-    STUDIP.Messages.whenMessageIsShown();
+jQuery(document).on('dialog-open', '#messages .title a', function () {
+    STUDIP.Messages.whenMessageIsShown(this);
 })
 
 jQuery(function () {

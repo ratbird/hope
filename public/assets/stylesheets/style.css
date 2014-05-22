@@ -1781,6 +1781,7 @@ td.infoboxrahmen {
   margin: 5px;
 }
 .widget-links > li {
+  line-height: 1.5em;
   margin-left: 22px;
 }
 .widget-links > li img {

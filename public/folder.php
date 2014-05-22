@@ -802,9 +802,7 @@ if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
     PageLayout::addScript('ui.multiselect.js');
 }
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
 // Hauptteil
 
@@ -1347,6 +1345,10 @@ div.droppable.hover {
 <div id="fehler_seite"></div>
 
 <?php
-include ('lib/include/html_end.inc.php');
+Sidebar::get()->setImage('sidebar/files-sidebar.png');
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 
 page_close();

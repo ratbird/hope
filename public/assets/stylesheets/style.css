@@ -1665,7 +1665,7 @@ td.infoboxrahmen {
   -webkit-box-shadow: 1px 0 3px #888;
   -moz-box-shadow: 1px 0 3px #888;
   box-shadow: 1px 0 3px #888;
-  display: block;
+  display: inline-block;
   flex: 0 0 auto;
   margin-bottom: 1em;
   padding-left: 4px;

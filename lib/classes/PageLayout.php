@@ -41,6 +41,11 @@ class PageLayout
     private static $help_keyword;
 
     /**
+     * base item path for tab view (defaults to active item in top nav)
+     */
+    private static $tab_navigation_path = false;
+
+    /**
      * base item for tab view (defaults to active item in top nav)
      */
     private static $tab_navigation = false;
@@ -141,7 +146,8 @@ class PageLayout
      */
     public static function setTabNavigation($path)
     {
-        self::$tab_navigation = isset($path) ? Navigation::getItem($path) : NULL;
+        self::$tab_navigation_path = $path;
+        self::$tab_navigation      = isset($path) ? Navigation::getItem($path) : NULL;
     }
 
     /**
@@ -155,6 +161,22 @@ class PageLayout
         }
 
         return self::$tab_navigation;
+    }
+
+    /**
+     * Returns the base navigation path for the tabs.
+     * May return NULL if tab display is disabled.
+     */
+    public static function getTabNavigationPath()
+    {
+        if (self::$tab_navigation_path === false) {
+            foreach (Navigation::getItem('/')->getSubNavigation() as $subpath => $navigation) {
+                if ($navigation->isActive()) {
+                    self::$tab_navigation_path = $subpath;
+                }
+            }
+        }
+        return self::$tab_navigation_path;
     }
 
     /**

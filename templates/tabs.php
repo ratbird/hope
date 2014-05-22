@@ -10,7 +10,7 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
 <ul id="tabs" role="navigation">
     <? foreach ($navigation as $path => $nav) : ?>
         <? if ($nav->isVisible()) : ?>
-            <li id="nav_<?= $path1 ?>__<?= $path ?>"<?= $nav->isActive() ? ' class="current"' : '' ?>>
+            <li id="nav_<?= $path1 ?>_<?= $path ?>"<?= $nav->isActive() ? ' class="current"' : '' ?>>
                 <? $nav->isActive() && $path2 = $path ?>
                 <? if ($nav->isEnabled()) : ?>
                     <?

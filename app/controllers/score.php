@@ -111,10 +111,10 @@ class ScoreController extends AuthenticatedController
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/medal-sidebar.png');
 
-        $actions = new ActionsWidget();
+        $actions = new OptionsWidget();
         $published = $this->score->ReturnPublik();
-        $actions->addLink(_('Ihren Wert veröffentlichen'),
-                          $this->url_for($published ? 'score/unpublish' : 'score/publish'),
+        $actions->addCheckbox(_('Ihren Wert veröffentlichen'),
+                              $this->url_for($published ? 'score/unpublish' : 'score/publish'),
                           $published ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
         $sidebar->addWidget($actions);
 

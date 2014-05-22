@@ -3,8 +3,8 @@
     <input type="hidden" name="message_id" id="message_id" value="<?= htmlReady($message_id) ?>">
     <div>
         <label for="user_id_1"><h4><?= _("An") ?></h4></label>
-        <ul style="list-style-type: none; margin: 0px; padding: 0px;" id="adressees">
-            <li id="template_adressee" style="display: none; padding: 0px;" class="adressee">
+        <ul class="clean" id="adressees">
+            <li id="template_adressee" style="display: none;" class="adressee">
                 <input type="hidden" name="message_to[]" value="">
                 <span class="visual"></span>
                 <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>

@@ -43,6 +43,30 @@ class CourseTopic extends SimpleORMap {
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
+        $config['belongs_to']['folder'] = array(
+            'class_name' => 'DocumentFolder',
+            'assoc_foreign_key' => "range_id"
+        );
         parent::configure($config);
     }
+
+    public function createFolder()
+    {
+        $folder = $this->folder;
+        if ($folder) {
+            return $folder;
+        } else {
+            $folder = new DocumentFolder();
+            $folder['range_id'] = $this->getId();
+            $folder['name'] = $this['title'];
+            $folder['description'] = $this['description'];
+            $folder['priority'] = $this['priority'];
+            $folder['seminar_id'] = $this['seminar_id'];
+            $folder['user_id'] = $GLOBALS['user']->id;
+            $folder['permission'] = 15;
+            $folder->store();
+            return $folder;
+        }
+    }
+
 }

@@ -3,7 +3,7 @@
 <? endif ?>
 
 <? if ($message["autor_id"] !== "____%system%____") : ?>
-<div style="float:left;"><?= Avatar::getAvatar($message["autor_id"])->getImageTag(Avatar::MEDIUM) ?></div>
+<div style="float:left; margin-right: 10px;"><?= Avatar::getAvatar($message["autor_id"])->getImageTag(Avatar::MEDIUM) ?></div>
 <? endif ?>
 <table id="message_metadata" data-message_id="<?= $message->getId() ?>">
     <tbody>
@@ -23,9 +23,9 @@
                 <? if ($message["autor_id"] !== $GLOBALS["user"]->id) : ?>
                 <?= count($message->getRecipients()) > 1 ? sprintf(_("%s Personen"), count($message->getRecipients())) : _("Eine Person") ?>
                 <? else : ?>
-                <ul style='padding: 0px; margin: 0px;'>
+                <ul class='clean'>
                 <? foreach ($message->users->filter(function ($u) { return $u["snd_rec"] === "rec"; }) as $key => $message_user) : ?>
-                    <li style='list-style-type: none;'>
+                    <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => get_username($message_user["user_id"]))) ?>">
                             <?= Avatar::getAvatar($message_user["user_id"])->getImageTag(Avatar::SMALL)?>
                             <?= htmlReady(get_fullname($message_user["user_id"])) ?>

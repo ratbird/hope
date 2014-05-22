@@ -538,7 +538,7 @@ class BlubberPosting extends SimpleORMap {
         }
         return $success;
     }
-
+    
     /**
      * Returns all data of this blubber that are relevant as a rest-resource
      * including reshares and html-content

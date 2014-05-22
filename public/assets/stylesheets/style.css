@@ -1707,17 +1707,6 @@ td.infoboxrahmen {
   background-color: #dee2e8;
   border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
-.sidebar {
-  background: #fff;
-  border-left: 1px solid #28497c;
-  -webkit-box-shadow: 1px 0 3px #888888;
-  -moz-box-shadow: 1px 0 3px #888888;
-  box-shadow: 1px 0 3px #888888;
-  display: inline-block;
-  flex: 0 0 auto;
-  margin-bottom: 1em;
-  padding-left: 4px;
-}
 #layout-sidebar {
   background: #fff;
   -webkit-box-flex: 0;
@@ -1728,6 +1717,17 @@ td.infoboxrahmen {
   position: relative;
   text-align: left;
   min-width: 270px;
+}
+.sidebar {
+  background: #fff;
+  border-left: 1px solid #28497c;
+  -webkit-box-shadow: 1px 0 3px #888888;
+  -moz-box-shadow: 1px 0 3px #888888;
+  box-shadow: 1px 0 3px #888888;
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-bottom: 1em;
+  padding-left: 4px;
 }
 .sidebar-image {
   position: relative;
@@ -1927,6 +1927,7 @@ ul.widget-list > li {
 }
 .sidebar-widget .widget-options > li {
   line-height: 1.5em;
+  margin-left: 0;
 }
 .sidebar-widget .widget-options .options-checkbox {
   background-repeat: no-repeat;

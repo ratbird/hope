@@ -17,10 +17,18 @@ $sidebar->setImage(Assets::image_path("sidebar/forum-sidebar.png"));
 
 if (ForumPerm::has('search', $seminar_id)) {
     $search = new SearchWidget();
-    $search->addElement(new WidgetElement(
-        $this->render_partial('index/_search', array('id' => 'tutorSearchInfobox'))),
-        'search' 
-    );
+    $search->add(_('Forum durchsuchen'),
+                 PluginEngine::getLink('coreforum/index/search?backend=search'),
+                 'searchfor',
+                 array(
+                     'search_title'   => _('Titel'),
+                     'search_content' => _('Inhalt'),
+                     'search_author'  => _('AutorIn'),
+                 ),
+                 array(
+                     'id'          => 'tutorSearchInfobox',
+                     'placeholder' => _('Beiträge durchsuchen'),
+                 ));
     $sidebar->addWidget($search);
 }
 

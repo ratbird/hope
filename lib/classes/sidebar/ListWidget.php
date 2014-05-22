@@ -14,7 +14,9 @@ class ListWidget extends SidebarWidget
      */
     public function __construct()
     {
+        parent::__construct();
         $this->template = 'sidebar/list-widget';
+        $this->addCSSClass('widget-list');
     }
 
     /**

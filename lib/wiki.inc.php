@@ -713,27 +713,24 @@ function listPages($mode, $sortby = NULL) {
     }
     echo "</table><p>&nbsp;</p>";
 
-    $infobox = array ();
+    $sidebar = Sidebar::get();
+
     if ($mode=="all"){
         $help_url = format_help_url("Basis.VerschiedenesFormat");
-        $infobox[] = array("kategorie" => _("Ansicht"),
-                            "eintrag" => array(
-                                array(
-                                    'icon' => "icons/16/black/file-pdf.png",
-                                    "text" => "<a href=\"".
-                                    URLHelper::getLink("?keyword=" . urlencode($keyword) . "&view=exportall_pdf&version=$version&sortby=$sortby") .
-                                    "\" target=\"_blank\">PDF-Ausgabe aller Wiki-Seiten</a>"),
-                                array(
-                                    'icon' => "icons/16/black/print.png",
-                                    "text" => "<a href=\"".
-                                    URLHelper::getLink("?keyword=" . urlencode($keyword) . "&view=wikiprintall&version=$version") .
-                                    "\" target=\"_blank\">Druckansicht aller Wiki-Seiten</a>"),
-                                array("text" => _("Die Sortierung der Tabelle kann durch Klicken auf die Headerüberschriften geändert werden"))
-                                )
-                    );
+
+        $widget = new ExportWidget();
+        $widget->addLink(_('PDF-Ausgabe aller Wiki-Seiten'),
+                         URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=exportall_pdf&version=' . $version . '&sortby=' . $sortby),
+                         'icons/16/black/file-pdf.png',
+                         array('target' => '_blank'));
+        $widget->addLink(_('Druckansicht aller Wiki-Seiten'),
+                         URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=wikiprintall&version=' . $version),
+                         'icons/16/black/print.png',
+                         array('target' => '_blank'));
+        $sidebar->addWidget($widget);
     }
 #    end_blank_table();
-    showPageFrameEnd($infobox);
+    showPageFrameEnd(array());
 }
 
 /**
@@ -805,24 +802,32 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     showPageFrameStart();
 
     // show hits
-    echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
-    echo "<tr><td colspan=3><font size=+1>"._("Treffer für Suche nach")."&nbsp;&raquo;".htmlReady($searchfor)."&laquo;";
-    if ($localsearch) {
-        echo "&nbsp;".sprintf(_("in allen Versionen der Seite &raquo;%s&laquo;"),htmlReady($keyword));
-    } else if ($searchcurrentversions) {
-        echo "&nbsp;"._("in aktuellen Versionen");
-    } else {
-        echo "&nbsp;"._("in allen Versionen");
-    }
-    echo "</font></td></tr>";
-    echo "<tr height=28>";
-    $s = "<td class=\"table_header\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=-1><b>%s</b></font></td>";
-    printf($s, 1, "left", "&nbsp;");
-    printf($s, 10,"left",  _("Seite"));
-    printf($s, 64,"left",  _("Treffer"));
-    printf($s, 25,"left",  _("Version"));
-    echo "</tr>";
-
+?>
+<table class="default">
+    <caption>
+        <?= sprintf(_('Treffer für Suche nach %s'), '&raquo;' . htmlReady($searchfor) . '&laquo;') ?>
+    <? if ($localsearch): ?>
+        <?= sprintf(_('in allen Versionen der Seite %s'), '&raquo;' . htmlReady($keyword) . '&laquo;') ?>
+    <? elseif ($searchcurrentversions): ?>
+        <?= _('in aktuellen Versionen') ?>
+    <? else: ?>
+        <?= _('in allen Versionen') ?>
+    <? endif; ?>
+    </caption>
+    <colgroup>
+        <col width="10%">
+        <col width="65%">
+        <col width="25%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th><?= _('Seite') ?></th>
+            <th><?= _('Treffer') ?></th>
+            <th><?= _('Version') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+<?php
     $c=1;
     $last_keyword="";
     $last_keyword_count=0;
@@ -834,7 +839,6 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
                 $last_keyword_count++;
                 continue;
             } else if ($last_keyword_count>0) {
-                print("<tr>".$tdheadleft."&nbsp;".$tdtail);
                 print($tdheadleft."&nbsp;".$tdtail);
                 if ($last_keyword_count==1) {
                     $hitstring=_("Weitere Treffer in %s älteren Version. Klicken Sie %shier%s, um diese Treffer anzuzeigen.");
@@ -849,12 +853,11 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
             $last_keyword_count=0;
         }
 
-        $class = ($c++ % 2) ? "table_row_even" : "table_row_odd";
-        $tdheadleft="<td class=\"$class\" align=\"left\" valign=\"top\"><font size=\"-1\">";
-        $tdheadcenter="<td class=\"$class\" align=\"center\"><font size=\"-1\">";
-        $tdtail="</font></td>";
+        $tdheadleft="<td>";
+        $tdheadcenter="<td>";
+        $tdtail="</td>";
 
-        print("<tr>".$tdheadleft."&nbsp;"."$tdtail");
+        print("<tr>");
         // Pagename
         print($tdheadleft);
         print("<a href=\"".URLHelper::getLink("?keyword=".$result['keyword']."&version=".$result['version']."&hilight=$searchfor&searchfor=$searchfor")."\">");
@@ -903,7 +906,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     }
 
     if (!$localsearch && $last_keyword_count>0) {
-        print("<tr>".$tdheadleft."&nbsp;".$tdtail);
+        print("<tr>");
         print($tdheadleft."&nbsp;".$tdtail);
         if ($last_keyword_count==1) {
             $hitstring=_("Weitere Treffer in %s älteren Version. Klicken Sie %shier%s, um diese Treffer anzuzeigen.");
@@ -915,9 +918,17 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         print("</tr>");
     }
 
-    echo "</table><p>&nbsp;</p>";
-    $infobox = array(getSearchBox($searchfor, $keyword));
-    showPageFrameEnd($infobox);
+    echo "</tbody></table><p>&nbsp;</p>";
+
+    // search
+    $widget = new SearchWidget();
+    $widget->add(_('Im Wiki suchen'),
+                 URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)),
+                 'searchfor',
+                 array('searchcurrentversions' => _('Nur in aktuellen Versionen')));
+    Sidebar::get()->addWidget($widget);
+
+    showPageFrameEnd(array());
 }
 
 
@@ -980,12 +991,18 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= '<br><br>' . Button::createAccept(_('Speichern')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
-    $infobox = array ();
-    $help_url = format_help_url("Basis.VerschiedenesFormat");
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie k&ouml;nnen beliebigen Text einf&uuml;gen und vorhandenen Text &auml;ndern. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. Links entstehen automatisch aus W&ouml;rtern, die mit Gro&szlig;buchstaben beginnen und einen Gro&szlig;buchstaben in der Wortmitte enthalten."),'<a href="'.$help_url.'" target="_blank">','</a>'))));
+    
+    $helpbar = Helpbar::get();
+    $helpbar->addPlainText(_('Information'),
+                           sprintf(_('Sie können beliebigen Text einfügen und vorhandenen Text ändern. '
+                                    .'Beachten Sie dabei die [Formatierungsmöglichkeiten]%s . '
+                                    .'Links entstehen automatisch aus Wörtern, die mit Großbuchstaben '
+                                    .'beginnen und einen Großbuchstaben in der Wortmitte enthalten.'),
+                                   format_help_url('Basis.VerschiedenesFormat')),
+                           'icons/16/white/info.png');
     end_blank_table();
     echo "</td>"; // end of content area
-    showPageFrameEnd($infobox);
+    showPageFrameEnd();
 }
 
 /**
@@ -1099,12 +1116,14 @@ function exportWiki() {
     showPageFrameStart();
     $message = MessageBox::info(_('Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern.'));
     PageLayout::postMessage($message);
-    $infobox = array();
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
+
+    Helpbar::get()->addPlainText(_('Information'),
+                                 _('Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert.'),
+                                 'icons/16/white/info.png');
     print '<div style="text-align: center;">';
     print LinkButton::create( _('Weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
     echo '</div>'; // end of content area
-    showPageFrameEnd($infobox);
+    showPageFrameEnd();
 }
 
 /**
@@ -1116,9 +1135,12 @@ function exportWiki() {
 **/
 function printAllWikiPages($range_id, $header) {
     echo getAllWikiPages($range_id, $header, TRUE);
-    $infobox = array();
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
-    showPageFrameEnd($infobox);
+
+    Helpbar::get()->addPlainText(_('Information'),
+                                 _('Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert.'),
+                                 'icons/16/white/info.png');
+
+    showPageFrameEnd();
 }
 
 /**
@@ -1201,35 +1223,10 @@ function showPageFrameStart() {
 * @param    array   ready to pass to print_infoxbox()
 *
 **/
-function showPageFrameEnd($infobox)
+function showPageFrameEnd()
 {
-    $GLOBALS['infobox'] = $infobox;
+    $GLOBALS['infobox'] = array();
     echo '</div>';
-}
-
-/**
-* Returns an infobox category string for a searchbox
-*
-* @param    string  preselection - put in searchbox
-*
-**/
-function getSearchbox($preselection, $keyword)
-{
-    SkipLinks::addIndex(_("Im Wiki suchen"), 'wiki_search');
-    // search
-    $search_text = '<form role="search" id="wiki_search" method="post" action="' . URLHelper::getLink('') . '">';
-    $search_text .= CSRFProtection::tokenTag();
-    $search_text .= '<input type="hidden" name="view" value="search">';
-    $search_text .= '<input type="hidden" name="keyword" value="' . htmlReady($keyword) . '">';
-    $search_text .= '<input type="text" size="10" name="searchfor" value="' . htmlReady($preselection) . '">';
-    $search_text .= "&nbsp;" . Button::create(_('Suchen'));
-    $search_text .= "<br>";
-    $search_text .= '<input type="checkbox" name="searchcurrentversions" checked>&nbsp;' . _("Nur in aktuellen Versionen");
-    $search_text .= "</form>";
-    return array("kategorie"=> _("Suche:"),
-        "eintrag" => array(array(
-            "icon" => "icons/16/black/search.png",
-            "text" => $search_text)));
 }
 
 /**
@@ -1243,117 +1240,114 @@ function getSearchbox($preselection, $keyword)
 **/
 function getShowPageInfobox($keyword, $latest_version)
 {
-    global $show_wiki_comments;
-
-    $versions=getWikiPageVersions($keyword);
-    $versiontext = '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">' . _("Aktuelle Version"). '</a><br>';
-    if ($versions) {
-        foreach ($versions as $v) {
-            $versiontext .= "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&version=".$v['version'])."\">"._("Version")." ".$v['version']."</a> - ".date("d.m.Y, H:i",$v['chdate'])."<br>";
-        }
-    }
-    if (!$versiontext) {
-        $versiontext=_("Keine alten Versionen.");
-    }
-
-    $viewtext="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=show")."\">"._("Standard")."</a>";
-    if (count($versions)>=1) {
-        $viewtext .= "<br><a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=showdiff&view=diff")."\">"._("Textänderungen anzeigen")."</a>";
-        $viewtext .= "<br><a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=showcombo&view=combodiff")."\">"._("Text mit AutorInnenzuordnung anzeigen")."</a>";
-    }
-    $printtext = "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=wikiprint&version=$version")."\" target=\"_blank\">"._("Druckansicht")."</a>";
-    $pdftext = "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=export_pdf&version=$version")."\" target=\"_blank\">"._("PDF-Ausgabe")."</a>";
-
-    $views = array(
-    array(
-        'icon' => "icons/16/black/wiki.png",
-        'text' => $viewtext
-    ),
-    array(
-        'icon' => "icons/16/black/print.png",
-        'text' => $printtext
-    ),
-    array(
-        'icon' => "icons/16/black/file-pdf.png",
-        'text' => $pdftext
-    )
-    );
-
-    $backlinktext="";
-    $first=1;
-    $backlinks=getBacklinks($keyword);
-    foreach($backlinks as $b) {
-        if (!$first) {
-            $backlinktext .= "<br>";
-        } else {
-            $first=0;
-        }
-        $backlinktext .= "<a href=\"".URLHelper::getLink("?keyword=".urlencode($b))."\">$b</a>";
-    }
-    if (empty($backlinktext)) {
-        $backlinktext = _("Keine Verweise vorhanden.");
-    }
-    $backlinktext= array(array(
-        'icon' => "icons/16/black/link-intern.png",
-        'text' => $backlinktext
-    ));
-
-    // assemble infobox
-    $infobox = array ();
-
-    // toc
-    $toccont=get_toc_content();
-    $toccont_empty = !trim(strip_tags($toccont));
-    if ($GLOBALS['perm']->have_studip_perm('autor', $GLOBALS['SessSemName'][1])){
-        $toceditlink.="<span class='wikitoc_editlink'>(";
-        if ($toccont_empty) {
-            $toceditlink.="<a href=\"".URLHelper::getLink("?keyword=toc&view=edit")."\">"._("erstellen")."</a>";
-        } else {
-            $toceditlink.="<a href=\"".URLHelper::getLink("?keyword=toc&view=edit")."\">"._("bearbeiten")."</a>";
-        }
-        $toceditlink.=")</span>";
-    }
-    $infobox_item =  array("kategorie"=> _("QuickLinks")."&nbsp;".$toceditlink); # disabled toggling: get_toc_toggler(),
-    if (!$toccont_empty) {
-        $infobox_item['eintrag'] = array(
-            array('icon' => 'icons/16/black/link-intern.png',
-                  'text' => $toccont)
-        );
-    }
-    $infobox[] = $infobox_item;
+    $versions = getWikiPageVersions($keyword);
 
     if (!$latest_version) {
-        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie betrachten eine alte Version, die nicht mehr geändert werden kann. Verwenden Sie dazu die %saktuelle Version%s."), '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">','</a>'))));
+        $message = sprintf(_('Sie betrachten eine alte Version, die nicht mehr geändert werden kann. Verwenden Sie dazu die %saktuelle Version%s.'),
+                           '<a href="' . URLHelper::getLink('?keyword='.urlencode($keyword)) . '">',
+                           '</a>');
+        PageLayout::postMessage(MessageBox::info($message));
     }
-    $infobox[] = array("kategorie"  => _("Ansicht:"), "eintrag" => $views);
 
-    // search
-    $infobox[]= getSearchBox(Request::get('searchfor'), $keyword);
+    $sidebar = Sidebar::get();
 
+    // Table of Contents/QuickLinks
+    $widget = new ListWidget();
+    $widget->setTitle(_('QuickLinks'));
+
+    $toccont = get_toc_content();
+    $toccont_empty = !trim(strip_tags($toccont));
+    if ($GLOBALS['perm']->have_studip_perm('autor', $GLOBALS['SessSemName'][1])){
+        $extra = sprintf('<a href="%s">%s</a>',
+                         URLHelper::getLink('?keyword=toc&view=edit'),
+                         $toccont_empty
+                             ? Assets::img('icons/16/blue/add.png', tooltip2(_('erstellen')))
+                             : Assets::img('icons/16/blue/edit.png', tooltip2(_('bearbeiten'))));
+        $widget->setExtra($extra);
+    }
+
+    $element = new WidgetElement($toccont_empty ? '&nbsp;' : $toccont);
+    $element->icon = Assets::image_path('icons/16/black/link-intern.png');
+    $widget->addElement($element);
+    $sidebar->addWidget($widget);
+
+    // Ansichten
+    $widget = new ViewsWidget();
+    $widget->addLink(_('Standard'),
+                     URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=show'),
+                     'icons/16/black/wiki.png');
+    if (count($versions) >= 1) {
+        $widget->addLink(_('Textänderungen anzeigen'),
+                         URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=diff'));
+        $widget->addLink(_('Text mit AutorInnenzuordnung anzeigen'),
+                         URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=combodiff'));        
+    }
+    $sidebar->addWidget($widget);
+
+    // Suche
+    $widget = new SearchWidget();
+    $widget->add(_('Im Wiki suchen'),
+                 URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)),
+                 'searchfor',
+                 array('searchcurrentversions' => _('Nur in aktuellen Versionen')));
+    $sidebar->addWidget($widget);
+
+    // Backlinks
     if ($latest_version) {
-        // no backlinks for old versions!
-        $infobox[] = array("kategorie" => _("Seiten, die auf diese Seite verweisen:"), "eintrag" => $backlinktext);
+        $widget = new LinksWidget();
+        $widget->setTitle(_('Seiten, die auf diese Seite verweisen'));
+        foreach(getBacklinks($keyword) as $backlink) {
+            $widget->addLink($backlink, URLHelper::getLink('?keyword=' . urlencode($backlink)));
+        }
+        $sidebar->addWidget($widget);
     }
-    $infobox[] = array("kategorie" => _("Alte Versionen dieser Seite:"),
-            "eintrag" => array(array('icon' => "blank.gif","text"=>$versiontext)));
 
-    // comments
-    $comment_all="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&wiki_comments=all")."\">"._("einblenden")."</a>";
-    $comment_icon="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&wiki_comments=icon")."\">"._("als Icons einblenden")."</a>";
-    $comment_none="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&wiki_comments=none")."\">"._("ausblenden")."</a>";
-    if ($show_wiki_comments=="none") {
-            $comment_addon=" ("._("ausgeblendet").") ";
-            $comment_text=$comment_all."<br>".$comment_icon;
-    } elseif ($show_wiki_comments=="icon") {
-            $comment_text=$comment_all."<br>".$comment_none;
-    } elseif ($show_wiki_comments=="all") {
-            $comment_text=$comment_icon."<br>".$comment_none;
+    // Versionen
+    if (count($versions) > 0) {
+        $widget = new SelectWidget(_('Alte Versionen dieser Seite'),
+                                   URLHelper::getLink('?keyword=' . urlencode($keyword)),
+                                   'version');
+        $widget->addElement(new SelectElement('', _('Aktuelle Version')));
+        foreach ($versions as $version) {
+            $element = new SelectElement($version['version'],
+                                         sprintf(_('Version %u (%s)'),
+                                                 $version['version'],
+                                                 date('d.m.Y, H:i', $version['chdate'])),
+                                         $version['version'] == Request::int('version', 0));
+            $widget->addElement($element);
+        }
+        $sidebar->addWidget($widget);
     }
-    $infobox[] = array("kategorie"=> _("Kommentare").$comment_addon.":",
-            "eintrag" => array(array('icon' => "comment.png",
-                    "text"=>$comment_text)));
 
-    return $infobox;
+    // Kommentare
+    $widget = new OptionsWidget();
+    $widget->setTitle(_('Kommentare'));
+    $widget->addRadioButton(_('einblenden'),
+                            URLHelper::getLink('?keyword=' . urlencode($keyword) . '&wiki_comments=all'),
+                            $GLOBALS['show_wiki_comments'] === 'all');
+    $widget->addRadioButton(_('als Icons einblenden'),
+                            URLHelper::getLink('?keyword=' . urlencode($keyword) . '&wiki_comments=icon'),
+                            $GLOBALS['show_wiki_comments'] === 'icon');
+    $widget->addRadioButton(_('ausblenden'),
+                            URLHelper::getLink('?keyword=' . urlencode($keyword) . '&wiki_comments=none'),
+                            $GLOBALS['show_wiki_comments'] === 'none');
+    $sidebar->addWidget($widget, 'comments');
+
+    // Exportfunktionen
+    $version = Request::int('version') ?: '';
+
+    $widget = new ExportWidget();
+    $widget->addLink(_('Druckansicht'),
+                     URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=wikiprint'),
+                     'icons/16/black/print.png',
+                     array('target' => '_blank'));
+    $widget->addLink(_('PDF-Ausgabe'),
+                     URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=export_pdf'),
+                     'icons/16/black/file-pdf.png',
+                     array('target' => '_blank'));
+    $sidebar->addWidget($widget);
+
+    return array();
 }
 
 /**
@@ -1366,25 +1360,37 @@ function getShowPageInfobox($keyword, $latest_version)
 function getDiffPageInfobox($keyword) {
 
     $versions=getWikiPageVersions($keyword);
-    $versiontext = '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">'. _("Aktuelle Version").'</a><br>';
-    if ($versions) {
-        foreach ($versions as $v) {
-            $versiontext .= "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&version=".$v['version'])."\">"._("Version")." ".$v['version']."</a> - ".date("d.m.Y, H:i",$v['chdate'])."<br>";
+
+    // Aktuelle Version
+    $widget = new ViewsWidget();
+    $widget->addLink(_('Aktuelle Version'),
+                     URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=show'));
+    Sidebar::get()->addWidget($widget);
+
+    // Versionen
+    if (count($versions) > 0) {
+        $widget = new SelectWidget(_('Alte Versionen dieser Seite'),
+                                   URLHelper::getLink('?keyword=' . urlencode($keyword)),
+                                   'version');
+        $widget->addElement(new SelectElement('', _('Aktuelle Version')));
+        foreach ($versions as $version) {
+            $element = new SelectElement($version['version'],
+                                         sprintf(_('Version %u (%s)'),
+                                                 $version['version'],
+                                                 date('d.m.Y, H:i', $version['chdate'])),
+                                         $version['version'] == Request::int('version', 0));
+            $widget->addElement($element);
         }
-    }
-    if (!$versiontext) {
-        $versiontext=_("Keine alten Versionen.");
+        Sidebar::get()->addWidget($widget);
     }
 
-    $viewtext="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=show")."\">"._("Aktuelle Version")."</a><br>";
-    $views=array(array('icon' => "blank.gif", "text" => $viewtext));
+    $helpbar = Helpbar::get();
+    $helpbar->addPlainText(_('Information'),
+                           _('Sie betrachten die Änderungsgeschichte eines Dokumentes. '
+                            .'Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen.'),
+                           'icons/16/white/info.png');
 
-    $infobox = array ();
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Sie betrachten die Änderungsgeschichte eines Dokumentes. Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen."))));
-    $infobox[] = array("kategorie"  => _("Ansicht:"), "eintrag" => $views);
-    $infobox[] = array("kategorie" => _("Alte Versionen dieser Seite:"),
-            "eintrag" => array(array('icon' => "blank.gif","text"=>$versiontext)));
-    return $infobox;
+    return array();
 }
 
 function get_toc_toggler() {
@@ -1526,8 +1532,8 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     //
     // end showpage logic
 
-    $infobox=getShowPageInfobox($keyword, $latest_version);
-    showPageFrameEnd($infobox);
+    getShowPageInfobox($keyword, $latest_version);
+    showPageFrameEnd();
 }
 
 /**
@@ -1599,8 +1605,8 @@ function showDiffs($keyword, $versions_since) {
     }
     echo '</table>';
 
-    $infobox = getDiffPageInfobox($keyword);
-    showPageFrameEnd($infobox);
+    getDiffPageInfobox($keyword);
+    showPageFrameEnd();
 }
 
 /////////////////////////////////////////////////
@@ -1712,8 +1718,8 @@ function showComboDiff($keyword, $db=NULL) {
     }
     echo "</table></td></tr>";
     echo "</table>     ";
-    $infobox=getDiffPageInfobox($keyword);
-    showPageFrameEnd($infobox);
+    getDiffPageInfobox($keyword);
+    showPageFrameEnd();
 }
 
 function create_color($index) {

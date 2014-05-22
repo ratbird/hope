@@ -221,19 +221,14 @@ if ($view=="listall") {
 
 } // end default action
 
-if ($infobox) {
-    $layout = $GLOBALS['template_factory']->open('layouts/base');
-    $layout->infobox = array('picture' => 'sidebar/wiki-sidebar.png', 'content' => $infobox);
-} else {
-    $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
-}
-
+$layout = $GLOBALS['template_factory']->open('layouts/base');
 $layout->content_for_layout = ob_get_clean();
 
 if (in_array($cmd, words('show abortedit really_delete really_delete_all'))) {
     // redirect to normal view to avoid duplicate edits on reload or back/forward
     header('Location: ' . URLHelper::getURL('', compact('keyword')));
 } else {
+    Sidebar::get()->setImage('sidebar/wiki-sidebar.png');
     echo $layout->render();
 }
 

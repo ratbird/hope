@@ -6,9 +6,8 @@
  * @license GPL 2 or later
  * @since   3.1
  */
-class SelectorWidget extends SidebarWidget
+class SelectorWidget extends SelectWidget
 {
-
     /**
      * Constructs the widget by defining a special template.
      */

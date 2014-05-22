@@ -13,7 +13,17 @@ class SidebarWidget extends Widget
      * Contains the title of the widget
      */
     protected $title = false;
-        
+
+    /**
+     * Containts extra options of the widget
+     */
+    protected $extra = false;
+
+    public function __construct()
+    {
+        $this->layout = 'sidebar/widget-layout.php';
+    }
+
     /**
      * Sets the title of the widget.
      *
@@ -42,6 +52,21 @@ class SidebarWidget extends Widget
         $this->title = false;
     }
 
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
+    }
+    
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    public function removeExtra()
+    {
+        $this->extra = false;
+    }
+
     /**
      * Renders the widget.
      * The widget will only be rendered if it contains at least one element.
@@ -51,6 +76,7 @@ class SidebarWidget extends Widget
     public function render($variables = array())
     {
         $this->template_variables['title'] = $this->title;
+        $this->template_variables['extra'] = $this->extra;
         return parent::render($variables);
     }
 }

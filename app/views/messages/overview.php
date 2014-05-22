@@ -106,8 +106,13 @@ $actions->addLink(
 $sidebar->addWidget($actions);
 
 $search = new SearchWidget();
-$search->addElement(new WidgetElement(
-    $this->render_partial('messages/_search'),
-    'search'
-));
+$search->add(_('Nachrichten durchsuchen'),
+             URLHelper::getLink('?'),
+             'search',
+             array(
+                 'search_subject' => _('Betreff'),
+                 'search_content' => _('Inhalt'),
+                 'search_autor'   => _('AutorIn'),
+             ),
+             array('placeholder' => _('Nachrichten durchsuchen')));
 $sidebar->addWidget($search);

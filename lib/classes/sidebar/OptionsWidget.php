@@ -19,4 +19,13 @@ class OptionsWidget extends ListWidget
                            htmlReady($label));
         $this->addElement(new WidgetElement($content));
     }
+    
+    public function addRadioButton($label, $url, $checked = false)
+    {
+        $content = sprintf('<a href="%s" class="options-radio options-%s">%s</a>',
+                           $url,
+                           $checked ? 'checked' : 'unchecked',
+                           htmlReady($label));
+        $this->addElement(new WidgetElement($content));
+    }
 }

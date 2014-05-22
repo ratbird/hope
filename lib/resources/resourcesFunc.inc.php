@@ -498,11 +498,10 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute($params);
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                    $requests[$row['request_id']] = array(
-                        'my_sem'      => true,
-                        'closed'      => $row['closed'],
-                        'resource_id' => $row['resource_id'],
-                    );
+                    $request_id = $row['request_id'];
+                    $requests[$request_id]['my_sem']      = true;
+                    $requests[$request_id]['closed']      = $row['closed'];
+                    $requests[$request_id]['resource_id'] = $row['resource_id'];
                 }
 
                 foreach ($queries as $q) {

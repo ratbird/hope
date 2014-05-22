@@ -20,5 +20,7 @@
             <? endforeach ?>
         </ul>
     </td>
-    <td><?= htmlReady($date['raum']) ?></td>
+    <td>
+        <?= htmlReady($date['raum']) ?>
+    </td>
 </tr>

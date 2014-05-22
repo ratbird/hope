@@ -1,5 +1,9 @@
+<? $open = 0 ?>
 <div class="accordion">
-    <? foreach ($topics as $topic) : ?>
+    <? foreach ($topics as $key => $topic) : ?>
+    <? if (Request::get("open") === $topic->getId()) {
+        $open = $key;
+    } ?>
     <h2><?= htmlReady($topic['title']) ?></h2>
     <div>
         <table>
@@ -60,7 +64,7 @@
             </tbody>
         </table>
         <div style="text-align: center;">
-            <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog="buttons=false">
+            <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
             <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
             </a>
         </div>
@@ -70,7 +74,9 @@
 
 <script>
     jQuery(function () {
-        jQuery(".accordion").accordion();
+        jQuery(".accordion").accordion({
+            'active': <?= (int) $open ?>
+        });
     })
 </script>
 

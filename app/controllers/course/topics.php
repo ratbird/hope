@@ -16,23 +16,28 @@ class Course_TopicsController extends AuthenticatedController
             if ($topic['seminar_id'] !== $_SESSION['SessionSeminar']) {
                 throw new AccessDeniedException("Kein Zugriff");
             }
-            $topic['title'] = Request::get("title");
-            $topic['description'] = Request::get("description");
-            $topic->store();
+            if (Request::submitted("delete_topic")) {
+                $topic->delete();
+                PageLayout::postMessage(MessageBox::success(_("Thema gelöscht.")));
+            } else {
+                $topic['title'] = Request::get("title");
+                $topic['description'] = Request::get("description");
+                $topic->store();
 
-            if (Request::get("folder") && !$topic->folder) {
-                $topic->createFolder();
-            }
-            if (Request::get("forumthread") && class_exists("ForumIssue")) {
-                ForumIssue::setThreadForIssue(
-                    $_SESSION['SessionSeminar'],
-                    $topic->getId(),
-                    $topic['title'],
-                    $topic['description']
-                );
-            }
+                if (Request::get("folder") && !$topic->folder) {
+                    $topic->createFolder();
+                }
+                if (Request::get("forumthread") && class_exists("ForumIssue")) {
+                    ForumIssue::setThreadForIssue(
+                        $_SESSION['SessionSeminar'],
+                        $topic->getId(),
+                        $topic['title'],
+                        $topic['description']
+                    );
+                }
 
-            PageLayout::postMessage(MessageBox::success(_("Thema gespeichert.")));
+                PageLayout::postMessage(MessageBox::success(_("Thema gespeichert.")));
+            }
         }
 
         Navigation::activateItem('/course/schedule/topics');

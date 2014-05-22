@@ -36,3 +36,10 @@
 <?php
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
+
+$actions = new ActionsWidget();
+$actions->addLink(
+    _("Exportieren"),
+    URLhelper::getURL("dispatch.php/course/dates/export")
+);
+$sidebar->addWidget($actions);

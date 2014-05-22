@@ -33,14 +33,6 @@ class CoreSchedule implements StudipModule {
 
         $navigation->addSubNavigation('dates', new Navigation(_('Termine'), "dispatch.php/course/dates"));
         $navigation->addSubNavigation('topics', new Navigation(_('Themen'), "dispatch.php/course/topics"));
-        $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), "dates.php?date_type=all".$openItem));
-        $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), "dates.php?date_type=1".$openItem));
-        $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), "dates.php?date_type=other".$openItem));
-
-
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
-            $navigation->addSubNavigation('edit', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id=' . $course_id.$openItem));
-        }
 
         return array('schedule' => $navigation);
     }

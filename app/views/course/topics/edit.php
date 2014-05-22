@@ -1,5 +1,6 @@
 <form action="<?= URLHelper::getLink("dispatch.php/course/topics") ?>" method="post">
     <input type="hidden" name="issue_id" value="<?=htmlReady($topic->getId())  ?>">
+    <input type="hidden" name="open" value="<?=htmlReady($topic->getId())  ?>">
     <table style="width: 100%;">
         <tbody>
             <tr>
@@ -49,7 +50,12 @@
             </tr>
         </tbody>
     </table>
-    <div style="text-align: center;">
-        <?= \Studip\Button::create(_("speichern")) ?>
+    <div align="center" data-dialog-button>
+        <div class="button-group">
+            <?= \Studip\Button::create(_("speichern")) ?>
+            <?= \Studip\Button::create(_("löschen"), "delete_topic", array('onClick' => "return window.confirm('"._("Wirklich löschen?")."');")) ?>
+        </div>
     </div>
 </form>
+
+<br>

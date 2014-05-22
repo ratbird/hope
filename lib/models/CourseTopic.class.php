@@ -65,6 +65,7 @@ class CourseTopic extends SimpleORMap {
             $folder['user_id'] = $GLOBALS['user']->id;
             $folder['permission'] = 15;
             $folder->store();
+            $this->resetRelation("folder");
             return $folder;
         }
     }

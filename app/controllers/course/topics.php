@@ -19,6 +19,19 @@ class Course_TopicsController extends AuthenticatedController
             $topic['title'] = Request::get("title");
             $topic['description'] = Request::get("description");
             $topic->store();
+
+            if (Request::get("folder") && !$topic->folder) {
+                $topic->createFolder();
+            }
+            if (Request::get("forumthread") && class_exists("ForumIssue")) {
+                ForumIssue::setThreadForIssue(
+                    $_SESSION['SessionSeminar'],
+                    $topic->getId(),
+                    $topic['title'],
+                    $topic['description']
+                );
+            }
+
             PageLayout::postMessage(MessageBox::success(_("Thema gespeichert.")));
         }
 

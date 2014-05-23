@@ -648,14 +648,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -1705,7 +1705,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 #layout-sidebar {
   background: #fff;
@@ -1766,8 +1766,10 @@ ul.widget-list {
   padding: 0;
 }
 ul.widget-list > li {
+  background-repeat: no-repeat;
+  background-position: 0 1px;
   line-height: 1.5em;
-  margin-left: 22px;
+  padding-left: 20px;
 }
 .widget-links {
   margin: 5px;

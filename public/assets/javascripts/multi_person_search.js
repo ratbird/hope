@@ -5,7 +5,7 @@ $(document).ready(function () {
     });
     
     // init form if it is loaded via ajax
-    $(".multi_person_search_link").on('lightbox-open', function (event, parameters) {
+    $(".multi_person_search_link").on('dialog-open', function (event, parameters) {
         STUDIP.MultiPersonSearch.dialog($(parameters.dialog).find(".mpscontainer").attr('data-dialogname'));
     });
     

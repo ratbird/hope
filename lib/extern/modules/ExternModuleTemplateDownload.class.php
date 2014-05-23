@@ -205,8 +205,8 @@ class ExternModuleTemplateDownload extends ExternModule {
         if ( !$row ) {
             $content['NO-FILES']['NO-FILES-TEXT'] = $this->config->getValue('Main', 'nodatatext');
         } else {
-            do{
-
+            $i = 0;
+            do {
                 preg_match("/^.+\.([a-z1-9_-]+)$/i", $row['filename'], $file_suffix);
 
                 $icon = '';
@@ -298,6 +298,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                 $i++;
             }while($row = $statement->fetch(PDO::FETCH_ASSOC));
         }
+        $content = array('DOWNLOAD' => $content);
         $content['__GLOBAL__']['FILES-COUNT'] = $i;
 
         return $content;

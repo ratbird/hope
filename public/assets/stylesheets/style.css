@@ -3667,6 +3667,75 @@ div#schedule-settings-dialog-shadow {
 #admin_seminare_assi #study_area_selection h3 {
   font-weight: normal;
 }
+/* --- tour --------------------------------------------------- */
+#tour_controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 20001;
+  border: solid 2px #28497c;
+  background-color: #ffffff;
+  padding: 10px 10px;
+  font-family: sans-serif;
+  overflow-y: auto;
+}
+#tour_controls button {
+  vertical-align: middle;
+}
+#tour_controls table {
+  text-align: center;
+}
+#tour_controls table width: 100%
+        td {
+  text-align: center;
+}
+#tour_title {
+  font-style: italic;
+}
+.tour_focus_box {
+  border: 2px dashed #ffbd33;
+}
+#tour_tip {
+  padding: 10px 20px;
+  position: absolute;
+  z-index: 20000;
+  max-width: 300px;
+  font-family: sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #28497c;
+  color: #ffffff;
+  border: solid 1px #aaaaaa;
+}
+#tour_tip #tour_tip_title {
+  font-weight: bold;
+}
+#tour_tip_interactive {
+  padding: 10px 20px;
+  position: absolute;
+  z-index: 20000;
+  max-width: 300px;
+  font-family: sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #ffbd33;
+  color: #000000;
+  border: solid 1px #aaaaaa;
+}
+#tour_tip_interactive #tour_tip_title {
+  font-weight: bold;
+}
+.tourArrow {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+}
+#tour_selector_overlay {
+  background-color: #000000;
+  opacity: 0.5;
+  position: absolute;
+}
 div.wikitoc {
   font-size: 1em;
   margin-bottom: 5px;

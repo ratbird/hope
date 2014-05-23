@@ -41,13 +41,12 @@ class Helpbar extends WidgetContainer
         $this->addWidget($widget, 'help-' . $id);
     }
     
-    public function addLink($label, $url, $icon = false, $target = false)
+    public function addLink($label, $url, $icon = false, $target = false, $attributes = array())
     {
         $id = md5($url);
 
-        $element = new LinkElement();
-        $element->label = $label;
-        $element->url   = $url;
+        $element = new LinkElement($label, $url);
+        $element->attributes = $attributes;
         $element->setTarget($target);
 
         $widget = new HelpbarWidget();
@@ -57,11 +56,12 @@ class Helpbar extends WidgetContainer
         $this->addWidget($widget, 'help-' . $id);
     }
     
-    public function insertLink($label, $url, $icon = false, $target = false)
+    public function insertLink($label, $url, $icon = false, $target = false, $attributes = array())
     {
         $id = md5($url);
 
         $element = new LinkElement($label, $url);
+        $element->attributes = $attributes;
         $element->setTarget($target);
 
         $widget = new HelpbarWidget();

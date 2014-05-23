@@ -181,6 +181,10 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('abstract_modules', new Navigation(_('Studienmodule'), 'stm_abstract_assi.php'));
             }
 
+            if (get_config('TOURS_ENABLE')) {
+                $navigation->addSubNavigation('tour', new Navigation(_('Touren'), 'dispatch.php/tour/admin_overview'));
+            }
+            
             if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                 $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
             }

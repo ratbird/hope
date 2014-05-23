@@ -36,6 +36,13 @@ if (Navigation::hasItem('/links/help')) {
     Helpbar::get()->insertLink(_('Hilfe-Wiki'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
 
     Navigation::removeItem('/footer/help');
+
+    // add tour links to help center
+    if (get_config('TOURS_ENABLE')) {
+        $tour_data = HelpTour::getHelpbarTourData();
+        foreach($tour_data['tours'] as $index => $tour)
+            Helpbar::get()->addLink(_('Tour:') . ' ' . $tour->name, '?tour_id='.$tour->tour_id, 'icons/16/white/play.png', false, array('class' => 'tour_link', 'id' => $tour->tour_id));
+    }
 }
 
 // TODO: Remove this after sidebar migration has been completed
@@ -80,6 +87,9 @@ if ($infobox && is_array($infobox)) {
         STUDIP.jsupdate_enable = true;
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
+        <? if ($tour_data['active_tour_id']) : ?>
+        STUDIP.Tour.init('<?=$tour_data['active_tour_id']?>', '<?=$tour_data['active_tour_step_nr']?>')
+        <? endif ?>
     </script>
     <?php
         // needs to be included in lib/include/html_head.inc.php as well

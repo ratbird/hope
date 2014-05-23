@@ -3684,10 +3684,13 @@ div#schedule-settings-dialog-shadow {
 }
 #tour_controls table {
   text-align: center;
+  width: 100%;
 }
-#tour_controls table width: 100%
-        td {
+#tour_controls table td {
   text-align: center;
+}
+#tour_controls div {
+  padding-top: 5px;
 }
 #tour_title {
   font-style: italic;
@@ -3730,6 +3733,14 @@ div#schedule-settings-dialog-shadow {
   display: block;
   width: 0;
   height: 0;
+}
+#tour_overlay {
+    background-color: #ffffff;
+    opacity: 0.4;
+    position: fixed;
+    z-index: 10000;
+    width: 100%; 
+    height: 100%;
 }
 #tour_selector_overlay {
   background-color: #000000;

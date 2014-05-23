@@ -79,7 +79,7 @@ STUDIP.Tour = {
                     } else {
                         STUDIP.Tour.hide_helpcenter();
                     	if ((STUDIP.Tour.options.tour_type == 'tour') && ! STUDIP.Tour.options.edit_mode)
-                        	jQuery('body').prepend('<div id="tour_overlay" style="background-color: #ffffff; opacity: 0.4; position: fixed; z-index: 10000; width: 100%; height: 100%;"></div>');
+                        	jQuery('body').prepend('<div id="tour_overlay"></div>');
                     	STUDIP.Tour.step = step_nr - STUDIP.Tour.options.route_step_nr - 1;
                         STUDIP.Tour.next();
                     }
@@ -146,7 +146,9 @@ STUDIP.Tour = {
         jQuery('.tour_focus_box').removeClass('tour_focus_box');
         var tip_id = 'tour_tip';
 	    if (stepData.interactive) {
-	        tip_id = 'tour_tip_interactive';
+	        if ((STUDIP.Tour.step == (STUDIP.Tour.steps-1)) && ((parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) != STUDIP.Tour.options.step_count))
+	            jQuery('#tour_interactive_text').show();
+            tip_id = 'tour_tip_interactive';
 	    }
 		jQuery('#tour_title').html(STUDIP.Tour.options.tour_title + 
             ' (' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + 
@@ -190,80 +192,80 @@ STUDIP.Tour = {
 		et = jQuery(element).offset().top;
 
 		var tbg = jQuery('#'+tip_id).css('background-color');
-		$upArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '10px solid transparent', 'border-right' : '10px solid transparent', 'border-bottom' : '10px solid '+tbg });
-		$downArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '10px solid transparent', 'border-right' : '10px solid transparent', 'border-top' : '10px solid '+tbg });
-		$rightArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '10px solid transparent', 'border-bottom' : '10px solid transparent', 'border-left' : '10px solid '+tbg });
-		$leftArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '10px solid transparent', 'border-bottom' : '10px solid transparent', 'border-right' : '10px solid '+tbg });
+		$upArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-bottom' : '16px solid '+tbg });
+		$downArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-top' : '16px solid '+tbg });
+		$rightArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-left' : '16px solid '+tbg });
+		$leftArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-right' : '16px solid '+tbg });
 		switch (pos) {
 			case 'BL' :
-				position = { 'left'  : el, 'top' : et + eh + 15 };
-				$upArrow.css({ top: '-10px', left: '10px' });
+				position = { 'left'  : el - 10, 'top' : et + eh + 20 };
+				$upArrow.css({ top: '-16px', left: '10px' });
 				jQuery('#'+tip_id).prepend($upArrow);
 				break;
 
 			case 'BR' :
-				position = { 'left'  : el + ew - tw, 'top' : et + eh + 15 };
-				$upArrow.css({ top: '-10px', right: '10px' });
+				position = { 'left'  : el + ew - tw + 10, 'top' : et + eh + 20 };
+				$upArrow.css({ top: '-16px', right: '10px' });
 				jQuery('#'+tip_id).prepend($upArrow);
 				break;
 
 			case 'TL' :
-				position = { 'left'  : el, 'top' : (et - th) -15 };
+				position = { 'left'  : el - 10, 'top' : (et - th) - 20 };
 				$downArrow.css({ top: th, left: '10px' });
 				jQuery('#'+tip_id).append($downArrow);
 				break;
 
 			case 'TR' :
-				position = { 'left'  : (el + ew) - tw, 'top' : et - th -15 };
+				position = { 'left'  : (el + ew) - tw + 10, 'top' : et - th - 20 };
 				$downArrow.css({ top: th, right: '10px' });
 				jQuery('#'+tip_id).append($downArrow);
 				break;
 
 			case 'RT' :
-				position = { 'left'  : el + ew + 15, 'top' : et };
-				$leftArrow.css({ left: '-10px' });
+				position = { 'left'  : el + ew + 20, 'top' : et - 10 };
+				$leftArrow.css({ left: '-16px' });
 				jQuery('#'+tip_id).prepend($leftArrow);
 				break;
 
 			case 'RB' :
-				position = { 'left'  : el + ew + 15, 'top' : et + eh - th };
-				$leftArrow.css({ left: '-10px' });
+				position = { 'left'  : el + ew + 20, 'top' : et + eh - th + 10 };
+				$leftArrow.css({ left: '-16px' });
 				jQuery('#'+tip_id).prepend($leftArrow);
 				break;
 
 			case 'LT' :
-				position = { 'left'  : (el - tw) - 15, 'top' : et };
-				$rightArrow.css({ right: '-10px' });
+				position = { 'left'  : (el - tw) - 20, 'top' : et - 10 };
+				$rightArrow.css({ right: '-16px' });
 			    jQuery('#'+tip_id).prepend($rightArrow);
 				break;
 
 			case 'LB' :
-				position = { 'left'  : (el - tw) - 15, 'top' : et + eh - th};
-				$rightArrow.css({ right: '-10px' });
+				position = { 'left'  : (el - tw) - 20, 'top' : et + eh - th + 10 };
+				$rightArrow.css({ right: '-16px' });
 				jQuery('#'+tip_id).prepend($rightArrow);
 				break;
 
 			case 'B'  :
-				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et + eh) + 15 };
-				$upArrow.css({ top: '-10px', left: '48%' });
+				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et + eh) + 20 };
+				$upArrow.css({ top: '-16px', left: (tw/2 - 16)+'px' });
 				jQuery('#'+tip_id).prepend($upArrow);
 				break;
 
-			case 'L'  :
-				position = { 'left'  : (el - tw) - 15, 'top' : et + eh/2 - th/2 };
-				$rightArrow.css({ right: '-10px', top: (th/2 - 10)+'px' });
-				jQuery('#'+tip_id).prepend($rightArrow);
-				break;
-
 			case 'T'  :
-				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et - th) - 15 };
-				$downArrow.css({ top: th, left: '48%' });
+				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et - th) - 20 };
+				$downArrow.css({ top: th, left: (tw/2 - 16)+'px' });
 				jQuery('#'+tip_id).append($downArrow);
 				break;
 
+			case 'L'  :
+				position = { 'left'  : (el - tw) - 20, 'top' : et + eh/2 - th/2 };
+				$rightArrow.css({ right: '-16px', top: (th/2 - 16)+'px' });
+				jQuery('#'+tip_id).prepend($rightArrow);
+				break;
+
 			case 'R'  :
-				position = { 'left'  : (el + ew) + 15, 'top' : et + eh/2 - th/2 };
-				$leftArrow.css({ left: '-10px', top: (th/2 - 10)+'px' });
+				position = { 'left'  : (el + ew) + 20, 'top' : et + eh/2 - th/2 };
+				$leftArrow.css({ left: '-16px', top: (th/2 - 16)+'px' });
 				jQuery('#'+tip_id).prepend($leftArrow);
 				break;
 		}

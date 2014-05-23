@@ -1,6 +1,9 @@
 <? use Studip\Button, Studip\LinkButton ?>
 <div id="tour_controls" style="display: none">
     <div id="tour_title"></div>
+    <div id="tour_interactive_text" style="display:none; width:360px">
+        <?=_('Die Tour wird fortgesetzt, wenn Sie die beschriebene Aktion ausgeführt haben.')?>
+    </div>
     <div id="tour_buttons">
         <table cellpadding="0" cellspacing="0">
             <tr>
@@ -27,8 +30,6 @@
                     <?= Button::createCancel(_('Beenden'), 'tour_end', array('id' => 'tour_end')) ?></td>
             </tr>
         </table>
-    </div>
-    <div id="tour_interactive_text" style="display:none"><?=_('Zum Fortsetzen bitte die Anweisungen aus dem Text befolgen.')?>
     </div>
 </div>
 <div id="tour_tip" class="tour_tip" style="display: none">

@@ -13,8 +13,8 @@
     <thead>
         <tr>
             <th></th>
-            <th><?= _("Typ") ?></th>
             <th><?= _("Zeit") ?></th>
+            <th><?= _("Typ") ?></th>
             <th><?= _("Thema") ?></th>
             <th><?= _("Raum") ?></th>
         </tr>

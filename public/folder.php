@@ -902,86 +902,7 @@ if ($question) {
             echo "\n" . '</td></tr></form>';
 
 
-        } elseif($folder_system_data["cmd"]=="tree") {
-            $select = '<option value="' . md5("new_top_folder") . '_a_">' . _("ausw&auml;hlen oder wie Eingabe").' --&gt;</option>';
-            $query = "SELECT SUM(1) FROM folder WHERE range_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($range_id));
-            $result2 = $statement->fetchColumn();
-            if ($result2 == 0) {
-                $select.="\n<option value=\"".$range_id."_a_\">" . _("Allgemeiner Dateiordner") . "</option>";
-            }
-
-
-            if($SessSemName['class'] == 'sem'){
-                $query = "SELECT statusgruppen.name, statusgruppe_id
-                          FROM statusgruppen
-                          LEFT JOIN folder ON (statusgruppe_id = folder.range_id)
-                          WHERE statusgruppen.range_id = ? AND folder_id IS NULL
-                          ORDER BY position";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($range_id));
-                $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($result2 as $row2) {
-                    $select.="\n<option value=\"".$row2['statusgruppe_id']."_a_\">" . sprintf(_("Dateiordner der Gruppe: %s"), htmlReady($row2['name'])) . "</option>";
-                }
-
-                $issues = array();
-                $shown_dates = array();
-
-                $query = "SELECT themen_termine.issue_id, termine.date, folder.name, termine.termin_id, date_typ
-                          FROM termine
-                          LEFT JOIN themen_termine USING (termin_id)
-                          LEFT JOIN folder ON (themen_termine.issue_id = folder.range_id)
-                          WHERE termine.range_id = ? AND folder.folder_id IS NULL
-                          ORDER BY termine.date, name";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($range_id));
-                $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-                foreach ($result2 as $row2) {
-                    if (!$row2["name"]) {
-                        $issue_name = false;
-                        if ($row2['issue_id']) {
-                            if (!$issues[$row2['issue_id']]) {
-                                $issues[$row2['issue_id']] = new Issue(array('issue_id' => $row2['issue_id']));
-                            }
-                            $issue_name = $issues[$row2['issue_id']]->toString();
-                            $issue_name = htmlReady(my_substr($issue_name, 0, 20));
-                            $option_id = $row2['issue_id'];
-                        } else {
-                            $option_id = $row2['termin_id'];
-                        }
-
-                        $select .= "\n".sprintf('<option value="%s_a_">%s</option>',
-                            $option_id,
-                            sprintf(_("Ordner für %s [%s]%s"),
-                                date("d.m.Y", $row2["date"]),
-                                $TERMIN_TYP[$row2["date_typ"]]["name"],
-                                ($issue_name ? ', '.$issue_name : '')
-                            )
-                        );
-
-                    }
-                }
-
-            }
-
-            if ($select) {
-                ?>
-                <tr>
-                <td class="blank" colspan="3" width="100%" style="padding-left:10px;">
-                <form action="<? echo URLHelper::getLink('#anker') ?>" method="POST">
-                    <?= CSRFProtection::tokenTag() ?>
-                    <select name="open" style="vertical-align:middle" aria-label="<?= _("Name für neuen Ordner auswählen") ?>">
-                        <? echo $select ?>
-                    </select>
-                    <input type="text" name="top_folder_name" size="50" aria-label="<?= _("Name für neuen Ordner eingeben") ?>">
-                    <?= Button::create(_("Neuer Ordner"), "anlegen") ?>
-                </form>
-                <?
-                }
-            }
+        }
     } elseif($folder_system_data['mode']){
         echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
         echo "\n" . '<span style="margin:25px;font-weight:bold;">';
@@ -1345,7 +1266,17 @@ div.droppable.hover {
 <div id="fehler_seite"></div>
 
 <?php
-Sidebar::get()->setImage('sidebar/files-sidebar.png');
+$sidebar = Sidebar::get();
+$sidebar->setImage('sidebar/files-sidebar.png');
+
+if ($rechte) {
+    $actions = new ActionsWidget();
+    $actions->addLink(_('Neuer Ordner'),
+                      URLHelper::getLink('dispatch.php/folder/create/' . $range_id . '/' . $SessSemName['class']),
+                      'icons/16/blue/add/folder-empty.png',
+                      array('data-dialog' => 'size=400x200'));
+    $sidebar->addWidget($actions);
+}
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();

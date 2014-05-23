@@ -648,14 +648,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   text-align: left;
 }
 table.default tbody td {
@@ -1705,7 +1705,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
 }
 #layout-sidebar {
   background: #fff;
@@ -4051,6 +4051,28 @@ a.opengraph_info:hover {
   background: #e6e6e6 none;
   cursor: default;
   opacity: 0.65;
+}
+.ui-dialog .ui-button.accept,
+.ui-dialog .ui-button.cancel {
+  white-space: normal;
+}
+.ui-dialog .ui-button.accept .ui-button-text:before,
+.ui-dialog .ui-button.cancel .ui-button-text:before {
+  content: ' ';
+  float: left;
+  height: 16px;
+  margin: -2px 8px 0 -4px;
+  width: 16px;
+}
+.ui-dialog .ui-button.accept .ui-button-text:before {
+  background: no-repeat;
+  background-image: url("../images/icons/16/blue/accept.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1x, url("../images/icons/32/blue/accept.png") 2x);
+}
+.ui-dialog .ui-button.cancel .ui-button-text:before {
+  background: no-repeat;
+  background-image: url("../images/icons/16/blue/decline.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1x, url("../images/icons/32/blue/decline.png") 2x);
 }
 .ui-dialog .ui-button-text-only .ui-button-text {
   padding: 0;

@@ -115,8 +115,17 @@
             };
             handler = handler.bind(this);
 
-            buttons[label] = handler;
+            if ($(this).is('.accept,.cancel')) {
+                buttons[label] = {
+                    text: label,
+                    click: handler,
+                    'class': $(this).is('.accept') ? 'accept' : 'cancel' 
+                }
+            } else {
+                buttons[label] = handler;
+            }
         });
+        console.log(buttons);
 
         return buttons;
     }
@@ -284,8 +293,12 @@
         if (!options.hasOwnProperty('buttons') || options.buttons) {
             dialog_options.buttons = extractButtons.call(this, instance.element);
             // Create 'close' button
-            dialog_options.buttons['Abbrechen'.toLocaleString()] = function () {
-                STUDIP.Dialog.close(options);
+            dialog_options.buttons['Abbrechen'.toLocaleString()] = {
+                text: 'Abbrechen'.toLocaleString(),
+                'class': 'cancel',
+                click: function () {
+                    STUDIP.Dialog.close(options);
+                }
             };
         }
 

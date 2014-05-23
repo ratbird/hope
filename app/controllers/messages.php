@@ -151,32 +151,25 @@ class MessagesController extends AuthenticatedController {
             }
         }
         if (Request::get("filter") && Request::option("course_id")) {
-            $course_id = Request::option('course_id');
+            $params = array(Request::option('course_id'), Request::option('who'));
             switch (Request::get("filter")) {
                 case 'send_sms_to_all':
-                    $who = Request::quoted('who');
-                    $query = "SELECT b.user_id FROM seminar_user a, auth_user_md5 b WHERE a.Seminar_id = '".$course_id."' AND a.user_id = b.user_id AND a.status = '$who' ORDER BY Nachname, Vorname";
+                    $query = "SELECT b.user_id,'rec' as snd_rec FROM seminar_user a, auth_user_md5 b WHERE a.Seminar_id = ? AND a.user_id = b.user_id AND a.status = ? ORDER BY Nachname, Vorname";
                     break;
                 case 'all':
-                    $query = "SELECT user_id FROM seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE Seminar_id = '".$course_id."' ORDER BY Nachname, Vorname";
+                    $query = "SELECT user_id,'rec' as snd_rec FROM seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE Seminar_id = ? ORDER BY Nachname, Vorname";
                     break;
                 case 'prelim':
-                    $query = "SELECT user_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND status='accepted' ORDER BY Nachname, Vorname";
+                    $query = "SELECT user_id,'rec' as snd_rec FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = ? AND status='accepted' ORDER BY Nachname, Vorname";
                     break;
                 case 'waiting':
-                    $query = "SELECT user_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND (status='awaiting' OR status='claiming') ORDER BY Nachname, Vorname";
+                    $query = "SELECT user_id,'rec' as snd_rec FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = ? AND status='awaiting' ORDER BY Nachname, Vorname";
                     break;
                 case 'inst_status':
-                    $who = Request::quoted('who');
-                    $query = "SELECT b.user_id FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = '".$course_id."' AND a.user_id = b.user_id AND a.inst_perms = '$who' ORDER BY Nachname, Vorname";
+                    $query = "SELECT b.user_id,'rec' as snd_rec FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = ? AND a.user_id = b.user_id AND a.inst_perms = ? ORDER BY Nachname, Vorname";
                     break;
             }
-            $user_ids = DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN, 0);
-            foreach ($user_ids as $user_id) {
-                $user = new MessageUser();
-                $user->setData(array('user_id' => $user_ids, 'snd_rec' => "rec"));
-                $this->default_message->receivers[] = $user;
-            }
+            $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
         }
         if (Request::option("answer_to")) {
             $old_message = new Message(Request::option("answer_to"));

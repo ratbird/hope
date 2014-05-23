@@ -22,7 +22,7 @@ class MessagesController extends AuthenticatedController {
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
         Navigation::activateItem('/messaging/messages/inbox');
-        
+
         if (Request::isPost() && Request::get("delete_message")) {
             $messaging = new messaging();
             $success = $messaging->delete_message(Request::option("delete_message"));
@@ -32,7 +32,7 @@ class MessagesController extends AuthenticatedController {
                 PageLayout::postMessage(MessageBox::error(_("Nachricht konnte nicht gelöscht werden.")));
             }
         }
-        
+
         $this->messages = $this->get_messages(
             true,
             Request::int("limit", $this->number_of_displayed_messages),
@@ -43,13 +43,13 @@ class MessagesController extends AuthenticatedController {
         $this->received = 1;
         $this->tags = Message::getUserTags();
     }
-    
+
     public function sent_action()
     {
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
         Navigation::activateItem('/messaging/messages/sent');
-        
+
         if (Request::isPost() && Request::get("delete_message")) {
             $messaging = new messaging();
             $success = $messaging->delete_message(Request::option("delete_message"));
@@ -59,7 +59,7 @@ class MessagesController extends AuthenticatedController {
                 PageLayout::postMessage(MessageBox::error(_("Nachricht konnte nicht gelöscht werden.")));
             }
         }
-        
+
         $this->messages = $this->get_messages(
             false,
             Request::int("limit", $this->number_of_displayed_messages),
@@ -69,10 +69,10 @@ class MessagesController extends AuthenticatedController {
         );
         $this->received = 0;
         $this->tags = Message::getUserTags();
-        
+
         $this->render_action("overview");
     }
-    
+
     public function more_action()
     {
         $messages = $this->get_messages(
@@ -93,10 +93,10 @@ class MessagesController extends AuthenticatedController {
                                             ->open("messages/_message_row.php")
                                             ->render(compact("message"));
         }
-        
+
         $this->render_text(json_encode(studip_utf8encode($this->output)));
     }
-    
+
     public function read_action($message_id)
     {
         PageLayout::setTitle(_("Nachrichten"));
@@ -114,7 +114,7 @@ class MessagesController extends AuthenticatedController {
         }
         $this->message->markAsRead($GLOBALS["user"]->id);
     }
-    
+
     /**
      * Lets the user compose a message and send it.
      */
@@ -130,13 +130,13 @@ class MessagesController extends AuthenticatedController {
         if (Request::username("rec_uname")) {
             $user = new MessageUser();
             $user->setData(array('user_id' => get_userid(Request::username("rec_uname")), 'snd_rec' => "rec"));
-            $this->default_message->users[] = $user;
+            $this->default_message->receivers[] = $user;
         }
         if (Request::getArray("rec_uname")) {
             foreach (Request::getArray("rec_uname") as $username) {
                 $user = new MessageUser();
                 $user->setData(array('user_id' => get_userid($username), 'snd_rec' => "rec"));
-                $this->default_message->users[] = $user;
+                $this->default_message->receivers[] = $user;
             }
         }
         if (Request::option("group_id")) {
@@ -146,7 +146,7 @@ class MessagesController extends AuthenticatedController {
                 foreach ($group->members as $member) {
                     $user = new MessageUser();
                     $user->setData(array('user_id' => $member['user_id'], 'snd_rec' => "rec"));
-                    $this->default_message->users[] = $user;
+                    $this->default_message->receivers[] = $user;
                 }
             }
         }
@@ -175,7 +175,7 @@ class MessagesController extends AuthenticatedController {
             foreach ($user_ids as $user_id) {
                 $user = new MessageUser();
                 $user->setData(array('user_id' => $user_ids, 'snd_rec' => "rec"));
-                $this->default_message->users[] = $user;
+                $this->default_message->receivers[] = $user;
             }
         }
         if (Request::option("answer_to")) {
@@ -189,7 +189,7 @@ class MessagesController extends AuthenticatedController {
             $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "Re: " ? $old_message['subject'] : "Re: ".$old_message['subject'];
             $user = new MessageUser();
             $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
-            $this->default_message->users[] = $user;
+            $this->default_message->receivers[] = $user;
         }
         if (Request::get("default_body")) {
             $this->default_message['message'] = Request::get("default_body");
@@ -294,7 +294,7 @@ class MessagesController extends AuthenticatedController {
             return $this->render_nothing();
         }
     }
-    
+
     protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null, $search = null)
     {
         if ($tag) {
@@ -432,5 +432,5 @@ class MessagesController extends AuthenticatedController {
 
         $this->render_text(json_encode(studip_utf8encode($output)));
     }
-    
+
 }

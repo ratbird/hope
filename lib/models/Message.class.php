@@ -94,8 +94,13 @@ class Message extends SimpleORMap
             'foreign_key' => 'autor_id',
             'assoc_foreign_key' => 'user_id'
         );
-        $config['has_many']['users'] = array(
-            'class_name' => 'MessageUser'
+        $config['has_one']['originator'] = array(
+            'class_name' => 'MessageUser',
+            'assoc_func' => 'findSendedByMessageId'
+        );
+        $config['has_many']['receivers'] = array(
+            'class_name' => 'MessageUser',
+            'assoc_func' => 'findReceivedByMessageId'
         );
         $config['has_many']['attachments'] = array(
             'class_name' => 'StudipDocument',
@@ -106,14 +111,12 @@ class Message extends SimpleORMap
 
     public function getSender()
     {
-        return $this->users->filter(function ($mu) {return $mu->snd_rec === 'snd';})->first()->user;
+        return $this->author;
     }
 
     public function getRecipients()
     {
-        return $this->users
-            ->filter(function ($mu) { return $mu->snd_rec === 'rec'; })
-            ->map(function ($mu) { return $mu->user; });
+        return new SimpleCollection(User::findMany($this->receivers->pluck('user_id'), 'ORDER BY Nachname'));
     }
 
     public function markAsRead($user_id)
@@ -129,23 +132,22 @@ class Message extends SimpleORMap
     private function markAs($user_id, $state_of_flag)
     {
         $changed = 0;
-        foreach ($this->users->findBy('user_id', $user_id) as $mu) {
+        if ($user_id == $this->autor_id) {
+            $mu = $this->originator;
+        } else {
+            $mu = $this->receivers->findOneBy('user_id', $user_id);
+        }
+        if ($mu) {
             $mu->readed = $state_of_flag;
             $changed += $mu->store();
         }
-        if ($changed) {
-            $this->users->refresh();
-        }
         return $changed;
     }
-    
+
     public function isRead($user_id = null)
     {
         $user_id || $user_id = $GLOBALS['user']->id;
-        foreach ($this->users->findBy('user_id', $user_id) as $mu) {
-            return (bool) $mu->readed;
-        }
-        return false;
+        return (bool)MessageUser::findOneBySQL("message_id = ? AND user_id = ? AND snd_rec IN('rec','snd') AND readed = 1", array($this->message_id, $user_id));
     }
 
     public static function send($sender, $recipients, $subject, $message)
@@ -166,14 +168,7 @@ class Message extends SimpleORMap
     public function permissionToRead($user_id = null)
     {
         $user_id || $user_id = $GLOBALS['user']->id;
-        $statement = DBManager::get()->prepare("
-            SELECT 1 FROM message_user WHERE message_id = :message_id AND user_id = :user_id
-        ");
-        $statement->execute(array(
-            'message_id' => $this->getId(),
-            'user_id' => $user_id
-        ));
-        return (bool) $statement->fetchColumn();
+        return (bool)MessageUser::findOneBySQL("message_id = ? AND user_id = ? AND snd_rec IN('rec','snd') AND deleted = 0", array($this->message_id, $user_id));
     }
 
     /**

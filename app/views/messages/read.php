@@ -21,10 +21,12 @@
             <td><strong><?= _("Adressaten") ?></strong></td>
             <td>
                 <? if ($message["autor_id"] !== $GLOBALS["user"]->id) : ?>
-                <?= count($message->getRecipients()) > 1 ? sprintf(_("%s Personen"), count($message->getRecipients())) : _("Eine Person") ?>
+                <?= count($message->receivers) > 1 ? sprintf(_("%s Personen"), count($message->receivers)) : _("Eine Person") ?>
+                <? $read = $message->receivers->findBy('readed', 1)->count();?>
                 <? else : ?>
                 <ul class='clean'>
-                <? foreach ($message->users->filter(function ($u) { return $u["snd_rec"] === "rec"; }) as $key => $message_user) : ?>
+                <? $read = 0;?>
+                <? foreach ($message->receivers as $key => $message_user) : ?>
                     <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => get_username($message_user["user_id"]))) ?>">
                             <?= Avatar::getAvatar($message_user["user_id"])->getImageTag(Avatar::SMALL)?>
@@ -32,6 +34,11 @@
                         </a>
                         <?= Assets::img("icons/16/grey/checkbox-".($message_user['readed'] ? "" : "un")."checked", array('class' => "text-bottom", "title" => ($message_user['readed'] ? _("Gelesen") : _("Noch ungelesen")))) ?>
                     </li>
+                    <?php
+                    if ($message_user["readed"]) {
+                        $read++;
+                    }
+                    ?>
                 <? endforeach ?>
                 </ul>
                 <? endif ?>
@@ -40,13 +47,7 @@
         <tr>
             <td><strong><?= _("Gelesen") ?></strong></td>
             <td>
-                <? $read = 0;
-                foreach ($message->users as $message_user) {
-                    if ($message_user["snd_rec"] === "rec" && $message_user["readed"]) {
-                        $read++;
-                    }
-                } ?>
-                <?= sprintf(_("%s mal gelesen"), $read) ?>
+                <?= sprintf(_("%s mal gelesen"), (int)$read) ?>
             </td>
         </tr>
         <tr>

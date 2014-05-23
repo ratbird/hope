@@ -9,7 +9,7 @@
                 <span class="visual"></span>
                 <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
             </li>
-            <? foreach ($default_message->users as $user) : ?>
+            <? foreach ($default_message->receivers as $user) : ?>
             <li style="padding: 0px;" class="adressee">
                 <input type="hidden" name="message_to[]" value="<?= htmlReady($user['user_id']) ?>">
                 <span class="visual">

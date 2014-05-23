@@ -40,4 +40,14 @@ class MessageUser extends SimpleORMap
         );
         parent::configure($config);
     }
+
+    static function findSendedByMessageId($message_id)
+    {
+        return self::findOneBySQL("message_id=? AND snd_rec='snd'", array($message_id));
+    }
+
+    static function findReceivedByMessageId($message_id)
+    {
+        return self::findBySQL("message_id=? AND snd_rec='rec'", array($message_id));
+    }
 }

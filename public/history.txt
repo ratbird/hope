@@ -1,3 +1,21 @@
+__23.05.2014 V 3.0__
+- Neue Anmeldeverfahren mit modularem Aufbau und Härtefallberücksichtigung
+- Plugin-Rollen können jetzt lokal beschränkt sein
+- Erweiterung des Loggings auf beliebige Objekte
+- Vorläufige Accounts, z.B. für Lehrauftragsplanung
+- Abfrage von Zusatzangaben vor Eintrag in Veranstaltungen
+- Überarbeitetes Ankündigungssystem
+- Vorschaubilder für Links in Blubber
+- Blubbermeldungen lasen sich "weitersagen"
+- Veranstaltungsgruppen können nun Termine haben
+- Überarbeiteter Mailversand 
+- Integration eines WYSIWYG-Editors
+- Sortierfunktionen für Veranstaltungslisten
+- Beschreibungstexte für Plugins 
+- Integration der REST-Schnittstelle ins Kernsystem
+- Designüberarbeitungen
+- Performanceverbesserungen
+
 __07.11.2013 V 2.5__
 - Automatisiertes Eintragen von Benutzern brücksichtigt Domänen
 - Benutzerdefinierte Blubberströme

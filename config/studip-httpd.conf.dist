@@ -16,7 +16,7 @@
 
     php_value upload_max_filesize 7M
     php_value post_max_size 8M
-    php_value memory_limit 40M
+    php_value memory_limit 64M
     php_value max_execution_time 300
     php_flag short_open_tag On
     php_flag session.use_trans_sid Off

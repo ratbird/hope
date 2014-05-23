@@ -306,7 +306,9 @@ class MessagesController extends AuthenticatedController {
         if ($message && $message->permissionToRead($GLOBALS['user']->id)) {
             $this->msg = $message->toArray();
             $this->msg['from'] = $message->getSender()->getFullname();
-            $this->msg['to'] = join(', ', $message->getRecipients()->getFullname());
+            $this->msg['to'] = $GLOBALS['user']->id == $message->autor_id ?
+                join(', ', $message->getRecipients()->getFullname()) :
+                $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), count($message->receivers)-1);
             $this->msg['attachments'] = $message->attachments->toArray('filename filesize');
             PageLayout::setTitle($data['subject']);
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));

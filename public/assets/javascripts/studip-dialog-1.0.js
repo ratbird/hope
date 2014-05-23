@@ -82,7 +82,7 @@
                     }
                 }
                 escaped -= 1;
-                
+
                 if (write || i === split.length - 1) {
                     if (i === split.length - 1 && inquotes) {
                         throw 'Invalid data, missing closing quote';
@@ -108,34 +108,13 @@
         // TODO: Remove the rel selector after Stud.IP 3.2 or 3.3 has been released
         $('[rel~="lightbox-button"],[rel~="option"],[data-dialog-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
             var label = $(this).text(),
-                handler,
-                form,
-                input;
+                handler;
 
-            // Submit form if element is a real button
-            if ($(this).is('button')) {
-                if (!$(this).is('form button')) {
-                    return;
-                }
-                input = $('<input type="hidden">');
-                input.attr('name', $(this).attr('name'));
-                input.val($(this).val());
+            handler = function () {
+                this.click();
+            };
+            handler = handler.bind(this);
 
-                form = $(this).closest('form');
-
-                handler = function () {
-                    form.append(input).submit();
-                };
-            }
-            // Trigger click if element is a link
-            if ($(this).is('a')) {
-                handler = function () {
-                    this.click();
-                };
-                handler = handler.bind(this);
-            }
-
-            // Store button and remove from response
             buttons[label] = handler;
         });
 
@@ -175,7 +154,7 @@
         if ($(element).is(':disabled')) {
             return;
         }
-        
+
         if (options.close) {
             STUDIP.Dialog.close(options);
             return;
@@ -197,7 +176,7 @@
             url = $(element).closest('form').attr('action');
             method = $(element).closest('form').attr('method');
             data = $(element).closest('form').serializeArray();
-            
+
             if ($(element).is('button')) {
                 data.push({
                     name: $(element).attr('name'),

@@ -300,14 +300,14 @@ class MessagesController extends AuthenticatedController {
         }
     }
 
-    function print_action($message_id, $sndrec = 'rec')
+    function print_action($message_id)
     {
-        $data = get_message_data($message_id, $GLOBALS['user']->id, $sndrec);
-        if ($data) {
-            $this->msg = $data;
-            $this->msg['from'] = get_fullname($data['snd_uid']);
-            $this->msg['to'] = join(', ', array_map('get_fullname', explode(',', $data['rec_uid'])));
-            $this->msg['attachments'] = array_filter(array_map(array('StudipDocument','find'), array_unique(explode(',', $data['attachments']))));
+        $message = Message::find($message_id);
+        if ($message && $message->permissionToRead($GLOBALS['user']->id)) {
+            $this->msg = $message->toArray();
+            $this->msg['from'] = $message->getSender()->getFullname();
+            $this->msg['to'] = join(', ', $message->getRecipients()->getFullname());
+            $this->msg['attachments'] = $message->attachments->toArray('filename filesize');
             PageLayout::setTitle($data['subject']);
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
         } else {

@@ -24,7 +24,7 @@
     </div>
     <?php foreach($msg['attachments'] as $one) : ?>
     <div>
-    <?php echo htmlReady($one->filename) . ' (' . round($one->filesize/1024) . ' Kb)' ?>
+    <?php echo htmlReady($one['filename']) . ' (' . relsize($one['filesize'], false) . ')' ?>
     </div>
     <?php endforeach;?>
 <?php endif;?>

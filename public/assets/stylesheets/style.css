@@ -1930,6 +1930,7 @@ ul.widget-list > li {
 .sidebar-widget .widget-options > li {
   line-height: 1.5em;
   margin-left: 0;
+  padding-left: 0;
 }
 .sidebar-widget .widget-options .options-checkbox {
   background-repeat: no-repeat;

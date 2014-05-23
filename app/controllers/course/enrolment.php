@@ -55,7 +55,7 @@ class Course_EnrolmentController extends AuthenticatedController {
         if (!$enrolment_info['enrolment_allowed']) {
             throw new AccessDeniedException($enrolment_info['description']);
         }
-        PageLayout::setTitle(Course::findCurrent()->getFullname() . " - " . _("Veranstaltungsanmeldung"));
+        PageLayout::setTitle($course->getFullname() . " - " . _("Veranstaltungsanmeldung"));
         PageLayout::addSqueezePackage('enrolment');
         if (Request::isXhr()) {
             $this->set_layout(null);

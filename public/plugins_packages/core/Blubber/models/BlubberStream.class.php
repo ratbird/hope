@@ -58,8 +58,8 @@ class BlubberStream extends SimpleORMap {
     static public function getGlobalStream($user_id = null) {
         $user_id OR $user_id = $GLOBALS['user']->id;
         $stream = new BlubberStream();
-        $stream['pool_courses'] = array("all");
-        $stream['pool_groups'] = array("all");
+        $stream['pool_courses'] = array();
+        $stream['pool_groups'] = array();
         $stream['sort'] = "activity";
         $stream->user_id = $user_id;
         return $stream;

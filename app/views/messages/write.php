@@ -90,7 +90,7 @@
         </ul>
     </div>
 
-    <div id="attachments" style="display: none;">
+    <div id="attachments" style="<?= $default_attachments ? '' : 'display: none;'?>">
         <h4><?= _("Anhänge") ?></h4>
         <div>
             <ul class="files">
@@ -99,6 +99,15 @@
                     <span class="name"></span>
                     <span class="size"></span>
                 </li>
+                <? if ($default_attachments) : ?>
+                    <? foreach ($default_attachments as $a) : ?>
+                    <li class="file">
+                    <span class="icon"><?=$a['icon']?></span>
+                    <span class="name"><?=$a['name']?></span>
+                    <span class="size"><?=$a['size']?></span>
+                    </li>
+                    <? endforeach ?>
+                <? endif ?>
             </ul>
             <div id="statusbar_container">
                 <div class="statusbar" style="display: none;">

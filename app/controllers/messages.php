@@ -183,13 +183,41 @@ class MessagesController extends AuthenticatedController {
             if (!$old_message->permissionToRead()) {
                 throw new AccessDeniedException("Message is not for you.");
             }
-            if (Request::option("quote") === $old_message->getId()) {
-                $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
+            if (!Request::get('forward')) {
+                if (Request::option("quote") === $old_message->getId()) {
+                    $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
+                }
+                $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
+                $user = new MessageUser();
+                $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
+                $this->default_message->receivers[] = $user;
+            } else {
+                $messagesubject = 'FWD: ' . $old_message['subject'];
+                $message = _("-_-_ Weitergeleitete Nachricht _-_-");
+                $message .= "\n" . _("Betreff") . ": " . $old_message['subject'];
+                $message .= "\n" . _("Datum") . ": " . strftime('%x %X', $old_message['mkdate']);
+                $message .= "\n" . _("Von") . ": " . get_fullname($old_message['autor_id']);
+                $message .= "\n" . _("An") . ": " . join(', ', $old_message->getRecipients()->getFullname());
+                $message .= "\n\n" . $old_message['message'];
+                if (count($old_message->attachments)) {
+                    Request::set('message_id', $old_message->getNewId());
+                    foreach($old_message->attachments as $attachment) {
+                        $attachment->range_id = 'provisional';
+                        $attachment->seminar_id = $GLOBALS['user']->id;
+                        $attachment->autor_host = $_SERVER['REMOTE_ADDR'];
+                        $attachment->user_id = $GLOBALS['user']->id;
+                        $attachment->description = Request::option('message_id');
+                        $new_attachment = $attachment->toArray(array('range_id', 'user_id', 'seminar_id', 'name', 'description', 'filename', 'filesize'));
+                        StudipDocument::createWithFile(get_upload_file_path($attachment->getId()), $new_attachment);
+                        $this->default_attachments[] = array('icon' => Assets::img(GetFileIcon(getFileExtension($new_attachment['filename'])), array('class' => "text-bottom")),
+                                                             'name' => $new_attachment['filename'],
+                                                             'size' => relsize($new_attachment['filesize'],false));
+
+                    }
+                }
+                $this->default_message['subject'] = $messagesubject;
+                $this->default_message['message'] = $message;
             }
-            $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "Re: " ? $old_message['subject'] : "Re: ".$old_message['subject'];
-            $user = new MessageUser();
-            $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
-            $this->default_message->receivers[] = $user;
         }
         if (Request::get("default_body")) {
             $this->default_message['message'] = Request::get("default_body");

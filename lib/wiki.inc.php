@@ -421,13 +421,18 @@ function refreshBacklinks($keyword, $str) {
 * @return   string  Displayable HTML
 *
 **/
-function getZusatz($wikiData) {
+function getZusatz($wikiData)
+{
     if (!$wikiData || $wikiData["version"] <= 0) {
         return "";
     }
-    $s = "<font size=-1>";
-    $s .=  _("Version ") . $wikiData['version'];
-    $s .= sprintf(_(", ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("dispatch.php/profile?username=".get_username ($wikiData['user_id']))."\"><font size=-1 color=\"#333399\">".get_fullname($wikiData['user_id'],'full',1)."</font></a><font size=-1>", date("d.m.Y, H:i",$wikiData['chdate'])."<font size=-1>&nbsp;"."</font>");
+    
+    $user = User::find($wikiData['user_id']);
+    
+    $s =  '<a href="' . URLHelper::getLink('?keyword=' . urlencode($wikiData['keyword']) . '&version=' . $wikiData['version']). '">' . _('Version ') . $wikiData['version'] . '</a>';
+    $s .= sprintf(_(', geändert von %s am %s'),
+                  '<a href="' . URLHelper::getLink('dispatch.php/profile?username=' . $user->username) .'">' . $user->getFullName() . '</a>',
+                  date('d.m.Y, H:i', $wikiData['chdate']));
     return $s;
 }
 

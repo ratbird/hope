@@ -152,8 +152,8 @@ if (count($tags) && $tags[0]) {
     //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
     foreach ($tags as $tag) {
         $cloud->addLink(
-            "#".$tag['tag'], 
-            URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)), 
+            "#".$tag['tag'],
+            URLHelper::getLink("plugins.php/blubber/streams/global", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)),
             ceil(10 * $tag['counter'] / $maximum)
         );
     }

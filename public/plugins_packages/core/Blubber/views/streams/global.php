@@ -152,7 +152,7 @@ if (count($tags) && $tags[0]) {
     foreach ($tags as $tag) {
         $cloud->addLink(
             "#".$tag['tag'], 
-            URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)), 
+            URLHelper::getLink("plugins.php/blubber/streams/global", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag)),
             ceil(10 * $tag['counter'] / $maximum)
         );
     }

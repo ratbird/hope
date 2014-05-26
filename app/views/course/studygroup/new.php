@@ -25,30 +25,45 @@ use Studip\Button, Studip\LinkButton;
     <?= $this->render_partial("course/studygroup/_choose_founders", array('founders' => $flash['founders'], 'results_choose_founders' => $flash['results_choose_founders'])) ?>
 <? endif; ?>
 <tr>
-  <td style='text-align:right; vertical-align:top;'><?= _("Module:") ?></td>
+  <td style='text-align:right; vertical-align:top;'><?= _("Inhaltselemente:") ?></td>
   <td>
     <? foreach($available_modules as $key => $name) : ?>
         <? if ($key === "documents_folder_permissions") : ?>
-        <label>
+            <?
+            // load metadata of module
+            $adminModules = new AdminModules();
+            $description = $adminModules->registered_modules[$key]['metadata']['description'];
+            ?>
+            <label <?= tooltip(kill_format($description)); ?>>
                 <input name="groupplugin[<?= $key ?>]" type="checkbox"<?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>>
                 <?= htmlReady($name) ?>
-        </label><br>
+            </label><br>
         <? else : ?>
             <? $module = $sem_class->getSlotModule($key) ?>
             <? if ($module && $sem_class->isModuleAllowed($module) && !$sem_class->isSlotMandatory($key)) : ?>
-            <label>
-                <input name="groupplugin[<?= $module ?>]" type="checkbox"<?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>>
-                <?= htmlReady($name) ?>
-            </label><br>
+                <?
+                // load metadata of module
+                $studip_module = $sem_class->getModule($key);
+                $info = $studip_module->getMetadata();
+                ?>
+                <label <?= tooltip(isset($info['description']) ? kill_format($info['description']) : ("Für dieses Element ist keine Beschreibung vorhanden.")) ?>>
+                    <input name="groupplugin[<?= $module ?>]" type="checkbox"<?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>>
+                    <?= htmlReady($name) ?>
+                </label><br>
             <? endif ?>
         <? endif ?>
     <? endforeach; ?>
 
     <? foreach($available_plugins as $key => $name) : ?>
         <? if ($sem_class->isModuleAllowed($key) && !$sem_class->isModuleMandatory($key) && !$sem_class->isSlotModule($key)) : ?>
-        <label>
-            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
-        </label><br>
+            <?
+            // load metadata of plugin
+            $plugin = $sem_class->getModule($key);
+            $info = $plugin->getMetadata();
+            ?>
+            <label <?= tooltip(isset($info['description']) ? kill_format($info['description']) : ("Für dieses Element ist keine Beschreibung vorhanden.")) ?>>
+                <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
+            </label><br>
         <? endif ?>
     <? endforeach; ?>
   </td>

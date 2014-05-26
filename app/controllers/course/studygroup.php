@@ -535,7 +535,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 // Success message
 
-                $this->flash['success'] .= _("Modul(e) erfolgreich deaktiviert.");
+                $this->flash['success'] .= _("Inhaltselement(e) erfolgreich deaktiviert.");
                 return $this->redirect('course/studygroup/edit/' . $id);
 
             } else if (Request::submitted('replace_founder'))  {

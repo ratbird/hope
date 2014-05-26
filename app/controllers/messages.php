@@ -102,6 +102,9 @@ class MessagesController extends AuthenticatedController {
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
         $this->message = new Message($message_id);
+        if (!$this->message->permissionToRead()) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         if ($this->message['autor_id'] === $GLOBALS['user']->id) {
             Navigation::activateItem('/messaging/messages/sent');
         } else {

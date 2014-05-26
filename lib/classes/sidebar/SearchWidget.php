@@ -3,6 +3,7 @@ class SearchWidget extends SidebarWidget
 {
     public function __construct()
     {
+        parent::__construct();
         $this->title = _('Suche');
     }
     

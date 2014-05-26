@@ -170,19 +170,7 @@ if ((getGlobalPerms($user->id) == 'admin') || ($perm->have_perm('root'))) {
 //load content, text, pictures and stuff
 include ("$RELATIVE_PATH_RESOURCES/views/page_intros.inc.php");
 
-/*****************************************************************************
-Kopf der Ausgabe
-/*****************************************************************************/
-if (Request::get('print_view')){
-    PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
-}
-
-include ('lib/include/html_head.inc.php');
-if ($quick_view_mode != "no_nav" && !Request::get('print_view')) {
-    include ('lib/include/header.php');
-}
-
+ob_start();
 ?>
 <script type="text/javascript">
 function check_opener(obj){
@@ -195,38 +183,22 @@ function check_opener(obj){
 }
 </script>
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
-    <?
-    if (!Request::get('print_view')){
-        if ($infobox) {
-    }
-    ?>
+<? if (!Request::get('print_view')): ?>
     <tr>
         <td class="blank" valign ="top">
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td valign ="top">
-                <?php
-                        if ($msg->checkMsgs()) {
-                            $msg->displayAllMsg("line");
-                        }
+                <?
+                    if ($msg->checkMsgs()) {
+                        $msg->displayAllMsg("line");
+                    }
+                    if ($page_intro) {
+                        echo $page_intro;
+                    }
                 ?>
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <?
-                        if ($page_intro) {
-                        ?>
-                        <tr>
-                            <td class="blank"><? (!$infobox) ? print "<br>":"" ?>
-                                <table width="99%" align="center" border="0" cellpadding="2" cellspacing ="0">
-                                    <tr><td>
-                                        <font size="-1"><? echo $page_intro ?></font><br>&nbsp;
-                                    </td></tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <?
-                        }
-    }
-    ?>
+<? endif; ?>
     <tr>
         <td class="blank" valign ="top">
 
@@ -364,20 +336,10 @@ if ($view == "edit_object_assign" || $view == "openobject_assign") {
     require_once ($RELATIVE_PATH_RESOURCES."/views/EditResourceData.class.php");
 
     if ($view == "edit_object_assign") {
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -457,20 +419,10 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
             $ViewSchedules->navigator();
         }
 
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox && !Request::get('print_view')) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -505,20 +457,10 @@ if ($view == "view_sem_schedule") {
         $ViewSchedules = new ShowSemSchedules($_SESSION['resources_data']["actual_object"], $_SESSION['resources_data']['sem_schedule_semester_id'],$_SESSION['resources_data']['sem_schedule_timespan']);
         $ViewSchedules->setUsedView($view);
         $ViewSchedules->navigator(Request::option('print_view'));
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox && !Request::get('print_view')) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -559,20 +501,10 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
         }
         $ViewSchedules->setUsedView($view);
         $ViewSchedules->navigator(Request::option('print_view'));
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox && !Request::get('print_view')) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -586,7 +518,6 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
                     $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
                 } else {
                     $msg->displayMsg(25);
-                    $suppress_infobox = TRUE;
                 }?> 
                 </td>
             </tr>
@@ -607,20 +538,10 @@ if ($view == "openobject_group_schedule") {
         $ViewSchedules = new ShowGroupSchedulesDaily($_SESSION['resources_data']['actual_room_group'], $_SESSION['resources_data']["schedule_start_time"],$resources_groups);
         $ViewSchedules->setUsedView($view);
         $ViewSchedules->navigator(Request::option('print_view'));
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox && !Request::get('print_view')) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -636,7 +557,6 @@ if ($view == "openobject_group_schedule") {
     } else {
         echo "</td></tr>";
         $msg->displayMsg(25);
-        $suppress_infobox = TRUE;
     }
 }
 
@@ -702,20 +622,10 @@ if ($view == "view_requests_schedule") {
         $ViewSchedules->setUsedView($view);
 
         $ViewSchedules->navigator();
-        $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox) {
-                    ?>
-                    <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
-                    </td>
-                    <?
-                }
-            ?>
                 </tr>
             </table>
         </td>
@@ -738,54 +648,49 @@ if ($view == "view_requests_schedule") {
 /*****************************************************************************
 Seite abschliessen und Infofenster aufbauen
 /*****************************************************************************/
-if (!$suppress_infobox) {
 ?>
                                 </td>
                             </tr>
                         </table>
                     </td>
-                <?
-                if ($infobox) {
-                    if (is_object($clipObj))  {
-                        $formObj = $clipObj->getFormObject();
-
-                        if ($quick_view) {
-                            $clip_form_action = URLHelper::getLink('', compact('quick_view', 'quick_view_mode'));
-                        } else {
-                            $clip_form_action = URLHelper::getLink('', compact('view', 'quick_view_mode'));
-                        }
-
-                        print $formObj->getFormStart($clip_form_action);
-                    }
-                    ?>
-                    <td class="blank" width="270" align="center" valign="top">
-                        <?
-                        print_infobox ($infobox, $infopic);
-                        if (is_object($clipObj))
-                            $clipObj->showClip();
-                        ?>
-
-                    </td>
-                    <?
-                    if (is_object($clipObj))  {
-                        print $formObj->getFormEnd();
-                    }
-                }
-            ?>
                 </tr>
             </table>
         </td>
     </tr>
-<?
-}
-?>  <tr>
-        <td class="blank">&nbsp;
-        </td>
-    </tr>
 </table>
 <?
-$_SESSION['resources_data'] = serialize($_SESSION['resources_data']);
-if (!Request::get('print_view')){
-    include ('lib/include/html_end.inc.php');
+if ($quick_view_mode === 'no_nav' || Request::get('print_view')) {
+    PageLayout::disableHeader();
 }
+if (Request::get('print_view')){
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
+}
+
+Sidebar::get()->setImage('sidebar/resources-sidebar.png');
+
+// Add clipboard if neccessary (another hack meets the core)
+if (is_object($clipObj))  {
+    $form   = $clipObj->getFormObject();
+    $action = $quick_view
+            ? URLHelper::getLink('', compact('quick_view', 'quick_view_mode'))
+            : URLHelper::getLink('', compact('view', 'quick_view_mode'));
+
+    ob_start();
+    echo $form->getFormStart($action);
+    $clipObj->showClip(false, '100%');
+    echo $form->getFormEnd();
+    $content = ob_get_clean();
+
+    $widget = new SidebarWidget();
+    $widget->setTitle(_('Merkliste'));
+    $widget->addElement(new WidgetElement($content));
+    Sidebar::get()->addWidget($widget);
+}
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+
+$_SESSION['resources_data'] = serialize($_SESSION['resources_data']);
 page_close();

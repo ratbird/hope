@@ -193,28 +193,23 @@ class ClipBoard {
         return $options;
     }
 
-    function showClip() {
+    function showClip($title = true, $width = '250px')
+    {
         $this->getFormObject();
-        ?>
-        <div align="center">
-            <b><?=_("Merkliste:"); ?></b>
-        </div>
-        <?
-        print $this->form_obj->getFormField("clip_content", array_merge(array('size' => $this->getNumElements()), array('style' => 'font-size:8pt;width:250px')))
-        ?>
-        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
-        <?
-        print $this->form_obj->getFormField("clip_cmd", array('style' => 'font-size:8pt;width:250px'))
-        ?>
-        <div align="center">
-        <?
-        print $this->form_obj->getFormButton("clip_ok", array('style'=>'vertical-align:middle;margin:3px;'));
-        if ($this->form_obj->form_buttons['clip_reload'])
-            print $this->form_obj->getFormButton("clip_reload", array('style'=>'vertical-align:middle;margin:3px;'))
-        ?>
-        </div>
-        <?
+
+        if ($title) {
+            echo '<div align="center"><b>' . _('Merkliste:') . '</b></div>';
         }
+        echo $this->form_obj->getFormField("clip_content", array_merge(array('size' => $this->getNumElements()), array('style' => 'font-size:8pt;width:' . $width)));
+        echo $this->form_obj->getFormField("clip_cmd", array('style' => 'font-size:8pt;width:' . $width));
+
+        echo '<div align="center">';
+        print $this->form_obj->getFormButton("clip_ok", array('style'=>'vertical-align:middle;margin:3px;'));
+        if ($this->form_obj->form_buttons['clip_reload']) {
+            print $this->form_obj->getFormButton("clip_reload", array('style'=>'vertical-align:middle;margin:3px;'));
+        }
+        echo '</div>';
+    }
 
     function doClipCmd(){
         $this->getFormObject();

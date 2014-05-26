@@ -47,7 +47,7 @@ PageLayout::setTitle(_("Archiv"));
 Navigation::activateItem('/search/archive');
 
 // Start of Output
-include('lib/include/html_head.inc.php'); // Output of html head
+ob_start();
 
 require_once('lib/msg.inc.php');
 require_once('config.inc.php');
@@ -242,8 +242,6 @@ PageLayout::setHelpKeyword("Basis.SuchenArchiv");
 
 // dann eben den Rest...
 
-include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-include ('lib/include/deprecated_tabs_layout.php');
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <? if ($msg) { parse_msg($msg); } ?>
@@ -368,9 +366,6 @@ include ('lib/include/deprecated_tabs_layout.php');
                 <br>
                 <input type="hidden" name="suche" value="yes">
             </form>
-        </td>
-        <td class="blank" align="right" valign="top" width="270">
-            <?= print_infobox(array(), 'sidebar/seminar-archive-sidebar.png') ?>
         </td>
     </tr>
 
@@ -623,6 +618,10 @@ if ($_SESSION['archiv_data']["perform_search"]) {
 </table>
 <?
 }
-    include ('lib/include/html_end.inc.php');
-    page_close();
- ?>
+Sidebar::get()->setImage('sidebar/seminar-archive-sidebar.png');
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+
+page_close();

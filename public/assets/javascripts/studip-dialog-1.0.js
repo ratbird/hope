@@ -273,7 +273,7 @@
             width:   width,
             height:  height,
             buttons: {},
-            title:   options.title || '',
+            title:   $('<div>').text(options.title || '').html(), // kinda like htmlReady()
             modal:   true,
             open: function () {
                 instance.open = true;

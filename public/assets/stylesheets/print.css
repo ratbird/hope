@@ -24,7 +24,8 @@ body, input, textarea, td, th, blockquote, p, form, ul, h4 {
 #barBottommiddle, #barBottomright, #barBottomshadow, #tabs, #tabs2,
 #layout_infobox, td.infoboxrahmen, td.infobox, td.infobox-img,
 #schedule_icons, #edit_inst_entry, #layout_sidebar, #barBottomContainer,
-.messagebox_buttons a.close, a.button, button.button {
+.messagebox_buttons a.close, a.button, button.button,
+#layout-sidebar, .helpbar-container, .helpbar {
     display: none !important;
 }
 

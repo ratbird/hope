@@ -168,7 +168,7 @@ class Message extends SimpleORMap
     public function permissionToRead($user_id = null)
     {
         $user_id || $user_id = $GLOBALS['user']->id;
-        return (bool)MessageUser::findOneBySQL("message_id = ? AND user_id = ? AND snd_rec IN('rec','snd') AND deleted = 0", array($this->message_id, $user_id));
+        return (bool) MessageUser::countBySQL("message_id = ? AND user_id = ? AND snd_rec IN('rec','snd') AND deleted = 0", array($this->message_id, $user_id));
     }
 
     /**

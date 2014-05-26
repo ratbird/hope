@@ -330,6 +330,7 @@ class MessagesController extends AuthenticatedController {
                     INNER JOIN message_user ON (message_user.message_id = message.message_id)
                     INNER JOIN message_tags ON (message_tags.message_id = message.message_id AND message_tags.user_id = message_user.user_id)
                 WHERE message_user.user_id = :me
+                    AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
                     AND message_tags.tag = :tag
                 ORDER BY message.mkdate DESC
@@ -387,6 +388,7 @@ class MessagesController extends AuthenticatedController {
                     INNER JOIN message_user ON (message_user.message_id = message.message_id)
                     INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = message.autor_id)
                 WHERE message_user.user_id = :me
+                    AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
                     $search_sql
                 ORDER BY message.mkdate DESC
@@ -402,6 +404,7 @@ class MessagesController extends AuthenticatedController {
                 FROM message
                     INNER JOIN message_user ON (message_user.message_id = message.message_id)
                 WHERE message_user.user_id = :me
+                    AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
                 ORDER BY message.mkdate DESC
                 LIMIT ".(int) $offset .", ".(int) $limit ."

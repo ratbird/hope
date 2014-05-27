@@ -159,7 +159,7 @@
     STUDIP.Dialog.fromElement = function (element, options) {
         options = options || {};
 
-        if ($(element).is(':disabled') || $(window).innerWidth() < 600 || $(window).innerHeight < 400) {
+        if ($(element).is(':disabled') || $(window).innerWidth() < 800 || $(window).innerHeight < 400) {
             return;
         }
 

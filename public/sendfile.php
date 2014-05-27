@@ -75,7 +75,17 @@ if ($type == 1){
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($file_id));
     $archiv_seminar_id = $statement->fetchColumn();
-    $no_access = !archiv_check_perm($archiv_seminar_id);
+    if ($archiv_seminar_id) {
+        $no_access = !archiv_check_perm($archiv_seminar_id);
+    } else {
+        $query = "SELECT seminar_id FROM archiv WHERE archiv_protected_file_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($file_id));
+        $archiv_seminar_id = $statement->fetchColumn();
+        if ($archiv_seminar_id) {
+            $no_access = !in_array(archiv_check_perm($archiv_seminar_id), words('tutor dozent admin'));
+        }
+    }
 }
 //download bibliography
 if ($type == 5){

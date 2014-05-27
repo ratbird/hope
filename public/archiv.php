@@ -101,7 +101,7 @@ unset($message, $details);
 if (($delete_id) && Request::submitted('delete_really')){
     if (archiv_check_perm($delete_id) == "admin") {
         // Load relevant data from archive
-        $query = "SELECT name, archiv_file_id, semester FROM archiv WHERE seminar_id = ?";
+        $query = "SELECT name, archiv_file_id, archiv_protected_file_id, semester FROM archiv WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($delete_id));
         $seminar = $statement->fetch(PDO::FETCH_ASSOC);
@@ -122,7 +122,15 @@ if (($delete_id) && Request::submitted('delete_really')){
                 $details[] = _("Das Zip-Archiv der Veranstaltung konnte nicht aus dem Archiv gelöscht werden.");
             }
         }
-        
+
+        if ($seminar['archiv_protected_file_id']) {
+            if (unlink ($ARCHIV_PATH."/".$seminar['archiv_protected_file_id'])){
+                $details[] = _("Das geschützte Zip-Archiv der Veranstaltung wurde aus dem Archiv gelöscht.");
+            } else {
+                $details[] = _("Das geschützte Zip-Archiv der Veranstaltung konnte nicht aus dem Archiv gelöscht werden.");
+            }
+        }
+
         // Delete from archiv_user
         $query = "DELETE FROM archiv_user WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
@@ -389,7 +397,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
     if ($_SESSION['archiv_data']['pers']) {
         $query = "SELECT seminar_id, name, untertitel, beschreibung, 
                          start_time, semester, studienbereiche, heimat_inst_id,
-                         institute, dozenten, fakultaet, archiv_file_id,
+                         institute, dozenten, fakultaet, archiv_file_id,archiv_protected_file_id,
                          forumdump, wikidump
                   FROM archiv
                   LEFT JOIN archiv_user USING (seminar_id)
@@ -398,7 +406,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
     } else {
         $query = "SELECT seminar_id, name, untertitel, beschreibung,
                          start_time, semester, studienbereiche, heimat_inst_id,
-                         institute, dozenten, fakultaet, archiv_file_id,
+                         institute, dozenten, fakultaet, archiv_file_id,archiv_protected_file_id,
                          forumdump, wikidump
                   FROM archiv
                   WHERE 1";
@@ -502,10 +510,14 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                 $view = 1;
             if ($view == 1) {
                 echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', 'title' =>_('Komplettansicht'))) . "</a></td>";
-                echo "<td class=\"$class\" width=\"3%\">&nbsp;";
+                echo "<td class=\"$class\" width=\"3%\" style=\"white-space: nowrap\">&nbsp;";
                 if (!$result['archiv_file_id']=='') {
                     echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
                 }
+                if ($result['archiv_protected_file_id'] && in_array(archiv_check_perm($result['seminar_id']), words("tutor dozent admin"))) {
+                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_protected_file_id'], _("Geschützte-") . $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Geschützte Dateisammlung'))) . '</a>';
+                }
+
                 echo "</td><td class=\"$class\" width=\"3%\">&nbsp;";
                 if (archiv_check_perm($result['seminar_id']) == "admin")
                     echo "<a href=\"". URLHelper::getLink("?delete_id=".$result['seminar_id']) ."\">&nbsp;<img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Diese Veranstaltung aus dem Archiv entfernen")) . "></a>";
@@ -534,6 +546,9 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                         echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?wiki_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Wikiseiten") . "</a></font></li>";
                     if (!$result['archiv_file_id']=='') {
                         echo '<li><font size="-1"><a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'">' . _("Download der Dateisammlung") . '</a></font></li>';
+                    }
+                    if ($result['archiv_protected_file_id'] && in_array(archiv_check_perm($result['seminar_id']), words("tutor dozent admin"))) {
+                        echo '<li><font size="-1"><a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_protected_file_id'], _("Geschützte-") . $file_name, 1)) .'">' . _("Download der geschützten Dateisammlung") . '</a></font></li>';
                     }
                     if (archiv_check_perm($result['seminar_id']) == "admin")
                         echo "<li><a href=\"". URLHelper::getLink("?delete_id=".$result['seminar_id']) ."\"><font size=\"-1\">" . _("Diese Veranstaltung unwiderruflich aus dem Archiv entfernen") . "</font></a></li>";

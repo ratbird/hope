@@ -506,7 +506,7 @@ function in_archiv ($sem_id)
 {
     global $SEM_CLASS,$SEM_TYPE, $ARCHIV_PATH, $TMP_PATH, $ZIP_PATH, $ZIP_OPTIONS, $_fullname_sql;
 
-    NotificationCenter::postNotification('CourseWillArchive', $seminar_id);
+    NotificationCenter::postNotification('CourseWillArchive', $sem_id);
 
     //Besorgen der Grunddaten des Seminars
     $query = "SELECT Seminar_id, Name, Untertitel, Beschreibung,
@@ -616,7 +616,14 @@ function in_archiv ($sem_id)
         }
     }
 
-    //OK, letzter Schritt: ZIPpen der Dateien des Seminars und Verschieben in eigenes Verzeichnis
+    $Modules = new Modules;
+    $Modules = $Modules->getLocalModules($sem_id);
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
+
+    if ($Modules['documents_folder_permissions'] || StudipDocumentTree::ExistsGroupFolders($sem_id)) {
+        $unreadable_folders = $folder_tree->getUnReadableFolders('nobody');
+    }
+
     $query = "SELECT COUNT(dokument_id) FROM dokumente WHERE seminar_id = ? AND url = ''";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($seminar_id));
@@ -629,7 +636,6 @@ function in_archiv ($sem_id)
         $tmp_full_path = "$TMP_PATH/$archiv_file_id";
         mkdir($tmp_full_path, 0700);
 
-        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
         if($folder_tree->getNumKids('root')) {
             $list = $folder_tree->getKids('root');
         }
@@ -654,6 +660,14 @@ function in_archiv ($sem_id)
             @rename($tmp_full_path . '.zip', $archiv_full_path);
         }
         rmdirr($tmp_full_path);
+
+        if (is_array($unreadable_folders)) {
+            $query = "SELECT dokument_id FROM dokumente WHERE seminar_id = ? AND url = '' AND range_id IN (?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($seminar_id, $unreadable_folders));
+            $archiv_protected_file_id = createSelectedZip($statement->fetchAll(PDO::FETCH_COLUMN), false, false);
+            @rename("$TMP_PATH/$archiv_protected_file_id", "$ARCHIV_PATH/$archiv_protected_file_id");
+        }
     } else {
         $archiv_file_id = '';
     }
@@ -662,10 +676,10 @@ function in_archiv ($sem_id)
     $query = "INSERT INTO archiv
                 (seminar_id, name, untertitel, beschreibung, start_time,
                  semester, heimat_inst_id, institute, dozenten, fakultaet,
-                 dump, archiv_file_id, forumdump, wikidump, studienbereiche,
+                 dump, archiv_file_id,archiv_protected_file_id, forumdump, wikidump, studienbereiche,
                  mkdate)
               VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
     $statement = DBManager::get()->prepare($query);
     $success = $statement->execute(array(
         $seminar_id,
@@ -680,6 +694,7 @@ function in_archiv ($sem_id)
         $fakultaet ?: '',
         $dump ?: '',
         $archiv_file_id ?: '',
+        $archiv_protected_file_id ?: '',
         $forumdump ?: '',
         $wikidump ?: '',
         $studienbereiche ?: '',

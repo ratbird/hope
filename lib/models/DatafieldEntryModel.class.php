@@ -108,9 +108,7 @@ class DatafieldEntryModel extends SimpleORMap
             'class_name' => 'Datafield',
             'foreign_key' => 'datafield_id'
         );
-        $config['additional_fields']['name'] = array(
-            'datafiled' => 'name'
-        );
+        $config['additional_fields']['name'] = array('datafield', 'name');
         parent::configure($config);
     }
 

@@ -75,7 +75,8 @@
 <script>
     jQuery(function () {
         jQuery(".accordion").accordion({
-            'active': <?= (int) $open ?>
+            'active': <?= (int) $open ?>,
+            'heightStyle': "content"
         });
     })
 </script>

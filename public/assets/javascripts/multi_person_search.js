@@ -58,11 +58,9 @@ STUDIP.MultiPersonSearch = {
         STUDIP.MultiPersonSearch.refresh();
         
         if (count == 0) {
-            $("#" + this.name + "_quickfilter_message_box").show();
-        } else {
-            $("#" + this.name + "_quickfilter_message_box").hide();
+            STUDIP.MultiPersonSearch.append('--', ' Dieser Filter enthält keine Personen.'.toLocaleString(), true);
+            STUDIP.MultiPersonSearch.refresh();
         }
-        $("#" + this.name + "_search_message_box").hide();
     },
     
     isAlreadyMember: function(user_id) {
@@ -87,10 +85,7 @@ STUDIP.MultiPersonSearch = {
             if (searchcount == 0) {
                 STUDIP.MultiPersonSearch.append('--', 'Es wurden keine neuen Ergebnisse für'.toLocaleString() + ' "' + searchterm + '" ' +  'gefunden.'.toLocaleString(), true);
                 STUDIP.MultiPersonSearch.refresh();
-            } else {
-                $("#" + name + "_search_message_box").hide();
             }
-            $("#" + name + "_quickfilter_message_box").hide();
         });
         return false;
     },
@@ -115,6 +110,11 @@ STUDIP.MultiPersonSearch = {
     removeAllNotSelected: function () {
         $('#' + this.name + '_selectbox option:not(:selected)').remove();
         $('#' + this.name + '_selectbox').multiSelect('refresh');
+    },
+    
+    resetSearch: function() {
+        $("#" + this.name + "_searchinput").val('');
+        STUDIP.MultiPersonSearch.removeAllNotSelected();
     },
     
     append: function (value, text, selected) {

@@ -33,6 +33,11 @@ class MessagesController extends AuthenticatedController {
             }
         }
 
+        if (Request::get("read_all")) {
+            Message::markAllAs($GLOBALS['user']->id, 1);
+            PageLayout::postMessage(MessageBox::success(_("Alle Nachrichten wurden als gelesen markiert.")));
+        }
+
         $this->messages = $this->get_messages(
             true,
             Request::int("limit", $this->number_of_displayed_messages),

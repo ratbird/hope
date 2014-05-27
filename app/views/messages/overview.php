@@ -103,6 +103,14 @@ $actions->addLink(
     null,
     array('data-dialog' => "buttons=false")
 );
+if (Navigation::getItem('/messaging/messages/inbox')->isActive()) {
+    $actions->addLink(
+        _("Alle als gelesen markieren"),
+        URLHelper::getURL("dispatch.php/messages/overview", array('read_all' => 1)),
+        null,
+        array()
+    );
+}
 $sidebar->addWidget($actions);
 
 $search = new SearchWidget();

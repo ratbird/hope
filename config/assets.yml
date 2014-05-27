@@ -71,6 +71,7 @@ javascripts:
     - javascripts/dates.js
     - javascripts/tour.js
     - javascripts/jquery/jquery.scrollTo.js
+    - javascripts/scm.js
     - *header
     - *toolbar
     - *wysiwyg

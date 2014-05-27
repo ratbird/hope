@@ -18,8 +18,10 @@
             <tr>
                 <td>
                     <?= Assets::img('icons/16/grey/infopage.png', array('class' => 'text-top')) ?>
-                    <input type="text" name="tab_name" value="<?= htmlReady($scm->tab_name) ?>"
-                           placeholder="<?= _('Titel der Informationsseite') ?>">
+                    <input id="tab_name" type="text" name="tab_name" value="<?= htmlReady($scm->tab_name) ?>"
+                           placeholder="<?= _('Titel der Informationsseite') ?>" maxlength=20 >
+
+                    <span style="color:#69767f">(<?= _('Zeichen verbleibend: ') ?> <span id="counter"></span>)</span>
 
                     <?= _('oder wählen Sie hier einen Namen aus:') ?>
                     <select name="tab_name_template" data-copy-to="input[name=tab_name]">

@@ -1,0 +1,13 @@
+[{
+    "label": "Aktionen",
+    "icon": "mail",
+    "text": "Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol."
+},
+{
+    "icon": "arr_2right",
+    "text": "In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen."
+},
+{
+    "icon": "trash",
+    "text": "Aus diesen Gruppen können Sie sich selbst austragen."
+}]

@@ -1,0 +1,9 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.",
+        "TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden.",
+        "Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen."
+    ]
+}]

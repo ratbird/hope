@@ -25,7 +25,6 @@ require_once 'lib/user_visible.inc.php';
 // classes required for global-module-settings
 require_once 'lib/classes/AdminModules.class.php';
 
-
 /**
  * This controller realises the basal functionalities of a studygroup.
  *
@@ -117,20 +116,7 @@ class Course_StudygroupController extends AuthenticatedController {
             }
         }
 
-        $helpbar = Helpbar::get();
-        $helpbar->addPlainText(_('Information'),
-                               _('Studiengruppen sind eine einfache Möglichkeit, mit '
-                                .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
-                                .'Jeder kann Studiengruppen gründen.'),
-                               'icons/16/white/info.png');
-        $helpbar->addPlainText('',
-                               _("Wählen Sie 'Offen für alle', wenn beliebige Nutzer der "
-                                ."Gruppe ohne Nachfrage beitreten können sollen. 'Auf Anfrage' "
-                                ."erfordert Ihr Eingreifen: Sie müssen jede einzelne "
-                                ."Aufnahmeanfrage annehmen oder ablehnen."));
-        $helpbar->addPlainText('',
-                               _("Alle Einstellungen können auch später noch unter "
-                                ."dem Reiter 'Admin' geändert werden."));
+        Helpbar::get()->load('studygroup/new');
     }
 
     /**
@@ -439,12 +425,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
             Sidebar::get()->addWidget($actions);
 
-            $helpbar = Helpbar::get();
-            $helpbar->addPlainText(_('Information'),
-                                   _('Studiengruppen sind eine einfache Möglichkeit, mit '
-                                    .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
-                                    .'Jeder kann Studiengruppen gründen.'),
-                                   'icons/16/white/info.png');
+            Helpbar::get()->load('studygroup/info');
         }
         // ... otherwise redirect us to the seminar
         else {
@@ -753,23 +734,9 @@ class Course_StudygroupController extends AuthenticatedController {
 
             Sidebar::get()->addWidget($actions);
 
-            $helpbar = Helpbar::get();
-            $helpbar->addPlainText(_('Information'),
-                                   _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.'),
-                                   'icons/16/white/info.png');
-            $helpbar->addPlainText('',
-                                   _('TeilnehmerInnen können je nach Status zu einem Moderator hoch oder '
-                                    .'runtergestuft werden und aus der Studiengruppe entlassen werden.'));
-            $helpbar->addPlainText('',
-                                   _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, '
-                                    .'abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.'));
+            Helpbar::get()->load('studygroup/members');
         } else {
-            $helpbar = Helpbar::get();
-            $helpbar->addPlainText(_('Information'),
-                                   _('Studiengruppen sind eine einfache Möglichkeit, mit '
-                                    .'KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. '
-                                    .'Jeder kann Studiengruppen gründen.'),
-                                   'icons/16/white/info.png');
+            Helpbar::get()->load('studygroup/info');
         }
         
         $this->invitedMembers = StudygroupModel::getInvitations($id);

@@ -373,9 +373,7 @@ if ($self_assign_exclusive) {
  * * * *     V I E W     * * * *
  * * * * * * * * * * * * * * * */
 
-Helpbar::get()->addPlainText(_('Information:'),
-                             _('Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.'),
-                             'icons/16/white/info.png');
+Helpbar::get()->load('statusgruppen/admin');
 
 list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($range_id);
 

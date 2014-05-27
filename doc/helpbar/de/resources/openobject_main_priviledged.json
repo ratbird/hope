@@ -1,0 +1,6 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Auf dieser Seite sehen Sie alle der #{type} zugeordneten Ressourcen.",
+             "Als #{member_type} der #{type} haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen."]
+}]

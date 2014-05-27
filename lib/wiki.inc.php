@@ -996,15 +996,11 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= '<br><br>' . Button::createAccept(_('Speichern')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
-    
-    $helpbar = Helpbar::get();
-    $helpbar->addPlainText(_('Information'),
-                           sprintf(_('Sie können beliebigen Text einfügen und vorhandenen Text ändern. '
-                                    .'Beachten Sie dabei die [Formatierungsmöglichkeiten]%s . '
-                                    .'Links entstehen automatisch aus Wörtern, die mit Großbuchstaben '
-                                    .'beginnen und einen Großbuchstaben in der Wortmitte enthalten.'),
-                                   format_help_url('Basis.VerschiedenesFormat')),
-                           'icons/16/white/info.png');
+
+    Helpbar::get()->load('wiki/edit', array(
+        'help_link' => format_help_url('Basis.VerschiedenesFormat'),
+    ));
+
     end_blank_table();
     echo "</td>"; // end of content area
     showPageFrameEnd();
@@ -1122,9 +1118,8 @@ function exportWiki() {
     $message = MessageBox::info(_('Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern.'));
     PageLayout::postMessage($message);
 
-    Helpbar::get()->addPlainText(_('Information'),
-                                 _('Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert.'),
-                                 'icons/16/white/info.png');
+    Helpbar::get()->load('wiki/export');
+
     print '<div style="text-align: center;">';
     print LinkButton::create( _('Weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
     echo '</div>'; // end of content area
@@ -1141,9 +1136,7 @@ function exportWiki() {
 function printAllWikiPages($range_id, $header) {
     echo getAllWikiPages($range_id, $header, TRUE);
 
-    Helpbar::get()->addPlainText(_('Information'),
-                                 _('Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert.'),
-                                 'icons/16/white/info.png');
+    Helpbar::get()->load('wiki/export');
 
     showPageFrameEnd();
 }
@@ -1389,11 +1382,7 @@ function getDiffPageInfobox($keyword) {
         Sidebar::get()->addWidget($widget);
     }
 
-    $helpbar = Helpbar::get();
-    $helpbar->addPlainText(_('Information'),
-                           _('Sie betrachten die Änderungsgeschichte eines Dokumentes. '
-                            .'Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen.'),
-                           'icons/16/white/info.png');
+    Helpbar::get()->load('wiki/diff');
 
     return array();
 }

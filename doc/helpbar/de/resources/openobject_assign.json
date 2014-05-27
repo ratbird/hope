@@ -1,0 +1,6 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Anzeigen der Belegung der Ressource **#{name}** (#{category}).",
+             "Sie können die Belegung auch bearbeiten, falls Sie entsprechende Rechte besitzen, oder eine neue Belegung erstellen."]
+}]

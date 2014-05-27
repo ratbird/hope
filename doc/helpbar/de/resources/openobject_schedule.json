@@ -1,0 +1,5 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten der Ressource **#{name}** (#{category}) ausgeben lassen"
+}]

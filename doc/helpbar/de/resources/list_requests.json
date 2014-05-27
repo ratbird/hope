@@ -1,0 +1,6 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Sie sehen hier eine Liste aller offenen Anfragen, die Sortierung folgt der Einstellung unter [Übersicht]#{link} .",
+             "Ein Klick auf das Symbol nebem dem Zähler erlaubt es Ihnen, direkt zu der Anfrage zu springen."]
+}]

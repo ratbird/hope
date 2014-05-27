@@ -8,6 +8,57 @@
  */
 class Helpbar extends WidgetContainer
 {
+    protected $json_directory;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->json_directory = $GLOBALS['STUDIP_BASE_PATH'] . '/doc/helpbar';
+    }
+    
+    /**
+     * @todo Adjust this to db BEFORE release
+     */
+    public function load($identifier, $variables = array(), $language = null)
+    {
+        $language = $language ?: substr($GLOBALS['user']->preferred_language, 0, 2);
+
+        $jsonfile = sprintf('%s/%s/%s.json',
+                            $this->json_directory,
+                            strtolower($language),
+                            $identifier);
+
+        if (!file_exists($jsonfile) || !is_readable($jsonfile)) {
+            throw new InvalidArgumentException('Helpbar for identifier "' . $identifier . '" not found or not readable.');
+        }
+
+        $json = studip_utf8decode(json_decode(file_get_contents($jsonfile), true));
+        if ($json === null) {
+            throw new RuntimeException('Helpbar content for identifier "' . $identifier . '" could not be loaded.');
+        }
+        
+        foreach ($json as $row) {
+            if (!empty($row['icon'])) {
+                $icon = sprintf('icons/16/white/%s.png', $row['icon']);
+            }
+            $this->addPlainText($row['label'] ?: '',
+                                array_map(array($this, 'interpolate'), (array)$row['text']),
+                                $icon ?: null);
+        }
+    }
+
+    protected function interpolate($string, $variables = array())
+    {
+        $replaces = array();
+        foreach ($variables as $needle => $replace)
+        {
+            $replaces['#{' . $needle . '}'] = $replace;
+        }
+
+        return str_replace(array_keys($replaces), array_values($replaces), $string);
+    }
+
     public function addPlainText($label, $text, $icon = null)
     {
         if (is_array($text)) {

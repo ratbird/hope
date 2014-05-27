@@ -87,12 +87,7 @@ class OnlineController extends AuthenticatedController
         }
         
         // Setup helpbar
-        $helpbar = Helpbar::get();
-        $helpbar->addPlainText(_('Information:'),
-                               _('Hier können Sie sehen, wer außer Ihnen im Moment online ist.'),
-                               'icons/16/white/info.png');
-        $helpbar->addPlainText('', _('Sie können diesen NutzerInnen eine Nachricht schicken.'));
-        $helpbar->addPlainText('', _('Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.'));
+        Helpbar::get()->load('online');
     }
 
     /**

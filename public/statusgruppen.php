@@ -251,18 +251,10 @@ list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($SessSemName
 if($self_assign_exclusive) {
     $infos .= '<br>' . _('In dieser Veranstaltung können Sie sich nur in eine der möglichen Gruppen eintragen.');
 }
-
+// TODO: Sidebar/Helpbar - This shouldn't be in the helpbar but where else!
 Helpbar::get()->addPlainText(_('Information:'), $infos, 'icons/16/white/info.png');
 
-Helpbar::get()->addPlainText(_('Aktionen:'),
-                             _('Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol.'),
-                             'icons/16/white/mail.png');
-Helpbar::get()->addPlainText('',
-                             _('In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen.'),
-                             'icons/16/white/arr_2right.png');
-Helpbar::get()->addPlainText('',
-                             _('Aus diesen Gruppen können Sie sich selbst austragen.'),
-                             'icons/16/white/trash.png');
+Helpbar::get()->load('statusgruppen/info');
 
 if ($rechte) {
     $sidebar = Sidebar::get();

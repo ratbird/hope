@@ -42,40 +42,25 @@ $sidebar = Sidebar::get();
 switch ($view) {
     //Reiter "Uebersicht"
     case 'plan':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Auf dieser Seite können Sie sich einen Wochenplan als CSV-Datei ausgeben lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/plan');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
     case 'regular':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Auf dieser Seite können Sie sich einen Semesterplan als CSV-Datei ausgeben lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/regular');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
     case 'diff':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Auf dieser Seite können Sie sich die wöchentliche Differenzliste der '
-                                .'Belegung aller Räume als CSV-Datei ausgeben lassen.'),
-                               'icons/16/white/info.png');
+        $helbar->load('resources/diff');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
 
     case 'resources':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Auf dieser Seite können Sie durch alle Ressourcen bzw. Ebenen, auf die '
-                                .'Sie Zugriff haben, navigieren und Ressourcen verwalten.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/resources');
         PageLayout::setTitle(_('Übersicht der Ressourcen'));
         Navigation::activateItem('/resources/view/hierarchy');
     break;
     case 'search':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Sie können hier nach Ressourcen suchen. '
-                                .'Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften '
-                                .'Ressourcen zu suchen oder sich durch die Ebenen zu navigieren.'),
-                               'icons/16/white/info.png');
-
+        $helpbar->load('resources/search');
         PageLayout::setTitle(_('Suche nach Ressourcen'));
         Navigation::activateItem('/search/resources');
 
@@ -98,7 +83,6 @@ switch ($view) {
     break;
     //Reiter "Listen"
     case 'lists':
-
         PageLayout::setTitle(_('Bearbeiten und ausgeben von Listen'));
         Navigation::activateItem('/resources/lists/show');
 
@@ -106,10 +90,9 @@ switch ($view) {
             // tlx: What is this line good for?
             $title.=" - "._("Ebene").": ".getResourceObjectName($_SESSION['resources_data']["list_open"]);
 
-            $helpbar->addPlainText(_('Informationen'),
-                                   sprintf(_('Sie sehen alle Einträge in der Ebene **%s**'),
-                                           getResourceObjectName($_SESSION['resources_data']['list_open'])),
-                                   'icons/16/white/info.png');
+            $helpbar->load('resources/lists', array(
+                'name' => getResourceObjectName($_SESSION['resources_data']['list_open'])
+            ));
 
             $widget = new OptionsWidget();
             $widget->addCheckbox(_('Untergeordnete Ebenen ausgeben'),
@@ -123,11 +106,7 @@ switch ($view) {
     //Reiter "Objekt"
     case 'objects':
     case 'edit_object_assign':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Sie sehen hier die Einzelheiten der Belegung. '
-                                .'Falls Sie über entsprechende Rechte verfügen, können Sie '
-                                .'sie bearbeiten oder eine neue Belegung erstellen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/objects');
         PageLayout::setTitle(_("Belegungen anzeigen/bearbeiten").$currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/edit_assign');
 
@@ -166,11 +145,7 @@ switch ($view) {
         Navigation::activateItem('/resources/objects/edit_perms');
     break;
     case 'view_schedule':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Hier können Sie sich die Belegungszeiten der Ressource anzeigen '
-                                .'und auf unterschiedliche Art darstellen lassen.'),
-                               'icons/16/white/info.png');
-
+        $helpbar->load('resources/view_schedule');
         PageLayout::setTitle(_('Belegungszeiten ausgeben') . $currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_schedule');
 
@@ -227,10 +202,7 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_sem_schedule':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Hier können Sie sich die Belegungszeiten der Ressource anzeigen '
-                                .'und auf unterschiedliche Art darstellen lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/view_sem_schedule');
 
         PageLayout::setTitle(_('Belegungszeiten pro Semester ausgeben') . $currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_sem_schedule');
@@ -292,9 +264,7 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_group_schedule':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/view_group_schedule');
 
         $room_groups = RoomGroups::GetInstance();
         PageLayout::setTitle(_('Belegungszeiten einer Raumgruppe pro Semester ausgeben:') . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
@@ -308,9 +278,7 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_group_schedule_daily':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/view_group_schedule_daily');
         $room_groups = RoomGroups::GetInstance();
         PageLayout::setTitle(_('Belegungszeiten einer Raumgruppe pro Tag ausgeben:') . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
         Navigation::activateItem('/resources/view/group_schedule_daily');
@@ -325,51 +293,34 @@ switch ($view) {
     //Reiter "Anpassen"
     case 'settings':
     case 'edit_types':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Verwalten Sie auf dieser Seite die Ressourcen-Typen, wie etwa Räume, '
-                                .'Geräte oder Gebäude. Sie können jedem Typ beliebig viele Eigenschaften zuordnen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/settings');
         PageLayout::setTitle(_('Typen bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_types');
     break;
     case 'edit_properties':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Verwalten Sie auf dieser Seite die einzelnen Eigenschaften. Diese '
-                                .'Eigenschaften können Sie beliebigen Ressourcen-Typen zuweisen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/edit_perms');
         PageLayout::setTitle(_('Eigenschaften bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_properties');
     break;
     case 'edit_perms':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Verwalten Sie hier AdministratorInnen des Systems, die Rechte über alle '
-                                .'Ressourcen erhalten.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/edit_perms');
         PageLayout::setTitle(_('globale Rechte der Ressourcenadministratoren bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_perms');
     break;
     case 'edit_settings':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Verwalten Sie hier grundlegende Einstellungen der Ressourcenverwaltung.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/edit_settings');
         PageLayout::setTitle(_('Einstellungen der Ressourcenverwaltung'));
         Navigation::activateItem('/resources/settings/edit_settings');
     break;
 
     //Reiter Raumplanung
     case 'requests_start':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Auf dieser Seite wird Ihnen der Status der Anfragen aus Ihren Bereichen '
-                                .'angezeigt. Sie können das Bearbeiten der Anfragen von hier aus starten.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/requests_start');
         PageLayout::setTitle(_('Übersicht des Raumplanungs-Status'));
         Navigation::activateItem('/resources/room_requests/start');
     break;
     case 'edit_request':
-        $helpbar->addPlainText(_('Informationen:'),
-                               _('Sie können hier die einzelnen Anfragen einsehen und passenden Räume '
-                                .'auswählen sowie zuweisen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/edit_request');
         PageLayout::setTitle(_('Bearbeiten der Anfragen'));
         Navigation::activateItem('/resources/room_requests/edit');
 
@@ -391,32 +342,21 @@ switch ($view) {
 
     break;
     case 'list_requests':
-        $text = sprintf(_('Sie sehen hier eine Liste aller offenen Anfragen, die Sortierung folgt der Einstellung unter [Übersicht]%s .'),
-                        URLHelper::getLink('resources.php?view=requests_start&cancel_edit_request_x=1'));
-        $helpbar->addPlainText(_('Informationen:'),
-                               array(
-                                   $text,
-                                   _('Ein Klick auf das Symbol nebem dem Zähler erlaubt es Ihnen, direkt zu der Anfrage zu springen.')
-                               ),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/list_requests', array(
+            'link' => URLHelper::getLink('resources.php?view=requests_start&cancel_edit_request_x=1'),
+        ));
         PageLayout::setTitle(_('Anfragenliste'));
         Navigation::activateItem('/resources/room_requests/list');
     break;
     //all the intros in an open object (Veranstaltung, Einrichtung)
     case 'openobject_main':
-        // TODO
-        $text = array();
-        $text[] = sprintf(_('Auf dieser Seite sehen Sie alle der %s zugeordneten Ressourcen.'), $SessSemName['art_generic']);
-        if ($perm->have_studip_perm('autor', $SessSemName[1])) {
-            $text[] = $SessSemName['class'] === 'sem'
-                ? _('Als Teilnehmer der Veranstaltung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.')
-                : _('Als Mitarbeiter der Einrichtung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.');
-        } else {
-            $text[] = $SessSemName['class'] === 'sem'
-                ? _('Sie können hier die Details und den Belegungsplan der dieser Veranstaltung zugeordneten Ressourcen einsehen.')
-                : _('Sie können hier den Details und Belegungsplan der dieser Einrichtung zugeordneten Ressourcen einsehen.');
-        }
-        $helpbar->addPlainText(_('Informationen'), $text, 'icons/16/white/info.png');
+        $identifier = $perm->have_studip_perm('autor', $SessSemName[1])
+            ? 'resources/openobject_main_priviledged'
+            : 'resources/openobject_main';
+        $helpbar->load($identifier, array(
+            'type'        => $SessSemName['art_generic'],
+            'member_type' => $SessSemName['class'] === 'sem' ? _('TeilnehmerIn') : _('MitarbeiterIn'),
+        ));
 
         PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcenübersicht"));
         Navigation::activateItem('/course/resources/overview');
@@ -451,11 +391,10 @@ switch ($view) {
 
     case 'openobject_schedule':
         if ($_SESSION['resources_data']['actual_object']) {
-            $text = sprintf(_('Hier können Sie sich die Belegungszeiten der Ressource **%s** (%s) ausgeben lassen'),
-                            $currentObject->getName(),
-                            $currentObject->getCategoryName());
-            $helpbar->addPlainText(_('Informationen'), $text, 'icons/16/white/info.png');
-            
+            $helpbar->load('resources/openobject_schedule', array(
+                'name'     => $currentObject->getName(),
+                'category' => $currentObject->getCategoryName(),
+            ));
         }
 
         PageLayout::setTitle($SessSemName['header_line'] . ' - ' . _('Ressourcenbelegung'));
@@ -463,23 +402,16 @@ switch ($view) {
     break;
     case 'openobject_assign':
         if ($_SESSION['resources_data']['actual_object']) {
-            $text = array();
-            $text[] = sprintf(_('Anzeigen der Belegung der Ressource **%s** (%s).'),
-                              $currentObject->getName(),
-                              $currentObject->getCategoryName());
-            $text[] = _('Sie können die Belegung auch bearbeiten, falls Sie entsprechende '
-                       .'Rechte besitzen, oder eine neue Belegung erstellen.');
-            $helpbar->addPlainText(_('Informationen'), $text, 'icons/16/white/info.png');
+            $helpbar->load('resources/openobject_assign', array(
+                'name'     => $currentObject->getName(),
+                'category' => $currentObject->getCategoryName(),
+            ));
         }
-        PageLayout::setTitle($SessSemName["header_line"]." - ".("Belegung anzeigen/bearbeiten"));
+        PageLayout::setTitle($SessSemName['header_line'] . ' - ' . ('Belegung anzeigen/bearbeiten'));
         Navigation::activateItem('/course/resources/edit_assign');
     break;
     case 'openobject_group_schedule':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Hier können Sie sich die Belegungszeiten aller Ressourcen '
-                                .'dieser Veranstaltung anzeigen lassen.'),
-                               'icons/16/white/info.png');
-
+        $helpbar->load('resources/openobject_group_schedule');
         PageLayout::setTitle($SessSemName['header_line'] . ' - ' . _('Belegungszeiten aller Ressourcen pro Tag ausgeben'));
         Navigation::activateItem('/course/resources/group_schedule');
 
@@ -491,10 +423,7 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_requests_schedule':
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Hier können Sie sich eine Übersicht über alle Anfragen und vorhandenenen '
-                                .'Belegungen eines angeforderten Raums anzeigen lassen.'),
-                               'icons/16/white/info.png');
+        $helpbar->load('resources/view_requests_schedule');
         PageLayout::setTitle(_('Anfragenübersicht eines Raums:') . ' ' . ResourceObject::Factory($_SESSION['resources_data']['resolve_requests_one_res'])->getName());
         Navigation::activateItem('/resources/room_requests/schedule');
 
@@ -507,11 +436,7 @@ switch ($view) {
     break;
     //default
     default:
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Sie befinden sich in der Ressourcenverwaltung von Stud.IP. '
-                                .'Sie können hier Räume, Gebäude, Geräte und andere Ressourcen verwalten.'),
-                               'icons/16/white/info.png');
-
+        $helpbar->load('resources/default');
         PageLayout::setTitle(_('Übersicht der Ressourcen'));
         Navigation::activateItem('/resources/view/hierarchy');
     break;

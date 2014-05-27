@@ -1,0 +1,9 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Sie können beliebigen Text einfügen und vorhandenen Text ändern.",
+        "Beachten Sie dabei die [Formatierungsmöglichkeiten]#{help_link} .",
+        "Links entstehen automatisch aus Wörtern, die von zwei paar eckigen Klammern umgeben sind (Beispiel: [nop][[[/nop]%%Schlüsselwort%%[nop]]][/nop])."
+    ]
+}]

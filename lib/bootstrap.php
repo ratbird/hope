@@ -21,8 +21,6 @@ set_include_path(
 );
 !ini_get('register_globals') OR require 'templates/register_globals_on.php';
 
-define('PHPLIB_SESSIONDATA_TABLE', 'session_data');
-
 require 'lib/classes/StudipAutoloader.php';
 StudipAutoloader::register();
 StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'models');
@@ -33,6 +31,7 @@ StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib
 
 require 'lib/phplib/db_mysql_studip_pdo.inc';
 require 'lib/phplib/ct_sql_studip_pdo.inc';
+require 'lib/phplib/ct_cache_studip.inc';
 require 'lib/phplib/session4_custom.inc';
 require 'lib/phplib/auth4.inc';
 require 'lib/phplib/perm.inc';

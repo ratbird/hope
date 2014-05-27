@@ -128,6 +128,7 @@ $PATH_EXPORT = "lib/export";                                //Stud.IP module: ex
 //caching
 $CACHING_ENABLE = true;
 $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
+$CACHE_IS_SESSION_STORAGE = false;                 //store session data in cache
 
 /*Stud.IP modules
 ----------------------------------------------------------------

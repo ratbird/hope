@@ -209,7 +209,7 @@ StudipMail::setDefaultTransporter($mail_transporter);
 unset($mail_transporter);
 
 class Seminar_CT_Sql extends CT_Sql {
-    var $database_table = PHPLIB_SESSIONDATA_TABLE; // and find our session data in this table.
+    var $database_table = 'session_data'; // and find our session data in this table.
 }
 
 
@@ -325,6 +325,9 @@ class Seminar_Session extends Session {
 
 
     function Seminar_Session(){
+        if ($GLOBALS['CACHING_ENABLE'] && $GLOBALS['CACHE_IS_SESSION_STORAGE']) {
+            $this->that_class = 'CT_Cache';
+        }
         $this->cookie_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
         if (method_exists($this, 'Session')){
             $this->Session();

@@ -1276,6 +1276,16 @@ function getShowPageInfobox($keyword, $latest_version)
     $widget->addElement($element);
     $sidebar->addWidget($widget);
 
+    // Backlinks
+    if ($latest_version) {
+        $widget = new LinksWidget();
+        $widget->setTitle(_('Seiten, die auf diese Seite verweisen'));
+        foreach(getBacklinks($keyword) as $backlink) {
+            $widget->addLink($backlink, URLHelper::getLink('?keyword=' . urlencode($backlink)));
+        }
+        $sidebar->addWidget($widget);
+    }
+
     // Ansichten
     $widget = new ViewsWidget();
     $widget->addLink(_('Standard'),
@@ -1296,16 +1306,6 @@ function getShowPageInfobox($keyword, $latest_version)
                  'searchfor',
                  array('searchcurrentversions' => _('Nur in aktuellen Versionen')));
     $sidebar->addWidget($widget);
-
-    // Backlinks
-    if ($latest_version) {
-        $widget = new LinksWidget();
-        $widget->setTitle(_('Seiten, die auf diese Seite verweisen'));
-        foreach(getBacklinks($keyword) as $backlink) {
-            $widget->addLink($backlink, URLHelper::getLink('?keyword=' . urlencode($backlink)));
-        }
-        $sidebar->addWidget($widget);
-    }
 
     // Versionen
     if (count($versions) > 0) {

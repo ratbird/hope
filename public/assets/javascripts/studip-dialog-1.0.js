@@ -125,7 +125,6 @@
                 buttons[label] = handler;
             }
         });
-        console.log(buttons);
 
         return buttons;
     }
@@ -160,7 +159,7 @@
     STUDIP.Dialog.fromElement = function (element, options) {
         options = options || {};
 
-        if ($(element).is(':disabled')) {
+        if ($(element).is(':disabled') || $(window).innerWidth() < 600 || $(window).innerHeight < 400) {
             return;
         }
 
@@ -232,6 +231,8 @@
                 STUDIP.Overlay.hide();
             }
         });
+        
+        return true;
     };
 
     // Opens or updates the dialog
@@ -332,8 +333,9 @@
     // Actual dialog handler
     function dialogHandler(event) {
         var options = $(this).data().dialog;
-        STUDIP.Dialog.fromElement(this, parseOptions(options));
-        event.preventDefault();
+        if (STUDIP.Dialog.fromElement(this, parseOptions(options))) {
+            event.preventDefault();
+        }
     }
 
     // Handle links, buttons and forms
@@ -349,8 +351,9 @@
     function legacyDialogHandler(event) {
         var rel  = $(this).attr('rel');
         if (/\blightbox(\s|\[|$)/.test(rel)) {
-            STUDIP.Dialog.fromElement(this, parseOptions(rel, 'lightbox'));
-            event.preventDefault();
+            if (STUDIP.Dialog.fromElement(this, parseOptions(rel, 'lightbox'))) {
+                event.preventDefault();
+            }
         }
     }
     $(document)

@@ -64,9 +64,11 @@
             </tbody>
         </table>
         <div style="text-align: center;">
+            <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
             <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
             <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
             </a>
+            <? endif ?>
         </div>
     </div>
     <? endforeach ?>

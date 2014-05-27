@@ -46,6 +46,9 @@ class Course_TopicsController extends AuthenticatedController
 
     public function edit_action($topic_id)
     {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         $this->topic = new CourseTopic($topic_id);
 
         if (Request::isXhr()) {

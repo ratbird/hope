@@ -6,7 +6,7 @@
     } ?>
     <h2><?= htmlReady($topic['title']) ?></h2>
     <div>
-        <table>
+        <table class="default nohover">
             <tbody>
                 <tr>
                     <td><strong><?= _("Beschreibung") ?></strong></td>

@@ -1,4 +1,4 @@
-<table style="width: 100%" data-termin_id="<?= htmlReady($date->getId()) ?>">
+<table style="width: 100%" class="default nohover" data-termin_id="<?= htmlReady($date->getId()) ?>">
     <tbody>
         <tr>
             <td><strong><?= _("Thema") ?></strong></td>

@@ -3,13 +3,12 @@
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 
-@font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-
 @image-path: "../images";
 @icon-path: "@{image-path}/icons/16";
 
 @import "mixins.less";
 
+@import "less/typography.less";
 @import "less/links.less";
 @import "less/tables.less";
 @import "less/forms.less";
@@ -55,12 +54,6 @@
 @import "less/admission.less";
 @import "less/enrolment.less";
 @import "less/dialog.less";
-/* --- Schrift (Vorgaben: Typ, Größe, Farbe) -------------------------------- */
-body, input, textarea {
-    color: #000;
-    font-family: @font-family;
-    font-size: 10pt;
-}
 
 /* --- Standardvorgaben ----------------------------------------------------- */
 //TODO: the Body-Background color should be similar to A:link.toolbar and A:visited.toolbar for best effect!!
@@ -73,31 +66,6 @@ body {
     margin: 0;
 }
 
-/* --- Überschriften -------------------------------------------------------- */
-
-h1, h2, h3 { font-weight: normal; }
-h1,h2,h3,h4,h5,h6 {
-    color: #444444;
-    border-bottom: 2px solid rgba(0,0,0,0.2);
-}
-h1 {
-    margin-top: 0px;
-    font-size: 2em;
-    padding-left: 10px;
-}
-h2 {
-    font-size: 1.7em;
-}
-h3 {
-    font-size: 1.4em;
-}
-h4 {
-    font-size: 1.1em;
-    margin-bottom: 3px;
-}
-h3,h4,h5,h6 {
-    border-bottom: none;
-}
 ul + br, table + br {
     display: none;
 }

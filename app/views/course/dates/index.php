@@ -21,9 +21,19 @@
     </thead>
     <tbody>
         <? if (count($dates)) : ?>
-        <? foreach ($dates as $key => $date) : ?>
-            <?= $this->render_partial("course/dates/_date_row.php", compact("date", "dates", "key")) ?>
-        <? endforeach ?>
+            <? $lastSemester = null ?>
+            <? foreach ($dates as $key => $date) : ?>
+                <? $currentSemester = Semester::findByTimestamp($date['date']) ?>
+                <? if (!$lastSemester || ($currentSemester->getId() !== $lastSemester->getId())) : ?>
+                <tr class="nohover">
+                    <td colspan="5">
+                        <h4><?= htmlReady($currentSemester['name']) ?></h4>
+                    </td>
+                </tr>
+                    <? $lastSemester = $currentSemester ?>
+                <? endif ?>
+                <?= $this->render_partial("course/dates/_date_row.php", compact("date", "dates", "key")) ?>
+            <? endforeach ?>
         <? else : ?>
         <tr>
             <td colspan="5" style="text-align: center;"><?= _("Keine Termine vorhanden") ?></td>

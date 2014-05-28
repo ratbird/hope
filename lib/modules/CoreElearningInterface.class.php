@@ -15,7 +15,7 @@ class CoreElearningInterface implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-            $navigation = new Navigation(_('Lernmodule'), "seminar_main.php?auswahl=".$course_id."&redirect_to=elearning_interface.php&view=show");
+            $navigation = new Navigation(_('Lernmodule'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/elearning/show");
             $navigation->setImage('icons/16/grey/wiki.png');
 
             return $navigation;
@@ -31,7 +31,7 @@ class CoreElearningInterface implements StudipModule {
             $navigation->setActiveImage('icons/16/black/learnmodule.png');
 
             if (ObjectConnections::isConnected($course_id)) {
-                $elearning_nav = new Navigation(_('Lernmodule dieser Veranstaltung'), 'elearning_interface.php?view=show&seminar_id=' . $course_id);
+                $elearning_nav = new Navigation(_('Lernmodule dieser Veranstaltung'), 'dispatch.php/course/elearning/show?seminar_id=' . $course_id);
 
                 if ($sem_class == 'inst') {
                     $elearning_nav->setTitle(_('Lernmodule dieser Einrichtung'));
@@ -41,7 +41,7 @@ class CoreElearningInterface implements StudipModule {
             }
 
             if ($GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar'])) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Lernmodule hinzufügen / entfernen'), 'elearning_interface.php?view=edit&seminar_id=' . $course_id));
+                $navigation->addSubNavigation('edit', new Navigation(_('Lernmodule hinzufügen / entfernen'), 'dispatch.php/course/elearning/edit?seminar_id=' . $course_id));
             }
 
             return array('elearning' => $navigation);

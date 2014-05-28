@@ -68,8 +68,8 @@ class ToolsNavigation extends Navigation
 
         // elearning
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-            $navigation = new Navigation(_('Lernmodule'), 'my_elearning.php');
-            $this->addSubNavigation('elearning', $navigation);
+            $navigation = new Navigation(_('Lernmodule'), 'dispatch.php/elearning/my_accounts');
+            $this->addSubNavigation('my_elearning', $navigation);
         }
 
         // export

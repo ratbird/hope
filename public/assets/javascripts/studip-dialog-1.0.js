@@ -119,7 +119,7 @@
                 buttons[label] = {
                     text: label,
                     click: handler,
-                    'class': $(this).is('.accept') ? 'accept' : 'cancel' 
+                    'class': $(this).is('.accept') ? 'accept' : 'cancel'
                 }
             } else {
                 buttons[label] = handler;
@@ -213,6 +213,7 @@
         }).done(function (response, status, xhr) {
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
+                STUDIP.Dialog.close();
                 document.location = xhr.getResponseHeader('X-Location');
                 return;
             }
@@ -231,7 +232,7 @@
                 STUDIP.Overlay.hide();
             }
         });
-        
+
         return true;
     };
 

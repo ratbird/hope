@@ -14,6 +14,9 @@ class Course_DatesController extends AuthenticatedController
 
     public function index_action()
     {
+        checkObject();
+        checkObjectModule("schedule");
+	    object_set_visit_module("schedule");
         Navigation::activateItem('/course/schedule/dates');
         $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
     }

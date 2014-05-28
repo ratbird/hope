@@ -311,6 +311,9 @@ class MessagesController extends AuthenticatedController {
     function print_action($message_id)
     {
         $message = Message::find($message_id);
+        if (!$message->permissionToRead()) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         if ($message && $message->permissionToRead($GLOBALS['user']->id)) {
             $this->msg = $message->toArray();
             $this->msg['from'] = $message->getSender()->getFullname();
@@ -319,7 +322,7 @@ class MessagesController extends AuthenticatedController {
                 $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), count($message->receivers)-1);
             $this->msg['attachments'] = $message->attachments->toArray('filename filesize');
             PageLayout::setTitle($data['subject']);
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         } else {
             $this->set_status(400);
             return $this->render_nothing();
@@ -431,7 +434,9 @@ class MessagesController extends AuthenticatedController {
     }
 
     public function upload_attachment_action() {
-        //var_dump($_FILES);
+        if ($GLOBALS['user']->id === "nobody") {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         $file = $_FILES['file'];
         $output = array(
             'name' => $file['name'],
@@ -465,6 +470,11 @@ class MessagesController extends AuthenticatedController {
         $output['icon'] = Assets::img(GetFileIcon(substr($output['name'], strrpos($output['name'], ".") + 1)), array('class' => "text-bottom"));
 
         $this->render_text(json_encode(studip_utf8encode($output)));
+    }
+
+    public function flex_action()
+    {
+        $this->set_layout(null);
     }
 
 }

@@ -1332,6 +1332,10 @@ the room-planning module
 if(Request::submitted('tools_requests_sem_choose_button') || Request::get('tools_requests_sem_choose')){
     $_SESSION['resources_data']["sem_schedule_semester_id"] = Request::quoted('tools_requests_sem_choose');
     $_SESSION['resources_data']["resolve_requests_no_time"] = (bool)Request::option('resolve_requests_no_time');
+    $_SESSION['resources_data']["resolve_requests_sem_type"] = Request::int('tools_requests_sem_type_choose',1);
+    $_SESSION['resources_data']["resolve_requests_faculty"] = Request::option('tools_requests_faculty_choose');
+    $_SESSION['resources_data']["resolve_requests_tagged"] = (bool)Request::int('resolve_requests_tagged',0);
+
     unset($_SESSION['resources_data']["requests_working_on"]);
     unset($_SESSION['resources_data']["requests_open"]);
     $_SESSION['resources_data']["view"] = "requests_start";
@@ -1398,8 +1402,7 @@ if (Request::int('cancel_edit_request_x') || Request::submitted('cancel_edit_req
 if (Request::submitted('start_multiple_mode') || (Request::option('single_request'))) {
     unset($_SESSION['resources_data']["requests_working_on"]);
     unset($_SESSION['resources_data']["requests_open"]);
-
-    $requests = (array)getMyRoomRequests($GLOBALS['user']->id, $_SESSION['resources_data']["sem_schedule_semester_id"], true, Request::option('single_request'));
+    $requests = (array)getMyRoomRequests($GLOBALS['user']->id, $_SESSION['resources_data']["sem_schedule_semester_id"], true, Request::option('single_request'), $_SESSION['resources_data']["resolve_requests_sem_type"], $_SESSION['resources_data']["resolve_requests_faculty"], $_SESSION['resources_data']["resolve_requests_tagged"]);
 
     $_SESSION['resources_data']["requests_working_pos"] = 0;
     $_SESSION['resources_data']["skip_closed_requests"] = TRUE;
@@ -1856,6 +1859,19 @@ if (Request::submitted('request_tool_group')) {
     $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
 }
 
+if (Request::get('request_user_status') !== null) {
+    $res_req = RoomRequest::find(Request::option('working_on_request'));
+    if ($res_req) {
+        $res_req->setUserStatus($GLOBALS['user']->id, Request::int('request_user_status'));
+    }
+}
+if (Request::get('reply_recipients') !== null) {
+    $res_req = RoomRequest::find(Request::option('working_on_request'));
+    if ($res_req) {
+        $res_req->reply_recipients = Request::get('reply_recipients');
+        $res_req->store();
+    }
+}
 
 //create the (overlap)data for all resources that should checked for a request
 if (Request::submitted('inc_request') || Request::submitted('dec_request')
@@ -1915,7 +1931,6 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
         //add resource_ids from clipboard
         if (is_array($marked_clip_ids))
             foreach ($marked_clip_ids as $val)
-                if (!$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$val])
                     $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$val] = array("type"=>"clipped");
 
 
@@ -1981,6 +1996,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
             $groupedDates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
             $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] = $groupedDates['groups'];
 
+            $red_flag_rooms = array();
             //gruppierte Termine durchlaufen
             foreach($groupedDates['groups'] as $group_id => $group) {
                 $events = array();
@@ -2024,9 +2040,24 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                 if ($groupedDates['info'][$group_id]['raum']) {
                     $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$group_id]["resource_id"] = $groupedDates['info'][$group_id]['raum'];
                 }
+                if (count($overlaps)) {
+                    $events_count = sizeof($event_zw);
+                    foreach ($overlaps as $overlap_room_id => $overlap_events_count) {
+                        if ($overlap_events_count >= round($events_count * ($GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] / 100))) {
+                            if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id]['type'] == 'matching') {
+                                $red_flag_rooms[$overlap_room_id]++;
+                            }
+                        }
+                    }
+                }
 
             }  // Ende: gruppierte Termine durchlaufen
-
+            $current_group_count = count($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"]);
+            foreach ($red_flag_rooms as $overlap_room_id => $overlap_group_count) {
+                if ($overlap_group_count == $current_group_count) {
+                    unset($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id]);
+                }
+            }
             $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"] = $result;
             $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"] = $first_event;
         }
@@ -2056,10 +2087,13 @@ if ($_sendMessage) {
     // -> creator of request
 
     $users = Array($reqObj->getUserId());
+    if ($reqObj->reply_recipients == 'lecturer') {
+         $users = array_merge($users, array_keys($semObj->getMembers('dozent')));
+    }
 
     // the room-request has been declined
     if ($_sendMessage['type'] == 'declined') {
-        $decline_message = remove_magic_quotes(Request::get('decline_message'));
+        $decline_message = Request::get('decline_message');
         if ($semObj->seminar_number) {
             $message = sprintf(_("ABGELEHNTE RAUMANFRAGE: Ihre Raumanfrage zur Veranstaltung %s (%s) wurde abgelehnt.") . "\n\n" .
                 _("Nachricht des Raumadministrators:") . "\n" . $decline_message, $semObj->getName(), $semObj->seminar_number);

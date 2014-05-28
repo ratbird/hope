@@ -374,8 +374,7 @@ function getSeminarRoomRequest($seminar_id) {
     return RoomRequest::existsByCourse($seminar_id);
 }
 
-
-function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed = true, $single_request = null)
+function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed = true, $single_request = null, $sem_type = null, $faculty = null, $tagged = null)
 {
     global $user, $perm, $RELATIVE_PATH_RESOURCES;
 
@@ -401,6 +400,15 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
     } elseif ($semester_id){
         $semester = Semester::find($semester_id);
         $sem_criteria = ' AND t.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'];
+        if ($sem_type) {
+            $criteria .= " AND EXISTS (SELECT * FROM seminare WHERE seminare.Seminar_id=rr.seminar_id AND seminare.status=".(int)$sem_type.") ";
+        }
+        if ($faculty) {
+            $criteria .= " AND EXISTS (SELECT * FROM seminare INNER JOIN Institute USING(Institut_id) WHERE seminare.Seminar_id=rr.seminar_id AND fakultaets_id=".DBManager::get()->quote($faculty).") ";
+        }
+        if ($tagged) {
+            $criteria .= " AND NOT EXISTS (SELECT * FROM resources_requests_user_status WHERE resources_requests_user_status.request_id=rr.request_id AND resources_requests_user_status.user_id=".DBManager::get()->quote($user_id).") ";
+        }
     }
 
     $query0  = "SELECT request_id, closed, rr.resource_id

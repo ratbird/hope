@@ -148,6 +148,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->request = $request;
         $this->room_categories = $room_categories;
         $this->new_room_request_type = Request::option('new_room_request_type');
+        $this->is_resources_admin = getGlobalPerms($GLOBALS['user']->id);
     }
 
     function edit_dialog_action()
@@ -330,7 +331,9 @@ class Course_RoomRequestsController extends AuthenticatedController
             if (Request::get('comment') !== null) {
                 $request->setComment(Request::get('comment'));
             }
-
+            if (Request::get('reply_recipients') !== null) {
+                $request->reply_recipients = Request::get('reply_recipients');
+            }
             if (!Request::submitted('reset_room_type')) {
                 $request->setCategoryId(Request::option('select_room_type'));
             }

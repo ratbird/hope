@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ResourcesUserRoots.class.php
-* 
+*
 * provides all the individual resources-roots for an user
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -44,15 +44,15 @@ class ResourcesUserRoots {
     var $user_global_perm;          //Globaler Status des Benutzers, fuer den Klasse initiert wird
     var $range_id;                  //the id of the User (could be a Person, Einrichtung oder Veranstaltung)
     var $my_roots;                  //Alle meine Ressourcen-Staemme
-    
+
     //Konstruktor
     function ResourcesUserRoots($range_id='') {
         global $user, $perm, $auth;
-        
+
         if($range_id){
             $this->range_id = $range_id;
         }
-        
+
         if (!$this->range_id)
             $this->range_id=$user->id;
 
@@ -61,7 +61,7 @@ class ResourcesUserRoots {
             $this->resources_global_perm=getGlobalPerms($this->range_id);
             //load the global studip perms (check, if user id root)
             $this->user_global_perm=get_global_perm($this->range_id);
-        
+
             if ($this->resources_global_perm == "admin")
                 $global_perm="root";
             else
@@ -70,7 +70,7 @@ class ResourcesUserRoots {
 
         //root or resoures root are able to see all resources (roots in tree)
         if ($global_perm == "root") {
-            $query = "SELECT resource_id FROM resources_objects WHERE resource_id = root_id";
+            $query = "SELECT resource_id FROM resources_objects WHERE resource_id = root_id ORDER BY name";
             $statement = DBManager::get()->query($query);
             while ($resource_id = $statement->fetchColumn()) {
                 $this->my_roots[$resource_id] = $resource_id;
@@ -108,7 +108,7 @@ class ResourcesUserRoots {
                 );
                 $roots[$row['root_id']][] = $row['resource_id'];
             }
-            
+
             //...and all objects where I have add perms...
             $query = "SELECT resource_id, parent_id, root_id, level
                       FROM resources_user_resources
@@ -153,7 +153,7 @@ class ResourcesUserRoots {
                                     $checked[$last_found] = TRUE;
                                     $last_found           = $superordinated_id;
                                 }
-    
+
                                 $superordinated_id = $parent_id;
                                 if ($parent_id == "0") {
                                     $top = TRUE;
@@ -165,9 +165,9 @@ class ResourcesUserRoots {
                 }
             }
         }
-    
+
     }
-    
+
     //public
     function getRoots() {
         return $this->my_roots;

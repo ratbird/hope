@@ -153,9 +153,9 @@ class ShowList extends ShowTreeRow{
                     $zusatz .= " <a href=\"".URLHelper::getLink('?clip_in='.$resObject->getId().$link_add)."\">" . Assets::img("icons/16/blue/add/resources.png", array('alt' => _("In Merkliste aufnehmen"), 'title' => _("In Merkliste aufnehmen"))) . "</a>";
 
             $new=TRUE;
-            
+
             $edit .= '<div style="text-align: center"><div class="button-group">';
-            
+
             if ($open == 'open') {
                 // check if the edit buttons for admins shell be shown
                 if ($admin_buttons && ($simple_perms == "admin")) {
@@ -164,8 +164,8 @@ class ShowList extends ShowTreeRow{
                         $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL('?kill_object=' . $resObject->id));
                     }
                 }
-                
-       
+
+
                 if ($resObject->getCategoryId()) {
                     if ($view_mode == 'no_nav') {
                         $edit .= LinkButton::create(_('Belegung'), URLHelper::getURL('?show_object=' . $resObject->id
@@ -175,7 +175,9 @@ class ShowList extends ShowTreeRow{
                             . '&view=view_schedule'));
                     }
                 }
-
+                if ($simple_perms && $resObject->isRoom()) {
+                    $edit .= LinkButton::create(_('Benachrichtigung'), UrlHelper::getScriptURL('dispatch.php/resources/helpers/resource_message/' . $resObject->id), array('data-dialog' => ''));
+                }
                 if ($view_mode == 'no_nav') {
                     $edit .= LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?show_object=' . $resObject->id
                         . '&quick_view=view_details&quick_view_mode=' . $view_mode));
@@ -187,10 +189,10 @@ class ShowList extends ShowTreeRow{
                 //clipboard in/out
                 if (is_object($clipObj) && $simple_perms && $resObject->getCategoryId())
                     if ($clipObj->isInClipboard($resObject->getId())) {
-                        $edit .= LinkButton::create(_('Aus Merkliste entfernen'), 
+                        $edit .= LinkButton::create(_('Aus Merkliste entfernen'),
                             URLHelper::getURL('?clip_out=' .$resObject->getId() . $link_add));
                     } else {
-                        $edit .= LinkButton::create(_('In Merkliste aufnehmen') . ' >', 
+                        $edit .= LinkButton::create(_('In Merkliste aufnehmen') . ' >',
                             URLHelper::getURL('?clip_in=' .$resObject->getId() . $link_add));
                     }
             }
@@ -428,7 +430,7 @@ class ShowList extends ShowTreeRow{
     function getResourcesSearchRange($resource_id)
     {
         static $children = array();
-        
+
         $query = "SELECT resource_id
                   FROM resources_objects
                   WHERE parent_id = ?

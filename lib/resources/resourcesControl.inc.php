@@ -73,7 +73,6 @@ if ($view == "edit_request") {
 
 //handle values
 include ("$RELATIVE_PATH_RESOURCES/lib/evaluate_values.php");
-
 /*****************************************************************************
 Navigation aufbauen
 /*****************************************************************************/
@@ -169,7 +168,8 @@ if ((getGlobalPerms($user->id) == 'admin') || ($perm->have_perm('root'))) {
 
 //load content, text, pictures and stuff
 include ("$RELATIVE_PATH_RESOURCES/views/page_intros.inc.php");
-
+//save messages from
+$pmessages = PageLayout::getMessages();
 ob_start();
 ?>
 <script type="text/javascript">
@@ -196,6 +196,7 @@ function check_opener(obj){
                     if ($page_intro) {
                         echo $page_intro;
                     }
+                        echo join("\n", $pmessages);
                 ?>
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <? endif; ?>
@@ -355,7 +356,7 @@ if ($view == "edit_object_assign" || $view == "openobject_assign") {
     if ($_SESSION['resources_data']["actual_object"]) {
         $editObject=new EditResourceData($_SESSION['resources_data']["actual_object"]);
         $editObject->setUsedView($view);
-        
+
         if (Request::option('edit_assign_object')){
             $_SESSION['resources_data']["actual_assign"] = Request::option('edit_assign_object');
         }
@@ -518,7 +519,7 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
                     $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
                 } else {
                     $msg->displayMsg(25);
-                }?> 
+                }?>
                 </td>
             </tr>
         </table>
@@ -594,8 +595,7 @@ Roomplanning
 /*****************************************************************************/
 if ($view == "requests_start") {
     require_once ($RELATIVE_PATH_RESOURCES."/views/ShowToolsRequests.class.php");
-
-    $toolReq=new ShowToolsRequests($_SESSION['resources_data']["sem_schedule_semester_id"],$_SESSION['resources_data']["resolve_requests_no_time"]);
+    $toolReq=new ShowToolsRequests($_SESSION['resources_data']["sem_schedule_semester_id"],$_SESSION['resources_data']["resolve_requests_no_time"],$_SESSION['resources_data']["resolve_requests_sem_type"],$_SESSION['resources_data']["resolve_requests_faculty"], $_SESSION['resources_data']["resolve_requests_tagged"]);
     $toolReq->showToolStart();
 }
 
@@ -608,8 +608,7 @@ if ($view == "edit_request") {
 
 if ($view == "list_requests") {
         require_once ($RELATIVE_PATH_RESOURCES."/views/ShowToolsRequests.class.php");
-
-        $toolReq=new ShowToolsRequests($_SESSION['resources_data']["sem_schedule_semester_id"],$_SESSION['resources_data']["resolve_requests_no_time"]);
+        $toolReq=new ShowToolsRequests($_SESSION['resources_data']["sem_schedule_semester_id"],$_SESSION['resources_data']["resolve_requests_no_time"],$_SESSION['resources_data']["resolve_requests_sem_type"],$_SESSION['resources_data']["resolve_requests_faculty"], $_SESSION['resources_data']["resolve_requests_tagged"]);
         $toolReq->showRequestList();
 }
 if ($view == "view_requests_schedule") {

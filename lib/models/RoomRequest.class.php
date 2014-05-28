@@ -449,6 +449,9 @@ class RoomRequest extends SimpleORMap
                 $properties_changed = $this->properties_changed;
                 $properties_stored = $this->storeProperties();
             }
+            if ($properties_stored || $this->isDirty()) {
+                $this->last_modified_by = $GLOBALS['user']->id;
+            }
             $stored = parent::store();
             // LOGGING
             $props="";
@@ -524,6 +527,7 @@ class RoomRequest extends SimpleORMap
             $requestData[] = sprintf(_('Erstellt von: %s'), get_fullname($this->user_id));
             $requestData[] = sprintf(_('Erstellt am: %s'), strftime('%x %H:%M', $this->mkdate));
             $requestData[] = sprintf(_('Letzte Änderung: %s'), strftime('%x %H:%M', $this->chdate));
+            $requestData[] = sprintf(_('Letzte Änderung von: %s'), get_fullname($this->last_modified_by ?: $this->user_id));
         }
         if ($this->resource_id) {
             $resObject = ResourceObject::Factory($this->resource_id);
@@ -603,4 +607,27 @@ class RoomRequest extends SimpleORMap
         }
         return $txt;
     }
+
+    function getUserStatus($user_id)
+    {
+        $db = DBManager::get();
+        $sql = "SELECT mkdate FROM resources_requests_user_status WHERE request_id=? AND user_id=?";
+        $st = $db->prepare($sql);
+        $st->execute(array($this->request_id, $user_id));
+        return $st->fetchColumn();
+    }
+
+    function setUserStatus($user_id, $status= true)
+    {
+        $db = DBManager::get();
+        if ($status) {
+            $sql = "REPLACE INTO resources_requests_user_status (request_id,user_id,mkdate) VALUES (?,?,UNIX_TIMESTAMP())";
+        } else {
+            $sql = "DELETE FROM resources_requests_user_status WHERE request_id=? AND user_id=?";
+        }
+        $st = $db->prepare($sql);
+        $st->execute(array($this->request_id, $user_id));
+        return $st->rowCount();
+    }
 }
+

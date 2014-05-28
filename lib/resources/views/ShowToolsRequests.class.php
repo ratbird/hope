@@ -60,12 +60,24 @@ class ShowToolsRequests
     var $requests;          //the requests i'am responsibel for
     var $semester_id;
     var $show_requests_no_time = false;
+    var $sem_type;
+    var $faculty;
+    var $tagged;
 
-    function ShowToolsRequests($semester_id, $resolve_requests_no_time = null)
+    function ShowToolsRequests($semester_id, $resolve_requests_no_time = null, $sem_type = null, $faculty = null, $tagged = null)
     {
         $this->semester_id = $semester_id ?: SemesterData::GetSemesterIdByDate(time());
         if (!is_null($resolve_requests_no_time)) {
             $this->show_requests_no_time = !$resolve_requests_no_time;
+        }
+        if (!is_null($sem_type)) {
+            $this->sem_type = $sem_type;
+        }
+        if (!is_null($faculty)) {
+            $this->faculty = $faculty;
+        }
+        if (!is_null($tagged)) {
+            $this->tagged = $tagged;
         }
     }
 
@@ -92,7 +104,7 @@ class ShowToolsRequests
 
     function restoreOpenRequests(){
         if (is_null($this->requests)){
-            $this->requests = (array)getMyRoomRequests($GLOBALS['user']->id, $this->semester_id, true);
+            $this->requests = (array)getMyRoomRequests($GLOBALS['user']->id, $this->semester_id, true, null, $this->sem_type, $this->faculty, $this->tagged);//MOD_BREMEN
             foreach ($this->requests as $val) {
                 $this->requests_stats_open['sum'] += !$val["closed"] && ($val["have_times"] || $this->show_requests_no_time);
                 $this->requests_stats_open['my_res'] += !$val["closed"] && $val["my_res"] && ($val["have_times"] || $this->show_requests_no_time);
@@ -177,6 +189,9 @@ class ShowToolsRequests
         $template->open_res_requests = $this->getMyOpenResRequests();
         $template->no_time           = $this->getMyOpenNoTimeRequests();
         $template->display_no_time   = $this->show_requests_no_time;
+        $template->display_sem_type  = $this->sem_type;//MOD_BREMEN
+        $template->display_faculty  = $this->faculty;//MOD_BREMEN
+        $template->display_tagged  = $this->tagged;//MOD_BREMEN
         $template->rooms             = $this->getMyRequestedRooms();
         $template->cssSw = $GLOBALS['cssSw'];
         echo $template->render();
@@ -319,6 +334,7 @@ class ShowToolsRequests
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt am:") ." ". strftime('%x %H:%M', $reqObj->mkdate) . '<br>';
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung:") ." ". strftime('%x %H:%M', $reqObj->chdate) . '<br>';
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung von:") . " <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->last_modified_by ?: $reqObj->user_id))."\">".htmlReady(get_fullname($reqObj->last_modified_by ?: $reqObj->user_id))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
                         foreach ($semObj->getMembers('dozent') as $doz) {
                             if ($dozent){
@@ -544,6 +560,11 @@ class ShowToolsRequests
                             }
 
                         if (sizeof($matching_rooms)) {
+                            $sql = "SELECT r1.resource_id FROM resources_objects r1 INNER JOIN resources_objects r2 ON r1.parent_id=r2.resource_id
+                                    WHERE r1.resource_id IN(?) ORDER BY r2.name,r1.name";
+                            $st = DbManager::get()->prepare($sql);
+                            $st->execute(array(array_keys($matching_rooms)));
+                            $matching_rooms = array_flip($st->fetchAll(PDO::FETCH_COLUMN));
                             foreach ($matching_rooms as $key=>$val) {
                             ?>
                         <tr>
@@ -754,7 +775,31 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <b><?=_("Kommentar (intern):")?></b><br><br>
+
+                    <?
+                    $user_status_mkdate = $reqObj->getUserStatus($GLOBALS['user']->id);
+                    ?>
+                    <b><?=("Benachrichtigungen:")?></b><br>
+                    <input type="radio" onChange="jQuery(this).closest('form').submit()" name="reply_recipients" id="reply_recipients_requester" value="requester" checked>
+                    <label for="reply_recipients_requester">
+                    <?=_("Ersteller")?>
+                    </label>
+                    <input type="radio" onChange="jQuery(this).closest('form').submit()" name="reply_recipients" id="reply_recipients_lecturer" value="lecturer" <?=($reqObj->reply_recipients == 'lecturer' ? 'checked' : '')?>>
+                    <label for="reply_recipients_lecturer">
+                    <?=_("Ersteller und alle Lehrenden")?>
+                    </label>
+                    <br>
+                    <b><?=("Anfrage markieren:")?></b><br>
+                    <input type="radio" onChange="jQuery(this).closest('form').submit()" name="request_user_status" id="request_user_status_0" value="0" checked>
+                    <label for="request_user_status_0">
+                    <?=_("unbearbeitet")?>
+                    </label>
+                    <input type="radio" onChange="jQuery(this).closest('form').submit()" name="request_user_status" id="request_user_status_1" value="1" <?=($user_status_mkdate ? 'checked' : '')?>>
+                    <label for="request_user_status_1">
+                    <?=_("bearbeitet")?>
+                    </label>
+                    <br><br>
+                    <b><?=_("Kommentar zur Belegung (intern):")?></b><br><br>
                     <textarea name="comment_internal" style="width: 90%" rows="2"></textarea>
                 </td>
             </tr>
@@ -774,16 +819,16 @@ class ShowToolsRequests
                     if ((sizeof($_SESSION['resources_data']["requests_open"]) > 1) && (($_SESSION['resources_data']["requests_open"][$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"] + $d]["request_id"]]) || (!$_SESSION['resources_data']["skip_closed_requests"])))
                         $inc_possible = TRUE;
                 }
-                
-                
+
+
                 if ($inc_possible) {
                     echo Button::create('<< ' . _('Zurück'), 'dec_request');
                 }
-                
-                
+
+
                 echo Button::createCancel(_('Abbrechen'), 'cancel_edit_request');
                 echo Button::create(_('Löschen'), 'delete_request');
-                
+
                 if ((($reqObj->getResourceId()) || (sizeof($matching_rooms)) || (sizeof($clipped_rooms)) || (sizeof($grouped_rooms))) &&
                     ((is_array($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"])) || ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"]))) {
                     echo Button::createAccept(_('Speichern'), 'save_state');
@@ -805,7 +850,7 @@ class ShowToolsRequests
                 }
                 ?>
                     </div>
-                
+
                 <?
                 if (sizeof($_SESSION['resources_data']["requests_open"]) > 1)
                     printf ("<br><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgel&ouml;st.") . "</font>", sizeof($_SESSION['resources_data']["requests_open"]), sizeof($_SESSION['resources_data']["requests_working_on"]));

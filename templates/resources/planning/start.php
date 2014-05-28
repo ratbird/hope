@@ -22,6 +22,32 @@
                                     'onChange' => 'document.tools_requests_form.submit()'
                                 ), $this->semester_id, 'semester_id',false) ?>
                             <?= Button::create(_('Semester auswählen'), 'tools_requests_sem_choose_button') ?>
+                            <br>
+                            <select name="tools_requests_sem_type_choose" onChange="document.tools_requests_form.submit()">
+                            <option value=""><?= _("alle Veranstaltungen")?></option>
+                            <?
+                            foreach (SeminarCategories::getAll() as $sc) {
+                                foreach ($sc->getTypes() as $key => $value) {
+                                    if (!$sc->studygroup_mode) {
+                                       ?>
+                                        <option <?=($display_sem_type == $key ? 'selected' : '')?> value="<?=$key?>"><?=htmlReady($value . ' (' . $sc->name . ')')?></option>
+                                       <?
+                                    }
+                                }
+                            }
+                           ?>
+                           </select>
+                           <br>
+                           <select name="tools_requests_faculty_choose" onChange="document.tools_requests_form.submit()">
+                           <option value=""><?= _("alle Veranstaltungen")?></option>
+                           <?
+                           foreach (Institute::findBySQL("fakultaets_id=Institut_id ORDER BY Name ASC") as $faculty) {
+                               ?>
+                               <option <?=($display_faculty == $faculty->id ? 'selected' : '')?> value="<?=$faculty->id?>"><?=htmlReady($faculty->name)?></option>
+                               <?
+                           }
+                           ?>
+                           </select>
                         </td>
                         <td style="padding-left:10px">
                             <b><?= _('Status:') ?></b><br>
@@ -55,6 +81,14 @@
                                        type="checkbox" value="1"
                                        <? if (!$display_no_time) echo 'checked'; ?>>
                                 <?= _('Anfragen ohne eingetragene Zeiten oder auf vergangene Termine ausblenden') ?>
+                            </label>
+                            <br>
+                            <label>
+                                <input onchange="document.tools_requests_form.submit()"
+                                       name="resolve_requests_tagged"
+                                       type="checkbox" value="1"
+                                       <? if ($display_tagged) echo 'checked'; ?>>
+                                <?= _('Anfragen die von mir als bearbeitet markiert sind ausblenden') ?>
                             </label>
                         </td>
                     </tr>

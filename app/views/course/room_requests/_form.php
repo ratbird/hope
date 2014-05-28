@@ -176,6 +176,23 @@ if ($request_resource_id = $request->getResourceId()) :
         </table>
     </td>
 </tr>
+<?
+if ($is_resources_admin) : ?>
+    <tr>
+        <td colspan="2">
+            <b><?=("Benachrichtigungen:")?></b><br><br>
+                <?=_("Sie können hier angeben, welche Nutzer bei Ablehnung der Raumanfrage benachrichtigt werden sollen.")?> <br><br>
+                <input type="radio" name="reply_recipients" id="reply_recipients_requester" value="requester" checked>
+                <label for="reply_recipients_requester">
+                <?=_("Der Ersteller der Anfrage")?>
+                </label>
+                <input type="radio" name="reply_recipients" id="reply_recipients_lecturer" value="lecturer" <?=($request->reply_recipients == 'lecturer' ? 'checked' : '')?>>
+                <label for="reply_recipients_lecturer">
+                <?=_("Der Ersteller der Anfrage und alle Lehrenden der zugehörigen Lehrveranstaltung")?>
+                </label>
+        </td>
+    </tr>
+<? endif ?>
 <tr>
     <td colspan="2">
         <b><?=("Nachricht an den Raumadministrator:")?></b><br><br>

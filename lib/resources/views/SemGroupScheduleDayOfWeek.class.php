@@ -83,7 +83,7 @@ class SemGroupScheduleDayOfWeek extends ScheduleView {
                     . htmlReady($res_obj->getName()) . '</a>'
                     . ($res_obj->getSeats() ? '<br>(' . $res_obj->getSeats() . ')' : '');
         } else {
-            $ret = '<span style="font-size:12pt;">' . htmlReady($res_obj->getName()) . '</span>';
+            $ret = '<span style="font-size:10pt;">' . htmlReady($res_obj->getName()) . '</span>';
         }
         return $ret . chr(10);
     }

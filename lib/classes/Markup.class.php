@@ -52,7 +52,7 @@ class Markup
      *
      * @return boolean  TRUE for HTML code, FALSE for plain text.
      */
-    private static function isHtml($text)
+    public static function isHtml($text)
     {
         // TODO compare trimming-and-comparing runtime to using regexp
         $trimmed = trim($text);
@@ -175,6 +175,14 @@ class Markup
             $text = nl2br($text, false);
         }
         return $text;
+    }
+
+    public static function removeHTML($html) {
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('Core.Encoding', 'ISO-8859-1');
+        $config->set('HTML.Allowed', ''); // allow nothing
+        $purifier = new \HTMLPurifier($config);
+        return $purifier->purify($html);
     }
 }
 

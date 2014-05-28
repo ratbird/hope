@@ -124,7 +124,7 @@ class ShowThread extends ShowTreeRow {
                 $zusatz=sprintf (_("verantwortlich:") . " %s", htmlReady($resObject->getOwnerName()));
 
             $new = true;
-            
+
             $edit .= '<div style="text-align: center"><div class="button-group">';
 
             if ($open == 'open') {
@@ -153,7 +153,11 @@ class ShowThread extends ShowTreeRow {
                 }
                 $edit .= LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?view=view_details&show_object=' . $resObject->id));
 
+
                 if ($perms == "admin") {
+                    if ($resObject->isRoom()) {
+                        $edit .= LinkButton::create(_('Benachrichtigung'), UrlHelper::getScriptURL('dispatch.php/resources/helpers/resource_message/' . $resObject->id), array('data-dialog' => ''));
+                    }
                     $edit .= "&nbsp;&nbsp;&nbsp;&nbsp;";
                     $edit .= LinkButton::create(_('Neues Objekt'), URLHelper::getURL('?create_object=' . $resObject->id));
                     $edit .= LinkButton::create(_('Neue Ebene'), URLHelper::getURL('?create_hierachie_level=' . $resObject->id));
@@ -175,7 +179,7 @@ class ShowThread extends ShowTreeRow {
                     $edit .= LinkButton::create(_('Löschen'), '?kill_object=' . $resObject->id);
                 }
             }
-            
+
             $edit .= '</div></div>';
 
             //Daten an Ausgabemodul senden (aus resourcesVisual)

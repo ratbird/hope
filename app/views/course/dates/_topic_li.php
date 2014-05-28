@@ -1,6 +1,6 @@
 <li data-issue_id="<?= $topic->getId() ?>" class="topic_<?= $topic->getId() ?>">
     <a href="<?= URLHelper::getLink("dispatch.php/course/topics", array('open' => $topic->getId())) ?>">
-        <?= Assets::img("icons/16/blue/star", array('class' => "text-bottom")) ?>
+        <?= Assets::img("icons/16/blue/topic", array('class' => "text-bottom")) ?>
         <?= htmlReady($topic['title']) ?>
     </a>
     <? if ($GLOBALS['perm']->have_studip_perm("tutor", $topic['seminar_id'])) : ?>

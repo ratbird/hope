@@ -1872,7 +1872,6 @@ ul.widget-list {
 ul.widget-list > li {
   background-repeat: no-repeat;
   background-position: 0 1px;
-  line-height: 1.5em;
   padding-left: 20px;
 }
 .widget-links {
@@ -1906,17 +1905,17 @@ ul.widget-list > li {
   display: block;
 }
 .widget-links.sidebar-navigation > li.active:before {
-  border: 8px solid rgba(137, 154, 185, 0);
+  border: 10px solid rgba(137, 154, 185, 0);
   content: "";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 8px 8px 8px 5px;
+  border-width: 10px 10px 10px 6px;
   border-left-color: #899ab9;
   left: 100%;
   top: 50%;
-  margin-top: -8px;
+  margin-top: -10px;
 }
 .sidebar-widget-cloud {
   margin: 0px;

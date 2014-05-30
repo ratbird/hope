@@ -53,7 +53,6 @@ ul.widget-list {
     > li {
         background-repeat: no-repeat;
         background-position: 0 1px;
-        line-height: 1.5em;
         padding-left: 20px;
     }
 }
@@ -75,7 +74,7 @@ ul.widget-list {
     &.sidebar-navigation > li {
         &.active {
             #gradient > .directional(@brand-color-lighter, fadeout(@brand-color-lighter, 100%), 270deg);
-            #arrow > .right(8px, @brand-color-lighter, -14px);
+            #arrow > .right(floor(0.5*@line-height-computed), @brand-color-lighter, -14px);
             display: block;
         }
     }

@@ -6,7 +6,7 @@
 ## for use with Stud.IP and cache only!
 
 class CT_Cache {
-    const CACHE_KEY_PREFIX = PHPLIB_SESSIONDATA_TABLE;
+    const CACHE_KEY_PREFIX = 'session_data';
     const SESSION_LIFETIME = 7200;
 
     private $cache;

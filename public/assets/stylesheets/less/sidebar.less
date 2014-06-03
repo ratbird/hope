@@ -76,6 +76,11 @@ ul.widget-list {
             #gradient > .directional(@brand-color-lighter, fadeout(@brand-color-lighter, 100%), 270deg);
             #arrow > .right(floor(0.5*@line-height-computed), @brand-color-lighter, -14px);
             display: block;
+
+            // Obtuser angle
+            &:before {
+                border-left-width: floor(0.5 * @line-height-computed * 2 / 3);
+            }
         }
     }
 }

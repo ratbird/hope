@@ -1391,7 +1391,6 @@ table.default2 tbody.togglable th:before {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 12px 12px 12px 8px;
   border-left-color: #899ab9;
   left: 100%;
   top: 50%;
@@ -1506,7 +1505,6 @@ table.default2 tbody.togglable th:before {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 10px 10px 6px 10px;
   border-bottom-color: #eeeeee;
   bottom: 100%;
   left: 50%;
@@ -1711,7 +1709,6 @@ li#notification_container:hover .list {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 12px 12px 12px 8px;
   border-left-color: #c53d3d;
   left: 100%;
   top: 50%;
@@ -1905,11 +1902,13 @@ ul.widget-list > li {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 10px 10px 10px 6px;
   border-left-color: #899ab9;
   left: 100%;
   top: 50%;
   margin-top: -10px;
+}
+.widget-links.sidebar-navigation > li.active:before {
+  border-left-width: 6px;
 }
 .sidebar-widget-cloud {
   margin: 0px;
@@ -2897,7 +2896,6 @@ a.tooltip span:before {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 6px 9px 9px 9px;
   border-top-color: #cccccc;
   top: 100%;
   left: 50%;
@@ -2910,7 +2908,6 @@ a.tooltip span:after {
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-width: 5px 8px 8px 8px;
   border-top-color: #dddddd;
   top: 100%;
   left: 50%;

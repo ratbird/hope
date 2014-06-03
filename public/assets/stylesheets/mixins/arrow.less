@@ -30,7 +30,6 @@
     // Top
     .top-pseudo(@width, @color) {
         #arrow > .pseudo(@width, @color);
-        border-width: @width @width floor(@width * 2 / 3) @width;
         border-bottom-color: @color;
         bottom: 100%;
         left: 50%;
@@ -55,7 +54,6 @@
     // Right
     .right-pseudo(@width, @color) {
         #arrow > .pseudo(@width, @color);
-        border-width: @width @width @width floor(@width * 2 / 3);
         border-left-color: @color;
         left: 100%;
         top: 50%;
@@ -80,7 +78,6 @@
     // Bottom
     .bottom-pseudo(@width, @color) {
         #arrow > .pseudo(@width, @color);
-        border-width: floor(@width * 2 / 3) @width @width @width;
         border-top-color: @color;
         top: 100%;
         left: 50%;
@@ -105,7 +102,6 @@
     // Left
     .left-pseudo(@width, @color) {
         #arrow > .pseudo(@width, @color);
-        border-width: @width floor(@width * 2 / 3) @width @width;
         border-right-color: @color;
         right: 100%;
         top: 50%;

@@ -61,33 +61,27 @@
  */
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/Lato-Light.eot');
-  src: url('../fonts/lato/Lato-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../fonts/lato/Lato-Light.woff') format('woff'), /* Modern Browsers */ url('../fonts/lato/Lato-Light.ttf') format('truetype');
+  src: url('../fonts/lato/latolatinlight-regular-webfont.eot');
+  src: url('../fonts/lato/latolatinlight-regular-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/latolatinlight-regular-webfont.woff') format('woff'), url('../fonts/lato/latolatinlight-regular-webfont.ttf') format('truetype'), url('../fonts/lato/latolatinlight-regular-webfont.svg#lato_latin_lightregular') format('svg');
   font-style: normal;
   font-weight: 300;
   text-rendering: optimizeLegibility;
-  
-  /* IE9 Compat Modes */
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/Lato-Regular.eot');
-  src: url('../fonts/lato/Lato-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../fonts/lato/Lato-Regular.woff') format('woff'), /* Modern Browsers */ url('../fonts/lato/Lato-Regular.ttf') format('truetype');
+  src: url('../fonts/lato/latolatin-regular-webfont.eot');
+  src: url('../fonts/lato/latolatin-regular-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/latolatin-regular-webfont.woff') format('woff'), url('../fonts/lato/latolatin-regular-webfont.ttf') format('truetype'), url('../fonts/lato/latolatin-regular-webfont.svg#lato_latinregular') format('svg');
   font-style: normal;
   font-weight: 400;
   text-rendering: optimizeLegibility;
-  
-  /* IE9 Compat Modes */
 }
 @font-face {
   font-family: 'Lato';
-  src: url('../fonts/lato/Lato-Bold.eot');
-  src: url('../fonts/lato/Lato-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../fonts/lato/Lato-Bold.woff') format('woff'), /* Modern Browsers */ url('../fonts/lato/Lato-Bold.ttf') format('truetype');
+  src: url('../fonts/lato/latolatin-bold-webfont.eot');
+  src: url('../fonts/lato/latolatin-bold-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/latolatin-bold-webfont.woff') format('woff'), url('../fonts/lato/latolatin-bold-webfont.ttf') format('truetype'), url('../fonts/lato/latolatin-bold-webfont.svg#lato_latinbold') format('svg');
   font-style: normal;
   font-weight: 700;
   text-rendering: optimizeLegibility;
-  
-  /* IE9 Compat Modes */
 }
 html {
   font-size: 62.5%;

@@ -53,6 +53,7 @@ class Events extends \RESTAPI\RouteMap
                 'description' => $event->getDescription() ?: '',
                 'categories'  => $event->toStringCategories() ?: '',
                 'room'        => html_entity_decode(strip_tags($singledate->getRoom() ?: $singledate->getFreeRoomText() ?: '')),
+                'canceled'    => $singledate->isHoliday() ?: false,
             );
         }
 
@@ -129,7 +130,8 @@ class Events extends \RESTAPI\RouteMap
                 'description' => implode(', ', $issue_titles),
                 'categories'  => $template_data['art'] ?: '',
                 'room'        => html_entity_decode(strip_tags($template_data['room'] ?: '')),
-                'deleted'     => $template_data['deleted']
+                'deleted'     => $template_data['deleted'],
+                'canceled'    => $date->isHoliday() ?: false,
             );
         }
 

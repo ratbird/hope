@@ -46,11 +46,13 @@ namespace Studip\Squeeze {
         $packager->cacheAll($outputDir);
 
         $compressor = new Compressor($configuration);
-        if (is_array($configuration['css']) && $compressor->shouldCompress()) {
-            if (!$compressor->hasJava()) {
+        if (is_array($configuration['css'])) {
+            $compress = $compressor->shouldCompress();
+            if ($compress && !$compressor->hasJava()) {
+                $compress = false;
                 error_log('CSS could not be compressed, since Java is missing.');
             }
-            
+
             $config_time = filemtime($configFile);
 
             foreach ($configuration['css'] as $package => $files) {
@@ -58,10 +60,9 @@ namespace Studip\Squeeze {
                     $src  = $configuration['assets_root'] . '/stylesheets/' . $file;
                     $dest = $configuration['package_path'] . '/' . $package . '-' . $file;
                     if (!file_exists($dest) || (max($config_time, filemtime($src)) > filemtime($dest))) {
-                        if ($compressor->hasJava()) {
-                            $contents = $compressor->callCompressor(file_get_contents($src), 'css');
-                        } else {
-                            $contents = file_get_contents($src);
+                        $contents = file_get_contents($src);
+                        if ($compress) {
+                            $contents = $compressor->callCompressor($contents, 'css');
                         }
                         file_put_contents($dest, $contents);
                     }

@@ -21,7 +21,7 @@
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/Markup.class.php';
 
-class StudipFormatTest extends PHPUnit_Framework_TestCase
+class MarkupTest extends PHPUnit_Framework_TestCase
 {
     public function testRemoveHTML()
     {

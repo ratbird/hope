@@ -53,14 +53,17 @@ class HelpTour extends SimpleORMap {
      */
     public static function GetRoute($route = '') 
     {
-        if (!$route)
+        if (!$route) {
             $route = str_replace($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '', $_SERVER['REQUEST_URI']);
-        else
+        } else {
             $route = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', $route);
+        }
         $route_array = explode('?', $route);
         $route = $route_array[0];
         $route_array = explode('#', $route);
         $route = $route_array[0];
+        if (strpos($route, '/index') == strlen($route)-6)
+            $route = str_replace('/index', '', $route);
         return $route;
     }
 

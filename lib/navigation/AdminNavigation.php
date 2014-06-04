@@ -70,7 +70,7 @@ class AdminNavigation extends Navigation
         if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
             $navigation->addSubNavigation('room_requests', new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests', array('list' => 'TRUE')));
         }
-        $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'dispatch.php/course/topics'));
+        $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'dispatch.php/course/dates'));
 
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem&list=TRUE'));

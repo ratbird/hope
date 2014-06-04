@@ -193,7 +193,7 @@ class StartNavigation extends Navigation
             $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
             $this->addSubNavigation('community', $navigation);
         }
-        
+
         // calendar / home page
         if (!$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Mein Profil'), 'dispatch.php/profile');
@@ -215,12 +215,6 @@ class StartNavigation extends Navigation
             }
 
             $this->addSubNavigation('planner', $navigation);
-        }
-
-        // module administration
-        if ($perm->have_perm('dozent') && get_config('STM_ENABLE')) {
-            $navigation = new Navigation(_('Studienmodule'), 'auswahl_module.php');
-            $this->addSubNavigation('admin_modules', $navigation);
         }
 
         // global search

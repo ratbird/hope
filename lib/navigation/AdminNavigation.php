@@ -61,7 +61,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('adminarea_start', new Navigation(_('Veranstaltung auswählen'),
                                           'adminarea_start.php', array('list' => 'TRUE')));
         }
-        
+
         $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'),
                                       'dispatch.php/course/basicdata/view/', array('list' => 'TRUE')));
         $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),
@@ -177,14 +177,10 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'dispatch.php/admin/smileys'));
             }
 
-            if (get_config('STM_ENABLE')) {
-                $navigation->addSubNavigation('abstract_modules', new Navigation(_('Studienmodule'), 'stm_abstract_assi.php'));
-            }
-
             if (get_config('TOURS_ENABLE')) {
                 $navigation->addSubNavigation('tour', new Navigation(_('Touren'), 'dispatch.php/tour/admin_overview'));
             }
-            
+
             if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                 $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
             }
@@ -193,7 +189,7 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice'), 'dispatch.php/admin/webservice_access'));
             }
             $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
-            
+
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
             }

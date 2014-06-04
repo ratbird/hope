@@ -47,11 +47,6 @@ class SearchNavigation extends Navigation
             $navigation->addSubNavigation($key, new Navigation($val['name'], 'dispatch.php/search/courses?reset_all=TRUE&cmd=qs', array('view' => $key)));
         }
 
-        // browse modules
-        if (get_config('STM_ENABLE')) {
-            $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'dispatch.php/search/courses?reset_all=TRUE', array('view' => 'mod')));
-        }
-
         $this->addSubNavigation('courses', $navigation);
 
         // search archive

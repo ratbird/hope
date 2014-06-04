@@ -60,10 +60,6 @@ class BrowseNavigation extends Navigation
             } else {
                 $navigation->addSubNavigation('groups', new Navigation(_('Gruppenzuordnung'), 'dispatch.php/meine_seminare/groups'));
 
-                if (get_config('STM_ENABLE') && $perm->have_perm('dozent')) {
-                    $navigation->addSubNavigation('modules', new Navigation(_('Meine Studienmodule'), 'my_stm.php'));
-                }
-
                 $navigation->addSubNavigation('archive', new Navigation(_('Meine archivierten Veranstaltungen'), 'dispatch.php/meine_seminare/archive'));
 
                 if (get_config('EXPORT_ENABLE')) {

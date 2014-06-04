@@ -12,8 +12,6 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/SemBrowse.class.php';
-require_once 'lib/classes/StmBrowse.class.php';
 
 class Search_CoursesController extends AuthenticatedController
 {
@@ -44,17 +42,12 @@ class Search_CoursesController extends AuthenticatedController
 
     public function index_action()
     {
-        if ($_SESSION['sem_portal']['bereich'] != "all" && $_SESSION['sem_portal']['bereich'] != "mod") {
+        if ($_SESSION['sem_portal']['bereich'] != "all") {
             $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_portal']['bereich']];
             $this->anzahl_seminare_class = $class->countSeminars();
             $_sem_status = array_keys($class->getSemTypes());
         } else {
             $_sem_status = false;
-        }
-
-        if ($_SESSION['sem_portal']['bereich'] == "mod") {
-            $query = "SELECT COUNT(*) FROM stm_instances WHERE complete = 1";
-            $this->anzahl_seminare_class = DBManager::get()->query($query)->fetchColumn();
         }
 
         $init_data = array( "level" => "f",
@@ -65,12 +58,9 @@ class Search_CoursesController extends AuthenticatedController
             "sem_status"=>$_sem_status);
 
         if (Request::option('reset_all')) $_SESSION['sem_browse_data'] = null;
-        if (get_config('STM_ENABLE') &&  $_SESSION['sem_portal']['bereich'] == "mod"){
-            $this->sem_browse_obj = new StmBrowse($init_data);
-        } else {
-            $this->sem_browse_obj = new SemBrowse($init_data);
-            $sem_browse_data['show_class'] = $_SESSION['sem_portal']['bereich'];
-        }
+        $this->sem_browse_obj = new SemBrowse($init_data);
+        $sem_browse_data['show_class'] = $_SESSION['sem_portal']['bereich'];
+
         if (!$GLOBALS['perm']->have_perm("root")){
             $this->sem_browse_obj->target_url="details.php";
             $this->sem_browse_obj->target_id="sem_id";

@@ -82,10 +82,6 @@ class ToolsNavigation extends Navigation
             if (get_config('LITERATURE_ENABLE')) {
                 $this->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
             }
-
-            if (get_config('STM_ENABLE')) {
-                $this->addSubNavigation('modules', new Navigation(_('Konkrete Studienmodule'), 'stm_instance_assi.php'));
-            }
         }
 
         if ($perm->have_perm('root')) {

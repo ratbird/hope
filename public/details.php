@@ -339,29 +339,6 @@ else
                 </td>
             </tr>
             <? }
-            if (get_config('STM_ENABLE')) {
-                $stms = StudipStmInstance::GetStmInstancesBySeminar($sem_id);
-                if (count($stms)){
-                    $stm_out = array();
-                    foreach( $stms as $stm_id => $stm) {
-                        if ($stm['complete']) {
-                            $stm_out[] = '<a href="'.URLHelper::getLink('stm_details.php?stm_instance_id='.$stm_id).'">'
-                                        .'<img src="' . Assets::image_path('icons/16/grey/link-intern.png') . '" ' . ($stm['id_number'] ? htmlReady($stm['id_number']).': ' : '') . htmlReady($stm['title']) . '></a>';
-                        }
-                    }
-                    ?>
-            <tr>
-                <td width="1%">&nbsp;</td>
-                <td colspan=4 width="99%" valign="top">
-                <?
-                printf ("<font size=-1><b>" . _("Studienmodule:") . "</b></font><br><font size=-1>%s</font>",
-                        join("<br>\n", $stm_out));
-                ?>
-                </td>
-            </tr>
-            <?
-                }
-            }
             $studienmodule = null;
             if ($studienmodulmanagement = PluginEngine::getPlugin('StudienmodulManagement')){
                 $studienmodule = StudipStudyArea::getStudyAreasForCourse($sem_id)->filter(function($area) { return $area->isModule(); });

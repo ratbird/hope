@@ -42,7 +42,7 @@ STUDIP.Termine = {
         jQuery("#termin_item_" + id + "_content").slideDown(400);
         jQuery("#termin_item_" + id + " .printhead2 img")
             .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-        jQuery("#termin_item_" + id + ".printhead2")
+        jQuery("#termin_item_" + id + " .printhead2")
             .removeClass("printhead2")
             .addClass("printhead3");
         jQuery("#termin_item_" + id + " .printhead b").css("font-weight", "bold");

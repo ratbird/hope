@@ -117,6 +117,7 @@ class NewsController extends StudipController
         $this->news = StudipNews::GetNewsByRange($range_id, true, true);
         $this->perm = StudipNews::haveRangePermission('edit', $range_id);
         $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
+        $this->range = $range_id;
 
     }
 

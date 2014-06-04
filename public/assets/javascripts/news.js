@@ -99,8 +99,8 @@ STUDIP.News = {
                 });
                 jQuery('#' + id).html(html);
                 jQuery('#' + id + '_content').css({
-                    'height' : STUDIP.News.dialog_height - 110 + "px", 
-                    'maxHeight': STUDIP.News.dialog_height - 110 + "px"
+                    'height' : STUDIP.News.dialog_height - 120 + "px", 
+                    'maxHeight': STUDIP.News.dialog_height - 120 + "px"
                 });
                 jQuery('.ui-dialog-content').css({'padding-right' : '1px'});
 
@@ -147,8 +147,8 @@ STUDIP.News = {
                     if (html.length > 0) {
                         jQuery('#' + id).html(html);
                         jQuery('#' + id + '_content').css({
-                            'height' : STUDIP.News.dialog_height - 110 + "px", 
-                            'maxHeight': STUDIP.News.dialog_height - 110 + "px"
+                            'height' : STUDIP.News.dialog_height - 120 + "px", 
+                            'maxHeight': STUDIP.News.dialog_height - 120 + "px"
                         });
                         // scroll to anker
                         var obj = jQuery('a[name=anker]');

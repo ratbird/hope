@@ -45,9 +45,9 @@ class Search_CoursesController extends AuthenticatedController
         if ($_SESSION['sem_portal']['bereich'] != "all") {
             $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_portal']['bereich']];
             $this->anzahl_seminare_class = $class->countSeminars();
-            $_sem_status = array_keys($class->getSemTypes());
+            $sem_status = array_keys($class->getSemTypes());
         } else {
-            $_sem_status = false;
+            $sem_status = false;
         }
 
         $init_data = array( "level" => "f",
@@ -55,7 +55,7 @@ class Search_CoursesController extends AuthenticatedController
             "show_class"=>$_SESSION['sem_portal']['bereich'],
             "group_by"=>0,
             "default_sem"=> ( ($default_sem = SemesterData::GetSemesterIndexById($_SESSION['_default_sem'])) !== false ? $default_sem : "all"),
-            "sem_status"=>$_sem_status);
+            "sem_status"=> $sem_status);
 
         if (Request::option('reset_all')) $_SESSION['sem_browse_data'] = null;
         $this->sem_browse_obj = new SemBrowse($init_data);
@@ -77,12 +77,12 @@ class Search_CoursesController extends AuthenticatedController
             }
         }
 
-        $this->toplist_entries = $this->getToplistEntries();
+        $this->toplist_entries = $this->getToplistEntries($sem_status);
         $this->controller = $this;
     }
 
 
-    protected function getToplistEntries() {
+    protected function getToplistEntries($sem_status) {
         $sql_where_query_seminare = " WHERE 1 ";
         $parameters = array();
 
@@ -90,9 +90,9 @@ class Search_CoursesController extends AuthenticatedController
             $sql_where_query_seminare .= " AND seminare.visible = 1 ";
         }
 
-        if ($_SESSION['sem_portal']['bereich'] != 'all' && count($_sem_status)) {
+        if ($_SESSION['sem_portal']['bereich'] != 'all' && count($sem_status)) {
             $sql_where_query_seminare .= " AND seminare.status IN (?) ";
-            $parameters[] = $_sem_status;
+            $parameters[] = $sem_status;
         }
         switch ($_SESSION['sem_portal']["toplist"]) {
             case 4:

@@ -1,10 +1,8 @@
 <table cellpadding="5" border="0" width="100%" id="main_content"><tr><td colspan="2">
             <?
             //
-            if ($_SESSION['sem_portal']["bereich"] == "mod") {
-                print "<br>"._("Hier finden Sie alle verfügbaren Studienmodule.");
-            } elseif ($anzahl_seminare_class > 0) {
-                print $SEM_CLASS[$_SESSION['sem_portal']["bereich"]]["description"]."<br>" ;
+            if ($anzahl_seminare_class > 0) {
+                print $GLOBALS['SEM_CLASS'][$_SESSION['sem_portal']["bereich"]]["description"]."<br>" ;
             } elseif ($_SESSION['sem_portal']["bereich"] != "all") {
                 print "<br>"._("In dieser Kategorie sind keine Veranstaltungen angelegt.<br>Bitte w&auml;hlen Sie einen andere Kategorie!");
             }
@@ -26,7 +24,7 @@ $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
 $widget = new OptionsWidget();
 $widget->setTitle(_('Suchoptionen'));
 $widget->addCheckbox(_('Erweiterte Suche anzeigen'),
-                     $_SESSION['sem_portal']["bereich"] != "mod" && $_SESSION['sem_browse_data']['cmd'] == "xts",
+                     $_SESSION['sem_browse_data']['cmd'] == "xts",
                      URLHelper::getLink('?cmd=xts&level=f'),
                      URLHelper::getLink('?cmd=qs&level=f'));
 
@@ -44,7 +42,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
         );
     }
     $sidebar->addWidget($grouping);
-} elseif ($_SESSION['sem_portal']['bereich'] != 'mod') {
+} else {
     $toplist_names = array("dummy",_("Teilnehmeranzahl"), _("die meisten Materialien"), _("aktivste Veranstaltungen"),_("neueste Veranstaltungen"));
     $toplist = new LinksWidget();
     $toplist->setTitle(_("Topliste: ").$toplist_names[$_SESSION['sem_portal']["toplist"] ?: 4]);

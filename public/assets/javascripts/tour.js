@@ -50,6 +50,8 @@ STUDIP.Tour = {
                         STUDIP.Tour.show_helpcenter();
                     } else if (STUDIP.Tour.options.last_run) {
                         STUDIP.Tour.hide_helpcenter();
+                    	if ((STUDIP.Tour.options.tour_type == 'tour') && ! STUDIP.Tour.options.edit_mode)
+                        	jQuery('body').prepend('<div id="tour_overlay"></div>');
                         jQuery('#tour_title').html(STUDIP.Tour.options.last_run);
                         jQuery('#tour_end').hide();
                         jQuery('#tour_next').hide();

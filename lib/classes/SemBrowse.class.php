@@ -259,6 +259,7 @@ class SemBrowse {
         echo $quicksearch->render();
         echo "&nbsp;";
         echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle', 'class' => "quicksearchbutton"), true);
+        echo \Studip\LinkButton::create(_('Zurücksetzen'), URLHelper::getURL('?reset_all=1'), array('title' => _("Zurücksetzen")));
         echo "</td></tr>";
         echo $this->search_obj->getFormEnd();
         echo "</table>\n";
@@ -311,7 +312,7 @@ class SemBrowse {
         echo "<tr><td class=\"table_row_even\" align=\"center\" colspan=\"4\">";
         echo $this->search_obj->getSearchButton();
         echo "&nbsp;";
-        echo $this->search_obj->getNewSearchButton();
+        echo \Studip\LinkButton::create(_('Zurücksetzen'), URLHelper::getURL('?cmd=xts&level=f&reset_all=1'), array('title' => _("Zurücksetzen")));
         echo "&nbsp</td></tr>\n";
         echo $this->search_obj->getFormEnd();
         echo "</table>\n";

@@ -9,18 +9,7 @@
                 print "<br>"._("In dieser Kategorie sind keine Veranstaltungen angelegt.<br>Bitte w&auml;hlen Sie einen andere Kategorie!");
             }
 
-            echo "</td></tr><tr><td class=\"blank\" align=\"left\">";
-            if ($_SESSION['sem_portal']["bereich"] != "mod"){
-                if ($_SESSION['sem_browse_data']['cmd'] == "xts"){
-                    echo \Studip\LinkButton::create(_('Schnellsuche'), URLHelper::getLink('?cmd=qs&level=f'), array('title' => _("Zur Schnellsuche zurückgehen")));
-                } else {
-                    echo \Studip\LinkButton::create(_('Erweiterte Suche'), URLHelper::getLink('?cmd=xts&level=f'), array('title' => _("Erweitertes Suchformular aufrufen")));
-                }
-            }
-            echo "</td>\n";
-            echo "<td class=\"blank\" align=\"right\">";
-            echo \Studip\LinkButton::create(_('Zurücksetzen'), URLHelper::getURL('?reset_all=1'), array('title' => _("zurücksetzen")));
-            echo "</td></tr>\n";
+            echo "</td></tr>";
 
 
             ?>
@@ -33,6 +22,15 @@
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
 
+// add search options to sidebar
+$widget = new OptionsWidget();
+$widget->setTitle(_('Suchoptionen'));
+$widget->addCheckbox(_('Erweiterte Suche anzeigen'),
+                     $_SESSION['sem_portal']["bereich"] != "mod" && $_SESSION['sem_browse_data']['cmd'] == "xts",
+                     URLHelper::getLink('?cmd=xts&level=f'),
+                     URLHelper::getLink('?cmd=qs&level=f'));
+
+$sidebar->addWidget($widget);
 
 if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_result'])){
     $group_by_links = "";

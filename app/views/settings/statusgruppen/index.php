@@ -53,7 +53,7 @@
                     <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Einrichtung'))) ?>
                 </a>
             <? else: ?>
-                <a href="<?= URLHelper::getURL('institut_main.php', array('auswahl' => $inst_id)) ?>">
+                <a href="<?= URLHelper::getURL('dispatch.php/institute/overview', array('auswahl' => $inst_id)) ?>">
                     <?= Assets::img('icons/16/blue/link-intern', tooltip2(_('Zur Einrichtung'))) ?>
                 </a>
             <? endif; ?>

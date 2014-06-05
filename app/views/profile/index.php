@@ -121,7 +121,7 @@
             <? if(count($study_institutes) > 0): ?>
                 <br><b><?=_("Wo ich studiere:")?></b><br>
                 <? foreach($study_institutes as $inst_result) :?>
-                    <a href="<?=URLHelper::getLink('institut_main.php', array('auswahl' => $inst_result["Institut_id"]))?>"><?=htmlReady($inst_result["Name"])?></a><br>
+                    <a href="<?=URLHelper::getLink('dispatch.php/institute/overview', array('auswahl' => $inst_result["Institut_id"]))?>"><?=htmlReady($inst_result["Name"])?></a><br>
                 <?endforeach?>
                     <br />
             <?endif?>

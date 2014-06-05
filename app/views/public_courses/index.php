@@ -50,7 +50,7 @@
             </td>
             <td><?= htmlReady($GLOBALS['SEM_TYPE'][$values['status']]['name']) ?></td>
             <td>
-                <a href="<?= URLHelper::getLink('institut_main.php?auswahl=' . $values['id']) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $values['id']) ?>">
                     <?= htmlReady($values['Institut']) ?>
                 </a>
             </td>

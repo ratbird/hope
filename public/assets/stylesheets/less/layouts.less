@@ -7,10 +7,10 @@
 @infobox-border-width: 1px;
 
 @content-width: 400px;
-@content-padding: 12px;
+@content-margin: 12px;
 
-@site-width: (@page-margin * 2) + @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-padding * 2); 
-@page-width: @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-padding * 2); 
+@site-width: (@page-margin * 2) + @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-margin * 2); 
+@page-width: @infobox-width + (@infobox-padding * 2) + (@infobox-border-width * 2) + @content-width + (@content-margin * 2); 
 
 
 /* --- Layouts -------------------------------------------------------------- */
@@ -38,10 +38,8 @@
 }
 
 #layout_content {
-    // Without the +1 zooming out would break the layout (weird behaviour, i know)
-    padding: @content-padding;
-    padding-top: 0;
-    padding-left: 20px;
+    .scrollbox-horizontal();
+    margin: 0 @content-margin @content-margin 20px;
     vertical-align: top;
     min-width: @content-width;
 }

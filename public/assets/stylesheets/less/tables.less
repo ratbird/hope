@@ -451,7 +451,7 @@ table.default {
     }
     // Hover effect
     &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-        background-color: @light-gray-color-20;
+        background-color: fadeout(@light-gray-color, 80%);
     }
     tfoot {
         td {

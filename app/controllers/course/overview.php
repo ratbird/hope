@@ -20,31 +20,32 @@ if (get_config('VOTE_ENABLE')) {
 
 class Course_OverviewController extends AuthenticatedController
 {
+    protected $allow_nobody = true;
+
     function before_filter(&$action, &$args) {
         global $SEM_TYPE, $SEM_CLASS;
 
         parent::before_filter($action, $args);
 
-        $this->course_id = $_SESSION["SessionSeminar"];
-        if ($this->course_id === '' || get_object_type($this->course_id) !== 'sem'
-            || !$GLOBALS['perm']->have_studip_perm("user", $this->course_id)) {
-            $this->set_status(403);
-            return FALSE;
+        checkObject();
+        $this->course = Course::findCurrent();
+        if (!$this->course) {
+            throw new CheckObjectException(_('Sie haben kein Objekt gewählt.'));
         }
-        
+        $this->course_id = $this->course->id;
+
         PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]. " - " . _("Kurzinfo"));
         Navigation::activateItem('/course/main/info');
         // add skip link
         SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
 
-        
+
         $this->sem = Seminar::getInstance($this->course_id);
         $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$this->sem->status]['class']];
         $sem_class || $sem_class = SemClass::getDefaultSemClass();
         $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$this->sem->status]["class"]]["studygroup_mode"];
-        
-        checkObject();
+
     }
 
     /**
@@ -61,7 +62,7 @@ class Course_OverviewController extends AuthenticatedController
         } else {
             $this->avatar = CourseAvatar::getAvatar($this->course_id);
         }
-        
+
         if (get_config('NEWS_RSS_EXPORT_ENABLE') && $this->course_id){
             $rss_id = StudipNews::GetRssIdFromRangeId($this->course_id);
             if ($rss_id) {
@@ -71,7 +72,7 @@ class Course_OverviewController extends AuthenticatedController
                                                          'href'  => 'rss.php?id='.$rss_id));
             }
         }
-        
-        
+
+
     }
 }

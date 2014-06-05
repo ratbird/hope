@@ -1,8 +1,5 @@
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td class="blank" valign="top">
-        <div style="padding:0 1.5em 1.5em 1.5em">
-        <ul style="list-style-type:none;padding:0px;">
+<h2><?= htmlReady($institute->getFullname())?></h2>
+<ul style="list-style-type:none;padding:0px;">
     <? if ($institute->strasse) : ?>
         <li><b><?=_("Straße:")?></b> <?=htmlReady($institute->strasse)?></li>
     <? endif ?>
@@ -28,25 +25,18 @@
     <? endif ?>
 
     <? if ($institute->fakultaets_id) : ?>
-        <li><b><?=_("Fakultät:")?></b> <?=htmlReady(Institute::find($institute->fakultaets_id)->name)?></li>
+        <li><b><?=_("Fakultät:")?></b> <?=htmlReady($institute->faculty->name)?></li>
     <? endif ?>
 
-    <? foreach ($localEntries as $entry) : ?>
-        <? if ($entry->structure->accessAllowed($perm) && $entry->getValue()) : ?>
+    <? foreach ($institute->datafields->map(function ($d) {return $d->getTypedDatafield();}) as $entry) : ?>
+        <? if ($entry->isVisible() && $entry->getValue()) : ?>
             <li><b><?=htmlReady($entry->getName())?>: </b>
             <?=$entry->getDisplayValue();?>
             </li>
         <? endif?>
     <? endforeach ?>
-        </ul>
-        </div>
-        </td>
-        <td class="blank" align="right" valign="top" style="padding:10px;">
-            <?//= InstituteAvatar::getAvatar($institute_id)->getImageTag(Avatar::NORMAL) ?>
-        </td>
-    </tr>
-</table>
-<br>
+</ul>
+
 <?
 // Anzeige von News
 ($rechte) ? $show_admin=TRUE : $show_admin=FALSE;

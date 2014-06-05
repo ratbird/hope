@@ -16,6 +16,8 @@ require_once 'studip_controller.php';
 
 abstract class AuthenticatedController extends StudipController {
 
+    protected $allow_nobody = false;
+
   /**
    * Callback function being called before an action is executed. If this
    * function does not return FALSE, the action will be called, otherwise
@@ -34,12 +36,12 @@ abstract class AuthenticatedController extends StudipController {
 
     # open session
     page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
+                    'auth' => $this->allow_nobody ? 'Seminar_Default_Auth' : 'Seminar_Auth',
                     'perm' => 'Seminar_Perm',
                     'user' => 'Seminar_User'));
 
     // show login-screen, if authentication is "nobody"
-    $GLOBALS['auth']->login_if($GLOBALS['auth']->auth['uid'] == 'nobody');
+    $GLOBALS['auth']->login_if((Request::get('again') || !$this->allow_nobody) && $GLOBALS['user']->id == 'nobody');
 
     $this->flash = Trails_Flash::instance();
 

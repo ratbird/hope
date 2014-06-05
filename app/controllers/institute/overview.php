@@ -5,7 +5,7 @@
  * Copyright (C) 2014 - Arne Schröder <schroeder@data-quest.de>
  *
  * formerly institut_main.php - Die Eingangsseite fuer ein Institut
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -13,12 +13,15 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-//require_once 'lib/classes/Seminar.class.php';
-include 'lib/showNews.inc.php';
-include 'lib/show_dates.inc.php';
+require_once 'lib/showNews.inc.php';
+require_once 'lib/show_dates.inc.php';
+require_once 'lib/vote/vote_show.inc.php';
+
 
 class Institute_OverviewController extends AuthenticatedController
 {
+    protected $allow_nobody = true;
+
     function before_filter(&$action, &$args) {
         global $SEM_TYPE, $SEM_CLASS;
 
@@ -28,18 +31,12 @@ class Institute_OverviewController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        require_once 'lib/dates.inc.php'; //Funktionen zur Anzeige der Terminstruktur
-        require_once 'lib/visual.inc.php';
-        require_once 'lib/functions.php';
-        require_once 'lib/classes/DataFieldEntry.class.php';
-        if (get_config('VOTE_ENABLE')) {
-            include_once ("lib/vote/vote_show.inc.php");
+        checkObject();
+        $this->institute = Institute::findCurrent();
+        if (!$this->institute) {
+            throw new CheckObjectException(_('Sie haben kein Objekt gewählt.'));
         }
-        
-        $this->institute_id = $_SESSION['SessionSeminar'];
-        //        selectInst($this->institute_id);
-//        var_dump($_SESSION['SessionSeminar']);
-//        die();
+        $this->institute_id = $this->institute->id;
 
         //set visitdate for institute, when coming from meine_seminare
         if (Request::option('auswahl')) {
@@ -47,7 +44,7 @@ class Institute_OverviewController extends AuthenticatedController
         }
 
         //gibt es eine Anweisung zur Umleitung?
-        if(Request::get('redirect_to')) {
+        if (Request::get('redirect_to')) {
             $query_parts = explode('&', stristr(urldecode($_SERVER['QUERY_STRING']), 'redirect_to'));
             list( , $where_to) = explode('=', array_shift($query_parts));
             $new_query = $where_to . '?' . join('&', $query_parts);
@@ -60,8 +57,7 @@ class Institute_OverviewController extends AuthenticatedController
         PageLayout::setHelpKeyword("Basis.Einrichtungen");
         PageLayout::setTitle($_SESSION['SessSemName']["header_line"]. " - " ._("Kurzinfo"));
         Navigation::activateItem('/course/main/info');
-        
-        checkObject();
+
     }
 
     /**
@@ -74,7 +70,7 @@ class Institute_OverviewController extends AuthenticatedController
     {
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage(Assets::image_path("sidebar/institute-sidebar.png"));
-        
+
         if (get_config('NEWS_RSS_EXPORT_ENABLE') && $this->institute_id){
             $rss_id = StudipNews::GetRssIdFromRangeId($this->institute_id);
             if ($rss_id) {
@@ -98,15 +94,15 @@ class Institute_OverviewController extends AuthenticatedController
                     'follow_inst' => 'on'
                 ));
                 $widget->addLink(_('Einrichtung abonnieren'), $url);
-            } elseif (! $GLOBALS['perm']->have_studip_perm('autor', $this->institute_id)) {            
+            } elseif (! $GLOBALS['perm']->have_studip_perm('autor', $this->institute_id)) {
                 $url = URLHelper::getLink('dispatch.php/institute/overview', array(
                     'follow_inst' => 'off'
                 ));
                 $widget->addLink(_('Austragen aus der Einrichtung'), $url);
             }
             $this->sidebar->addWidget($widget);
-            
-            if (! $GLOBALS['perm']->have_studip_perm('user', $this->institute_id) AND (Request::option('follow_inst') == 'on')) {            
+
+            if (! $GLOBALS['perm']->have_studip_perm('user', $this->institute_id) AND (Request::option('follow_inst') == 'on')) {
                 $query = "INSERT IGNORE INTO user_inst
                           (user_id, Institut_id, inst_perms)
                           VALUES (?, ?, 'user')";
@@ -121,7 +117,7 @@ class Institute_OverviewController extends AuthenticatedController
                     header('Location: '.URLHelper::getURL('', array('cid' => $this->institute_id)));
                     die;
                 }
-            } elseif (! $GLOBALS['perm']->have_studip_perm('autor', $this->institute_id) AND (Request::option('follow_inst') == 'off')) {            
+            } elseif (! $GLOBALS['perm']->have_studip_perm('autor', $this->institute_id) AND (Request::option('follow_inst') == 'off')) {
                 $query = "DELETE FROM user_inst
                           WHERE user_id = ?  AND Institut_id = ?";
                 $statement = DBManager::get()->prepare($query);
@@ -140,8 +136,5 @@ class Institute_OverviewController extends AuthenticatedController
 
         //Auf und Zuklappen News
         process_news_commands($this->institut_main_data);
-        
-        $this->institute = Institute::find($this->institute_id);
-        $this->localEntries = DataFieldEntry::getDataFieldEntries($this->institute_id);
     }
 }

@@ -81,6 +81,7 @@
             $mods[] = '<a href="'.URLHelper::getLink("dispatch.php/profile?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';
         }
         echo implode(', ', $mods);
+        echo '<br><br>';
     }
 ?>
 

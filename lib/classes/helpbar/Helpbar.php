@@ -29,6 +29,15 @@ class Helpbar extends WidgetContainer
                             strtolower($language),
                             $identifier);
 
+        if (!file_exists($jsonfile) && $language !== 'de') {
+            $language = 'de';
+            $jsonfile = sprintf('%s/%s/%s.json',
+                                $this->json_directory,
+                                strtolower($language),
+                                $identifier);
+
+        }
+
         if (!file_exists($jsonfile) || !is_readable($jsonfile)) {
             throw new InvalidArgumentException('Helpbar for identifier "' . $identifier . '" not found or not readable.');
         }
@@ -43,19 +52,22 @@ class Helpbar extends WidgetContainer
                 $icon = sprintf('icons/16/white/%s.png', $row['icon']);
             }
             $this->addPlainText($row['label'] ?: '',
-                                array_map(array($this, 'interpolate'), (array)$row['text']),
+                                $this->interpolate($row['text'], $variables),
                                 $icon ?: null);
         }
     }
-
+    
     protected function interpolate($string, $variables = array())
     {
+        if (is_array($string)) {
+            return array_map(array($this, 'interpolate'), $string, array_pad(array(), count($string), $variables));
+        }
+
         $replaces = array();
         foreach ($variables as $needle => $replace)
         {
             $replaces['#{' . $needle . '}'] = $replace;
         }
-
         return str_replace(array_keys($replaces), array_values($replaces), $string);
     }
 

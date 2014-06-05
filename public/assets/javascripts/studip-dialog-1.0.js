@@ -116,10 +116,11 @@
             handler = handler.bind(this);
 
             if ($(this).is('.accept,.cancel')) {
-                buttons[label] = {
+                var cancel = $(this).is('.cancel');
+                buttons[cancel ? 'cancel' : label] = {
                     text: label,
                     click: handler,
-                    'class': $(this).is('.accept') ? 'accept' : 'cancel'
+                    'class': cancel ? 'cancel' : 'accept'
                 }
             } else {
                 buttons[label] = handler;
@@ -295,13 +296,14 @@
         if (!options.hasOwnProperty('buttons') || options.buttons) {
             dialog_options.buttons = extractButtons.call(this, instance.element);
             // Create 'close' button
-            dialog_options.buttons['Abbrechen'.toLocaleString()] = {
-                text: 'Abbrechen'.toLocaleString(),
-                'class': 'cancel',
-                click: function () {
-                    STUDIP.Dialog.close(options);
-                }
-            };
+            if (!dialog_options.buttons.hasOwnProperty('cancel')) {
+                dialog_options.buttons['cancel'] = {
+                    text: 'Schlieﬂen'.toLocaleString(),
+                    click: function () {
+                        STUDIP.Dialog.close(options);
+                    }
+                };
+            }
         }
 
         // Create/update dialog

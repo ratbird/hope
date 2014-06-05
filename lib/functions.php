@@ -170,7 +170,7 @@ function get_object_by_range_id($range_id) {
  */
 function selectSem ($sem_id)
 {
-    global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemUserStatus, $rechte;
+    global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemUserStatus, $rechte, $auth;
 
     closeObject();
     $SessionSeminar = $sem_id;
@@ -180,6 +180,8 @@ function selectSem ($sem_id)
         if( !($SemUserStatus = $perm->get_studip_perm($course["Seminar_id"])) ){
             $SemUserStatus = "nobody";
             if ($course['lesezugriff'] > 0 || !get_config('ENABLE_FREE_ACCESS')) {
+                // redirect to login page if user is not logged in
+                $auth->login_if($auth->auth["uid"] == "nobody");
                 throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
@@ -241,11 +243,13 @@ function selectSem ($sem_id)
  */
 function selectInst ($inst_id)
 {
-    global $SessionSeminar, $SessSemName, $INST_TYPE, $SemUserStatus, $rechte, $perm;
+    global $SessionSeminar, $SessSemName, $INST_TYPE, $SemUserStatus, $rechte, $perm, $auth;
 
     closeObject();
 
     if (!get_config('ENABLE_FREE_ACCESS') && !$perm->have_perm('user')) {
+        // redirect to login page if user is not logged in
+        $auth->login_if($auth->auth["uid"] == "nobody");
         throw new AccessDeniedException(_("Keine Berechtigung."));
     }
 

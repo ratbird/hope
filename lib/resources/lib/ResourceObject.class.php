@@ -348,7 +348,7 @@ class ResourceObject {
         if (!$id)
             $id=$this->institut_id;
         
-        return  sprintf ("institut_main.php?auswahl=%s",$id);   
+        return  sprintf ("dispatch.php/institute/overview?auswahl=%s",$id);   
     }
 
     
@@ -366,7 +366,7 @@ class ResourceObject {
                 return  sprintf ("dispatch.php/profile?username=%s",get_username($id));
             break;
             case "inst":
-                return  sprintf ("institut_main.php?auswahl=%s",$id);
+                return  sprintf ("dispatch.php/institute/overview?auswahl=%s",$id);
             break;
             case "sem":
                 return  sprintf ("seminar_main.php?auswahl=%s",$id);

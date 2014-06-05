@@ -211,7 +211,7 @@ class AdminNavigation extends Navigation
 
         // link to course
         if ($SessSemName['class'] == 'inst') {
-            $navigation = new Navigation($back_jump, 'institut_main.php?auswahl='.$SessSemName[1]);
+            $navigation = new Navigation($back_jump, 'dispatch.php/institute/overview?auswahl='.$SessSemName[1]);
             $this->addSubNavigation('back_jump', $navigation);
         } else if ($SessSemName['class'] == 'sem' && !$archive_kill && !$_SESSION['links_admin_data']['assi']) {
             $navigation = new Navigation($back_jump, 'seminar_main.php?auswahl='.$SessSemName[1]);

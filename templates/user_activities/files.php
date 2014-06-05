@@ -6,7 +6,7 @@
         ),
         'institutes' => array(
             'title' => _('Dateiübersicht Einrichtungen'),
-            'link'  => 'institut_main.php?redirect_to=folder.php&cmd=all',
+            'link'  => 'dispatch.php/institute/overview?redirect_to=folder.php&cmd=all',
         ),
     );
 ?>

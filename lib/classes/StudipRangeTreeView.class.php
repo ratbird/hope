@@ -71,7 +71,7 @@ class StudipRangeTreeView extends TreeView{
                 }
             }
             $content .= "</td></tr><tr><td class=\"blank\" align=\"left\">" .
-                    "<a href=\"".URLHelper::getLink("institut_main.php?auswahl=".$range_object->item_data['studip_object_id'])."\"" .
+                    "<a href=\"".URLHelper::getLink("dispatch.php/institute/overview?auswahl=".$range_object->item_data['studip_object_id'])."\"" .
                     tooltip(_("Seite dieser Einrichtung in Stud.IP aufrufen")) . ">" .
                     htmlReady($range_object->item_data['name']) . "</a>&nbsp;" ._("in Stud.IP") ."</td></tr>";
             

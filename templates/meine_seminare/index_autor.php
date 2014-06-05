@@ -195,7 +195,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 </td>
 
                                 <td align="left">
-                                    <a href="institut_main.php?auswahl=<?= $instid ?>">
+                                    <a href="dispatch.php/institute/overview?auswahl=<?= $instid ?>">
                                         <?= htmlReady($INST_TYPE[$values["type"]]["name"] . ": " . $values["name"]) ?>
                                     </a>
                                 </td>

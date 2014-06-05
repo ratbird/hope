@@ -427,7 +427,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                 if ($institute_name) {
                     printf("<font size=-1><b>" . _('Heimat-Einrichtung:') . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>",
-                           URLHelper::getLink('institut_main.php?auswahl=' . $seminar['Institut_id']),
+                           URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $seminar['Institut_id']),
                            htmlReady($institute_name));
                 }
 
@@ -450,7 +450,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                     print("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
                     $institute = reset($institutes);
                     printf('<font size=-1><a href="%s">%s</a></font><br>',
-                           URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
+                           URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
                            htmlReady($institute['Name']));
                 } else if (count($institutes) >= 2) {
                     print("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
@@ -459,7 +459,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                     foreach ($institutes as $institute) {
                         echo '<li>';
                         printf('<font size=-1><a href="%s">%s</a></font><br>',
-                               URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
+                               URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
                                htmlReady($institute['Name']));
                         echo '</li>';
                     }

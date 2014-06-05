@@ -183,7 +183,7 @@ switch ($view) {
             }
             if ($SessSemName['class'] === 'inst') {
                 $navigation = new Navigation(_('Zurück zur Einrichtung'),
-                                             URLHelper::getLink('institut_main.php'));
+                                             URLHelper::getLink('dispatch.php/institute/overview'));
                 $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
@@ -245,7 +245,7 @@ switch ($view) {
             }
             if ($SessSemName['class'] === 'inst') {
                 $navigation = new Navigation(_('Zurück zur Einrichtung'),
-                                             URLHelper::getLink('institut_main.php'));
+                                             URLHelper::getLink('dispatch.php/institute/overview'));
                 $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }

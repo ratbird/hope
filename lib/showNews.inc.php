@@ -310,7 +310,7 @@ function show_rss_news($range_id, $type)
 
         break;
         case 'inst':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'institut_main.php?auswahl=' . $range_id;
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/institute/overview?auswahl=' . $range_id;
             $object_name = get_object_name($range_id, $type);
             if (!get_config('ENABLE_FREE_ACCESS')) $studip_url .= "&again=yes";
             $title = $object_name['name'] . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';

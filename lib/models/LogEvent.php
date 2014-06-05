@@ -193,7 +193,7 @@ class LogEvent extends SimpleORMap
         }
 
         return sprintf('<a href="%s">%s</a>',
-                       URLHelper::getLink('institut_main.php',
+                       URLHelper::getLink('dispatch.php/institute/overview',
                                array('auswahl' => $institute->getId())),
                        htmlReady(my_substr($institute->name, 0, 100)));
     }

@@ -414,7 +414,7 @@ else
                     $statement->execute(array($seminar['Institut_id']));
                     $temp = $statement->fetch(PDO::FETCH_ASSOC);
                     if (!empty($temp)) {
-                        printf("<font size=-1><b>" . _("Heimat-Einrichtung:") . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("institut_main.php?auswahl=".$seminar['Institut_id']), htmlReady($temp['Name']));
+                        printf("<font size=-1><b>" . _("Heimat-Einrichtung:") . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("dispatch.php/institute/overview?auswahl=".$seminar['Institut_id']), htmlReady($temp['Name']));
                     }
                 ?>
                 </td>
@@ -431,7 +431,7 @@ else
                     foreach ($entries as $entry) {
                         $data[] = array(
                             'name' => $entry['Name'],
-                            'link' => 'institut_main.php?auswahl=' . $entry['Institut_id']
+                            'link' => 'dispatch.php/institute/overview?auswahl=' . $entry['Institut_id']
                         );
                     }
 

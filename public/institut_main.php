@@ -50,6 +50,7 @@ $institute_id = $_SESSION['SessionSeminar'];
 
 //set visitdate for institute, when coming from meine_seminare
 if (Request::get('auswahl')) {
+    $institute_id = Request::get('auswahl');
     object_set_visit($institute_id, "inst");
 }
 

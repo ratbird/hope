@@ -184,7 +184,7 @@ $view_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=new")."\">".Assets:
 
 // did we came from a ...?
 if ($SessSemName[0] && $SessSemName["class"] == "inst") {
-    $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => "<a href=\"institut_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung")."</a>")));
+    $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => "<a href=\"dispatch.php/institute/overview\">"._("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung")."</a>")));
 } else if ($SessSemName[0]) {
     $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => "<a href=\"seminar_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung")."</a>")));
 }

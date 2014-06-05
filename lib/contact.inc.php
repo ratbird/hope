@@ -383,7 +383,7 @@ function GetinstInfo ($user_id)
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $item = array();
 
-        $item[_('Einrichtung')] = sprintf('<a href="institut_main.php?auswahl=%s">%s</a>',
+        $item[_('Einrichtung')] = sprintf('<a href="dispatch.php/institute/overview?auswahl=%s">%s</a>',
                                           $row['Institut_id'], htmlReady($row['Name']));
         if ($row['raum']) {
             $item[_('Raum')] = formatReady($row['raum']);

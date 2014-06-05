@@ -2,7 +2,7 @@
 /*
  * smtp.php
  *
- * @(#) $Header: /home/mlemos/cvsroot/smtp/smtp.php,v 1.41 2009/04/12 06:15:06 mlemos Exp $
+ * @(#) $Header: /home/mlemos/cvsroot/smtp/smtp.php,v 1.45 2011/02/03 08:11:30 mlemos Exp $
  *
  */
 
@@ -12,8 +12,8 @@
 
 	<package>net.manuellemos.smtp</package>
 
-	<version>@(#) $Id: smtp.php,v 1.41 2009/04/12 06:15:06 mlemos Exp $</version>
-	<copyright>Copyright © (C) Manuel Lemos 1999-2009</copyright>
+	<version>@(#) $Id: smtp.php,v 1.45 2011/02/03 08:11:30 mlemos Exp $</version>
+	<copyright>Copyright (C) Manuel Lemos 1999-2011</copyright>
 	<title>Sending e-mail messages via SMTP protocol</title>
 	<author>Manuel Lemos</author>
 	<authoraddress>mlemos-at-acm.org</authoraddress>
@@ -34,10 +34,18 @@
 				<data>http://www.phpclasses.org/discuss/package/14/</data>
 				<url>http://www.phpclasses.org/discuss/package/14/</url>
 			</link></support>
-		<usage>To use this class just create a new object as follows, set any
-			variables to configure its options and call the
+		<usage>To use this class just create a new object, set any variables
+			to configure its options and call the
 			<functionlink>SendMessage</functionlink> function to send a
-			message.<paragraphbreak />.</usage>
+			message.<paragraphbreak />It is not recommended that you use this
+			class alone unless you have deep understanding of Internet mail
+			standards on how to compose compliant e-mail messages. Instead, use
+			the <link>
+				<data>MIME message composing and sending class</data>
+				<url>http://www.phpclasses.org/mimemessage</url>
+			</link> and its sub-class SMTP message together with this SMTP class
+			to properly compose e-mail messages, so your messages are not
+			discarded for not being correctly composed.</usage>
 	</documentation>
 
 {/metadocument}
@@ -114,7 +122,7 @@ class smtp_class
 {/metadocument}
 */
 	var $workstation="";
-	
+
 /*
 {metadocument}
 	<variable>
@@ -154,7 +162,7 @@ class smtp_class
 /*
 {metadocument}
 	<variable>
-		<name>host_post</name>
+		<name>host_port</name>
 		<type>INTEGER</type>
 		<value>25</value>
 		<documentation>
@@ -165,6 +173,104 @@ class smtp_class
 {/metadocument}
 */
 	var $host_port=25;
+
+/*
+{metadocument}
+	<variable>
+		<name>socks_host_name</name>
+		<type>STRING</type>
+		<value></value>
+		<documentation>
+			<purpose>Define the SOCKS server host name.</purpose>
+			<usage>Set to the SOCKS server host name through which the SMTP
+				connection should be routed. Leave it empty if you do not want the
+				connections to be established through a SOCKS server.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $socks_host_name = '';
+
+/*
+{metadocument}
+	<variable>
+		<name>socks_host_port</name>
+		<type>INTEGER</type>
+		<value>1080</value>
+		<documentation>
+			<purpose>Define the SOCKS server host port.</purpose>
+			<usage>Set to the port of the SOCKS server host through which the
+				the SMTP connection should be routed.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $socks_host_port=1080;
+
+/*
+{metadocument}
+	<variable>
+		<name>socks_version</name>
+		<type>STRING</type>
+		<value>5</value>
+		<documentation>
+			<purpose>Set the SOCKS protocol version.</purpose>
+			<usage>Change this value if SOCKS server you want to use is
+				listening to a different port.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $socks_version='5';
+
+/*
+{metadocument}
+	<variable>
+		<name>http_proxy_host_name</name>
+		<type>STRING</type>
+		<value></value>
+		<documentation>
+			<purpose>Define the HTTP proxy server host name.</purpose>
+			<usage>Set to the HTTP proxy server host name through which the
+				SMTP connection should be routed. Leave it empty if you do not
+				want the connections to be established through an HTTP proxy.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $http_proxy_host_name = '';
+
+/*
+{metadocument}
+	<variable>
+		<name>http_proxy_host_port</name>
+		<type>INTEGER</type>
+		<value>80</value>
+		<documentation>
+			<purpose>Define the HTTP proxy server host port.</purpose>
+			<usage>Set to the port of the HTTP proxy server host through which
+				the SMTP connection should be routed.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $http_proxy_host_port=80;
+
+/*
+{metadocument}
+	<variable>
+		<name>user_agent</name>
+		<type>STRING</type>
+		<value>SMTP Class (http://www.phpclasses.org/smtpclass $Revision: 1.45 $)</value>
+		<documentation>
+			<purpose>Set the user agent used when connecting via an HTTP proxy.</purpose>
+			<usage>Change this value only if for some reason you want emulate a
+				certain e-mail client.</usage>
+		</documentation>
+	</variable>
+{/metadocument}
+*/
+	var $user_agent='SMTP Class (http://www.phpclasses.org/smtpclass $Revision: 1.45 $)';
 
 /*
 {metadocument}
@@ -501,6 +607,12 @@ class smtp_class
 				$this->disconnected_error=1;
 			}
 		}
+		return($this->error);
+	}
+
+	Function SetError($error)
+	{
+		return($this->error=$error);
 	}
 
 	Function GetLine()
@@ -616,6 +728,24 @@ class smtp_class
 		return(1);
 	}
 
+	Function Resolve($domain, &$ip, $server_type)
+	{
+		if(preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/',$domain))
+			$ip=$domain;
+		else
+		{
+			if($this->debug)
+				$this->OutputDebug('Resolving '.$server_type.' server domain "'.$domain.'"...');
+			if(!strcmp($ip=@gethostbyname($domain),$domain))
+				$ip="";
+		}
+		if(strlen($ip)==0
+		|| (strlen($this->exclude_address)
+		&& !strcmp(@gethostbyname($this->exclude_address),$ip)))
+			return($this->SetError("could not resolve the host domain \"".$domain."\""));
+		return('');
+	}
+
 	Function ConnectToHost($domain, $port, $resolve_message)
 	{
 		if($this->ssl)
@@ -628,22 +758,183 @@ class smtp_class
 			|| !extension_loaded("openssl"))
 				return("establishing SSL connections requires the OpenSSL extension enabled");
 		}
-		if(function_exists('preg_match') ? preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $domain) : ereg('^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',$domain))
-			$ip=$domain;
+		if(strlen($this->Resolve($domain, $ip, 'SMTP')))
+			return($this->error);
+		if(strlen($this->socks_host_name))
+		{
+			switch($this->socks_version)
+			{
+				case '4':
+					$version = 4;
+					break;
+				case '5':
+					$version = 5;
+					break;
+				default:
+					return('it was not specified a supported SOCKS protocol version');
+					break;
+			}
+			$host_ip = $ip;
+			$host_port = $port;
+			if(strlen($this->error = $this->Resolve($this->socks_host_name, $ip, 'SOCKS')))
+				return($this->error);
+			if($this->ssl)
+				$ip="ssl://".$ip;
+			if(($this->connection=($this->timeout ? @fsockopen($ip, $this->socks_host_port, $errno, $error, $this->timeout) : @fsockopen($ip, $this->socks_host_port, $errno))))
+			{
+				$timeout=($this->data_timeout ? $this->data_timeout : $this->timeout);
+				if($timeout
+				&& function_exists("socket_set_timeout"))
+					socket_set_timeout($this->connection,$timeout,0);
+				if(strlen($this->socks_host_name))
+				{
+					if($this->debug)
+						$this->OutputDebug('Connected to the SOCKS server '.$this->socks_host_name);
+					$send_error = 'it was not possible to send data to the SOCKS server';
+					$receive_error = 'it was not possible to receive data from the SOCKS server';
+					switch($version)
+					{
+						case 4:
+							$command = 1;
+							$user = '';
+							if(!fputs($this->connection, chr($version).chr($command).pack('nN', $host_port, ip2long($host_ip)).$user.Chr(0)))
+								$error = $this->SetDataAccessError($send_error);
+							else
+							{
+								$response = fgets($this->connection, 9);
+								if(strlen($response) != 8)
+									$error = $this->SetDataAccessError($receive_error);
+								else
+								{
+									$socks_errors = array(
+										"\x5a"=>'',
+										"\x5b"=>'request rejected',
+										"\x5c"=>'request failed because client is not running identd (or not reachable from the server)',
+										"\x5d"=>'request failed because client\'s identd could not confirm the user ID string in the request',
+									);
+									$error_code = $response[1];
+									$error = (IsSet($socks_errors[$error_code]) ? $socks_errors[$error_code] : 'unknown');
+									if(strlen($error))
+										$error = 'SOCKS error: '.$error;
+								}
+							}
+							break;
+						case 5:
+							if($this->debug)
+								$this->OutputDebug('Negotiating the authentication method ...');
+							$methods = 1;
+							$method = 0;
+							if(!fputs($this->connection, chr($version).chr($methods).chr($method)))
+								$error = $this->SetDataAccessError($send_error);
+							else
+							{
+								$response = fgets($this->connection, 3);
+								if(strlen($response) != 2)
+									$error = $this->SetDataAccessError($receive_error);
+								elseif(Ord($response[1]) != $method)
+									$error = 'the SOCKS server requires an authentication method that is not yet supported';
+								else
+								{
+									if($this->debug)
+										$this->OutputDebug('Connecting to SMTP server IP '.$host_ip.' port '.$host_port.'...');
+									$command = 1;
+									$address_type = 1;
+									if(!fputs($this->connection, chr($version).chr($command)."\x00".chr($address_type).pack('Nn', ip2long($host_ip), $host_port)))
+										$error = $this->SetDataAccessError($send_error);
+									else
+									{
+										$response = fgets($this->connection, 11);
+										if(strlen($response) != 10)
+											$error = $this->SetDataAccessError($receive_error);
+										else
+										{
+											$socks_errors = array(
+												"\x00"=>'',
+												"\x01"=>'general SOCKS server failure',
+												"\x02"=>'connection not allowed by ruleset',
+												"\x03"=>'Network unreachable',
+												"\x04"=>'Host unreachable',
+												"\x05"=>'Connection refused',
+												"\x06"=>'TTL expired',
+												"\x07"=>'Command not supported',
+												"\x08"=>'Address type not supported'
+											);
+											$error_code = $response[1];
+											$error = (IsSet($socks_errors[$error_code]) ? $socks_errors[$error_code] : 'unknown');
+											if(strlen($error))
+												$error = 'SOCKS error: '.$error;
+										}
+									}
+								}
+							}
+							break;
+						default:
+							$error = 'support for SOCKS protocol version '.$this->socks_version.' is not yet implemented';
+							break;
+					}
+					if(strlen($this->error = $error))
+					{
+						fclose($this->connection);
+						return($error);
+					}
+				}
+				return('');
+			}
+		}
+		elseif(strlen($this->http_proxy_host_name))
+		{
+			if(strlen($error = $this->Resolve($this->http_proxy_host_name, $ip, 'SMTP')))
+				return($error);
+			if($this->debug)
+				$this->OutputDebug("Connecting to proxy host address \"".$ip."\" port ".$this->http_proxy_host_port."...");
+			if(($this->connection=($this->timeout ? @fsockopen(($this->ssl ? "ssl://" : "").$ip, $this->http_proxy_host_port, $errno, $error,$this->timeout) : @fsockopen(($this->ssl ? "ssl://" : "").$ip, $this->http_proxy_host_port))))
+			{
+				if($this->debug)
+					$this->OutputDebug('Connected to HTTP proxy host "'.$this->http_proxy_host_name.'".');
+				$timeout=($this->data_timeout ? $this->data_timeout : $this->timeout);
+				if($timeout
+				&& function_exists("socket_set_timeout"))
+					socket_set_timeout($this->connection,$timeout,0);
+				if($this->PutLine('CONNECT '.$domain.':'.$port.' HTTP/1.0')
+				&& $this->PutLine('User-Agent: '.$this->user_agent)
+				&& $this->PutLine(''))
+				{
+					if(GetType($response = $this->GetLine()) == 'string')
+					{
+						if(!preg_match('/^http\\/[0-9]+\\.[0-9]+[ \t]+([0-9]+)[ \t]*(.*)$/i', $response,$matches))
+							return($this->SetError("3 it was received an unexpected HTTP response status"));
+						$error = $matches[1];
+						switch($error)
+						{
+							case '200':
+								for(;;)
+								{
+									if(GetType($response = $this->GetLine()) != 'string')
+										break;
+									if(strlen($response) == 0)
+										return('');
+								}
+								break;
+							default:
+								$this->error = 'the HTTP proxy returned error '.$error.' '.$matches[2];
+								break;
+						}
+					}
+				}
+				if($this->debug)
+					$this->OutputDebug("Disconnected.");
+				fclose($this->connection);
+				$this->connection = 0;
+				return($this->error);
+			}
+		}
 		else
 		{
 			if($this->debug)
-				$this->OutputDebug($resolve_message);
-			if(!strcmp($ip=@gethostbyname($domain),$domain))
-				return("could not resolve host \"".$domain."\"");
+				$this->OutputDebug("Connecting to host address \"".$ip."\" port ".$port."...");
+			if(($this->connection=($this->timeout ? @fsockopen(($this->ssl ? "ssl://" : "").$ip, $port, $errno, $error, $this->timeout) : @fsockopen(($this->ssl ? "ssl://" : "").$ip, $port))))
+				return("");
 		}
-		if(strlen($this->exclude_address)
-		&& !strcmp(@gethostbyname($this->exclude_address),$ip))
-			return("domain \"".$domain."\" resolved to an address excluded to be valid");
-		if($this->debug)
-			$this->OutputDebug("Connecting to host address \"".$ip."\" port ".$port."...");
-		if(($this->connection=($this->timeout ? @fsockopen(($this->ssl ? "ssl://" : "").$ip,$port,$errno,$error,$this->timeout) : @fsockopen(($this->ssl ? "ssl://" : "").$ip,$port))))
-			return("");
 		$error=($this->timeout ? strval($error) : "??");
 		switch($error)
 		{
@@ -760,7 +1051,7 @@ class smtp_class
 		}
 		return(1);
 	}
-	
+
 	Function StartSMTP($localhost)
 	{
 		$success = 1;
@@ -960,12 +1251,12 @@ class smtp_class
 				elseif($success = ($this->PutLine('STARTTLS')
 				&& $this->VerifyResultLines('220',$responses)>0))
 				{
-					$this->OutputDebug('Starting TLS cryptograpic protocol');
+					if($this->debug) $this->OutputDebug('Starting TLS cryptograpic protocol');
 					if(!($success = stream_socket_enable_crypto($this->connection, 1, STREAM_CRYPTO_METHOD_TLS_CLIENT)))
 						$this->error = 'could not start TLS connection encryption protocol';
 					else
 					{
-						$this->OutputDebug('TLS started');
+						if($this->debug) $this->OutputDebug('TLS started');
 						$success = $this->StartSMTP($localhost);
 					}
 				}
@@ -1301,10 +1592,7 @@ class smtp_class
 */
 	Function PrepareData($data)
 	{
-		if(function_exists("preg_replace"))
-			return(preg_replace(array("/\n\n|\r\r/","/(^|[^\r])\n/","/\r([^\n]|\$)/D","/(^|\n)\\./"),array("\r\n\r\n","\\1\r\n","\r\n\\1","\\1.."),$data));
-		else
-			return(ereg_replace("(^|\n)\\.","\\1..",ereg_replace("\r([^\n]|\$)","\r\n\\1",ereg_replace("(^|[^\r])\n","\\1\r\n",ereg_replace("\n\n|\r\r","\r\n\r\n",$data)))));
+		return(preg_replace(array("/\n\n|\r\r/","/(^|[^\r])\n/","/\r([^\n]|\$)/D","/(^|\n)\\./"),array("\r\n\r\n","\\1\r\n","\r\n\\1","\\1.."),$data));
 	}
 /*
 {metadocument}

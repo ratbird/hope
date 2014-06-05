@@ -404,6 +404,11 @@ class StudipMail
             ));
         }
         $error = $transporter->Send();
-        return strlen($error) == 0;
+        if (strlen($error) === 0) {
+            return true;
+        } else {
+            Log::error(get_class($transporter) . '::Send() - ' . $error);
+            return false;
+        }
     }
 }

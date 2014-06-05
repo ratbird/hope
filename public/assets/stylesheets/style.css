@@ -1683,14 +1683,25 @@ li#notification_container:hover .list {
   position: absolute;
   top: 10px;
 }
+.studip-logo {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  background-repeat: no-repeat;
+  background-image: url("../images/logos/studip-logo.png");
+  background-image: -webkit-image-set(url("../images/logos/studip-logo.png") 1x, url("../images/logos/studip-logo@2x.png") 2x);
+  background-image: none, url("../images/logos/studip-logo.svg");
+  background-size: 168px 57px;
+  display: block;
+  width: 168px;
+  height: 57px;
+}
 #barTopStudip {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-}
-#barTopStudip,
-#barTopStudip img {
-  border: none;
+  bottom: 16px;
+  right: 15px;
 }
 #barTopLogo {
   left: 0;

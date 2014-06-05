@@ -43,11 +43,9 @@
         </ul>
     </div>
     <!-- Stud.IP Logo -->
-    <div id="barTopStudip">
-        <a href="http://www.studip.de/" title="Studip Homepage">
-            <?= Assets::img('/images/logos/header_logo.png', array('@2x' => TRUE, 'size' => '203@76')); ?>
-        </a>
-    </div>
+    <a class="studip-logo" id="barTopStudip" href="http://www.studip.de/" title="Stud.IP Homepage" target="_blank">
+        Stud.IP Homepage
+    </a>
 </div>
 
 <!-- Leiste unten -->

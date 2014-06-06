@@ -3390,10 +3390,29 @@ table.contact-header td.empty a {
 .cron-item input[type=number] {
   width: 2em;
 }
-#dates .nextdate {
+.themen_list > * {
+  background-color: #e7ebf1;
+  margin: 2px;
+}
+.themen_list > * .topic_actions {
+  float: right;
+}
+.themen_list > * .topic_decription {
+  padding: 4px;
+}
+table.dates {
+  width: calc(100% - 4px);
+}
+table.dates .themen_list > * {
+  background-color: transparent;
+}
+table.dates .nextdate {
   border: 2px solid #24437c;
 }
-#dates .topic_decription {
+table.dates .topic_decription {
+  display: none;
+}
+table.dates .topic_actions {
   display: none;
 }
 .eval_title {

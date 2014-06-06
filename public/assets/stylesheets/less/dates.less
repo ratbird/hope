@@ -1,8 +1,25 @@
-#dates {
+.themen_list > * {
+    background-color: @content-color-20;
+    margin: 2px;
+    .topic_actions {
+        float: right;
+    }
+    .topic_decription {
+        padding: 4px;
+    }
+}
+table.dates {
+    width: ~"calc(100% - 4px)";
+    .themen_list > * {
+        background-color: transparent;
+    }
     .nextdate {
         border: 2px solid @brand-color-dark;
     }
     .topic_decription {
+        display: none;
+    }
+    .topic_actions {
         display: none;
     }
 }

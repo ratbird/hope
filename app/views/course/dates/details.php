@@ -34,7 +34,7 @@
             <td>
                 <? $dozenten = $date->dozenten ?>
                 <? count($dozenten) > 0 || $dozenten = array_map(function ($m) { return $m->user; }, (Course::findCurrent()->getMembersWithStatus("dozent"))) ?>
-                <ul class="dozenten_list">
+                <ul class="dozenten_list clean">
                 <? foreach ($dozenten as $dozent) : ?>
                     <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $dozent['username'])) ?>"><?= Avatar::getAvatar($dozent['user_id'])->getImageTag(Avatar::SMALL)." ".htmlReady($dozent->getFullName()) ?></a>

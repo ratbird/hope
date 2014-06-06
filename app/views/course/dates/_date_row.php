@@ -10,7 +10,7 @@ $is_next_date = (!$dates[$key - 1] || ($dates[$key - 1]['end_time'] < time())) &
     </td>
     <td><?= htmlReady($GLOBALS['TERMIN_TYP'][$date['date_typ']]['name']) ?></td>
     <td>
-        <ul class="themen_list">
+        <ul class="themen_list clean">
             <? foreach ($date->topics as $topic) : ?>
                 <?= $this->render_partial("course/dates/_topic_li", compact("topic")) ?>
             <? endforeach ?>

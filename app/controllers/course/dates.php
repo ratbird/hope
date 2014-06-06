@@ -18,6 +18,7 @@ class Course_DatesController extends AuthenticatedController
         checkObjectModule("schedule");
 	    object_set_visit_module("schedule");
         Navigation::activateItem('/course/schedule/dates');
+        PageLayout::addScript("jquery/jquery.tablesorter.js");
         $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
     }
 

@@ -8,11 +8,10 @@ $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
 
 $links = new ActionsWidget();
-
 foreach (Navigation::getItem('/course/admin/main') as $nav) {
     if ($nav->isVisible(true)) {
         $image = $nav->getImage();
-        $links->addLink($nav->getTitle(), $nav->getURL(), $image['src']);
+        $links->addLink($nav->getTitle(), URLHelper::getLink($nav->getURL()), $image['src']);
     }
 }
 $sidebar->addWidget($links);

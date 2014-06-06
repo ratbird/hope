@@ -148,16 +148,6 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($range_id_statusgruppe));
 
-    $lid = rand(1, 1000);
-    $i = 0;
-    ?>
-    <div class="sortable">
-    <?
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $statusgruppe_id = $row['statusgruppe_id'];
-        
-    addToStatusgroup($range_id, $statusgruppe_id);
-        
     // generate MultiPersonSearch
     // load addressbook
     $contacts_query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
@@ -182,9 +172,21 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                             . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
                             . " ORDER BY fullname ASC",
                             _("Nutzer suchen"), "user_id");
+
+    $lid = rand(1, 1000);
+    $i = 0;
+    ?>
+    <div class="sortable">
+    <?
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $statusgruppe_id = $row['statusgruppe_id'];
+
+    addToStatusgroup($range_id, $statusgruppe_id);
+
+
     $members_statement->execute(array($statusgruppe_id));
     $member = $members_statement->fetchAll();
-    
+
     $defaultSelectedUser = array();
     foreach ($member as $m) {
         $defaultSelectedUser[] = $m['user_id'];
@@ -197,7 +199,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         ->setExecuteURL(URLHelper::getLink("contact_statusgruppen.php"))
         ->setSearchObject($search_obj)
         ->addQuickfilter(_("Adressbuch"), $quickfilter)
-        ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id)) 
+        ->addQuickfilter(_("Buddies"), GetBuddyIDs($GLOBALS['user']->id))
         ->render();
         ?>
         <table id="<?= $statusgruppe_id ?>" width="95%" border="0" cellpadding="2" cellspacing="0" class="sortable">
@@ -225,18 +227,18 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         <td class="table_header<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
             <?= count($member)?>
         </td>
-        
+
         <td class="table_header<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
             <?= $mp; ?>
         </td>
-        
+
         <?
         echo '<td class="table_header' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" width="1%">';
         if ($cal_group) {
             echo '<img src="' . Assets::image_path('icons/16/blue/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
             echo '</td><td class="table_header ' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="whitespace: width="5%">';
         }
-        
+
         echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
         echo '<img src="' . Assets::image_path('icons/16/blue/edit.png') . '" ';
         echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
@@ -392,7 +394,7 @@ if ($cmd == 'storeSortOrder') {
         $statusgroup->store();
         $i++;
     }
-    
+
     // if we have an ajax call, no further execution is required
     if (Request::isXhr()) {
         die;
@@ -495,11 +497,11 @@ if (is_array($msgs)) {
                 $present = $statement->fetchColumn();
 
                 if ($present) {   // haben wir schon Gruppen? dann Anzeige
-                    
+
     // Anfang Gruppenuebersicht
     PrintAktualStatusgruppen($range_id, $view, $edit_id);
     ?>
-    
+
                     <?
                 } else { // es sind noch keine Gruppen angelegt, daher Infotext
                     ?>

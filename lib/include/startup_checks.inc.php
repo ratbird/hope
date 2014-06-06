@@ -38,10 +38,10 @@
 
 use Studip\Button, Studip\LinkButton;
 
-$perm->check("dozent");
+$perm->check('dozent');
 
-require_once('lib/msg.inc.php');    //Ausgaben
-require_once('lib/classes/StartupChecks.class.php');
+require_once 'lib/msg.inc.php';    //Ausgaben
+require_once 'lib/classes/StartupChecks.class.php';
 
 $checks=new StartupChecks;
 $list = $checks->getCheckList();
@@ -50,9 +50,9 @@ $problems_found = 0;
 
 foreach ($list as $key=>$val) {
     if ($val){
-        if (($checks->registered_checks[$key]["msg_fak_admin"]) && ($perm->is_fak_admin())) 
+        if ($checks->registered_checks[$key]['msg_fak_admin'] && $perm->is_fak_admin()) {
             $msgText = $checks->registered_checks[$key]["msg_fak_admin"]; 
-        else {
+        } else {
             $msgText = $checks->registered_checks[$key]["msg"];
             $msgText .= ' <br><i> Aktion: '.formatReady("=)");
             $msgText .= '&nbsp;<a href="'.($checks->registered_checks[$key]["link_fak_admin"] && $perm->is_fak_admin() ? 
@@ -65,11 +65,12 @@ foreach ($list as $key=>$val) {
     }
 }
 
-if ($problems_found > 1)
+if ($problems_found > 1) {
     $moreProbs = " (Beachten Sie bitte die angegebene Reihenfolge!)";
+}
 
 if ($problems_found) {
-    ?>
+?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
              <td class="blank" colspan=2>
@@ -87,7 +88,5 @@ if ($problems_found) {
         </tr>
     </table>
 <?php
-include ('lib/include/html_end.inc.php');
-page_close();
-die;
+return false;
 }

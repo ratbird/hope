@@ -2015,16 +2015,19 @@ if ($perm->have_perm('admin')) {
     Navigation::activateItem('/browse/my_courses/create');
 }
 // Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
+if (!$_SESSION['sem_create_data']['sem_class']) {
+    $valid = (include 'lib/include/startup_checks.inc.php') !== false;
+}
 
-if (!$_SESSION['sem_create_data']["sem_class"])
-    include ('lib/include/startup_checks.inc.php');
-
+if (isset($valid) && !$valid) {
+    // Empty action to prevent all others
+}
 //Before we start, let's decide the category (class) of the Veranstaltung
-if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
+elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
+    Sidebar::get()->setImage(localePictureUrl('assistent.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <?
@@ -2036,9 +2039,6 @@ if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
                 <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?=_("Bitte geben Sie zun&auml;chst an, welche Art von Veranstaltung Sie neu anlegen m&ouml;chten:"); ?>
                 </div>
-            </td>
-            <td class="blank" align="right" valign="top" rowspan="2">
-                <img src="<?= localePictureUrl('assistent.jpg') ?>" border="0">
             </td>
         </tr>
         <tr>
@@ -2052,7 +2052,6 @@ if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
                 } ?>
                 </ul>
             </td>
-            <td class="blank"></td>
         </tr>
         <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
         <tr>
@@ -2062,7 +2061,6 @@ if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
             <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=sprintf(_("Kopie anlegen (%s)"), htmlReady(stripslashes($_SESSION['sem_create_data_backup']['sem_name'])). ' - ' . strftime('%x %X',$_SESSION['sem_create_data_backup']['timestamp']) );?></a>.
             </p>
             </td>
-            <td class="blank"></td>
         </tr>
         <? endif ?>
         <? if ($GLOBALS['STUDYGROUPS_ENABLE']) : ?>
@@ -2073,7 +2071,6 @@ if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
             <a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
             </p>
             </td>
-            <td class="blank"></td>
         </tr>
         <? endif ?>
     </table>
@@ -2081,12 +2078,13 @@ if ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
 }
 
 //Level 1: Hier werden die Grunddaten abgefragt.
-elseif ((!$level) || ($level == 1))
-    {
+elseif ((!$level) || ($level == 1)) {
+    Sidebar::get()->setImage(localePictureUrl('hands01.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -2105,12 +2103,9 @@ elseif ((!$level) || ($level == 1))
                 <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands01.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" action="<? echo URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=1>
@@ -2470,12 +2465,13 @@ elseif ((!$level) || ($level == 1))
     }
 
 //Level 2: Hier werden weitere Einzelheiten (Personendaten und Zeiten) abgefragt
-if ($level == 2)
-    {
+elseif ($level == 2) {
+    Sidebar::get()->setImage(localePictureUrl('hands02.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr >
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -2493,12 +2489,9 @@ if ($level == 2)
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands02.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=2>
@@ -2916,13 +2909,17 @@ if ($level == 2)
     }
 
 //Level 3: Metadaten ueber Terminstruktur
-if ($level == 3) {
+elseif ($level == 3) {
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
+
+    Sidebar::get()->setImage(localePictureUrl('hands03.jpg'));
+    Sidebar::get()->setTitle(' ');
+
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -2940,12 +2937,9 @@ if ($level == 3) {
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands03.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" name="Formular" action="<? echo URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=3>
@@ -3177,13 +3171,17 @@ if ($level == 3) {
     }
 
 //Level 4: Raumdaten
-if ($level == 4) {
+elseif ($level == 4) {
     if ($GLOBALS['RESOURCES_ENABLE'])
         $resList = new ResourcesUserRoomsList($user_id->id, TRUE, FALSE, TRUE);
+
+    Sidebar::get()->setImage(localePictureUrl('hands04.jpg'));
+    Sidebar::get()->setTitle(' ');
+
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -3206,12 +3204,9 @@ if ($level == 4) {
                     print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden.")."<br><br>";
                 ?>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands04.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" name="form_4" action="<? echo URLHelper::getLink() ?>#anker">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=4>
@@ -3454,14 +3449,15 @@ if ($level == 4) {
 
 
 //Level 5: Hier wird der Rest abgefragt
-if ($level == 5)
-    {
+elseif ($level == 5) {
+    Sidebar::get()->setImage(localePictureUrl('hands05.jpg'));
+    Sidebar::get()->setTitle(' ');
 
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr >
-            <td class="blank" colspan=2 >&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -3474,12 +3470,9 @@ if ($level == 5)
                 <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands05.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" name="form_5" action="<? echo URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=5>
@@ -3628,12 +3621,13 @@ if ($level == 5)
     }
 
 //Level 6: Seminar anlegen
-if ($level == 6)
-    {
+elseif ($level == 6) {
+    Sidebar::get()->setImage(localePictureUrl('hands06.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -3651,21 +3645,19 @@ if ($level == 6)
                 </form>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
-            </td>
         </tr>
     </table>
     <?
     }
 
 //Level 6:Statusmeldungen nach dem Anlegen und weiter zum den Einzelheiten
-if ($level == 7)
-    {
+elseif ($level == 7) {
+    Sidebar::get()->setImage(localePictureUrl('hands06.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -3685,9 +3677,6 @@ if ($level == 7)
                         <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>
                     </form>
                     </div>
-                </td>
-                <td class="blank" align="right">
-                    <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
                 </td>
             </tr> <?
             }
@@ -3722,9 +3711,6 @@ if ($level == 7)
                         ?>
                     </form>
                     </div>
-                </td>
-                <td class="blank" align="right">
-                    <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
                 </td>
             </tr> <?
             }
@@ -3769,12 +3755,9 @@ if ($level == 7)
                     </form>
                     </div>
                 </td>
-                <td class="blank" align="right" valign="top">
-                    <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
-                </td>
             </tr>
             <tr>
-                <td class="blank" colspan=2>
+                <td class="blank">
                 <br>
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
@@ -3863,12 +3846,13 @@ if ($level == 7)
     }
 
 //Level 8: Erstellen des Simple-Content-Bereichs
-if ($level == 8)
-    {
+elseif ($level == 8) {
+    Sidebar::get()->setImage(localePictureUrl('hands07.jpg'));
+    Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">
                 <?
                 if ($errormsg) parse_msg($errormsg);
                 ?>
@@ -3886,12 +3870,9 @@ if ($level == 8)
                 <br><br>
                 </div>
             </td>
-            <td class="blank" align="right" valign="top">
-                <img src="<?= localePictureUrl('hands07.jpg') ?>" border="0">
-            </td>
         </tr>
         <tr>
-            <td class="blank" colspan=2>
+            <td class="blank">
             <form method="POST" name="form_8" action="<? echo URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=8>
@@ -3976,7 +3957,9 @@ if ($level == 8)
     <?php
     }
 
-include ('lib/include/html_end.inc.php');
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+
 //save all the data back to database
 page_close();
-?>

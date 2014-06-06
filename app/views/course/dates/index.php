@@ -12,7 +12,6 @@
 <table class="default" id="dates">
     <thead>
         <tr>
-            <th></th>
             <th><?= _("Zeit") ?></th>
             <th><?= _("Typ") ?></th>
             <th><?= _("Thema") ?></th>
@@ -24,7 +23,7 @@
             <? $lastSemester = null ?>
             <? foreach ($dates as $key => $date) : ?>
                 <? $currentSemester = Semester::findByTimestamp($date['date']) ?>
-                <? if (!$lastSemester || ($currentSemester->getId() !== $lastSemester->getId())) : ?>
+                <? if (!$lastSemester || ($currentSemester && ($currentSemester->getId() !== $lastSemester->getId()))) : ?>
                 <tr class="nohover">
                     <td colspan="5">
                         <h4><?= htmlReady($currentSemester['name']) ?></h4>
@@ -36,7 +35,7 @@
             <? endforeach ?>
         <? else : ?>
         <tr>
-            <td colspan="5" style="text-align: center;"><?= _("Keine Termine vorhanden") ?></td>
+            <td colspan="4" style="text-align: center;"><?= _("Keine Termine vorhanden") ?></td>
         </tr>
         <? endif ?>
     </tbody>

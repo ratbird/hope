@@ -4,6 +4,7 @@
 .ui-multiselect {
     border: solid 1px;
     font-size: 0.8em;
+    padding: 0 !important; /* Important since .studip_form will mess with it otherwise */
 }
 
 .ui-multiselect ul {

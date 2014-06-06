@@ -93,8 +93,8 @@ $_views["SEMINAR_GET_SEMDATA"] = array("query" => "SELECT a.seminar_id,IF(a.visi
                                         FROM seminare a LEFT JOIN seminar_user b ON (a.seminar_id=b.seminar_id AND b.status='dozent' )
                                         LEFT JOIN auth_user_md5 USING(user_id) WHERE a.seminar_id IN (&) ORDER BY sem_number DESC,Name ASC");
 $_views["SEM_SEARCH_LECTURER"] = array("query" => "SELECT user_id FROM auth_user_md5 WHERE perms = 'dozent' AND (username LIKE ? OR Vorname LIKE ? OR Nachname LIKE ?)");
-$_views["SEM_SEARCH_LECTURER_ID"] = array("query" => "SELECT b.seminar_id, " . $_views['sem_number_sql'] . " AS sem_number, " . $_views['sem_number_end_sql'] . " AS sem_number_end FROM auth_user_md5 a LEFT JOIN seminar_user b ON(a.user_id=b.user_id AND b.status='dozent')
-                                                    LEFT JOIN seminare c USING (seminar_id) WHERE § AND b.seminar_id IS NOT NULL AND a.user_id IN (&) §");
+$_views["SEM_SEARCH_LECTURER_ID"] = array("query" => "SELECT b.seminar_id, " . $_views['sem_number_sql'] . " AS sem_number, " . $_views['sem_number_end_sql'] . " AS sem_number_end FROM seminar_user b
+                                                    INNER JOIN seminare c USING (seminar_id) WHERE § AND b.status='dozent' AND b.user_id IN (&) §");
 $_views["SEM_SEARCH_SEM"] = array("query" =>"SELECT c.seminar_id, " . $_views['sem_number_sql'] . " AS sem_number , " . $_views['sem_number_end_sql'] . " AS sem_number_end FROM seminare c WHERE § §");
 $_views["SEM_GET_FAKS"] = array("query" => "SELECT DISTINCT b.fakultaets_id,d.sem_tree_id FROM seminar_inst a LEFT JOIN  Institute b USING(Institut_id) LEFT JOIN sem_tree d ON (b.fakultaets_id=d.studip_object_id) WHERE a.seminar_id=?");
 $_views["SEM_GET_INST"] = array("query" => "SELECT institut_id FROM seminar_inst WHERE seminar_id=?");

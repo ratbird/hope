@@ -90,4 +90,12 @@ class CourseDate extends SimpleORMap {
         ));
     }
 
+    public function getResourceInfo()
+    {
+        $sd = new Singledate($this->getId());
+        $resource_id = $sd->getResourceID();
+        $room_name = $sd->getRoom() ?: $this['raum'];
+        return array($room_name, $resource_id);
+    }
+
 }

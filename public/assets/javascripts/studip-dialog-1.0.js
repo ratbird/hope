@@ -108,6 +108,7 @@
         // TODO: Remove the rel selector after Stud.IP 3.2 or 3.3 has been released
         $('[rel~="lightbox-button"],[rel~="option"],[data-dialog-button]', element).hide().find('a,button').andSelf().filter('a,button').each(function () {
             var label = $(this).text(),
+                cancel = $(this).is('.cancel'),
                 handler;
 
             handler = function () {
@@ -116,12 +117,11 @@
             handler = handler.bind(this);
 
             if ($(this).is('.accept,.cancel')) {
-                var cancel = $(this).is('.cancel');
                 buttons[cancel ? 'cancel' : label] = {
                     text: label,
                     click: handler,
                     'class': cancel ? 'cancel' : 'accept'
-                }
+                };
             } else {
                 buttons[label] = handler;
             }
@@ -297,13 +297,13 @@
             dialog_options.buttons = extractButtons.call(this, instance.element);
             // Create 'close' button
             if (!dialog_options.buttons.hasOwnProperty('cancel')) {
-                dialog_options.buttons['cancel'] = {
-                    text: 'Schlieﬂen'.toLocaleString(),
-                    click: function () {
-                        STUDIP.Dialog.close(options);
-                    }
+                dialog_options.buttons.cancel = {
+                    text: 'Schlieﬂen'.toLocaleString()
                 };
             }
+            dialog_options.buttons.cancel.click = function () {
+                STUDIP.Dialog.close(options);
+            };
         }
 
         // Create/update dialog

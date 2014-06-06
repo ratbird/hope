@@ -16,7 +16,7 @@ class Course_DatesController extends AuthenticatedController
     {
         checkObject();
         checkObjectModule("schedule");
-	    object_set_visit_module("schedule");
+        object_set_visit_module("schedule");
         Navigation::activateItem('/course/schedule/dates');
         PageLayout::addScript("jquery/jquery.tablesorter.js");
         $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
@@ -50,23 +50,6 @@ class Course_DatesController extends AuthenticatedController
             $topic['seminar_id'] = $seminar_id;
             $topic['author_id'] = $GLOBALS['user']->id;
             $topic['description'] = "";
-            $priority = 0;
-            $found = false;
-            foreach (CourseDate::findBySeminar_id($seminar_id) as $date2) {
-                if ($date2->getId() === Request::option("termin_id")) {
-                    $priority++;
-                    $found = true;
-                }
-                foreach ($date2->topics as $topic2) {
-                    if (!$found) {
-                        $priority = max($priority, $topic2['priority']);
-                    } elseif($topic2['priority'] >= $priority) {
-                        $topic2['priority'] = $topic2['priority'] + 1;
-                        $topic2->store();
-                    }
-                }
-            }
-            $topic['priority'] = $priority;
             $topic->store();
         }
         $date->addTopic($topic);

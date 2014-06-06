@@ -17,13 +17,10 @@ $is_next_date = (!$dates[$key - 1] || ($dates[$key - 1]['end_time'] < time())) &
         </ul>
     </td>
     <td>
-        <? $resourceInfo = $date->getResourceInfo() ?>
-        <? if ($resourceInfo[1]) : ?>
-        <a href="<?= URLHelper::getLink("resources.php", array('quick_view' => "view_details", 'actual_object' => $resourceInfo[1])) ?>">
-        <? endif ?>
-        <?= htmlReady($resourceInfo[0]) ?>
-        <? if ($resourceInfo[1]) : ?>
-        </a>
+        <? if ($date->getRoom()) : ?>
+        <?= $date->getRoom()->getFormattedLink() ?>
+        <? else : ?>
+        <?= htmlReady($date->raum) ?>
         <? endif ?>
     </td>
 </tr>

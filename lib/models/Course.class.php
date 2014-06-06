@@ -92,6 +92,17 @@ class Course extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'seminare';
+        $config['has_many']['topics'] = array(
+            'class_name' => 'CourseTopic',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
+        $config['has_many']['dates'] = array(
+            'class_name' => 'CourseDate',
+            'assoc_foreign_key' => 'range_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
         $config['has_many']['members'] = array(
             'class_name' => 'CourseMember',
             'assoc_func' => 'findByCourse',

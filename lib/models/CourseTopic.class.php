@@ -23,23 +23,28 @@ class CourseTopic extends SimpleORMap {
         );
     }
 
-    static public function findBySeminar_id($seminar_id)
+    static public function findBySeminar_id($seminar_id, $order_by = "ORDER BY priority")
     {
-        return self::findBySQL("seminar_id = ? ORDER BY priority ", array($seminar_id));
+        return parent::findBySeminar_id($seminar_id, $order_by);
     }
 
     static public function findByTitle($seminar_id, $name)
     {
-        $topics = self::findBySQL("seminar_id = ? AND title = ?", array($seminar_id, $name));
-        return $topics[0];
+        return self::findOneBySQL("seminar_id = ? AND title = ?", array($seminar_id, $name));
+    }
+
+    static public function getMaxPriority($seminar_id)
+    {
+        return DbManager::get()->fetchColumn("SELECT MAX(priority) FROM themen WHERE seminar_id=?", array($seminar_id));
     }
 
     protected static function configure($config = array())
     {
         $config['db_table'] = 'themen';
-        $config['has_many']['dates'] = array(
+        $config['has_and_belongs_to_many']['dates'] = array(
             'class_name' => 'CourseDate',
-            'assoc_func' => 'findByIssue_id',
+            'thru_table' => 'themen_termine',
+            'order_by' => 'ORDER BY date',
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
@@ -47,6 +52,16 @@ class CourseTopic extends SimpleORMap {
             'class_name' => 'DocumentFolder',
             'assoc_foreign_key' => "range_id"
         );
+        $config['belongs_to']['course'] = array(
+            'class_name'  => 'Course',
+            'foreign_key' => 'seminar_id'
+        );
+        $config['belongs_to']['author'] = array(
+            'class_name'  => 'User',
+            'foreign_key' => 'author_id'
+        );
+        $config['default_values']['priority'] = function($topic) {return CourseTopic::getMaxPriority($topic->seminar_id) + 1;};
+
         parent::configure($config);
     }
 

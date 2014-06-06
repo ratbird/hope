@@ -17,7 +17,7 @@
                     <script>
                         jQuery(function () {
                             jQuery("#new_topic").autocomplete({
-                                'source': <?= json_encode(studip_utf8encode(array_map(function ($t) { return $t['title']; }, CourseTopic::findBySQL("seminar_id = ?", array($date['range_id']))))) ?>
+                                'source': <?= json_encode(studip_utf8encode(Course::findCurrent()->topics->pluck('title'))) ?>
                             });
                         });
                     </script>

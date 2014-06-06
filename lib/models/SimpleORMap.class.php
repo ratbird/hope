@@ -495,7 +495,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $record = new $class();
         $sql = "SELECT `{$record->db_table}`.* FROM `$thru_table`
         INNER JOIN `{$record->db_table}` ON `$thru_table`.`$thru_assoc_key` = `{$record->db_table}`.`$assoc_foreign_key`
-        WHERE `$thru_table`.`$thru_key` = ?";
+        WHERE `$thru_table`.`$thru_key` = ? " . $options['order_by'];
         $db = DBManager::get();
         $st = $db->prepare($sql);
         $st->execute(array($foreign_key_value));
@@ -1567,9 +1567,16 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     }
                 }
                 if ($value === null && $meta['null'] == 'NO') {
-                    $value = $this->default_values[$field];
-                    if ($value === null) {
+                    $default_value = $this->default_values[$field];
+                    if ($default_value === null) {
                         throw new UnexpectedValueException($this->db_table . '.' . $field . ' must not be null.');
+                    }
+                    if ($default_value instanceof Closure) {
+                      $value = call_user_func_array($default_value, array($this, $field));
+                    } elseif (method_exists($this, $default_value)) {
+                        $value = call_user_func(array($this, $default_value), $field);
+                    } else {
+                        $value = $default_value;
                     }
                 }
                 if (is_float($value)) {
@@ -1609,10 +1616,20 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return number addition of all return values, false if none was called
      */
-    protected function storeRelations()
+    protected function storeRelations($only_these = null)
     {
         $ret = false;
-        foreach (array_keys($this->relations) as $relation) {
+        if (is_string($only_these)) {
+            $only_these = words($only_these);
+        }
+        $relations = array_keys($this->relations);
+        if (is_array($only_these)) {
+            $only_these = array_filter(array_map(function($s) {
+                    return is_string($s) ? strtolower($s) : null;
+            }, $only_these));
+            $relations = array_intersect($only_these, $relations);
+        }
+        foreach ($relations as $relation) {
             $options = $this->getRelationOptions($relation);
             if (isset($options['on_store']) &&
             ($options['type'] === 'has_one' ||

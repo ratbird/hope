@@ -25,27 +25,59 @@ class CourseDate extends SimpleORMap {
 
     static public function findBySeminar_id($seminar_id)
     {
-        return self::findBySQL("range_id = ? ORDER BY date ", array($seminar_id));
+        return self::findByRange_id($seminar_id);
+    }
+
+    static public function findByRange_id($seminar_id, $order_by = "ORDER BY date")
+    {
+        return parent::findByRange_id($seminar_id, $order_by);
+    }
+
+    static public function findByMetadate_id($metadate_id, $order_by = "ORDER BY date")
+    {
+        return parent::findByRange_id($metadate_id, $order_by);
     }
 
     protected static function configure($config = array())
     {
         $config['db_table'] = 'termine';
-        $config['has_many']['topics'] = array(
+        $config['has_and_belongs_to_many']['topics'] = array(
             'class_name' => 'CourseTopic',
-            'assoc_func' => 'findByTermin_id',
+            'thru_table' => 'themen_termine',
+            'order_by' => 'ORDER BY priority',
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
-        $config['has_many']['statusgruppen'] = array(
+        $config['has_and_belongs_to_many']['statusgruppen'] = array(
             'class_name' => 'Statusgruppen',
-            'assoc_func' => 'findByTermin_id',
+            'thru_table' => 'termin_related_groups',
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
-        $config['has_many']['dozenten'] = array(
+        $config['has_and_belongs_to_many']['dozenten'] = array(
             'class_name' => 'User',
-            'assoc_func' => 'findDozentenByTermin_id',
+            'thru_table' => 'termin_related_persons',
+            'foreign_key' => 'termin_id',
+            'thru_key' => 'range_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
+        );
+        $config['belongs_to']['author'] = array(
+            'class_name'  => 'User',
+            'foreign_key' => 'autor_id'
+        );
+        $config['belongs_to']['course'] = array(
+            'class_name'  => 'Course',
+            'foreign_key' => 'range_id'
+        );
+        $config['belongs_to']['cycle'] = array(
+            'class_name'  => 'SeminarCycleDate',
+            'foreign_key' => 'metadate_id'
+        );
+        $config['has_one']['room_assignment'] = array(
+            'class_name'  => 'ResourceAssignment',
+            'foreign_key' => 'termin_id',
+            'assoc_foreign_key' => 'assign_user_id',
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
@@ -54,48 +86,27 @@ class CourseDate extends SimpleORMap {
 
     public function addTopic($topic)
     {
-        if (!is_a($topic, "CourseTopic")) {
-            $topic = CourseTopic::find($topic);
+        $topic = CourseTopic::toObject($topic);
+        if (!$this->topics->find($topic->id)) {
+            $this->topics[] = $topic;
+            return $this->storeRelations('topics');
         }
-        if (!$topic) {
-            throw new Exception("Thema existiert nicht.");
-        }
-        $statement = DBManager::get()->prepare("
-            INSERT IGNORE INTO themen_termine
-            SET issue_id = :issue_id,
-                termin_id = :termin_id
-        ");
-        return $statement->execute(array(
-            'issue_id' => $topic->getId(),
-            'termin_id' => $this->getId()
-        ));
     }
 
     public function removeTopic($topic)
     {
-        if (!is_a($topic, "CourseTopic")) {
-            $topic = CourseTopic::find($topic);
-        }
-        if (!$topic) {
-            throw new Exception("Thema existiert nicht.");
-        }
-        $statement = DBManager::get()->prepare("
-            DELETE FROM themen_termine
-            WHERE issue_id = :issue_id
-                AND termin_id = :termin_id
-        ");
-        return $statement->execute(array(
-            'issue_id' => $topic->getId(),
-            'termin_id' => $this->getId()
-        ));
+        $this->topics->unsetByPk(is_string($topic) ? $topic : $topic->id);
+        return $this->storeRelations('topics');
     }
 
-    public function getResourceInfo()
+    public function getRoomName()
     {
-        $sd = new Singledate($this->getId());
-        $resource_id = $sd->getResourceID();
-        $room_name = $sd->getRoom() ?: $this['raum'];
-        return array($room_name, $resource_id);
+        return $this->room_assignment->resource_id ? $this->room_assignment->resource->getName() : $this['raum'];
+    }
+
+    public function getRoom()
+    {
+        return $this->room_assignment->resource_id ? $this->room_assignment->resource : null;
     }
 
 }

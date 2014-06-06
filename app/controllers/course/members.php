@@ -1279,7 +1279,7 @@ class Course_MembersController extends AuthenticatedController
                 // create csv-export link
                 $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen-Liste als rtf-Dokument exportieren'), 'passthrough');
                 $widget->addLink(_('TeilnehmerInnen-Liste als rtf-Dokument exportieren'),
-                                 $this->parseHref($csvExport),
+                                 $this->parseHref($rtfExport),
                                  'icons/16/black/export/file-text.png');
 
                 if (count($this->awaiting) > 0) {

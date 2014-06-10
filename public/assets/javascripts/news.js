@@ -118,15 +118,21 @@ STUDIP.News = {
                 });
 
                 // fix added elements (as in application.js)
+                // autofocus for all browsers
                 if (!("autofocus" in document.createElement("input"))) {
-                    jQuery('[autofocus]').last().focus();
+                    jQuery('[autofocus]').first().focus();
                 }
-                jQuery('.add_toolbar').addToolbar();
-                jQuery('textarea.resizable').resizable({
-                    handles: 's',
-                    minHeight: 50,
-                    zIndex: 1
-                });
+                if (!STUDIP.WYSIWYG) {
+                    // add toolbar only if WYSIWYG editor is not activated
+                    jQuery('.add_toolbar').addToolbar();
+                }
+                if (document.createElement('textarea').style.resize === undefined) {
+                    jQuery('textarea.resizable').resizable({
+                        handles: 's',
+                        minHeight: 50,
+                        zIndex: 1
+                    });
+                }
             },
             'fail': function () {
                 alert("Fehler beim Aufruf des News-Controllers");
@@ -166,15 +172,21 @@ STUDIP.News = {
                         }
                     }
                     // fix added elements (as in application.js)
+                    // autofocus for all browsers
                     if (!("autofocus" in document.createElement("input"))) {
-                        jQuery('[autofocus]').last().focus();
+                        jQuery('[autofocus]').first().focus();
                     }
-                    jQuery('.add_toolbar').addToolbar();
-                    jQuery('textarea.resizable').resizable({
-                        handles: 's',
-                        minHeight: 50,
-                        zIndex: 1
-                    });
+                    if (!STUDIP.WYSIWYG) {
+                        // add toolbar only if WYSIWYG editor is not activated
+                        jQuery('.add_toolbar').addToolbar();
+                    }
+                    if (document.createElement('textarea').style.resize === undefined) {
+                        jQuery('textarea.resizable').resizable({
+                            handles: 's',
+                            minHeight: 50,
+                            zIndex: 1
+                        });
+                    }
                 },
                 'fail': function () {
                 	STUDIP.News.pending_ajax_request = false;

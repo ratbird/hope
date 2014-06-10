@@ -9,7 +9,7 @@
     .box-shadow(0px 0px 8px rgba(0,0,0,0.5));
 
 
-    .ui-dialog-titlebar{
+    .ui-dialog-titlebar {
         background: @brand-color-darker;
         border: 0;
         font-size:1.3em;
@@ -55,43 +55,41 @@
             text-align: center;
             float: none;
         }
-    }
-
-    .ui-button {
-        .button(); // Include button mixin
+        .ui-button {
+            .button(); // Include button mixin
         
-        // Replicate cancel and accept buttons
-        // TODO This should not be repeated here (not DRY)
-        &.accept, &.cancel {
-            white-space: normal;
+            // Replicate cancel and accept buttons
+            // TODO This should not be repeated here (not DRY)
+            &.accept, &.cancel {
+                white-space: normal;
 
-            .ui-button-text:before {
-                content: ' ';
-                float: left;
-                height: 16px;
-                margin: -2px 8px 0 -4px;
-                width: 16px;
+                .ui-button-text:before {
+                    content: ' ';
+                    float: left;
+                    height: 16px;
+                    margin: -2px 8px 0 -4px;
+                    width: 16px;
+                }
+            }
+
+            &.accept {
+                .ui-button-text:before {
+                    background: no-repeat; 
+                    .retina-background-icon('blue/accept.png');
+                }
+            }
+
+            &.cancel {
+                .ui-button-text:before {
+                    background: no-repeat; 
+                    .retina-background-icon('blue/decline.png');
+                }
             }
         }
-
-        &.accept {
-            .ui-button-text:before {
-                background: no-repeat; 
-                .retina-background-icon('blue/accept.png');
-            }
-        }
-
-        &.cancel {
-            .ui-button-text:before {
-                background: no-repeat; 
-                .retina-background-icon('blue/decline.png');
-            }
-        }
-        
-    }
     
-    .ui-button-text-only .ui-button-text {
-        padding: 0;
+        .ui-button-text-only .ui-button-text {
+            padding: 0;
+        }
     }
 }
 

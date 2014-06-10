@@ -20,7 +20,7 @@
                             <li>
                                 <a href="<?= URLHelper::getLink("dispatch.php/course/dates/details/".$date->getId()) ?>" data-dialog="buttons=false">
                                     <?= Assets::img("icons/16/blue/date", array('class' => "text-bottom")) ?>
-                                    <?= (floor($date['date'] / 86400) !== floor($date['end_time'] / 86400)) ? date("d.m.Y, H:i", $date['date'])." - ".date("d.m.Y, H:i", $date['end_time']) : date("d.m.Y, H:i", $date['date'])." - ".date("H:i", $date['end_time']) ?>
+                                    <?= htmlReady($date->getFullName()) ?>
                                 </a>
                             </li>
                             <? endforeach ?>

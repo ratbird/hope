@@ -723,6 +723,7 @@ class Course_StudygroupController extends AuthenticatedController {
                       ->setSearchObject($inviting_search)
                       ->addQuickfilter(_('Adressbuch'), $userArray)
                       ->addQuickfilter(_('Buddies'), GetBuddyIDs($GLOBALS['user']->id))
+                      ->setNavigationItem('/course/members')
                       ->render();
 
             $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');

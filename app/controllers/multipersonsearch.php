@@ -83,6 +83,9 @@ class MultipersonsearchController extends AuthenticatedController {
             $this->set_layout(null);
         } else {
             $this->title = $mp->getTitle();
+            if ($mp->getNavigationItem() != "") {
+                Navigation::activateItem($mp->getNavigationItem());
+            }
         }
     }
     
@@ -227,6 +230,10 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->title = $mp->getTitle();
         $this->description = $mp->getDescription();
         $this->pageURL = $mp->getPageURL();
+        
+        if ($mp->getNavigationItem() != "") {
+            Navigation::activateItem($mp->getNavigationItem());
+        }
         
     }
     

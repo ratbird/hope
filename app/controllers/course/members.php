@@ -251,10 +251,13 @@ class Course_MembersController extends AuthenticatedController
         $this->title = sprintf(_('Bemerkung für %s eintragen'), $this->user->getFullName());
 
         // Output as dialog (Ajax-Request) or as Stud.IP page?
-        if (Request::isXhr()) {
+        $this->xhr = Request::isXhr();
+        if ($this->xhr) {
             $this->set_layout(null);
             $this->comment = studip_utf8encode($this->comment);
             header('X-Title: ' . $this->title);
+        } else {
+            Navigation::activateItem('/course/members/view');
         }
     }
 
@@ -1185,6 +1188,7 @@ class Course_MembersController extends AuthenticatedController
                         ->setExecuteURL(URLHelper::getLink('dispatch.php/course/members/execute_multipersonsearch_dozent'))
                         ->setSearchObject($searchtype)
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['dozent']), $membersOfInstitute)
+                        ->setNavigationItem('/course/members/view')
                         ->render();
                     $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');
                     $widget->addElement($element);
@@ -1222,6 +1226,7 @@ class Course_MembersController extends AuthenticatedController
                         ->setExecuteURL(URLHelper::getLink('dispatch.php/course/members/execute_multipersonsearch_tutor'))
                         ->setSearchObject($searchType)
                         ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['tutor']), $membersOfInstitute)
+                        ->setNavigationItem('/course/members/view')
                         ->render();
                     $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');
                     $widget->addElement($element);
@@ -1255,6 +1260,7 @@ class Course_MembersController extends AuthenticatedController
                     ->setExecuteURL(URLHelper::getLink('dispatch.php/course/members/execute_multipersonsearch_autor'))
                     ->setSearchObject($searchType)
                     ->addQuickfilter(sprintf(_('%s der Einrichtung'), $this->status_groups['autor']), $membersOfInstitute)
+                    ->setNavigationItem('/course/members/view')
                     ->render();
                 $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');
                 $widget->addElement($element);

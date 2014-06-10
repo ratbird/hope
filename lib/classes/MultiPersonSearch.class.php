@@ -32,6 +32,7 @@ class MultiPersonSearch {
     public static $importsAlreadyAdded = false;
     private $searchObject = null;
     private $additionalHMTL = "";
+    private $navigationItem = "";
 
     /**
      * restores a MultiPersonSearch object.
@@ -411,6 +412,28 @@ class MultiPersonSearch {
 
         return $this;
     }
+    
+    /**
+     * sets the navigation item.
+     *
+     * @param string  $navigationItem navigation item
+     *
+     * @return MultiPersonSearch
+     */
+    public function setNavigationItem($navigationItem) {
+        $this->navigationItem = $navigationItem;
+        
+        return $this;
+    }
+    
+    /**
+     * returns the navigation item.
+     *
+     * @return string
+     */
+    public function getNavigationItem() {
+        return $this->navigationItem;
+    }
 
     /**
      * stores the internal data to a session.
@@ -427,6 +450,7 @@ class MultiPersonSearch {
         $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'] = $this->defaultSelectedUsersIDs;
         $_SESSION['multipersonsearch_' . $this->name . '_quickfilterIds'] = $this->quickfilterIds;
         $_SESSION['multipersonsearch_' . $this->name . '_searchObject'] = serialize($this->searchObject);
+        $_SESSION['multipersonsearch_' . $this->name . '_navigationItem'] = $this->navigationItem;
 
     }
 
@@ -445,7 +469,7 @@ class MultiPersonSearch {
         $this->defaultSelectableUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectableUsersIDs'];
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch_' . $this->name . '_defaultSelectedUsersIDs'];
         $this->searchObject = unserialize($_SESSION['multipersonsearch_' . $this->name . '_searchObject']);
-
+        $this->navigationItem = $_SESSION['multipersonsearch_' . $this->name . '_navigationItem'];
     }
 
     /**
@@ -464,6 +488,7 @@ class MultiPersonSearch {
         unset($_SESSION['multipersonsearch_' . $this->name . '_searchObject']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_added']);
         unset($_SESSION['multipersonsearch_' . $this->name . '_removed']);
+        unset($_SESSION['multipersonsearch_' . $this->name . '_navigationItem']);
     }
 
     /**

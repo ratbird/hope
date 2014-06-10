@@ -122,6 +122,25 @@ $start_pages = array(
                            <? if ($config->SHOWSEM_ENABLE) echo 'checked'; ?>>
                 </td>
             </tr>
+            <? if (get_config('TOURS_ENABLE')) : ?>
+            <tr>
+                <td>
+                    <label for="tour_autostart_disable">
+                        <?= _('Autostart von Touren verhindern');?><br>
+                        <dfn id="tour_autostart_disable_description">
+                            <?= _('Mit dieser Einstellung können Sie verhindern, dass Touren zu einzelnen '
+                                .'Stud.IP-Seiten automatisch starten, wenn Sie die Seite aufrufen. Die Touren '
+                                .'können weiterhin über die Hilfe gestartet werden.') ?>
+                        </dfn>
+                    </label>
+                </td>
+                <td>
+                    <input type="checkbox" name="tour_autostart_disable" id="tour_autostart_disable"
+                           aria-describedby="tour_autostart_disable_description" value="1"
+                           <? if ($config->TOUR_AUTOSTART_DISABLE) echo 'checked'; ?>>
+                </td>
+            </tr>
+            <? endif ?>
         </tbody>
         <? if (PersonalNotifications::isGloballyActivated()): ?>
         <tbody>

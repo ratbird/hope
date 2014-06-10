@@ -80,7 +80,7 @@ class HelpTour extends SimpleORMap {
         foreach($tours as $index => $tour) {
             if ($tour->isVisible() AND ($tour->settings->access != 'link')) {
                 $visible_tours[$index] = $tour;
-                if (($tour->settings->access == 'autostart') OR ($tour->settings->access == 'autostart_once')) {
+                if ((($tour->settings->access == 'autostart') OR ($tour->settings->access == 'autostart_once')) AND ! $GLOBALS['user']->cfg->TOUR_AUTOSTART_DISABLE) {
                     $user_visit = new HelpTourUser(array($tour->tour_id, $GLOBALS['user']->user_id));
                     if (($tour->settings->access == 'autostart_once') AND $user_visit->isNew()) {
                         $active_tour_id = $tour->tour_id;

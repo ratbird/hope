@@ -68,22 +68,8 @@ $lostDateKeys = array();
 
 <script>
     jQuery(function () {
-        jQuery.tablesorter.addParser({
-            id: 'germandatetime',
-            is: function(s) {
-                return false;
-            },
-            format: function(s) {
-                var p = s.split(",");
-                var t = p[1].split("-")[0].split(":");
-                var d = p[0].split('.');
-                return new Date(d[2], d[1], d[0], t[0], t[1]).getTime();
-            },
-            type: 'numeric'
-        });
         jQuery(".dates").tablesorter({
-            headers: { 0: { sorter:'germandatetime' }},
-            textExtraction: function (node) { return jQuery(node).text(); }
+            textExtraction: function (node) { return jQuery(node).data('timestamp') ? jQuery(node).data('timestamp') : jQuery(node).text(); }
         });
     });
 </script>

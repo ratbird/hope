@@ -1859,7 +1859,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $to_call = array($options['class_name'], $options['assoc_func']);
             $params = $options['assoc_func_params_func'];
             if ($options['type'] === 'has_many') {
-                $records = function($record) use ($to_call, $params) {$p = (array)$params($record); return call_user_func_array($to_call, count($p) ? $p : array(null));};
+                $records = function($record) use ($to_call, $params, $options) {$p = (array)$params($record); return call_user_func_array($to_call, array_merge(count($p) ? $p : array(null), array($options['order_by'])));};
                 $this->relations[$relation] = new SimpleORMapCollection($records, $options, $this);
             } elseif ($options['type'] === 'has_and_belongs_to_many') {
                 $records = function($record) use ($to_call, $params, $options) {$p = (array)$params($record); return call_user_func_array($to_call, array_merge(count($p) ? $p : array(null), array($options)));};

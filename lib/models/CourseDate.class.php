@@ -33,11 +33,6 @@ class CourseDate extends SimpleORMap {
         return parent::findByRange_id($seminar_id, $order_by);
     }
 
-    static public function findByMetadate_id($metadate_id, $order_by = "ORDER BY date")
-    {
-        return parent::findByRange_id($metadate_id, $order_by);
-    }
-
     protected static function configure($config = array())
     {
         $config['db_table'] = 'termine';
@@ -81,6 +76,7 @@ class CourseDate extends SimpleORMap {
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
+        $config['default_values']['date_typ'] = 1;
         parent::configure($config);
     }
 
@@ -107,6 +103,25 @@ class CourseDate extends SimpleORMap {
     public function getRoom()
     {
         return $this->room_assignment->resource_id ? $this->room_assignment->resource : null;
+    }
+
+    public function getTypeName() {
+        global $TERMIN_TYP;
+        return $TERMIN_TYP[$this->date_typ]['name'];
+    }
+
+    public function getFullname($format = 'default') {
+        if ($this->date) {
+            if ($format === 'default') {
+                if ((($this->end_time - $this->date) / 60 / 60) > 23) {
+                    return strftime('%a., %x' . ' (' . _('ganztägig') . ')' , $this->date);
+                } else {
+                    return strftime('%a., %x, %R', $this->date) . ' - ' . strftime('%R', $this->end_time);
+                }
+            }
+        } else {
+            return '';
+        }
     }
 
 }

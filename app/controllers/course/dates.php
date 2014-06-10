@@ -28,10 +28,8 @@ class Course_DatesController extends AuthenticatedController
         if (Request::isXhr()) {
             $this->set_layout(null);
             $this->set_content_type('text/html;Charset=windows-1252');
-            $this->response->add_header('X-Title', $GLOBALS['TERMIN_TYP'][$this->date['date_typ']]['name'].": ".
-                ((floor($this->date['date'] / 86400) !== floor($this->date['end_time'] / 86400))
-                    ? date("d.m.Y, H:i", $this->date['date'])." - ".date("d.m.Y, H:i", $this->date['end_time'])
-                    : date("d.m.Y, H:i", $this->date['date'])." - ".date("H:i", $this->date['end_time']))
+            $this->response->add_header('X-Title', $this->date->getTypeName() . ": ".
+                $this->date->getFullname()
             );
         }
     }

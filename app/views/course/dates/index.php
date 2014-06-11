@@ -80,7 +80,7 @@ $sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
 
 $actions = new ActionsWidget();
 $actions->addLink(
-    _("Exportieren"),
+    _("Als Doc-Datei runterladen"),
     URLhelper::getURL("dispatch.php/course/dates/export")
 );
 $sidebar->addWidget($actions);

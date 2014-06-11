@@ -23,8 +23,8 @@ $lostDateKeys = array();
 <? endif ?>
 
 <? foreach ($allSsemesters as $semester) : ?>
-<h2><?= htmlReady($semester['name']) ?></h2>
 <table class="dates default">
+    <caption><?= htmlReady($semester['name']) ?></caption>
     <thead>
         <tr>
             <th><?= _("Zeit") ?></th>
@@ -47,8 +47,8 @@ $lostDateKeys = array();
 <? endforeach ?>
 
 <? if (count($lostDateKeys)) : ?>
-<h2><?= _("Ohne Semester") ?></h2>
 <table class="dates default">
+    <caption><?= _("Ohne Semester") ?></caption>
     <thead>
     <tr>
         <th><?= _("Zeit") ?></th>

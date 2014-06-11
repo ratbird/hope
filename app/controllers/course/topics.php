@@ -24,6 +24,20 @@ class Course_TopicsController extends AuthenticatedController
                 $topic['description'] = Request::get("description");
                 $topic->store();
 
+                //change dates for this topic
+                $former_date_ids = $topic->dates->pluck("termin_id");
+                $new_date_ids = array_keys(Request::getArray("date"));
+                foreach (array_diff($former_date_ids, $new_date_ids) as $delete_termin_id) {
+                    $topic->dates->unsetByPk($delete_termin_id);
+                }
+                foreach (array_diff($new_date_ids, $former_date_ids) as $add_termin_id) {
+                    $date = CourseDate::find($add_termin_id);
+                    if ($date) {
+                        $topic->dates[] = $date;
+                    }
+                }
+                $topic->store();
+
                 if (Request::get("folder") && !$topic->folder) {
                     $topic->createFolder();
                 }
@@ -50,6 +64,7 @@ class Course_TopicsController extends AuthenticatedController
             throw new AccessDeniedException("Kein Zugriff");
         }
         $this->topic = new CourseTopic($topic_id);
+        $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
 
         if (Request::isXhr()) {
             $this->set_layout(null);

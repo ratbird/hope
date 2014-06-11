@@ -70,6 +70,7 @@ javascripts:
     - javascripts/contentbox.js
     - javascripts/dates.js
     - javascripts/tour.js
+    - javascripts/tables.js
     - javascripts/jquery/jquery.scrollTo.js
     - javascripts/scm.js
     - *header

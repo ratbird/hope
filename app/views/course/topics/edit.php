@@ -2,6 +2,7 @@
 <form action="<?= URLHelper::getLink("dispatch.php/course/topics") ?>" method="post">
     <input type="hidden" name="issue_id" value="<?=htmlReady($topic->getId())  ?>">
     <input type="hidden" name="open" value="<?=htmlReady($topic->getId())  ?>">
+    <input type="hidden" name="edit" value="1">
     <table style="width: 100%;">
         <tbody>
             <tr>
@@ -70,7 +71,9 @@
     <div align="center" data-dialog-button>
         <div class="button-group">
             <?= \Studip\Button::create(_("speichern")) ?>
+            <? if (!$topic->isNew()) : ?>
             <?= \Studip\Button::create(_("löschen"), "delete_topic", array('onClick' => "return window.confirm('"._("Wirklich löschen?")."');")) ?>
+            <? endif ?>
         </div>
     </div>
 </form>

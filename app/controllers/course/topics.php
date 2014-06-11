@@ -11,7 +11,7 @@ class Course_TopicsController extends AuthenticatedController
 
     public function index_action()
     {
-        if (Request::isPost() && $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if (Request::isPost() && Request::get("edit") && $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
             $topic = new CourseTopic(Request::option("issue_id"));
             if ($topic['seminar_id'] && ($topic['seminar_id'] !== $_SESSION['SessionSeminar'])) {
                 throw new AccessDeniedException("Kein Zugriff");
@@ -57,6 +57,36 @@ class Course_TopicsController extends AuthenticatedController
                     Request::set("open", $topic->getId());
                 }
                 PageLayout::postMessage(MessageBox::success(_("Thema gespeichert.")));
+            }
+        }
+        if (Request::isPost() && Request::option("move_down")) {
+            $topics = CourseTopic::findBySeminar_id($_SESSION['SessionSeminar']);
+            $mainkey = null;
+            foreach ($topics as $key => $topic) {
+                if ($topic->getId() === Request::option("move_down")) {
+                    $mainkey = $key;
+                }
+                $topic['priority'] = $key + 1;
+            }
+            if ($mainkey !== null && $mainkey < count($topics)) {
+                $topics[$mainkey]->priority++;
+                $topics[$mainkey + 1]->priority--;
+            }
+            foreach ($topics as $key => $topic) {
+                $topic->store();
+            }
+        }
+        if (Request::isPost() && Request::option("move_up")) {
+            $topics = CourseTopic::findBySeminar_id($_SESSION['SessionSeminar']);
+            foreach ($topics as $key => $topic) {
+                if (($topic->getId() === Request::option("move_up")) && $key > 0) {
+                    $topic['priority'] = $key;
+                    $topics[$key - 1]->priority = $key + 1;
+                    $topics[$key - 1]->store();
+                } else {
+                    $topic['priority'] = $key + 1;
+                }
+                $topic->store();
             }
         }
 

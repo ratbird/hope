@@ -70,6 +70,16 @@
                     </table>
                     <div style="text-align: center;">
                         <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                            <form action="?" method="post" style="display: inline;">
+                                <input type="hidden" name="move_down" value="<?= $topic->getId() ?>">
+                                <input type="hidden" name="open" value="<?= $topic->getId() ?>">
+                                <?= \Studip\Button::create(_("nach unten verschieben")) ?>
+                            </form>
+                            <form action="?" method="post" style="display: inline;">
+                                <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">
+                                <input type="hidden" name="open" value="<?= $topic->getId() ?>">
+                                <?= \Studip\Button::create(_("nach oben verschieben")) ?>
+                            </form>
                             <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
                                 <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
                             </a>

@@ -234,6 +234,18 @@ jQuery(function ($) {
             var editor = event.editor,
                 $textarea = $(editor.element.$);
 
+            // output paragraphs as
+            // <p>
+            // Text
+            // </p>
+            editor.dataProcessor.writer.setRules('p', {
+                indent: false,
+                breakBeforeOpen: true,
+                breakAfterOpen: true,
+                breakBeforeClose: true,
+                breakAfterClose: true
+            });
+
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function (event) {
                 var editor = event.editor;

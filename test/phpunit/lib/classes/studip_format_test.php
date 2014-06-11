@@ -13,6 +13,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once 'lib/classes/TextFormat.php';
 require_once 'lib/classes/StudipFormat.php';
 
 function markupBold($markup, $matches, $contents)
@@ -55,5 +56,34 @@ class StudipFormatTest extends PHPUnit_Framework_TestCase
         $input = '**some %%code%%**';
         $expected = '**some <i>code</i>**';
         $this->assertEquals($expected, $markup->format($input));
+    }
+
+    public function testHtmlEnclosedMarkup()
+    {
+        $markup = new StudipFormat();
+        $index = 0;
+        forEach (array(
+            '<p>' . PHP_EOL
+            . '- single item' . PHP_EOL
+            . '</p>'
+            =>
+            '<p>' . PHP_EOL
+            . '<ul><li>single item</li></ul>'
+            . '</p>',
+
+            '<p>' . PHP_EOL
+            . '- a' . PHP_EOL
+            . '- list' . PHP_EOL
+            . '</p>'
+            => '<p>' . PHP_EOL
+            . '<ul>'
+            . '<li>a</li>'
+            . '<li>list</li>'
+            . '</ul>'
+            . '</p>'
+        ) as $in => $out) {
+            ++$index;
+            $this->assertEquals($out, $markup->format($in), 'test number ' . $index);
+        }
     }
 }

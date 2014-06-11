@@ -107,7 +107,7 @@ if ($infobox && is_array($infobox)) {
 
     <div id="layout_page">
         <? if (PageLayout::isHeaderEnabled() && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody' && Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() && $_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']]) : ?>
-            <?= $this->render_partial('change_view') ?>
+            <?= $this->render_partial('change_view', array('changed_status' => $_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']])) ?>
         <? endif ?>
 
         <? if (PageLayout::isHeaderEnabled() && isset($navigation)) : ?>

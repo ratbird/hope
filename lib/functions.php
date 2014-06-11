@@ -1801,7 +1801,7 @@ function get_title_for_status($type, $count, $sem_type = NULL)
     } else if (isset($DEFAULT_TITLE_FOR_STATUS[$type])) {
         $title = $DEFAULT_TITLE_FOR_STATUS[$type];
     } else {
-        throw new Exception('unkown status in get_title_for_status()');
+        $title = array('unbekannt', 'unbekannt');
     }
 
     return ngettext($title[0], $title[1], $count);

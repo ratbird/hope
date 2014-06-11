@@ -69,11 +69,6 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spri
                 $header_template->public_hint = _('öffentliche Veranstaltung');
             }
         }
-        //show hint if change view is used
-        if (Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() &&
-            isset($_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']])) {
-            $header_template->changed_status = $_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']];
-        }
         if ($GLOBALS['user']->cfg->getValue('ACCESSKEY_ENABLE')){
             $header_template->accesskey_enabled = true;
         }

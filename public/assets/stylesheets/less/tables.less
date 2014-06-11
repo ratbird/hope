@@ -579,3 +579,31 @@ table.default2 {
         }
     }
 }
+
+table.withdetails {
+    tr.details {
+        display: none;
+        max-height: 0px;
+        overflow: hidden;
+        transition: max-height 0.8s;
+        -moz-transition: max-height 0.8s;
+    }
+    tr.open + tr.details {
+        display: table-row;
+        max-height: 200px;
+        overflow: hidden;
+        transition: max-height 0.8s;
+        -moz-transition: max-height 0.8s;
+        background-color: transparent !important;
+        > td {
+            padding-top: 0px;
+            padding-bottom: 10px;
+            > .detailscontainer {
+                padding: 5px;
+                border: 1px solid @table-header-color;
+                margin-top: -1px;
+                border-top-color: white;
+            }
+        }
+    }
+}

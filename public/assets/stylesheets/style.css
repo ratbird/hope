@@ -863,6 +863,13 @@ table.default2 tbody.togglable th:before {
   margin-right: 3px;
   vertical-align: middle;
 }
+table.withdetails > tbody > tr:not(.details) > td:first-child {
+  background: url("../images/icons/16/blue/arr_1right.png") no-repeat 2px center;
+  padding-left: 20px;
+}
+table.withdetails > tbody > tr.open > td:first-child {
+  background-image: url("../images/icons/16/blue/arr_1down.png");
+}
 table.withdetails tr.details {
   display: none;
   max-height: 0px;

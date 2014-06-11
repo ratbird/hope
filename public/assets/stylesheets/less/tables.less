@@ -582,8 +582,13 @@ table.default2 {
 
 table.withdetails {
     > tbody > tr:not(.details) > td:first-child {
-        background: url("@{icon-path}/blue/arr_1right.png") no-repeat 2px center;
+        background-image: url("@{icon-path}/blue/arr_1right.png");
+        background-repeat: no-repeat;
+        background-position: 2px center;
         padding-left: 20px;
+    }
+    > tbody > tr.open > td {
+        background-color: fadeout(@light-gray-color, 80%);
     }
     > tbody > tr.open > td:first-child {
         background-image: url("@{icon-path}/blue/arr_1down.png");

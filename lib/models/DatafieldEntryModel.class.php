@@ -71,7 +71,7 @@ class DatafieldEntryModel extends SimpleORMap
         }
         $query = "SELECT a.*, b.*,a.datafield_id,b.datafield_id as isset_content ";
         $query .= "FROM datafields a LEFT JOIN datafields_entries b ON (a.datafield_id=b.datafield_id AND range_id = ? AND sec_range_id = ?) ";
-        $query .= "WHERE object_type = ? AND ((object_class & ?) OR object_class IS NULL) $one_datafield ORDER BY object_class, priority";
+        $query .= "WHERE object_type = ? AND ((object_class & ?) OR object_class IS NULL) $one_datafield ORDER BY priority";
 
         $st = DBManager::get()->prepare($query);
         $st->execute(array(

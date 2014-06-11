@@ -118,7 +118,7 @@ abstract class DataFieldEntry
                       LEFT JOIN datafields_entries AS b
                         ON (a.datafield_id = b.datafield_id AND range_id = :range_id {$clause1})
                       WHERE object_type = :object_type AND ({$clause2})
-                      ORDER BY object_class, priority";
+                      ORDER BY priority";
             $parameters[':range_id']    = $rangeID;
             $parameters[':object_type'] = $object_type;
 

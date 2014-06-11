@@ -64,7 +64,7 @@ class DataFieldStructure
   function getViewPerms()        {return $this->data['view_perms'];}
   function getIsRequired()       {return (bool)$this->data['is_required']; }
   function getDescription()      {return $this->data['description'];}
-  
+
 
   function getCachedNumEntries() {
     if (is_null($this->numEntries)) {
@@ -210,7 +210,7 @@ class DataFieldStructure
     $query = "SELECT *
               FROM datafields
               {$expr}
-              ORDER BY object_class, priority, name";
+              ORDER BY priority, name";
     $statement = DBManager::get()->prepare($query);
     $statement->execute($params);
 

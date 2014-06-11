@@ -1,3 +1,4 @@
+<? if (count($topics) > 0) : ?>
 <table class="default withdetails">
     <thead>
         <tr>
@@ -80,7 +81,18 @@
     <? endforeach ?>
     </tbody>
 </table>
+<? else : ?>
+    <? PageLayout::postMessage(MessageBox::info(_("Keine Themen vorhanden."))) ?>
+<? endif ?>
 
 <?php
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
+
+$actions = new ActionsWidget();
+$actions->addLink(_("Alle Themen aufklappen"), null, null, array('onClick' => "jQuery('table.withdetails > tbody > tr:not(.details):not(.open) > :first-child a').click(); return false;"));
+if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+    $actions->addLink(_("Neues Thema erstellen"), URLHelper::getURL("dispatch.php/course/topics/edit"), null, array('data-dialog' => "buttons"));
+}
+$sidebar->addWidget($actions);
+

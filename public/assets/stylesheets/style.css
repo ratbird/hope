@@ -900,6 +900,9 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   margin-top: -1px;
   border-top-color: white;
 }
+.no-js table.withdetails tr.details {
+  display: table-row;
+}
 .studip_form .caption {
   font-weight: bold;
   color: #24437c;

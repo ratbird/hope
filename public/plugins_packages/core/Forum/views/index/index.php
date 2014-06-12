@@ -17,14 +17,11 @@ $sidebar->setImage(Assets::image_path("sidebar/forum-sidebar.png"));
 
 if (ForumPerm::has('search', $seminar_id)) {
     $search = new SearchWidget(PluginEngine::getLink('coreforum/index/search?backend=search'));
+    $search->setId('tutorSearchInfobox');
     $search->addNeedle(_('Beiträge durchsuchen'), 'searchfor', true);
     $search->addFilter(_('Titel'), 'search_title');
     $search->addFilter(_('Inhalt'), 'search_content');
     $search->addFilter(_('AutorIn'), 'search_autor');
-                 array(
-                     'id'          => 'tutorSearchInfobox',
-                     'placeholder' => _(''),
-                 ));
     $sidebar->addWidget($search);
 }
 

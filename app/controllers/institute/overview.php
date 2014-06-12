@@ -17,7 +17,6 @@ require_once 'lib/showNews.inc.php';
 require_once 'lib/show_dates.inc.php';
 require_once 'lib/vote/vote_show.inc.php';
 
-
 class Institute_OverviewController extends AuthenticatedController
 {
     protected $allow_nobody = true;
@@ -61,8 +60,7 @@ class Institute_OverviewController extends AuthenticatedController
     }
 
     /**
-     * This method is called to show the form to upload a new avatar for a
-     * course.
+     * show institute overview page
      *
      * @return void
      */

@@ -43,9 +43,7 @@ PageLayout::setTitle(_("Einrichtungssuche"));
 Navigation::activateItem('/search/institutes');
 
 // Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
 $view = new DbView();
 $the_tree = new StudipRangeTreeView();
@@ -82,9 +80,6 @@ if (Request::option('cmd')=="suche"){
     }
 }
 ?>
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-    <td class="blank" align="left" valign="top">
     <h1><?= _('Suche nach Einrichtungen') ?></h1>
     <?
 if ($msg)   {
@@ -93,18 +88,12 @@ if ($msg)   {
     echo "\n</table>";
 }
 $the_tree->showTree();
-    ?>
-    <br>
-    </td>
-    <td class="blank" align="right" valign="top" width="270">
-    <?
-$infobox = array(array("kategorie"  => _("Information:"),
-                        "eintrag" => array(array("icon" => "icons/16/black/info.png",
-                                                "text"  => _("Sie k&ouml;nnen sich durch den Einrichtungsbaum klicken oder das Suchformular benutzen"))
-                                        )
-                        )
-                );
-$such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"post\">" . _("Bitte geben Sie hier Ihre Suchkriterien ein:") . "<br>"
+
+Helpbar::get()->load('institut_browse');
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/institute-sidebar.png"));
+$widget = new SidebarWidget();
+$such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"post\">"
             . CSRFProtection::tokenTag()
             . _("Name der Einrichtung:") . "<br>"
             . "<input type=\"text\" name=\"search_name\" style=\"width:95%;\"><br>"
@@ -114,15 +103,13 @@ $such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"pos
             . "<input type=\"text\" name=\"search_sem\" style=\"width:95%;\">"
             . "<div align=\"right\" style=\"width:95%;\">". Button::create(_('Suchen'), array('title' => _("Suche starten")))
             . "</div></form>";
-$infobox[1]["kategorie"] = _("Suchen:");
-$infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/search.png" ,
-                                    "text" => $such_form
-                                );
-print_infobox($infobox, "sidebar/institute-sidebar.png");
-?>
-</td></tr>
-</table>
-<?
-include ('lib/include/html_end.inc.php');
+$widget->setTitle(_('Suche'));
+$widget->addElement(new WidgetElement($such_form));
+$sidebar->addWidget($widget);
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+
 page_close();
 ?>

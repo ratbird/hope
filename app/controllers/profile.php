@@ -246,7 +246,7 @@ class ProfileController extends AuthenticatedController
         if (get_config('LITERATURE_ENABLE')) {
             $lit_list = StudipLitList::GetFormattedListsByRange($this->current_user->user_id);
             if ($this->current_user->user_id == $this->user->user_id) {
-                $this->admin_url    = 'admin_lit_list.php?_range_id=self';
+                $this->admin_url    = 'dispatch.php/literature/edit_list.php?_range_id=self';
                 $this->admin_title  = _('Literaturlisten bearbeiten');
             }
 

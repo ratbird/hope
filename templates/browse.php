@@ -121,32 +121,11 @@ use Studip\Button, Studip\LinkButton;
 <? endif; ?>
 
 <?
-$infobox = array(
-    'picture' => 'sidebar/person-sidebar.png',
-    'content' => array(
-        array("kategorie" => _("Information:"),
-            "eintrag" => array(
-                array(
-                    "icon" => 'icons/16/black/person.png',
-                    "text" => _("Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind.")
-                ),
-                array(
-                    "icon" => 'icons/16/black/institute.png',
-                    "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterf&uuml;hrende Informationen, wie Sprechstunden und Raumangaben.")
-                ),
-                array(
-                    "icon" => 'icons/16/black/info.png',
-                    "text" => _("Wählen Sie den gewünschten Bereich aus oder suchen Sie nach einem Namen!")
-                )
-            )
-        )
-      )
-    );
-
+Helpbar::get()->load('browse');
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
 if (get_config('SCORE_ENABLE')) {
-    $infobox['content'][] = array("kategorie" => _("Ansichten:"),
-                                  "eintrag" => array( array(
-                                                 "icon" => 'icons/16/black/crown.png',
-                                                 "text" => '<a href="'.URLHelper::getLink('dispatch.php/score').'">'._("Zur Stud.IP-Rangliste").'</a>'
-                            ) ) );
+    $widget = new ActionsWidget();
+    $widget->addLink(_('Zur Stud.IP-Rangliste'), URLHelper::getLink('dispatch.php/score'), 'icons/16/black/crown.png');
+    $sidebar->addWidget($widget);
 }

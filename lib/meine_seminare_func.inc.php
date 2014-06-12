@@ -566,7 +566,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                     $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
                 }
 
-                $nav = new Navigation('literature', 'dispatch.php/course/literatur');
+                $nav = new Navigation('literature', 'dispatch.php/course/literature');
 
                 if ($db2->f('neue')) {
                     $nav->setImage('icons/20/red/new/literature.png', array('title' =>

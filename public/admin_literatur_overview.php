@@ -434,7 +434,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $participants = 0;
                     $edit .= LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('?_catalog_id=' . $element->getValue('catalog_id') . '#anker'), array('title' => _("Verfügbarkeit überprüfen")));
                     $edit .= "&nbsp;";
-                    $edit .= LinkButton::create(_('Details'), 'admin_lit_element.php?_catalog_id=' . $element->getValue('catalog_id'), array('title' => _("Detailansicht dieses Eintrages ansehen.")));
+                    $edit .= LinkButton::create(_('Details'), 'dispatch.php/literature/edit_element.php?_catalog_id=' . $element->getValue('catalog_id'), array('title' => _("Detailansicht dieses Eintrages ansehen.")));
                     $edit .= "&nbsp;";
                     echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
                     $content .= "<b>" . _("Titel:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_title"),true,true) . "<br>";

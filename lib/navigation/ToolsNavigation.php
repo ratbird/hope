@@ -62,7 +62,7 @@ class ToolsNavigation extends Navigation
 
         // literature
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation = new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self'));
+            $navigation = new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php', array('_range_id' => 'self'));
             $this->addSubNavigation('literature', $navigation);
         }
 

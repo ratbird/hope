@@ -14,9 +14,7 @@
 <? endif ?>
 <div class="news_admin">
 <h2><?= _('Meine Ankündigungen') ?></h2>
-<table cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-        <td width="100%" class="blank"><p class="info">
+<p class="info">
         <form action="<?=$controller->url_for('news/admin_news/'.$area_type)?>" id="admin_news_form" method="POST">
         <input type="hidden" name="news_filter" value="set">
         <input type="hidden" name="news_filter_term" value="<?=htmlReady($news_searchterm)?>">
@@ -120,9 +118,8 @@
         <? else : ?>
             <?=_('Keine Ankündigungen vorhanden.')?>
         <? endif ?>
-        </form><br><br></p></td>
-    </tr>
-</table>
+        </form><br><br>
+</p>
 </div>
 <script>
     jQuery('.news_date').datepicker();

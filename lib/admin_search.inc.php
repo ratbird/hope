@@ -161,7 +161,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     //here are all the pages/views listed, which require the search form for Einrichtungen
     if ($i_page == "admin_institut.php"
             OR ($i_page == "admin_roles.php" AND $_SESSION['links_admin_data']["view"] == "statusgruppe_inst")
-            OR ($i_page == "admin_lit_list.php" AND $_SESSION['links_admin_data']["view"] == "literatur_inst")
+            OR ($i_page == "dispatch.php/literature/edit_list.php" AND $_SESSION['links_admin_data']["view"] == "literatur_inst")
             OR $i_page == "inst_admin.php"
             OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"] == "news_inst")
             OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_inst")
@@ -178,7 +178,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             OR $i_page == "raumzeit.php"
             OR $i_page == "admin_admission.php"
             OR ($i_page == "admin_statusgruppe.php" AND $_SESSION['links_admin_data']["view"]=="statusgruppe_sem")
-            OR ($i_page == "admin_lit_list.php" AND $_SESSION['links_admin_data']["view"]=="literatur_sem")
+            OR ($i_page == "dispatch.php/literature/edit_list.php" AND $_SESSION['links_admin_data']["view"]=="literatur_sem")
             OR $i_page == "archiv_assi.php"
             OR $i_page == "admin_visibility.php"
             OR $i_page == "admin_aux.php"

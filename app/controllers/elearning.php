@@ -152,25 +152,19 @@ class ElearningController extends AuthenticatedController
         $widget = new ActionsWidget();
     
         if ($GLOBALS['perm']->have_perm('autor') AND count($this->cms_list)) {
-            foreach($this->cms_list as $cms_data) {
-                $widget->addLink(sprintf(_('Zur %s Startseite'), $cms_data['name']), $cms_data['start_link'], 'icons/16/black/link-extern.png');
+            foreach($this->cms_list as $cms_key => $cms_data) {
+                if ($connected_cms[$cms_key]->user->isConnected()) {
+                    $widget->addLink(sprintf(_('Zur %s Startseite'), $cms_data['name']), $cms_data['start_link'], 'icons/16/black/link-extern.png', array('target' => '_blank'));
+                    $link_count++;
+                }
             }
         }
-        $sidebar->addWidget($widget);
+        if ($link_count)
+            $sidebar->addWidget($widget);
 
         // terminate objects
         if (is_array($connected_cms))
             foreach($connected_cms as $system)
                 $system->terminate();
-    }
-    
-    /**
-     * Displays accounts and elearning modules for active user
-     */
-    public function browse_action()
-    {
-        global $connected_cms, $current_module;
-        Navigation::activateItem('/browse/elearning');
-        
     }
 }

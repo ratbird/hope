@@ -234,7 +234,7 @@ class StartNavigation extends Navigation
 
         // literature
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self')));
+            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php', array('_range_id' => 'self')));
         }
 
         // elearning

@@ -34,8 +34,6 @@ class Course_LiteratureController extends AuthenticatedController
         }
 
         PageLayout::setHelpKeyword('Basis.Literatur');
-        Navigation::activateItem('/course/literature/view');
-        PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Literatur"));
 
         checkObject(); // do we have an open object?
         checkObjectModule('literature');
@@ -47,8 +45,8 @@ class Course_LiteratureController extends AuthenticatedController
      */
     public function index_action($id = null)
     {
+        Navigation::activateItem('/course/literature/view');
+        PageLayout::setTitle($_SESSION['SessSemName']["header_line"]. " - " . _("Literatur"));
         $this->list = StudipLitList::GetFormattedListsByRange($_SESSION["SessionSeminar"], object_get_visit($_SESSION["SessionSeminar"], "literature"));
-        
     }
-    
 }

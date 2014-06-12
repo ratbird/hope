@@ -510,7 +510,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getDetailsButton($item_id){
         $content = LinkButton::create(_('Details'),
-                    'admin_lit_element.php?_catalog_id='.$this->tree->tree_data[$item_id]['catalog_id'],
+                    'dispatch.php/literature/edit_element.php?_catalog_id='.$this->tree->tree_data[$item_id]['catalog_id'],
                     array('title' => _('Detailansicht dieses Eintrages ansehen.')));
         $content .= "&nbsp;";
 

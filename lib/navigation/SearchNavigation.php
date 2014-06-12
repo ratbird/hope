@@ -63,7 +63,7 @@ class SearchNavigation extends Navigation
 
         // search literature
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation = new Navigation(_('Literatur'), 'lit_search.php');
+            $navigation = new Navigation(_('Literatur'), 'dispatch.php/literature/search.php');
             $this->addSubNavigation('literature', $navigation);
         }
 

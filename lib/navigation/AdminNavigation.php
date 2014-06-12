@@ -78,7 +78,7 @@ class AdminNavigation extends Navigation
         }
 
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
+            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php?list=TRUE&view=literatur_sem'));
         }
 
         $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission', array('list' => 'TRUE')));
@@ -111,7 +111,7 @@ class AdminNavigation extends Navigation
         }
 
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_inst'));
+            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php?list=TRUE&view=literatur_inst'));
         }
 
         $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));

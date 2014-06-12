@@ -1,0 +1,19 @@
+[{
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind."
+    ]
+},
+{
+    "icon": "institute",
+    "text": [
+        "Sie erhalten auf der Profilseite von MitarbeiterInnen an Einrichtungen auch weiterführende Informationen, wie Sprechstunden und Raumangaben."
+    ]
+},
+{
+    "icon": "search",
+    "text": [
+        "Wählen Sie den gewünschten Bereich aus oder suchen Sie nach einem Namen!"
+    ]
+}]

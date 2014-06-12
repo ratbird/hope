@@ -1924,7 +1924,19 @@ ul.widget-list > li {
   display: block;
 }
 .widget-links.sidebar-navigation > li.active:before {
-  border: 10px solid rgba(169,182,203,0);
+  border: 10px solid rgba(126,146,176,0);
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-left-color: #7e92b0;
+  left: 100%;
+  top: 50%;
+  margin-top: -10px;
+}
+.widget-links.sidebar-navigation > li.active:after {
+  border: 9px solid rgba(169,182,203,0);
   content: "";
   height: 0;
   width: 0;
@@ -1933,7 +1945,7 @@ ul.widget-list > li {
   border-left-color: #a9b6cb;
   left: 100%;
   top: 50%;
-  margin-top: -10px;
+  margin-top: -9px;
 }
 .widget-links.sidebar-navigation > li.active a {
   color: #fff;

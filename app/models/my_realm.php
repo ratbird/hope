@@ -677,7 +677,8 @@ class MyRealmModel
                 $_course['sem_number_end'] = $sem_nrs['sem_number_end'];
                 $_course['sem_number']     = $sem_nrs['sem_number'];
                 $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
-                $_course['name']           = $course->getFullname('number-name-semester');
+                $_course['name']           = $course->getFullname($sem_nrs['sem_number_end'] != $sem_nrs['sem_number'] ? 'number-name-semester' : 'number-name');
+                $_course['temp_name']      = $course->name;
 
                 // add the the course to the correct semester
                 for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
@@ -711,26 +712,32 @@ class MyRealmModel
         krsort($sem_courses);
 
         // grouping
-        if (strcmp($group_field, 'sem_number') !== 0) {
-            // Group by teacher
-            if ($group_field == 'dozent_id') {
-                self::groupByTeacher($sem_courses);
+        if ($group_field == 'sem_number' && !$params['order_by']) {
+            foreach ($sem_courses as $index => $courses) {
+                uasort($courses, function ($a, $b) {
+                     return $a['gruppe'] == $b['gruppe'] ? strcmp($a['temp_name'], $b['temp_name']) : $a['gruppe'] - $b['gruppe'];
+                });
+                $sem_courses[$index] = $courses;
             }
+        }
+        // Group by teacher
+        if ($group_field == 'dozent_id') {
+            self::groupByTeacher($sem_courses);
+        }
 
-            // Group by Sem Status
-            if ($group_field == 'sem_status') {
-                self::groupBySemStatus($sem_courses);
-            }
+        // Group by Sem Status
+        if ($group_field == 'sem_status') {
+            self::groupBySemStatus($sem_courses);
+        }
 
-            // Group by colors
-            if ($group_field == 'gruppe') {
-                self::groupByGruppe($sem_courses);
-            }
+        // Group by colors
+        if ($group_field == 'gruppe') {
+            self::groupByGruppe($sem_courses);
+        }
 
-            // Group by sem_tree
-            if ($group_field == 'sem_tree_id') {
-                self::groupBySemTree($sem_courses);
-            }
+        // Group by sem_tree
+        if ($group_field == 'sem_tree_id') {
+            self::groupBySemTree($sem_courses);
         }
 
         return !empty($sem_courses) ? $sem_courses : false;

@@ -34,7 +34,7 @@
                             ? 'sortdesc'
                             : 'sortasc'
                         : '' ?>>
-                        <? $_order = ($order == 'desc') ? 'asc' : 'desc' ?>
+                        <? $_order = (!$order_by || $order == 'desc') ? 'asc' : 'desc' ?>
                         <a href="<?= $controller->url_for(sprintf('my_courses/index/name/%s', $_order)) ?>">
                             <?= _("Name") ?>
                         </a>

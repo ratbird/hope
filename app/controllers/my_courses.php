@@ -172,6 +172,7 @@ class MyCoursesController extends AuthenticatedController
 
         if (Request::isXhr()) {
             $this->set_layout(null);
+            $this->response->add_header('Content-Type', 'text/html;charset=Windows-1252');
             header('X-Title: ' . $this->title);
         } else {
             PageLayout::setTitle($this->title);
@@ -183,7 +184,7 @@ class MyCoursesController extends AuthenticatedController
 
         $this->semesters     = SemesterData::GetSemesterArray();
         $forced_grouping     = Config::get()->MY_COURSES_FORCE_GROUPING;
-        $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_grouping, getValidGroupingFields()));
+        $no_grouping_allowed = ($forced_grouping == 'sem_number' || !in_array($forced_grouping, getValidGroupingFields()));
 
         $group_field = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ?: $forced_grouping;
 

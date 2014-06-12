@@ -93,6 +93,7 @@ class Course_DetailsController extends AuthenticatedController
 
         if (Request::isXhr()) {
             $this->set_layout(null);
+            $this->response->add_header('Content-Type', 'text/html;charset=Windows-1252');
             header('X-Title: ' . $this->title);
         } else {
             PageLayout::setHelpKeyword("Basis.InVeranstaltungDetails");

@@ -54,7 +54,7 @@
                 </a>
             </td>
             <td>
-                <a data-dialog="buttons=false;size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $wait['seminar_id'])) ?>">
+                <a data-dialog="size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $wait['seminar_id'])) ?>">
                     <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
                     <? $params['style'] = 'cursor: pointer'; ?>
                     <?= Assets::img('icons/20/grey/info-circle.png', $params) ?>

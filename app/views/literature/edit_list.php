@@ -19,7 +19,7 @@
     print_lit_import_dlg();
 ?>
 <?php
-Helpbar::get()->load('literature/list');
+Helpbar::get()->load('literature/edit_list');
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
 $widget = new ActionsWidget();

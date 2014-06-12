@@ -13,6 +13,7 @@
 <? endif ?>
 
 <table class="default" id="messages">
+    <caption><?= $received ? _("Eingang") : _("Gesendet") ?></caption>
     <thead>
         <tr>
             <th></th>

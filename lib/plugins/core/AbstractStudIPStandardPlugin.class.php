@@ -9,7 +9,7 @@
  */
 
 class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
-  implements StandardPlugin {
+    implements StandardPlugin {
 
     // Id, der dieses Plugin zugeordnet ist (bspw. Veranstaltung oder Institution)
     var $id;
@@ -107,10 +107,10 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
 
             if ($this->hasChanged($last_visit)) {
                 $navigation->setImage($this->getChangeindicatoriconname(),
-                        array('title' => $this->getOverviewMessage(true)));
+                    array('title' => $this->getOverviewMessage(true)));
             } else {
                 $navigation->setImage($this->getPluginiconname(),
-                        array('title' => $this->getOverviewMessage(false)));
+                    array('title' => $this->getOverviewMessage(false)));
             }
         }
 
@@ -186,7 +186,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
      * Getter- und Setter für die Attribute
      *
      * @deprecated
-         */
+     */
     function getChangeindicatoriconname() {
         return $this->getPluginURL() . '/' . $this->changeindicatoriconname;
     }

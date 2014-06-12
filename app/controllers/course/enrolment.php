@@ -70,7 +70,7 @@ class Course_EnrolmentController extends AuthenticatedController {
         }
         $this->set_content_type('text/html;charset=windows-1252');
         if (Request::submitted('cancel')) {
-            $this->redirect(URLHelper::getURL('details.php', array('sem_id' => $this->course_id)));
+            $this->redirect(URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $this->course_id)));
         }
     }
 

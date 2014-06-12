@@ -21,7 +21,7 @@
     <thead>
         <tr>
             <th colspan="2" align="center">
-                <a href="<?= URLHelper::getLink('dispatch.php/meine_seminare/groups') ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/my_courses/groups') ?>">
                     <?= Assets::img('icons/16/blue/group', tooltip2(_('Gruppe ändern'))) ?>
                 </a>
             </th>

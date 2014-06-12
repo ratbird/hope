@@ -40,7 +40,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 $course_id = $_SESSION['SessionSeminar'];
 
-//set visitdate for course, when coming from meine_seminare
+//set visitdate for course, when coming from my_courses
 if (Request::get('auswahl')) {
     object_set_visit($course_id, "sem");
 }
@@ -50,8 +50,7 @@ if (Request::get('redirect_to')) {
     $query_parts = explode('&', stristr(urldecode($_SERVER['QUERY_STRING']), 'redirect_to'));
     list( , $where_to) = explode('=', array_shift($query_parts));
     $new_query = $where_to . '?' . join('&', $query_parts);
-    page_close();
-    $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
+    $new_query = preg_replace('/[^:0-9a-z+_#?&=.-\/]/i', '', $new_query);
     header('Location: '.URLHelper::getURL($new_query, array('cid' => $course_id)));
     die;
 }
@@ -60,6 +59,7 @@ if (Request::get('redirect_to')) {
 $sem = new Seminar($course_id);
 $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']];
 $sem_class || $sem_class = SemClass::getDefaultSemClass();
+
 if ($sem_class->getSlotModule("overview")) {
     foreach ($sem_class->getNavigationForSlot("overview") as $nav) {
         header('Location: '.URLHelper::getURL($nav->getURL()));

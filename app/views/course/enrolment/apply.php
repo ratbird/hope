@@ -39,7 +39,7 @@
     <? if ($enrol_user) : ?>
         <?=Studip\LinkButton::create(_('Zur Veranstaltung'), URLHelper::getURL('seminar_main.php', array('auswahl' => $course_id))) ?>
     <? else : ?>
-        <?=Studip\LinkButton::create(_('Abbrechen'), URLHelper::getURL('details.php', array('sem_id' => $course_id))) ?>
+        <?=Studip\LinkButton::create(_('Abbrechen'), URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $course_id))) ?>
     <? endif ?>
     </div>
 <? endif ?>

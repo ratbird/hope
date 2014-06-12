@@ -616,10 +616,10 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 case "admin_aux.php":
 
                     $db5query = "SELECT aux_lock_rule from seminare WHERE Seminar_id = ?";
-                    $db5params = array($seminar_id);
+                    $db5params = array('03777689ada89ef61283886fa7ff2da7');
                     $db5statement = DBManager::get()->prepare($db5query);
                     $db5statement->execute($db5params);
-                    $db5row = $db4statement->fetch(PDO::FETCH_ASSOC);
+                    $db5row = $db5statement->fetch(PDO::FETCH_ASSOC);
 
                     if ($perm->have_perm("dozent")) {
                         ?>

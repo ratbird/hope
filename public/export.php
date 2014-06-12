@@ -57,7 +57,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
     include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 }
 
-//$i_page = "meine_seminare.php";
+//$i_page = "my_courses.php";
 //$EXPORT_ENABLE = TRUE;
 //$PATH_EXPORT = "export";
 // -- here you have to put initialisations for the current page
@@ -152,7 +152,7 @@ if (get_config('EXPORT_ENABLE'))
 }
 else
 {
-    //TODO: Globales Fehlertemplate erzeugen und nur die Fehlermeldung übergeben
+    //TODO: Globales Fehlertemplate erzeugen und nur die Fehlermeldung ï¿½bergeben
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head

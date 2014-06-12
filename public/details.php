@@ -84,7 +84,7 @@ ob_start();
 // Start of Output
 #include ('lib/include/html_head.inc.php'); // Output of html head
 #include ('lib/include/header.php');  // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+#include ('lib/include/deprecated_tabs_layout.php');
 
 //load all the data
 $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
@@ -426,6 +426,7 @@ else
                     . 'LEFT JOIN seminar_inst USING (institut_id) '
                     . 'WHERE seminar_id = ? AND Institute.institut_id != ?');
                 $stmt->execute(array($sem_id, $seminar['Institut_id']));
+
                 if ($entries = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
                     $data = array();
                     foreach ($entries as $entry) {
@@ -468,7 +469,7 @@ else
             printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></td></tr></table>", "2%", formatReady($seminar['admission_prelim_txt']));
         } else {
             if (!$perm->have_perm("admin")) {
-                print("<p>"._("Wenn Sie an der Veranstaltung teilnehmen wollen, klicken Sie auf \"Tragen Sie sich hier ein\". Sie erhalten dann nähere Hinweise und können sich immer noch gegen eine Teilnahme entscheiden.")."</p>");
+                print("<p>"._("Wenn Sie an der Veranstaltung teilnehmen wollen, klicken Sie auf \"Tragen Sie sich hier ein\". Sie erhalten dann nähere Hinweise und kännen sich immer noch gegen eine Teilnahme entscheiden.")."</p>");
             } else {
                 print("<p>"._("NutzerInnen, die sich für diese Veranstaltung eintragen möchten, erhalten nähere Hinweise und können sich dann noch gegen eine Teilnahme entscheiden.")."</p>");
             }
@@ -645,7 +646,7 @@ else
     }
     if ($delete_msg) {
         $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/door-leave.png',
-                                    "text"  => "<a href=\"".URLHelper::getLink("meine_seminare.php?auswahl=".$sem_id."&cmd=suppose_to_kill")."\">".$delete_msg."</a>"
+                                    "text"  => "<a href=\"".URLHelper::getLink("my_courses.php?auswahl=".$sem_id."&cmd=suppose_to_kill")."\">".$delete_msg."</a>"
                                 );
     }
     if ($back_msg) {

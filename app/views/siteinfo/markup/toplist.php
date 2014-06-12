@@ -7,7 +7,7 @@
     <?
         switch($type){
             case "seminar":
-                $link = URLHelper::getLink('details.php', array('sem_id' => $line["seminar_id"],
+                $link = URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $line["seminar_id"],
                                                                 'send_from_search' => 'true',
                                                                 'send_from_search_page' => $view));
                 break;

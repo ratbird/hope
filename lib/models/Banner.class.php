@@ -154,7 +154,7 @@ class Banner extends SimpleORMap
             return $this->target;
         }
         if ($this->target_type === 'seminar') {
-            return URLHelper::getLink('details.php', array('sem_id' => $this->target));
+            return URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $this->target));
         }
         if ($this->target_type === 'user') {
             return URLHelper::getLink('dispatch.php/profile', array('username' => $this->target));

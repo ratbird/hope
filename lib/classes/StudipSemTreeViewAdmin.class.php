@@ -626,7 +626,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                         $sem_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->tree->sem_dates[$sem_number_end]['name']) . ")";
                     }
                     $content .= "<tr><td class=\"table_row_even\" width=\"1%\"><input type=\"checkbox\" name=\"marked_sem[]\" value=\"$seminar_id\" style=\"vertical-align:middle\">
-                    </td><td class=\"table_row_even\" style=\"font-size:10pt;\"><a href=\"details.php?sem_id=". $seminar_id
+                    </td><td class=\"table_row_even\" style=\"font-size:10pt;\"><a href=\"dispatch.php/course/details/?sem_id=". $seminar_id
                     ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">" . htmlReady($sem_name) . "</a>
                     </td><td class=\"table_row_even\" align=\"right\" style=\"font-size:10pt;\">(";
                     $doz_name = array_keys($sem_data[$seminar_id]['doz_name']);
@@ -636,7 +636,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                         $i = 0;
                         foreach ($doz_name as $index => $value){
                             if ($i == 4){
-                                $content .= "... <a href=\"details.php?sem_id=". $seminar_id
+                                $content .= "... <a href=\"dispatch.php/course/details/?sem_id=". $seminar_id
                                 ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">("._("mehr").")</a>";
                                 break;
                             }

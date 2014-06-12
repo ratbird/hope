@@ -50,7 +50,7 @@ class CourseNavigation extends Navigation
         if (is_object($user) && $user->id != 'nobody') {
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
-            $courselink = 'meine_seminare.php';
+            $courselink = 'dispatch.php/my_courses';
         } else {
             $coursetext = _('Freie');
             $courseinfo = _('Freie Veranstaltungen');

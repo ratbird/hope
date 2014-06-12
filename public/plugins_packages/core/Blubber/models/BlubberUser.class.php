@@ -93,7 +93,7 @@ class BlubberUser extends User implements BlubberContact {
                     _("Sie sind noch kein Mitglied der zugehörigen Veranstaltung. Melden Sie sich erst hier an, damit Sie den Blubber sehen können: ") .
                     ($GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][Course::find($posting['Seminar_id'])->status]['class']]['studygroup_mode'] 
                         ? $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/details/".$posting['Seminar_id']
-                        : $GLOBALS['ABSOLUTE_URI_STUDIP']."details.php?sem_id=".$posting['Seminar_id']);
+                        : $GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/details?sem_id=".$posting['Seminar_id']);
         }
         $mention_text = _("Sie wurden erwähnt.");
         restoreLanguage();

@@ -151,8 +151,8 @@ function getPluginNavigationForSeminar($seminar_id, $visitdate)
 
     if (!$plugin_navigation[$seminar_id]) {
         $plugin_navigation[$seminar_id] = array();
-
-        foreach (PluginEngine::getPlugins('StandardPlugin', $seminar_id) as $plugin) {
+        $plugins = PluginEngine::getPlugins('StandardPlugin', $seminar_id);
+        foreach ($plugins as $plugin) {
             $nav = $plugin->getIconNavigation($seminar_id, $visitdate, $GLOBALS['user']->id);
             if ($nav instanceof Navigation) {
                 $plugin_navigation[$seminar_id][get_class($plugin)] = $nav;

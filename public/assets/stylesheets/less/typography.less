@@ -68,6 +68,15 @@ h1, h2 {
 }
 
 
+h1 {
+  span {
+    display: block;
+    font-size: @font-size-h1 / 2;
+    font-weight: @headings-font-weight / 7;
+    padding: (@line-height-computed / 4) 0;
+  }
+}
+
 // Body text
 // -------------------------
 
@@ -75,17 +84,3 @@ p {
   margin: 0 0 (@line-height-computed / 2);
 }
 
-
-// Lists
-// -------------------------
-
-// Unordered and Ordered lists
-ul,
-ol {
-  margin-top: 0;
-  margin-bottom: (@line-height-computed / 2);
-  ul,
-  ol {
-    margin-bottom: 0;
-  }
-}

@@ -48,7 +48,7 @@ if (get_config('VOTE_ENABLE')) {
 
 $institute_id = $_SESSION['SessionSeminar'];
 
-//set visitdate for institute, when coming from meine_seminare
+//set visitdate for institute, when coming from my_courses
 if (Request::get('auswahl')) {
     $institute_id = Request::get('auswahl');
     object_set_visit($institute_id, "inst");

@@ -43,11 +43,11 @@ class AdminNavigation extends Navigation
                 $back_jump= _('zur ausgewählten Einrichtung');
             }
         } else if ($SessSemName['class'] == 'sem') {
-            if ($_SESSION['links_admin_data']['referred_from'] == 'sem' && !$archive_kill && !$_SESSION['links_admin_data']['assi']) {
+            if (isset($_SESSION['links_admin_data']['referred_from']) && $_SESSION['links_admin_data']['referred_from'] == 'sem' && !$archive_kill && !isset($_SESSION['links_admin_data']['assi'])) {
                 $back_jump= _('zurück zur ausgewählten Veranstaltung');
-            } else if ($_SESSION['links_admin_data']['referred_from'] == 'assi' && !$archive_kill) {
+            } else if (isset($_SESSION['links_admin_data']['referred_from'])  && $_SESSION['links_admin_data']['referred_from'] == 'assi' && !$archive_kill) {
                 $back_jump= _('zur neu angelegten Veranstaltung');
-            } else if (!$_SESSION['links_admin_data']['assi']) {
+            } else if (!isset($_SESSION['links_admin_data']['assi'])) {
                 $back_jump= _('zur ausgewählten Veranstaltung');
             }
         }
@@ -213,7 +213,7 @@ class AdminNavigation extends Navigation
         if ($SessSemName['class'] == 'inst') {
             $navigation = new Navigation($back_jump, 'dispatch.php/institute/overview?auswahl='.$SessSemName[1]);
             $this->addSubNavigation('back_jump', $navigation);
-        } else if ($SessSemName['class'] == 'sem' && !$archive_kill && !$_SESSION['links_admin_data']['assi']) {
+        } else if ($SessSemName['class'] == 'sem' && !$archive_kill && !isset($_SESSION['links_admin_data']['assi'])) {
             $navigation = new Navigation($back_jump, 'seminar_main.php?auswahl='.$SessSemName[1]);
             $this->addSubNavigation('back_jump', $navigation);
         }

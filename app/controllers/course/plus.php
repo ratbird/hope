@@ -47,7 +47,7 @@ class Course_PlusController extends AuthenticatedController
             throw new AccessDeniedException(_("Keine Berechtigung."));
         }
 
-        PageLayout::setTitle(Course::findCurrent()->getFullname() . " - " . PageLayout::getTitle());
+        PageLayout::setTitle(Course::find($id)->getFullname() . " - " . PageLayout::getTitle());
 
         if ($object_type === "sem") {
             $this->sem           = new Seminar($id);

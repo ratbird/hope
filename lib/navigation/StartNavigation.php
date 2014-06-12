@@ -88,9 +88,9 @@ class StartNavigation extends Navigation
         if ($perm->have_perm('root')) {
             $navigation = new Navigation(_('Veranstaltungsübersicht'), 'dispatch.php/search/courses');
         } else if ($perm->have_perm('admin')) {
-            $navigation = new Navigation(_('Veranstaltungen an meinen Einrichtungen'), 'meine_seminare.php');
+            $navigation = new Navigation(_('Veranstaltungen an meinen Einrichtungen'), 'dispatch.php/my_courses');
         } else {
-            $navigation = new Navigation(_('Meine Veranstaltungen'), 'meine_seminare.php');
+            $navigation = new Navigation(_('Meine Veranstaltungen'), 'dispatch.php/my_courses');
 
             if (!$perm->have_perm('dozent')) {
                 $navigation->addSubNavigation('browse', new Navigation(_('Veranstaltung hinzufügen'), 'dispatch.php/search/courses'));

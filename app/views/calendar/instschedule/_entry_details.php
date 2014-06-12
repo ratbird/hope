@@ -25,7 +25,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                     <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even')?>">
                         <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                         <td width="85%">
-                            <a href="<?= URLHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
+                            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $seminar->getId())) ?>">
                                 <?= Assets::img('icons/16/blue/link-intern.png') ?>
                                 <?= htmlReady($seminar->getName()) ?>
                             </a>

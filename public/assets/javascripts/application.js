@@ -25,9 +25,9 @@
  * ------------------------------------------------------------------------ */
 jQuery('[data-behaviour="ajaxContent"]').live('click', function () {
     var parameters = jQuery(this).data(),
-    indicator = parameters.hasOwnProperty('indicator') ? parameters.indicator : this,
-    target    = parameters.hasOwnProperty('target') ? parameters.target : jQuery(this).next(),
-    url       = parameters.hasOwnProperty('url') ? parameters.url : jQuery(this).attr('href');
+        indicator = parameters.hasOwnProperty('indicator') ? parameters.indicator : this,
+        target    = parameters.hasOwnProperty('target') ? parameters.target : jQuery(this).next(),
+        url       = parameters.hasOwnProperty('url') ? parameters.url : jQuery(this).attr('href');
 
     jQuery(indicator).showAjaxNotification('right');
     jQuery(target).load(url, function () {
@@ -94,7 +94,7 @@ jQuery(function ($) {
 
     $('table.collapsable .toggler').focus(function () {
         $(this).blur();
-    }).click(function () {
+    }).live('click', function () {
         $(this).closest('tbody').toggleClass('collapsed');
         return false;
     });
@@ -194,9 +194,9 @@ jQuery.ui.accordion.prototype.options.icons = {
         nextText: 'Vor&#x3e;',
         currentText: 'heute',
         monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-                     'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
         monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
-                          'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+            'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
         dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
         dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
         dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
@@ -246,18 +246,18 @@ jQuery(function ($) {
             height: '1px',
             frameborder: 0
         })
-        .css({top: '-99px', position: 'absolute'})
-        .appendTo('body')
-        .load(function () {
-            this.contentWindow.focus();
-            this.contentWindow.print();
-        });
+            .css({top: '-99px', position: 'absolute'})
+            .appendTo('body')
+            .load(function () {
+                this.contentWindow.focus();
+                this.contentWindow.print();
+            });
         return false;
     });
 });
 
 /* Secure textareas by displaying a warning on page unload if there are
-   unsaved changes */
+ unsaved changes */
 (function ($) {
     function securityHandler(event) {
         var message = 'Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString();

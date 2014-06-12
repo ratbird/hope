@@ -72,7 +72,7 @@ class Course_BasicdataController extends AuthenticatedController
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGrunddaten");
         PageLayout::setTitle(_("Verwaltung der Grunddaten"));
         if ($this->course_id) {
-            PageLayout::setTitle(Course::findCurrent()->getFullname()." - ".PageLayout::getTitle());
+            PageLayout::setTitle(Course::find($this->course_id)->getFullname()." - ".PageLayout::getTitle());
         }
 
         //Daten sammeln:

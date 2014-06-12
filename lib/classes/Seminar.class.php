@@ -60,19 +60,19 @@ class Seminar
     private $_metadate = null;               // MetaDate
 
     private $alias = array(
-            'seminar_number' => 'VeranstaltungsNummer',
-            'subtitle' => 'Untertitel',
-            'description' => 'Beschreibung',
-            'location' => 'Ort',
-            'misc' => 'Sonstiges',
-            'read_level' => 'Lesezugriff',
-            'write_level' => 'Schreibzugriff',
-            'semester_start_time' => 'start_time',
-            'semester_duration_time' => 'duration_time',
-            'form' => 'art',
-            'participants' => 'teilnehmer',
-            'requirements' => 'vorrausetzungen',
-            'orga' => 'lernorga',
+        'seminar_number' => 'VeranstaltungsNummer',
+        'subtitle' => 'Untertitel',
+        'description' => 'Beschreibung',
+        'location' => 'Ort',
+        'misc' => 'Sonstiges',
+        'read_level' => 'Lesezugriff',
+        'write_level' => 'Schreibzugriff',
+        'semester_start_time' => 'start_time',
+        'semester_duration_time' => 'duration_time',
+        'form' => 'art',
+        'participants' => 'teilnehmer',
+        'requirements' => 'vorrausetzungen',
+        'orga' => 'lernorga',
     );
 
     private $course = null;
@@ -104,12 +104,12 @@ class Seminar
     }
 
     /**
-    * Constructor
-    *
-    * Pass nothing to create a seminar, or the seminar_id from an existing seminar to change or delete
-    * @access   public
-    * @param    string  $seminar_id the seminar to be retrieved
-    */
+     * Constructor
+     *
+     * Pass nothing to create a seminar, or the seminar_id from an existing seminar to change or delete
+     * @access   public
+     * @param    string  $seminar_id the seminar to be retrieved
+     */
     function __construct($course_or_id = FALSE)
     {
         $course = Course::toObject($course_or_id);
@@ -172,11 +172,11 @@ class Seminar
     }
 
     /**
-    *
-    * creates an new id for this object
-    * @access   private
-    * @return   string  the unique id
-    */
+     *
+     * creates an new id for this object
+     * @access   private
+     * @return   string  the unique id
+     */
     function createId()
     {
         return $this->course->getNewId();
@@ -415,7 +415,7 @@ class Seminar
             }
             return $return_string;
         } else
-        return FALSE;
+            return FALSE;
     }
 
     function getMetaDateCount()
@@ -445,13 +445,13 @@ class Seminar
     }
 
     /**
-    * restore the data
-    *
-    * the complete data of the object will be loaded from the db
-    * @access   public
-    * @throws   Exception  if there is no such course
-    * @return   boolean    always true
-    */
+     * restore the data
+     *
+     * the complete data of the object will be loaded from the db
+     * @access   public
+     * @throws   Exception  if there is no such course
+     * @return   boolean    always true
+     */
     function restore()
     {
         if ($this->course->id) {
@@ -696,8 +696,8 @@ class Seminar
             }
             $dates = array_merge($this->irregularSingleDates, $deleted_dates);
             uasort($dates, function($a,$b) {
-                if ($a->getStartTime() == $b->getStartTime()) return 0;
-                return $a->getStartTime() < $b->getStartTime() ? -1 : 1;}
+                    if ($a->getStartTime() == $b->getStartTime()) return 0;
+                    return $a->getStartTime() < $b->getStartTime() ? -1 : 1;}
             );
             return $dates;
         }
@@ -847,21 +847,21 @@ class Seminar
                             'title'   => _("Es sind Fehler/Probleme aufgetreten!"),
                             'details' => $this->message_stack['error']
                         );
-                    break;
+                        break;
 
                     case 'info':
                         $ret['info'] = array(
                             'title'   => implode('<br>', $this->message_stack['info']),
                             'details' => array()
                         );
-                    break;
+                        break;
 
                     case 'success':
                         $ret['success'] = array(
                             'title'   => _("Ihre Änderungen wurden gespeichert!"),
                             'details' => $this->message_stack['success']
                         );
-                    break;
+                        break;
                 }
             }
 
@@ -1575,72 +1575,72 @@ class Seminar
                 }
             }
             if (!$metadate) {
-            $irreg = $this->getSingleDates();
+                $irreg = $this->getSingleDates();
 
-            if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
-                $anzahl = 0;
-                foreach ($irreg as $termin_id => $termin) {
-                    if ($termin->getStartTime() > (time() - 3600)) {
-                        $anzahl++;
+                if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
+                    $anzahl = 0;
+                    foreach ($irreg as $termin_id => $termin) {
+                        if ($termin->getStartTime() > (time() - 3600)) {
+                            $anzahl++;
+                        }
                     }
+                } else {
+                    $anzahl = sizeof($irreg);
                 }
-            } else {
-                $anzahl = sizeof($irreg);
-            }
 
-            if ($anzahl > $GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]) {
-                $single = true;
-                $first = true;
-                foreach ($irreg as $termin_id => $termin) {
-                    if ($termin->isPresence()) {
-                        if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
-                            if (empty($first_event)) {
-                                $first_event = $termin->getStartTime();
-                            }
-                            $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
-                            if (!$first) $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            $info[$i]['name'] .= $termin->toString();
-                            $resObj = ResourceObject::Factory($termin->resource_id);
-
-                            if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
-                                $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
-                                if (empty($info[$i]['raum'])) {
-                                    $info[$i]['raum'] = $termin->resource_id;
-                                } else if ($info[$i]['raum'] != $termin->resource_id) {
-                                    $single = false;
+                if ($anzahl > $GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]) {
+                    $single = true;
+                    $first = true;
+                    foreach ($irreg as $termin_id => $termin) {
+                        if ($termin->isPresence()) {
+                            if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
+                                if (empty($first_event)) {
+                                    $first_event = $termin->getStartTime();
                                 }
-                            }
+                                $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
+                                if (!$first) $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                $info[$i]['name'] .= $termin->toString();
+                                $resObj = ResourceObject::Factory($termin->resource_id);
 
-                            if (date('w', $termin->getStartTime()) == 6 || date('w', $termin->getStartTime()) == 0) {
-                                $info[$i]['weekend'] = true;
+                                if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
+                                    $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
+                                    if (empty($info[$i]['raum'])) {
+                                        $info[$i]['raum'] = $termin->resource_id;
+                                    } else if ($info[$i]['raum'] != $termin->resource_id) {
+                                        $single = false;
+                                    }
+                                }
+
+                                if (date('w', $termin->getStartTime()) == 6 || date('w', $termin->getStartTime()) == 0) {
+                                    $info[$i]['weekend'] = true;
+                                }
+                                $first = false;
                             }
-                            $first = false;
+                        }
+                    }
+                    if (!$single) unset($info[$i]['raum']);
+                } else {
+                    foreach ($irreg as $termin_id => $termin) {
+                        if ($termin->isPresence()) {
+                            if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
+                                if (empty($first_event)) {
+                                    $first_event = $termin->getStartTime();
+                                }
+                                $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
+                                $info[$i]['name'] = $termin->toString();
+                                $resObj = ResourceObject::Factory($termin->resource_id);
+
+                                if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
+                                    $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
+                                    $info[$i]['raum'] = $termin->resource_id;
+                                }
+
+                                $info[$i]['weekend'] = (date('w', $termin->getStartTime()) == 6 || date('w', $termin->getStartTime()) == 0);
+                                $i++;
+                            }
                         }
                     }
                 }
-                if (!$single) unset($info[$i]['raum']);
-            } else {
-                foreach ($irreg as $termin_id => $termin) {
-                    if ($termin->isPresence()) {
-                        if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
-                            if (empty($first_event)) {
-                                $first_event = $termin->getStartTime();
-                            }
-                            $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
-                            $info[$i]['name'] = $termin->toString();
-                            $resObj = ResourceObject::Factory($termin->resource_id);
-
-                            if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
-                                $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
-                                $info[$i]['raum'] = $termin->resource_id;
-                            }
-
-                            $info[$i]['weekend'] = (date('w', $termin->getStartTime()) == 6 || date('w', $termin->getStartTime()) == 0);
-                            $i++;
-                        }
-                    }
-                }
-            }
             }
         } else {    // we have a single date
             $termin = new SingleDate($singledate);
@@ -1655,7 +1655,7 @@ class Seminar
     }
 
     /**
-   * creates a textual, status-dependent representation of a room-request for a seminar.
+     * creates a textual, status-dependent representation of a room-request for a seminar.
      *
      * @return string conatining room, responsible person, properties, current status and message / decline-message
      */
@@ -1715,12 +1715,12 @@ class Seminar
     {
         $request_id = RoomRequest::existsByCourse($this->getId());
         if ($request_id) {
-        // logging >>>>>>
-        log_event("SEM_DELETE_REQUEST", $this->getId());
-        // logging <<<<<<
+            // logging >>>>>>
+            log_event("SEM_DELETE_REQUEST", $this->getId());
+            // logging <<<<<<
             $this->requestData = '';
             return RoomRequest::find($request_id)->delete();
-    }
+        }
     }
 
     /**
@@ -1814,8 +1814,8 @@ class Seminar
     function getStudyAreas()
     {
         $stmt = DBManager::get()->prepare("SELECT DISTINCT sem_tree_id ".
-                                          "FROM seminar_sem_tree ".
-                                          "WHERE seminar_id=?");
+            "FROM seminar_sem_tree ".
+            "WHERE seminar_id=?");
 
         $stmt->execute(array($this->id));
         return $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -1887,7 +1887,7 @@ class Seminar
 
     function delete()
     {
-       $s_id = $this->id;
+        $s_id = $this->id;
 
         // Delete that Seminar.
 
@@ -1915,7 +1915,7 @@ class Seminar
         // user aus den Statusgruppen rauswerfen
         $count = DeleteAllStatusgruppen($s_id);
         if ($count > 0) {
-             $this->createMessage(_("Eintr&auml;ge aus Funktionen / Gruppen gel&ouml;scht."));
+            $this->createMessage(_("Eintr&auml;ge aus Funktionen / Gruppen gel&ouml;scht."));
         }
 
         // Alle Eintraege aus dem Vorlesungsverzeichnis rauswerfen
@@ -2054,7 +2054,7 @@ class Seminar
      */
     function getDatesHTML($params = array())
     {
-       return $this->getDatesTemplate('dates/seminar_html.php', $params);
+        return $this->getDatesTemplate('dates/seminar_html.php', $params);
     }
 
     /**
@@ -2217,7 +2217,7 @@ class Seminar
                 "SELECT Institut_id " .
                 "FROM user_inst " .
                 "WHERE user_id = :user_id " .
-            "");
+                "");
             $user_institute_stmt->execute(array('user_id' => $user_id));
             $user_institute = $user_institute_stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
@@ -2284,7 +2284,7 @@ class Seminar
             $this->course->resetRelation('admission_applicants');
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
-                && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
+            && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
             $query = "UPDATE seminar_user
                       SET status = ?, visible = IFNULL(?, visible), position = ?
                       WHERE Seminar_id = ? AND user_id = ?";
@@ -2317,8 +2317,8 @@ class Seminar
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
                 $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
-                                   get_title_for_status('dozent', 1, $this->status)) .
-                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
+                        get_title_for_status('dozent', 1, $this->status)) .
+                    ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
             }
 
             return false;
@@ -2355,7 +2355,7 @@ class Seminar
             }
             RemovePersonStatusgruppeComplete(get_username($user_id), $this->id);
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
-                    "<i>".htmlReady(get_fullname($user_id))."</i>"));
+                "<i>".htmlReady(get_fullname($user_id))."</i>"));
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
             NotificationCenter::postNotification('UserDidLeaveCourse', $this->id, $user_id);
             log_event('SEM_USER_DEL', $this->id, $user_id, 'Wurde aus der Veranstaltung rausgeworfen');
@@ -2363,8 +2363,8 @@ class Seminar
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
-                                   get_title_for_status('dozent', 1, $this->status)) .
-                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen zu löschen."));
+                    get_title_for_status('dozent', 1, $this->status)) .
+                ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen zu löschen."));
             return false;
         }
     }
@@ -2394,8 +2394,8 @@ class Seminar
                 "UPDATE seminar_user " .
                 "SET label = :label " .
                 "WHERE user_id = :user_id " .
-                    "AND Seminar_id = :seminar_id " .
-            "");
+                "AND Seminar_id = :seminar_id " .
+                "");
             $statement->execute(array(
                 'user_id' => $user_id,
                 'seminar_id' => $this->getId(),
@@ -2556,8 +2556,8 @@ class Seminar
      */
     function isAdmissionEnabled()
     {
-       $cs = $this->getCourseSet();
-       return ($cs && $cs->isSeatDistributionEnabled());
+        $cs = $this->getCourseSet();
+        return ($cs && $cs->isSeatDistributionEnabled());
     }
 
     /**
@@ -2607,7 +2607,7 @@ class Seminar
         $cs = $this->getCourseSet();
         return ($cs && $cs->hasAdmissionRule('TimedAdmission')) ?
             array(array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime()),
-                  array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
+                array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
     }
 
     function getFullname($format = 'default')

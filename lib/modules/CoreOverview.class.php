@@ -46,7 +46,7 @@ class CoreOverview implements StudipModule {
         } else {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'dispatch.php/course/overview'));
             if (!$studygroup_mode) {
-                $navigation->addSubNavigation('details', new Navigation(_('Details'), 'details.php'));
+                $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/details/'));
                 $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
             }
 
@@ -57,7 +57,7 @@ class CoreOverview implements StudipModule {
             }
 
             if (!$admission_binding && !$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $GLOBALS['user']->id != 'nobody') {
-                $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'meine_seminare.php?auswahl='.$course_id.'&cmd=suppose_to_kill'));
+                $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'my_courses.php?auswahl='.$course_id.'&cmd=suppose_to_kill'));
             }
         }
         return array('main' => $navigation);

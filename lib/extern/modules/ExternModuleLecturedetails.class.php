@@ -419,7 +419,7 @@ class ExternModuleLecturedetails extends ExternModule {
                     $studip_link .= "&again=1&redirect_to=dispatch.php/course/basicdata/view/".$this->seminar_id."&login=true&new_sem=TRUE";
                 }
                 else {
-                    $studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'details.php?again=1&sem_id=';
+                    $studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/course/details/?again=1&sem_id=';
                     $studip_link .= $this->seminar_id;
                 }
             }

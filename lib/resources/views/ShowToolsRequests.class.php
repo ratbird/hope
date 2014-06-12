@@ -262,7 +262,7 @@ class ShowToolsRequests
                     echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Assets::img('icons/16/blue/edit.png', tooltip(_("Anfrage bearbeiten")))."</a>");
                     echo $zt->cell((($_SESSION['resources_data']['requests_open'][$val['request_id']]) ? '' : Assets::img('icons/16/green/accept.png'))."</font>");
                     echo $zt->cell("<font size=\"-1\">".htmlReady($semObj->seminar_number)."</font>");
-                    echo $zt->cell("<font size=\"-1\"><a href=\"details.php?sem_id=".$semObj->getId()."&send_from_search=true&send_from_search_page=".urlencode($CANONICAL_RELATIVE_PATH_STUDIP."resources.php?view=list_requests")."\">".my_substr(htmlReady($semObj->getName()),0,50)."</a><br></font>");
+                    echo $zt->cell("<font size=\"-1\"><a href=\"dispatch.php/course/details/?sem_id=".$semObj->getId()."&send_from_search=true&send_from_search_page=".urlencode($CANONICAL_RELATIVE_PATH_STUDIP."resources.php?view=list_requests")."\">".my_substr(htmlReady($semObj->getName()),0,50)."</a><br></font>");
                     echo $zt->openCell();
                     echo "<font size=\"-1\">";
                     $k = false;
@@ -311,7 +311,7 @@ class ShowToolsRequests
         $semObj = new Seminar($reqObj->getSeminarId());
         $sem_link = $perm->have_studip_perm('tutor', $semObj->getId()) ?
             "seminar_main.php?auswahl=" . $semObj->getId() :
-            "details.php?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="
+            "dispatch.php/course/details/?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="
             . URLHelper::getLink("resources.php?working_on_request=$request_id");
         ?>
         <form method="POST" action="<?echo URLHelper::getLink('?working_on_request=' . $request_id);?>">

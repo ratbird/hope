@@ -37,7 +37,7 @@
     <? foreach ($sems as $one_sem): ?>
         <tr>
             <td colspan="3">
-                <a href="<?= URLHelper::getLink('details.php?sem_id=' . $one_sem['seminar_id']) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/course/details/?sem_id=' . $one_sem['seminar_id']) ?>">
                     <?= htmlReady($one_sem['Name']) ?>
                     (
                         <?= htmlReady($one_sem['startsem']) ?>

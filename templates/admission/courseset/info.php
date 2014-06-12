@@ -25,7 +25,7 @@
         <?php foreach ($courses as $course_id => $course) { ?>
         <li>
         <? if ($is_limited) : ?>
-            <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $course_id))?>"><?= htmlReady($course) ?></a>
+            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $course_id))?>"><?= htmlReady($course) ?></a>
         <? else : ?>
             <?= htmlReady($course) ?>
         <? endif ?>

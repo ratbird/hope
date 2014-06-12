@@ -37,7 +37,7 @@ function startpage_redirect($page_code) {
     switch ($page_code) {
         case 1:
         case 2:
-            $jump_page = "meine_seminare.php";
+            $jump_page = "dispatch.php/my_courses";
         break;
         case 3:
             $jump_page = "dispatch.php/calendar/schedule";

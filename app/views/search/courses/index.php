@@ -49,7 +49,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
     foreach ((array) $toplist_entries as $key => $entry) {
         $toplist->addLink(
             ($key + 1).". ".$entry['name'],
-            URLHelper::getURL("details.php", array('sem_id' => $entry['seminar_id'],
+            URLHelper::getURL("dispatch.php/course/details/", array('sem_id' => $entry['seminar_id'],
                 'cid' => null,
                 'send_from_search' => 1,
                 'send_from_search_page' => URLHelper::getUrl(basename($_SERVER['PHP_SELF']), array('cid' => null)))

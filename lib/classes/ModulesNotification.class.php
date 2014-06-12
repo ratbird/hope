@@ -387,7 +387,7 @@ class ModulesNotification extends Modules {
                 if ($r_data['chdate'] > $r_data['visitdate']) {
                     $text = _("Die Grunddaten wurden geändert:");
                 }
-                $redirect = '&redirect_to=details.php';
+                $redirect = '&redirect_to=dispatch.php/course/details/';
                 $icon = "icons/16/blue/home.png";
                 break;
             default :

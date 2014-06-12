@@ -3,7 +3,7 @@
 global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-<? if (isset($meldung)) { parse_msg($meldung, "§", "blank", 5); }?>
+<? if (isset($meldung)) { parse_msg($meldung, "ï¿½", "blank", 5); }?>
 
     <? if (!$num_my_sem) { ?>
         <tr>
@@ -35,7 +35,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     <thead >
                         <tr>
                             <th colspan="2" nowrap="nowrap" align="center">
-                                <a href="<?= URLHelper::getLink('dispatch.php/meine_seminare/groups') ?>">
+                                <a href="<?= URLHelper::getLink('dispatch.php/my_courses/groups') ?>">
                                     <?= Assets::img('icons/20/blue/group.png', array('title' => _("Gruppe ändern"), 'class' => 'middle')) ?>
                                 </a>
                             </th>
@@ -81,7 +81,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     foreach ($waitlists as $wait) {
                         // wir sind in einer Anmeldeliste und brauchen Prozentangaben
                         if ($wait["status"] == "claiming") {
-                            // Grün der Farbe nimmt mit Wahrscheinlichkeit ab
+                            // Grï¿½n der Farbe nimmt mit Wahrscheinlichkeit ab
                             $chance_color = dechex(55 + $wait['admission_chance'] * 2);
                         }
 
@@ -106,7 +106,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                             <td width="1%">&nbsp;</td>
 
                             <td width="55%" align="left">
-                                <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $wait['seminar_id'], 'send_from_search_page' => 'meine_seminare.php', 'send_from_search' => 'TRUE'))?>">
+                                <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $wait['seminar_id'], 'send_from_search_page' => 'my_courses.php', 'send_from_search' => 'TRUE'))?>">
                                     <?= htmlReady($seminar_name) ?>
                                 </a>
                             </td>
@@ -152,9 +152,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                 <table class="">
                     <?
                     if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm("dozent")) {
-                        $meldung = "info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§";
+                        $meldung = "infoï¿½" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "ï¿½";
                     } else {
-                        $meldung = "info§" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer pers&ouml;nlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>") . "§";
+                        $meldung = "infoï¿½" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer pers&ouml;nlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>") . "ï¿½";
                     }
                     parse_msg($meldung);
                     ?>
@@ -205,6 +205,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 </td>
 
                                 <td align="right" nowrap="nowrap">
+                                    <? var_dump($values)?>
                                 <?  if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
                                     <a href="<?= URLHelper::getLink('', array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
                                         <?= Assets::img('icons/20/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>

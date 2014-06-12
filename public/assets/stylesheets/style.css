@@ -164,19 +164,14 @@ h1,
 h2 {
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
+h1 span {
+  display: block;
+  font-size: 18px;
+  font-weight: 100;
+  padding: 5px 0;
+}
 p {
   margin: 0 0 10px;
-}
-ul,
-ol {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-ul ul,
-ol ul,
-ul ol,
-ol ol {
-  margin-bottom: 0;
 }
 /* --- Links ---------------------------------------------------------------- */
 a,
@@ -2343,31 +2338,43 @@ select.sidebar-selectlist {
   position: absolute;
 }
 section.contentbox {
-  border-color: #D3D9E5;
+  border-color: #7e92b0;
   border-style: solid;
   border-width: 1px;
   margin-bottom: 10px;
 }
 section.contentbox header {
   padding: 2px;
-  background-color: #E7EBF1;
+  background-color: #d4dbe5;
 }
 section.contentbox header h1 {
-  padding: 0;
+  padding: 5px;
   margin: 0;
-  color: #24437C;
+  color: #536d96;
   border-bottom: none;
   font-size: medium;
+}
+section.contentbox header h1 img {
+  display: inline-block;
+  margin-right: 5px;
 }
 section.contentbox header nav {
   float: right;
 }
-section.contentbox section,
-section.contentbox p {
+section.contentbox header nav a img {
+  margin: 5px;
+}
+section.contentbox section {
   padding: 10px;
 }
+section.contentbox table.default {
+  margin-bottom: 0;
+}
+section.contentbox table.default tbody tr:last-child td {
+  border-bottom: none;
+}
 section.contentbox article {
-  border-color: #D3D9E5;
+  border-color: #7e92b0;
   border-style: solid;
   border-width: 1px;
   margin: 10px;
@@ -2404,7 +2411,7 @@ section.contentbox article header h1 a {
 }
 section.contentbox article footer {
   text-align: center;
-  border-color: #D3D9E5;
+  border-color: #7e92b0;
   border-top-style: solid;
   border-width: 1px;
 }
@@ -4458,6 +4465,31 @@ a.opengraph_info:hover {
 }
 .modal-overlay-ajax.modal-overlay-dark {
   background-image: none, url("../images/ajax-indicator-black.svg");
+}
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  margin-bottom: 0;
+}
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+.list-inline {
+  padding-left: 0;
+  list-style: none;
+  margin-left: -5px;
+}
+.list-inline > li {
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 /* --- Standardvorgaben ----------------------------------------------------- */
 html,

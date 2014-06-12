@@ -204,7 +204,7 @@ function haveDeputyPerm($user_id='') {
  * Database query for retrieving all courses where the current user is deputy 
  * in.
  * 
- * @param string $type are we in the "My courses" list (='meine_seminare') or 
+ * @param string $type are we in the "My courses" list (='my_courses') or
  * in grouping or notification view ('gruppe', 'notification') or outside 
  * Stud.IP in the notification cronjob (='notification_cli')?
  * @param string $sem_number_sql SQL for specifying the semester for a course
@@ -215,7 +215,7 @@ function haveDeputyPerm($user_id='') {
  * @return string The SQL query for getting all courses where the current 
  * user is deputy in
  */
-function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $add_fields, $add_query) {
+function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $add_fields, $add_query, $studygroups = false) {
     global $user;
     switch ($type) {
         // My courses list
@@ -241,6 +241,12 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
                     "LEFT JOIN object_user_visits ouv ON (ouv.object_id=deputies.range_id AND ouv.user_id='$user->id' AND ouv.type='sem')"
                 );
             $where = " WHERE deputies.user_id = '$user->id'";
+            if (Config::get()->MY_COURSES_ENABLE_STUDYGROUPS && !$studygroups) {
+                $where .= " AND seminare.status != 99";
+            }
+            if($studygroups) {
+                $where .= " AND seminare.status = 99";
+            }
             break;
         // Grouping and notification settings for my courses
         case 'gruppe':

@@ -10,7 +10,7 @@
     <b><?= htmlReady($semester) ?></b><br>
 
         <? foreach ($seminar as $id => $inhalt) :?>
-            <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $id))?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $id))?>">
                 <?= htmlReady($inhalt) ?>
             </a><br>
         <?endforeach?>

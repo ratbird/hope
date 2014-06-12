@@ -4,17 +4,17 @@
 # Lifter007: TODO
 # Lifter010: TODO
 /**
-* admission.inc.php
-*
-* the basic library for the admisson system
-*
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      admission
-* @module       admission.inc.php
-* @package      studip_core
-*/
+ * admission.inc.php
+ *
+ * the basic library for the admisson system
+ *
+ *
+ * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
+ * @access       public
+ * @modulegroup      admission
+ * @module       admission.inc.php
+ * @package      studip_core
+ */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -138,31 +138,31 @@ function removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id)
 }
 
 /**
-* This function calculate the remaining places for the complete seminar
-*
-* This function calculate the remaining places for the complete seminar. It considers all the allocations
-* and it avoids rounding errors
-*
-* @param        string  seminar_id  the seminar_id of the seminar to calculate
-* @return       integer
-*
-*/
+ * This function calculate the remaining places for the complete seminar
+ *
+ * This function calculate the remaining places for the complete seminar. It considers all the allocations
+ * and it avoids rounding errors
+ *
+ * @param        string  seminar_id  the seminar_id of the seminar to calculate
+ * @return       integer
+ *
+ */
 
 function get_free_admission ($seminar_id) {
     return Seminar::GetInstance($seminar_id)->getFreeAdmissionSeats();
 }
 
 /**
-* This function numbers a waiting list
-*
-* Use this functions, if a person was moved from the waiting list or there were other changes
-* to the waiting list. The User gets a message, if the parameter is set and the position
-* on the waiting  list has changed.
-*
-* @param        string  seminar_id      the seminar_id of the seminar to calculate
-* @param        boolean send_message        should a system-message be send?
-*
-*/
+ * This function numbers a waiting list
+ *
+ * Use this functions, if a person was moved from the waiting list or there were other changes
+ * to the waiting list. The User gets a message, if the parameter is set and the position
+ * on the waiting  list has changed.
+ *
+ * @param        string  seminar_id      the seminar_id of the seminar to calculate
+ * @param        boolean send_message        should a system-message be send?
+ *
+ */
 
 function renumber_admission ($seminar_id, $send_message = TRUE)
 {
@@ -197,9 +197,9 @@ function renumber_admission ($seminar_id, $send_message = TRUE)
 
                 setTempLanguage($user_id);
                 $message = sprintf(_('Sie sind in der Warteliste der Veranstaltung **%s (%s)** hochgestuft worden. Sie stehen zur Zeit auf Position %s.'),
-                                   $seminar->name,
-                                   view_turnus($seminar->seminar_id),
-                                   $position);
+                    $seminar->name,
+                    view_turnus($seminar->seminar_id),
+                    $position);
                 $subject = sprintf(_('Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert'), $seminar->name);
                 restoreLanguage();
 
@@ -222,15 +222,15 @@ function update_admission ($seminar_id, $send_message = TRUE) {
 }
 
 /**
-* This function updates an admission procedure
-*
-* The function checks, if user could be insert to the seminar.
-* The User gets a message, if he is inserted to the seminar
-*
-* @param        string  seminar_id      the seminar_id of the seminar to calculate
-* @param        boolean send_message        should a system-message be send?
-*
-*/
+ * This function updates an admission procedure
+ *
+ * The function checks, if user could be insert to the seminar.
+ * The User gets a message, if he is inserted to the seminar
+ *
+ * @param        string  seminar_id      the seminar_id of the seminar to calculate
+ * @param        boolean send_message        should a system-message be send?
+ *
+ */
 function normal_update_admission($seminar_id, $send_message = TRUE)
 {
     $messaging=new messaging;
@@ -324,18 +324,18 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
 
 
 /**
-* sets a user on a waiting list for a registration procedure
-*
-* if applicable ($status == 'awaiting') returns the position
-*
-* @param        string  user_id
-* @param        string  seminar_id
-* @param        string  status              'claiming','awaiting','accepted'
-* @param        string  studiengang_id
-* @param        string  comment
-* @return       integer position on waiting list
-*
-*/
+ * sets a user on a waiting list for a registration procedure
+ *
+ * if applicable ($status == 'awaiting') returns the position
+ *
+ * @param        string  user_id
+ * @param        string  seminar_id
+ * @param        string  status              'claiming','awaiting','accepted'
+ * @param        string  studiengang_id
+ * @param        string  comment
+ * @return       integer position on waiting list
+ *
+ */
 function admission_seminar_user_insert($user_id, $seminar_id, $status, $studiengang_id = '', $comment = '')
 {
     if ($status == 'accepted') {
@@ -368,16 +368,16 @@ function admission_seminar_user_insert($user_id, $seminar_id, $status, $studieng
 }
 
 /**
-* returns the position for a user on a waiting list
-*
-* if the user is not found false is returned, return true if the user is found but
-* no position is available
-*
-* @param        string  user_id
-* @param        string  seminar_id
-* @return       integer position in waiting list or false if not found
-*
-*/
+ * returns the position for a user on a waiting list
+ *
+ * if the user is not found false is returned, return true if the user is found but
+ * no position is available
+ *
+ * @param        string  user_id
+ * @param        string  seminar_id
+ * @return       integer position in waiting list or false if not found
+ *
+ */
 function admission_seminar_user_get_position($user_id, $seminar_id)
 {
     $query = "SELECT IFNULL(position, 'na')

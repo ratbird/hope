@@ -124,7 +124,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
     /**
      * Returns a navigation-object with the grey/red icon for displaying in the
-     * meine_seminare.php page.
+     * my_courses.php page.
      * @param string  $course_id
      * @param int $last_visit
      * @param string|null  $user_id
@@ -156,6 +156,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
             $title = $new_ones > 1 ? sprintf(_("%s neue Blubber"), $new_ones) : _("1 neuer Blubber");
             $icon->setImage(Assets::image_path("icons/20/red/blubber"), array('title' => $title));
             $icon->setTitle($title);
+            $icon->setBadgeNumber($new_ones);
         } else {
             $icon->setImage(Assets::image_path("icons/20/grey/blubber"), array('title' => $this->getDisplayTitle()));
         }

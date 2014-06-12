@@ -15,8 +15,7 @@ class CoreDocuments implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Dateibereich'), "seminar_main.php?auswahl=$course_id&redirect_to=folder.php");
-        $navigation->setImage('icons/16/grey/forum.png');
-
+        $navigation->setImage('icons/16/grey/files.png');
         return $navigation;
     }
     
@@ -24,7 +23,6 @@ class CoreDocuments implements StudipModule {
         $navigation = new Navigation(_('Dateien'));
         $navigation->setImage('icons/16/white/files.png');
         $navigation->setActiveImage('icons/16/black/files.png');
-
         $navigation->addSubNavigation('tree', new Navigation(_('Ordneransicht'), "folder.php?cmd=tree"));
         $navigation->addSubNavigation('all', new Navigation(_('Alle Dateien'), "folder.php?cmd=all"));
         return array('files' => $navigation);

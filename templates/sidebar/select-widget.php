@@ -10,6 +10,6 @@
     <? endforeach; ?>
     </select>
     <noscript>
-        <?= Studip\Button::create(_('Auswählen')) ?>
+        <?= Studip\Button::create(_('Zuweisen')) ?>
     </noscript>
 </form>

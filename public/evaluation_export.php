@@ -55,7 +55,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough")) {
   include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 }
 
-//$i_page = "meine_seminare.php";
+//$i_page = "my_courses.php";
 //$EXPORT_ENABLE = TRUE;
 //$GLOBALS['PATH_EXPORT'] = "export";
 // -- here you have to put initialisations for the current page

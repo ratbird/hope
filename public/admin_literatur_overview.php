@@ -452,7 +452,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     }
                     $content .= "<b>" . _("Veranstaltungen:") . "</b>&nbsp;&nbsp;";
                     foreach ($_SESSION['_lit_data'][$cid]['sem_data'] as $sem_data){
-                        $content .= '<a href="details.php?sem_id=' . $sem_data['Seminar_id'] . '&send_from_search=1&send_from_search_page=' . URLHelper::getURL() . '">' . htmlReady(my_substr($sem_data["Name"],0,50)) . "</a>, ";
+                        $content .= '<a href="dispatch.php/course/details/?sem_id=' . $sem_data['Seminar_id'] . '&send_from_search=1&send_from_search_page=' . URLHelper::getURL() . '">' . htmlReady(my_substr($sem_data["Name"],0,50)) . "</a>, ";
                         $estimated_p += $sem_data['admission_turnout'];
                         $participants += $sem_data['participants'];
                     }

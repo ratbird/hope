@@ -62,7 +62,7 @@ class Search_CoursesController extends AuthenticatedController
         $sem_browse_data['show_class'] = $_SESSION['sem_portal']['bereich'];
 
         if (!$GLOBALS['perm']->have_perm("root")){
-            $this->sem_browse_obj->target_url="details.php";
+            $this->sem_browse_obj->target_url="dispatch.php/course/details/";
             $this->sem_browse_obj->target_id="sem_id";
         } else {
             $this->sem_browse_obj->target_url="seminar_main.php";

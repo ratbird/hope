@@ -926,11 +926,9 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     echo "</tbody></table><p>&nbsp;</p>";
 
     // search
-    $widget = new SearchWidget();
-    $widget->add(_('Im Wiki suchen'),
-                 URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)),
-                 'searchfor',
-                 array('searchcurrentversions' => _('Nur in aktuellen Versionen')));
+    $widget = new SearchWidget(URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)));
+    $widget->addNeedle(_('Im Wiki suchen'), 'searchfor', true);
+    $widget->addFilter(_('Nur in aktuellen Versionen'), 'searchcurrentversions');
     Sidebar::get()->addWidget($widget);
 
     showPageFrameEnd(array());
@@ -1293,11 +1291,9 @@ function getShowPageInfobox($keyword, $latest_version)
     $sidebar->addWidget($widget);
 
     // Suche
-    $widget = new SearchWidget();
-    $widget->add(_('Im Wiki suchen'),
-                 URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)),
-                 'searchfor',
-                 array('searchcurrentversions' => _('Nur in aktuellen Versionen')));
+    $widget = new SearchWidget(URLHelper::getLink('?view=search&keyword=' . urlencode($keyword)));
+    $widget->addNeedle(_('Im Wiki suchen'), 'searchfor', true);
+    $widget->addFilter(_('Nur in aktuellen Versionen'), 'searchcurrentversions');
     $sidebar->addWidget($widget);
 
     // Versionen

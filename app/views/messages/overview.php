@@ -99,28 +99,21 @@ if (count($tags)) {
 $actions = new ActionsWidget();
 $actions->addLink(
     _("Neue Nachricht schreiben"),
-    URLHelper::getURL("dispatch.php/messages/write"),
-    null,
-    array('data-dialog' => "buttons=false")
+    $controller->url_for('messages/write'),
+    'icons/16/blue/add/mail.png',
+    array('data-dialog' => '')
 );
 if (Navigation::getItem('/messaging/messages/inbox')->isActive()) {
     $actions->addLink(
-        _("Alle als gelesen markieren"),
-        URLHelper::getURL("dispatch.php/messages/overview", array('read_all' => 1)),
-        null,
-        array()
+        _('Alle als gelesen markieren'),
+        $controller->url_for('messages/overview', array('read_all' => 1))
     );
 }
 $sidebar->addWidget($actions);
 
-$search = new SearchWidget();
-$search->add(_('Nachrichten durchsuchen'),
-             URLHelper::getLink('?'),
-             'search',
-             array(
-                 'search_subject' => _('Betreff'),
-                 'search_content' => _('Inhalt'),
-                 'search_autor'   => _('AutorIn'),
-             ),
-             array('placeholder' => _('Nachrichten durchsuchen')));
+$search = new SearchWidget(URLHelper::getLink('?'));
+$search->addNeedle(_('Nachrichten durchsuchen'), 'search', true);
+$search->addFilter(_('Betreff'), 'search_subject');
+$search->addFilter(_('Inhalt'), 'search_content');
+$search->addFilter(_('AutorIn'), 'search_autor');
 $sidebar->addWidget($search);

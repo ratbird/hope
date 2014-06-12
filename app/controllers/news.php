@@ -603,13 +603,15 @@ class NewsController extends StudipController
         $this->sidebar->setImage('sidebar/news-sidebar.png');
         if ($GLOBALS['perm']->have_perm('tutor')) {
             $widget = new ViewsWidget();
-            $widget->addLink(_('Alle Ankündigungen'), URLHelper::getURL('dispatch.php/news/admin_news/all'), $this->area_type ? '' : 'icons/16/red/arr_1right');
-            if ($GLOBALS['perm']->have_perm('root'))
-                $widget->addLink(_('System'), URLHelper::getURL('dispatch.php/news/admin_news/global'), $this->area_type != 'global' ? '' : 'icons/16/red/arr_1right');
-            if ($GLOBALS['perm']->have_perm('dozent'))
-                $widget->addLink(_('Einrichtungen'), URLHelper::getURL('dispatch.php/news/admin_news/inst'), $this->area_type != 'inst' ? '' : 'icons/16/red/arr_1right');
-            $widget->addLink(_('Veranstaltungen'), URLHelper::getURL('dispatch.php/news/admin_news/sem'), $this->area_type != 'sem' ? '' : 'icons/16/red/arr_1right');
-            $widget->addLink(_('Profil'), URLHelper::getURL('dispatch.php/news/admin_news/user'), $this->area_type != 'user' ? '' : 'icons/16/red/arr_1right');
+            $widget->addLink(_('Alle Ankündigungen'), URLHelper::getURL('dispatch.php/news/admin_news/all'))->setActive(!$this->area_type);
+            if ($GLOBALS['perm']->have_perm('root')) {
+                $widget->addLink(_('System'), URLHelper::getURL('dispatch.php/news/admin_news/global'))->setActive($this->area_type === 'global');
+            }
+            if ($GLOBALS['perm']->have_perm('dozent')) {
+                $widget->addLink(_('Einrichtungen'), URLHelper::getURL('dispatch.php/news/admin_news/inst'))->setActive($this->area_type === 'inst');
+            }
+            $widget->addLink(_('Veranstaltungen'), URLHelper::getURL('dispatch.php/news/admin_news/sem'))->setActive($this->area_type === 'inst');
+            $widget->addLink(_('Profil'), URLHelper::getURL('dispatch.php/news/admin_news/user'))->setActive($this->area_type === 'user');
             $this->sidebar->addWidget($widget);
         }
         $widget = new ActionsWidget();

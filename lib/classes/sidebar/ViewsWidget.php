@@ -6,5 +6,6 @@ class ViewsWidget extends LinksWidget
         parent::__construct();
         
         $this->title = _('Ansichten');
+        $this->addCSSClass('sidebar-views');
     }
 }

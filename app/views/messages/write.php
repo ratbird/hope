@@ -159,7 +159,7 @@
         </table>
     </div>
 
-    <div style="text-align: center;">
+    <div style="text-align: center;" data-dialog-button>
         <?= \Studip\Button::create(_("abschicken"), null, array('onclick' => "STUDIP.Messages.send(jQuery(this).closest('form')[0]);")) ?>
     </div>
 

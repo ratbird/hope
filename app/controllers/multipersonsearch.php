@@ -125,7 +125,7 @@ class MultipersonsearchController extends AuthenticatedController {
         
         // abort
         if (Request::submitted('abort')) {
-            $this->redirect($_SESSION['multipersonsearch_' . $this->name . '_pageURL']);
+            $this->redirect($_SESSION['multipersonsearch'][$this->name]['pageURL']);
         }
         // search
         elseif (Request::submitted('submit_search')) {
@@ -200,9 +200,9 @@ class MultipersonsearchController extends AuthenticatedController {
 
                 }
             }
-            $_SESSION['multipersonsearch_' . $this->name . '_selected'] = $previousSelectedUsers;
-            $_SESSION['multipersonsearch_' . $this->name . '_added'] = $addedUsers;
-            $_SESSION['multipersonsearch_' . $this->name . '_removed'] = $removedUsers;
+            $_SESSION['multipersonsearch'][$this->name]['selected'] = $previousSelectedUsers;
+            $_SESSION['multipersonsearch'][$this->name]['added'] = $addedUsers;
+            $_SESSION['multipersonsearch'][$this->name]['removed'] = $removedUsers;
             // redirect to action which handles the form data
             $this->redirect($mp->getExecuteURL());
         }

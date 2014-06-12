@@ -92,6 +92,10 @@ class MyCoursesController extends AuthenticatedController
             ? Config::get()->MY_COURSES_FORCE_GROUPING
             : 'sem_number';
 
+        if($forced_grouping == 'not_grouped') {
+            $forced_grouping = 'sem_number';
+        }
+
         if (!$group_field) {
             $group_field = 'sem_number';
         }
@@ -100,6 +104,8 @@ class MyCoursesController extends AuthenticatedController
         }
 
         $this->group_field = $group_field === 'not_grouped' ? 'sem_number' : $group_field;
+
+
         // Needed parameters for selecting courses
         $params = array('group_field'         => $this->group_field,
                         'order_by'            => $order_by,
@@ -184,6 +190,10 @@ class MyCoursesController extends AuthenticatedController
 
         $this->semesters     = SemesterData::GetSemesterArray();
         $forced_grouping     = Config::get()->MY_COURSES_FORCE_GROUPING;
+        if($forced_grouping == 'not_grouped') {
+            $forced_grouping = 'sem_number';
+        }
+
         $no_grouping_allowed = ($forced_grouping == 'sem_number' || !in_array($forced_grouping, getValidGroupingFields()));
 
         $group_field = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ?: $forced_grouping;
@@ -519,6 +529,7 @@ class MyCoursesController extends AuthenticatedController
                 // tlx: If array is 2-dimensional, merge it into a 1-dimensional
                 $courses = call_user_func_array('array_merge', $courses);
             }
+
             foreach ($courses as $course) {
                 if ($this->check_course($course)) {
                     return true;
@@ -560,6 +571,7 @@ class MyCoursesController extends AuthenticatedController
      */
     function check_course($seminar_content)
     {
+
         if ($seminar_content['visitdate'] <= $seminar_content['chdate'] || $seminar_content['last_modified'] > 0) {
             $last_modified = $seminar_content['visitdate'] <= $seminar_content['chdate']
                               && $seminar_content['chdate'] > $seminar_content['last_modified']

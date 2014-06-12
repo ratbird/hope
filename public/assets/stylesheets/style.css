@@ -1833,7 +1833,7 @@ td.infoboxrahmen {
 }
 .sidebar {
   background: #fff;
-  border: 1px solid #636a71;
+  border: 1px solid #8a8f95;
   border-left: 0;
   display: inline-block;
   flex: 0 0 auto;
@@ -1915,28 +1915,16 @@ ul.widget-list > li {
 }
 .widget-links.sidebar-navigation > li.active {
   background: #a9b6cb;
-  -webkit-box-shadow: inset 0 0 0 1px #28497c;
-  -moz-box-shadow: inset 0 0 0 1px #28497c;
-  box-shadow: inset 0 0 0 1px #28497c;
+  -webkit-box-shadow: inset 0 0 0 1px #7e92b0;
+  -moz-box-shadow: inset 0 0 0 1px #7e92b0;
+  box-shadow: inset 0 0 0 1px #7e92b0;
   position: relative;
   display: inline-block;
   margin-right: -12px;
   display: block;
 }
 .widget-links.sidebar-navigation > li.active:before {
-  border: 10px solid rgba(40,73,124,0);
-  content: "";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-left-color: #28497c;
-  left: 100%;
-  top: 50%;
-  margin-top: -10px;
-}
-.widget-links.sidebar-navigation > li.active:after {
-  border: 9px solid rgba(169,182,203,0);
+  border: 10px solid rgba(169,182,203,0);
   content: "";
   height: 0;
   width: 0;
@@ -1945,7 +1933,7 @@ ul.widget-list > li {
   border-left-color: #a9b6cb;
   left: 100%;
   top: 50%;
-  margin-top: -9px;
+  margin-top: -10px;
 }
 .widget-links.sidebar-navigation > li.active a {
   color: #fff;

@@ -276,7 +276,7 @@ class MyRealmModel
             }
 
             if ($modified || $count > 0) {
-                $nav = new Navigation('schedule', 'dates.php');
+                $nav = new Navigation('schedule', 'dispatch.php/course/dates');
                 if ($modified) {
                     $nav->setImage('icons/20/red/new/schedule.png', array('title' => _('Es sind neue Termine vorhanden')));
                 } elseif ($count) {

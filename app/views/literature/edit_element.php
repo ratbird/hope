@@ -73,7 +73,7 @@ $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
 $widget = new ActionsWidget();
 $widget->addLink(_('Literatur suchen'), URLHelper::getLink('dispatch.php/literature/search'), 'icons/16/black/search.png');
-$widget->addLink(_('Literaturlisten bearbeiten'), URLHelper::getLink('dispatch.php/literature/edit_list'), 'icons/16/black/add/literature.png');
+$widget->addLink(_('Literaturlisten bearbeiten'), URLHelper::getLink('dispatch.php/literature/edit_list?_range_id=self'), 'icons/16/black/literature.png');
 $sidebar->addWidget($widget);
 ob_start();
 ?>

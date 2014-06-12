@@ -299,7 +299,7 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
 }
 
 //Assi-Modus an und gesetztes Object loeschen solange keine Veranstaltung angelegt
-if (!isset($_SESSION['sem_create_data']["sem_entry"])) {
+if (!$_SESSION['sem_create_data']["sem_entry"]) {
     $_SESSION['links_admin_data']["assi"]=TRUE;
     closeObject();
 } else
@@ -2054,24 +2054,24 @@ elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
             </td>
         </tr>
         <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
-        <tr>
-            <td class="blank">
-            <p class="info">
-            <?=_("Sie können ein Kopie der letzten angelegten Veranstaltung anlegen:");?>
-            <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=sprintf(_("Kopie anlegen (%s)"), htmlReady(stripslashes($_SESSION['sem_create_data_backup']['sem_name'])). ' - ' . strftime('%x %X',$_SESSION['sem_create_data_backup']['timestamp']) );?></a>.
-            </p>
-            </td>
-        </tr>
+            <tr>
+                <td class="blank">
+                    <p class="info">
+                        <?=_("Sie können ein Kopie der letzten angelegten Veranstaltung anlegen:");?>
+                        <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=sprintf(_("Kopie anlegen (%s)"), htmlReady(stripslashes($_SESSION['sem_create_data_backup']['sem_name'])). ' - ' . strftime('%x %X',$_SESSION['sem_create_data_backup']['timestamp']) );?></a>.
+                    </p>
+                </td>
+            </tr>
         <? endif ?>
         <? if ($GLOBALS['STUDYGROUPS_ENABLE']) : ?>
-        <tr>
-            <td class="blank">
-            <p class="info">
-            <?=_("Sie können auch Studiengruppen anlegen, die funktional deutlich eingeschränkt sind und vor allem Formen selbstorganisierten Lernens unterstützen sollen:")?>
-            <a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
-            </p>
-            </td>
-        </tr>
+            <tr>
+                <td class="blank">
+                    <p class="info">
+                        <?=_("Sie können auch Studiengruppen anlegen, die funktional deutlich eingeschränkt sind und vor allem Formen selbstorganisierten Lernens unterstützen sollen:")?>
+                        <a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
+                    </p>
+                </td>
+            </tr>
         <? endif ?>
     </table>
 <?
@@ -2083,16 +2083,16 @@ elseif ((!$level) || ($level == 1)) {
     Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr>
-            <td class="blank">&nbsp;
-                <?
-                if ($errormsg) parse_msg($errormsg);
-                ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" valign="top">
-                <div class="info">
+    <tr>
+        <td class="blank">&nbsp;
+            <?
+            if ($errormsg) parse_msg($errormsg);
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" valign="top">
+            <div class="info">
                 <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie nun Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?
                 if ($cmd=="do_copy") {
@@ -2103,12 +2103,9 @@ elseif ((!$level) || ($level == 1)) {
                 <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
             </div>
         </td>
-        <td class="blank" align="right" valign="top">
-            <img src="<?= localePictureUrl('hands01.jpg') ?>" border="0">
-        </td>
     </tr>
     <tr>
-    <td class="blank" colspan=2>
+    <td class="blank">
     <form method="POST" action="<? echo URLHelper::getLink() ?>">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="form" value=1>
@@ -2180,6 +2177,10 @@ elseif ((!$level) || ($level == 1)) {
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                 <?=_("Veranstaltungsnummer:"); ?>
             </td>
+            <td class="<? echo $cssSw->getClass() ?>" width="30%">
+                &nbsp; <input type="text" name="sem_nummer" size=20 maxlength=32 value="<? echo  htmlReady(stripslashes($_SESSION['sem_create_data']["sem_nummer"])) ?>">
+                <?= tooltipIcon(_("Fall Sie eine eindeutige Veranstaltungsnummer für diese Veranstaltung kennen, geben Sie diese bitte hier ein.")) ?>
+            </td>
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                 <?=_("ECTS-Punkte:"); ?>
             </td>
@@ -2188,92 +2189,73 @@ elseif ((!$level) || ($level == 1)) {
                 <?= tooltipIcon(_("ECTS-Punkte, die in dieser Veranstaltung erreicht werden können.")) ?>
             </td>
         </tr>
-        <tr>
-            <td class="blank">
-            <form method="POST" action="<? echo URLHelper::getLink() ?>">
-            <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden" name="form" value=1>
-                <table cellspacing=0 cellpadding=2 border=0 width="99%" align="center">
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('Weiter').' >>', 'jump_next') ?>
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Name der Veranstaltung:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
-                            &nbsp; <input type="text" name="sem_name" size=58 maxlength=254 value="<? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_name"])) ?>">
-                            <?= tooltipIcon(_("Bitte geben Sie hier einen aussagekräftigen, aber möglichst knappen Titel für die Veranstaltung ein. Dieser Eintrag erscheint innerhalb Stud.IPs durchgehend zur Identifikation der Veranstaltung.")) ?>
-                            <font color="red" size=+2>*</font>
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Untertitel:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
-                            &nbsp; <input type="text" name="sem_untert" size=58 maxlength=254 value="<? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_untert"]))?>">
-                            <?= tooltipIcon(_("Der Untertitel ermöglicht eine genauere Beschreibung der Veranstaltung.")) ?>
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Typ der Veranstaltung:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                            &nbsp; <select name="sem_status">
-                            <?
-                                foreach ($SEM_TYPE as $sem_type_id => $sem_type) {
-                                    if ($sem_type["class"] == $_SESSION['sem_create_data']["sem_class"])
-                                        printf("<option %s value=%s>%s</option>",
-                                               $_SESSION['sem_create_data']["sem_status"] == $sem_type_id
-                                                 ? "selected"
-                                                 : "",
-                                               $sem_type_id,
-                                               $sem_type["name"]);
-                                }
-                            ?>
-                            </select> <br>
-                            &nbsp; <font size="-1"> <?=_("in der Kategorie"); ?> <b><? echo $SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["name"] ?></b></font>
-                            <?= tooltipIcon(_("Über den Typ der Veranstaltung werden die Veranstaltungen innerhalb von Listen gruppiert.")) ?>
-                            <font color="red" size=+2>*</font>
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Art der Veranstaltung:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                            &nbsp; <input type="text" name="sem_art" size=30 maxlength=254 value="<? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_art"])) ?>">
-                            <font size=-1><?=_("(eigene Beschreibung)"); ?></font>
-                            <?= tooltipIcon(_("Hier können Sie eine frei wählbare Bezeichnung für die Art der Veranstaltung wählen.")) ?>
-                        </td>
-                    </tr>
-                    <?
-                    if (!$SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["compact_mode"]) {
-                    ?>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("Veranstaltungsnummer:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="30%">
-                            &nbsp; <input type="text" name="sem_nummer" size=20 maxlength=32 value="<? echo  htmlReady(stripslashes($_SESSION['sem_create_data']["sem_nummer"])) ?>">
-                            <?= tooltipIcon(_("Fall Sie eine eindeutige Veranstaltungsnummer für diese Veranstaltung kennen, geben Sie diese bitte hier ein.")) ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("ECTS-Punkte:"); ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="60%">
-                            &nbsp; <input type="text" name="sem_ects" size=6 maxlength=32 value="<? echo  htmlReady(stripslashes($_SESSION['sem_create_data']["sem_ects"])) ?>">
-                            <?= tooltipIcon(_("ECTS-Punkte, die in dieser Veranstaltung erreicht werden können.")) ?>
-                        </td>
-                    </tr>
-                    <?
+    <?
+    }
+    if (!$SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["compact_mode"]) {
+        ?>
+        <tr <? $cssSw->switchClass() ?>>
+            <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+                <?=_("Teilnahme- beschr&auml;nkung:"); ?>
+            </td>
+            <td class="<? echo $cssSw->getClass() ?>" width="30%" colspan=1>
+                &nbsp; <input type="radio" name="sem_admission" value=0 <? if (!$_SESSION['sem_create_data']["sem_admission"]) echo 'checked'?>>
+                <?=_("Nein"); ?> &nbsp; <br>
+                &nbsp; <input type="radio" name="sem_admission" value=1 <? if ($_SESSION['sem_create_data']["sem_admission"]==1) echo 'checked'?>>
+                <?=_("Ja"); ?> <br>
+            </td>
+            <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+                <?=_("maximale Teilnehmeranzahl:"); ?>
+            </td>
+            <td class="<? echo $cssSw->getClass() ?>" width="50%">
+                &nbsp; <input type="text" name="sem_turnout" size=6 maxlength=5 value="<? echo (int)$_SESSION['sem_create_data']["sem_turnout"] ?>">
+                <?= tooltipIcon(_("Geben Sie hier die maximale Teilnehmerzahl an. Stud.IP kann auf Wunsch für Sie ein Anmeldeverfahren starten, wenn Sie »Teilnahmebeschränkung: per Losverfahren / nach Anmeldereihenfolge« benutzen.")) ?>
+            </td>
+        </tr>
+        <tr<? $cssSw->switchClass() ?>>
+            <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+                <?=_("Anmeldemodus:"); ?>
+            </td>
+            <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
+                &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($_SESSION['sem_create_data']["sem_payment"] == 0) echo 'checked'?>>
+                <?= _("direkter Eintrag"); ?>&nbsp;
+                <?= tooltipIcon(_("Neue Teilnehmer werden direkt in die Veranstaltung eingetragen.")) ?>
+                &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($_SESSION['sem_create_data']["sem_payment"] == 1) echo 'checked'?>>
+                <?= _("vorl&auml;ufiger Eintrag"); ?>&nbsp;
+                <?= tooltipIcon(_("Neue Teilnehmer bekommen den Status \"vorläufig aktzeptiert\". Sie können von Hand die zugelassenen Teilnehmer auswählen. Vorläufig akzeptierte Teilnehmer haben keinen Zugriff auf die Veranstaltung.")) ?>
+            </td>
+        </tr>
+    <?
+    }
+    ?>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+            <?=_("Beschreibung/ Kommentar:"); ?>
+        </td>
+        <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
+            &nbsp; <textarea name="sem_desc" cols=58 rows=6><? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_desc"])) ?></textarea>
+            <?= tooltipIcon(_("Hier geben Sie bitte den eigentlichen Kommentartext der Veranstaltung (analog zum Vorlesungskommentar) ein.")) ?>
+        </td>
+    </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+            <?=_("Semester:"); ?>
+        </td>
+        <td class="<? echo $cssSw->getClass() ?>" width="20%">
+            &nbsp;
+            <?
+            $all_semester = $semester->getAllSemesterData();
+
+            echo "<select name=\"sem_start_time\">";
+            if(!$GLOBALS['ASSI_SEMESTER_PRESELECT'])
+            {
+                echo "<option value=\"-1\" >["._('bitte auswählen')."]</option>";
+            }
+            foreach ($all_semester as $key => $semester) {
+                if ((!$semester["past"]) && ($semester["ende"] > time())) {
+                    if ($_SESSION['sem_create_data']["sem_start_time"] ==$semester["beginn"]) {
+                        echo "<option value=".$semester["beginn"]." selected>", htmlReady($semester["name"]), "</option>";
+                    } else {
+                        echo "<option value=".$semester["beginn"].">", htmlReady($semester["name"]), "</option>";
                     }
                 }
             }
@@ -2488,8 +2470,16 @@ elseif ($level == 2) {
     Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr >
-            <td class="blank">&nbsp;
+    <tr >
+        <td class="blank">&nbsp;
+            <?
+            if ($errormsg) parse_msg($errormsg);
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" valign="top">
+            <div class="info">
                 <?
                 if ($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["bereiche"])
                     echo "<b>"._("Schritt 2: Personendaten, Studienbereiche und weitere Angaben zur Veranstaltung")."</b><br><br>";
@@ -2497,43 +2487,43 @@ elseif ($level == 2) {
                     echo "<b>"._("Schritt 2: Personendaten und weitere Angaben zur Veranstaltung")." </b><br><br>";
                 ?>
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank">
-            <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
-            <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden" name="form" value=2>
-                <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) .'&nbsp;'. Button::create(_('Weiter').' >>', 'jump_next') ?>
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                        <?
-                        echo get_title_for_status('dozent', count($_SESSION['sem_create_data']["sem_doz"]), $_SESSION['sem_create_data']["sem_status"]);
-                        ?>
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="40%">
-                            <?
-                            if (sizeof($_SESSION['sem_create_data']["sem_doz"]) >0) {
-                        asort($_SESSION['sem_create_data']["sem_doz"]);
-                        echo "<table>";
-                        $i = 0;
-                                foreach($_SESSION['sem_create_data']["sem_doz"] as $key=>$val) {
-                                    echo "<tr>";
-                                     $href = "?delete_doz=".get_username($key)."#anker";
-                                     echo "<td>";
-                                     echo "<a href='".URLHelper::getLink($href)."'>";
-                                     echo Assets::img('icons/16/blue/trash.png');
-                                     echo "</a>";
-                                     echo "</td>";
+            </div>
+        </td>
+    </tr>
+    <tr>
+    <td class="blank">
+    <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
+    <?= CSRFProtection::tokenTag() ?>
+    <input type="hidden" name="form" value=2>
+    <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" width="10%">
+            &nbsp;
+        </td>
+        <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
+            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) .'&nbsp;'. Button::create(_('Weiter').' >>', 'jump_next') ?>
+        </td>
+    </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+            <?
+            echo get_title_for_status('dozent', count($_SESSION['sem_create_data']["sem_doz"]), $_SESSION['sem_create_data']["sem_status"]);
+            ?>
+        </td>
+        <td class="<? echo $cssSw->getClass() ?>" width="40%">
+            <?
+            if (sizeof($_SESSION['sem_create_data']["sem_doz"]) >0) {
+                asort($_SESSION['sem_create_data']["sem_doz"]);
+                echo "<table>";
+                $i = 0;
+                foreach($_SESSION['sem_create_data']["sem_doz"] as $key=>$val) {
+                    echo "<tr>";
+                    $href = "?delete_doz=".get_username($key)."#anker";
+                    echo "<td>";
+                    echo "<a href='".URLHelper::getLink($href)."'>";
+                    echo Assets::img('icons/16/blue/trash.png');
+                    echo "</a>";
+                    echo "</td>";
 
                     // move up (if not first)
                     echo "<td>";
@@ -2928,16 +2918,16 @@ elseif ($level == 3) {
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr>
-            <td class="blank">&nbsp;
-                <?
-                if ($errormsg) parse_msg($errormsg);
-                ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" valign="top">
-                <div class="info">
+    <tr>
+        <td class="blank">&nbsp;
+            <?
+            if ($errormsg) parse_msg($errormsg);
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" valign="top">
+            <div class="info">
                 <b><?=_("Schritt 3: Termindaten"); ?></b><br><br>
                 <? if ($_SESSION['sem_create_data']["term_art"] ==0)
                     print _("Bitte geben Sie hier ein, an welchen Tagen die Veranstaltung stattfindet. Wenn Sie nur einen Wochentag wissen, brauchen Sie nur diesen angeben.<br>Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
@@ -2947,12 +2937,9 @@ elseif ($level == 3) {
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
             </div>
         </td>
-        <td class="blank" align="right" valign="top">
-            <img src="<?= localePictureUrl('hands03.jpg') ?>" border="0">
-        </td>
     </tr>
     <tr>
-    <td class="blank" colspan=2>
+    <td class="blank">
     <form method="POST" name="Formular" action="<? echo URLHelper::getLink() ?>">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="form" value=3>
@@ -2973,32 +2960,9 @@ elseif ($level == 3) {
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                 &nbsp; <?=_("Daten &uuml;ber die Termine:"); ?>
             </td>
-        </tr>
-        <tr>
-            <td class="blank">
-            <form method="POST" name="Formular" action="<? echo URLHelper::getLink() ?>">
-            <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden" name="form" value=3>
-                <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
-                        </td>
-                    </tr>
-                    <?
-                        if ($_SESSION['sem_create_data']["term_art"] == 0)
-                            {
-                            ?>
-                            <tr <? $cssSw->switchClass() ?>>
-                                <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                                    &nbsp; <?=_("Daten &uuml;ber die Termine:"); ?>
-                                </td>
-                                <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                                    &nbsp; <b><font size=-1><?=_("Regelm&auml;&szlig;ige Veranstaltung"); ?></font></b><br><br>
-                                    &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung &auml;ndern m&ouml;chten, gehen Sie bitte auf die erste Seite zur&uuml;ck."); ?></font><br><br>
+            <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
+                &nbsp; <b><font size=-1><?=_("Regelm&auml;&szlig;ige Veranstaltung"); ?></font></b><br><br>
+                &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung &auml;ndern m&ouml;chten, gehen Sie bitte auf die erste Seite zur&uuml;ck."); ?></font><br><br>
 
                 <br><br>&nbsp; <font size=-1><?=_("Die Veranstaltung findet immer zu diesen Zeiten statt:"); ?></font><br><br>
                 <?
@@ -3216,16 +3180,16 @@ elseif ($level == 4) {
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr>
-            <td class="blank">&nbsp;
-                <?
-                if ($errormsg) parse_msg($errormsg);
-                ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" valign="top">
-                <div class="info">
+    <tr>
+        <td class="blank">&nbsp;
+            <?
+            if ($errormsg) parse_msg($errormsg);
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" valign="top">
+            <div class="info">
                 <b><?=_("Schritt 4: Raumangaben"); ?></b><br><br>
                 <?
                 if ($GLOBALS['RESOURCES_ENABLE']) {
@@ -3240,12 +3204,9 @@ elseif ($level == 4) {
                     print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden.")."<br><br>";
                 ?>
         </td>
-        <td class="blank" align="right" valign="top">
-            <img src="<?= localePictureUrl('hands04.jpg') ?>" border="0">
-        </td>
     </tr>
     <tr>
-    <td class="blank" colspan=2>
+    <td class="blank">
     <form method="POST" name="form_4" action="<? echo URLHelper::getLink() ?>#anker">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="form" value=4>
@@ -3326,21 +3287,9 @@ elseif ($level == 4) {
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
                 &nbsp;
             </td>
-        </tr>
-        <tr>
-            <td class="blank">
-            <form method="POST" name="form_4" action="<? echo URLHelper::getLink() ?>#anker">
-            <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden" name="form" value=4>
-                <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
-                        </td>
-                    </tr>
+            <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=3>
+                <font size="-1"><b><?=_("Raumbuchungen"); ?></b></font><br><br>
+                <table border="0" width="100%" cellspaceing="2" cellpadding="0">
                     <?
                     print "<font size=\"-1\">"._("Sie k&ouml;nnen zu jedem Termin einen Raum eintragen. Diese Eintragung wird beim Speichern der Veranstaltung in der Raumverwaltung gebucht.")."</font><br>";
                     if ($_SESSION['sem_create_data']["term_art"] == 0) {

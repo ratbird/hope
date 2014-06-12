@@ -16,7 +16,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-
+header('Location:dispatch.php/my_courses');
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -81,7 +81,7 @@ require_once ('lib/dates.inc.php');         // Semester-Namen fuer Admins
 require_once ('lib/admission.inc.php');     // Funktionen der Teilnehmerbegrenzung
 require_once ('lib/messaging.inc.php');
 require_once ('lib/classes/ModulesNotification.class.php');
-require_once ('lib/statusgruppe.inc.php');      // Funktionen für Statusgruppen
+require_once ('lib/statusgruppe.inc.php');      // Funktionen fï¿½r Statusgruppen
 require_once ('lib/object.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
 
@@ -116,21 +116,21 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 
     //Ausgabe bei bindenden Veranstaltungen, loeschen nicht moeglich!
     if ($cmd == "no_kill") {
-        $meldung = "info§" . sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt. Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."), htmlReady($current_seminar->getName())) . "<br>";
+        $meldung = "infoï¿½" . sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt. Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."), htmlReady($current_seminar->getName())) . "<br>";
     }
 
     //Sicherheitsabfrage fuer abonnierte Veranstaltungen
     if ($cmd == "suppose_to_kill") {
         if(LockRules::Check($current_seminar->getId(), 'participants')){
             $lockdata = LockRules::getObjectRule($current_seminar->getId());
-            $meldung = "error§" . sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
-            if($lockdata['description']) $meldung .= '§info§' . formatLinks($lockdata['description']);
+            $meldung = "errorï¿½" . sprintf(_("Sie kï¿½nnen das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
+            if($lockdata['description']) $meldung .= 'ï¿½infoï¿½' . formatLinks($lockdata['description']);
         } else {
             $admission_time = $current_seminar->getAdmissionTimeFrame();
             if ($current_seminar->isAdmissionEnabled() || $current_seminar->isAdmissionLocked() || $current_seminar->admission_prelim == 1) {
-                $meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
+                $meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschrï¿½nkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung fï¿½r die Veranstaltung und mï¿½ssen sich ggf. neu anmelden!'), $current_seminar->getName());
             } else if (isset($admission_time['end_time']) && $admission_time['end_time'] < time()) {
-                $meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->getName());
+                $meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie kï¿½nnen sich nicht wieder anmelden!'), $current_seminar->getName());
             } else {
                 $meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->getName());
             }
@@ -144,7 +144,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
         if(admission_seminar_user_get_position($user->id, $current_seminar->getId()) === false){
             $meldung = sprintf(_('Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->getName());
         } else {
-            $meldung = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
+            $meldung = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die bereits erreichte Position und mï¿½ssen sich ggf. neu anmelden!'), $current_seminar->getName());
         }
         echo createQuestion($meldung, array('cmd' => 'kill_admission', 'auswahl' => $current_seminar->getId()));
     }
@@ -155,7 +155,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
         && $ticket_check) {
 
         if ($current_seminar->admission_binding) {
-            $meldung = "info§" . sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt. Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."), htmlReady($current_seminar->getName())) . "<br>";
+            $meldung = "infoï¿½" . sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt. Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."), htmlReady($current_seminar->getName())) . "<br>";
         } elseif (!$perm->have_studip_perm('tutor', $current_seminar->getId())) {
 
             // LOGGING
@@ -165,18 +165,18 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user->id, $current_seminar->getId()));
             if ($statement->rowCount() == 0) {
-                $meldung="error§" . _("Datenbankfehler!");
+                $meldung="errorï¿½" . _("Datenbankfehler!");
             } else {
                 // enable others to do something after the user has been deleted
                 NotificationCenter::postNotification('UserDidLeaveCourse', $current_seminar->getId(), $user->id);
 
-                // Löschen aus Statusgruppen
+                // Lï¿½schen aus Statusgruppen
                 RemovePersonStatusgruppeComplete (get_username(), $current_seminar->getId());
 
                 //Pruefen, ob es Nachruecker gibt
                 update_admission($current_seminar->getId());
 
-                $meldung = "msg§" . sprintf(_("Das Abonnement der Veranstaltung <b>%s</b> wurde aufgehoben. Sie sind nun nicht mehr als TeilnehmerIn dieser Veranstaltung im System registriert."), htmlReady($current_seminar->getName()));
+                $meldung = "msgï¿½" . sprintf(_("Das Abonnement der Veranstaltung <b>%s</b> wurde aufgehoben. Sie sind nun nicht mehr als TeilnehmerIn dieser Veranstaltung im System registriert."), htmlReady($current_seminar->getName()));
             }
         }
     }
@@ -198,7 +198,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
             renumber_admission($current_seminar->getId());
             //Pruefen, ob es Nachruecker gibt
             update_admission($current_seminar->getId());
-            $meldung="msg§" . sprintf(_("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben. Wenn Sie an der Veranstaltung teilnehmen wollen, m&uuml;ssen Sie sich erneut bewerben."), htmlReady($current_seminar->getName()));
+            $meldung="msgï¿½" . sprintf(_("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben. Wenn Sie an der Veranstaltung teilnehmen wollen, m&uuml;ssen Sie sich erneut bewerben."), htmlReady($current_seminar->getName()));
         }
     }
 }
@@ -208,7 +208,7 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($user->id, Request::option('auswahl')));
     if ($statement->rowCount() == 0)
-        $meldung="error§" . _("Datenbankfehler!");
+        $meldung="errorï¿½" . _("Datenbankfehler!");
     else {
 
         $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
@@ -216,7 +216,7 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
         $statement->execute(array(Request::option('auswahl')));
         $name = $statement->fetchColumn();
 
-        $meldung="msg§" . sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>".htmlReady($name)."</b>");
+        $meldung="msgï¿½" . sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>".htmlReady($name)."</b>");
     }
 }
 
@@ -294,7 +294,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($seminars) == 0) {
-        $meldung = "info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"dispatch.php/search/courses\">", "</a>") . "§" . $meldung;
+        $meldung = "infoï¿½" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"dispatch.php/search/courses\">", "</a>") . "ï¿½" . $meldung;
     }
 
     foreach ($seminars as $seminar) {
@@ -459,7 +459,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $waitlists = array_merge($claiming, $stmt->fetchAll());
 
     // Berechnung der uebrigen Seminare und Einrichtungen
-    // (wird für 5 Minuten im Cache gehalten)
+    // (wird fï¿½r 5 Minuten im Cache gehalten)
 
     $cache = StudipCacheFactory::getCache();
 
@@ -565,7 +565,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                                                 )));
     if (get_config('MAIL_NOTIFICATION_ENABLE')){
         $infobox[count($infobox)-1]['eintrag'][] = array(   'icon' => 'icons/16/black/mail.png',
-                                                            'text' => sprintf(_("Benachrichtigung über neue Inhalte %sanpassen%s."),
+                                                            'text' => sprintf(_("Benachrichtigung ï¿½ber neue Inhalte %sanpassen%s."),
                                                                     '<a href="' . URLHelper::getLink('dispatch.php/settings/notification'). '">', '</a>'));
     }
 
@@ -641,7 +641,7 @@ elseif ($auth->auth["perm"]=="admin") {
     }
 
     if (!is_array($_my_inst))
-        $meldung="info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§".$meldung;
+        $meldung="infoï¿½" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "ï¿½".$meldung;
     else {
         $_my_inst_arr = array_keys($_my_inst);
         if(Request::option('institut_id')){
@@ -714,9 +714,9 @@ elseif ($auth->auth["perm"]=="admin") {
 
         $num_my_sem = count($seminars);
         if (!$num_my_sem) {
-            $meldung = "msg§"
+            $meldung = "msgï¿½"
                     . sprintf(_("An der Einrichtung \"%s\" sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
-                    . "§"
+                    . "ï¿½"
                     . $meldung;
         } else {
             foreach ($seminars as $seminar) {

@@ -87,9 +87,10 @@ ul.widget-list {
     &.sidebar-navigation > li {
         padding-left: 5px;
         &.active {
-            background: @content-color;
+            background: @base-color-40;
             .box-shadow(inset 0 0 0 1px @base-color);
-            #arrow > .right-border(floor(0.5 * @line-height-computed), @content-color, 1px, @base-color);
+            #arrow > .right-border(floor(0.5 * @line-height-computed), @base-color-40, 1px, @base-color, -12px);
+
             display: block;
 
             a {
@@ -102,10 +103,10 @@ ul.widget-list {
 
             // Obtuse angle looks kinda ugly with borders
             &:before {
-//                border-left-width: floor(0.5 * @line-height-computed * 2 / 3);
+                border-left-width: floor(0.5 * @line-height-computed * 2 / 3);
             }
             &:after {
-//                border-left-width: floor(0.5 * @line-height-computed * 2 / 3) - 1;
+                border-left-width: floor(0.5 * @line-height-computed * 2 / 3) - 1;
             }
         }
     }
@@ -114,6 +115,9 @@ ul.widget-list {
             background: @activity-color-40;
             .box-shadow(inset 0 0 0 1px @activity-color);
             #arrow > .right-border(floor(0.5 * @line-height-computed), @activity-color-40, 1px, @activity-color);
+            //#gradient > .directional(@brand-color-lighter, fadeout(@brand-color-lighter, 100%), 270deg);
+            //#arrow > .right(floor(0.5*@line-height-computed), @brand-color-lighter, -14px);
+
             display: block;
 
             &:before, &:after {
@@ -170,7 +174,6 @@ ul.widget-list {
     .sidebar-widget, .sidebar-widget-placeholder {
         background: #fff;
         border: 1px solid @content-color-40;
-        border-radius: 2px;
         margin: 7px 5px 0;
     }
     .sidebar-widget-header {

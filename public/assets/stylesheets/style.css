@@ -2300,7 +2300,7 @@ select.sidebar-selectlist {
   position: absolute;
   right: 12px;
   top: 0;
-  width: 180px;
+  width: 250px;
   z-index: 1000;
 }
 .helpbar:before {
@@ -2366,13 +2366,9 @@ select.sidebar-selectlist {
   background-image: url("../images/icons/16/white/accept.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/accept.png") 1x, url("../images/icons/32/white/accept.png") 2x);
 }
-.helpbar .help-tours a:hover {
-  background-image: url("../images/icons/16/red/play.png");
-  background-image: -webkit-image-set(url("../images/icons/16/red/play.png") 1x, url("../images/icons/32/red/play.png") 2x);
-}
 .helpbar {
   width: 32px;
-  text-indent: -180px;
+  text-indent: -250px;
   -webkit-transition: all 0;
   -moz-transition: all 0;
   -o-transition: all 0;
@@ -2388,7 +2384,7 @@ select.sidebar-selectlist {
 }
 #helpbar-sticky:checked + .helpbar {
   text-indent: 0;
-  width: 180px;
+  width: 250px;
 }
 #helpbar-sticky:checked + .helpbar .helpbar-widgets {
   max-height: 1000px;

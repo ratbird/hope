@@ -92,10 +92,10 @@
 <div align="center" data-dialog-button>
     <div class="button-group">
     <? if ($message['autor_id'] !== '____%system%____'): ?>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId())) ?>"><?= \Studip\Button::create(_("Antworten"))?></a>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'quote' => $message->getId())) ?>"><?= \Studip\Button::create(_("Zitieren"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId())) ?>" data-dialog="buttons"><?= \Studip\Button::create(_("Antworten"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'quote' => $message->getId())) ?>" data-dialog="buttons"><?= \Studip\Button::create(_("Zitieren"))?></a>
     <? endif; ?>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'forward' => "rec")) ?>"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
+        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'forward' => "rec")) ?>" data-dialog="buttons"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
     </div>
     <a href="<?= URLHelper::getLink("dispatch.php/messages/print/".$message->getId()) ?>" class="print_action"><?= \Studip\Button::create(_("Drucken"))?></a>
     <form action="?" method="post" style="display: inline;">

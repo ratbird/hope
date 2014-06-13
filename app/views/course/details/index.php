@@ -33,6 +33,14 @@
                     <?= sprintf(_("%s in der Kategorie %s"), $GLOBALS['SEM_TYPE'][$course->status]["name"], $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]["class"]]["name"]) ?>
                 </td>
             </tr>
+            <? if ($course->veranstaltungsnummer) : ?>
+                <tr>
+                    <td><strong><?= _("Veranstaltungsnummer") ?></strong></td>
+                    <td>
+                        <?= $course->veranstaltungsnummer ?>
+                    </td>
+                </tr>
+            <? endif ?>
             <? if ($course->start_semester): ?>
                 <tr>
                     <td>

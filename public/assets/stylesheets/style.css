@@ -2173,7 +2173,7 @@ ul.widget-list > li {
 }
 .sidebar-widget .widget-options .options-checkbox {
   background-repeat: no-repeat;
-  background-position: left top;
+  background-position: left 2px;
   display: block;
   padding-left: 20px;
 }
@@ -2187,7 +2187,7 @@ ul.widget-list > li {
 }
 .sidebar-widget .widget-options .options-radio {
   background-repeat: no-repeat;
-  background-position: left top;
+  background-position: left 2px;
   display: block;
   padding-left: 20px;
 }

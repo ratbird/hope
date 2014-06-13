@@ -2347,14 +2347,14 @@ select.sidebar-selectlist {
   max-height: 1000px;
 }
 section.contentbox {
-  border-color: #7e92b0;
+  border-color: #d0d7e3;
   border-style: solid;
   border-width: 1px;
   margin-bottom: 10px;
 }
 section.contentbox header {
   padding: 2px;
-  background-color: #d4dbe5;
+  background-color: #e7ebf1;
 }
 section.contentbox header h1 {
   padding: 5px;
@@ -2420,7 +2420,7 @@ section.contentbox article header h1 a {
 }
 section.contentbox article footer {
   text-align: center;
-  border-color: #7e92b0;
+  border-color: #d0d7e3;
   border-top-style: solid;
   border-width: 1px;
 }

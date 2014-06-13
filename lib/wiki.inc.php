@@ -431,7 +431,9 @@ function getZusatz($wikiData)
     
     $s =  '<a href="' . URLHelper::getLink('?keyword=' . urlencode($wikiData['keyword']) . '&version=' . $wikiData['version']). '">' . _('Version ') . $wikiData['version'] . '</a>';
     $s .= sprintf(_(', geändert von %s am %s'),
-                  '<a href="' . URLHelper::getLink('dispatch.php/profile?username=' . $user->username) .'">' . $user->getFullName() . '</a>',
+                  $user
+                      ? '<a href="' . URLHelper::getLink('dispatch.php/profile?username=' . $user->username) .'">' . $user->getFullName() . '</a>'
+                      : _('unbekannt'),
                   date('d.m.Y, H:i', $wikiData['chdate']));
     return $s;
 }

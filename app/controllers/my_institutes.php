@@ -69,9 +69,11 @@ class MyInstitutesController extends AuthenticatedController
 
     function check_for_new($my_obj)
     {
-        foreach ($my_obj as $inst) {
-            if ($this->check_institute($inst)) {
-                return true;
+        if(!empty($my_obj)) {
+            foreach ($my_obj as $inst) {
+                if ($this->check_institute($inst)) {
+                    return true;
+                }
             }
         }
         return false;

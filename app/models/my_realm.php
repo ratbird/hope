@@ -1069,8 +1069,12 @@ class MyRealmModel
      */
     public static function getMyInstitutes()
     {
+        $memberShips = InstituteMember::findByUser($GLOBALS['user']->id);
 
-        $insts      = new SimpleCollection(InstituteMember::findByUser($GLOBALS['user']->id));
+        if(empty($memberShips)) {
+            return null;
+        }
+        $insts      = new SimpleCollection($memberShips);
         $institutes = array();
         $insts->filter(function ($a) use (&$institutes) {
             $array                   = $a->institute->toArray();

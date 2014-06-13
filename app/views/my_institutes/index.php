@@ -1,13 +1,14 @@
 <? if (isset($flash['decline_inst'])) : ?>
     <?=
-    createQuestion(sprintf(_('Wollen Sie sich aus dem/der %s wirklich austragen?'), htmlReady($flash['name'])), array('cmd' => 'kill', 'studipticket' => $flash['studipticket']),
+    createQuestion(sprintf(_('Wollen Sie sich aus dem/der %s wirklich austragen?'),
+            htmlReady($flash['name'])), array('cmd' => 'kill', 'studipticket' => $flash['studipticket']),
         array('cmd'          => 'back',
               'studipticket' => $flash['studipticket']),
         $controller->url_for(sprintf('my_institutes/decline_inst/%s', $flash['inst_id']))); ?>
 <? endif ?>
 
 <? if (empty($institutes)) : ?>
-    <? if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm("dozent")) : ?>
+    <? if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm("dozent")) : ?>
         <?=
         MessageBox::info(sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."),
             "<a href=\"dispatch.php/siteinfo/show\">", "</a>"))?>
@@ -99,7 +100,7 @@ $links->setTitle(_('Aktionen'));
 if($reset) {
     $links->addLink(_('Alles als gelesen markieren'), $controller->url_for('my_institutes/tabularasa'),'icons/16/blue/refresh.png');
 }
-if ($GLOBALS['perm']->have_perm('dozent')) {
+if ($GLOBALS['perm']->have_perm('dozent') && !empty($institutes)) {
     $links->addLink(_('Einrichtungsdaten bearbeiten'), URLHelper::getLink('dispatch.php/settings/statusgruppen'), 'icons/16/blue/add/institute.png' );
 }
 if ($GLOBALS['perm']->have_perm('autor')) {

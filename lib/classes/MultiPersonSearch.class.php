@@ -226,7 +226,12 @@ class MultiPersonSearch {
         $this->jsFunction = $function_name;
         return $this;
     }
-
+    
+    /**
+     * returns a JavaScript-function which should be fired when the user has pressed the submit button.
+     * 
+     * @return string function name
+     */
     public function getJSFunctionOnSubmit()
     {
         return $this->jsFunction;
@@ -253,17 +258,34 @@ class MultiPersonSearch {
     public function getSearchObject() {
         return $this->searchObject;
     }
-
+    
+    /**
+     * sets html code which will be shown inside the form element.
+     * 
+     * @param string html code
+     * 
+     * @return MultiPersonSearch
+     */
     public function setAdditionalHTML($html) {
         $this->additionalHMTL = $html;
 
         return $this;
     }
-
+    
+    /**
+     * returns html code which will be shown inside the form element.
+     * 
+     * @return string html code
+     */
     public function getAdditionHTML() {
         return $this->additionalHMTL;
     }
-
+    
+    /**
+     * returns an additional option array.
+     * 
+     * @return string html code
+     */
     public function getAdditionalOptionArray() {
         return $_SESSION['multipersonsearch'][$this->name]['additional'];
     }

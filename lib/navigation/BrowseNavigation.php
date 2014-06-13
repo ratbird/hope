@@ -67,10 +67,6 @@ class BrowseNavigation extends Navigation
 
             $navigation->addSubNavigation('list', new Navigation(_('Aktuelle Veranstaltungen'), 'dispatch.php/my_courses'));
 
-            if ($perm->have_perm($sem_create_perm)) {
-                $navigation->addSubNavigation('create', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
-            }
-
             if ($perm->have_perm('admin')) {
                 $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
                 $navigation->addSubNavigation('export_csv', new Navigation(_('Als Excel exportieren'), 'dispatch.php/admin/courses/export_csv'));

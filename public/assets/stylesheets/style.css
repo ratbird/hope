@@ -108,7 +108,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -763,14 +763,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   text-align: left;
 }
 table.default tbody td {
@@ -785,7 +785,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.19999999999999996);
+  background-color: rgba(105, 118, 127, 0.2);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -911,7 +911,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.19999999999999996);
+  background-color: rgba(105, 118, 127, 0.2);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -1870,7 +1870,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
 }
 #layout-sidebar {
   background: #fff;
@@ -2268,6 +2268,9 @@ select.sidebar-selectlist {
   position: relative;
   width: 100%;
 }
+.helpbar-container #helpbar-sticky {
+  display: none;
+}
 .helpbar {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -2305,6 +2308,10 @@ select.sidebar-selectlist {
   margin: 2px 4px 0;
   padding: 2px 0 10px 6px;
 }
+.helpbar-title label {
+  cursor: pointer;
+  display: block;
+}
 .helpbar-widgets {
   color: #fff;
   list-style: none;
@@ -2326,24 +2333,24 @@ select.sidebar-selectlist {
 .helpbar {
   width: 32px;
   text-indent: -180px;
-  -webkit-transition: 0;
-  -moz-transition: 0;
-  -o-transition: 0;
-  transition: 0;
+  -webkit-transition: all 0;
+  -moz-transition: all 0;
+  -o-transition: all 0;
+  transition: all 0;
 }
 .helpbar .helpbar-widgets {
   max-height: 0;
-  -webkit-transition: 0;
-  -moz-transition: 0;
-  -o-transition: 0;
-  transition: 0;
+  -webkit-transition: all 0;
+  -moz-transition: all 0;
+  -o-transition: all 0;
+  transition: all 0;
   overflow: hidden;
 }
-.helpbar:hover {
+#helpbar-sticky:checked + .helpbar {
   text-indent: 0;
   width: 180px;
 }
-.helpbar:hover .helpbar-widgets {
+#helpbar-sticky:checked + .helpbar .helpbar-widgets {
   max-height: 1000px;
 }
 section.contentbox {

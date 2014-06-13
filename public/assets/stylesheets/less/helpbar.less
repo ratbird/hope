@@ -7,6 +7,10 @@
     height: 3em;
     position: relative;
     width: 100%;
+
+    #helpbar-sticky {
+        display: none;
+    }
 }
 .helpbar {
     .box-sizing(border-box);
@@ -44,8 +48,13 @@
     font-weight: normal;
     margin: 2px 4px 0;
     padding: 2px 0 10px 6px;
+
+    label {
+        cursor: pointer;
+        display: block;
+    }
 }
-.helpbar-widgets {  
+.helpbar-widgets {
     color: #fff;
     list-style: none;
     margin: 0 10px;
@@ -64,19 +73,19 @@
 }
 
 .helpbar {
-    @transition: 0;
-    
+    @transition: all 0;
+
     width: 32px;
     text-indent: -@helpbar-width;
     .transition(@transition);
-    
+
     .helpbar-widgets {
         max-height: 0;
         .transition(@transition);
         overflow: hidden;
     }
-    
-    &:hover {
+
+    #helpbar-sticky:checked + & {
         text-indent: 0;
         width: @helpbar-width;
         .helpbar-widgets {

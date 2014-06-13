@@ -1,7 +1,10 @@
 <div class="helpbar-container">
+    <input type="checkbox" id="helpbar-sticky">
     <div class="helpbar">
         <h2 class="helpbar-title">
-            <?= _('Tipps & Hilfe') ?>
+            <label for="helpbar-sticky">
+                <?= _('Tipps & Hilfe') ?>
+            </label>
         </h2>
         <ul class="helpbar-widgets">
         <? foreach ($widgets as $index => $widget): ?>

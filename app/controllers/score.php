@@ -114,8 +114,9 @@ class ScoreController extends AuthenticatedController
         $actions = new OptionsWidget();
         $published = $this->score->ReturnPublik();
         $actions->addCheckbox(_('Ihren Wert veröffentlichen'),
-                              $this->url_for($published ? 'score/unpublish' : 'score/publish'),
-                          $published ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+                              $published,
+                              $this->url_for('score/publish'),
+                              $this->url_for('score/unpublish'));
         $sidebar->addWidget($actions);
 
         $helpbar = Helpbar::get();

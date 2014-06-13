@@ -143,7 +143,7 @@ class Admin_CoursesController extends AuthenticatedController
         $this->aux_lock_rules = array_merge(array(array('name'    => '--' . _("keine Zusatzangaben") . '--',
                                                         'lock_id' => 'none')),
             AuxLockRules::getAllLockRules());
-        $sidebar              = Sidebar::get();
+        $sidebar = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
 
         $this->setTeacherWidget($teachers);

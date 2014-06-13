@@ -615,7 +615,7 @@ class NewsController extends StudipController
             $this->sidebar->addWidget($widget);
         }
         $widget = new ActionsWidget();
-        $widget->addLink(_('Ankündigung erstellen'), URLHelper::getLink('dispatch.php/news/edit_news/new'), 'icons/16/black/add/news.png', array('rel'=>'get_dialog', 'target'=>'_blank'));
+        $widget->addLink(_('Ankündigung erstellen'), URLHelper::getLink('dispatch.php/news/edit_news/new'), 'icons/16/blue/add/news.png', array('rel'=>'get_dialog', 'target'=>'_blank'));
         $this->sidebar->addWidget($widget);
     }
 

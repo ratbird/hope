@@ -728,11 +728,11 @@ function listPages($mode, $sortby = NULL) {
         $widget = new ExportWidget();
         $widget->addLink(_('PDF-Ausgabe aller Wiki-Seiten'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=exportall_pdf&version=' . $version . '&sortby=' . $sortby),
-                         'icons/16/black/file-pdf.png',
+                         'icons/16/blue/file-pdf.png',
                          array('target' => '_blank'));
         $widget->addLink(_('Druckansicht aller Wiki-Seiten'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=wikiprintall&version=' . $version),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     }
@@ -1265,7 +1265,7 @@ function getShowPageInfobox($keyword, $latest_version)
     }
 
     $element = new WidgetElement($toccont_empty ? '&nbsp;' : $toccont);
-    $element->icon = Assets::image_path('icons/16/black/link-intern.png');
+    $element->icon = Assets::image_path('icons/16/blue/link-intern.png');
     $widget->addElement($element);
     $sidebar->addWidget($widget);
 
@@ -1283,7 +1283,7 @@ function getShowPageInfobox($keyword, $latest_version)
     $widget = new ViewsWidget();
     $widget->addLink(_('Standard'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=show'),
-                     'icons/16/black/wiki.png');
+                     'icons/16/blue/wiki.png');
     if (count($versions) >= 1) {
         $widget->addLink(_('Textänderungen anzeigen'),
                          URLHelper::getLink('?keyword=' . urlencode($keyword) . '&view=diff'));
@@ -1335,11 +1335,11 @@ function getShowPageInfobox($keyword, $latest_version)
     $widget = new ExportWidget();
     $widget->addLink(_('Druckansicht'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=wikiprint'),
-                     'icons/16/black/print.png',
+                     'icons/16/blue/print.png',
                      array('target' => '_blank'));
     $widget->addLink(_('PDF-Ausgabe'),
                      URLHelper::getLink('?keyword=' . urlencode($keyword) . '&version=' . $version . '&view=export_pdf'),
-                     'icons/16/black/file-pdf.png',
+                     'icons/16/blue/file-pdf.png',
                      array('target' => '_blank'));
     $sidebar->addWidget($widget);
 

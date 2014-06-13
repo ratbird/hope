@@ -413,15 +413,15 @@ class Course_StudygroupController extends AuthenticatedController {
             
             $actions->addLink(_('Neue Studiengruppe anlegen'),
                               $this->url_for('course/studygroup/new'),
-                              'icons/16/black/add/studygroup.png');
+                              'icons/16/blue/add/studygroup.png');
             if ($GLOBALS['perm']->have_studip_perm('tutor', $id)) {
                 $actions->addLink(_('Bild ändern'),
                                   $this->url_for('course/avatar/update/' . $id),
-                                  'icons/16/black/edit.png');
+                                  'icons/16/blue/edit.png');
             }
             $actions->addLink(_('Diese Studiengruppe löschen'),
                               $this->url_for('course/studygroup/delete/' . $id),
-                              'icons/16/black/trash.png');
+                              'icons/16/blue/trash.png');
 
             Sidebar::get()->addWidget($actions);
 
@@ -726,12 +726,12 @@ class Course_StudygroupController extends AuthenticatedController {
                       ->setNavigationItem('/course/members')
                       ->render();
 
-            $element = LinkElement::fromHTML($mp, 'icons/16/black/add/community.png');
+            $element = LinkElement::fromHTML($mp, 'icons/16/blue/add/community.png');
             $actions->addElement($element);
             
             $actions->addLink(_('Nachricht an alle Gruppenmitglieder verschicken'),
                               $this->url_for('course/studygroup/message/' . $id),
-                              'icons/16/black/mail.png');
+                              'icons/16/blue/mail.png');
 
             Sidebar::get()->addWidget($actions);
 

@@ -143,21 +143,21 @@ class MyCoursesController extends AuthenticatedController
         $setting_widget->setTitle(_("Aktionen"));
 
         if ($this->reset_all) {
-            $setting_widget->addLink(_('Alles als gelesen markieren'), $this->reset_all, 'icons/16/black/refresh.png');
+            $setting_widget->addLink(_('Alles als gelesen markieren'), $this->reset_all, 'icons/16/blue/refresh.png');
         }
-        $setting_widget->addLink(_('Farbgruppierung ändern'), URLHelper::getLink($this->settings_url), 'icons/16/black/group.png',
+        $setting_widget->addLink(_('Farbgruppierung ändern'), URLHelper::getLink($this->settings_url), 'icons/16/blue/group.png',
             array('data-dialog' => 'buttons=true'));
 
         if (Config::get()->MAIL_NOTIFICATION_ENABLE) {
             $setting_widget->addLink(_('Benachrichtigungen anpassen'),
                 URLHelper::getLink('dispatch.php/settings/notification'),
-                'icons/16/black/mail.png');
+                'icons/16/blue/mail.png');
         }
 
         if ($sem_create_perm == 'dozent' && $GLOBALS['perm']->have_perm('dozent')) {
             $setting_widget->addLink(_('Neue Veranstaltung anlegen'),
                 URLHelper::getLink('admin_seminare_assi.php',
-                    array('new_session' => 'TRUE')), 'icons/16/black/add/seminar.png');
+                    array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
         }
         $sidebar->addWidget($setting_widget);
         $this->setSemesterWidget($sem);

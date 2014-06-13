@@ -49,7 +49,8 @@ if ($infobox && is_array($infobox)) {
         $widget->setTitle($entry['kategorie'] . ' (Infobox)');
         if (isset($entry['eintrag']) && is_array($entry['eintrag'])) {
             foreach (@$entry['eintrag'] as $row) {
-                $widget->addElement(new InfoboxElement($row['text'], $row['icon']));
+                $icon = str_replace('/black/', '/blue/', $row['icon']);
+                $widget->addElement(new InfoboxElement($row['text'], $icon));
             }
         }
         $sidebar->insertWidget($widget, ':first');

@@ -144,10 +144,10 @@ class Course_ElearningController extends AuthenticatedController
         }
         
         $widget = new ActionsWidget();
-        $widget->addLink(_('Externe Accounts verwalten'), URLHelper::getURL('dispatch.php/elearning/my_accounts'), 'icons/16/black/person.png');
+        $widget->addLink(_('Externe Accounts verwalten'), URLHelper::getURL('dispatch.php/elearning/my_accounts'), 'icons/16/blue/person.png');
         if (count($this->course_output['courses']))
             foreach ($this->course_output['courses'] as $course) {        
-                $widget->addLink(sprintf(_('Direkt zum Kurs in %s'), $course['cms_name']), $course['url'], 'icons/16/black/link-extern.png', array('target' => '_blank'));
+                $widget->addLink(sprintf(_('Direkt zum Kurs in %s'), $course['cms_name']), $course['url'], 'icons/16/blue/link-extern.png', array('target' => '_blank'));
             }
         $this->sidebar->addWidget($widget);
         $this->new_account = $this->new_account_cms;
@@ -325,7 +325,7 @@ class Course_ElearningController extends AuthenticatedController
 
         $widget = new ActionsWidget();
         if (count($this->course_output['courses'])) {
-            $widget->addLink(_('Zuordnungen aktualisieren'), URLHelper::getURL('?view=edit&cms_select='.$this->cms_select.'&update=1'), 'icons/16/black/refresh.png');
+            $widget->addLink(_('Zuordnungen aktualisieren'), URLHelper::getURL('?view=edit&cms_select='.$this->cms_select.'&update=1'), 'icons/16/blue/refresh.png');
         }
         $this->sidebar->addWidget($widget);
         $this->new_account = $this->new_account_cms;

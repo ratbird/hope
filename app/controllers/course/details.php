@@ -122,7 +122,7 @@ class Course_DetailsController extends AuthenticatedController
             } elseif (enrolment_allowed) {
                 $abo_msg = _("Zugang zur Veranstaltung");
             }
-            $links->addLink($abo_msg, URLHelper::getScriptLink("dispatch.php/course/enrolment/apply/" . $this->course->id), 'icons/16/black/door-enter.png');
+            $links->addLink($abo_msg, URLHelper::getScriptLink("dispatch.php/course/enrolment/apply/" . $this->course->id), 'icons/16/blue/door-enter.png');
         }
 
         if (Config::get()->SCHEDULE_ENABLE
@@ -136,12 +136,12 @@ class Course_DetailsController extends AuthenticatedController
                 $GLOBALS['user']->id));
             $sem_user_schedule = $statement->fetchColumn();
             if (!$sem_user_schedule) {
-                $links->addLink(_("Nur im Stundenplan vormerken"), URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/" . $this->course->id), 'icons/16/black/info.png');
+                $links->addLink(_("Nur im Stundenplan vormerken"), URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/" . $this->course->id), 'icons/16/blue/info.png');
             }
         }
 
         if ($this->send_from_search) {
-            $links->addLink(_("Zurück zur letzten Auswahl"), URLHelper::getLink($this->send_from_search_page), 'icons/16/black/link-intern.png');
+            $links->addLink(_("Zurück zur letzten Auswahl"), URLHelper::getLink($this->send_from_search_page), 'icons/16/blue/link-intern.png');
         }
 
         if ($links->hasElements()) {

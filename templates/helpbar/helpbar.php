@@ -1,5 +1,5 @@
 <div class="helpbar-container">
-    <input type="checkbox" id="helpbar-sticky">
+    <input type="checkbox" id="helpbar-sticky" <? if ($open) echo 'checked'; ?>>
     <div class="helpbar">
         <h2 class="helpbar-title">
             <label for="helpbar-sticky">
@@ -9,7 +9,7 @@
         <ul class="helpbar-widgets">
         <? foreach ($widgets as $index => $widget): ?>
             <li>
-            <? if (false && $widget->icon): ?>
+            <? if ($widget->icon): ?>
                 <?= Assets::img($widget->icon, array('class' => 'helpbar-widget-icon')) ?>
             <? endif; ?>
                 <?= $widget->render(array('base_class' => 'helpbar')) ?>

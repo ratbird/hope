@@ -2271,6 +2271,24 @@ select.sidebar-selectlist {
 .helpbar-container #helpbar-sticky {
   display: none;
 }
+.helpbar-container h2,
+.helpbar-container h3 {
+  border-bottom: 0;
+  color: #fff;
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
+.helpbar-container h2 {
+  font-size: 1.2em;
+}
+.helpbar-container h3 {
+  border-bottom: 1px dotted #536d96;
+  font-size: 1.1em;
+  margin-bottom: 2px;
+  padding-bottom: 2px;
+}
 .helpbar {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -2296,39 +2314,61 @@ select.sidebar-selectlist {
   left: 0;
   right: 0;
 }
-.helpbar-title {
+.helpbar .helpbar-title {
   background-image: url("../images/icons/24/white/question-circle.png");
   background-image: -webkit-image-set(url("../images/icons/24/white/question-circle.png") 1x, url("../images/icons/48/white/question-circle.png") 2x);
   background-position: right top;
   background-repeat: no-repeat;
-  border-bottom: 0;
-  color: #fff;
-  font-size: 1.2em;
-  font-weight: normal;
   margin: 2px 4px 0;
+  overflow: hidden;
   padding: 2px 0 10px 6px;
 }
-.helpbar-title label {
+.helpbar .helpbar-title label {
   cursor: pointer;
   display: block;
 }
-.helpbar-widgets {
+.helpbar .helpbar-widgets {
   color: #fff;
   list-style: none;
   margin: 0 10px;
   padding: 0;
 }
-.helpbar-widgets a:link,
-.helpbar-widgets a:visited {
+.helpbar .helpbar-widgets a:link,
+.helpbar .helpbar-widgets a:visited {
   color: #fff;
 }
-.helpbar-widgets a:hover,
-.helpbar-widgets a:active {
+.helpbar .helpbar-widgets a:hover,
+.helpbar .helpbar-widgets a:active {
   color: #ff3333;
 }
-.helpbar-widgets li {
+.helpbar .helpbar-widgets > li {
   border-top: 1px solid #899ab9;
   padding: 2px 0 4px;
+}
+.helpbar .help-tours {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.helpbar .help-tours a {
+  background-image: url("../images/icons/16/white/play.png");
+  background-image: -webkit-image-set(url("../images/icons/16/white/play.png") 1x, url("../images/icons/32/white/play.png") 2x);
+  background-position: left 2px;
+  background-repeat: no-repeat;
+  display: block;
+  padding-left: 20px;
+}
+.helpbar .help-tours a.tour-paused {
+  background-image: url("../images/icons/16/white/pause.png");
+  background-image: -webkit-image-set(url("../images/icons/16/white/pause.png") 1x, url("../images/icons/32/white/pause.png") 2x);
+}
+.helpbar .help-tours a.tour-completed {
+  background-image: url("../images/icons/16/white/accept.png");
+  background-image: -webkit-image-set(url("../images/icons/16/white/accept.png") 1x, url("../images/icons/32/white/accept.png") 2x);
+}
+.helpbar .help-tours a:hover {
+  background-image: url("../images/icons/16/red/play.png");
+  background-image: -webkit-image-set(url("../images/icons/16/red/play.png") 1x, url("../images/icons/32/red/play.png") 2x);
 }
 .helpbar {
   width: 32px;

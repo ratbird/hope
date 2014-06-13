@@ -9,6 +9,7 @@
 class Helpbar extends WidgetContainer
 {
     protected $json_directory;
+    protected $open = false;
     
     public function __construct()
     {
@@ -134,6 +135,11 @@ class Helpbar extends WidgetContainer
         $this->insertWidget($widget, ':first', 'help-' . $id);
     }
     
+    public function open($state = true)
+    {
+        $this->open = $state;
+    }
+    
     /**
      * Renders the help bar.
      * The helpbar will only be rendered if it actually contains any widgets.
@@ -145,6 +151,14 @@ class Helpbar extends WidgetContainer
      */
     public function render()
     {
+        // add tour links
+        if (Config::get()->TOURS_ENABLE) {
+            $widget = new HelpbarTourWidget();
+            if ($widget->hasElements()) {
+                $this->addWidget($widget);
+            }
+        }
+
         $content = '';
 
         NotificationCenter::postNotification('HelpbarWillRender', $this);
@@ -152,6 +166,7 @@ class Helpbar extends WidgetContainer
         if ($this->hasWidgets()) {
             $template = $GLOBALS['template_factory']->open('helpbar/helpbar');
             $template->widgets = $this->widgets;
+            $template->open    = $this->open;
             $content = $template->render();
         }
 

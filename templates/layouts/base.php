@@ -36,13 +36,6 @@ if (Navigation::hasItem('/links/help')) {
     Helpbar::get()->insertLink(_('Hilfe-Wiki'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
 
     Navigation::removeItem('/footer/help');
-
-    // add tour links to help center
-    if (get_config('TOURS_ENABLE')) {
-        $tour_data = HelpTour::getHelpbarTourData();
-        foreach($tour_data['tours'] as $index => $tour)
-            Helpbar::get()->addLink(_('Tour:') . ' ' . $tour->name, '?tour_id='.$tour->tour_id, 'icons/16/white/play.png', false, array('class' => 'tour_link', 'id' => $tour->tour_id));
-    }
 }
 
 // TODO: Remove this after sidebar migration has been completed

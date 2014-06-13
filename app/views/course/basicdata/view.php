@@ -17,20 +17,17 @@ $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
 $widget = new ActionsWidget();
 $widget->addLink(_('Bild ändern'),
                  $controller->url_for('course/avatar/update', $course_id),
-                 'icons/16/black/edit.png');
+                 'icons/16/blue/edit.png');
 $sidebar->addWidget($widget);
 
 if ($adminList) {
-    $infobox[] = array(
-        "kategorie" => _("Veranstaltungsliste:"),
-        "eintrag"   =>
-            array(
-                array(
-                      "icon" => "icons/16/black/link-intern.png",
-                      "text" => $adminList->render()
-                )
-            )
-    );
+    $list = new SelectorWidget();
+    $list->setUrl("?#admin_top_links");
+    foreach ($adminList->adminList as $seminar) {
+        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+    }
+    $list->setSelection($adminList->course_id);
+    $sidebar->addWidget($list);
 }
 
 $width_column1 = 20;

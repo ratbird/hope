@@ -164,7 +164,7 @@
                                 echo $this->render_partial('admin/courses/visibility.php', compact('values', 'semid'));
                                 break;
                             case 10:
-                                echo $this->render_partial('admin/courses/aux.php', compact('values', 'semid'));
+                                echo $this->render_partial('admin/courses/aux-select.php', compact('values', 'semid'));
                                 break;
                             case 16:
                                 echo $this->render_partial('admin/courses/add_to_archive', compact('values', 'semid'));

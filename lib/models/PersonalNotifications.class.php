@@ -39,6 +39,17 @@
  */
 class PersonalNotifications extends SimpleORMap {
 
+    static public function doGarbageCollect()
+    {
+        $max_days = 30;
+        $sql = "DELETE personal_notifications,personal_notifications_user
+                FROM personal_notifications
+                LEFT JOIN personal_notifications_user USING(personal_notification_id)
+                WHERE mkdate < ?";
+        $st = DBManager::get()->prepare($sql);
+        $st->execute(array(time() - $max_days * 24 * 60 * 60));
+    }
+
     /**
      * Central function to add a personal notification to the user. This could be
      * anything that needs to catch the attention of the user. The notification
@@ -90,7 +101,7 @@ class PersonalNotifications extends SimpleORMap {
      * @param null|string $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return array of \PersonalNotifications in ascending order of mkdate
      */
-    static public function getMyNotifications($only_unread = true, $user_id = null) {
+    static public function getMyNotifications($only_unread = true, $user_id = null, $limit = 15) {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -101,9 +112,9 @@ class PersonalNotifications extends SimpleORMap {
             "WHERE u.user_id = :user_id " .
                 ($only_unread ? "AND u.seen = '0' " : "") .
             "GROUP BY pn.url " .
-            "ORDER BY mkdate ASC " .
+            "ORDER BY mkdate ASC LIMIT :limit" .
         "");
-        $statement->execute(array('user_id' => $user_id));
+        $statement->execute(array('user_id' => $user_id, 'limit' => (int)$limit));
         $notifications = array();
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
             $notification = new PersonalNotifications();

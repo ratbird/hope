@@ -64,5 +64,7 @@ class GarbageCollectorJob extends CronJob
             printf(_("Gelöschte Nachrichten: %u") . "\n", count($to_delete));
             printf(_("Gelöschte Dateianhänge: %u") . "\n", count($to_delete_attach));
         }
+
+        PersonalNotifications::doGarbageCollect();
     }
 }

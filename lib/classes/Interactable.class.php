@@ -170,6 +170,22 @@ abstract class Interactable
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
      */
+    static function createEdit($label = NULL, $trait = NULL, $attributes = array())
+    {
+        $args = func_num_args() ? func_get_args() : array('bearbeiten');
+        return self::__callStatic(__FUNCTION__, $args);
+    }
+
+    /**
+     * Convenience method used for autocompletion hints by your
+     * editor.
+     *
+     * Without this method #__callStatic would do the same.
+     *
+     * @param string $label      the label of the current element
+     * @param string $trait      the specific trait of the current element
+     * @param array  $attributes the attributes of the button element
+     */
     static function createCancel($label = NULL, $trait = NULL, $attributes = array())
     {
         $args = func_num_args() ? func_get_args() : array('abbrechen');

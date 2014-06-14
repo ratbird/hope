@@ -46,7 +46,7 @@ a.button, button.button {
     .button;
 }
 
-.button.accept, .button.cancel {
+.button.accept, .button.cancel, .button.edit {
     white-space: normal;
 
     &:before {
@@ -74,6 +74,15 @@ a.button, button.button {
             url("@{image-path}/icons/16/blue/decline.png") ~"1x",
             url("@{image-path}/icons/32/blue/decline.png") ~"2x");           
     }
+}
+
+.button.edit {
+  &:before { background: no-repeat;
+    background-image: url("@{image-path}/icons/16/blue/edit.png");
+    background-image: -webkit-image-set(
+      url("@{image-path}/icons/16/blue/edit.png") ~"1x",
+      url("@{image-path}/icons/32/blue/edit.png") ~"2x");
+  }
 }
 
 /****************************************************************************/

@@ -677,7 +677,7 @@ class MyRealmModel
                 $_course['sem_number_end'] = $sem_nrs['sem_number_end'];
                 $_course['sem_number']     = $sem_nrs['sem_number'];
                 $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
-                $_course['name']           = $course->getFullname($sem_nrs['sem_number_end'] != $sem_nrs['sem_number'] ? 'number-name-semester' : 'number-name');
+                $_course['name']           = $course->name;
                 $_course['temp_name']      = $course->name;
 
                 // add the the course to the correct semester

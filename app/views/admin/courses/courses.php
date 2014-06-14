@@ -33,7 +33,7 @@
                 <? $colspan++ ?>
                 <col width="3%">
             <? endif ?>
-            <col width="10%">
+            <col width="18%">
         </colgroup>
         <caption>
             <?=
@@ -172,7 +172,7 @@
                         }?>
                     <? else : ?>
                         <?=
-                        \Studip\LinkButton::create(
+                        \Studip\LinkButton::createEdit(
                             _($actions[$selected_action]['button_name']),
                             URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
                                 ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),

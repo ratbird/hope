@@ -143,7 +143,7 @@ class Admin_CoursesController extends AuthenticatedController
         $this->aux_lock_rules = array_merge(array(array('name'    => '--' . _("keine Zusatzangaben") . '--',
                                                         'lock_id' => 'none')),
             AuxLockRules::getAllLockRules());
-        $sidebar = Sidebar::get();
+        $sidebar              = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
 
         $this->setTeacherWidget($teachers);
@@ -181,7 +181,7 @@ class Admin_CoursesController extends AuthenticatedController
                 'semester_id' => $this->semester->id,
                 'show_room'   => true
             ));
-            $_room    = $_room ?: _('nicht angegeben');
+            $_room    = $_room ? : _('nicht angegeben');
             $dozenten = "";
             array_walk($course['dozenten'], function ($a) use (&$dozenten) {
                 $user = User::findByUsername($a['username']);
@@ -412,54 +412,54 @@ class Admin_CoursesController extends AuthenticatedController
         // array for the avaiable modules
         $actions = array(
             1  => array('name'        => 'Grunddaten',
-                        'button_name' => 'Grunddaten bearbeiten',
+                        'button_name' => 'Grunddaten',
                         'url'         => 'dispatch.php/course/basicdata/view/%s'),
             2  => array('name'        => 'Studienbereiche',
-                        'button_name' => 'Studienbereiche bearbeiten',
+                        'button_name' => 'Studienbereiche',
                         'url'         => 'dispatch.php/course/study_areas/show/%s'),
             3  => array('name'        => 'Zeiten / Räume',
-                        'button_name' => 'Zeiten / Räume verwalten',
+                        'button_name' => 'Zeiten / Räume',
                         'url'         => 'raumzeit.php?seminar_id=%s'),
             4  => array('name'        => 'Raumanfragen',
-                        'button_name' => 'Raumanfragen verwalten',
+                        'button_name' => 'Raumanfragen',
                         'url'         => 'dispatch.php/course/room_requests/index/%s'),
             5  => array('name'        => 'Ablaufplan',
-                        'button_name' => 'Ablaufplan bearbeiten',
+                        'button_name' => 'Ablaufplan',
                         'url'         => 'dispatch.php/course/dates?cid=%s'),
             6  => array('name'        => 'Umfragen & Tests',
-                        'button_name' => 'Umfragen & Tests verwalten',
+                        'button_name' => 'Umfragen & Tests',
                         'url'         => 'admin_vote.php?view=vote_sem&rangeID=%s'),
             7  => array('name'        => 'Evaluationen',
-                        'button_name' => 'Evaluationen verwalten',
+                        'button_name' => 'Evaluationen',
                         'url'         => 'admin_evaluation.php?rangeID=%s',
                         'params'      => array('view' => 'eval_sem')),
             8  => array('name'        => 'Sperrebene',
-                        'button_name' => 'Sperrebenen auswählen',
+                        'button_name' => 'Sperrebenen',
                         'url'         => 'dispatch.php/admin/courses/set_lockrule'),
             9  => array('name'        => 'Sichtbarkeit',
-                        'button_name' => 'Sichtbarkeit bearbeiten',
+                        'button_name' => 'Sichtbarkeit',
                         'url'         => 'dispatch.php/admin/courses/set_visibility'),
             10 => array('name'        => 'Zusatzangaben',
-                        'button_name' => 'Zusatzangaben auswählen',
+                        'button_name' => 'Zusatzangaben',
                         'url'         => 'dispatch.php/admin/courses/set_aux_lockrule'),
             11 => array('name'        => 'Veranstaltung kopieren',
-                        'button_name' => 'Veranstaltung kopieren',
+                        'button_name' => 'Kopieren',
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
             12 => array('name'        => 'Inhaltselemente',
-                        'button_name' => 'Inhaltselemente bearbeiten',
+                        'button_name' => 'Inhaltselemente',
                         'url'         => 'dispatch.php/course/plus/index/%s'),
             13 => array('name'        => 'Zugangsberechtigung',
-                        'button_name' => 'Zugangsberechtigung bearbeiten',
+                        'button_name' => 'Zugangsberechtigung',
                         'url'         => 'dispatch.php/course/admission/index/%s'),
             14 => array('name'        => 'Literatur',
-                        'button_name' => 'Literatur verwalten',
+                        'button_name' => 'Literatur',
                         'url'         => 'admin_lit_list.php?_range_id=%s'),
             14 => array('name'        => 'Funktionen und Gruppen',
-                        'button_name' => 'Funktionen und Gruppen bearbeiten',
+                        'button_name' => 'Funktionen und Gruppen',
                         'url'         => 'admin_statusgruppe.php?range_id=%s',
                         'params'      => array('ebene' => 'sem')),
             16 => array('name'        => 'Archivieren',
-                        'button_name' => 'Veranstaltungen Archivieren',
+                        'button_name' => 'Archivieren',
                         'url'         => 'archiv_assi.php')
         );
 
@@ -477,11 +477,11 @@ class Admin_CoursesController extends AuthenticatedController
     private function getViewFilters()
     {
         return array(_('Nr.'),
-                     _('Name'),
-                     _('Veranstaltungstyp'),
-                     _('DozentIn'),
-                     _('TeilnehmerInnen'),
-                     _('Raum/Zeit'));
+            _('Name'),
+            _('Veranstaltungstyp'),
+            _('Raum/Zeit'),
+            _('DozentIn'),
+            _('TeilnehmerInnen'),);
     }
 
     /**

@@ -40,6 +40,10 @@ class ProfileController extends AuthenticatedController
         if (get_config('VOTE_ENABLE')) {
             include_once ("lib/vote/vote_show.inc.php");
         }
+        
+        // Remove cid
+        URLHelper::removeLinkParam('cid');
+        unset($_SESSION['SessionSeminar']);
 
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
 

@@ -15,7 +15,7 @@
  * @author      Sebastian Hobert <sebastian.hobert@uni-goettingen.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @link        http://docs.studip.de/develop/Entwickler/...
+ * @link        http://docs.studip.de/develop/Entwickler/MultiPersonSearch
  */
 class MultiPersonSearch {
 

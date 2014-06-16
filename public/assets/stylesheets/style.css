@@ -1964,35 +1964,35 @@ ul.widget-list > li {
   border-left-width: 5px;
 }
 .widget-links.sidebar-views > li.active {
-  background: #fff1ad;
-  -webkit-box-shadow: inset 0 0 0 1px #ffdb33;
-  -moz-box-shadow: inset 0 0 0 1px #ffdb33;
-  box-shadow: inset 0 0 0 1px #ffdb33;
+  background: #ffe985;
+  -webkit-box-shadow: inset 0 0 0 1px #f78666;
+  -moz-box-shadow: inset 0 0 0 1px #f78666;
+  box-shadow: inset 0 0 0 1px #f78666;
   position: relative;
   display: inline-block;
   margin-right: -12px;
   display: block;
 }
 .widget-links.sidebar-views > li.active:before {
-  border: 10px solid rgba(255,219,51,0);
+  border: 10px solid rgba(247,134,102,0);
   content: "";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-left-color: #ffdb33;
+  border-left-color: #f78666;
   left: 100%;
   top: 50%;
   margin-top: -10px;
 }
 .widget-links.sidebar-views > li.active:after {
-  border: 9px solid rgba(255,241,173,0);
+  border: 9px solid rgba(255,233,133,0);
   content: "";
   height: 0;
   width: 0;
   position: absolute;
   pointer-events: none;
-  border-left-color: #fff1ad;
+  border-left-color: #ffe985;
   left: 100%;
   top: 50%;
   margin-top: -9px;

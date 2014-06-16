@@ -905,3 +905,37 @@ function display_exception(Exception $exception, $as_html = false, $deep = false
 
     return $as_html ? nl2br(htmlReady($result)) : $result;
 }
+
+/**
+ * Returns the appropriate stud.ip icon for a given mime type.
+ *
+ * @param String $mime_type Mime type to get the icon for
+ * @return String Icon path for the mime type
+ */
+function get_icon_for_mimetype($mime_type)
+{
+    if (strpos($mime_type, 'image/') === 0) {
+        return 'file-pic.png';
+    }
+    if (strpos($mime_type, 'audio/') === 0) {
+        return 'file-audio.png';
+    }
+    if (strpos($mime_type, 'video/') === 0) {
+        return 'file-video.png';
+    }
+    if ($mime_type === 'application/pdf') {
+        return 'file-pdf.png';
+    }
+    if ($mime_type === 'application/vnd.ms-powerpoint') {
+        return 'file-presentation.png';
+    }
+
+    $parts = explode('/', $mime_type);
+    if (reset($parts) === 'application' && in_array(end($parts), words('vnd.ms-excel msexcel x-msexcel x-ms-excel x-excel x-dos_ms_excel xls x-xls'))) {
+        return 'file-xls.png';
+    }
+    if (reset($parts) === 'application' && in_array(end($parts), words('7z arj rar zip'))) {
+        return 'file-archive.png';
+    }
+    return 'file-generic.png';
+}

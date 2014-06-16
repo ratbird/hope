@@ -443,7 +443,7 @@ table.default {
             transition: background-color 0.3s;
         }
         td.dragHandle {
-            background: #ffffff url("../images/anfasser_24.png") center no-repeat;
+            background: #ffffff url("@{image-path}/anfasser_24.png") center no-repeat;
             cursor: move;
         }
         tr:last-child td {
@@ -475,6 +475,25 @@ table.default {
     }
     td.actions, th.actions {
         float: none;
+    }
+    
+    caption {
+        .caption-container {
+            .flex();
+            .flex-align-items(stretch);
+            .flex-justify-content(space-between);
+            margin-bottom: -5px;
+        }  
+        .caption-content {
+            .flex-grow(1);
+            border-right: 1px solid @brand-color-darker;
+            padding-bottom: 5px;
+            padding-right: 0.5em;
+            margin-right: 0.5em;
+        }
+        .caption-actions {
+            .flex-align-self(flex-end);
+        }
     }
 
     tbody.toggleable {

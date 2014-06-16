@@ -107,6 +107,9 @@ javascripts:
   enrolment:
     - javascripts/enrolment.js
 
+  document:
+    - javascripts/document.js 
+
 css:
   base:
     # filename : media

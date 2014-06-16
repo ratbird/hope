@@ -40,3 +40,13 @@ require 'lib/phplib/email_validation.inc';
 require 'config_local.inc.php';
 require 'lib/phplib_local.inc.php';
 require 'lib/phplib/page4.inc';
+
+// Development: Use own directory for file related classes
+require_once 'lib/files/FileStorage.php';
+require_once 'lib/files/DirectoryEntry.php';
+require_once 'lib/files/DiskFileStorage.php';
+require_once 'lib/files/File.php';
+require_once 'lib/files/StudipDirectory.php';
+require_once 'lib/files/RootDirectory.php';
+require_once 'lib/files/FileHelper.php';
+

@@ -808,6 +808,33 @@ table.default td.actions,
 table.default th.actions {
   float: none;
 }
+table.default caption .caption-container {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  -moz-box-align: stretch;
+  align-items: stretch;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  margin-bottom: -5px;
+}
+table.default caption .caption-content {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  border-right: 1px solid #1e3e70;
+  padding-bottom: 5px;
+  padding-right: 0.5em;
+  margin-right: 0.5em;
+}
+table.default caption .caption-actions {
+  -webkit-align-self: flex-end;
+  align-self: flex-end;
+}
 table.default tbody.toggleable.toggled .toggle-switch {
   background-image: url("../images/icons/16//blue/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1right.png") 1x, url("../images/icons/32//blue/arr_1right.png") 2x);
@@ -821,6 +848,9 @@ table.default tbody.toggleable .toggle-switch {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
   background-image: url("../images/icons/16//blue/arr_1down.png");
   background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1down.png") 1x, url("../images/icons/32//blue/arr_1down.png") 2x);
   display: inline-block;
@@ -1725,6 +1755,9 @@ li#notification_container:hover .list {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
   background-repeat: no-repeat;
   background-image: url("../images/logos/studip-logo.png");
   background-image: -webkit-image-set(url("../images/logos/studip-logo.png") 1x, url("../images/logos/studip-logo@2x.png") 2x);
@@ -2234,6 +2267,9 @@ select.sidebar-selectlist {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
   width: 29px;
   height: 20px;
   background-image: url("../images/icons/16/white/search.png");
@@ -2596,6 +2632,9 @@ section.contentbox article.open header h1 a {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .ajaxing img {
   display: none;
@@ -3018,6 +3057,9 @@ div.quicksearch_frame select {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 #skiplink_list {
   display: none;
@@ -3674,6 +3716,244 @@ table.contact-header td.empty a {
 .cron-item input[type=number] {
   width: 2em;
 }
+.documents .chdir-up a {
+  display: block;
+}
+.documents .document-icon,
+.documents .empty {
+  text-align: center;
+}
+.documents .options {
+  text-align: right;
+}
+.documents caption header h2 {
+  border: 0;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+.documents caption header p {
+  font-size: 0.7em;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
+.documents .bread-crumbs {
+  display: inline-block;
+  min-height: 1.5em;
+  width: 40px;
+}
+.documents .bread-crumbs > a,
+.documents .bread-crumbs ul {
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 5px;
+}
+.documents .bread-crumbs > a {
+  padding-bottom: 2px;
+}
+.documents .bread-crumbs.extendable:hover > a,
+.documents .bread-crumbs.extendable:hover > ul {
+  box-shadow: 0 4px 5px #444;
+}
+.documents .bread-crumbs.extendable:hover ul {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-direction: column-reverse;
+  -ms-flex-direction: column-reverse;
+  -moz-box-direction: reverse;
+  -moz-box-orient: vertical;
+  -webkit-box-orient: vertical;
+  flex-direction: column-reverse;
+}
+.documents .bread-crumbs ul {
+  display: none;
+  list-style: none;
+  margin: 0;
+  position: absolute;
+}
+.documents .bread-crumbs li {
+  line-height: 1.5em;
+}
+.documents .bread-crumbs li a {
+  background-image: url("../images/icons/24/blue/folder-down.png");
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+.documents .bread-crumbs li:first-child a {
+  background-image: url("../images/icons/24/blue/folder-empty.png");
+}
+.document-dialog {
+  *zoom: 1;
+}
+.document-dialog:before,
+.document-dialog:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.document-dialog:after {
+  clear: both;
+}
+.document-dialog aside {
+  float: left;
+  width: 120px;
+}
+.document-dialog div {
+  border-left: 1px dashed #888;
+  margin-left: 120px;
+  min-height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+.file-tree,
+.file-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.file-tree ul {
+  margin-left: 8px;
+  position: relative;
+}
+.file-tree ul:before {
+  border-left: 1px solid #888888;
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+}
+.file-tree li {
+  overflow: hidden;
+  padding-left: 10px;
+  position: relative;
+}
+.file-tree ul li:before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 8px;
+  position: absolute;
+  border-top: 1px solid #888888;
+  left: 0;
+  top: 8px;
+}
+.file-tree ul li:last-child:before {
+  background: #fff;
+  height: auto;
+  top: 10px;
+  bottom: 0;
+}
+.file-tree input[type=checkbox] {
+  display: none;
+}
+.file-tree input[type=checkbox] + label {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  vertical-align: text-top;
+  -webkit-transition: transform 300ms;
+  -moz-transition: transform 300ms;
+  -o-transition: transform 300ms;
+  transition: transform 300ms;
+}
+.file-tree input[type=checkbox] ~ ul {
+  max-height: 0;
+  opacity: 0;
+  -webkit-transition: all 300ms;
+  -moz-transition: all 300ms;
+  -o-transition: all 300ms;
+  transition: all 300ms;
+}
+.file-tree input[type=checkbox] ~ input[type=radio] + label {
+  margin-left: 0;
+}
+.file-tree input[type=checkbox]:checked + label {
+  background-image: url("../images/icons/16/blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x, url("../images/icons/32/blue/arr_1down.png") 2x);
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+}
+.csstransforms .file-tree input[type=checkbox]:checked + label {
+  background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.file-tree input[type=checkbox]:checked ~ ul {
+  max-height: 1000px;
+  opacity: 1;
+}
+.file-tree input[type=radio] {
+  display: none;
+}
+.file-tree input[type=radio] + label {
+  color: #24437c;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0 3px;
+  margin-left: 1px;
+}
+.file-tree input[type=radio]:checked + label {
+  font-weight: bold;
+  background: #d0d7e3;
+}
+.file-tree input[type=radio][disabled] + label {
+  color: #888;
+}
+.documents.dragging [data-file]:not([data-folder]) {
+  background-color: #c3c8cc;
+  opacity: 0.6;
+}
+.documents [data-folder].dropping {
+  background-color: #ef9999;
+}
+.document-draggable-helper {
+  background-color: #fff1ad !important;
+  opacity: 1 !important;
+}
+.document-draggable-helper td {
+  border-bottom: 0 !important;
+}
+fieldset.document-admin-search label {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 49%;
+}
 .themen_list > * {
   background-color: #e7ebf1;
   margin: 2px;
@@ -4279,6 +4559,9 @@ a.opengraph_info:hover {
   text-shadow: none;
   background-color: transparent;
   border: 0;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
   background-position: center;
   background-repeat: no-repeat;
   display: inline-block;

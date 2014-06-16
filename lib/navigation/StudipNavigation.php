@@ -27,6 +27,7 @@ require_once 'ProfileNavigation.php';
 require_once 'SearchNavigation.php';
 require_once 'StartNavigation.php';
 require_once 'ToolsNavigation.php';
+require_once 'DocumentNavigation.php';
 
 /**
  * This is the class for the top navigation (toolbar) in the page header.
@@ -70,7 +71,12 @@ class StudipNavigation extends Navigation
 
             // calendar and schedule page
             $this->addSubNavigation('calendar', new CalendarNavigation());
-
+            
+            // user documents page
+            if (Config::get()->PERSONALDOCUMENT_ENABLE) {
+                $this->addSubNavigation('document', new DocumentNavigation());
+            }
+            
             // search page
             $this->addSubNavigation('search', new SearchNavigation());
         }

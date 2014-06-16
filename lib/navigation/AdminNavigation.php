@@ -193,7 +193,12 @@ class AdminNavigation extends Navigation
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
             }
+            
+             if(Config::get()->PERSONALDOCUMENT_ENABLE){
+                 $navigation->addSubNavigation('document_area', new Navigation(_('Pers. Dateibereich'), 'dispatch.php/document/administration'));
+            }
 
+            
             $navigation->addSubNavigation('admissionrules', new Navigation(_('Anmelderegeln'), 'dispatch.php/admission/ruleadministration'));
 
             $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));

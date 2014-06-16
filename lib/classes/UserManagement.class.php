@@ -897,9 +897,10 @@ class UserManagement
                     $temp_count++;
                 }
             }
-            if ($temp_count) {
-                $this->msg .= "info§" . sprintf(_("%s Dokumente gel&ouml;scht."), $temp_count) . "§";
-            }
+
+            // Remove private file space of this user
+            $root_dir = new RootDirectory($this->user_data['auth_user_md5.user_id']);
+            $root_dir->delete();
 
             // delete empty folders of this user
             $temp_count = 0;

@@ -8,6 +8,7 @@ $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
 if ($adminList) {
     $list = new SelectorWidget();
     $list->setUrl("?#admin_top_links");
+    $list->setSelectParameterName("cid");
     foreach ($adminList->adminList as $seminar) {
         $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
     }

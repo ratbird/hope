@@ -4317,6 +4317,10 @@ div#schedule-settings-dialog-shadow {
   padding: 10px 10px;
   font-family: "Lato", sans-serif;
   overflow-y: auto;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
 }
 #tour_controls button {
   vertical-align: middle;
@@ -4348,6 +4352,9 @@ div#schedule-settings-dialog-shadow {
   background-color: #28497c;
   color: #ffffff;
   border: solid 1px #aaaaaa;
+  -webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
 }
 #tour_tip #tour_tip_title {
   font-weight: bold;

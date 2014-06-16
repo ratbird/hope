@@ -15,8 +15,8 @@
     position: relative;
     
     &:before {
-        @border-width: 4px;
-        border-right: @border-width solid @light-gray-color-40;
+        @border-width: 2px;
+        border-right: @border-width solid @light-gray-color-60;
         border-top: @border-width solid transparent;
         border-bottom: @border-width solid transparent;
         content: '';
@@ -35,6 +35,18 @@
     }
     &-with-context {
         margin-bottom: 9px;
+    }
+
+    &:before {
+        @border-width: 2px;
+        border-right: @border-width solid darken(@brand-color-darker, 10%);
+        border-top: @border-width solid transparent;
+        content: '';
+        display: block;
+        left: -@border-width;
+        top: 0;
+        bottom: 0;
+        position: absolute;
     }
 }
 .sidebar-context {

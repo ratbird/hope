@@ -843,7 +843,7 @@ class MyRealmModel
     {
 
         $plugin_navigation = MyRealmModel::getPluginNavigationForSeminar($object_id, $my_obj_values['visitdate']);
-        $available_modules = 'forum participants documents news scm schedule wiki vote literature elearning_interface';
+        $available_modules = 'CoreForum participants documents news scm schedule wiki vote literature elearning_interface';
 
         foreach (words($available_modules) as $key) {
             // Go to next module if current module is not available and not voting-module

@@ -50,7 +50,7 @@ if (Request::get('redirect_to')) {
     $query_parts = explode('&', stristr(urldecode($_SERVER['QUERY_STRING']), 'redirect_to'));
     list( , $where_to) = explode('=', array_shift($query_parts));
     $new_query = $where_to . '?' . join('&', $query_parts);
-    $new_query = preg_replace('/[^:0-9a-z+_#?&=.-\/]/i', '', $new_query);
+    $new_query = preg_replace('/[^:0-9a-z+_\-.#?&=\/]/i', '', $new_query);
     header('Location: '.URLHelper::getURL($new_query, array('cid' => $course_id)));
     die;
 }

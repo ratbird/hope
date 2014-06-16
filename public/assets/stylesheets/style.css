@@ -2278,7 +2278,6 @@ select.sidebar-selectlist {
 }
 .helpbar-container {
   background: #fff;
-  border-radius: 0 2px 0 0;
   clear: both;
   height: 3em;
   position: relative;
@@ -3058,9 +3057,6 @@ div.clear {
   background-color: #899ab9;
   border-right: 1px solid #1e3e70;
   border-bottom: 1px solid #1e3e70;
-  -webkit-border-radius: 2px 2px 0 0;
-  -moz-border-radius: 2px 2px 0 0;
-  border-radius: 2px 2px 0 0;
 }
 #tabs li:last-child {
   border-right: none;

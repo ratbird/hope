@@ -2012,7 +2012,7 @@ switch ($level) {
 if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/create');
 } else {
-    Navigation::activateItem('/browse/my_courses/create');
+    Navigation::activateItem('/browse/my_courses');
 }
 // Start of Output
 ob_start();

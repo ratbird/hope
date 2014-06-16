@@ -51,7 +51,7 @@
                 </td>
 
                 <td style="text-align: left">
-                    <a href="<?= URLHelper::getLink('institut_main.php', array('auswahl' => $instid)) ?>">
+                    <a href="<?= URLHelper::getLink('dispatch.php/institute/overview', array('auswahl' => $instid)) ?>">
                         <?= htmlReady($GLOBALS['INST_TYPE'][$values["type"]]["name"] . ": " . $values["name"]) ?>
                     </a>
                 </td>
@@ -62,7 +62,7 @@
                             <? if (isset($nav) && $nav->isVisible(true)) : ?>
                                 <? $image = $nav->getImage(); ?>
                                 <a href="<?=
-                                UrlHelper::getLink('institut_main.php',
+                                UrlHelper::getLink('dispatch.php/institute/overview',
                                     array('auswahl'     => $instid,
                                           'redirect_to' => strtr($nav->getURL(), '?', '&'))) ?>" <?= $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber()) . '"' : '' ?>>
                                     <?= Assets::img($image['src'], array_map("htmlready", $image)) ?>

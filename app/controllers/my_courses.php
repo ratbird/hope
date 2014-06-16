@@ -159,9 +159,9 @@ class MyCoursesController extends AuthenticatedController
                 URLHelper::getLink('admin_seminare_assi.php',
                     array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
         }
+        $this->setGroupingSelector($this->group_field);
         $sidebar->addWidget($setting_widget);
         $this->setSemesterWidget($sem);
-        $this->setGroupingSelector($this->group_field);
     }
 
     /**
@@ -609,15 +609,11 @@ class MyCoursesController extends AuthenticatedController
             'gruppe'      => _('Farbgruppen'),
             'dozent_id'   => _('Dozenten'),
         );
-        $list = new OptionsWidget();        
-        $list->setTitle(_('Kategorie zur Gliederung'));
+        $view = new ViewsWidget();
         foreach ($groups as $key => $group) {
-            $list->addRadioButton($group,
-                                  $this->url_for('my_courses/store_groups?select_group_field=' . $key),
-                                  $key === $group_field);
+            $view->addLink($group, $this->url_for('my_courses/store_groups?select_group_field=' . $key))->setActive($key === $group_field);
         }
-        $sidebar->addWidget($list);
-        return $list;
+        $sidebar->addWidget($view);
     }
 
     /**

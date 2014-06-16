@@ -2485,6 +2485,7 @@ class Seminar
         if (LockRules::Check($this->getId(), 'participants')) {
             $info['enrolment_allowed'] = false;
             $info['cause'] = 'locked';
+            $lockdata = LockRules::getObjectRule($this->getId());
             $info['description'] = _("In diese Veranstaltung können Sie sich nicht eintragen!") . ($lockdata['description'] ? '<br>' . formatLinks($lockdata['description']) : '');
             return $info;
         }

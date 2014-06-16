@@ -660,7 +660,7 @@ class MyRealmModel
 
                 // the sem numbers for a given course
                 $sem_nrs     = self::getCourseSemNumbers($course);
-                $member_ship = reset($course->getMemberWithUser($GLOBALS['user']->id));
+                $member_ship = User::findCurrent()->course_memberships->findOneBy('seminar_id', $course->id);
 
                 // get teachers only if grouping selected (for better performance)
                 if ($group_field == 'dozent_id') {
@@ -1168,40 +1168,32 @@ class MyRealmModel
 
     public static function getStudygroups()
     {
-        $courses     = array();
-        $modules     = new Modules();
-        $_stuygroups = Course::findThru($GLOBALS['user']->id, array(
-            'thru_table'        => 'seminar_user',
-            'thru_key'          => 'user_id',
-            'thru_assoc_key'    => 'seminar_id',
-            'assoc_foreign_key' => 'seminar_id'
-        ));
+        $courses = array();
+        $modules = new Modules();
 
+        $studygroups = User::findCurrent()
+            ->course_memberships
+            ->filter(function ($c) {
+                return $c->getSemClass()->offsetGet('studygroup_mode');
+            })->toGroupedArray('seminar_id');
 
-        $_stuygroups = new SimpleCollection($_stuygroups);
-
-        $_stuygroups = $_stuygroups->filter(function ($a) {
-            return (int)$a->status == 99;
-        });
 
         $param_array = 'name seminar_id visible veranstaltungsnummer start_time duration_time status visible ';
         $param_array .= 'chdate admission_binding modules admission_prelim';
-        foreach ($_stuygroups as $course) {
-            $member                    = reset($course->getMemberWithUser($GLOBALS['user']->id));
-            $_course                   = $course->toArray($param_array);
-            $_course['start_semester'] = $course->start_semester->name;
-            $_course['end_semester']   = $course->end_semester->name;
-            $_course['obj_type']       = 'sem';
-            $_course['last_visitdate'] = object_get_visit($course->id, 'sem', 'last');
-            $_course['visitdate']      = object_get_visit($course->id, 'sem', '');
-            $_course['user_status']    = $member->status;
-            $_course['gruppe']         = $member->gruppe;
-            $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
+        $courses = Course::findAndMapMany(function ($course) use ($param_array, $studygroups, $modules) {
+            $ret = $course->toArray($param_array);
+            $ret['start_semester'] = $course->start_semester->name;
+            $ret['end_semester'] = $course->end_semester->name;
+            $ret['obj_type'] = 'sem';
+            $ret['last_visitdate'] = object_get_visit($course->id, 'sem', 'last');
+            $ret['visitdate'] = object_get_visit($course->id, 'sem', '');
+            $ret['user_status'] = $studygroups[$course->id]['status'];
+            $ret['gruppe'] = $studygroups[$course->id]['gruppe'];
+            $ret['modules'] = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
+            MyRealmModel::getObjectValues($ret);
 
-            MyRealmModel::getObjectValues($_course);
+        }, array_keys($studygroups));
 
-            $courses[] = $_course;
-        }
 
         return $courses;
     }

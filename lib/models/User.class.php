@@ -70,6 +70,18 @@
 class User extends AuthUserMd5
 {
     /**
+     * Returns the currently authenticated user.
+     *
+     * @return mixed User
+     */
+    public static function findCurrent()
+    {
+        if (is_object($GLOBALS['user'])) {
+            return $GLOBALS['user']->getAuthenticatedUser();
+        }
+    }
+
+    /**
      * return user object for given username
      *
      * @param string $username a username

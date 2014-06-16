@@ -253,10 +253,11 @@ class Course extends SimpleORMap
         return $this->members->findBy('status', words('user autor'))->count() + $this->getNumPrelimParticipants();
     }
 
+    /* wtf ?
     function getMemberWithUser($user_id) {
         return CourseMember::findBySQL('seminar_id = ? AND user_id = ? ORDER BY position', array($this->id, $user_id));
     }
-
+    */
 
     function getNumPrelimParticipants()
     {

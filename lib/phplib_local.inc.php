@@ -375,6 +375,11 @@ class Seminar_User {
         $this->last_online_time = $this->get_last_action();
     }
 
+    function getAuthenticatedUser()
+    {
+        return $this->user->id !== 'nobody' ? $this->user : null;
+    }
+
     function get_last_action()
     {
         if ($this->id && $this->id != 'nobody') {

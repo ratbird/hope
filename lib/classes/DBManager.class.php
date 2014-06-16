@@ -221,7 +221,7 @@ class DBManager
      *
      * @param  string  the key
      *
-     * @return PDO     the database connection
+     * @return StudipPDO     the database connection
      */
     static public function get($database = 'studip')
     {

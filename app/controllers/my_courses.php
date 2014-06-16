@@ -160,8 +160,8 @@ class MyCoursesController extends AuthenticatedController
                     array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
         }
         $this->setGroupingSelector($this->group_field);
-        $sidebar->addWidget($setting_widget);
         $this->setSemesterWidget($sem);
+        $sidebar->addWidget($setting_widget);
     }
 
     /**
@@ -545,21 +545,15 @@ class MyCoursesController extends AuthenticatedController
      * Set the selected semester and redirects to index
      * @param null $sem
      */
-    public function set_semester_action($sem = null)
+    public function set_semester_action()
     {
-        $sem = Request::option('sem_select', $sem);
-        // check input value
-        if (!Request::option('sem_select') && !is_null($sem)) {
-            if (!in_array($sem, array('future', 'last', 'current', 'all'))) {
-                $this->redirect('my_courses/index');
-                return;
-            }
-        }
+        $sem = Request::option('sem_select', null);
         if (!is_null($sem)) {
             $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_CYCLE', $sem);
-        }
-        PageLayout::postMessage(MessageBox::success(_('Das gewünschte Semester bzw.
+            PageLayout::postMessage(MessageBox::success(_('Das gewünschte Semester bzw.
             die gewünschte Semester Filteroption wurde ausgewählt!')));
+        }
+
         $this->redirect('my_courses/index');
     }
 
@@ -623,43 +617,19 @@ class MyCoursesController extends AuthenticatedController
      */
     private function setSemesterWidget(&$sem)
     {
-        $sidebar = Sidebar::Get();
-        $widget  = new OptionsWidget();
-        $widget->setTitle(_('Semesterfilter'));
-
-        $widget->addRadioButton(_('Aktuelles Semester'),
-                                $this->url_for('my_courses/set_semester/current'),
-                                $sem == 'current' && !Request::option('sem_select'));
-
-        $widget->addRadioButton(_('Aktuelles und zukünftiges Semester'),
-                                $this->url_for('my_courses/set_semester/future'),
-                                $sem == 'future' && !Request::option('sem_select'));
-
-        $widget->addRadioButton(_('Aktuelles und letztes Semester'),
-                                $this->url_for('my_courses/set_semester/last'),
-                                $sem == 'last' && !Request::option('sem_select'));
-
-        if (Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS) {
-            $widget->addRadioButton(_('Alle Semester'),
-                                    $this->url_for('my_courses/set_semester/all'),
-                                    $sem == 'all' && !Request::option('sem_select'));
-        }
-
-        if (Request::option('sem_select')) {
-            $widget->addRadioButton(_('Ausgewähltes Semester'),
-                                    '#',
-                                     Request::option('sem_select'));
-        }
-
-        $sidebar->addWidget($widget);
         $semesters = new SimpleCollection(Semester::getAll());
-        $semesters->orderBy('beginn desc');
-        $list = new SelectWidget(_('Semester auswählen'), $this->url_for('my_courses/set_semester'), 'sem_select');
-        foreach ($semesters as $semester) {
-            $list->addElement(new SelectElement($semester->id, $semester->name, $semester->id == Request::get('sem_select')), 'sem_select-' . $semester->id);
-        }
+        $this->sem = $sem;
+        $this->semesters = $semesters->orderBy('beginn desc');
 
-        $sidebar->addWidget($list);
+        $sidebar = Sidebar::Get();
+        $widget = new SidebarWidget();
+        $widget->setTitle(_('Semesterfilter'));
+        $this->render_template('my_courses/_semester_filter.php', null);
+        $html = $this->response->body;
+        $this->erase_response();
+
+        $widget->addElement(new WidgetElement($html));
+        $sidebar->addWidget($widget);
     }
 
 }

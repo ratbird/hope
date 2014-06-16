@@ -231,7 +231,7 @@ class DbCalendarDay extends CalendarDay
                     if ($rep['day']) {
                         $lwst = mktime(12, 0, 0, $this->mon
                                 - ((($this->year - date('Y', $rep['ts'])) * 12
-                                + ($this->mon - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $this->year, 0);
+                                + ($this->mon - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $this->year);
                         $hgst = $lwst + $duration * 86400;
                         $this->createEvent($properties, 1, $lwst, $hgst);
                         break;
@@ -241,7 +241,7 @@ class DbCalendarDay extends CalendarDay
                         do {
                             $lwst = mktime(12, 0, 0, $mon
                                             - ((($this->year - date('Y', $rep['ts'])) * 12
-                                            + ($mon - date('n', $rep['ts']))) % $rep['linterval']), 1, $this->year, 0)
+                                            + ($mon - date('n', $rep['ts']))) % $rep['linterval']), 1, $this->year)
                                     + ($rep['sinterval'] - 1) * 604800;
                             $aday = strftime('%u', $lwst);
                             $lwst -= ( $aday - $rep['wdays']) * 86400;
@@ -272,7 +272,7 @@ class DbCalendarDay extends CalendarDay
                     if ($rep['day']) {
                         if (date('Y', $properties['DTEND']) - date('Y', $properties['DTSTART'])) {
                             $lwst = mktime(12, 0, 0, $rep['month'], $rep['day'], $this->year - (($this->year - date('Y', $rep['ts'])) % $rep['linterval'])
-                                    - $rep['linterval'], 0);
+                                    - $rep['linterval']);
                             $hgst = $lwst + 86400 * $duration;
 
                             if ($this->ts >= $lwst && $this->ts <= $hgst) {
@@ -280,8 +280,7 @@ class DbCalendarDay extends CalendarDay
                                 break;
                             }
                         }
-                        $lwst = mktime(12, 0, 0, $rep['month'], $rep['day'], $this->year - (($this->year - date('Y', $rep['ts'])) % $rep['linterval'])
-                                , 0);
+                        $lwst = mktime(12, 0, 0, $rep['month'], $rep['day'], $this->year - (($this->year - date('Y', $rep['ts'])) % $rep['linterval']));
                         $hgst = $lwst + 86400 * $duration;
                         $this->createEvent($properties, 1, $lwst, $hgst);
                         break;
@@ -289,7 +288,7 @@ class DbCalendarDay extends CalendarDay
                     $ayear = $this->year - 1;
                     do {
                         if ($rep['sinterval']) {
-                            $lwst = mktime(12, 0, 0, $rep['month'], 1 + ($rep['sinterval'] - 1) * 7, $ayear, 0);
+                            $lwst = mktime(12, 0, 0, $rep['month'], 1 + ($rep['sinterval'] - 1) * 7, $ayear);
                             $aday = strftime('%u', $lwst);
                             $lwst -= ( $aday - $rep['wdays']) * 86400;
                             if ($rep['sinterval'] == 5) {

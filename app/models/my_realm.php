@@ -890,7 +890,7 @@ class MyRealmModel
                         $navigation[$key] = $plugin_navigation[get_class($module)];
                         // Workaround to get the badge-information on overview
                         // if still badge number exists something new in blubber or forum exists
-                        if ((int)$navigation[$key]->getBadgeNumber() > 0) {
+                        if ($navigation[$key] && ((int) $navigation[$key]->getBadgeNumber() > 0)) {
                             $my_obj_values['last_modified'] = time();
                         }
                         $main_nav = false;

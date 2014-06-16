@@ -19,11 +19,10 @@
  * @package     calendar
  */
 require_once $RELATIVE_PATH_CALENDAR . '/lib/DbCalendarYear.class.php';
-include 'lib/include/html_head.inc.php';
+
+ob_start();
 
 $view = $_calendar->toStringYear($atime, Request::int('cal_restrict'), Calendar::getBindSeminare($_calendar->getUserId()));
-
-include 'lib/include/header.php';
 
 // add skip links
 SkipLinks::addIndex(_("Jahresansicht"), 'main_content', 100);
@@ -43,7 +42,9 @@ if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
     echo $GLOBALS['template_factory']->render('calendar/_select_category', compact('atime', 'cmd'));
     echo "</td></tr>\n";
 }
-echo "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\" align=\"center\">\n";
+echo '</table>';
 echo $view;
-echo "</td></tr><tr><td  colspan=\"3\" align=\"center\" class=\"blank\">\n";
-echo "<br />&nbsp;";
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();

@@ -83,13 +83,12 @@ if ($experiod == 'period') {
 }
 
 if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == 'exp' && !empty($err))) {
-    include 'lib/include/html_head.inc.php';
+    ob_start();
+    $templated = true;
 
     //TODO: 2mal body?, ob das so geht?
-    print_js_import();
-    echo "\n<body onUnLoad=\"STUDIP.OldUpload.upload_end()\">";
-
-    include('lib/include/header.php');
+#    print_js_import();
+#    echo "\n<body onUnLoad=\"STUDIP.OldUpload.upload_end()\">";
 }
 
 if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == 'exp' && !empty($err))) {
@@ -178,10 +177,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         echo "<tr><th align=\"left\" width=\"100%\">\n";
         echo _("Herunterladen der synchronisierten Kalenderdaten") . "\n</th></tr>\n";
         print_cell($params);
-        echo "</table\n</td>\n";
-
-        echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "sidebar/schedule-sidebar.png");
+        echo "</table>\n";
     } else {
 
         // add skip link
@@ -392,15 +388,11 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $info['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 'text' => _("Sie k&ouml;nnen Termindaten importieren, exportieren und synchronisieren."));
         }
-        echo "</table>\n</td>\n";
-
-        echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "sidebar/schedule-sidebar.png");
+        echo "</table>\n";
     }
 
     echo "</td>\n";
     echo "</tr>\n";
-    echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
     echo "</table>\n";
     echo "</td>\n";
     echo "</tr>\n";
@@ -535,6 +527,12 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     page_close();
     header($location);
     exit;
+}
+
+if (isset($templated) && $templated) {
+    $template = $GLOBALS['template_factory']->open('layouts/base.php');
+    $template->content_for_layout = ob_get_clean();
+    echo $template->render();
 }
 
 /**

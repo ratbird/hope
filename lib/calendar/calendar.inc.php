@@ -33,6 +33,8 @@ $cmd_cal = Request::option('cmd_cal');
 $mod_prv = Request::option('mod_prv');
 $mod = Request::option('mod');
 
+Sidebar::get()->setImage('sidebar/schedule-sidebar.png');
+
 // if the calendar-settings are not loaded yet, get them from the UserConfig
 $calendar_user_control_data = UserConfig::get($GLOBALS['user']->id)->CALENDAR_SETTINGS ;
 
@@ -485,14 +487,13 @@ if ($cmd == 'showday') {
     }
 
     $tmpl = $GLOBALS['template_factory']->open('calendar/day_view');
+    $tmpl->set_layout('layouts/base.php');
     $tmpl->_calendar = $_calendar;
     $tmpl->atime = $atime;
     $tmpl->cmd = $cmd;
     $tmpl->st = $st;
     $tmpl->et = $et;
     $view = $tmpl->render();
-    include('lib/include/html_head.inc.php');
-    include('lib/include/header.php');
     echo $view;
 }
 
@@ -514,14 +515,13 @@ if ($cmd == 'showweek') {
     include_once($RELATIVE_PATH_CALENDAR . '/lib/DbCalendarWeek.class.php');
 
     $tmpl = $GLOBALS['template_factory']->open('calendar/week_view');
+    $tmpl->set_layout('layouts/base.php');
     $tmpl->_calendar = $_calendar;
     $tmpl->atime = $atime;
     $tmpl->cmd = $cmd;
     $tmpl->st = $st;
     $tmpl->et = $et;
     $view = $tmpl->render();
-    include('lib/include/html_head.inc.php');
-    include('lib/include/header.php');
     echo $view;
 
 }
@@ -608,10 +608,6 @@ if ($cmd == 'export') {
     include $RELATIVE_PATH_CALENDAR . '/views/export.inc.php';
 }
 
-if ($cmd !== 'bind') {
-    echo "</td></tr>\n</table>\n";
 
-    include ('lib/include/html_end.inc.php');
-}
 page_close();
 

@@ -19,11 +19,10 @@
  * @package     calendar
  */
 require_once $RELATIVE_PATH_CALENDAR . '/lib/DbCalendarMonth.class.php';
-include 'lib/include/html_head.inc.php';
+
+ob_start();
 
 $view = $_calendar->toStringMonth($atime, $step, Request::int('cal_restrict'), Calendar::getBindSeminare($_calendar->getUserId()));
-
-include 'lib/include/header.php';
 
 // add skip link
 SkipLinks::addIndex(_("Monatsansicht"), 'main_content', 100);
@@ -48,3 +47,7 @@ echo "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\" align=\"center\">\n";
 echo $view;
 echo "</td></tr><tr><td  colspan=\"3\" align=\"center\" class=\"blank\">\n";
 echo "<br />&nbsp;";
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();

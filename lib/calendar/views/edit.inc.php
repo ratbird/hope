@@ -22,14 +22,11 @@
 
 use Studip\Button, Studip\LinkButton;
 
-include('lib/include/html_head.inc.php');
-include('lib/include/header.php');
+ob_start();
 
 // add skip link
 SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
 
-echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" valign=\"top\">\n";
 echo "<table class=\"blank\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n";
 
 if (!empty($err)) {
@@ -414,7 +411,7 @@ else {
         $form_month_arr = array(
             "1" => _("Januar"),
             "2" => _("Februar"),
-            "3" => _("M&auml;rz"),
+            "3" => _("März"),
             "4" => _("April"),
             "5" => _("Mai"),
             "6" => _("Juni"),
@@ -845,3 +842,6 @@ echo "</td></tr></table>\n";
     jQuery("#endDate").datepicker();
 </script>
 <?
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();

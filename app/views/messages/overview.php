@@ -77,25 +77,23 @@
     <span class="title"></span>
 </div>
 
-<script>
-STUDIP.jsupdate_enable = true;
-jQuery(function () {
-    jQuery("#nav__messaging_messages_write").attr("data-dialog", "buttons=false");
-});
-</script>
-
 <?php
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/mail-sidebar.png"));
 
-if (count($tags)) {
-    $folderwidget = new LinksWidget();
-    $folderwidget->setTitle(_("Verwendete Tags"));
+$folderwidget = new LinksWidget();
+$folderwidget->forceRendering();
+$folderwidget->title = _('Verwendete Tags');
+$folderwidget->id    = 'messages-tags';
+if (empty($tags)) {
+    $folderwidget->style = 'display:none';
+} else {
     foreach ($tags as $tag) {
         $folderwidget->addLink(ucfirst($tag), URLHelper::getURL("?", array('tag' => $tag)), null, array('class' => "tag"));
     }
-    $sidebar->addWidget($folderwidget, 'folder');
 }
+
+$sidebar->addWidget($folderwidget, 'folder');
 
 $actions = new ActionsWidget();
 $actions->addLink(

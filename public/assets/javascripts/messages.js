@@ -141,55 +141,55 @@ STUDIP.Messages = {
     send: function (form) {
         console.log(form);
         return false;
+    },
+    setTags: function (message_id, tags) {
+        var container = jQuery('#message_' + message_id).find('.tag-container').empty(),
+            template  = _.template('<a href="<%= url %>" class="message-tag"><%= tag %></a>');
+
+        jQuery.each(tags, function (index, tag) {
+            var html = template({
+                url: STUDIP.URLHelper.getURL('dispatch.php/messages/overview', {tag: tag}),
+                tag: tag.charAt(0).toUpperCase() + tag.slice(1) // ucfirst
+            });
+            jQuery(container).append(html).append(' ');
+        });
+    },
+    setAllTags: function (tags) {
+        var container = jQuery('#messages-tags ul').empty(),
+            template  = _.template('<li><a href="<%= url %>" class="tag"><%= tag %></a></li>');
+
+        jQuery.each(tags, function (index, tag) {
+            var html = template({
+                url: STUDIP.URLHelper.getURL('dispatch.php/messages/overview', {tag: tag}),
+                tag: tag.charAt(0).toUpperCase() + tag.slice(1) // ucfirst
+            });
+            jQuery(container).append(html);
+        });
+        jQuery('#messages-tags').toggle(tags.length !== 0).find('li:has(.tag)').each(STUDIP.Messages.createDroppable);
+    },
+    createDroppable: function (element) {
+        jQuery(arguments.length === 1 ? element : this).droppable({
+            hoverClass: 'dropping',
+            drop: function (event, ui) {
+                var message_id = ui.draggable.attr('id').substr(ui.draggable.attr("id").lastIndexOf("_") + 1),
+                    tag = jQuery(this).text().trim();
+                jQuery.post(STUDIP.URLHelper.getURL('dispatch.php/messages/tag/' + message_id), {
+                    add_tag: tag
+                }).then(function (response, status, xhr) {
+                    var tags = jQuery.parseJSON(xhr.getResponseHeader('X-Tags'));
+                    STUDIP.Messages.setTags(message_id, tags);
+                });
+            }
+        });        
     }
 };
 
-
-/*********** for the single-message view ***********/
-
-jQuery("#message_metadata .add_new_tag").live("click", function () {
-    var tag = jQuery(this).parent().find("input").val();
-    var message_id = jQuery("#message_metadata").data("message_id");
-    if (tag.length) {
-        jQuery.ajax({
-            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/add_tag",
-            'data': {
-                'message_id': message_id,
-                'tag': tag
-            },
-            'type': "post",
-            'dataType': "json",
-            'success': function (response) {
-                if (jQuery(".ui-dialog-content").length) {
-                    jQuery(".ui-dialog-content").html(response['full']);
-                    jQuery("#message_" + message_id).replaceWith(response['row']);
-                } else {
-                    location.href = STUDIP.ABSOLUTE_URI_STUDIP + "dispatch/messages/read/" + message_id;
-                }
-            }
-        });
-    }
-});
-jQuery("#message_metadata .remove_tag").live("click", function () {
-    var tag = jQuery(this).closest(".tag").data("tag");
-    var message_id = jQuery("#message_metadata").data("message_id");
-    jQuery.ajax({
-        'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/remove_tag",
-        'data': {
-            'message_id': message_id,
-            'tag': tag
-        },
-        'type': "post",
-        'dataType': "json",
-        'success': function (response) {
-            if (jQuery(".ui-dialog-content").length) {
-                jQuery(".ui-dialog-content").html(response['full']);
-                jQuery("#message_" + message_id).replaceWith(response['row']);
-            } else {
-                location.href = STUDIP.ABSOLUTE_URI_STUDIP + "dispatch/messages/read/" + message_id;
-            }
-        }
-    });
+jQuery(document).on('dialog-load', 'form#message-tags', function (event, data) {
+    var tags          = jQuery.parseJSON(data.xhr.getResponseHeader('X-Tags')),
+        all_tags      = jQuery.parseJSON(data.xhr.getResponseHeader('X-All-Tags')),
+        message_id    = jQuery(this).closest('table').data().message_id;
+    STUDIP.Messages.setTags(message_id, tags);
+    STUDIP.Messages.setAllTags(all_tags);
 });
 
 jQuery(document).on('dialog-open', '#messages .title a', function () {
@@ -240,33 +240,23 @@ jQuery(function () {
 
     jQuery("#messages > tbody > tr").draggable({
         //cursor: "move",
+        cursorAt: {left: 28, top: 15},
         helper: function () {
-            var handle = jQuery("#move_handle").clone().show();
-            handle.find(".title").text(jQuery(this).find(".title").text());
-            return handle;
+            var title = jQuery(this).find('.title').text().trim();
+            return jQuery('<div id="message-move-handle">').text(title);
         },
         revert: true,
-        revertDuration: "200"
-    });
-    jQuery(".widget-links .tag").droppable({
-        'hoverClass': "drop",
-        'drop': function (event, ui) {
-            var message_id = ui.draggable.attr("id").substr(ui.draggable.attr("id").lastIndexOf("_") + 1);
-            var tag = jQuery(this).text();
-            jQuery.ajax({
-                'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/add_tag",
-                'data': {
-                    'message_id': message_id,
-                    'tag': tag
-                },
-                'type': "post",
-                'dataType': "json",
-                'success': function (response) {
-                    jQuery("#message_" + message_id).replaceWith(response.row);
-                }
-            });
+        revertDuration: "200",
+        appendTo: 'body',
+        zIndex: 1000,
+        start: function () {
+            jQuery('#messages-tags').addClass('dragging');
+        },
+        stop: function () {
+            jQuery('#messages-tags').removeClass('dragging');
         }
     });
+    jQuery('.widget-links li:has(.tag)').each(STUDIP.Messages.createDroppable);
 
     jQuery(".adressee .remove_adressee").live("click", STUDIP.Messages.remove_adressee);
 });

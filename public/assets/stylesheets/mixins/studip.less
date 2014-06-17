@@ -46,8 +46,23 @@
         url("@{image-path}/@{image0}") @one,
         url("@{image-path}/@{image1}") @two);
 }
-.retina-background-icon(@icon) {
-    .retina-background-image("icons/16/@{icon}", "icons/32/@{icon}");
+.retina-background-icon(@icon, @size: 16) {
+    @retina: @size * 2;
+    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}");
+}
+
+// Icon before
+.icon-before(@icon, @size: 16, @padding: 0) {
+    &:before {
+        background-repeat: no-repeat;
+        content: ' ';
+        display: inline-block;
+        height: ~"@{size}px";
+        padding-right: @padding;
+        .retina-background-icon(@icon, @size);
+        vertical-align: text-top;
+        width: ~"@{size}px";
+    }
 }
 
 // Scrollboxes

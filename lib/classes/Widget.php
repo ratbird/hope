@@ -29,6 +29,11 @@ class Widget
     protected $layout = 'widgets/widget-layout';
 
     /**
+     * Forced rendering?
+     */
+    protected $forced_rendering = false;
+
+    /**
      * Add an element to the widget.
      *
      * @param WidgetElement $element The actual element
@@ -139,6 +144,16 @@ class Widget
     }
 
     /**
+     * Force rendering
+     *
+     * @param bool $state Whether to force rendering or not
+     */
+    public function forceRendering($state = true)
+    {
+        $this->forced_rendering = $state;
+    }
+
+    /**
      * Renders the widget.
      * The widget will only be rendered if it contains at least one element.
      *
@@ -148,7 +163,7 @@ class Widget
     {
         $content = '';
 
-        if ($this->hasElements()) {
+        if ($this->hasElements() || $this->forced_rendering) {
             $layout = $GLOBALS['template_factory']->open($this->layout);
 
             $template = $GLOBALS['template_factory']->open($this->template);
@@ -159,5 +174,25 @@ class Widget
         }
         
         return $content;
+    }
+    
+    public function __isset($offset)
+    {
+        return isset($this->template_variables[$offset]);
+    }
+    
+    public function __get($offset)
+    {
+        return $this->template_variables[$offset];
+    }
+    
+    public function __set($offset, $value)
+    {
+        $this->template_variables[$offset] = $value;
+    }
+    
+    public function __unset($offset)
+    {
+        unset($this->template_variables[$offset]);
     }
 }

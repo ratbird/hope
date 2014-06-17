@@ -108,7 +108,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -763,14 +763,14 @@ table.default caption {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -785,7 +785,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -941,7 +941,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -1903,7 +1903,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 #layout-sidebar {
   background: #fff;
@@ -2562,7 +2562,7 @@ section.contentbox article.open p,
 section.contentbox article.open section,
 section.contentbox article.open footer {
   max-height: 1000px;
-  transition: max-height 1s;
+  transition: max-height 9s;
 }
 section.contentbox article.open footer {
   border-top-style: solid;
@@ -2996,12 +2996,47 @@ div.messagebox_warning {
 .unread {
   font-weight: bold;
 }
-a.drop {
-  background-color: #899AB9;
+.dropping {
+  background-color: #899ab9;
+}
+.dropping a {
   color: white;
 }
-a.tag {
+a.message-tag {
   white-space: nowrap;
+}
+a.message-tag:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  padding-right: 0;
+  background-image: url("../images/icons/16/blue/star.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/star.png") 1x, url("../images/icons/32/blue/star.png") 2x);
+  vertical-align: text-top;
+  width: 16px;
+}
+#message-move-handle {
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 3px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: thin solid #000;
+}
+#message-move-handle:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 20px;
+  padding-right: 2px;
+  background-image: url("../images/icons/20/blue/mail.png");
+  background-image: -webkit-image-set(url("../images/icons/20/blue/mail.png") 1x, url("../images/icons/40/blue/mail.png") 2x);
+  vertical-align: text-top;
+  width: 20px;
+}
+#messages-tags.dragging .sidebar-widget-content {
+  background-color: #fff8d6;
 }
 #statusbar_container > .statusbar {
   border: thin solid lightgrey;

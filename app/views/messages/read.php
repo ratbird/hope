@@ -57,14 +57,20 @@
         <tr>
             <td><strong><?= _("Tags") ?></strong></td>
             <td>
+                <form id="message-tags" action="<?= $controller->url_for('messages/tag/' . $message->id) ?>" method="post" data-dialog>
                 <? foreach ($message->getTags() as $tag) : ?>
-                    <span class="tag" data-tag="<?= htmlReady($tag) ?>">
-                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="tag"><?= Assets::img("icons/16/blue/star", array('class' => "text-bottom")).htmlReady($tag) ?></a><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom remove_tag")) ?>
+                    <span>
+                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="message-tag">
+                            <?= htmlReady($tag) ?>
+                        </a>
+                        <?= Assets::input('icons/16/blue/trash.png', array('class' => 'text-bottom', 'name' => 'remove_tag', 'value' => $tag)) ?>
                     </span>
                 <? endforeach ?>
-                <span>
-                    <input type="text" name="new_tag" id="new_tag" style="width: 50px; opacity: 0.8;"><?= Assets::img("icons/16/blue/add", array('class' => "text-bottom add_new_tag")) ?>
-                </span>
+                    <span>
+                        <input type="text" name="add_tag" style="width: 50px; opacity: 0.8;">
+                        <?= Assets::input('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
+                    </span>
+                </form>
             </td>
         </tr>
     </tbody>

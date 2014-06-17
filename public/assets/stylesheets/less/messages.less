@@ -4,12 +4,27 @@
 .unread {
   font-weight: bold;
 }
-a.drop {
-  background-color: #899AB9;
-  color: white;
+.dropping {
+  background-color: @content-color;
+  a {
+      color: white;
+  }
 }
-a.tag {
+a.message-tag {
   white-space: nowrap;
+  .icon-before('blue/star.png');
+}
+
+#message-move-handle {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 3px;
+    .border-radius(5px);
+    border: thin solid #000;
+
+    .icon-before('blue/mail.png', 20, 2px);
+}
+#messages-tags.dragging .sidebar-widget-content {
+    background-color: @activity-color-20;
 }
 
 #statusbar_container {

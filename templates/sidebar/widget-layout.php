@@ -1,4 +1,4 @@
-<div class="<?= $base_class ?>-widget">
+<div class="<?= $base_class ?>-widget" <? if ($id) printf('id="%s"', htmlReady($id)) ?> <? if ($style) printf('style="%s"', $style) ?>>
 <? if ($title): ?>
     <div class="<?= $base_class ?>-widget-header">
     <? if ($extra): ?>

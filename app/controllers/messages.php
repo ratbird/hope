@@ -119,6 +119,8 @@ class MessagesController extends AuthenticatedController {
             $this->set_layout(null);
             $this->set_content_type('text/html;Charset=windows-1252');
             $this->response->add_header('X-Title', _("Betreff").": ".$this->message["subject"]);
+            $this->response->add_header('X-Tags', json_encode($this->message->getTags()));
+            $this->response->add_header('X-All-Tags', json_encode(Message::getUserTags()));
         }
         $this->message->markAsRead($GLOBALS["user"]->id);
     }
@@ -266,46 +268,17 @@ class MessagesController extends AuthenticatedController {
         $this->redirect("messages/sent");
     }
 
-    public function add_tag_action() {
-        if (Request::isPost() && Request::get("tag")) {
-            $message = new Message(Request::option("message_id"));
-            $message->addTag(Request::get("tag"));
-
-            $output = array();
-            $factory = $this->get_template_factory();
-            $template = $factory->open($this->get_default_template("read"));
-            $template->set_attribute("message", $message);
-            $output['full'] = $template->render();
-
-            $template = $factory->open($this->get_default_template("_message_row"));
-            $template->set_attribute("message", $message);
-            $output['row'] = $template->render();
-
-            $this->render_text(json_encode(studip_utf8encode($output)));
-        } else {
-            $this->render_nothing();
+    public function tag_action($message_id) {
+        if (Request::isPost()) {
+            if (Request::get('add_tag')) {
+                $message = new Message($message_id);
+                $message->addTag(Request::get('add_tag'));
+            } elseif (Request::get('remove_tag')) {
+                $message = new Message($message_id);
+                $message->removeTag(Request::get('remove_tag'));
+            }
         }
-    }
-
-    public function remove_tag_action() {
-        if (Request::isPost() && Request::get("tag")) {
-            $message = new Message(Request::option("message_id"));
-            $message->removeTag(Request::get("tag"));
-
-            $output = array();
-            $factory = $this->get_template_factory();
-            $template = $factory->open($this->get_default_template("read"));
-            $template->set_attribute("message", $message);
-            $output['full'] = $template->render();
-
-            $template = $factory->open($this->get_default_template("_message_row"));
-            $template->set_attribute("message", $message);
-            $output['row'] = $template->render();
-
-            $this->render_text(json_encode(studip_utf8encode($output)));
-        } else {
-            $this->render_nothing();
-        }
+        $this->redirect('messages/read/' . $message_id);
     }
 
     function print_action($message_id)

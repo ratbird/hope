@@ -9,16 +9,6 @@
  */
 class SidebarWidget extends Widget
 {
-    /**
-     * Contains the title of the widget
-     */
-    protected $title = false;
-
-    /**
-     * Containts extra options of the widget
-     */
-    protected $extra = false;
-
     public function __construct()
     {
         $this->layout = 'sidebar/widget-layout.php';
@@ -75,8 +65,6 @@ class SidebarWidget extends Widget
      */
     public function render($variables = array())
     {
-        $this->template_variables['title'] = $this->title;
-        $this->template_variables['extra'] = $this->extra;
         return parent::render($variables);
     }
 }

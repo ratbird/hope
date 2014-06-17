@@ -2454,6 +2454,7 @@ section.contentbox {
   border-style: solid;
   border-width: 1px;
   margin-bottom: 10px;
+  transition: all 300ms ease 0s;
 }
 section.contentbox header {
   padding: 2px;
@@ -2495,7 +2496,12 @@ section.contentbox article p,
 section.contentbox article section,
 section.contentbox article footer {
   padding: 0 10px 0 10px;
-  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
+}
+section.contentbox article p {
+  margin: 0;
 }
 section.contentbox article section {
   border-width: 0;
@@ -2516,15 +2522,19 @@ section.contentbox article section article time {
   font-size: smaller;
   margin: 2px;
 }
-section.contentbox article header h1 a {
-  padding-left: 16px;
+section.contentbox article header h1 a:before {
+  content: " ";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
   background-image: url("../images/icons/16/blue/arr_1right.png");
   background-repeat: no-repeat;
+  transition: all 300ms ease 0s;
 }
 section.contentbox article footer {
   text-align: center;
   border-color: #d0d7e3;
-  border-top-style: solid;
+  border-top-style: none;
   border-width: 1px;
 }
 section.contentbox article footer h1 {
@@ -2552,10 +2562,14 @@ section.contentbox article footer article.comment time {
 section.contentbox article.open p,
 section.contentbox article.open section,
 section.contentbox article.open footer {
-  display: inherit;
+  max-height: 1000px;
+  transition: max-height 0.3s cubic-bezier(1, 0, 1, -0.05);
 }
-section.contentbox article.open header h1 a {
-  background-image: url("../images/icons/16/blue/arr_1down.png");
+section.contentbox article.open footer {
+  border-top-style: solid;
+}
+section.contentbox article.open header h1 a:before {
+  transform: rotate(90deg);
 }
 #header .badge {
   position: relative;

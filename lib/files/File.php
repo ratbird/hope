@@ -161,6 +161,38 @@ class File extends SimpleORMap
     }
 
     /**
+     * Sets the contents of the file from another file.
+     */
+    public function setContentFromFile($file)
+    {
+        if (!file_exists($file)) {
+            throw new Exception('Source file "' . $file . '" does not exist.');
+        }
+        if (!is_readable($file)) {
+            throw new Exception('Source file "' . $file . '" is not readable.');
+        }
+
+        $source = fopen($file, 'r');
+        $target = $this->open('w+');
+        
+        if (!$source) {
+            throw new Exception('Source file "' . $file . '" could not be opened.');
+        }
+        if (!$target) {
+            throw new Exception('Target file "' . $this->getStoragePath() . '" could not be opened.');
+        }
+
+        $copied = stream_copy_to_stream($source, $target);
+
+        fclose($source);
+        fclose($target);
+        
+        if ($copied !== filesize($file)) {
+            throw new Exception('Error during copy - not all bytes were transferred.');
+        }
+    }
+
+    /**
      * Update this file's metadata if the content has changed.
      * Note: This needs to be called after each update of the file.
      */

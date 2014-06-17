@@ -153,7 +153,7 @@
 
 <?= $news ?>
 
-<? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, Request::option('dopen')) ?>
+<?= $dates ?>
 
 <?= $votes ?>
 

@@ -20,10 +20,7 @@ require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/statusgruppe.inc.php';
-require_once 'lib/showNews.inc.php';
-require_once 'lib/show_dates.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'lib/dates.inc.php';
 
 require_once 'lib/classes/score.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
@@ -35,11 +32,6 @@ class ProfileController extends AuthenticatedController
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-
-        // Checks if voting is enabled
-        if (get_config('VOTE_ENABLE')) {
-            include_once ("lib/vote/vote_show.inc.php");
-        }
         
         // Remove cid
         URLHelper::removeLinkParam('cid');
@@ -184,8 +176,9 @@ class ProfileController extends AuthenticatedController
         // calendar
         if (get_config('CALENDAR_ENABLE')) {
             if (!in_array($this->current_user->perms, words('admin root'))) {
-                if (($this->terms = $this->profile->checkVisibility('termine'))) {
-                    $this->show_admin   = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id);
+                if ($this->profile->checkVisibility('termine')) { 
+            $response = $this->relay('calendar/contentbox/display/' . $this->current_user->user_id);
+            $this->dates = $response->body;
                 }
             }
         }

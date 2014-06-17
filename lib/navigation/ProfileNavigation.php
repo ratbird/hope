@@ -112,6 +112,12 @@ class ProfileNavigation extends Navigation
             // user defined sections
             $navigation = new Navigation(_('Kategorien'), 'dispatch.php/settings/categories');
             $this->addSubNavigation('categories', $navigation);
+
+            // user documents page
+            if (Config::get()->PERSONALDOCUMENT_ENABLE) {
+                $navigation = new Navigation(_('Meine Dateien'), 'dispatch.php/document/files');
+                $this->addSubNavigation('files', $navigation);
+            }
         }
     }
 }

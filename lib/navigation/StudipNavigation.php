@@ -72,11 +72,6 @@ class StudipNavigation extends Navigation
             // calendar and schedule page
             $this->addSubNavigation('calendar', new CalendarNavigation());
             
-            // user documents page
-            if (Config::get()->PERSONALDOCUMENT_ENABLE) {
-                $this->addSubNavigation('document', new DocumentNavigation());
-            }
-            
             // search page
             $this->addSubNavigation('search', new SearchNavigation());
         }

@@ -43,7 +43,7 @@ class Document_FilesController extends DocumentController
 
         PageLayout::setTitle(_('Dateiverwaltung'));
         PageLayout::setHelpKeyword('Basis.Dateien');
-        Navigation::activateItem('/document/files');
+        Navigation::activateItem('/profile/files');
         
         PageLayout::addSqueezePackage('document');
     }

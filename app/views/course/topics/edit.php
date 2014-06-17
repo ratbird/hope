@@ -21,7 +21,7 @@
             <tr>
                 <td><strong><?= _("Termine") ?></strong></td>
                 <td>
-                    <ul class="clean" style="max-height: 100px; overflow: auto;">
+                    <ul class="clean" style="max-height: 310px; overflow: auto;">
                         <? foreach ($dates as $date) : ?>
                         <li>
                             <label>
@@ -29,6 +29,17 @@
                                 <?= (floor($date['date'] / 86400) !== floor($date['end_time'] / 86400)) ? date("d.m.Y, H:i", $date['date'])." - ".date("d.m.Y, H:i", $date['end_time']) : date("d.m.Y, H:i", $date['date'])." - ".date("H:i", $date['end_time']) ?>
                                 <input type="checkbox" name="date[<?= $date->getId() ?>]" value="1" class="text-bottom"<?= in_array($date->getId(), $date_ids) ? " checked" : "" ?>>
                             </label>
+                            <? $localtopics = $date->topics ?>
+                            <? if (count($localtopics)) : ?>
+                            (
+                                <? foreach ($localtopics as $key => $localtopic) : ?>
+                                    <a href="<?= URLHelper:: getLink("dispatch.php/course/topics/index", array('open' => $localtopic->getId())) ?>">
+                                        <?= Assets::img("icons/16/blue/topic", array('class' => "text-bottom")) ?>
+                                        <?= htmlReady($localtopic['title']) ?>
+                                    </a>
+                                <? endforeach ?>
+                            )
+                            <? endif ?>
                         </li>
                         <? endforeach ?>
                     </ul>

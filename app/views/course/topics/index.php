@@ -78,14 +78,14 @@
                                 <form action="?" method="post" style="display: inline;">
                                     <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">
                                     <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                    <?= \Studip\Button::createMoveUp(_("nach oben verschieben")) ?>
+                                    <?= \Studip\Button::createArr_1up(_("nach oben verschieben")) ?>
                                 </form>
                             <? endif ?>
                             <? if ($key < count($topics) - 1) : ?>
                             <form action="?" method="post" style="display: inline;">
                                 <input type="hidden" name="move_down" value="<?= $topic->getId() ?>">
                                 <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                <?= \Studip\Button::createMoveDown(_("nach unten verschieben")) ?>
+                                <?= \Studip\Button::createArr_1down(_("nach unten verschieben")) ?>
                             </form>
                             <? endif ?>
                         <? endif ?>

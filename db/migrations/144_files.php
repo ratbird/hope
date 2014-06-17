@@ -107,8 +107,7 @@ class files extends DBMigration
             (`id` INT NOT NULL AUTO_INCREMENT ,
             `type` VARCHAR(45) NOT NULL ,
             `description` TEXT NULL ,
-            PRIMARY KEY (`id`))
-            ENGINE = MyISAM"
+            PRIMARY KEY (`id`))"
         );
 
         DBManager::get()->query("CREATE  TABLE IF NOT EXISTS `doc_usergroup_config`
@@ -122,8 +121,7 @@ class files extends DBMigration
             `area_close` INT NOT NULL DEFAULT 0 ,
             `area_close_text` TEXT NULL ,
             `is_group_config` INT NOT NULL DEFAULT 0 ,
-            PRIMARY KEY (`id`, `usergroup`))
-            ENGINE = MyISAM"
+            PRIMARY KEY (`id`, `usergroup`))"
         );
 
         DBManager::get()->query("CREATE  TABLE IF NOT EXISTS `doc_filetype_forbidden`
@@ -132,8 +130,7 @@ class files extends DBMigration
             `dateityp_id` INT NOT NULL ,
             PRIMARY KEY (`id`) ,
             INDEX `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id` ASC) ,
-            INDEX `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup` ASC))
-            ENGINE = MyISAM"
+            INDEX `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup` ASC))"
         );
 
         /*

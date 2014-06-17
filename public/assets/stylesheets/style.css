@@ -3070,7 +3070,7 @@ div.clear {
 }
 #tabs {
   float: left;
-  line-height: 18pt;
+  line-height: 25px;
   margin: 0;
 }
 #tabs ul,
@@ -4312,15 +4312,14 @@ div#schedule-settings-dialog-shadow {
   bottom: 20px;
   right: 20px;
   z-index: 20001;
-  border: solid 2px #28497c;
+  border: solid 1px #28497c;
   background-color: #ffffff;
   padding: 10px 10px;
   font-family: "Lato", sans-serif;
   overflow-y: auto;
-  box-sizing: border-box;
-  -webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-  box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 #tour_controls button {
   vertical-align: middle;
@@ -4352,12 +4351,9 @@ div#schedule-settings-dialog-shadow {
   background-color: #28497c;
   color: #ffffff;
   border: solid 1px #aaaaaa;
-  -webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-  box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-}
-#tour_tip #tour_tip_title {
-  font-weight: bold;
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
 #tour_tip_interactive {
   padding: 10px 20px;
@@ -4370,8 +4366,11 @@ div#schedule-settings-dialog-shadow {
   background-color: #ffbd33;
   color: #000000;
   border: solid 1px #aaaaaa;
+  -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
-#tour_tip_interactive #tour_tip_title {
+#tour_tip_title {
   font-weight: bold;
 }
 .tourArrow {

@@ -33,6 +33,7 @@ class Document_FilesController extends DocumentController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+
         //Setup the user's sub-directory in $USER_DOC_PATH
         $userdir = $GLOBALS['USER_DOC_PATH'] . '/' . $this->context_id . '/';
 
@@ -131,7 +132,8 @@ class Document_FilesController extends DocumentController
                     $this_title = $title;
                     if ($this_title && $count > 1) {
                         $this_title .= ' ' . sprintf(_('(%u von %u)'), $i + 1, $count);
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                    }
+
                     $new_file = $directory->createFile($filename);
                     $new_file->description = $description;
                     $new_file->name        = $this_title ?: $filename;
@@ -143,12 +145,16 @@ class Document_FilesController extends DocumentController
                     //echo $filesize;die;
                     $handle->size = $filesize;
                         
-                    // TODO: Check if storage path is writable
-                    if (!move_uploaded_file($tempname, $handle->getStoragePath())) {
-                        $failed[] = array($filename, 'local');
-                        $handle->delete();
-                    } else {
+                    try {
+                        $handle->setContentFromFile($tempname);
                         $handle->update();
+                    } catch (Exception $e) {
+                        if (Studip\ENV === 'development') {
+                            throw $e;
+                        } else {
+                            $failed[] = array($filename, 'local');
+                            $handle->delete();
+                        }
                     }
                 }
             }
@@ -376,7 +382,7 @@ class Document_FilesController extends DocumentController
                                         $this->url_for('document/files/delete/' . $id));
             $this->flash['question'] = $question;
         } elseif (Request::isPost() && Request::submitted('yes')) {
-            $entry->directory->file->unlink($entry->name);
+            File::get($parent_id)->unlink($entry->name);
             PageLayout::postMessage(MessageBox::success(_('Die Datei wurde gelöscht.')));
         }
         $this->redirect('document/files/index/' . $parent_id);

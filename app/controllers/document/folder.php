@@ -116,7 +116,7 @@ class Document_FolderController extends DocumentController
                 PageLayout::postMessage(MessageBox::success(_('Der Dateibereich wurde geleert.')));
             } else {
                 $entry = DirectoryEntry::find($folder_id);
-                $entry->directory->file->unlink($entry->name);
+                File::get($parent_id)->unlink($entry->name);
                 PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde gelöscht.')));
             }
         }

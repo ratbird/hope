@@ -5,6 +5,7 @@
     }?>
     <tbody class="collapsed">
     <tr class="table_header header-row">
+        <th class="toggle-indicator" style="white-space: nowrap; text-align: left"></th>
         <th class="toggle-indicator" style="white-space: nowrap; text-align: left" colspan="3">
             <a class="toggler">
                 <? if (strcmp($group_field, 'sem_tree_id') === 0 && strcmp($title, '') === 0) : ?>
@@ -17,7 +18,7 @@
 
                 <?= htmlReady($title) ?></a>
         </th>
-        <th colspan="3">
+        <th colspan="2">
             <? if($last_modified) : ?>
                 <?= tooltipIcon(_('Letzte Änderung: ') . strftime('%x, %H:%M', $last_modified), true) ?>
             <? endif?>

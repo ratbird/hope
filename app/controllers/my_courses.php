@@ -73,9 +73,9 @@ class MyCoursesController extends AuthenticatedController
         $default_deputies_enabled     = Config::get()->DEPUTIES_DEFAULTENTRY_ENABLE;
         $deputies_edit_about_enabledt = Config::get()->DEPUTIES_EDIT_ABOUT_ENABLE;
         $studygroups_enabled          = Config::get()->MY_COURSES_ENABLE_STUDYGROUPS;
-
-        $sem_create_perm = (in_array(Config::get()->SEM_CREATE_PERM, array('root', 'admin',
-                                                                           'dozent')) ? Config::get()->SEM_CREATE_PERM : 'dozent');
+        $this->config_sem_number      = Config::get()->IMPORTANT_SEMNUMBER;
+        $sem_create_perm              = (in_array(Config::get()->SEM_CREATE_PERM, array('root', 'admin',
+            'dozent')) ? Config::get()->SEM_CREATE_PERM : 'dozent');
 
         $this->sem_data = SemesterData::GetSemesterArray();
 
@@ -92,7 +92,7 @@ class MyCoursesController extends AuthenticatedController
             ? Config::get()->MY_COURSES_FORCE_GROUPING
             : 'sem_number';
 
-        if($forced_grouping == 'not_grouped') {
+        if ($forced_grouping == 'not_grouped') {
             $forced_grouping = 'sem_number';
         }
 
@@ -186,17 +186,17 @@ class MyCoursesController extends AuthenticatedController
             Navigation::activateItem('/browse/my_courses/list');
         }
 
-        $this->current_semester = $sem ?: Semester::findCurrent()->semester_id;
+        $this->current_semester = $sem ? : Semester::findCurrent()->semester_id;
 
-        $this->semesters     = SemesterData::GetSemesterArray();
-        $forced_grouping     = Config::get()->MY_COURSES_FORCE_GROUPING;
-        if($forced_grouping == 'not_grouped') {
+        $this->semesters = SemesterData::GetSemesterArray();
+        $forced_grouping = Config::get()->MY_COURSES_FORCE_GROUPING;
+        if ($forced_grouping == 'not_grouped') {
             $forced_grouping = 'sem_number';
         }
 
         $no_grouping_allowed = ($forced_grouping == 'sem_number' || !in_array($forced_grouping, getValidGroupingFields()));
 
-        $group_field = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ?: $forced_grouping;
+        $group_field = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ? : $forced_grouping;
 
         $groups     = array();
         $add_fields = '';
@@ -310,14 +310,14 @@ class MyCoursesController extends AuthenticatedController
 
             foreach ($gruppe as $key => $value) {
                 $user_statement->execute(array($value,
-                                               $key,
-                                               $GLOBALS['user']->id));
+                    $key,
+                    $GLOBALS['user']->id));
                 $updated = $user_statement->rowCount();
 
                 if ($deputies_enabled && !$updated) {
                     $deputy_statement->execute(array($value,
-                                                     $key,
-                                                     $GLOBALS['user']->id));
+                        $key,
+                        $GLOBALS['user']->id));
                 }
             }
         }
@@ -380,7 +380,7 @@ class MyCoursesController extends AuthenticatedController
             if ($lockdata['description']) PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
             $this->redirect('my_courses/index');
             return;
-        } 
+        }
 
         if (Request::option('cmd') == 'back') {
             $this->redirect('my_courses/index');
@@ -439,7 +439,7 @@ class MyCoursesController extends AuthenticatedController
                 $query     = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($GLOBALS['user']->id,
-                                          $course_id));
+                    $course_id));
                 if ($statement->rowCount() == 0) {
                     PageLayout::postMessage(MessageBox::error(_('Datenbankfehler!')));
                 } else {
@@ -466,7 +466,7 @@ class MyCoursesController extends AuthenticatedController
                 $query     = "DELETE FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($GLOBALS['user']->id,
-                                          $course_id));
+                    $course_id));
                 if ($statement->rowCount() || $prio_delete) {
                     //Warteliste neu sortieren
                     renumber_admission($course_id);
@@ -497,7 +497,7 @@ class MyCoursesController extends AuthenticatedController
         SkipLinks::addIndex(_('Hauptinhalt'), 'layout_content', 100);
         $sortby = Request::option('sortby', 'name');
 
-        $query = "SELECT semester, name, seminar_id, status, archiv_file_id,
+        $query     = "SELECT semester, name, seminar_id, status, archiv_file_id,
                          LENGTH(forumdump) > 0 AS forumdump, # Test for existence
                          LENGTH(wikidump) > 0 AS wikidump    # Test for existence
                   FROM archiv_user
@@ -568,9 +568,9 @@ class MyCoursesController extends AuthenticatedController
 
         if ($seminar_content['visitdate'] <= $seminar_content['chdate'] || $seminar_content['last_modified'] > 0) {
             $last_modified = $seminar_content['visitdate'] <= $seminar_content['chdate']
-                              && $seminar_content['chdate'] > $seminar_content['last_modified']
-                           ? $seminar_content['chdate']
-                           : $seminar_content['last_modified'];
+            && $seminar_content['chdate'] > $seminar_content['last_modified']
+                ? $seminar_content['chdate']
+                : $seminar_content['last_modified'];
             if ($last_modified) {
                 return true;
             }
@@ -603,7 +603,7 @@ class MyCoursesController extends AuthenticatedController
             'gruppe'      => _('Farbgruppen'),
             'dozent_id'   => _('Dozenten'),
         );
-        $view = new ViewsWidget();
+        $view    = new ViewsWidget();
         foreach ($groups as $key => $group) {
             $view->addLink($group, $this->url_for('my_courses/store_groups?select_group_field=' . $key))->setActive($key === $group_field);
         }
@@ -617,12 +617,12 @@ class MyCoursesController extends AuthenticatedController
      */
     private function setSemesterWidget(&$sem)
     {
-        $semesters = new SimpleCollection(Semester::getAll());
-        $this->sem = $sem;
+        $semesters       = new SimpleCollection(Semester::getAll());
+        $this->sem       = $sem;
         $this->semesters = $semesters->orderBy('beginn desc');
 
         $sidebar = Sidebar::Get();
-        $widget = new SidebarWidget();
+        $widget  = new SidebarWidget();
         $widget->setTitle(_('Semesterfilter'));
         $this->render_template('my_courses/_semester_filter.php', null);
         $html = $this->response->body;

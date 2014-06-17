@@ -12,6 +12,7 @@
 <? endif ?>
 
 <? if (!empty($sem_courses)) : ?>
+    <? $_order = (!$order_by || $order == 'desc') ? 'asc' : 'desc' ?>
     <? SkipLinks::addIndex(_("Meine Veranstaltungen"), 'my_seminars') ?>
     <div id="my_seminars">
         <? foreach ($sem_courses as $sem_key => $course_group) : ?>
@@ -20,21 +21,28 @@
                     <?= sprintf(_("Meine Veranstaltungen im %s"), htmlReady($sem_data[$sem_key]['name'])) ?>
                 </caption>
                 <colgroup>
-                    <col width="10px">
+                    <col width="7px">
                     <col width="25px">
+                    <? if ($config_sem_number) : ?>
+                        <col width="10%">
+                    <? endif ?>
                     <col>
                     <col width="35%">
-                    <col width="3%">
+                    <col width=25px>
                 </colgroup>
                 <thead>
                 <tr class="sortable">
-                    <th colspan="3"class=<?=
-                    ($order_by == "name")
-                        ? ($order == 'desc')
-                            ? 'sortdesc'
-                            : 'sortasc'
-                        : '' ?>>
-                        <? $_order = (!$order_by || $order == 'desc') ? 'asc' : 'desc' ?>
+                    <th></th>
+                    <th></th>
+                    <? if ($config_sem_number) : ?>
+                        <th class=<?= ($order_by == "veranstaltungsnummer") ? ($order == 'desc') ? 'sortdesc' : 'sortasc' : '' ?>>
+                            <a href="<?= $controller->url_for(sprintf('my_courses/index/veranstaltungsnummer/%s', $_order)) ?>">
+                                <?= _("Nr.") ?>
+                            </a>
+                        </th>
+                    <? endif ?>
+                    <th <?= !$config_sem_number ? 'colspan="2"' : ''?>
+                        class=<?= ($order_by == "name") ? ($order == 'desc') ? 'sortdesc' : 'sortasc' : '' ?>>
                         <a href="<?= $controller->url_for(sprintf('my_courses/index/name/%s', $_order)) ?>">
                             <?= _("Name") ?>
                         </a>

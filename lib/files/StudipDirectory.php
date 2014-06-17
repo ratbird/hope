@@ -209,6 +209,19 @@ class StudipDirectory extends File
     {
         return $this->files->orderBy('name asc');
     }
+    
+    /**
+     * Return a list of all child directories in this
+     * directory.
+     *
+     * @return array array of DirectoryEntry objects
+     */
+    public function listDirectories()
+    {
+        return $this->listFiles()->filter(function ($file) {
+            return $file->isDirectory();
+        });
+    }
 
     /**
      * Create a new sub directory with the given name in this
@@ -222,7 +235,7 @@ class StudipDirectory extends File
     {
         $dir = new StudipDirectory();
         $dir->user_id    = $GLOBALS['user']->id;
-        $dir->filename   = '';
+        $dir->filename   = $name;
         $dir->mime_type  = '';
         $dir->size       = 0;
         $dir->restricted = false;

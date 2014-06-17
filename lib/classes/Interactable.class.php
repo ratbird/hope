@@ -156,7 +156,7 @@ abstract class Interactable
      */
     static function createAccept($label = NULL, $trait = NULL, $attributes = array())
     {
-        $args = func_num_args() ? func_get_args() : array('übernehmen');
+        $args = func_num_args() ? func_get_args() : array(_('Übernehmen'));
         return self::__callStatic(__FUNCTION__, $args);
     }
 
@@ -172,7 +172,7 @@ abstract class Interactable
      */
     static function createEdit($label = NULL, $trait = NULL, $attributes = array())
     {
-        $args = func_num_args() ? func_get_args() : array('bearbeiten');
+        $args = func_num_args() ? func_get_args() : array(_('Bearbeiten'));
         return self::__callStatic(__FUNCTION__, $args);
     }
 
@@ -188,7 +188,7 @@ abstract class Interactable
      */
     static function createCancel($label = NULL, $trait = NULL, $attributes = array())
     {
-        $args = func_num_args() ? func_get_args() : array('abbrechen');
+        $args = func_num_args() ? func_get_args() : array(_('Abbrechen'));
         return self::__callStatic(__FUNCTION__, $args);
     }
 

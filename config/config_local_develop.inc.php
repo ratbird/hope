@@ -86,11 +86,15 @@ if ($ASSETS_URL[0] === '/') {
 // absolute filesystem path to the plugin packages
 $PLUGINS_PATH = $ABSOLUTE_PATH_STUDIP . 'plugins_packages';
 
-
 // path to uploaded documents (wwwrun needs write-perm there)
 $UPLOAD_PATH = $STUDIP_BASE_PATH . "/data/upload_doc";
+
+// path to uploaded user-documents (wwwrun needs write-perm there)
+$USER_DOC_PATH = $STUDIP_BASE_PATH . "/data/user_doc";
+
 // path to Stud.IP archive (wwwrun needs write-perm there)
 $ARCHIV_PATH = $STUDIP_BASE_PATH . "/data/archiv";
+
 //path to store configs (wwwrun needs write-perm there)
 $EXTERN_CONFIG_FILE_PATH =  $STUDIP_BASE_PATH . "/data/extern_config/";
 
@@ -128,6 +132,7 @@ $PATH_EXPORT = "lib/export";                                //Stud.IP module: ex
 //caching
 $CACHING_ENABLE = true;
 $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
+$CACHE_IS_SESSION_STORAGE = false;                 //store session data in cache
 
 /*Stud.IP modules
 ----------------------------------------------------------------

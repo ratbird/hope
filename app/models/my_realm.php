@@ -1194,8 +1194,8 @@ class MyRealmModel
             $ret['modules'] = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
             MyRealmModel::getObjectValues($ret);
 
+            return $ret;
         }, array_keys($studygroups));
-
 
         return $courses;
     }

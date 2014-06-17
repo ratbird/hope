@@ -550,7 +550,10 @@ class StudipFormat extends TextFormat
             }
         }
         $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
-        if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {
+        if ($intern
+            && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))
+            && !($pu['first_target'] === 'dispatch.php' && strpos($pu['path'], 'dispatch.php/document/files/download') !== false))
+        {
             return $matches[0];
         } elseif ((!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') && !$intern) {
             return $matches[0];

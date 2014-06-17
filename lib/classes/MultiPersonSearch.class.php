@@ -475,7 +475,6 @@ class MultiPersonSearch {
         $_SESSION['multipersonsearch'][$this->name]['quickfilterIds'] = $this->quickfilterIds;
         $_SESSION['multipersonsearch'][$this->name]['searchObject'] = serialize($this->searchObject);
         $_SESSION['multipersonsearch'][$this->name]['navigationItem'] = $this->navigationItem;
-        $_SESSION['multipersonsearch'][$this->name]['lastUse'] = $this->lastUse;
     }
 
     /**
@@ -493,7 +492,6 @@ class MultiPersonSearch {
         $this->defaultSelectedUsersIDs = $_SESSION['multipersonsearch'][$this->name]['defaultSelectedUsersIDs'];
         $this->searchObject = unserialize($_SESSION['multipersonsearch'][$this->name]['searchObject']);
         $this->navigationItem = $_SESSION['multipersonsearch'][$this->name]['navigationItem'];
-        $this->lastUse = $_SESSION['multipersonsearch'][$this->name]['lastUse'];
     }
 
     /**

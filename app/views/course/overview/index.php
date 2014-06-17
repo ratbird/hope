@@ -75,7 +75,7 @@
     } else {
         echo '<b>'._('Beschreibung:').' </b><br>'. formatLinks($sem->description) .'<br><br>';
         echo '<b>'._('Moderiert von:') .'</b> ';
-        #$all_mods = $sem->getMembers('dozent') + $sem->getMembers('tutor');
+        $all_mods = $sem->getMembers('dozent') + $sem->getMembers('tutor');
         $mods = array();
         foreach($all_mods as $mod) {
             $mods[] = '<a href="'.URLHelper::getLink("dispatch.php/profile?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';

@@ -65,31 +65,73 @@ class Course_StudygroupController extends AuthenticatedController {
     function details_action($id)
     {
         global $perm;
-
-        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
-        PageLayout::setHelpKeyword('Basis.StudiengruppenAbonnieren');
-        PageLayout::addSqueezePackage('enrolment');
-
-        $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
-                    . " WHERE user_id = ? AND seminar_id = ?");
-        $stmt->execute(array($GLOBALS['user']->id, $id));
-        $data = $stmt->fetch();
-
-        if ($data['status'] == 'accepted') $this->membership_requested = true;
-        if (StudygroupModel::isInvited($GLOBALS['user']->id, $id)) $this->invited = true;
-        
-        if ($perm->have_studip_perm('autor', $id)) {
-            $this->participant = true;
+        $studygroup = new Seminar($id);
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->response->add_header('Content-Type', 'text/html;charset=Windows-1252');
+            header('X-Title: ' . _('Studiengruppendetails'));
         } else {
-            $this->participant = false;
-        }
+            PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
+            PageLayout::setHelpKeyword('Basis.StudiengruppenAbonnieren');
+            PageLayout::addSqueezePackage('enrolment');
 
-        $this->studygroup = new Seminar($id);
-        if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'],'/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', Request::get('send_from_search_page'))) {
-            $this->send_from_search_page = '';
-        } else {
-            $this->send_from_search_page = Request::get('send_from_search_page');
+            $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
+                . " WHERE user_id = ? AND seminar_id = ?");
+            $stmt->execute(array($GLOBALS['user']->id, $id));
+            $data = $stmt->fetch();
+
+            if ($data['status'] == 'accepted') $membership_requested = true;
+            if (StudygroupModel::isInvited($GLOBALS['user']->id, $id)) $invited = true;
+
+            $participant = $perm->have_studip_perm('autor', $id);
+
+
+            if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', Request::get('send_from_search_page'))) {
+                $send_from_search_page = '';
+            } else {
+                $send_from_search_page = Request::get('send_from_search_page');
+            }
+
+            $icon = 'icons/16/black/schedule.png';
+            if ($GLOBALS['perm']->have_studip_perm('autor', $studygroup->getId()) || $membership_requested) {
+                $action = _("Persönlicher Status:");
+                if ($membership_requested) {
+                    $infotext = _("Mitgliedschaft bereits beantragt!");
+                } else {
+                    $infolink = URLHelper::getURL('seminar_main.php?auswahl=' . $studygroup->getId());
+                    $infotext = _("Direkt zur Studiengruppe");
+                }
+            } else if ($GLOBALS['perm']->have_perm('admin')) {
+                $action = _("Hinweis:");
+                $infotext = _('Sie sind einE AdministratorIn und können sich daher nicht für Studiengruppen anmelden.');
+                $icon = 'icons/16/red/decline.png';
+            } else {
+                $action = _("Aktionen:");
+                $infolink = URLHelper::getScriptURL('dispatch.php/course/enrolment/apply/' . $studygroup->getId());
+                $infolink_options = array('data-dialog' => '');
+                // customize link text if user is invited or group access is restricted
+                if ($invited === true) {
+                    $infotext = _("Einladung akzeptieren");
+                } elseif ($studygroup->admission_prelim) {
+                    $infotext = _("Mitgliedschaft beantragen");
+                } else {
+                    $infotext = _("Studiengruppe beitreten");
+                }
+            }
+            $sidebar = Sidebar::get();
+            $iwidget = new SidebarWidget();
+            $iwidget->setTitle(_("Information"));
+            $iwidget->addElement(new WidgetElement(_("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können Sie ihr beitreten/eine Mitgliedschaft beantragen.")));
+            $sidebar->addWidget($iwidget);
+            $awidget = new LinksWidget();
+            $awidget->setTitle($action);
+            $awidget->addLink($infotext, $infolink, $icon, $infolink_options);
+            if ($send_from_search_page) {
+                $awidget->addLink(_("zurück zur Suche"), URLHelper::getURL($send_from_search_page), 'icons/16/black/schedule.png');
+            }
+            $sidebar->addWidget($awidget);
         }
+        $this->studygroup = $studygroup;
     }
 
     /**

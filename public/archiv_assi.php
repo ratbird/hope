@@ -463,32 +463,21 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             if (count($institutes) === 1) {
-                print("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
+                print("<b>" . _("Beteiligte Einrichtung:") . "</b><br>");
                 $institute = reset($institutes);
-                printf('<font size=-1><a href="%s">%s</a></font><br>',
+                printf('<a href="%s">%s</a><br>',
                     URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
                     htmlReady($institute['Name']));
             } else if (count($institutes) >= 2) {
-                print("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
+                print("<b>" . _("Beteiligte Einrichtungen:") . "</b><br>");
 
                 echo '<ul style="margin:0;">';
                 foreach ($institutes as $institute) {
                     echo '<li>';
-                    printf('<font size=-1><a href="%s">%s</a></font><br>',
+                    printf('<a href="%s">%s</a>',
                            URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
                            htmlReady($institute['Name']));
-                } else if (count($institutes) >= 2) {
-                    print("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
-
-                    echo '<ul style="margin:0;">';
-                    foreach ($institutes as $institute) {
-                        echo '<li>';
-                        printf('<font size=-1><a href="%s">%s</a></font><br>',
-                               URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
-                               htmlReady($institute['Name']));
-                        echo '</li>';
-                    }
-                    echo '</ul>';
+                    echo '</li>';
                 }
                 echo '</ul>';
             }

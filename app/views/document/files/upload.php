@@ -24,10 +24,10 @@
                 <textarea name="description" placeholder="<?= _('Optionale Beschreibung') ?>"></textarea>
             </label>
         </fieldset>
-
+<?/*
         <fieldset>
             <label>
-                <input type="radio" name="restricted" checked value="0">
+                <input type="radio" name="restricted" value="0">
                 <?= _('Ja, dieses Dokument ist frei von Rechten Dritter.') ?>
             </label>
             <label>
@@ -36,7 +36,7 @@
             </label>
         </fieldset>
     </fieldset>
-
+*/?>
     <div data-dialog-button>
         <?= Studip\Button::createAccept(_('Hochladen'), 'upload') ?>
         <?= Studip\LinkButton::createCancel(_('Abbrechen'),

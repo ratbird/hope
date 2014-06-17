@@ -27,7 +27,6 @@ require_once 'ProfileNavigation.php';
 require_once 'SearchNavigation.php';
 require_once 'StartNavigation.php';
 require_once 'ToolsNavigation.php';
-require_once 'DocumentNavigation.php';
 
 /**
  * This is the class for the top navigation (toolbar) in the page header.

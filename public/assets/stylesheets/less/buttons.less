@@ -46,10 +46,11 @@ a.button, button.button {
     .button;
 }
 
-.button.accept, .button.cancel, .button.edit, .button.arr_1down, .button.arr_1up {
+.button-with-empty-icon {
     white-space: normal;
 
     &:before {
+        background: no-repeat;
         content: " ";
         float: left;
         height: 16px;
@@ -58,34 +59,32 @@ a.button, button.button {
     }
 }
 
-.button.accept {
-    &:before { background: no-repeat;
-        .retina-background-icon("blue/accept.png");
+.button-with-icon(@icon) {
+    &:extend(.button-with-empty-icon);
+    &:before {
+        &:extend(.button-with-empty-icon:before);
+        .retina-background-icon(@icon);
     }
+}
+
+.button.accept {
+  .button-with-icon("blue/accept.png");
 }
 
 .button.cancel {
-    &:before { background: no-repeat;
-        .retina-background-icon("blue/decline.png");
-    }
+  .button-with-icon("blue/decline.png");
 }
 
 .button.edit {
-    &:before { background: no-repeat;
-        .retina-background-icon("blue/edit.png");
-    }
+  .button-with-icon("blue/edit.png");
 }
 
-.button.arr_1up {
-    &:before { background: no-repeat;
-        .retina-background-icon("blue/arr_1up.png");
-    }
+.button.move-up {
+  .button-with-icon("blue/arr_1up.png");
 }
 
-.button.arr_1down {
-    &:before { background: no-repeat;
-        .retina-background-icon("blue/arr_1down.png");
-    }
+.button.move-down {
+  .button-with-icon("blue/arr_1down.png");
 }
 
 /****************************************************************************/

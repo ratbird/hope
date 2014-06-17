@@ -597,18 +597,52 @@ class StreamsController extends PluginController {
                 $document['seminar_id'] = $context;
                 $document['range_id'] = $context_type === "course" ? $folder_id : $parent_folder_id;
                 $document['filesize'] = $file['size'];
-                if ($newfile = StudipDocument::createWithFile($file['tmp_name'], $document)) {
+
+                if ($context === $GLOBALS['user']->id && Config::get()->PERSONALDOCUMENT_ENABLE) {
+                    try {
+                        $root_dir = RootDirectory::find($GLOBALS['user']->id);
+                        $blubber_directory = $root_dir->listDirectories()->findOneBy('name', 'Blubber');
+                        if (!$blubber_directory) {
+                            $blubber_directory = $root_dir->mkdir('Blubber', _('Ihre Dateien aus Blubberstreams'));
+                        }
+                        $newfile = $blubber_directory->file->createFile($document['name']);
+                        $newfile->name = $document['name'];
+                        $newfile->store();
+                    
+                        $handle = $newfile->file;
+                        $handle->restricted = 0;
+                        $handle->mime_type = $file['type'];
+                        $handle->setContentFromFile($file['tmp_name']);
+                        $handle->update();
+
+                        URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+                        $url = URLHelper::getURL('dispatch.php/document/files/download/' . $newfile->id . '/inline');
+
+                        $success = true;
+                    } catch (Exception $e) {
+                        $output['error'][] = $e->getMessage();
+                        $success = false;
+                    }
+                } else {
+                    $newfile = StudipDocument::createWithFile($file['tmp_name'], $document);
+                    $success = (bool)$newfile;
+                    
+                    if ($success) {
+                        $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
+                    }
+                }
+
+                if ($success) {
                     $type = null;
                     strpos($file['type'], 'image') === false || $type = "img";
                     strpos($file['type'], 'video') === false || $type = "video";
                     if (strpos($file['type'], 'audio') !== false || strpos($document['filename'], '.ogg') !== false) {
                          $type = "audio";
                     }
-                    $url = GetDownloadLink($newfile->getId(), $newfile['filename']);
                     if ($type) {
                         $output['inserts'][] = "[".$type."]".$url;
                     } else {
-                        $output['inserts'][] = "[".$newfile['filename']."]".$url;
+                        $output['inserts'][] = "[".$document['filename']."]".$url;
                     }
                 }
             }

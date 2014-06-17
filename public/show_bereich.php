@@ -128,62 +128,62 @@ if ($level == "s" && $SessSemName[1] && $SessSemName["class"] == "inst") {
     Navigation::activateItem('/course/main/courses');
 }
 
-$group_by_links = "";
-for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
-    $group_by_links .= '<div ';
-    if($group_by != $i){
-        $group_by_links .=  ' style="padding-left:20px"><a href="'.URLHelper::getLink("",array('group_by'=> $i)).'">';
-    } else {
-        $group_by_links .= ' style="padding-left:20px;background: url(\''.$GLOBALS['ASSETS_URL'].'images/icons/16/red/arr_1right.png' . '\') no-repeat">';
-    }
-    $group_by_links .= htmlReady($sem_browse_obj->group_by_fields[$i]['name']);
-    if($group_by != $i){
-        $group_by_links .= "</a>";
-    }
-    $group_by_links .= "</div>";
+$sidebar = Sidebar::get();
+$sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+$semester = new SelectWidget(_("Semester:"), URLHelper::getURL(), 'select_sem');
+foreach (array_reverse(Semester::getAll()) as $one) {
+    $semester->addElement(new SelectElement($one->id, $one->name, $one->id == $show_semester));
 }
-$infobox = array();
-$infobox[] = array("kategorie" => _("Anzeige gruppieren:"),
-    "eintrag" => array(array(
-        "text" => $group_by_links))
+$sidebar->addWidget($semester);
+$grouping = new LinksWidget();
+$grouping->setTitle(_("Anzeige gruppieren:"));
+foreach ($sem_browse_obj->group_by_fields as $i => $field){
+    $grouping->addLink(
+        $field['name'],
+        URLHelper::getLink('?', array('group_by' => $i)),
+        $group_by == $i ? "icons/16/red/arr_1right" : ""
     );
+}
+$sidebar->addWidget($grouping);
+
 if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
+    $export = new LinksWidget();
+    $export->setTitle(_("Daten ausgeben:"));
     if ($level == "s") {
-        $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                "text" => '<a href="' . URLHelper::getLink("export.php", array('range_id' => $SessSemName[1], 'o_mode' => 'choose', 'ex_type' => "veranstaltung",'xslt_filename' => $SessSemName[0], 'ex_sem' => $show_semester)).'">' . _("Diese Daten exportieren") . '</a>'),
-                array( 'icon' => 'icons/16/black/file-xls.png',
-                    "text" => '<a href="' . URLHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
-                )
-            );
+        $export->addLink(
+            _("Diese Daten exportieren"),
+            URLHelper::getLink("export.php", array('range_id' => $SessSemName[1], 'o_mode' => 'choose', 'ex_type' => "veranstaltung", 'xslt_filename' => $SessSemName[0], 'ex_sem' => $show_semester)),
+            "icons/16/black/download.png"
+        );
+        $export->addLink(
+            _("Download als Excel Tabelle"),
+            URLHelper::getLink('?send_excel=1&group_by=' . (int)$group_by),
+            'icons/16/black/file-xls.png'
+        );
     }
     if ($level == "sbb") {
-
-        $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                "text" => '<a href="' . URLHelper::getLink("export.php", array('range_id' => $id, 'o_mode' => 'choose', 'ex_type' => "veranstaltung",'xslt_filename' => $id, 'ex_sem' => $show_semester)).'">' . _("Diese Daten exportieren") . '</a>'),
-                array( 'icon' => 'icons/16/black/file-xls.png',
-                    "text" => '<a href="' . URLHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
-                )
-            );
+        $export->addLink(
+            _("Diese Daten exportieren"),
+            URLHelper::getLink("export.php", array('range_id' => $id, 'o_mode' => 'choose', 'ex_type' => "veranstaltung", 'xslt_filename' => $id, 'ex_sem' => $show_semester)),
+            "icons/16/black/download.png"
+        );
+        $export->addLink(
+            _("Download als Excel Tabelle"),
+            URLHelper::getLink('?send_excel=1&group_by=' . (int)$group_by),
+            'icons/16/black/file-xls.png'
+        );
     }
+    $sidebar->addWidget($export);
+
 }
 
 ?>
 <div><?= $intro_text ?></div>
-<div style="text-align:right">
-    <form method="post" name="sem_form">
-    <?= _("Semester:") ?>
-    <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem'), $show_semester, 'semester_id', false) ?>
-    <?= \Studip\Button::create(_("Auswählen"), 'choose_sem', array('title' => _("anderes Semester auswählen"))); ?>
-    </form>
-</div>
 <? $sem_browse_obj->print_result(); ?>
 
 <?php
 $layout = $GLOBALS['template_factory']->open('layouts/base.php');
 
-$layout->infobox = array('content' => $infobox, 'picture' => "sidebar/seminar-sidebar.png");
 $layout->content_for_layout = ob_get_clean();
 
 echo $layout->render();

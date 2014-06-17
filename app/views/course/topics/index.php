@@ -70,9 +70,10 @@
                     </table>
                     <div style="text-align: center;">
                         <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
-                            <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
-                                <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
-                            </a>
+                            <?= \Studip\LinkButton::createEdit(_('Bearbeiten'),
+                                                               URLHelper::getURL("dispatch.php/course/topics/edit/".$topic->getId()),
+                                                               array('data-dialog' => '')) ?>
+
                             <? if ($key > 0) : ?>
                                 <form action="?" method="post" style="display: inline;">
                                     <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">

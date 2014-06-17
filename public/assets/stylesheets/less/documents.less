@@ -12,10 +12,10 @@
         display: inline-block;
         min-height: 1.5em;
         width: 40px;
+        z-index: 1;
     
         > a, ul {
             background-color: #fff;
-            border-radius: 2px;
             padding: 5px;
         }
         > a {
@@ -24,7 +24,7 @@
 
         &.extendable:hover {
             > a, > ul {
-                box-shadow: 0 4px 5px #444;
+                box-shadow: 0 4px 3px #444;
             }
             ul {
                 .flex();
@@ -39,6 +39,7 @@
             position: absolute;
         }
         li {
+            font-size: 0.85em;
             line-height: 1.5em;
 
             a {

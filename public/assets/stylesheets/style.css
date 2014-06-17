@@ -3803,11 +3803,11 @@ table.contact-header td.empty a {
   display: inline-block;
   min-height: 1.5em;
   width: 40px;
+  z-index: 1;
 }
 .documents .bread-crumbs > a,
 .documents .bread-crumbs ul {
   background-color: #fff;
-  border-radius: 2px;
   padding: 5px;
 }
 .documents .bread-crumbs > a {
@@ -3815,7 +3815,7 @@ table.contact-header td.empty a {
 }
 .documents .bread-crumbs.extendable:hover > a,
 .documents .bread-crumbs.extendable:hover > ul {
-  box-shadow: 0 4px 5px #444;
+  box-shadow: 0 4px 3px #444;
 }
 .documents .bread-crumbs.extendable:hover ul {
   display: -ms-flexbox;
@@ -3838,6 +3838,7 @@ table.contact-header td.empty a {
   position: absolute;
 }
 .documents .bread-crumbs li {
+  font-size: 0.85em;
   line-height: 1.5em;
 }
 .documents .bread-crumbs li a {

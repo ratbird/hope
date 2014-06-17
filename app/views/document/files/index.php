@@ -25,9 +25,7 @@
             </div>
             <div class="caption-content">
                 <header class="folder-description">
-                    <h2>
-                        <?= htmlReady($last_crumb['name']) ?>
-                    </h2>
+                    <h2><?= htmlReady($last_crumb['name']) ?></h2>
                 <? if ($last_crumb['description']): ?>
                     <p><?= formatReady($last_crumb['description']) ?></p>
                 <? endif; ?>

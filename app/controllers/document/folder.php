@@ -22,7 +22,7 @@ class Document_FolderController extends DocumentController
     {
         parent::before_filter($action, $args);
 
-        Navigation::activateItem('/document/files');
+        Navigation::activateItem('/profile/files');
 
         // Setup the user's sub-directory in $USER_DOC_PATH
         // TODO: This shouldn't be here

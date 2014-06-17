@@ -70,23 +70,23 @@
                     </table>
                     <div style="text-align: center;">
                         <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                            <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
+                                <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
+                            </a>
                             <? if ($key > 0) : ?>
                                 <form action="?" method="post" style="display: inline;">
                                     <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">
                                     <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                    <?= \Studip\Button::create(_("nach oben verschieben")) ?>
+                                    <?= \Studip\Button::createArr_1up(_("nach oben verschieben")) ?>
                                 </form>
                             <? endif ?>
                             <? if ($key < count($topics) - 1) : ?>
                             <form action="?" method="post" style="display: inline;">
                                 <input type="hidden" name="move_down" value="<?= $topic->getId() ?>">
                                 <input type="hidden" name="open" value="<?= $topic->getId() ?>">
-                                <?= \Studip\Button::create(_("nach unten verschieben")) ?>
+                                <?= \Studip\Button::createArr_1down(_("nach unten verschieben")) ?>
                             </form>
                             <? endif ?>
-                            <a href="<?= URLHelper::getLink("dispatch.php/course/topics/edit/".$topic->getId()) ?>" data-dialog>
-                                <?= \Studip\Button::create(_("bearbeiten"), null, array()) ?>
-                            </a>
                         <? endif ?>
                     </div>
                 </div>
@@ -106,7 +106,18 @@ $sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
 $actions = new ActionsWidget();
 $actions->addLink(_("Alle Themen aufklappen"), null, null, array('onClick' => "jQuery('table.withdetails > tbody > tr:not(.details):not(.open) > :first-child a').click(); return false;"));
 if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-    $actions->addLink(_("Neues Thema erstellen"), URLHelper::getURL("dispatch.php/course/topics/edit"), null, array('data-dialog' => "buttons"));
+    $actions->addLink(
+        _("Neues Thema erstellen"),
+        URLHelper::getURL("dispatch.php/course/topics/edit"),
+        null,
+        array('data-dialog' => "buttons")
+    );
+    /*$actions->addLink(
+        _("Themen aus Veranstaltung kopieren"),
+        URLHelper::getURL("dispatch.php/course/topics/copy"),
+        null,
+        array('data-dialog' => "buttons")
+    );*/
 }
 $sidebar->addWidget($actions);
 

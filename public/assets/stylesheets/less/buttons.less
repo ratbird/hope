@@ -46,7 +46,7 @@ a.button, button.button {
     .button;
 }
 
-.button.accept, .button.cancel, .button.edit {
+.button.accept, .button.cancel, .button.edit, .button.arr_1down, .button.arr_1up {
     white-space: normal;
 
     &:before {
@@ -59,30 +59,33 @@ a.button, button.button {
 }
 
 .button.accept {
-    &:before { background: no-repeat; 
-  	    background-image: url("@{image-path}/icons/16/blue/accept.png"); 
-  	    background-image: -webkit-image-set(
-            url("@{image-path}/icons/16/blue/accept.png") ~"1x",
-            url("@{image-path}/icons/32/blue/accept.png") ~"2x");       
+    &:before { background: no-repeat;
+        .retina-background-icon("blue/accept.png");
     }
 }
 
 .button.cancel {
-    &:before { background: no-repeat; 
-  	    background-image: url("@{image-path}/icons/16/blue/decline.png"); 
-  	    background-image: -webkit-image-set(
-            url("@{image-path}/icons/16/blue/decline.png") ~"1x",
-            url("@{image-path}/icons/32/blue/decline.png") ~"2x");           
+    &:before { background: no-repeat;
+        .retina-background-icon("blue/decline.png");
     }
 }
 
 .button.edit {
-  &:before { background: no-repeat;
-    background-image: url("@{image-path}/icons/16/blue/edit.png");
-    background-image: -webkit-image-set(
-      url("@{image-path}/icons/16/blue/edit.png") ~"1x",
-      url("@{image-path}/icons/32/blue/edit.png") ~"2x");
-  }
+    &:before { background: no-repeat;
+        .retina-background-icon("blue/edit.png");
+    }
+}
+
+.button.arr_1up {
+    &:before { background: no-repeat;
+        .retina-background-icon("blue/arr_1up.png");
+    }
+}
+
+.button.arr_1down {
+    &:before { background: no-repeat;
+        .retina-background-icon("blue/arr_1down.png");
+    }
 }
 
 /****************************************************************************/

@@ -22,7 +22,7 @@
                 <textarea name="description" placeholder="<?= _('Optionale Beschreibung für die Datei') ?>"><?= htmlReady($entry->description) ?></textarea>
             </label>
         </fieldset>
-
+<?/*
         <fieldset>
             <label>
                 <input type="radio" name="restricted" value="0" <? if (!$entry->file->restricted) echo 'checked'; ?>>
@@ -33,7 +33,7 @@
                 <?= _('Nein, dieses Dokument ist <u>nicht</u> frei von Rechten Dritter.') ?>
             </label>
         </fieldset>
-
+*/?>
     </fieldset>
 
     <div data-dialog-button>

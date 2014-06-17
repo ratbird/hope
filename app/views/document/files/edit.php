@@ -19,7 +19,7 @@
         <fieldset>
             <label>
                 <?= _('Beschreibung:') ?>
-                <textarea name="description" placeholder="<?= _('Optionale Beschreibung fÃ¼r die Datei') ?>"><?= htmlReady($entry->description) ?></textarea>
+                <textarea name="description" placeholder="<?= _('Optionale Beschreibung für die Datei') ?>"><?= htmlReady($entry->description) ?></textarea>
             </label>
         </fieldset>
 <?/*

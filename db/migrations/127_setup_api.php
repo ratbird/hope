@@ -27,7 +27,7 @@ class SetupApi extends Migration
           KEY `ocr_server_uri` (`ocr_server_uri`),
           KEY `ocr_server_uri_host` (`ocr_server_uri_host`,`ocr_server_uri_path`),
           KEY `ocr_usa_id_ref` (`ocr_usa_id_ref`)
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE IF NOT EXISTS `oauth_consumer_token` (
@@ -45,7 +45,7 @@ class SetupApi extends Migration
           UNIQUE KEY `oct_usa_id_ref` (`oct_usa_id_ref`,`oct_ocr_id_ref`,`oct_token_type`,`oct_name`),
           KEY `oct_token_ttl` (`oct_token_ttl`),
           CONSTRAINT `oauth_consumer_token_ibfk_1` FOREIGN KEY (`oct_ocr_id_ref`) REFERENCES `oauth_consumer_registry` (`ocr_id`) ON DELETE CASCADE ON UPDATE CASCADE
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE IF NOT EXISTS `oauth_log` (
@@ -67,7 +67,7 @@ class SetupApi extends Migration
           KEY `olg_ocr_consumer_key` (`olg_ocr_consumer_key`,`olg_id`),
           KEY `olg_oct_token` (`olg_oct_token`,`olg_id`),
           KEY `olg_usa_id_ref` (`olg_usa_id_ref`,`olg_id`)
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE IF NOT EXISTS `oauth_server_nonce` (
@@ -78,7 +78,7 @@ class SetupApi extends Migration
           `osn_nonce` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
           PRIMARY KEY (`osn_id`),
           UNIQUE KEY `osn_consumer_key` (`osn_consumer_key`,`osn_token`,`osn_timestamp`,`osn_nonce`)
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
         
         $query = "CREATE TABLE IF NOT EXISTS `oauth_server_registry` (
@@ -102,7 +102,7 @@ class SetupApi extends Migration
           PRIMARY KEY (`osr_id`),
           UNIQUE KEY `osr_consumer_key` (`osr_consumer_key`),
           KEY `osr_usa_id_ref` (`osr_usa_id_ref`)
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE IF NOT EXISTS `oauth_server_token` (
@@ -123,7 +123,7 @@ class SetupApi extends Migration
           KEY `ost_osr_id_ref` (`ost_osr_id_ref`),
           KEY `ost_token_ttl` (`ost_token_ttl`),
           CONSTRAINT `oauth_server_token_ibfk_1` FOREIGN KEY (`ost_osr_id_ref`) REFERENCES `oauth_server_registry` (`osr_id`) ON DELETE CASCADE ON UPDATE CASCADE
-        ) DEFAULT CHARSET=utf8";
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
         DBManager::get()->exec($query);
 
         // Add api tables
@@ -133,7 +133,7 @@ class SetupApi extends Migration
           `method` char(6) NOT NULL,
           `granted` tinyint(1) unsigned NOT NULL DEFAULT '0',
           UNIQUE KEY `route_id` (`route_id`,`consumer_id`,`method`)
-        )";
+        ) ENGINE=MyISAM";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE IF NOT EXISTS `api_consumers` (
@@ -156,7 +156,7 @@ class SetupApi extends Migration
           `mkdate` int(11) unsigned NOT NULL,
           `chdate` int(11) unsigned NOT NULL,
           PRIMARY KEY (`consumer_id`)
-        )";
+        ) ENGINE=MyISAM";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE IF NOT EXISTS `api_oauth_user_mapping` (
@@ -164,7 +164,7 @@ class SetupApi extends Migration
           `user_id` char(32) NOT NULL DEFAULT '',
           `mkdate` int(11) unsigned NOT NULL,
           PRIMARY KEY (`oauth_id`)
-        )";
+        ) ENGINE=MyISAM";
         DBManager::get()->exec($query);
 
         $query = "CREATE TABLE IF NOT EXISTS `api_user_permissions` (
@@ -174,7 +174,7 @@ class SetupApi extends Migration
           `mkdate` int(11) unsigned NOT NULL,
           `chdate` int(11) unsigned NOT NULL,
           PRIMARY KEY (`user_id`,`consumer_id`)
-        )";
+        ) ENGINE=MyISAM";
         DBManager::get()->exec($query);
 
         // Add config entries

@@ -16,7 +16,7 @@ class Tic4454RoomrequestOptions extends Migration
                   `user_id` char(32) NOT NULL DEFAULT '',
                   `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
                   PRIMARY KEY (`request_id`,`user_id`)
-                )");
+                ) ENGINE=MyISAM");
     }
 
     function down()

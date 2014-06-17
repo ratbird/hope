@@ -67,7 +67,7 @@ class files extends DBMigration
             storage_id VARCHAR(32) NOT NULL,
             mkdate INT(11) UNSIGNED NOT NULL DEFAULT 0,
             chdate INT(11) UNSIGNED NOT NULL DEFAULT 0,
-            PRIMARY KEY (file_id))");
+            PRIMARY KEY (file_id)) ENGINE=MyISAM");
 
         DBManager::get()->exec("CREATE TABLE IF NOT EXISTS file_refs
             (id CHAR(32) NOT NULL,
@@ -76,19 +76,19 @@ class files extends DBMigration
             name VARCHAR(255) NOT NULL,
             description TEXT NOT NULL,
             downloads INT NOT NULL DEFAULT 0,
-            PRIMARY KEY (id))");
+            PRIMARY KEY (id)) ENGINE=MyISAM");
 
         DBManager::get()->exec("CREATE TABLE IF NOT EXISTS files_backend_studip
             (id INT UNSIGNED NOT NULL,
             files_id VARCHAR(64) NOT NULL,
             path VARCHAR(256) NOT NULL,
-            PRIMARY KEY (id))");
+            PRIMARY KEY (id)) ENGINE=MyISAM");
 
         DBManager::get()->exec("CREATE TABLE IF NOT EXISTS files_backend_url
             (id INT UNSIGNED NOT NULL,
             files_id VARCHAR(64) NOT NULL,
             url VARCHAR(256) NOT NULL,
-            PRIMARY KEY (id))");
+            PRIMARY KEY (id)) ENGINE=MyISAM");
 
         DBManager::get()->exec("CREATE TABLE IF NOT EXISTS files_share
             (files_id VARCHAR(64) NOT NULL,
@@ -98,7 +98,7 @@ class files extends DBMigration
             write_perm BOOLEAN DEFAULT FALSE,
             start_date INT UNSIGNED NOT NULL,
             end_date INT UNSIGNED NOT NULL,
-            PRIMARY KEY (files_id, entity_id))");
+            PRIMARY KEY (files_id, entity_id)) ENGINE=MyISAM");
 
         /*
          * Migration for the Admin-Area
@@ -107,7 +107,7 @@ class files extends DBMigration
             (`id` INT NOT NULL AUTO_INCREMENT ,
             `type` VARCHAR(45) NOT NULL ,
             `description` TEXT NULL ,
-            PRIMARY KEY (`id`))"
+            PRIMARY KEY (`id`)) ENGINE=MyISAM"
         );
 
         DBManager::get()->query("CREATE  TABLE IF NOT EXISTS `doc_usergroup_config`
@@ -121,7 +121,7 @@ class files extends DBMigration
             `area_close` INT NOT NULL DEFAULT 0 ,
             `area_close_text` TEXT NULL ,
             `is_group_config` INT NOT NULL DEFAULT 0 ,
-            PRIMARY KEY (`id`, `usergroup`))"
+            PRIMARY KEY (`id`, `usergroup`)) ENGINE=MyISAM"
         );
 
         DBManager::get()->query("CREATE  TABLE IF NOT EXISTS `doc_filetype_forbidden`
@@ -130,7 +130,7 @@ class files extends DBMigration
             `dateityp_id` INT NOT NULL ,
             PRIMARY KEY (`id`) ,
             INDEX `fk_dateityp_verbot_nutzerbereich_2_idx` (`dateityp_id` ASC) ,
-            INDEX `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup` ASC))"
+            INDEX `fk_dateityp_verbot_nutzerbereich_1_idx` (`usergroup` ASC)) ENGINE=MyISAM"
         );
 
         /*

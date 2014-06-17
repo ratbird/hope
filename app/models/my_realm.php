@@ -1174,7 +1174,7 @@ class MyRealmModel
         $studygroups = User::findCurrent()
             ->course_memberships
             ->filter(function ($c) {
-                return $c->getSemClass()->offsetGet('studygroup_mode');
+                return $c->course->getSemClass()->offsetGet('studygroup_mode');
             })->toGroupedArray('seminar_id');
 
 

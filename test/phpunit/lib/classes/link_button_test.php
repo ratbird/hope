@@ -49,13 +49,13 @@ class LinkButtonTestCase extends PHPUnit_Framework_TestCase
 
     function testCreateAccept()
     {
-        $this->assertEquals('<a class="accept button" href="?" name="accept" tabindex="0">übernehmen</a>',
+        $this->assertEquals('<a class="accept button" href="?" name="accept" tabindex="0">Übernehmen</a>',
                             '' . LinkButton::createAccept());
     }
 
     function testCreateCancel()
     {
-        $this->assertEquals('<a class="cancel button" href="?" name="cancel" tabindex="0">abbrechen</a>',
+        $this->assertEquals('<a class="cancel button" href="?" name="cancel" tabindex="0">Abbrechen</a>',
                             '' . LinkButton::createCancel());
     }
 

@@ -46,13 +46,13 @@ class ButtonTestCase extends PHPUnit_Framework_TestCase
 
     function testCreateAccept()
     {
-        $this->assertEquals('<button type="submit" class="accept button" name="accept">übernehmen</button>',
+        $this->assertEquals('<button type="submit" class="accept button" name="accept">Übernehmen</button>',
                             '' . Button::createAccept());
     }
 
     function testCreateCancel()
     {
-        $this->assertEquals('<button type="submit" class="cancel button" name="cancel">abbrechen</button>',
+        $this->assertEquals('<button type="submit" class="cancel button" name="cancel">Abbrechen</button>',
                             '' . Button::createCancel());
     }
 

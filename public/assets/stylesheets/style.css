@@ -761,6 +761,19 @@ table.default caption {
   font-size: 1.4em;
   text-align: left;
 }
+table.default caption header h2 {
+  border: 0;
+  font-size: inherit;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
+table.default caption header p {
+  font-size: 0.7em;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
 table.default thead th {
   background-color: #e7ebf1;
   border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
@@ -3785,18 +3798,6 @@ table.contact-header td.empty a {
 }
 .documents .options {
   text-align: right;
-}
-.documents caption header h2 {
-  border: 0;
-  font-size: inherit;
-  margin: 0;
-  padding: 0;
-}
-.documents caption header p {
-  font-size: 0.7em;
-  font-weight: normal;
-  margin: 0;
-  padding: 0;
 }
 .documents .bread-crumbs {
   display: inline-block;

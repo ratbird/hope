@@ -33,11 +33,11 @@ class CoreAdmin implements StudipModule {
 
             if ($GLOBALS['SessSemName']['class'] !== "inst") {
                 $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $course_id);
-                $item->setDescription(_('Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.'));
+                $item->setDescription(_('Prüfen und bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.'));
                 $navigation->addSubNavigation('details', $item);
 
                 $item = new Navigation(_('Avatar'), 'dispatch.php/course/avatar/update/' . $course_id);
-                $item->setDescription(_('Bearbeiten oder Löschen Sie den Veranstaltungsavatar, das Infobild zu dieser Veranstaltung.'));
+                $item->setDescription(_('Bearbeiten oder löschen Sie den Veranstaltungsavatar, das Infobild zu dieser Veranstaltung.'));
                 $navigation->addSubNavigation('avatar', $item);
 
                 $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $course_id);
@@ -59,7 +59,7 @@ class CoreAdmin implements StudipModule {
                 $navigation->addSubNavigation('admission', $item);
 
                 $item = new AutoNavigation(_('Zusatzangaben'), 'dispatch.php/admin/additional');
-                $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern auswählen.'));
+                $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiterer Angaben von Ihren TeilnehmerInnen auswählen.'));
                 $navigation->addSubNavigation('additional_data', $item);
 
                 if ($GLOBALS['perm']->have_perm($sem_create_perm)) {

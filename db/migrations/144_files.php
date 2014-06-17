@@ -39,10 +39,17 @@ class files extends DBMigration
     public function up()
     {
         // Create directory
+        if (empty($GLOBALS['USER_DOC_PATH'])) {
+            throw new Exception('Config variable "USER_DOC_PATH" has not been set in file "config/config_local.inc.php". '
+                               .'If you are upgrading to a newer release, please refer to the file "config/config_local.inc.php.dist" '
+                               .'or just set it to default value of "$USER_DOC_PATH = $STUDIP_BASE_PATH . \'/data/user_doc\';".');
+        }
+        
         if (!file_exists($GLOBALS['USER_DOC_PATH'])) {
             $result = mkdir($GLOBALS['USER_DOC_PATH'], 0755, true);
             if ($result === false) {
-                throw new Exception('Could not create user file path');
+                throw new Exception('Could not create user file path. Please check the config variable "USER_DOC_PATH" '
+                                   .'in file "config/config_local.inc.php".');
             }
         }
 

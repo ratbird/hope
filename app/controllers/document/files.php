@@ -51,7 +51,7 @@ class Document_FilesController extends DocumentController
     public function index_action($dir_id = null)
     {
         $dir_id = $dir_id ?: $this->context_id;
-        $this->setupInfobox($dir_id);
+        $this->setupSidebar($dir_id);
         try {
             $directory = new DirectoryEntry($dir_id);
             $this->directory = $directory->file;
@@ -429,7 +429,7 @@ class Document_FilesController extends DocumentController
         }
     }
 
-    private function setupInfobox($current_dir)
+    private function setupSidebar($current_dir)
     {
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/files-sidebar.png');
@@ -438,7 +438,7 @@ class Document_FilesController extends DocumentController
 
         $widget->addLink(_('Datei hochladen'),
                          $this->url_for('document/files/upload/' . $current_dir),
-                         'icons/16/black/upload.png',
+                         'icons/16/blue/upload.png',
                          $this->userConfig['forbidden']
                              ? array('disabled' => '',
                                      'title' => _('Ihre Upload-Funktion wurde gesperrt.'))
@@ -447,19 +447,19 @@ class Document_FilesController extends DocumentController
 
         $widget->addLink(_('Neuen Ordner erstellen'),
                          $this->url_for('document/folder/create/' . $current_dir),
-                         'icons/16/black/add/folder-empty.png')
+                         'icons/16/blue/add/folder-empty.png')
                ->asDialog();
 
         $widget->addLink(_('Dateibereich leeren'),
                          $this->url_for('document/folder/delete/all'),
-                         'icons/16/black/trash.png');
+                         'icons/16/blue/trash.png');
         $sidebar->addWidget($widget);
 
 
         $widget = new ExportWidget();
         $widget->addLink(_('Dateibereich herunterladen'),
                          $this->url_for('document/folder/download/' . $this->context_id),
-                         'icons/16/black/download.png');
+                         'icons/16/blue/download.png');
         $sidebar->addWidget($widget);
     }
 }

@@ -198,7 +198,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="8" class="printhead">
+            <td colspan="8">
                 <?= _('Alle markierten') ?>
                 <?= Studip\Button::create(_('Herunterladen'), 'download') ?>
                 <?= Studip\Button::create(_('Verschieben'), 'move', array('data-dialog' => '')) ?>

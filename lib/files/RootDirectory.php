@@ -16,6 +16,19 @@
 class RootDirectory extends StudipDirectory
 {
     /**
+     * Wrapper "find" method in compliance with the other SimpleORMap methods.
+     * Since the root directory is abstract and does not have a corresponding
+     * db entry, find would always return null otherwise.
+     *
+     * @param String $context_id
+     * @return RootDirectory
+     */
+    public static function find($context_id)
+    {
+        return new self($context_id);
+    }
+    
+    /**
      * Initialize a new root directory object for the given id.
      *
      * @param string $id  context id

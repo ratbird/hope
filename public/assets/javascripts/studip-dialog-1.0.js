@@ -191,6 +191,8 @@
                     name: $(element).attr('name'),
                     value: $(element).val()
                 });
+            } else if ($(element).data().triggeredBy) {
+                data.push($(element).data().triggeredBy);
             }
         } else {
             url = $(element).attr('href');
@@ -212,6 +214,9 @@
             data: data || {},
             headers: {'X-Dialog': true}
         }).done(function (response, status, xhr) {
+            // Trigger event
+            $(options.origin).trigger('dialog-load', {xhr: xhr, options: options});
+            
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
                 STUDIP.Dialog.close();
@@ -340,11 +345,21 @@
             event.preventDefault();
         }
     }
+    
+    function clickHandler(event) {
+        var form  = $(this).closest('form');
+        form.data('triggeredBy', {
+            name: $(this).attr('name'),
+            value: $(this).val()
+        });
+    }
 
     // Handle links, buttons and forms
     $(document)
         .on('click', 'a[data-dialog],button[data-dialog]', dialogHandler)
-        .on('submit', 'form[data-dialog]', dialogHandler);
+        .on('click', 'form[data-dialog] :submit', clickHandler)
+        .on('click', 'form[data-dialog] input[type=image]', clickHandler)
+        .on('submit', 'form[data-dialog]', dialogHandler)
 
     // Extra: Expose parseOptions to STUDIP object
     STUDIP.parseOptions = parseOptions;

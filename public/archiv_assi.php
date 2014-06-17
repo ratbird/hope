@@ -155,7 +155,7 @@ if (Request::option('archive_kill')) {
         unset($sem);
 
         // Successful archived, if we are here
-        $msg .= "msg§" . sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gel&ouml;scht. Sie steht nun im Archiv zur Verf&uuml;gung."), "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>") . "§";
+        $msg .= "msg§" . sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gelöscht. Sie steht nun im Archiv zur Verfügung."), "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>") . "§";
 
         // unset the checker, lecture is now killed!
         unset($_SESSION['archiv_assi_data']["sem_check"][$s_id]);
@@ -201,12 +201,12 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     $statement->execute(array($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
     $seminar = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $msg .= "info§<font color=\"black\">" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!") . "§";
+    $msg .= "info§" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht rückgängig gemacht werden!") . "§";
     // check is Veranstaltung running
     if ($seminar['duration_time'] == -1) {
-        $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.") . "§";
+        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.") . "§";
     } elseif (time() < $seminar['start_time'] + $seminar['duration_time']) {
-        $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
+        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
     }
     if($ELEARNING_INTERFACE_ENABLE){
         $cms_types = ObjectConnections::GetConnectedSystems($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
@@ -251,7 +251,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             $last_activity = lastActivity($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
             if ((time() - $last_activity) < (60 * 60 * 24 * 7 * 12))
                 $activity_warning = TRUE;
-            printf ("<br><font size=\"-1\" >" . _("letzte Ver&auml;nderung am:") . " %s%s%s </font>", ($activity_warning) ? "<font color=\"red\" >" : "", date("d.m.Y, G:i", $last_activity), ($activity_warning) ? "</font>" : "");
+            printf ("<br>" . _("letzte Veränderung am:") . " %s%s%s", ($activity_warning) ? "<font color=\"red\" >" : "", date("d.m.Y, G:i", $last_activity), ($activity_warning) ? "</font>" : "");
             ?>
         </td>
     </tr>
@@ -264,7 +264,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             <td valign="top" colspan=2 valign="top" width="96%">
                 <?
                 // Grunddaten des Seminars
-                printf ("<font size=-1><b>" . _("Untertitel:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Untertitel']));
+                printf ("<b>" . _("Untertitel:") . "</b><br>%s", htmlReady($seminar['Untertitel']));
                 ?>
             </td>
         </tr>
@@ -274,12 +274,12 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
         <td width="4%">&nbsp;</td>
         <td valign="top" width="48%">
             <?
-            printf ("<font size=-1><b>" . _("Zeit:") . "</b></font><br><font size=-1>%s</font>", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
+            printf ("<b>" . _("Zeit:") . "</b><br>%s", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
             ?>
         </td>
         <td valign="top" width="48%">
             <?
-            printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
+            printf ("<b>" . _("Semester:") . "</b><br>%s", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
             ?>
         </td>
     </tr>
@@ -287,12 +287,12 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
         <td width="4%">&nbsp;</td>
         <td valign="top" width="48%">
             <?
-            printf ("<font size=-1><b>" . _("Erster Termin:") . "</b></font><br><font size=-1>%s</font>", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
+            printf ("<b>" . _("Erster Termin:") . "</b><br>%s", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
             ?>
         </td>
         <td valign="top" width="48%">
             <?
-            printf ("<font size=-1><b>" . _("Vorbesprechung:") . "</b></font><br><font size=-1>%s</font>", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
+            printf ("<b>" . _("Vorbesprechung:") . "</b><br>%s", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
             ?>
         </td>
     </tr>
@@ -301,14 +301,14 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
         <td width="48%" valign="top">
             <?
             $sem = Seminar::getInstance($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']);
-            printf ("<font size=-1><b>" . _("Veranstaltungsort:") . "</b></font><br><font size=-1>%s</font>",
+            printf ("<b>" . _("Veranstaltungsort:") . "</b><br>%s",
                 htmlReady($sem->getDatesTemplate('dates/seminar_export_location')));
             ?>
         </td>
         <td width="48%" valign="top">
             <?
             if ($seminar['VeranstaltungsNummer'])
-                printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['VeranstaltungsNummer']));
+                printf ("<b>" . _("Veranstaltungsnummer:") . "</b><br>%s", htmlReady($seminar['VeranstaltungsNummer']));
             else
                 print "&nbsp; ";
             ?>
@@ -332,18 +332,18 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
             $statement->closeCursor();
 
-            printf("<font size=-1><b>" . get_title_for_status('dozent', count($teachers), $seminar['status']) . "</b></font><br>");
+            printf("<b>" . get_title_for_status('dozent', count($teachers), $seminar['status']) . "</b><br>");
 
             if (count($teachers) === 1) {
                 $teacher = reset($teachers);
-                printf('<font size=-1><a href="%s">%s</a></font>',
+                printf('<a href="%s">%s</a>',
                     URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
                     htmlReady($teacher['fullname']));
             } else {
                 echo '<ul style="margin:0;">';
                 foreach ($teachers as $teacher) {
                     echo '<li>';
-                    printf('<font size=-1><a href="%s">%s</a></font>',
+                    printf('<a href="%s">%s</a>',
                         URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
                         htmlReady($teacher['fullname']));
                     echo '</li>';
@@ -363,19 +363,19 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             $tutors = $statement->fetchAll(PDO::FETCH_ASSOC);
             $statement->closeCursor();
 
-            printf("<font size=-1><b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b></font><br>");
+            printf("<b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b><br>");
             if (count($tutors) === 0) {
-                echo '<font size=-1>' . _('keine') . '</font>';
+                echo _('keine');
             } else if (count($tutors) === 1) {
                 $tutor = reset($tutors);
-                printf('<font size=-1><a href="%s">%s</a></font>',
+                printf('<a href="%s">%s</a>',
                     URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
                     htmlReady($tutor['fullname']));
             } else {
                 echo '<ul style="margin:0;">';
                 foreach ($tutors as $tutor) {
                     echo '<li>';
-                    printf('<font size=-1><a href="%s">%s</a></font>',
+                    printf('<a href="%s">%s</a>',
                         URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
                         htmlReady($tutor['fullname']));
                     echo '</li>';
@@ -390,13 +390,13 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
         <td width="4%">&nbsp;</td>
         <td width="48%" valign="top">
             <?
-            printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>%s in der Kategorie %s</font>", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
+            printf ("<b>" . _("Veranstaltungstyp:") . "</b><br>%s in der Kategorie %s", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
             ?>
         </td>
         <td width="48%" valign="top">
             <?
             if ($seminar['art'])
-                printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['art']));
+                printf ("<b>" . _("Art/Form:") . "</b><br>%s", htmlReady($seminar['art']));
             else
                 print "&nbsp; ";
             ?>
@@ -409,7 +409,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             <td width="4%">&nbsp;</td>
             <td colspan="2" width="96%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
+                printf ("<b>" . _("Kommentar/Beschreibung:") . "</b><br>%s", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
                 ?>
             </td>
         </tr>
@@ -426,7 +426,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             $institute_name = $statement->fetchColumn();
 
             if ($institute_name) {
-                printf("<font size=-1><b>" . _('Heimat-Einrichtung:') . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>",
+                printf("<b>" . _('Heimat-Einrichtung:') . "</b><br><a href=\"%s\">%s</a>",
                     URLHelper::getLink('institut_main.php?auswahl=' . $seminar['Institut_id']),
                     htmlReady($institute_name));
             }
@@ -442,7 +442,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 $institute_name = $statement->fetchColumn();
 
                 if ($institute_name) {
-                    printf("<font size=-1><b>" . _('Heimat-Einrichtung:') . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>",
+                    printf("<b>" . _('Heimat-Einrichtung:') . "</b><br><a href=\"%s\">%s</a>",
                            URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $seminar['Institut_id']),
                            htmlReady($institute_name));
                 }
@@ -524,7 +524,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 echo LinkButton::create(_('Nächster >>'), URLHelper::getURL("?inc=TRUE"));
             }
             if (sizeof($_SESSION['archiv_assi_data']["sems"]) > 1)
-                printf ("<br><font size=\"-1\">" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgew&auml;hlt.") . "</font>", sizeof($_SESSION['archiv_assi_data']["sem_check"]), sizeof($_SESSION['archiv_assi_data']["sems"]));
+                printf ("<br>" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgewählt."), sizeof($_SESSION['archiv_assi_data']["sem_check"]), sizeof($_SESSION['archiv_assi_data']["sems"]));
             ?>
         </td>
     </tr>
@@ -545,7 +545,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
         </tr>
         <tr>
             <td class="blank" colspan=2>
-                <b><? parse_msg($msg . "info§" . _("Sie haben alle ausgew&auml;hlten Veranstaltungen archiviert!")); ?></b>
+                <b><? parse_msg($msg . "info§" . _("Sie haben alle ausgewählten Veranstaltungen archiviert!")); ?></b>
             </td>
         </tr>
     </table>
@@ -558,14 +558,14 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td class="table_header_bold" colspan=2><b><?=_("Keine Veranstaltung zum Archivieren gew&auml;hlt")?></b>
+            <td class="table_header_bold" colspan=2><b><?=_("Keine Veranstaltung zum Archivieren gewählt")?></b>
             </td>
         </tr>
         <tr>
             <td class="blank" colspan=2><b>
                     <?
                     if (!$_SESSION['links_admin_data']["sem_id"])
-                        parse_msg("info§" . _("Sie haben keine Veranstaltung zum Archivieren gew&auml;hlt."));
+                        parse_msg("info§" . _("Sie haben keine Veranstaltung zum Archivieren gewählt."));
                     ?></b>
             </td>
         </tr>

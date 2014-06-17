@@ -211,7 +211,8 @@ class Document_FilesController extends DocumentController
         $this->setDialogLayout('icons/48/blue/upload.png');
 
         if (Request::isXhr()) {
-            header('X-Title: ' . _('Datei hochladen'));
+            $this->response->add_header('X-Title', _('Datei hochladen'));
+            
         }
     }
 
@@ -238,7 +239,7 @@ class Document_FilesController extends DocumentController
         $this->entry = $entry;
 
         if (Request::isXhr()) {
-            header('X-Title: ' . _('Datei bearbeiten'));
+            $this->response->add_header('X-Title', _('Datei bearbeiten'));
         }
     }
 

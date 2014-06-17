@@ -19,6 +19,7 @@ class DocumentController extends AuthenticatedController
 
         if (Request::isXhr()) {
             $this->set_layout(null);
+            $this->set_content_type('text/html;charset=windows-1252');
         } else {
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         }

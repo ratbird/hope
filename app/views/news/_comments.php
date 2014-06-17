@@ -25,5 +25,5 @@
                 ?>
             </a>
         <? endif; ?>
-    </section>
+    </footer>
 <? endif; ?>

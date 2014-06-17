@@ -491,7 +491,7 @@ class MyRealmModel
         // init
         $order_by         = $params['order_by'];
         $order            = $params['order'];
-        $deputies_enabled = $params['deputies'];
+        $deputies_enabled = $params['deputies_enabled'];
         $sem_data         = SemesterData::GetSemesterArray();
         $min_sem          = $sem_data[$min_sem_key];
         $max_sem          = $sem_data[$max_sem_key];
@@ -515,10 +515,12 @@ class MyRealmModel
 
         if ($deputies_enabled) {
             $datas = self::getDeputies($GLOBALS['user']->id);
-            foreach ($datas as $data) {
-                $deputies[] = Course::import($data);
+            if(!empty($datas)) {
+                foreach ($datas as $data) {
+                    $deputies[] = Course::import($data);
+                }
+                $courses = array_merge($courses, $deputies);
             }
-            $courses = array_merge($courses, $deputies);
         }
         // create a new collection for more functionality
         $courses = new SimpleCollection($courses);
@@ -546,8 +548,8 @@ class MyRealmModel
         $query     = "SELECT DISTINCT range_id as seminar_id FROM deputies WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
-
-        return $statement->fetchALL(PDO::FETCH_ASSOC);
+        $data = $statement->fetchALL(PDO::FETCH_ASSOC);
+        return $data;
     }
 
 

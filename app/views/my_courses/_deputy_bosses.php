@@ -14,6 +14,7 @@
     <tr>
         <th></th>
         <th><?= _("Name") ?></th>
+        <th><?= _('Aktion') ?></th>
     </tr>
     </thead>
     <tbody>
@@ -23,17 +24,19 @@
                 <?= Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($boss['fullname']))) ?>
             </td>
             <td>
-                <?php
-                $name_text = '';
-                if ($boss['edit_about'] && $deputies_edit_about_enabled) {
-                    $name_text .= '<a href="' . URLHelper::getLink('dispatch.php/profile', array('username' => $boss['username'])) . '">';
-                }
-                $name_text .= $boss['fullname'];
-                if ($boss['edit_about'] && $deputies_edit_about_enabled) {
-                    $name_text .= '</a>';
-                }
-                echo $name_text;
-                ?>
+                <?= htmlReady($boss['fullname'])?>
+            </td>
+            <td>
+                <? if ($boss['edit_about'] && $deputies_edit_about_enabled) : ?>
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $boss['username'])) ?>">
+                        <?= Assets::img('icons/20/blue/person.png', tooltip2(_('Personenangaben bearbeiten'))) ?>
+                    </a>
+                <? endif ?>
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
+                    array('filter' => 'send_sms_to_all',
+                          'rec_uname' => $boss['username']))?>">
+                    <?= Assets::img('icons/20/blue/mail.png', tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($boss['fullname'])))) ?>
+                </a>
             </td>
         </tr>
     <? endforeach ?>

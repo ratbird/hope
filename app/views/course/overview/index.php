@@ -88,28 +88,13 @@
 <?php
 
 // Anzeige von News
-show_news($course_id, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit($course_id, "sem"), $smain_data);
+echo $news;
 
 // Anzeige von Terminen
-$start_zeit=time();
-$end_zeit=$start_zeit+1210000;
-$show_admin = false;
-if (!$studygroup_mode) {
-    if ($rechte) {
-        $show_admin = URLHelper::getLink("admin_dates.php?range_id=".$course_id."&ebene=sem&new_sem=TRUE");
-        PageLayout::addSqueezePackage('raumzeit');
-        PageLayout::addHeadElement('script', array(), "
-        jQuery(function () {
-            STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . URLHelper::getUrl() ."';
-        });");
-    }
-    show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $course_id, 0, TRUE, $show_admin);
-}
+echo $dates;
 
-// include and show votes and tests
-if (get_config('VOTE_ENABLE')) {
-    show_votes($course_id, $GLOBALS["auth"]->auth["uid"], $GLOBALS["perm"], YES);
-}
+// Anzeige von Umfragen
+echo $votes;
 
 // display plugins
 $plugins = PluginEngine::getPlugins('StandardPlugin', $course_id);

@@ -29,9 +29,11 @@ class VoteController extends AuthenticatedController {
                 }
             }
         }
+        
+        // Check if we ned administration icons
+        $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
-        $votes = StudipVote::findByRange_id($range_id);
-        $this->votes = SimpleORMapCollection::createFromArray($votes)->orderBy('mkdate desc');
+        $this->votes = StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id));
     }
 
     /**

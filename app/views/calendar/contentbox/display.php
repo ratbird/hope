@@ -1,19 +1,22 @@
+<? if($admin || $termine): ?>
 <section class="contentbox">
     <header>
         <nav>
             <? if($admin): ?>
+            <? if($isProfile): ?>
             <a href="<?= URLHelper::getLink("calendar.php", array('cmd' => 'edit', 'termin_id' => $termin->id, 'source_page' => 'dispatch.php/profile')) ?>">
                 <?= Assets::img('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
             </a>
+            <? else: ?>
+            <a href="<?= URLHelper::getLink("raumzeit.php", array('cid' => $range_id)) ?>">
+                <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
+            </a>
+            <? endif; ?>
             <? endif; ?>
         </nav>
         <h1>
             <?= Assets::img('icons/16/black/schedule.png') ?>
-            <? if($termine): ?>
-            <?= sprintf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", time()), strftime("%d. %B %Y", time() + 7 * 24 * 3600)) ?>
-            <? else: ?>
-            <?= _('Termine'); ?>
-            <? endif; ?>
+            <?= $title ?>
         </h1>
     </header>
     <? if($termine): ?>
@@ -22,8 +25,13 @@
     <?= $this->render_partial('calendar/contentbox/_termin.php', array('termin' => $termin)); ?>    
     <? endforeach; ?>
     <? else: ?>
-    <p>
+    <section>
+        <? if($isProfile): ?>
+        <?= _('Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf das Plus.') ?>
+        <? else: ?>
         <?= _('Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.') ?>
-    </p>
+        <? endif; ?>
+    </section>
     <? endif; ?>
 </section>
+<? endif;

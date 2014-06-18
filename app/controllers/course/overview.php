@@ -73,6 +73,19 @@ class Course_OverviewController extends AuthenticatedController
             }
         }
 
+        // Fetch news
+        $response = $this->relay('news/display/' . $this->course_id);
+        $this->news = $response->body;
 
+        // Fetch  votes
+        if (get_config('VOTE_ENABLE')) {
+            $response = $this->relay('vote/display/' . $this->course_id);
+            $this->votes = $response->body;
+        }
+
+        // Fetch dates
+        $response = $this->relay("calendar/contentbox/display/$this->course_id/1210000");
+        $this->dates = $response->body;
     }
+
 }

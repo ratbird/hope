@@ -2,9 +2,9 @@
     <header>
         <nav>
             <span>
-                <?= $termin->getLocation() ? _('Raum') . ': ' . htmlReady($termin->getLocation()) : '' ?>
+                <?= $termin->raum ? _('Raum') . ': ' . htmlReady($termin->raum) : '' ?>
             </span>
-            <? if($admin): ?>
+            <? if($admin && $isProfile): ?>
             <a href="<?= URLHelper::getLink("calendar.php", array('cmd' => 'edit', 'termin_id' => $termin->id, 'atime' => time(), 'source_page' => 'dispatch.php/profile')) ?>">
                 <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
             </a>
@@ -13,17 +13,19 @@
         <h1>
             <a href="<?= ContentBoxHelper::href($termin->id) ?>">
                 <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom')) ?>
-                <?= htmlReady($termin->titel) ?>
+                <?= htmlReady($termin->title) ?>
             </a>
         </h1>
     </header>
     <p>
-        <?= $termin->getDescription() ? : _('Keine Beschreibung vorhanden') ?>
+        <?= $termin->description ? : _('Keine Beschreibung vorhanden') ?>
     </p>
     <footer>
-        <em><?= _('Kategorie') ?>: </em><?= htmlReady($termin->toStringCategories()) ?> 
-        <em><?= _('Priorität') ?>: </em><?= htmlReady($termin->toStringPriority()) ?> 
-        <em><?= _('Sichtbarkeit') ?>: </em><?= htmlReady($termin->toStringAccessibility()) ?> 
-        <?= htmlReady($termin->toStringRecurrence()) ?>
+        <? foreach($termin->info as $type => $info): ?>
+        <? if (!is_numeric($type)): ?>
+            <em><?= htmlReady($type) ?>: </em>
+        <? endif; ?>
+        <?= htmlReady($info) ?> 
+        <? endforeach; ?>
     </footer>
 </article>

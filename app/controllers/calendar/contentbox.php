@@ -13,7 +13,8 @@
  * @category    Stud.IP
  * @package     calender
  */
-class Calendar_ContentboxController extends StudipController {
+class Calendar_ContentboxController extends StudipController
+{
 
     /**
      * Widget controller to produce the formally known show_votes()
@@ -21,43 +22,73 @@ class Calendar_ContentboxController extends StudipController {
      * @param String $range_id range id of the news to get displayed
      * @return array() Array of votes
      */
-    function display_action($range_id) {
-        $events = new DbCalendarEventList(new SingleCalendar($range_id, Calendar::PERMISSION_READABLE), $date_start, $date_end, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
+    function display_action($range_id, $timespan = 604800, $start = null) {
+
+        // Fetch time if needed
+        $start = $start ? : time();
+
+        $events = new DbCalendarEventList(new SingleCalendar($range_id, Calendar::PERMISSION_READABLE), $start, $start + $timespan, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
 
         // Prepare termine
         $this->termine = array();
-        
+
         while ($termin = $events->nextEvent()) {
-            
+
             // Adjust title
             if (date("Ymd", $termin->getStart()) == date("Ymd", time()))
-                $termin->titel .= _("Heute") . date(", H:i", $termin->getStart());
+                $termin->title .= _("Heute") . date(", H:i", $termin->getStart());
             else {
-                $termin->titel = substr(strftime("%a", $termin->getStart()), 0, 2);
-                $termin->titel .= date(". d.m.Y, H:i", $termin->getStart());
+                $termin->title = substr(strftime("%a", $termin->getStart()), 0, 2);
+                $termin->title .= date(". d.m.Y, H:i", $termin->getStart());
             }
 
             if ($termin->getStart() < $termin->getEnd()) {
                 if (date("Ymd", $termin->getStart()) < date("Ymd", $termin->getEnd())) {
-                    $termin->titel .= " - " . substr(strftime("%a", $termin->getEnd()), 0, 2);
-                    $termin->titel .= date(". d.m.Y, H:i", $termin->getEnd());
+                    $termin->title .= " - " . substr(strftime("%a", $termin->getEnd()), 0, 2);
+                    $termin->title .= date(". d.m.Y, H:i", $termin->getEnd());
                 } else {
-                    $termin->titel .= " - " . date("H:i", $termin->getEnd());
+                    $termin->title .= " - " . date("H:i", $termin->getEnd());
                 }
             }
 
             if ($termin->getTitle()) {
                 $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
-                $termin->titel .= ", " . $tmp_titel;
+                $termin->title .= ", " . $tmp_titel;
             }
-            
+
+            // Adjust other values
+            $termin->description = $termin->description;
+            $termin->raum = $termin->getLocation();
+            $termin->info = array(
+                _('Kategorie') => $termin->toStringCategories(),
+                _('Priorität') => $termin->toStringPriority(),
+                _('Sichtbarkeit') => $termin->toStringAccessibility(),
+                $termin->toStringRecurrence()
+            );
+
             // Store for view
             $this->termine[] = $termin;
-            
         }
-        
+
+        // Fetch normal dates
+        $this->termine = array_merge($this->termine, Termin::findCurrent($range_id, $timespan, $start));
         // Check permission to edit
-        $this->admin = $GLOBALS['perm']->have_perm('root') || $range_id == $GLOBALS['user']->id;
+        $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
+
+        // Forge title
+        if ($this->termine) {
+            $this->title = sprintf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $start), strftime("%d. %B %Y", $start + $timespan));
+        } else {
+            $this->title = _('Termine');
+        }
+
+        // Set range_id
+        $this->range_id = $range_id;
+
+        // Check out if we are on a profile
+        if ($this->admin) {
+            $this->isProfile = User::findOneBySQL('user_id = ?', array($range_id));
+        }
     }
 
 }

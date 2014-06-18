@@ -2467,6 +2467,9 @@ section.contentbox {
   border-style: solid;
   border-width: 1px;
   margin-bottom: 10px;
+  -webkit-transition: all 300ms ease 0s;
+  -moz-transition: all 300ms ease 0s;
+  -o-transition: all 300ms ease 0s;
   transition: all 300ms ease 0s;
 }
 section.contentbox header {
@@ -2511,6 +2514,9 @@ section.contentbox article footer {
   padding: 0 10px 0 10px;
   max-height: 0;
   overflow: hidden;
+  -webkit-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
+  -moz-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
   transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
 }
 section.contentbox article p {
@@ -2535,12 +2541,20 @@ section.contentbox article section article time {
   margin: 2px;
 }
 section.contentbox article header h1 a:before {
-  content: " ";
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
   background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  padding-right: 0;
+  background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  vertical-align: text-top;
+  width: 16px;
+}
+section.contentbox article header h1 a:before {
+  -webkit-transition: all 300ms ease 0s;
+  -moz-transition: all 300ms ease 0s;
+  -o-transition: all 300ms ease 0s;
   transition: all 300ms ease 0s;
 }
 section.contentbox article footer {
@@ -2575,12 +2589,19 @@ section.contentbox article.open p,
 section.contentbox article.open section,
 section.contentbox article.open footer {
   max-height: 1000px;
+  -webkit-transition: max-height 0.9s;
+  -moz-transition: max-height 0.9s;
+  -o-transition: max-height 0.9s;
   transition: max-height 0.9s;
 }
 section.contentbox article.open footer {
   border-top-style: solid;
 }
 section.contentbox article.open header h1 a:before {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 #header .badge {

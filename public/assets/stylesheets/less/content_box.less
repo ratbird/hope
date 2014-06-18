@@ -3,7 +3,7 @@ section.contentbox {
     border-style: solid;
     border-width: 1px;
     margin-bottom: 10px;
-    transition: all 300ms ease 0s;
+    .transition(all 300ms ease 0s);
 
     header {
         padding: 2px;
@@ -15,9 +15,7 @@ section.contentbox {
             color: @base-color-80;
             border-bottom: none;
             font-size: medium;
-        }
 
-        h1{
             img {
                 display: inline-block;
                 margin-right: 5px;
@@ -57,7 +55,7 @@ section.contentbox {
             padding: 0 10px 0 10px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s cubic-bezier(0,1.05,0,1);
+            .transition(max-height 0.3s cubic-bezier(0,1.05,0,1));
         }
 
         p {
@@ -86,14 +84,11 @@ section.contentbox {
             }
         }
 
-        header h1 a:before {
-            content: " ";
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-image: url("../images/icons/16/blue/arr_1right.png");
-            background-repeat: no-repeat;
-            transition: all 300ms ease 0s;
+        header h1 a {
+            .icon-before('blue/arr_1right.png');
+            &:before {
+                .transition(all 300ms ease 0s);
+            }
         }
 
         footer {
@@ -109,7 +104,7 @@ section.contentbox {
             }
             article.comment {
                 border: 0;
-                border-top: 1px solid #c3c8cc;
+                border-top: 1px solid @light-gray-color-40;
                 max-width: 1260px;
                 margin: auto;
                 margin-bottom: 4px;
@@ -120,7 +115,7 @@ section.contentbox {
                 time {
                     float:right;
                     font-size: 0.8em;
-                    color: #c3c8cc;
+                    color: @light-gray-color-40;
                 }
             }
         }
@@ -129,7 +124,7 @@ section.contentbox {
     article.open {
         p,section,footer {
             max-height: 1000px;
-            transition: max-height 0.9s;
+            .transition(max-height 0.9s);
         }
 
         footer {
@@ -137,7 +132,7 @@ section.contentbox {
         }
 
         header h1 a:before {
-            transform: rotate(90deg);
+            .rotate(90deg);
         }
     }
 }

@@ -13,9 +13,6 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/showNews.inc.php';
-require_once 'lib/show_dates.inc.php';
-require_once 'lib/vote/vote_show.inc.php';
 
 class Institute_OverviewController extends AuthenticatedController
 {
@@ -132,7 +129,19 @@ class Institute_OverviewController extends AuthenticatedController
             }
         }
 
-        //Auf und Zuklappen News
-        process_news_commands($this->institut_main_data);
+        // Fetch news
+        $response = $this->relay('news/display/' . $this->institute_id);
+        $this->news = $response->body;
+
+        // Fetch  votes
+        if (get_config('VOTE_ENABLE')) {
+            $response = $this->relay('vote/display/' . $this->institute_id);
+            $this->votes = $response->body;
+        }
+
+        // Fetch dates
+        $response = $this->relay("calendar/contentbox/display/$this->institute_id/1210000");
+        $this->dates = $response->body;
     }
+
 }

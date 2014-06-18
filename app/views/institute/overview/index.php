@@ -37,16 +37,11 @@
     <? endforeach ?>
 </ul>
 
+<?= $news ?>
+<?= $dates ?>
+<?= $votes ?>
+
 <?
-// Anzeige von News
-($rechte) ? $show_admin=TRUE : $show_admin=FALSE;
-show_news($institute_id,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($institute_id, "inst"), $institut_main_data);
-
-// include and show votes and tests
-if (get_config('VOTE_ENABLE')) {
-    show_votes ($institute_id, $auth->auth["uid"], $GLOBALS['perm'], YES);
-}
-
 // display plugins
 $plugins = PluginEngine::getPlugins('StandardPlugin', $institute_id);
 $layout = $GLOBALS['template_factory']->open('shared/index_box');

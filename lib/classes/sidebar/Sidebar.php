@@ -125,12 +125,12 @@ class Sidebar extends WidgetContainer
     {
         $content = '';
         
-        if ($context_avatar === null) {
+        if ($this->context_avatar === null) {
             $breadcrumbs = $this->getBreadCrumbs();
             $keys = array_keys($breadcrumbs);
             if (reset($keys) === 'course') {
                 $course = Course::findCurrent();
-                if ($SGLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']]['studygroup_mode']) {
+                if ($course->getSemClass()->offsetGet('studygroup_mode')) {
                     $avatar = StudygroupAvatar::getAvatar($course->id);
                 } else {
                     $avatar = CourseAvatar::getAvatar($course->id);

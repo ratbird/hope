@@ -95,6 +95,9 @@ class Course_DetailsController extends AuthenticatedController
             }
 
             $sidebar = Sidebar::Get();
+            if ($sidebarlink) {
+                $sidebar->setContextAvatar(CourseAvatar::getAvatar($this->course->id));
+            }
             $sidebar->setTitle(_('Details'));
             $links = new LinksWidget();
             $links->setTitle(_('Aktionen'));

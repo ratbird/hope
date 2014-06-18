@@ -119,6 +119,8 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
             }
             $sidebar = Sidebar::get();
+            $sidebar->setTitle(_("Details"));
+            $sidebar->setContextAvatar(StudygroupAvatar::getAvatar($studygroup->id));
             $iwidget = new SidebarWidget();
             $iwidget->setTitle(_("Information"));
             $iwidget->addElement(new WidgetElement(_("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können Sie ihr beitreten/eine Mitgliedschaft beantragen.")));

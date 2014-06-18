@@ -15,6 +15,8 @@ class VoteController extends AuthenticatedController {
 
     public function display_action($range_id) {
 
+        // We will need to know if we have to show expired
+        URLHelper::bindLinkParam('show_expired', Request::submitted('show_expired'));
 
         /*
          * Insert vote
@@ -29,11 +31,19 @@ class VoteController extends AuthenticatedController {
                 }
             }
         }
-        
+
         // Check if we ned administration icons
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
-        $this->votes = StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id));
+        $this->votes = SimpleORMapCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
+
+        // Check if we got expired
+        if (!Request::get('show_expired')) {
+            $this->votes = $this->votes->filter(
+                    function($vote) {
+                return $vote->isRunning();
+            });
+        }
     }
 
     /**
@@ -46,7 +56,7 @@ class VoteController extends AuthenticatedController {
         if (Request::submitted('change') && $vote->changeable) {
             return false;
         }
-        return $vote->userVoted() || Request::submitted('preview');
+        return $vote->userVoted() || in_array($vote->id, Request::getArray('preview'));
     }
 
 }

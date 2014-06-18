@@ -15,9 +15,17 @@
     <section>
         <?= _('Keine Umfragen vorhanden. Um neue Umfragen zu erstellen, klicken Sie rechts auf die Zahnräder.') ?>
     </section>
-    <? endif; ?>
+    <? else: ?>
     <? foreach ($votes as $vote): ?>
     <?= $this->render_partial('vote/_vote.php', array('vote' => $vote)); ?>
     <? endforeach; ?>
+    <footer>
+        <? if(Request::get('show_expired')): ?>
+            <a href="<?= URLHelper::getLink('', array('show_expired' => 0)) ?>"><?= _('Abgelaufene Umfragen ausblenden') ?></a>        
+        <? else: ?>
+            <a href="<?= URLHelper::getLink('', array('show_expired' => 1)) ?>"><?= _('Abgelaufene Umfragen einblenden') ?></a>
+        <? endif; ?>
+    </footer>
+    <? endif; ?>
 </section>
 <? endif;

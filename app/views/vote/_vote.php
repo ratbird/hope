@@ -2,7 +2,7 @@
     <header>
         <nav>
             <?= $vote->count ?> |
-            <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
+            <a href="<?= $vote->author ? URLHelper::getLink('dispatch.php/profile', array('username' => $vote->author->username)) : '' ?>">
                 <?= $vote->author ? htmlReady($vote->author->getFullName()) : '' ?>
             </a> |
             <?= strftime("%d.%m.%Y", $vote->mkdate) ?>
@@ -11,7 +11,7 @@
             </a>
         </nav>
         <h1>
-            <a href="<?= URLHelper::getLink('', array('voteopenID' => $vote->id)) ?>">
+            <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
                 <?= htmlReady($vote->title) ?>
             </a>
         </h1>

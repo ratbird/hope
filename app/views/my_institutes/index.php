@@ -101,10 +101,10 @@ if($reset) {
     $links->addLink(_('Alles als gelesen markieren'), $controller->url_for('my_institutes/tabularasa'),'icons/16/blue/refresh.png');
 }
 if ($GLOBALS['perm']->have_perm('dozent') && !empty($institutes)) {
-    $links->addLink(_('Einrichtungsdaten bearbeiten'), URLHelper::getLink('dispatch.php/settings/statusgruppen'), 'icons/16/blue/add/institute.png' );
+    $links->addLink(_('Einrichtungsdaten bearbeiten'), URLHelper::getLink('dispatch.php/settings/statusgruppen'), 'icons/16/blue/edit/institute.png' );
 }
 if ($GLOBALS['perm']->have_perm('autor')) {
-    $links->addLink(_('Einrichtungen suchen'), URLHelper::getLink('institut_browse.php'), 'icons/16/blue/institute.png' );
+    $links->addLink(_('Einrichtungen suchen'), URLHelper::getLink('institut_browse.php'), 'icons/16/blue/add/institute.png' );
     $links->addLink(_('Studiendaten bearbeiten'),URLHelper::getLink('dispatch.php/settings/studies'),'icons/16/blue/person.png');
 }
 

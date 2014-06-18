@@ -5,7 +5,7 @@
 <? endforeach; ?>
 <? endif; ?>
 
-    <ul class="file-tree">
+    <ul class="selectable css-tree">
         <li class="file-directory">
             <input type="radio" name="folder_id" id="folder-<?= $context_id ?>"
                    value="<?= $context_id ?>" <? if ($context_id === $parent_file_id) echo 'checked'; ?>>

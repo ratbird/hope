@@ -36,7 +36,11 @@ class StudipStudyArea extends SimpleORMap
      * This constant represents the key of the root area.
      */
     const ROOT = 'root';
-
+    
+    /**
+     * This is required, if the nodes are added backwards
+     */
+    public $required_children = array();
 
     protected static function configure($config = array())
     {
@@ -401,4 +405,50 @@ class StudipStudyArea extends SimpleORMap
         ORDER BY priority";
         return self::findBySql($query, array('searchTerm' => "%$searchTerm%"));
     }
+
+    /**
+     * Takes an array of StudyArea objects and produces the tree to the root node
+     * 
+     * @param array $nodes All required nodes in the tree
+     * @return StudipStudyArea the root node
+     */
+    public static function backwards($nodes) {
+
+        // create the dummy root
+        $root = static::getRootArea();
+
+        // let the backwardssearch begin
+        while ($nodes && $i < 99) {
+
+            //clear cache
+            $newNodes = array();
+
+            //process nodes on this level
+            foreach ($nodes as $node) {
+                // if we know the node already place there
+                if ($hashmap[$node->parent_id]) {
+                    $cached = $hashmap[$node->parent_id];
+                    $cached->required_children[] = $node;
+                } else {
+
+                    // if we have a node that is directly under root
+                    if ($node->parent_id == $root->id) {
+                        $root->required_children[] = $node;
+                    } else {
+
+                        // else store in hashmap and continue
+                        $hashmap[$node->parent_id] = $node->_parent;
+                        $node->_parent->required_children[] = $node;
+                        $newNodes[] = $node->_parent;
+                    }
+                }
+            }
+            $nodes = $newNodes;
+            $i++;
+        }
+
+        // plant the tree
+        return $root;
+    }
+
 }

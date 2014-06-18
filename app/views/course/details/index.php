@@ -272,14 +272,8 @@
                 <h1><?= _('Studienbereiche') ?></h1>
             </header>
             <section>
-                <ul>
-                    <? foreach ($study_areas as $area) : ?>
-                        <li>
-                            <a href="<?=URLHelper::getScriptLink('show_bereich.php?level=sbb&id=' . $area->id)?>">
-                                <?= htmlReady($area->getPath(' > ')) ?>
-                            </a>
-                        </li>
-                    <? endforeach ?>
+                <ul class='css_tree'>
+                    <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true)) ?>
                 </ul>
             </section>
         </section>

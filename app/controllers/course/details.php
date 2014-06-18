@@ -76,6 +76,7 @@ class Course_DetailsController extends AuthenticatedController
         $this->study_areas = $this->course->study_areas->filter(function ($m) {
             return !$m->isModule();
         });
+        $this->studyAreaTree = StudipStudyArea::backwards($this->course->study_areas);
 
         if (Request::isXhr()) {
             $this->set_layout(null);

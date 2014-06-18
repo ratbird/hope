@@ -77,6 +77,9 @@ class NewsController extends StudipController
             $this->set_status(401);
             return $this->render_nothing();
         }
+        
+        // Visit object
+        ContentBoxHelper::visitType('news');
 
         // Check if user wrote a comment
         if (Request::submitted('accept') && trim(Request::get('comment_content')) && Request::isPost()) {

@@ -24,7 +24,7 @@ class ContentBoxHelper {
      * @return String open if the contentbox is open otherwise an empty String 
      */
     public static function classes($id) {
-        return Request::get('contentbox_open') == $id ? 'open' : '' . '"';
+        return Request::get('contentbox_open') == $id ? 'open' : '';
     }
 
     /**
@@ -53,6 +53,13 @@ class ContentBoxHelper {
     public static function href($id, $params = array()) {
         $params['contentbox_open'] = $id;
         return URLHelper::getURL("#$id", $params);
+    }
+    
+    public static function visitType($type) {
+        $object_id = Request::get('contentbox_open');
+        if ($object_id) {
+            ObjectVisit::visit($object_id, $type);
+        }
     }
 
 }

@@ -2737,6 +2737,17 @@ section.contentbox article.open header h1 a:before {
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
+section.contentbox article.new header h1 a:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  padding-right: 0;
+  background-image: url("../images/icons/16/red/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1right.png") 1x, url("../images/icons/32/red/arr_1right.png") 2x);
+  vertical-align: text-top;
+  width: 16px;
+}
 #header .badge {
   position: relative;
 }

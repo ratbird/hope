@@ -24,6 +24,9 @@ class Calendar_ContentboxController extends StudipController {
      */
     function display_action($range_id, $timespan = 604800, $start = null) {
 
+        // Visit object
+        ContentBoxHelper::visitType('schedule');
+        
         // Fetch time if needed
         $start = $start ? : time();
 

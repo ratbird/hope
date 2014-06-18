@@ -1,5 +1,5 @@
 PHP = php
-PLESSC = $(PHP) vendor/lessphp/plessc
+PLESSC = $(PHP) vendor/mishal-iless/bin/iless
 JLESSC = $(shell which lessc)
 STYLES = public/assets/stylesheets
 JAVA   = $(shell which java)

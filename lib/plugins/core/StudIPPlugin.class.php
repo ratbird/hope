@@ -199,11 +199,14 @@ abstract class StudIPPlugin {
                 $less .= '@icon-path: "@{image-path}/icons/16";' . "\n";
                 $less .= file_get_contents($less_file);
 
-                require_once 'vendor/lessphp/lessc.inc.php';
-                $compiler = new lessc();
-                $css = $compiler->parse($less, array(
+                require_once 'vendor/mishal-iless/lib/ILess/Autoloader.php';
+                ILess_Autoloader::register();
+                $parser = new ILess_Parser();
+                $parser->setVariables(array(
                     'image-path' => '"' . substr(Assets::image_path('placeholder.png'), 0, -15) . '"',
                 ));
+                $parser->parseString($less);
+                $css = $parser->getCSS();
                 file_put_contents($css_file, $css);
             }
             $filename  = substr($filename, 0, -5) . '.css';

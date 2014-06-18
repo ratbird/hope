@@ -16,6 +16,9 @@
 class SimpleORMapCollection extends SimpleCollection
 {
 
+    const WRONG_OBJECT_TYPE = 1;
+    const OBJECT_EXISTS = 2;
+
     /**
      * the record object this collection belongs to
      *
@@ -53,7 +56,7 @@ class SimpleORMapCollection extends SimpleCollection
                     $ret->exchangeArray($data);
                 }
             } else {
-                throw new InvalidArgumentException('This collection only accepts objects derived from SimpleORMap');
+                throw new InvalidArgumentException('This collection only accepts objects derived from SimpleORMap', self::WRONG_OBJECT_TYPE);
             }
         }
         return $ret;
@@ -86,7 +89,7 @@ class SimpleORMapCollection extends SimpleCollection
             $index = (int)$index;
         }
         if (!is_a($newval, $this->getClassName())) {
-            throw new InvalidArgumentException('This collection only accepts objects of type: ' .  $this->getClassName());
+            throw new InvalidArgumentException('This collection only accepts objects of type: ' .  $this->getClassName(), self::WRONG_OBJECT_TYPE);
         }
         if ($this->related_record && $this->relation_options['type'] === 'has_many') {
             $foreign_key_value = call_user_func($this->relation_options['assoc_func_params_func'], $this->related_record);
@@ -95,7 +98,7 @@ class SimpleORMapCollection extends SimpleCollection
         if ($newval->id !== null) {
             $exists = $this->find($newval->id);
             if ($exists) {
-                throw new InvalidArgumentException('Element could not be appended, element with id: ' . $exists->id . ' is in the way');
+                throw new InvalidArgumentException('Element could not be appended, element with id: ' . $exists->id . ' is in the way', self::OBJECT_EXISTS);
             }
         }
         return parent::offsetSet($index, $newval);
@@ -135,7 +138,7 @@ class SimpleORMapCollection extends SimpleCollection
      * reloads the elements of the collection
      * by calling the finder function
      *
-     * @throws Exception
+     * @throws InvalidArgumentException
      * @return number of records after refresh
      */
     function refresh()
@@ -144,7 +147,7 @@ class SimpleORMapCollection extends SimpleCollection
             $data = call_user_func($this->finder, $this->related_record);
             foreach ($data as $one) {
                 if (!is_a($one, $this->getClassName())) {
-                    throw new Exception('This collection only accepts objects of type: ' .  $this->getClassName());
+                    throw new InvalidArgumentException('This collection only accepts objects of type: ' .  $this->getClassName(), self::WRONG_OBJECT_TYPE);
                 }
             }
             $this->exchangeArray($data);
@@ -204,5 +207,32 @@ class SimpleORMapCollection extends SimpleCollection
     function unsetByPk($id)
     {
         return $this->unsetBy('id', $id);
+    }
+
+    /**
+     * merge in another collection, elements must be of
+     * the same type, if an element already exists it is
+     * replaced or ignored depending on second param
+     *
+     * @param SimpleORMapCollection $a_collection
+     * @param string $mode 'replace' or 'ignore'
+     */
+    function merge(SimpleORMapCollection $a_collection, $mode = 'replace')
+    {
+        foreach ($a_collection as $element) {
+            try {
+                $this[] = $element;
+            } catch (InvalidArgumentException $e) {
+                if ($e->getCode() === self::OBJECT_EXISTS) {
+                    if ($mode === 'replace') {
+                        $this->unsetByPk($element->id);
+                        $this[] = $element;
+                    } // else $mode means 'ignore'
+                } else {
+                    throw $e;
+                }
+            }
+        }
+        $this->storage = array_values($this->storage);
     }
 }

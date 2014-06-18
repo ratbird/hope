@@ -218,6 +218,10 @@ class SimpleCollection extends StudipArrayObject
         }
     }
 
+    /**
+     * @param array $input
+     * @return array
+     */
     function exchangeArray(Array $input)
     {
         return parent::exchangeArray(array_map('SimpleCollection::arrayToArrayObject', $input));
@@ -372,7 +376,7 @@ class SimpleCollection extends StudipArrayObject
     function each(Closure $func)
     {
         $result = false;
-        foreach ($this as $record) {
+        foreach ($this->storage as $record) {
             $result+= call_user_func($func, $record);
         }
         return $result;
@@ -388,7 +392,7 @@ class SimpleCollection extends StudipArrayObject
     function map(Closure $func)
     {
         $results = array();
-        foreach ($this as $key => $value) {
+        foreach ($this->storage as $key => $value) {
             $results[$key] = call_user_func($func, $value, $key);
         }
         return $results;
@@ -406,7 +410,7 @@ class SimpleCollection extends StudipArrayObject
     {
         $results = array();
         $found = 0;
-        foreach ($this as $key => $value) {
+        foreach ($this->storage as $key => $value) {
             if (call_user_func($func, $value, $key)) {
                 $results[$key] = $value;
                 if ($limit && (++$found == $limit)) {
@@ -481,7 +485,7 @@ class SimpleCollection extends StudipArrayObject
      */
     function first()
     {
-        $keys = array_keys($this->getArrayCopy());
+        $keys = array_keys($this->storage);
         $first_offset = reset($keys);
         return $this->offsetGet($first_offset ?: 0);
     }
@@ -493,7 +497,7 @@ class SimpleCollection extends StudipArrayObject
      */
     function last()
     {
-        $keys = array_keys($this->getArrayCopy());
+        $keys = array_keys($this->storage);
         $last_offset = end($keys);
         return $this->offsetGet($last_offset ?: 0);
     }
@@ -539,7 +543,7 @@ class SimpleCollection extends StudipArrayObject
     {
         $ret = false;
         $comp_func = self::getCompFunc($op, $values);
-        foreach ($this as $k => $record) {
+        foreach ($this->storage as $k => $record) {
             if ($comp_func($record[$key])) {
                 $this->offsetunset($k);
                 $ret += 1;
@@ -650,7 +654,7 @@ class SimpleCollection extends StudipArrayObject
             $offset = $arg1;
             $row_count = $arg2;
         }
-        return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count, true));
+        return self::createFromArray(array_slice($this->storage, $offset, $row_count, true));
     }
 
      /**
@@ -662,7 +666,7 @@ class SimpleCollection extends StudipArrayObject
      */
     function sendMessage($method, $params = array()) {
         $results = array();
-        foreach ($this as $record) {
+        foreach ($this->storage as $record) {
             $results[] = call_user_func_array(array($record, $method), $params);
         }
         return $results;
@@ -681,5 +685,15 @@ class SimpleCollection extends StudipArrayObject
     function __call($method, $params)
     {
         return $this->sendMessage($method, $params);
+    }
+
+    /**
+     * merge in another collection, elements are appended
+     *
+     * @param SimpleCollection $a_collection
+     */
+    function merge(SimpleCollection $a_collection)
+    {
+        $this->storage = array_merge($this->storage, $a_collection->getArrayCopy());
     }
 }

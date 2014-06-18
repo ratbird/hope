@@ -240,4 +240,19 @@ class SimpleCollectionTest extends PHPUnit_Framework_TestCase
     {
         SimpleCollection::getCompFunc('foo', null);
     }
+
+    /**
+     * @depends testConstruct
+     * @depends testOrderBy
+     */
+    public function testMerge($a)
+    {
+        $data[] = array('id' => 19, 'vorname' => 'Marcus', 'nachname' => 'Eibrink-Lunzenauer', 'perm' => 'dozent');
+        $data[] = array('id' => 20, 'vorname' => 'Rasmus', 'nachname' => 'Fuhse', 'perm' => 'root');
+
+        $a->merge(new SimpleCollection($data));
+        $this->assertCount(7, $a);
+        $expected = array(1,2,10,11,15,19,20);
+        $this->assertEquals($expected, array_values($a->orderBy('id asc', SORT_NUMERIC)->pluck('id')));
+    }
 }

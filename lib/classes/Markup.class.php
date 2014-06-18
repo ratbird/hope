@@ -248,7 +248,7 @@ function getMediaUrl($url) {
     if (isStudipMediaUrl($url)) {
         return removeStudipDomain($url);
     }
-    if (is_internal_url($url)) {
+    if (isInternalLink($url)) {
         // link is studip-internal, but not to a valid media location
         throw new InvalidInternalLinkException($url);
     }
@@ -309,8 +309,12 @@ function getMediaProxyUrl() {
  * @returns boolean  TRUE for internal media link URLs, FALSE otherwise.
  */
 function isStudipMediaUrl($url) {
-    return is_internal_url($url) &&
+    return isInternalLink($url) &&
         isStudipMediaUrlPath(getStudipRelativePath($url));
+}
+
+function isInternalLink($url) {
+    return is_internal_url(transformInternalIdnaLink($url));
 }
 
 //// url utilities ////////////////////////////////////////////////////////////
@@ -326,7 +330,7 @@ function isStudipMediaUrl($url) {
  *                      value as $url for external URLs.
  */
 function removeStudipDomain($url) {
-    if (!is_internal_url($url)) {
+    if (!isInternalLink($url)) {
         return $url;
     }
     $parsed_url = \parse_url(transformInternalIdnaLink($url));

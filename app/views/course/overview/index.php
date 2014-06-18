@@ -1,5 +1,5 @@
     <?
-    echo "<h2>".htmlReady($GLOBALS['SessSemName']["header_line"]). "</h2>";
+    echo "<h1>".htmlReady($GLOBALS['SessSemName']["header_line"]). "</h1>";
     if ($GLOBALS['SessSemName'][3]) {
         echo "<b>" . _("Untertitel:") . " </b>";
         echo htmlReady($GLOBALS['SessSemName'][3]);

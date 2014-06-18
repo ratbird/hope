@@ -61,7 +61,7 @@
         <th><?= _('Größe') ?></th>
         <th><?= _('Autor/in') ?></th>
         <th><?= _('Datum') ?></th>
-        <th>&nbsp;</th>
+        <th><?= _('Aktionen') ?></th>
     </thead>
     <tbody>
 <? if (!$directory->isRootDirectory()): ?>

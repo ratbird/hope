@@ -15,8 +15,11 @@ class VoteController extends AuthenticatedController {
 
     public function display_action($range_id) {
 
-        // We will need to know if we have to show expired
-        URLHelper::bindLinkParam('show_expired', Request::submitted('show_expired'));
+        // Bind some params
+        URLHelper::bindLinkParam('show_expired', $null1);
+        URLHelper::bindLinkParam('preview', $null2);
+        URLHelper::bindLinkParam('revealNames', $null3);
+        URLHelper::bindLinkParam('sort', $null4);
 
         /*
          * Insert vote

@@ -19,7 +19,7 @@ class VoteAnswerUser extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'voteanswers_user';
-        $config['has_one']['user'] = array (
+        $config['belongs_to']['user'] = array (
             'class_name' => 'User',
             'foreign_key' => 'user_id'
         );

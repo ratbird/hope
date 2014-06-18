@@ -23,7 +23,7 @@
             </div>
             <div class="infotext">
                 (<?= $answer->count ?> <?= $answer->count == 1 ? _("Stimme") : _("Stimmen") ?>)
-                <? if (Request::submitted('revealNames') && $vote->namesvisibility): ?>
+                <? if (Request::get('revealNames') && $vote->namesvisibility): ?>
                 ( <?= join(', ', $answer->getUsernames()) ?> )
                 <? endif; ?>      
             </div>

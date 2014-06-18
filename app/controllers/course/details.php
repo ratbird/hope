@@ -99,9 +99,11 @@ class Course_DetailsController extends AuthenticatedController
                 $sidebar->setContextAvatar(CourseAvatar::getAvatar($this->course->id));
             }
             $sidebar->setTitle(_('Details'));
-            $links = new LinksWidget();
-            $links->setTitle(_('Aktionen'));
-
+            $links = new ActionsWidget();
+            $links->addLink(_("Druckansicht"),
+                URLHelper::getScriptLink("dispatch.php/course/details/index/" . $this->course->id),
+                'icons/16/blue/print.png',
+                array('class' => 'print_action', 'target' => '_blank'));
             if ($enrolment_info['enrolment_allowed'] && $sidebarlink) {
                 if (in_array($enrolment_info['cause'], words('member root courseadmin'))) {
                     $abo_msg = _("direkt zur Veranstaltung");

@@ -47,7 +47,6 @@ class CoreOverview implements StudipModule {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'dispatch.php/course/overview'));
             if (!$studygroup_mode) {
                 $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/details/'));
-                $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
             }
 
             if ($GLOBALS['perm']->have_studip_perm('admin', $course_id)

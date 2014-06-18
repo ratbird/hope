@@ -13,8 +13,8 @@
  * @category    Stud.IP
  * @package     calender
  */
-class Calendar_ContentboxController extends StudipController
-{
+
+class Calendar_ContentboxController extends StudipController {
 
     /**
      * Widget controller to produce the formally known show_votes()
@@ -33,7 +33,6 @@ class Calendar_ContentboxController extends StudipController
         $this->termine = array();
 
         while ($termin = $events->nextEvent()) {
-
             // Adjust title
             if (date("Ymd", $termin->getStart()) == date("Ymd", time()))
                 $termin->title .= _("Heute") . date(", H:i", $termin->getStart());
@@ -56,22 +55,42 @@ class Calendar_ContentboxController extends StudipController
                 $termin->title .= ", " . $tmp_titel;
             }
 
-            // Adjust other values
-            $termin->description = $termin->description;
-            $termin->raum = $termin->getLocation();
-            $termin->info = array(
-                _('Kategorie') => $termin->toStringCategories(),
-                _('Priorität') => $termin->toStringPriority(),
-                _('Sichtbarkeit') => $termin->toStringAccessibility(),
-                $termin->toStringRecurrence()
-            );
-
             // Store for view
-            $this->termine[] = $termin;
+            $this->termine[] = array(
+                'id' => $termin->id,
+                'title' => $termin->title,
+                'description' => $termin->description,
+                'room' => $termin->getLocation(),
+                'info' => array(
+                    _('Kategorie') => $termin->toStringCategories(),
+                    _('Priorität') => $termin->toStringPriority(),
+                    _('Sichtbarkeit') => $termin->toStringAccessibility(),
+                    $termin->toStringRecurrence())
+            );
         }
 
         // Fetch normal dates
-        $this->termine = array_merge($this->termine, Termin::findCurrent($range_id, $timespan, $start));
+        foreach (CourseDate::findBySQL('range_id = :range AND ((date BETWEEN :start AND :end) OR (end_time BETWEEN :start AND :end)) ORDER BY date', array(':range' => $range_id, ':start' => $start, ':end' => $start + $timespan)) as $courseDate) {
+
+            // Build info
+            $info = array();
+            if ($courseDate->dozenten[0]) {
+                $info[_('Durchführende Dozenten')] = join(', ', $courseDate->dozenten->getFullname());
+            }
+            if ($courseDate->statusgruppen[0]) {
+                $info[_('Beteiligte Gruppen')] = join(', ', $courseDate->statusgruppen->getValue('name'));
+            }
+
+            // Store for view
+            $this->termine[] = array(
+                'id' => $courseDate->id,
+                'title' => $courseDate->getFullname() . ($courseDate->topics[0] ? ', '.join(', ', $courseDate->topics->getValue('title') ): ""),
+                'description' => $courseDate->description,
+                'room' => $courseDate->getRoomName(),
+                'info' => $info
+            );
+        }
+        
         // Check permission to edit
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
@@ -87,7 +106,7 @@ class Calendar_ContentboxController extends StudipController
 
         // Check out if we are on a profile
         if ($this->admin) {
-            $this->isProfile = User::findOneBySQL('user_id = ?', array($range_id));
+            $this->isProfile = User::exists($range_id);
         }
     }
 

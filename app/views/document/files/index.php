@@ -198,7 +198,9 @@
         <tr>
             <td colspan="8">
                 <?= _('Alle markierten') ?>
+            <? if (extension_loaded('zip')): ?>
                 <?= Studip\Button::create(_('Herunterladen'), 'download') ?>
+            <? endif; ?>
                 <?= Studip\Button::create(_('Verschieben'), 'move', array('data-dialog' => '')) ?>
                 <?= Studip\Button::create(_('Kopieren'), 'copy', array('data-dialog' => ''))?>
                 <?= Studip\Button::create(_('Löschen'), 'delete') ?>

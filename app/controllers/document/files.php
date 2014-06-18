@@ -435,14 +435,17 @@ class Document_FilesController extends DocumentController
                          'icons/16/blue/trash.png');
         $sidebar->addWidget($widget);
 
-
-        $widget = new ExportWidget();
-        $widget->addLink(_('Inhalt dieses Ordners herunterladen'),
-                         $this->url_for('document/folder/download/' . $current_dir),
-                         'icons/16/blue/file-archive.png');
-        $widget->addLink(_('Alle meine Dateien herunterladen'),
-                         $this->url_for('document/folder/download/' . $this->context_id),
-                         'icons/16/blue/download.png');
-        $sidebar->addWidget($widget);
+        // Show export options only if zip extension is loaded
+        // TODO: Implement fallback
+        if (extension_loaded('zip')) {
+            $widget = new ExportWidget();
+            $widget->addLink(_('Inhalt dieses Ordners herunterladen'),
+                             $this->url_for('document/folder/download/' . $current_dir),
+                             'icons/16/blue/file-archive.png');
+            $widget->addLink(_('Alle meine Dateien herunterladen'),
+                             $this->url_for('document/folder/download/' . $this->context_id),
+                             'icons/16/blue/download.png');
+            $sidebar->addWidget($widget);
+        }
     }
 }

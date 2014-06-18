@@ -452,7 +452,7 @@ class MyRealmModel
                 $nav->setImage('icons/20/red/new/vote.png', array('title' => _('Es sind neue Umfragen vorhanden')));
                 $nav->setBadgeNumber($my_obj['neuevotes']);
             } else if ($count) {
-                $nav->setImage('icons/20/grey/vote.png', array('title' => _('Umfrgaen')));
+                $nav->setImage('icons/20/grey/vote.png', array('title' => _('Umfragen')));
             }
             return $nav;
         }

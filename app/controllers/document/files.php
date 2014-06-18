@@ -375,8 +375,8 @@ class Document_FilesController extends DocumentController
         if (empty($ids)) {
             $this->redirect('document/files/index/' . $folder_id);
         } else if (Request::submitted('download')) {
-            $this->flash['download-ids'] = $ids;
-            $this->redirect('document/folder/download/flashed');
+            $this->flash['ids'] = $ids;
+            $this->redirect('document/download/flashed');
         } else if (Request::submitted('move')) {
             $this->flash['move-ids'] = $ids;
             $this->redirect('document/files/move/flashed/' . $folder_id);
@@ -440,10 +440,10 @@ class Document_FilesController extends DocumentController
         if (extension_loaded('zip')) {
             $widget = new ExportWidget();
             $widget->addLink(_('Inhalt dieses Ordners herunterladen'),
-                             $this->url_for('document/folder/download/' . $current_dir),
+                             $this->url_for('document/download/' . $current_dir),
                              'icons/16/blue/file-archive.png');
             $widget->addLink(_('Alle meine Dateien herunterladen'),
-                             $this->url_for('document/folder/download/' . $this->context_id),
+                             $this->url_for('document/download/' . $this->context_id),
                              'icons/16/blue/download.png');
             $sidebar->addWidget($widget);
         }

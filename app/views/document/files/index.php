@@ -127,7 +127,7 @@
                 <a href="<?= $controller->url_for('document/folder/edit/' . $file->id) ?>" data-dialog title="<?= _('Ordner bearbeiten') ?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
                 </a>
-                <a href="<?= $controller->url_for('document/folder/download/' . $file->id) ?>" title="<?= _('Ordner herunterladen') ?>">
+                <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Ordner herunterladen') ?>">
                     <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
                 </a>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog title="<?= _('Ordner verschieben') ?>">

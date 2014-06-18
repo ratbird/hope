@@ -38,7 +38,7 @@ class File extends SimpleORMap
             } else {
                 if ($entry['storage_id']) {
                     $file = $entry;
-                    $file->storage_object = new $file->storage($file->storage_id);
+                    $file->storage_object = new $file->storage($file->storage_id, $file->user_id);
                 } else {
                     $file = new StudipDirectory($id);
                 }

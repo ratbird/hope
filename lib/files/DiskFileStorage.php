@@ -25,19 +25,14 @@ class DiskFileStorage implements FileStorage
      *
      * @param string $storage_id  file id or NULL
      */
-    public function __construct($storage_id = NULL)
+    public function __construct($storage_id = NULL, $user_id = null)
     {
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+
         if (isset($storage_id)) {
             $this->storage_id = $storage_id;
-            global $USER_DOC_PATH;
-            $path = $USER_DOC_PATH.'/'.$GLOBALS['user']->id.'/'.$this->storage_id;
-            $this->file_path = $path;//get_upload_file_path($storage_id);
-
-            /* TODO Should a DiskFileStorage exist without backing file?
-            if (!file_exists($this->file_path)) {
-                throw new InvalidArgumentException('file not found');
-            }
-            */
+            $path = array($GLOBALS['USER_DOC_PATH'], $user_id, $this->storage_id);
+            $this->file_path = join(DIRECTORY_SEPARATOR, $path);
         } else {
             $this->storage_id = md5(uniqid(__CLASS__, true));
         }

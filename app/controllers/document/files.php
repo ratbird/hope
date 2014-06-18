@@ -351,26 +351,6 @@ class Document_FilesController extends DocumentController
         return $restQuota > $copySize;
     }
     
-    public function download_action($entry_id, $inline = false)
-    {
-        $entry = new DirectoryEntry($entry_id);
-        $file  = $entry->file;
-
-        if ($file instanceof StudipDirectory) {
-            throw new Exception('Cannot download directory');
-        }
-
-        $storage = $file->getStorageObject();
-        if (!$storage->exists() || !$storage->isReadable()) {
-            throw new Exception('Cannot access file');
-        }
-
-        $entry->downloads += 1;
-        $entry->store();
-
-        $this->initiateDownload($inline, $file->filename, $file->mime_type, $file->size, $storage->open('r'));
-    }
-
     public function delete_action($id)
     {
         $entry = DirectoryEntry::find($id);

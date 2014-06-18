@@ -1,49 +1,53 @@
 <?php
 /**
- * 
+ * download.php
+ *
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-3.0
+ * @copyright   Stud.IP Core-Group
+ * @since       3.1
  */
 
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'app/controllers/studip_controller.php';
 
-class DocumentController extends AuthenticatedController
+class Document_DownloadController extends StudipController
 {
-    // This is duplicated in app/controllers/document/download.php
+    // This is duplicated in app/controllers/document/document_controller.php
     // TODO: Convert this into a trait as soon as Stud.IP supports PHP 5.4
     protected $download_handle = null;
     protected $download_remove = null;
-    
+
     public function before_filter(&$action, &$args)
     {
+        if ($action !== 'index') {
+            array_unshift($args, $action);
+            $action = 'index';
+        }
+
         parent::before_filter($action, $args);
-
-        // Lock context to user id
-        $this->context_id = $GLOBALS['user']->id;
-
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;charset=windows-1252');
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-        }
-        $this->userConfig = DocUsergroupConfig::getUserConfig($GLOBALS['user']->id);
-        if($this->userConfig['area_close'] == 1){
-            $this->redirect('document/closed/index');
-        }
     }
 
-    protected function setDialogLayout($icon = false)
+    public function index_action($entry_id, $inline = false)
     {
-        $layout = $this->get_template_factory()->open('document/dialog-layout.php');
-        $layout->icon = $icon;
+        $entry = new DirectoryEntry($entry_id);
+        $file  = $entry->file;
 
-        if (!Request::isXhr()) {
-            $layout->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        if ($file instanceof StudipDirectory) {
+            throw new Exception('Cannot download directory');
         }
 
-        $this->set_layout($layout);
+        $storage = $file->getStorageObject();
+        if (!$storage->exists() || !$storage->isReadable()) {
+            throw new Exception('Cannot access file "' . $storage->getPath() . '"');
+        }
+
+        $entry->downloads += 1;
+        $entry->store();
+
+        $this->initiateDownload($inline, $file->filename, $file->mime_type, $file->size, $storage->open('r'));
     }
 
-    // This is duplicated in app/controllers/document/download.php
+    // This is duplicated in app/controllers/document/document_controller.php
     // TODO: Convert this into a trait as soon as Stud.IP supports PHP 5.4
     protected function initiateDownload($inline, $filename, $mime_type, $size, $handle)
     {
@@ -71,7 +75,7 @@ class DocumentController extends AuthenticatedController
         $this->download_handle = $handle;
     }
 
-    // This is duplicated in app/controllers/document/download.php
+    // This is duplicated in app/controllers/document/document_controller.php
     // TODO: Convert this into a trait as soon as Stud.IP supports PHP 5.4
     public function after_filter($action, $args)
     {

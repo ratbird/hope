@@ -615,8 +615,7 @@ class StreamsController extends PluginController {
                         $handle->setContentFromFile($file['tmp_name']);
                         $handle->update();
 
-                        URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
-                        $url = URLHelper::getURL('dispatch.php/document/files/download/' . $newfile->id . '/inline');
+                        $url = $newfile->getDownloadLink(true, true);
 
                         $success = true;
                     } catch (Exception $e) {

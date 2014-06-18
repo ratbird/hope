@@ -142,12 +142,12 @@
             </td>
         <? else: ?>
             <td class="document-icon">
-                <a href="<?= $controller->url_for('document/files/download/' . $file->id . '/inline') ?>">
+                <a href="<?= $file->getDownloadLink(true) ?>">
                     <?= Assets::img('icons/24/blue/'. get_icon_for_mimetype($file->file->mime_type)) ?>
                 </a>
             </td>
             <td>
-                <a href="<?= $controller->url_for('document/files/download/' . $file->id) ?>" title="<?= htmlReady($file->file->filename) ?>">
+                <a href="<?= $file->getDownloadLink() ?>" title="<?= htmlReady($file->file->filename) ?>">
                     <?= htmlReady($file->name) ?>
                 </a>
             <? if ($file->file->restricted): ?>
@@ -176,7 +176,7 @@
                 <a href="<?= $controller->url_for('document/files/edit/' . $file->id) ?>" data-dialog title="<?= _('Datei bearbeiten') ?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('alt' => _('bearbeiten'))) ?>
                 </a>
-                <a href="<?= $controller->url_for('document/files/download/' . $file->id) ?>" title="<?= _('Datei herunterladen') ?>">
+                <a href="<?= $file->getDownloadLink() ?>" title="<?= _('Datei herunterladen') ?>">
                     <?= Assets::img('icons/16/blue/download.png', array('alt' => _('herunterladen'))) ?>
                 </a>
                 <a href="<?= $controller->url_for('document/files/move/' . $file->id) ?>" data-dialog title="<?= _('Datei verschieben') ?>">

@@ -115,4 +115,21 @@ class DirectoryEntry extends SimpleORMap
         }
         return $size;
     }
+    
+    public function getDownloadLink($inline = false, $absolute = false)
+    {
+        if ($absolute) {
+            $old_base_url = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+        }
+
+        $url = $inline
+             ? URLHelper::getURL('dispatch.php/document/download/' . $this->id . '/inline')
+             : URLHelper::getURL('dispatch.php/document/download/' . $this->id);
+
+        if ($absolute) {
+            URLHelper::setBaseURL($old_base_url);
+        }
+
+        return $url;
+    }
 }

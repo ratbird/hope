@@ -164,6 +164,9 @@ h1,
 h2 {
   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
+h1 {
+  margin-top: 0px;
+}
 h1 span {
   display: block;
   font-size: 18px;

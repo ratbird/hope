@@ -273,7 +273,7 @@
             </header>
             <section>
                 <ul class='css_tree'>
-                    <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true)) ?>
+                    <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true, 'dont_open' => array(1))) ?>
                 </ul>
             </section>
         </section>

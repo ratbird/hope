@@ -81,20 +81,6 @@
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/mail-sidebar.png"));
 
-$folderwidget = new LinksWidget();
-$folderwidget->forceRendering();
-$folderwidget->title = _('Verwendete Tags');
-$folderwidget->id    = 'messages-tags';
-if (empty($tags)) {
-    $folderwidget->style = 'display:none';
-} else {
-    foreach ($tags as $tag) {
-        $folderwidget->addLink(ucfirst($tag), URLHelper::getURL("?", array('tag' => $tag)), null, array('class' => "tag"));
-    }
-}
-
-$sidebar->addWidget($folderwidget, 'folder');
-
 $actions = new ActionsWidget();
 $actions->addLink(
     _("Neue Nachricht schreiben"),
@@ -116,3 +102,18 @@ $search->addFilter(_('Betreff'), 'search_subject');
 $search->addFilter(_('Inhalt'), 'search_content');
 $search->addFilter(_('AutorIn'), 'search_autor');
 $sidebar->addWidget($search);
+
+$folderwidget = new LinksWidget();
+$folderwidget->forceRendering();
+$folderwidget->title = _('Verwendete Tags');
+$folderwidget->id    = 'messages-tags';
+if (empty($tags)) {
+    $folderwidget->style = 'display:none';
+} else {
+    foreach ($tags as $tag) {
+        $folderwidget->addLink(ucfirst($tag), URLHelper::getURL("?", array('tag' => $tag)), null, array('class' => "tag"));
+    }
+}
+
+$sidebar->addWidget($folderwidget);
+

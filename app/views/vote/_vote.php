@@ -3,7 +3,7 @@
         <nav>
             <?= $vote->count ?> |
             <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
-                <?= htmlReady($vote->author->getFullName()) ?>
+                <?= $vote->author ? htmlReady($vote->author->getFullName()) : '' ?>
             </a> |
             <?= strftime("%d.%m.%Y", $vote->mkdate) ?>
             <a href="<?= URLHelper::getLink('admin_vote.php', array('page' => 'edit', 'type' => 'vote', 'voteID' => $vote->id)) ?>">

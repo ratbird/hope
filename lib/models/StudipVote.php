@@ -26,10 +26,9 @@ class StudipVote extends SimpleORMap {
         $config['has_many']['anonymous_users'] = array(
             'class_name' => 'VoteUser'
         );
-        $config['has_one']['author'] = array(
+        $config['belongs_to']['author'] = array(
             'class_name' => 'User',
-            'foreign_key' => 'author_id',
-            'assoc_func' => 'findByUser_id'
+            'foreign_key' => 'author_id'
         );
         $config['additional_fields']['users'] = true;
         $config['additional_fields']['count'] = true;

@@ -272,7 +272,7 @@
                 <h1><?= _('Studienbereiche') ?></h1>
             </header>
             <section>
-                <ul class="css-tree">
+                <ul class="collapsable css-tree">
                     <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true, 'dont_open' => array(1))) ?>
                 </ul>
             </section>

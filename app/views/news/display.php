@@ -33,10 +33,10 @@
                 </a>
             </h1>
         </header>
-        <p>
+        <section>
             <?= formatReady($new['body']) ?>
 
-        </p>
+        </section>
         <?= $this->render_partial('news/_comments.php', array('new' => $new, 'range' => $range)) ?>
     </article>
     <? endforeach; ?>

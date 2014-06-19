@@ -57,6 +57,7 @@ class Course_TopicsController extends AuthenticatedController
                     Request::set("open", $topic->getId());
                 }
                 PageLayout::postMessage(MessageBox::success(_("Thema gespeichert.")));
+                $this->redirect("course/topics/index");
             }
         }
         if (Request::isPost() && Request::option("move_down")) {
@@ -107,6 +108,84 @@ class Course_TopicsController extends AuthenticatedController
             $this->set_content_type('text/html;Charset=windows-1252');
             $this->response->add_header('X-Title', $topic_id ? _("Bearbeiten").": ".$this->topic['title'] : _("Neues Thema erstellen"));
         }
+    }
+
+    public function copy_action()
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
+        if (Request::submitted("copy")) {
+            $prio = 1;
+            foreach (Course::find($_SESSION['SessionSeminar'])->topics as $topic) {
+                $prio = max($prio, $topic['priority']);
+            }
+            foreach (Request::getArray("topic") as $topic_id => $value) {
+                $topic = new CourseTopic($topic_id);
+                $topic = clone $topic;
+                $topic['seminar_id'] = $_SESSION['SessionSeminar'];
+                $topic['priority'] = $prio;
+                $prio++;
+                $topic->setId($topic->getNewId());
+                $topic->setNew(true);
+                var_dump($topic->store());
+            }
+            PageLayout::postMessage(MessageBox::success(sprintf(_("%s Themen kopiert."), count(Request::getArray("topic")))));
+            $this->redirect("course/topics");
+        }
+        if ($GLOBALS['perm']->have_perm("root")) {
+            $this->courseSearch = new SQLSearch("
+                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                FROM seminare
+                WHERE seminare.name LIKE :input
+                ",
+                _("Veranstaltung suchen"),
+                "seminar_id"
+            );
+        } elseif ($GLOBALS['perm']->have_perm("admin")) {
+            $this->courseSearch = new SQLSearch("
+                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                FROM seminare
+                    INNER JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.seminar_id)
+                    INNER JOIN user_inst ON (user_inst.Institut_id = seminar_inst.institut_id)
+                WHERE seminare.name LIKE :input
+                    AND user_inst.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."
+                    AND user_inst.inst_perms = 'admin'
+                ",
+                _("Veranstaltung suchen"),
+                "seminar_id"
+            );
+        } else {
+            $this->courseSearch = new SQLSearch("
+                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                FROM seminare
+                    INNER JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                WHERE seminare.name LIKE :input
+                    AND seminar_user.status IN ('tutor', 'dozent')
+                    AND seminar_user.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."
+                ",
+                _("Veranstaltung suchen"),
+                "seminar_id"
+            );
+        }
+
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;Charset=windows-1252');
+            $this->response->add_header('X-Title', _("Themen aus Veranstaltung kopieren"));
+        }
+    }
+
+    public function fetch_topics_action()
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
+        $this->topics = CourseTopic::findBySeminar_id(Request::option("seminar_id"));
+        $output = array(
+            'html' => $this->render_template_as_string("course/topics/_topiclist.php")
+        );
+        $this->render_json($output);
     }
 
 

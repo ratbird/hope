@@ -249,4 +249,12 @@ abstract class StudipController extends Trails_Controller
         return $this->response;
     }
 
+    function render_template_as_string($template, $layout = null)
+    {
+        $template = $this->get_template_factory()->open($template);
+        $template->set_layout($layout);
+        $template->set_attributes($this->get_assigned_variables());
+        return $template->render();
+    }
+
 }

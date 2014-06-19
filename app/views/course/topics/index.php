@@ -113,12 +113,12 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
         null,
         array('data-dialog' => "buttons")
     );
-    /*$actions->addLink(
+    $actions->addLink(
         _("Themen aus Veranstaltung kopieren"),
         URLHelper::getURL("dispatch.php/course/topics/copy"),
         null,
         array('data-dialog' => "buttons")
-    );*/
+    );
 }
 $sidebar->addWidget($actions);
 

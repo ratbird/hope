@@ -18,7 +18,7 @@
         <? foreach ($sem_courses as $sem_key => $course_group) : ?>
             <table class="default collapsable">
                 <caption>
-                    <?= sprintf(_("Meine Veranstaltungen im %s"), htmlReady($sem_data[$sem_key]['name'])) ?>
+                    <?= htmlReady($sem_data[$sem_key]['name']) ?>
                 </caption>
                 <colgroup>
                     <col width="7px">

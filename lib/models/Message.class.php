@@ -146,6 +146,7 @@ class Message extends SimpleORMap
 
     public function markAsRead($user_id)
     {
+        PersonalNotifications::markAsReadByHTML('message_'.$this->getId(), $user_id);
         return $this->markAs($user_id, 1);
     }
 

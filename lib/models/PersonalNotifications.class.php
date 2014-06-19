@@ -138,14 +138,38 @@ class PersonalNotifications extends SimpleORMap {
         $pn = new PersonalNotifications($notification_id);
         $statement = DBManager::get()->prepare(
             "UPDATE personal_notifications_user AS pnu " .
-                "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
+            "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
             "SET pnu.seen = '1' " .
             "WHERE pnu.user_id = :user_id " .
-                "AND pn.url = :url " .
-        "");
+            "AND pn.url = :url " .
+            "");
         return $statement->execute(array(
             'user_id' => $user_id,
             'url' => $pn['url']
+        ));
+    }
+
+    /**
+     * Mark a notification as read for the user by the given HTML-ID. It won't appear anymore in the
+     * notification-list on top of its site.
+     * @param string $html_id : HTML ID attribute of the notification
+     * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
+     * @return boolean : true on success, false if it failed.
+     */
+    static public function markAsReadByHTML($html_id, $user_id = null) {
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        $statement = DBManager::get()->prepare(
+            "UPDATE personal_notifications_user AS pnu " .
+                "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
+            "SET pnu.seen = '1' " .
+            "WHERE pnu.user_id = :user_id " .
+                "AND pn.html_id = :html_id " .
+        "");
+        return $statement->execute(array(
+            'user_id' => $user_id,
+            'html_id' => $html_id
         ));
     }
 

@@ -30,6 +30,7 @@ require_once 'core/SystemPlugin.class.php';
 require_once 'core/WebServicePlugin.class.php';
 require_once 'core/ForumModule.class.php';
 require_once 'core/RESTAPIPlugin.class.php';
+require_once 'core/MetricsPlugin.class.php';
 
 // old navigation classes (deprecated)
 require_once 'core/StudipPluginNavigation.class.php';

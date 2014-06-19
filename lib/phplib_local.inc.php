@@ -537,6 +537,9 @@ class Seminar_Auth extends Auth {
     function auth_preauth() {
         // is Single Sign On activated?
         if ( ($provider = Request::option('sso')) ) {
+
+            Metrics::increment('core.sso_login.attempted');
+
             // then do login
             if ( ($authplugin = StudipAuthAbstract::GetInstance($provider)) ) {
                 $authplugin->authenticateUser("","","");
@@ -547,6 +550,9 @@ class Seminar_Auth extends Auth {
                     $this->auth["uname"] = $user->username;
                     $this->auth["auth_plugin"]  = $user->auth_plugin;
                     $this->auth_set_user_settings($user);
+
+                    Metrics::increment('core.sso_login.succeeded');
+
                     return $user->id;
                 }
             } else {

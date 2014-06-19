@@ -29,12 +29,8 @@ StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib
 StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'sidebar');
 StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'helpbar');
 
-
-register_shutdown_function(
-    function ($timer) {
-        $timer('core.request_time', 0.1);
-    },
-    Metrics::startTimer());
+// sample the request time every tenth time
+register_shutdown_function(function ($timer) { $timer('core.request_time', 0.1); }, Metrics::startTimer());
 
 require 'lib/phplib/db_mysql_studip_pdo.inc';
 require 'lib/phplib/ct_sql_studip_pdo.inc';

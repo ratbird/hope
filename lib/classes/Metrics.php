@@ -79,7 +79,7 @@ class Metrics {
      * @param integer $increment  the amount to increment by; must be within [-2^63, 2^63]
      * @param float $sampleRate  a float between 0 and 1; will only be send this percentage of time
      */
-    public static function count($stat, $increment, $sampleRate = null)
+    public static function count($stat, $increment, $sampleRate = 1)
     {
         self::sendMessage('count', $stat, intval($increment), $sampleRate);
     }
@@ -90,7 +90,7 @@ class Metrics {
      * @param string $stat  the name of the counter
      * @param float $sampleRate  a float between 0 and 1; will only be send this percentage of time
      */
-    public static function increment($stat, $sampleRate = null)
+    public static function increment($stat, $sampleRate = 1)
     {
         self::count($stat, 1, $sampleRate);
     }
@@ -101,7 +101,7 @@ class Metrics {
      * @param string $stat  the name of the counter
      * @param float $sampleRate  a float between 0 and 1; will only be send this percentage of time
      */
-    public static function decrement($stat, $sampleRate = null)
+    public static function decrement($stat, $sampleRate = 1)
     {
         self::count($stat, -1, $sampleRate);
     }
@@ -114,7 +114,7 @@ class Metrics {
      * @param integer $value  the value of the gauge; must be within [0, 2^64]
      * @param float $sampleRate  a float between 0 and 1; will only be send this percentage of time
      */
-    public static function gauge($stat, $value, $sampleRate = null)
+    public static function gauge($stat, $value, $sampleRate = 1)
     {
         if ($value < 0) {
             throw new InvalidArgumentException("Valid gauge values are in the range [0, 2^64]");
@@ -129,7 +129,7 @@ class Metrics {
      * @param integer $milliseconds  the amount to milliseconds that something lastedincrement by; must be within [0, 2^64]
      * @param float $sampleRate  a float between 0 and 1; will only be send this percentage of time
      */
-    public static function timing($stat, $milliseconds, $sampleRate = null)
+    public static function timing($stat, $milliseconds, $sampleRate = 1)
     {
         if ($milliseconds < 0) {
             throw new InvalidArgumentException("Valid timer values are in the range [0, 2^64]");
@@ -146,7 +146,7 @@ class Metrics {
      * The timer function has this signature:
      *
      * @code
-     * $timer = function ($stat, $sampleRate = null) {...};
+     * $timer = function ($stat, $sampleRate = 1) {...};
      * @endcode
      *
      * Invoke the timer function using a stat name and an optional
@@ -164,7 +164,7 @@ class Metrics {
     public static function startTimer()
     {
         $start_time = microtime(true);
-        return function ($stat, $sampleRate = null) use ($start_time) {
+        return function ($stat, $sampleRate = 1) use ($start_time) {
             \Metrics::timing($stat, round(1000 * (microtime(true) - $start_time)), $sampleRate);
         };
     }
@@ -182,6 +182,13 @@ class Metrics {
             return;
         }
 
+        if ($sampleRate < 1) {
+            $rand = mt_rand() % 100 / 100;
+            if ($rand > $sampleRate) {
+                return;
+            }
+        }
+
         // cache the activated MetricsPlugins
         if (!self::$metricPlugins) {
             self::$metricPlugins = \PluginEngine::getPlugins('MetricsPlugin');
@@ -189,7 +196,7 @@ class Metrics {
 
         // call every MetricPlugin
         foreach (self::$metricPlugins as $plugin) {
-            call_user_func_array(array($plugin, $message), array($stat, $value));
+            call_user_func_array(array($plugin, $message), array($stat, $value, $sampleRate));
         }
     }
 }

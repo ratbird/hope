@@ -32,7 +32,7 @@ StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib
 
 register_shutdown_function(
     function ($timer) {
-        $timer('core.request_time');
+        $timer('core.request_time', 0.1);
     },
     Metrics::startTimer());
 

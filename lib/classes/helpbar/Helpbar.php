@@ -10,6 +10,7 @@ class Helpbar extends WidgetContainer
 {
     protected $json_directory;
     protected $open = false;
+    protected $should_render = true;
     
     public function __construct()
     {
@@ -140,6 +141,11 @@ class Helpbar extends WidgetContainer
         $this->open = $state;
     }
     
+    public function shouldRender($state = true)
+    {
+        $this->should_render = $state;
+    }
+    
     /**
      * Renders the help bar.
      * The helpbar will only be rendered if it actually contains any widgets.
@@ -163,7 +169,7 @@ class Helpbar extends WidgetContainer
 
         NotificationCenter::postNotification('HelpbarWillRender', $this);
 
-        if ($this->hasWidgets()) {
+        if ($this->should_render && $this->hasWidgets()) {
             $template = $GLOBALS['template_factory']->open('helpbar/helpbar');
             $template->widgets = $this->widgets;
             $template->open    = $this->open;

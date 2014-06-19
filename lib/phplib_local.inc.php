@@ -649,6 +649,7 @@ class Seminar_Auth extends Auth {
             $this->auth_set_user_settings($user);
             return $uid;
         } else {
+            Metrics::increment('core.login.failed');
             $this->error_msg = $check_auth['error'];
             return false;
         }

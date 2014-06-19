@@ -144,6 +144,7 @@ if (Navigation::hasItem('/profile/edit')) {
     Navigation::addItem('/profile/modules', $plus_nav);
 }
 if ($user_did_login) {
+    Metrics::increment('core.login.succeeded');
     NotificationCenter::postNotification('UserDidLogin', $user->id);
 }
 if ($seminar_open_redirected) {

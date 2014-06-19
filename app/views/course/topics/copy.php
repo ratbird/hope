@@ -1,15 +1,16 @@
 <form action="<?= URLHelper::getLink("dispatch.php/course/topics/copy") ?>" method="post">
     <script>
         STUDIP.Topics = {
-            loadTopics: function () {
+            loadTopics: function (seminar_id) {
                 jQuery.ajax({
                     'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/course/topics/fetch_topics",
-                    'data': { 'seminar_id': jQuery("input[name=copy_from]").val() },
+                    'data': { 'seminar_id': seminar_id },
                     'dataType': "json",
                     'success': function (json) {
                         jQuery("#topiclist").html(json.html);
                     }
-                })
+                });
+                return true;
             }
         };
     </script>

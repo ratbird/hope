@@ -135,8 +135,9 @@ class Course_TopicsController extends AuthenticatedController
         }
         if ($GLOBALS['perm']->have_perm("root")) {
             $this->courseSearch = new SQLSearch("
-                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                SELECT DISTINCT seminare.Seminar_id, CONCAT(seminare.name, '(', SUM(1), ')')
                 FROM seminare
+                    LEFT JOIN themen ON (themen.seminar_id = seminare.Seminar_id)
                 WHERE seminare.name LIKE :input
                 ",
                 _("Veranstaltung suchen"),
@@ -144,10 +145,11 @@ class Course_TopicsController extends AuthenticatedController
             );
         } elseif ($GLOBALS['perm']->have_perm("admin")) {
             $this->courseSearch = new SQLSearch("
-                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                SELECT DISTINCT seminare.Seminar_id, CONCAT(seminare.name, ' (', SUM(1), ')')
                 FROM seminare
                     INNER JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.seminar_id)
                     INNER JOIN user_inst ON (user_inst.Institut_id = seminar_inst.institut_id)
+                    LEFT JOIN themen ON (themen.seminar_id = seminare.Seminar_id)
                 WHERE seminare.name LIKE :input
                     AND user_inst.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."
                     AND user_inst.inst_perms = 'admin'
@@ -157,9 +159,10 @@ class Course_TopicsController extends AuthenticatedController
             );
         } else {
             $this->courseSearch = new SQLSearch("
-                SELECT DISTINCT seminare.Seminar_id, seminare.name
+                SELECT DISTINCT seminare.Seminar_id, CONCAT(seminare.name, '(', SUM(1), ')')
                 FROM seminare
                     INNER JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                    LEFT JOIN themen ON (themen.seminar_id = seminare.Seminar_id)
                 WHERE seminare.name LIKE :input
                     AND seminar_user.status IN ('tutor', 'dozent')
                     AND seminar_user.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."

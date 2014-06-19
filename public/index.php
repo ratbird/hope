@@ -55,6 +55,12 @@ include_once 'lib/classes/RSSFeed.class.php';
 // -- wir sind jetzt definitiv in keinem Seminar, also... --
 closeObject();
 
+// if new start page is in use, redirect there (if logged in)
+if ($auth->is_authenticated() && $user->id != 'nobody' && get_config('NEW_START_PAGE')) {
+    header('Location: ' . URLHelper::getURL('dispatch.php/start'));
+    die;
+}
+
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user->id != 'nobody')){
     $rss_id = StudipNews::GetRssIdFromRangeId('studip');
     if ($rss_id) {

@@ -1,0 +1,121 @@
+<?php
+# Lifter010: TODO
+
+if (!$calendar_view || !($calendar_view instanceof CalendarView)) {
+    throw new Exception('You need to pass a variable named $calendar_view, which holds an instance of CalendarView, to this template ('. __FILE__ .')!');
+}
+
+list($start_hour, $end_hour) = $calendar_view->getRange();
+
+$cell_height = $calendar_view->getHeight() + 2;
+$cell_steps = $cell_height / 60;
+$cell_width = floor (100 / sizeof($calendar_view->getColumns()));
+?>
+
+<!-- the view -->
+
+<div id="schedule">
+
+<table id="schedule_data" style="width: 100%;" cellspacing="0" cellpadding="0">
+    <thead>
+        <tr>
+            <td style="width: 40px;">
+            </td>
+            <? foreach ($calendar_view->getColumns() as $column) : ?>
+            <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px; width: <?= $cell_width ?>%">
+                <? $link_or_not = $column->getURL() ? '<a href="'.URLHelper::getLink($column->getURL()).'">%s</a>' : '%s';
+                printf($link_or_not, htmlReady($column->getTitle()));
+                ?>
+            </td>
+            <? endforeach; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <tr height="1">
+            <td style="width: 40px;">
+            </td>
+            <td colspan="7" style="padding: 0px">
+                <!-- the lines separating the hours and half-hours -->
+                <div style="position: relative">
+                    <div style="position: absolute; width: 100%;">
+                        <? for ($i = $start_hour; $i <= $end_hour; $i++) : ?>
+                        <div id="marker_<?= $i ?>" class="schedule_marker"></div>
+                        <? endfor; ?>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px;">
+                <!-- the hours for the time-table -->
+                <? for ($i = $start_hour; $i <= $end_hour; $i++) : ?>
+                <div class="schedule_hours"><?= ($i < 10) ? '0'.$i : $i ?>:00</div>
+                <? endfor; ?>
+            </td>
+            <? foreach ($calendar_view->getColumns() as $column) : ?>
+            <td style="vertical-align: top">
+                <!-- the days with the date for the timetable -->
+                <div id="calendar_view_<?= $view_id ?>_column_<?= $column->getId() ?>" class="schedule_day" style="overflow: hidden">
+                    <? $groups = $column->getGroupedEntries();
+                    if (!empty($groups)) :
+                    $width = floor( 98 / sizeof($groups));
+                    $col = 0;
+                    foreach ($groups as $grouped_entries) :
+
+                        foreach ($grouped_entries as $entry) :
+                            // if we have a grouped entry, use start- and end-time of any entry, the are all the same
+                            $calc_entry = $calendar_view->isGrouped() ? $entry[0] : $entry;
+
+                            // move the box up, if the user has set a later start-hour for his schedule
+                            $calc_entry['end'] -= $start_hour * 100;
+
+                            // if the start is out of range of the displayed hours, clip the box
+                            if ($calc_entry['start'] < $start_hour * 100) {
+                                $calc_entry['start'] = 0;
+                            } else {
+                                $calc_entry['start'] -= $start_hour * 100;
+                            }
+
+                            // calculate the position and height of the entry
+                            $top = floor($cell_height * floor($calc_entry['start'] / 100)
+                                + $cell_steps * floor($calc_entry['start'] % 100));
+                            $bottom = floor($cell_height * floor($calc_entry['end'] / 100)
+                                + $cell_steps * floor($calc_entry['end'] % 100)) - 1;
+
+                            // how many concurring entries has this entry?
+                            $max = 0;
+                            $current_matrix = $column->getMatrix();
+                            for ($i = ($calc_entry['start'] + 1 + ($start_hour * 100)); $i < $calc_entry['end'] + ($start_hour * 100); $i++) {
+                                $max = max($max, $current_matrix[$i]);
+                            }
+
+                            // set height and width
+                            $height = $bottom - $top;
+
+                            $this->top    = $top;
+                            $this->width  = $width;
+                            $this->height = $height;
+                            $this->entry  = $entry;
+                            $this->col    = $col;
+
+                            // if we have no concurring entries set the maximum useful width
+                            if ($max == 1) $this->width = '98';
+
+                            if ($calendar_view->isGrouped()) {
+                                echo $this->render_partial('entries/grouped_entry');
+                            } else {
+                                echo $this->render_partial('entries/entry');
+                            }
+
+                        endforeach; /* cycle thrugh entries  */
+                        $col++;
+
+                    endforeach; /* cycle through columns */
+                endif; ?>
+                </div>
+            </td>
+            <? endforeach; /* cycle through days*/ ?>
+        </tr>
+    </tbody>
+</table>
+</div>

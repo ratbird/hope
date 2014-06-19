@@ -1,0 +1,6 @@
+pluginname=ActivityFeedWidget
+pluginclassname=ActivityFeedWidget
+origin=core
+version=3.0
+plugincontext=Startseite
+description=ActivityFeedWidget ermöglicht ihnen tolle sachen.

@@ -1,0 +1,8 @@
+pluginclassname=NewsWidget
+pluginname=NewsWidget
+origin=core
+version=3.0
+studipMinVersion=2.5
+plugincontext=Startseite
+description=Mit diesem Widget haben Sie Zugriff auf systemweite Ankündigungen.
+

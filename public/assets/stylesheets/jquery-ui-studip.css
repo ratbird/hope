@@ -1,3 +1,8 @@
+.ui-widget_start {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.0em;
+    padding: 0;
+}
 .ui-widget {
     font-family: inherit;
     font-size: 1.0em;
@@ -9,9 +14,42 @@
 
 
 .ui-widget-header {
-    background-color: #8899b8;
+    background-color: #8899b8; 
+    background-image: none;
+}
+.ui-widget_columnl {
+    float: left;    
+    width: 100%;
+}
+.ui-widgetContainer {    
     color: white;
     background-image: none;
+    padding: 2%;
+    
+}
+
+.ui-widget_columnr {
+    float: right;
+    /*width: 39%; */
+}
+
+.ui-widget_head {    
+    line-height: 30px;
+    
+    text-align: center;
+    color: white;
+    font-size: 1.3em;
+    background-color: #8899b8;
+}
+
+.ui-widget_head:hover {
+    cursor:move;
+
+}
+.ui-widget_head h1 {
+    line-height: 100px;    
+    text-align: center;
+    color: black;
 }
 
 .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-right, .ui-corner-tl,

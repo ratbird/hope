@@ -66,6 +66,47 @@ function export_form($range_id, $ex_type = "", $filename = "", $format = "", $fi
 }
 
 /**
+* Generates a form that can be put into the sidebar to link to the export-module.
+*
+* This function returns a string with a HTML-form that links to the export-module.
+* It passes the given parameters in order to allow to jump to a specific part of the export-module.
+*
+* @access   public
+* @param        string  $range_id   export-range
+* @param        string  $ex_type    type of data to be exported
+* @param        string  $filename   filename for data-file
+* @param        string  $format file-format for export
+* @param        string  $filter grouping-category for export
+* @return       string
+*/
+function export_form_sidebar($range_id, $ex_type = "", $filename = "", $format = "", $filter = "")
+{
+    global $output_formats, $PATH_EXPORT, $xslt_filename;
+    $filename = $xslt_filename;
+    require_once ($PATH_EXPORT . "/export_xslt_vars.inc.php");
+    $export_string .= "<form class=\"studip_form\" action=\"" .$GLOBALS['ABSOLUTE_URI_STUDIP']. "export.php\" method=\"post\">";
+    $export_string .= CSRFProtection::tokenTag();
+    $export_string .= "<select name=\"format\">";
+    while (list($key, $val) = each($output_formats))
+    {
+        $export_string .= "<option value=\"" . $key . "\"";
+        if ($format==$key) $export_string .= " selected";
+        $export_string .= ">" . my_substr($val, 0, 20) . "</option>";
+    }
+    $export_string .= "</select>";
+
+    $export_string .= Button::create(_('Export'), 'export', array('title' => _('Daten Exportieren')));
+    $export_string .= "<input type=\"hidden\" name=\"range_id\" value=\"$range_id\">";
+    $export_string .= "<input type=\"hidden\" name=\"o_mode\" value=\"choose\">";
+    $export_string .= "<input type=\"hidden\" name=\"page\" value=\"1\">";
+    $export_string .= "<input type=\"hidden\" name=\"ex_type\" value=\"$ex_type\">";
+    $export_string .= "<input type=\"hidden\" name=\"filter\" value=\"$filter\">";
+    $export_string .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"$filename\">";
+    $export_string .= "</form>";
+    return $export_string;
+}
+
+/**
 * Generates a link to the export-module that can be put into Stud.IP-pages.
 *
 * This function returns a string with a  link to the export-module.

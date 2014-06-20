@@ -365,7 +365,7 @@ class MyRealmModel
                         $my_obj['last_modified'] = $result['last_modified'];
                     }
                 }
-                $nav = new Navigation('elearning', 'dispatch/elearning/show');
+                $nav = new Navigation('elearning', 'dispatch/course/elearning/show');
                 if ((int)$result['last_modified']) {
                     $nav->setImage('icons/20/red/new/learnmodule.png', array('title' => _('Es sind neue Lernmodule vorhanden')));
                 } elseif ((int)$result['count']) {

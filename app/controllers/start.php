@@ -39,7 +39,6 @@ class StartController extends AuthenticatedController {
         PageLayout::setTabNavigation(NULL); // disable display of tabs
         PageLayout::setHelpKeyword("Basis.Startseite"); // set keyword for new help
         PageLayout::setTitle(_('Startseite'));
-        Helpbar::get()->shouldRender(false);
     }
 
     function index_action() {

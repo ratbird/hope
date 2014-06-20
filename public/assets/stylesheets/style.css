@@ -4622,9 +4622,6 @@ a.opengraph_info:hover {
   border-right: 1px dashed #1e3e70;
   margin-right: 25px;
 }
-#startheader {
-  margin-top: 42px;
-}
 .start-widgetcontainer {
   padding: 1% 0px;
   margin-top: -35px;
@@ -4666,7 +4663,7 @@ a.opengraph_info:hover {
   background: #315388;
   border-top: 1px solid #315388;
   position: absolute;
-  right: 26px;
+  right: 60px;
   top: 145px;
 }
 .addclip-container #addclip-sticky {

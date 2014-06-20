@@ -129,6 +129,7 @@ class Course_TopicsController extends AuthenticatedController
                 $prio++;
                 $topic->setId($topic->getNewId());
                 $topic->setNew(true);
+                $topic->store();
             }
             PageLayout::postMessage(MessageBox::success(sprintf(_("%s Themen kopiert."), count(Request::getArray("topic")))));
             $this->redirect("course/topics");

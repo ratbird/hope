@@ -102,17 +102,14 @@ class CleanupLogJob extends CronJob
         $event_log->cleanup_log_events();
 
         if (!empty($parameters['cronjobs'])) {
+            $delete = function($l) {$l->delete();};
             if ($parameters['cronjobs-error'] > 0) {
-                $temp = CronjobLog::findBySql("exception != 'N;' AND executed + ? < UNIX_TIMESTAMP()",
+                CronjobLog::findEachBySql($delete, "exception != 'N;' AND executed + ? < UNIX_TIMESTAMP()",
                                               array($parameters['cronjobs-error'] * 24 * 60 * 60));
-                $logs = SimpleORMapCollection::createFromArray($temp);
-                $logs->sendMessage('delete');
             }
             if ($parameters['cronjobs-success'] > 0) {
-                $temp = CronjobLog::findBySql("exception = 'N;' AND executed + ? < UNIX_TIMESTAMP()",
+                CronjobLog::findEachBySql($delete, "exception = 'N;' AND executed + ? < UNIX_TIMESTAMP()",
                                               array($parameters['cronjobs-success'] * 24 * 60 * 60));
-                $logs = SimpleORMapCollection::createFromArray($temp);
-                $logs->sendMessage('delete');
             }
         }
     }

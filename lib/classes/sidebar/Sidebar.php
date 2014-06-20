@@ -1,6 +1,6 @@
 <?php
 /**
- * The sidebar supersedes the pretty static infobox of Stud.IP. 
+ * The sidebar supersedes the pretty static infobox of Stud.IP.
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL 2 or later
@@ -17,14 +17,14 @@ class Sidebar extends WidgetContainer
 
         $this->setTitle();
     }
-    
+
     /**
      * Contains an optional image for the container.
      */
     protected $image = false;
     protected $title = false;
     protected $context_avatar = null;
-    
+
     /**
      * Set an image for the sidebar.
      *
@@ -34,7 +34,7 @@ class Sidebar extends WidgetContainer
     {
         $this->image = $image;
     }
-    
+
     /**
      * Returns the image for the sidebar.
      *
@@ -45,7 +45,7 @@ class Sidebar extends WidgetContainer
     {
         return $this->image;
     }
-    
+
     /**
      * Removes a previously set image.
      */
@@ -63,7 +63,7 @@ class Sidebar extends WidgetContainer
     {
         $this->title = $title;
     }
-    
+
     /**
      * Returns the title of the sidebar.
      *
@@ -102,7 +102,7 @@ class Sidebar extends WidgetContainer
     {
         $this->context_avatar = $avatar;
     }
-    
+
     /**
      * Removes a previously set context-indicator.
      */
@@ -124,22 +124,27 @@ class Sidebar extends WidgetContainer
     public function render()
     {
         $content = '';
-        
+
         if ($this->context_avatar === null) {
             $breadcrumbs = $this->getBreadCrumbs();
             $keys = array_keys($breadcrumbs);
             if (reset($keys) === 'course') {
                 $course = Course::findCurrent();
-                if ($course->getSemClass()->offsetGet('studygroup_mode')) {
-                    $avatar = StudygroupAvatar::getAvatar($course->id);
+                if ($course) {
+                    if ($course->getSemClass()->offsetGet('studygroup_mode')) {
+                        $avatar = StudygroupAvatar::getAvatar($course->id);
+                    } else {
+                        $avatar = CourseAvatar::getAvatar($course->id);
+                    }
                 } else {
-                    $avatar = CourseAvatar::getAvatar($course->id);
+                    $institute = Institute::findCurrent();
+                    $avatar = InstituteAvatar::getAvatar($institute->id);
                 }
                 $this->setContextAvatar($avatar);
             }
         }
 
-        NotificationCenter::postNotification('SidebarWillRender', $this);        
+        NotificationCenter::postNotification('SidebarWillRender', $this);
 
         if ($this->hasWidgets()) {
             $template = $GLOBALS['template_factory']->open('sidebar/sidebar');

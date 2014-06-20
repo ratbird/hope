@@ -97,9 +97,10 @@ class HelpTour extends SimpleORMap {
      */
     public static function GetToursByRoute($route = '')
     {
-        if (!$route)
-            $route = HelpTour::GetRoute();
-    	$query = "SELECT tour_id AS idx, help_tours.*
+        if (!$route) {
+            $route = get_route();
+        }
+        $query = "SELECT tour_id AS idx, help_tours.*
                   FROM help_tour_steps
                   INNER JOIN help_tours USING (tour_id)
                   WHERE route = ? AND step = 1

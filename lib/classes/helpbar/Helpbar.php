@@ -11,12 +11,26 @@ class Helpbar extends WidgetContainer
     protected $json_directory;
     protected $open = false;
     protected $should_render = true;
+    protected $variables = array();
     
     public function __construct()
     {
         parent::__construct();
         
         $this->json_directory = $GLOBALS['STUDIP_BASE_PATH'] . '/doc/helpbar';
+    }
+    
+    /**
+     * load helptour content from db
+     */
+    public function loadContent()
+    {
+        $help_content = HelpContent::getContentByRoute();
+        foreach ($help_content as $row) {
+            $this->addPlainText($row['label'] ?: '',
+                                $this->interpolate($row['content'], $this->variables),
+                                $row['icon'] ? sprintf('icons/16/white/%s.png', $row['icon']) : null);
+        }
     }
     
     /**
@@ -157,6 +171,8 @@ class Helpbar extends WidgetContainer
      */
     public function render()
     {
+        // add content
+        $this->loadContent();
         // add tour links
         if (Config::get()->TOURS_ENABLE) {
             $widget = new HelpbarTourWidget();

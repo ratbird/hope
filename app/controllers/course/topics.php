@@ -139,7 +139,7 @@ class Course_TopicsController extends AuthenticatedController
                     LEFT JOIN semester_data ON (semester_data.beginn = seminare.start_time)
                 WHERE CONCAT(seminare.VeranstaltungsNummer, ' ', seminare.name, ' (', IF(seminare.duration_time = 0, semester_data.name, 'unbegrenzt'), ') (', (SELECT COUNT(*) FROM themen WHERE themen.seminar_id = seminare.Seminar_id), ')') LIKE :input
                 GROUP BY seminare.Seminar_id
-                ORDER BY semester_data.beginn, seminare.VeranstaltungsNummer, seminare.name
+                ORDER BY semester_data.beginn DESC, seminare.VeranstaltungsNummer ASC, seminare.name ASC
                 ",
                 _("Veranstaltung suchen"),
                 "seminar_id"
@@ -155,7 +155,7 @@ class Course_TopicsController extends AuthenticatedController
                     AND user_inst.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."
                     AND user_inst.inst_perms = 'admin'
                 GROUP BY seminare.Seminar_id
-                ORDER BY semester_data.beginn, seminare.VeranstaltungsNummer, seminare.name
+                ORDER BY semester_data.beginn DESC, seminare.VeranstaltungsNummer ASC, seminare.name ASC
                 ",
                 _("Veranstaltung suchen"),
                 "seminar_id"
@@ -170,7 +170,7 @@ class Course_TopicsController extends AuthenticatedController
                     AND seminar_user.status IN ('tutor', 'dozent')
                     AND seminar_user.user_id = ".DBManager::get()->quote($GLOBALS['user']->id)."
                 GROUP BY seminare.Seminar_id
-                ORDER BY semester_data.beginn, seminare.VeranstaltungsNummer, seminare.name
+                ORDER BY semester_data.beginn DESC, seminare.VeranstaltungsNummer ASC, seminare.name ASC
                 ",
                 _("Veranstaltung suchen"),
                 "seminar_id"

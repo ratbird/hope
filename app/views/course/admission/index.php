@@ -25,23 +25,6 @@
             </div>
         </div>
         <? else : ?>
-            <? if (!$is_locked['admission_type'] && count($available_coursesets)) : ?>
-            <label class="caption">
-                <?=_("Zuordnung zu einem bestehenden Anmeldeset"); ?>
-            </label>
-            <select name="course_set_assign" style="display: inline-block;"
-                onChange="$('#course_set_assign_explain').load('<?= $controller->link_for('/explain_course_set') ?>&set_id=' + $(this).val());">
-                <option></option>
-                <? foreach($available_coursesets as $cs) : ?>
-                    <option value="<?= $cs->getId() ?>"><?= htmlReady(my_substr($cs->getName(),0,100)) ?></option>
-                <? endforeach ?>
-            </select>
-            <div id="course_set_assign_explain" style="display: inline-block;padding:1ex;">
-            </div>
-            <div style="display: inline-block;padding:1ex;">
-                <?= Studip\Button::create(_("Zuordnen"), 'change_course_set_assign') ?>
-            </div>
-            <? endif ?>
             <label class="caption">
                 <?=_("Anmelderegeln erzeugen"); ?>
             </label>
@@ -54,9 +37,43 @@
                 <?= Studip\LinkButton::create(_("Zeitgesteuerte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'TimedAdmission')),array('data-dialog' => '')) ?>
                 <br>
                 <?= Studip\LinkButton::create(_("Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission')),array('data-dialog' => '')) ?>
-                <?= Studip\LinkButton::create(_("Zeitgesteurte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('data-dialog' => '')) ?>
+                <?= Studip\LinkButton::create(_("Zeitgesteuerte und Teilnahmebeschränkte Anmeldung"), $controller->url_for('/instant_course_set', array('type' => 'ParticipantRestrictedAdmission_TimedAdmission')),array('data-dialog' => '')) ?>
             <? endif ?>
             </div>
+            <? if (!$is_locked['admission_type'] && count($available_coursesets)) : ?>
+                <table class="default nohover collapsable">
+                    <tbody class="collapsed">
+                    <tr class="header-row">
+                        <td>
+                            <label class="caption toggler">
+                                <span style="cursor:pointer" title="<?=_("Klicken um Zuordnungsmöglichkeiten zu öffnen")?>">
+                                    <?= _("Zuordnung zu einem bestehenden Anmeldeset"); ?>
+                                    <?= tooltipIcon(_("Wenn die Veranstaltung die Anmelderegeln eines Anmeldesets übernehmen soll, klicken Sie hier und wählen das entsprechende Anmeldeset aus."));?>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="course_set_assign" style="display: inline-block;"
+                                    onChange="$('#course_set_assign_explain').load('<?= $controller->link_for('/explain_course_set') ?>&set_id=' + $(this).val());">
+                                <option></option>
+                                <? foreach ($available_coursesets as $cs) : ?>
+                                    <option
+                                        value="<?= $cs->getId() ?>"><?= htmlReady(my_substr($cs->getName(), 0, 100)) ?></option>
+                                <? endforeach ?>
+                            </select>
+
+                            <div id="course_set_assign_explain" style="display: inline-block;padding:1ex;">
+                            </div>
+                            <div style="display: inline-block;padding:1ex;">
+                                <?= Studip\Button::create(_("Zuordnen"), 'change_course_set_assign') ?>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            <? endif ?>
         <? endif ?>
     </fieldset>
 </form>

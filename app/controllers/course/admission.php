@@ -99,6 +99,12 @@ class Course_AdmissionController extends AuthenticatedController
                     $this->available_coursesets[] = $cs;
                 }
             }
+            foreach (CourseSet::getglobalCoursesets() as $cs) {
+                $cs = new CourseSet($cs['set_id']);
+                if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
+                    $this->available_coursesets[] = $cs;
+                }
+            }
         }
     }
 
@@ -407,7 +413,6 @@ class Course_AdmissionController extends AuthenticatedController
                     $course_set->setPrivate(true);
                     $course_set->addAdmissionRule($rule);
                     $course_set->setAlgorithm(new RandomAlgorithm());//TODO
-                    $course_set->setInstitutes(array($this->course->institut_id));
                     $course_set->setCourses(array($this->course_id));
                     if ($another_rule) {
                         $course_set->addAdmissionRule($another_rule);

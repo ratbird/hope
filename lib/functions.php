@@ -2041,6 +2041,13 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
     return implode($glue, array_reverse($result));
 }
 
+/**
+ * extracts route
+ *
+ * @param string $route           route (optional, uses REQUEST_URI otherwise)
+ * 
+ * @return  string  route
+ */
 function get_route($route = '') 
 {
     if (!$route) {

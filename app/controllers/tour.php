@@ -83,7 +83,7 @@ class TourController extends StudipController
      */
     function get_data_action($tour_id, $step_nr = 1)
     {
-        $this->route = HelpTour::GetRoute(Request::get('route'));
+        $this->route = get_route(Request::get('route'));
         $this->tour = new HelpTour($tour_id);
         if (!$this->tour->isVisible() OR (!$this->route))
             return $this->render_nothing();

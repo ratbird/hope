@@ -32,10 +32,10 @@ class CoreLiterature implements StudipModule {
 
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), "dispatch.php/course/literature?view=literatur_".$object_type));
             if(StudipLitList::GetFormattedListsByRange($course_id, false, false)){
-                $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'dispatch.php/literature/print_view.php?_range_id=' . $course_id));
+                $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'dispatch.php/literature/print_view?_range_id=' . $course_id));
             }
             if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'dispatch.php/literature/edit_list.php?view=literatur_'.$object_type.'&new_'.$object_type.'=TRUE&_range_id='. $course_id));
+                $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'dispatch.php/literature/edit_list?view=literatur_'.$object_type.'&new_'.$object_type.'=TRUE&_range_id='. $course_id));
             }
 
             return array('literature' => $navigation);

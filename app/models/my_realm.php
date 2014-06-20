@@ -98,7 +98,7 @@ class MyRealmModel
                         $my_obj['last_modified'] = $result['last_modified'];
                     }
                 }
-                $nav = new Navigation('literature', 'literatur.php');
+                $nav = new Navigation('literature', 'dispatch.php/course/literature');
                 if ((int)$result['last_modified']) {
                     $nav->setImage('icons/20/red/new/literature.png', array('title' => _('Es sind neue Literaturlisten/ -einträge vorhanden')));
                 } elseif ((int)$result['count']) {
@@ -365,7 +365,7 @@ class MyRealmModel
                         $my_obj['last_modified'] = $result['last_modified'];
                     }
                 }
-                $nav = new Navigation('elearning', 'elearning_interface.php?view=show');
+                $nav = new Navigation('elearning', 'dispatch/elearning/show');
                 if ((int)$result['last_modified']) {
                     $nav->setImage('icons/20/red/new/learnmodule.png', array('title' => _('Es sind neue Lernmodule vorhanden')));
                 } elseif ((int)$result['count']) {

@@ -613,7 +613,7 @@ class NewsController extends StudipController
             if ($GLOBALS['perm']->have_perm('dozent')) {
                 $widget->addLink(_('Einrichtungen'), URLHelper::getURL('dispatch.php/news/admin_news/inst'))->setActive($this->area_type === 'inst');
             }
-            $widget->addLink(_('Veranstaltungen'), URLHelper::getURL('dispatch.php/news/admin_news/sem'))->setActive($this->area_type === 'inst');
+            $widget->addLink(_('Veranstaltungen'), URLHelper::getURL('dispatch.php/news/admin_news/sem'))->setActive($this->area_type === 'sem');
             $widget->addLink(_('Profil'), URLHelper::getURL('dispatch.php/news/admin_news/user'))->setActive($this->area_type === 'user');
             $this->sidebar->addWidget($widget);
         }

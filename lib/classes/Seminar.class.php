@@ -164,6 +164,11 @@ class Seminar
         return isset($this->course->$field);
     }
 
+    function __call($method, $params)
+    {
+        return call_user_func_array(array($this->course, $method), $params);
+    }
+
     static function GetSemIdByDateId($date_id)
     {
         $stmt = DBManager::get()->prepare("SELECT range_id FROM termine WHERE termin_id = ? LIMIT 1");
@@ -2609,10 +2614,5 @@ class Seminar
         return ($cs && $cs->hasAdmissionRule('TimedAdmission')) ?
             array(array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime()),
                 array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
-    }
-
-    function getFullname($format = 'default')
-    {
-        return $this->course->getFullname($format);
     }
 }

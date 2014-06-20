@@ -103,18 +103,21 @@ class Course_BasicdataController extends AuthenticatedController
         );
         $sem_types = array();
         if ($perm->have_perm("admin")) {
-            foreach (SeminarCategories::getAll() as $sc) {
-                foreach ($sc->getTypes() as $key => $value) {
-                    if (!$sc->course_creation_forbidden || $key == $data['status']) {
-                        $sem_types[$key] = $value . ' (' . $sc->name . ')';
+            foreach (SemClass::getClasses() as $sc) {
+                foreach ($sc->getSemTypes() as $st) {
+                    if (!$sc['course_creation_forbidden']) {
+                        $sem_types[$st['id']] = $st['name'] . ' (' . $sc['name'] . ')';
                     }
                 }
             }
         } else {
-            $sc = SeminarCategories::getByTypeId($data['status']);
-            foreach($sc->getTypes() as $key => $value) {
-                $sem_types[$key] = $value . ' (' . $sc->name . ')';
+            $sc = $sem->getSemClass();
+            foreach($sc->getSemTypes() as $st) {
+                $sem_types[$st['id']] = $st['name'] . ' (' . $sc['name'] . ')';
             }
+        }
+        if (!isset($sem_types[$data['status']])) {
+            $sem_types[$data['status']] = $sem->getSemType()->offsetGet('name');
         }
         $this->attributes[] = array(
             'title' => _("Typ der Veranstaltung"),

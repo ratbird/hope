@@ -285,7 +285,12 @@ class Course extends SimpleORMap
     */
     public function getSemType() {
         $semTypes = SemType::getTypes();
-        return $semTypes[$this->status];
+        if (isset($semTypes[$this->status])) {
+            return $semTypes[$this->status];
+        } else {
+            Log::ERROR(sprintf('SemType not found id:%s status:%s', $this->id, $this->status));
+            return new SemType(array('name' => 'Fehlerhafter Veranstaltungstyp'));
+        }
     }
 
     /**
@@ -294,7 +299,7 @@ class Course extends SimpleORMap
      * @return SemClass The SemClassObject for the course
      */
      public function getSemClass() {
-        return $this->getSemType()->getClass();
+         return $this->getSemType()->getClass();
      }
 
     /**

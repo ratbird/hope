@@ -106,7 +106,7 @@ class SemType implements ArrayAccess
     }
 
     public function getClass() {
-        return $GLOBALS['SEM_CLASS'][$this->data['class']];
+        return $GLOBALS['SEM_CLASS'][$this->data['class']] ?: SemClass::getDefaultSemClass();
     }
 
     /***************************************************************************

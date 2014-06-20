@@ -119,7 +119,7 @@ class CourseNavigation extends Navigation
                 $navigation = new Navigation(_('Personal'));
                 $navigation->setImage('icons/16/white/persons.png');
                 $navigation->setActiveImage('icons/16/black/persons.png');
-                $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'inst_admin.php'));
+                $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'dispatch.php/institute/members'));
 
                 if ($GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $GLOBALS['perm']->have_perm('admin')) {
                     $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'dispatch.php/admin/statusgroups'));

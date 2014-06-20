@@ -79,11 +79,11 @@ class StartupChecks {
         $this->registered_checks["dozent"]["link_name"] = _("Dozentenaccount anlegen oder anderen Account hochstufen");
 
         $this->registered_checks["institutesDozent"]["msg"] = _("Um Veranstaltungen anlegen zu k&ouml;nnen, muss der Einrichtung, f&uuml;r die Sie eine Veranstaltung anlegen m&ouml;chten, mindestens ein Dozentenaccount zugeordnet werden. Nutzen Sie daf&uuml;r die Mitarbeiterverwaltung f&uuml;r Einrichtungen.");
-        $this->registered_checks["institutesDozent"]["link"] = "inst_admin.php?list=TRUE";
+        $this->registered_checks["institutesDozent"]["link"] = "dispatch.php/institute/members?list=TRUE";
         $this->registered_checks["institutesDozent"]["link_name"] = _("Dozent der Einrichtung zuordnen");
 
         $this->registered_checks["myInstitutesDozent"]["msg"] = _("Um Veranstaltungen anlegen zu k&ouml;nnen, muss der Einrichtung, f&uuml;r die Sie eine Veranstaltung anlegen m&ouml;chten, mindestens ein Dozentenaccount zugeordnet werden. Nutzen Sie daf&uuml;r die Mitarbeiterverwaltung f&uuml;r Einrichtungen.");
-        $this->registered_checks["myInstitutesDozent"]["link"] = "inst_admin.php?list=TRUE";
+        $this->registered_checks["myInstitutesDozent"]["link"] = "dispatch.php/institute/members?list=TRUE";
         $this->registered_checks["myInstitutesDozent"]["link_name"] = _("Dozent der Einrichtung zuordnen");
 
         $this->registered_checks["myInstitutes"]["msg"] = _("Um Veranstaltungen anlegen zu k&ouml;nnen, muss Ihr Account der Einrichtung, f&uuml;r die Sie eine Veranstaltung anlegen m&ouml;chten, zugeordnet werden. Bitte wenden Sie sich an einen der Administratoren des Systems.");

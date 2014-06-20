@@ -162,7 +162,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     if ($i_page == "admin_institut.php"
             OR ($i_page == "admin_roles.php" AND $_SESSION['links_admin_data']["view"] == "statusgruppe_inst")
             OR ($i_page == "dispatch.php/literature/edit_list.php" AND $_SESSION['links_admin_data']["view"] == "literatur_inst")
-            OR $i_page == "inst_admin.php"
+            OR $i_page == "dispatch.php/institute/members.php"
             OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"] == "news_inst")
             OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_inst")
             OR ($i_page == "admin_extern.php" AND $_SESSION['links_admin_data']["view"] == "extern_inst")

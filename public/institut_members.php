@@ -22,5 +22,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-$admin_view = false;
-include('inst_admin.php');
+//$admin_view = false;
+//include('inst_admin.php');
+require '../lib/bootstrap.php';
+header('Location: '.URLHelper::getURL('dispatch.php/institute/members', $_REQUEST));
+die;

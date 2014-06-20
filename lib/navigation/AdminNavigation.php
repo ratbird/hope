@@ -102,7 +102,7 @@ class AdminNavigation extends Navigation
 
         $navigation->setURL('admin_institut.php?list=TRUE&quit=1');
         $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php?list=TRUE'));
-        $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'inst_admin.php?list=TRUE&admin_view=1'));
+        $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'dispatch.php/institute/members?list=TRUE&admin_view=1'));
         $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'dispatch.php/admin/statusgroups?type=inst&list=TRUE'));
 
         if (get_config('VOTE_ENABLE')) {

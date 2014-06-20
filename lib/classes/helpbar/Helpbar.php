@@ -163,6 +163,7 @@ class Helpbar extends WidgetContainer
             if ($widget->hasElements()) {
                 $this->addWidget($widget);
             }
+            $tour_data = $widget->tour_data;
         }
 
         $content = '';
@@ -171,8 +172,9 @@ class Helpbar extends WidgetContainer
 
         if ($this->should_render && $this->hasWidgets()) {
             $template = $GLOBALS['template_factory']->open('helpbar/helpbar');
-            $template->widgets = $this->widgets;
-            $template->open    = $this->open;
+            $template->widgets   = $this->widgets;
+            $template->open      = $this->open;
+            $template->tour_data = $tour_data;
             $content = $template->render();
         }
 

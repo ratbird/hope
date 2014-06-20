@@ -2040,3 +2040,29 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
     }
     return implode($glue, array_reverse($result));
 }
+
+function get_route($route = '') 
+{
+    if (!$route) {
+        $route = str_replace($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '', $_SERVER['REQUEST_URI']);
+    } else {
+        $route = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', $route);
+    }
+    if (FALSE !== ($pos = strpos($route, '?')))
+        $route = substr($route, 0, $pos);
+    if (FALSE !== ($pos = strpos($route, '#')))
+        $route = substr($route, 0, $pos);
+    $trails = explode('dispatch.php/', $route);
+    if ($trails[1]) {
+        $dispatcher = new StudipDispatcher();
+        $pieces = explode('/', $trails[1]);
+        foreach ($pieces as $index => $piece) {
+            $trail .= ($trail ? '/' : '') . $piece;
+            if ($dispatcher->file_exists($trail . '.php'))
+                $route = 'dispatch.php/' . $trail . ($pieces[$index+1] ? '/' . $pieces[$index+1] : '');
+        }
+        if (strpos($route, '/index') == strlen($route)-6)
+            $route = str_replace('/index', '', $route);
+    }
+    return $route;
+}

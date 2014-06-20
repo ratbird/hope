@@ -18,3 +18,8 @@
         </ul>
     </div>
 </div>
+<? if ($tour_data['active_tour_id']) : ?>
+    <script>
+        STUDIP.Tour.init('<?=$tour_data['active_tour_id']?>', '<?=$tour_data['active_tour_step_nr']?>')
+    </script>
+<? endif ?>

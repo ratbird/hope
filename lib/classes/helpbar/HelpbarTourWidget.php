@@ -2,12 +2,13 @@
 class HelpbarTourWidget extends HelpbarWidget
 {
     protected $template = 'helpbar/tour-widget.php';
+    public $tour_data = array();
 
     public function __construct()
     {
-        $tour_data = HelpTour::getHelpbarTourData();
+        $this->tour_data = HelpTour::getHelpbarTourData();
         
-        foreach ($tour_data['tours'] as $index => $tour) {
+        foreach ($this->tour_data['tours'] as $index => $tour) {
             $element = new LinkElement($tour->name, URLHelper::getURL('?tour_id=' . $tour->tour_id));
 
             $visit_state = HelpTourUser::find(array($tour->tour_id, $GLOBALS['user']->id));            

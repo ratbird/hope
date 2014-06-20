@@ -81,9 +81,6 @@ if ($infobox && is_array($infobox)) {
         STUDIP.jsupdate_enable = true;
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
-        <? if ($tour_data['active_tour_id']) : ?>
-        STUDIP.Tour.init('<?=$tour_data['active_tour_id']?>', '<?=$tour_data['active_tour_step_nr']?>')
-        <? endif ?>
     </script>
     <?php
         // needs to be included in lib/include/html_head.inc.php as well

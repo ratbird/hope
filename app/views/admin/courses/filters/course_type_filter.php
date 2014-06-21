@@ -1,5 +1,5 @@
 <form action="<?= $url ?>" method="post">
-    <select id="course_type" size="6" name="course_type" style="width: 100%">
+    <select id="course_type" name="course_type" style="width: 100%">
         <option value="all" <?= ($selected == 'all' ? 'selected="selected"' : '') ?>><?= _('Alle') ?></option>
         <? foreach ($types as $cat => $ids) : ?>
             <optgroup label="<?= htmlReady($cat)?>">

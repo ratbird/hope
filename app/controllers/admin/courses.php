@@ -72,8 +72,6 @@ class Admin_CoursesController extends AuthenticatedController
         PageLayout::setHelpKeyword("Basis.Veranstaltungen");
         PageLayout::setTitle(_("Verwaltung von Veranstaltungen und Einrichtungen"));
 
-        $this->set_inst_selector();
-        $this->set_semester_selector();
     }
 
     /**
@@ -83,6 +81,7 @@ class Admin_CoursesController extends AuthenticatedController
     {
         $this->sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, array('root', 'admin', 'dozent'))
             ? Config::get()->SEM_CREATE_PERM : 'dozent';
+
 
         // get courses only if institutes available
         if (!empty($this->insts)) {
@@ -146,6 +145,20 @@ class Admin_CoursesController extends AuthenticatedController
         $sidebar              = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
 
+        if ($this->sem_create_perm) {
+            $actions = new ActionsWidget();
+            $actions->addLink(_('Neue Veranstaltung anlegen'),
+                URLHelper::getLink('admin_seminare_assi.php',
+                    array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
+
+            $actions->addLink(_('Als Excel exportieren'),
+                URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
+            'icons/16/blue/file-excel.png');
+            $sidebar->addWidget($actions, 'links');
+        }
+
+        $this->set_inst_selector();
+        $this->set_semester_selector();
         $this->setTeacherWidget($teachers);
         $this->setCourseTypeWidget($config_my_course_type_filter);
         $this->setActionsWidget($this->selected_action);
@@ -766,6 +779,6 @@ class Admin_CoursesController extends AuthenticatedController
             $list->addElement(new SelectElement($user_id, $teacher['fullname'], Request::get('teacher_filter') == $user_id), 'teacher_filter-' . $user_id);
         }
 
-        $sidebar->addWidget($list);
+        $sidebar->addWidget($list, 'teachers');
     }
 }

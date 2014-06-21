@@ -61,12 +61,6 @@ class SearchNavigation extends Navigation
         $navigation = new Navigation(_('Einrichtungen'), 'institut_browse.php');
         $this->addSubNavigation('institutes', $navigation);
 
-        // search literature
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation = new Navigation(_('Literatur'), 'dispatch.php/literature/search.php');
-            $this->addSubNavigation('literature', $navigation);
-        }
-
         // browse resources
         if (get_config('RESOURCES_ENABLE')) {
             $navigation = new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'search', 'reset' => 'TRUE'));

@@ -2,6 +2,7 @@
     <table width="99%" border="0" cellpadding="2" cellspacing="0">
         <?=parse_msg ($msg,"§","blank",1,false)?>
     </table>
+    <br>
 <? endif ?>
 <? if (! $lists) : ?>
     <?= _('Sie haben noch keine Listen angelegt.') ?><br>
@@ -14,17 +15,13 @@
     <br>
 <? endif ?>
 <? $treeview->showTree(); ?>
-<br>
-<? // Literaturlisten-Import
-    print_lit_import_dlg();
-?>
 <?php
 Helpbar::get()->load('literature/edit_list');
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
 $widget = new ActionsWidget();
-$widget->addLink(_('Literatur suchen'), URLHelper::getLink('dispatch.php/literature/search'), 'icons/16/black/search.png');
-$widget->addLink(_('Neue Literatur anlegen'), URLHelper::getLink('dispatch.php/literature/edit_element?_range_id=new_entry'), 'icons/16/black/add/literature.png');
+$widget->addLink(_('Literatur importieren'), URLHelper::getLink('dispatch.php/literature/import_list?return_range='.$_range_id), 'icons/16/black/add/literature.png', array('data-dialog' => ''));
+$widget->addLink(_('Neue Literatur anlegen'), URLHelper::getLink('dispatch.php/literature/edit_element?_range_id=new_entry&return_range='.$_range_id), 'icons/16/black/add/literature.png', array('data-dialog' => ''));
 $sidebar->addWidget($widget);
 ob_start();
 ?>

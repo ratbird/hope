@@ -7,6 +7,9 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
+ * @author   Arne Schröder <schroeder@data-quest.de>
+ * @author   André Noack <noack@data-quest.de>
+ * @author   Jan Kulmann <jankul@tzi.de>
  * @author   Rasmus Fuhse <fuhse@data-quest.de>
  * @license  http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category Stud.IP
@@ -30,7 +33,7 @@ class LiteratureController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         if (!Config::Get()->LITERATURE_ENABLE ) {
-            throw new AccessDeniedException(_('Die Literaturübersicht ist nicht aktiviert.'));
+            throw new AccessDeniedException(_('Die Literaturverwaltung ist nicht aktiviert.'));
         }
 
         $this->attributes['text'] = array('style' => 'width:98%');
@@ -39,6 +42,60 @@ class LiteratureController extends AuthenticatedController
         $this->attributes['date'] = array();
         $this->attributes['combo'] = array('style' => 'width:45%; display: inline;');
         $this->attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
+        
+        // on AJAX request set no page layout.
+        if (Request::isXhr()) {
+            $this->via_ajax = true;
+            $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
+        }
+        $this->set_content_type('text/html;charset=windows-1252');
+        /*      checkObject(); // do we have an open object?
+        checkObjectModule('literature');
+        object_set_visit_module('literature');/**/
+    }
+
+    /**
+     * Displays a page for literature import.
+     */
+    public function import_list_action()
+    {
+        if (Request::option('return_range')){
+            $this->return_range = Request::option('return_range');
+            URLHelper::addLinkParam('return_range', $this->return_range);
+        }
+        $o_type = get_object_type($this->return_range, array('sem', 'inst'));
+        //checking rights
+        if (($o_type == "sem" && !$GLOBALS['perm']->have_studip_perm("tutor", $this->return_range)) ||
+            (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->return_range))){
+                throw new AccessDeniedException(_('Keine Berechtigung in diesem Bereich.'));
+        }
+        
+        PageLayout::setTitle(_("Literatur importieren"));
+        require_once ('lib/classes/StudipLitListViewAdmin.class.php');
+        require_once ('lib/classes/StudipLitClipBoard.class.php');
+        
+        $this->plugin_name  = Request::quoted('plugin_name');
+        $plugin = array();
+
+        if ($this->plugin_name)
+            foreach ($GLOBALS['LIT_IMPORT_PLUGINS'] as $p) {
+                if ($p["name"] == $this->plugin_name) {
+                    $this->plugin = $p;
+                    break;
+                }
+            }
+    }
+    
+    /**
+     * Displays a page for literature list administration.
+     */
+    public function edit_list_action()
+    {
+        global $_msg;
         
         if (Request::get('admin_inst_id')) {
             $this->view = 'lit_inst';
@@ -56,23 +113,13 @@ class LiteratureController extends AuthenticatedController
         }
         $_SESSION['_lit_range'] = $this->_range_id;
         
-        /*      checkObject(); // do we have an open object?
-        checkObjectModule('literature');
-        object_set_visit_module('literature');/**/
-    }
-
-    /**
-     * Displays a page for literature list administration.
-     */
-    public function edit_list_action()
-    {
         require_once ('lib/classes/StudipLitListViewAdmin.class.php');
         require_once ('lib/classes/StudipLitClipBoard.class.php');
-        include_once('lib/lit_import.inc.php');
+        require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
         PageLayout::setHelpKeyword("Basis.LiteraturListen");
         PageLayout::setTitle(_("Verwaltung von Literaturlisten"));
         
-        if (Request::option('list')  || Request::option('view') || Request::option('view_mode') || $this->_range_id != $GLOBALS['user']->id){
+        if (Request::option('list') || Request::option('view') || Request::option('view_mode') || $this->_range_id != $GLOBALS['user']->id){
             if ($GLOBALS['perm']->have_perm('admin')) {
                 include 'lib/admin_search.inc.php';
 
@@ -86,13 +133,25 @@ class LiteratureController extends AuthenticatedController
             }
             $this->_range_id = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->_range_id;
         } else {
-            Navigation::activateItem('/tools/literature');
+            Navigation::activateItem('/tools/literature/edit_list');
             closeObject();
         }
 
         $_the_treeview = new StudipLitListViewAdmin($this->_range_id);
         $_the_tree =& $_the_treeview->tree;
 
+        //Literaturlisten-Import
+        $cmd          = Request::option('cmd');
+        $xmlfile      = $_FILES['xmlfile']['tmp_name'];
+        $xmlfile_name = $_FILES['xmlfile']['name'];
+        $xmlfile_size = $_FILES['xmlfile']['size'];
+        $this->plugin_name  = Request::quoted('plugin_name');
+        if ($cmd=="import_lit_list" && $xmlfile) {
+            echo "import";
+            StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $this->plugin_name, $this->_range_id);
+        }
+        $this->msg = $_msg;
+        
         PageLayout::setTitle($_the_tree->root_name . " - " . PageLayout::getTitle());
 
         include 'lib/include/admin_search_form.inc.php';
@@ -102,9 +161,6 @@ class LiteratureController extends AuthenticatedController
             (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->_range_id))){
                 throw new AccessDeniedException(_('Keine Berechtigung für diese Literaturliste.'));
         }
-
-        //Literaturlisten-Import
-        do_lit_import();
 
         $_the_treeview->parseCommand();
 
@@ -143,7 +199,7 @@ class LiteratureController extends AuthenticatedController
             }
         }
 
-        $this->msg = $_the_clipboard->msg;
+        $this->msg .= $_the_clipboard->msg;
         if (is_array($_the_treeview->msg)){
             foreach ($_the_treeview->msg as $t_msg){
                 if (!$this->msg || ($this->msg && (strpos($t_msg, $this->msg) === false))){
@@ -198,8 +254,36 @@ class LiteratureController extends AuthenticatedController
         $GLOBALS['perm']->check("autor");
         PageLayout::setHelpKeyword("Basis.Literatursuche");
         PageLayout::setTitle(_("Literatursuche"));
-        Navigation::activateItem('/search/literature');
 
+        if (Request::option('return_range') == "self"){
+            $this->return_range = $GLOBALS['user']->id;
+        } else if (Request::option('return_range')){
+            $this->return_range = Request::option('return_range');
+        } else {
+            $this->return_range = $_SESSION['_lit_range'];
+        }
+        if (!$this->return_range) {
+            $this->return_range = $GLOBALS['user']->id;
+        }
+        $_SESSION['_lit_range'] = $this->return_range;
+        
+        if ($this->return_range != $GLOBALS['user']->id) {
+            if ($GLOBALS['perm']->have_perm('admin')) {
+                include 'lib/admin_search.inc.php';
+                if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
+                    Navigation::activateItem('/admin/course/literature/search');
+                } else {
+                    Navigation::activateItem('/admin/institute/literature/search');
+                }
+            } else {
+                Navigation::activateItem('/course/literature/search');
+            }
+            $this->return_range = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->return_range;
+        } else {
+            Navigation::activateItem('/tools/literature/search');
+            closeObject();
+        }
+        
         $_the_search = new StudipLitSearch();
         $_the_clipboard = StudipLitClipBoard::GetInstance();
         $_the_clip_form = $_the_clipboard->getFormObject();
@@ -207,7 +291,7 @@ class LiteratureController extends AuthenticatedController
         if (Request::quoted('change_start_result')){
             $_the_search->start_result = Request::quoted('change_start_result');
         }
-
+        
         if ($_the_clip_form->isClicked("clip_ok")){
             $_the_clipboard->doClipCmd();
         }
@@ -266,10 +350,16 @@ class LiteratureController extends AuthenticatedController
      */
     public function edit_element_action()
     {
+        if (Request::option('reload'))
+            $this->reload = true;
         if (Request::option('cmd') == "new_entry"){
             $_catalog_id = "new_entry";
         } else {
             $_catalog_id = Request::option('_catalog_id', "new_entry");
+        }
+        if (Request::option('return_range')){
+            $this->return_range = Request::option('return_range');
+            URLHelper::addLinkParam('return_range', $this->return_range);
         }
         if ($_catalog_id == "new_entry"){
             $title = _("Literatureintrag anlegen");
@@ -342,31 +432,36 @@ class LiteratureController extends AuthenticatedController
 
         if (Request::option('cmd') == "delete_element" && $_the_element->isChangeable() && !$_the_element->reference_count){
             $_the_element->deleteElement();
+            $this->reload = true;
         }
 
         if (Request::option('cmd') == "in_clipboard" && $_catalog_id != "new_entry"){
             $_the_clipboard->insertElement($_catalog_id);
+            $this->reload = true;
         }
 
         if (Request::option('cmd') == "check_entry"){
             $lit_plugin_value = $_the_element->getValue('lit_plugin');
+            $check_result = StudipLitSearch::CheckZ3950($_the_element->getValue('accession_number'));
             $content = "<div style=\"font-size:70%\"<b>" ._("Verfügbarkeit in externen Katalogen:") . "</b><br>";
-            foreach (StudipLitSearch::CheckZ3950($_the_element->getValue('accession_number')) as $plugin_name => $ret){
-                $content .= "<b>&nbsp;" . htmlReady(StudipLitSearch::GetPluginDisplayName($plugin_name))."&nbsp;</b>";
-                if ($ret['found']){
-                    $content .= _("gefunden") . "&nbsp;";
-                    $_the_element->setValue('lit_plugin', $plugin_name);
-                    if (($link = $_the_element->getValue("external_link"))){
-                        $content.= formatReady(" [" . $_the_element->getValue("lit_plugin_display_name"). "]" . $link);
+            if (is_array($check_result)) {
+                foreach ($check_result as $plugin_name => $ret){
+                    $content .= "<b>&nbsp;" . htmlReady(StudipLitSearch::GetPluginDisplayName($plugin_name))."&nbsp;</b>";
+                    if ($ret['found']){
+                        $content .= _("gefunden") . "&nbsp;";
+                        $_the_element->setValue('lit_plugin', $plugin_name);
+                        if (($link = $_the_element->getValue("external_link"))){
+                            $content.= formatReady(" [" . $_the_element->getValue("lit_plugin_display_name"). "]" . $link);
+                        } else {
+                            $content .= _("(Kein Link zum Katalog vorhanden.)");
+                        }
+                    } elseif (count($ret['error'])){
+                        $content .= '<span style="color:red;">' . htmlReady($ret['error'][0]['msg']) . '</span>';
                     } else {
-                        $content .= _("(Kein Link zum Katalog vorhanden.)");
+                        $content .= _("<u>nicht</u> gefunden") . "&nbsp;";
                     }
-                } elseif (count($ret['error'])){
-                    $content .= '<span style="color:red;">' . htmlReady($ret['error'][0]['msg']) . '</span>';
-                } else {
-                    $content .= _("<u>nicht</u> gefunden") . "&nbsp;";
+                    $content .= "<br>";
                 }
-                $content .= "<br>";
             }
             $content .= "</div>";
             $_the_element->setValue('lit_plugin', $lit_plugin_value);
@@ -377,6 +472,7 @@ class LiteratureController extends AuthenticatedController
             $_the_element->setValuesFromForm();
             if ($_the_element->checkValues()){
                 $_the_element->insertData();
+                $this->reload = true;
             }
         }
 

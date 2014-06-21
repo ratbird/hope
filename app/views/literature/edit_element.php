@@ -1,12 +1,13 @@
 <? use Studip\Button, Studip\LinkButton ?>
+<div id="lit_edit_element">
 <? if ($msg) : ?>
 <table width="99%" border="0" cellpadding="2" cellspacing="0">
     <?=parse_msg ($msg,"§","blank",1,false)?>
 </table>
 <? endif ?>
-<?=$form->getFormStart(URLHelper::getLink('?_catalog_id='.$catalog_id), array('class' => 'studip_form'))?>
+<?=$form->getFormStart(URLHelper::getLink('dispatch.php/literature/edit_element?_catalog_id='.$catalog_id), array('class' => 'studip_form', 'data-dialog' => ''))?>
     <fieldset>
-        <legend><?= ($element->isNewEntry()) ? _("Neuer Eintrag (noch nicht gespeichert)") : _('Eintrag') ?></legend>
+        <legend><?= ($element->isNewEntry()) ? _("Neuer Eintrag") : _('Eintrag') ?></legend>
         <? if (! $element->isNewEntry()) : ?>
             <?= sprintf(_("Anzahl an Referenzen für diesen Eintrag: %s"), (int)$element->reference_count) ?><br>
             <b><?= ($element->getValue("user_id") == "studip") ? _("Systemeintrag:") : _("Eingetragen von:") ?></b><br>
@@ -46,47 +47,31 @@
             <? endif ?>
         <? endforeach ?>
         </table>
-        <div class="submit_wrapper">
+        <div class="submit_wrapper" data-dialog-button="1">
             <?= CSRFProtection::tokenTag() ?>
             <? if ($element->isChangeable()) : ?>
-                <?= $form->getFormButton("send") .  $form->getFormButton("delete") . $form->getFormButton("reset") ?>
+                <?= $form->getFormButton("send") . ($element->isNewEntry() ? '' : $form->getFormButton("delete")) ?>
             <? elseif ($catalog_id != "new_entry") : ?>
-                <?= LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen"))) ?>
+                <?= LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=clone_entry&_catalog_id='.$catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen"), 'data-dialog' => '')) ?>
             <? endif ?>
-            <img src="<?= $GLOBALS['ASSETS_URL']."images/blank.gif"?>" height="28" width="15" border="0">
-            <?= LinkButton::create(_('Neu anlegen'), URLHelper::getURL('?cmd=new_entry'), array('title' =>  _("Neuen Eintrag anlegen"))) ?>
             <? if ($catalog_id != "new_entry") : ?>
                 <img src="<?= $GLOBALS['ASSETS_URL']."images/blank.gif" ?>" height="28" width="15" border="0">
-                <?= LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('?cmd=check_entry&_catalog_id='.$catalog_id), array('title' =>  _("Verfügbarkeit überprüfen"))) ?>
+                <?= LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=check_entry&_catalog_id='.$catalog_id), array('title' =>  _("Verfügbarkeit überprüfen"), 'data-dialog' => '')) ?>
             <? endif ?>
             <? if ($catalog_id != "new_entry" && !$clipboard->isInClipboard($catalog_id)) : ?>
                 <img src="<?= $GLOBALS['ASSETS_URL']."images/blank.gif" ?>" height="28" width="15" border="0">
-                <?= LinkButton::create(_('Merkliste'), URLHelper::getURL('?cmd=in_clipboard&_catalog_id='.$catalog_id), array('title' =>  _("Eintrag in Merkliste aufnehmen"))) ?>
+                <?= LinkButton::create(_('Merkliste'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=in_clipboard&_catalog_id='.$catalog_id), array('title' =>  _("Eintrag in Merkliste aufnehmen"), 'data-dialog' => '')) ?>
             <? endif ?>
         </div>
     </fieldset>
-<?php
-echo $form->getFormEnd();
-
-Helpbar::get()->load('literature/edit_element');
-$sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
-$widget = new ActionsWidget();
-$widget->addLink(_('Literatur suchen'), URLHelper::getLink('dispatch.php/literature/search'), 'icons/16/black/search.png');
-$widget->addLink(_('Literaturlisten bearbeiten'), URLHelper::getLink('dispatch.php/literature/edit_list?_range_id=self'), 'icons/16/black/literature.png');
-$sidebar->addWidget($widget);
-ob_start();
-?>
-<?=$clip_form->getFormStart(URLHelper::getLink('?_catalog_id='.$catalog_id)); ?>
-<?=$clip_form->getFormField("clip_content", array_merge(array('size' => $clipboard->getNumElements()),(array) $attributes['lit_select']))?>
-<?=$clip_form->getFormField("clip_cmd", $attributes['lit_select'])?>
-<div align="center">
-<?=$clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>
+<?= $form->getFormEnd(); ?>
 </div>
-<?= $clip_form->getFormEnd(); ?>
-<?
-$content = ob_get_clean();
-$widget = new SidebarWidget();
-$widget->setTitle(_('Merkliste'));
-$widget->addElement(new WidgetElement($content));
-$sidebar->addWidget($widget);
+<? if ($reload && $return_range) : ?>
+<script>
+    jQuery('#lit_edit_element').parent().dialog({
+        beforeClose: function () {
+            window.location.href = "<?= URLHelper::getURL('dispatch.php/literature/edit_list?_range_id='.$return_range, array(), true)?>";
+        }
+    });
+</script>
+<? endif;

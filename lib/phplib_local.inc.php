@@ -61,6 +61,16 @@ $GLOBALS['template_factory'] =
 function studip_default_exception_handler($exception) {
     require_once('lib/visual.inc.php');
 
+    // send exception to metrics backend
+    if (class_exists('Metrics')) {
+        $exception_class = strtolower(
+            preg_replace(
+                '/(?<=\w)([A-Z])/',
+                '_\\1',
+                get_class($exception)));
+        Metrics::increment('core.exception.' . $exception_class);
+    }
+
     if ($exception instanceof AccessDeniedException) {
         $status = 403;
         $template = 'access_denied_exception';

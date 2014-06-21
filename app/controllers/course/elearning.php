@@ -290,7 +290,7 @@ class Course_ElearningController extends AuthenticatedController
                 if ((method_exists($connected_cms[$this->cms_select], "updateConnections")) AND ! ($this->module_system_count[$this->cms_select]) AND ! (ObjectConnections::getConnectionModuleId($this->seminar_id, "crs", $this->cms_select)))
                 {
                     $show_ilias_empty_course = true;
-                    if ($perm->have_perm('root')) {
+                    if ($GLOBALS['perm']->have_perm('root')) {
                         $query = "SELECT DISTINCT object_id, module_id, Name
                                   FROM object_contentmodules
                                   LEFT JOIN seminare ON (object_id = Seminar_id)

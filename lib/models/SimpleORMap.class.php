@@ -180,7 +180,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                         throw new UnexpectedValueException('no relation found for autoget/set additional field: ' . $a_field);
                     }
                     $config['additional_fields'][$a_field] = array('get' => '_getAdditionalValueFromRelation',
-                                                                   'set' => '_setAdditionalValue',
+                                                                   'set' => '_setAdditionalValueFromRelation',
                                                                    'relation' => $relation,
                                                                    'relation_field' => $relation_field);
                 }
@@ -793,7 +793,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * retrieves an additional field value from relation
-     *
+     * 
+     * @param string $field
+     * @return multitype:
      */
     protected function _getAdditionalValueFromRelation($field)
     {
@@ -806,8 +808,34 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * stores an additional field value
-     *
+     * sets additional value in field imported from relation
+     * 
+     * @param string $field
+     * @param mixed $value
+     * @return multitype:
+     */
+    protected function _setAdditionalValueFromRelation($field, $value)
+    {
+    	list($relation, $relation_field) = array($this->additional_fields[$field]['relation'],
+    			$this->additional_fields[$field]['relation_field']);
+    	$this->$relation->$field = $value;
+    	unset($this->additional_data[$field]);
+    	return $this->_getAdditionalValueFromRelation($field);
+    }
+    
+    /**
+     * @param string $field
+     * @return multitype:
+     */
+    protected function _getAdditionalValue($field)
+    {
+    	return $this->additional_data[$field];
+    }
+    
+    /**
+     * @param string $field
+     * @param mixed $value
+     * @return multitype:
      */
     protected function _setAdditionalValue($field, $value)
     {

@@ -142,11 +142,6 @@ class ElearningController extends AuthenticatedController
             }
         }
 
-        // help texts for help center -> to be put into db!
-        $help_text[] = _('Auf dieser Seite sehen Sie Ihre Benutzer-Accounts und Lernmodule in angebundenen Systemen.');
-        $help_text[] = _('Sie können für jedes externe System einen eigenen Benutzer-Account erstellen oder zuordnen.');
-        $help_text[] = _('Wenn Sie über die entsprechenden Rechte verfügen, können Sie eigene Lernmodule erstellen.');
-
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/learnmodule-sidebar.png');
         $widget = new ActionsWidget();

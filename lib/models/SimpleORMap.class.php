@@ -180,7 +180,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                         throw new UnexpectedValueException('no relation found for autoget/set additional field: ' . $a_field);
                     }
                     $config['additional_fields'][$a_field] = array('get' => '_getAdditionalValueFromRelation',
-                                                                   'set' => '_setAdditionalValueFromRelation',
+                                                                   'set' => '_setAdditionalValue',
                                                                    'relation' => $relation,
                                                                    'relation_field' => $relation_field);
                 }

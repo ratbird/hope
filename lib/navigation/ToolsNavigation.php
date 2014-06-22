@@ -62,10 +62,13 @@ class ToolsNavigation extends Navigation
 
         // literature
         if (get_config('LITERATURE_ENABLE')) {
-            $navigation = new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php', array('_range_id' => 'self'));
-            $this->addSubNavigation('literature', $navigation);
-            $navigation->addSubNavigation('edit_list', new Navigation(_('Literatur bearbeiten'), 'dispatch.php/literature/edit_list?_range_id=self'));
-            $navigation->addSubNavigation('search', new Navigation(_('Literatur suchen'), 'dispatch.php/literature/search?return_range=self'));
+            if ($perm->have_perm('admin')) {
+                $this->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
+            } elseif (get_config('LITERATURE_ENABLE')) {
+                $this->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php', array('_range_id' => 'self')));
+                $navigation->addSubNavigation('edit_list', new Navigation(_('Literatur bearbeiten'), 'dispatch.php/literature/edit_list?_range_id=self'));
+                $navigation->addSubNavigation('search', new Navigation(_('Literatur suchen'), 'dispatch.php/literature/search?return_range=self'));
+            }
         }
 
         // elearning
@@ -78,12 +81,6 @@ class ToolsNavigation extends Navigation
         if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
             $navigation = new Navigation(_('Export'), 'export.php');
             $this->addSubNavigation('export', $navigation);
-        }
-
-        if ($perm->have_perm('admin')) {
-            if (get_config('LITERATURE_ENABLE')) {
-                $this->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
-            }
         }
 
         if ($perm->have_perm('root')) {

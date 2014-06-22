@@ -2073,3 +2073,34 @@ function get_route($route = '')
     }
     return $route;
 }
+
+/**
+ * compares actual route to requested route
+ *
+ * @param string $requested_route         requested route (for help content or tour)
+ * @param string $current_route           current route (optional)
+ * 
+ * @return  boolean  result
+ */
+function match_route($requested_route, $current_route = '') 
+{
+    if (!$current_route) {
+        $current_route = get_route();
+    }
+    $route_parts = explode('?', $requested_route);
+    // if base routes don't match, return false without further checks
+    if ($route_parts[0] != $current_route)
+        return false;
+    // if no parameters given and base routes do match, return true
+    if (!$route_parts[1])
+        return true;
+    // extract vars and check if they are set accordingly
+    preg_match_all('/([^?&=#]+)=([^&#]*)/', $route_parts[1], $vars);
+    if (!count($vars))
+        return false;
+    foreach ($vars[1] as $index => $var_name) {
+        if ($_REQUEST[$var_name] != $vars[2][$index])
+            return false;
+    }
+    return true;
+}

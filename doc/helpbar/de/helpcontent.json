@@ -45,7 +45,7 @@
 
 
 {
-    "comment" : "------------ INSTITUTW ---------------------------------",
+    "comment" : "------------ INSTITUTE ---------------------------------",
     "route": "dispatch.php/institute/members",
     "label": "Informationen",
     "icon": "info",
@@ -126,13 +126,22 @@
 
 {
     "comment" : "-------------- WIKI ------------------------------------",
-    "route": "wiki.php",
+    "route": "wiki.php?view=edit",
     "label": "Informationen",
     "icon": "info",
     "text": [
         "Auf den Wiki-Seiten können Sie beliebigen Text einfügen und vorhandenen Text ändern.",
-        "Beachten Sie dabei die [Formatierungsmöglichkeiten]#{help_link} .",
+        "Beachten Sie dabei die [Formatierungsmöglichkeiten]#{help_link}.",
         "Links entstehen automatisch aus Wörtern, die von zwei paar eckigen Klammern umgeben sind (Beispiel: [nop][[[/nop]%%Schlüsselwort%%[nop]]][/nop])."
+    ]
+},
+{
+    "route": "wiki.php?view=diff",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Sie betrachten die Änderungsgeschichte eines Dokumentes.",
+        "Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen."
     ]
 },
 
@@ -165,13 +174,206 @@
 
 
 {
-    "comment" : "------------- RESSOURCEN -------------------------------",
-    "route": "resources.php",
+    "comment" : "------------- RESSOURCEN: ÜBERSICHT ----------------------",
+    "route": "resources.php?view=resources",
     "label": "Informationen",
     "icon": "info",
     "text": [
         "Sie befinden sich in der Ressourcenverwaltung von Stud.IP.",
         "Sie können hier Räume, Gebäude, Geräte und andere Ressourcen verwalten."
     ]
+},
+{
+    "route": "resources.php?view=",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Sie befinden sich in der Ressourcenverwaltung von Stud.IP.",
+        "Sie können hier Räume, Gebäude, Geräte und andere Ressourcen verwalten."
+    ]
+},
+{
+    "route": "resources.php?view=view_group_schedule_daily",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen."
+},
+{
+    "route": "resources.php?view=view_group_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen."
+},
+
+{
+    "comment" : "------------- RESSOURCEN: RAUMPLANUNG --------------------",
+    "route": "resources.php?view=requests_start",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Auf dieser Seite wird Ihnen der Status der Anfragen aus Ihren Bereichen angezeigt. Sie können das Bearbeiten der Anfragen von hier aus starten."
+},
+{
+    "route": "resources.php?view=edit_request",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Sie können hier die einzelnen Anfragen einsehen und passenden Räume auswählen sowie zuweisen."
+},
+{
+    "route": "resources.php?view=list_requests",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Sie sehen hier eine Liste aller offenen Anfragen, die Sortierung folgt der Einstellung unter [Übersicht]#{link} .",
+             "Ein Klick auf das Symbol nebem dem Zähler erlaubt es Ihnen, direkt zu der Anfrage zu springen."]
+},
+{
+    "route": "resources.php?view=view_requests_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich eine Übersicht über alle Anfragen und vorhandenenen Belegungen eines angeforderten Raums anzeigen lassen."
+},
+
+{
+    "comment" : "------------- RESSOURCEN: ANPASSEN --------------------",
+    "route": "resources.php?view=edit_properties",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie auf dieser Seite die einzelnen Eigenschaften. Diese Eigenschaften können Sie beliebigen Ressourcen-Typen zuweisen."
+},
+{
+    "route": "resources.php?view=edit_settings",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie hier grundlegende Einstellungen der Ressourcenverwaltung."
+},
+{
+    "route": "resources.php?view=edit_perms",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie hier AdministratorInnen des Systems, die Rechte über alle Ressourcen erhalten."
+},
+{
+    "route": "resources.php?view=edit_object_properties",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie auf dieser Seite die einzelnen Ressourcen-Eigenschaften. Diese Eigenschaften können Sie beliebigen Ressourcen-Typen zuweisen."
+},
+{
+    "route": "resources.php?view=edit_object_perms",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.",
+        "Achtung: Alle hier erteilten Berechtigungen gelten ebenfalls für die Ressourcen, die der gewählten Ressource untergeordnet sind!"
+    ]
+},
+
+{
+    "comment" : "------------- RESSOURCEN: WEITERE SEITEN -----------------",
+    "route": "resources.php?view=diff",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Auf dieser Seite können Sie sich die wöchentliche Differenzliste der Belegung aller Räume als CSV-Datei ausgeben lassen."
+},
+{
+    "route": "resources.php?view=lists",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Sie sehen alle Einträge in der Ebene **#{name}**."
+},
+{
+    "route": "resources.php?view=view_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten der Ressource anzeigen und auf unterschiedliche Art darstellen lassen."
+},
+{
+    "route": "resources.php?view=view_sem_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten der Ressource anzeigen und auf unterschiedliche Art darstellen lassen."
+},
+{
+    "route": "resources.php?view=view_details",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier sehen Sie detaillierte Informationen der Ressource."
+},
+{
+    "route": "resources.php?view=openobject_details",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier sehen Sie detaillierte Informationen der Ressource."
+},
+{
+    "route": "resources.php?view=edit_object_assign",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Sie sehen hier die Einzelheiten der Belegung.",
+             "Falls Sie über entsprechende Rechte verfügen, können Sie sie bearbeiten oder eine neue Belegung erstellen."]
+},
+{
+    "route": "resources.php?view=objects",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Sie sehen hier die Einzelheiten der Belegung.",
+             "Falls Sie über entsprechende Rechte verfügen, können Sie sie bearbeiten oder eine neue Belegung erstellen."]
+},
+{
+    "route": "resources.php?view=openobject_assign",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Anzeigen der Belegung der Ressource **#{name}** (#{category}).",
+             "Sie können die Belegung auch bearbeiten, falls Sie entsprechende Rechte besitzen, oder eine neue Belegung erstellen."]
+},
+{
+    "route": "resources.php?view=openobject_group_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten aller Ressourcen dieser Veranstaltung anzeigen lassen."
+},
+{
+    "route": "resources.php?view=openobject_main",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Auf dieser Seite sehen Sie alle der #{type} zugeordneten Ressourcen.",
+             "Sie können hier die Details und den Belegungsplan der dieser #{type} zugeordneten Ressourcen einsehen."]
+},
+{
+    "route": "resources.php?view=openobject_schedule",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Hier können Sie sich die Belegungszeiten der Ressource **#{name}** (#{category}) ausgeben lassen"
+},
+{
+    "route": "resources.php?view=plan",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Auf dieser Seite können Sie sich einen Wochenplan als CSV-Datei ausgeben lassen."
+},
+{
+    "route": "resources.php?view=regular",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Auf dieser Seite können Sie sich einen Semesterplan als CSV-Datei ausgeben lassen."
+},
+{
+    "route": "resources.php?view=search",
+    "label": "Informationen",
+    "icon": "info",
+    "text": ["Sie können hier nach Ressourcen suchen.",
+             "Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften Ressourcen zu suchen oder sich durch die Ebenen zu navigieren."]
+},
+{
+    "route": "resources.php?view=edit_types",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie auf dieser Seite die Ressourcen-Typen, wie etwa Räume, Geräte oder Gebäude. Sie können jedem Typ beliebig viele Eigenschaften zuordnen."
+},
+{
+    "route": "resources.php?view=settings",
+    "label": "Informationen",
+    "icon": "info",
+    "text": "Verwalten Sie auf dieser Seite die Ressourcen-Typen, wie etwa Räume, Geräte oder Gebäude. Sie können jedem Typ beliebig viele Eigenschaften zuordnen."
 }
+
 ]

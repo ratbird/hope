@@ -61,11 +61,14 @@ class HelpContent extends SimpleORMap {
         $route = get_route($route);
         $query = "SELECT *
                   FROM help_content
-                  WHERE route = ? AND language = ? AND studip_version = ? AND visible = 1
+                  WHERE route LIKE CONCAT(?, '%') AND language = ? AND studip_version = ? AND visible = 1
                   ORDER BY position ASC";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($route, $language, $version));
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        foreach ($ret as $index => $data)
+            if (! match_route($data['route'], $route))
+                unset($ret[$index]);
         return $ret;
     }
 

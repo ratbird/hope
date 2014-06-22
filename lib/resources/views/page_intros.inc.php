@@ -42,25 +42,20 @@ $sidebar = Sidebar::get();
 switch ($view) {
     //Reiter "Uebersicht"
     case 'plan':
-        $helpbar->load('resources/plan');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
     case 'regular':
-        $helpbar->load('resources/regular');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
     case 'diff':
-        $helbar->load('resources/diff');
         PageLayout::setTitle(_('Spezielle Funktionen'));
     break;
 
     case 'resources':
-        $helpbar->load('resources/resources');
         PageLayout::setTitle(_('Übersicht der Ressourcen'));
         Navigation::activateItem('/resources/view/hierarchy');
     break;
     case 'search':
-        $helpbar->load('resources/search');
         PageLayout::setTitle(_('Suche nach Ressourcen'));
         Navigation::activateItem('/search/resources');
 
@@ -90,7 +85,7 @@ switch ($view) {
             // tlx: What is this line good for?
             $title.=" - "._("Ebene").": ".getResourceObjectName($_SESSION['resources_data']["list_open"]);
 
-            $helpbar->load('resources/lists', array(
+            $helpbar->setVariables(array(
                 'name' => getResourceObjectName($_SESSION['resources_data']['list_open'])
             ));
 
@@ -106,7 +101,6 @@ switch ($view) {
     //Reiter "Objekt"
     case 'objects':
     case 'edit_object_assign':
-        $helpbar->load('resources/objects');
         PageLayout::setTitle(_("Belegungen anzeigen/bearbeiten").$currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/edit_assign');
 
@@ -145,7 +139,6 @@ switch ($view) {
         Navigation::activateItem('/resources/objects/edit_perms');
     break;
     case 'view_schedule':
-        $helpbar->load('resources/view_schedule');
         PageLayout::setTitle(_('Belegungszeiten ausgeben') . $currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_schedule');
 
@@ -202,8 +195,6 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_sem_schedule':
-        $helpbar->load('resources/view_sem_schedule');
-
         PageLayout::setTitle(_('Belegungszeiten pro Semester ausgeben') . $currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_sem_schedule');
 
@@ -264,8 +255,6 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_group_schedule':
-        $helpbar->load('resources/view_group_schedule');
-
         $room_groups = RoomGroups::GetInstance();
         PageLayout::setTitle(_('Belegungszeiten einer Raumgruppe pro Semester ausgeben:') . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
         Navigation::activateItem('/resources/view/group_schedule');
@@ -278,7 +267,6 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_group_schedule_daily':
-        $helpbar->load('resources/view_group_schedule_daily');
         $room_groups = RoomGroups::GetInstance();
         PageLayout::setTitle(_('Belegungszeiten einer Raumgruppe pro Tag ausgeben:') . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
         Navigation::activateItem('/resources/view/group_schedule_daily');
@@ -293,34 +281,28 @@ switch ($view) {
     //Reiter "Anpassen"
     case 'settings':
     case 'edit_types':
-        $helpbar->load('resources/settings');
         PageLayout::setTitle(_('Typen bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_types');
     break;
     case 'edit_properties':
-        $helpbar->load('resources/edit_perms');
         PageLayout::setTitle(_('Eigenschaften bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_properties');
     break;
     case 'edit_perms':
-        $helpbar->load('resources/edit_perms');
         PageLayout::setTitle(_('globale Rechte der Ressourcenadministratoren bearbeiten'));
         Navigation::activateItem('/resources/settings/edit_perms');
     break;
     case 'edit_settings':
-        $helpbar->load('resources/edit_settings');
         PageLayout::setTitle(_('Einstellungen der Ressourcenverwaltung'));
         Navigation::activateItem('/resources/settings/edit_settings');
     break;
 
     //Reiter Raumplanung
     case 'requests_start':
-        $helpbar->load('resources/requests_start');
         PageLayout::setTitle(_('Übersicht des Raumplanungs-Status'));
         Navigation::activateItem('/resources/room_requests/start');
     break;
     case 'edit_request':
-        $helpbar->load('resources/edit_request');
         PageLayout::setTitle(_('Bearbeiten der Anfragen'));
         Navigation::activateItem('/resources/room_requests/edit');
 
@@ -342,7 +324,7 @@ switch ($view) {
 
     break;
     case 'list_requests':
-        $helpbar->load('resources/list_requests', array(
+        $helpbar->setVariables(array(
             'link' => URLHelper::getLink('resources.php?view=requests_start&cancel_edit_request_x=1'),
         ));
         PageLayout::setTitle(_('Anfragenliste'));
@@ -353,7 +335,7 @@ switch ($view) {
         $identifier = $perm->have_studip_perm('autor', $SessSemName[1])
             ? 'resources/openobject_main_priviledged'
             : 'resources/openobject_main';
-        $helpbar->load($identifier, array(
+        $helpbar->setVariables(array(
             'type'        => $SessSemName['art_generic'],
             'member_type' => $SessSemName['class'] === 'sem' ? _('TeilnehmerIn') : _('MitarbeiterIn'),
         ));
@@ -391,7 +373,7 @@ switch ($view) {
 
     case 'openobject_schedule':
         if ($_SESSION['resources_data']['actual_object']) {
-            $helpbar->load('resources/openobject_schedule', array(
+            $helpbar->setVariables(array(
                 'name'     => $currentObject->getName(),
                 'category' => $currentObject->getCategoryName(),
             ));
@@ -402,7 +384,7 @@ switch ($view) {
     break;
     case 'openobject_assign':
         if ($_SESSION['resources_data']['actual_object']) {
-            $helpbar->load('resources/openobject_assign', array(
+            $helpbar->setVariables(array(
                 'name'     => $currentObject->getName(),
                 'category' => $currentObject->getCategoryName(),
             ));
@@ -411,7 +393,6 @@ switch ($view) {
         Navigation::activateItem('/course/resources/edit_assign');
     break;
     case 'openobject_group_schedule':
-        $helpbar->load('resources/openobject_group_schedule');
         PageLayout::setTitle($SessSemName['header_line'] . ' - ' . _('Belegungszeiten aller Ressourcen pro Tag ausgeben'));
         Navigation::activateItem('/course/resources/group_schedule');
 
@@ -423,7 +404,6 @@ switch ($view) {
         $sidebar->addWidget($widget);
     break;
     case 'view_requests_schedule':
-        $helpbar->load('resources/view_requests_schedule');
         PageLayout::setTitle(_('Anfragenübersicht eines Raums:') . ' ' . ResourceObject::Factory($_SESSION['resources_data']['resolve_requests_one_res'])->getName());
         Navigation::activateItem('/resources/room_requests/schedule');
 
@@ -436,7 +416,6 @@ switch ($view) {
     break;
     //default
     default:
-        $helpbar->load('resources/default');
         PageLayout::setTitle(_('Übersicht der Ressourcen'));
         Navigation::activateItem('/resources/view/hierarchy');
     break;

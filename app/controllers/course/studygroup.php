@@ -159,8 +159,6 @@ class Course_StudygroupController extends AuthenticatedController {
                 break;
             }
         }
-
-        Helpbar::get()->load('studygroup/new');
     }
 
     /**
@@ -468,8 +466,6 @@ class Course_StudygroupController extends AuthenticatedController {
                               'icons/16/blue/trash.png');
 
             Sidebar::get()->addWidget($actions);
-
-            Helpbar::get()->load('studygroup/info');
         }
         // ... otherwise redirect us to the seminar
         else {

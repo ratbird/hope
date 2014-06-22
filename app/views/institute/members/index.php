@@ -141,8 +141,6 @@ if ($GLOBALS['perm']->have_perm("admin")) {
                      $show == 'liste');
 }
 $sidebar->addWidget($widget);
-$help_text = "Auf dieser Seite können Sie Personen der Einrichtung zuordnen." 
-            ."Um weitere Personen als Mitarbeiter hinzuzufügen, benutzen Sie die Suche.";
 if (get_config('EXPORT_ENABLE') && $GLOBALS['perm']->have_perm('tutor')) {
     $widget = new ExportWidget();
     $widget->addElement(new WidgetElement(export_form_sidebar($auswahl, "person", $GLOBALS['SessSemName'][0])));

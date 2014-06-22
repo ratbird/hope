@@ -166,7 +166,6 @@ if ($search->start_result + 4 < $num_hits) {
 </table>
 
 <?php
-Helpbar::get()->load('literature/search');
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
 ob_start();

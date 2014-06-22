@@ -21,7 +21,7 @@ class Helpbar extends WidgetContainer
     }
     
     /**
-     * load helptour content from db
+     * load help content from db
      */
     public function loadContent()
     {
@@ -31,6 +31,14 @@ class Helpbar extends WidgetContainer
                                 $this->interpolate($row['content'], $this->variables),
                                 $row['icon'] ? sprintf('icons/16/white/%s.png', $row['icon']) : null);
         }
+    }
+    
+    /**
+     * set variables for help content
+     */
+    public function setVariables($variables)
+    {
+        $this->variables = $variables;
     }
     
     /**

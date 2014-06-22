@@ -55,13 +55,16 @@ class HelpContent extends SimpleORMap {
         $language = $language ?: substr($GLOBALS['user']->preferred_language, 0, 2);
         if (!$language)
             $language = 'de';
+        $version = Config::get()->getValue('HELP_CONTENT_CURRENT_VERSION');
+        if (!$version)
+            return array();
         $route = get_route($route);
         $query = "SELECT *
                   FROM help_content
-                  WHERE route = ? AND language = ? AND visible = 1
+                  WHERE route = ? AND language = ? AND studip_version = ? AND visible = 1
                   ORDER BY position ASC";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($route, $language));
+        $statement->execute(array($route, $language, $version));
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
         return $ret;
     }

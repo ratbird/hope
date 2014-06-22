@@ -254,8 +254,6 @@ if($self_assign_exclusive) {
 // TODO: Sidebar/Helpbar - This shouldn't be in the helpbar but where else!
 Helpbar::get()->addPlainText(_('Information:'), $infos, 'icons/16/white/info.png');
 
-Helpbar::get()->load('statusgruppen/info');
-
 if ($rechte) {
     $sidebar = Sidebar::get();
     $sidebar->setImage(Assets::image_path('sidebar/group-sidebar.png'));

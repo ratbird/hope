@@ -602,7 +602,6 @@ class NewsController extends StudipController
                 ksort($this->news_groups[$type]);
 
         $this->sidebar = Sidebar::get();
-        Helpbar::get()->load('news/admin_news');
         $this->sidebar->setImage('sidebar/news-sidebar.png');
         if ($GLOBALS['perm']->have_perm('tutor')) {
             $widget = new ViewsWidget();

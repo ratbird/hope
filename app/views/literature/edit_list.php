@@ -16,7 +16,6 @@
 <? endif ?>
 <? $treeview->showTree(); ?>
 <?php
-Helpbar::get()->load('literature/edit_list');
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
 $widget = new ActionsWidget();

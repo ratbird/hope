@@ -270,7 +270,7 @@ if (Request::option('cmd') == 'sortByName') {
 }
 
 // add persons to a statusgroup
-foreach (GetAllStatusgruppen($range_id) as $id => $role) {
+foreach ((array) GetAllStatusgruppen($range_id) as $id => $role) {
     addToStatusgroup($range_id, $id, $workgroup_mode);
 }
 
@@ -372,8 +372,6 @@ if ($self_assign_exclusive) {
 /* * * * * * * * * * * * * * * *
  * * * *     V I E W     * * * *
  * * * * * * * * * * * * * * * */
-
-Helpbar::get()->load('statusgruppen/admin');
 
 list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($range_id);
 

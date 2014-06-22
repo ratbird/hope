@@ -1,0 +1,177 @@
+[{
+    "comment" : "------------ ANKÜNDIGUNGEN ------------------------------",
+    "route": "dispatch.php/news/admin_news",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie Ihre Ankündigungen verwalten.",
+        "Durch die Angabe eines Anzeigezeitraums oder eines Suchbegriffs können sie die Ausgabe filtern."
+    ]
+},
+
+
+{
+    "comment" : "-------------- SUCHE -----------------------------------",
+    "route": "browse.php",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind.",
+        "Sie erhalten auf der Profilseite von MitarbeiterInnen an Einrichtungen auch weiterführende Informationen, wie Sprechstunden und Raumangaben.",
+        "Wählen Sie den gewünschten Bereich aus oder suchen Sie nach einem Namen!"
+    ]
+},
+{
+    "route": "institut_browse.php",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Sie können sich durch den Einrichtungsbaum klicken oder das Suchformular benutzen."
+    ]
+},
+
+
+{
+    "comment" : "------------ COMMUNITY ---------------------------------",
+    "route": "dispatch.php/online",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie sehen, wer außer Ihnen im Moment online ist.",
+        "Sie können diesen NutzerInnen eine Nachricht schicken.",
+        "Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers."
+    ]
+},
+
+
+{
+    "comment" : "------------ INSTITUTW ---------------------------------",
+    "route": "dispatch.php/institute/members",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Auf dieser Seite können Sie Personen der Einrichtung zuordnen.",
+        "Um weitere Personen als Mitarbeiter hinzuzufügen, benutzen Sie die Suche."
+    ]
+},
+
+
+{
+    "comment" : "------------ STUDIENGRUPPEN -----------------------------",
+    "route": "dispatch.php/studygroup/browse",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Auf dieser Seite können Sie nach Studiengruppen suchen.",
+        "Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten.",
+        "JedeR kann Studiengruppen gründen."
+    ]
+},
+{
+    "route": "dispatch.php/course/studygroup/members",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier sehen Sie die TeilnehmerInnen der Studiengruppe.",
+        "TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden."
+    ]
+},
+{
+    "route": "dispatch.php/course/studygroup/new",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Wählen Sie 'Offen für alle', wenn beliebige Nutzer der Gruppe ohne Nachfrage beitreten können sollen.",
+        "'Auf Anfrage' erfordert Ihr Eingreifen: Sie müssen jede einzelne Aufnahmeanfrage annehmen oder ablehnen.",
+        "Alle Einstellungen können auch später noch unter dem Reiter 'Admin' geändert werden."
+    ]
+},
+{
+    "route": "dispatch.php/course/studygroup/edit",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten.",
+        "JedeR kann Studiengruppen gründen."
+    ]
+},
+
+
+{
+    "comment" : "------------ STATUSGRUPPEN ------------------------------",
+    "route": "statusgruppen.php",
+    "label": "Aktionen",
+    "icon": "mail",
+    "text": "Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol."
+},
+{
+    "route": "statusgruppen.php",
+    "icon": "arr_2right",
+    "text": "In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen."
+},
+{
+    "route": "statusgruppen.php",
+    "icon": "trash",
+    "text": "Aus diesen Gruppen können Sie sich selbst austragen."
+},
+{
+    "route": "admin_statusgruppe.php",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen."
+    ]
+},
+
+
+{
+    "comment" : "-------------- WIKI ------------------------------------",
+    "route": "wiki.php",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Auf den Wiki-Seiten können Sie beliebigen Text einfügen und vorhandenen Text ändern.",
+        "Beachten Sie dabei die [Formatierungsmöglichkeiten]#{help_link} .",
+        "Links entstehen automatisch aus Wörtern, die von zwei paar eckigen Klammern umgeben sind (Beispiel: [nop][[[/nop]%%Schlüsselwort%%[nop]]][/nop])."
+    ]
+},
+
+
+{
+    "comment" : "------------ LITERATUR ---------------------------------",
+    "route": "dispatch.php/course/literature",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier sehen Sie die Literaturlisten in diesem Bereich."
+    ]
+},
+{
+    "route": "dispatch.php/literature/edit_list",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie Literaturlisten erstellen und bearbeiten."
+    ]
+},
+{
+    "route": "dispatch.php/literature/search",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Hier können Sie in verschiedenen Katalogen nach Literatur suchen."
+    ]
+},
+
+
+{
+    "comment" : "------------- RESSOURCEN -------------------------------",
+    "route": "resources.php",
+    "label": "Informationen",
+    "icon": "info",
+    "text": [
+        "Sie befinden sich in der Ressourcenverwaltung von Stud.IP.",
+        "Sie können hier Räume, Gebäude, Geräte und andere Ressourcen verwalten."
+    ]
+}
+]

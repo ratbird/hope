@@ -997,7 +997,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
 
-    Helpbar::get()->load('wiki/edit', array(
+    Helpbar::get()->setVariables(array(
         'help_link' => format_help_url('Basis.VerschiedenesFormat'),
     ));
 

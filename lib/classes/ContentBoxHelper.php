@@ -24,7 +24,22 @@ class ContentBoxHelper {
      * @return String open if the contentbox is open otherwise an empty String 
      */
     public static function classes($id) {
-        return Request::get('contentbox_open') == $id ? 'open' : '';
+        
+        // Init
+        $classes = array();
+        
+        // Check if open
+        if (Request::get('contentbox_open') == $id) {
+            $classes[] = 'open';
+        }
+        
+        // Check if new
+        if (!ObjectVisit::visited($id)) {
+            $classes[] = 'new';
+        }
+        
+        // Return classes
+        return join(' ', $classes);
     }
 
     /**

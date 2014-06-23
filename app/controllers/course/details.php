@@ -73,10 +73,15 @@ class Course_DetailsController extends AuthenticatedController
                                               'title' => $studienmodulmanagement->getModuleTitle($module->id, $this->course->start_semester->id));
             }
         }
-        $this->study_areas = $this->course->study_areas->filter(function ($m) {
-            return !$m->isModule();
-        });
-        $this->studyAreaTree = StudipStudyArea::backwards($this->course->study_areas);
+        
+        // Retrive display of sem_tree
+        if (Config::get()->COURSE_SEM_TREE_DISPLAY) {
+            $this->studyAreaTree = StudipStudyArea::backwards($this->course->study_areas);
+        } else {
+            $this->study_areas = $this->course->study_areas->filter(function ($m) {
+                return !$m->isModule();
+            });
+        }
 
         if (Request::isXhr()) {
             $this->set_layout(null);

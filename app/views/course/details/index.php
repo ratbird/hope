@@ -265,15 +265,33 @@
         </section>
     <? endif ?>
 
-    <? if ($study_areas) : ?>
-
+    <? if ($studyAreaTree) : ?>
         <section class="contentbox">
             <header>
                 <h1><?= _('Studienbereiche') ?></h1>
             </header>
             <section>
                 <ul class="collapsable css-tree">
-                    <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true, 'dont_open' => array(1))) ?>
+                    <?= $this->render_partial('study_area/tree.php', array('node' => $studyAreaTree, 'open' => true, 'dont_open' => Config::get()->COURSE_SEM_TREE_CLOSED_LEVELS)) ?>
+                </ul>
+            </section>
+        </section>
+    <? endif ?>
+    
+    <? if ($study_areas) : ?>
+        <section class="contentbox">
+            <header>
+                <h1><?= _('Studienbereiche') ?></h1>
+            </header>
+            <section>
+                <ul>
+                    <? foreach ($study_areas as $area) : ?>
+                        <li>
+                            <a href="<?=URLHelper::getScriptLink('show_bereich.php?level=sbb&id=' . $area->id)?>">
+                                <?= htmlReady($area->getPath(' > ')) ?>
+                            </a>
+                        </li>
+                    <? endforeach ?>
                 </ul>
             </section>
         </section>

@@ -20,37 +20,21 @@
  */
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
-# common set-up
-# done by lib/bootstraph.php and config/config_local.inc.php when run on web 
-# server
-#$STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/../../../..');
-#$ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH . '/public/';
+# common set-up, usually done by lib/bootstraph.php and
+# config/config_local.inc.php when run on web server
+$STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/../../../..');
+$ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH . '/public/';
 
 # needed by visual.inc.php
-#require_once 'lib/classes/DbView.class.php';
-#require_once 'lib/classes/TreeAbstract.class.php';
+require_once 'lib/classes/DbView.class.php';
+require_once 'lib/classes/TreeAbstract.class.php';
 
 # needed by Markup.class.php
-# NOTE some includes from visual.inc.php violate strict standards
-#@require_once 'lib/visual.inc.php';
+require_once 'lib/visual.inc.php';
+require_once 'lib/classes/Config.class.php';
 
 # class and functions that are tested by this script
 require_once 'lib/classes/Markup.class.php';
-
-# faked classes and functions
-#final class Config
-#{
-#    public $LOAD_EXTERNAL_MEDIA = 'allow';
-#
-#    public static function get()
-#    {
-#        static $singleton = null;
-#        if ( !$singleton) {
-#            $singleton = new Config();
-#        }
-#        return $singleton;
-#    }
-#}
 
 # helper functions
 
@@ -168,18 +152,32 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
     public function testGetMediaUrl()
     {
-        return;
         global $_SERVER, $STUDIP_DOMAINS, $STUDIP_BASE_PATH;
 
-        $domains = array(
-            'example.org/studip',
-            'example.org/~home',
-            'example.net/studip',
-        );
+        # mock class Config
+        $configStub = $this->getMockBuilder('Config')
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $namespace = 'Studip\MarkupPrivate\MediaProxy\\';
+        $properties = array();
+
+        $configStub->expects($this->any())
+        ->method('__get')
+        ->will($this->returnCallback(function ($property) use (&$properties) {
+            return $properties[$property];
+        }));
+
+        $configStub->expects($this->any())
+        ->method('__set')
+        ->will($this->returnCallback(function ($property, $value) use (&$properties) {
+            $properties[$property] = $value;
+            return $properties[$property];
+        }));
+
+        Config::set($configStub);
 
         # exceptions
+        $namespace = 'Studip\MarkupPrivate\MediaProxy\\';
         $invalidInternalLink = $namespace . 'InvalidInternalLinkException';
         $externalMediaDenied = $namespace . 'ExternalMediaDeniedException';
 
@@ -187,6 +185,13 @@ class MarkupTest extends PHPUnit_Framework_TestCase
         $sendfile = 'sendfile.php?type=0&file_id=9eea7ca20cba01dd4ea394b3b53027cc&file_name=image.png';
         $wiki = 'wiki.php?cid=a07535cf2f8a72df33c12ddfa4b53dde&view=show';
         $wikipediaLogo = 'http://upload.wikimedia.org/wikipedia/meta/0/08/Wikipedia-logo-v2_1x.png';
+
+        # domains
+        $domains = array(
+            'example.org/studip',
+            'example.org/~home',
+            'example.net/studip',
+        );
 
         # run various tests
         $index = 0;

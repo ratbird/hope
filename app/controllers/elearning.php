@@ -52,7 +52,7 @@ class ElearningController extends AuthenticatedController
             $_SESSION['elearning_open_close'][Request::get('do_open')] = true;
         elseif (Request::get('do_close'))
             $_SESSION['elearning_open_close'][Request::get('do_close')] = false;
-        
+
         $this->open_all = Request::get('open_all');
         $this->close_all = Request::get('close_all');
         $this->new_account_cms = Request::get('new_account_cms');
@@ -60,7 +60,7 @@ class ElearningController extends AuthenticatedController
         $this->module_id = Request::option('module_id');
         $this->module_type = Request::option('module_type');
         $this->anker_target = Request::option('anker_target');
-        
+
         //$this->seminar_id = $_SESSION['SessSemName'][1];
         //$this->rechte = $GLOBALS['perm']->have_studip_perm('tutor', $this->seminar_id);
         if (!isset($GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->new_account_cms])) {
@@ -85,9 +85,9 @@ class ElearningController extends AuthenticatedController
     {
         global $connected_cms, $current_module;
         Navigation::activateItem('/tools/my_elearning');
-    
+
         PageLayout::setTitle(_("Meine Lernmodule und Benutzer-Accounts"));
-        
+
         if ($this->new_account_cms != "")
             $this->new_account_form = ELearningUtils::getNewAccountForm($this->new_account_cms);
         foreach($GLOBALS['ELEARNING_INTERFACE_MODULES'] as $cms => $cms_preferences) {
@@ -100,7 +100,8 @@ class ElearningController extends AuthenticatedController
 
                 foreach ($connection_status as $type => $msg) {
                     if ($msg["error"] != "") {
-                        PageLayout::postMessage(MessageBox::error(sprintf(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."),$cms)));
+                        PageLayout::postMessage(MessageBox::error(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."), array($cms .': ' . $msg["error"])));
+                        $GLOBALS["ELEARNING_INTERFACE_" . $cms . "_ACTIVE"] = false;
                     }
                 }
             }
@@ -121,7 +122,7 @@ class ElearningController extends AuthenticatedController
                     $this->cms_list[$cms]['cms_anker_target'] = true;
                 if ($connected_cms[$cms]->user->isConnected())
                     $this->cms_list[$cms]['start_link'] = $connected_cms[$cms]->link->getStartpageLink();
-                
+
                 if ($this->new_account_cms != $cms) {
                     if ($connected_cms[$cms]->user->isConnected()) {
                         $this->cms_list[$cms]['user'] = $connected_cms[$cms]->user->getUsername();
@@ -133,7 +134,7 @@ class ElearningController extends AuthenticatedController
                                 $connected_cms[$cms]->setContentModule($connection, false);
                                 $this->cms_list[$cms]['modules'][] = $connected_cms[$cms]->content_module[$current_module]->view->show();
                             }
-                        } 
+                        }
                         $this->cms_list[$cms]['new_module_form'] = $this->new_module_form[$cms];
                     }
                 } else {
@@ -145,7 +146,7 @@ class ElearningController extends AuthenticatedController
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/learnmodule-sidebar.png');
         $widget = new ActionsWidget();
-    
+
         if ($GLOBALS['perm']->have_perm('autor') AND count($this->cms_list)) {
             foreach($this->cms_list as $cms_key => $cms_data) {
                 if ($connected_cms[$cms_key]->user->isConnected()) {

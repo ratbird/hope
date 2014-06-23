@@ -23,9 +23,6 @@ class Calendar_ContentboxController extends StudipController {
      * @return array() Array of votes
      */
     function display_action($range_id, $timespan = 604800, $start = null) {
-
-        // Visit object
-        ContentBoxHelper::visitType('schedule');
         
         // Fetch time if needed
         $start = $start ? : time();
@@ -111,6 +108,9 @@ class Calendar_ContentboxController extends StudipController {
         if ($this->admin) {
             $this->isProfile = User::exists($range_id);
         }
+        
+        // Visit object
+        ContentBoxHelper::visitType('schedule', array_map(function($termin) {return $termin['id'];}, $this->termine));
     }
 
 }

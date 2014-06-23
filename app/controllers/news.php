@@ -77,9 +77,6 @@ class NewsController extends StudipController
             $this->set_status(401);
             return $this->render_nothing();
         }
-        
-        // Visit object
-        ContentBoxHelper::visitType('news');
 
         // Check if user wrote a comment
         if (Request::submitted('accept') && trim(Request::get('comment_content')) && Request::isPost()) {
@@ -117,11 +114,13 @@ class NewsController extends StudipController
             }
         }
 
-        $this->news = StudipNews::GetNewsByRange($range_id, true, true);
+        $this->news = SimpleORMapCollection::createFromArray(StudipNews::GetNewsByRange($range_id, true, true));
         $this->perm = StudipNews::haveRangePermission('edit', $range_id);
         $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
         $this->range = $range_id;
 
+        // Visit object
+        ContentBoxHelper::visitType('news', $this->news->pluck('id'));
     }
 
     /**

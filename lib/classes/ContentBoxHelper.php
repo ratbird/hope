@@ -70,9 +70,15 @@ class ContentBoxHelper {
         return URLHelper::getURL("#$id", $params);
     }
     
-    public static function visitType($type) {
+    /**
+     * Sets an object as visited
+     * 
+     * @param String $type the type to be set in the database
+     * @param Array $ids Array of ids that might be visited with the given type
+     */
+    public static function visitType($type, $ids) {
         $object_id = Request::get('contentbox_open');
-        if ($object_id) {
+        if ($object_id && in_array($object_id, $ids)) {
             ObjectVisit::visit($object_id, $type);
         }
     }

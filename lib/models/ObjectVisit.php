@@ -32,6 +32,15 @@ class ObjectVisit extends SimpleORMap
         $visit = new self(array($object_id, $user_id, $type));
         $visit->visitdate = $visit->visitdate ? : time();
         $visit->last_visitdate = time();
+        
+        // Increase views on object if new visit
+        if ($visit->isNew()) {
+            $views = new ObjectView($object_id);
+            $views->views++;
+            $views->store();
+        }
+        
+        // And store it to the database
         $visit->store();
     }
     

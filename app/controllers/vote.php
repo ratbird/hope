@@ -20,9 +20,6 @@ class VoteController extends AuthenticatedController {
         URLHelper::bindLinkParam('preview', $null2);
         URLHelper::bindLinkParam('revealNames', $null3);
         URLHelper::bindLinkParam('sort', $null4);
-        
-        // Visit object
-        ContentBoxHelper::visitType('vote');
 
         /*
          * Insert vote
@@ -50,6 +47,9 @@ class VoteController extends AuthenticatedController {
                 return $vote->isRunning();
             });
         }
+         
+        // Visit object
+        ContentBoxHelper::visitType('vote', $this->votes->pluck('id'));
     }
 
     /**

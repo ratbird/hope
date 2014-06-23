@@ -13,12 +13,12 @@
             <? if ($cms_data['show_account_form'] AND $cms_data['user']) : ?>
                 <?=ELearningUtils::getMyAccountForm('', $cms_index)?>
             <? elseif ($cms_data['show_account_form']) : ?>
-                <?=ELearningUtils::getMyAccountForm(sprintf(_("Sie haben im System %s bisher keinen Benutzer-Account."), $cms_data['name']), $cms_index)?>
+                <?=ELearningUtils::getMyAccountForm(sprintf(_("Sie haben im System %s bisher keinen Benutzer-Account."), htmlReady($cms_data['name'])), $cms_index)?>
             <? endif ?>
             <? if ($cms_data['user'] AND $cms_data['start_link']) : ?>
                 <div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">
-                    <?=_('Hier gelangen Sie direkt zur Startseite im angebundenen System:')?> 
-                    <a href="<?=$cms_data['start_link']?>" target=_blank><?=$cms_data['name']?></a>
+                    <?=_('Hier gelangen Sie direkt zur Startseite im angebundenen System:')?>
+                    <a href="<?=URLHelper::getScriptLink($cms_data['start_link'])?>" target="_blank"><?=htmlReady($cms_data['name'])?></a>
                 </div>
                 <br>
             <? endif ?>
@@ -31,10 +31,8 @@
                 <table border="0" cellspacing="0" cellpadding="6">
                     <tr>
                         <td>
-                            <font size="-1">
-                            <?=sprintf(_("Sie haben im System %s keine eigenen Lernmodule."), $cms_data['name'])?><br>
+                            <?=sprintf(_("Sie haben im System %s keine eigenen Lernmodule."), htmlReady($cms_data['name']))?><br>
                             <br>
-                            </font>
                         </td>
                     </tr>
                 </table>

@@ -548,9 +548,6 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 case "adminarea_start.php":
                     printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Auswählen'), URLHelper::getURL('', array('select_sem_id' => $seminar_id))));
                     break;
-                case "themen.php":
-                    printf(_("Ablaufplan") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('seminar_id' => $seminar_id))));
-                    break;
                 case "raumzeit.php":
                     printf(_("Zeiten / Räume") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('seminar_id' => $seminar_id))));
                     break;
@@ -675,6 +672,9 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                     } elseif ($this instanceof Course_AdmissionController){
                         echo _("Zugangsberechtigungen") . '<br>',
                         LinkButton::create(_("Bearbeiten"), $this->url_for('course/admission/index/' . $seminar_id));
+                    } elseif ($this instanceof Course_DatesController){
+                        echo _("Ablaufplan") . '<br>',
+                        LinkButton::create(_("Bearbeiten"), URLHelper::getURL('dispatch.php/course/dates/', array('cid' => $seminar_id)));
                     }
                     break;
                 default:

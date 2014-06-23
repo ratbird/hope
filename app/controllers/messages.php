@@ -445,9 +445,4 @@ class MessagesController extends AuthenticatedController {
         $this->render_text(json_encode(studip_utf8encode($output)));
     }
 
-    public function flex_action()
-    {
-        $this->set_layout(null);
-    }
-
 }

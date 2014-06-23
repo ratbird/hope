@@ -22,6 +22,9 @@
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
+if (version_compare(phpversion(), '5.5', '>=')) {
+    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+}
 
 // set include path
 $inc_path = ini_get('include_path');

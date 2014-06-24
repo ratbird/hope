@@ -657,6 +657,9 @@ class Seminar_Auth extends Auth {
             $this->auth["uname"] = $user->username;
             $this->auth["auth_plugin"]  = $user->auth_plugin;
             $this->auth_set_user_settings($user);
+
+            Metrics::increment('core.login.succeeded');
+
             return $uid;
         } else {
             Metrics::increment('core.login.failed');

@@ -1249,6 +1249,11 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
     ));
     $online = $statement->fetchGrouped();
 
+    // measure users online
+    if ($active_time === 10) {
+        Metrics::gauge('core.users_online', sizeof($online));
+    }
+
     return $online;
 }
 

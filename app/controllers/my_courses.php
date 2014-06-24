@@ -43,8 +43,22 @@ class MyCoursesController extends AuthenticatedController
         // we are defintely not in an lecture or institute
         closeObject();
         $_SESSION['links_admin_data'] = '';
+
+        // measure performance of #index_action
+        if ($action === 'index') {
+            $this->performance_timer = Metrics::startTimer();
+        }
     }
 
+    function after_filter($action, $args) {
+        parent::after_filter($action, $args);
+
+        // send performance metric
+        if (isset($this->performance_timer)) {
+            $timer = $this->performance_timer;
+            $timer('core.my_courses_time');
+        }
+    }
 
     /**
      * Autor / Tutor / Teacher action

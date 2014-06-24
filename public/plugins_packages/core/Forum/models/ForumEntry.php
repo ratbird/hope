@@ -1150,23 +1150,17 @@ class ForumEntry {
         $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries 
             WHERE seminar_id = ? AND depth = 1");
         $stmt->execute(array($seminar_id));
-
-    	if ($GLOBALS['user']->id == 'nobody') {
-            $fullname = Request::get('author', 'unbekannt');
-        } else {
-            $fullname = get_fullname($GLOBALS['user']->id);
-        }
         
         // add default area
         if ($stmt->fetchColumn() == 0) {
             $data = array(
                 'topic_id'    => md5(uniqid()),
                 'seminar_id'  => $seminar_id,
-                'user_id'     => $GLOBALS['user']->id,
+                'user_id'     => '',
                 'name'        => 'Allgemeine Diskussion',
                 'content'     => 'Hier ist Raum für allgemeine Diskussionen',
-                'author'      => $fullname,
-                'author_host' => getenv('REMOTE_ADDR')
+                'author'      => '',
+                'author_host' => ''
             );
             ForumEntry::insert($data, $seminar_id);
         }

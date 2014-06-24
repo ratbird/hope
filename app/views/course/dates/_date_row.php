@@ -1,9 +1,9 @@
 <?
 $is_next_date = $date['end_time'] >= time() && !is_a($date, "CourseExDate");
 if ($is_next_date) {
-    for ($i = $key; $i >= 0; $i--) {
-        if (!is_a($dates[$i], "CourseExDate")) {
-            $is_next_date = $dates[$i] < time();
+    for ($i = 1; $i < $key; $i++) {
+        if (!is_a($dates[$key - $i], "CourseExDate") || ($dates[$key - $i]['end_time'] <= time())) {
+            $is_next_date = $dates[$key - $i]['end_time'] <= time();
             break;
         }
     }

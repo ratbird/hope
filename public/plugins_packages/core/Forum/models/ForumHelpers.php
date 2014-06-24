@@ -188,7 +188,7 @@ class ForumHelpers {
         }
 
         if (!$online_status) {
-            $online_users = get_users_online(15);
+            $online_users = get_users_online(10);
             foreach ($online_users as $username => $data) {
                 if ($data['last_action'] >= 300) {
                     $online_status[$data['user_id']] = 'away';

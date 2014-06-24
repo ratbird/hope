@@ -1,7 +1,15 @@
 <?
-$is_next_date = (!$dates[$key - 1] || ($dates[$key - 1]['end_time'] < time())) && ($date['end_time'] >= time());
+$is_next_date = $date['end_time'] >= time() && !is_a($date, "CourseExDate");
+if ($is_next_date) {
+    for ($i = $key; $i >= 0; $i--) {
+        if (!is_a($dates[$i], "CourseExDate")) {
+            $is_next_date = $dates[$i] < time();
+            break;
+        }
+    }
+}
 ?>
-<tr id="date_<?= $date->getId() ?>"<?= $is_next_date ? ' class="nextdate" title="'._("Der nächste Termin").'"' : ""?>>
+<tr id="date_<?= $date->getId() ?>" class="<?= is_a($date, "CourseExDate") ? "ausfall" : "" ?><?= $is_next_date ? 'nextdate' : ""?>"<?= $is_next_date ? ' title="'._("Der nächste Termin").'"' : ""?>>
     <td data-timestamp="<?=htmlReady($date['date']);?>">
         <a href="<?= URLHelper::getLink("dispatch.php/course/dates/details/".$date->getId()) ?>" data-dialog>
             <?= Assets::img("icons/16/blue/date", array('class' => "text-bottom")) ?>

@@ -40,7 +40,7 @@ class Course_DatesController extends AuthenticatedController
         checkObjectModule("schedule");
         object_set_visit_module("schedule");
         PageLayout::addScript("jquery/jquery.tablesorter.js");
-        $this->dates = CourseDate::findBySeminar_id($_SESSION['SessionSeminar']);
+        $this->dates = Course::find($_SESSION['SessionSeminar'])->getDatesWithExdates();
     }
 
     public function details_action($termin_id) {

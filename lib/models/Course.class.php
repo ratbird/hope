@@ -329,4 +329,32 @@ class Course extends SimpleORMap
         }
         return trim(vsprintf($template[$format], array_map('trim', $data)));
     }
+
+    public function getDatesWithExdates()
+    {
+        $statement = DBManager::get()->prepare("
+            (
+                SELECT termine.*, '' AS resource_id, 0 AS ausfalltermin
+                FROM termine
+                WHERE range_id = :seminar_id
+            )
+            UNION
+            (
+                SELECT ex_termine.*, 1 as ausfalltermin
+                FROM ex_termine
+                WHERE range_id = :seminar_id
+            )
+            ORDER BY date
+        ");
+        $statement->execute(array('seminar_id' => $this['seminar_id']));
+        $termine_data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $items = array();
+        foreach ($termine_data as $data) {
+            $date = $data['ausfalltermin'] ? new CourseExDate() : new CourseDate();
+            $date->setData($data);
+            $date->setNew(false);
+            $items[] = $date;
+        }
+        return $items;
+    }
 }

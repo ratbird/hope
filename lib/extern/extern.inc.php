@@ -135,6 +135,7 @@ header('Content-Type: text/html; charset=windows-1252');
 if (Request::option('preview')) {
     $module_obj->printoutPreview();
 } else {
+    Metrics::increment('core.extern_page_request');
     $module_obj->printout($arguments);
 }
 

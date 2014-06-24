@@ -183,7 +183,7 @@ class Metrics {
         }
 
         if ($sampleRate < 1) {
-            $rand = mt_rand() % 100 / 100;
+            $rand = mt_rand() / mt_getrandmax();
             if ($rand > $sampleRate) {
                 return;
             }

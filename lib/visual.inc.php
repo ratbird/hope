@@ -818,16 +818,17 @@ function tooltipIcon($text, $important = false, $html = false)
 * @return   string  text with convertes internal links
 */
 function TransformInternalLinks($str){
-    static $domain_data = null;
     if (is_array($GLOBALS['STUDIP_DOMAINS']) && count($GLOBALS['STUDIP_DOMAINS']) > 1) {
-        if (is_null($domain_data)){
+        if (!isset($GLOBALS['TransformInternalLinks_domainData'])){
             $domain_data['domains'] = '';
             foreach ($GLOBALS['STUDIP_DOMAINS'] as $studip_domain) $domain_data['domains'] .= '|' . preg_quote($studip_domain);
             $domain_data['domains'] = preg_replace("'\|[^/|]*'", '$0[^/]*?', $domain_data['domains']);
             $domain_data['domains'] = substr($domain_data['domains'], 1);
             $domain_data['user_domain'] = preg_replace("'^({$domain_data['domains']})(.*)$'i", "\\1", $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
             $domain_data['user_domain_scheme'] = 'http' . (($_SERVER['HTTPS'] || $_SERVER['SERVER_PORT'] == 443) ? 's' : '') . '://';
+            $GLOBALS['TransformInternalLinks_domainData'] = $domain_data;
         }
+        $domain_data = $GLOBALS['TransformInternalLinks_domainData'];
         return preg_replace("'https?\://({$domain_data['domains']})((/[^<\s]*[^\.\s<])*)'i", "{$domain_data['user_domain_scheme']}{$domain_data['user_domain']}\\2", $str);
     } else {
         return $str;

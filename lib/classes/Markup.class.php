@@ -223,9 +223,6 @@ class AttrTransform_Image_Source extends \HTMLPurifier_AttrTransform
     }
 }
 
-
-
-
 //// media proxy //////////////////////////////////////////////////////////////
 
 namespace Studip\MarkupPrivate\MediaProxy;
@@ -246,7 +243,7 @@ function getMediaUrl($url) {
 
     // handle internal media links
     if (isStudipMediaUrl($url)) {
-        return removeStudipDomain($url);
+        return transformInternalIdnaLink($url);
     }
     if (isInternalLink($url)) {
         // link is studip-internal, but not to a valid media location

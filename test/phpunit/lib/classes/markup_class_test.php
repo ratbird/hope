@@ -219,63 +219,64 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
         # domains
         $domains = array(
-            'example.org/studip',
-            'example.org/~home',
-            'example.net/studip',
+            'org' => 'example.org/studip',
+            'home' => 'example.org/~home',
+            'net' => 'example.net/studip',
         );
+
+        $getUrl = function ($domainKey, $path) use (&$domains) {
+            return 'http://' . $domains[$domainKey] . '/' . $path;
+        };
 
         # run various tests
         $index = 0;
         foreach (array(
             array(
-                'in' => 'http://example.org/studip/image.jpg',
+                'in' => $getUrl('org', 'image.jpg'),
                 'exception' => $invalidInternalLink,
-                'uri' => 'http://example.org/studip/index.php',
+                'uri' => $getUrl('org', 'index.php'),
                 'domains' => $domains,
                 'externalMedia' => 'allow'
             ),
             array(
-                'in' => 'http://example.org/studip/' . $sendfile,
-                'out' => '/studip/' . $sendfile,
-                //'out' => 'http://example.org/studip/' . $sendfile,
-                'uri' => 'http://example.org/studip/index.php',
-                'domains' => $domains,
-                'externalMedia' => 'allow'
-            ),/*
-            array(
-                'in' => 'http://example.org/studip/' . $sendfile,
-                'out' => '/~home/' . $sendfile,
-                //'out' => 'http://example.org/~home/' . $sendfile,
-                'uri' => 'http://example.org/~home/' . $wiki,
+                'in' => $getUrl('org', $sendfile),
+                'out' => $getUrl('org', $sendfile),
+                'uri' => $getUrl('org', 'index.php'),
                 'domains' => $domains,
                 'externalMedia' => 'allow'
             ),
             array(
-                'in' => 'http://example.net/studip/' . $sendfile,
-                'out' => '/~home/' . $sendfile,
-                //'out' => 'http://example.org/~home/' . $sendfile,
-                'uri' => 'http://example.org/~home/' . $wiki,
+                'in' => $getUrl('org', $sendfile),
+                'out' => $getUrl('home', $sendfile),
+                'uri' => $getUrl('home', $wiki),
                 'domains' => $domains,
                 'externalMedia' => 'allow'
-            ),*/
+            ),
+            array(
+                'in' => $getUrl('org', $sendfile),
+                'out' => $getUrl('net', $sendfile),
+                'uri' => $getUrl('net', $wiki),
+                'domains' => $domains,
+                'externalMedia' => 'allow'
+            ),
             array(
                 'in' => $wikipediaLogo,
                 'out' => $wikipediaLogo,
-                'uri' => 'http://example.org/~home/' . $wiki,
+                'uri' => $getUrl('org', $wiki),
                 'domains' => $domains,
                 'externalMedia' => 'allow'
             ),
             array(
                 'in' => $wikipediaLogo,
                 'exception' => $externalMediaDenied,
-                'uri' => 'http://example.org/~home/' . $wiki,
+                'uri' => $getUrl('org', $wiki),
                 'domains' => $domains,
                 'externalMedia' => 'deny'
-            ),/*
-            array(
+            ),
+/*            array(
                 'in' => $wikipediaLogo,
                 'out' => $wikipediaLogo,
-                'uri' => 'http://example.org/~home/' . $wiki,
+                'uri' => $getUrl('org', $wiki),
                 'domains' => $domains,
                 'externalMedia' => 'proxy'
             ),*/
@@ -285,10 +286,11 @@ class MarkupTest extends PHPUnit_Framework_TestCase
             # fake Stud.IP web server set-up
             fakeServer($test['uri']);
             $STUDIP_DOMAINS = $test['domains'];
+            unset($GLOBALS['TransformInternalLinks_domainData']);
             computeRelativePath();
             computeAbsoluteURI();
-            // call this to help with debugging: echoWebGlobals();
             Config::get()->LOAD_EXTERNAL_MEDIA = $test['externalMedia'];
+            //echoWebGlobals(); // call to help with debugging
 
             # test getMediaUrl
             try {

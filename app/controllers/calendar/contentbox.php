@@ -25,7 +25,7 @@ class Calendar_ContentboxController extends StudipController {
     function display_action($range_id, $timespan = 604800, $start = null) {
         
         // Fetch time if needed
-        $start = $start ? : time();
+        $start = $start ? : strtotime('today');
 
         $events = new DbCalendarEventList(new SingleCalendar($range_id, Calendar::PERMISSION_READABLE), $start, $start + $timespan, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
 
@@ -87,7 +87,7 @@ class Calendar_ContentboxController extends StudipController {
                 'id' => $courseDate->id,
                 'chdate' => $courseDate->chdate,
                 'title' => $courseDate->getFullname() . ($courseDate->topics[0] ? ', '.join(', ', $courseDate->topics->getValue('title') ): ""),
-                'description' => $courseDate->description,
+                'description' => ($courseDate->topics[0] ? ', '.join("\n\n", $courseDate->topics->getValue('description') ): ""),
                 'room' => $courseDate->getRoomName(),
                 'info' => $info
             );
@@ -110,9 +110,7 @@ class Calendar_ContentboxController extends StudipController {
         if ($this->admin) {
             $this->isProfile = User::exists($range_id);
         }
-        
-        // Visit object
-        ContentBoxHelper::visitType('schedule', array_map(function($termin) {return $termin['id'];}, $this->termine));
+
     }
 
 }

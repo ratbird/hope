@@ -1,4 +1,6 @@
-<article class="<?= ContentBoxHelper::classes($vote->id, $vote->chdate) ?>" id="<?= $vote->id ?>">
+<? $is_new = ($vote->chdate >= object_get_visit($vote->id, 'vote', false, false))
+    && ($vote->author_id != $GLOBALS['user']->id); ?>
+<article class="<?= ContentBoxHelper::classes($vote->id, $is_new) ?>" id="<?= $vote->id ?>">
     <header>
         <nav>
             <?= $vote->count ?> |

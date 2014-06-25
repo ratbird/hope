@@ -38,7 +38,7 @@ class VoteController extends AuthenticatedController {
         // Check if we ned administration icons
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
-        $this->votes = SimpleORMapCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
+        $this->votes = SimpleCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
 
         // Check if we got expired
         if (!Request::get('show_expired')) {
@@ -47,9 +47,10 @@ class VoteController extends AuthenticatedController {
                 return $vote->isRunning();
             });
         }
-         
-        // Visit object
-        ContentBoxHelper::visitType('vote', $this->votes->pluck('id'));
+
+        if ($this->votes->findOneBy('id', Request::option('contentbox_open'))) {
+            object_set_visit(Request::option('contentbox_open'), 'vote');
+        }
     }
 
     /**

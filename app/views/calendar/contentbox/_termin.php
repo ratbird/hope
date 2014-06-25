@@ -1,4 +1,4 @@
-<article class="<?= ContentBoxHelper::classes($termin['id'], $termin['chdate']) ?>" id="<?= $termin['id'] ?>">
+<article class="<?= ContentBoxHelper::classes($termin['id']) ?>" id="<?= $termin['id'] ?>">
     <header>
         <nav>
             <span>

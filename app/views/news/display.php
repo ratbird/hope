@@ -21,7 +21,9 @@
         </h1>
     </header>
     <? foreach ($news as $new): ?>
-    <article class="<?= ContentBoxHelper::classes($new->id, $new->chdate) ?>" id="<?= $new->id ?>">
+    <? $is_new = ($new['chdate'] >= object_get_visit($new->id, 'news', false, false))
+            && ($new['user_id'] != $GLOBALS['user']->id); ?>
+    <article class="<?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>">
         <header>
             <nav>
                 <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>

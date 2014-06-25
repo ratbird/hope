@@ -164,14 +164,6 @@ class ProfileController extends AuthenticatedController
             $this->news = $response->body;
         }
         
-        // show news on profile page
-        $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
-                (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
-
-        if (($this->show_news = ($this->profile->checkVisibility('news') OR ($show_admin))) === true) {
-            $this->profile_data = $this->about_data;
-            $this->show_admin = $show_admin;
-        }
 
         // calendar
         if (get_config('CALENDAR_ENABLE')) {

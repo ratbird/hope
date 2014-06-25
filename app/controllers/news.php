@@ -114,13 +114,18 @@ class NewsController extends StudipController
             }
         }
 
-        $this->news = SimpleORMapCollection::createFromArray(StudipNews::GetNewsByRange($range_id, true, true));
+        $this->news = StudipNews::GetNewsByRange($range_id, true, true);
         $this->perm = StudipNews::haveRangePermission('edit', $range_id);
         $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
         $this->range = $range_id;
 
-        // Visit object
-        ContentBoxHelper::visitType('news', $this->news->pluck('id'));
+        if (isset($this->news[Request::option('contentbox_open')])) {
+            $open_news = $this->news[Request::option('contentbox_open')];
+            if ($open_news->user_id != $GLOBALS['user']->id) {
+                object_add_view($open_news->id);
+            }
+            object_set_visit($open_news->id, 'news'); //and, set a visittime
+        }
     }
 
     /**

@@ -128,6 +128,20 @@ function echoWebGlobals()
     echo PHP_EOL . "absolute URI\t" . $GLOBALS['ABSOLUTE_URI_STUDIP'];
 }
 
+# Seminar_Session cannot be mocked since it uses static functions.
+# Also, including phplib_local.inc.php, where Seminar_Session is
+# defined, introduces a massive amount of dependencies that are otherwise 
+# completely unneeded for testing the Markup class.
+# Instead, create a fake class.
+# => But note, this will fail if another test case does the same thing!
+class Seminar_Session
+{
+    public static function is_current_session_authenticated()
+    {
+        return true;
+    }
+}
+
 # the actual test
 
 class MarkupTest extends PHPUnit_Framework_TestCase
@@ -187,8 +201,8 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
         # mock class Config
         $configStub = $this->getMockBuilder('Config')
-            ->disableOriginalConstructor()
-            ->getMock();
+        ->disableOriginalConstructor()
+        ->getMock();
 
         $properties = array();
 
@@ -216,6 +230,8 @@ class MarkupTest extends PHPUnit_Framework_TestCase
         $sendfile = 'sendfile.php?type=0&file_id=9eea7ca20cba01dd4ea394b3b53027cc&file_name=image.png';
         $wiki = 'wiki.php?cid=a07535cf2f8a72df33c12ddfa4b53dde&view=show';
         $wikipediaLogo = 'http://upload.wikimedia.org/wikipedia/meta/0/08/Wikipedia-logo-v2_1x.png';
+        $proxy = 'dispatch.php/media_proxy?url=';
+        $proxiedWikipediaLogo = $proxy . 'http%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fmeta%2F0%2F08%2FWikipedia-logo-v2_1x.png';
 
         # domains
         $domains = array(
@@ -273,13 +289,13 @@ class MarkupTest extends PHPUnit_Framework_TestCase
                 'domains' => $domains,
                 'externalMedia' => 'deny'
             ),
-/*            array(
+            array(
                 'in' => $wikipediaLogo,
-                'out' => $wikipediaLogo,
+                'out' => $getUrl('org', $proxiedWikipediaLogo),
                 'uri' => $getUrl('org', $wiki),
                 'domains' => $domains,
                 'externalMedia' => 'proxy'
-            ),*/
+            ),
         ) as $test) {
             $index++;
 

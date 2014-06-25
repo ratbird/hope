@@ -256,7 +256,7 @@ function getMediaUrl($url) {
         \Seminar_Session::is_current_session_authenticated()
     ) {
         // media proxy must be accessed by an internal link
-        return removeStudipDomain(encodeMediaProxyUrl($url));
+        return encodeMediaProxyUrl($url);
     }
     if ($external_media === 'allow') {
         return $url;

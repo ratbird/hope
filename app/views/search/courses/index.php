@@ -32,7 +32,7 @@ $sidebar->addWidget($widget);
 
 if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_result'])){
     $actions = new ActionsWidget();
-    $actions->addLink(_("Download des Ergebnisses"), URLHelper::getURL("dispatch.php/search/courses/export_results"));
+    $actions->addLink(_("Download des Ergebnisses"), URLHelper::getURL("dispatch.php/search/courses/export_results"), 'icons/16/blue/file-office.png');
     $sidebar->addWidget($actions);
 
     $group_by_links = "";

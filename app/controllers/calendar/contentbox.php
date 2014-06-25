@@ -58,6 +58,7 @@ class Calendar_ContentboxController extends StudipController {
             // Store for view
             $this->termine[] = array(
                 'id' => $termin->id,
+                'chdate' => $termin->chdate,
                 'title' => $termin->title,
                 'description' => $termin->description,
                 'room' => $termin->getLocation(),
@@ -84,6 +85,7 @@ class Calendar_ContentboxController extends StudipController {
             // Store for view
             $this->termine[] = array(
                 'id' => $courseDate->id,
+                'chdate' => $courseDate->chdate,
                 'title' => $courseDate->getFullname() . ($courseDate->topics[0] ? ', '.join(', ', $courseDate->topics->getValue('title') ): ""),
                 'description' => $courseDate->description,
                 'room' => $courseDate->getRoomName(),

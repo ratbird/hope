@@ -1,4 +1,4 @@
-<article class="<?= ContentBoxHelper::classes($vote->id) ?>" id="<?= $vote->id ?>">
+<article class="<?= ContentBoxHelper::classes($vote->id, $vote->chdate) ?>" id="<?= $vote->id ?>">
     <header>
         <nav>
             <?= $vote->count ?> |

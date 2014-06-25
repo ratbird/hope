@@ -21,7 +21,7 @@
         </h1>
     </header>
     <? foreach ($news as $new): ?>
-    <article class="<?= ContentBoxHelper::classes($new->id) ?>" id="<?= $new->id ?>">
+    <article class="<?= ContentBoxHelper::classes($new->id, $new->chdate) ?>" id="<?= $new->id ?>">
         <header>
             <nav>
                 <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>

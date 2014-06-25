@@ -21,9 +21,10 @@ class ContentBoxHelper {
      * Returns the class open if the id was clicked
      * 
      * @param String $id id of the content box
+     * @param int $chdate last change of the displayed article
      * @return String open if the contentbox is open otherwise an empty String 
      */
-    public static function classes($id) {
+    public static function classes($id, $chdate = 0) {
         
         // Init
         $classes = array();
@@ -34,7 +35,7 @@ class ContentBoxHelper {
         }
         
         // Check if new
-        if (!ObjectVisit::visited($id)) {
+        if (!ObjectVisit::visited($id, $chdate)) {
             $classes[] = 'new';
         }
         

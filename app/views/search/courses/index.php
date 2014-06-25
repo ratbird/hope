@@ -31,6 +31,10 @@ $widget->addCheckbox(_('Erweiterte Suche anzeigen'),
 $sidebar->addWidget($widget);
 
 if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_result'])){
+    $actions = new ActionsWidget();
+    $actions->addLink(_("Download des Ergebnisses"), URLHelper::getURL("dispatch.php/search/courses/export_results"));
+    $sidebar->addWidget($actions);
+
     $group_by_links = "";
     $grouping = new LinksWidget();
     $grouping->setTitle(_("Suchergebnis gruppieren:"));

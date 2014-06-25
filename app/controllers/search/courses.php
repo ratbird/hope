@@ -81,6 +81,39 @@ class Search_CoursesController extends AuthenticatedController
         $this->controller = $this;
     }
 
+    public function export_results_action()
+    {
+        if ($_SESSION['sem_portal']['bereich'] != "all" && $_SESSION['sem_portal']['bereich'] != "mod") {
+            $class = $GLOBALS['SEM_CLASS'][$_SESSION['sem_portal']['bereich']];
+            $_sem_status = array_keys($class->getSemTypes());
+        } else {
+            $_sem_status = false;
+        }
+        $init_data = array(
+            "level" => "f",
+            "cmd"=>"qs",
+            "show_class"=>$_SESSION['sem_portal']['bereich'],
+            "group_by"=>0,
+            "default_sem"=> ($default_sem = SemesterData::GetSemesterIndexById($_SESSION['_default_sem'])) !== false
+                    ? $default_sem
+                    : "all",
+            "sem_status" => $_sem_status
+        );
+        if (get_config('STM_ENABLE') && $_SESSION['sem_portal']['bereich'] == "mod") {
+            $sem_browse_obj = new StmBrowse($init_data);
+        } else {
+            $sem_browse_obj = new SemBrowse($init_data);
+            $sem_browse_data['show_class'] = $_SESSION['sem_portal']['bereich'];
+        }
+        $tmpfile = basename($sem_browse_obj->create_result_xls());
+        if($tmpfile){
+           header('Location: ' . getDownloadLink( $tmpfile, _("ErgebnisVeranstaltungssuche.xls"), 4));
+           page_close();
+           die;
+        }
+        $this->render_nothing();
+    }
+
 
     protected function getToplistEntries($sem_status) {
         $sql_where_query_seminare = " WHERE 1 ";

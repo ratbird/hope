@@ -41,25 +41,37 @@ require_once 'lib/classes/Markup.class.php';
 function fakeServer($uri) {
     $urlComponents = parse_url($uri);
 
-    $_SERVER['SERVER_NAME'] = $urlComponents['host'];
-    $_SERVER['PHP_SELF'] = $urlComponents['path'];
+    if (isset($urlComponents['host'])) {
+        $_SERVER['SERVER_NAME'] = $urlComponents['host'];
+        $_SERVER['HTTP_HOST'] = $urlComponents['host'];
+    }
 
+    $_SERVER['HTTPS'] = false;
+    $_SERVER['SERVER_PORT'] = 80;
     if (isset($urlComponents['scheme'])
         && strtolower($urlComponents['scheme']) == 'https'
     ) {
         $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_PORT'] = 443;
     }
+
     if (isset($urlComponents['port'])) {
         $_SERVER['SERVER_PORT'] = $urlComponents['port'];
-    } else {
-        $_SERVER['SERVER_PORT'] = $_SERVER['HTTPS'] == 'on' ? 443 : 80;
     }
-    $_SERVER['HTTP_HOST'] = $urlComponents['host'];
 
-    $_SERVER['REQUEST_URI']
-        = $urlComponents['path']
-        . '?' . $urlComponents['query']
-        . '#' . $urlComponents['fragment'];
+    $path = '';
+    if (isset($urlComponents['path'])) {
+        $_SERVER['PHP_SELF'] = $urlComponents['path'];
+        $path = $urlComponents['path'];
+    }
+
+    $query = isset($urlComponents['query']) ? ('?' . $urlComponents['query']) : '';
+    $fragment = isset($urlComponents['fragment']) ? ('#' . $urlComponents['fragment']) : '';
+    $_SERVER['REQUEST_URI'] = $path . $query . $fragment;
+
+    if (!isset($GLOBALS['CONVERT_IDNA_URL'])) {
+        $GLOBALS['CONVERT_IDNA_URL'] = false;
+    }
 }
 
 function computeRelativePath() {
@@ -91,11 +103,13 @@ function computeAbsoluteURI() {
                 explode(':', $_SERVER['SERVER_NAME']);
         }
 
-        $ABSOLUTE_URI_STUDIP = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
+        $ABSOLUTE_URI_STUDIP = $https ? 'https' : 'http';
         $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
 
-        if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
-            $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
+        if ($https && $_SERVER['SERVER_PORT'] != 443 ||
+            !$https && $_SERVER['SERVER_PORT'] != 80
+        ) {
             $ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
         }
 
@@ -118,6 +132,21 @@ function echoWebGlobals()
 
 class MarkupTest extends PHPUnit_Framework_TestCase
 {
+    private static $originalErrorReporting;
+
+    public static function setUpBeforeClass()
+    {
+        MarkupTest::$originalErrorReporting = error_reporting();
+        // check for all errors in this test
+        // E_STRICT was not part of E_ALL in PHP < 5.4.0
+        error_reporting(E_ALL | E_STRICT);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        error_reporting(MarkupTest::$originalErrorReporting);
+    }
+
     public function testRemoveHTML()
     {
         forEach (array(
@@ -125,6 +154,8 @@ class MarkupTest extends PHPUnit_Framework_TestCase
             '<p>paragraph only</p>' => 'paragraph only',
 
             '<a>no href</a>' => 'no href',
+            '<a href=""></a>' => '',
+            '<a href="">empty href</a>' => 'empty href',
             '<a href="href only" />' => '[href%20only]',
             '<a href="href end-tag"></a>' => '[href%20end-tag]',
             '<a href="http://href.de">and text</a>' => '[http://href.de]and text',
@@ -269,6 +300,8 @@ class MarkupTest extends PHPUnit_Framework_TestCase
                         . $test['exception'] . '. Output: ' . $out . '.'
                     );
                 }
+            } catch (PHPUnit_Framework_Error_Notice $e) {
+                throw $e;
             } catch (Exception $e) {
                 if ( !isset($test['exception'])) {
                     $this->fail(

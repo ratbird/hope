@@ -25,6 +25,7 @@ class HTMLPurifier_Injector_Unlinkify extends HTMLPurifier_Injector
     {
         if (isset($this->needed[$token->name])) {
             $attribute = $this->needed[$token->name];
+            $url = '';
             if (isset($token->attr[$attribute])) {
                 $url = $this->sanitizer->validate(
                     $token->attr[$attribute],
@@ -36,4 +37,3 @@ class HTMLPurifier_Injector_Unlinkify extends HTMLPurifier_Injector
         }
     }
 }
-

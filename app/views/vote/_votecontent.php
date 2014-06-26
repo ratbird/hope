@@ -1,6 +1,6 @@
 <?= $GLOBALS['vote_message'][$vote->id] ?>
 <p>
-    <?= htmlReady($vote->question) ?>
+    <?= formatReady($vote->question) ?>
 </p>
 <form action="<?= ContentBoxHelper::href($vote->id) ?>" method="post">
     <section class="answers">

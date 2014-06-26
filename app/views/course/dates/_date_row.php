@@ -14,6 +14,7 @@ if ($is_next_date) {
         <? if (is_a($date, "CourseExDate")) : ?>
             <?= Assets::img("icons/16/black/date", array('class' => "text-bottom")) ?>
             <?= htmlReady($date->getFullname()) ?>
+            <?= tooltipIcon($date->content)?>
         <? else : ?>
         <a href="<?= URLHelper::getLink("dispatch.php/course/dates/details/".$date->getId()) ?>" data-dialog>
             <?= Assets::img("icons/16/blue/date", array('class' => "text-bottom")) ?>

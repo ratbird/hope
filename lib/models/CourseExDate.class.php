@@ -40,11 +40,12 @@ class CourseExDate extends SimpleORMap {
             'class_name'  => 'SeminarCycleDate',
             'foreign_key' => 'metadate_id'
         );
-        $config['additional_fields']['topics']['get'] = function () { return array(); };
-        $config['additional_fields']['statusgruppen']['get'] = function () { return array(); };
-        $config['additional_fields']['dozenten']['get'] = function () { return array(); };
+        $dummy_relation = function () { return new SimpleCollection(); };
+        $config['additional_fields']['topics']['get'] = $dummy_relation;
+        $config['additional_fields']['statusgruppen']['get'] = $dummy_relation;
+        $config['additional_fields']['dozenten']['get'] = $dummy_relation;
         $config['default_values']['date_typ'] = 1;
-        parent::configure($conf + $config);
+        parent::configure($config);
     }
 
     public function getRoomName()

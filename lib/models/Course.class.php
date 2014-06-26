@@ -103,6 +103,12 @@ class Course extends SimpleORMap
             'on_delete' => 'delete',
             'on_store' => 'store',
         );
+        $config['has_many']['ex_dates'] = array(
+            'class_name' => 'CourseExDate',
+            'assoc_foreign_key' => 'range_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+        );
         $config['has_many']['members'] = array(
             'class_name' => 'CourseMember',
             'assoc_func' => 'findByCourse',
@@ -332,29 +338,9 @@ class Course extends SimpleORMap
 
     public function getDatesWithExdates()
     {
-        $statement = DBManager::get()->prepare("
-            (
-                SELECT termine.*, '' AS resource_id, 0 AS ausfalltermin
-                FROM termine
-                WHERE range_id = :seminar_id
-            )
-            UNION
-            (
-                SELECT ex_termine.*, 1 as ausfalltermin
-                FROM ex_termine
-                WHERE range_id = :seminar_id
-            )
-            ORDER BY date
-        ");
-        $statement->execute(array('seminar_id' => $this['seminar_id']));
-        $termine_data = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $items = array();
-        foreach ($termine_data as $data) {
-            $date = $data['ausfalltermin'] ? new CourseExDate() : new CourseDate();
-            $date->setData($data);
-            $date->setNew(false);
-            $items[] = $date;
-        }
-        return $items;
+        $dates = $this->ex_dates->findBy('content', '', '<>');
+        $dates->merge($this->dates);
+        $dates->orderBy('date', SORT_NUMERIC);
+        return $dates;
     }
 }

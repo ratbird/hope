@@ -64,7 +64,7 @@
                             'rec_uname' => $dozent['username'],
                             'default_subject' => $subject))
                         ?>
-                ">
+                " data-dialog="button">
                     <?= Assets::img('icons/16/blue/mail.png',
                             tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                 </a>

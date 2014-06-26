@@ -22,7 +22,7 @@
         </a>
     <? endif ?>
 
-        <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $user['username'])) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $user['username'])) ?>" data-dialog="button">
             <?= Assets::img('icons/16/blue/mail.png', array('title' => _('Nachricht an Benutzer verschicken'))) ?>
         </a>
     <? if ($user['is_buddy']): ?>

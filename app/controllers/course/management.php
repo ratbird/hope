@@ -25,10 +25,9 @@ class Course_ManagementController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        if ($GLOBALS['SessSemName']['class'] == 'sem') {
-            if (SeminarCategories::GetBySeminarId($GLOBALS['SessSemName'][1])->studygroup_mode) {
-                throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
-            }
+        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$GLOBALS['SessSemName']['art_num']]['class']];
+        if (!$sem_class->isModuleAllowed("CoreAdmin")) {
+            throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
         }
         PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $GLOBALS['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');

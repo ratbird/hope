@@ -29,35 +29,61 @@ class Document_DownloadController extends AuthenticatedController
 
     public function index_action($entry_id, $inline = false)
     {
+        $download_files = array();
+        $download_type  = 'single';
+        $filename       = null;
+
+        // Download files from bulk-action?
         if ($entry_id === 'flashed') {
-            $files = array();
             foreach ($this->flash['ids'] as $id) {
                 $entry   = new DirectoryEntry($id);
-                if ($entry->file instanceof StudipDirectory && $entry->file->user_id !== $GLOBALS['user']->id) {
-                    throw new AccessDeniedException(_('Sie dÃ¼rfen keinen fremden Ordner herunterladen.'));
+                if ($entry->isDirectory() && $entry->file->user_id !== $GLOBALS['user']->id) {
+                    throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
                 }
-                $files[] = $entry;
+                $download_files[] = $entry;
             }
-            $this->download_files($files);
+            $download_type = 'multiple';
         } else {
             try {
+                // Get directory entry
                 $entry = new DirectoryEntry($entry_id);
-                $file  = $entry->file;
-                if ($file->user_id !== $GLOBALS['user']->id) {
-                    throw new AccessDeniedException(_('Sie dÃ¼rfen keinen fremden Ordner herunterladen.'));
+
+                // Determine download type
+                $filename         = $entry->file->filename;
+                $download_files[] = $entry;
+                $download_type    = $entry->isDirectory()
+                                  ? 'multiple'
+                                  : 'single';
+
+                if ($entry->file->user_id !== $GLOBALS['user']->id) {
+                    if ($entry->isDirectory()) {
+                        throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
+                    } elseif (false) {
+                        // TODO: Permission check inactive for now
+                        throw new AccessDeniedException(_('Sie dürfen keine fremde Datei herunterladen.'));
+                    }
                 }
             } catch (InvalidArgumentException $e) {
+                // Entry id is not a valid directory entry,
+                // so we assume that it is a foreign folder
                 if ($entry_id !== $GLOBALS['user']->id) {
-                    throw new AccessDeniedException(_('Sie dÃ¼rfen keinen fremden Ordner herunterladen.'));
+                    if (User::exists($entry_id)) {
+                        throw new AccessDeniedException(_('Sie dürfen keinen fremden Ordner herunterladen.'));
+                    } else {
+                        throw new InvalidArgumentException(_('404 - File not found'));
+                    }
                 }
-                $file = new RootDirectory($entry_id);
-            }
 
-            if ($file instanceof StudipDirectory) {
-                $this->download_files(array($file instanceof RootDirectory ? $file : $entry), $file->filename ?: 'Stud-IP');
-            } else {
-                $this->download_file($entry, $inline);
+                $download_files[] = new RootDirectory($entry_id);
+                $download_type    = 'multiple';
             }
+        }
+
+        // Download either a zip file or single file
+        if ($download_type === 'multiple') {
+            $this->download_files($download_files, $filename ?: 'Stud-IP');
+        } else {
+            $this->download_file(reset($download_files), $inline);
         }
     }
 

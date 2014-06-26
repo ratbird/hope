@@ -99,7 +99,7 @@
                     <label for="hobbies"><?= _('Hobbys:') ?></label>
                 </td>
                 <td colspan="2">
-                    <textarea name="hobby" id="hobbies" style="height:100px;"
+                    <textarea name="hobby" id="hobbies" style="width:100%;height:100px;"
                               class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.hobby')) echo 'disabled'; ?>
                     ><?= htmlReady($user->hobby) ?></textarea>
@@ -111,7 +111,7 @@
                     <label for="lebenslauf"><?= _('Lebenslauf:') ?></label>
                 </td>
                 <td colspan="2">
-                    <textarea id="lebenslauf" name="lebenslauf" style="height:100px;"
+                    <textarea id="lebenslauf" name="lebenslauf" style="width:100%;height:100px;"
                               class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.lebenslauf')) echo 'disabled'; ?>
                     ><?= htmlReady($user->lebenslauf) ?></textarea>
@@ -124,7 +124,7 @@
                     <label for="schwerp"><?= _('Schwerpunkte:') ?></label>
                 </td>
                 <td colspan="2">
-                    <textarea id="schwerp" name="schwerp" style="height:100px;"
+                    <textarea id="schwerp" name="schwerp" style="width:100%;height:100px;"
                               class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.schwerp')) echo 'disabled'; ?>
                     ><?= htmlReady($user->schwerp) ?></textarea>
@@ -136,7 +136,7 @@
                     <label for="publi"><?= _('Publikationen:') ?></label>
                 </td>
                 <td colspan="2">
-                    <textarea id="publi" name="publi" style="height:100px;"
+                    <textarea id="publi" name="publi" style="width:100%;height:100px;"
                               class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.publi')) echo 'disabled'; ?>
                     ><?= htmlReady($user->publi) ?></textarea>

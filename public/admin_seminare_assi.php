@@ -1669,9 +1669,12 @@ if (($form == 6) && (Request::submitted('jump_next')))
                         $count_doz++;
                     }
                 }
+                if ($deputies_enabled && $_SESSION['sem_create_data']['sem_dep'][$user_id] && sizeof($_SESSION['sem_create_data']['sem_doz']) > 0) {
+                    $self_included = true;
+                }
             }
 
-            if (!$perm->have_perm("admin") && !$self_included && (!$deputies_enabled || $_SESSION['sem_create_data']['sem_dep'][$user_id])) // wenn nicht admin, aktuellen Dozenten eintragen
+            if (!$perm->have_perm("admin") && !$self_included) // wenn nicht admin, aktuellen Dozenten eintragen
             {
                 $group=select_group($_SESSION['sem_create_data']["sem_start_time"]);
 

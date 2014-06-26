@@ -331,7 +331,7 @@ class IndexController extends ForumController
      * this action renders a preview of the submitted text
      */
     function preview_action() {
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->set_content_type('text/html; charset=UTF-8');
             $this->render_text(studip_utf8encode(formatReady(transformBeforeSave(studip_utf8decode(Request::get('posting'))))));
         } else {
@@ -428,7 +428,7 @@ class IndexController extends ForumController
             }
         }
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_template('messages');
             $this->flash['messages'] = null;
         } else {
@@ -569,7 +569,7 @@ class IndexController extends ForumController
         
         ForumLike::like($topic_id);
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->topic_id   = $topic_id;
             $this->render_template('index/_like');
         } else {
@@ -588,7 +588,7 @@ class IndexController extends ForumController
 
         ForumLike::dislike($topic_id);
         
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->topic_id   = $topic_id;
             $this->render_template('index/_like');
         } else {
@@ -611,7 +611,7 @@ class IndexController extends ForumController
         
         $success_text = _('Das Thema wurde erfolgreich geschlossen.');
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_text(MessageBox::success($success_text));
         } else {
             $this->flash['messages'] = array('success' => $success_text);
@@ -634,7 +634,7 @@ class IndexController extends ForumController
         
         $success_text = _('Das Thema wurde erfolgreich geöffnet.');
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_text(MessageBox::success($success_text));
         } else {
             $this->flash['messages'] = array('success' => $success_text);
@@ -657,7 +657,7 @@ class IndexController extends ForumController
         
         $success_text = _('Das Thema wurde erfolgreich in der Themenliste hervorgehoben.');
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_text(MessageBox::success($success_text));
         } else {
             $this->flash['messages'] = array('success' => $success_text);
@@ -680,7 +680,7 @@ class IndexController extends ForumController
         
         $success_text = _('Die Hervorhebung des Themas in der Themenliste wurde entfernt.');
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_text(MessageBox::success($success_text));
         } else {
             $this->flash['messages'] = array('success' => $success_text);
@@ -748,7 +748,7 @@ class IndexController extends ForumController
         $this->flash['messages'] = array('success' => _('Die Kategorie wurde gelöscht!'));
         ForumCat::remove($category_id, $this->getId());
 
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             $this->render_template('messages');
         } else {
             $this->redirect(PluginEngine::getLink('coreforum/index/index'));
@@ -765,7 +765,7 @@ class IndexController extends ForumController
         ForumPerm::checkCategoryId($this->getId(), $category_id);
         ForumPerm::check('edit_category', $this->getId());
         
-        if (Request::isAjax()) {
+        if (Request::isXhr()) {
             ForumCat::setName($category_id, studip_utf8decode(Request::get('name')));
             $this->render_nothing();
         } else {

@@ -113,7 +113,7 @@ class Calendar_ContentboxController extends StudipController {
 
         // Check out if we are on a profile
         if ($this->admin) {
-            $this->isProfile = User::exists($range_id);
+            $this->isProfile = $context === 'user';
         }
 
     }

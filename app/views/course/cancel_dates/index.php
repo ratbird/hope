@@ -24,9 +24,8 @@
     <?= $form->getFormField('snd_message') ?>
 </div>
 
-<div style="text-align:center">
+<div style="text-align:center" data-dialog-button>
      <?= $form->getFormButton('save_close')?>
-     <?= $form->getFormButton('close')?>
 </div>
 <? if ($issue_id) : ?>
     <input type="hidden" name="issue_id" value="<?= $issue_id ?>">

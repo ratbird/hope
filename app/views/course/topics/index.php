@@ -74,6 +74,9 @@
                                                                URLHelper::getURL("dispatch.php/course/topics/edit/".$topic->getId()),
                                                                array('data-dialog' => '')) ?>
 
+                            <? if (!$cancelled_dates_locked && $topic->dates->count()) : ?>
+                                <?= \Studip\LinkButton::create(_("Alle Termine ausfallen lassen"), URLHelper::getURL("dispatch.php/course/cancel_dates", array('issue_id' => $topic->getId())), array('data-dialog' => '')) ?>
+                            <? endif ?>
                             <? if ($key > 0) : ?>
                                 <form action="?" method="post" style="display: inline;">
                                     <input type="hidden" name="move_up" value="<?= $topic->getId() ?>">

@@ -63,9 +63,11 @@
 
 <div style="text-align: center;" data-dialog-button>
     <div class="button-group">
-        <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+        <? if (!$dates_locked && $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
         <?= \Studip\LinkButton::create(_("Termin bearbeiten"), URLHelper::getURL("raumzeit.php#".$date->getId(), array('raumzeitFilter' => "all", 'cycle_id' => $date['metadate_id'], 'singleDateID' => $date->getId()))) ?>
-        <?= \Studip\LinkButton::create(_("Ausfallen lassen"), URLHelper::getURL("raumzeit.php#".$date->getId(), array('raumzeitFilter' => "all", 'cmd' => "delete_singledate", 'subcommand' => "cancel", 'cycle_id' => $date['metadate_id'], 'sd_id' => $date->getId()))) ?>
+        <? endif ?>
+        <? if (!$cancelled_dates_locked && $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+            <?= \Studip\LinkButton::create(_("Ausfallen lassen"), URLHelper::getURL("dispatch.php/course/cancel_dates", array('termin_id' => $date->getId())), array('data-dialog' => '')) ?>
         <? endif ?>
     </div>
 </div>

@@ -51,29 +51,31 @@ class Course_CancelDatesController extends AuthenticatedController
                 !$perm->have_studip_perm("tutor", $this->course_id)) {
             throw new Trails_Exception(400);
         }
-        $this->set_layout(null);
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
         PageLayout::setTitle(Course::findCurrent()->getFullname()." - " . _("Veranstaltungstermine absagen"));
+        $this->set_content_type('text/html;charset=windows-1252');
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->response->add_header('X-Title', PageLayout::getTitle());
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
+        }
     }
 
     function index_action()
     {
-        if (Request::isXhr()) {
-
-            $title = PageLayout::getTitle();
-            
             $form_fields['comment'] = array('caption' => _("Kommentar"), 'type' => 'textarea', 'attributes' => array('rows' => 4, 'style' => 'width:100%'));
             $form_fields['snd_message'] = array('caption' => _("Benachrichtigung über ausfallende Termine an alle Teilnehmer verschicken"),'type' => 'checkbox', 'attributes' => array('style' => 'vertical-align:middle'));
             
             $form_buttons['save_close'] = array('caption' => _('OK'), 'info' => _("Termine absagen und Dialog schließen"));
-            $form_buttons['close'] = array('caption' => _('Abbrechen'), 'info' => _('Abbrechen und schließen'));
-            $form_buttons['close']['attributes'] = array('onClick' => 'STUDIP.CancelDatesDialog.dialog.dialog(\'close\');return false;');
 
             $form = new StudipForm($form_fields, $form_buttons, 'cancel_dates', false);
 
             if ($form->isClicked('save_close')) {
                 $sem = Seminar::getInstance($this->course_id);
-                $comment = studip_utf8decode($form->getFormFieldValue('comment'));
+                $comment = $form->getFormFieldValue('comment');
                 foreach ($this->dates as $date) {
                     $sem->cancelSingleDate($date->getTerminId(), $date->getMetadateId());
                     $date->setComment($comment);
@@ -88,24 +90,24 @@ class Course_CancelDatesController extends AuthenticatedController
                 }
                 PageLayout::postMessage(MessageBox::success(_("Folgende Termine wurden abgesagt") . ($msg ? ' (' . $msg . '):' : ':'),
                      array_map(function ($d) {return $d->toString();}, $this->dates)));
-                return $this->render_json(array('auto_close' => true,
-                                    'auto_reload' => true));
+                $this->redirect($this->url_for('course/dates'));
             }
             $this->form = $form;
-            $this->render_template('course/cancel_dates/index.php');
-            $this->flash->discard();
-            $content = $this->get_response()->body;
-            $this->erase_response();
-            return $this->render_json(array('title' => studip_utf8encode($title),
-                    'content' => studip_utf8encode($content)));
-        } else {
-            return $this->render_text('');
+    }
+
+    function after_filter($action, $args)
+    {
+        if (Request::isXhr()) {
+            foreach ($this->response->headers as $k => $v) {
+                if ($k === 'Location') {
+                    $this->response->headers['X-Location'] = $v;
+                    unset($this->response->headers['Location']);
+                    $this->response->set_status(200);
+                    $this->response->body = '';
+                }
+            }
         }
-
+        parent::after_filter($action, $args);
     }
 
-    function render_json($data){
-        $this->set_content_type('application/json;charset=utf-8');
-        return $this->render_text(json_encode($data));
-    }
 }

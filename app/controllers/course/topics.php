@@ -94,6 +94,7 @@ class Course_TopicsController extends AuthenticatedController
 
         Navigation::activateItem('/course/schedule/topics');
         $this->topics = CourseTopic::findBySeminar_id($_SESSION['SessionSeminar']);
+        $this->cancelled_dates_locked = LockRules::Check($_SESSION['SessionSeminar'], 'cancelled_dates');
     }
 
     public function edit_action($topic_id = null)

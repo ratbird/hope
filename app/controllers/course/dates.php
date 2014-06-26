@@ -46,6 +46,8 @@ class Course_DatesController extends AuthenticatedController
     public function details_action($termin_id) {
         Navigation::activateItem('/course/schedule/dates');
         $this->date = new CourseDate($termin_id);
+        $this->cancelled_dates_locked = LockRules::Check($this->date->range_id, 'cancelled_dates');
+        $this->dates_locked = LockRules::Check($this->date->range_id, 'room_time');
         if (Request::isXhr()) {
             $this->set_layout(null);
             $this->set_content_type('text/html;Charset=windows-1252');

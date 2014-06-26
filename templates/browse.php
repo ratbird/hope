@@ -121,7 +121,6 @@ use Studip\Button, Studip\LinkButton;
 <? endif; ?>
 
 <?
-Helpbar::get()->load('browse');
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
 if (get_config('SCORE_ENABLE')) {

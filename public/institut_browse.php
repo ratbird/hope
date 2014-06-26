@@ -91,9 +91,6 @@ if ($msg)   {
 }
 $the_tree->showTree();
 
-Helpbar::get()->load('institut_browse');
-
-
 $sidebar = Sidebar::get();
 $sidebar->setImage('sidebar/institute-sidebar.png');
 

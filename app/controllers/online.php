@@ -85,9 +85,6 @@ class OnlineController extends AuthenticatedController
 
             $sidebar->addWidget($actions);
         }
-        
-        // Setup helpbar
-        Helpbar::get()->load('online');
     }
 
     /**

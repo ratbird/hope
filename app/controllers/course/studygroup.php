@@ -774,10 +774,6 @@ class Course_StudygroupController extends AuthenticatedController {
                               'icons/16/blue/mail.png');
 
             Sidebar::get()->addWidget($actions);
-
-            Helpbar::get()->load('studygroup/members');
-        } else {
-            Helpbar::get()->load('studygroup/info');
         }
         
         $this->invitedMembers = StudygroupModel::getInvitations($id);

@@ -1118,8 +1118,6 @@ function exportWiki() {
     $message = MessageBox::info(_('Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern.'));
     PageLayout::postMessage($message);
 
-    Helpbar::get()->load('wiki/export');
-
     print '<div style="text-align: center;">';
     print LinkButton::create( _('Weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
     echo '</div>'; // end of content area
@@ -1135,8 +1133,6 @@ function exportWiki() {
 **/
 function printAllWikiPages($range_id, $header) {
     echo getAllWikiPages($range_id, $header, TRUE);
-
-    Helpbar::get()->load('wiki/export');
 
     showPageFrameEnd();
 }
@@ -1379,8 +1375,6 @@ function getDiffPageInfobox($keyword) {
         }
         Sidebar::get()->addWidget($widget);
     }
-
-    Helpbar::get()->load('wiki/diff');
 
     return array();
 }

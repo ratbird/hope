@@ -8,7 +8,7 @@
                         'filter' => 'send_sms_to_all',
                         'who' => 'dozent',
                         'course_id' => $course_id,
-                        'default_subject' => $subject)) ?>">
+                        'default_subject' => $subject)) ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/inbox.png',
                             tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['dozent']))) ?>
                 </a>
@@ -64,7 +64,7 @@
                             'rec_uname' => $dozent['username'],
                             'default_subject' => $subject))
                         ?>
-                " data-dialog="button">
+                " data-dialog>
                     <?= Assets::img('icons/16/blue/mail.png',
                             tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                 </a>

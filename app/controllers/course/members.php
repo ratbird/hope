@@ -1151,7 +1151,7 @@ class Course_MembersController extends AuthenticatedController
                 'filter' => 'all',
                 'emailrequest' => 1
             ));
-            $widget->addLink(_('Nachricht an alle (Rundmail)'), $url, 'icons/16/blue/inbox.png');
+            $widget->addLink(_('Nachricht an alle (Rundmail)'), $url, 'icons/16/blue/inbox.png', array('data-dialog' => "buttons"));
 
             if ($this->is_dozent) {
                 if (!$this->dozent_is_locked) {

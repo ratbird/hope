@@ -13,7 +13,7 @@
                                     'who' => 'tutor',
                                     'course_id' => $course_id,
                                     'default_subject' => $subject))
-                        ?>">
+                        ?>" data-dialog>
                             <?= Assets::img('icons/16/blue/inbox.png',
                                 tooltip2(sprintf(_('Nachricht an alle %s versenden'), $status_groups['tutor'])))?>
                         </a>
@@ -109,7 +109,7 @@
                                 'rec_uname' => $tutor['username'],
                                 'default_subject' => $subject))
                             ?>
-                    " data-dialog="button">
+                    " data-dialog>
                         <?= Assets::img('icons/16/blue/mail.png',
                               tooltip2(sprintf(_('Nachricht an %s senden'), htmlReady($fullname)))) ?>
                     </a>

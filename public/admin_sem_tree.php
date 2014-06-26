@@ -48,9 +48,7 @@ PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbe
 Navigation::activateItem('/admin/config/sem_tree');
 
 // Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
 $view = new DbView();
 $the_tree = new StudipSemTreeViewAdmin(Request::option('start_item_id'));
@@ -261,6 +259,9 @@ $the_tree->showSemTree();
 </td></tr>
 </table>
 <?php
-include ('lib/include/html_end.inc.php');
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
+
 page_close();
-?>

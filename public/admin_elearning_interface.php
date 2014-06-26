@@ -41,9 +41,7 @@ PageLayout::setHelpKeyword("Basis.Ilias");
 PageLayout::setTitle(_("Verwaltung der Lernmodul-Schnittstelle"));
 Navigation::activateItem('/admin/config/elearning');
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
 $cms_select = Request::get('cms_select');
 
@@ -74,19 +72,6 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         unset($cms_select);
     }
 
-    ?><table cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr>
-        <td class="blank" colspan="3">&nbsp;
-        </td>
-    </tr>
-    <tr valign="top">
-                <td width="1%" class="blank">
-                    &nbsp;
-                </td>
-        <td width="90%" class="blank">
-
-
-    <?
     if ($messages["error"] != "")
     {
         echo "<table>";
@@ -102,9 +87,9 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
 
     echo "<font size=\"-1\">";
     if ($cms_select == "")
-        echo ELearningUtils::getCMSSelectbox("<b>" . _("Bitte w&auml;hlen Sie ein angebundenes System f&uuml;r die Schnittstelle: ") . "</b>", false) . "\n\n<br><br>";
+        echo ELearningUtils::getCMSSelectbox(_("Bitte wählen Sie ein angebundenes System für die Schnittstelle: "), false) . "\n\n<br><br>";
     else
-        echo ELearningUtils::getCMSSelectbox(_("Bitte w&auml;hlen Sie ein angebundenes System f&uuml;r die Schnittstelle: "), false) . "\n\n<br><br>";
+        echo ELearningUtils::getCMSSelectbox(_("Bitte wählen Sie ein angebundenes System für die Schnittstelle: "), false) . "\n\n<br><br>";
     echo "</font>";
 
     if ($cms_select != "")
@@ -201,7 +186,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/info.png" ,
-                                        "text"  => _("Nachdem Sie ein angebundenes System ausgew&auml;hlt haben, wird die Verbindung zum System gepr&uuml;ft.")
+                                        "text"  => _("Nachdem Sie ein angebundenes System ausgewählt haben, wird die Verbindung zum System geprüft.")
                                     );
 
         switch($status_info)
@@ -218,26 +203,10 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             break;
             case "error":
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/decline.png" ,
-                                        "text"  => sprintf(_("Bei der Pr&uuml;fung der Verbindung sind Fehler aufgetreten. Sie m&uuml;ssen zun&auml;chst die Eintr&auml;ge in der Konfigurationsdatei korrigieren, bevor das System angebunden werden kann."), $connected_cms[$cms_select]->getName())
+                                        "text"  => sprintf(_("Bei der Prüfung der Verbindung sind Fehler aufgetreten. Sie müssen zunächst die Einträge in der Konfigurationsdatei korrigieren, bevor das System angebunden werden kann."), $connected_cms[$cms_select]->getName())
                                     );
             break;
         }
-        $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-
-    ?>
-    <br>
-    </td>
-    <td width="270" class="blank" align="center" valign="top">
-    <?
-        print_infobox ($infobox, "sidebar/learnmodule-sidebar.png");
-    ?>
-    </td>
-</tr>
-<tr>
-    <td class="blank" colspan="3">&nbsp;
-    </td>
-</tr>
-</table><?
 
 // terminate objects
     if (is_array($connected_cms))
@@ -251,6 +220,11 @@ else
     parse_window ("error§" . _("Die Schnittstelle für die Integration von Lernmodulen ist nicht aktiviert. Damit Lernmodule verwendet werden können, muss die Verbindung zu einem LCM-System in der Konfigurationsdatei von Stud.IP hergestellt werden. Wenden Sie sich bitte an den/die AdministratorIn."), "§",
                 _("E-Learning-Schnittstelle nicht eingebunden"));
 }
-include ('lib/include/html_end.inc.php');
+
+
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+$template->infobox = $infobox ?: null;
+    echo $template->render();
+
 page_close();
-?>

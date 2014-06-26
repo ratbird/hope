@@ -49,24 +49,14 @@ include('lib/seminar_open.php'); //hier werden die sessions initialisiert
 PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Einrichtungshierarchie bearbeiten"));
 Navigation::activateItem('/admin/config/range_tree');
 
-include('lib/include/html_head.inc.php');
-include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen 
-include ('lib/include/deprecated_tabs_layout.php');
+ob_start();
 
-?>
-<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">
-    <tr><td  align="center" class="blank"><br>
-    <table class="blank" cellspacing="0" cellpadding="0" border="0" width="99%">
-    <tr>
-    <td align="center" class="blank">
-<?
 $the_tree = new StudipRangeTreeViewAdmin();
 $the_tree->open_ranges['root'] = true;
-
 $the_tree->showTree();
 
-echo '</td></tr></table><br></td></tr></table>';
-include ('lib/include/html_end.inc.php');
-page_close();
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+echo $template->render();
 
-?>
+page_close();

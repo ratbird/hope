@@ -3253,6 +3253,10 @@ a.message-tag:before {
   height: 20px;
   line-height: 20px;
 }
+#adressees {
+  max-height: 200px;
+  overflow: auto;
+}
 /* --- Quicksearch ---------------------------------------------------------- */
 form#quicksearch {
   display: inline;

@@ -181,6 +181,12 @@ STUDIP.Messages = {
                 });
             }
         });        
+    },
+    toggleSetting: function (name) {
+        jQuery("#" + name).toggle("fade");
+        if (jQuery("#" + name).is(":visible")) {
+            jQuery("#" + name)[0].scrollIntoView(false);
+        }
     }
 };
 

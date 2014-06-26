@@ -67,21 +67,21 @@
     <div>
         <ul style="list-style-type: none; text-align: center;">
             <li style="display: inline-block; min-width: 70px;">
-                <a href="" onClick="jQuery('#attachments').toggle('fade');return false;">
+                <a href="" onClick="STUDIP.Messages.toggleSetting('attachments'); return false;">
                     <?= Assets::img("icons/40/blue/staple") ?>
                     <br>
                     <strong><?= _("Anhänge") ?></strong>
                 </a>
             </li>
             <li style="display: inline-block; min-width: 70px;">
-                <a href="" onClick="jQuery('#tags').toggle('fade');return false;">
+                <a href="" onClick="STUDIP.Messages.toggleSetting('tags'); return false;">
                     <?= Assets::img("icons/40/blue/star") ?>
                     <br>
                     <strong><?= _("Tags") ?></strong>
                 </a>
             </li>
             <li style="display: inline-block; min-width: 70px;">
-                <a href="" onClick="jQuery('#settings').toggle('fade');return false;">
+                <a href="" onClick="STUDIP.Messages.toggleSetting('settings'); return false;">
                     <?= Assets::img("icons/40/blue/admin") ?>
                     <br>
                     <strong><?= _("Optionen") ?></strong>

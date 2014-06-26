@@ -444,8 +444,13 @@ class IndexController extends ForumController
      */
     function update_entry_action($topic_id)
     {
-        $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
-        $content = studip_utf8decode(Request::get('content', _('Keine Beschreibung')));
+        if (Request::isXhr()) {
+            $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
+            $content = studip_utf8decode(Request::get('content', _('Keine Beschreibung')));
+        } else {
+            $name    = Request::get('name', _('Kein Titel'));
+            $content = Request::get('content', _('Keine Beschreibung'));
+        }
 
         ForumPerm::check('add_entry', $this->getId(), $topic_id);
 

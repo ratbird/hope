@@ -362,7 +362,7 @@ class Document_FilesController extends DocumentController
                                         $this->url_for('document/files/delete/' . $id));
             $this->flash['question'] = $question;
         } elseif (Request::isPost() && Request::submitted('yes')) {
-            File::get($parent_id)->unlink($entry->name);
+            File::get($entry->directory->file->id)->unlink($entry->name);
             PageLayout::postMessage(MessageBox::success(_('Die Datei wurde gelöscht.')));
         }
         $this->redirect('document/files/index/' . $parent_id);

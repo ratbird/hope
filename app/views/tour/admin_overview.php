@@ -4,7 +4,7 @@
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="100%" class="blank"><p class="info">
-        <form action="<?=$controller->url_for('help/admin_tour_overview/'.$area_type)?>" id="admin_tour_form" method="POST">
+        <form action="<?=$controller->url_for('tour/admin_overview')?>" id="admin_tour_form" method="POST">
         <input type="hidden" name="tour_filter" value="set">
         <input type="hidden" name="tour_filter_term" value="<?=htmlReady($tour_searchterm)?>">
         <?=CSRFProtection::tokenTag(); ?>

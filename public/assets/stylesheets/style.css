@@ -48,30 +48,20 @@
  */
 .scrollbox-vertical {
   overflow: auto;
-  background: /* Shadow covers */
- linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */
- radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
-  background: /* Shadow covers */
- linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */
- radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: /* Shadow covers */ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: /* Shadow covers */ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
   /* Opera doesn't support this in the shorthand */
-
   background-attachment: local, local, scroll, scroll;
 }
 .scrollbox-horizontal {
   overflow: auto;
-  background: /* Shadow covers */
- linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
- radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: /* Shadow covers */
- linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
- radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
-
   background-attachment: local, local, scroll, scroll;
 }
 /*
@@ -1340,16 +1330,11 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 }
 #layout_content {
   overflow: auto;
-  background: /* Shadow covers */
- linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
- radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: /* Shadow covers */
- linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
- radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
-
   background-attachment: local, local, scroll, scroll;
   margin: 0 12px 12px 20px;
   vertical-align: top;
@@ -2778,7 +2763,6 @@ section.contentbox article.new header h1 a:before {
   margin: 0px;
   padding: 1px 5px;
   /* border: 2px solid white; */
-
   background-color: #D60000;
   color: white;
   font-size: 10px;
@@ -3801,7 +3785,6 @@ td.tddaterowpx {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
-
   *zoom: 1;
   padding: 0 0.5em;
 }
@@ -4557,6 +4540,9 @@ textarea.wiki-editor {
   display: block;
   height: 250px;
   width: 98%;
+}
+body#wiki #main_content td.printcontent:last-child:not(:first-child) {
+  padding-right: 22px;
 }
 #raumzeit ul.termin_related {
   padding: 0;

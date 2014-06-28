@@ -489,14 +489,14 @@ class MyRealmModel
     public static function getCourses($min_sem_key, $max_sem_key, $params = array())
     {
         // init
-        $order_by         = $params['order_by'];
-        $order            = $params['order'];
-        $deputies_enabled = $params['deputies_enabled'];
-        $sem_data         = SemesterData::GetSemesterArray();
-        $min_sem          = $sem_data[$min_sem_key];
-        $max_sem          = $sem_data[$max_sem_key];
-        $studygroups      = $params['studygroups'];
-        $ordering         = '';
+        $order_by          = $params['order_by'];
+        $order             = $params['order'];
+        $deputies_enabled  = $params['deputies_enabled'];
+        $sem_data          = SemesterData::GetSemesterArray();
+        $min_sem           = $sem_data[$min_sem_key];
+        $max_sem           = $sem_data[$max_sem_key];
+        $studygroup_filter = !$params['studygroups_enabled'] ? false : true;
+        $ordering          = '';
         // create ordering
         if (!$order_by) {
             $ordering .= 'name asc';
@@ -524,13 +524,13 @@ class MyRealmModel
         }
         // create a new collection for more functionality
         $courses = new SimpleCollection($courses);
-        if ($params['studygroups_enabled']) {
+        if ($studygroup_filter) {
             $courses = $courses->filter(function ($a) {
                 return (int)$a['status'] != 99;
             });
         }
 
-        $courses = $courses->filter(function ($a) use ($min_sem, $max_sem, $studygroups) {
+        $courses = $courses->filter(function ($a) use ($min_sem, $max_sem) {
             return (($a->end_semester->beginn >= $min_sem['beginn'])
                 || ($a->start_semester->beginn >= $min_sem['beginn'] && $a->end_semester->beginn <= $max_sem['beginn'])
                 || (int)$a->duration_time == -1);

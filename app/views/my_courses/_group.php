@@ -1,13 +1,15 @@
-<? $index = 1?>
+<? $index = 1 ?>
 <? foreach ($course_group as $title => $course_collection) : ?>
-  <? foreach(array_values($course_collection) as $course) {
+    <? foreach (array_values($course_collection) as $course) {
         $last_modified = $course['last_modified'];
-    }?>
-    <tbody class="collapsed">
+    }
+    $id = md5($title);
+    ?>
+    <tbody class="<?=!$_my_sem_open[$id] ? 'collapsed' : ''?>">
     <tr class="table_header header-row">
         <th class="toggle-indicator" style="white-space: nowrap; text-align: left"></th>
-        <th class="toggle-indicator" style="white-space: nowrap; text-align: left" colspan="<?= !$config_sem_number ? '2' : '3'?>">
-            <a class="toggler">
+        <th class="toggle-indicator" style="white-space: nowrap; text-align: left" colspan="<?= !$config_sem_number ? '2' : '3' ?>">
+            <a href="<?= URLHelper::getLink(sprintf('dispatch.php/my_courses/set_open_group/%s', $id)) ?>">
                 <? if (strcmp($group_field, 'sem_tree_id') === 0 && strcmp($title, '') === 0) : ?>
                     <? $title = "keine Zuordnung"; ?>
                 <? endif ?>
@@ -19,13 +21,13 @@
                 <?= htmlReady($title) ?></a>
         </th>
         <th colspan="2">
-            <? if($last_modified) : ?>
+            <? if ($last_modified) : ?>
                 <?= tooltipIcon(_('Letzte Änderung: ') . strftime('%x, %H:%M', $last_modified), true) ?>
-            <? endif?>
+            <? endif ?>
         </th>
     </tr>
     <?= $this->render_partial("my_courses/_course", compact('course_collection')) ?>
     </tbody>
-    <? $index++?>
+    <? $index++ ?>
 <? endforeach ?>
 

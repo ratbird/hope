@@ -50,7 +50,8 @@ class MyCoursesController extends AuthenticatedController
         }
     }
 
-    function after_filter($action, $args) {
+    function after_filter($action, $args)
+    {
         parent::after_filter($action, $args);
 
         // send performance metric
@@ -81,7 +82,7 @@ class MyCoursesController extends AuthenticatedController
         if (!Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS && $config_sem == 'all') {
             $config_sem = 'future';
         }
-
+        $this->_my_sem_open           = $GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS;
         $group_field                  = $GLOBALS['user']->cfg->MY_COURSES_GROUPING;
         $deputies_enabled             = Config::get()->DEPUTIES_ENABLE;
         $default_deputies_enabled     = Config::get()->DEPUTIES_DEFAULTENTRY_ENABLE;
@@ -176,6 +177,18 @@ class MyCoursesController extends AuthenticatedController
         $this->setGroupingSelector($this->group_field);
         $this->setSemesterWidget($sem);
         $sidebar->addWidget($setting_widget);
+    }
+
+    public function set_open_group_action($id)
+    {
+        $_my_sem_open = $GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS;
+        if (isset($_my_sem_open[$id])) {
+            unset($_my_sem_open[$id]);
+        } else {
+            $_my_sem_open[$id] = true;
+        }
+        $GLOBALS['user']->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
+        $this->redirect('my_courses/index');
     }
 
     /**

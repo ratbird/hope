@@ -41,7 +41,7 @@
                             </a>
                         </th>
                     <? endif ?>
-                    <th <?= !$config_sem_number ? 'colspan="2"' : ''?>
+                    <th
                         class=<?= ($order_by == "name") ? ($order == 'desc') ? 'sortdesc' : 'sortasc' : '' ?>>
                         <a href="<?= $controller->url_for(sprintf('my_courses/index/name/%s', $_order)) ?>">
                             <?= _("Name") ?>

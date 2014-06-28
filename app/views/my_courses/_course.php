@@ -18,7 +18,7 @@
         <? if($config_sem_number) :?>
             <td><?= $course['veranstaltungsnummer']?></td>
         <? endif?>
-        <td <?= !$config_sem_number ? 'colspan="2"' : ''?> style="text-align: left">
+        <td style="text-align: left">
             <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $course['seminar_id'])) ?>"
                 <?= $course['visitdate'] <= $course['chdate'] ? 'style="color: red;"' : '' ?>>
                 <?= htmlReady($course['name']) ?>

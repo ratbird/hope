@@ -258,9 +258,9 @@ if(Request::submitted('saveButton')) {
     if( $pageMode == MODE_RESTRICTED && !empty( $_POST["question"]) )
     $vote->throwError(666, _("Inzwischen hat jemand abgestimmt! Sie k&ouml;nnen daher die meisten &Auml;nderungen nicht mehr vornehmen."), __LINE__, __FILE__);
 
-    if( $title == NULL )
-    if( $question != NULL )
-        $title = my_substr( $question, 0, 50 );
+    if ($title == NULL && $question != NULL) {
+        $title = my_substr(kill_format($question), 0, 50);
+    }
 
     $vote->setTitle( $title );
     /* -------------------------------------------------------- */

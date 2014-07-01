@@ -2064,8 +2064,12 @@ function get_route($route = '')
         $route = substr($route, 0, $pos);
     if (FALSE !== ($pos = strpos($route, '#')))
         $route = substr($route, 0, $pos);
-    $trails = explode('dispatch.php/', $route);
-    if ($trails[1]) {
+    if (strpos($route, 'plugins.php/') !== false) {
+        $trails = explode('plugins.php/', $route);
+        $pieces = explode('/', $trails[1]);
+        $route = 'plugins.php/' . $pieces[0] . '/' . $pieces[1] . ($pieces[2] ? '/' . $pieces[2] : '');
+    } elseif (strpos($route, 'dispatch.php/') !== false) {
+        $trails = explode('dispatch.php/', $route);
         $dispatcher = new StudipDispatcher();
         $pieces = explode('/', $trails[1]);
         foreach ($pieces as $index => $piece) {

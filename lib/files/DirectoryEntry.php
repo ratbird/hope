@@ -123,8 +123,8 @@ class DirectoryEntry extends SimpleORMap
         }
 
         $url = $inline
-             ? URLHelper::getURL('dispatch.php/document/download/' . $this->id . '/inline')
-             : URLHelper::getURL('dispatch.php/document/download/' . $this->id);
+             ? URLHelper::getURL('dispatch.php/document/download/' . $this->id . '/inline', array(), true)
+             : URLHelper::getURL('dispatch.php/document/download/' . $this->id, array(), true);
 
         if ($absolute) {
             URLHelper::setBaseURL($old_base_url);

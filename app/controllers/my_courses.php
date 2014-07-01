@@ -349,7 +349,6 @@ class MyCoursesController extends AuthenticatedController
             }
         }
 
-        PageLayout::postMessage(MessageBox::success(_('Ihre Einstellungen wurden übernommen.')));
         $this->redirect($studygroups ? 'my_studygroups/index' : 'my_courses/index');
     }
 

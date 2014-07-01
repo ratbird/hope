@@ -51,17 +51,19 @@
         <col width="120px">
     </colgroup>
     <thead>
-        <th>&nbsp;</th>
-        <th>
-            <input type="checkbox" data-proxyfor=":checkbox[name='ids[]']"
-                   data-activates="table.documents tfoot button">
-        </th>
-        <th><?= _('Typ') ?></th>
-        <th><?= _('Name') ?></th>
-        <th><?= _('Größe') ?></th>
-        <th><?= _('Autor/in') ?></th>
-        <th><?= _('Datum') ?></th>
-        <th><?= _('Aktionen') ?></th>
+        <tr>
+            <th>&nbsp;</th>
+            <th>
+                <input type="checkbox" data-proxyfor=":checkbox[name='ids[]']"
+                       data-activates="table.documents tfoot button">
+            </th>
+            <th><?= _('Typ') ?></th>
+            <th><?= _('Name') ?></th>
+            <th><?= _('Größe') ?></th>
+            <th><?= _('Autor/in') ?></th>
+            <th><?= _('Datum') ?></th>
+            <th><?= _('Aktionen') ?></th>
+        </tr>
     </thead>
     <tbody>
 <? if (!$directory->isRootDirectory()): ?>

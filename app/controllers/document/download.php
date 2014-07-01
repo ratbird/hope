@@ -12,13 +12,13 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class Document_DownloadController extends AuthenticatedController
 {
-    public function __construct()
+    public function __construct($dispatcher)
     {
         if (Request::get('cid')) {
             Request::set('cid', null);
         }
 
-        parent::__construct();
+        parent::__construct($dispatcher);
     }
 
     protected $allow_nobody = true;

@@ -60,7 +60,7 @@ class AdminList {
         global $perm, $user;
         //the search parameters are completely saved in the following session variable
         $links_admin_data = $_SESSION['links_admin_data'];
-        if ($links_admin_data["srch_on"]) {
+        if (isset($links_admin_data["srch_on"]) && $links_admin_data["srch_on"]) {
             $db = DBManager::get();
             if (!$perm->have_perm("root")) {
                 foreach (Institute::getMyInstitutes() as $institute) {

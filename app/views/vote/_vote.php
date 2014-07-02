@@ -8,9 +8,11 @@
                 <?= $vote->author ? htmlReady($vote->author->getFullName()) : '' ?>
             </a> |
             <?= strftime("%d.%m.%Y", $vote->mkdate) ?>
-            <a href="<?= URLHelper::getLink('admin_vote.php', array('page' => 'edit', 'type' => 'vote', 'voteID' => $vote->id)) ?>">
-                <?= Assets::img('icons/16/blue/admin.png') ?>
-            </a>
+            <? if ($admin): ?>
+                <a href="<?= URLHelper::getLink('admin_vote.php', array('page' => 'edit', 'type' => 'vote', 'voteID' => $vote->id)) ?>">
+                    <?= Assets::img('icons/16/blue/admin.png') ?>
+                </a>
+            <? endif; ?>
         </nav>
         <h1>
             <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">

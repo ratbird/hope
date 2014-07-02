@@ -20,6 +20,9 @@ class VoteController extends AuthenticatedController {
         URLHelper::bindLinkParam('preview', $null2);
         URLHelper::bindLinkParam('revealNames', $null3);
         URLHelper::bindLinkParam('sort', $null4);
+        
+        // Bind range_id
+        $this->range_id = $range_id;
 
         /*
          * Insert vote
@@ -39,6 +42,9 @@ class VoteController extends AuthenticatedController {
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
         $this->votes = SimpleCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
+        
+        // Load evaluations
+        $this->evaluations = StudipEvaluation::findByRange_id($range_id);
 
         // Check if we got expired
         if (!Request::get('show_expired')) {

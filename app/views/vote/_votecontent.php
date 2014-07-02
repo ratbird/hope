@@ -1,7 +1,7 @@
 <?= $GLOBALS['vote_message'][$vote->id] ?>
-<p>
+<section>
     <?= formatReady($vote->question) ?>
-</p>
+</section>
 <form action="<?= ContentBoxHelper::href($vote->id) ?>" method="post">
     <section class="answers">
         <? foreach (Request::submitted('sort') ? $vote->answers->orderBy("count desc") : $vote->answers as $answer): ?>

@@ -62,7 +62,13 @@ require_once( EVAL_LIB_COMMON );
 require_once( EVAL_LIB_SHOW );
 # ====================================================== end: including files #
 
-
+header('Content-Type:text/html;charset=windows-1252');
+if (Request::isXHR()) {
+    $request = Request::getInstance();
+    foreach ($request as $key => $value) {
+        $request[$key] = studip_utf8decode($value);
+    }
+}
 /* Create objects ---------------------------------------------------------- */
 $db  = new EvaluationDB();
 $lib = new EvalShow();
@@ -96,13 +102,16 @@ $br = new HTMpty( "br" );
 
 /* Surrounding Form -------------------------------------------------------- */
 $form = new HTM( "form" );
-$form->attr( "action", URLHelper::getLink("?evalID=".$evalID) );
+$form->attr( "action", URLHelper::getLink(Request::url()) );
 $form->attr( "method", "post" );
 $form->html(CSRFProtection::tokenTag());
 
-$titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
-$form->cont( $titlebar );
-
+if (Request::isXHR()) {
+    header('X-Title:' . _("Stud.IP Online-Evaluation"));
+} else {
+    $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
+    $form->cont( $titlebar );
+}
 /* Surrounding Table ------------------------------------------------------- */
 $table = new HTM( "table" );
 $table->attr( "border","0" );
@@ -196,19 +205,16 @@ $table->cont( $lib->createEvaluationFooter( $eval, $votedNow || $votedEarlier, $
 
 $form->cont( $table );
 
-PageLayout::disableHeader();
-
 /* Ausgabe erzeugen---------------------------------------------------------- */
-//Header
-include ('lib/include/html_head.inc.php');
-include ('lib/include/header.php');
-include ('lib/include/deprecated_tabs_layout.php');
-
 //Content (TODO: besser mit TemplateFactory)
-echo $form->createContent();
+if (Request::isXHR()) {
+    echo $form->createContent();
+} else {
+    $layout = $GLOBALS['template_factory']->open('layouts/base.php');
+    $layout->content_for_layout = $form->createContent();
+    echo $layout->render();
+}
 
-//Footer
-include ('lib/include/html_end.inc.php');
 page_close();
 
 

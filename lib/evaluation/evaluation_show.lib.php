@@ -297,26 +297,24 @@ class EvalShow
       $td = new HTM( "td" );
       $td->attr( "class", "content_body" );
       $td->attr( "align", "center" );
+      $td->attr( "data-dialog-button","");
       $td->cont( $br );
 
       /* vote button */
       if( ! $voted ) {
           $button = Button::createAccept(_('Abschicken'),
                 'voteButton',
-                array('title' => _('Senden Sie Ihre Antworten hiermit ab.')));
+                array('title' => _('Senden Sie Ihre Antworten hiermit ab.'), 'data-dialog' => ''));
          $td->cont( $button );
       }
 
       /* close button */
-      if( $auth->auth["jscript"] ) {
-          $button = LinkButton::create(_('Schließen'),
-                'javascript:window.close()',
-                array('title' => _('Schließt dieses Fenster.')));
-      } else {
+      if (!Request::isXHR()) {
          $button = new HTM( "p" );
          $button->cont( _("Sie können dieses Fenster jetzt schließen.") );
+         $td->cont( $button );
       }
-      $td->cont( $button );
+
 
       /* reload button */
       if( $isPreview ) {

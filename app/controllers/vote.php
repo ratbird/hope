@@ -20,7 +20,7 @@ class VoteController extends AuthenticatedController {
         URLHelper::bindLinkParam('preview', $null2);
         URLHelper::bindLinkParam('revealNames', $null3);
         URLHelper::bindLinkParam('sort', $null4);
-        
+
         // Bind range_id
         $this->range_id = $range_id;
 
@@ -42,9 +42,10 @@ class VoteController extends AuthenticatedController {
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
         $this->votes = SimpleCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
-        
+
         // Load evaluations
-        $this->evaluations = StudipEvaluation::findByRange_id($range_id);
+        $eval_db = new EvaluationDB();
+        $this->evaluations = SimpleCollection::createFromArray(StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_ACTIVE)));
 
         // Check if we got expired
         if (!Request::get('show_expired')) {
@@ -52,6 +53,8 @@ class VoteController extends AuthenticatedController {
                     function($vote) {
                 return $vote->isRunning();
             });
+        } elseif ($this->admin) {
+            $this->evaluations->merge(new SimpleCollection(StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED))));
         }
 
         if ($this->votes->findOneBy('id', Request::option('contentbox_open'))) {
@@ -61,7 +64,7 @@ class VoteController extends AuthenticatedController {
 
     /**
      * Determines if a vote should show its result
-     * 
+     *
      * @param StudipVote $vote the vote to check
      * @return boolean true if result should be shown
      */

@@ -4,9 +4,10 @@
             case 8 :
                 echo $this->render_partial('admin/courses/lock_preselect.php', compact('values', 'semid'));
                 break;
+            default:
             case 9:
                 echo '<label>', _('Alle auswählen'), '<input title="', _('Alle auswählen'), '"
-                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=visibility]" aria-label="',
+                                type="checkbox" name="all" value="1" data-proxyfor=".course-admin td:last-child :checkbox" aria-label="',
                 _('Alle auswählen'), '"/></label>';
                 break;
             case 10:

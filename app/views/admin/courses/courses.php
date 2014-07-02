@@ -1,5 +1,5 @@
 <? $colspan = 2 ?>
-<? if (in_array($selected_action, array(8, 9, 10, 16))) : ?>
+<? if ($actions[$selected_action]['multimode']) : ?>
     <? if ($selected_action == 16) : ?>
         <?= MessageBox::error(_('Achtung: Das Archivieren ist ein Schritt, der nicht rückgängig gemacht werden kann!'))?>
     <? endif ?>
@@ -85,7 +85,7 @@
                 <?= _('Aktion') ?>
             </th>
         </tr>
-    <? if (in_array($selected_action, array(8, 9, 10, 16))) : ?>
+    <? if ($actions[$selected_action]['multimode']) : ?>
             <?= $this->render_partial('admin/courses/additional_inputs.php', compact('colspan')) ?>
         <? if (count($courses) > 10): ?>
             <tr>
@@ -155,7 +155,7 @@
                     <td style="text-align: center;"><?= $values["teilnehmer"] ?></td>
                 <? endif ?>
                 <td style="text-align: right;">
-                    <? if (in_array($selected_action, array(8, 9, 10, 16))) : ?>
+                    <? if ($actions[$selected_action]['multimode'] && is_numeric($selected_action)) : ?>
                         <? switch ($selected_action) {
                             case 8 :
                                 echo $this->render_partial('admin/courses/lock.php', compact('values', 'semid'));
@@ -170,6 +170,10 @@
                                 echo $this->render_partial('admin/courses/add_to_archive', compact('values', 'semid'));
                                 break;
                         }?>
+                    <? elseif(!is_numeric($selected_action) && $actions[$selected_action]['multimode']) : ?>
+                        <? $plugin = PluginManager::getInstance()->getPlugin($selected_action) ?>
+                        <? $template = $plugin->getAdminCourseActionTemplate($sem_id, $values) ?>
+                        <?= $template ? $template->render() : "" ?>
                     <? else : ?>
                         <?=
                         \Studip\LinkButton::createEdit(
@@ -183,7 +187,7 @@
             </tr>
         <? } ?>
         </tbody>
-        <? if (in_array($selected_action, array(8, 9, 10, 16))) : ?>
+        <? if ($actions[$selected_action]['multimode']) : ?>
             <tfoot>
             <tr>
                 <td colspan="<?= $colspan ?>" style="text-align: right">
@@ -193,6 +197,6 @@
             </tfoot>
         <? endif ?>
     </table>
-<? if (in_array($selected_action, array(8, 9, 10, 16))) : ?>
+<? if ($actions[$selected_action]['multimode']) : ?>
     </form>
 <? endif ?>

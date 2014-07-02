@@ -448,13 +448,16 @@ class Admin_CoursesController extends AuthenticatedController
                         'params'      => array('view' => 'eval_sem')),
             8  => array('name'        => 'Sperrebene',
                         'button_name' => 'Sperrebenen',
-                        'url'         => 'dispatch.php/admin/courses/set_lockrule'),
+                        'url'         => 'dispatch.php/admin/courses/set_lockrule',
+                        'multimode'   => true),
             9  => array('name'        => 'Sichtbarkeit',
                         'button_name' => 'Sichtbarkeit',
-                        'url'         => 'dispatch.php/admin/courses/set_visibility'),
+                        'url'         => 'dispatch.php/admin/courses/set_visibility',
+                        'multimode'   => true),
             10 => array('name'        => 'Zusatzangaben',
                         'button_name' => 'Zusatzangaben',
-                        'url'         => 'dispatch.php/admin/courses/set_aux_lockrule'),
+                        'url'         => 'dispatch.php/admin/courses/set_aux_lockrule',
+                        'multimode'   => true),
             11 => array('name'        => 'Veranstaltung kopieren',
                         'button_name' => 'Kopieren',
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
@@ -467,14 +470,23 @@ class Admin_CoursesController extends AuthenticatedController
             14 => array('name'        => 'Literatur',
                         'button_name' => 'Literatur',
                         'url'         => 'admin_lit_list.php?_range_id=%s'),
-            14 => array('name'        => 'Funktionen und Gruppen',
+            15 => array('name'        => 'Funktionen und Gruppen',
                         'button_name' => 'Funktionen und Gruppen',
                         'url'         => 'admin_statusgruppe.php?range_id=%s',
                         'params'      => array('ebene' => 'sem')),
             16 => array('name'        => 'Archivieren',
                         'button_name' => 'Archivieren',
-                        'url'         => 'archiv_assi.php')
+                        'url'         => 'archiv_assi.php',
+                        'multimode'   => true)
         );
+        foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
+            $actions[get_class($plugin)] = array(
+                'name' => $plugin->getPluginName(),
+                'button_name' => $plugin->getPluginName(),
+                'url'         => $plugin->getAdminActionURL(),
+                'multimode'   => (bool)$plugin->useMultimode()
+            );
+        }
 
         if (is_null($selected)) {
             return $actions;

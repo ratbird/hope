@@ -25,8 +25,10 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
     {
 
         parent::before_filter($action, $args);
-        PageLayout::setTitle(_('Anmeldesets'));
+        PageLayout::setTitle(_('Teilnahmebeschränkte Veranstaltungen'));
         Navigation::activateItem('/tools/coursesets/restricted_courses');
+        PageLayout::addScript("jquery/jquery.tablesorter.js");
+
     }
 
     /**
@@ -34,9 +36,11 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
      */
     function index_action()
     {
-        $this->setInfoboxImage(Assets::image_path('sidebar/seminar-sidebar.png'));
-        $this->addToInfobox(_('Information'), _("Sie können hier alle Veranstaltungen mit eingeschränkter Teilnehmerzahl einsehen."), 'icons/16/black/info');
-        $this->addToInfobox(_('Aktionen'), '<a href="'.$this->link_for('admission/restricted_courses', array('csv' => 1)).'">' . _("Export") . '</a>', 'icons/16/blue/file-xls');
+
+        $actions = new ActionsWidget();
+        $actions->addLink(_("Export"), $this->link_for('admission/restricted_courses', array('csv' => 1)), 'icons/16/blue/file-xls');
+        Sidebar::get()->addWidget($actions);
+        Sidebar::get()->setImage('sidebar/admin-sidebar.png');
 
         $sem_condition = "AND EXISTS (SELECT * FROM seminar_courseset INNER JOIN courseset_rule USING(set_id) WHERE type='ParticipantRestrictedAdmission' AND seminar_courseset.seminar_id=seminare.seminar_id) ";
         if (Request::isPost()) {

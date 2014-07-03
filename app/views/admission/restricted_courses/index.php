@@ -2,9 +2,9 @@
 <?= $this->render_partial('admission/restricted_courses/_institute_choose.php')?>
 <br>
 <? if (count($courses)) : ?>
-    <table class="default nohover">
+    <table class="default nohover restricted_courses">
         <thead>
-            <tr>
+            <tr class="sortable">
                 <th><?= _("Anmeldeset")?></th>
                 <th><?= _("Name")?></th>
                 <th><?= _("max. Teilnehmer")?></th>
@@ -29,12 +29,21 @@
                 <? endif ?>
                 <td><?= htmlReady(isset($course['count_claiming']) ? $course['count_claiming'] : '-')?></td>
                 <td><?= htmlReady(isset($course['count_waiting']) ? $course['count_waiting'] : '-')?></td>
-                <td style="white-space:nowrap"><?= htmlReady($course['distribution_time'] ? strftime('%x %R', $course['distribution_time']) : '-')?></td>
-                <td style="white-space:nowrap"><?= htmlReady($course['start_time'] ? strftime('%x %R', $course['start_time']) : '-')?></td>
-                <td style="white-space:nowrap"><?= htmlReady($course['end_time'] ? strftime('%x %R', $course['end_time']) : '-')?></td>
+                <td style="white-space:nowrap" data-timestamp="<?=(int)$course['distribution_time']?>"><?= htmlReady($course['distribution_time'] ? strftime('%x %R', $course['distribution_time']) : '-')?></td>
+                <td style="white-space:nowrap" data-timestamp="<?=(int)$course['start_time']?>"><?= htmlReady($course['start_time'] ? strftime('%x %R', $course['start_time']) : '-')?></td>
+                <td style="white-space:nowrap" data-timestamp="<?=(int)$course['end_time']?>"><?= htmlReady($course['end_time'] ? strftime('%x %R', $course['end_time']) : '-')?></td>
                 </td>
             </tr>
         <? endforeach ?>
         </tbody>
     </table>
+    <script>
+        jQuery(function () {
+            jQuery(".restricted_courses").tablesorter({
+                textExtraction: function (node) { return jQuery(node).data('timestamp') !== undefined ? jQuery(node).data('timestamp')+'' : jQuery(node).text()+''; },
+                cssAsc: 'sortasc',
+                cssDesc: 'sortdesc',
+            });
+        });
+    </script>
 <? endif ?>

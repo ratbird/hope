@@ -289,7 +289,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        if (stripos($sql, 'WHERE') === false) {
+        $has_join = stripos($sql, 'JOIN ');
+        if ($has_join === false || $has_join > 10) {
             $sql = 'WHERE ' . $sql;
         }
         $sql = "SELECT count(*) FROM `" .  $record->db_table . "` " . $sql;
@@ -406,7 +407,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        if (!preg_match('/^\\s*\\bwhere\\b/i', $sql)) {
+        $has_join = stripos($sql, 'JOIN ');
+        if ($has_join === false || $has_join > 10) {
             $sql = 'WHERE ' . $sql;
         }
         $sql = "SELECT `" . $record->db_table . "`.* FROM `" .  $record->db_table . "` " . $sql;
@@ -523,7 +525,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        if (stripos($sql, 'WHERE') === false) {
+        $has_join = stripos($sql, 'JOIN ');
+        if ($has_join === false || $has_join > 10) {
             $sql = 'WHERE ' . $sql;
         }
         $sql = "SELECT `" . $record->db_table . "`.* FROM `" .  $record->db_table . "` " . $sql;
@@ -793,7 +796,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * retrieves an additional field value from relation
-     * 
+     *
      * @param string $field
      * @return multitype:
      */
@@ -809,7 +812,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * sets additional value in field imported from relation
-     * 
+     *
      * @param string $field
      * @param mixed $value
      * @return multitype:
@@ -822,7 +825,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     	unset($this->additional_data[$field]);
     	return $this->_getAdditionalValueFromRelation($field);
     }
-    
+
     /**
      * @param string $field
      * @return multitype:
@@ -831,7 +834,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
     	return $this->additional_data[$field];
     }
-    
+
     /**
      * @param string $field
      * @param mixed $value

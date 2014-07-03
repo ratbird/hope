@@ -52,8 +52,8 @@ if ($flash['error']) {
             <label for="private" class="caption">
                 <?= _('Sichtbarkeit:') ?>
             </label>
-            <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : '' ?>/>
-            <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar sein.') ?>
+            <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : 'checked' ?>/>
+            <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar und benutzbar sein.') ?>
         <?  endif ?>
         <label for="institutes" class="caption">
             <?= _('Einrichtungszuordnung:') ?>
@@ -117,8 +117,9 @@ if ($flash['error']) {
                 </select>
             </label>
             <label class="caption">
-                <?= _('Filter auf Name/Nummer/Dozent:') ?>
-                <input type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
+                <?= _('Filter auf Name/Nummer/Dozent:') ?><br>
+                <input style="display:inline-block" type="text" onKeypress="if (event.which==13) return STUDIP.Admission.getCourses('<?= $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ?>')" value="<?= htmlReady($current_course_filter) ?>" name="course_filter" >
+                <?=Assets::img('icons/16/blue/search.png', array('title' => _("Veranstaltungen anzeigen"),'onClick' => "return STUDIP.Admission.getCourses('" . $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '') ."')"))?>
             </label>
             <div id="instcourses">
             <?= $coursesTpl; ?>
@@ -169,6 +170,7 @@ if ($flash['error']) {
             </div>
         </div>
     </fieldset>
+    <? if (!$instant_course_set_view) : ?>
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
     <? if ($courseset && $courseset->getSeatDistributionTime()) :?>
@@ -213,10 +215,12 @@ if ($flash['error']) {
             <?= _('Weitere Hinweise:') ?>
         </label>
         <textarea cols="60" rows="3" name="infotext"><?= $courseset ? htmlReady($courseset->getInfoText()) : '' ?></textarea>
-        <div class="submit_wrapper">
+    </fieldset>
+    <? endif ?>
+        <div class="submit_wrapper" data-dialog-button>
             <?= CSRFProtection::tokenTag() ?>
             <?= Button::createAccept(_('Speichern'), 'submit') ?>
-            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admission/courseset'), array('rel' => 'close')) ?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admission/courseset')) ?>
         </div>
-    </fieldset>
+
 </form>

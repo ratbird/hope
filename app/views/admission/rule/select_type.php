@@ -7,7 +7,8 @@ foreach ($ruleTypes as $className => $classDetail) {
 ?>
     <div id="<?= $className ?>">
         <label>
-            <input <?=$disabled ?> type="radio" name="ruletype" value="<?= $className ?>"/><?=$classDetail['name'] ?>
+            <input <?=$disabled ?> type="radio" name="ruletype" value="<?= $className ?>"/>
+            <span <?=($disabled ? 'style="text-decoration:line-through"' : '')?>><?=$classDetail['name'] ?></span>
             <?= Assets::img('icons/16/blue/question-circle.png', 
                     tooltip2($classDetail['description'], true, true)) ?>
         </label>

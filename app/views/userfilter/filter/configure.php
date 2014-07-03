@@ -2,7 +2,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 <div id="conditionfields">
-    <?= $this->render_partial('userfilter/field/configure.php'); ?>
+    <?= $this->render_partial('userfilter/field/configure.php', array('is_first' => true)); ?>
 </div>
 <br/>
 <a href="#" onclick="return STUDIP.UserFilter.addConditionField('conditionfields', '<?= $controller->url_for('userfilter/field/configure') ?>')">

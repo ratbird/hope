@@ -147,6 +147,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $selectedCourses = array();
                 $this->selectedSemester = Semester::findCurrent()->semester_id;
             }
+            Config::get()->AJAX_AUTOCOMPLETE_DISABLED = false;
             $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
                 ->withoutButton()
                 ->render();
@@ -160,6 +161,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 // Load course set data.
                 $this->courseset = new CourseSet($coursesetId);
                 $selectedInstitutes = $this->courseset->getInstituteIds();
+                $this->selectedInstitutes = array();
                 foreach ($selectedInstitutes as $id => $selected) {
                     $this->selectedInstitutes[$id] = new Institute($id);
                 }
@@ -296,7 +298,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             if ($this->instant_course_set_view) {
                 $this->redirect($this->url_for('course/admission'));
             } else {
-                $this->redirect($this->url_for('admission/courseset'));
+                $this->redirect($this->url_for('admission/courseset/configure', $courseset->getId()));
             }
         }
     }
@@ -348,6 +350,7 @@ class Admission_CoursesetController extends AuthenticatedController {
         foreach(Request::getArray('institutes') as $institute) {
             $this->selectedInstitutes[$institute] = new Institute($institute);
         }
+        Config::get()->AJAX_AUTOCOMPLETE_DISABLED = false;
         $this->instSearch = QuickSearch::get("institute_id", new StandardSearch("Institut_id"))
             ->withOutButton()
             ->render();

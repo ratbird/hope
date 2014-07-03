@@ -406,7 +406,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $class = get_called_class();
         $record = new $class();
         $db = DBManager::get();
-        if (!preg_match('/\\bwhere\\b/i', $sql)) {
+        if (!preg_match('/^\\s*\\bwhere\\b/i', $sql)) {
             $sql = 'WHERE ' . $sql;
         }
         $sql = "SELECT `" . $record->db_table . "`.* FROM `" .  $record->db_table . "` " . $sql;

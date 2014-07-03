@@ -153,10 +153,10 @@ class Admin_CoursesController extends AuthenticatedController
 
             $actions->addLink(_('Als Excel exportieren'),
                 URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
-            'icons/16/blue/file-excel.png');
+                'icons/16/blue/file-excel.png');
             $sidebar->addWidget($actions, 'links');
         }
-
+        $this->setSearchWiget();
         $this->set_inst_selector();
         $this->set_semester_selector();
         $this->setTeacherWidget($teachers);
@@ -481,7 +481,7 @@ class Admin_CoursesController extends AuthenticatedController
         );
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
             $actions[get_class($plugin)] = array(
-                'name' => $plugin->getPluginName(),
+                'name'        => $plugin->getPluginName(),
                 'button_name' => $plugin->getPluginName(),
                 'url'         => $plugin->getAdminActionURL(),
                 'multimode'   => (bool)$plugin->useMultimode()
@@ -616,6 +616,30 @@ class Admin_CoursesController extends AuthenticatedController
 
             }
         }
+
+        if (Request::get('search')) {
+            $search_result = array_filter($seminars, function ($a) {
+                if (strpos($a['VeranstaltungsNummer'], Request::get('search')) !== false) {
+                    return $a;
+                }
+
+                if (strpos($a['Name'], Request::get('search')) !== false) {
+                    return $a;
+                }
+
+                foreach($a['dozenten'] as $teacher) {
+                    if(strpos($teacher['fullname'], Request::get('search')) !== false) {
+                        return $a;
+                    }
+                }
+            });
+
+            if (!empty($search_result)) {
+                return $search_result;
+            }
+            return array();
+        }
+
 
         return $seminars;
     }
@@ -792,5 +816,14 @@ class Admin_CoursesController extends AuthenticatedController
         }
 
         $sidebar->addWidget($list, 'teachers');
+    }
+
+
+    private function setSearchWiget()
+    {
+        $sidebar = Sidebar::Get();
+        $search  = new SearchWidget(URLHelper::getLink('dispatch.php/admin/courses'));
+        $search->addNeedle(_('Freie Suche'), 'search', true);
+        $sidebar->addWidget($search);
     }
 }

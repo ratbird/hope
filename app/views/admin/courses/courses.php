@@ -11,7 +11,7 @@
             <col width="2%">
             <? if (in_array('Nr.', $view_filter)) : ?>
                 <? $colspan++ ?>
-                <col width="10%">
+                <col width="8%">
             <? endif ?>
             <? if (in_array('Name', $view_filter)) : ?>
                 <? $colspan++ ?>
@@ -31,9 +31,9 @@
             <? endif ?>
             <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
                 <? $colspan++ ?>
-                <col width="3%">
+                <col width="8%">
             <? endif ?>
-            <col width="18%">
+            <col width="15%">
         </colgroup>
         <caption>
             <?=
@@ -78,7 +78,7 @@
                 <th <?= ($sortby == 'teilnehmer') ? sprintf('class="sort%s"', strtolower($sortFlag)) : '' ?>>
                     <a href="<?=
                     URLHelper::getLink('', array('sortby'   => 'teilnehmer',
-                                                 'sortFlag' => strtolower($sortFlag))) ?>"><?= _("Anzahl") ?></a>
+                                                 'sortFlag' => strtolower($sortFlag))) ?>"><?= _("Anzahl TN") ?></a>
                 </th>
             <? endif ?>
             <th style="text-align: center" class="actions">

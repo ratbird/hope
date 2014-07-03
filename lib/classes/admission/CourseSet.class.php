@@ -464,6 +464,10 @@ class CourseSet
         return $this->institutes;
     }
 
+    public function isGlobal()
+    {
+        return count($this->institutes) == 0;
+    }
     /**
      * Gets this course set's display name.
      */
@@ -613,6 +617,7 @@ class CourseSet
             }
             $this->private = (bool) $data['private'];
             $this->user_id = $data['user_id'];
+            $this->chdate = $data['chdate'];
         }
         // Load institute assigments.
         $stmt = DBManager::get()->prepare(
@@ -947,7 +952,7 @@ class CourseSet
         $is_admin = $perm->have_perm('admin', $user_id) || ($perm->have_perm('dozent', $user_id) && get_config('ALLOW_DOZENT_COURSESET_ADMIN'));
         $is_private = $this->getPrivate();
         $is_my_own = $this->getUserId() == $user_id;
-        $is_correct_institute = !count($this->institutes) || isset($this->institutes[Course::find($course_id)->institut_id]);
+        $is_correct_institute = $this->isGlobal() || isset($this->institutes[Course::find($course_id)->institut_id]);
         return $is_dozent && $is_correct_institute && ($is_my_own || $is_admin || !$is_private) || $perm->have_perm('root', $user_id);
     }
 

@@ -92,19 +92,28 @@ class Course_AdmissionController extends AuthenticatedController
         $this->seminar_domains = array_map(function($d) {return $d->getId();}, UserDomain::getUserDomainsForSeminar($this->course_id));
         $this->current_courseset = CourseSet::getSetForCourse($this->course_id);
         if (!$this->current_courseset) {
-            $this->available_coursesets = array();
+            $available_coursesets = new SimpleCollection();
             foreach (CourseSet::getCoursesetsByInstituteId($this->course->institut_id) as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
-                    $this->available_coursesets[] = $cs;
+                    $available_coursesets[] = array('id' => $cs->getId(),
+                                                    'name' => $cs->getName(),
+                                                    'chdate' => $cs->chdate,
+                                                    'my_own' => $cs->getUserId() === $GLOBALS['user']->id);
                 }
             }
             foreach (CourseSet::getglobalCoursesets() as $cs) {
                 $cs = new CourseSet($cs['set_id']);
                 if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
-                    $this->available_coursesets[] = $cs;
+                    $available_coursesets[] = array('id' => $cs->getId(),
+                                                    'name' => $cs->getName(),
+                                                    'chdate' => $cs->chdate,
+                                                    'my_own' => $cs->getUserId() === $GLOBALS['user']->id);
                 }
             }
+            $available_coursesets = $available_coursesets->findBy('chdate', strtotime('-1 year'), '>');
+            $available_coursesets->orderBy('name');
+            $this->available_coursesets = $available_coursesets;
         }
     }
 
@@ -432,7 +441,7 @@ class Course_AdmissionController extends AuthenticatedController
             if ($another_rule) {
                 $this->type = $this->type . '_' . $another_type;
                 $this->rule_id = $this->rule_id . '_' . $another_rule->getId();
-                $this->rule_template = $another_rule->getTemplate() . $this->rule_template;
+                $this->rule_template = $this->rule_template  . $another_rule->getTemplate();
             }
             $this->course_set_name = $course_set->getName();
         } else {

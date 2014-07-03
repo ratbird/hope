@@ -58,10 +58,25 @@
                             <select name="course_set_assign" style="display: inline-block;"
                                     onChange="$('#course_set_assign_explain').load('<?= $controller->link_for('/explain_course_set') ?>&set_id=' + $(this).val());">
                                 <option></option>
-                                <? foreach ($available_coursesets as $cs) : ?>
-                                    <option
-                                        value="<?= $cs->getId() ?>"><?= htmlReady(my_substr($cs->getName(), 0, 100)) ?></option>
-                                <? endforeach ?>
+                                <? $my_own_sets = $available_coursesets->findBy('my_own', true); ?>
+                                <? $other_sets = $available_coursesets->findBy('my_own', false); ?>
+                                <? if ($my_own_sets->count()) : ?>
+                                    <optgroup label="<?=_("Meine Anmeldesets")?>">
+                                    <? foreach ($my_own_sets as $cs) : ?>
+                                        <option
+                                            value="<?= $cs['id'] ?>"><?= htmlReady(my_substr($cs['name'], 0, 100)) ?></option>
+                                    <? endforeach ?>
+                                    </optgroup>
+                                <? endif ?>
+                                <? if ($other_sets->count()) : ?>
+                                    <optgroup label="<?=_("Verfügbare Anmeldesets meiner Einrichtungen")?>">
+                                    <? foreach ($available_coursesets->findBy('my_own', false) as $cs) : ?>
+                                            <option
+                                                value="<?= $cs['id'] ?>"><?= htmlReady(my_substr($cs['name'], 0, 100)) ?></option>
+
+                                    <? endforeach ?>
+                                    </optgroup>
+                                <? endif ?>
                             </select>
 
                             <div id="course_set_assign_explain" style="display: inline-block;padding:1ex;">

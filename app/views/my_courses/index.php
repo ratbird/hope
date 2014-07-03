@@ -27,8 +27,9 @@
                         <col width="10%">
                     <? endif ?>
                     <col>
+                    <col width="10%">
                     <col width="35%">
-                    <col width=25px>
+                    <col width=50px>
                 </colgroup>
                 <thead>
                 <tr class="sortable">
@@ -47,12 +48,13 @@
                             <?= _("Name") ?>
                         </a>
                     </th>
+                    <th></th>
                     <th><?= _("Inhalt") ?></th>
                     <th></th>
                 </tr>
                 </thead>
                 <? if (strcmp($group_field, 'sem_number') !== 0) : ?>
-                    <?= $this->render_partial("my_courses/_group", compact('course_group')) ?>
+                    <?= $this->render_partial("my_courses/_group", compact('sem_key','course_group')) ?>
                 <? else : ?>
                     <? $course_collection = $course_group ?>
                     <?= $this->render_partial("my_courses/_course", compact('course_collection')) ?>

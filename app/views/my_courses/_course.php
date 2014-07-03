@@ -36,18 +36,20 @@
                 <?= tooltipicon($infotext) ?>
             <? endif ?>
         </td>
-        <td style="text-align: left; white-space: nowrap">
+        <td>
             <? if (!$sem_class['studygroup_mode']) : ?>
                 <a data-dialog="size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $course['seminar_id'])) ?>">
                     <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
                     <? $params['style'] = 'cursor: pointer'; ?>
                     <?= Assets::img('icons/20/grey/info-circle.png', $params) ?>
                 </a>
-                <? else : ?>
+            <? else : ?>
                 <?=
                 Assets::img('blank.gif', array('width'  => 20,
                                                'height' => 20)); ?>
             <? endif ?>
+        </td>
+        <td style="text-align: left; white-space: nowrap">
             <? if (!empty($course['navigation'])) : ?>
                 <? foreach ($course['navigation'] as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
@@ -68,7 +70,7 @@
             <? endif ?>
 
         </td>
-        <td style="text-align: left">
+        <td style="text-align: right">
             <? if (in_array($course["user_status"], array("dozent",
                                                           "tutor"))
             ) : ?>

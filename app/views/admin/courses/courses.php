@@ -154,7 +154,7 @@
                 <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
                     <td style="text-align: center;"><?= $values["teilnehmer"] ?></td>
                 <? endif ?>
-                <td style="text-align: right;">
+                <td style="text-align: right;" class="actions">
                     <? if ($actions[$selected_action]['multimode'] && is_numeric($selected_action)) : ?>
                         <? switch ($selected_action) {
                             case 8 :
@@ -172,7 +172,7 @@
                         }?>
                     <? elseif(!is_numeric($selected_action) && $actions[$selected_action]['multimode']) : ?>
                         <? $plugin = PluginManager::getInstance()->getPlugin($selected_action) ?>
-                        <? $template = $plugin->getAdminCourseActionTemplate($sem_id, $values) ?>
+                        <? $template = $plugin->getAdminCourseActionTemplate($semid, $values) ?>
                         <?= $template ? $template->render() : "" ?>
                     <? else : ?>
                         <?=
@@ -191,7 +191,11 @@
             <tfoot>
             <tr>
                 <td colspan="<?= $colspan ?>" style="text-align: right">
-                    <?= Studip\Button::createAccept(sprintf(_('%s'), $actions[$selected_action]['button_name']), $actions[$selected_action]['name']) ?>
+                    <?= Studip\Button::createAccept(
+                        is_string($actions[$selected_action]['multimode'])
+                            ? $actions[$selected_action]['multimode']
+                            : $actions[$selected_action]['button_name'],
+                        $actions[$selected_action]['name']) ?>
                 </td>
             </tr>
             </tfoot>

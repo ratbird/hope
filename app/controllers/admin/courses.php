@@ -484,7 +484,7 @@ class Admin_CoursesController extends AuthenticatedController
                 'name'        => $plugin->getPluginName(),
                 'button_name' => $plugin->getPluginName(),
                 'url'         => $plugin->getAdminActionURL(),
-                'multimode'   => (bool)$plugin->useMultimode()
+                'multimode'   => $plugin->useMultimode()
             );
         }
 

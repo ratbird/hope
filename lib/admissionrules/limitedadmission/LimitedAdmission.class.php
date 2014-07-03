@@ -178,7 +178,7 @@ class LimitedAdmission extends AdmissionRule
             // Check if the number is smaller than admission rule limit
             if (!($number <
                     $this->getMaxNumber())) {
-                $errors[] = $this->getMessage($userId);
+                $errors[] = $this->getMessage($this->getMaxNumber());
             }
         }
         return $errors;
@@ -274,11 +274,14 @@ class LimitedAdmission extends AdmissionRule
         return $errors;
     }
 
-    public function getMessage()
+    public function getMessage($max_number = null)
     {
         $message = parent::getMessage();
-        $max_number = $this->getMaxNumber();
-        return sprintf($message, $max_number);
+        if (isset($max_number)) {
+            return sprintf($message, $max_number);
+        } else {
+            return $message;
+        }
     }
 } /* end of class LimitedAdmission */
 

@@ -1,7 +1,8 @@
 <label for="message" class="caption">
     <?= _('Nachricht bei fehlgeschlagener Anmeldung') ?>:
+    <?= (strpos($rule->getMessage(),'%s') ? tooltipicon(_("Die Zeichen %s sind ein Platzhalter für änderbare Bedingungen")) : '')?>
 </label>
-<textarea name="message" rows="4" cols="50"><?= $rule->getMessage() ?></textarea>
+<textarea name="message" rows="4" cols="50"><?= htmlReady($rule->getMessage()) ?></textarea>
 <br/>
 <label for="start_date" class="caption">
     <?= _('Gültigkeitszeitraum der Regel') ?>:

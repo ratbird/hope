@@ -3404,8 +3404,7 @@ div.clear {
   text-align: left;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   white-space: normal;
-  z-index: 1000;
-  word-break: break-all;
+  z-index: 1003;
   word-wrap: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
@@ -3478,8 +3477,7 @@ div.clear {
   text-align: left;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   white-space: normal;
-  z-index: 1000;
-  word-break: break-all;
+  z-index: 1003;
   word-wrap: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;

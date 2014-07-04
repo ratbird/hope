@@ -23,9 +23,11 @@
 
 .tooltip {
     display: inline-block;
-    .icon-before('grey/info-circle.png');
-    &.tooltip-important {
-        .icon-before('red/info-circle.png');
+    &.tooltip-icon {
+        .icon-before('grey/info-circle.png');
+        &.tooltip-important {
+            .icon-before('red/info-circle.png');
+        }
     }
     
     position: relative;

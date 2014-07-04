@@ -12,7 +12,7 @@ shuffle($likes);
     if (array_search($GLOBALS['user']->id, $likes) !== false) {
         if (sizeof($likes) > 1) {
             $text = '<a class="tooltip">' . sprintf(_('Dir und %s weiteren gefällt das.'), (sizeof($likes) - 1));
-            $text .= '<span>';
+            $text .= '<span class="tooltip-content">';
             foreach ($likes as $user_id) {
                 if ($user_id != $GLOBALS['user']->id) {
                     $text .= get_fullname($user_id) .'<br>';
@@ -24,7 +24,7 @@ shuffle($likes);
         }
     } else {
         $text = '<a class="tooltip">' . sprintf(_('%s gefällt das.'), sizeof($likes));
-        $text .= '<span>';
+        $text .= '<span class="tooltip-content">';
         foreach ($likes as $user_id) {
             $text .= get_fullname($user_id) .'<br>';
         }

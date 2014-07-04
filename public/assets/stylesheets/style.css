@@ -3440,7 +3440,7 @@ div.clear {
   display: inline-block;
   position: relative;
 }
-.tooltip:before {
+.tooltip.tooltip-icon:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -3451,7 +3451,7 @@ div.clear {
   vertical-align: text-top;
   width: 16px;
 }
-.tooltip.tooltip-important:before {
+.tooltip.tooltip-icon.tooltip-important:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;

@@ -248,14 +248,14 @@ class Course_MembersController extends AuthenticatedController
         }
         $this->comment = CourseMember::find(array($this->course_id, $user_id))->comment;
         $this->user = User::find($user_id);
-        $this->title = sprintf(_('Bemerkung für %s eintragen'), $this->user->getFullName());
+        PageLayout::setTitle(sprintf(_('Bemerkung für %s'), $this->user->getFullName()));
 
         // Output as dialog (Ajax-Request) or as Stud.IP page?
         $this->xhr = Request::isXhr();
         if ($this->xhr) {
             $this->set_layout(null);
             $this->comment = studip_utf8encode($this->comment);
-            header('X-Title: ' . $this->title);
+            header('X-Title: ' . PageLayout::getTitle());
         } else {
             Navigation::activateItem('/course/members/view');
         }

@@ -108,7 +108,7 @@
 
                 <td style="text-align: right">
                     <? if ($is_tutor) : ?>
-                        <a rel="comment_dialog" title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $autor['user_id']) ?>">
+                        <a data-dialog title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $autor['user_id']) ?>">
                             <?= Assets::img('icons/16/blue/comment.png') ?>
                         </a>
                     <? endif ?>

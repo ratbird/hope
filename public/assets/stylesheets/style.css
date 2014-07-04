@@ -3375,18 +3375,10 @@ div.clear {
   height: 16px;
 }
 /* Tooltips for Stud.IP with CSS3 only -------------------------------------- */
-a.tooltip {
-  color: #222;
-  cursor: help;
-  display: inline-block;
-  outline: none;
-  position: relative;
-  text-decoration: none;
-}
-a.tooltip span {
+.studip-tooltip {
   position: relative;
   display: inline-block;
-  margin-bottom: 9px;
+  margin-bottom: 5px;
   background-color: rgba(255, 255, 255, 0.3);
   background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255, 255, 255, 0.5)), to(rgba(255, 255, 255, 0)));
@@ -3400,25 +3392,28 @@ a.tooltip span {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  bottom: 100%;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  font-size: 10pt;
-  font-weight: normal;
-  left: 50%;
-  margin-left: -127px;
-  opacity: .95;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  font-size: 14px;
+  margin-bottom: 8px;
+  max-width: 230px;
+  opacity: 0.95;
   padding: 10px;
   position: absolute;
   text-align: left;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-  visibility: hidden;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   white-space: normal;
-  width: 230px;
-  z-index: 999;
+  z-index: 1000;
+  word-break: break-all;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
 }
-a.tooltip span:before {
+.studip-tooltip:before {
   border: 9px solid rgba(204, 204, 204, 0);
   content: "";
   height: 0;
@@ -3430,7 +3425,7 @@ a.tooltip span:before {
   left: 50%;
   margin-left: -9px;
 }
-a.tooltip span:after {
+.studip-tooltip:after {
   border: 8px solid rgba(221, 221, 221, 0);
   content: "";
   height: 0;
@@ -3442,8 +3437,87 @@ a.tooltip span:after {
   left: 50%;
   margin-left: -8px;
 }
-a.tooltip:hover span {
-  visibility: visible;
+.tooltip {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("../images/icons/16/grey/info-circle.png");
+  background-image: -webkit-image-set(url("../images/icons/16/grey/info-circle.png") 1x, url("../images/icons/32/grey/info-circle.png") 2x);
+  position: relative;
+}
+.tooltip.tooltip-important {
+  background-image: url("../images/icons/16/red/info-circle.png");
+  background-image: -webkit-image-set(url("../images/icons/16/red/info-circle.png") 1x, url("../images/icons/32/red/info-circle.png") 2x);
+}
+.tooltip .tooltip-content {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(255, 255, 255, 0.5)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80ffffff', endColorstr='#00ffffff', GradientType=0);
+  background-color: #ddd;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  font-size: 14px;
+  margin-bottom: 8px;
+  max-width: 230px;
+  opacity: 0.95;
+  padding: 10px;
+  position: absolute;
+  text-align: left;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  white-space: normal;
+  z-index: 1000;
+  word-break: break-all;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+  display: none;
+}
+.tooltip .tooltip-content:before {
+  border: 9px solid rgba(204, 204, 204, 0);
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-top-color: #cccccc;
+  top: 100%;
+  left: 50%;
+  margin-left: -9px;
+}
+.tooltip .tooltip-content:after {
+  border: 8px solid rgba(221, 221, 221, 0);
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-top-color: #dddddd;
+  top: 100%;
+  left: 50%;
+  margin-left: -8px;
+}
+.tooltip:hover .tooltip-content {
+  bottom: 100%;
+  display: inline-block;
+  left: 50%;
+  margin-left: -129px;
+  width: 230px;
 }
 .answers .answer .percent {
   display: inline;

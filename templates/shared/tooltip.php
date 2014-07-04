@@ -1,8 +1,5 @@
-<a class="tooltip">
-<? if ($important): ?>
-    <?= Assets::img('icons/16/red/info-circle.png', array('class' => 'text-top')) ?>
-<? else: ?>
-    <?= Assets::img('icons/16/grey/info-circle.png', array('class' => 'text-top')) ?>
+<span class="tooltip <? if ($important) echo 'tooltip-important'; ?>" data-tooltip <? if (!$html) printf('title="%s"', htmlReady($text, true, true)) ?>>
+<? if ($html): ?>
+    <span class="tooltip-content"><?= $text ?></span>
 <? endif; ?>
-    <span><?= $text ?></span>
-</a>
+</span>

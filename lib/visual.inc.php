@@ -802,12 +802,9 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
  */
 function tooltipIcon($text, $important = false, $html = false)
 {
-    // prepare text
-    $text = ($html) ? $text : htmlReady($text, true, true);
-
     // render tooltip
     $template = $GLOBALS['template_factory']->open('shared/tooltip');
-    return $template->render(compact('text', 'important'));
+    return $template->render(compact('text', 'important', 'html'));
 }
 
 /**

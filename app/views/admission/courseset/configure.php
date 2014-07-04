@@ -139,10 +139,14 @@ if ($flash['error']) {
                 </div>
             <? endif ?>
         <? else :?>
-            <? foreach ($courseIds as $course_id) : ?>
-                <?= htmlReady(Course::find($course_id)->name) ?>
-                <br>
-            <?  endforeach ?>
+            <? if (count($courseIds) > 100) :?>
+                <?= sprintf(_("%s zugewiesene Veranstaltungen"), count($courseIds)) ?>
+            <? else : ?>
+                <? foreach ($courseIds as $course_id) : ?>
+                    <?= htmlReady(Course::find($course_id)->name) ?>
+                    <br>
+                <?  endforeach ?>
+            <? endif ?>
         <? endif ?>
     </fieldset>
     <fieldset>

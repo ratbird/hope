@@ -78,6 +78,8 @@ javascripts:
     - *toolbar
     - *wysiwyg
     - *dialog
+    - javascripts/studip-css.js
+    - javascripts/studip-tooltip.js
     - javascripts/studip-helper-attributes.js
     - javascripts/application.js
 

@@ -114,6 +114,12 @@ class Course_AdmissionController extends AuthenticatedController
             $available_coursesets = $available_coursesets->findBy('chdate', strtotime('-1 year'), '>');
             $available_coursesets->orderBy('name');
             $this->available_coursesets = $available_coursesets;
+
+            PageLayout::postMessage(MessageBox::info(_("Für diese Veranstaltung sind keine Anmelderegeln festgelegt. Die Veranstaltung ist damit für alle Nutzer zugänglich.")));
+        } else {
+            if ($this->current_courseset->isSeatDistributionEnabled() && !$this->course->admission_turnout) {
+                PageLayout::postMessage(MessageBox::info(_("Diese Veranstaltung ist teilnahmebeschränkt, aber die maximale Teilnehmeranzahl ist nicht gesetzt.")));
+            }
         }
     }
 
@@ -242,8 +248,8 @@ class Course_AdmissionController extends AuthenticatedController
             $request = Request::extract('admission_turnout int, admission_disable_waitlist submitted, admission_disable_waitlist_move submitted, admission_waitlist_max int');
             $request = array_diff_key($request, array_filter($this->is_locked));
             $request['change_admission_turnout'] = 1;
-            if ($request['admission_turnout'] > 1) {
-                $this->course->admission_turnout = $request['admission_turnout'];
+            if (isset($request['admission_turnout'])) {
+                $this->course->admission_turnout = abs($request['admission_turnout']);
             }
             if (isset($request['admission_disable_waitlist'])) {
                 $this->course->admission_disable_waitlist = $request['admission_disable_waitlist'] ? 0 : 1;
@@ -255,7 +261,7 @@ class Course_AdmissionController extends AuthenticatedController
                 $this->course->admission_disable_waitlist_move = $request['admission_disable_waitlist_move'] ? 0 : 1;
             }
             if (isset($request['admission_waitlist_max'])) {
-                $this->course->admission_waitlist_max = $request['admission_waitlist_max'];
+                $this->course->admission_waitlist_max = abs($request['admission_waitlist_max']);
                 if ($this->course->admission_waitlist_max > 0 && !$this->admission_disable_waitlist && $this->course->getNumWaiting() > $this->course->admission_waitlist_max) {
                     $question = sprintf(_("Sie beabsichtigen die Anzahl der Wartenden zu begrenzen. Die letzten %s Einträge der Warteliste werden gelöscht. Sind sie sicher?"), $this->course->getNumWaiting()-$this->course->admission_waitlist_max);
                 }

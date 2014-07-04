@@ -5,7 +5,6 @@ jQuery(function ($) {
         $(this).closest('table').find('colgroup').clone().appendTo(helper);
         $(this).clone().addClass('document-draggable-helper').appendTo(helper);
         helper.find('td:first-child,td:last-child').empty();
-        console.log(helper);
         return helper;
     };
     

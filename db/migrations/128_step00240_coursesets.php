@@ -255,7 +255,7 @@ class Step00240CourseSets extends Migration
             $set_id = md5(uniqid('coursesets',1));
             $name = 'Anmeldung mit Passwort: ' . $course['name'];
             $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
-            $cs_insert->execute(array($set_id,$GLOBALS['user']->id,$name,$info,0,$course['chdate'],$course['chdate']));
+            $cs_insert->execute(array($set_id,'',$name,$info,1,$course['chdate'],$course['chdate']));
             $cs_r_insert->execute(array($set_id,$rule_id,'PasswordAdmission'));
             $s_cs_insert->execute(array($set_id, $course['seminar_id']));
         }
@@ -263,7 +263,7 @@ class Step00240CourseSets extends Migration
         $locked_set_id = md5(uniqid('coursesets',1));
         $name = 'Anmeldung gesperrt (global)';
         $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
-        $cs_insert->execute(array($locked_set_id,$GLOBALS['user']->id,$name,$info,0,time(),time()));
+        $cs_insert->execute(array($locked_set_id,'',$name,$info,1,time(),time()));
         $locked_rule_id = md5(uniqid('lockedadmissions',1));
         $locked_insert->execute(array($locked_rule_id));
         $cs_r_insert->execute(array($locked_set_id,$locked_rule_id,'LockedAdmission'));
@@ -379,7 +379,7 @@ class Step00240CourseSets extends Migration
             if ($course['admission_endtime_sem'] != -1) {
                 $rule->setEndTime($course['admission_endtime_sem']);
             }
-            $cs->setName('Anmeldezeitraum: '.$course['name'])->addCourse($course['seminar_id'])->addAdmissionRule($rule)->store();
+            $cs->setName('Anmeldezeitraum: '.$course['name'])->addCourse($course['seminar_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
         }
 
         //Warte und Anmeldelisten löschen

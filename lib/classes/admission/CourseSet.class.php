@@ -953,7 +953,7 @@ class CourseSet
         $is_private = $this->getPrivate();
         $is_my_own = $this->getUserId() == $user_id;
         $is_correct_institute = $this->isGlobal() || isset($this->institutes[Course::find($course_id)->institut_id]);
-        return $is_dozent && $is_correct_institute && ($is_my_own || $is_admin || !$is_private) || $perm->have_perm('root', $user_id);
+        return $is_dozent && $is_correct_institute && ($is_my_own || $is_admin || !$is_private || $this->isGlobal()) || $perm->have_perm('root', $user_id);
     }
 
     /**

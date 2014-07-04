@@ -10,18 +10,18 @@
 <? if (empty($institutes)) : ?>
     <? if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm("dozent")) : ?>
         <?=
-        MessageBox::info(sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."),
-            "<a href=\"dispatch.php/siteinfo/show\">", "</a>"))?>
+        MessageBox::info(sprintf(_('Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s.'),
+            '<a href="' . URLHelper::getLink('dispatch.php/siteinfo/show') . '">', '</a>'))?>
     <? else : ?>
         <?=
-        MessageBox::info(sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet.
-           Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\"
-           auf Ihrer pers&ouml;nlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>"))?>
+        MessageBox::info(sprintf(_('Sie haben sich noch keinen Einrichtungen zugeordnet.
+           Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter "Nutzerdaten - Studiendaten"
+           auf Ihrer persönlichen Einstellungsseite.'), '<a href="' . URLHelper::getLink('dispatch.php/settings/studies#einrichtungen') . '">', '</a>'))?>
     <? endif ?>
 <? else : ?>
-    <? SkipLinks::addIndex(_("Meine Einrichtungen"), 'my_institutes') ?>
+    <? SkipLinks::addIndex(_('Meine Einrichtungen'), 'my_institutes') ?>
     <table class="default" id="my_institutes">
-        <caption><?= _("Meine Einrichtungen") ?></caption>
+        <caption><?= _('Meine Einrichtungen') ?></caption>
         <colgroup>
             <col width="10px">
             <col width="25px">

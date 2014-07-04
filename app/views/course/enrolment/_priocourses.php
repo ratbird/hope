@@ -27,7 +27,7 @@ tatsächlich belegen wollen') ?>
             </tr>
             <tr>
                 <td valign="top">
-                    <h2> <?= _("Verfügbare Veranstaltungen") ?></h2>
+                    <h3> <?= _("Verfügbare Veranstaltungen") ?></h3>
                     <input type="text" class="hidden-no-js" name="filter" placeholder="<?= _('Filter') ?>">
 
                     <ul id="avaliable-courses">
@@ -67,12 +67,12 @@ tatsächlich belegen wollen') ?>
 
                 </td>
                 <td  valign="top">
-                    <h2><?= _("Ausgewählte Veranstaltungen") ?></h2>
+                    <h3><?= _("Ausgewählte Veranstaltungen") ?></h3>
                     <input type="text" class="hidden-no-js" name="filter" placeholder="<?= _('Filter') ?>">
                     <ul id="selected-courses">
 <?php $hasUserPrios = count($user_prio) > 0 ?>
 
-                        <li class="empty" <?= $hasUserPrios ? 'style="display:none"' : '' ?>><?= _('Verfügbare Veranstaltungen hierhin droppen') ?></li>
+                        <li class="empty" <?= $hasUserPrios ? 'style="display:none"' : '' ?>><?= _('Gewünschte Veranstaltungen hierhin ziehen') ?></li>
                         <?php
                         asort($user_prio);
 

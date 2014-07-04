@@ -207,7 +207,7 @@ class Course_EnrolmentController extends AuthenticatedController {
         if ($courseset->isSeatDistributionEnabled() && !count($courseset->checkAdmission($user_id, $this->course_id))) {
             if ($limit = $courseset->getAdmissionRule('LimitedAdmission')) {
                 $admission_user_limit = Request::int('admission_user_limit');
-                if ($admission_user_limit && $admission_user_limit < $limit->getMaxNumber()) {
+                if ($admission_user_limit && $admission_user_limit <= $limit->getMaxNumber()) {
                     $limit->setCustomMaxNumber($user_id, $admission_user_limit);
                 }
                 $admission_prio = Request::getArray('admission_prio');

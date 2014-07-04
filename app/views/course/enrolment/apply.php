@@ -11,9 +11,9 @@
 <? if ($admission_form) : ?>
     <form name="apply_admission" action="<?= $controller->link_for('/apply/' . $course_id) ?>" method="post">
         <?= $admission_form ?>
-        <div>
-        <?= Studip\Button::create(_("OK"), 'apply', array('data-dialog' => '')) ?>
-        <?= Studip\Button::create(_("Abbrechen"), 'cancel') ?>
+        <div data-dialog-button>
+        <?= Studip\Button::createAccept(_("OK"), 'apply', array('data-dialog' => '')) ?>
+        <?= Studip\Button::createCancel(_("Abbrechen"), 'cancel') ?>
         </div>
         <?= CSRFProtection::tokenTag() ?>
     </form>
@@ -27,9 +27,9 @@
         <label for="courseset_claimed" style="font-weight:bold"><?=_("Zur Platzverteilung anmelden")?></label>
         &nbsp;(<?= sprintf(_("max. Teilnehmeranzahl: %s / Anzahl der Anmeldungen: %s"), $priocourses->admission_turnout, $num_claiming) ?>)
     <? endif ?>
-    <div>
-    <?= Studip\Button::create(_("OK"), 'claim', array('data-dialog' => '')) ?>
-    <?= Studip\Button::create(_("Abbrechen"), 'cancel') ?>
+    <div data-dialog-button>
+    <?= Studip\Button::createAccept(_("OK"), 'claim', array('data-dialog' => '')) ?>
+    <?= Studip\Button::createCancel(_("Abbrechen"), 'cancel') ?>
     </div>
     <?= CSRFProtection::tokenTag() ?>
     </form>
@@ -37,9 +37,9 @@
 <? if (!$priocourses && !$admission_form) :?>
     <div>
     <? if ($enrol_user) : ?>
-        <?=Studip\LinkButton::create(_('Zur Veranstaltung'), URLHelper::getURL('seminar_main.php', array('auswahl' => $course_id))) ?>
+        <?=Studip\LinkButton::createAccept(_('Zur Veranstaltung'), URLHelper::getURL('seminar_main.php', array('auswahl' => $course_id))) ?>
     <? else : ?>
-        <?=Studip\LinkButton::create(_('Abbrechen'), URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $course_id))) ?>
+        <?=Studip\LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $course_id))) ?>
     <? endif ?>
     </div>
 <? endif ?>

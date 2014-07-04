@@ -26,8 +26,8 @@ $lostDateKeys = array();
 <table class="dates default">
     <caption><?= htmlReady($semester['name']) ?></caption>
     <thead>
-        <tr>
-            <th><?= _("Zeit") ?></th>
+        <tr class="sortable">
+            <th class="sortasc"><?= _("Zeit") ?></th>
             <th><?= _("Typ") ?></th>
             <th><?= _("Thema") ?></th>
             <th><?= _("Raum") ?></th>
@@ -50,8 +50,8 @@ $lostDateKeys = array();
 <table class="dates default">
     <caption><?= _("Ohne Semester") ?></caption>
     <thead>
-    <tr>
-        <th><?= _("Zeit") ?></th>
+    <tr class="sortable">
+        <th class="sortasc"><?= _("Zeit") ?></th>
         <th><?= _("Typ") ?></th>
         <th><?= _("Thema") ?></th>
         <th><?= _("Raum") ?></th>
@@ -69,7 +69,9 @@ $lostDateKeys = array();
 <script>
     jQuery(function () {
         jQuery(".dates").tablesorter({
-            textExtraction: function (node) { return jQuery(node).data('timestamp') ? jQuery(node).data('timestamp') : jQuery(node).text(); }
+            textExtraction: function (node) { return jQuery(node).data('timestamp') ? jQuery(node).data('timestamp') : jQuery(node).text();},
+            cssAsc: 'sortasc',
+            cssDesc: 'sortdesc'
         });
     });
 </script>

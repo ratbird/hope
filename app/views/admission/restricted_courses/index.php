@@ -5,7 +5,7 @@
     <table class="default nohover restricted_courses">
         <thead>
             <tr class="sortable">
-                <th><?= _("Anmeldeset")?></th>
+                <th class="sortasc"><?= _("Anmeldeset")?></th>
                 <th><?= _("Name")?></th>
                 <th><?= _("max. Teilnehmer")?></th>
                 <th><?= _("Teilnehmer aktuell")?></th>
@@ -42,7 +42,7 @@
             jQuery(".restricted_courses").tablesorter({
                 textExtraction: function (node) { return jQuery(node).data('timestamp') !== undefined ? jQuery(node).data('timestamp')+'' : jQuery(node).text()+''; },
                 cssAsc: 'sortasc',
-                cssDesc: 'sortdesc',
+                cssDesc: 'sortdesc'
             });
         });
     </script>

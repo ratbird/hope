@@ -16,7 +16,6 @@ STUDIP.Messages = {
         }
     },
     newMessages: function (response) {
-        console.log(response);
         jQuery.each(response.messages, function (index, message) {
             jQuery("#messages > tbody").prepend(message);
         });
@@ -139,7 +138,6 @@ STUDIP.Messages = {
         });
     },
     send: function (form) {
-        console.log(form);
         return false;
     },
     setTags: function (message_id, tags) {

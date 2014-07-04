@@ -64,7 +64,6 @@ STUDIP.admin_sem_class = {
                 'sticky':    +sticky
             };
         });
-        console.log(modules);
         jQuery("#message_below").html("");
         jQuery.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/save",

@@ -167,7 +167,7 @@ class MyCoursesController extends AuthenticatedController
         $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
         $setting_widget = new ActionsWidget();
 
-        if ($this->check_for_new($this->sem_courses, $group_field)) {
+        if ($new_contents) {
             $setting_widget->addLink(_('Alles als gelesen markieren'),
                                      $this->url_for('my_courses/tabularasa/' . $sem . '/', time()),
                                      'icons/16/blue/refresh.png');

@@ -39,7 +39,7 @@
     <input type="text" name="study_area_selection[search_key]" value="">
     <?= Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "study_area_selection[search_button]", 'title' => _('Suche starten'))) ?>
     <? if ($selection->searched()) : ?>
-      <a href="<?= URLHelper::getLink(isset($url) ? $url : '',
+      <a <?=(Request::isXhr() ? 'data-dialog="size=auto"' : '')?> href="<?= URLHelper::getLink(isset($url) ? $url : '',
                       array('study_area_selection[rewind_button]' => 1,
                             'study_area_selection[last_selected]' => $selected,
                            'study_area_selection[showall]' => (int) $selection->getShowAll())) ?>">

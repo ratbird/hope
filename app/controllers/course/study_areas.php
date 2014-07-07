@@ -67,16 +67,20 @@ class Course_StudyAreasController extends AuthenticatedController
             $course_id = Request::option("cid");
         }
 
-        // prepare layout
-        $layout =
-            $GLOBALS['template_factory']->open('layouts/base');
-        $this->set_layout($layout);
-
-        if ($perm->have_perm('admin')) {
-            Navigation::activateItem('/admin/course/study_areas');
+        if(Request::isXhr()) {
+            $this->set_layout(null);
         } else {
-            Navigation::activateItem('/course/admin/study_areas');
+            // prepare layout
+            $layout =
+                $GLOBALS['template_factory']->open('layouts/base');
+            $this->set_layout($layout);
+            if ($perm->have_perm('admin')) {
+                Navigation::activateItem('/admin/course/study_areas');
+            } else {
+                Navigation::activateItem('/course/admin/study_areas');
+            }
         }
+
 
         // w/o a course ID show the admin search form
         if (!self::isCourseId($course_id)) {
@@ -90,10 +94,15 @@ class Course_StudyAreasController extends AuthenticatedController
             die(); //must not return
         }
         $this->set_course($course_id);
+        $title = sprintf('%s - %s',
+            Course::find($this->course_id)->getFullname(),
+            _('Studienbereichsauswahl'));
 
-        PageLayout::setTitle(sprintf('%s - %s',
-                                     Course::find($this->course_id)->getFullname(),
-                                     _('Studienbereichsauswahl')));
+        if(Request::isXhr()) {
+            header('X-Title: ' . $title);
+        } else {
+            PageLayout::setTitle($title);
+        }
 
         // is locked?
         // TODO (mlunzena) shouldn't this be done in the before filter?

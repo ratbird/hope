@@ -41,7 +41,7 @@ if ($adminList) {
   <? else : ?>
 
     <form method="POST" name="details"
-          action="<?= $controller->url_for('course/study_areas/show/' . $course_id) ?>">
+          action="<?= $controller->url_for('course/study_areas/show/' . $course_id) ?>"  <?=(Request::isXhr() ? 'data-dialog="size=auto"' : '')?>>
 
       <?= CSRFProtection::tokenTag() ?>
       <?= $this->render_partial('course/study_areas/form') ?>

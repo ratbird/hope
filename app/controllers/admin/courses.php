@@ -429,23 +429,14 @@ class Admin_CoursesController extends AuthenticatedController
                         'url'         => 'dispatch.php/course/basicdata/view/%s'),
             2  => array('name'        => 'Studienbereiche',
                         'button_name' => 'Studienbereiche',
-                        'url'         => 'dispatch.php/course/study_areas/show/%s'),
+                        'url'         => 'dispatch.php/course/study_areas/show/%s',
+                        'attributes'      => array('data-dialog' => 'true')),
             3  => array('name'        => 'Zeiten / Räume',
                         'button_name' => 'Zeiten / Räume',
                         'url'         => 'raumzeit.php?seminar_id=%s'),
             4  => array('name'        => 'Raumanfragen',
                         'button_name' => 'Raumanfragen',
                         'url'         => 'dispatch.php/course/room_requests/index/%s'),
-            5  => array('name'        => 'Ablaufplan',
-                        'button_name' => 'Ablaufplan',
-                        'url'         => 'dispatch.php/course/dates?cid=%s'),
-            6  => array('name'        => 'Umfragen & Tests',
-                        'button_name' => 'Umfragen & Tests',
-                        'url'         => 'admin_vote.php?view=vote_sem&rangeID=%s'),
-            7  => array('name'        => 'Evaluationen',
-                        'button_name' => 'Evaluationen',
-                        'url'         => 'admin_evaluation.php?rangeID=%s',
-                        'params'      => array('view' => 'eval_sem')),
             8  => array('name'        => 'Sperrebene',
                         'button_name' => 'Sperrebenen',
                         'url'         => 'dispatch.php/admin/courses/set_lockrule',
@@ -461,19 +452,9 @@ class Admin_CoursesController extends AuthenticatedController
             11 => array('name'        => 'Veranstaltung kopieren',
                         'button_name' => 'Kopieren',
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
-            12 => array('name'        => 'Inhaltselemente',
-                        'button_name' => 'Inhaltselemente',
-                        'url'         => 'dispatch.php/course/plus/index/%s'),
-            13 => array('name'        => 'Zugangsberechtigung',
-                        'button_name' => 'Zugangsberechtigung',
-                        'url'         => 'dispatch.php/course/admission/index/%s'),
             14 => array('name'        => 'Literatur',
                         'button_name' => 'Literatur',
                         'url'         => 'admin_lit_list.php?_range_id=%s'),
-            15 => array('name'        => 'Funktionen und Gruppen',
-                        'button_name' => 'Funktionen und Gruppen',
-                        'url'         => 'admin_statusgruppe.php?range_id=%s',
-                        'params'      => array('ebene' => 'sem')),
             16 => array('name'        => 'Archivieren',
                         'button_name' => 'Archivieren',
                         'url'         => 'archiv_assi.php',
@@ -514,15 +495,16 @@ class Admin_CoursesController extends AuthenticatedController
      * @param $seminars
      * @return array
      */
-    private function filterTeacher($seminars)
+    private function filterTeacher(&$seminars)
     {
+
         $teachers = array();
         if (!empty($seminars)) {
             foreach ($seminars as $index => $course) {
                 foreach ($course['dozenten'] as $user_id => $teacher) {
                     if (Request::option('teacher_filter') && strcmp('all', Request::get('teacher_filter')) !== 0) {
-                        if (!isset($course['dozenten'][Request::option('teacher_filter')])) {
-                            unset($this->seminars[$index]);
+                        if ($user_id != Request::option('teacher_filter')) {
+                            unset($seminars[$index]);
                         }
                     }
 
@@ -627,8 +609,8 @@ class Admin_CoursesController extends AuthenticatedController
                     return $a;
                 }
 
-                foreach($a['dozenten'] as $teacher) {
-                    if(strpos($teacher['fullname'], Request::get('search')) !== false) {
+                foreach ($a['dozenten'] as $teacher) {
+                    if (strpos($teacher['fullname'], Request::get('search')) !== false) {
                         return $a;
                     }
                 }

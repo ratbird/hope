@@ -140,13 +140,24 @@ class MyCoursesController extends AuthenticatedController
         $this->deputies_edit_about_enabledt = $deputies_edit_about_enabledt;
         $this->my_bosses                    = $default_deputies_enabled ? getDeputyBosses($GLOBALS['user']->id) : array();
 
-        $this->reset_all = null;
-        if ($this->check_for_new($this->sem_courses, $group_field)) {
-            $this->reset_all = $this->url_for(sprintf('my_courses/tabularasa/sem/%s', $sem));
+        // Check for new contents
+        $new_contents = $this->check_for_new($this->sem_courses, $group_field);
+
+        // 
+        if ($tabularasa = $this->flash['tabularasa']) {
+            $details = array();
+            if ($new_contents) {
+                $details[] = sprintf(_('Seit Ihrem letzten Seitenaufruf (%s) sind allerdings neue Inhalte hinzugekommen.'),
+                                     reltime($tabularasa));
+            }
+
+            $message_box = MessageBox::success(_('Alles als gelesen markiert!'), $details);
+            PageLayout::postMessage($message_box);
         }
 
+
         // create settings url depended on selected cycle
-        if (!in_array($sem, words('future all last current')) && isset($sem)) {
+        if (isset($sem) && !in_array($sem, words('future all last current'))) {
             $this->settings_url = sprintf('dispatch.php/my_courses/groups/%s', $sem);
         } else {
             $this->settings_url = 'dispatch.php/my_courses/groups';
@@ -155,24 +166,27 @@ class MyCoursesController extends AuthenticatedController
         $sidebar = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
         $setting_widget = new ActionsWidget();
-        $setting_widget->setTitle(_("Aktionen"));
 
-        if ($this->reset_all) {
-            $setting_widget->addLink(_('Alles als gelesen markieren'), $this->reset_all, 'icons/16/blue/refresh.png');
+        if ($this->check_for_new($this->sem_courses, $group_field)) {
+            $setting_widget->addLink(_('Alles als gelesen markieren'),
+                                     $this->url_for('my_courses/tabularasa/' . $sem . '/', time()),
+                                     'icons/16/blue/refresh.png');
         }
-        $setting_widget->addLink(_('Farbgruppierung ändern'), URLHelper::getLink($this->settings_url), 'icons/16/blue/group.png',
-            array('data-dialog' => 'buttons=true'));
+        $setting_widget->addLink(_('Farbgruppierung ändern'),
+                                 URLHelper::getLink($this->settings_url),
+                                 'icons/16/blue/group.png',
+                                 array('data-dialog' => ''));
 
         if (Config::get()->MAIL_NOTIFICATION_ENABLE) {
             $setting_widget->addLink(_('Benachrichtigungen anpassen'),
-                URLHelper::getLink('dispatch.php/settings/notification'),
-                'icons/16/blue/mail.png');
+                                     URLHelper::getLink('dispatch.php/settings/notification'),
+                                     'icons/16/blue/mail.png');
         }
 
         if ($sem_create_perm == 'dozent' && $GLOBALS['perm']->have_perm('dozent')) {
             $setting_widget->addLink(_('Neue Veranstaltung anlegen'),
-                URLHelper::getLink('admin_seminare_assi.php',
-                    array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
+                                     URLHelper::getLink('admin_seminare_assi.php', array('new_session' => 'TRUE')),
+                                     'icons/16/blue/add/seminar.png');
         }
         $this->setGroupingSelector($this->group_field);
         $this->setSemesterWidget($sem);
@@ -358,7 +372,7 @@ class MyCoursesController extends AuthenticatedController
      * @param string $type
      * @param string $sem
      */
-    public function tabularasa_action($type = 'sem', $sem = 'all')
+    public function tabularasa_action($sem = 'all', $timestamp = null)
     {
         $semesters   = MyRealmModel::getSelectedSemesters($sem);
         $min_sem_key = min($semesters);
@@ -370,11 +384,10 @@ class MyCoursesController extends AuthenticatedController
         foreach ($courses as $index => $course) {
             $courses[$index]['modules']  = $modules->getLocalModules($course['seminar_id'], $type, $course['modules'], $course['status']);
             $courses[$index]['obj_type'] = $type;
-            MyRealmModel::setObjectVisits($courses[$index], $course['seminar_id'], $GLOBALS['user']->id);
+            MyRealmModel::setObjectVisits($courses[$index], $course['seminar_id'], $GLOBALS['user']->id, $timestamp);
         }
-        NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
-        PageLayout::postMessage(MessageBox::success(_('Alles als gelesen markiert!')));
 
+        $this->flash['tabularasa'] = $timestamp;
         $this->redirect('my_courses/index');
     }
 

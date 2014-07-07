@@ -51,20 +51,17 @@ class MyInstitutesController extends AuthenticatedController
             }
         }
         $this->redirect('my_institutes/index');
-        return;
     }
 
-    public function tabularasa_action()
+    public function tabularasa_action($timestamp = null)
     {
         $institutes = MyRealmModel::getMyInstitutes();
         foreach ($institutes as $index => $institut) {
-            MyRealmModel::setObjectVisits($institutes[$index], $institut['institut_id'], $GLOBALS['user']->id);
+            MyRealmModel::setObjectVisits($institutes[$index], $institut['institut_id'], $GLOBALS['user']->id, $timestamp);
         }
 
-        NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
-        $this->redirect('my_institutes/index');
         PageLayout::postMessage(MessageBox::success(_('Alles als gelesen markiert!')));
-        return;
+        $this->redirect('my_institutes/index');
     }
 
     function check_for_new($my_obj)

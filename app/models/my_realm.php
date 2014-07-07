@@ -957,7 +957,7 @@ class MyRealmModel
      * @param $user_id
      * @return bool
      */
-    public static function setObjectVisits(&$object, $object_id, $user_id)
+    public static function setObjectVisits(&$object, $object_id, $user_id, $timestamp = null)
     {
         // load plugins, so they have a chance to register themselves as observers
         PluginEngine::getPlugins('StandardPlugin');
@@ -982,7 +982,7 @@ class MyRealmModel
                   ON DUPLICATE KEY UPDATE last_visitdate = IFNULL(visitdate, 0), visitdate = :timestamp";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
-        $statement->bindValue(':timestamp', time());
+        $statement->bindValue(':timestamp', $timestamp ?: time());
         // Update all activated modules
         foreach (words('forum documents schedule participants literature wiki scm elearning_interface') as $type) {
             if ($object['modules'][$type]) {
@@ -996,6 +996,8 @@ class MyRealmModel
 
         // Update object itself
         object_set_visit($object_id, $object['obj_type']);
+
+        NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
 
         return true;
     }

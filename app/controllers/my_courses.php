@@ -382,8 +382,8 @@ class MyCoursesController extends AuthenticatedController
 
         $modules = new Modules();
         foreach ($courses as $index => $course) {
-            $courses[$index]['modules']  = $modules->getLocalModules($course['seminar_id'], $type, $course['modules'], $course['status']);
-            $courses[$index]['obj_type'] = $type;
+            $courses[$index]['modules']  = $modules->getLocalModules($course['seminar_id'], 'sem', $course['modules'], $course['status']);
+            $courses[$index]['obj_type'] = 'sem';
             MyRealmModel::setObjectVisits($courses[$index], $course['seminar_id'], $GLOBALS['user']->id, $timestamp);
         }
 

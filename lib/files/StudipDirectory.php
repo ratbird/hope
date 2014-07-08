@@ -184,10 +184,7 @@ class StudipDirectory extends File
     public function link(File $file, $name, $description = '')
     {
         $name = FileHelper::CompressFilename($name);
-
-        while (StudipDirectory::getEntry($name)) {
-            $name = FileHelper::AdjustFilename($name);
-        }
+        $name = $this->ensureUniqueFilename($name, $file);
 
         $entry = new DirectoryEntry();
         $entry->file_id     = $file->id;
@@ -197,6 +194,29 @@ class StudipDirectory extends File
         $entry->store();
         
         return $entry;
+    }
+
+    /**
+     * Ensure a unique filename.
+     *
+     * @param String $name Base file name that is supposed to be unique
+     * @param File|null $file Optional associated file
+     * @return String Unique filename
+     */
+    public function ensureUniqueFilename($name, File $file = null)
+    {
+        $changed = false;
+        while (($temp = $this->getEntry($name)) && ($file === null || $temp->file->id !== $file->id)) {
+            $changed = true;
+            $name = FileHelper::AdjustFilename($name);
+        }
+
+        if ($changed && $file !== null) {
+            $file->filename = $name;
+            $file->store();
+        }
+
+        return $name;
     }
 
     /**

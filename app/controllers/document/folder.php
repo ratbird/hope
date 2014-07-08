@@ -38,8 +38,8 @@ class Document_FolderController extends DocumentController
         $this->parent_id = $parent_id;
 
         if (Request::isPost()) {
-            $name = Request::get('name');
-
+            $name        = Request::get('name');
+            $description = Request::get('description', '');
             try {
                 $entry = new DirectoryEntry($parent_id);
                 $parent_dir = $entry->file;
@@ -50,17 +50,13 @@ class Document_FolderController extends DocumentController
             do {
                 $check = true;
                 try {
-                    $directory = $parent_dir->mkdir($name);
+                    $directory = $parent_dir->mkdir($name, $description);
                 } catch (Exception $e) {
                     $check = false;
 
                     $name = FileHelper::AdjustFilename($name);
                 }
             } while (!$check);
-
-            $directory->description = Request::get('description', '');
-            $directory->name        = $name;
-            $directory->store();
 
             $directory->file->filename = $name;
             $directory->file->store();
@@ -69,37 +65,38 @@ class Document_FolderController extends DocumentController
             $this->redirect('document/files/index/' . $parent_id);
         }
     }
-    
+
     public function edit_action($folder_id)
-    {   $folder    = new DirectoryEntry($folder_id);
+    {
+        $folder    = new DirectoryEntry($folder_id);
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
-        
+
         if (Request::isPost()) {
-            $folder->name        = Request::get('name');
-            $folder->Description = Request::get('description');
+            $name = Request::get('name');
+            $name = $folder->directory->ensureUniqueFilename($name, $folder->file);
+
+            $folder->name        = $name;
+            $folder->description = Request::get('description');
             $folder->store();
 
-            $folder->file->filename = Request::get('name');
-            $folder->file->store();
-            
             PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde bearbeitet.')));
             $this->redirect('document/files/index/' . $parent_id);
         }
-        
+
         if (Request::isXhr()) {
             header('X-Title: ' . _('Ordner bearbeiten'));
         }
-        
+
         $this->setDialogLayout('icons/48/blue/edit.png');
 
         $this->folder_id = $folder_id;
         $this->folder    = $folder;
     }
-    
+
     public function delete_action($folder_id)
     {
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
-        
+
         if (!Request::isPost()) {
             $message = $folder_id === 'all'
                      ? _('Soll der gesamte Dateibereich inklusive aller Order und Dateien wirklich gelöscht werden?')
@@ -116,7 +113,7 @@ class Document_FolderController extends DocumentController
                 PageLayout::postMessage(MessageBox::success(_('Der Dateibereich wurde geleert.')));
             } else {
                 $entry = DirectoryEntry::find($folder_id);
-                File::get($entry->directory->file->id)->unlink($entry->name);
+                $entry->directory->unlink($entry->name);
                 PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde gelöscht.')));
             }
         }

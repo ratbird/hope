@@ -227,7 +227,10 @@ class Document_FilesController extends DocumentController
         $entry = new DirectoryEntry($entry_id);
 
         if (Request::isPost()) {
-            $entry->file->filename   = Request::get('filename');
+            $name = Request::get('filename');
+            $name = $entry->directory->ensureUniqueFilename($name, $entry->file);
+            
+            $entry->file->filename   = $name;
             $entry->file->restricted = Request::int('restricted', 0);
             $entry->file->store();
 
@@ -236,7 +239,7 @@ class Document_FilesController extends DocumentController
             $entry->store();
 
             PageLayout::postMessage(MessageBox::success(_('Die Datei wurde bearbeitet.')));
-            $this->redirect('document/files/index/' . FileHelper::getParentId($entry_id) ?: $this->context_id);
+            $this->redirect('document/files/index/' . FileHelper::getParentId($entry->id) ?: $this->context_id);
             return;
         }
 

@@ -22,12 +22,11 @@ class DirectoryEntry extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'file_refs';
-        $config['belongs_to']['directory'] = array(
-            'class_name'        => 'DirectoryEntry',
-            'foreign_key'       => 'parent_id',
-            'assoc_foreign_key' => 'file_id',
-        );
-        
+#        $config['belongs_to']['directory'] = array(
+#            'class_name'        => 'DirectoryEntry',
+#            'foreign_key'       => 'parent_id',
+#            'assoc_foreign_key' => 'file_id',
+#        );
 
         $config['additional_fields']['file'] = array(
             'get' => function ($record, $field) {
@@ -35,11 +34,11 @@ class DirectoryEntry extends SimpleORMap
             }
         );
 
-#        $config['additional_fields']['directory'] = array(
-#            'get' => function ($record, $field) {
-#                return File::get($record->parent_id);
-#            }
-#        );
+        $config['additional_fields']['directory'] = array(
+            'get' => function ($record, $field) {
+                return File::get($record->parent_id);
+            }
+        );
 
         $config['notification_map'] = array(
             'before_create' => 'FileWillCreate',
@@ -78,8 +77,13 @@ class DirectoryEntry extends SimpleORMap
     {
         $entries = DirectoryEntry::findByFile_id($this->file_id);
         if(count($entries) > 0) {
-            $entries[0]->parent_id = $parent_id;
-            $entries[0]->store();
+            $entry = reset($entries);
+
+            $old_dir  = $entry->directory;
+            $old_name = $entry->name;
+
+            File::get($parent_id)->link($entry->file, $entry->name, $entry->description);
+            $old_dir->unlink($old_name);
         }
     }
 

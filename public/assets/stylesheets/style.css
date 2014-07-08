@@ -221,7 +221,7 @@ a.link-intern:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  padding-right: 2;
   background-image: url("../images/icons/16/blue/link-intern.png");
   background-image: -webkit-image-set(url("../images/icons/16/blue/link-intern.png") 1x, url("../images/icons/32/blue/link-intern.png") 2x);
   vertical-align: text-top;
@@ -232,7 +232,7 @@ a.link-extern:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  padding-right: 2;
   background-image: url("../images/icons/16/blue/link-extern.png");
   background-image: -webkit-image-set(url("../images/icons/16/blue/link-extern.png") 1x, url("../images/icons/32/blue/link-extern.png") 2x);
   vertical-align: text-top;
@@ -2470,7 +2470,7 @@ select.sidebar-selectlist {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  padding-right: 2;
   background-image: url("../images/icons/16/white/link-intern.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/link-intern.png") 1x, url("../images/icons/32/white/link-intern.png") 2x);
   vertical-align: text-top;
@@ -2481,7 +2481,7 @@ select.sidebar-selectlist {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  padding-right: 2;
   background-image: url("../images/icons/16/white/link-extern.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/link-extern.png") 1x, url("../images/icons/32/white/link-extern.png") 2x);
   vertical-align: text-top;

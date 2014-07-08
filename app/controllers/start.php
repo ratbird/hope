@@ -58,7 +58,7 @@ class StartController extends AuthenticatedController {
                 }
             }
 
-            WidgetHelper::addInitialPositons(0, $idl, $this->user->id);
+            WidgetHelper::addInitialPositions(0, $idl, $this->user->id);
             $this->widgets = WidgetHelper::getUserWidgets($this->user->id);
         }
 

@@ -17,9 +17,9 @@
  */
 
 class WidgetHelper {
+
     /**
      * array of submitted widget parameter values
-     *
      */
     private static $params = array();
 
@@ -28,9 +28,8 @@ class WidgetHelper {
      */
     private static $activeWidget;
 
-
     /**
-     * Set the last activ Widget
+     * Set the last active Widget
      * @param string $activeWidget
      */
     static function setActiveWidget($activeWidget)
@@ -41,6 +40,9 @@ class WidgetHelper {
     /**
      * Returns the position in the two column layout on the Startpage
      * If no position is stored in UserConfig, the widget will be displayed on the right side.
+     *
+     * @param string $pluginid
+     *
      * @return the position as array matrix
      */
     static function getWidgetPosition($pluginid)
@@ -54,20 +56,10 @@ class WidgetHelper {
     }
 
     /**
-     *
-
-    static function storeNewPosition($pos, $col, $id)
-    {
-        $pos_string = $pos .",". $col ;
-        $query = "update widget_user set position = ? where id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($pos_string, $id));
-
-    }
-     */
-
-    /**
-     *
+     * storeNewPositions - stores new Widget positions for a given user
+     * 
+     * @param array ids of widgets to be stored
+     * @return void
      */
     static function storeNewPositions($ids)
     {
@@ -84,9 +76,15 @@ class WidgetHelper {
     }
 
     /**
-     * addInitialPositons
+     * addInitialPositons - adds the global widget default settings to an user setting
+     * 
+     * @param string $col
+     * @param array $ids of widgets 
+     * @param string $range_id
+     *
+     * @return void
      */
-    static function addInitialPositons($col, $ids, $range_id){
+    static function addInitialPositions($col, $ids, $range_id){
         if(is_array($ids))
         {
              foreach ($ids as $pos => $id)
@@ -100,11 +98,14 @@ class WidgetHelper {
     }
 
     /**
-     * storeInitialPositions
+     * storeInitialPositions - stores the global widget default for a given perm
      *
-     *
+     * @param string $col
+     * @param array $ids of widgets 
+     * @param string $perm
+     * 
+     * @return boolean success
      */
-
      static function storeInitialPositions($col, $ids, $perm)
      {
          $statement = DBManager::get()->prepare('DELETE FROM widget_default WHERE `perm` = ? AND `column` = ?;');
@@ -123,7 +124,13 @@ class WidgetHelper {
          } else return false;
      }
 
-
+     /**
+      * getInitialPositions - retrieves the intial widget setting for a given perm
+      * 
+      * @param string $perm
+      *
+      * @return array $widgets
+      */
      static function getInitialPositions($perm)
      {
          $query = "SELECT * FROM widget_default WHERE perm=?";
@@ -136,9 +143,12 @@ class WidgetHelper {
          return $widgets;
      }
 
-
     /**
-     *
+     * getUserWidgets - retrieves the widget settings for a given user
+     * 
+     * @param string $id 
+     * 
+     * @return array $widgets
      */
     static function getUserWidgets($id)
     {
@@ -148,16 +158,24 @@ class WidgetHelper {
         $statement->execute(array($id));
         $widgets = array();
         while ($db_widget = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $widget = clone $plugin_manager->getPluginById($db_widget['pluginid']);
-            $widget->widget_id = $db_widget['id'];
-            $widgets[$db_widget['position']] = $widget;
+            if(!is_null($plugin_manager->getPluginById($db_widget['pluginid']))){
+                $widget = clone $plugin_manager->getPluginById($db_widget['pluginid']);
+                $widget->widget_id = $db_widget['id'];
+                $widgets[$db_widget['position']] = $widget;
+            }
         }
         return $widgets;
     }
 
 
     /**
-     * creates user_config entry for widget newly added by a user
+     * addWidgetUserConfig - creates user_config entry for widget newly added by a user
+     *
+     * @param string $id - user_id
+     * @param string $pluginName
+     * @param array $confArray
+     *
+     * @return void
      */
     static function addWidgetUserConfig($id, $pluginName, $confArray )
     {
@@ -166,9 +184,12 @@ class WidgetHelper {
 
 
     /**
-     * creates user_config entry for widget newly added by a user
-     * @param $id userId
-     * @param $pluginName Name des Plugins
+     * getWidgetUserConfig - retrieves user_config entry for widget newly added by a user
+     *
+     * @param string $id user_id
+     * @param string $pluginName
+     * 
+     * @return object UserConfig
      */
     static function getWidgetUserConfig($id, $pluginName)
     {
@@ -177,7 +198,13 @@ class WidgetHelper {
     }
 
     /**
-     * removes a widget for a user
+     * removeWidget - removes a widget for a user
+     *
+     * @param string $id - widget_id
+     * @param string $pluginName
+     * @param string $range_id e.g. user_id
+     *
+     * @return bool success
      */
     static function removeWidget($id, $pluginName, $range_id)
     {
@@ -192,7 +219,12 @@ class WidgetHelper {
     }
 
     /**
-     * adds a widget for a user
+     * addWidget - adds a widget for a given user
+     *
+     * @param string $id - widget_id
+     * @param string $range_id e.g. user_id
+     *
+     * @return bool success
      */
     static function addWidget($id, $range_id)
     {
@@ -215,9 +247,12 @@ class WidgetHelper {
     }
 
     /**
-     * get Name for a given widgetid
+     * getWidgetName - retrieves the name of a given widget
+     * 
+     * @param string $id - widget_id
+     * 
+     * @return string widget_name 
      */
-
     static function getWidgetName($id) {
 
         $query = "SELECT `pluginid` FROM `widget_user` WHERE `id`=?";
@@ -233,9 +268,12 @@ class WidgetHelper {
 
 
     /**
-     * retrieves a  widgets for a given pluginid and plugintype
+     * getWidget - retrieves an instance of a given widget / portal plugin
+     *
+     * @param string $pluginid
+     * 
+     * @return object widget
      */
-
     static function getWidget($pluginid)
     {
         return PluginManager::getInstance()->getPluginById($pluginid);

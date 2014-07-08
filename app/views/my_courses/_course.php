@@ -49,9 +49,9 @@
                                                'height' => 20)); ?>
             <? endif ?>
         </td>
-        <td style="text-align: left; white-space: nowrap">
+        <td style="text-align: left; white-space: nowrap;">
             <? if (!empty($course['navigation'])) : ?>
-                <? foreach ($course['navigation'] as $key => $nav)  : ?>
+                <? foreach ($controller->array_rtrim($course['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
                         <? $image = $nav->getImage(); ?>
                         <a href="<?=

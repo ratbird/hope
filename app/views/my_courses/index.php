@@ -27,9 +27,9 @@
                         <col width="10%">
                     <? endif ?>
                     <col>
-                    <col width="10%">
-                    <col width="35%">
-                    <col width=50px>
+                    <col width="45px">
+                    <col width="<?= $nav_elements * 24 ?>px">
+                    <col width=45px>
                 </colgroup>
                 <thead>
                 <tr class="sortable">

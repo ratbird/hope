@@ -20,9 +20,9 @@
 */
 
 require_once 'lib/functions.php';
-require_once 'studip_controller.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-class TourController extends StudipController
+class TourController extends AuthenticatedController
 {
     
     /**
@@ -31,11 +31,6 @@ class TourController extends StudipController
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        // open session
-        page_open(array('sess' => 'Seminar_Session',
-                        'auth' => 'Seminar_Default_Auth',
-                        'perm' => 'Seminar_Perm',
-                        'user' => 'Seminar_User'));
 
         $this->orientation_options = array(
             'TL' => _('oben (links)'), 
@@ -66,14 +61,6 @@ class TourController extends StudipController
             $this->set_layout($layout);
         }
         $this->set_content_type('text/html;charset=windows-1252');
-    }
-
-    /**
-     * Callback function being called after an action is executed.
-     */
-    function after_filter($action, $args)
-    {
-        page_close();
     }
 
     /**
@@ -154,7 +141,7 @@ class TourController extends StudipController
     function set_status_action($tour_id, $step_nr, $status)
     {
         // check permission
-        $GLOBALS['perm']->check('autor');
+        $GLOBALS['perm']->check('user');
         $this->tour = new HelpTour($tour_id);
         if (!$this->tour->isVisible())
             return $this->render_nothing();

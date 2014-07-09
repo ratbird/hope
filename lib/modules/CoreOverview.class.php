@@ -56,7 +56,7 @@ class CoreOverview implements StudipModule {
             }
 
             if (!$admission_binding && !$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar']) && $GLOBALS['user']->id != 'nobody') {
-                $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'my_courses.php?auswahl='.$course_id.'&cmd=suppose_to_kill'));
+                $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'dispatch.php/my_courses/decline/'.$course_id));
             }
         }
         return array('main' => $navigation);

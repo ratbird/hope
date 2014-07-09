@@ -41,7 +41,15 @@ class StartController extends AuthenticatedController {
         PageLayout::setTitle(_('Startseite'));
     }
 
-    function index_action() {
+    /**
+     * Entry point of the controller that displays the start page of Stud.IP
+     *
+     * @param string $action
+     * @param string $widgetId
+     *
+     * @return void
+     */
+    function index_action($action = false, $widgetId = NULL) {
 
         Navigation::activateItem('/start');
 
@@ -70,35 +78,63 @@ class StartController extends AuthenticatedController {
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $this->suitable_widgets = PluginEngine::getPlugins('PortalPlugin');
+        
+        if($action == 'delete' && isset($widgetId)) {
+            $template = $GLOBALS['template_factory']->open('shared/question');
+            $template->set_attribute('approvalLink', $this->url_for('start/delete/' . $widgetId . '/true/' . get_ticket()));
+            $template->set_attribute('disapprovalLink', $this->url_for('start/'));
+            $template->set_attribute('question',sprintf(_("Sind Sie sicher, dass Sie das Widget »%s« von der Startseite entfernen möchten?"),
+                                      WidgetHelper::getWidgetName($widgetId)));
+            $this->flash['question'] = $template->render();
+        }
     }
-
-    function add_widget_action($choice, $side) {
-        WidgetHelper::addWidget($choice, $this->user->id);
+    
+    /**
+     *  This actions adds a new widget to the start page
+     *
+     * @param string $choice representing the chosen widgetId
+     * @param string $side where the widget should be paced (used in later versions)
+     * @param string $studipticket
+     *
+     * @return void
+     */
+    function add_widget_action($choice, $side = 0, $studipticket = false) {
+        if(check_ticket($studipticket)){
+            WidgetHelper::addWidget($choice, $this->user->id);
+        }
         $this->redirect('start');
     }
 
-
-    function delete_action($widgtId, $approveDelete = false, $studipticket = false) {
+    /**
+     *  This actions removes a new widget from the start page
+     *
+     * @param string $widgetId
+     * @param string $approveDelete
+     * @param string $studipticket
+     *
+     * @return void
+     */
+    function delete_action($widgetId, $approveDelete = false, $studipticket = false) {
+        
         if ($approveDelete && check_ticket($studipticket)) {
-            $name = WidgetHelper::getWidgetName($widgtId);
-            if(WidgetHelper::removeWidget($widgtId,$name,$this->user->id)) {
+
+            $name = WidgetHelper::getWidgetName($widgetId);
+            
+            if(WidgetHelper::removeWidget($widgetId,$name,$this->user->id)) {
 
             } else {
                 $this->flash['error'] = sprintf(_("Widget »%s« konnte nicht entfernt werden."), $name);
             }
 
-            $this->redirect('start/');
-        } else if (!$approveDelete) {
-            $template = $GLOBALS['template_factory']->open('shared/question');
-            $template->set_attribute('approvalLink', $this->url_for('start/delete/' . $widgtId . '/true/' . get_ticket()));
-            $template->set_attribute('disapprovalLink', $this->url_for('start/'));
-            $template->set_attribute('question',sprintf(_("Sind Sie sicher, dass Sie das Widget »%s« von der Startseite entfernen möchten?"),
-                                      WidgetHelper::getWidgetName($widgtId)));
-            $this->flash['question'] = $template->render();
             $this->redirect('start');
         }
     }
 
+    /**
+     *  Action to store the widget placements
+     *
+     * @return void
+     */
     function storeNewOrder_action() {
 
         if($_POST['ids']){

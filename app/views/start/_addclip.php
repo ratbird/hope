@@ -9,7 +9,7 @@
         <ul class="addclip-widgets">
         <? foreach($widgets as $widget) :?>
             <? $metadata = $widget->getMetadata(); ?>
-            <a href="<?= $controller->url_for('start/add_widget/'.$widget->getPluginId().'/0') ?>"
+            <a href="<?= $controller->url_for('start/add_widget/'.$widget->getPluginId(). '/0/' . get_ticket()) ?>"
                 <?= tooltip($metadata['description']) ?>>
                 <li><?= $widget->getPluginName();?></li>
             </a>

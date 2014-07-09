@@ -59,6 +59,7 @@ class WidgetHelper {
      * storeNewPositions - stores new Widget positions for a given user
      * 
      * @param array ids of widgets to be stored
+     *
      * @return void
      */
     static function storeNewPositions($ids)

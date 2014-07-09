@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -108,7 +108,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -4749,6 +4749,12 @@ a.opengraph_info:hover {
 .studip-widget .header-options {
   float: right;
   padding: 0px 1ex 0px 0;
+}
+.studip-widget section.contentbox {
+  border: none;
+}
+.studip-widget section.contentbox > header {
+  display: none;
 }
 #widget_choices {
   border-right: 1px dashed #1e3e70;

@@ -18,7 +18,7 @@
         <tr>
             <th></th>
             <th><?= _("Betreff") ?></th>
-            <th><?= _("Autor") ?></th>
+            <th><?= $received ? _("Gesendet") : _("Empfänger") ?></th>
             <th><?= _("Zeit") ?></th>
             <th><?= _("Tags") ?></th>
             <th></th>
@@ -43,7 +43,7 @@
             </noscript>
             <? endif ?>
             <? foreach ($messages as $message) : ?>
-            <?= $this->render_partial("messages/_message_row.php", compact("message")) ?>
+            <?= $this->render_partial("messages/_message_row.php", compact("message", "received")) ?>
             <? endforeach ?>
             <? if ($more || (Request::int("offset") > 0)) : ?>
             <noscript>

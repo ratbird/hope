@@ -8,10 +8,19 @@
     <td>
     <? if ($message['autor_id'] == "____%system%____") : ?>
         <?= _("Systemnachricht") ?>
-    <? else: ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . get_username($message['autor_id'])) ?>">
-            <?= get_fullname($message['autor_id']) ?>
+    <? else : if(!$received): ?>
+        <? if (count($message->receivers) > 1) : ?>
+            <?= sprintf(_("%s Personen"), count($message->receivers)) ?>
+        <? else : ?>
+        <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($message['autor_id']))) ?>">
+            <?= htmlReady(get_fullname($message->receivers[0]['user_id'])) ?>
         </a>
+        <? endif ?>
+    <? else: ?>
+        <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($message['autor_id']))) ?>">
+            <?= htmlReady(get_fullname($message['autor_id'])) ?>
+        </a>
+    <? endif; ?>
     <? endif; ?>
     </td>
     <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>

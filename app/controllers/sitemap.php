@@ -36,5 +36,14 @@ class SitemapController extends AuthenticatedController
         $this->navigation = Navigation::getItem('/');
         $this->quicklinks = Navigation::getItem('/links');
         $this->footer     = Navigation::getItem('/footer');
+        
+        // Add sidebar
+        $sidebar = Sidebar::get();
+        $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+        
+        $info = new InfoboxWidget();
+        $info->setTitle(_('Hinweise'));
+        $info->addElement(new WidgetElement(_('Auf dieser Seite finden Sie eine Übersicht über alle verfügbaren Seiten.')));
+        $sidebar->addWidget($info);
     }
 }

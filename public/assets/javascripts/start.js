@@ -18,7 +18,6 @@ INDEX = {},
            }
         });
 
-
         $("ul.start-admin").sortable({
             connectWith: "ul",
             tolerance:"pointer",

@@ -24,26 +24,15 @@ class Admin_StartController extends AuthenticatedController
 
         global $perm, $template_factory;
         $perm->check('root');
-
-
-
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;Charset=windows-1252');
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
-        }
-
-
+        
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+        
         PageLayout::setTitle(_('Konfiguration der Startseite'));
         Navigation::activateItem('/admin/config/start');
     }
 
-
     /**
      * index_action show start page administration
-     *
-     * @param string context
      *
      * @return void
      */
@@ -69,6 +58,11 @@ class Admin_StartController extends AuthenticatedController
         ksort($this->left);
     }
 
+    /**
+     * storeSettings_action stores the perm configruation of the start page
+     *
+     * @return void
+     */
     function storeSettings_action() {
             $perm = Request::get('perm');
             $ids = Request::get('ids');

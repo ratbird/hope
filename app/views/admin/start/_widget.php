@@ -2,7 +2,6 @@
     <?= $widget->getPluginName() ;?>
 </div>
 <div style="clear:both" id="wid<?=$widget->getPluginId()?>">
-<?//= $widget->getPortalTemplate()->render() ?>
 <div style="padding:5px;">
     <div style="magin:5px;">
         <? $metadata = $widget->getMetadata();?>

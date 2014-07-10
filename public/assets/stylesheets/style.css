@@ -4721,11 +4721,12 @@ a.opengraph_info:hover {
 }
 #admin_widget_container {
   padding-top: 1em;
+  width: 100%;
 }
 #main,
 #choices {
-  width: 100%;
-  border: 1px dashed black;
+  width: 99%;
+  border: 1px solid #8a8f95;
 }
 .studip-widget-wrapper {
   margin: 5px;

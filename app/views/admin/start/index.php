@@ -10,7 +10,6 @@
 <h2><?=_("Startseitenverwaltung")?></h2>
 
 
-
 <form action="<?= $controller->url_for('admin/start') ?>" method="POST">
     <span style="float:right;">
         <select id="selected_perm" name="selected_perm" onchange="this.form.submit();">
@@ -23,7 +22,7 @@
     <br style="clear:both">
     <?if(is_array($choices)) : ?>
     <div id="admin_widget_container">
-        <div class="ui-widget_columnl" id='main' style="float:right;">
+        <div class="ui-widget_columnl" id="main">
             <ul class="droparea ui-sortable start-admin" id="sort0" style="list-style-type: none;margin-top:5px;">
                 <? foreach($left as $choice) :?>
                     <div class="studip-widget-wrapper" id="<?= $choice->getPluginId() ?>" data-instance="1">
@@ -51,12 +50,6 @@
 
         </div>
         <br style="clear: both;" />
-
-        <div>
-            <?= Button::createAccept(_('Übernehmen'), array('title' => _("Änderungen übernehmen"))); ?>
-            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/start')); ?>
-        </div>
-
     </div>
     <? endif; ?>
 </form>

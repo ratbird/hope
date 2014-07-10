@@ -14,7 +14,7 @@
 
 require_once 'studip_controller.php';
 
-abstract class AuthenticatedController extends StudipController {
+class AuthenticatedController extends StudipController {
 
     protected $allow_nobody = false;
 

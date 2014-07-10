@@ -18,7 +18,10 @@
     </span>
 </div>
 <div style="clear:both" id="wid<?=$widget->widget_id?>">
-<? if ($template = $widget->getPortalTemplate()) : ?>
+
+<? if (($template = $widget->getPortalTemplate()) instanceof Flexi_Template) : ?>
     <?= $template->render() ?>
+<? elseif (is_string($template)) : ?>
+    <?= $template ?>
 <? endif ?>
 </div>

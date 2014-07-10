@@ -69,6 +69,10 @@ class Calendar_ScheduleController extends AuthenticatedController
     {
         global $user;
 
+        if (!$this->my_schedule_settings) {
+            $this->my_schedule_settings = UserConfig::get($user->id)->SCHEDULE_SETTINGS;
+        }
+        
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         if ($inst_mode) {

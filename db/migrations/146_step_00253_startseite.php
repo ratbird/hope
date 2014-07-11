@@ -35,15 +35,6 @@ class Step00253startseite extends Migration
             self::addWidget($classname);
         }
 
-        $query = "INSERT INTO config (config_id, field, value, is_default, type, `range`, section, mkdate, chdate, description)
-                  VALUES (MD5(?), ?, '0', 1, 'boolean', 'global', 'global', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?)";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            'NEW_START_PAGE',
-            'NEW_START_PAGE',
-            'Schaltet die neue Stud.IP Startseite ein',
-        ));
-        
         // add a default configuration for each
         self::addWidgetDefaulConfiguration(words("QuickSelection NewsWidget TerminWidget EvaluationsWidget"));
 
@@ -58,8 +49,6 @@ class Step00253startseite extends Migration
         }
 
         DBManager::get()->exec("DROP TABLE IF EXISTS `widget_user`,`widget_default`");
-        // Delete config entry
-        DBManager::get()->exec("DELETE FROM config WHERE field = 'NEW_START_PAGE'");
     }
 
     private function addWidget($classname) {

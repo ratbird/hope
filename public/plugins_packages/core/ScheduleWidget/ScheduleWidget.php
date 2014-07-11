@@ -25,14 +25,22 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
     public function getPortalTemplate() {
         // render schedule-action
         $c = new AuthenticatedController(new StudipDispatcher());
-        $response = $c->relay('calendar/schedule/index');
+        try {
+            $response = $c->relay('calendar/schedule/index');
+        } catch (Exception $e) {
+            // schedule-controller throws an exception if user has no schedule!
+        }
 
         // remove sidebar widgets
         $sidebar = Sidebar::get();
-        $sidebar->removeWidget('calendar/schedule/semester');
-        $sidebar->removeWidget('calendar/schedule/actions');
-        $sidebar->removeWidget('calendar/schedule/print');
-        $sidebar->removeWidget('calendar/schedule/options');
+        try {
+            $sidebar->removeWidget('calendar/schedule/semester');
+            $sidebar->removeWidget('calendar/schedule/actions');
+            $sidebar->removeWidget('calendar/schedule/print');
+            $sidebar->removeWidget('calendar/schedule/options');
+        } catch (Exception $e) {
+            // removeWigdet throws an Exception when trying to remove an unknown widget
+        }
 
         // remove links and return template-string
         return preg_replace('/<a.*>(.*)<\/a>/msU', '$1', $response->body);

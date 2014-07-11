@@ -246,4 +246,27 @@ class Message extends SimpleORMap
             'tag' => strtolower($tag)
         ));
     }
+    
+    /**
+     * Deletes a message. Extends default delete() by removing associated tags
+     * as well.
+     *
+     * @return int number of deleted rows
+     * @see SimpleORMap::delete()
+     */
+    public function delete()
+    {
+        $id = $this->getId();
+        $ret = parent::delete();
+
+        if ($ret) {
+            $query = "DELETE FROM message_tags WHERE message_id = :message_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':message_id', $id);
+            $statement->execute();
+            $ret += $statement->rowCount();
+        }
+
+        return $ret;
+    }
 }

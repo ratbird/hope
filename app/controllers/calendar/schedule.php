@@ -55,6 +55,9 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         URLHelper::bindLinkParam('semester_id', $this->current_semester['semester_id']);
         URLHelper::bindLinkParam('show_hidden', $this->show_hidden);
+        
+        PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
+        PageLayout::setTitle(_('Mein Stundenplan'));
     }
 
     /**
@@ -132,10 +135,6 @@ class Calendar_ScheduleController extends AuthenticatedController
         } else {
             $this->days = explode(',', $days);
         }
-
-
-        PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
-        PageLayout::setTitle(_('Mein Stundenplan'));
 
         if ($inst_mode) {
             // get the entries to be displayed in the schedule

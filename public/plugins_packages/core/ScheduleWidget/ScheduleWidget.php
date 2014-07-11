@@ -13,16 +13,11 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/WidgetHelper.php';
 
-/**
- * Personal schedule controller.
- *
- * @since      2.0
- */
 class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 {
     public function getPortalTemplate() {
+        
         // render schedule-action
         $c = new AuthenticatedController(new StudipDispatcher());
         try {
@@ -41,11 +36,13 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
         } catch (Exception $e) {
             // removeWigdet throws an Exception when trying to remove an unknown widget
         }
-
+        
+        // take care of Navigation
+        Navigation::getItem('/calendar/schedule')->setActive(false);
+        
         // remove links and return template-string
         return preg_replace('/<a.*>(.*)<\/a>/msU', '$1', $response->body);
     }
-
 
     function getHeaderOptions()
     {
@@ -57,23 +54,6 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
             )
         );
     }
-
-  /**
-     * Callback function being called before an action is executed. If this
-     * function does not return FALSE, the action will be called, otherwise
-     * an error will be generated and processing will be aborted. If this function
-     * already #rendered or #redirected, further processing of the action is
-     * withheld.
-     *
-     * @param string  Name of the action to perform.
-     * @param array   An array of arguments to the action.
-     *
-     * @return bool
-     */
-    function  __construct() {
-        parent::__construct();
-    }
-
 
     function getPluginName(){
         return _("Mein Stundenplan");

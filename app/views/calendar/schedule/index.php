@@ -8,7 +8,7 @@ $sidebar->setImage(Assets::image_path("sidebar/schedule-sidebar.png"));
 $semester_widget = new SidebarWidget();
 $semester_widget->setTitle(_('Angezeigtes Semester'));
 $semester_widget->addElement(new WidgetElement($this->render_partial('calendar/schedule/_semester_chooser')), 'semester');
-$sidebar->addWidget($semester_widget, 'semester');
+$sidebar->addWidget($semester_widget, 'calendar/schedule/semester');
 
 $actions = new ActionsWidget();
 if (!$inst_mode) {
@@ -21,21 +21,21 @@ if (!$show_hidden) {
 } else {
     $actions->addLink(_("Ausgeblendete Veranstaltungen verbergen"), $controller->url_for('calendar/schedule/?show_hidden=0'), 'icons/16/blue/visibility-visible.png');
 }
-$sidebar->addWidget($actions);
+$sidebar->addWidget($actions, 'calendar/schedule/actions');
 
 $widget = new ExportWidget();
 $widget->addLink(_('Druckansicht'),
                  $controller->url_for('calendar/schedule/index/'. implode(',', $days) .  '?printview=true&semester_id=' . $current_semester['semester_id']),
                  'icons/16/blue/print.png',
                  array('target' => '_blank'));
-$sidebar->addWidget($widget);
+$sidebar->addWidget($widget, 'calendar/schedule/print');
 
 $options = new OptionsWidget();
 $options->setTitle(_("Darstellungsgröße"));
 $options->addRadioButton(_("klein"), URLHelper::getURL('', array('zoom' => 0)), $zoom == 0);
 $options->addRadioButton(_("mittel"), URLHelper::getURL('', array('zoom' => 1)), $zoom == 1);
 $options->addRadioButton(_("groß"), URLHelper::getURL('', array('zoom' => 2)), $zoom == 2);
-$sidebar->addWidget($options, 'options');
+$sidebar->addWidget($options, 'calendar/schedule/options');
 
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">

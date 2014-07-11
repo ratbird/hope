@@ -23,10 +23,31 @@ require_once 'lib/classes/WidgetHelper.php';
 class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 {
     public function getPortalTemplate() {
+        // render schedule-action
         $c = new AuthenticatedController(new StudipDispatcher());
         $response = $c->relay('calendar/schedule/index');
 
+        // remove sidebar widgets
+        $sidebar = Sidebar::get();
+        $sidebar->removeWidget('calendar/schedule/semester');
+        $sidebar->removeWidget('calendar/schedule/actions');
+        $sidebar->removeWidget('calendar/schedule/print');
+        $sidebar->removeWidget('calendar/schedule/options');
+
+        // remove links and return template-string
         return preg_replace('/<a.*>(.*)<\/a>/msU', '$1', $response->body);
+    }
+
+
+    function getHeaderOptions()
+    {
+        return array(
+            array(
+                'url' => URLHelper::getLink('dispatch.php/calendar/schedule?show_settings=true'),
+                'img' => 'icons/16/blue/admin.png',
+                'tooltip' => _('Einstellungen im Stundenplan bearbeiten')
+            )
+        );
     }
 
   /**

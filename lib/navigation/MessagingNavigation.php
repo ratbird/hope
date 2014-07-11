@@ -61,7 +61,7 @@ class MessagingNavigation extends Navigation
         }
 
 
-        $this->setImage('header/mail.png', array('title' => $tip, "@2x" => TRUE));
+        $this->setImage('icons/28/lightblue/mail.png', array('title' => $tip, "@2x" => TRUE));
     }
 
     /**

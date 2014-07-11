@@ -4,6 +4,36 @@
     top: 150px;
 }
 
+#barTopMenu {
+    canvas.headericon {
+        display: none;
+    }
+    a.canvasready {
+        img.headericon {
+            display: none;
+        }
+        canvas.headericon:not(.highlighted) {
+            display: inline-block;
+        }
+        &:hover {
+            canvas.headericon:not(.highlighted) {
+                display: none;
+            }
+            canvas.headericon.highlighted {
+                display: inline-block;
+            }
+        }
+    }
+    li.active a.canvasready {
+        canvas.headericon:not(.highlighted) {
+            display: none;
+        }
+        canvas.headericon.highlighted {
+            display: inline-block;
+        }
+    }
+}
+
 #barBottom {
     background-color: @brand-color-lighter;
     left: 0;

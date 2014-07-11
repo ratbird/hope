@@ -39,7 +39,7 @@ class CommunityNavigation extends Navigation
             }
         }
 
-        $this->setImage('header/community.png', array('title' => $onlinetip, "@2x" => TRUE));
+        $this->setImage('icons/28/lightblue/community.png', array('title' => $onlinetip, "@2x" => TRUE));
     }
 
     /**

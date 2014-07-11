@@ -31,12 +31,12 @@ class Step00253startseite extends Migration
         ");
 
         // take care of the widgets
-        foreach (words("ActivityFeedWidget EvaluationsWidget NewsWidget QuickSelection ScheduleWidget TerminWidget") as $classname) {
+        foreach (words('EvaluationsWidget NewsWidget QuickSelection ScheduleWidget TerminWidget') as $classname) {
             self::addWidget($classname);
         }
 
         // add a default configuration for each
-        self::addWidgetDefaulConfiguration(words("QuickSelection NewsWidget TerminWidget EvaluationsWidget"));
+        self::addWidgetDefaulConfiguration(words('QuickSelection NewsWidget TerminWidget EvaluationsWidget'));
 
 
     }
@@ -44,7 +44,7 @@ class Step00253startseite extends Migration
     function down()
     {
         // take care of the widgets
-        foreach (words("ActivityFeedWidget EvaluationsWidget NewsWidget QuickSelection ScheduleWidget TerminWidget") as $classname) {
+        foreach (words('EvaluationsWidget NewsWidget QuickSelection ScheduleWidget TerminWidget') as $classname) {
             self::removeWidget($classname);
         }
 

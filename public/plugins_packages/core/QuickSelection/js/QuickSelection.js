@@ -9,7 +9,6 @@ QuickSelection = {
     openDialog: function (url) {
         jQuery.ajax ({
                  url: url,
-                 type: "POST",
 
                  success: function(data){
                     $('#quickSelectionDiagWrap').dialog({
@@ -17,26 +16,22 @@ QuickSelection = {
                         autoOpen:true,
 
                         title: 'Schnellzugriff konfigurieren',
-                        open: function ()
-                        {
+                        open: function () {
                             $(this).html(data);
                         },
                         buttons: {
-                            OK: function() {
-                                var saveurl = jQuery("#configure_quickselection").attr('data-url');
+                            Ok: function() {
                                 $.ajax({
                                     type: 'POST',
-                                    url: saveurl,
-                                    data: {'data':jQuery("#configure_quickselection").serialize()},
+                                    url: jQuery("#configure_quickselection").attr('data-url'),
+                                    data: jQuery("#configure_quickselection").serialize(),
                                     success: function(data){
-
                                        jQuery("#quickSelectionWrap").html(data);
-
                                     }
                                 });
-                                $( this ).dialog( 'destroy' );
+                                $(this).dialog('destroy');
                             },
-                            Cancel: function() {
+                            Abbrechen: function() {
                                 $(this).dialog('destroy');
                             }
                        },

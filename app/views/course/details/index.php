@@ -150,35 +150,6 @@
         </table>
     </section>
 
-
-    <section class="contentbox">
-        <header>
-            <h1><?= _('Zeiten') ?></h1>
-        </header>
-        <section>
-            <?= $sem->getDatesHTML() ?>
-        </section>
-    </section>
-
-    <section class="contentbox">
-        <header>
-            <h1><?= _('Veranstaltungsort') ?></h1>
-        </header>
-        <section>
-            <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $course->ort)) ?>
-        </section>
-    </section>
-
-    <? if ($course->beschreibung) : ?>
-        <section class="contentbox">
-            <header>
-                <h1><?= _("Kommentar/Beschreibung") ?></h1>
-            </header>
-            <section>
-                <?= formatLinks($course->beschreibung) ?>
-            </section>
-        </section>
-    <? endif ?>
     <? $lecturers = $course->members->findBy('status' ,'dozent'); ?>
     <? if (count($lecturers)) : ?>
         <section class="contentbox">
@@ -239,6 +210,23 @@
         </section>
     <? endif ?>
 
+    <section class="contentbox">
+        <header>
+            <h1><?= _('Zeiten') ?></h1>
+        </header>
+        <section>
+            <?= $sem->getDatesHTML() ?>
+        </section>
+    </section>
+
+    <section class="contentbox">
+        <header>
+            <h1><?= _('Veranstaltungsort') ?></h1>
+        </header>
+        <section>
+            <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $course->ort)) ?>
+        </section>
+    </section>
     <? if ($this->studymodules) : ?>
 
         <section class="contentbox">
@@ -293,6 +281,17 @@
                         </li>
                     <? endforeach ?>
                 </ul>
+            </section>
+        </section>
+    <? endif ?>
+
+    <? if ($course->beschreibung) : ?>
+        <section class="contentbox">
+            <header>
+                <h1><?= _("Kommentar/Beschreibung") ?></h1>
+            </header>
+            <section>
+                <?= formatLinks($course->beschreibung) ?>
             </section>
         </section>
     <? endif ?>

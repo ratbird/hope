@@ -38,7 +38,12 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
         }
         
         // take care of Navigation
-        Navigation::getItem('/calendar/schedule')->setActive(false);
+        try {
+            Navigation::getItem('/calendar/schedule')->setActive(false);
+        } catch (Exception $e) {
+            // navigation-item may not exists, so catch the potential exception
+        }
+
         
         // remove links and return template-string
         return preg_replace('/<a.*>(.*)<\/a>/msU', '$1', $response->body);

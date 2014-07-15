@@ -2468,6 +2468,7 @@ select.sidebar-selectlist {
 }
 .sidebar-search ul.needles li {
   *zoom: 1;
+  margin-bottom: 0.5em;
 }
 .sidebar-search ul.needles li:before,
 .sidebar-search ul.needles li:after {
@@ -2477,6 +2478,9 @@ select.sidebar-selectlist {
 }
 .sidebar-search ul.needles li:after {
   clear: both;
+}
+.sidebar-search ul.needles li:last-child {
+  margin-bottom: 0;
 }
 .sidebar-search ul.filters {
   list-style: none;

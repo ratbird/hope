@@ -71,10 +71,6 @@ class BrowseNavigation extends Navigation
                 $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
             } else {
                 $navigation->addSubNavigation('archive', new Navigation(_('Archivierte Veranstaltungen'), 'dispatch.php/my_courses/archive'));
-
-                if (get_config('EXPORT_ENABLE')) {
-                    $navigation->addSubNavigation('record_of_study', new Navigation(_('Druckansicht'), 'recordofstudy.php'));
-                }
             }
 
             $this->addSubNavigation('my_courses', $navigation);

@@ -190,9 +190,14 @@ class MyCoursesController extends AuthenticatedController
                                      URLHelper::getLink('admin_seminare_assi.php', array('new_session' => 'TRUE')),
                                      'icons/16/blue/add/seminar.png');
         }
+        $sidebar->addWidget($setting_widget);
+        if (get_config('EXPORT_ENABLE')) {
+            $this->setExportWidget();
+        }
+
         $this->setGroupingSelector($this->group_field);
         $this->setSemesterWidget($sem);
-        $sidebar->addWidget($setting_widget);
+
     }
 
     public function set_open_group_action($id)
@@ -718,6 +723,15 @@ class MyCoursesController extends AuthenticatedController
         $this->erase_response();
 
         $widget->addElement(new WidgetElement($html));
+        $sidebar->addWidget($widget);
+    }
+
+
+
+    private function setExportWidget() {
+        $sidebar = Sidebar::Get();
+        $widget = new ExportWidget();
+        $widget->addLink(_('Druckansicht'), URLHelper::getLink('recordofstudy.php'), 'icons/16/blue/print.png');
         $sidebar->addWidget($widget);
     }
 

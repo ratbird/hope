@@ -2703,6 +2703,7 @@ section.contentbox article section,
 section.contentbox article footer {
   padding: 0 10px 0 10px;
   max-height: 0;
+  overflow: hidden;
   -webkit-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
   -moz-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
   -o-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
@@ -2778,6 +2779,7 @@ section.contentbox article.open p,
 section.contentbox article.open section,
 section.contentbox article.open footer {
   max-height: 1000px;
+  overflow: visible;
   -webkit-transition: max-height 0.9s;
   -moz-transition: max-height 0.9s;
   -o-transition: max-height 0.9s;

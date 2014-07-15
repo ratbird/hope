@@ -8,7 +8,7 @@
             <label for="needle-<?= $hash = md5($url . '|' . $needle['name']) ?>" <? if ($needle['placeholder']) echo 'style="display:none;"'; ?>>
                 <?= htmlReady($needle['label']) ?>
             </label>
-            <input type="search" id="needle-<?= $hash ?>"
+            <input type="text" id="needle-<?= $hash ?>"
                    name="<?= htmlReady($needle['name']) ?>"
                    value="<?= htmlReady($needle['value']) ?>"
                    <? if ($needle['placeholder']) printf('placeholder="%s"', htmlReady($needle['label'])); ?>>

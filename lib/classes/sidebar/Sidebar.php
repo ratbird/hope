@@ -16,6 +16,9 @@ class Sidebar extends WidgetContainer
         parent::__construct();
 
         $this->setTitle();
+        
+        // Default sidebar image in order to prevent jumps in navigation
+        $this->setImage('sidebar/seminar-sidebar.png');
     }
 
     /**

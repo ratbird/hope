@@ -691,7 +691,7 @@ class MyCoursesController extends AuthenticatedController
     {
         $sidebar = Sidebar::Get();
         $groups  = array(
-            'sem_number'  => _('Veranstaltungszentriert'),
+            'sem_number'  => _('Standard'),
             'sem_tree_id' => _('Studienbereich'),
             'sem_status'  => _('Typ'),
             'gruppe'      => _('Farbgruppen'),

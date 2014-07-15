@@ -2703,7 +2703,6 @@ section.contentbox article section,
 section.contentbox article footer {
   padding: 0 10px 0 10px;
   max-height: 0;
-  overflow: hidden;
   -webkit-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
   -moz-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);
   -o-transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1);

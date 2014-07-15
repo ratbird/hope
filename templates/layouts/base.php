@@ -53,7 +53,7 @@ if ($infobox && is_array($infobox)) {
                 $widget->addElement(new InfoboxElement($row['text'], $icon));
             }
         }
-        $sidebar->insertWidget($widget, ':first');
+        $sidebar->addWidget($widget);
     }
     unset($infobox);
 }

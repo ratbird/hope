@@ -2508,13 +2508,16 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
+/*
 .sidebar-widget.sidebar-infobox {
-  border-color: #d60000;
-  background: #e1e4e5;
+    border-color: @red;
+    background: @light-gray-color-20;
+    
+    .sidebar-widget-header {
+        background: @red-40;
+    }
 }
-.sidebar-widget.sidebar-infobox .sidebar-widget-header {
-  background: #ef9999;
-}
+*/
 .helpbar-container {
   background: #fff;
   clear: both;

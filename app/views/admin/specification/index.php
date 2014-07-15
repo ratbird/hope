@@ -49,31 +49,13 @@
     </tbody>
 </table>
 
-<? //infobox
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag' => array(
-                array(
-                    "icon" => "icons/16/black/add.png",
-                    "text" => '<a href="' . $controller->url_for('admin/specification/edit') . '">' . _('Neue Regel anlegen') . '</a>'
-                )
-            )
-        ),
-        array(
-            'kategorie' => _("Hinweis"),
-            'eintrag' => array(
-                array(
-                    "icon" => "icons/16/black/info.png",
-                    "text" => _("Zusatzangaben werden zentral vom Systemadministrator definiert. "
-                               ."Damit wird verhindert, dass Dozenten beliebige Informationen von Studierenden "
-                               ."abfragen (Datenschutz) können und die Bedienungsfehler bei der Aktivierung "
-                               ."der Abfrage von Zusatzangaben minimiert werden.")
-                )
-            )
-        )
-    )
-);
+<?
+
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Zusatzangaben'));
+$actions = new ActionsWidget();
+$actions->addLink(_('Neue Regel anlegen'), $controller->url_for('admin/specification/edit'), 'icons/16/blue/add.png');
+$sidebar->addWidget($actions);
+
 ?>

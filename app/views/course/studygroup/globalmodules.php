@@ -2,21 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-/* * * * * * * * * * * * *
- * * * I N F O B O X * * *
-  * * * * * * * * * * * * */
-$infobox['picture'] = 'sidebar/studygroup-sidebar.png';
-$infobox['content'] = array(
-    array(
-        'kategorie' => _("Information"),
-        'eintrag'   => array(
-            array(
-                'text' => 'Hier können Sie globale Einstellungen zu Studentischen Arbeitsgruppen vornehmen.',
-                "icon" => "icons/16/black/info.png"
-            )
-        )
-    )
-);
 
 /* * * * * * * * * * * *
  * * * O U T P U T * * *

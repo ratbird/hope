@@ -51,38 +51,20 @@
 <?endif ; ?>
 
 <?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/admin.png",
-                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Zurück zur Konfiguration').'</a>'
-            ),
-            array(
-                "icon" => "icons/16/black/person.png",
-                "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration').'">'._('Nutzerparameter abrufen').'</a>'
-            )
-        )
-    ), array(
-        'kategorie' => _('Suche:'),
-        'eintrag'   => array(
-            array(
-                'icon' => "icons/16/black/arr_2right.png",
-                'text' => $this->render_partial('admin/configuration/results_filter', compact('search_filter', 'config_filter'))
-        )
-       )
-    ), array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                        "text" => _("Sie können hier Parameter der Systemkonfiguration
-                        direkt verändern. Sie können sowohl auf System- als auch Nutzervariablen zugreifen."),
-                        "icon" => "icons/16/black/info.png"
-                        )
-        )
-    )
-);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(PageLayout::getTitle() ? : _('Konfiguration'));
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
-$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
+$actions = new ActionsWidget();
+$actions->addLink(_('Übersicht'),$controller->url_for('admin/configuration/configuration'), 'icons/16/blue/admin.png');
+$actions->addLink(_('Nutzerparameter abrufen'),$controller->url_for('admin/configuration/user_configuration'), 'icons/16/blue/person.png');
+$sidebar->addWidget($actions);
+
+
+$widget = new SidebarWidget();
+$widget->setTitle(_('Suche'));
+$widget->addElement(new WidgetElement($this->render_partial('admin/configuration/results_filter', compact('search_filter', 'config_filter'))));
+$sidebar->addWidget($widget);
+
+
 ?>

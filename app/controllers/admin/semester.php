@@ -37,10 +37,10 @@ class Admin_SemesterController extends AuthenticatedController
 
         //setting title and navigation
         PageLayout::setTitle(_("Verwaltung von Semestern und Ferien"));
-        Navigation::activateItem('/admin/config/semester');
+        Navigation::activateItem('/admin/locations/semester');
 
         //Infobox
-        $this->infobox = $this->getInfobox();
+        $this->infobox = $this->setSidebar();
     }
 
     /**
@@ -309,40 +309,17 @@ class Admin_SemesterController extends AuthenticatedController
     }
 
     /**
-     * Return the infobox for this controller.
+     * Adds the content to sidebar
      */
-    private function getInfobox()
+    private function setSidebar()
     {
-        $infobox = array('picture' => 'sidebar/admin-sidebar.png');
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/semester/edit_semester').'">'._('Neues Semester anlegen').'</a>',
-            "icon" => "icons/16/black/add.png");
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/semester/edit_holidays').'">'._('Neue Ferien anlegen').'</a>',
-            "icon" => "icons/16/black/add.png");
-        $infobox['content'] = array(
-            array(
-                'kategorie' => _("Aktionen"),
-                'eintrag'   => $aktionen
-            ),
-            array(
-                'kategorie' => _("Information"),
-                'eintrag'   => array(
-                    array(
-                        "text" => _("Auf dieser Seite werden die Semester und Ferien aufgelistet."),
-                        "icon" => "icons/16/black/info.png"
-                    ),
-                    array(
-                        "text" => _("Die Daten müssen im Format tt.mm.jjjj eingegeben werden."),
-                        "icon" => "icons/16/black/info.png"
-                    ),
-                    array(
-                        "text" => _("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!"),
-                        "icon" => "icons/16/black/info.png"
-                    )
-                )
-            )
-        );
-        return $infobox;
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(_('Semester'));
+        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+
+        $links = new ActionsWidget();
+        $links->addLink(_('Neues Semester anlegen'), $this->url_for('admin/semester/edit_semester'),'icons/16/blue/add.png');
+        $links->addLink(_('Neue Ferien anlegen'), $this->url_for('admin/semester/edit_holidays'),'icons/16/blue/add.png');
+        $sidebar->addWidget($links);
     }
 }

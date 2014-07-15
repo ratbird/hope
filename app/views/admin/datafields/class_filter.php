@@ -1,6 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
+
 <form action="<?= $controller->url_for('admin/datafields') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <select name="class_filter" onchange="this.form.submit();">

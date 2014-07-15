@@ -72,7 +72,7 @@ PageLayout::setTitle(_("Verwaltung externer Seiten"));
 if ($_SESSION['links_admin_data']["topkat"] == "inst") {
     Navigation::activateItem('/admin/institute/external');
 } else {
-    Navigation::activateItem('/admin/config/external');
+    Navigation::activateItem('/admin/locations/external');
 }
 $mod=Request::quoted('mod');//Change header_line if open object
 $header_line = getHeaderLine($range_id);

@@ -125,38 +125,8 @@ use Studip\Button, Studip\LinkButton;
 </table>
 
 <?
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('admin/autoinsert').'">'._('Übersicht').'</a>',
-    "icon" => "icons/16/black/edit.png"
-);
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('admin/autoinsert/manual').'">'._('Benutzergruppen manuell eintragen').'</a>',
-    "icon" => "icons/16/black/visibility-visible.png"
-);
-
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag'   => $aktionen
-        ),
-        array(
-            'kategorie' => _("Hinweise"),
-            'eintrag'   => array(
-                array(
-                    "text" => _("Wählen Sie Veranstaltungen aus, in die neue Benutzer oder bereits vorhandene Benutzer anhand ihrer Statusgruppe automatisch eingetragen werden sollen."),
-                    "icon" => "icons/16/black/info.png"
-                ),
-                array(
-                    "text" => _("Es können nur Veranstaltungen ohne gesetzte Zugangsberechtigungen ausgewählt werden."),
-                    "icon" => "icons/16/black/info.png"
-                ),
-                array(
-                    "text" => _("Die Suche umfasst folgende Bereiche:<br> Titel, Lehrender, Studienbereich, Veranstaltungsnummer, Kommentare"),
-                    "icon" => "icons/16/black/info.png"
-                )
-            )
-        )
-    )
-);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle('Automatisiertes Eintragen');
+$links = new ActionsWidget();
+$links->addLink(_('Benutzergruppen manuell eintragen'), $controller->url_for('admin/autoinsert/manual'), 'icons/16/blue/visibility-visible.png');
+$sidebar->addWidget($links);

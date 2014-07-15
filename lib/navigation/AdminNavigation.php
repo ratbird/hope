@@ -54,6 +54,19 @@ class AdminNavigation extends Navigation
 
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
+        // global config / user administration
+        if (!get_config('RESTRICTED_USER_MANAGEMENT') || $perm->have_perm('root')) {
+            $navigation = new Navigation(_('Benutzer'));
+            $navigation->setURL('dispatch.php/admin/user/');
+            $navigation->addSubNavigation('index', new Navigation(_('Benutzer'), 'dispatch.php/admin/user'));
+
+            if($perm->have_perm('root')) {
+                $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/admin/domain'));
+            }
+            $this->addSubNavigation('user', $navigation);
+        }
+
+
         // course administration
         $navigation = new Navigation(_('Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
@@ -126,52 +139,27 @@ class AdminNavigation extends Navigation
 
         $this->addSubNavigation('institute', $navigation);
 
+
+
         // global config / user administration
-        $navigation = new Navigation(_('Globale Einstellungen'));
-
-        if (!get_config('RESTRICTED_USER_MANAGEMENT') || $perm->have_perm('root')) {
-            $navigation->addSubNavigation('user', new Navigation(_('Benutzer'), 'dispatch.php/admin/user/'));
-        }
-
-        if ($perm->have_perm(get_config('RANGE_TREE_ADMIN_PERM') ? get_config('RANGE_TREE_ADMIN_PERM') : 'admin')) {
-            $navigation->addSubNavigation('range_tree', new Navigation(_('Einrichtungshierarchie'), 'admin_range_tree.php'));
-        }
-
-        if ($perm->have_perm(get_config('SEM_TREE_ADMIN_PERM') ? get_config('SEM_TREE_ADMIN_PERM') : 'admin') && $perm->is_fak_admin()) {
-            $navigation->addSubNavigation('sem_tree', new Navigation(_('Veranstaltungshierarchie'), 'admin_sem_tree.php'));
-        }
+        $navigation = new Navigation(_('System'));
 
         if ($perm->have_perm(get_config('AUX_RULE_ADMIN_PERM') ? get_config('AUX_RULE_ADMIN_PERM') : 'admin')) {
             $navigation->addSubNavigation('specification', new Navigation(_('Zusatzangaben'), 'dispatch.php/admin/specification'));
         }
 
-        if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'dispatch.php/admin/lockrules'));
-        }
 
         if ($perm->have_perm('root')) {
             $navigation->addSubNavigation('plugins', new Navigation(_('Plugins'), 'dispatch.php/admin/plugin'));
             $navigation->addSubNavigation('roles', new Navigation(_('Rollen'), 'dispatch.php/admin/role'));
-            $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/admin/domain'));
             $navigation->addSubNavigation('datafields', new Navigation(_('Datenfelder'), 'dispatch.php/admin/datafields'));
             $navigation->addSubNavigation('configuration', new Navigation(_('Konfiguration'), 'dispatch.php/admin/configuration/configuration'));
-            $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
 
             if (get_config('BANNER_ADS_ENABLE'))  {
                 $navigation->addSubNavigation('banner', new Navigation(_('Werbebanner'), 'dispatch.php/admin/banner'));
             }
 
-            if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
-                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
-            }
-
-            if (get_config('EXTERN_ENABLE')) {
-                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
-            }
-
             $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
-
-            $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
 
             if (get_config('SMILEYADMIN_ENABLE')) {
                 $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'dispatch.php/admin/smileys'));
@@ -182,13 +170,12 @@ class AdminNavigation extends Navigation
             }
 
             if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-                $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
+                $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'admin_elearning_interface.php'));
             }
 
             if (get_config('WEBSERVICES_ENABLE')) {
-                $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice'), 'dispatch.php/admin/webservice_access'));
+                $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservices'), 'dispatch.php/admin/webservice_access'));
             }
-            $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
 
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
@@ -203,11 +190,45 @@ class AdminNavigation extends Navigation
 
             $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
 
-            $navigation->addSubNavigation('start', new Navigation(_('Startseitenverwaltung'), 'dispatch.php/admin/start'));
+            $navigation->addSubNavigation('start', new Navigation(_('Startseite'), 'dispatch.php/admin/start'));
         }
 
         $this->addSubNavigation('config', $navigation);
 
+
+        if($perm->have_perm('root')) {
+            $navigation = new Navigation(_('Standort'));
+
+            if ($perm->have_perm(get_config('RANGE_TREE_ADMIN_PERM') ? get_config('RANGE_TREE_ADMIN_PERM') : 'admin')) {
+                $navigation->addSubNavigation('range_tree', new Navigation(_('Einrichtungshierarchie'), 'admin_range_tree.php'));
+            }
+
+            if ($perm->have_perm(get_config('SEM_TREE_ADMIN_PERM') ? get_config('SEM_TREE_ADMIN_PERM') : 'admin') && $perm->is_fak_admin()) {
+                $navigation->addSubNavigation('sem_tree', new Navigation(_('Veranstaltungshierarchie'), 'admin_sem_tree.php'));
+            }
+
+
+            if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin')) {
+                $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'dispatch.php/admin/lockrules'));
+            }
+
+            $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
+
+            if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
+                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
+            }
+
+
+            if (get_config('EXTERN_ENABLE')) {
+                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
+            }
+
+            $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
+            $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
+
+
+            $this->addSubNavigation('locations', $navigation);
+        }
         // log view
         if ($perm->have_perm('root') && get_config('LOG_ENABLE')) {
             $navigation = new Navigation(_('Log'));

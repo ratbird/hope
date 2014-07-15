@@ -122,7 +122,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         $this->edit = ConfigurationModel::getConfigInfo($config_id);
         $this->allconfigs = ConfigurationModel::getConfig();
         PageLayout::setTitle(_("Konfigurationsparameter editieren"));
-        $this->infobox = $this-> getInfobox();
+        $this->infobox = $this-> setSidebar();
 
         //ajax
         if (Request::isXhr()) {
@@ -191,7 +191,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Konfigurationsparameter editieren"));
-        $this->infobox = $this->getInfobox();
+        $this->infobox = $this->setSidebar();
 
         //ajax
         if (@$_SERVER['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest') {
@@ -204,33 +204,16 @@ class Admin_ConfigurationController extends AuthenticatedController
     /**
      * Create the messagebox
      */
-    private function getInfobox()
+    private function setSidebar()
     {
-        $infobox = array('picture' => 'sidebar/admin-sidebar.png');
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/configuration/configuration').'">'._('Zurück zur Konfiguration').'</a>',
-            "icon" => "icons/16/black/admin.png"
-        );
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/configuration/user_configuration').'">'._('Nutzerparameter abrufen').'</a>',
-            "icon" => "icons/16/black/person.png"
-        );
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(PageLayout::getTitle() ? : _('Konfiguration'));
+        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
-        $infobox['content'] = array(
-            array(
-                'kategorie' => _("Aktionen"),
-                'eintrag'   => $aktionen
-                ),
-            array(
-                'kategorie' => _("Hinweise"),
-                'eintrag'   => array(
-                    array(
-                        "text" => _("Sie können hier Parameter der Systemkonfiguration direkt verändern. Sie können sowohl auf System- als auch Nutzervariablen zugreifen."),
-                        "icon" => "icons/16/black/info.png"
-                        )
-                    )
-                )
-            );
-        return $infobox;
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Übersicht'),$this->url_for('admin/configuration/configuration'), 'icons/16/blue/admin.png');
+        $actions->addLink(_('Nutzerparameter abrufen'),$this->url_for('admin/configuration/user_configuration'), 'icons/16/blue/person.png');
+        $sidebar->addWidget($actions);
+
     }
 }

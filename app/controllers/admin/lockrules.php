@@ -33,7 +33,7 @@ class Admin_LockrulesController extends AuthenticatedController
         $this->set_layout($layout);
 
         PageLayout::setTitle(_('Verwaltung der Sperrebenen'));
-        Navigation::activateItem('/admin/config/lock_rules');
+        Navigation::activateItem('/admin/locations/lock_rules');
 
         URLHelper::bindLinkParam('lock_rule_type', $this->lock_rule_type);
 

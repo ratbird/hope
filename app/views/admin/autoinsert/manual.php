@@ -168,34 +168,9 @@ jQuery(function ($) {
 <? endif ?>
 
 <?
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('admin/autoinsert').'">'._('Zurück zum automatischen Eintragen').'</a>',
-    "icon" => "icons/16/black/edit.png"
-);
-$aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('admin/autoinsert/manual').'">'._('Benutzergruppen manuell eintragen').'</a>',
-    "icon" => "icons/16/black/visibility-visible.png"
-);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle('Manuelles Eintragen');
+$links = new ActionsWidget();
+$links->addLink(_('Übersicht'), $controller->url_for('admin/autoinsert'), 'icons/16/blue/edit.png');
+$sidebar->addWidget($links);
 
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag'   => $aktionen
-        ),
-        array(
-            'kategorie' => _("Hinweise"),
-            'eintrag'   => array(
-                array(
-                    "text" => _("Teilnehmer die bereits in eine Veranstaltung eingetragen wurden, können nicht erneut in die gleiche Veranstaltung eingetragen werden. Ein erneutes Eintragen ist auch dann nicht möglich, wenn sich ein Teilnehmer selbst ausgetragen hat."),
-                    "icon" => "icons/16/black/info.png"
-                ),
-                array(
-                    "text" => _("Es können nur Veranstaltungen ausgewählt werden, in denen keine Zugangsbeschränkungen aktiviert wurden."),
-                    "icon" => "icons/16/black/info.png"
-                )
-            )
-        )
-    )
-);

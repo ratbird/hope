@@ -87,26 +87,12 @@ use Studip\Button, Studip\LinkButton;
     </table>
 </form>
 
-<? //infobox
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Hinweis"),
-            'eintrag' => array(
-                array(
-                    "icon" => "icons/16/black/info.png",
-                    "text" => sprintf(_('Es können nur neue Regeln für Zusatzangaben erstellt werden, '
-                               .'wenn mindestens ein Eintrag im Bereich %sDatenfelder%s in der Kategorie '
-                               .'<i>Datenfelder für Nutzer-Zusatzangaben in Veranstaltungen</i> erstellt wurde.'),
-                               '<a href="' . URLHelper::getLink('dispatch.php/admin/datafields') . '">', '</a>')
-                ),
-                array(
-                    "icon" => "icons/16/black/info.png",
-                    "text" => _('Mit roten Sternchen markierte Felder sind Pflichtfelder.')
-                )
-            )
-        )
-    )
-);
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Zusatzangaben'));
+$actions = new ActionsWidget();
+$actions->addLink(_('Datenfelder bearbeiten'), URLHelper::getLink('dispatch.php/admin/datafields'), 'icons/16/blue/add.png');
+$sidebar->addWidget($actions);
+
 ?>

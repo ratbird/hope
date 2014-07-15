@@ -171,27 +171,4 @@ use Studip\Button, Studip\LinkButton;
 
 include '_infobox.php';
 
-$infobox = array(
-    'picture' => 'sidebar/person-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag' => $aktionen
-        ),
-        array("kategorie" => _("Informationen:"),
-              "eintrag"   =>
-            array(
-                array(
-                      "icon" => "icons/16/black/info.png",
-                      "text" => _("Mit roten Sternchen markierte Felder sind Pflichtfelder.")
-                )
-            )
-        )
-    )
-);
-if ($prelim) {
-    $infobox['content'][1]['eintrag'][] = array(
-                      "icon" => "icons/16/black/info.png",
-                      "text" => _("Sie erstellen einen vorläufigen Benutzer. Vorläufige Benutzer können sich nicht anmelden und sind nicht öffentlich sichtbar.")
-                );
-}
+?>

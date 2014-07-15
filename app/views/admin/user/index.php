@@ -170,15 +170,6 @@ $infobox = array(
         array(
             'kategorie' => _("Aktionen"),
             'eintrag'   => $aktionen
-        ),
-        array(
-            'kategorie' => _("Information"),
-            'eintrag'   => array(
-                array(
-                    "text" => _("Auf dieser Seite können Sie nach Benutzern suchen und die Benutzerdaten einsehen bzw. verändern."),
-                    "icon" => "icons/16/black/info.png"
-                )
-            )
         )
     )
 );

@@ -23,7 +23,7 @@ class Admin_SemClassesController extends AuthenticatedController
 
     public function overview_action()
     {
-        Navigation::activateItem("/admin/config/sem_classes");
+        Navigation::activateItem("/admin/locations/sem_classes");
         if (count($_POST) && Request::submitted('delete') && Request::get("delete_sem_class")) {
             $sem_class = $GLOBALS['SEM_CLASS'][Request::get("delete_sem_class")];
             if ($sem_class->delete()) {
@@ -63,7 +63,7 @@ class Admin_SemClassesController extends AuthenticatedController
 
     public function details_action()
     {
-        Navigation::activateItem("/admin/config/sem_classes");
+        Navigation::activateItem("/admin/locations/sem_classes");
         $modules = array(
             'CoreOverview' => array('id' => "CoreOverview", 'name' => _("Kern-Übersicht"), 'enabled' => true),
             'CoreAdmin' => array('id' => "CoreAdmin", 'name' => _("Kern-Verwaltung"), 'enabled' => true),

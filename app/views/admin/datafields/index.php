@@ -202,34 +202,16 @@ jQuery(function ($) {
 });
 </script>
 <?
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/arr_2right.png',
-                'text' => $this->render_partial('admin/datafields/class_filter', compact('allclasses', 'class_filter'))
-            ),
-            array(
-                'text' => '<a href="'.$controller->url_for('admin/datafields/new/'.$class_filter).'">'._('Neues Datenfeld anlegen').'</a>',
-                'icon' => 'icons/16/black/add.png',
-            )
-        )
-    ),
-    array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                'text' => _('Um neue Datenfelder anlegen zu können, wählen Sie bitte vorher im Anzeigefilter einen Datenfeldtyp aus.'),
-                'icon' => 'icons/16/black/info.png'
-            ),
-            array(
-                'text' => _('Die Metadaten von Veranstaltungen, Einrichtungen und Personen können um freie Datenfelder erweitert werden. Dabei kann der Name der Datenfelder festgelegt werden, sowie für welche Nutzer diese Felder sichtbar und bearbeitbar sind.'),
-                'icon' => 'icons/16/black/info.png'
-            )
-        )
-    )
-));
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Datenfelder'));
 
+$actions = new ActionsWidget();
+$actions->addLink(_('Neues Datenfeld anlegen'),$controller->url_for('admin/datafields/new/'.$class_filter), 'icons/16/blue/add.png');
+$sidebar->addWidget($actions);
+
+
+$widget = new SidebarWidget();
+$widget->setTitle(_('Filter'));
+$widget->addElement(new WidgetElement($this->render_partial('admin/datafields/class_filter', compact('allclasses', 'class_filter'))));
+$sidebar->addWidget($widget);

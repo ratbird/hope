@@ -72,22 +72,3 @@ use Studip\Button, Studip\LinkButton;
 <? //infobox
 
 include '_infobox.php';
-
-$infobox = array(
-    'picture' => 'sidebar/person-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag' => $aktionen
-        ),
-        array(
-            'kategorie' => _("Information"),
-            'eintrag'   => array(
-                array(
-                    "text" => _("Folgende Daten werden migriert:<br> Forumsbeiträge, Dateien, Kalender, Archiv, Evaluationen, Kategorien, Literatur, Nachrichten, Ankündigungen, Abstimmungen, Termine, Umfragen, Wiki, Statusgruppen und Adressbuch."),
-                    "icon" => "icons/16/black/info.png"
-                    )
-            )
-        )
-    )
-);

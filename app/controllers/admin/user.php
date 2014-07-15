@@ -37,7 +37,7 @@ class Admin_UserController extends AuthenticatedController
         $perm->check($GLOBALS['RESTRICTED_USER_MANAGEMENT'] ? 'root' : 'admin');
 
         // set navigation
-        Navigation::activateItem('/admin/config/user');
+        Navigation::activateItem('/admin/user/index');
 
         //PageLayout
         PageLayout::setHelpKeyword("Admins.Benutzerkonten");

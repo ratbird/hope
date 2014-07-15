@@ -40,7 +40,7 @@ class Admin_AutoinsertController extends AuthenticatedController
         $perm->check('root');
 
         // set navigation
-        Navigation::activateItem('/admin/config/auto_insert');
+        Navigation::activateItem('/admin/locations/auto_insert');
 
         //pagelayout
         PageLayout::setTitle(_('Automatisiertes Eintragen verwalten'));

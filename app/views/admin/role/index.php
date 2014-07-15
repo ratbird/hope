@@ -63,38 +63,3 @@ use Studip\Button, Studip\LinkButton;
     <?= Button::create(_('Anlegen'), 'createrolebtn', array('title' => _('Rolle anlegen')))?>
 </form>
 
-<?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/roles.png',
-                'text' => '<a href="'.$controller->url_for('admin/role').'">'._('Rollen verwalten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/person.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/assign_role').'">'._('Benutzerzuweisungen bearbeiten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/plugin.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/assign_plugin_role').'">'._('Pluginzuweisungen bearbeiten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/log.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/show_role').'">'._('Rollenzuweisungen anzeigen').'</a>'
-            )
-        )
-    ), array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Zum Erstellen neuer Rollen geben Sie den Namen ein und klicken Sie auf "anlegen".')
-            ), array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Zum Löschen von Rollen klicken Sie auf das Mülleimersymbol. Systemrollen können jedoch nicht gelöscht werden.')
-            )
-        )
-    )
-);
-
-$infobox = array('picture' => 'sidebar/roles-sidebar.png', 'content' => $infobox_content);
-?>

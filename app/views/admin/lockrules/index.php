@@ -41,22 +41,14 @@ echo $message;
     </tbody>
     </table>
 <?
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_('Sperrebenen'));
+$sidebar->setImage(Assets::image_path('sidebar/lock-sidebar.png'));
 
-        $infobox_content = array(
-            array(
-                'kategorie' => _('Sperrebenen verwalten'),
-                'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/search.png',
-                'text' => $this->render_partial('admin/lockrules/_chooser.php')
-            ),
-            array(
-                    'icon' => 'icons/16/black/add.png',
-                    'text' => '<a href="'.$controller->url_for('admin/lockrules/new').'">'._('Neue Sperrebene anlegen').'</a>'
-                ))
-            ),
-        );
-if (!$GLOBALS['perm']->have_perm('root')) {
-    unset($infobox_content[0]['eintrag'][0]);
+if ($GLOBALS['perm']->have_perm('root')) {
+$actions = new ActionsWidget();
+$actions->addLink(_('Neue Sperrebene anlegen'), $controller->url_for('admin/lockrules/new'), 'icons/16/blue/add.png');
+$sidebar->addWidget($actions);
+    $this->render_partial('admin/lockrules/_chooser.php');
 }
-$infobox = array('picture' => 'sidebar/lock-sidebar.png', 'content' => $infobox_content);
+

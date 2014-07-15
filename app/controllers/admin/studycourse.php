@@ -38,7 +38,7 @@ class Admin_StudycourseController extends AuthenticatedController
         $perm->check('root');
 
         // set navigation
-        Navigation::activateItem('/admin/config/studycourse');
+        Navigation::activateItem('/admin/locations/studycourse');
     }
 
     /**
@@ -51,7 +51,7 @@ class Admin_StudycourseController extends AuthenticatedController
 
         //get data
         $this->studycourses = StudycourseModel::getStudyCourses();
-        $this->infobox = $this->getInfobox();
+        $this->infobox = $this->setSidebar();
 
         //sorting
         if(Request::get('sortby') == 'users') {
@@ -71,7 +71,7 @@ class Admin_StudycourseController extends AuthenticatedController
 
         //get data
         $this->studydegrees = StudycourseModel::getStudyDegrees();
-        $this->infobox = $this-> getInfobox();
+        $this->infobox = $this->setSidebar();
 
         //sorting
         if(Request::get('sortby') == 'users') {
@@ -101,7 +101,7 @@ class Admin_StudycourseController extends AuthenticatedController
 
         PageLayout::setTitle(_("Fächer editieren"));
         $this->edit = StudycourseModel::getStudyCourseInfo($prof_id);
-        $this->infobox = $this->getInfobox();
+        $this->infobox = $this->setSidebar();
     }
 
     /**
@@ -125,7 +125,7 @@ class Admin_StudycourseController extends AuthenticatedController
 
         PageLayout::setTitle(_("Abschlüsse editieren"));
         $this->edit = StudycourseModel::getStudyDegreeInfo($deg_id);
-        $this->infobox = $this->getInfobox();
+        $this->infobox = $this->setSidebar();
     }
 
     /**
@@ -202,7 +202,7 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Anlegen von Studienfächern"));
-        $this->infobox = $this-> getInfobox();
+        $this->infobox = $this->setSidebar();
     }
 
     /**
@@ -228,52 +228,24 @@ class Admin_StudycourseController extends AuthenticatedController
 
         PageLayout::setTitle(_("Anlegen von Studienabschlüssen"));
 
-        $this->infobox = $this-> getInfobox();
+        $this->infobox = $this->setSidebar();
     }
 
     /**
      * Create the messagebox
      */
-    private function getInfobox()
+    private function setSidebar()
     {
-        $infobox = array('picture' => 'sidebar/admin-sidebar.png');
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/studycourse/profession').'">'._('Gruppierung nach Fächer').'</a>',
-            "icon" => "icons/16/black/visibility-visible.png"
-        );
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/studycourse/degree').'">'._('Gruppierung nach Abschlüssen').'</a>',
-            "icon" => "icons/16/black/visibility-visible.png"
-        );
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/studycourse/newprofession').'">'._('Neue Fächer anlegen').'</a>',
-            "icon" => "icons/16/black/add.png"
-        );
-        $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/studycourse/newdegree').'">'._('Neue Abschlüsse anlegen').'</a>',
-            "icon" => "icons/16/black/add.png"
-        );
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(_('Studiengänge'));
+        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
-        $infobox['content'] = array(
-            array(
-                'kategorie' => _("Aktionen"),
-                'eintrag'   => $aktionen
-            ),
-            array(
-                'kategorie' => _("Information"),
-                'eintrag'   => array(
-                    array(
-                        "text" => _("Auf dieser Seite können Sie die Studiengänge verwalten. Zusätzlich können Sie allen Benutzern eines Studiengangs eine Nachricht senden."),
-                        "icon" => "icons/16/black/info.png"
-                    ),
-                    array(
-                        "text" => _("Studiengänge bestehen aus einem Fach und einem oder mehreren Abschlüssen. Bestehende Studiengänge und Abschlüsse können nur gelöscht werden, wenn diese keine Nutzer haben."),
-                        "icon" => "icons/16/black/info.png"
-                    )
-                )
-            )
-        );
-        return $infobox;
+        $links = new ActionsWidget();
+        $links->addLink(_('Gruppierung nach Fächer'), $this->url_for('admin/studycourse/profession'), 'icons/16/blue/visibility-visible.png');
+        $links->addLink(_('Gruppierung nach Abschlüssen'), $this->url_for('admin/studycourse/degree'), 'icons/16/blue/visibility-visible.png');
+        $links->addLink(_('Neue Fächer anlegen'), $this->url_for('admin/studycourse/newprofession'), 'icons/16/blue/add.png');
+        $links->addLink(_('Neue Abschlüsse anlegen'), $this->url_for('admin/studycourse/newdegree'), 'icons/16/blue/add.png');
+        $sidebar->addWidget($links);
     }
 
     private static function sortByUsers($a, $b)

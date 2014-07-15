@@ -153,31 +153,18 @@ use Studip\Button, Studip\LinkButton;
     </table>
 </form>
 
-<? //infobox
-$infobox = array(
-    'picture' => 'sidebar/admin-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _('Aktionen:'),
-            'eintrag'   => array(
-                array(
-                    'icon' => 'icons/16/black/arr_2right.png',
-                    'text' => $this->render_partial('admin/datafields/class_filter', compact('allclasses', 'class_filter'))
-                ),
-                array(
-                    'text' => '<a href="'.$controller->url_for('admin/datafields/new/'.$class_filter).'">'._('Neues Datenfeld anlegen').'</a>',
-                    'icon' => 'icons/16/black/add.png',
-                )
-            )
-        ),
-        array(
-            'kategorie' => _("Information"),
-            'eintrag'   => array(
-                array(
-                   "text" => _("Hier haben Sie die Möglichkeit, ein neues Datenfeld im gewählten Bereich anzulegen."),
-                   "icon" => "icons/16/black/info.png"
-                )
-            )
-        )
-    )
-);
+
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Datenfelder'));
+
+$actions = new ActionsWidget();
+$actions->addLink(_('Neues Datenfeld anlegen'),$controller->url_for('admin/datafields/new/'.$class_filter), 'icons/16/blue/add.png');
+$sidebar->addWidget($actions);
+
+
+$widget = new SidebarWidget();
+$widget->setTitle(_('Filter'));
+$widget->addElement(new WidgetElement($this->render_partial('admin/datafields/class_filter', compact('allclasses', 'class_filter'))));
+$sidebar->addWidget($widget);

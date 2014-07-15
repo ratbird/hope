@@ -104,39 +104,3 @@ use Studip\Button, Studip\LinkButton;
         <?= MessageBox::info(_('Es wurden keine Plugins gefunden.')) ?>
     <? endif ?>
 <? endif ?>
-
-<?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/roles.png',
-                'text' => '<a href="'.$controller->url_for('admin/role').'">'._('Rollen verwalten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/person.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/assign_role').'">'._('Benutzerzuweisungen bearbeiten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/plugin.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/assign_plugin_role').'">'._('Pluginzuweisungen bearbeiten').'</a>'
-            ), array(
-                'icon' => 'icons/16/black/log.png',
-                'text' => '<a href="'.$controller->url_for('admin/role/show_role').'">'._('Rollenzuweisungen anzeigen').'</a>'
-            )
-        )
-    ), array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Hier werden alle Benutzer und Plugins angezeigt, die der ausgewählten Rolle zugewiesen sind.')
-            ), array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Klicken Sie auf den Namen eines Nutzers oder Plugins, um die Rollenzuweisungen dieses Nutzers oder Plugins zu ändern.')
-            )
-        )
-    )
-);
-
-$infobox = array('picture' => 'sidebar/roles-sidebar.png', 'content' => $infobox_content);
-?>

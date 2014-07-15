@@ -297,29 +297,7 @@
 
 
 
-<? 
-$infobox = array(
-    array(
-        'kategorie' => _('Informationen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/exclaim.png',
-                'text' => _("Änderungen an dieser Seite können alle Veranstaltungen (auch bestehende) in Stud.IP verändern.")
-            )
-        )
-    ),
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/tools.png',
-                'text' => _("Weisen Sie Inhaltselemente wie Forum oder Plugins den Inhaltselementslots per Drag & Drop zu.")
-            ),
-            array(
-                'icon' => 'icons/16/black/group.png',
-                'text' => _("Nicht änderbare Inhaltselemente sind welche, die weder Dozent noch Admin selbst aktivieren oder deaktivieren können. Der von Ihnen hier festgelegte Zustand bleibt immer erhalten. Leere Inhaltselementslots können ebenfalls nicht vom Dozenten oder Admin befüllt werden und bleiben leer.")
-            )
-        )
-    )
-);
-$infobox = array('picture' => "sidebar/plugin-sidebar.png", 'content' => $infobox);
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_(PageLayout::getTitle()));
+$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));

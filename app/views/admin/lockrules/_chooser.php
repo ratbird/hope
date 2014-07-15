@@ -1,16 +1,10 @@
 <?
 # Lifter010: TODO
+$sidebar = Sidebar::Get();
+$list    = new SelectWidget(_('Bereichsauswahl'), $controller->url_for('admin/lockrules'), 'lock_rule_type');
+foreach (array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer")) as $type => $desc) {
+    $list->addElement(new SelectElement($type, $desc, Request::get('lock_rule_type') == $type), 'lock_rule_type-' . $type);
+}
+
+$sidebar->addWidget($list);
 ?>
-<form action="<?=$controller->url_for('admin/lockrules')?>" method="post">
-<?=CSRFProtection::tokenTag()?>
-    <select name="lock_rule_type" onchange="this.form.submit();">
-    <? foreach (array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer")) as $type => $desc) : ?>
-        <option value="<?= $type ?>" <?= $type == $lock_rule_type ? 'selected' : '' ?>>
-                <?= $desc ?>
-        </option>
-        <? endforeach ?>
-    </select>
-    <noscript>
-        <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "show")) ?>
-    </noscript>
-</form>

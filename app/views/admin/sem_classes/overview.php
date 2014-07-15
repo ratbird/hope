@@ -81,24 +81,10 @@ STUDIP.sem_classes = {
 };
 </script>
 <?
-$infobox = array(
-    array(
-        'kategorie' => _('Informationen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/exclaim.png',
-                'text' => _("Änderungen an dieser Seite können alle Veranstaltungen (auch bestehende) in Stud.IP verändern.")
-            )
-        )
-    ),
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/add.png',
-                'text' => '<a href="#" onClick="STUDIP.sem_classes.add(); return false;">'._("Fügen Sie eine neue Veranstaltungskategorie hinzu.").'</a>'
-            )
-        )
-    )
-);
-$infobox = array('picture' => "sidebar/plugin-sidebar.png", 'content' => $infobox);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_(PageLayout::getTitle()));
+$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));
+$links = new ActionsWidget();
+$links->addLink(_('Neue Kategorie anlegen'), '#', 'icons/16/blue/add.png', array('onClick' => 'STUDIP.sem_classes.add(); return false;'));
+$sidebar->addWidget($links);
+

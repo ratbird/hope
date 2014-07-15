@@ -103,42 +103,19 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 </table>
 
-<?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Globale Konfiguration').'</a>',
-                "icon" => "icons/16/black/admin.png"
-            ), array(
-                "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration/'.'giveAll').'">'._('Alle Nutzer-Einstellungen').'</a>',
-                "icon" => "icons/16/black/person.png"
-            )
-          )
-    ), array(
-        'kategorie' => _('Eingabe:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/search.png",
-                "text" =>  $this->render_partial('admin/configuration/user_filter', compact('allconfigs', 'config_filter'))
-            )
-        )
-    ),
-    array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                "text" => _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein."),
-                "icon" => "icons/16/black/info.png"
-                ),
-            array(
-                "text" => _("Einstellungen, die für einen Stud.IP-Nutzer gelten."),
-                "icon" => "icons/16/black/info.png"
-                )
-        )
-    )
-);
 
-$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
-?>
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(PageLayout::getTitle() ? : _('Konfiguration'));
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+
+$actions = new ActionsWidget();
+$actions->addLink(_('Globale Konfiguration'),$controller->url_for('admin/configuration/configuration'), 'icons/16/blue/admin.png');
+$actions->addLink(_('Alle Nutzer-Einstellungen'),$controller->url_for('admin/configuration/user_configuration/giveAll'), 'icons/16/blue/person.png');
+$sidebar->addWidget($actions);
+
+
+$widget = new SidebarWidget();
+$widget->setTitle(_('Eingabe'));
+$widget->addElement(new WidgetElement($this->render_partial('admin/configuration/user_filter', compact('allconfigs', 'config_filter'))));
+$sidebar->addWidget($widget);

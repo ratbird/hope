@@ -34,6 +34,7 @@ class Admin_RoleController extends AuthenticatedController
         // set page title and navigation
         PageLayout::setTitle(_('Verwaltung von Rollen'));
         Navigation::activateItem('/admin/config/roles');
+        $this->setSidebar($action);
     }
 
     /**
@@ -375,5 +376,18 @@ class Admin_RoleController extends AuthenticatedController
         if (Request::isXhr()) {
             $this->qsearch->withoutButton();
         }
+    }
+
+    private function setSidebar(&$action) {
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(PageLayout::getTitle() ? : _('Rollen'));
+        $sidebar->setImage(Assets::image_path('sidebar/roles-sidebar.png'));
+
+        $actions = new ViewsWidget();
+        $actions->addLink(_('Rollen verwalten'), $this->url_for('admin/role'))->setActive($action == 'index');
+        $actions->addLink(_('Benutzerzuweisungen bearbeiten'), $this->url_for('admin/role/assign_role'))->setActive($action == 'assign_role');
+        $actions->addLink(_('Pluginzuweisungen bearbeiten'), $this->url_for('admin/role/assign_plugin_role'))->setActive($action == 'assign_plugin_role');
+        $actions->addLink(_('Rollenzuweisungen anzeigen'), $this->url_for('admin/role/show_role'))->setActive($action == 'show_role');
+        $sidebar->addWidget($actions);
     }
 }

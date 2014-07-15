@@ -120,40 +120,20 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>
 
 <?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Anzeigefilter:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/search.png',
-                'text' => $this->render_partial('admin/plugin/plugin_filter')
-            )
-        )
-    ), array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Per Default-Aktivierung lassen sich Standard-Plugins automatisch in allen Veranstaltungen einer Einrichtung aktivieren.')
-            ), array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Position gibt die Reihenfolge des Plugins in der Navigation an. Erlaubt sind nur Werte größer als 0.')
-            )
-        )
-    )
-);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_('Plugins'));
+$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));
+
+
 
 if (get_config('PLUGINS_UPLOAD_ENABLE')) {
-    array_unshift($infobox_content, array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/add/plugin.png',
-                'text' => '<a href="'.$controller->url_for('admin/plugin/search').'">'._('Weitere Plugins installieren').'</a>'
-                          . $this->render_partial('admin/plugin/upload-drag-and-drop')
-            )
-        )
-    ));
+    $actions = new ActionsWidget();
+    $actions->addLink(_('Weitere Plugins installieren'), $controller->url_for('admin/plugin/search'), 'icons/16/blue/add.png');
+    $sidebar->addWidget($actions);
+
+    $widget = new SidebarWidget();
+    $widget->setTitle(_('Weitere Plugins installieren'));
+    $widget->addElement(new WidgetElement($this->render_partial('admin/plugin/upload-drag-and-drop')));
+    $sidebar->addWidget($widget);
 }
 
-$infobox = array('picture' => 'sidebar/plugin-sidebar.png', 'content' => $infobox_content);

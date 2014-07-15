@@ -482,47 +482,22 @@ use Studip\Button, Studip\LinkButton;
 
 include '_infobox.php';
 
-$paktionen[] = array(
-    "text" => '<a href="' .URLHelper::getLink('dispatch.php/profile?username=' . $user['username']) .'">' . _('Zum Benutzerprofil') .'</a>',
-    "icon" => "icons/16/black/person.png");
-$paktionen[] = array(
-    "text" => '<a href="' .URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $user['username']) .'">' . _('Nachricht an Benutzer verschicken') .'</a>',
-    "icon" => "icons/16/black/mail.png");
+$actions->addLink(_('Zum Benutzerprofil'), URLHelper::getLink('dispatch.php/profile?username=' . $user['username']), 'icons/16/blue/person.png');
+$actions->addLink(_('Nachricht an Benutzer verschicken'), URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $user['username']), 'icons/16/blue/mail.png');
+
 if ($GLOBALS['perm']->have_perm('root')) {
-    $paktionen[] = array(
-        "text" => '<a href="' .URLHelper::getLink('user_activities.php?username=' . $user['username']) . '">' . _('Datei- und Aktivitätsübersicht') .'</a>',
-        "icon" => "icons/16/black/vcard.png");
+    $actions->addLink(_('Datei- und Aktivitätsübersicht'), URLHelper::getLink('user_activities.php?username=' . $user['username']), 'icons/16/blue/vcard.png');
     if ($GLOBALS['LOG_ENABLE']) {
-        $paktionen[] = array(
-        "text" => '<a href="' . URLHelper::getLink('dispatch.php/event_log/show?search=' . $user['username'] .'&type=user&object_id=' .$user['user_id']) . '">' . _('Benutzereinträge im Log') . '</a>',
-        "icon" => "icons/16/black/log.png");
+        $actions->addLink(_('Benutzereinträge im Log'), URLHelper::getLink('dispatch.php/event_log/show?search=' . $user['username'] .'&type=user&object_id=' .$user['user_id']), 'icons/16/blue/log.png');
     }
 }
 if ($user['locked']) {
-    $paktionen[] = array(
-        "text" => '<a href="' . $controller->url_for('admin/user/unlock/' . $user['user_id'] . '') . '">' . _('Benutzer entsperren') . '</a>',
-        "icon" => "icons/16/black/lock-unlocked.png");
+    $actions->addLink(_('Benutzer entsperren'), $controller->url_for('admin/user/unlock/' . $user['user_id'] . ''), 'icons/16/blue/lock-unlocked.png');
 }
 if (!$prelim && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user['perms'], words('root admin')))) {
     if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $user['auth_plugin'])) {
-        $paktionen[] = array(
-            "text" => '<a href="' . $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') . '">' . _('Neues Passwort setzen') . '</a>',
-            "icon" => "icons/16/black/lock-locked.png");
+        $actions->addLink(_('Neues Passwort setzen'), $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') , 'icons/16/blue/lock-locked.png');
     }
-    $paktionen[] = array(
-        "text" => '<a href="' . $controller->url_for('admin/user/delete/' . $user['user_id'] . '/edit') . '">' . _('Benutzer löschen') . '</a>',
-        "icon" => "icons/16/black/trash.png");
+    $actions->addLink(_('Benutzer löschen'), $controller->url_for('admin/user/delete/' . $user['user_id'] . '/edit') , 'icons/16/blue/trash.png');
 }
-$infobox = array(
-    'picture' => 'sidebar/person-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag' => $aktionen
-        ),
-        array(
-            'kategorie' => _("Benutzerspezifische Aktionen"),
-            'eintrag' => $paktionen
-        )
-    )
-);
+

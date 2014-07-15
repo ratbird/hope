@@ -1,24 +1,4 @@
 <?php
-//Infobox:
-$info = array();
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Legen Sie fest, welche der installierten ".
-                        "Anmelderegeln im System benutzt werden dürfen.");
-$info[] = array(
-              "icon" => "icons/16/black/checkbox-checked.png",
-              "text" => "Sie können Anmelderegeln systemweit oder gezielt ".
-                        "für einzelne Einrichtungen freischalten.");
-
-$infobox = array(
-    array("kategorie" => _('Informationen:'),
-          "eintrag" => $info
-    )
-);
-$infobox = array('content' => $infobox,
-                 'picture' => 'sidebar/admin-sidebar.png'
-);
-
 if (isset($flash['error'])) {
     echo MessageBox::error($flash['error'], $flash['error_detail']);
 } elseif (isset($flash['success'])) {

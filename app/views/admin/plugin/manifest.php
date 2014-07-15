@@ -39,25 +39,6 @@ use Studip\Button, Studip\LinkButton;
 </p>
 
 <?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/schedule.png',
-                'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
-            )
-        )
-    ), array(
-        'kategorie' => _('Hinweise:'),
-        'eintrag'   => array(
-            array(
-                "icon" => "icons/16/black/info.png",
-                'text' => _('Hier finden Sie weitere Informationen zum ausgewählten Plugin.')
-            )
-        )
-    )
-);
-
-$infobox = array('picture' => 'sidebar/plugin-sidebar.png', 'content' => $infobox_content);
-?>
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_('Plugins'));
+$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));

@@ -35,12 +35,12 @@ class Admin_DomainController extends AuthenticatedController
 
         # set page title and navigation
         $layout = $template_factory->open('layouts/base');
-        $layout->infobox = $this->infobox_content();
+        $layout->infobox = $this->set_sidebar();
         $this->set_layout($layout);
 
         PageLayout::setTitle(_('Verwaltung der Nutzerdomänen'));
         PageLayout::setHelpKeyword('Admins.Nutzerdomaenen');
-        Navigation::activateItem('/admin/config/user_domains');
+        Navigation::activateItem('/admin/user/user_domains');
 
         # fetch user domain
         $this->domains = UserDomain::getUserDomains();
@@ -120,25 +120,12 @@ class Admin_DomainController extends AuthenticatedController
     /**
      * Get contents of the info box for this action.
      */
-    function infobox_content()
+    function set_sidebar()
     {
-        $infobox_content = array(
-            array(
-                'kategorie' => _('Nutzerdomänen verwalten'),
-                'eintrag'   => array(array(
-                    'icon' => 'icons/16/black/add.png',
-                    'text' => '<a href="'.$this->url_for('admin/domain/new').'">'._('Neue Nutzerdomäne anlegen').'</a>'
-                ))
-            ), array(
-                'kategorie' => _('Informationen'),
-                'eintrag'   => array(array(
-                    'icon' => 'icons/16/black/info.png',
-                    'text' => sprintf(_('In der Stud.IP-Hilfe finden Sie %sHinweise zur Verwendung von Nutzerdomänen%s.'),
-                                        '<a target="_blank" href="'.format_help_url('Admins.Nutzerdomaenen').'">', '</a>')
-                ))
-            )
-        );
-
-        return array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
+        $sidebar = Sidebar::Get();
+        $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neue Nutzerdomäne anlegen'), $this->url_for('admin/domain/new'), 'icons/16/black/add.png');
+        $sidebar->addWidget($actions);
     }
 }

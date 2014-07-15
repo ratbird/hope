@@ -45,7 +45,7 @@ require_once ('lib/classes/StudipSemSearch.class.php');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten"));
-Navigation::activateItem('/admin/config/sem_tree');
+Navigation::activateItem('/admin/locations/sem_tree');
 
 // Start of Output
 ob_start();

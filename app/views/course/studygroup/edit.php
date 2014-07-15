@@ -37,9 +37,10 @@ use Studip\Button, Studip\LinkButton;
             $adminModules = new AdminModules();
             $description = $adminModules->registered_modules[$key]['metadata']['description'];
             ?>
-            <label <?= tooltip(kill_format($description)); ?>>
+            <label>
                 <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>>
                 <?= htmlReady($name) ?>
+                <?= isset($description) ? tooltipIcon(kill_format($description)) : "" ?>
             </label><br>
         <? else : ?>
             <? $module = $sem_class->getSlotModule($key) ?>
@@ -49,13 +50,14 @@ use Studip\Button, Studip\LinkButton;
                 $studip_module = $sem_class->getModule($key);
                 $info = $studip_module->getMetadata();
                 ?>
-                <label <?= tooltip(isset($info['description']) ? kill_format($info['description']) : ("Für dieses Element ist keine Beschreibung vorhanden.")) ?>>
+                <label>
                     <input name="groupplugin[<?= $module ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>>
                     <?= htmlReady($name) ?>
                     <? $studip_module = $sem_class->getModule($module);
                     if (is_a($studip_module, "StandardPlugin")) : ?>
                         (<?= htmlReady($studip_module->getPluginName()) ?>)
                     <? endif ?>
+                    <?= isset($info['description']) ? tooltipIcon(kill_format($info['description'])) : "" ?>
                 </label><br>
             <? endif;?>
         <? endif ?>
@@ -68,9 +70,10 @@ use Studip\Button, Studip\LinkButton;
             $plugin = $sem_class->getModule($key);
             $info = $plugin->getMetadata();
             ?>
-            <label <?= tooltip(isset($info['description']) ? kill_format($info['description']) : ("Für dieses Element ist keine Beschreibung vorhanden.")) ?>>
+            <label>
                 <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>>
                 <?= htmlReady($name) ?>
+                <?= isset($info['description']) ? tooltipIcon(kill_format($info['description'])) : "" ?>
             </label><br>
         <? endif ?>
     <? endforeach; ?>

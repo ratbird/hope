@@ -183,6 +183,11 @@ class ForumHelpers {
     {
         static $online_status;
 
+        // check if the corresponding user's profile is visible
+        if (get_visibility_by_id($user_id) == false) {
+            return 'offline';
+        }
+
         if ($GLOBALS['user']->id == $user_id) {
             return 'available';
         }

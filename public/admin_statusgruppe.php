@@ -383,15 +383,18 @@ $statusgruppen = GetAllStatusgruppen($range_id);
 
 // do we have some roles already?
 if ($statusgruppen && sizeof($statusgruppen) > 0) {
-    $actions = new ActionsWidget();
+    $actions = new OptionsWidget();
+    $actions->setTitle(_('Aktionen'));
 
-    $actions->addLink(_('Selbsteintragung in allen Gruppen aktiviert?'),
-                      URLHelper::getLink($self_assign_all ? '?cmd=deactivateSelfAssignAll' : '?cmd=activateSelfAssignAll'),
-                      $self_assign_all ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+    $actions->addCheckbox(_('Selbsteintragung in allen Gruppen aktiviert?'),
+                          $self_assign_all,
+                          URLHelper::getLink('?cmd=activateSelfAssignAll'),
+                          URLHelper::getLink('?cmd=deactivateSelfAssignAll'));
 
-    $actions->addLink(_('Selbsteintragung in nur einer Gruppe aktiviert?'),
-                      URLHelper::getLink($self_assign_exclusive ? '?cmd=deactivateSelfAssignExclusive' : '?cmd=activateSelfAssignExclusive'),
-                      $self_assign_exclusive ? 'icons/16/black/checkbox-checked.png' : 'icons/16/black/checkbox-unchecked.png');
+    $actions->addCheckbox(_('Selbsteintragung in nur einer Gruppe aktiviert?'),
+                          $self_assign_exclusive,
+                          URLHelper::getLink('?cmd=activateSelfAssignExclusive'),
+                          URLHelper::getLink('?cmd=deactivateSelfAssignExclusive'));
 
     $sidebar->addWidget($actions);
 

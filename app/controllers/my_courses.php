@@ -191,13 +191,11 @@ class MyCoursesController extends AuthenticatedController
                                      'icons/16/blue/add/seminar.png');
         }
         $sidebar->addWidget($setting_widget);
+        $this->setGroupingSelector($this->group_field);
+        $this->setSemesterWidget($sem);
         if (get_config('EXPORT_ENABLE')) {
             $this->setExportWidget();
         }
-
-        $this->setGroupingSelector($this->group_field);
-        $this->setSemesterWidget($sem);
-
     }
 
     public function set_open_group_action($id)
@@ -705,7 +703,7 @@ class MyCoursesController extends AuthenticatedController
     }
 
     /**
-     * Returns a widtget for semester selection
+     * Returns a widget for semester selection
      * @param $sem
      * @return OptionsWidget
      */
@@ -727,7 +725,9 @@ class MyCoursesController extends AuthenticatedController
     }
 
 
-
+    /**
+     * Returns a widget for export functionality
+     */
     private function setExportWidget() {
         $sidebar = Sidebar::Get();
         $widget = new ExportWidget();

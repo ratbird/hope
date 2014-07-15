@@ -150,10 +150,6 @@ class Admin_CoursesController extends AuthenticatedController
             $actions->addLink(_('Neue Veranstaltung anlegen'),
                 URLHelper::getLink('admin_seminare_assi.php',
                     array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
-
-            $actions->addLink(_('Als Excel exportieren'),
-                URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
-                'icons/16/blue/file-excel.png');
             $sidebar->addWidget($actions, 'links');
         }
         $this->setSearchWiget();
@@ -163,6 +159,14 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setCourseTypeWidget($config_my_course_type_filter);
         $this->setActionsWidget($this->selected_action);
         $this->setViewWidget($this->view_filter);
+
+        if($this->sem_create_perm) {
+            $export = new ExportWidget();
+            $export->addLink(_('Als Excel exportieren'),
+                URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
+                'icons/16/blue/file-excel.png');
+            $sidebar->addWidget($export);
+        }
     }
 
     /**

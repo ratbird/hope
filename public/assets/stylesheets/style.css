@@ -2435,7 +2435,7 @@ ul.widget-list > li {
 select.sidebar-selectlist {
   width: 100%;
 }
-.sidebar-search input[type=search] {
+.sidebar-search .needles input[type=text] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

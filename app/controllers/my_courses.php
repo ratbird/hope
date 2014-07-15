@@ -172,7 +172,7 @@ class MyCoursesController extends AuthenticatedController
         if ($new_contents) {
             $setting_widget->addLink(_('Alles als gelesen markieren'),
                                      $this->url_for('my_courses/tabularasa/' . $sem . '/', time()),
-                                     'icons/16/blue/refresh.png');
+                                     'icons/16/blue/accept.png');
         }
         $setting_widget->addLink(_('Farbgruppierung ändern'),
                                  URLHelper::getLink($this->settings_url),

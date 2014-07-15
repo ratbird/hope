@@ -99,7 +99,7 @@ $links = new ActionsWidget();
 if ($reset) {
     $links->addLink(_('Alles als gelesen markieren'),
                     $controller->url_for('my_institutes/tabularasa/' . time()),
-                    'icons/16/blue/refresh.png');
+                    'icons/16/blue/accept.png');
 }
 if ($GLOBALS['perm']->have_perm('dozent') && !empty($institutes)) {
     $links->addLink(_('Einrichtungsdaten bearbeiten'),

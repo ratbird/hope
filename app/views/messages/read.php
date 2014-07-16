@@ -77,7 +77,7 @@
 </table>
 <div class="clear"></div>
 
-<div class="message_body" style="font-size: 1.2em; margin: 3px; padding: 10px; background-color: #e7ebf1;">
+<div class="message_body" style="font-size: 1.2em;">
     <?= formatReady($message["message"]) ?>
 </div>
 <? if (count($message->attachments)) : ?>

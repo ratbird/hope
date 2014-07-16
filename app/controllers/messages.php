@@ -257,7 +257,7 @@ class MessagesController extends AuthenticatedController {
                 '',
                 '',
                 '',
-                Request::get("message_signature") ? Request::get("message_signature_content") : "",
+                null,
                 Request::get("message_subject"),
                 Request::get("message_mail") ? true : "",
                 'normal',
@@ -306,7 +306,7 @@ class MessagesController extends AuthenticatedController {
     {
         if ($tag) {
             $messages_data = DBManager::get()->prepare("
-                SELECT *
+                SELECT message.*
                 FROM message
                     INNER JOIN message_user ON (message_user.message_id = message.message_id)
                     INNER JOIN message_tags ON (message_tags.message_id = message.message_id AND message_tags.user_id = message_user.user_id)

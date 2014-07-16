@@ -6,14 +6,13 @@
 <input type="hidden" name="search_subject" id="search_subject" value="<?= htmlReady(Request::get("search_subject")) ?>">
 <input type="hidden" name="search_content" id="search_content" value="<?= htmlReady(Request::get("search_content")) ?>">
 
-<? if (Request::get("tag")) : ?>
-<h4>
-<?= _("Zum Tag: ").htmlReady(ucfirst(Request::get("tag"))) ?>
-</h4>
-<? endif ?>
-
 <table class="default" id="messages">
-    <caption><?= $received ? _("Eingang") : _("Gesendet") ?></caption>
+    <caption>
+        <?= $received ? _("Eingang") : _("Gesendet") ?>
+        <? if (Request::get("tag")) : ?>
+            <?= ", "._("Tag: ").htmlReady(ucfirst(Request::get("tag"))) ?>
+        <? endif ?>
+    </caption>
     <thead>
         <tr>
             <th></th>
@@ -103,15 +102,20 @@ $search->addFilter(_('Inhalt'), 'search_content');
 $search->addFilter(_('AutorIn'), 'search_autor');
 $sidebar->addWidget($search);
 
-$folderwidget = new LinksWidget();
+$folderwidget = new ViewsWidget();
 $folderwidget->forceRendering();
 $folderwidget->title = _('Verwendete Tags');
 $folderwidget->id    = 'messages-tags';
+$folderwidget
+    ->addLink(_("Alle Nachrichten"), URLHelper::getURL("?"), null, array('class' => "tag"))
+    ->setActive(!Request::submitted("tag"));
 if (empty($tags)) {
     $folderwidget->style = 'display:none';
 } else {
     foreach ($tags as $tag) {
-        $folderwidget->addLink(ucfirst($tag), URLHelper::getURL("?", array('tag' => $tag)), null, array('class' => "tag"));
+        $folderwidget
+            ->addLink(ucfirst($tag), URLHelper::getURL("?", array('tag' => $tag)), null, array('class' => "tag"))
+            ->setActive(Request::get("tag") === $tag);
     }
 }
 

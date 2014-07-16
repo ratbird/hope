@@ -448,7 +448,7 @@ class MessagesController extends AuthenticatedController {
     public function preview_action()
     {
         $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
-        $this->render_text(studip_utf8encode(formatReady(studip_utf8decode(Request::get("text")).$settings['sms_sig'])));
+        $this->render_text(studip_utf8encode(formatReady(studip_utf8decode(Request::get("text"))."\n".$settings['sms_sig'])));
     }
 
 }

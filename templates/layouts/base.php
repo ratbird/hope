@@ -33,7 +33,7 @@ if (Navigation::hasItem('/links/help')) {
     $nav = Navigation::getItem('/links/help');
     Navigation::removeItem('/links/help');
 
-    Helpbar::get()->insertLink(_('Hilfe-Wiki'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
+    Helpbar::get()->insertLink(_('Weiterführende Hilfe'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
 
     Navigation::removeItem('/footer/help');
 }

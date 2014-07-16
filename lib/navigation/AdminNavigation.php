@@ -139,6 +139,39 @@ class AdminNavigation extends Navigation
 
         $this->addSubNavigation('institute', $navigation);
 
+        if($perm->have_perm('root')) {
+            $navigation = new Navigation(_('Standort'));
+
+            if ($perm->have_perm(get_config('RANGE_TREE_ADMIN_PERM') ? get_config('RANGE_TREE_ADMIN_PERM') : 'admin')) {
+                $navigation->addSubNavigation('range_tree', new Navigation(_('Einrichtungshierarchie'), 'admin_range_tree.php'));
+            }
+
+            if ($perm->have_perm(get_config('SEM_TREE_ADMIN_PERM') ? get_config('SEM_TREE_ADMIN_PERM') : 'admin') && $perm->is_fak_admin()) {
+                $navigation->addSubNavigation('sem_tree', new Navigation(_('Veranstaltungshierarchie'), 'admin_sem_tree.php'));
+            }
+
+
+            if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin')) {
+                $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'dispatch.php/admin/lockrules'));
+            }
+
+            $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
+
+            if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
+                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
+            }
+
+
+            if (get_config('EXTERN_ENABLE')) {
+                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
+            }
+
+            $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
+            $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
+
+
+            $this->addSubNavigation('locations', $navigation);
+        }
 
 
         // global config / user administration
@@ -195,40 +228,6 @@ class AdminNavigation extends Navigation
 
         $this->addSubNavigation('config', $navigation);
 
-
-        if($perm->have_perm('root')) {
-            $navigation = new Navigation(_('Standort'));
-
-            if ($perm->have_perm(get_config('RANGE_TREE_ADMIN_PERM') ? get_config('RANGE_TREE_ADMIN_PERM') : 'admin')) {
-                $navigation->addSubNavigation('range_tree', new Navigation(_('Einrichtungshierarchie'), 'admin_range_tree.php'));
-            }
-
-            if ($perm->have_perm(get_config('SEM_TREE_ADMIN_PERM') ? get_config('SEM_TREE_ADMIN_PERM') : 'admin') && $perm->is_fak_admin()) {
-                $navigation->addSubNavigation('sem_tree', new Navigation(_('Veranstaltungshierarchie'), 'admin_sem_tree.php'));
-            }
-
-
-            if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin')) {
-                $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'dispatch.php/admin/lockrules'));
-            }
-
-            $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
-
-            if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
-                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
-            }
-
-
-            if (get_config('EXTERN_ENABLE')) {
-                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
-            }
-
-            $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
-            $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
-
-
-            $this->addSubNavigation('locations', $navigation);
-        }
         // log view
         if ($perm->have_perm('root') && get_config('LOG_ENABLE')) {
             $navigation = new Navigation(_('Log'));

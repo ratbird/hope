@@ -56,6 +56,13 @@ include ('lib/seminar_open.php');
 require_once('config.inc.php');
 require_once('lib/datei.inc.php');
 
+
+$sidebar = Sidebar::Get();
+$widget = new ExportWidget();
+$widget->addLink(_('Druckansicht'), URLHelper::getLink('recordofstudy.php'), 'icons/16/blue/print.png');
+$sidebar->addWidget($widget);
+
+
 // needed session-variables
 if (empty($_SESSION['seminars'])) {
     $_SESSION['seminars'] = array();
@@ -258,10 +265,7 @@ elseif ($mode == "create_pdf"){
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();
-$sidebar = Sidebar::Get();
-$widget = new ExportWidget();
-$widget->addLink(_('Druckansicht'), URLHelper::getLink('recordofstudy.php'), 'icons/16/blue/print.png');
-$sidebar->addWidget($widget);
+
 echo $template->render();
 
 page_close ();

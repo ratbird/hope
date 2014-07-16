@@ -97,7 +97,7 @@ else
 /* collecting the data                                                        *
 /*                                                                            *
 /* ************************************************************************* */
-$infobox = createInfoxboxArray($mode);
+#$infobox = createInfoxboxArray($mode);
 
 if ($mode == "new"){
 }
@@ -239,7 +239,6 @@ if ($mode == "new"){
 }
 elseif ($mode == "edit"){
     PageLayout::setTitle(PageLayout::getTitle() . ': ' . $basicdata["semester"]);
-
     // display a notice for the user?
     if (sizeof($seminareAR) > 10)
         $notice = "above_limit";
@@ -254,22 +253,19 @@ elseif ($mode == "pdf_assortment"){
 }
 elseif ($mode == "create_pdf"){
     ob_end_clean();
-    $out = printPDF($pdf_file ,$fdfAR);
+    printPDF($pdf_file ,$fdfAR);
 }
 
-// if you wanna create a pdf no html-header should be send to the browser
-if ($mode != 'create_pdf') {
-    $out = ob_get_clean();
-    require_once('lib/include/html_head.inc.php');
-    require_once('lib/include/header.php');
-    include ('lib/include/deprecated_tabs_layout.php');
-}
-echo $out;
-if ($mode != 'create_pdf') {
-    require_once 'lib/include/html_end.inc.php';
-}
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+$sidebar = Sidebar::Get();
+$widget = new ExportWidget();
+$widget->addLink(_('Druckansicht'), URLHelper::getLink('recordofstudy.php'), 'icons/16/blue/print.png');
+$sidebar->addWidget($widget);
+echo $template->render();
+
 page_close ();
-/* **END*of*displays*the*site*********************************************** */
+
 
 
 /* ************************************************************************** *

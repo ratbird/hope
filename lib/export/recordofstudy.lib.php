@@ -54,13 +54,7 @@ function printSiteTitle($semester = NULL){
  */
 function printSelectSemester($infobox,$semestersAR){
     global $record_of_study_templates;
-    $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-          . " <tr valign=\"top\">\n"
-          . "  <td class=\"blank\" id=\"main_content\">\n"
-          . "   <table align=\"center\" class=\"blank\" border=\"0\" cellpadding=\"2\" cellspacing=3>\n"
-          . "    <tr>"
-          . "     <td><font size=\"-1\">\n"
-          . MessageBox::info($GLOBALS['FDF_USAGE_HINT'])
+    $html =  MessageBox::info($GLOBALS['FDF_USAGE_HINT'])
           . _("Bitte wählen Sie ein Semester aus:")."\n"
           . "      <form action=\"".$_SERVER['PHP_SELF']."\" method=post>\n"
           . CSRFProtection::tokenTag()
@@ -84,17 +78,7 @@ function printSelectSemester($infobox,$semestersAR){
     } else {
         $html .=" <input type=\"hidden\" name=\"template\" value=\"1\">\n";
     }
-    $html .="      </form>\n"
-          . "     </font></td>\n"
-          . "    </tr>\n"
-          . "   </table>\n"
-          . "  </td>\n"
-          . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
-    echo $html;
-    print_infobox($infobox, "sidebar/files-sidebar.png");
-    $html = "     <br></td>\n"
-          . " </tr>\n"
-          . "</table>\n";
+    $html .="      </form>\n";
     echo $html;
 }
 
@@ -110,15 +94,9 @@ function printSelectSemester($infobox,$semestersAR){
  */
 function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     global $semesterid;
-    $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-        . " <form action=\"{$_SERVER['PHP_SELF']}\" method=post>\n"
+    $html = " <form action=\"{$_SERVER['PHP_SELF']}\" method=\"post\">\n"
         . CSRFProtection::tokenTag()
         . " <input type=\"hidden\" name=\"semesterid\" value=\"".$semesterid."\">\n"
-        . " <tr valign=\"top\">\n"
-        . "  <td width=\"99%\" class=\"blank\">&nbsp;\n"
-        . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
-        . "  <tr>"
-        . "   <td valign=\"top\" id=\"main_content\">"
         . "    <table align=\"center\" width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n";
 
     // displays some infos for the user
@@ -158,14 +136,14 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
         if (($i % 2) == 0)  $displayclass = "table_row_even";
         else                $displayclass = "table_row_odd";
     $html .="       <tr>\n"
-          . "        <td class=\"$displayclass\" height=\"40\"><font size=\"-1\">\n"
+          . "        <td class=\"$displayclass\" height=\"40\">\n"
           . "         &nbsp;<input name=\"seminarnumber$i\" type=\"text\" size=\"6\" maxlength=\"6\" value=\"".htmlReady($seminare[$i]["seminarnumber"])."\">\n"
           . "        </td>\n"
-          . "        <td class=\"$displayclass\"><font size=\"-1\">\n"
+          . "        <td class=\"$displayclass\">\n"
           . "         &nbsp;<input name=\"tutor$i\" type=\"text\" size=\"70\" maxlength=\"70\" value=\"".$seminare[$i]["tutor"]."\">\n"
           . "         \n"
           . "        </td>\n"
-          . "        <td class=\"$displayclass\" align=\"center\"><font size=\"-1\">\n"
+          . "        <td class=\"$displayclass\" align=\"center\">"
           . "         &nbsp;<input name=\"sws$i\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"".htmlReady($seminare[$i]["sws"])."\">"._("SWS")."\n"
           . "        </td>\n"
           . "        <td class=\"$displayclass\" rowspan=\"2\" align=\"center\">\n"
@@ -173,7 +151,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
           . "        </td>\n"
           . "       </tr>\n"
           . "       <tr>\n"
-          . "        <td class=\"$displayclass\" colspan=\"3\"><font size=\"-1\" align=\"top\">\n"
+          . "        <td class=\"$displayclass\" colspan=\"3\">\n"
           . "         &nbsp;<b>"._("Genaue Bezeichnung:")."</b><br>&nbsp;<textarea name=\"description$i\" cols=\"60\" rows=\"2\">".htmlReady($seminare[$i]["description"])."</textarea>\n"
           . "        &nbsp;<br><br></td>\n"
           . "       </tr>\n";
@@ -185,37 +163,30 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     }
 
     $html .="       <tr>\n"
-          . "        <td colspan=\"4\"><font size=\"-1\"><br><table width=\"100%\"><tr><td align=\"left\">\n"
+          . "        <td colspan=\"3\">\n"
           . Button::create(_('Hinzufügen'), 'add_seminars', array('title' => _('Neue Veranstaltung hinzufügen.')))
           . "         <select style=\"vertical-align:middle;\" name=\"newseminarfields\" size=1>\n";
     for( $i=1; $i<=10; $i++ )
         $html .= "        <option>$i</option>\n";
     $html .="         </select>\n"
-          . "        </font></td>\n"
-          . "        <td align=right><font size=\"-1\" style=\"vertical-align:middle;\">\n";
+          . "       </td>\n"
+          . "        <td>\n";
 
     // only show delete-button if there are any seminars
     if(!empty($seminare))
         $html .= _("Markierte Veranstaltung(en) löschen")."\n" . Button::create(_('Löschen'), 'delete_seminars', array('title' => _("Markierte Veranstaltung(en) löschen.")));
-    $html .="        </font></td></tr></table>\n"
-          . "       </tr>\n"
-          . "      </table>\n"
-          . "     </td>\n";
+    $html .="        </td></tr>\n"
+          . "    <tr>\n";
 
     // the right site of the page
-    $html .="     <td class=\"blank\" width=\"270\" valign=\"top\" align=\"center\">\n";
-    echo $html;
-    print_infobox($infobox, "sidebar/files-sidebar.png");
-    $html = "      <br>\n"
-          . Button::create('<< '._('Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
+    $html .="     <td colspan=\"4\">\n";
+
+    $html .=  Button::create('<< '._('Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
           . Button::create(_('Weiter').' >>', 'collect_information', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
-          . "     <br><br></td>\n"
+          . "       </td>\n"
           . "    </tr>\n"
           . "   </table>\n"
-          . "  </td>\n"
-          . " </tr>\n"
-          . " </form>\n"
-          . "</table>\n";
+          . " </form>\n";
     echo $html;
 }
 
@@ -229,10 +200,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
  */
 function printPdfAssortment($infobox,$seminars){
     global $record_of_study_templates, $template;
-    $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-          . " <tr valign=\"top\">\n"
-          . "  <td class=\"blank\">&nbsp;\n"
-          . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
+    $html = "<table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
           . "    <tr>\n"
           . "     <td align=\"left\" valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
           . sprintf(_("Sie haben %s Einträge für Ihre Veranstaltungsübersicht ausgewählt."),$seminars["numberofseminars"]);
@@ -265,25 +233,9 @@ function printPdfAssortment($infobox,$seminars){
         $html .=" </a>";
     }
 
-    $html .="     </font></td>\n"
-          . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
-    echo $html;
-    print_infobox($infobox, "sidebar/files-sidebar.png");
-//  $html = "     <form action=\"$PHP_SELF\" method=post>"
-//        . "     <center>\n"
-//        . "       <a href=\"recordofstudy.php\">\n"
-//        . "        "._("Zurück zur Semesterauswahl")."\n"
-//        . "       </a>\n"
-//        . createButton("speichern",_("Erstellt Sie mit diesem Button ein PDF, wenn Sie die benötigten Daten eingegeben haben."),"create_pdf")
-//        . createButton("zurueck",_("Abbrechen und eine Studienbuchseite für ein anderes Semester erstellen."),"select_new_semester")
-//        . "     <br><br></center></form></td>\n"
-
-    $html = "     </td>\n"
+    $html .="     </td>\n"
           . "    </tr>\n"
-          . "   </table>\n"
-          . "  <br></td>\n"
-          . " </tr>\n"
-          . "</table>\n";
+          . "   </table>";
     echo $html;
 }
 

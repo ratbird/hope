@@ -73,29 +73,12 @@
 </table>
 </form>
 <?
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Webservices'));
 
-$infobox_content = array(
-            array(
-                'kategorie' => _('Zugriffsregeln verwalten'),
-                'eintrag'   => array(array(
-                'icon' => 'icons/16/black/add.png',
-                'text' => '<a href="'.$controller->url_for('admin/webservice_access/test').'">'._('Regeln testen').'</a>'
-            ),
-            array(
-                    'icon' => 'icons/16/black/add.png',
-                    'text' => '<a href="'.$controller->url_for('admin/webservice_access/new').'">'._('Neue Zugriffsregel anlegen').'</a>'
-                ))
-            ),
-            array(
-                'kategorie' => _('Hinweise'),
-                'eintrag'   => array(array(
-                'icon' => 'icons/16/black/info.png',
-                'text' => '<div>' . _("Sie können für einen API-Key beliebig viele Regeln hinterlegen.") . '</div>
-                           <div>' . _("Ein leerer Eintrag für die Methode gilt für alle Methoden. Sie können auch nur einen Teil eines Methodennamens eingeben.") . '</div>
-                           <div>' . _("Ein leerer Eintrag für den IP Bereich gilt für alle Adressen. Sie können mehrere IP Adressen/Bereiche durch Kommata getrennt angeben. Adressbereiche müssen in CIDR Notation angegeben werden, z.B. 192.168.0.0/24") . '</div>'
-                 ))
-            )
-        );
+$actions = new ActionsWidget();
+$actions->addLink(_('Regeln testen'),$controller->url_for('admin/webservice_access/test'),'icons/16/blue/add.png');
+$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'),'icons/16/blue/add.png');
 
-$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
-
+$sidebar->addWidget($actions);

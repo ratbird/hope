@@ -25,25 +25,12 @@
 </table>
 </form>
 <?
-$infobox_content = array(
-            array(
-                'kategorie' => _('Zugriffsregeln testen'),
-                'eintrag'   => array(array(
-                'icon' => 'icons/16/black/add.png',
-                'text' => '<a href="'.$controller->url_for('admin/webservice_access').'">'._('Liste der Zugriffsregeln').'</a>'
-            ),
-            array(
-                    'icon' => 'icons/16/black/add.png',
-                    'text' => '<a href="'.$controller->url_for('admin/webservice_access/new').'">'._('Neue Zugriffsregel anlegen').'</a>'
-                ))
-            ),
-            array(
-                'kategorie' => _('Hinweise'),
-                'eintrag'   => array(array(
-                'icon' => 'icons/16/black/info.png',
-                'text' => _("Hier können Sie testen ob der Zugriff mit einem API-Key für eine konkrete Webservicemethode von einer bestimmten IP Adresse aus möglich ist.")
-                 ))
-            )
-        );
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setTitle(_('Webservices'));
 
-$infobox = array('picture' => 'sidebar/admin-sidebar.png', 'content' => $infobox_content);
+$actions = new ActionsWidget();
+$actions->addLink(_('Liste der Zugriffsregeln'),$controller->url_for('admin/webservice_access'),'icons/16/blue/add.png');
+$actions->addLink(_('Neue Zugriffsregel anlegen'),$controller->url_for('admin/webservice_access/new'),'icons/16/blue/add.png');
+
+$sidebar->addWidget($actions);

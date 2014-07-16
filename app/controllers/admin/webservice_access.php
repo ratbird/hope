@@ -157,4 +157,5 @@ class Admin_WebserviceAccessController extends AuthenticatedController
             $this->ws_rules[$rule->id] = $rule;
         }
     }
+
 }

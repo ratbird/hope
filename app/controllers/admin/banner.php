@@ -66,7 +66,7 @@ class Admin_BannerController extends AuthenticatedController
         );
 
         //Infobox
-        $this->addInfobox();
+        $this->setSidebar();
     }
 
     /**
@@ -416,23 +416,19 @@ class Admin_BannerController extends AuthenticatedController
     }
 
     /**
-     * Extends this controller with neccessary infobox
+     * Extends this controller with neccessary sidebar
      *
      * @param String $view Currently viewed group
      */
-    protected function addInfobox()
+    protected function setSidebar()
     {
-        $this->setInfoboxImage('sidebar/admin-sidebar.png');
+        $sidebar = Sidebar::Get();
+        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
-        // :Actions
-        $start = sprintf('<a href="%s">%s</a>',
-                         $this->url_for('admin/banner'),
-                         _('Übersicht'));
-        $this->addToInfobox(_('Aktionen'), $start, 'icons/16/black/visibility-visible.png');
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Übersicht'), $this->url_for('admin/banner'),'icons/16/blue/visibility-visible.png');
+        $actions->addLink(_('Neues Banner anlegen'), $this->url_for('admin/banner/new'),'icons/16/blue/add.png');
 
-        $create = sprintf('<a href="%s">%s</a>',
-                          $this->url_for('admin/banner/new'),
-                          _('Neues Banner anlegen'));
-        $this->addToInfobox(_('Aktionen'), $create, 'icons/16/black/add.png');
+        $sidebar->addWidget($actions);
     }
 }

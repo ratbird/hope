@@ -122,13 +122,15 @@ class Admin_ConfigurationController extends AuthenticatedController
         $this->edit = ConfigurationModel::getConfigInfo($config_id);
         $this->allconfigs = ConfigurationModel::getConfig();
         PageLayout::setTitle(_("Konfigurationsparameter editieren"));
-        $this->infobox = $this-> setSidebar();
+
 
         //ajax
         if (Request::isXhr()) {
             $this->via_ajax = true;
             $this->set_layout(null);
             $this->response->add_header('Content-Type', 'text/html;charset=windows-1252');
+        } else {
+            $this->infobox = $this->setSidebar();
         }
     }
 

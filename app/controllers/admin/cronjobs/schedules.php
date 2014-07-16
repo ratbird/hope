@@ -84,29 +84,21 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
-        $this->setInfoboxImage(Assets::image_path('sidebar/date-sidebar.png'));
+        $sidebar = Sidebar::Get();
+        $sidebar->setTitle(_('Cronjobs'));
+        $sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
 
-        // Navigation
-        $cronjobs = sprintf('<a href="%s"><strong>%s</strong></a>',
-                            $this->url_for('admin/cronjobs/schedules'),
-                            _('Cronjobs verwalten'));
-        $this->addToInfobox(_('Navigation'), $cronjobs, 'icons/16/red/arr_1right');
 
-        $tasks = sprintf('<a href="%s">%s</a>',
-                         $this->url_for('admin/cronjobs/tasks'),
-                         _('Aufgaben verwalten'));
-        $this->addToInfobox(_('Navigation'), $tasks);
+        // Aktionen
+        $views = new ViewsWidget();
+        $views->addLink(_('Cronjobs verwalten'),$this->url_for('admin/cronjobs/schedules'))->setActive(true);
+        $views->addLink(_('Aufgaben verwalten'),$this->url_for('admin/cronjobs/tasks'));
+        $views->addLink(_('Logs anzeigen'),$this->url_for('admin/cronjobs/logs'));
+        $sidebar->addWidget($views);
 
-        $logs = sprintf('<a href="%s">%s</a>',
-                        $this->url_for('admin/cronjobs/logs'),
-                        _('Logs anzeigen'));
-        $this->addToInfobox(_('Navigation'), $logs);
-
-        // Actions
-        $register = sprintf('<a href="%s">%s</a>',
-                            $this->url_for('admin/cronjobs/schedules/edit'),
-                            _('Neuen Cronjob registrieren'));
-        $this->addToInfobox(_('Aktionen'), $register, 'icons/16/black/add');
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neuen Cronjob registrieren'),$this->url_for('admin/cronjobs/schedules/edit'), 'icons/16/blue/add');
+        $sidebar->addWidget($actions);
     }
 
     /**
@@ -207,13 +199,14 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
 
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
-        $this->setInfoboxImage(Assets::image_path('sidebar/date-sidebar.png'));
+        $sidebar = Sidebar::Get();
+        $sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
+        $sidebar->setTitle(_('Cronjobs'));
 
-        // Actions
-        $back = sprintf('<a href="%s">%s</a>',
-                        $this->url_for('admin/cronjobs/schedules/index/' . $page),
-                        _('Zurück zur Übersicht'));
-        $this->addToInfobox(_('Aktionen'), $back, 'icons/16/black/link-intern');
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Zurück zur Übersicht'),$this->url_for('admin/cronjobs/schedules/index/' . $page),'icons/16/blue/link-intern');
+
+        $sidebar->addWidget($actions);
 
         $this->page     = $page;
         $this->tasks    = CronjobTask::findBySql('1');

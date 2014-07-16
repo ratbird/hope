@@ -164,12 +164,3 @@ use Studip\Button, Studip\LinkButton;
 <? //infobox
 include '_infobox.php';
 
-$infobox = array(
-    'picture' => 'sidebar/person-sidebar.png',
-    'content' => array(
-        array(
-            'kategorie' => _("Aktionen"),
-            'eintrag'   => $aktionen
-        )
-    )
-);

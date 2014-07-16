@@ -2,13 +2,13 @@
 # Lifter010: TODO
 $sidebar = Sidebar::Get();
 $sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
-$actions = new ActionsWidget();
-$actions->addLink(_('Benutzer verwalten'), $controller->url_for('admin/user'), 'icons/16/blue/persons.png');
+$actions = new ViewsWidget();
+$actions->addLink(_('Benutzer verwalten'), $controller->url_for('admin/user'))->setActive($action == 'index');
 if (in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
-    $actions->addLink(_('Neuen Benutzer anlegen'), $controller->url_for('admin/user/new'), 'icons/16/blue/add/person.png');
+    $actions->addLink(_('Neuen Benutzer anlegen'), $controller->url_for('admin/user/new'))->setActive($action == 'new' && empty($args));
 }
-$actions->addLink(_('Neuen vorläufigen Benutzer anlegen'), $controller->url_for('admin/user/new/prelim'), 'icons/16/blue/add/person.png');
-$actions->addLink(_('Benutzer zusammenführen'), $controller->url_for('admin/user/migrate'), 'icons/16/blue/move_right/persons.png');
+$actions->addLink(_('Neuen vorläufigen Benutzer anlegen'), $controller->url_for('admin/user/new/prelim'))->setActive($action == 'new' && $args[0] == 'prelim');
+$actions->addLink(_('Benutzer zusammenführen'), $controller->url_for('admin/user/migrate'))->setActive($action == 'migrate');
 $sidebar->addWidget($actions);
 
 

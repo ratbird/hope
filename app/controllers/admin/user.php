@@ -49,6 +49,10 @@ class Admin_UserController extends AuthenticatedController
             $this->via_ajax = true;
             $this->set_layout(null);
         }
+
+
+        $this->action = $action;
+        $this->args = $args;
     }
 
     /**

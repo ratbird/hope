@@ -51,7 +51,7 @@ $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getURL() .
 
 $export_pagecontent .= CSRFProtection::tokenTag();
 
-$export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br><select name=\"range_id\">";
+$export_pagecontent .="<br><b>". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</b><br><select name=\"range_id\">";
 
 // Prepare institutes statement for faculty
 $query = "SELECT Institut_id, Name
@@ -94,7 +94,7 @@ if ($perm->have_perm("root")) {
 
 $export_pagecontent .= "</select><br><br>";
 
-$export_pagecontent .= "<b><font size=\"-1\">"._("Art der auszugebenden Daten: ") .  "</font></b><br><select name=\"ex_type\">";
+$export_pagecontent .= "<b>"._("Art der auszugebenden Daten: ") .  "</b><br><select name=\"ex_type\">";
 
 $export_pagecontent .= "<option";
 if ($ex_type=="veranstaltung")
@@ -109,14 +109,14 @@ $export_pagecontent .= " value=\"person\">" . _("MitarbeiterInnendaten") .  "</o
 
 $export_pagecontent .= "</select><br><br><br><br>";
 
-$export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br>";
+$export_pagecontent .="<b>". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</b><br>";
 if (!isset($ex_sem)) {
     $ex_sem = (Semester::findCurrent() ? Semester::findCurrent()->getId() : null);
 }
 $export_pagecontent .= SemesterData::GetSemesterSelector(array('name' => 'ex_sem'), $ex_sem, 'semester_id', true);
 $export_pagecontent .= "<br><br>";
 
-$export_pagecontent .="<b><font size=\"-1\">". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</font></b><br>";
+$export_pagecontent .="<b>". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</b><br>";
 
 if (!count($ex_sem_class)) {
     $ex_sem_class[1] = 1;
@@ -136,21 +136,3 @@ $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlR
 $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
 
 $export_weiter_button = "<center>" . Button::create(_('Weiter') . ' >>' ) . "</center></form>";
-
-$infobox = array(
-    array(
-        'kategorie'  => _("Information:"),
-        'eintrag'    => array(
-            array(
-                'icon' => 'icons/16/black/info.png',
-                'text' => sprintf(_("Dies ist das Stud.IP-Exportmodul. Mit diesem Modul k&ouml;nnen Sie Daten in den folgenden Formaten ausgeben: %s."), implode($output_formats, ", "))
-             )
-        )
-    )
-);
-
-$infobox[1]["kategorie"] = _("Aktionen:");
-$infobox[1]["eintrag"][] = array(
-    'icon' => 'icons/16/black/info.png',
-    'text' => sprintf(_("W&auml;hlen Sie die Art der Daten, die Sie exportieren wollen, und die Einrichtung, aus der die Daten gelesen werden sollen. Klicken Sie dann auf 'weiter.'"), $link2, "</a>")
-);

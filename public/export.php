@@ -51,6 +51,10 @@ $ex_sem = Request::option('ex_sem');
 $format = Request::option('format');
 $choose = Request::quoted('choose');
 $range_id = Request::option('range_id');
+
+$sidebar = Sidebar::Get();
+$sidebar->setImage(Assets::image_path("sidebar/export-sidebar.png"));
+
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 {
     $perm->check("tutor");
@@ -70,7 +74,7 @@ require_once ('lib/classes/DataFieldEntry.class.php');
 require_once ('config.inc.php');
 
 PageLayout::setHelpKeyword("Basis.Export");
-
+ob_start();
 if (get_config('EXPORT_ENABLE'))
 {
     $ex_sem_class = Request::intArray('ex_sem_class');
@@ -137,29 +141,22 @@ if (get_config('EXPORT_ENABLE'))
     {
         $export_pagename = "Exportmodul - Fehler!";
         $export_error = _("Fehlerhafter Seitenaufruf");
-        $infobox = array(
-        array ("kategorie"  => _("Information:"),
-            "eintrag" => array  (
-                            array ( "icon" => "icons/16/black/info.png",
-                                    "text"  => _("Die Parameter, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
-                                 )
-                            )
-            )
-        );
+
     }
 
     include($GLOBALS['PATH_EXPORT']  . "/export_view.inc.php");
 }
 else
 {
-    //TODO: Globales Fehlertemplate erzeugen und nur die Fehlermeldung ï¿½bergeben
+    //TODO: Globales Fehlertemplate erzeugen und nur die Fehlermeldung übergeben
     // Start of Output
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   // Output of Stud.IP head
-    include ('lib/include/deprecated_tabs_layout.php');
     parse_window ("error§" . _("Das Exportmodul ist nicht eingebunden. Damit Daten im XML-Format exportiert werden k&ouml;nnen, muss das Exportmodul in den Systemeinstellungen freigeschaltet werden. Wenden Sie sich bitte an die Administratoren."), "§",
                 _("Exportmodul nicht eingebunden"));
-    include ('lib/include/html_end.inc.php');
 }
+$template = $GLOBALS['template_factory']->open('layouts/base.php');
+$template->content_for_layout = ob_get_clean();
+
+
+echo $template->render();
 page_close();
 ?>

@@ -178,26 +178,6 @@ else
         }
 
 
-        $infobox = array(
-            array(
-                'kategorie'  => _("Information:"),
-                'eintrag'    => array(
-                    array(
-                        'icon' => 'icons/16/black/info.png',
-                        'text' => $xslt_info
-                     )
-                )
-            )
-        );
-
-        if ($xslt_process) {
-            $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array(
-                'icon' => 'icons/16/black/download.png' ,
-                'text' => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %shier%s."), $link2, "</a>")
-            );
-        }
-
         include_once ("$PATH_EXPORT/oscar.php");
     }
 

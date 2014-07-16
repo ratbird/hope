@@ -22,17 +22,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 // Start of Output
     PageLayout::setTitle($export_pagename);
     Navigation::activateItem('/tools/export');
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   // Output of Stud.IP head
  ?>
-<table cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr valign="top">
-            <td width="1%" class="blank">
-            &nbsp;
-            </td>
-            <td class="blank">
-
-            <table width="100%">
 <?
 
                 if (isset($export_error))
@@ -42,7 +32,6 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
                 if (isset($export_info))
                     my_info($export_info);
 ?>
-            </table>
             <?
             echo $export_pagecontent;
 
@@ -113,20 +102,8 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
                 echo $export_weiter_button;
             }
             ?>
-        </td>
-        <td width="270" class="blank" align="center" valign="top">
-            <?
-            print_infobox ($infobox, "sidebar/export-sidebar.png");
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" colspan="3">&nbsp;
-        </td>
-    </tr>
-    </table>
+
 <?php
-    include ('lib/include/html_end.inc.php');
 }
 elseif ($export_error_num > 0)
 {

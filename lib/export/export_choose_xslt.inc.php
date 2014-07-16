@@ -124,7 +124,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $export_pagecontent .= CSRFProtection::tokenTag();
 
     $export_pagecontent .= "";
-    $export_pagecontent .= "<b><font size=\"-1\">"._("Ausgabeformat:") .  "</font></b><br><select name=\"format\">";
+    $export_pagecontent .= "<b>"._("Ausgabeformat:") .  "</b><br><select name=\"format\">";
 
     while (list($key, $val) = each($output_formats))
     {
@@ -133,7 +133,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
         $export_pagecontent .= ">" . $val;
     }
     $export_pagecontent .= "</select><br>   <br><br>";
-    $export_pagecontent .= "<b><font size=\"-1\">"._("Name der Datei (z.B. &raquo;Test&laquo;):")."</font></b><br>";
+    $export_pagecontent .= "<b>"._("Name der Datei (z.B. &raquo;Test&laquo;):")."</b><br>";
     $export_pagecontent .= "<input type=\"text\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"1\"><br><br><br>";
     $export_pagecontent .= "<input type=\"hidden\" name=\"o_mode\" value=\"" . htmlReady($o_mode) . "\">";
@@ -151,20 +151,6 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
 
     $export_weiter_button .= "</center></form>";
 
-    $infobox = array    (
-    array ("kategorie"  => _("Information:"),
-        "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
-                                "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 1/3 %s"), "<br><i>", "</i>")
-                             )
-                        )
-        )
-    );
-    $link = "<a href=\"./test.xml"."\">";
-    $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
-                                    "text"  => _("Bitte w&auml;hlen Sie das Dateiformat, in dem Ihre Daten ausgegeben werden sollen. Klicken Sie anschließend auf 'weiter'.")
-                                );
 }
 
 
@@ -223,22 +209,6 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
 
     $export_weiter_button .= Button::create(_('Weiter') . ' >>', 'next');
     $export_weiter_button .=  "</div></center></form>";
-
-
-    $infobox = array    (
-    array ("kategorie"  => _("Information:"),
-        "eintrag" => array  (
-                        array ( "icon" => "icons/16/black/info.png",
-                                "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 2/3 %s"), "<br><i>", "</i>")
-                             )
-                        )
-        )
-    );
-    $link = "<a href=\"./test.xml"."\">";
-    $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
-                                    "text"  => _("W&auml;hlen Sie bitte eines der zur Verf&uuml;gung stehenden Ausgabemodule. Klicken Sie dann auf 'weiter'.")
-                                );
 }
 
 

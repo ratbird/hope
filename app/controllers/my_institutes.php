@@ -21,10 +21,12 @@ class MyInstitutesController extends AuthenticatedController
     {
 
         $this->institutes = MyRealmModel::getMyInstitutes();
+
         if ($this->check_for_new($this->institutes)) {
             $this->reset = true;
         }
 
+        $this->nav_elements = MyRealmModel::calc_single_navigation($this->institutes);
     }
 
     public function decline_inst_action($inst_id)

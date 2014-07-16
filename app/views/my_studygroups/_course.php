@@ -26,7 +26,7 @@
         </td>
         <td style="text-align: left">
             <? if (!empty($group['navigation'])) : ?>
-                <? foreach ($group['navigation'] as $key => $nav)  : ?>
+                <? foreach (MyRealmModel::array_rtrim($group['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
                         <? $image = $nav->getImage(); ?>
                         <a href="<?=

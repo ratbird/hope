@@ -51,7 +51,7 @@
         </td>
         <td style="text-align: left; white-space: nowrap;">
             <? if (!empty($course['navigation'])) : ?>
-                <? foreach ($controller->array_rtrim($course['navigation']) as $key => $nav)  : ?>
+                <? foreach (MyRealmModel::array_rtrim($course['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
                         <? $image = $nav->getImage(); ?>
                         <a href="<?=

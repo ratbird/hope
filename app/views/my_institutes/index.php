@@ -26,8 +26,8 @@
             <col width="10px">
             <col width="25px">
             <col>
-            <col width="35%">
-            <col width="3%">
+            <col width="<?= $nav_elements * 24 ?>px">
+            <col width="45px">
         </colgroup>
         <thead>
         <tr>
@@ -58,7 +58,7 @@
 
                 <td style="text-align: left; white-space: nowrap">
                     <? if (!empty($values['navigation'])) : ?>
-                        <? foreach ($values['navigation'] as $key => $nav)  : ?>
+                        <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
                             <? if (isset($nav) && $nav->isVisible(true)) : ?>
                                 <? $image = $nav->getImage(); ?>
                                 <a href="<?=

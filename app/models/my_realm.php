@@ -1213,4 +1213,60 @@ class MyRealmModel
         $present = $statement->fetchColumn();
         return $present;
     }
+
+    /**
+     * Calc nav elements to get the table-column-width
+     * @TODO: Caching?
+     * @param $my_obj
+     * @param string $group_field
+     * @return int
+     */
+    public static function calc_nav_elements($my_obj, $group_field = 'sem_number') {
+        $nav_elements = 0;
+        if (empty($my_obj)) {
+            return $nav_elements;
+        }
+
+        foreach ($my_obj as $courses) {
+            if ($group_field !== 'sem_number') {
+                // tlx: If array is 2-dimensional, merge it into a 1-dimensional
+                $courses = call_user_func_array('array_merge', $courses);
+            }
+
+            foreach ($courses as $course) {
+                $nav_elements = max($nav_elements, count(self::array_rtrim($course['navigation'])));
+            }
+        }
+
+        return $nav_elements;
+    }
+
+    public static function calc_single_navigation($collection) {
+        $nav_elements = 0;
+        foreach ($collection as $course) {
+            $nav_elements = max($nav_elements, count(self::array_rtrim($course['navigation'])));
+        }
+        return $nav_elements;
+    }
+
+    /**
+     * Trims an array from it's null value from the right.
+     *
+     * @param Array $array The array to trim
+     * @return array The trimmed array
+     * @author tlx
+     */
+    public static function array_rtrim($array)
+    {
+        $temp  = array_reverse($array);
+        $empty = true;
+
+        while ($empty && !empty($temp)) {
+            $item = reset($temp);
+            if ($empty = ($item === null)) {
+                $temp = array_slice($temp, 1);
+            }
+        }
+        return array_reverse($temp);
+    }
 } 

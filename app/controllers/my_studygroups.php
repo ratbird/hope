@@ -18,6 +18,7 @@ class MyStudygroupsController extends AuthenticatedController
         PageLayout::setTitle(_("Meine Studiengruppen"));
         URLHelper::removeLinkParam('cid');
         $this->studygroups  = MyRealmModel::getStudygroups();
+        $this->nav_elements = MyRealmModel::calc_single_navigation($this->studygroups);
         $this->set_sidebar();
     }
 

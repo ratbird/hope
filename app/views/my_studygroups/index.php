@@ -7,8 +7,8 @@
             <col width="10px">
             <col width="25px">
             <col>
-            <col width="35%">
-            <col width="3%">
+            <col width="<?= $nav_elements * 24 ?>px">
+            <col width="45px">
         </colgroup>
         <thead>
         <tr>

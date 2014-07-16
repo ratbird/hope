@@ -26,14 +26,12 @@ if (get_config('BANNER_ADS_ENABLE')) {
 
     <div  class="ui-widget_columnl" id="0" >
         <ul id="sort0" style="list-style-type: none;margin-top:5px;">
-
             <? foreach($left as $widget) : ?>
-            <div class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
-                <li class="ui-widget-content studip-widget" >
-                    <?=$this->render_partial("start/_widget", array('widget' => $widget))?>
-                </li>
-            </div>
-
+                <li class="studip-widget-wrapper" >
+                    <div class="ui-widget-content studip-widget" id="<?= $widget->widget_id ?>">
+                        <?=$this->render_partial("start/_widget", array('widget' => $widget))?>
+                    </div>
+                 </li>
             <? endforeach ; ?>
         </ul>
     </div>

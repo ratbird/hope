@@ -97,6 +97,13 @@
                     <strong><?= _("Optionen") ?></strong>
                 </a>
             </li>
+            <li style="display: inline-block; min-width: 70px;">
+                <a href="" onClick="STUDIP.Messages.toggleSetting('preview'); STUDIP.Messages.previewComposedMessage(); return false;">
+                    <?= Assets::img("icons/40/blue/visibility-visible") ?>
+                    <br>
+                    <strong><?= _("Vorschau") ?></strong>
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -157,6 +164,10 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div id="preview" style="display: none;">
+        <h4><?= _("Vorschau") ?></h4>
+        <p class="message_body"></p>
     </div>
 
     <div style="text-align: center;" data-dialog-button>

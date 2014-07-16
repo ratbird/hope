@@ -185,6 +185,30 @@ STUDIP.Messages = {
         if (jQuery("#" + name).is(":visible")) {
             jQuery("#" + name)[0].scrollIntoView(false);
         }
+    },
+    previewComposedMessage: function () {
+        var old_written_text = "",
+            written_text = jQuery("textarea[name=message_body]").val();
+        var updatePreview = function () {
+            written_text = jQuery("textarea[name=message_body]").val();
+            if (old_written_text !== written_text) {
+                jQuery.ajax({
+                    url: STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/messages/preview",
+                    data: {
+                        text: written_text
+                    },
+                    type: "POST",
+                    success: function (html) {
+                        jQuery("#preview .message_body").html(html);
+                    }
+                });
+                old_written_text = written_text;
+            }
+            if (jQuery("#preview .message_body").is(":visible")) {
+                window.setTimeout(updatePreview, 1000);
+            }
+        };
+        updatePreview();
     }
 };
 

@@ -64,6 +64,16 @@
   /* Opera doesn't support this in the shorthand */
   background-attachment: local, local, scroll, scroll;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
 /*
  * arrow.less - CSS arrows mixin
  *
@@ -4797,7 +4807,7 @@ a.opengraph_info:hover {
 }
 .start-widgetcontainer {
   padding: 1% 0px;
-  margin-top: -35px;
+  margin-top: -25px;
 }
 /* some improvements for ui_widget elements */
 .ui-widget_start {

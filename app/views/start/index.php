@@ -1,4 +1,4 @@
-<h1 id="startheader">
+<h1 class="sr-only">
     <? if ($GLOBALS['perm']->have_perm('root')) :?>
         <?= _("Startseite für Root bei Stud.IP")?>
     <? elseif ($GLOBALS['perm']->have_perm('admin')) : ?>

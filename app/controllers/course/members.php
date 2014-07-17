@@ -654,7 +654,7 @@ class Course_MembersController extends AuthenticatedController
         } else {
             PageLayout::postMessage(MessageBox::error(_('Leider ist beim Ändern der Sichtbarkeit ein Fehler aufgetreten. Die Einstellung konnte nicht vorgenommen werden.')));
         }
-        $this->redirect('course/members');
+        $this->redirect('course/members/index');
     }
 
     /**

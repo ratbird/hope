@@ -9,5 +9,5 @@
     <dd><?= $sum ?></dd>
 
     <dt><?= _('Letzte Änderung:') ?></dt>
-    <dd><?= date('d.m.Y H:i:s', $last_change) ?></dd>
+    <dd><?= (!is_null($last_change) ? date('d.m.Y H:i:s', $last_change) : '')?></dd>
 </dl>

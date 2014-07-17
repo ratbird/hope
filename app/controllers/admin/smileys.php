@@ -53,7 +53,7 @@ class Admin_SmileysController extends AuthenticatedController
         $this->smileys           = Smiley::getGrouped($this->view);
         $this->favorites_enabled = SmileyFavorites::isEnabled();
 
-        $this->addInfobox($this->view);
+        $this->setSidebar($this->view);
     }
 
     /**
@@ -255,45 +255,38 @@ class Admin_SmileysController extends AuthenticatedController
      *
      * @param String $view Currently viewed group
      */
-    private function addInfobox($view)
+    private function setSidebar($view)
     {
-        $this->setInfoboxImage('sidebar/smiley-sidebar.png');
+        $sidebar = Sidebar::Get();
+        $sidebar->setImage(Assets::image_path('sidebar/smiley-sidebar.png'));
+        $sidebar->setTitle(PageLayout::getTitle() ? : _('Smileys'));
 
         // Render items
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');
 
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neues Smiley hochladen'), $this->url_for('admin/smileys/upload', $view), 'icons/16/blue/add.png');
+        $actions->addLink(_('Smileys zählen'), $this->url_for('admin/smileys/count', $view), 'icons/16/blue/code.png');
+        $actions->addLink(_('Tabelle aktualisieren'), $this->url_for('admin/smileys/refresh', $view), 'icons/16/blue/refresh.png');
+        $actions->addLink(_('Smiley-Übersicht öffnen'), URLHelper::getLink('dispatch.php/smileys',
+            array('view' => null)), 'icons/16/blue/smiley.png', array('target' => '_blank'));
+        $sidebar->addWidget($actions);
+
+        $widget = new SidebarWidget();
         $filter = $factory->render('selector', array(
             'characters' => Smiley::getUsedCharacters(),
             'controller' => $this,
             'view'       => $view,
         ));
+        $widget->setTitle(_('Filter'));
+        $widget->addElement(new WidgetElement($filter));
+        $sidebar->addWidget($widget);
+
+        $widget = new SidebarWidget();
         $statistics = $factory->render('statistics', Smiley::getStatistics());
+        $widget->setTitle(_('Statistiken'));
+        $widget->addElement(new WidgetElement($statistics));
+        $sidebar->addWidget($widget);
 
-        // :Filters
-        $this->addToInfobox(_('Filter'), $filter, 'icons/16/black/search.png');
-
-        // :Actions
-        $upload = sprintf('<a href="%s">%s</a>',
-                          $this->url_for('admin/smileys/upload', $view),
-                          _('Neues Smiley hochladen'));
-        $this->addToInfobox(_('Aktionen'), $upload, 'icons/16/black/add.png');
-
-        $count = sprintf('<a href="%s">%s</a>',
-                         $this->url_for('admin/smileys/count', $view),
-                         _('Smileys zählen'));
-        $this->addToInfobox(_('Aktionen'), $count, 'icons/16/black/code.png');
-
-        $refresh = sprintf('<a href="%s">%s</a>',
-                           $this->url_for('admin/smileys/refresh', $view),
-                           _('Tabelle aktualisieren'));
-        $this->addToInfobox(_('Aktionen'), $refresh, 'icons/16/black/refresh.png');
-
-        $open = sprintf('<a href="%s" target="_smileys">%s</a>',
-                        URLHelper::getURL('dispatch.php/smileys', array('view' => null)),
-                         _('Smiley-Übersicht öffnen'));
-        $this->addToInfobox(_('Aktionen'), $open, 'icons/16/black/smiley.png');
-
-        // :Statistics
-        $this->addToInfobox(_('Statistiken'), $statistics, 'icons/16/black/stat.png');
     }
 }

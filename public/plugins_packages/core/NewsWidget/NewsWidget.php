@@ -43,8 +43,9 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
                               'tooltip' => _('RSS-Feed'));
         }
         if ($show_admin) {
-            $options[] = array('url' => URLHelper::getLink('dispatch.php/news/admin_news'),
-                               'img' => 'icons/16/blue/admin.png',
+            $options[] = array('url' => URLHelper::getLink('dispatch.php/news/edit_news/new'),
+                               'rel' => 'get_dialog',
+                               'img' => 'icons/16/blue/add.png',
                                'tooltip' =>_('Ankündigungen bearbeiten'));
         }
         return $options;

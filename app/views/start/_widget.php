@@ -5,7 +5,7 @@
             <? $options = $widget->getHeaderOptions()?>
 
             <?foreach($options as $option) : ?>
-        <? if(array_key_exists('id', $option)): ?>  <div id="<?=$option['id']?>"> </div> <? endif; ?><a href="<?= $option['url'] ?>" <? if(array_key_exists('onclick', $option)): ?> onclick="<?= $option['onclick'] ?>" <? endif; ?> >
+        <? if(array_key_exists('id', $option)): ?>  <div id="<?=$option['id']?>"> </div> <? endif; ?><a href="<?= $option['url'] ?>" <? if(array_key_exists('onclick', $option)): ?> onclick="<?= $option['onclick'] ?>" <? endif; ?> <? if(array_key_exists('rel', $option)): ?> rel="<?= $option['rel'] ?>" <? endif; ?> >
                     <img src="<?= Assets::image_path($option['img']) ?>">
                 </a>
             <?endforeach; ?>

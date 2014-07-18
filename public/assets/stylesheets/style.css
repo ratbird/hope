@@ -4844,7 +4844,6 @@ a.opengraph_info:hover {
 /* addclip */
 .addclip-container {
   background: #315388;
-  border-top: 1px solid #315388;
   position: absolute;
   right: 60px;
   top: 145px;
@@ -4867,7 +4866,7 @@ a.opengraph_info:hover {
   z-index: 999;
 }
 .addclip:before {
-  border-bottom: 4px solid #536d96;
+  border-bottom: 4px solid #7f5e19;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   content: '';

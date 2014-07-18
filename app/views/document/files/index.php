@@ -7,7 +7,11 @@
     <caption>
         <div class="caption-container">
             <? $last_crumb = end($breadcrumbs); ?>
+        <? if (count($breadcrumbs) > 1): ?>
+            <div class="extendable bread-crumbs" title="<?= _('In übergeordnete Verzeichnisse wechseln') ?>">
+        <? else: ?>
             <div class="bread-crumbs <? if (count($breadcrumbs) > 1) echo 'extendable'; ?>">
+        <? endif; ?>
                 <a href="<?= $controller->url_for('document/files/index/' . $last_crumb['id']) ?>">
                     <?= Assets::img('icons/24/blue/folder-down.png') ?>
                 </a>

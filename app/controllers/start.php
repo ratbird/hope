@@ -74,6 +74,7 @@ class StartController extends AuthenticatedController
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $sidebar = Sidebar::get();
+        $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
         
         $nav = new NavigationWidget();
         $nav->setTitle(_('Sprungmarken'));
@@ -93,11 +94,9 @@ class StartController extends AuthenticatedController
     /**
      *  This actions adds a new widget to the start page
      *
-     * @param string $studipticket
-     *
      * @return void
      */
-    public function add_action($studipticket = false)
+    public function add_action()
     {
         if (Request::isPost()) {
             $ticket   = Request::get('studip_ticket');

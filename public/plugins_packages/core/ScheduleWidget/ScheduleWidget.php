@@ -26,8 +26,9 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
             // schedule-controller throws an exception if user has no schedule!
         }
 
-        // remove sidebar widgets
+        // remove sidebar widgets since it will be devliverd as intended in schedule-controller otherwise
         $sidebar = Sidebar::get();
+        $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
         try {
             $sidebar->removeWidget('calendar/schedule/semester');
             $sidebar->removeWidget('calendar/schedule/actions');

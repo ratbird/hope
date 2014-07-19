@@ -75,6 +75,7 @@ class StartController extends AuthenticatedController
 
         $sidebar = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
+        $sidebar->setTitle(_("Meine Startseite"));
         
         $nav = new NavigationWidget();
         $nav->setTitle(_('Sprungmarken'));

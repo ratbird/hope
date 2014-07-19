@@ -18,7 +18,7 @@ class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
         // include and show votes and tests
         if (get_config('VOTE_ENABLE')) {
             $dispatcher = new StudipDispatcher();
-            $controller = new NewsController($dispatcher);
+            $controller = new VoteController($dispatcher);
             $response = $controller->relay('vote/display/studip');
             $template = $GLOBALS['template_factory']->open('shared/string');
             $template->content = $response->body;

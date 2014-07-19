@@ -93,13 +93,11 @@ class StartController extends AuthenticatedController
     /**
      *  This actions adds a new widget to the start page
      *
-     * @param string $choice representing the chosen widgetId
-     * @param string $side where the widget should be paced (used in later versions)
      * @param string $studipticket
      *
      * @return void
      */
-    public function add_action($choice, $side = 0, $studipticket = false)
+    public function add_action($studipticket = false)
     {
         if (Request::isPost()) {
             $ticket   = Request::get('studip_ticket');

@@ -1,5 +1,5 @@
 #sort1, #sort0, #sort3 {
-    padding : 5px 0px;
+    padding : 0 0px;
 }
 #admin_widget_container {
     padding-top: 1em;
@@ -12,8 +12,8 @@
 }
 
 .studip-widget-wrapper {
-    margin: 5px 0;
-    padding: 5px 0;
+    margin: 0 0 20px;
+    padding: 0;
 }
 
 .studip-widget {
@@ -50,8 +50,8 @@
     margin-right: 25px;
 }
 .start-widgetcontainer {
-    padding: 1% 0px;
-    margin-top:-25px;
+    padding: 0;
+    margin-top: 0;
 }
 
 /* some improvements for ui_widget elements */
@@ -167,7 +167,7 @@
 .addclip-widgets {
     color: #000;
     list-style: none;
-    margin: 0 12px;
+    margin: 0;
     padding: 0;
 
     a:link, a:visited {
@@ -178,9 +178,15 @@
     }
 
     li {
-        padding: 1.5em;
         border-top: 1px solid @content-color;
-        padding: 2px 0 4px;
+        padding: 4px 0;
+
+        &:first-child {
+            border-top: 0;
+        }
+    }
+    p {
+        margin-left: 25px;
     }
 }
 

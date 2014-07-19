@@ -17,23 +17,22 @@ if (get_config('BANNER_ADS_ENABLE')) {
 }
 ?>
 
-<?= $this->render_partial("start/_addclip", array('widgets' => $suitable_widgets)) ?>
-
-<div style="clear:both;"> </div>
-<?= $this->render_partial("start/_feedback", array('flash' => $flash)) ?>
+<? if ($flash['question']): ?>
+    <?= $flash['question'] ?>
+<? endif; ?>
 
 <div class="ui-widgetContainer start-widgetcontainer">
 
-    <div  class="ui-widget_columnl" id="0" >
-        <ul id="sort0" style="list-style-type: none;margin-top:5px;">
-            <? foreach($left as $widget) : ?>
-                <li class="studip-widget-wrapper" >
-                    <div class="ui-widget-content studip-widget" id="<?= $widget->widget_id ?>">
-                        <?=$this->render_partial("start/_widget", array('widget' => $widget))?>
-                    </div>
-                 </li>
-            <? endforeach ; ?>
+    <div class="ui-widget_columnl">
+        <ul id="sort0" style="list-style-type: none;">
+        <? foreach ($left as $widget) : ?>
+            <li class="studip-widget-wrapper">
+                <div class="ui-widget-content studip-widget" id="<?= $widget->widget_id ?>">
+                    <?= $this->render_partial('start/_widget', compact('widget')) ?>
+                </div>
+             </li>
+        <? endforeach; ?>
         </ul>
     </div>
-    <br style="clear: both;" />
+
 </div>

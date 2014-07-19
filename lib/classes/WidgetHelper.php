@@ -225,26 +225,21 @@ class WidgetHelper {
      * @param string $id - widget_id
      * @param string $range_id e.g. user_id
      *
-     * @return bool success
+     * @return bool|int false on error, id of inserted widget otherwise
      */
-    static function addWidget($id, $range_id)
+    public static function addWidget($id, $range_id)
     {
         $db = DBManager::get();
-        $statement = $db->query('SELECT MAX(position) + 1 as pos FROM widget_user');
-        $statement->execute();
-        $position = $statement->fetchColumn(0);
-
-        if ($position === null) {
-            $position = 0;
-        }
+        $statement = $db->query('SELECT MAX(position) + 1 FROM widget_user');
+        $position = $statement->fetchColumn() ?: 0;
 
         $statement = $db->prepare('INSERT INTO widget_user (pluginid, position, range_id) VALUES (:id, :position, :range_id)');
+        $statement->bindValue(':id', $id);
+        $statement->bindValue(':position', $position);
+        $statement->bindValue(':range_id', $range_id);
+        $result = $statement->execute();
 
-        return $statement->execute(array(
-            ':id' => $id,
-            ':position' => $position,
-            ':range_id' => $range_id,
-        ));
+        return $result ? $db->lastInsertId() : false;
     }
 
     /**

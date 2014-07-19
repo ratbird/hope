@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -803,14 +803,14 @@ table.default caption header p {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -825,7 +825,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -978,7 +978,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -2094,7 +2094,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 #layout-sidebar {
   background: #fff;
@@ -2585,7 +2585,7 @@ select.sidebar-selectlist {
   left: 0;
   right: 0;
 }
-.helpbar :after {
+.helpbar:after {
   background-color: #8a8f95;
   content: '';
   height: 2px;
@@ -4761,7 +4761,7 @@ a.opengraph_info:hover {
 #sort1,
 #sort0,
 #sort3 {
-  padding: 5px 0px;
+  padding: 0 0px;
 }
 #admin_widget_container {
   padding-top: 1em;
@@ -4773,8 +4773,8 @@ a.opengraph_info:hover {
   border: 1px solid #8a8f95;
 }
 .studip-widget-wrapper {
-  margin: 5px 0;
-  padding: 5px 0;
+  margin: 0 0 20px;
+  padding: 0;
 }
 .studip-widget {
   border-color: #d3d9e5;
@@ -4806,8 +4806,8 @@ a.opengraph_info:hover {
   margin-right: 25px;
 }
 .start-widgetcontainer {
-  padding: 1% 0px;
-  margin-top: -25px;
+  padding: 0;
+  margin-top: 0;
 }
 /* some improvements for ui_widget elements */
 .ui-widget_start {
@@ -4904,7 +4904,7 @@ a.opengraph_info:hover {
 .addclip-widgets {
   color: #000;
   list-style: none;
-  margin: 0 12px;
+  margin: 0;
   padding: 0;
 }
 .addclip-widgets a:link,
@@ -4916,9 +4916,14 @@ a.opengraph_info:hover {
   color: #ff3333;
 }
 .addclip-widgets li {
-  padding: 1.5em;
   border-top: 1px solid #899ab9;
-  padding: 2px 0 4px;
+  padding: 4px 0;
+}
+.addclip-widgets li:first-child {
+  border-top: 0;
+}
+.addclip-widgets p {
+  margin-left: 25px;
 }
 .addclip {
   width: 32px;

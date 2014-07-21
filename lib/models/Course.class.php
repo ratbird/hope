@@ -256,7 +256,7 @@ class Course extends SimpleORMap
 
     function getNumParticipants()
     {
-        return $this->members->findBy('status', words('user autor'))->count() + $this->getNumPrelimParticipants();
+        return $this->countMembersWithStatus('user autor') + $this->getNumPrelimParticipants();
     }
 
     /* wtf ?
@@ -267,12 +267,12 @@ class Course extends SimpleORMap
 
     function getNumPrelimParticipants()
     {
-        return $this->admission_applicants->findBy('status', 'accepted')->count();
+        return AdmissionApplication::countBySql("seminar_id = ? AND status = 'accepted'", array($this->id));
     }
 
     function getNumWaiting()
     {
-        return $this->admission_applicants->findBy('status', 'awaiting')->count();
+        return AdmissionApplication::countBySql("seminar_id = ? AND status = 'awaiting'", array($this->id));
     }
 
     function getParticipantStatus($user_id)

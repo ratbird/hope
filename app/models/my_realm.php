@@ -1243,8 +1243,10 @@ class MyRealmModel
 
     public static function calc_single_navigation($collection) {
         $nav_elements = 0;
-        foreach ($collection as $course) {
-            $nav_elements = max($nav_elements, count(self::array_rtrim($course['navigation'])));
+        if (!empty($collection)) {
+            foreach ($collection as $course) {
+                $nav_elements = max($nav_elements, count(self::array_rtrim($course['navigation'])));
+            }
         }
         return $nav_elements;
     }

@@ -55,6 +55,18 @@ define ("EVAL_STATE_ACTIVE", "active");
 define ("EVAL_STATE_STOPPED", "stopped");
 # =========================================================================== #
 
+/**
+ * Replace escaped line breaks with actual line breaks.
+ *
+ * Only replaces windows-style line-breaks \r\n at the moment, since those 
+ * where the ones creating problems.
+ *
+ * @param string $text  Text containing escaped line breaks.
+ * @returns string      Text with actual line breaks.
+ */
+function EvaluationDB_decodeLineBreaks($text) {
+    return str_replace('\\r\\n', "\r\n", $text);
+}
 
 /**
  * Databaseclass for all evaluations
@@ -106,7 +118,7 @@ class EvaluationDB extends EvaluationObjectDB {
 
     $evalObject->setAuthorID     ($row['author_id']);
     $evalObject->setTitle        ($row['title']);
-    $evalObject->setText         ($row['text']);
+    $evalObject->setText         (EvaluationDB_decodeLineBreaks($row['text']));
     $evalObject->setStartdate    ($row['startdate']);
     $evalObject->setStopdate     ($row['stopdate']);
     $evalObject->setTimespan     ($row['timespan']);

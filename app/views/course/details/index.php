@@ -150,7 +150,7 @@
         </table>
     </section>
 
-    <? $lecturers = $course->members->findBy('status' ,'dozent'); ?>
+    <? $lecturers = $course->getMembersWithStatus('dozent'); ?>
     <? if (count($lecturers)) : ?>
         <section class="contentbox">
             <header>
@@ -160,7 +160,7 @@
                 <colgroup>
                     <col width="40%">
                 </colgroup>
-                <? foreach ($lecturers->orderBy('position name') as $lecturer) : ?>
+                <? foreach ($lecturers as $lecturer) : ?>
                     <tr>
                         <td>
                             <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $lecturer['username'])) ?>">
@@ -168,7 +168,7 @@
                             </a>
                         </td>
                         <td style="text-align: right">
-                            <a href="<?=
+                            <a data-dialog="" href="<?=
                             URLHelper::getScriptLink('dispatch.php/messages/write',
                                 array('rec_uname' => $lecturer['username']))?>">
                                 <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht schreiben"))) ?>
@@ -180,7 +180,7 @@
         </section>
     <? endif ?>
 
-    <? $tutors = $course->members->findBy('status' ,'tutor'); ?>
+    <? $tutors = $course->getMembersWithStatus('tutor'); ?>
     <? if (count($tutors)) : ?>
         <section class="contentbox">
             <header>
@@ -190,7 +190,7 @@
                 <colgroup>
                     <col width="40%">
                 </colgroup>
-                <? foreach ($tutors->orderBy('position name') as $tutor) : ?>
+                <? foreach ($tutors as $tutor) : ?>
                     <tr>
                         <td>
                             <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $tutor['username'])) ?>">
@@ -198,7 +198,7 @@
                             </a>
                         </td>
                         <td style="text-align: right">
-                            <a href="<?=
+                            <a data-dialog="" href="<?=
                             URLHelper::getScriptLink('dispatch.php/messages/write',
                                 array('rec_uname' => $tutor['username']))?>">
                                 <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht schreiben"))) ?>
@@ -265,7 +265,7 @@
             </section>
         </section>
     <? endif ?>
-    
+
     <? if ($study_areas) : ?>
         <section class="contentbox">
             <header>

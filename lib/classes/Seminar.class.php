@@ -190,7 +190,7 @@ class Seminar
     function getMembers($status = 'dozent')
     {
         $ret = array();
-        foreach($this->course->members->findBy('status', $status)->orderBy('position nachname') as $m) {
+        foreach($this->course->getMembersWithStatus($status) as $m) {
             $ret[$m->user_id]['user_id'] = $m->user_id;
             $ret[$m->user_id]['username'] = $m->username;
             $ret[$m->user_id]['Vorname'] = $m->vorname;

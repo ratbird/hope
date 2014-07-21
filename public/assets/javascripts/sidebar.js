@@ -1,37 +1,67 @@
-jQuery(document).ready(function ($) {
+$(window).load(function () {
     var sidebar     = $('#layout-sidebar'),
         container   = $('#layout_container'),
         fold_top    = $('#barBottomContainer').outerHeight(true),
         handler,
         last_scroll = null,
-        pos, boundaries = {},
-        size;
-    
+        offset = 0,
+        boundaries = {},
+        size,
+        prefixes = _.filter(Modernizr._prefixes, function (prefix) { return !!prefix; });
+
     if (sidebar.length === 0) {
         return;
     }
 
-    pos  = sidebar.offset();
-    size = sidebar.outerHeight(true);
-    boundaries.top = pos.top - fold_top;
+    var update = function (offset) {
+        STUDIP.CSS.removeRule('#layout-sidebar');
+        STUDIP.CSS.addRule('#layout-sidebar', {'margin-top': offset + 'px'});
+    };
+    if (Modernizr.csstransforms) {
+        update = function (offset) {
+            STUDIP.CSS.removeRule('#layout-sidebar');
+            STUDIP.CSS.addRule('#layout-sidebar .sidebar', {
+                transform: 'translateY(' + offset + 'px)'
+            }, prefixes);
+        };
+    }
 
-    handler = _.throttle(function () {
-        var scroll_y       = $(document).scrollTop(),
-            distance       = Math.abs(last_scroll - scroll_y),
+    size = sidebar.find('section').outerHeight(true);
+    boundaries.top = sidebar.offset().top - fold_top;
+    boundaries.bottom = container.height() - size;
+
+    handler = function (scroll_y) {
+        var distance       = Math.abs(last_scroll - scroll_y),
             size_y         = $(window).height(),
-            current        = sidebar.offset(),
-            leaving_top    = scroll_y > Math.max(boundaries.top, current.top - fold_top),
-            margin = false;
-        if (last_scroll > scroll_y && (scroll_y > boundaries.top || pos.top != current.top)) {
+            leaving_top    = scroll_y > Math.max(boundaries.top, offset + distance - fold_top),
+            move = false;
+            
+        if (last_scroll > scroll_y && (scroll_y > boundaries.top || offset > 0)) {
             // Scrolling up
-            margin = Math.max(0, scroll_y - boundaries.top);
+            move = true;
         } else if (last_scroll < scroll_y) {
-            margin = Math.max(0, scroll_y - boundaries.top);
+            move = true;
         }
-        if (margin !== false) {
-            sidebar.css('margin-top', margin);
+        if (move !== false) {
+            offset = Math.max(0, Math.min(scroll_y - boundaries.top, boundaries.bottom));
+            update(offset);
         }
         last_scroll = scroll_y;
-    }, 10);
-    $(document).on('scroll.studip', handler);
+    };
+
+    STUDIP.Sidebar = STUDIP.Sidebar || {};
+    STUDIP.Sidebar.scroll = function (state) {
+        if (arguments.length === 0) {
+            state = true;
+        }
+
+        if (state) {
+            STUDIP.Scroll.addHandler('sidebar', handler);
+        } else {
+            STUDIP.Scroll.removeHandler('sidebar');
+            update(0);
+        }
+    };
+
+    STUDIP.Sidebar.scroll();
 });

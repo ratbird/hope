@@ -311,6 +311,7 @@ jQuery(function () {
     STUDIP.Tour.pending_ajax_request = false;
 
     jQuery('.tour_link').live('click', function(event) {
+        STUDIP.Sidebar.scroll(false);
     	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     	event.preventDefault();
     });
@@ -325,5 +326,6 @@ jQuery(function () {
 
     jQuery('#tour_end').live('click', function() {
         STUDIP.Tour.destroy();
+        STUDIP.Sidebar.scroll(true);
     });
 });

@@ -652,7 +652,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             }
         }
         $content .= "<tr><td class=\"table_row_even\" colspan=\"2\">"
-            . LinkButton::create(_('Auswählen'), array('title' => _('Auswahl umkeheren'), 'onClick' => 'invert_selection(\'$form_name\');return false;'))
+            . LinkButton::create(_('Auswählen'), array('title' => _('Auswahl umkehren'), 'onClick' => 'invert_selection(\''. $form_name .'\');return false;'))
             . "</td><td class=\"table_row_even\" align=\"right\">
         <select name=\"sem_aktion\" style=\"font-size:8pt;vertical-align:bottom;\" " . tooltip(_("Aktion auswählen"),true) . ">
         <option value=\"mark\">" . _("in Merkliste &uuml;bernehmen") . "</option>";

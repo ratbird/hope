@@ -26,8 +26,8 @@ if (get_config('BANNER_ADS_ENABLE')) {
     <div class="ui-widget_columnl">
         <ul id="sort0" style="list-style-type: none;">
         <? foreach ($left as $widget) : ?>
-            <li class="studip-widget-wrapper">
-                <div class="ui-widget-content studip-widget" id="<?= $widget->widget_id ?>">
+            <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
+                <div class="ui-widget-content studip-widget">
                     <?= $this->render_partial('start/_widget', compact('widget')) ?>
                 </div>
              </li>

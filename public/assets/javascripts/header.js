@@ -71,7 +71,6 @@ STUDIP.HeaderIcons = {
             } else {
                 ctx.drawImage(icon, 7, 2,  28 * (image.width / image.height), 28);
             }
-            console.log(image.width);
             var filterCanvas = function (filter) {
                 if (canvas.width > 0 && canvas.height > 0) {
                     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

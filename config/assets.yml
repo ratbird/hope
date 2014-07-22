@@ -74,7 +74,6 @@ javascripts:
     - javascripts/jquery/jquery.scrollTo.js
     - javascripts/scm.js
     - javascripts/start.js
-    - javascripts/sidebar.js
     - *header
     - *toolbar
     - *wysiwyg

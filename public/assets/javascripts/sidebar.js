@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
     }
 
     var update = function (offset) {
-        $sidebar.css('margin-top', offset + 'px');
+        $sidebar.css('margin-top', offset);
     };
     if (Modernizr.csstransforms) {
         update = function (offset) {

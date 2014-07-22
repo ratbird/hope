@@ -3,30 +3,34 @@
 
 (function ($, document) {
 
-    var fold = null,
+    var fold,
+        $header,
+        $wrapper,
         was_below_the_fold = false,
         scroll = function (scrolltop) {
             var is_below_the_fold = scrolltop > fold;
             if (is_below_the_fold !== was_below_the_fold) {
-                $('body').toggleClass('fixed', is_below_the_fold);
+                $header.toggleClass('fixed', is_below_the_fold);
                 was_below_the_fold = is_below_the_fold;
             }
         };
 
     STUDIP.HeaderMagic = {
         enable: function () {
+            $header = $('#barBottomContainer');
+            $wrapper = $header.wrap('<div class="sticky-wrapper" />').parent().height($header.outerHeight(true));
+            fold = $header.offset().top;
             STUDIP.Scroll.addHandler('header', scroll);
         },
         disable : function () {
             STUDIP.Scroll.removeHandler('header');
-            $('body').removeClass('fixed');
+            $header.removeClass('fixed');
         }
     };
 
     $(document).ready(function () {
         // Test if the header is actually present
         if ($('#barBottomContainer').length > 0) {
-            fold = $('#barBottomContainer').offset().top;
             STUDIP.HeaderMagic.enable();
         }
     });

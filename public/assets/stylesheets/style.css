@@ -1637,12 +1637,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   position: relative;
   width: 100%;
 }
-.fixed #header {
+#barBottomContainer.fixed {
   border-bottom: 1px solid #000;
-  margin-top: 24px;
-  margin-bottom: 5px;
-}
-.fixed #barBottomContainer {
   position: fixed;
   top: 0px;
   z-index: 10000;

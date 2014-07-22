@@ -1,55 +1,61 @@
-$(window).load(function () {
-    var sidebar     = $('#layout-sidebar'),
+jQuery(document).ready(function ($) {
+    var $sidebar    = $('#layout-sidebar .sidebar'),
         container   = $('#layout_container'),
         fold_top    = $('#barBottomContainer').outerHeight(true),
         handler,
         last_scroll = null,
         offset = 0,
         boundaries = {},
-        size,
-        prefixes = _.filter(Modernizr._prefixes, function (prefix) { return !!prefix; });
+        size;
 
-    if (sidebar.length === 0) {
+    STUDIP.Sidebar = STUDIP.Sidebar || {};
+
+    if ($sidebar.length === 0) {
+        STUDIP.Sidebar.scroll = function () {};
         return;
     }
 
     var update = function (offset) {
-        STUDIP.CSS.removeRule('#layout-sidebar');
-        STUDIP.CSS.addRule('#layout-sidebar', {'margin-top': offset + 'px'});
+        $sidebar.css('margin-top', offset + 'px');
     };
     if (Modernizr.csstransforms) {
         update = function (offset) {
-            STUDIP.CSS.removeRule('#layout-sidebar');
-            STUDIP.CSS.addRule('#layout-sidebar .sidebar', {
-                transform: 'translateY(' + offset + 'px)'
-            }, prefixes);
+            $sidebar.css('transform', 'translateY(' + offset + 'px)');
         };
     }
 
-    size = sidebar.find('section').outerHeight(true);
-    boundaries.top = sidebar.offset().top - fold_top;
-    boundaries.bottom = container.height() - size;
+    size = $sidebar.find('.sidebar').outerHeight(true);
+    $sidebar.find('img').on('load', function () {
+        size = $sidebar.outerHeight(true);
+        handler(last_scroll);
+    })
 
-    handler = function (scroll_y) {
-        var distance       = Math.abs(last_scroll - scroll_y),
-            size_y         = $(window).height(),
-            leaving_top    = scroll_y > Math.max(boundaries.top, offset + distance - fold_top),
-            move = false;
-            
-        if (last_scroll > scroll_y && (scroll_y > boundaries.top || offset > 0)) {
-            // Scrolling up
+    boundaries.top = $sidebar.offset().top - fold_top;
+
+    handler = function (scrolltop) {
+        // We need to keep this dynamic in order to cope with endless scrolls
+        boundaries.bottom = container.height() - size;
+
+        var move = false,
+            direction = scrolltop > last_scroll ? 'down' : 'up',
+            boundary = boundaries.bottom;
+
+        if (direction === 'up' && (scrolltop > boundaries.top || offset > 0)) {
+            boundary = Math.min(offset, boundary);
             move = true;
-        } else if (last_scroll < scroll_y) {
+        } else if (direction === 'down') {
+            boundary = Math.max(offset, Math.min(boundary, scrolltop - boundaries.top + $(window).height() - size - fold_top));
             move = true;
         }
+
         if (move !== false) {
-            offset = Math.max(0, Math.min(scroll_y - boundaries.top, boundaries.bottom));
+            offset = Math.max(0, Math.min(scrolltop - boundaries.top, boundary));
             update(offset);
         }
-        last_scroll = scroll_y;
+        last_scroll = scrolltop;
     };
 
-    STUDIP.Sidebar = STUDIP.Sidebar || {};
+    // Expose enable/disable functionality
     STUDIP.Sidebar.scroll = function (state) {
         if (arguments.length === 0) {
             state = true;
@@ -63,5 +69,6 @@ $(window).load(function () {
         }
     };
 
+    // Enable the scrolling sidebar
     STUDIP.Sidebar.scroll();
 });

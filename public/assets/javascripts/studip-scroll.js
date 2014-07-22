@@ -3,18 +3,13 @@
     
     var handlers  = {},
         activated = false,
-        throttle  = 30,
-        timeout   = false;
+        throttle  = 30;
         
     function scrollHandler (event) {
         var scrollTop = $(document).scrollTop();
         $.each(handlers, function (index, handler) {
             handler(scrollTop);
         });
-        if (arguments.length > 0) {
-            clearTimeout(timeout);
-            timeout = setTimeout(scrollHandler, throttle + 10);
-        }
     };
 
     function refresh() {

@@ -207,7 +207,7 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
     if ( Request::submitted('create_moveItemID') )
         $this->moveItemID = Request::option("itemID");
     elseif ( Request::option("moveItemID") )
-        $this->moveItemID = Request::quoted("moveItemID");
+        $this->moveItemID = Request::get("moveItemID");
 
     if (Request::submitted("abbort_move"))
         $this->moveItemID = NULL;
@@ -249,24 +249,7 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
 */
 function showEvalTree(){
 
-    $html = "<script type=\"text/javascript\">\n"
-        . " function invert_selection(the_form){\n"
-        . "  my_elements = document.forms[the_form].elements['marked_sem[]'];\n"
-        . "  if(!my_elements.length){\n"
-        . "   if(my_elements.checked)\n"
-        . "    my_elements.checked = false;\n"
-        . "   else\n"
-        . "    my_elements.checked = true;\n"
-        . "  } else {\n"
-        . "   for(i = 0; i < my_elements.length; ++i){\n"
-        . "    if(my_elements[i].checked)\n"
-        . "    my_elements[i].checked = false;\n"
-        . "   }\n"
-        . "  }\n"
-        . " }\n"
-        . "</script>\n";
-
-    $html .= "<table width=\"99%\" border=\"0\" cellpadding=\"0\" "
+    $html = "<table width=\"99%\" border=\"0\" cellpadding=\"0\" "
         . "cellspacing=\"0\">\n";
 
     if ( $this->startItemID != ROOT_BLOCK ){
@@ -1226,19 +1209,19 @@ function execCommandUpdateItem ( $no_delete = false ){
 
     $mode = $this->getInstance($this->itemID);
 
-    $title = Request::quoted('title');
+    $title = Request::get('title');
     if ($title == "" && $mode != QUESTION_BLOCK)
         $title = _("Kein Titel angegeben.");
-    $text = trim(Request::quoted('text'));
+    $text = trim(Request::get('text'));
 
     switch ($mode){
      case ROOT_BLOCK:
 
-        $this->tree->eval->setTitle($title, QUOTED);
-        $this->tree->eval->setText($text, QUOTED);
+        $this->tree->eval->setTitle($title);
+        $this->tree->eval->setText($text);
 
         //global features
-        $this->tree->eval->setAnonymous(Request::quoted('anonymous'));
+        $this->tree->eval->setAnonymous(Request::get('anonymous'));
 
         $this->tree->eval->save();
 
@@ -1253,8 +1236,8 @@ function execCommandUpdateItem ( $no_delete = false ){
 
         $group = &$this->tree->getGroupObject($this->itemID, true);
 
-        $group->setTitle($title, QUOTED);
-        $group->setText($text, QUOTED);
+        $group->setTitle($title);
+        $group->setText($text);
         $group->save();
         if ($group->isError)
             return EvalCommon::showErrorReport ($this->tree->eval,
@@ -1266,9 +1249,9 @@ function execCommandUpdateItem ( $no_delete = false ){
      case QUESTION_BLOCK:
 
         $group = &$this->tree->getGroupObject($this->itemID, true );
-        $group->setTitle($title, QUOTED);
-        $group->setText($text, QUOTED);
-        $group->setMandatory(Request::quoted('mandatory'));
+        $group->setTitle($title);
+        $group->setText($text);
+        $group->setMandatory(Request::get('mandatory'));
         $group->save();
 
         // update the questions
@@ -1441,7 +1424,7 @@ function execCommandAddGroup(){
 
    
     $group = new EvaluationGroup();
-    $group->setTitle( NEW_ARRANGMENT_BLOCK_TITLE , QUOTED);
+    $group->setTitle( NEW_ARRANGMENT_BLOCK_TITLE);
     $group->setText("");
 
     $mode = $this->getInstance($this->itemID);
@@ -1481,29 +1464,12 @@ function execCommandAddQGroup(){
 
 
     $group = new EvaluationGroup();
-    $group->setTitle( NEW_QUESTION_BLOCK_BLOCK_TITLE , QUOTED);
+    $group->setTitle( NEW_QUESTION_BLOCK_BLOCK_TITLE);
     $group->setText("");
     $group->setChildType("EvaluationQuestion");
     $group->setTemplateID(Request::option("templateID"));
     $template = new EvaluationQuestion (Request::option("templateID"),
         NULL, EVAL_LOAD_FIRST_CHILDREN);
-
-    // add 3 Questions
-/*  for ($i=0;$i<=3;$i++){
-        $template = new EvaluationQuestion (Request::quoted("templateID"));
-        $newquestion = $template->duplicate ();
-        $newquestion->setText(_("Bitte eine Frage eingeben."));
-        $newquestion->save ();
-        if ($newquestion->isError)
-            return EvalCommon::showErrorReport ($this->tree->eval,
-                _("Fehler beim Anlegen neuer Fragen."));
-
-        $group->addChild ($newquestion);
-        if ($group->isError)
-            return EvalCommon::showErrorReport ($this->tree->eval,
-                _("Fehler beim Anlegen neuer Fragen."));
-    }
-*/
 
     $mode = $this->getInstance($this->itemID);
 
@@ -1513,7 +1479,7 @@ function execCommandAddQGroup(){
         if ($this->tree->eval->isError)
             return EvalCommon::showErrorReport ($this->tree->eval,
                 _("Fehler beim Anlegen eines neuen Blocks."));
-        $this->msg[$item_id] = "msg§"
+        $this->msg[$this->itemID] = "msg§"
             . _("Ein neuer Fragenblock wurde angelegt.");
     }// group
     elseif ($mode == ARRANGMENT_BLOCK){
@@ -1609,7 +1575,7 @@ function execCommandUpdateQuestions ( $no_delete = false ){
                 // upadate the questiontext to the db
             } else {
 
-                $question->setText($questions[$i]['text'], QUOTED);
+                $question->setText($questions[$i]['text']);
                 $question->save();
             }
         }
@@ -1631,7 +1597,7 @@ function execCommandUpdateQuestions ( $no_delete = false ){
  */
 function execCommandAddQuestions(){
 
-    $addquestions = Request::quoted('newQuestionFields');
+    $addquestions = Request::get('newQuestionFields');
 
     $qgroup = &$this->tree->getGroupObject($this->itemID);
     $templateID = $qgroup->getTemplateID();
@@ -1738,7 +1704,7 @@ function execCommandQuestionAnswersCreated(){
 
     $id = $this->itemID;
 
-    $question = new EvaluationQuestion(Request::quoted("questionID"));
+    $question = new EvaluationQuestion(Request::get("questionID"));
     $title = htmlready ($question->getTitle());
 
     $this->msg[$this->itemID] = "msg§"
@@ -2194,10 +2160,10 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $number_of_childs = $this->tree->eval->getNumberChildren();
    if ($number_of_childs == 1 &&
         $this->itemID == ROOT_BLOCK &&
-        $this->tree->eval->getTitle(QUOTED) == NEW_EVALUATION_TITLE &&
-        $this->tree->eval->getText(QUOTED) == "" &&
+        $this->tree->eval->getTitle() == NEW_EVALUATION_TITLE &&
+        $this->tree->eval->getText() == "" &&
         $child &&
-        $child->getTitle(QOUTED) == FIRST_ARRANGMENT_BLOCK_TITLE &&
+        $child->getTitle() == FIRST_ARRANGMENT_BLOCK_TITLE &&
         $child->getChildren() == NULL &&
         $child->getText == ""){
         
@@ -2300,10 +2266,10 @@ function createFormNew($show = ARRANGMENT_BLOCK){
     $number_of_childs = $this->tree->eval->getNumberChildren();
     if ($number_of_childs == 1 &&
         $this->itemID == ROOT_BLOCK &&
-        $this->tree->eval->getTitle(QUOTED) == _("Neue Evaluation") &&
-        $this->tree->eval->getText(QUOTED) == "" &&
+        $this->tree->eval->getTitle() == _("Neue Evaluation") &&
+        $this->tree->eval->getText() == "" &&
         $child &&
-        $child->getTitle(QOUTED) == _("Erster Gruppierungsblock") &&
+        $child->getTitle() == _("Erster Gruppierungsblock") &&
         $child->getChildren() == NULL &&
         $child->getText == ""){
 
@@ -2729,7 +2695,7 @@ function createQuestionForm(){
     if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
         $questionID = $command_parts[2];
     else
-        $questionID = Request::submitted('template_save2_button') ? "" : Request::quoted("template_id");
+        $questionID = Request::submitted('template_save2_button') ? "" : Request::get("template_id");
 
     if ($question->getObjectID() == $questionID)
         $tr2->addAttr ("class", "eval_highlight");

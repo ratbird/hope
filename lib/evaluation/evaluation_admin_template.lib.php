@@ -382,7 +382,7 @@ class EvalTemplateGUI {
        $input = new HTMpty( "input" );
        $input->attr( "type", "text" );
        $input->attr( "name", "template_name" );
-       $input->attr( "value", $question->getText(UNQUOTED) );
+       $input->attr( "value", $question->getText() );
        $input->attr( "style", "vertical-align:middle;" );
        $input->attr( "size", 22 );
        $input->attr( "maxlength", 22 );
@@ -393,7 +393,7 @@ class EvalTemplateGUI {
     $input = new HTMpty( "input" );
     $input->attr( "type", "hidden" );
     $input->attr( "name", "template_name" );
-    $input->attr( "value", $question->getText(UNQUOTED) );
+    $input->attr( "value", $question->getText() );
     $form->cont( $input );
 
     $input = new HTMpty( "input" );
@@ -473,7 +473,7 @@ class EvalTemplateGUI {
       $input = new HTMpty( "input" );
       $input->attr( "type", "text" );
       $input->attr( "name", "template_answers[".$i."][text]" );
-      $input->attr( "value", $answer->getText(UNQUOTED) );
+      $input->attr( "value", $answer->getText() );
       $input->attr( "size", 23 );
       $input->attr( "tabindex", $i+2 );
       $form->cont( $input );
@@ -542,7 +542,7 @@ class EvalTemplateGUI {
               $input = new HTMpty( "input" );
               $input->attr( "type", "text" );
               $input->attr( "name", "template_answers[0][text]" );
-              $input->attr( "value", $answer->getText(UNQUOTED) );
+              $input->attr( "value", $answer->getText() );
               $input->attr( "size", 29 );
               $form->cont( $input );
               $input = new HTMpty( "input" );
@@ -553,7 +553,7 @@ class EvalTemplateGUI {
               $form->cont( $this->BR );
            }else{
 
-              if($answer->getText(UNQUOTED) == "" ){
+              if($answer->getText() == "" ){
              $oldid=$answer->getObjectID();
              //continue;
               }
@@ -563,7 +563,7 @@ class EvalTemplateGUI {
               $input = new HTMpty( "input" );
               $input->attr( "type", "text" );
               $input->attr( "name", "template_answers[1][text]" );
-              $input->attr( "value", $answer->getText(UNQUOTED) );
+              $input->attr( "value", $answer->getText() );
               $input->attr( "size", 29 );
               $form->cont( $input );
               $input = new HTMpty( "input" );
@@ -632,7 +632,7 @@ class EvalTemplateGUI {
         $input = new HTMpty( "input" );
         $input->attr( "type", "text" );
         $input->attr( "name", "template_answers[".$i."][text]" );
-        $input->attr( "value", $answer->getText( UNQUOTED ) );
+        $input->attr( "value", $answer->getText(  ) );
         $input->attr( "size", 23 );
         $input->attr( "tabindex", $i+2 );
         $form->cont( $input );
@@ -718,7 +718,7 @@ class EvalTemplateGUI {
        $input->attr( "type", "text" );
        $input->attr( "name", "template_residual_text" );
        if ($isResidual)
-      $input->attr( "value", $residualAnswer->getText(UNQUOTED) );
+      $input->attr( "value", $residualAnswer->getText() );
        else
       $input->attr( "value", "" );
        $input->attr( "size", 22 );
@@ -838,8 +838,8 @@ class EvalTemplateGUI {
      $input = new HTMpty( "input" );
      $input->attr( "type", "text" );
      $input->attr( "name", "template_name" );
-     $name = $question->getText(UNQUOTED);
-     $input->attr( "value", $question->getText(UNQUOTED));
+     $name = $question->getText();
+     $input->attr( "value", $question->getText());
      //    $input->attr( "value", $name );
      $input->attr( "style", "vertical-align:middle;" );
      $input->attr( "size", 22 );

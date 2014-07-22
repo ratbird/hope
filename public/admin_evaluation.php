@@ -119,7 +119,6 @@ if (Request::option('page') == "edit"){
 }else{
     include (EVAL_PATH.EVAL_FILE_OVERVIEW);
 }
-
 $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();
 echo $template->render();

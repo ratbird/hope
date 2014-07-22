@@ -179,27 +179,18 @@ class EvaluationObject extends StudipObject {
     * Sets the title
     * @access  public
     * @param   string  $title  The title.
-    * @param   boolean $encoded    YES, if text is escaped (e.g. with addslashes) 
-                                   and have html special chars.
     * @throws  error
     */
-   function setTitle ($title, $encoded = false) {
-      if ($encoded)
-         $this->title = stripslashes (decodeHTML ($title));
-      else   
+   function setTitle ($title) {
          $this->title = $title;
    }
 
    /**
     * Gets the title
     * @access  public
-    * @param   boolean $escaped  If YES, the string is escaped
     * @return  string  The title
     */
-   function getTitle ($escaped = false) {
-      if ($escaped)
-         return mysql_escape_string ($this->title);
-      else
+   function getTitle () {
          return $this->title;
    }
 
@@ -207,27 +198,18 @@ class EvaluationObject extends StudipObject {
     * Sets the text
     * @access  public
     * @param   string  $text        The text.
-    * @param   boolean $encoded    YES, if text is escaped (e.g. with addslashes) 
-                                   and have html special chars.
     * @throws  error
     */
-   function setText ($text, $encoded = false) {
-      if ($encoded)
-         $this->text = stripslashes (decodeHTML ($text));
-      else
+   function setText ($text) {
          $this->text = $text;
    }
 
    /**
     * Gets the text
     * @access  public
-    * @param   boolean $escaped  If YES, the string is escaped
     * @return  string  The text
     */
-   function getText ($escaped = false) {
-      if ($escaped)
-         return mysql_escape_string ($this->text);
-      else
+   function getText () {
          return $this->text;
    }
    

@@ -132,8 +132,8 @@ class EvaluationGroupDB extends EvaluationObjectDB {
                 mandatory       = ?
             WHERE
                 evalgroup_id    = ?
-            ", array((string)$groupObject->getTitle(YES),
-                     (string)$groupObject->getText(YES),
+            ", array((string)$groupObject->getTitle(),
+                     (string)$groupObject->getText(),
                      (string)$groupObject->getChildType(),
                      (int)$groupObject->getPosition (),
                      (string)$groupObject->getTemplateID(),
@@ -154,8 +154,8 @@ class EvaluationGroupDB extends EvaluationObjectDB {
             ", array(
                      (string)$groupObject->getObjectID(),
                      (string)$groupObject->getParentID(),
-                     (string)$groupObject->getTitle(YES),
-                     (string)$groupObject->getText(YES),
+                     (string)$groupObject->getTitle(),
+                     (string)$groupObject->getText(),
                      (string)$groupObject->getChildType(),
                      (int)$groupObject->isMandatory(),
                      (string)$groupObject->getTemplateID(),

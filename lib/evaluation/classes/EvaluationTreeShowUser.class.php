@@ -435,7 +435,7 @@ class EvaluationTreeShowUser {
             $extraStyle .= ($question->getPosition() == $group->getNumberChildren() - 1
                     ? " border-bottom: $answerBorder;"
                     : "");
-            $answers = Request::quotedArray('answers');
+            $answers = Request::getArray('answers');
             $checked = $answers[$question->getObjectID()] == $answer->getObjectID() ? "checked" : "";
 
             $html .= "  <td align=\"center\" style=\"border-left: $answerBorder; $extraStyle;\" ".
@@ -505,7 +505,7 @@ class EvaluationTreeShowUser {
                     "</td>\n";
 
                 /* one row input field */
-                $freetexts = Request::quotedArray('freetexts');
+                $freetexts = Request::getArray('freetexts');
                 if( $answer->getRows() == 1)
                 $html .=
                     "<td colspan=\"2\">".
@@ -528,7 +528,7 @@ class EvaluationTreeShowUser {
 
             /* show normal answer ------------- */
             else {
-                $answers = Request::quotedArray('answers');
+                $answers = Request::getArray('answers');
                 /* see if it must be checked  */
                 if( $type == "radio" )
                 $checked = $answers[$question->getObjectID()] == $answer->getObjectID()

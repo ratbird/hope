@@ -45,7 +45,7 @@ if(empty($showrangeID)) $showrangeID        = $SessionSeminar;
 $voteID                                     = Request::option('voteID');
 $openID                                     = Request::option('openID');
     if(empty($openID))          $openID     = Request::option('voteopenID');
-$searchRange                                = Request::quoted('searchRange');
+$searchRange                                = Request::get('searchRange');
     if(empty($searchRange))     $searchRange= NULL;
 $referer                                    = Request::option('referer');
 

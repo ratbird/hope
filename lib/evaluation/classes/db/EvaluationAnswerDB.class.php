@@ -134,7 +134,7 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
             array($answerObject->getObjectID(),
                     $answerObject->getParentID(),
                     $answerObject->getPosition(),
-                    $answerObject->getText(YES),
+                    $answerObject->getText(),
                     $answerObject->getValue(),
                     $answerObject->getRows(),
                     $answerObject->isResidual()));

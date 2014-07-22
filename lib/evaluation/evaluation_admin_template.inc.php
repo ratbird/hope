@@ -77,10 +77,10 @@ if(!$parentID){
    $parentID = Request::option('parentID');
 }
 $template_name = Request::get('template_name',$template_name);
-$template_type = Request::quoted('template_type') ? Request::quoted('template_type') : $template_type;
+$template_type = Request::get('template_type') ? Request::get('template_type') : $template_type;
 $template_multiple = Request::get('template_multiple',$template_multiple) ;
-$template_answers = Request::quotedArray('template_answers');
-$template_add_num_answers = Request::quoted('template_add_num_answers') ? Request::quoted('template_add_num_answers') : $template_add_num_answers;
+$template_answers = Request::getArray('template_answers');
+$template_add_num_answers = Request::get('template_add_num_answers') ? Request::get('template_add_num_answers') : $template_add_num_answers;
 if( empty($template_answers) ) {
     if( strstr( $command, "edit" ))
    for( $i=0; $i<5; $i++ )
@@ -214,7 +214,7 @@ switch( $command ) {
   }
   else
      $question->save();
-     $template_delete_answers = Request::quotedArray("template_delete_answers");
+     $template_delete_answers = Request::getArray("template_delete_answers");
      if(!empty($template_delete_answers))
           foreach ($template_delete_answers as $answerID) {
              $question->removeChildID ($answerID);
@@ -611,7 +611,7 @@ function save1($myuserid){
    /*Existiert Question/Template schon?*/
    $qdb = new EvaluationQuestionDB();
    if(!$template_id){
-      $template_id = Request::quoted("template_id");
+      $template_id = Request::option("template_id");
    }
    if( $qdb->exists($template_id) ){
       $question=  new EvaluationQuestion ($template_id,
@@ -633,13 +633,13 @@ function save1($myuserid){
    }
 
    /*Get Vars ----------------------------------------------------*/
-   $template_name = Request::quoted("template_name");
-   $template_type = Request::quoted("template_type");
-   $template_multiple = Request::quoted("template_multiple");
+   $template_name = Request::get("template_name");
+   $template_type = Request::get("template_type");
+   $template_multiple = Request::get("template_multiple");
    $template_add_num_answers = Request::option("template_add_num_answers");
-   $template_residual = Request::quoted("template_residual");
-   $template_residual_text = Request::quoted("template_residual_text");
-   $template_answers = Request::quotedArray("template_answers");
+   $template_residual = Request::get("template_residual");
+   $template_residual_text = Request::get("template_residual_text");
+   $template_answers = Request::getArray("template_answers");
    /*end: Get Vars -----------------------------------------------*/
 
    $question->setParentID($myuserid);

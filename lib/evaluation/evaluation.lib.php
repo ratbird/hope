@@ -34,7 +34,7 @@ require_once (HTML);
 
 
 /**
- * Library with common functions for the evaluation module
+ * Library with common static functions for the evaluation module
  *
  * @author      Alexander Willner <mail@AlexanderWillner.de>
  *
@@ -45,14 +45,14 @@ require_once (HTML);
  */
 
 class EvalCommon {
-  /* Define functions ------------------------------------------------------ */
+  /* Define static functions ------------------------------------------------------ */
 
   /**
    * Creates this funny blue title bar
    * @param   string   $title     The title
    * @param   string   $iconURL   The URL for the icon
    */
-  function createTitle ($title, $iconURL = "", $padding = 0) {
+  static function createTitle ($title, $iconURL = "", $padding = 0) {
     $table = new HTML("table");
     $table->addAttr ("border","0");
     $table->addAttr ("class","blank");
@@ -98,7 +98,7 @@ class EvalCommon {
    * @param   string   $imgURL   The URL for the icon
    * @param   string   $imgALT   The description for the icon
    */
-  function createImage ($imgURL, $imgALT, $extra = "") {
+  static function createImage ($imgURL, $imgALT, $extra = "") {
     $img = new HTMLempty ("img");
     $img->addAttr ("border", "0");
     $img->addAttr ("valign", "middle");
@@ -113,9 +113,9 @@ class EvalCommon {
   }
 
   /**
-   * Creates the Javascript function, which will open an evaluation popup
+   * Creates the Javascript static function, which will open an evaluation popup
    */
-  function createEvalShowJS( $isPreview = NO, $as_object = YES ) {
+  static function createEvalShowJS( $isPreview = NO, $as_object = YES ) {
       $html = "";
       $html .= 
       "<script type=\"text/javascript\" language=\"JavaScript\">".
@@ -139,7 +139,7 @@ class EvalCommon {
   /**
    * Creates a link, which will open an evaluation popup
    */
-  function createEvalShowLink ($evalID, $content, $isPreview = NO, $as_object = YES) {
+  static function createEvalShowLink ($evalID, $content, $isPreview = NO, $as_object = YES) {
       $html = "";
       
       $html .=
@@ -166,7 +166,7 @@ class EvalCommon {
    * @param  string  $imgURL   The image to show
    * @param  string  $cssClass The css class for the text
    */
-  function createReportMessage ($text, $imgURL, $cssClass) {
+  static function createReportMessage ($text, $imgURL, $cssClass) {
     $table = new HTML ("table");
     $table->addAttr ("border", "0");
     $table->addAttr ("cellpadding", "2");
@@ -199,7 +199,7 @@ class EvalCommon {
    * Creates an errormessage from an object
    * @param    object StudipObejct   $object   A Stud.IP-object
    */
-  function showErrorReport (&$object, $errortitle = "") {
+  static function showErrorReport (&$object, $errortitle = "") {
     if (empty ($errortitle)) {
       $errortitle = ( count( $object->getErrors() ) > 1 )
     ? _("Es sind Fehler aufgetreten.")
@@ -242,7 +242,7 @@ class EvalCommon {
     echo $message->createContent ();
   }
 
-  function createErrorReport (&$object, $errortitle = "") {
+  static function createErrorReport (&$object, $errortitle = "") {
       ob_start();
       EvalCommon::showErrorReport ($object, $errortitle);
       $html = ob_get_contents();
@@ -253,7 +253,7 @@ class EvalCommon {
   /**
    * Returns the rangeID
    */
-  function getRangeID () {
+  static function getRangeID () {
     $rangeID = Request::option('range_id') ? Request::option('range_id') : 
       $GLOBALS["SessSemName"][1];
     if (empty ($rangeID) || ($rangeID == get_username ($GLOBALS['user']->id)))
@@ -275,7 +275,7 @@ class EvalCommon {
    * @param   integer $second The second (optional)
    * @return  integer If an error occurs -> -1. Otherwise the UNIX-timestamp
    */
-  function date2timestamp ($day, $month, $year, 
+  static function date2timestamp ($day, $month, $year, 
                $hour = 0, $minute = 0, $second = 0) {
       if (!checkdate ((int)$month, (int)$day, (int)$year) ||
       $hour < 0 || $hour > 24 ||

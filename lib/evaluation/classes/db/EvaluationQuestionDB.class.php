@@ -149,7 +149,7 @@ class EvaluationQuestionDB extends EvaluationObjectDB {
         (string)$questionObject->getParentID(),
         (string)$questionObject->getType(),
         (int)$questionObject->getPosition(),
-        (string)$questionObject->getText(YES),
+        (string)$questionObject->getText(),
         (int)$questionObject->isMultiplechoice(),
         $questionObject->getObjectID()
         ));

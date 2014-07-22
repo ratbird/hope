@@ -82,8 +82,8 @@ $evalAction = $lib->getPageCommand();
 
 $openID = Request::option("openID");
 $evalID = Request::option("evalID");
-$search = Request::quoted("search"); // range
-$templates_search = Request::quoted("templates_search");
+$search = Request::get("search"); // range
+$templates_search = Request::get("templates_search");
 $search = $templates_search;
 /* ---------------------------------------------------------- end: variables */
 
@@ -101,9 +101,7 @@ if (! ($perm->have_studip_perm ("tutor", $rangeID)) &&
     $safeguard = $lib->createSafeguard("ausruf", sprintf(_("Sie haben keinen Zugriff auf diesen Bereich.")));
     $table->addContent ($lib->createHeader ($safeguard));
     echo $table->createContent ();
-    include_once ('lib/include/html_end.inc.php');
-    page_close ();
-    exit;
+    return;
 }
 
 $safeguard = $lib->callSafeguard( $evalAction, $evalID, $rangeID,
@@ -262,7 +260,7 @@ $table->addContent ($tr);
 /* ----------------------------------------------------------- end: infoline */
 
 /* Show showrange search results ------------------------------------------- */
-if( $evalAction == "search_showrange" && Request::quoted("search") ) {
+if( $evalAction == "search_showrange" && Request::get("search") ) {
     $tr = new HTML ("tr");
     $td = new HTML ("td");
     $td->addAttr ("class", "blank");
@@ -276,14 +274,12 @@ if( $evalAction == "search_showrange" && Request::quoted("search") ) {
     $b->addContent(_("Suchergebnisse:"));
     $td->addContent ($b);
 
-    $td->addHTMLContent ($lib->createDomainLinks (Request::quoted("search")));
+    $td->addHTMLContent ($lib->createDomainLinks (Request::get("search")));
     $tr->addContent ($td);
     $table->addContent ($tr);
     $table->addContent ($lib->createClosingRow());
     echo $table->createContent();
-    include_once ('lib/include/html_end.inc.php');
-    page_close ();
-    exit;
+    return;
 }
 /* -------------------------------------- end: Show showrange search results */
 
@@ -412,12 +408,6 @@ if ($debug) {
 
     print_r($_POST);
 }
-
-# PHP-LIB: close session ==================================================== #
-include_once ('lib/include/html_end.inc.php');
-//page_close ();
-# ============================================================== end: PHP-LIB #
-
 
 
 ?>

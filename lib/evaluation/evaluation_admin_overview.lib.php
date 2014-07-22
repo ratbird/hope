@@ -508,7 +508,7 @@ class EvalOverview {
         $no_permission = EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval);
 
         if (($globalperm == "root" || $globalperm == "admin") &&
-                !Request::quoted("search") && $eval->isTemplate()) {
+                !Request::get("search") && $eval->isTemplate()) {
             // no RuntimeSettings and Save-Button for Template if there are no ranges
             $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
         } elseif ($no_permission) {
@@ -1201,7 +1201,7 @@ class EvalOverview {
                             break;
 
                         case "timeBased":
-                            $startDate = EvalCommon::date2timestamp(Request::quoted("startDay"), Request::quoted("startMonth"), Request::quoted("startYear"), Request::quoted("startHour"), Request::quoted("startMinute"));
+                            $startDate = EvalCommon::date2timestamp(Request::int("startDay"), Request::int("startMonth"), Request::int("startYear"), Request::int("startHour"), Request::int("startMinute"));
                             break;
 
                         case "immediate":
@@ -1224,13 +1224,13 @@ class EvalOverview {
                             break;
 
                         case "timeBased":
-                            $stopDate = EvalCommon::date2timestamp(Request::quoted("stopDay"), Request::quoted("stopMonth"), Request::quoted("stopYear"), Request::quoted("stopHour"), Request::quoted("stopMinute"));
+                            $stopDate = EvalCommon::date2timestamp(Request::int("stopDay"), Request::int("stopMonth"), Request::int("stopYear"), Request::int("stopHour"), Request::int("stopMinute"));
                             $timeSpan = NULL;
                             break;
 
                         case "timeSpanBased":
                             $stopDate = NULL;
-                            $timeSpan = Request::quoted("timeSpan");
+                            $timeSpan = Request::get("timeSpan");
                             break;
                     }
 
@@ -1295,7 +1295,7 @@ class EvalOverview {
                         $newEval = $eval->duplicate();
                         if (Request::option("startMode"))
                             $newEval->setStartdate($startDate);
-                        if (Request::quoted("stopMode")) {
+                        if (Request::get("stopMode")) {
                             $newEval->setStopdate($stopDate);
                             $newEval->setTimespan($timeSpan);
                         }
@@ -1431,7 +1431,7 @@ class EvalOverview {
                     }
 
                     // set new stop date
-                    if (Request::quoted("stopMode") && !$time_msg) {
+                    if (Request::get("stopMode") && !$time_msg) {
                         $eval->setStopDate($stopDate);
                         $eval->setTimeSpan($timeSpan);
 
@@ -1470,7 +1470,7 @@ class EvalOverview {
 
             case "search_showrange":
             case "search_range":
-                $search = Request::quoted("search");
+                $search = Request::get("search");
 
                 if (EvaluationObjectDB::getGlobalPerm(YES) < 31) {
                     $safeguard = $this->createSafeguard("ausruf", _("Sie besitzen keine Berechtigung eine Suche durchzuführen."));
@@ -1491,17 +1491,17 @@ class EvalOverview {
                 # check if the evaluation is new and not yet edited
                 $eval = new Evaluation($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
                 $abort_creation = false;
-                if ($eval->getTitle(QUOTED) == _("Neue Evaluation") &&
-                        $eval->getText(QUOTED) == "") {
+                if ($eval->getTitle() == _("Neue Evaluation") &&
+                        $eval->getText() == "") {
                     # the evaluationen may be not edited yet ... so continue checking
                     $eval = new Evaluation($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
                     $number_of_childs = $eval->getNumberChildren();
                     $child = $eval->getNextChild();
                     if ($number_of_childs == 1 &&
                             $child &&
-                            $child->getTitle(QOUTED) == _("Erster Gruppierungsblock") &&
+                            $child->getTitle() == _("Erster Gruppierungsblock") &&
                             $child->getChildren() == NULL &&
-                            $child->getText(QOUTED) == "") {
+                            $child->getText() == "") {
                         $abort_creation = true;
                     }
                 }
@@ -1842,8 +1842,8 @@ class EvalOverview {
         $rangeIDs = $eval->getRangeIDs();
 
         // search results
-        if (Request::quoted("search"))
-            $results = $evalDB->search_range(Request::quoted("search"));
+        if (Request::get("search"))
+            $results = $evalDB->search_range(Request::get("search"));
         elseif ($globalperm == "dozent")
             $results = $evalDB->search_range("");
 
@@ -1853,7 +1853,7 @@ class EvalOverview {
             $results[$user->id] = array("type" => "user", "name" => _("Profil"));
         }
 
-        if ($globalperm == "dozent" || $globalperm == "autor" || Request::quoted("search"))
+        if ($globalperm == "dozent" || $globalperm == "autor" || Request::get("search"))
             $showsearchresults = 1;
 
 
@@ -2130,7 +2130,7 @@ class EvalOverview {
 //       $td->addContent(new HTMLempty("hr"));
             $b = new HTML("b");
 #       $b->addContent (_("Suchergebnisse:"));
-            if (Request::quoted("search"))
+            if (Request::get("search"))
                 $b->addContent(_("Sie können die Evaluation folgenden Bereichen zuordnen (Suchergebnisse):"));
             else
                 $b->addContent(_("Sie können die Evaluation folgenden Bereichen zuordnen:"));
@@ -2155,7 +2155,7 @@ class EvalOverview {
             $input->addAttr("type", "text");
             $input->addAttr("name", "search");
             $input->addAttr("style", "vertical-align:middle;");
-            $input->addAttr("value", "" . Request::quoted("search") . "");
+            $input->addAttr("value", "" . Request::get("search") . "");
             $td->addContent($input);
 
             $td->addContent(Button::create(_('Suchen'), 'search_range_button', array('title' => _('Bereiche suchen'))));

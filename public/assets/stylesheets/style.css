@@ -2347,6 +2347,10 @@ ul.widget-list > li {
   padding-bottom: 7px;
   width: 270px;
   z-index: 2;
+  -webkit-transition: all 500ms;
+  -moz-transition: all 500ms;
+  -o-transition: all 500ms;
+  transition: all 500ms;
 }
 .sidebar .sidebar-image > img {
   width: 270px;

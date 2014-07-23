@@ -104,6 +104,8 @@ jQuery(function ($) {
                 {name: 'insert'}
             ],
             removeButtons: 'Font,FontSize,Anchor',
+            toolbarCanCollapse: true,
+            toolbarStartupExpanded: textarea.width() > 420,
 
             // configure dialogs
             removeDialogTabs: 'image:Link;image:advanced;'

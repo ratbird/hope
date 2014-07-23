@@ -382,6 +382,7 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
        PageLayout::setTitle($this->getDisplayTitle());
        $layout = $GLOBALS['template_factory']->open('layouts/base.php');
        $pluginparams = Request::quoted('plugin_subnavi_params');
+       ob_start();
        $this->$action($pluginparams);
        $layout->content_for_layout = ob_get_clean();
        echo $layout->render();

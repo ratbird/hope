@@ -15,7 +15,7 @@ if ($filter->show_user_count) {
     $user_count = count($filter->getUsers());
     $fieldText .= ' ('.sprintf(_('%s Personen'), $user_count);
     if (!$user_count) {
-        $fieldText .= Assets::img('icons/16/grey/exclaim-circle.png', array('title' => _("Kein Nutzer erfüllt diese Bedingung.")));
+        $fieldText .= Assets::img('icons/16/red/exclaim-circle.png', array('title' => _("Kein Nutzer erfüllt diese Bedingung.")));
     }
     $fieldText .= ')';
 }

@@ -73,11 +73,11 @@ jQuery(function ($) {
         CKEDITOR.replace(textarea[0], {
             width: textareaWidth,
             skin: 'studip',
-            // TODO directly include widget plugin in downloaded ckeditor
             // NOTE widget plugin requires line utils plugin!!
             extraPlugins: 'widget,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course__files').length > 0 ? ',studip-upload' : ''),
+            removePlugins: 'magic-line',
             enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {

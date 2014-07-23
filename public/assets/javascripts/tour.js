@@ -37,6 +37,8 @@ STUDIP.Tour = {
                 'data': {'route': window.location.href},
                 'dataType': 'json',
                 'success': function (json) {
+                    jQuery(document).trigger('tourstart.studip');
+                    
                     STUDIP.Tour.pending_ajax_request = false;
                     STUDIP.Tour.options = json;
                     if (STUDIP.Tour.options.redirect)
@@ -278,6 +280,8 @@ STUDIP.Tour = {
 	},
 
     destroy : function() {
+        jQuery(document).trigger('tourend.studip');
+
         jQuery('#tour_overlay').remove();
         jQuery('#tour_controls').hide();
         jQuery('#tour_tip').hide();
@@ -311,7 +315,6 @@ jQuery(function () {
     STUDIP.Tour.pending_ajax_request = false;
 
     jQuery('.tour_link').live('click', function(event) {
-//        STUDIP.Sidebar.scroll(false);
     	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     	event.preventDefault();
     });
@@ -326,6 +329,5 @@ jQuery(function () {
 
     jQuery('#tour_end').live('click', function() {
         STUDIP.Tour.destroy();
-//        STUDIP.Sidebar.scroll(true);
     });
 });

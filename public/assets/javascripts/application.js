@@ -237,6 +237,20 @@ jQuery.ui.accordion.prototype.options.icons = {
 
 
 jQuery(function ($) {
+    var stickySidebar = function () {
+        $('#layout-sidebar .sidebar').stick_in_parent({
+            offset_top: $('#barBottomContainer').outerHeight(true),
+            inner_scrolling: true
+        });
+    }
+    stickySidebar();
+
+    $(document).on('tourstart.studip', function () {
+        $('#layout-sidebar .sidebar').trigger('sticky_kit:detach');
+    }).on('tourend.studip', function () {
+        stickySidebar();
+    });
+    
     $('a.print_action').live('click', function (event) {
         var url_to_print = this.href;
         $('<iframe/>', {

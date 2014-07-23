@@ -378,22 +378,14 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
    *
    * @return void
    */
-  function display_action($action) {
-    if (!Request::get('CURRENT_PAGE')) {
-      Request::set('CURRENT_PAGE',$this->getDisplayTitle());
-    }
-
-    include 'lib/include/html_head.inc.php';
-    include 'lib/include/header.php';
-
-    $pluginparams = Request::quoted('plugin_subnavi_params');
-
-    StudIPTemplateEngine::startContentTable();
-    $this->$action($pluginparams);
-    StudIPTemplateEngine::endContentTable();
-
-    include 'lib/include/html_end.inc.php';
-  }
+   function display_action($action) {
+       PageLayout::setTitle($this->getDisplayTitle());
+       $layout = $GLOBALS['template_factory']->open('layouts/base.php');
+       $pluginparams = Request::quoted('plugin_subnavi_params');
+       $this->$action($pluginparams);
+       $layout->content_for_layout = ob_get_clean();
+       echo $layout->render();
+   }
 
     static function getDescription() {
         return '';

@@ -64,7 +64,7 @@ jQuery(function ($) {
             toolbar = $('<div>')
                 .attr('id', toolbarId)
                 .css('max-width', textareaWidth),
-            toolbarPlaceholder = $('<div>');
+            toolbarPlaceholder = $('<div>').attr('id', toolbarId + '-placeholder');
 
         toolbarPlaceholder.insertBefore(textarea);
         toolbar.insertBefore(textarea);
@@ -299,7 +299,11 @@ jQuery(function ($) {
 
             // do not scroll toolbar out of viewport
             function stickyTools() {
-                var MARGIN = 25;
+                var MARGIN = 25,
+                    toolbarId = editor.config.sharedSpaces.top,
+                    toolbar = $('#' + toolbarId),
+                    toolbarPlaceholder = $('#' + toolbarId + '-placeholder');
+
                 // is(':visible'): offset() is wrong for hidden elements
                 if (($(window).scrollTop() + MARGIN > toolbarPlaceholder.offset().top)
                         && toolbar.is(':visible')) {

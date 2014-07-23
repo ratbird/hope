@@ -39,7 +39,7 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
             .css("height", STUDIP.Calendar.cell_height + "px")
             .css("display", "none")
             .appendTo('#calendar_view_<?= $view_id ?>_column_' + column_id)
-            .fadeIn();
+            .show();
     });
 
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mousemove', function(event) {

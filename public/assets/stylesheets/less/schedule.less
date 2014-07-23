@@ -103,7 +103,7 @@ div.snatch {
 #schedule_entry_new {
     dl {
         border: 1px solid #5c2d64;
-        background: #7c5783 url("@{image-path}/calendar/category_neutral.png");
+        background-color: #7c5783;
     }
     dt { background-color: #5c2d64; }
 }
@@ -128,19 +128,6 @@ div.schedule_edit_entry > form {
     margin-right: 10px;
     padding-left: 10px;
     padding-top: 10px;
-}
-
-div.window_heading, div.window_heading_nodrag {
-    background-color: @content-color;
-    color: #fff;
-    cursor: move;
-    font-weight: bold;
-    padding: 2px;
-    text-align: center;
-}
-
-div.window_heading_nodrag {
-    cursor: default !important;
 }
 
 #color_picker {
@@ -168,27 +155,26 @@ span.invisible_entry {
     font-style: italic;
 }
 
-div.settings {
+div.schedule_settings {
     float: left;
     margin-left: 10px;
 
     div {
         font-weight: bold;
-        margin-bottom: 10px;
     }
 }
 
-div#schedule-settings-dialog-shadow {
-    background: #000 none repeat scroll 0 0;
-    height: 100%;
-    left: 0;
-    opacity: 0.7;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 3;
-
-    -moz-background-clip: border;
-    -moz-background-inline-policy: continuous;
-    -moz-background-origin: padding;
+.schedule-dialog {
+    display: block; 
+    outline: 0px none;
+    z-index: 1002; 
+    
+    position: absolute; 
+    height: 400px; 
+    width: 600px; 
+    top: 50%; 
+    left: 50%; 
+    
+    margin: -200px 0 0 -300px;
 }
+

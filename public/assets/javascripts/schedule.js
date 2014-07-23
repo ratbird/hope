@@ -11,8 +11,10 @@ STUDIP.Schedule = {
      * @param  object  the empty entry in the calendar
      * @param  int     the day that has been clicked
      * @param  int     the start-hour that has been clicked
+     * @param  int     the end-hour that has been chosen
      */
     newEntry: function (entry, day, start_hour, end_hour) {
+        /*
         // do not allow creation of new entry, if one of the following popups is visible!
         if (jQuery('#edit_sem_entry').is(':visible') ||
             jQuery('#edit_entry').is(':visible') ||
@@ -20,6 +22,7 @@ STUDIP.Schedule = {
             jQuery(entry).remove();
             return;
         }
+        */
 
         // if there is already an entry set, kick him first before showing a new one
         if (this.entry) {
@@ -29,46 +32,48 @@ STUDIP.Schedule = {
 
         this.entry = entry;
 
-        // fill values of overlay
-        jQuery('#entry_hour_start').text(start_hour);
-        jQuery('#entry_hour_end').text(end_hour);
-        jQuery('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
-
-        jQuery('#new_entry_start_hour').val(start_hour);
-        jQuery('#new_entry_end_hour').val(end_hour);
-        jQuery('#new_entry_day').val(day);
-
-        // show the overlay
-        jQuery('#schedule_new_entry').show();
-
-        // set the position of the overlay
-        jQuery('#schedule_new_entry').css({
-            top: Math.floor(entry.offset().top - jQuery('#schedule_new_entry').height() - 20),
-            left: Math.floor(entry.offset().left)
-        });
-
-        if (jQuery('#schedule_new_entry').offset().top < 0) {
-            jQuery('#schedule_new_entry').css({
-                top:  Math.floor(entry.offset().top + entry.height() + 20)
+        if (!STUDIP.Schedule.new_entry_template) {
+            jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entry'), function (data) {
+                STUDIP.Schedule.new_entry_template = data;
+                STUDIP.Schedule.showEntryDialog(STUDIP.Schedule.new_entry_template, day, start_hour, end_hour);
             });
+        } else {
+            STUDIP.Schedule.showEntryDialog(STUDIP.Schedule.new_entry_template, day, start_hour, end_hour);
         }
+
+
     },
 
     /**
-     * cancel adding of a new entry and fade out/remove all faded in/added boxes
+     * this function is called, when an entry shall be created in the calendar
+     * and the template-data has been loaded
      *
-     * @param bool fade: if fade is true, fade out all boxes, otherwise just hide them
-     *
-     * @return: void
+     * @param  string  the html for the new-entry dialog
+     * @param  int     the day that has been clicked
+     * @param  int     the start-hour that has been clicked
+     * @param  int     the end-hour that has been chosen
      */
-    cancelNewEntry: function () {
-        if (jQuery(this.entry).is(':visible')) {
-            jQuery('#schedule_new_entry').fadeOut('fast');
-            jQuery(this.entry).fadeOut('fast').remove();
-        }
+    showEntryDialog: function(template, day, start_hour, end_hour)
+    {
+        // do not open dialog, if no new-entry-marker is present
+        if ($('#schedule_entry_new').length === 0) return;
 
-        jQuery('#edit_entry').fadeOut('fast');
-        jQuery('#edit_inst_entry').fadeOut('fast');
+        STUDIP.Dialog.show(template, {
+            title : 'Neuen Termin eintragen'.toLocaleString(),
+            origin: this
+        });
+
+        $(this).on('dialog-close', function() {
+            $('#schedule_entry_new').remove();
+        })
+
+        // fill values of overlay
+        jQuery('input[name=entry_start_hour]').val(start_hour);
+        jQuery('input[name=entry_start_minute]').val('00');
+        jQuery('input[name=entry_end_hour]').val(end_hour);
+        jQuery('input[name=entry_end_minute]').val('00');
+        jQuery('select[name=entry_day]').val(parseInt(day) + 1);
+
     },
 
     /**
@@ -120,12 +125,13 @@ STUDIP.Schedule = {
      *                 (a seminar can have multiple of these
      */
     showSeminarDetails: function (seminar_id, cycle_id) {
-        STUDIP.Schedule.cancelNewEntry();
-        jQuery('#edit_sem_entry').fadeOut('fast');
         jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id), function (data) {
-            jQuery('#edit_sem_entry').remove();
-            jQuery('body').append(data);
+            STUDIP.Dialog.show(data, {
+                title : 'Veranstaltungsdetails'.toLocaleString()
+            });
         });
+
+        STUDIP.Calendar.click_in_progress = false;
     },
 
     /**
@@ -134,12 +140,13 @@ STUDIP.Schedule = {
      * @param  string  the id of the schedule-entry
      */
     showScheduleDetails: function (id) {
-        STUDIP.Schedule.cancelNewEntry();
-        jQuery('#edit_entry').fadeOut('fast');
-        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entryajax/' + id), function (data) {
-            jQuery('#edit_entry').remove();
-            jQuery('body').append(data);
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/entry/' + id), function (data) {
+            STUDIP.Dialog.show(data, {
+                title : 'Termindetails bearbeiten'.toLocaleString()
+            });
         });
+
+        STUDIP.Calendar.click_in_progress = false;
     },
 
     /**
@@ -148,14 +155,14 @@ STUDIP.Schedule = {
      * @param  string  the id of the grouped entry to be displayed
      */
     showInstituteDetails: function (id) {
-        STUDIP.Schedule.cancelNewEntry();
-        jQuery('#edit_inst_entry').fadeOut('fast');
         jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/schedule/groupedentry/' + id + '/true'), function (data) {
-            jQuery('#edit_inst_entry').remove();
-            jQuery('body').append(data);
+            STUDIP.Dialog.show(data, {
+                title : 'Veranstaltungsdetails'.toLocaleString()
+            });
+
         });
 
-        return false;
+        STUDIP.Calendar.click_in_progress = false;
     },
 
     /**
@@ -243,7 +250,6 @@ STUDIP.Instschedule = {
      * @param  string  the id of the grouped-entry to be displayed
      */
     showInstituteDetails: function (id) {
-        STUDIP.Schedule.cancelNewEntry();
         jQuery('#edit_inst_entry').fadeOut('fast');
         jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/instschedule/groupedentry/' + id + '/true'), function (data) {
             jQuery('#edit_inst_entry').remove();

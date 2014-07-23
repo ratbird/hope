@@ -210,8 +210,20 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->inst_mode      = $inst_mode;
         $this->institute_name = $inst['name'];
         $this->institute_id   = $institute_id;
+
+        if (Request::get('show_settings')) {
+            $this->show_settings = true;
+        }
     }
 
+    function new_entry_action()
+    {
+        $this->layout = null;
+
+        if (!Request::isXhr()) {
+            $this->render_nothing();
+        }
+    }
 
     /**
      * this action is called whenever a new entry shall be modified or added to the schedule
@@ -281,12 +293,33 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function entry_action($id = false, $cycle_id = false)
     {
-        $this->flash['entry'] = array(
-            'id' => $id,
-            'cycle_id' => $cycle_id
-        );
+        if (Request::isXhr()) {
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+            $this->layout = null;
 
-        $this->redirect('calendar/schedule/');
+            $this->entry = array(
+                'id' => $id,
+                'cycle_id' => $cycle_id
+            );
+
+            if ($cycle_id) {
+                $this->show_entry = array_pop(CalendarScheduleModel::getSeminarEntry($id, $GLOBALS['user']->id, $cycle_id));
+                $this->show_entry['id'] = $id;
+                $this->render_template('calendar/schedule/_entry_course');
+            } else if ($id) {
+                $entry_columns = CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id);
+                $entries = array_pop($entry_columns)->getEntries();
+                $this->show_entry = array_pop($entries);
+                $this->render_template('calendar/schedule/_entry_schedule');
+            }
+        } else {
+            $this->flash['entry'] = array(
+                'id' => $id,
+                'cycle_id' => $cycle_id
+            );
+
+            $this->redirect('calendar/schedule/');
+        }
     }
 
     /**
@@ -467,6 +500,14 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function settings_action()
     {
+        if (Request::isXhr()) {
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+            $this->layout = null;
+        } else {
+            $this->redirect('calendar/schedule/index?show_settings=true');
+        }
+
+        $this->settings = UserConfig::get($GLOBALS['user']->id)->SCHEDULE_SETTINGS;
     }
 
     /**

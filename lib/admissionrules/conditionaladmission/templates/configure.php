@@ -11,7 +11,8 @@
     </span>
     <?php } else { ?>
     <div class="userfilter">
-        <?php foreach ($rule->getConditions() as $condition) { ?>
+        <?php foreach ($rule->getConditions() as $condition) {
+            $condition->show_user_count = true; var_dump($condition);?>
             <div class="condition" id="condition_<?= $condition->getId() ?>">
                 <?= $condition->toString() ?>
                 <a href="#" onclick="return STUDIP.UserFilter.removeConditionField($(this).parent())"

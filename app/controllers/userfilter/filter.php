@@ -45,7 +45,7 @@ class Userfilter_FilterController extends AuthenticatedController {
 
     /**
      * Show configuration for a given UserFilter.
-     * 
+     *
      * @param String $containerId Target HTML element
      * @param String $conditionId ID of an existiting UserFilter object
      */
@@ -72,6 +72,7 @@ class Userfilter_FilterController extends AuthenticatedController {
                 $field->setCompareOperator($compareOps[$i]);
                 $field->setValue($values[$i]);
                 $condition->addField($field);
+                $condition->show_user_count = true;
             }
         }
         $this->condition = $condition;
@@ -79,7 +80,7 @@ class Userfilter_FilterController extends AuthenticatedController {
 
     /**
      * Deletes the given UserFilter object.
-     * 
+     *
      * @param String $conditionId the UserFilter to delete.
      */
     public function delete_action($conditionId) {

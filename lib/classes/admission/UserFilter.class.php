@@ -2,10 +2,10 @@
 
 /**
  * UserFilter.class.php
- * 
+ *
  * Conditions for user selection in Stud.IP. A condition is a collection of
- * condition fields, e.g. degree, course of study or semester. Each 
- * condition can have a validity period. 
+ * condition fields, e.g. degree, course of study or semester. Each
+ * condition can have a validity period.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -33,6 +33,7 @@ class UserFilter
      */
     public $id = '';
 
+    public $show_user_count = false;
     // --- OPERATIONS ---
 
     /**
@@ -71,7 +72,7 @@ class UserFilter
      */
     public function delete() {
         // Delete condition data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `userfilter` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `userfilter`
             WHERE `filter_id`=?");
         $stmt->execute(array($this->id));
         // Delete all defined condition fields.
@@ -82,20 +83,20 @@ class UserFilter
 
     /**
      * Generate a new unique ID.
-     * 
+     *
      * @param  String tableName
      */
     public function generateId() {
         do {
             $newid = md5(uniqid(get_class($this).microtime(), true));
-            $id = DBManager::get()->fetchColumn("SELECT `filter_id` 
+            $id = DBManager::get()->fetchColumn("SELECT `filter_id`
                 FROM `userfilter` WHERE `filter_id`=?", array($newid));
         } while ($id);
         return $newid;
     }
 
     /**
-     * Get all fields (without checking for validity according 
+     * Get all fields (without checking for validity according
      * to the current time).
      *
      * @return Array
@@ -117,7 +118,7 @@ class UserFilter
 
     /**
      * Gets all users that fulfill the current condition.
-     * 
+     *
      * @return Array
      */
     public function getUsers() {
@@ -160,16 +161,16 @@ class UserFilter
     }
 
     /**
-     * Is the current condition fulfilled (that means, are all 
+     * Is the current condition fulfilled (that means, are all
      * required field values matched)?
-     * 
+     *
      * @return boolean
      */
     public function isFulfilled($userId) {
         $fulfilled = true;
         // Check all fields.
         foreach ($this->fields as $field) {
-            $fulfilled = $fulfilled && 
+            $fulfilled = $fulfilled &&
                 $field->checkValue($field->getUserValues($userId));
         }
         return $fulfilled;
@@ -193,7 +194,7 @@ class UserFilter
             while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 /*
                  * Create instance of appropriate UserFilterField subclass.
-                 * We just "try" here because the class definition could have 
+                 * We just "try" here because the class definition could have
                  * been removed since saving data to DB.
                  */
                 //try {
@@ -224,15 +225,15 @@ class UserFilter
         if (!$this->id) {
             $this->id = $this->generateId();
         }
-        
+
         // Store condition data.
-        $stmt = DBManager::get()->prepare("INSERT INTO `userfilter` 
-            (`filter_id`, `mkdate`, `chdate`)  
-            VALUES (?, ?, ?) 
+        $stmt = DBManager::get()->prepare("INSERT INTO `userfilter`
+            (`filter_id`, `mkdate`, `chdate`)
+            VALUES (?, ?, ?)
             ON DUPLICATE KEY UPDATE `chdate`=VALUES(`chdate`)");
         $stmt->execute(array($this->id, time(), time()));
         // Delete removed condition fields from DB.
-        DBManager::get()->exec("DELETE FROM `userfilter_fields` 
+        DBManager::get()->exec("DELETE FROM `userfilter_fields`
             WHERE `filter_id`='".$this->id."' AND `field_id` NOT IN ('".
             implode("', '", array_keys($this->fields))."')");
         // Store all fields.

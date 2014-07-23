@@ -299,28 +299,7 @@ jQuery(function ($) {
 
             // do not scroll toolbar out of viewport
             function stickyTools() {
-                var MARGIN = 25,
-                    toolbarId = editor.config.sharedSpaces.top,
-                    toolbar = $('#' + toolbarId),
-                    toolbarPlaceholder = $('#' + toolbarId + '-placeholder');
-
-                // is(':visible'): offset() is wrong for hidden elements
-                if (($(window).scrollTop() + MARGIN > toolbarPlaceholder.offset().top)
-                        && toolbar.is(':visible')) {
-                    toolbar.css({
-                        position: 'fixed',
-                        top: MARGIN,
-                        'max-width': editor.window.getViewPaneSize().width
-                    });
-                    toolbarPlaceholder.css('height', toolbar.height());
-                } else {
-                    toolbar.css({
-                        position: 'relative',
-                        top: '',
-                        'max-width': textareaWidth
-                    });
-                    toolbarPlaceholder.css('height', 0);
-                }
+                updateStickyTools(editor);
             };
             $(window).scroll(stickyTools);
             $(window).resize(stickyTools);
@@ -334,6 +313,33 @@ jQuery(function ($) {
             // focus the editor so the user can immediately hack away...
             editor.focus();
         });
+    }
+
+    // editor utilities
+    function updateStickyTools(editor) {
+        var MARGIN = 25,
+            toolbarId = editor.config.sharedSpaces.top,
+            toolbar = $('#' + toolbarId),
+            placeholder = $('#' + toolbarId + '-placeholder'),
+            outOfView = $(window).scrollTop() + MARGIN
+                        > placeholder.offset().top;
+
+        // is(':visible'): offset() is wrong for hidden elements
+        if (toolbar.is(':visible') && outOfView) {
+            toolbar.css({
+                position: 'fixed',
+                top: MARGIN,
+                'max-width': editor.window.getViewPaneSize().width
+            });
+            placeholder.css('height', toolbar.height());
+        } else {
+            toolbar.css({
+                position: 'relative',
+                top: '',
+                'max-width': editor.container.getStyle('width')
+            });
+            placeholder.css('height', 0);
+        }
     }
 
     // convert plain text entries to html

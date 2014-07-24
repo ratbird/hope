@@ -21,7 +21,7 @@ if (ForumPerm::has('search', $seminar_id)) {
     $search->addNeedle(_('Beiträge durchsuchen'), 'searchfor', true);
     $search->addFilter(_('Titel'), 'search_title');
     $search->addFilter(_('Inhalt'), 'search_content');
-    $search->addFilter(_('AutorIn'), 'search_autor');
+    $search->addFilter(_('AutorIn'), 'search_author');
     $sidebar->addWidget($search);
 }
 

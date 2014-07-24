@@ -796,7 +796,9 @@ class ForumEntry {
                     $zw_search_string[] .= "author LIKE " . DBManager::get()->quote($search_word);
                 }
                 
-                $search_string[] = '('. implode(' OR ', $zw_search_string) .')';
+                if (!empty($zw_search_string)) {
+                    $search_string[] = '(' . implode(' OR ', $zw_search_string) . ')';
+                }
             }
         }
 

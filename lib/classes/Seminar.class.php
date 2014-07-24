@@ -2232,13 +2232,6 @@ class Seminar
                 return false;
             }
         }
-        if (($status === "autor" || $status === "user") && SeminarCategories::getByTypeId($this->status)->workgroup_mode) {
-            //Nutzer muss Tutor sein, wenn er globalen Status mindestens Tutor hat
-            $global_user_perm = get_global_perm($user_id);
-            if ($global_user_perm === "tutor" || $global_user_perm === "dozent") {
-                $status = "tutor";
-            }
-        }
 
         if (!$force) {
             $query = "SELECT status FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";

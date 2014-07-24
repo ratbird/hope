@@ -36,13 +36,13 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
     $sidebar->addWidget($actions);
 
     $group_by_links = "";
-    $grouping = new LinksWidget();
+    $grouping = new OptionsWidget();
     $grouping->setTitle(_("Suchergebnis gruppieren:"));
     foreach ($sem_browse_obj->group_by_fields as $i => $field){
-        $grouping->addLink(
+        $grouping->addRadioButton(
             $field['name'],
             URLHelper::getLink('?', array('group_by' => $i, 'keep_result_set' => 1)),
-            $_SESSION['sem_browse_data']['group_by'] == $i ? "icons/16/red/arr_1right" : ""
+            $_SESSION['sem_browse_data']['group_by'] == $i
         );
     }
     $sidebar->addWidget($grouping);

@@ -55,7 +55,7 @@ STUDIP.Tour = {
                     	if ((STUDIP.Tour.options.tour_type == 'tour') && ! STUDIP.Tour.options.edit_mode)
                         	jQuery('body').prepend('<div id="tour_overlay"></div>');
                         jQuery('#tour_title').html(STUDIP.Tour.options.last_run);
-                        jQuery('#tour_end').hide();
+                        jQuery('#tour_end').show();
                         jQuery('#tour_next').hide();
                         jQuery('#tour_prev').hide();
                         jQuery('#tour_controls').show();
@@ -279,17 +279,19 @@ STUDIP.Tour = {
 		jQuery.scrollTo(jQuery('#'+tip_id), 400, { offset : -100});
 	},
 
-    destroy : function() {
+    destroy : function(skip_status = false) {
         jQuery(document).trigger('tourend.studip');
 
         jQuery('#tour_overlay').remove();
+        if (! jQuery('#tour_proceed').is(':visible')) {
+        	jQuery.ajax({
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + '/off' 
+            });
+        }
         jQuery('#tour_controls').hide();
         jQuery('#tour_tip').hide();
         jQuery('#tour_tip_interactive').hide();
         jQuery('.tour_focus_box').removeClass('tour_focus_box');
-        jQuery.ajax({
-            'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + '/off' 
-        });
         STUDIP.Tour.show_helpcenter();
         STUDIP.Tour.step = -1;
         STUDIP.Tour.started = false;
@@ -314,6 +316,18 @@ jQuery(function () {
 //	STUDIP.Tour.started = false;
     STUDIP.Tour.pending_ajax_request = false;
 
+    jQuery(document).keyup(function(event) {
+        if (STUDIP.Tour.started && (event.keyCode == 37) && (jQuery('#tour_prev').is(':visible'))) {
+            STUDIP.Tour.prev();
+        } else if (STUDIP.Tour.started && (event.keyCode == 39) && (jQuery('#tour_next').is(':visible'))) { 
+            STUDIP.Tour.next();
+        } else if (STUDIP.Tour.started && (event.keyCode == 27) && (jQuery('#tour_end').is(':visible'))) { 
+            STUDIP.Tour.destroy();
+        }
+    });
+    jQuery().live('keyright', function(event) {
+        STUDIP.Tour.prev();
+    });
     jQuery('.tour_link').live('click', function(event) {
     	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     	event.preventDefault();

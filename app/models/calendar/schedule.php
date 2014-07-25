@@ -697,6 +697,9 @@ class CalendarScheduleModel
 
         if (!$days) {
             $days = $schedule_settings['glb_days'];
+            foreach ($days as $key => $day_number) {
+                $days[$key] = ($day_number + 6) % 7;
+            }
         }
 
         $user_id = $GLOBALS['user']->id;
@@ -743,6 +746,9 @@ class CalendarScheduleModel
 
         if (!$days) {
             $days = $schedule_settings['glb_days'];
+            foreach ($days as $key => $day_number) {
+                $days[$key] = ($day_number + 6) % 7;
+            }
         }
 
         $entries = CalendarScheduleModel::getEntries(

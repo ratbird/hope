@@ -66,11 +66,14 @@ class StartController extends AuthenticatedController
             $this->widgets = WidgetHelper::getUserWidgets($GLOBALS['user']->id);
         }
 
-        foreach ($this->widgets as $pos => $widget) {
+        /*foreach ($this->widgets as $pos => $widget) {
             $this->left[$pos] = $widget;
         }
 
-        ksort($this->left);
+        ksort($this->left);*/
+        $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
+        $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
+        
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $sidebar = Sidebar::get();
@@ -152,10 +155,7 @@ class StartController extends AuthenticatedController
      */
     function storeNewOrder_action()
     {
-        if ($ids = Request::get('ids')) {
-             $idArray = explode(',', $ids);
-             WidgetHelper::storeNewPositions($idArray);
-        }
+        WidgetHelper::storeNewPositions(Request::get('widget'), Request::get('position'), Request::get('column'));
         $this->render_nothing();
     }
 }

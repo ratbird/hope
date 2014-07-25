@@ -4790,6 +4790,7 @@ a.opengraph_info:hover {
 .start-widgetcontainer {
   padding: 0;
   margin-top: 0;
+  width: 100%;
 }
 /* some improvements for ui_widget elements */
 .ui-widget_start {
@@ -4929,6 +4930,29 @@ a.opengraph_info:hover {
 }
 #addclip-sticky:checked + .addclip .addclip-widgets {
   max-height: 1000px;
+}
+div.start-widgetcontainer {
+  display: table;
+  border-spacing: 5px;
+  table-layout: fixed;
+}
+div.start-widgetcontainer ul {
+  list-style-type: none;
+  display: table-cell;
+  table-layout: fixed;
+  padding: 0px;
+  width: 66%;
+  border: #FFF dashed 1px;
+}
+div.start-widgetcontainer ul.empty {
+  display: none;
+}
+div.start-widgetcontainer ul.move {
+  display: table-cell;
+  border: #315388 dashed 1px;
+}
+div.start-widgetcontainer ul + ul {
+  width: 34%;
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

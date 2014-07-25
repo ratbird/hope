@@ -62,17 +62,20 @@ class WidgetHelper {
      *
      * @return void
      */
-    static function storeNewPositions($ids)
+    static function storeNewPositions($widget, $position, $column)
     {
-        if(is_array($ids))
-        {
-             foreach ($ids as $pos => $id)
-             {
-                  $pos = intVal($pos);
-                  $query = "UPDATE widget_user set position = ? where id = ?";
-                  $statement = DBManager::get()->prepare($query);
-                  $statement->execute(array($pos, $id));
-             }
+        $db = DBManager::get();
+        $oldWidget = $db->fetchOne("SELECT position,col FROM widget_user WHERE id = ? AND range_id = ?", array($widget, $GLOBALS['user']->id));
+        if ($oldWidget) {
+            
+            // Push all entries in the new column one position away
+            $db->execute("UPDATE widget_user SET position = position + 1 WHERE range_id = ? AND col = ? AND position >= ?", array($GLOBALS['user']->id, $column, $position));
+            
+            // Insert element
+            $db->execute("UPDATE widget_user SET position = ?, col = ? WHERE id = ? ", array($position, $column, $widget));
+            
+            // Move positions in old column
+            $db->execute("UPDATE widget_user SET position = position - 1 WHERE col = ? AND range_id = ? AND position > ?", array($oldWidget['col'], $GLOBALS['user']->id, $oldWidget['position']));
         }
     }
 
@@ -151,12 +154,12 @@ class WidgetHelper {
      * 
      * @return array $widgets
      */
-    static function getUserWidgets($id)
+    static function getUserWidgets($id, $col = 0)
     {
         $plugin_manager = PluginManager::getInstance();
-        $query = "SELECT * FROM widget_user WHERE range_id=? ORDER BY position";
+        $query = "SELECT * FROM widget_user WHERE range_id=? AND col = ? ORDER BY position";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($id));
+        $statement->execute(array($id, $col));
         $widgets = array();
         while ($db_widget = $statement->fetch(PDO::FETCH_ASSOC)) {
             if(!is_null($plugin_manager->getPluginById($db_widget['pluginid']))){

@@ -1,49 +1,52 @@
-INDEX = {},
-(function ($, STUDIP) {
+STUDIP.startpage = {
+    /*
+     THIS CODE ADDS DYNAMIC COLUMNING. WILL BE USED IN 3.2
+     
+     init: function() {
+     $(".start-widgetcontainer ul").sortable({
+     connectWith: "ul",
+     start: function(event, ui) {
+     $(this).parent().find('ul').addClass('ui-sortable').addClass('move');
+     },
+     stop: function(event, ui) {
+     $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/start/storeNewOrder',
+     {
+     widget: $(ui.item).attr('id'),
+     position: $(ui.item).index(),
+     column: $(ui.item).parent().index()
+     }
+     );
+     $(this).parent().find('ul').removeClass('move empty');
+     $(this).parent().find('ul:empty').remove();
+     $(this).parent().append($('<ul>').addClass('empty'));
+     STUDIP.startpage.init();
+     }
+     
+     });
+     }*/
 
-    // document ready / page load.
-    $(document).ready(function () {
-        $("#sort0").sortable({
+
+    init: function() {
+        $(".start-widgetcontainer ul").sortable({
             connectWith: "ul",
-            tolerance:"pointer",
-            handle: 'div.ui-widget_head',
-            update: function (event, ui) {
-                var ids =  $("#sort0").sortable("toArray").toString();
-                $.post(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/start/storeNewOrder' ,
-                    {ids: ids});
+            start: function(event, ui) {
+                $(this).parent().find('ul').addClass('ui-sortable').addClass('move');
             },
-            start: function (event, ui) {
-                $(ui.item).width($('#sort0').width());
-
-           }
-        });
-
-        $("ul.start-admin").sortable({
-            connectWith: "ul",
-            tolerance:"pointer",
-            handle: "div.ui-widget_head",
-            stop: function (event, ui) {
-                var ids =  $("#sort0").sortable("toArray").toString();
-                $.post(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/admin/start/storeSettings' ,
-                    {ids: ids, perm: $('#selected_perm option:selected').val()});
-            },
-            receive: function ( event, ui ) {
-
-                if( $(this).parent().attr('id') != 'choices' ) {
-                    $(this).children().attr('style','');
-                    $(this).children().width('95%');
-
-                } else {
-                    ui.item.remove();
-                }
-            },
-            remove: function(event, ui) {
-                if( $(this).parent().attr('id') == 'choices' ) {
-                    // increase the instance ...
-                    ui.item.clone().prependTo('#sort3');
-                }
+            stop: function(event, ui) {
+                
+                $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/start/storeNewOrder',
+                        {
+                            widget: $(ui.item).attr('id'),
+                            position: $(ui.item).index(),
+                            column: $(ui.item).parent().index()
+                        }
+                );
+                $(this).parent().find('ul').removeClass('move');
             }
-        });
 
-    });
-}(jQuery, STUDIP));
+        });
+    }
+};
+$(document).ready(function() {
+    STUDIP.startpage.init();
+});

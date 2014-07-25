@@ -251,6 +251,14 @@ jQuery(function ($) {
         stickySidebar();
     });
     
+    // Recalculcate positions on ajax and img load events
+    $(document).on('ajaxComplete', function () {
+        $(document.body).trigger('sticky_kit:recalc');
+    });
+    $(document).on('load', '#layout_content img', function () {
+        $(document.body).trigger('sticky_kit:recalc');
+    });
+    
     $('a.print_action').live('click', function (event) {
         var url_to_print = this.href;
         $('<iframe/>', {

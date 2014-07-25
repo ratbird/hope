@@ -96,7 +96,7 @@ class JsupdaterController extends AuthenticatedController {
             );
             $template_factory = $this->get_template_factory();
             foreach ($messages as $message) {
-                $data['Messages.newMessages']['messages'][] = $template_factory
+                $data['Messages.newMessages']['messages'][$message->getId()] = $template_factory
                         ->open("messages/_message_row.php")
                         ->render(compact("message"));
             }

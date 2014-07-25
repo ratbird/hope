@@ -351,7 +351,5 @@ class Document_AdministrationController extends AuthenticatedController {
                          'icons/16/black/add');
 
         $sidebar->addWidget($widget);
-        
-        Helpbar::get()->addPlainText(_('Hinweis'), _('Diese Ebene der Einstellungen ermöglicht es Ihnen den persönlichen Dateibereich zu konfigurieren.'));
     }
 }

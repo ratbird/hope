@@ -71,12 +71,6 @@ class Settings_DeputiesController extends Settings_SettingsController
         $this->search   = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
                                                'user_id', array('permission'   => getValidDeputyPerms(),
                                                                 'exclude_user' => $exclude_users));
-
-        Helpbar::get()
-            ->addPlainText(_('Informationen'),
-                           _('Legen Sie hier fest, wer standardmäßig als Vertretung '
-                            .'in Ihren Veranstaltungen eingetragen sein soll.'),
-                           'icons/16/white/info.png');
     }
 
     /**

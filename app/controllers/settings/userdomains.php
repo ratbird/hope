@@ -35,10 +35,6 @@ class Settings_UserdomainsController extends Settings_SettingsController
         SkipLinks::addIndex(_('Nutzerdomäne auswählen'), 'select_userdomains');
 
         Sidebar::get()->setImage('sidebar/admin-sidebar.png');
-        Helpbar::get()
-            ->addPlainText(_('Informationen'),
-                           _('Hier können Sie die Liste Ihrer Nutzerdomänen einsehen.'),
-                           'icons/16/white/info.png');
     }
 
     /**

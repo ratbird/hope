@@ -48,13 +48,6 @@ class Settings_NotificationController extends Settings_SettingsController
         SkipLinks::addIndex(_('Benachrichtigung über neue Inhalte anpassen'), 'layout_content', 100);
 
         Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
-        
-        Helpbar::get()
-            ->addPlainText(_('Informationen'),
-                           _('Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen '
-                            .'Ihrer Veranstaltungen automatisch per Email informieren.<br>'
-                            .'Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.'),
-                           'icons/16/white/info.png');
     }
 
     /**

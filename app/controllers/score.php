@@ -120,16 +120,6 @@ class ScoreController extends AuthenticatedController
         $sidebar->addWidget($actions);
 
         $helpbar = Helpbar::get();
-        $helpbar->addPlainText(_('Information:'),
-                               _('Auf dieser Seite können Sie abrufen, wie weit Sie in der '
-                                .'Stud.IP-Rangliste aufgestiegen sind. Je aktiver Sie sich '
-                                .'im System verhalten, desto höher klettern Sie!'),
-                               'icons/16/white/info.png');
-
-        $helpbar->addPlainText('',
-                               _('Sie erhalten auf der Profilseite von MitarbeiternInnen an '
-                                .'Einrichtungen auch weiterführende Informationen, wie '
-                                .'Sprechstunden und Raumangaben.'));
     }
 
     /**

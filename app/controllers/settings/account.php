@@ -34,13 +34,6 @@ class Settings_AccountController extends Settings_SettingsController
         SkipLinks::addIndex(_('Benutzerkonto bearbeiten'), 'layout_content');
 
         Sidebar::get()->setImage('sidebar/person-sidebar.png');
-
-        $helpbar = Helpbar::get();
-        $helpbar->addPlainText(_('Informationen'),
-                               _('Hier können Sie Ihre Benutzerdaten verändern.'),
-                               'icons/16/white/info.png');
-        $helpbar->addPlainText('',
-                               _('Alle mit einem Sternchen ##*****## markierten Felder müssen ausgefüllt werden.'));
     }
 
     /**

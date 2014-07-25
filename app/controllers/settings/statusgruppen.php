@@ -40,11 +40,6 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         SkipLinks::addIndex(_('Einrichtungsdaten bearbeiten'), 'layout_content', 100);
 
         Sidebar::get()->setImage('sidebar/group-sidebar.png');
-        Helpbar::get()
-            ->addPlainText(_('Informationen'),
-                           _('Hier können Sie Ihre Kontaktdaten für die '
-                            .'Einrichtungen angeben, an denen Sie tätig sind.'),
-                           'icons/16/white/info.png');
     }
 
     /**

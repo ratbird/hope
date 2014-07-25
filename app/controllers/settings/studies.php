@@ -42,11 +42,6 @@ class Settings_StudiesController extends Settings_SettingsController {
             && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $GLOBALS['perm']->have_perm('admin')),
             'in' => $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm('admin'),
         );
-
-        Helpbar::get()
-            ->addPlainText(_('Informationen'),
-                           _('Hier können Sie Angaben über Ihre Studienkarriere machen.'),
-                           'icons/16/white/info.png');
     }
 
     /**

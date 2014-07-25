@@ -71,7 +71,7 @@ class Settings_CategoriesController extends Settings_SettingsController
                             : false;
 
         $sidebar = Sidebar::get();
-        $sidebar->setImage('sidebar/privacy-sidebar.png');
+        $sidebar->setImage('sidebar/category-sidebar.png');
         
         $actions = new ActionsWidget();
         $actions->addLink(_('Neue Kategorie anlegen'),

@@ -21,18 +21,14 @@ if (get_config('BANNER_ADS_ENABLE')) {
     <?= $flash['question'] ?>
 <? endif; ?>
 
-<div class="ui-widgetContainer start-widgetcontainer">
-
-    <div class="ui-widget_columnl">
-        <ul id="sort0" style="list-style-type: none;">
+<div class="start-widgetcontainer">
+    <ul>
         <? foreach ($left as $widget) : ?>
             <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
                 <div class="ui-widget-content studip-widget">
                     <?= $this->render_partial('start/_widget', compact('widget')) ?>
                 </div>
-             </li>
+            </li>
         <? endforeach; ?>
-        </ul>
-    </div>
-
+    </ul>
 </div>

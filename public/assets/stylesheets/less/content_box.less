@@ -12,22 +12,24 @@ section.contentbox {
         h1 {
             padding: 5px;
             margin: 0;
-            color: @base-color-80;
+            color: @base-color;
             border-bottom: none;
             font-size: medium;
 
             img {
                 display: inline-block;
-                margin-right: 5px;
             }
         }
 
         nav {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 4px;
             float: right;
-            a {
-                img {
-                    margin: 5px;
-                }
+            * {
+                padding: 3px;
+                padding-left: 2px;
+                padding-right: 0px;
             }
         }
     }
@@ -46,7 +48,7 @@ section.contentbox {
     }
 
     article {
-        border-color: @base-color-60;
+        border-color: @content-color-40;
         border-style: solid;
         border-width: 1px;
         margin: 10px;
@@ -84,10 +86,23 @@ section.contentbox {
             }
         }
 
-        header h1 a {
-            .icon-before('blue/arr_1right.png');
-            &:before {
-                .transition(all 300ms ease 0s);
+        header {
+            h1 {
+                * {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                .icon-before('blue/arr_1right.png');
+                &:before {
+                    .transition(all 300ms ease 0s);
+                    vertical-align: middle;
+                }
+            }
+            nav {
+                * {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
             }
         }
 

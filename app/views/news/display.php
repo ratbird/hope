@@ -29,8 +29,8 @@
                 <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>
             </nav>
             <h1>
+                <?= Assets::img('icons/16/grey/news.png'); ?>
                 <a href="<?= ContentBoxHelper::href($new->id) ?>">
-                    <?= Assets::img('icons/16/grey/news.png'); ?>
                     <?= htmlReady($new['topic']); ?>
                 </a>
             </h1>

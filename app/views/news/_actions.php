@@ -1,12 +1,14 @@
 <? $user = new User($new['user_id']); ?>
 
 <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
-    <span style="color: #339;">
-        <?= htmlReady($user->getFullName()) ?>
-    </span>
+    <?= htmlReady($user->getFullName()) ?>
 </a>
-<?= date('d.m.Y', $new['date']) ?> |
-<span style="color: #050"><?= object_return_views($new['news_id']) ?></span> |
+<span>
+    <?= date('d.m.Y', $new['date']) ?>
+</span>
+<span style="color: #050">
+    <?= object_return_views($new['news_id']) ?>
+</span>
 
 <?
 if ($new['allow_comments']):
@@ -21,7 +23,7 @@ if ($new['allow_comments']):
             <span style="color: #aa6;">
             <? endif; ?>
             <?= $num ?>
-        </span> |
+        </span>
     <? endif; ?>
 
     <? if ($new->havePermission('edit')): ?>

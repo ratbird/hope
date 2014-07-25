@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -190,7 +190,7 @@ p {
 a,
 a:link,
 a:visited {
-  color: #24437c;
+  color: #28497c;
   text-decoration: none;
   transition: color 0.3s;
 }
@@ -2360,7 +2360,7 @@ ul.widget-list > li {
 .sidebar .sidebar-widget-header {
   *zoom: 1;
   background: #e7ebf1;
-  color: #536d96;
+  color: #28497c;
   font-weight: bold;
   padding: 4px;
 }
@@ -2669,19 +2669,23 @@ section.contentbox header {
 section.contentbox header h1 {
   padding: 5px;
   margin: 0;
-  color: #536d96;
+  color: #28497c;
   border-bottom: none;
   font-size: medium;
 }
 section.contentbox header h1 img {
   display: inline-block;
-  margin-right: 5px;
 }
 section.contentbox header nav {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
   float: right;
 }
-section.contentbox header nav a img {
-  margin: 5px;
+section.contentbox header nav * {
+  padding: 3px;
+  padding-left: 2px;
+  padding-right: 0px;
 }
 section.contentbox section {
   padding: 10px;
@@ -2693,7 +2697,7 @@ section.contentbox table.default tbody tr:last-child td {
   border-bottom: none;
 }
 section.contentbox article {
-  border-color: #7e92b0;
+  border-color: #d0d7e3;
   border-style: solid;
   border-width: 1px;
   margin: 10px;
@@ -2730,7 +2734,11 @@ section.contentbox article section article time {
   font-size: smaller;
   margin: 2px;
 }
-section.contentbox article header h1 a:before {
+section.contentbox article header h1 * {
+  display: inline-block;
+  vertical-align: middle;
+}
+section.contentbox article header h1:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -2741,11 +2749,16 @@ section.contentbox article header h1 a:before {
   vertical-align: text-top;
   width: 16px;
 }
-section.contentbox article header h1 a:before {
+section.contentbox article header h1:before {
   -webkit-transition: all 300ms ease 0s;
   -moz-transition: all 300ms ease 0s;
   -o-transition: all 300ms ease 0s;
   transition: all 300ms ease 0s;
+  vertical-align: middle;
+}
+section.contentbox article header nav * {
+  display: inline-block;
+  vertical-align: middle;
 }
 section.contentbox article footer {
   text-align: center;
@@ -4916,6 +4929,22 @@ a.opengraph_info:hover {
 }
 #addclip-sticky:checked + .addclip .addclip-widgets {
   max-height: 1000px;
+}
+div.start-widgetcontainer {
+  display: table;
+  border-spacing: 5px;
+}
+div.start-widgetcontainer ul {
+  list-style-type: none;
+  margin: 0;
+  display: table-cell;
+  table-layout: fixed;
+  min-width: 100px;
+  padding: 0px;
+  border-radius: 5px;
+}
+div.start-widgetcontainer ul.move {
+  border: #315388 dashed 1px;
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

@@ -1,13 +1,17 @@
-<? $is_new = ($vote->chdate >= object_get_visit($vote->id, 'vote', false, false))
-    && ($vote->author_id != $GLOBALS['user']->id); ?>
+<? $is_new = ($vote->chdate >= object_get_visit($vote->id, 'vote', false, false)) && ($vote->author_id != $GLOBALS['user']->id);
+?>
 <article class="<?= ContentBoxHelper::classes($vote->id, $is_new) ?>" id="<?= $vote->id ?>">
     <header>
         <nav>
-            <?= $vote->count ?> |
             <a href="<?= $vote->author ? URLHelper::getLink('dispatch.php/profile', array('username' => $vote->author->username)) : '' ?>">
                 <?= $vote->author ? htmlReady($vote->author->getFullName()) : '' ?>
-            </a> |
-            <?= strftime("%d.%m.%Y", $vote->mkdate) ?>
+            </a>
+            <span>
+                <?= strftime("%d.%m.%Y", $vote->mkdate) ?>
+            </span>
+            <span>
+                <?= $vote->count ?>
+            </span>
             <? if ($admin): ?>
                 <a href="<?= URLHelper::getLink('admin_vote.php', array('page' => 'edit', 'type' => 'vote', 'voteID' => $vote->id)) ?>">
                     <?= Assets::img('icons/16/blue/admin.png') ?>

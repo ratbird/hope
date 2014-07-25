@@ -251,8 +251,7 @@ list($self_assign_all, $self_assign_exclusive) = CheckSelfAssignAll($SessSemName
 if($self_assign_exclusive) {
     $infos .= '<br>' . _('In dieser Veranstaltung können Sie sich nur in eine der möglichen Gruppen eintragen.');
 }
-// TODO: Sidebar/Helpbar - This shouldn't be in the helpbar but where else!
-Helpbar::get()->addPlainText(_('Information:'), $infos, 'icons/16/white/info.png');
+
 
 if ($rechte) {
     $sidebar = Sidebar::get();

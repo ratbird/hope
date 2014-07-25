@@ -241,7 +241,7 @@ class MessagesController extends AuthenticatedController {
      * Sends a message and redirects the user.
      */
     public function send_action() {
-        if (Request::isPost() && count(Request::getArray("message_to")) && Request::get("message_body")) {
+        if (Request::isPost() && count(Request::getArray("message_to")) && Request::submitted("message_body")) {
             $messaging = new messaging();
             $rec_uname = array();
             foreach (Request::getArray("message_to") as $user_id) {

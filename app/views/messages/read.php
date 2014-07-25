@@ -24,7 +24,7 @@
                 <?= count($message->receivers) > 1 ? sprintf(_("%s Personen"), count($message->receivers)) : _("Eine Person") ?>
                 <? $read = $message->receivers->findBy('readed', 1)->count();?>
                 <? else : ?>
-                <ul class='clean'>
+                <ul class='clean' id="adressees">
                 <? $read = 0;?>
                 <? foreach ($message->receivers as $key => $message_user) : ?>
                     <li>

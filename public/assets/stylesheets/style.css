@@ -2556,42 +2556,42 @@ select.sidebar-selectlist {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-box-shadow: 2px 2px 0 #8a8f95;
-  -moz-box-shadow: 2px 2px 0 #8a8f95;
-  box-shadow: 2px 2px 0 #8a8f95;
+  -webkit-box-shadow: 1px 1px 0 #8a8f95;
+  -moz-box-shadow: 1px 1px 0 #8a8f95;
+  box-shadow: 1px 1px 0 #8a8f95;
   background: #28497c;
   position: absolute;
   right: 12px;
-  top: 0;
+  top: -2px;
   width: 250px;
   z-index: 1000;
 }
 .helpbar:before {
-  border-bottom: 4px solid #536d96;
+  border-bottom: 2px solid #536d96;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   content: '';
   display: inline-block;
   position: absolute;
-  top: -4px;
+  top: -2px;
   left: 0;
   right: 0;
 }
 .helpbar:after {
-  background-color: #8a8f95;
+  background-color: #44494F;
   content: '';
-  height: 2px;
-  width: 2px;
+  height: 1px;
+  width: 1px;
   position: absolute;
-  right: -2px;
-  top: 0;
+  right: -1px;
+  top: 1px;
 }
 .helpbar .helpbar-title {
   background-image: url("../images/icons/24/white/question-circle.png");
   background-image: -webkit-image-set(url("../images/icons/24/white/question-circle.png") 1x, url("../images/icons/48/white/question-circle.png") 2x);
   background-position: right top;
   background-repeat: no-repeat;
-  margin: 2px 4px 0;
+  margin: 4px 4px -2px;
   overflow: hidden;
   padding: 2px 0 10px 6px;
 }
@@ -4924,6 +4924,21 @@ a.opengraph_info:hover {
 }
 #addclip-sticky:checked + .addclip .addclip-widgets {
   max-height: 1000px;
+}
+div.start-widgetcontainer {
+  display: table;
+}
+div.start-widgetcontainer ul {
+  list-style-type: none;
+  margin: 0;
+  display: table-cell;
+  width: 100%;
+  min-width: 100px;
+  padding: 0px;
+  border-radius: 5px;
+}
+div.start-widgetcontainer ul.move {
+  border: #315388 dashed 1px;
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

@@ -17,8 +17,6 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
-require_once 'lib/calendar/CalendarColumn.class.php';
-require_once 'lib/calendar/CalendarWeekView.class.php';
 
 /**
  * Personal schedule controller.
@@ -72,9 +70,7 @@ class Calendar_ScheduleController extends AuthenticatedController
     {
         global $user;
 
-        if (!$this->my_schedule_settings) {
-            $this->my_schedule_settings = UserConfig::get($user->id)->SCHEDULE_SETTINGS;
-        }
+        $schedule_settings = CalendarScheduleModel::getScheduleSettings();
         
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -93,6 +89,10 @@ class Calendar_ScheduleController extends AuthenticatedController
             if (!$institute_id || !in_array(get_object_type($institute_id), words('fak inst'))) {
                 throw new Exception('Cannot display institute-calender. No valid ID given!');
             }
+
+            Navigation::activateItem('/browse/my_courses/schedule');
+        } else {
+            Navigation::activateItem('/calendar/schedule');
         }
 
         // check, if the hidden seminar-entries shall be shown
@@ -108,26 +108,12 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
 
-        // convert old settings, if necessary (mein_stundenplan.php)
-        if (!$this->my_schedule_settings['converted']) {
-            $c = 1;
-            foreach ($this->my_schedule_settings['glb_days'] as $show) {
-                if ($c == 7) $c = 0;
-                $new_days[] = $c;
-                $c++;
-            }
-
-            sort($new_days);
-            $this->my_schedule_settings['glb_days'] = $new_days;
-            $this->my_schedule_settings['converted'] = true;
-        }
-
         // check type-safe if days is false otherwise sunday (0) cannot be chosen
         if ($days === false) {
             if (Request::getArray('days')) {
                 $this->days = array_keys(Request::getArray('days'));
             } else {
-                $this->days = $this->my_schedule_settings['glb_days'];
+                $this->days = $schedule_settings['glb_days'];
                 foreach ($this->days as $key => $day_number) {
                     $this->days[$key] = ($day_number + 6) % 7;
                 }
@@ -136,20 +122,11 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->days = explode(',', $days);
         }
 
-        if ($inst_mode) {
-            // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
-                $this->my_schedule_settings['glb_start_time'], $this->my_schedule_settings['glb_end_time'],
-                $institute_id, $this->days, $show_hidden);
+        $this->controller = $this;
 
-            Navigation::activateItem('/browse/my_courses/schedule');
-        } else {
-            // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
-                $this->my_schedule_settings['glb_start_time'], $this->my_schedule_settings['glb_end_time'], $this->days, $show_hidden);
-
-            Navigation::activateItem('/calendar/schedule');
-        }
+        $this->calendar_view = $inst_mode
+            ? CalendarScheduleModel::getInstCalendarView($institute_id, $show_hidden, $this->current_semester, $this->days)
+            : CalendarScheduleModel::getUserCalendarView($GLOBALS['user']->id, $show_hidden, $this->current_semester, $this->days);;
 
         // have we chosen an entry to display?
         if ($this->flash['entry']) {
@@ -158,7 +135,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             } else if ($this->flash['entry']['id'] == null) {
                 $this->show_entry = $this->flash['entry'];
             } else {
-                foreach ($this->entries as $entry_days) {
+                foreach ($this->calendar_view->getColumns() as $entry_days) {
                     foreach ($entry_days->getEntries() as $entry) {
                         if ($entry['id'] == $this->flash['entry']['id']) {
                             if ($this->flash['entry']['cycle_id']) {
@@ -173,16 +150,6 @@ class Calendar_ScheduleController extends AuthenticatedController
                 }
             }
 
-        }
-
-        $this->controller = $this;
-        $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
-        $this->calendar_view->setHeight(40 + (20 * $this->my_schedule_settings['zoom']));
-        $this->calendar_view->setRange($this->my_schedule_settings['glb_start_time'], $this->my_schedule_settings['glb_end_time']);
-
-        if ($inst_mode) {
-            $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
-            $this->calendar_view->setReadOnly();
         }
 
         $style_parameters = array(

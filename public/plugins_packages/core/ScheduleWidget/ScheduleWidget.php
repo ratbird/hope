@@ -13,52 +13,21 @@
  * @category    Stud.IP
  */
 
+require_once('app/models/calendar/schedule.php');
 
 class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 {
-    public function getPortalTemplate() {
-        
-        // render schedule-action
-        $c = new AuthenticatedController(new StudipDispatcher());
-        try {
-            $response = $c->relay('calendar/schedule/index');
-        } catch (Exception $e) {
-            // schedule-controller throws an exception if user has no schedule!
-        }
+    public function getPortalTemplate()
+    {
+        $view = CalendarScheduleModel::getUserCalendarView($GLOBALS['user']->id, true);
+        $view->setReadOnly();
 
-        // remove sidebar widgets since it will be devliverd as intended in schedule-controller otherwise
-        $sidebar = Sidebar::get();
-        $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
-        try {
-            $sidebar->removeWidget('calendar/schedule/semester');
-            $sidebar->removeWidget('calendar/schedule/actions');
-            $sidebar->removeWidget('calendar/schedule/print');
-            $sidebar->removeWidget('calendar/schedule/options');
-        } catch (Exception $e) {
-            // removeWigdet throws an Exception when trying to remove an unknown widget
-        }
-        
-        // take care of Navigation
-        try {
-            Navigation::getItem('/calendar/schedule')->setActive(false);
-        } catch (Exception $e) {
-            // navigation-item may not exists, so catch the potential exception
-        }
-
-        
-        // remove links and return template-string
-        return preg_replace('/<a.*>(.*)<\/a>/msU', '$1', $response->body);
+        return $view->render();
     }
 
     function getHeaderOptions()
     {
-        return array(
-            array(
-                'url' => URLHelper::getLink('dispatch.php/calendar/schedule?show_settings=true'),
-                'img' => 'icons/16/blue/admin.png',
-                'tooltip' => _('Einstellungen im Stundenplan bearbeiten')
-            )
-        );
+        return false;
     }
 
     function getPluginName(){

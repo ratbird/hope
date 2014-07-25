@@ -78,6 +78,13 @@ class CalendarWeekView extends CalendarView
         $this->read_only = $readonly;
     }
 
+    /**
+     * @return mixed the content of read_only
+     */
+    public function getReadOnly() {
+        return $this->read_only;
+    }
+
 
     /* * * * * * * * * * * * * * *
      * * *   G E T T E R S   * * *

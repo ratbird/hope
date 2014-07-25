@@ -11,7 +11,7 @@ $element_id = md5(uniqid());
         <?= $entry['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine('. $entry['onClick'].', this, event); return false;"' : '' ?>>
 
     <!-- for safari5 we need to set the height for the dl as well -->
-    <dl class="hover" style="height: <?= $height - 2 ?>px;
+    <dl <?= $calendar_view->getReadOnly() ? '' : 'class="hover"' ?> style="height: <?= $height - 2 ?>px;
         border: 1px solid <?= $entry['color'] ?>;
         background-color: <?= $color_background ?>;">
         <dt style="background-color: <?= $entry['color'] ?>;">

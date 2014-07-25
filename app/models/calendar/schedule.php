@@ -15,6 +15,8 @@
  */
 
 require_once('lib/calendar/CalendarColumn.class.php');
+require_once 'lib/calendar/CalendarWeekView.class.php';
+
 define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
@@ -637,5 +639,126 @@ class CalendarScheduleModel
             WHERE seminar_id = ? AND user_id = ? AND metadate_id = ?");
 
         $stmt->execute(array($seminar_id, $GLOBALS['user']->id, $cycle_id));
+    }
+
+    /**
+     * Get the schedule_settings from the user's config
+     *
+     * @param string $user_id the user to get the settings for, defaults
+     *                        to current user
+     * @return mixed the settings
+     */
+    static function getScheduleSettings($user_id = false)
+    {
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+
+        $schedule_settings = UserConfig::get($user_id)->SCHEDULE_SETTINGS;
+
+        // convert old settings, if necessary (mein_stundenplan.php)
+        if (!$schedule_settings['converted']) {
+            $schedule_settings['glb_days'] = array(0, 1, 2, 3, 4);
+            $schedule_settings['converted'] = true;
+        }
+
+        return $schedule_settings;
+    }
+
+    /**
+     * Return the semester-entry for the current semester
+     *
+     * @return mixed the current semester
+     */
+    static function getCurrentSemester()
+    {
+        $semdata = new SemesterData();
+        return $semdata->getCurrentSemesterData();
+    }
+
+    /**
+     * Create a CalendarWeekView (a schedule) for an institute
+     * for the current user and return it.
+     *
+     * @param string $institute_id  the institute to get the calendar for
+     * @param bool $show_hidden     show hidden entries
+     * @param mixed $semester       the semester to use
+     * @param mixed $days           the days to consider
+     *
+     * @return CalendarWeekView
+     */
+    static function getInstCalendarView($institute_id, $show_hidden = false, $semester = false, $days = false)
+    {
+        $schedule_settings = self::getScheduleSettings();
+
+        if (!$semester) {
+            $semester = self::getCurrentSemester();
+        }
+
+        if (!$days) {
+            $days = $schedule_settings['glb_days'];
+        }
+
+        $user_id = $GLOBALS['user']->id;
+
+        $entries = CalendarScheduleModel::getInstituteEntries(
+            $user_id,
+            $semester,
+            $schedule_settings['glb_start_time'],
+            $schedule_settings['glb_end_time'],
+            $institute_id,
+            $days,
+            $show_hidden
+        );
+
+        $view = new CalendarWeekView($entries, 'schedule');
+
+        $view->setHeight(40 + (20 * $schedule_settings['zoom']));
+        $view->setRange($schedule_settings['glb_start_time'], $schedule_settings['glb_end_time']);
+
+        // group entries in institute calendar
+        $view->groupEntries();  // if enabled, group entries with same start- and end-date
+        $view->setReadOnly();
+
+        return $view;
+    }
+
+    /**
+     * Create a CalendarWeekView (a schedule) for the current user and return it.
+     *
+     * @param string $user_id  the institute to get the calendar for
+     * @param bool $show_hidden     show hidden entries
+     * @param mixed $semester       the semester to use
+     * @param mixed $days           the days to consider
+     *
+     * @return CalendarWeekView
+     */
+    static function getUserCalendarView($user_id, $show_hidden = false, $semester = false, $days = false)
+    {
+        $schedule_settings = self::getScheduleSettings($user_id);
+
+        if (!$semester) {
+            $semester = self::getCurrentSemester();
+        }
+
+        if (!$days) {
+            $days = $schedule_settings['glb_days'];
+        }
+
+        $entries = CalendarScheduleModel::getEntries(
+            $user_id,
+            $semester,
+            $schedule_settings['glb_start_time'],
+            $schedule_settings['glb_end_time'],
+            $days,
+            $show_hidden
+        );
+
+        $view = new CalendarWeekView($entries, 'schedule');
+
+        $view->setHeight(40 + (20 * $schedule_settings['zoom']));
+        $view->setRange($schedule_settings['glb_start_time'], $schedule_settings['glb_end_time']);
+
+        return $view;
     }
 }

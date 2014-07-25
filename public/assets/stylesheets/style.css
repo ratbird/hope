@@ -4471,18 +4471,6 @@ div.schedule_edit_entry > form {
   padding-left: 10px;
   padding-top: 10px;
 }
-div.window_heading,
-div.window_heading_nodrag {
-  background-color: #899ab9;
-  color: #fff;
-  cursor: move;
-  font-weight: bold;
-  padding: 2px;
-  text-align: center;
-}
-div.window_heading_nodrag {
-  cursor: default !important;
-}
 #color_picker {
   padding-top: 3px;
   white-space: nowrap;
@@ -4520,15 +4508,6 @@ div.schedule_settings div {
   top: 50%;
   left: 50%;
   margin: -200px 0 0 -300px;
-}
-.schedule-dialog-small {
-  display: block;
-  outline: 0px none;
-  z-index: 1002;
-  position: absolute;
-  height: 200px;
-  width: 300px;
-  margin: -100px 0 0 -150px;
 }
 /* --- Studienbereichsauswahl ----------------------------------------------- */
 #study_area_selection {

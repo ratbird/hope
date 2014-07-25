@@ -27,7 +27,7 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 
     function getHeaderOptions()
     {
-        return false;
+        return array();
     }
 
     function getPluginName(){

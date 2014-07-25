@@ -2562,7 +2562,7 @@ select.sidebar-selectlist {
   background: #28497c;
   position: absolute;
   right: 12px;
-  top: -2px;
+  top: -1px;
   width: 250px;
   z-index: 1000;
 }
@@ -2573,18 +2573,9 @@ select.sidebar-selectlist {
   content: '';
   display: inline-block;
   position: absolute;
-  top: -2px;
+  top: -1px;
   left: 0;
   right: 0;
-}
-.helpbar:after {
-  background-color: #44494F;
-  content: '';
-  height: 1px;
-  width: 1px;
-  position: absolute;
-  right: -1px;
-  top: 1px;
 }
 .helpbar .helpbar-title {
   background-image: url("../images/icons/24/white/question-circle.png");

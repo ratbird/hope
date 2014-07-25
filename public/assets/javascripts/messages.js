@@ -16,8 +16,10 @@ STUDIP.Messages = {
         }
     },
     newMessages: function (response) {
-        jQuery.each(response.messages, function (index, message) {
-            jQuery("#messages > tbody").prepend(message);
+        jQuery.each(response.messages, function (message_id, message) {
+            if (jQuery("#message_" + message_id).length === 0) {
+                jQuery("#messages > tbody").prepend(message);
+            }
         });
         jQuery("#since").val(Math.floor(new Date().getTime() / 1000));
     },

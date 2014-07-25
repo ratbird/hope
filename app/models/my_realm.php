@@ -52,18 +52,20 @@ class MyRealmModel
                 }
             }
             $result = self::getDocumentsVisitDate($object_id, $user_id, $unreadable_folders);
+
             if (!is_null($result['last_modified'])) {
                 if ($my_obj['last_modified'] < $result['last_modified']) {
                     $my_obj['last_modified'] = $result['last_modified'];
                 }
                 $nav = new Navigation('files');
-                if ($result['last_modified']) {
+                if ($result['neue']) {
                     $nav->setURL(sprintf('folder.php?cmd=all'));
-                    $nav->setImage('icons/20/red/new/files.png', array('title' => _('Es sind neue Dokumente vorhanden')));
+                    $nav->setImage('icons/20/red/new/files.png',
+                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Dokument(e)'), $result['neue'], _('neue'))));
                     $nav->setBadgeNumber($result['neue']);
                 } else {
                     $nav->setURL('folder.php?cmd=tree');
-                    $nav->setImage('icons/20/grey/files.png', array('title' => _('Dokumente')));
+                    $nav->setImage('icons/20/grey/files.png', array('title' => sprintf('%s %s', $result['count'], _('Dokument(e)'))));
                 }
                 return $nav;
             }
@@ -81,7 +83,8 @@ class MyRealmModel
     {
         if ($my_obj["modules"]["literature"]) {
             $sql       = "SELECT a.range_id, COUNT(list_id) as count,
-                MAX(IF((chdate > IFNULL(b . visitdate, 0) AND a . user_id != :user_id), chdate, 0)) AS last_modified
+                COUNT(IF((chdate > IFNULL(b.visitdate,0) AND a.user_id !=:user_id), list_id, NULL)) AS neue,
+                MAX(IF((chdate > IFNULL(b.visitdate, 0) AND a.user_id != :user_id), chdate, 0)) AS last_modified
                 FROM
                 lit_list a
                 LEFT JOIN object_user_visits b ON (b.object_id = a.range_id AND b.user_id = :user_id AND b.type ='literature')
@@ -99,10 +102,13 @@ class MyRealmModel
                     }
                 }
                 $nav = new Navigation('literature', 'dispatch.php/course/literature');
-                if ((int)$result['last_modified']) {
-                    $nav->setImage('icons/20/red/new/literature.png', array('title' => _('Es sind neue Literaturlisten/ -einträge vorhanden')));
+                if ((int)$result['neue']) {
+                    $nav->setImage('icons/20/red/new/literature.png',
+                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Literaturliste(n)'), $result['neue'], _('neue'))));
+                    $nav->setBadgeNumber($result['neue']);
                 } elseif ((int)$result['count']) {
-                    $nav->setImage('icons/20/grey/literature.png', array('title' => _('Literaturlisten')));
+                    $nav->setImage('icons/20/grey/literature.png',
+                        array('title' => sprintf('%s %s', $result['count'], _('Literaturliste(n)'))));
                 }
                 return $nav;
             }
@@ -119,10 +125,10 @@ class MyRealmModel
      */
     public static function checkOverview(&$my_obj, $user_id, $object_id)
     {
-
         $sql = "SELECT
-            COUNT(nw . news_id) as count,
-            MAX(IF ((chdate > IFNULL(b . visitdate, 0) AND nw . user_id !=:user_id), chdate, 0)) AS last_modified
+            COUNT(nw.news_id) as count,
+            MAX(IF ((chdate > IFNULL(b.visitdate, 0) AND nw.user_id !=:user_id), chdate, 0)) AS last_modified,
+            COUNT(IF((chdate > IFNULL(b.visitdate,0) AND nw.user_id !=:user_id), nw.news_id, NULL)) AS neue
             FROM news_range a
             LEFT JOIN news nw ON(a . news_id = nw . news_id AND UNIX_TIMESTAMP() BETWEEN date AND (date + expire))
             LEFT JOIN object_user_visits b ON(b . object_id = a . news_id AND b . user_id = :user_id AND b . type = 'news')
@@ -140,12 +146,13 @@ class MyRealmModel
                 $my_obj['last_modified'] = $result['last_modified'];
             }
             $nav = new Navigation('news', '');
-            if ($result['last_modified']) {
+            if ($result['neue']) {
                 $nav->setURL('?new_news=true');
-                $nav->setImage('icons/20/red/new/news.png', array('title' => _('Es sind neue Ankündigungen vorhanden')));
+                $nav->setImage('icons/20/red/new/news.png',
+                    array('title' => sprintf('%s %s, %s %s', $result['count'], _('Ankündigung(en)'), $result['neue'], _('neue'))));
                 $nav->setBadgeNumber($result['neue']);
             } elseif ($result['count']) {
-                $nav->setImage('icons/20/grey/news.png', array('title' => _('Ankündigungen')));
+                $nav->setImage('icons/20/grey/news.png', array('title' => sprintf('%s %s', $result['count'], _('Ankündigung(en)'))));
             }
             return $nav;
         }
@@ -161,7 +168,6 @@ class MyRealmModel
      */
     public static function checkScm(&$my_obj, $user_id, $object_id)
     {
-
         if ($my_obj["modules"]["scm"]) {
             $sql = "SELECT tab_name,  ouv.object_id,
                   COUNT(IF(content !='',1,0)) as count,
@@ -189,22 +195,22 @@ class MyRealmModel
                 }
 
                 $nav = new Navigation('scm', 'dispatch.php/course/scm');
-                if ($result['count']) {
 
+                if ($result['count']) {
                     if ($result['neue']) {
                         $image = 'icons/20/red/new/infopage.png';
                         $nav->setBadgeNumber($result['neue']);
                         if ($result['count'] == 1) {
                             $title = $result['tab_name'] . _(' (geändert)');
                         } else {
-                            $title = sprintf(_('%s Einträge'), $result['count']);
-                        };
+                            $title = sprintf('%s %s %s ' . _('neue'), $result['count'], $result['neue'], _('Einträge'));
+                        }
                     } else {
                         $image = 'icons/20/grey/infopage.png';
                         if ($result['count'] == 1) {
                             $title = $result['tab_name'] . _(' (geändert)');
                         } else {
-                            $title = sprintf(_('%s Einträge'), $result['count']);
+                            $title = sprintf('%s %s', $result['count'], _('Einträge'));
                         }
                     }
                     $nav->setImage($image, array('title' => $title));
@@ -224,12 +230,14 @@ class MyRealmModel
      */
     public static function checkSchedule(&$my_obj, $user_id, $object_id)
     {
+
         if ($my_obj["modules"]["schedule"]) {
-            $modified = false;
-            $count    = 0;
+            $count = 0;
+            $neue  = 0;
             // check for extern dates
-            $sql       = "SELECT  COUNT(term . termin_id) as count,
-                  MAX(IF ((term . chdate > IFNULL(ouv . visitdate, 0) AND term . autor_id != :user_id), term . chdate, 0)) AS last_modified
+            $sql       = "SELECT  COUNT(term.termin_id) as count,
+                  MAX(IF ((term.chdate > IFNULL(ouv.visitdate, 0) AND term.autor_id != :user_id), term.chdate, 0)) AS last_modified,
+                  COUNT(IF((term.chdate > IFNULL(ouv.visitdate,0) AND term.autor_id !=:user_id), term.termin_id, NULL)) AS neue
                 FROM
                   ex_termine term
                 LEFT JOIN
@@ -241,18 +249,20 @@ class MyRealmModel
             $statement->bindValue(':course_id', $object_id);
             $statement->execute();
             $result = $statement->fetch(PDO::FETCH_ASSOC);
+
             if (!empty($result)) {
                 $count = $result['count'];
+                $neue  = $result['neue'];
                 if ($my_obj['last_modified'] < $result['last_modified'] && (int)$result['last_modified'] != 0) {
                     $my_obj['last_modified'] = $result['last_modified'];
-                    $modified                = true;
                 }
             }
 
 
             // check for normal dates
-            $sql = "SELECT  COUNT(term . termin_id) as count,
-                  MAX(IF ((term . chdate > IFNULL(ouv . visitdate, 0) AND term . autor_id != :user_id), term . chdate, 0)) AS last_modified
+            $sql = "SELECT  COUNT(term.termin_id) as count,
+                  COUNT(term.termin_id) as count, COUNT(IF((term.chdate > IFNULL(ouv.visitdate,0) AND term.autor_id !=:user_id), term.termin_id, NULL)) AS neue,
+                  MAX(IF ((term.chdate > IFNULL(ouv.visitdate, 0) AND term.autor_id != :user_id), term . chdate, 0)) AS last_modified
                 FROM
                   termine term
                 LEFT JOIN
@@ -266,21 +276,22 @@ class MyRealmModel
             $statement->execute();
             $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-
             if (!empty($result)) {
                 $count += $result['count'];
+                $neue += $result['neue'];
                 if ($my_obj['last_modified'] < $result['last_modified'] && (int)$result['last_modified'] != 0) {
                     $my_obj['last_modified'] = $result['last_modified'];
-                    $modified                = true;
                 }
             }
 
-            if ($modified || $count > 0) {
+            if ($neue || (int)$count > 0) {
                 $nav = new Navigation('schedule', 'dispatch.php/course/dates');
-                if ($modified) {
-                    $nav->setImage('icons/20/red/new/schedule.png', array('title' => _('Es sind neue Termine vorhanden')));
+                if ($neue) {
+                    $nav->setImage('icons/20/red/new/schedule.png',
+                        array('title' => sprintf('%s %s, %s %s', $count, _('Termin(e)'), $neue, _('neue'))));
+                    $nav->setBadgeNumber($neue);
                 } elseif ($count) {
-                    $nav->setImage('icons/20/grey/schedule.png', array('title' => _('Termine')));
+                    $nav->setImage('icons/20/grey/schedule.png', array('title' => sprintf('%s %s', $count, _('Termin(e)'))));
                 }
                 return $nav;
             }
@@ -324,11 +335,12 @@ class MyRealmModel
                 $nav = new Navigation('wiki');
                 if ((int)$result['neue']) {
                     $nav->setURL('wiki.php?view=listnew');
-                    $nav->setImage('icons/20/red/new/wiki.png', array('title' => sprintf(_('%s WikiSeiten, %s Änderungen'), $result['count_d'], $result['neue'])));
+                    $nav->setImage('icons/20/red/new/wiki.png',
+                        array('title' => sprintf('%s %s, %s %s', $result['count_d'], _('WikiSeite(n)'), $result['neue'], _('Änderungen'))));
                     $nav->setBadgeNumber($result['neue']);
                 } elseif ((int)$result['count']) {
                     $nav->setURL('wiki.php');
-                    $nav->setImage('icons/20/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $result['count_d'])));
+                    $nav->setImage('icons/20/grey/wiki.png', array('title' => sprintf('%s %s', $result['count_d'], _('WikiSeite(n)'))));
                 }
                 return $nav;
             }
@@ -338,7 +350,6 @@ class MyRealmModel
     }
 
     /**
-     * TODO: prepared statement
      * @param      $my_obj
      * @param      $user_id
      * @param null $modules
@@ -347,6 +358,7 @@ class MyRealmModel
     {
         if ($my_obj["modules"]["elearning_interface"]) {
             $sql = "SELECT a.object_id, COUNT(module_id) as count,
+                COUNT(IF((chdate > IFNULL(b.visitdate,0) AND a.module_type != 'crs'), module_id, NULL)) AS neue,
                 MAX(IF((chdate > IFNULL(b.visitdate, 0) AND a.module_type != 'crs'), chdate, 0)) AS last_modified
                 FROM
                 object_contentmodules a
@@ -366,13 +378,13 @@ class MyRealmModel
                     }
                 }
                 $nav = new Navigation('elearning', 'dispatch/course/elearning/show');
-                if ((int)$result['last_modified']) {
-                    $nav->setImage('icons/20/red/new/learnmodule.png', array('title' => _('Es sind neue Lernmodule vorhanden')));
+                if ((int)$result['neue']) {
+                    $nav->setImage('icons/20/red/new/learnmodule.png',
+                        array('title' => sprintf('%s %s, %s %s', $result['count'], _('Lernmodul(e)'), $result['neue'], _('neue'))));
                 } elseif ((int)$result['count']) {
-                    $nav->setImage('icons/20/grey/learnmodule.png', array('title' => _('Lernmodule')));
+                    $nav->setImage('icons/20/grey/learnmodule.png', array('title' => sprintf('%s %s', $result['count'], _('Lernmodul(e)'))));
                 }
                 return $nav;
-
             }
         }
         return null;
@@ -386,10 +398,10 @@ class MyRealmModel
      */
     public static function checkVote(&$my_obj, $user_id, $object_id)
     {
-        $count    = 0;
-        $modified = false;
-
-        $sql = "SELECT  COUNT(vote.vote_id) as count,
+        $count = 0;
+        $neue  = 0;
+        $sql   = "SELECT  COUNT(vote.vote_id) as count,
+              COUNT(IF((chdate > IFNULL(ouv.visitdate,0) AND vote.author_id !=:user_id AND vote.state != 'stopvis'), vote_id, NULL)) AS neue,
               MAX(IF((chdate > IFNULL(ouv.visitdate,0) AND vote.author_id !=:user_id AND vote.state != 'stopvis'), chdate, 0)) AS last_modified
             FROM vote
             LEFT JOIN object_user_visits ouv ON(ouv.object_id = vote.vote_id AND ouv.user_id = :user_id AND ouv.type = 'vote')
@@ -404,16 +416,18 @@ class MyRealmModel
 
         if (!empty($result)) {
             $count = $result['count'];
+            $neue  = $result['neue'];
+
             if (!is_null($result['last_modified']) && (int)$result['last_modified'] != 0) {
                 if ($my_obj['last_modified'] < $result['last_modified']) {
                     $my_obj['last_modified'] = $result['last_modified'];
-                    $modified                = true;
                 }
             }
         }
 
         $sql = "SELECT
                 COUNT(a.eval_id) as count,
+                COUNT(IF((chdate > IFNULL(b.visitdate,0) AND d.author_id !=:user_id ), a.eval_id, NULL)) AS neue,
                 MAX(IF ((chdate > IFNULL(b.visitdate, 0) AND d.author_id != :user_id), chdate, 0)) AS last_modified
             FROM
                 eval_range a
@@ -437,32 +451,33 @@ class MyRealmModel
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if (!empty($result)) {
             $count += $result['count'];
+            $neue += $result['neue'];
             if (!is_null($result['last_modified']) && (int)$result['last_modified'] != 0) {
                 if ($my_obj['last_modified'] < $result['last_modified']) {
                     $my_obj['last_modified'] = $result['last_modified'];
-                    $modified                = true;
                 }
             }
         }
 
 
-        if ($modified || $count > 0) {
+        if ($neue || $count > 0) {
             $nav = new Navigation('vote', '#vote');
-            if ($modified) {
-                $nav->setImage('icons/20/red/new/vote.png', array('title' => _('Es sind neue Umfragen vorhanden')));
-                $nav->setBadgeNumber($my_obj['neuevotes']);
+            if ($neue) {
+                $nav->setImage('icons/20/red/new/vote.png',
+                    array('title' => sprintf('%s %s, %s %s', $count, _('Umfrage(n)'), $neue, _('neue'))));
+                $nav->setBadgeNumber($neue);
             } else if ($count) {
-                $nav->setImage('icons/20/grey/vote.png', array('title' => _('Umfragen')));
+                $nav->setImage('icons/20/grey/vote.png', array('title' => sprintf('%s %s', $count, _('Umfrag(en)'))));
             }
             return $nav;
         }
-
 
         return null;
     }
 
 
     /**
+     * Get the plugin icon navigation for a course
      * @param $seminar_id
      * @param $visitdate
      * @return mixed
@@ -484,7 +499,6 @@ class MyRealmModel
 
     /**
      * Get all courses vor given user in selected semesters
-     *
      */
     public static function getCourses($min_sem_key, $max_sem_key, $params = array())
     {
@@ -515,7 +529,7 @@ class MyRealmModel
 
         if ($deputies_enabled) {
             $datas = self::getDeputies($GLOBALS['user']->id);
-            if(!empty($datas)) {
+            if (!empty($datas)) {
                 foreach ($datas as $data) {
                     $deputies[] = Course::import($data);
                 }
@@ -645,11 +659,6 @@ class MyRealmModel
             $modules = new Modules();
 
             foreach ($courses as $index => $course) {
-                // remove invisible courses if no rights avaible
-                if ((int)$course->visible != 1 && !$GLOBALS['perm']->have_studip_perm('dozent', $course->seminar_id)) {
-                    continue;
-                }
-
                 // export object to array for simple handling
                 $_course                   = $course->toArray($param_array);
                 $_course['start_semester'] = $course->start_semester->name;
@@ -711,13 +720,14 @@ class MyRealmModel
         if ($params['main_navigation']) {
             return $sem_courses;
         }
+
         krsort($sem_courses);
 
         // grouping
         if ($group_field == 'sem_number' && !$params['order_by']) {
             foreach ($sem_courses as $index => $courses) {
                 uasort($courses, function ($a, $b) {
-                     return $a['gruppe'] == $b['gruppe'] ? strcmp($a['temp_name'], $b['temp_name']) : $a['gruppe'] - $b['gruppe'];
+                    return $a['gruppe'] == $b['gruppe'] ? strcmp($a['temp_name'], $b['temp_name']) : $a['gruppe'] - $b['gruppe'];
                 });
                 $sem_courses[$index] = $courses;
             }
@@ -748,37 +758,46 @@ class MyRealmModel
     public static function  checkParticipants(&$my_obj, $user_id, $object_id, $is_admission)
     {
         if ($my_obj["modules"]["participants"]) {
-            if ($is_admission) {
-                //vorlï¿½ufige Teilnahme
-                //            $sql     = MyCoursesModel::get_obj_clause('admission_seminar_user a', 'seminar_id', 'a.user_id', "(mkdate > IFNULL(b . visitdate, 0) AND a . user_id != '$user_id')",
-                //                'participants', false, " AND a . status = 'accepted' ", false, $user_id, 'mkdate');
-                //            $results = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-                //            if (!empty($results)) {
-                //                foreach ($results as $result) {
-                //                    if ($my_obj["modules"]["participants"]) {
-                //                        $my_obj["new_accepted_participants"]   = $result['neue'];
-                //                        $my_obj["count_accepted_participants"] = $result['count'];
-                //                        if ($my_obj['last_modified'] < $result['last_modified']) {
-                //                            $my_obj['last_modified'] = $result['last_modified'];
-                //                        }
-                //                    }
-                //                }
-                //            }
-            }
-
             if (SeminarCategories::GetByTypeId($my_obj['status'])->studygroup_mode) {
                 $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/' . $object_id);
             } else {
                 $nav = new Navigation('participants', 'dispatch.php/course/members/index');
             }
 
+
             if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj['user_status'], words('dozent tutor'))) {
+                $count            = 0;
+                $neue             = 0;
                 $all_auto_inserts = AutoInsert::getAllSeminars(true);
                 $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
 
                 $sql       = "SELECT
+                        COUNT(a.user_id) as count,
+                        COUNT(IF((mkdate > IFNULL(b.visitdate,0) AND a.user_id !=:user_id), a.user_id, NULL)) AS neue,
+                        MAX(IF((mkdate > IFNULL(b.visitdate,0) AND a.user_id != :user_id), mkdate, 0)) AS last_modified
+                    FROM admission_seminar_user a
+                    LEFT JOIN object_user_visits b ON (b.object_id = a.seminar_id AND b.user_id = :user_id AND b.type ='participants')
+                    WHERE a.seminar_id = :course_id";
+                $statement = DBManager::get()->prepare($sql);
+                $statement->bindValue(':user_id', $user_id);
+                $statement->bindValue(':course_id', $object_id);
+                $statement->execute();
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+                if (!empty($result)) {
+                    if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj['status'], words('dozent tutor'))) {
+                        $count = $result['count'];
+                        $neue  = $result['neue'];
+                        if ($my_obj['last_modified'] < $result['last_modified']) {
+                            $my_obj['last_modified'] = $result['last_modified'];
+                        }
+                    }
+                }
+
+                $sql       = "SELECT
                     COUNT(a . user_id) as count,
-                    MAX(IF ((mkdate > IFNULL(b . visitdate, 0) AND a . user_id != :user_id), mkdate, 0)) AS last_modified
+                    COUNT(IF((mkdate > IFNULL(b.visitdate,0) AND a.user_id !=:user_id), a.user_id, NULL)) AS neue,
+                    MAX(IF ((mkdate > IFNULL(b.visitdate, 0) AND a.user_id != :user_id), mkdate, 0)) AS last_modified
                     FROM seminar_user a
                     LEFT JOIN object_user_visits b ON(b . object_id = a . seminar_id AND b . user_id = :user_id AND b . type = 'participants')
                     WHERE seminar_id = :course_id";
@@ -788,9 +807,9 @@ class MyRealmModel
                 $statement->execute();
                 $result = $statement->fetch(PDO::FETCH_ASSOC);
 
+
                 if (!empty($result)) {
                     // show the participants-icon only if the module is activated and it is not an auto-insert-sem
-
                     if (in_array($object_id, $all_auto_inserts)) {
                         if ($GLOBALS['perm']->have_perm('admin', $user_id) && !$GLOBALS['perm']->have_perm($auto_insert_perm, $user_id)) {
                             return null;
@@ -798,20 +817,21 @@ class MyRealmModel
                             return null;
                         }
                     }
-                    $my_obj["countparticipants"] = $result['count'];
+                    $count += $result['count'];
+                    $neue += $result['neue'];
+
                     if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj['user_status'], words('dozent tutor'))) {
                         if ($my_obj['last_modified'] < $result['last_modified']) {
                             $my_obj['last_modified'] = $result['last_modified'];
                         }
                     }
+                }
 
-                    $count = $my_obj["countparticipants"] + $my_obj["count_accepted_participants"];
-
-                    if ($result['last_modified']) {
-                        $nav->setImage('icons/20/red/new/persons.png', array('title' => _('Es sind neue TeilnehmerInnen vorhanden')));
-                    } else if ($count) {
-                        $nav->setImage('icons/20/grey/persons.png', array('title' => _('TeilnehmerInnen')));
-                    }
+                if ($neue) {
+                    $nav->setImage('icons/20/red/new/persons.png', array('title' => sprintf('%s %s, %s %s', $count, _('TeilnehmerInnen'), $neue, _('neue'))));
+                    $nav->setBadgeNumber($neue);
+                } else if ($count) {
+                    $nav->setImage('icons/20/grey/persons.png', array('title' => sprintf('%s %s', $count, _('TeilnehmerInnen'))));
                 }
             } else {
                 $nav->setImage('icons/20/grey/persons.png', array('title' => _('TeilnehmerInnen')));
@@ -824,7 +844,10 @@ class MyRealmModel
 
     public static function getDocumentsVisitDate($object_id, $user_id, $unreadable_folders = array())
     {
-        $sql = "SELECT MAX(IF ((d . chdate > IFNULL(ouv . visitdate, 0) AND d . user_id !=:user_id), d . chdate, 0)) AS last_modified
+        $sql = "SELECT
+              MAX(IF ((d.chdate > IFNULL(ouv.visitdate, 0) AND d.user_id !=:user_id), d.chdate, 0)) AS last_modified,
+              COUNT(d.dokument_id) as count,
+              COUNT(IF((d.chdate > IFNULL(ouv.visitdate,0) AND d.user_id !=:user_id), d.dokument_id, NULL)) AS neue
             FROM
               dokumente d
             LEFT JOIN object_user_visits ouv
@@ -840,7 +863,14 @@ class MyRealmModel
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-
+    /**
+     * Get the whole icon-navigation for a given course
+     * @param $object_id
+     * @param $my_obj_values
+     * @param null $sem_class
+     * @param $user_id
+     * @return array
+     */
     public static function getAdditionalNavigations($object_id, &$my_obj_values, $sem_class = null, $user_id)
     {
 
@@ -875,16 +905,15 @@ class MyRealmModel
 
             if (method_exists(__CLASS__, $function)) {
                 $params = array(&$my_obj_values,
-                    $user_id,
-                    $object_id);
+                                $user_id,
+                                $object_id);
                 if (strcmp($key, 'participants') === 0) {
                     array_push($params, false);
                 }
                 $nav = call_user_func_array(array(self,
-                    $function), $params);
+                                                  $function), $params);
 
             }
-
 
             if ($sem_class && !empty($plugin_navigation)) {
                 $module = $sem_class->getModule($key);
@@ -893,7 +922,7 @@ class MyRealmModel
                         $navigation[$key] = $plugin_navigation[get_class($module)];
                         // Workaround to get the badge-information on overview
                         // if still badge number exists something new in blubber or forum exists
-                        if ($navigation[$key] && ((int) $navigation[$key]->getBadgeNumber() > 0)) {
+                        if ($navigation[$key] && ((int)$navigation[$key]->getBadgeNumber() > 0)) {
                             $my_obj_values['last_modified'] = time();
                         }
                         $main_nav = false;
@@ -982,7 +1011,7 @@ class MyRealmModel
                   ON DUPLICATE KEY UPDATE last_visitdate = IFNULL(visitdate, 0), visitdate = :timestamp";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
-        $statement->bindValue(':timestamp', $timestamp ?: time());
+        $statement->bindValue(':timestamp', $timestamp ? : time());
         // Update all activated modules
         foreach (words('forum documents schedule participants literature wiki scm elearning_interface') as $type) {
             if ($object['modules'][$type]) {
@@ -1076,7 +1105,7 @@ class MyRealmModel
     {
         $memberShips = InstituteMember::findByUser($GLOBALS['user']->id);
 
-        if(empty($memberShips)) {
+        if (empty($memberShips)) {
             return null;
         }
         $insts      = new SimpleCollection($memberShips);
@@ -1186,15 +1215,15 @@ class MyRealmModel
         $param_array = 'name seminar_id visible veranstaltungsnummer start_time duration_time status visible ';
         $param_array .= 'chdate admission_binding modules admission_prelim';
         $courses = Course::findAndMapMany(function ($course) use ($param_array, $studygroups, $modules) {
-            $ret = $course->toArray($param_array);
+            $ret                   = $course->toArray($param_array);
             $ret['start_semester'] = $course->start_semester->name;
-            $ret['end_semester'] = $course->end_semester->name;
-            $ret['obj_type'] = 'sem';
+            $ret['end_semester']   = $course->end_semester->name;
+            $ret['obj_type']       = 'sem';
             $ret['last_visitdate'] = object_get_visit($course->id, 'sem', 'last');
-            $ret['visitdate'] = object_get_visit($course->id, 'sem', '');
-            $ret['user_status'] = $studygroups[$course->id]['status'];
-            $ret['gruppe'] = $studygroups[$course->id]['gruppe'];
-            $ret['modules'] = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
+            $ret['visitdate']      = object_get_visit($course->id, 'sem', '');
+            $ret['user_status']    = $studygroups[$course->id]['status'];
+            $ret['gruppe']         = $studygroups[$course->id]['gruppe'];
+            $ret['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
             MyRealmModel::getObjectValues($ret);
 
             return $ret;
@@ -1209,19 +1238,19 @@ class MyRealmModel
         $query     = "SELECT 1 FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($GLOBALS['user']->id,
-            $course_id));
+                                  $course_id));
         $present = $statement->fetchColumn();
         return $present;
     }
 
     /**
      * Calc nav elements to get the table-column-width
-     * @TODO: Caching?
      * @param $my_obj
      * @param string $group_field
      * @return int
      */
-    public static function calc_nav_elements($my_obj, $group_field = 'sem_number') {
+    public static function calc_nav_elements($my_obj, $group_field = 'sem_number')
+    {
         $nav_elements = 0;
         if (empty($my_obj)) {
             return $nav_elements;
@@ -1241,7 +1270,8 @@ class MyRealmModel
         return $nav_elements;
     }
 
-    public static function calc_single_navigation($collection) {
+    public static function calc_single_navigation($collection)
+    {
         $nav_elements = 0;
         if (!empty($collection)) {
             foreach ($collection as $course) {

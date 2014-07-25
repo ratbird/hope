@@ -44,9 +44,7 @@
                     <?= Assets::img('icons/20/grey/info-circle.png', $params) ?>
                 </a>
             <? else : ?>
-                <?=
-                Assets::img('blank.gif', array('width'  => 20,
-                                               'height' => 20)); ?>
+                <?= Assets::img('blank.gif', array('width'  => 20, 'height' => 20)); ?>
             <? endif ?>
         </td>
         <td style="text-align: left; white-space: nowrap;">

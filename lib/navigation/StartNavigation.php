@@ -177,7 +177,6 @@ class StartNavigation extends Navigation
         $navigation = new Navigation(_('Nachrichten'));
         $navigation->addSubNavigation('in', new Navigation(_('Posteingang'), 'dispatch.php/messages/overview'));
         $navigation->addSubNavigation('out', new Navigation(_('Gesendet'), 'dispatch.php/messages/sent'));
-        $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'dispatch.php/messages/write'));
         $this->addSubNavigation('messaging', $navigation);
 
         // community

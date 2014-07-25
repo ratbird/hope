@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -153,16 +153,16 @@ h6 {
   margin-bottom: 10px;
 }
 h1 {
-  font-size: 36px;
+  font-size: 19px;
 }
 h2 {
-  font-size: 30px;
+  font-size: 16px;
 }
 h3 {
-  font-size: 24px;
+  font-size: 16px;
 }
 h4 {
-  font-size: 18px;
+  font-size: 14px;
 }
 h5 {
   font-size: 14px;
@@ -179,7 +179,7 @@ h1 {
 }
 h1 span {
   display: block;
-  font-size: 18px;
+  font-size: 9.5px;
   font-weight: 100;
   padding: 5px 0;
 }
@@ -2752,6 +2752,7 @@ section.contentbox article footer {
   border-color: #d0d7e3;
   border-top-style: none;
   border-width: 1px;
+  background-color: white;
 }
 section.contentbox article footer h1 {
   font-size: 1em;
@@ -2779,7 +2780,7 @@ section.contentbox article.open p,
 section.contentbox article.open section,
 section.contentbox article.open footer {
   max-height: 1000px;
-  overflow: visible;
+  overflow: hidden;
   -webkit-transition: max-height 0.9s;
   -moz-transition: max-height 0.9s;
   -o-transition: max-height 0.9s;
@@ -4915,21 +4916,6 @@ a.opengraph_info:hover {
 }
 #addclip-sticky:checked + .addclip .addclip-widgets {
   max-height: 1000px;
-}
-div.start-widgetcontainer {
-  display: table;
-}
-div.start-widgetcontainer ul {
-  list-style-type: none;
-  margin: 0;
-  display: table-cell;
-  width: 100%;
-  min-width: 100px;
-  padding: 0px;
-  border-radius: 5px;
-}
-div.start-widgetcontainer ul.move {
-  border: #315388 dashed 1px;
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

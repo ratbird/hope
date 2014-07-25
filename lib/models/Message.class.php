@@ -246,4 +246,5 @@ class Message extends SimpleORMap
             'tag' => strtolower($tag)
         ));
     }
+
 }

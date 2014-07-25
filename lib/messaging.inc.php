@@ -28,17 +28,7 @@ require_once ('lib/datei.inc.php');
 require_once ('lib/sms_functions.inc.php');
 require_once 'lib/models/MailQueueEntry.class.php';
 
-//
-function CheckChecked($a, $b)
-{
-    if ($a == $b) {
-        return "checked";
-    } else {
-        return FALSE;
-    }
-}
 
-//
 function CheckSelected($a, $b)
 {
     if ($a == $b) {

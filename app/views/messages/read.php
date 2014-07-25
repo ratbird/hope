@@ -8,7 +8,7 @@
 <table id="message_metadata" data-message_id="<?= $message->getId() ?>">
     <tbody>
         <tr>
-            <td><strong><?= _("Autor") ?></strong></td>
+            <td><strong><?= _("Von") ?></strong></td>
             <td>
             <? if ($message['autor_id'] === '____%system%____'): ?>
                 <?= _('Stud.IP') ?>
@@ -18,36 +18,24 @@
             </td>
         </tr>
         <tr>
-            <td><strong><?= _("Adressaten") ?></strong></td>
+            <td><strong><?= _("An") ?></strong></td>
             <td>
                 <? if ($message["autor_id"] !== $GLOBALS["user"]->id) : ?>
                 <?= count($message->receivers) > 1 ? sprintf(_("%s Personen"), count($message->receivers)) : _("Eine Person") ?>
-                <? $read = $message->receivers->findBy('readed', 1)->count();?>
                 <? else : ?>
                 <ul class='clean' id="adressees">
                 <? $read = 0;?>
-                <? foreach ($message->receivers as $key => $message_user) : ?>
+                <? foreach ($message->getRecipients() as $message_user) : ?>
                     <li>
-                        <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => get_username($message_user["user_id"]))) ?>">
-                            <?= Avatar::getAvatar($message_user["user_id"])->getImageTag(Avatar::SMALL)?>
-                            <?= htmlReady(get_fullname($message_user["user_id"])) ?>
+                        <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $message_user["username"])) ?>">
+                            <?= Avatar::getAvatar($message_user["user_id"], $message_user["username"])->getImageTag(Avatar::SMALL, array('title' => ''))?>
+                            <?= htmlReady($message_user->getFullname()) ?>
                         </a>
-                        <?= Assets::img("icons/16/grey/checkbox-".($message_user['readed'] ? "" : "un")."checked", array('class' => "text-bottom", "title" => ($message_user['readed'] ? _("Gelesen") : _("Noch ungelesen")))) ?>
                     </li>
-                    <?php
-                    if ($message_user["readed"]) {
-                        $read++;
-                    }
-                    ?>
+                    
                 <? endforeach ?>
                 </ul>
                 <? endif ?>
-            </td>
-        </tr>
-        <tr>
-            <td><strong><?= _("Gelesen") ?></strong></td>
-            <td>
-                <?= sprintf(_("%s mal gelesen"), (int)$read) ?>
             </td>
         </tr>
         <tr>

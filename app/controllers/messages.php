@@ -442,13 +442,15 @@ class MessagesController extends AuthenticatedController {
         $output['document_id'] = $document->getId();
         $output['icon'] = Assets::img(GetFileIcon(substr($output['name'], strrpos($output['name'], ".") + 1)), array('class' => "text-bottom"));
 
-        $this->render_text(json_encode(studip_utf8encode($output)));
+        $this->render_json($output);
     }
 
     public function preview_action()
     {
-        $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
-        $this->render_text(studip_utf8encode(formatReady(studip_utf8decode(Request::get("text"))."\n".$settings['sms_sig'])));
+        if (Request::isXhr()) {
+            $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
+            $this->render_text(studip_utf8encode(formatReady(studip_utf8decode(Request::get("text"))."\n".$settings['sms_sig'])));
+        }
     }
 
 }

@@ -172,14 +172,14 @@ h6 {
 }
 h1,
 h2 {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
 h1 {
   margin-top: 0px;
 }
 h1 span {
   display: block;
-  font-size: 9.5px;
+  font-size: 14.25px;
   font-weight: 100;
   padding: 5px 0;
 }
@@ -579,12 +579,12 @@ table td.printcontent:hover {
 }
 table td.printhead2 {
   background-image: url("../images/content_object_arr-right.png");
-  border-top: 1px solid red;
+  border-top: 1px solid #899ab9;
   padding: 0;
 }
 table td.printhead3 {
   background-image: url("../images/content_object_arr-down.png");
-  border-top: 1px solid red;
+  border-top: 1px solid #899ab9;
   padding: 0;
 }
 /* classes for sortable table headers --------------------------------------- */
@@ -3312,6 +3312,17 @@ a.message-tag:before {
 #adressees {
   max-height: 200px;
   overflow: auto;
+}
+#adressees ul,
+#adressees li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#adressees li {
+  float: left;
+  padding-right: 2px;
+  padding-bottom: 2px;
 }
 .message_body {
   background-color: #e7ebf1;

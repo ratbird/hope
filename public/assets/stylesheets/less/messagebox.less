@@ -1,8 +1,7 @@
 /* --- MessageBoxes --------------------------------------------------------- */
 div.messagebox {
     background: no-repeat 10px 10px;
-    border: 1px solid;
-    border-radius: 3px;
+	border: 2px solid;
     font-size: 12pt;
     font-weight: bold;
     margin: 5px;
@@ -17,6 +16,7 @@ div.messagebox {
 
         a {
             background: transparent no-repeat center center;
+
             display: inline-block;
             margin: 1px;
             .size(16px, 16px);
@@ -24,7 +24,7 @@ div.messagebox {
             &.close, &.details {
                 span { display: none; }
             }
-            &.close   { background-image: url("@{image-path}/messagebox/cross_inv.png"); }
+            &.close   { background-image: url("@{image-path}/icons/16/blue/decline.png"); }
             &.details { background-image: url("@{image-path}/messagebox/minimize_inv.png"); }
         }
     }
@@ -60,10 +60,10 @@ div.messagebox_details {
     }
 }
 
-.messagebox(info,      #000,    #d8e3fc, #b6c1da);
-.messagebox(success,   #000,    #dcf1da, #bad0b8);
-.messagebox(error,     #000,    #ffdddc, #ddbbba);
-.messagebox(exception, #d8000c, #ffbaba, #ddbbba);
+.messagebox(info,      #000,    white, @base-color);
+.messagebox(success,   #000,    white, #00962d);
+.messagebox(error,     #000,    white, #d60000);
+.messagebox(exception, #d8000c, #ffbaba, #d60000);
 .messagebox(warning,   #b06500, #f7e98e, #d5c76c, "advice");
 
 // Define modal messagebox
@@ -99,10 +99,10 @@ div.messagebox_details {
         width: 50%;
 
         color: #000;
-        background-color: #f3e180;
+        background-color: white;
         background-image: url("@{image-path}/messagebox/question.png");
-        .box-shadow(8px 8px 0 fade(#000, 50%));
-
+		.box-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
+		
         .content {
             max-height: 200px;
             overflow: auto;

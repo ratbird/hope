@@ -277,5 +277,25 @@ class WidgetHelper {
     {
         return PluginManager::getInstance()->getPluginById($pluginid);
     }
+
+    /**
+     * getAvailableWidgets - fetches all widgets that are not already in use.
+     *
+     * @param string $user_id the user to check
+     *
+     * @return array All available widgets.
+     */
+    static function getAvailableWidgets($user_id) {
+        $all_widgets = PluginEngine::getPlugins('PortalPlugin');
+        $used_widgets = DBManager::get()->fetchFirst("SELECT `pluginid` FROM `widget_user` WHERE `range_id`=? ORDER BY `pluginid`", array($user_id));
+        $available = array();
+        foreach ($all_widgets as $widget) {
+            if (!in_array($widget->getPluginId(), $used_widgets)) {
+                $available[] = $widget;
+            }
+        }
+        return $available;
+    }
+
 }
 ?>

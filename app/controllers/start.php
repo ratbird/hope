@@ -74,10 +74,13 @@ class StartController extends AuthenticatedController
         }
         $sidebar->addWidget($nav);
         
-        $actions = new ActionsWidget();
-        $actions->addLink(_('Neues Widget hinzufügen'),
-                          $this->url_for('start/add'),
-                          'icons/16/blue/add.png')->asDialog();
+		// Show action to add widget only if not all widgets have already been added.
+        if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
+            $actions = new ActionsWidget();
+            $actions->addLink(_('Neues Widget hinzufügen'),
+                              $this->url_for('start/add'),
+                              'icons/16/blue/add.png')->asDialog();
+        }
         
         // Root may set initial positions
         if ($GLOBALS['perm']->have_perm('root')) {
@@ -94,7 +97,9 @@ class StartController extends AuthenticatedController
             $sidebar->addWidget($defaulter);
         }
         
-        $sidebar->addWidget($actions);
+        if ($actions) {
+            $sidebar->addWidget($actions);
+        }
     }
     
     /**
@@ -116,7 +121,7 @@ class StartController extends AuthenticatedController
             }
             $this->redirect('start' . $post_url);
         }
-        $this->widgets = PluginEngine::getPlugins('PortalPlugin');
+        $this->widgets = WidgetHelper::getAvailableWidgets($GLOBALS['user']->id);
     }
 
     /**

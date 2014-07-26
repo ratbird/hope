@@ -15,6 +15,7 @@ class Step00253startseite extends Migration
                     `pluginid` int(11) NOT NULL,
                     `position` int(11) NOT NULL DEFAULT 0,
                     `range_id` varchar(32) NOT NULL,
+                    `col` tinyint(1) NOT NULL DEFAULT 0,
                     PRIMARY KEY (`id`),
                     KEY (`range_id`)
                 ) ENGINE=MyISAM
@@ -23,10 +24,10 @@ class Step00253startseite extends Migration
         DBManager::get()->exec("
                 CREATE TABLE IF NOT EXISTS `widget_default` (
                     `pluginid` int(11) NOT NULL,
-                    `column` int(11) NOT NULL DEFAULT 0,
-                    `row` int(11) NOT NULL DEFAULT 0,
+                    `col` tinyint(1) NOT NULL DEFAULT 0,
+                    `position` tinyint(1) NOT NULL DEFAULT 0,
                     `perm` enum('user', 'autor', 'tutor', 'dozent', 'admin', 'root') NOT NULL DEFAULT 'autor',
-                    KEY (`perm`)
+                    PRIMARY KEY (`perm`,`pluginid`)
                 ) ENGINE=MyISAM
         ");
 

@@ -80,7 +80,7 @@ class Step00253startseite extends Migration
             $plugin_id = DBManager::get()->query("SELECT pluginid FROM plugins
                 WHERE pluginclassname = '$classname'")->fetchColumn();
             $stmt = DBManager::get()->prepare("INSERT INTO widget_default
-                (`pluginid`, `column`, `row`, `perm`) VALUES (?, ?, ?, ?)");
+                (`pluginid`, `col`, `position`, `perm`) VALUES (?, ?, ?, ?)");
             foreach (words("user autor tutor dozent admin root") as $perm) {
                $stmt->execute(array($plugin_id, 0, $key, $perm));
             }

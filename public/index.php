@@ -48,6 +48,8 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 // -- wir sind jetzt definitiv in keinem Seminar, also... --
 closeObject();
 
+include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+
 // if new start page is in use, redirect there (if logged in)
 if ($auth->is_authenticated() && $user->id != 'nobody') {
     header('Location: ' . URLHelper::getURL('dispatch.php/start'));
@@ -58,8 +60,6 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
  * *   L O G I N - P A G E   ( N O B O D Y - U S E R )   * *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-include 'lib/seminar_open.php'; // initialise Stud.IP-Session
-require_once 'config.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 include_once 'lib/classes/RSSFeed.class.php';

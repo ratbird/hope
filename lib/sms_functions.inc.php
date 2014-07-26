@@ -34,11 +34,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 function get_message_attachments($message_id, $provisional = false)
 {
-    if (!$provisional){
-        return count(Message::find($message_id)->attachments);
+    $db = DBManager::get();
+    if (! $provisional) {
+        $st = $db->prepare("SELECT dokumente.* FROM message INNER JOIN dokumente ON message_id=range_id WHERE message_id=? ORDER BY dokumente.chdate");
     } else {
-        $st = DBManager::get()->prepare("SELECT * FROM dokumente WHERE range_id='provisional' AND description=? ORDER BY chdate");
-        return $st->execute(array($message_id)) ? $st->fetchAll(PDO::FETCH_ASSOC) : array();
+        $st = $db->prepare("SELECT * FROM dokumente WHERE range_id='provisional' AND description=? ORDER BY chdate");
     }
+    return $st->execute(array(
+        $message_id
+    )) ? $st->fetchAll(PDO::FETCH_ASSOC) : array();
 }
-

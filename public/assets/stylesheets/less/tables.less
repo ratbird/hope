@@ -23,8 +23,10 @@ table.header, .table_header { //normale Tabellenheader
 table.links1 { background-color: #fff; }
 table.logintable { 
     background-image: url("@{image-path}/login.jpg");
+    background-size: 750px 350px;
     h1 {
         border-bottom: 0;
+        font-size: 2.5em;
     }
 }
 
@@ -46,7 +48,7 @@ table.logintable {
 
 table.toolbar {
   .gradient-bar(false);
-}
+} 
 td.toolbar, td.printhead {
   .gradient-bar();
 }
@@ -253,12 +255,12 @@ table {
     }
     td.printhead2 {
         background-image: url("@{image-path}/content_object_arr-right.png");
-        border-top: 1px solid @brand-color-lighter;
+        border-top: 1px solid red;
         padding: 0;
     }
     td.printhead3 {
         background-image: url("@{image-path}/content_object_arr-down.png");
-        border-top: 1px solid @brand-color-lighter;
+        border-top: 1px solid red;
         padding: 0;
     }
 }

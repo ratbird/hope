@@ -2102,7 +2102,6 @@ elseif ((!$level) || ($level == 1)) {
                     echo _("Die Daten der zu kopierenden Veranstaltung werden &uuml;bernommen. Bitte &auml;ndern Sie die Informationen, die sich f&uuml;r die kopierte Veranstaltung ergeben.");
                 }
                 ?><br><br>
-                <b><?=_("Schritt 1: Grunddaten der Veranstaltung angeben"); ?></b><br><br>
                 <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
             </div>
         </td>
@@ -2482,14 +2481,14 @@ elseif ($level == 2) {
     </tr>
     <tr>
         <td class="blank" valign="top">
-            <div class="info">
+ 	          <div class="info">
                 <?
                 if ($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["bereiche"])
-                    echo "<b>"._("Schritt 2: Personendaten, Studienbereiche und weitere Angaben zur Veranstaltung")."</b><br><br>";
+                    echo _("Geben Sie hier Personendaten, Studienbereiche und weitere Angaben zur Veranstaltung an.")."<br><br>";
                 else
-                    echo "<b>"._("Schritt 2: Personendaten und weitere Angaben zur Veranstaltung")." </b><br><br>";
+                    echo _("Geben Sie hier Personendaten und weitere Angaben zur Veranstaltung an.")."<br><br>";
                 ?>
-                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
+ 	            <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
             </div>
         </td>
     </tr>

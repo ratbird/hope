@@ -39,6 +39,9 @@ $translations = array(
   , 'Bitte geben Sie Ihren tatsächlichen Nachnamen an.' => _('Bitte geben Sie Ihren tatsächlichen Nachnamen an.')
   , 'Die E-Mail-Adresse ist nicht korrekt!' => _('Die E-Mail-Adresse ist nicht korrekt!')
 
+  // public/assets/javascripts/messages.js
+  , 'Sie haben nicht angegeben, wer die Nachricht empfangen soll!' => _('Sie haben nicht angegeben, wer die Nachricht empfangen soll!')
+
   // add your translations here
 );
 

@@ -273,7 +273,7 @@ class MessagesController extends AuthenticatedController {
      * Sends a message and redirects the user.
      */
     public function send_action() {
-        if (Request::isPost() && count(Request::getArray("message_to")) && Request::submitted("message_body")) {
+        if (Request::isPost() && count(array_filter(Request::getArray("message_to"))) && Request::submitted("message_body")) {
             $messaging = new messaging();
             $rec_uname = array();
             foreach (Request::getArray("message_to") as $user_id) {
@@ -296,6 +296,8 @@ class MessagesController extends AuthenticatedController {
                 trim(Request::get("message_tags")) ?: null
             );
             PageLayout::postMessage(MessageBox::success(_("Nachricht wurde verschickt.")));
+        } else if (!count(array_filter(Request::getArray('message_to')))) {
+            PageLayout::postMessage(MessageBox::error(_('Sie haben nicht angegeben, wer die Nachricht empfangen soll!')));
         }
         $this->redirect("messages/sent");
     }

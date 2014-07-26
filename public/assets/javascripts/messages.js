@@ -140,6 +140,13 @@ STUDIP.Messages = {
         });
     },
     send: function (form) {
+        // Check if recipients added (one element is always there -> template)
+        if (jQuery('li.adressee').children('input[name^="message_to"]').length <= 1) {
+            alert('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'.toLocaleString());
+            jQuery(form).attr('onsubmit', 'return false;');
+        } else {
+            jQuery(form).removeAttr('onsubmit');
+        }
         return false;
     },
     setTags: function (message_id, tags) {

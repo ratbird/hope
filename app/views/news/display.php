@@ -16,8 +16,7 @@
             <? endif; ?>
         </nav>
         <h1>
-            <?= Assets::img('icons/16/black/news.png') ?>
-            <?= _('Ankündigungen') ?>
+            <?= Assets::img('icons/16/black/news.png') ?><?= _('Ankündigungen') ?>
         </h1>
     </header>
     <? foreach ($news as $new): ?>

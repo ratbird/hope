@@ -2677,6 +2677,7 @@ section.contentbox header h1 {
 }
 section.contentbox header h1 img {
   display: inline-block;
+  margin-right: 5px;
 }
 section.contentbox header nav {
   display: inline-block;

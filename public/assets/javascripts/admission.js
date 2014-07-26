@@ -13,7 +13,7 @@ STUDIP.Admission = {
             courseFilter = '%%%';
         }
         var data = {
-                'courses[]' : _.pluck($('#courses li.jstree-checked'), 'id'),
+                'courses[]' : _.pluck($('#courselist input:checked'), 'id'),
                 'course_filter' : courseFilter,
                 'semester' : $('select[name="semester"]').val(),
                 'institutes[]' : $.merge(_.pluck($('input[name="institutes[]"]:hidden'), 'value'), _.pluck($('input[name="institutes[]"]:checked'), 'value'))

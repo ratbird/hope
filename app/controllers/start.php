@@ -58,6 +58,8 @@ class StartController extends AuthenticatedController
         
         if (!(count($this->left) + count($this->right)) ) {
             WidgetHelper::setInitialPositions();
+            $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
+            $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
         }
         
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));

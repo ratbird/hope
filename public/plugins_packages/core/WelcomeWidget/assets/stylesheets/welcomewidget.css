@@ -1,0 +1,15 @@
+#welcomewidget {
+    background-image: url('../images/welcome.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    min-width: 400px;
+    min-height: 300px;
+    width: 100%;
+}
+
+#welcomewidget_message {
+    font-size: 2em;
+    width: 50%;
+    padding-left: 40px;
+    padding-top: 40px;
+}

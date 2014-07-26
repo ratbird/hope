@@ -1,0 +1,6 @@
+pluginclassname=WelcomeWidget
+pluginname=WelcomeWidget
+origin=core
+version=1.0
+studipMinVersion=3.0
+description=Dieses Widget zeigt eine einfache Willkommensnachricht.

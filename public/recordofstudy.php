@@ -260,7 +260,8 @@ elseif ($mode == "pdf_assortment"){
 }
 elseif ($mode == "create_pdf"){
     ob_end_clean();
-    printPDF($pdf_file ,$fdfAR);
+    echo printPDF($pdf_file ,$fdfAR);
+	die();
 }
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');

@@ -672,9 +672,6 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                     } elseif ($this instanceof Course_AdmissionController){
                         echo _("Zugangsberechtigungen") . '<br>',
                         LinkButton::create(_("Bearbeiten"), $this->url_for('course/admission/index/' . $seminar_id));
-                    } elseif ($this instanceof Course_DatesController){
-                        echo _("Ablaufplan") . '<br>',
-                        LinkButton::create(_("Bearbeiten"), URLHelper::getURL('dispatch.php/course/dates/', array('cid' => $seminar_id)));
                     }
                     break;
                 default:

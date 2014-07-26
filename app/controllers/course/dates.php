@@ -20,21 +20,9 @@ class Course_DatesController extends AuthenticatedController
 
     public function index_action()
     {
-        if ($GLOBALS['perm']->have_perm("admin")) {
-            Navigation::activateItem('/admin/course/schedule');
-        } else {
-            Navigation::activateItem('/course/schedule/dates');
-        }
-
-        //Auswähler für Admin-Bereich:
-        if (!Request::option('cid', $_SESSION['SessionSeminar'])) {
-            $GLOBALS['view_mode'] = "sem";
-
-            require_once 'lib/admin_search.inc.php';
-            $GLOBALS['list'] = "TRUE";
-            include 'lib/include/admin_search_form.inc.php';  // will not return
-            die(); //must not return
-        }
+        
+        Navigation::activateItem('/course/schedule/dates');
+       
 
         checkObject();
         checkObjectModule("schedule");

@@ -51,19 +51,14 @@ class StartController extends AuthenticatedController
     {
         $this->left = array();
         $this->right = array();
-        $this->widgets = WidgetHelper::getUserWidgets($GLOBALS['user']->id);
+        
 
-        if (empty($this->widgets)){
-            WidgetHelper::setInitialPositions();
-        }
-
-        /*foreach ($this->widgets as $pos => $widget) {
-            $this->left[$pos] = $widget;
-        }
-
-        ksort($this->left);*/
         $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
         $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
+        
+        if (!(count($this->left) + count($this->right)) ) {
+            WidgetHelper::setInitialPositions();
+        }
         
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
@@ -73,7 +68,7 @@ class StartController extends AuthenticatedController
         
         $nav = new NavigationWidget();
         $nav->setTitle(_('Sprungmarken'));
-        foreach ($this->widgets as $widget) {
+        foreach (array_merge($this->left, $this->right) as $widget) {
             $nav->addLink($widget->getPluginName(),
                           $this->url_for('start#widget-' . $widget->widget_id));
         }
@@ -122,7 +117,6 @@ class StartController extends AuthenticatedController
             $this->redirect('start' . $post_url);
         }
 
-        $this->widgets = PluginEngine::getPlugins('PortalPlugin');
     }
 
     /**

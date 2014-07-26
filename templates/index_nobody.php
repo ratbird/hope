@@ -5,27 +5,19 @@
 <? if ($logout) : ?>
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array($GLOBALS['UNI_LOGOUT_ADD'])) ?>
 <? endif; ?>
-<style>
-    #layout_container {
-        background-color: transparent;
-    }
-</style>
-<table class="index_box">
+<div class="index_container" style="width: 750px; padding-top: 15px; margin: 0  auto !important;">
+<table class="index_box" style="border:0px solid white; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);">
     <tr>
-        <td colspan="2" class="table_header_bold">
-            &nbsp;<b><?= htmlReady($GLOBALS['UNI_NAME_CLEAN']) ?></b>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" height="270" valign="top" colspan="2" style="background:url(<?=$GLOBALS['ASSETS_URL']?>images/startseite.jpg) no-repeat left top; background-color:#FFFFFF; padding-top:30px;">
+        <td class="blank" height="270" valign="top" colspan="2" style="background:url(<?=$GLOBALS['ASSETS_URL']?>images/startseite.jpg) no-repeat left top; background-color:#FFFFFF; padding-top:30px; background-size: 750px 299px;">
+            <h1 style="margin-left:35px; border-bottom: 0px;"><?= htmlReady($GLOBALS['UNI_NAME_CLEAN']) ?></h1>
             <? foreach (Navigation::getItem('/login') as $key => $nav) : ?>
                 <? if ($nav->isVisible()) : ?>
                     <? list($name, $title) = explode(' - ', $nav->getTitle()) ?>
-                    <div style="margin-left:70px; margin-top:10px; padding: 2px;">
+                    <div style="margin-left:35px; margin-top:5px; padding: 2px;">
                         <? if (is_internal_url($url = $nav->getURL())) : ?>
-                            <a class="index" href="<?= URLHelper::getLink($url) ?>">
+                            <a href="<?= URLHelper::getLink($url) ?>">
                         <? else : ?>
-                            <a class="index" href="<?= htmlReady($url) ?>" target="_blank">
+                            <a href="<?= htmlReady($url) ?>" target="_blank">
                         <? endif ?>
                         <? SkipLinks::addLink($name, $url) ?>
                         <font size="4"><b><?= htmlReady($name) ?></b></font>
@@ -103,3 +95,4 @@
         </td>
     </tr>
 </table>
+</div>

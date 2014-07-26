@@ -18,7 +18,7 @@ $(function () {
         background-color: transparent;
     }
 </style>
-<div class="index_container" style="width: 750px; margin: 0 auto !important;">
+<div class="index_container" style="width: 750px; padding-top: 30px; margin: 0  auto !important;">
 <? if ($loginerror): ?>
     <!-- failed login code -->
     <?= MessageBox::error(
@@ -27,22 +27,16 @@ $(function () {
                   sprintf(_('Bitte wenden Sie sich bei Problemen an: <a href="%1$s">%1$s</a>'),
                           $GLOBALS['UNI_CONTACT']))) ?>
 <? endif; ?>
-<table class="index_box logintable">
+<table class="index_box logintable" style="border:0px solid white; box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);">
     <tbody>
-        <tr>
-            <td class="table_header_bold">
-                <?= Assets::img('icons/16/white/door-enter.png', array('alt' => _('Anmelden'))) ?>
-                <strong><?=_("Stud.IP - Login")?></strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 5px 0 20px 40px;">
+        <tr style="height: 350px">
+            <td style="padding: 5px 0px 10px 40px;">
             <? if  (!$loginerror): ?>
-                <h1 style="margin: 0;"><?=_("Herzlich willkommen!")?></h1>
+                <h1 style="margin: 0; padding-bottom:10px;"><?=_("Herzlich willkommen!")?></h1>
             <?endif;?>
-                <p><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
+                <p style="padding-bottom:25px;"><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
 
-                <form name="login" method="post" action="<?= URLHelper::getLink(Request::url(), array('cancel_login' => NULL)) ?>">
+                <form style="padding-bottom:25px;" name="login" method="post" action="<?= URLHelper::getLink(Request::url(), array('cancel_login' => NULL)) ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
                     <input type="hidden" name="resolution"  value="">

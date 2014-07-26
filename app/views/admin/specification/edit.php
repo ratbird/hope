@@ -91,7 +91,7 @@ use Studip\Button, Studip\LinkButton;
 $sidebar = Sidebar::Get();
 $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 $sidebar->setTitle(_('Zusatzangaben'));
-if ($GLOABLS['perm']->have_perm('root')) {
+if ($GLOBALS['perm']->have_perm('root')) {
     $actions = new ActionsWidget();
     $actions->addLink(_('Datenfelder bearbeiten'), URLHelper::getLink('dispatch.php/admin/datafields'), 'icons/16/blue/add.png');
     $sidebar->addWidget($actions);

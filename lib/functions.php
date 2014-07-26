@@ -191,6 +191,8 @@ function selectSem ($sem_id)
         $statement->execute(array($GLOBALS['user']->id, $course["Seminar_id"]));
         if (!$statement->rowCount()) {
             header('location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
+            page_close();
+            die;
             }
         }
         $SessionSeminar = $course["Seminar_id"];

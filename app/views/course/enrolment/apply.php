@@ -28,8 +28,8 @@
         &nbsp;(<?= sprintf(_("max. Teilnehmeranzahl: %s / Anzahl der Anmeldungen: %s"), $priocourses->admission_turnout, $num_claiming) ?>)
     <? endif ?>
     <div data-dialog-button>
-    <?= Studip\Button::createAccept(_("OK"), 'claim', array('data-dialog' => '')) ?>
-    <?= Studip\Button::createCancel(_("Abbrechen"), 'cancel') ?>
+    <?= Studip\Button::createAccept(_("Speichern"), 'claim', array('data-dialog' => '')) ?>
+    <?= Studip\Button::createCancel(_("Schließen"), 'cancel') ?>
     </div>
     <?= CSRFProtection::tokenTag() ?>
     </form>
@@ -39,7 +39,7 @@
     <? if ($enrol_user) : ?>
         <?=Studip\LinkButton::createAccept(_('Zur Veranstaltung'), URLHelper::getURL('seminar_main.php', array('auswahl' => $course_id))) ?>
     <? else : ?>
-        <?=Studip\LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $course_id))) ?>
+        <?=Studip\LinkButton::createCancel(_('Schließen'), URLHelper::getURL('dispatch.php/course/details/', array('sem_id' => $course_id))) ?>
     <? endif ?>
     </div>
 <? endif ?>

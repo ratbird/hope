@@ -116,7 +116,7 @@ class StartController extends AuthenticatedController
             }
             $this->redirect('start' . $post_url);
         }
-
+        $this->widgets = PluginEngine::getPlugins('PortalPlugin');
     }
 
     /**

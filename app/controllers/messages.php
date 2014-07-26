@@ -181,6 +181,38 @@ class MessagesController extends AuthenticatedController {
             }
             $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
         }
+        
+        if (Request::option('prof_id') && Request::option('deg_id') && $GLOBALS['perm']->have_perm('root')) {
+            $query = "SELECT DISTINCT user_id,'rec' as snd_rec
+            FROM user_studiengang
+            WHERE studiengang_id = ? AND abschluss_id = ?";
+            $this->default_message->receivers = DBManager::get()->fetchAll($query, array(
+                Request::option('prof_id'),
+                Request::option('deg_id')
+            ), 'MessageUser::build');
+        }
+        
+        if (Request::option('sd_id') && $GLOBALS['perm']->have_perm('root')) {
+            $query = "SELECT DISTINCT user_id,'rec' as snd_rec
+            FROM user_studiengang
+            WHERE abschluss_id = ?";
+            $this->default_message->receivers = DBManager::get()->fetchAll($query, array(
+                Request::option('sd_id')
+            ), 'MessageUser::build');
+        }
+        
+        if (Request::option('sp_id') && $GLOBALS['perm']->have_perm('root')) {
+            $query = "SELECT DISTINCT user_id,'rec' as snd_rec
+            FROM user_studiengang
+            WHERE studiengang_id = ?";
+            $this->default_message->receivers = DBManager::get()->fetchAll($query, array(
+                Request::option('sp_id')
+            ), 'MessageUser::build');
+        }
+        
+        if (!$this->default_message->receivers->count() && is_array($_SESSION['sms_data']['p_rec'])) {
+            $this->default_message->receivers = DBManager::get()->fetchAll("SELECT user_id,'rec' as snd_rec FROM auth_user_md5 WHERE username IN(?) ORDER BY Nachname,Vorname", array($_SESSION['sms_data']['p_rec']), 'MessageUser::build');
+        }
         if (Request::option("answer_to")) {
             $old_message = new Message(Request::option("answer_to"));
             if (!$old_message->permissionToRead()) {

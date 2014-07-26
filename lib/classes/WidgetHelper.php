@@ -131,8 +131,8 @@ class WidgetHelper {
      /**
       * Sets the current setting of a user as the default for a usergroup
       * 
-      * @param type $range_id The range id of the user that defines the setting
-      * @param type $group The usergroup
+      * @param string $range_id The range id of the user that defines the setting
+      * @param string $group The usergroup
       */
      static function setAsInitialPositions($range_id, $group) {
          DBManager::get()->execute('DELETE FROM widget_default WHERE `perm` = ?', array($group));
@@ -140,22 +140,11 @@ class WidgetHelper {
      }
 
      /**
-      * getInitialPositions - retrieves the intial widget setting for a given perm
-      * 
-      * @param string $perm
-      *
-      * @return array $widgets
+      * setInitialPositions - copies the default to the logged on user
       */
-     static function getInitialPositions($perm)
+     static function setInitialPositions()
      {
-         $query = "SELECT * FROM widget_default WHERE perm=?";
-         $statement = DBManager::get()->prepare($query);
-         $statement->execute(array($perm));
-         $widgets = array();
-         while ($db_widget = $statement->fetch(PDO::FETCH_ASSOC)) {
-             $widgets[] = $db_widget;
-         }
-         return $widgets;
+         DBManager::get()->execute('INSERT INTO widget_user (pluginid, position, range_id, col) (SELECT pluginid, position, ?, col as perm  FROM widget_default WHERE perm = ?)', array($GLOBALS['user']->id, $GLOBALS['perm']->get_perm()));
      }
 
     /**

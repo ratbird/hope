@@ -54,16 +54,7 @@ class StartController extends AuthenticatedController
         $this->widgets = WidgetHelper::getUserWidgets($GLOBALS['user']->id);
 
         if (empty($this->widgets)){
-            $this->widgets = WidgetHelper::getInitialPositions($GLOBALS['perm']->get_perm());
-            $idl = array();
-            foreach ($this->widgets as $widget) {
-                if ($widget['column'] == 0) {
-                    $idl[$widget['row']] = $widget['pluginid'];
-                }
-            }
-
-            WidgetHelper::addInitialPositions(0, $idl, $GLOBALS['user']->id);
-            $this->widgets = WidgetHelper::getUserWidgets($GLOBALS['user']->id);
+            WidgetHelper::setInitialPositions();
         }
 
         /*foreach ($this->widgets as $pos => $widget) {

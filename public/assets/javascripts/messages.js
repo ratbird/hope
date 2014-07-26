@@ -37,6 +37,7 @@ STUDIP.Messages = {
         var new_adressee = jQuery("#template_adressee").clone();
         new_adressee.find("input").val(user_id);
         new_adressee.find(".visual").html(name).find("b").replaceWith(function() { return jQuery(this).contents(); });
+        new_adressee.find('img.avatar-small').remove();
         new_adressee.removeAttr("id").appendTo("#adressees").fadeIn();
         return false;
     },
@@ -47,13 +48,10 @@ STUDIP.Messages = {
             if (jQuery(this).is(":visible")) {
                 var user_id = jQuery(this).attr("id").substr(0, 32);
                 var name = jQuery(this).text();
-                var image = jQuery(this).find("img").clone()
-                        .attr("height", "25px")
-                        .css({"float": "none",'margin':"0px"})
-                    .addClass("avatar-small");
+                
                 var new_adressee = jQuery("#template_adressee").clone();
                 new_adressee.find("input").val(user_id);
-                new_adressee.find(".visual").html(image[0].outerHTML + name);
+                new_adressee.find(".visual").html(name);
                 new_adressee.removeAttr("id").appendTo("#adressees").fadeIn();
             }
         });

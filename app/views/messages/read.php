@@ -24,12 +24,11 @@
                 <?= count($message->receivers) > 1 ? sprintf(_("%s Personen"), count($message->receivers)) : _("Eine Person") ?>
                 <? else : ?>
                 <ul class='clean' id="adressees">
-                <? $read = 0;?>
                 <? foreach ($message->getRecipients() as $message_user) : ?>
                     <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $message_user["username"])) ?>">
-                            <?= Avatar::getAvatar($message_user["user_id"], $message_user["username"])->getImageTag(Avatar::SMALL, array('title' => ''))?>
                             <?= htmlReady($message_user->getFullname()) ?>
+                            <?= count($message->receivers) > 1 ? ', ' : '' ?>
                         </a>
                     </li>
                     

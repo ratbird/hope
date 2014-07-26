@@ -1,6 +1,6 @@
 <? $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS ?>
 
-<form action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+<form action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;">
     <? $message_id = Request::option("message_id") ?: md5(uniqid("neWMesSagE")) ?>
     <input type="hidden" name="message_id" id="message_id" value="<?= htmlReady($message_id) ?>">
     <div>
@@ -11,12 +11,11 @@
                 <span class="visual"></span>
                 <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
             </li>
-            <? foreach ($default_message->receivers as $user) : ?>
+            <? foreach ($default_message->getRecipients() as $user) : ?>
             <li style="padding: 0px;" class="adressee">
                 <input type="hidden" name="message_to[]" value="<?= htmlReady($user['user_id']) ?>">
                 <span class="visual">
-                    <?= Avatar::getAvatar($user['user_id'])->getImageTag(Avatar::SMALL) ?>
-                    <?= htmlReady(get_fullname($user['user_id'], 'full_rev')) ?>
+                    <?= htmlReady($user->getFullname()) ?>
                 </span>
                 <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
             </li>
@@ -47,7 +46,7 @@
         foreach (Statusgruppen::findContactGroups() as $group) {
             $mps->addQuickfilter(
                 $group['name'],
-                $group->members->map(function($member) { return $member['user_id']; })
+                $group->members->pluck('user_id')
             );
         }
         echo $mps->render();

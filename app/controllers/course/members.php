@@ -1053,11 +1053,9 @@ class Course_MembersController extends AuthenticatedController
         }       
         if (Request::submitted('export')) {
             $aux = $course->aux->getCourseData($course, true);
-            $doc = new exportDoc();
-            $table = $doc->add('table');
-            $table->header = $aux['head'];
-            $table->content = $aux['rows'];
-            $doc->export('XLS');
+            $tmp_name = uniqid();
+            array_to_csv($aux['rows'], $GLOBALS['TMP_PATH'] . '/' . $tmp_name, $aux['head']);
+            $this->redirect(GetDownloadLink($tmp_name, _('Zusatzangaben') . '.csv', 4, 'force'));
         } else {
             $this->aux = $course->aux->getCourseData($course);
         }

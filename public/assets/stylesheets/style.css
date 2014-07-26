@@ -4260,7 +4260,7 @@ table.dates .ausfall {
   opacity: 0.5;
 }
 table.dates .nextdate {
-  border: 2px solid #24437c;
+  background-color: #e7ebf1;
 }
 table.dates .topic_decription {
   display: none;

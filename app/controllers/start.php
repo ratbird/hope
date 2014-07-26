@@ -84,7 +84,8 @@ class StartController extends AuthenticatedController
         
         // Root may set initial positions
         if ($GLOBALS['perm']->have_perm('root')) {
-            $html = "<form action='".$this->url_for('start/storeAsDefault')."'><select name='usergroup'>";
+            $html .= _('Als Standard setzen für') . "<br>";
+            $html .= "<form action='".$this->url_for('start/storeAsDefault')."'><select name='usergroup'>";
             foreach ($GLOBALS['perm']->permissions as $permission => $useless) {
                 $html .= "<option value='$permission'>$permission</option>";
             }
@@ -92,7 +93,7 @@ class StartController extends AuthenticatedController
             $html .= Studip\Button::create(_('Übernehmen'));
             $html .= "</form>";
             $defaulter = new SidebarWidget();
-            $defaulter->setTitle(_('Als Standard setzen für'));
+            $defaulter->setTitle(_('Einstellungen'));
             $defaulter->addElement(new WidgetElement($html));
             $sidebar->addWidget($defaulter);
         }

@@ -8,7 +8,7 @@
  * the License, or (at your option) any later version.
  *
  * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
- * @copyright   2015 Stud.IP Core Group
+ * @copyright   2014 Stud.IP Core Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */

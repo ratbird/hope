@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -172,7 +172,7 @@ h6 {
 }
 h1,
 h2 {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
 h1 {
   margin-top: 0px;
@@ -4300,6 +4300,54 @@ h3.eval {
   font-size: 1.3em;
   color: #000000;
   font-weight: bold;
+}
+div.index_container {
+  width: 750px;
+  padding-top: 15px;
+  margin: 0  auto;
+}
+div.index_container div.index_main {
+  background: url('../images/startseite.jpg') no-repeat left top;
+  background-color: #FFFFFF;
+  background-size: 750px 299px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+div.index_container div.index_main footer {
+  background-color: white;
+  overflow: auto;
+  padding: 5px;
+}
+div.index_container div.index_main footer table.login_info {
+  float: right;
+}
+div.index_container div.index_main footer table.login_info td + td {
+  text-align: right;
+}
+div.index_container div.index_main footer > a {
+  margin-left: 12px;
+}
+div.index_container div.index_main nav {
+  padding: 10px;
+  margin: 20px;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: inline-block;
+  width: 324px;
+}
+div.index_container div.index_main nav h1 {
+  border-bottom: 0px;
+}
+div.index_container div.index_main nav div.login_link {
+  display: inline-block;
+  width: 150px;
+  vertical-align: top;
+  padding-right: 10px;
+}
+div.index_container div.index_main nav div.login_link a {
+  font-size: 1.5em;
+}
+div.index_container div.index_main nav div.login_link a p {
+  font-size: 0.5em;
+  color: #69767f;
 }
 /* --- news --------------------------------------------------- */
 #news_dialog_content {

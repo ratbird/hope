@@ -174,9 +174,10 @@ if ($flash['error']) {
             </div>
         </div>
     </fieldset>
-    <? if (!$instant_course_set_view) : ?>
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
+   <? if (!$instant_course_set_view) : ?>
+        
     <? if ($courseset && $courseset->getSeatDistributionTime()) :?>
         <label class="caption">
             <?= _('Nutzerlisten zuordnen:') ?>
@@ -215,12 +216,12 @@ if ($flash['error']) {
             }
             ?>
         <? endif ?>
+        <? endif ?>
         <label for="infotext" class="caption">
-            <?= _('Weitere Hinweise:') ?>
+            <?= _('Weitere Hinweise für die Teilnehmenden:') ?>
         </label>
         <textarea cols="60" rows="3" name="infotext"><?= $courseset ? htmlReady($courseset->getInfoText()) : '' ?></textarea>
     </fieldset>
-    <? endif ?>
         <div class="submit_wrapper" data-dialog-button>
             <?= CSRFProtection::tokenTag() ?>
             <?= Button::createAccept(_('Speichern'), 'submit') ?>

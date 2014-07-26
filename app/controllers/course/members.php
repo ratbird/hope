@@ -254,7 +254,6 @@ class Course_MembersController extends AuthenticatedController
         $this->xhr = Request::isXhr();
         if ($this->xhr) {
             $this->set_layout(null);
-            $this->comment = studip_utf8encode($this->comment);
             header('X-Title: ' . PageLayout::getTitle());
         } else {
             Navigation::activateItem('/course/members/view');

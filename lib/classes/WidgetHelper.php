@@ -127,6 +127,17 @@ class WidgetHelper {
              } return true;
          } else return false;
      }
+     
+     /**
+      * Sets the current setting of a user as the default for a usergroup
+      * 
+      * @param type $range_id The range id of the user that defines the setting
+      * @param type $group The usergroup
+      */
+     static function setAsInitialPositions($range_id, $group) {
+         DBManager::get()->execute('DELETE FROM widget_default WHERE `perm` = ?', array($group));
+         DBManager::get()->execute('INSERT INTO widget_default (SELECT pluginid, col, position, ? as perm  FROM widget_user WHERE range_id = ?)', array($group, $range_id));
+     }
 
      /**
       * getInitialPositions - retrieves the intial widget setting for a given perm

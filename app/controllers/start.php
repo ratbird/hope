@@ -92,7 +92,23 @@ class StartController extends AuthenticatedController
         $actions->addLink(_('Neues Widget hinzufügen'),
                           $this->url_for('start/add'),
                           'icons/16/blue/add.png')->asDialog();
+        
+        // Root may set initial positions
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $html = "<form action='".$this->url_for('start/storeAsDefault')."'><select name='usergroup'>";
+            foreach ($GLOBALS['perm']->permissions as $permission => $useless) {
+                $html .= "<option value='$permission'>$permission</option>";
+            }
+            $html .= "</select><br>";
+            $html .= Studip\Button::create(_('Übernehmen'));
+            $html .= "</form>";
+            $defaulter = new SidebarWidget();
+            $defaulter->setTitle(_('Als Standard setzen für'));
+            $defaulter->addElement(new WidgetElement($html));
+        }
+        
         $sidebar->addWidget($actions);
+        $sidebar->addWidget($defaulter);
     }
     
     /**
@@ -157,5 +173,15 @@ class StartController extends AuthenticatedController
     {
         WidgetHelper::storeNewPositions(Request::get('widget'), Request::get('position'), Request::get('column'));
         $this->render_nothing();
+    }
+    
+    /**
+     * 
+     */
+    function storeAsDefault_action() {
+        $GLOBALS['perm']->check('root');
+        $group = Request::get('usergroup');
+        WidgetHelper::setAsInitialPositions($GLOBALS['user']->id, $group);
+        $this->redirect('start');
     }
 }

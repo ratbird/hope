@@ -22,7 +22,7 @@ if (get_config('BANNER_ADS_ENABLE')) {
 <? endif; ?>
 
 <div class="start-widgetcontainer">
-    <ul>
+    <ul class="widget-list">
         <? foreach ($left as $widget) : ?>
             <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
                 <div class="ui-widget-content studip-widget">
@@ -31,7 +31,7 @@ if (get_config('BANNER_ADS_ENABLE')) {
             </li>
         <? endforeach; ?>
     </ul>
-    <ul>
+    <ul class="widget-list">
         <? foreach ($right as $widget) : ?>
             <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
                 <div class="ui-widget-content studip-widget">

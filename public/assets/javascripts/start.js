@@ -28,7 +28,7 @@ STUDIP.startpage = {
 
     init: function() {
         $(".start-widgetcontainer ul").sortable({
-            connectWith: "ul",
+            connectWith: "ul.widget-list",
             start: function(event, ui) {
                 $(this).parent().find('ul').addClass('ui-sortable').addClass('move');
             },

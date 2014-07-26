@@ -2029,7 +2029,7 @@ if (isset($valid) && !$valid) {
 }
 //Before we start, let's decide the category (class) of the Veranstaltung
 elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
-    Sidebar::get()->setImage(localePictureUrl('assistent.jpg'));
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
     Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -2082,8 +2082,8 @@ elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
 
 //Level 1: Hier werden die Grunddaten abgefragt.
 elseif ((!$level) || ($level == 1)) {
-    Sidebar::get()->setImage(localePictureUrl('hands01.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 1: Grunddaten'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
@@ -2469,8 +2469,8 @@ elseif ((!$level) || ($level == 1)) {
 
 //Level 2: Hier werden weitere Einzelheiten (Personendaten und Zeiten) abgefragt
 elseif ($level == 2) {
-    Sidebar::get()->setImage(localePictureUrl('hands02.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 2: Personen & Bereiche'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr >
@@ -2915,9 +2915,9 @@ elseif ($level == 2) {
 elseif ($level == 3) {
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
-
-    Sidebar::get()->setImage(localePictureUrl('hands03.jpg'));
-    Sidebar::get()->setTitle(' ');
+    
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 3: Zeiten & Termine'));
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -2931,7 +2931,6 @@ elseif ($level == 3) {
     <tr>
         <td class="blank" valign="top">
             <div class="info">
-                <b><?=_("Schritt 3: Termindaten"); ?></b><br><br>
                 <? if ($_SESSION['sem_create_data']["term_art"] ==0)
                     print _("Bitte geben Sie hier ein, an welchen Tagen die Veranstaltung stattfindet. Wenn Sie nur einen Wochentag wissen, brauchen Sie nur diesen angeben.<br>Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
                 else
@@ -3178,8 +3177,8 @@ elseif ($level == 4) {
     if ($GLOBALS['RESOURCES_ENABLE'])
         $resList = new ResourcesUserRoomsList($user_id->id, TRUE, FALSE, TRUE);
 
-    Sidebar::get()->setImage(localePictureUrl('hands04.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 4: Orts- & Raumangaben'));
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -3193,7 +3192,6 @@ elseif ($level == 4) {
     <tr>
         <td class="blank" valign="top">
             <div class="info">
-                <b><?=_("Schritt 4: Raumangaben"); ?></b><br><br>
                 <?
                 if ($GLOBALS['RESOURCES_ENABLE']) {
                     if ($GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) {
@@ -3453,9 +3451,8 @@ elseif ($level == 4) {
 
 //Level 5: Hier wird der Rest abgefragt
 elseif ($level == 5) {
-    Sidebar::get()->setImage(localePictureUrl('hands05.jpg'));
-    Sidebar::get()->setTitle(' ');
-
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 5: Sonstige Daten'));
 
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -3469,7 +3466,6 @@ elseif ($level == 5) {
         <tr>
             <td class="blank" valign="top">
                 <div class="info">
-                    <b><?=_("Schritt 5: Sonstige Daten zu der Veranstaltung"); ?></b><br><br>
                     <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
                 </div>
             </td>
@@ -3625,8 +3621,8 @@ elseif ($level == 5) {
 
 //Level 6: Seminar anlegen
 elseif ($level == 6) {
-    Sidebar::get()->setImage(localePictureUrl('hands06.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 6: Anlegen'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
@@ -3639,7 +3635,7 @@ elseif ($level == 6) {
         <tr>
             <td class="blank" valign="top">
                 <div class="info">
-                    <b><?=_("Schritt 6: Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
+                    <b><?=_("Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
                     <?=_("Sie haben nun alle n&ouml;tigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP &uuml;bernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, &uuml;berpr&uuml;fen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
@@ -3655,8 +3651,8 @@ elseif ($level == 6) {
 
 //Level 6:Statusmeldungen nach dem Anlegen und weiter zum den Einzelheiten
 elseif ($level == 7) {
-    Sidebar::get()->setImage(localePictureUrl('hands06.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 6: Anlegen'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
@@ -3850,8 +3846,8 @@ elseif ($level == 7) {
 
 //Level 8: Erstellen des Simple-Content-Bereichs
 elseif ($level == 8) {
-    Sidebar::get()->setImage(localePictureUrl('hands07.jpg'));
-    Sidebar::get()->setTitle(' ');
+    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setTitle(_('Schritt 7: Informationsseite'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
         <tr>
@@ -3864,7 +3860,6 @@ elseif ($level == 8) {
         <tr>
             <td class="blank" valign="top">
                 <div class="info">
-                    <b><?=_("Schritt 7: Erstellen einer Informationsseite"); ?></b><br><br>
                     <? printf (_("Sie k&ouml;nnen nun eine frei gestaltbare Infomationsseite f&uuml;r die eben angelegte Veranstaltung <b>%s</b> eingeben."), $_SESSION['sem_create_data']["sem_name"]);
                     print "<br>"._("Sie k&ouml;nnen die Bezeichnug dieser Seite frei bestimmten. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
                     if ($_SESSION['sem_create_data']["modules_list"]["schedule"])

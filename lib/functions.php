@@ -185,16 +185,6 @@ function selectSem ($sem_id)
                 throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
-        // if the aux data is forced for this seminar forward all user that havent made an input to this site
-        if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
-        $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
-        $statement->execute(array($GLOBALS['user']->id, $course["Seminar_id"]));
-        if (!$statement->rowCount()) {
-            header('location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
-            page_close();
-            die;
-            }
-        }
         $SessionSeminar = $course["Seminar_id"];
         $SessSemName[0] = $course["Name"];
         $SessSemName[1] = $course["Seminar_id"];
@@ -215,6 +205,18 @@ function selectSem ($sem_id)
         $_SESSION['SessSemName'] =& $SessSemName;
 
         URLHelper::addLinkParam('cid', $SessionSeminar);
+        
+                // if the aux data is forced for this seminar forward all user that havent made an input to this site
+        if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
+            $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
+            $statement->execute(array($GLOBALS['user']->id, $course["Seminar_id"]));
+            if (!$statement->rowCount()) {
+                header('location: ' . URLHelper::getURL('dispatch.php/course/members/additional_input'));
+                page_close();
+                die;
+            }
+        }
+
         return true;
     } else {
         $SessionSeminar = null;

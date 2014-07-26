@@ -193,9 +193,6 @@ class MyCoursesController extends AuthenticatedController
         $sidebar->addWidget($setting_widget);
         $this->setGroupingSelector($this->group_field);
         $this->setSemesterWidget($sem);
-        if (get_config('EXPORT_ENABLE')) {
-            $this->setExportWidget();
-        }
     }
 
     public function set_open_group_action($id)
@@ -677,16 +674,4 @@ class MyCoursesController extends AuthenticatedController
         $widget->addElement(new WidgetElement($html));
         $sidebar->addWidget($widget);
     }
-
-
-    /**
-     * Returns a widget for export functionality
-     */
-    private function setExportWidget() {
-        $sidebar = Sidebar::Get();
-        $widget = new ExportWidget();
-        $widget->addLink(_('Druckansicht'), URLHelper::getLink('recordofstudy.php'), 'icons/16/blue/print.png');
-        $sidebar->addWidget($widget);
-    }
-
 }

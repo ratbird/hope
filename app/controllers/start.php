@@ -105,10 +105,10 @@ class StartController extends AuthenticatedController
             $defaulter = new SidebarWidget();
             $defaulter->setTitle(_('Als Standard setzen für'));
             $defaulter->addElement(new WidgetElement($html));
+            $sidebar->addWidget($defaulter);
         }
         
         $sidebar->addWidget($actions);
-        $sidebar->addWidget($defaulter);
     }
     
     /**

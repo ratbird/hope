@@ -11,8 +11,8 @@
             <? else : ?>
                 <?=
                 CourseAvatar::getAvatar($course['seminar_id'])->is_customized()
-                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($course['name'])))
-                    : Assets::img('icons/20/blue/seminar.png') ?>
+                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($course["Name"]))))
+                    : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($course["Name"]))) ?>
             <? endif ?>
         </td>
         <? if($config_sem_number) :?>
@@ -39,7 +39,7 @@
         <td>
             <? if (!$sem_class['studygroup_mode']) : ?>
                 <a data-dialog="size=50%" href="<?= $controller->url_for(sprintf('course/details/index/%s', $course['seminar_id'])) ?>">
-                    <? $params = tooltip2(_("Veranstaltungsdetails anzeigen")); ?>
+                    <? $params = tooltip2(_("Veranstaltungsdetails")); ?>
                     <? $params['style'] = 'cursor: pointer'; ?>
                     <?= Assets::img('icons/20/grey/info-circle.png', $params) ?>
                 </a>

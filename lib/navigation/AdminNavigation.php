@@ -222,7 +222,6 @@ class AdminNavigation extends Navigation
 
             $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
 
-            $navigation->addSubNavigation('start', new Navigation(_('Startseite'), 'dispatch.php/admin/start'));
         }
 
         $this->addSubNavigation('config', $navigation);

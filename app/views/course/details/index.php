@@ -151,62 +151,46 @@
     </section>
 
     <? $lecturers = $course->getMembersWithStatus('dozent'); ?>
-    <? if (count($lecturers)) : ?>
+    <? $count_lecturers = count($lecturers); ?>
+    <? if ($count_lecturers) : ?>
         <section class="contentbox">
             <header>
-                <h1><?= get_title_for_status('dozent', count($lecturers)) ?></h1>
+                <h1><?= get_title_for_status('dozent', $count_lecturers) ?></h1>
             </header>
-            <table class="default">
-                <colgroup>
-                    <col width="40%">
-                </colgroup>
-                <? foreach ($lecturers as $lecturer) : ?>
-                    <tr>
-                        <td>
-                            <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $lecturer['username'])) ?>">
-                                <?= htmlReady($lecturer->getUserFullname() . ($lecturer->label ? " (" . $lecturer->label . ")" : "")) ?>
-                            </a>
-                        </td>
-                        <td style="text-align: right">
-                            <a data-dialog="" href="<?=
-                            URLHelper::getScriptLink('dispatch.php/messages/write',
-                                array('rec_uname' => $lecturer['username']))?>">
-                                <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht schreiben"))) ?>
-                            </a>
-                        </td>
-                    </tr>
+            <section>
+                <ul style="padding:0">
+                <? foreach ($lecturers as $c => $lecturer) : ?>
+                    <li style="list-style-type:none; display:inline-block; padding-right: 2px;">
+                        <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $lecturer['username'])) ?>">
+                            <?= htmlReady($lecturer->getUserFullname() . ($lecturer->label ? " (" . $lecturer->label . ")" : "")) ?>
+                        </a>
+                        <?= ($c > 0 && $c < $count_lecturers-1 ? ',' : '') ?>
+                    </li>
                 <? endforeach ?>
-            </table>
+                </ul>
+             </section>
         </section>
     <? endif ?>
 
     <? $tutors = $course->getMembersWithStatus('tutor'); ?>
-    <? if (count($tutors)) : ?>
+    <? $count_tutors = count($tutors); ?>
+    <? if ($count_tutors) : ?>
         <section class="contentbox">
             <header>
-                <h1><?= get_title_for_status('tutor', count($tutors)) ?></h1>
+                <h1><?= get_title_for_status('tutor', $count_tutors) ?></h1>
             </header>
-            <table class="default">
-                <colgroup>
-                    <col width="40%">
-                </colgroup>
-                <? foreach ($tutors as $tutor) : ?>
-                    <tr>
-                        <td>
-                            <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $tutor['username'])) ?>">
-                                <?= htmlReady($tutor->getUserFullname() . ($tutor->label ? " (" . $tutor->label . ")" : "")) ?>
-                            </a>
-                        </td>
-                        <td style="text-align: right">
-                            <a data-dialog="" href="<?=
-                            URLHelper::getScriptLink('dispatch.php/messages/write',
-                                array('rec_uname' => $tutor['username']))?>">
-                                <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht schreiben"))) ?>
-                            </a>
-                        </td>
-                    </tr>
+            <section>
+                <ul style="padding:0">
+                <? foreach ($tutors as $c => $tutor) : ?>
+                    <li style="list-style-type:none; display:inline-block; padding-right: 2px;">
+                        <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $tutor['username'])) ?>">
+                            <?= htmlReady($tutor->getUserFullname() . ($tutor->label ? " (" . $tutor->label . ")" : "")) ?>
+                        </a>
+                        <?= ($c > 0 && $c < $count_tutors-1 ? ',' : '') ?>
+                    </li>
                 <? endforeach ?>
-            </table>
+                </ul>
+             </section>
         </section>
     <? endif ?>
 

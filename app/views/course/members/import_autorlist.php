@@ -1,16 +1,19 @@
-<? use Studip\Button, Studip\LinkButton?>
-
-<h1><?=sprintf(_('%s hinzufügen'), htmlReady(get_title_for_status('autor', 1)))?></h1>
+<? use Studip\Button, Studip\LinkButton;?>
 
 <form action="<?= $controller->url_for('course/members/set_autor_csv')?>" method="post" name="user">
 <?= CSRFProtection::tokenTag() ?>
-<table class="default zebra">
+<table class="default">
+    <caption>
+        <?=sprintf(_('%s hinzufügen'), htmlReady(get_title_for_status('autor', 1)))?>
+    </caption>
+    <thead>
+    <tr>
+        <th colspan="2">
+            <?=_('Teilnehmerliste übernehmen')?>
+        </th>
+    </tr>
+    </thead>
     <tbody>
-        <tr class="table_header header-row">
-            <th colspan="3">
-                <?=_('Teilnehmerliste übernehmen')?>
-            </th>
-        </tr>
         <tr>
             <td>
                 <?=_('Eingabeformat')?>:
@@ -39,15 +42,17 @@
             <td style="width: 50%">
                 <textarea name="csv_import" rows="6" cols="50"></textarea>
             </td>
-            <td style="width: 20%; text-align: right">
-                <?= Button::createAccept(_('Eintragen'), 'add_member_list',
-                        array('title' => sprintf(_("als %s eintragen"), htmlReady(get_title_for_status('autor', 1))))) ?>
-            </td>
         </tr>
     </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2">
+            <?= Button::createAccept(_('Eintragen'), 'add_member_list',
+                array('title' => sprintf(_("als %s eintragen"), htmlReady(get_title_for_status('autor', 1))))) ?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('course/members/index')) ?>
+        </td>
+    </tr>
+    </tfoot>
 </table>
 </form>
 
-<div style="text-align: right">
-    <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('course/members/index')) ?>
-</div>

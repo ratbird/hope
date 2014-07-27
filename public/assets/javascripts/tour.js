@@ -21,10 +21,10 @@
 
 STUDIP.Tour = {
     show_helpcenter : function() {
-        jQuery('.helpbar').fadeTo(500, 1);
+        jQuery('#helpbar-sticky').prop('checked', true)
     },
     hide_helpcenter : function() {
-        jQuery('.helpbar').fadeTo(500, 0);
+        jQuery('#helpbar-sticky').prop('checked', false)
     },
     init : function( tour_id, step_nr) {
         STUDIP.Tour.direction = 'f';
@@ -75,7 +75,7 @@ STUDIP.Tour = {
                                 jQuery.ajax({
                                     'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + STUDIP.Tour.options.last_run_step + '/on',
                                     'success': function () {
-                                	    window.location.href = STUDIP.Tour.options.last_run_href;
+                                	    window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.last_run_href);
                                 	}
                                 });
                             }
@@ -120,7 +120,7 @@ STUDIP.Tour = {
  
         if (STUDIP.Tour.step >= STUDIP.Tour.steps) {
             if (STUDIP.Tour.options.proceed_link)
-                window.location.href = STUDIP.Tour.options.proceed_link;
+                window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.proceed_link);
             else
                 this.destroy();
         } else {
@@ -137,7 +137,7 @@ STUDIP.Tour = {
             jQuery.ajax({
                 'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (STUDIP.Tour.options.route_step_nr-1) + '/on',
                 'success': function () {
-                	window.location.href = STUDIP.Tour.options.back_link;
+                	window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.back_link);
                 }
             });
         } else {

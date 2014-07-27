@@ -2071,7 +2071,7 @@ function get_route($route = '')
     if (strpos($route, 'plugins.php/') !== false) {
         $trails = explode('plugins.php/', $route);
         $pieces = explode('/', $trails[1]);
-        $route = 'plugins.php/' . $pieces[0] . '/' . $pieces[1] . ($pieces[2] ? '/' . $pieces[2] : '');
+        $route = 'plugins.php/' . $pieces[0] . ($pieces[1] ? '/' . $pieces[1] : '') . ($pieces[2] ? '/' . $pieces[2] : '');
     } elseif (strpos($route, 'dispatch.php/') !== false) {
         $trails = explode('dispatch.php/', $route);
         $dispatcher = new StudipDispatcher();
@@ -2081,9 +2081,9 @@ function get_route($route = '')
             if ($dispatcher->file_exists($trail . '.php'))
                 $route = 'dispatch.php/' . $trail . ($pieces[$index+1] ? '/' . $pieces[$index+1] : '');
         }
-        if (strpos($route, '/index') == strlen($route)-6)
-            $route = str_replace('/index', '', $route);
     }
+    while (substr($route, strlen($route)-6, 6) == '/index')
+        $route = substr($route, 0, strlen($route)-6);
     return $route;
 }
 

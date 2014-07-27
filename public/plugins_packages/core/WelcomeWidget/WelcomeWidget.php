@@ -18,8 +18,10 @@ class WelcomeWidget extends StudIPPlugin implements PortalPlugin
     public function getPortalTemplate()
     {
         PageLayout::addStylesheet($this->getPluginURL().'/assets/stylesheets/welcomewidget.css');
+        PageLayout::addScript($this->getPluginURL().'/assets/javascripts/welcomewidget.js');
         $this->template_factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/templates/');
         $template = $this->template_factory->open('index');
+        $template->set_attribute('picture', $this->getPluginURL().'/assets/images/welcome.jpg');
         return $template;
     }
 

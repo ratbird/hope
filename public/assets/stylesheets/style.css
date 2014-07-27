@@ -3234,8 +3234,10 @@ div.messagebox_warning {
   max-width: 50%;
   width: 50%;
   color: #000;
+  border-color: #ffbd33;
   background-color: white;
   background-image: url("../images/messagebox/question.png");
+  background-size: 32px 32px;
   -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);

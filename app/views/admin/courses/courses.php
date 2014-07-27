@@ -106,8 +106,8 @@
                 <td>
                     <?=
                     CourseAvatar::getAvatar($course['seminar_id'])->is_customized()
-                        ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($course['name'])))
-                        : Assets::img('icons/20/blue/seminar.png', tooltip2(_('Studienbereiche anzeigen'))) ?>
+                        ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => tooltip2(trim($values["Name"]))))
+                        : Assets::img('icons/20/blue/seminar.png', tooltip2(trim($values["Name"]))) ?>
                 </td>
                 <? if (in_array('Nr.', $view_filter)) : ?>
                     <td>

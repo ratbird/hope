@@ -9,12 +9,12 @@ $actions[] = array(
 $info = array();
 $info[] = array(
               "icon" => "icons/16/black/info.png",
-              "text" => "Anmeldesets legen fest, wer sich zu den zugeordneten ".
-                        "Veranstaltungen anmelden darf.");
+              "text" => _("Anmeldesets legen fest, wer sich zu den zugeordneten ".
+                        "Veranstaltungen anmelden darf."));
 $info[] = array(
               "icon" => "icons/16/black/info.png",
-              "text" => "Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff ".
-                        "haben.");
+              "text" => _("Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff ".
+                        "haben."));
 
 $infobox = array(
     array("kategorie" => _('Informationen:'),

@@ -15,7 +15,7 @@ class CoreStudygroupAdmin implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$course_id);
-        $navigation->setImage('icons/16/grey/admin.png');
+        $navigation->setImage('icons/16/grey/admin.png', tooltip2(_('Verwaltung')));
         return $navigation;
     }
     

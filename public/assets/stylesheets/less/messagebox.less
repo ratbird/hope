@@ -16,6 +16,7 @@ div.messagebox {
 
         a {
             background: transparent no-repeat center center;
+            background-size: 16px 16px;
 
             display: inline-block;
             margin: 1px;
@@ -24,7 +25,7 @@ div.messagebox {
             &.close, &.details {
                 span { display: none; }
             }
-            &.close   { background-image: url("@{image-path}/icons/16/blue/decline.png"); }
+            &.close   { background-image: url("@{image-path}/icons/32/blue/decline.png"); }
             &.details { background-image: url("@{image-path}/messagebox/minimize_inv.png"); }
         }
     }
@@ -56,6 +57,7 @@ div.messagebox_details {
         color: @color;
         background-color: @background-color;
         background-image: url("@{image-path}/messagebox/@{image}.png");
+    	background-size: 32px 32px;
         border-color: @border-color;
     }
 }

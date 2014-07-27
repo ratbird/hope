@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -3143,6 +3143,7 @@ div.messagebox .messagebox_buttons {
 }
 div.messagebox .messagebox_buttons a {
   background: transparent no-repeat center center;
+  background-size: 16px 16px;
   display: inline-block;
   margin: 1px;
   width: 16px;
@@ -3153,7 +3154,7 @@ div.messagebox .messagebox_buttons a.details span {
   display: none;
 }
 div.messagebox .messagebox_buttons a.close {
-  background-image: url("../images/icons/16/blue/decline.png");
+  background-image: url("../images/icons/32/blue/decline.png");
 }
 div.messagebox .messagebox_buttons a.details {
   background-image: url("../images/messagebox/minimize_inv.png");
@@ -3172,30 +3173,35 @@ div.messagebox_info {
   color: #000000;
   background-color: #ffffff;
   background-image: url("../images/messagebox/info.png");
+  background-size: 32px 32px;
   border-color: #28497c;
 }
 div.messagebox_success {
   color: #000000;
   background-color: #ffffff;
   background-image: url("../images/messagebox/success.png");
+  background-size: 32px 32px;
   border-color: #00962d;
 }
 div.messagebox_error {
   color: #000000;
   background-color: #ffffff;
   background-image: url("../images/messagebox/error.png");
+  background-size: 32px 32px;
   border-color: #d60000;
 }
 div.messagebox_exception {
   color: #d8000c;
   background-color: #ffbaba;
   background-image: url("../images/messagebox/exception.png");
+  background-size: 32px 32px;
   border-color: #d60000;
 }
 div.messagebox_warning {
   color: #b06500;
   background-color: #f7e98e;
   background-image: url("../images/messagebox/advice.png");
+  background-size: 32px 32px;
   border-color: #d5c76c;
 }
 .modaloverlay {

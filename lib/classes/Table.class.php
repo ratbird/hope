@@ -186,15 +186,15 @@ class Table {
             $this->close();
         }
         $code .= "\n<table ";
-        $width=$styles["width"] ? $styles["width"] : $this->table_width;
-        $border=$styles["border"] ? $styles["border"] : $this->table_border;
-        $align=$styles["align"] ? $styles["align"] : $this->table_align;
-        $padding=$styles["padding"] ? $styles["padding"] : $this->table_padding;
-        $spacing=$styles["spacing"] ? $styles["spacing"] : $this->table_spacing;
-        $bgcolor=$styles["bgcolor"] ? $styles["bgcolor"] : $this->table_bgcolor;
-        $class=$styles["class"] ? $styles["class"] : $this->table_class;
-        $style=$styles["style"] ? $styles["style"] : $this->table_style;
-        $id=$styles["id"] ? $styles["id"] : $this->table_id;
+        $width= isset($styles["width"]) ? $styles["width"] : $this->table_width;
+        $border=isset($styles["border"]) ? $styles["border"] : $this->table_border;
+        $align=isset($styles["align"]) ? $styles["align"] : $this->table_align;
+        $padding=isset($styles["padding"]) ? $styles["padding"] : $this->table_padding;
+        $spacing=isset($styles["spacing"])? $styles["spacing"] : $this->table_spacing;
+        $bgcolor=isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->table_bgcolor;
+        $class=isset($styles["class"]) ? $styles["class"] : $this->table_class;
+        $style= isset($styles["style"]) ? $styles["style"] : $this->table_style;
+        $id=isset($styles["id"]) ? $styles["id"] : $this->table_id;
         if ($width) { $code .= "width=\"".$width."\" "; }
         if ($class) { $code .= "class=\"".$class."\" "; }
         if ($style) { $code .= "style=\"".$style."\" "; }

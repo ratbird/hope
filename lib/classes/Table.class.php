@@ -275,13 +275,13 @@ class Table {
             $code .= $this->closeRow();
         }
         $code .= "<tr ";
-        $bgcolor= $styles["bgcolor"] ? $styles["bgcolor"] : $this->row_bgcolor;
-        $align = $styles["align"] ? $styles["align"] : $this->row_align;
-        $valign = $styles["valign"] ? $styles["valign"] : $this->row_valign;
-        $class = $styles["class"] ? $styles["class"] : $this->row_class;
-        $style = $styles["style"] ? $styles["style"] : $this->row_style;
-        $mouseover = $styles["onMouseOver"] ? $styles["onMouseOver"] : $this->row_mouseover;
-        $mouseout = $styles["onMouseOut"] ? $styles["onMouseOut"] : $this->row_mouseout;
+        $bgcolor= isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->row_bgcolor;
+        $align = isset($styles["align"]) ? $styles["align"] : $this->row_align;
+        $valign = isset($styles["valign"]) ? $styles["valign"] : $this->row_valign;
+        $class = isset($styles["class"]) ? $styles["class"] : $this->row_class;
+        $style = isset($styles["style"]) ? $styles["style"] : $this->row_style;
+        $mouseover = isset($styles["onMouseOver"]) ? $styles["onMouseOver"] : $this->row_mouseover;
+        $mouseout = isset($styles["onMouseOut"]) ? $styles["onMouseOut"] : $this->row_mouseout;
         $id = $styles["id"] ? $styles["id"] : $this->row_id;
         if ($bgcolor) { $code .= "bgcolor=\"" . $bgcolor . "\" "; }
         if ($align) { $code .= "align=\"" . $align . "\" "; }
@@ -374,16 +374,16 @@ class Table {
             $code .= $this->closeCell();
         }
         $code .= "<".$tag." ";
-        $bgcolor= $styles["bgcolor"] ? $styles["bgcolor"] : $this->cell_bgcolor;
-        $align = $styles["align"] ? $styles["align"] : $this->cell_align;
-        $valign = $styles["valign"] ? $styles["valign"] : $this->cell_valign;
-        $height = $styles["height"] ? $styles["height"] : $this->cell_height;
-        $width = $styles["width"] ? $styles["width"] : $this->cell_width;
-        $colspan = $styles["colspan"] ? $styles["colspan"] : $this->cell_colspan;
-        $nowrap = $styles["nowrap"] ? $styles["nowrap"] : $this->cell_nowrap;
-        $class = $styles["class"] ? $styles["class"] : $this->cell_class;
-        $style = $styles["style"] ? $styles["style"] : $this->cell_style;
-        $id = $styles["id"] ? $styles["id"] : $this->cell_id;
+        $bgcolor= isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->cell_bgcolor;
+        $align = isset($styles["align"]) ? $styles["align"] : $this->cell_align;
+        $valign = isset($styles["valign"]) ? $styles["valign"] : $this->cell_valign;
+        $height = isset($styles["height"]) ? $styles["height"] : $this->cell_height;
+        $width = isset($styles["width"]) ? $styles["width"] : $this->cell_width;
+        $colspan = isset($styles["colspan"]) ? $styles["colspan"] : $this->cell_colspan;
+        $nowrap = isset($styles["nowrap"]) ? $styles["nowrap"] : $this->cell_nowrap;
+        $class = isset($styles["class"]) ? $styles["class"] : $this->cell_class;
+        $style = isset($styles["style"]) ? $styles["style"] : $this->cell_style;
+        $id = isset($styles["id"]) ? $styles["id"] : $this->cell_id;
 
         if ($bgcolor) { $code .= "bgcolor=\"" . $bgcolor . "\" "; }
         if ($align) { $code .= "align=\"" . $align . "\" "; }

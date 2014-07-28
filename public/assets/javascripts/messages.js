@@ -55,7 +55,7 @@ STUDIP.Messages = {
                 new_adressee.removeAttr("id").appendTo("#adressees").fadeIn();
             }
         });
-        jQuery(".ui-dialog-content").dialog("close");
+        jQuery(form).closest(".ui-dialog-content").dialog("close");
         return false;
     },
 

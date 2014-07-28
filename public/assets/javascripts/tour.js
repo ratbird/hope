@@ -329,8 +329,8 @@ jQuery(function () {
         STUDIP.Tour.prev();
     });
     jQuery('.tour_link').live('click', function(event) {
-    	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     	event.preventDefault();
+    	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     });
 
     jQuery('#tour_next').live('click', function() {

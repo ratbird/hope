@@ -2813,14 +2813,14 @@ section.contentbox article.open footer {
 section.contentbox article.open footer {
   border-top-style: solid;
 }
-section.contentbox article.open header h1 a:before {
+section.contentbox article.open header h1:before {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-section.contentbox article.new header h1 a:before {
+section.contentbox article.new header h1:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;

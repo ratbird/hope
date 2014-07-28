@@ -70,7 +70,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
     {
         parent::__construct();
         if ($icon && !$this->isURL($icon)) {
-            $icon = Assets::image_path($icon);
+            $icon = Assets::image_path($icon, true);
         }
         $this->label      = $label;
         $this->url        = $url;

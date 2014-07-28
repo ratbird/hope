@@ -7,7 +7,7 @@ class InfoboxElement extends WidgetElement
     public function __construct($content = '', $icon = false)
     {
         parent::__construct($content);
-        $this->setIcon(Assets::image_path($icon));
+        $this->setIcon(Assets::image_path($icon, true));
     }
 
     public function setIcon($icon)

@@ -241,8 +241,23 @@ class Assets {
    * scripts, as we would like to always generate the complete <image> oder
    * <input> tag. Please use Assets::img or Assets::input instead.
    */
-  static function image_path($source) {
-    return Assets::compute_public_path($source, 'images', 'png');
+  static function image_path($source, $respect_retina = false)
+  {
+    $path = Assets::compute_public_path($source, 'images', 'png');
+
+    if ($respect_retina) {
+      $parts = explode('/', $path);
+      $pos   = array_search('icons', $parts);
+
+      if ($pos !== false) {
+        if (true || $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
+          $parts[$pos + 1] = $parts[$pos + 1] * 2;
+        }
+        $path = implode('/', $parts);
+      }
+    }
+
+    return $path;
   }
 
 

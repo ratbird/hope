@@ -279,7 +279,7 @@ STUDIP.Tour = {
 		jQuery.scrollTo(jQuery('#'+tip_id), 400, { offset : -100});
 	},
 
-    destroy : function(skip_status = false) {
+    destroy : function() {
         jQuery(document).trigger('tourend.studip');
 
         jQuery('#tour_overlay').remove();

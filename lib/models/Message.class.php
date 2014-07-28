@@ -158,14 +158,17 @@ class Message extends SimpleORMap
     private function markAs($user_id, $state_of_flag)
     {
         $changed = 0;
+        $mu = array();
         if ($user_id == $this->autor_id) {
-            $mu = $this->originator;
-        } else {
-            $mu = $this->receivers->findOneBy('user_id', $user_id);
+            $mu[] = $this->originator;
         }
-        if ($mu) {
-            $mu->readed = $state_of_flag;
-            $changed += $mu->store();
+        $receiver = $this->receivers->findOneBy('user_id', $user_id);
+        if ($receiver) {
+            $mu[] = $receiver;
+        }
+        foreach ($mu as $message_user) {
+            $message_user->readed = $state_of_flag;
+            $changed += $message_user->store();
         }
         return $changed;
     }

@@ -51,7 +51,9 @@
         }
         echo $mps->render();
         ?>
-
+        <script>
+            STUDIP.MultiPersonSearch.init();
+        </script>
     </div>
     <div>
         <label>

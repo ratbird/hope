@@ -250,7 +250,7 @@ class Assets {
       $pos   = array_search('icons', $parts);
 
       if ($pos !== false) {
-        if (true || $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
+        if ($GLOBALS['auth']->auth['devicePixelRatio'] > 1.2) {
           $parts[$pos + 1] = $parts[$pos + 1] * 2;
         }
         $path = implode('/', $parts);

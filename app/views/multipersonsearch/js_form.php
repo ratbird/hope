@@ -7,8 +7,9 @@
     <img title="<?= _('Suche starten'); ?>" src="<?= Assets::image_path("icons/16/blue/search.png"); ?>" onclick="STUDIP.MultiPersonSearch.search()">
     <img title="<?= _('Suche zur&uuml;cksetzen'); ?>" src="<?= Assets::image_path("icons/16/blue/decline.png"); ?>" onclick="STUDIP.MultiPersonSearch.resetSearch()">
     <p><? foreach($quickfilter as $title => $users) : ?>
-        <a href="#" class="quickfilter" data-quickfilter="<?= str_replace(" ", "", $title); ?>"><?= $title; ?> (<?= count($users); ?>)</a> 
-        <select multiple="multiple" id="<?= $name . '_quickfilter_' . str_replace(" ", "", $title); ?>" style="display: none;">
+        <? $title = studip_utf8encode($title); ?>
+        <a href="#" class="quickfilter" data-quickfilter="<?= md5($title); ?>"><?= htmlReady($title); ?> (<?= count($users); ?>)</a>
+        <select multiple="multiple" id="<?= $name . '_quickfilter_' . md5($title); ?>" style="display: none;">
         <? foreach($users as $user) : ?>
             <option value="<?= $user->id ?>"><?= Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady(studip_utf8encode($user->getFullName('full_rev'))) ?> -- <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
         <? endforeach; ?>
@@ -24,16 +25,16 @@
             <option value="<?= $person->id ?>" selected><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady(studip_utf8encode($person->getFullName('full_rev'))) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
         <? endforeach; ?>
     </select>
-    
+
     <?= $additionHTML; ?>
-    
+
     <? if ($ajax): ?>
         <?= \Studip\Button::create(_('Speichern'), 'confirm', array('data-dialog-button' => true)) ?>
     <? else: ?>
-        <?= \Studip\Button::create(_('Speichern'), 'confirm') ?> 
+        <?= \Studip\Button::create(_('Speichern'), 'confirm') ?>
         <?= \Studip\Button::create(_('Abbrechen'), $name . '_button_abort') ?>
     <? endif; ?>
     <?= CSRFProtection::tokenTag() ?>
-    
+
 </form>
 </div>

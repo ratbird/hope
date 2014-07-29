@@ -31,7 +31,7 @@ class MyStudygroupsController extends AuthenticatedController
             $setting_widget = new ActionsWidget();
             $setting_widget->setTitle(_("Aktionen"));
             $setting_widget->addLink(_('Farbgruppierung ändern'),
-                URLHelper::getLink('dispatch.php/my_courses/groups/all/true'), 'icons/16/blue/group.png',
+                URLHelper::getLink('dispatch.php/my_courses/groups/all/true'), 'icons/16/blue/group4.png',
                     array('data-dialog' => 'buttons=true'));
             $sidebar->addWidget($setting_widget);
         }

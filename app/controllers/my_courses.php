@@ -176,7 +176,7 @@ class MyCoursesController extends AuthenticatedController
         }
         $setting_widget->addLink(_('Farbgruppierung ändern'),
                                  URLHelper::getLink($this->settings_url),
-                                 'icons/16/blue/group.png',
+                                 'icons/16/blue/group4.png',
                                  array('data-dialog' => ''));
 
         if (Config::get()->MAIL_NOTIFICATION_ENABLE) {

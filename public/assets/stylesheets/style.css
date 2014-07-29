@@ -3132,7 +3132,7 @@ div.messagebox {
   border: 2px solid;
   font-size: 12pt;
   font-weight: bold;
-  margin: 5px;
+  margin: 5px 0;
   padding: 15px 15px 15px 55px;
   position: relative;
   text-align: left;

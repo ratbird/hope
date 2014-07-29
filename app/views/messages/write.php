@@ -88,7 +88,7 @@
                 <a href="" onClick="STUDIP.Messages.toggleSetting('tags'); return false;">
                     <?= Assets::img("icons/40/blue/star") ?>
                     <br>
-                    <strong><?= _("Tags") ?></strong>
+                    <strong><?= _("Schlagworte") ?></strong>
                 </a>
             </li>
             <li style="display: inline-block; min-width: 70px;">
@@ -147,7 +147,7 @@
     </div>
     <div id="tags" style="<?= Request::get("default_tags") ? "" : 'display: none; ' ?>">
         <label>
-            <h4><?= _("Tags") ?></h4>
+            <h4><?= _("Schlagworte") ?></h4>
             <input type="text" name="message_tags" style="width: 100%" placeholder="<?= _("z.B. klausur termin statistik etc.") ?>" value="<?= htmlReady(Request::get("default_tags")) ?>">
         </label>
     </div>

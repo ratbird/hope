@@ -42,20 +42,20 @@
             <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>
         </tr>
         <tr>
-            <td><strong><?= _("Tags") ?></strong></td>
+            <td><strong><?= _("Schlagworte") ?></strong></td>
             <td>
                 <form id="message-tags" action="<?= $controller->url_for('messages/tag/' . $message->id) ?>" method="post" data-dialog>
                 <? foreach ($message->getTags() as $tag) : ?>
                     <span>
-                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="message-tag">
+                        <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="message-tag" title="<?= _("Alle Nachrichten zu diesem Schlagwort") ?>">
                             <?= htmlReady($tag) ?>
                         </a>
-                        <?= Assets::input('icons/16/blue/trash.png', array('class' => 'text-bottom', 'name' => 'remove_tag', 'value' => $tag)) ?>
+                        <?= Assets::input('icons/16/blue/trash.png', array('class' => 'text-bottom', 'name' => 'remove_tag', 'value' => $tag, 'title' => _("Schlagwort entfernen"))) ?>
                     </span>
                 <? endforeach ?>
                     <span>
                         <input type="text" name="add_tag" style="width: 50px; opacity: 0.8;">
-                        <?= Assets::input('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
+                        <?= Assets::input('icons/16/blue/add.png', array('class' => 'text-bottom', 'title' => _("Schlagwort hinzufügen"))) ?>
                     </span>
                 </form>
             </td>

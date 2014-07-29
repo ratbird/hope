@@ -10,7 +10,7 @@
     <caption>
         <?= $received ? _("Eingang") : _("Gesendet") ?>
         <? if (Request::get("tag")) : ?>
-            <?= ", "._("Tag: ").htmlReady(ucfirst(Request::get("tag"))) ?>
+            <?= ", "._("Schlagwort: ").htmlReady(ucfirst(Request::get("tag"))) ?>
         <? endif ?>
     </caption>
     <thead>
@@ -19,7 +19,7 @@
             <th><?= _("Betreff") ?></th>
             <th><?= $received ? _("Gesendet") : _("Empfänger") ?></th>
             <th><?= _("Zeit") ?></th>
-            <th><?= _("Tags") ?></th>
+            <th><?= _("Schlagworte") ?></th>
             <th></th>
         </tr>
     </thead>
@@ -104,7 +104,7 @@ $sidebar->addWidget($search);
 
 $folderwidget = new ViewsWidget();
 $folderwidget->forceRendering();
-$folderwidget->title = _('Verwendete Tags');
+$folderwidget->title = _('Schlagworte');
 $folderwidget->id    = 'messages-tags';
 $folderwidget
     ->addLink(_("Alle Nachrichten"), URLHelper::getURL("?"), null, array('class' => "tag"))

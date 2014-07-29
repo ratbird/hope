@@ -13,7 +13,7 @@
             <div class="bread-crumbs">
         <? endif; ?>
                 <a href="<?= $controller->url_for('document/files/index/' . $last_crumb['id']) ?>">
-                    <?= Assets::img('icons/24/blue/folder-down.png') ?>
+                    <?= Assets::img('icons/24/blue/folder-parent.png') ?>
                 </a>
             <? if (count($breadcrumbs) > 1): ?>
                 <ul>

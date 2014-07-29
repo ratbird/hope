@@ -4901,66 +4901,6 @@ a.opengraph_info:hover {
   text-align: center;
   color: black;
 }
-/* addclip */
-.addclip-container {
-  background: #315388;
-  position: absolute;
-  right: 60px;
-  top: 145px;
-}
-.addclip-container #addclip-sticky {
-  display: none;
-}
-.addclip {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-box-shadow: 2px 2px 0 #8a8f95;
-  -moz-box-shadow: 2px 2px 0 #8a8f95;
-  box-shadow: 2px 2px 0 #8a8f95;
-  background: #ffbd33;
-  position: absolute;
-  right: 12px;
-  top: 0;
-  width: 350px;
-  z-index: 999;
-}
-.addclip:before {
-  border-bottom: 4px solid #7f5e19;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  content: '';
-  display: inline-block;
-  position: absolute;
-  top: -4px;
-  left: 0;
-  right: 0;
-}
-.addclip :after {
-  background-color: #8a8f95;
-  content: '';
-  height: 2px;
-  width: 2px;
-  position: absolute;
-  right: -2px;
-  top: 0;
-}
-.addclip .addclip-title {
-  background-image: url("../images/icons/24/black/add-circle.png");
-  background-position: right top;
-  background-repeat: no-repeat;
-  border-bottom: 0;
-  color: #000;
-  font-size: 1.2em;
-  font-weight: normal;
-  margin: 2px 4px 0;
-  padding: 2px 0 10px 6px;
-  overflow: hidden;
-}
-.addclip .addclip-title label {
-  cursor: pointer;
-  display: block;
-}
 .addclip-widgets {
   color: #000;
   list-style: none;
@@ -4984,29 +4924,6 @@ a.opengraph_info:hover {
 }
 .addclip-widgets p {
   margin-left: 25px;
-}
-.addclip {
-  width: 32px;
-  text-indent: -350px;
-  -webkit-transition: all 0;
-  -moz-transition: all 0;
-  -o-transition: all 0;
-  transition: all 0;
-}
-.addclip .addclip-widgets {
-  max-height: 0;
-  -webkit-transition: all 0;
-  -moz-transition: all 0;
-  -o-transition: all 0;
-  transition: all 0;
-  overflow: hidden;
-}
-#addclip-sticky:checked + .addclip {
-  text-indent: 0;
-  width: 350px;
-}
-#addclip-sticky:checked + .addclip .addclip-widgets {
-  max-height: 1000px;
 }
 div.start-widgetcontainer {
   display: -ms-flexbox;
@@ -5033,10 +4950,13 @@ div.start-widgetcontainer ul {
   vertical-align: top;
 }
 div.start-widgetcontainer ul:first-child {
-  width: 66%;
+  -webkit-flex-grow: 2;
+  flex-grow: 2;
 }
 div.start-widgetcontainer ul:last-child {
-  width: 33%;
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 div.start-widgetcontainer ul.empty {
   display: none;

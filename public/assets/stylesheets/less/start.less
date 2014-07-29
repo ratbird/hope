@@ -93,77 +93,6 @@
     color: black;
 }
 
-/* addclip */
-@addclip-width: 350px;
-
-.addclip-container {
-    background: #315388;
-    position: absolute;
-    right: 60px;
-    top: 145px;
-
-    #addclip-sticky {
-        display: none;
-    }
-
-}
-.addclip {
-    .box-sizing(border-box);
-    .box-shadow(2px 2px 0 @dark-gray-color-60);
-
-    @border-width: 4px;
-    background: #ffbd33;
-
-    position: absolute;
-    right: 12px;
-    top: 0;
-
-    width: @addclip-width;
-    z-index: 999;
-
-    &:before {
-        border-bottom: @border-width solid #7F5E19;
-        border-left: @border-width solid transparent;
-        border-right: @border-width solid transparent;
-        content: '';
-        display: inline-block;
-        position: absolute;
-        top: -@border-width;
-        left: 0;
-        right: 0;
-    }
-    :after { // Fill box-shadow at upper right corner
-             background-color: @dark-gray-color-60;
-             content: '';
-
-             height: 2px;
-             width: 2px;
-
-             position: absolute;
-             right: -2px;
-             top: 0;
-    }
-
-    .addclip-title {
-        background-image: url("@{image-path}/icons/24/black/add-circle.png");
-        background-position: right top;
-        background-repeat: no-repeat;
-        border-bottom: 0;
-        color: #000;
-        font-size: 1.2em;
-        font-weight: normal;
-        margin: 2px 4px 0;
-        padding: 2px 0 10px 6px;
-        overflow: hidden;
-
-        label {
-            cursor: pointer;
-            display: block;
-        }
-    }
-}
-
-
 .addclip-widgets {
     color: #000;
     list-style: none;
@@ -190,28 +119,6 @@
     }
 }
 
-.addclip {
-    @transition: all 0;
-
-    width: 32px;
-    text-indent: -@addclip-width;
-    .transition(@transition);
-
-    .addclip-widgets {
-        max-height: 0;
-        .transition(@transition);
-        overflow: hidden;
-    }
-
-    #addclip-sticky:checked + & {
-        text-indent: 0;
-        width: @addclip-width;
-        .addclip-widgets {
-            max-height: 1000px;
-        }
-    }
-}
-
 
 // Wirklich wichtiger Code
 div.start-widgetcontainer {
@@ -228,10 +135,11 @@ div.start-widgetcontainer {
         padding: 0;
         vertical-align: top;
         &:first-child {
-            width: 66%;
+            .flex-grow(2);
         }
         &:last-child {
-            width: 33%
+            .flex-grow(1);
+            margin-left: 20px;
         }
         &.empty {
             display: none;

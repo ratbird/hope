@@ -85,7 +85,7 @@ $actions->addLink(
     _("Neue Nachricht schreiben"),
     $controller->url_for('messages/write'),
     'icons/16/blue/add/mail.png',
-    array('data-dialog' => '')
+    array('data-dialog' => 'width=650;height=600')
 );
 if (Navigation::getItem('/messaging/messages/inbox')->isActive()) {
     $actions->addLink(

@@ -140,12 +140,26 @@ div.start-widgetcontainer {
         &:last-child {
             .flex-grow(1);
             margin-left: 20px;
+            max-width: 33%;
+            min-width: 33%;
         }
         &.empty {
             display: none;
         }
         &.move {
             border: @base-color-80 dashed 1px;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    div.start-widgetcontainer {
+        display: block;
+        ul {
+            display: block;
+            &:last-child {
+                margin-left: 0;
+            }
         }
     }
 }

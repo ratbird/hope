@@ -4957,12 +4957,25 @@ div.start-widgetcontainer ul:last-child {
   -webkit-flex-grow: 1;
   flex-grow: 1;
   margin-left: 20px;
+  max-width: 33%;
+  min-width: 33%;
 }
 div.start-widgetcontainer ul.empty {
   display: none;
 }
 div.start-widgetcontainer ul.move {
   border: #536d96 dashed 1px;
+}
+@media screen and (max-width: 1024px) {
+  div.start-widgetcontainer {
+    display: block;
+  }
+  div.start-widgetcontainer ul {
+    display: block;
+  }
+  div.start-widgetcontainer ul:last-child {
+    margin-left: 0;
+  }
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

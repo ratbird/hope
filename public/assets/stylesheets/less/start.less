@@ -17,7 +17,6 @@
 }
 
 .studip-widget {
-
     .widget-header {
         width:100%;
         background-color: @content-color-20;
@@ -217,7 +216,7 @@
 // Wirklich wichtiger Code
 div.start-widgetcontainer {
     display: table;
-    border-spacing: 5px;
+    border-spacing: none;
     table-layout: fixed;
     ul {
         list-style-type: none;
@@ -235,6 +234,7 @@ div.start-widgetcontainer {
         }
     }
     ul + ul {
+        padding-left: 5px;
         width: 34%
     }
 }

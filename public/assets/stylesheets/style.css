@@ -2430,12 +2430,12 @@ ul.widget-list > li {
   padding-left: 20px;
 }
 .sidebar-widget .widget-options .options-radio.options-checked {
-  background-image: url("../images/icons/16/blue/radio-checked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/radio-checked.png") 1x, url("../images/icons/32/blue/radio-checked.png") 2x);
+  background-image: url("../images/icons/16/blue/radiobutton-checked.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/radiobutton-checked.png") 1x, url("../images/icons/32/blue/radiobutton-checked.png") 2x);
 }
 .sidebar-widget .widget-options .options-radio.options-unchecked {
-  background-image: url("../images/icons/16/blue/radio-unchecked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/radio-unchecked.png") 1x, url("../images/icons/32/blue/radio-unchecked.png") 2x);
+  background-image: url("../images/icons/16/blue/radiobutton-unchecked.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/radiobutton-unchecked.png") 1x, url("../images/icons/32/blue/radiobutton-unchecked.png") 2x);
 }
 select.sidebar-selectlist {
   width: 100%;

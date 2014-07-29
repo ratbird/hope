@@ -215,26 +215,29 @@
 
 // Wirklich wichtiger Code
 div.start-widgetcontainer {
-    display: table;
-    border-spacing: none;
-    table-layout: fixed;
+    .flex();
+    .flex-justify-content(space-between);
+    .flex-align-items(stretch);
+
     ul {
+        .box-sizing(border-box);
+        display: inline-block;
+
         list-style-type: none;
-        display: table-cell;
-        table-layout: fixed;
-        padding: 0px;
-        width: 66%;
-        border: #FFF dashed 1px;
+        margin: 0;
+        padding: 0;
+        vertical-align: top;
+        &:first-child {
+            width: 66%;
+        }
+        &:last-child {
+            width: 33%
+        }
         &.empty {
-            display:none;
+            display: none;
         }
         &.move {
-            display: table-cell;
-            border: #315388 dashed 1px;
+            border: @base-color-80 dashed 1px;
         }
-    }
-    ul + ul {
-        padding-left: 5px;
-        width: 34%
     }
 }

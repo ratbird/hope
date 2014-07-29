@@ -5009,28 +5009,40 @@ a.opengraph_info:hover {
   max-height: 1000px;
 }
 div.start-widgetcontainer {
-  display: table;
-  border-spacing: none;
-  table-layout: fixed;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  -moz-box-align: stretch;
+  align-items: stretch;
 }
 div.start-widgetcontainer ul {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
   list-style-type: none;
-  display: table-cell;
-  table-layout: fixed;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+div.start-widgetcontainer ul:first-child {
   width: 66%;
-  border: #FFF dashed 1px;
+}
+div.start-widgetcontainer ul:last-child {
+  width: 33%;
 }
 div.start-widgetcontainer ul.empty {
   display: none;
 }
 div.start-widgetcontainer ul.move {
-  display: table-cell;
-  border: #315388 dashed 1px;
-}
-div.start-widgetcontainer ul + ul {
-  padding-left: 5px;
-  width: 34%;
+  border: #536d96 dashed 1px;
 }
 @media only screen and (max-width: 768px) {
   #layout_wrapper {

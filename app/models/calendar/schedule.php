@@ -124,6 +124,7 @@ class CalendarScheduleModel
             $entry['start_minute'] = sprintf("%02d", $entry['start'] % 100);
             $entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
             $entry['end_minute']   = sprintf("%02d", $entry['end'] % 100);
+            $entry['url']          = URLHelper::getLink('dispatch.php/calendar/schedule/entry/' . $entry['id']);
             $entry['onClick']      = "function (id) { STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); }";
             $entry['visible']      = true;
 

@@ -137,19 +137,19 @@ class Calendar_ScheduleController extends AuthenticatedController
             } else {
                 foreach ($this->calendar_view->getColumns() as $entry_days) {
                     foreach ($entry_days->getEntries() as $entry) {
-                        if ($entry['id'] == $this->flash['entry']['id']) {
-                            if ($this->flash['entry']['cycle_id']) {
-                                if ($this->flash['entry']['cycle_id'] == $entry['cycle_id']) {
-                                    $this->show_entry = $entry;
-                                }
-                            } else {
+                        if ($this->flash['entry']['cycle_id']) {
+                            if ($this->flash['entry']['id'] .'-'. $this->flash['entry']['cycle_id'] == $entry['id']) {
+                                $this->show_entry = $entry;
+                                $this->show_entry['id'] = reset(explode('-', $this->show_entry['id']));
+                            }
+                        } else {
+                            if ($entry['id'] == $this->flash['entry']['id']) {
                                 $this->show_entry = $entry;
                             }
                         }
                     }
                 }
             }
-
         }
 
         $style_parameters = array(

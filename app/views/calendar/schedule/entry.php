@@ -7,6 +7,6 @@
 <? elseif ($show_entry && $show_entry['type'] == 'inst') : ?>
     <?= $this->render_partial('calendar/schedule/_entry_inst.php') ?>
     <? unset($this->show_entry) ?>
+<? else : ?>
+    <?= $this->render_partial('calendar/schedule/_entry_schedule.php') ?>
 <? endif ?>
-
-<?= $this->render_partial('calendar/schedule/_entry_schedule.php') ?>

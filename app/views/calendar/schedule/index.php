@@ -52,7 +52,16 @@ $sidebar->addWidget($options, 'calendar/schedule/options');
     <?= $this->render_partial('calendar/schedule/_dialog', array(
         'content_for_layout' =>  $this->render_partial('calendar/schedule/settings', array(
             'settings' => $my_schedule_settings)),
-        'title'              => _('Darstellung ändern')
+            'title'    => _('Darstellung ändern')
+    )) ?>
+<? endif ?>
+
+<? if ($show_entry) : ?>
+    <div class="ui-widget-overlay" style="width: 100%; height: 100%; z-index: 1001;"></div>
+    <?= $this->render_partial('calendar/schedule/_dialog', array(
+        'content_for_layout' =>  $this->render_partial('calendar/schedule/entry', array(
+            'show_entry' => $show_entry)),
+            'title'      => _('Termindetails')
     )) ?>
 <? endif ?>
 

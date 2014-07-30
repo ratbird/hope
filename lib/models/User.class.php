@@ -190,6 +190,7 @@ class User extends AuthUserMd5
         );
         $config['has_one']['info'] = array(
             'class_name' => 'UserInfo',
+            'assoc_func' => 'find',
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
@@ -197,15 +198,15 @@ class User extends AuthUserMd5
         $info = new UserInfo();
         $info_meta = $info->getTableMetadata();
         foreach ( $info_meta ['fields'] as $field => $meta ) {
-			if ($field !== $info_meta ['pk'] [0]) {
-				$config ['additional_fields'] [$field] = array (
-						'get' => '_getAdditionalValueFromRelation',
-						'set' => '_setAdditionalValueFromRelation',
-						'relation' => 'info',
-						'relation_field' => $field 
-				);
-			}
-		}
+            if ($field !== $info_meta ['pk'] [0]) {
+                $config ['additional_fields'] [$field] = array (
+                        'get' => '_getAdditionalValueFromRelation',
+                        'set' => '_setAdditionalValueFromRelation',
+                        'relation' => 'info',
+                        'relation_field' => $field
+                );
+            }
+        }
 
         $config['notification_map']['after_create'] = 'UserDidCreate';
         $config['notification_map']['after_store'] = 'UserDidUpdate';

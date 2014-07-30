@@ -56,7 +56,7 @@
                                   LEFT JOIN datafields_entries USING (datafield_id)
                                   WHERE object_type = 'usersemdata' AND sec_range_id = ? AND range_id = ?";
                         $statement = DBManager::get()->prepare($query);
-                        $statement->execute(array($course_id, $user->id));
+                        $statement->execute(array($course_id, $GLOBALS['user']->id));
                         if (!$statement->fetchColumn()) {
                             $show = true;
                         }
@@ -67,7 +67,7 @@
                 if ($show) {
                     echo MessageBox::info(_("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen."), array(
                         _('Um das nachzuholen, gehen Sie unter "TeilnehmerInnen" auf "Zusatzangaben"'),
-                        _("oder") . ' <a href="' . URLHelper::getLink("teilnehmer_aux.php") . '"> ' . _("direkt zu den Zusatzangaben") . '</a>'
+                        _("oder") . ' <a href="' . URLHelper::getLink("dispatch.php/members/additional_input") . '"> ' . _("direkt zu den Zusatzangaben") . '</a>'
                     ));
                 }
             }

@@ -96,7 +96,7 @@ class MessagesController extends AuthenticatedController {
         foreach ($messages as $message) {
             $this->output['messages'][] = $template_factory
                                             ->open("messages/_message_row.php")
-                                            ->render(compact("message"));
+                                            ->render(array('message' => $message, 'received' => (bool) Request::int("received")));
         }
 
         $this->render_text(json_encode(studip_utf8encode($this->output)));

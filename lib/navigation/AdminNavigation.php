@@ -37,17 +37,17 @@ class AdminNavigation extends Navigation
         parent::initSubNavigation();
 
         if ($SessSemName['class'] == 'inst') {
-            if ($_SESSION['links_admin_data']['referred_from'] == 'inst') {
+            if (isset($_SESSION['links_admin_data']['referred_from']) && $_SESSION['links_admin_data']['referred_from'] == 'inst') {
                 $back_jump= _('zurück zur ausgewählten Einrichtung');
             } else {
                 $back_jump= _('zur ausgewählten Einrichtung');
             }
         } else if ($SessSemName['class'] == 'sem') {
-            if (isset($_SESSION['links_admin_data']['referred_from']) && $_SESSION['links_admin_data']['referred_from'] == 'sem' && !$archive_kill && !isset($_SESSION['links_admin_data']['assi'])) {
+            if (isset($_SESSION['links_admin_data']['referred_from']) && $_SESSION['links_admin_data']['referred_from'] == 'sem' && !$archive_kill && !(isset($_SESSION['links_admin_data']['assi']) && $_SESSION['links_admin_data']['assi'])) {
                 $back_jump= _('zurück zur ausgewählten Veranstaltung');
             } else if (isset($_SESSION['links_admin_data']['referred_from'])  && $_SESSION['links_admin_data']['referred_from'] == 'assi' && !$archive_kill) {
                 $back_jump= _('zur neu angelegten Veranstaltung');
-            } else if (!isset($_SESSION['links_admin_data']['assi'])) {
+            } else if (!(isset($_SESSION['links_admin_data']['assi']) && $_SESSION['links_admin_data']['assi'])) {
                 $back_jump= _('zur ausgewählten Veranstaltung');
             }
         }
@@ -176,9 +176,7 @@ class AdminNavigation extends Navigation
         // global config / user administration
         $navigation = new Navigation(_('System'));
 
-        if ($perm->have_perm(get_config('AUX_RULE_ADMIN_PERM') ? get_config('AUX_RULE_ADMIN_PERM') : 'admin')) {
-            $navigation->addSubNavigation('specification', new Navigation(_('Zusatzangaben'), 'dispatch.php/admin/specification'));
-        }
+
 
 
         if ($perm->have_perm('root')) {
@@ -212,15 +210,19 @@ class AdminNavigation extends Navigation
             if (Config::get()->CRONJOBS_ENABLE) {
                 $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
             }
-            
+
              if(Config::get()->PERSONALDOCUMENT_ENABLE){
                  $navigation->addSubNavigation('document_area', new Navigation(_('Pers. Dateibereich'), 'dispatch.php/document/administration'));
             }
 
-            
+
             $navigation->addSubNavigation('admissionrules', new Navigation(_('Anmelderegeln'), 'dispatch.php/admission/ruleadministration'));
 
             $navigation->addSubNavigation('api', new Navigation(_('API'), 'dispatch.php/admin/api'));
+
+            if ($perm->have_perm(get_config('AUX_RULE_ADMIN_PERM') ? get_config('AUX_RULE_ADMIN_PERM') : 'admin')) {
+                $navigation->addSubNavigation('specification', new Navigation(_('Zusatzangaben'), 'dispatch.php/admin/specification'));
+            }
 
         }
 
@@ -238,7 +240,7 @@ class AdminNavigation extends Navigation
         if ($SessSemName['class'] == 'inst') {
             $navigation = new Navigation($back_jump, 'dispatch.php/institute/overview?auswahl='.$SessSemName[1]);
             $this->addSubNavigation('back_jump', $navigation);
-        } else if ($SessSemName['class'] == 'sem' && !$archive_kill && !isset($_SESSION['links_admin_data']['assi'])) {
+        } else if ($SessSemName['class'] == 'sem' && !$archive_kill && !(isset($_SESSION['links_admin_data']['assi']) && $_SESSION['links_admin_data']['assi'])) {
             $navigation = new Navigation($back_jump, 'seminar_main.php?auswahl='.$SessSemName[1]);
             $this->addSubNavigation('back_jump', $navigation);
         }

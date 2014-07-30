@@ -33,6 +33,15 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
     {
         $options = array();
         $show_admin = $GLOBALS['perm']->have_perm('root');
+        $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE')
+                   ? StudipNews::GetRssIdFromRangeId('studip')
+                   : false;
+
+        if ($rss_id) {
+           $options[] = array('url' => URLHelper::getLink('rss.php?id='. $rss_id),
+                              'img' => 'icons/16/blue/rss.png',
+                              'tooltip' => _('RSS-Feed'));
+        }
         if ($show_admin) {
             $options[] = array('url' => URLHelper::getLink('dispatch.php/news/edit_news/new'),
                                'rel' => 'get_dialog',

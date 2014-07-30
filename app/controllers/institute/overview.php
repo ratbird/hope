@@ -66,6 +66,15 @@ class Institute_OverviewController extends AuthenticatedController
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage(Assets::image_path("sidebar/institute-sidebar.png"));
 
+        if (get_config('NEWS_RSS_EXPORT_ENABLE') && $this->institute_id){
+            $rss_id = StudipNews::GetRssIdFromRangeId($this->institute_id);
+            if ($rss_id) {
+                PageLayout::addHeadElement('link', array('rel'   => 'alternate',
+                                                         'type'  => 'application/rss+xml',
+                                                         'title' => 'RSS',
+                                                         'href'  => 'rss.php?id='.$rss_id));
+            }
+        }
         // list of used modules
         $Modules = new Modules;
         $modules = $Modules->getLocalModules($this->institute_id);

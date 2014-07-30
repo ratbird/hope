@@ -13,6 +13,22 @@ class HelpToursAndContent extends Migration
     {
         $this->addHelpTours();
         $this->addHelpContent();
+        
+        // set version in config
+        $version = 1;
+        // see migrate_help_content.php
+        if (!Config::get()->getValue('HELP_CONTENT_CURRENT_VERSION')) {
+            Config::get()->create('HELP_CONTENT_CURRENT_VERSION', array(
+                'value' => $version, 
+                'is_default' => 0, 
+                'type' => 'string',
+                'range' => 'global',
+                'section' => 'global',
+                'description' => _('Aktuelle Version der Helpbar-Einträge in Stud.IP')
+                ));
+        } else {
+            Config::get()->store('HELP_CONTENT_CURRENT_VERSION', $version);
+        }
     }
 
     function down()
@@ -25,27 +41,27 @@ class HelpToursAndContent extends Migration
     
     function addHelpTours() {
         // add tour data
-        $query = "INSERT INTO `help_tours` (`tour_id`, `name`, `description`, `type`, `roles`, `version`, `language`, `studip_version`, `installation_id`, `mkdate`) VALUES
-('96ea422f286fb5bbf9e41beadb484a9a', 'Profilseite', 'In dieser Tour werden die Grundfunktionen und Bereiche der Profilseite vorgestellt.', 'tour', 'autor,dozent,root', 1, 'de', '', '', 1406722657),
-('25e7421f286fc5bdf9e41beadb484ffa', 'Eigenes Bild hochladen', 'In der Tour wird erklärt, wie Nutzende ein eigenes Profilbild hochladen können.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1406722657),
-('3629493a16bf2680de64361f07cab096', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1406709759),
-('21f487fa74e3bfc7789886f40fe4131a', 'Forum nutzen', 'Die Inhalte dieser Tour stammen aus der alten Tour des Forums (Sidebar > Aktionen > Tour starten).', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405415746),
-('44f859c50648d3410c39207048ddd833', 'Forum verwalten', '', 'tour', 'tutor,dozent,admin,root', 1, 'de', '', '', 1405417901),
-('3a717a468afb0822cb1455e0ae6b6fce', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1406709041),
-('ef5092ba722c81c37a5a6bd703890bd9', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405507317),
-('6849293baa05be5bef8ff438dc7c438b', 'Suche', 'In dieser Feature-Tour werden die wichtigsten Funktionen der Suche vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405519609),
-('b74f8459dce2437463096d56db7c73b9', 'Meine Veranstaltungen (Studierende)', 'In dieser Tour werden die wichtigsten Funktionen der Seite \"Meine Veranstaltung\" vorgestellt.', 'tour', 'autor,admin,root', 1, 'de', '', '', 1405521073),
-('154e711257d4d32d865fb8f5fb70ad72', 'Meine Dateien', 'In dieser Tour wird der persönliche Dateibereich vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405592618),
-('19ac063e8319310d059d28379139b1cf', 'Studiengruppe anlegen', 'In dieser Gruppe wird das Anlegen von Studiengruppen erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405684299),
-('edfcf78c614869724f93488c4ed09582', 'Teilnehmerverwaltung', 'In dieser Tour werden die Verwaltungsoptionen der Teilnehmerverwaltung erklärt.', 'tour', 'tutor,dozent,admin,root', 1, 'de', '', '', 1405688156),
-('977f41c5c5239c4e86f04c3df27fae38', 'Was ist neu in Stud.IP 3.1?', 'In dieser Tour werden die Neuerungen in Stud.IP 3.1 überblicksartig vorgestellt.', 'tour', 'autor,tutor,dozent,admin', 1, 'de', '', '', 1405932260),
-('49604a77654617a745e29ad6b253e491', 'Gestaltung der Startseite', 'In dieser Feature-Tour werden die Funktionen und Gestaltungsmöglichkeiten der Startseite vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '', '', 1405934780),
-('7cccbe3b22dfa745c17cb776fb04537c', 'Meine Veranstaltungen (Dozierende)', 'In dieser Tour werden die wichtigsten Funktionen der Seite \"Meine Veranstaltung\" vorgestellt.', 'tour', 'tutor,dozent,admin,root', 1, 'de', '', '', 1406125685);
+        $query = "INSERT IGNORE INTO `help_tours` (`tour_id`, `name`, `description`, `type`, `roles`, `version`, `language`, `studip_version`, `installation_id`, `mkdate`) VALUES
+('96ea422f286fb5bbf9e41beadb484a9a', 'Profilseite', 'In dieser Tour werden die Grundfunktionen und Bereiche der Profilseite vorgestellt.', 'tour', 'autor,dozent,root', 1, 'de', '3.1', '', 1406722657),
+('25e7421f286fc5bdf9e41beadb484ffa', 'Eigenes Bild hochladen', 'In der Tour wird erklärt, wie Nutzende ein eigenes Profilbild hochladen können.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1406722657),
+('3629493a16bf2680de64361f07cab096', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1406709759),
+('21f487fa74e3bfc7789886f40fe4131a', 'Forum nutzen', 'Die Inhalte dieser Tour stammen aus der alten Tour des Forums (Sidebar > Aktionen > Tour starten).', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405415746),
+('44f859c50648d3410c39207048ddd833', 'Forum verwalten', 'Die Inhalte dieser Tour stammen aus der alten Tour des Forums (Sidebar > Aktionen > Tour starten).', 'tour', 'tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405417901),
+('3a717a468afb0822cb1455e0ae6b6fce', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1406709041),
+('ef5092ba722c81c37a5a6bd703890bd9', 'Blubber', 'In der Tour wird die Nutzung von Blubber erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405507317),
+('6849293baa05be5bef8ff438dc7c438b', 'Suche', 'In dieser Feature-Tour werden die wichtigsten Funktionen der Suche vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405519609),
+('b74f8459dce2437463096d56db7c73b9', 'Meine Veranstaltungen (Studierende)', 'In dieser Tour werden die wichtigsten Funktionen der Seite \"Meine Veranstaltungen\" vorgestellt.', 'tour', 'autor,admin,root', 1, 'de', '3.1', '', 1405521073),
+('154e711257d4d32d865fb8f5fb70ad72', 'Meine Dateien', 'In dieser Tour wird der persönliche Dateibereich vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405592618),
+('19ac063e8319310d059d28379139b1cf', 'Studiengruppe anlegen', 'In dieser Tour wird das Anlegen von Studiengruppen erklärt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405684299),
+('edfcf78c614869724f93488c4ed09582', 'Teilnehmerverwaltung', 'In dieser Tour werden die Verwaltungsoptionen der Teilnehmerverwaltung erklärt.', 'tour', 'tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405688156),
+('977f41c5c5239c4e86f04c3df27fae38', 'Was ist neu in Stud.IP 3.1?', 'In dieser Tour werden die Neuerungen in Stud.IP 3.1 überblicksartig vorgestellt.', 'tour', 'autor,tutor,dozent,admin', 1, 'de', '3.1', '', 1405932260),
+('49604a77654617a745e29ad6b253e491', 'Gestaltung der Startseite', 'In dieser Tour werden die Funktionen und Gestaltungsmöglichkeiten der Startseite vorgestellt.', 'tour', 'autor,tutor,dozent,admin,root', 1, 'de', '3.1', '', 1405934780),
+('7cccbe3b22dfa745c17cb776fb04537c', 'Meine Veranstaltungen (Dozierende)', 'In dieser Tour werden die wichtigsten Funktionen der Seite \"Meine Veranstaltungen\" vorgestellt.', 'tour', 'tutor,dozent,admin,root', 1, 'de', '3.1', '', 1406125685);
 ";
         DBManager::get()->exec($query);
         
         // add steps
-        $query = "INSERT INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`, `interactive`, `css_selector`, `route`, `author_id`, `mkdate`) VALUES
+        $query = "INSERT IGNORE INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`, `interactive`, `css_selector`, `route`, `author_id`, `mkdate`) VALUES
 ('96ea422f286fb5bbf9e41beadb484a9a', 3, 'Stud.IP-Score', 'Der Stud.IP-Score wächst mit den Aktivitäten in Stud.IP und repräsentiert so die Erfahrung mit Stud.IP.', 'BL', 0, '#layout_content TABLE:eq(0) TBODY:eq(0) TR:eq(0) TD:eq(0) A:eq(0)', 'dispatch.php/profile', '', 1406722657),
 ('96ea422f286fb5bbf9e41beadb484a9a', 5, 'Neue Ankündigung', 'Klicken Sie auf das Plus-Zeichen, wenn Sie eine Ankündigung erstellen möchten.', 'BR', 0, '.contentbox:eq(0) header img:eq(0)', 'dispatch.php/profile', '', 1406722657),
 ('96ea422f286fb5bbf9e41beadb484a9a', 1, 'Profil-Tour', 'Diese Tour gibt Ihnen einen Überblick über die wichtigsten Funktionen des \"Profils\".\r\n\r\nUm auf den nächsten Schritt zu kommen, klicken Sie bitte rechts unten auf \"Weiter\".', 'T', 0, '', 'dispatch.php/profile', '', 1406722657),
@@ -165,7 +181,7 @@ class HelpToursAndContent extends Migration
         DBManager::get()->exec($query);
         
         // add settings
-        $query = "INSERT INTO `help_tour_settings` (`tour_id`, `active`, `access`) VALUES
+        $query = "INSERT IGNORE INTO `help_tour_settings` (`tour_id`, `active`, `access`) VALUES
 ('96ea422f286fb5bbf9e41beadb484a9a', 1, 'standard'),
 ('25e7421f286fc5bdf9e41beadb484ffa', 1, 'standard'),
 ('3a717a468afb0822cb1455e0ae6b6fce', 1, 'standard'),
@@ -186,7 +202,7 @@ class HelpToursAndContent extends Migration
     }
     
     function addHelpContent() {
-        $query = "INSERT INTO `help_content` (`content_id`, `language`, `label`, `icon`, `content`, `route`, `studip_version`, `position`, `custom`, `visible`, `author_id`, `installation_id`, `mkdate`) VALUES
+        $query = "INSERT IGNORE INTO `help_content` (`content_id`, `language`, `label`, `icon`, `content`, `route`, `studip_version`, `position`, `custom`, `visible`, `author_id`, `installation_id`, `mkdate`) VALUES
 ('5a90d1219dbeb07c124156592fb5d877', 'de', 'Informationen', 'info', 'In den allgemeinen Einstellungen können verschiedene Anzeigeoptionen und Benachrichtigungsfunktionen ausgewählt und verändert werden.', 'dispatch.php/settings/general', '1', 0, 0, 1, '', '', 1406641688),
 ('a202eb75df0a1da2a309ad7a4abfac59', 'de', 'Informationen', 'info', 'In den Privatsphäre-Einstellungen kann die Sichtbarkeit und Auffindbarkeit des eigenen Profils eingestellt werden.', 'dispatch.php/settings/privacy', '1', 0, 0, 1, '', '', 1406641688),
 ('845d1ce67a62d376ec26c8ffbb22d492', 'de', 'Informationen', 'info', 'Die Einstellungen des Nachrichtensystems bieten die Möglichkeit z.B. eine Weiterleitung der in Stud.IP empfangenen Nachrichten an die E-Mail-Adresse zu veranlassen.', 'dispatch.php/settings/messaging', '1', 0, 0, 1, '', '', 1406641688),

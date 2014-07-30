@@ -216,7 +216,7 @@
                 <h1><?= _('Studienmodule') ?></h1>
             </header>
             <section>
-                <ul>
+                <ul class="list-unstyled">
                     <? foreach ($this->studymodules as $module) : ?>
                         <li>
                             <a class="module-info" href="<?= URLHelper::getLink($module['nav']->getUrl())?>">
@@ -254,7 +254,7 @@
                 <h1><?= _('Studienbereiche') ?></h1>
             </header>
             <section>
-                <ul>
+                <ul class="list-unstyled">
                     <? foreach ($study_areas as $area) : ?>
                         <li>
                             <a href="<?=URLHelper::getScriptLink('show_bereich.php?level=sbb&id=' . $area->id)?>">

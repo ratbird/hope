@@ -86,16 +86,6 @@ class ProfileController extends AuthenticatedController
             $this->current_user->store();
         }
 
-        if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
-            $news_author_id = StudipNews::GetRssIdFromUserId($this->current_user->user_id);
-            if ($news_author_id) {
-                PageLayout::addHeadElement('link', array('rel'   => 'alternate',
-                                                         'type'  => 'application/rss+xml',
-                                                         'title' => 'RSS',
-                                                         'href'  => 'rss.php?id=' . $news_author_id));
-            }
-        }
-
         // Get Avatar
         $this->avatar   = Avatar::getAvatar($this->current_user->user_id)->getImageTag(Avatar::NORMAL);
 

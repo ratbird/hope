@@ -63,16 +63,6 @@ class Course_OverviewController extends AuthenticatedController
             $this->avatar = CourseAvatar::getAvatar($this->course_id);
         }
 
-        if (get_config('NEWS_RSS_EXPORT_ENABLE') && $this->course_id){
-            $rss_id = StudipNews::GetRssIdFromRangeId($this->course_id);
-            if ($rss_id) {
-                PageLayout::addHeadElement('link', array('rel'   => 'alternate',
-                                                         'type'  => 'application/rss+xml',
-                                                         'title' => 'RSS',
-                                                         'href'  => 'rss.php?id='.$rss_id));
-            }
-        }
-
         // Fetch news
         $response = $this->relay('news/display/' . $this->course_id);
         $this->news = $response->body;

@@ -1044,7 +1044,6 @@ class UserManagement
 
         // delete all remaining user data
         $queries = array(
-            "DELETE FROM rss_feeds WHERE user_id = ?",
             "DELETE FROM kategorien WHERE range_id = ?",
             "DELETE FROM user_info WHERE user_id = ?",
             "DELETE FROM user_visibility WHERE user_id = ?",

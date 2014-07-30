@@ -56,10 +56,6 @@ class ToolsNavigation extends Navigation
             $this->addSubNavigation('evaluation', $navigation);
         }
 
-        // rss feeds
-        $navigation = new Navigation(_('RSS-Feeds'), 'dispatch.php/admin/rss_feeds');
-        $this->addSubNavigation('rss', $navigation);
-
         // literature
         if (get_config('LITERATURE_ENABLE')) {
             if ($perm->have_perm('admin')) {

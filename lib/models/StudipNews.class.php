@@ -79,14 +79,6 @@ class StudipNews extends SimpleORMap {
         return ($as_objects ? StudipNews::GetNewsObjects($ret) : $ret);
     }
 
-    public static function GetNewsByRSSId($rss_id, $as_objects = false){
-        if ($user_id = StudipNews::GetUserIDFromRssID($rss_id)){
-            return StudipNews::GetNewsByRange($user_id, true, $as_objects);
-        } else {
-            return array();
-        }
-    }
-
     public static function GetNewsObjects($news_result){
         $objects = array();
         if (is_array($news_result)){
@@ -202,69 +194,6 @@ class StudipNews extends SimpleORMap {
             }
         }
         return $objects;
-    }
-
-    public static function GetUserIdFromRssID($rss_id){
-        $ret = StudipNews::GetRangeIdFromRssID($rss_id);
-        return $ret['range_id'];
-    }
-
-    public static function GetRssIdFromUserId($user_id){
-        return StudipNews::GetRssIdFromRangeId($user_id);
-    }
-
-    public static function GetRangeFromRssID($rss_id){
-        if ($rss_id){
-            $query = "SELECT range_id ,range_type
-                      FROM news_rss_range
-                      WHERE rss_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($rss_id));
-            $ret = $statement->fetch(PDO::FETCH_ASSOC);
-
-            if (count($ret)) return $ret;
-        }
-        return false;
-    }
-
-    public static function GetRangeIdFromRssID($rss_id){
-        $ret = StudipNews::GetRangeFromRssID($rss_id);
-        return $ret['range_id'];
-    }
-
-    public static function GetRssIdFromRangeId($range_id)
-    {
-        $query = "SELECT rss_id FROM news_rss_range WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($range_id));
-        return $statement->fetchColumn();
-    }
-
-    public static function SetRssId($range_id, $type = false)
-    {
-        if (!$type){
-            $type = get_object_type($range_id);
-            if ($type == 'fak') $type = 'inst';
-        }
-        $rss_id = md5('StudipRss'.$range_id);
-
-        $query = "REPLACE INTO news_rss_range (range_id,rss_id,range_type)
-                  VALUES (?, ?, ?)";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $range_id,
-            $rss_id,
-            $type
-        ));
-        return $statement->rowCount();
-    }
-
-    public static function UnsetRssId($range_id)
-    {
-        $query = "DELETE FROM news_rss_range WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($range_id));
-        return $statement->rowCount();
     }
 
     public static function GetAdminMsg($user_id, $date){

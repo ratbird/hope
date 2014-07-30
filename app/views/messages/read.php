@@ -28,10 +28,9 @@
                     <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $message_user["username"])) ?>">
                             <?= htmlReady($message_user->getFullname()) ?>
-                            <?= count($message->receivers) > 1 ? ', ' : '' ?>
                         </a>
                     </li>
-                    
+
                 <? endforeach ?>
                 </ul>
                 <? endif ?>

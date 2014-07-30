@@ -158,13 +158,12 @@
                 <h1><?= get_title_for_status('dozent', $count_lecturers) ?></h1>
             </header>
             <section>
-                <ul style="padding:0">
-                <? foreach ($lecturers as $c => $lecturer) : ?>
-                    <li style="list-style-type:none; display:inline-block; padding-right: 2px;">
+                <ul class="list-csv">
+                <? foreach ($lecturers as $lecturer) : ?>
+                    <li>
                         <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $lecturer['username'])) ?>">
                             <?= htmlReady($lecturer->getUserFullname() . ($lecturer->label ? " (" . $lecturer->label . ")" : "")) ?>
                         </a>
-                        <?= ($c > 0 && $c < $count_lecturers-1 ? ',' : '') ?>
                     </li>
                 <? endforeach ?>
                 </ul>
@@ -180,13 +179,12 @@
                 <h1><?= get_title_for_status('tutor', $count_tutors) ?></h1>
             </header>
             <section>
-                <ul style="padding:0">
-                <? foreach ($tutors as $c => $tutor) : ?>
-                    <li style="list-style-type:none; display:inline-block; padding-right: 2px;">
+                <ul class="list-csv">
+                <? foreach ($tutors as $tutor) : ?>
+                    <li>
                         <a href="<?= URLHelper::getScriptLink('dispatch.php/profile', array('username' => $tutor['username'])) ?>">
                             <?= htmlReady($tutor->getUserFullname() . ($tutor->label ? " (" . $tutor->label . ")" : "")) ?>
                         </a>
-                        <?= ($c > 0 && $c < $count_tutors-1 ? ',' : '') ?>
                     </li>
                 <? endforeach ?>
                 </ul>

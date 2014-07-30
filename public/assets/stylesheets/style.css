@@ -3137,6 +3137,9 @@ div.messagebox {
   position: relative;
   text-align: left;
 }
+div.messagebox:first-child {
+  margin-top: 0;
+}
 div.messagebox .messagebox_buttons {
   position: absolute;
   right: 3px;
@@ -3797,36 +3800,6 @@ table.attribute_table div[container]#deactivated_modules {
 }
 table.attribute_table div[container]#deactivated_modules .plugin > div {
   display: none;
-}
-/* --- archiv -------------------------------------------------------------- */
-#archiv body {
-  background-color: #91a2b6;
-}
-#archiv h1,
-#archiv h2,
-#archiv h3 {
-  color: #213499;
-  font-weight: bold;
-}
-#archiv p,
-#archiv td,
-#archiv form,
-#archiv ul {
-  color: #000;
-}
-#archiv table,
-#archiv th,
-#archiv table.blank,
-#archiv td.blank {
-  background-color: #fff;
-}
-#archiv th,
-#archiv td.table_header_bold {
-  border: 0 solid #000;
-  color: #fff;
-}
-#archiv th {
-  background: #b5b5b5 url('../images/content_seperator.gif');
 }
 /* --- Styles fuer Terminkalender ------------------------------------------- */
 a.day {

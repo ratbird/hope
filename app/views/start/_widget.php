@@ -10,7 +10,7 @@
             <? if (isset($option['id'])): ?> 
                 <div id="<?= $option['id'] ?>"></div>
             <? endif; ?>
-                <a href="<?= $option['url'] ?>" <? if (isset($option['onclick'])): ?> onclick="<?= $option['onclick'] ?>" <? endif; ?> <? if (isset($option['rel'])): ?> rel="<?= $option['rel'] ?>" <? endif; ?>>
+                <a href="<?= $option['url'] ?>" <? if (isset($option['onclick'])): ?> onclick="<?= $option['onclick'] ?>" <? endif; ?> <? if (isset($option['rel'])): ?> rel="<?= $option['rel'] ?>" <? endif; ?> <? if (isset($option['data-dialog'])): ?> data-dialog="<?= $option['data-dialog'] ?>" <? endif; ?>>
                     <?= Assets::img($option['img']) ?>
                 </a>
             <?endforeach; ?>

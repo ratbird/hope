@@ -76,7 +76,7 @@ class StartController extends AuthenticatedController
         }
         $sidebar->addWidget($nav);
         
-		// Show action to add widget only if not all widgets have already been added.
+        // Show action to add widget only if not all widgets have already been added.
         if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
             $actions = new ActionsWidget();
             $actions->addLink(_('Neues Widget hinzufügen'),
@@ -86,18 +86,19 @@ class StartController extends AuthenticatedController
         
         // Root may set initial positions
         if ($GLOBALS['perm']->have_perm('root')) {
-            $html .= _('Als Standard setzen für') . "<br>";
-            $html .= "<form action='".$this->url_for('start/storeAsDefault')."'><select name='usergroup'>";
+
+            $settings = new ActionsWidget();
+            $settings->setTitle(_('Standard-Startseite bearbeiten'));
+
             foreach ($GLOBALS['perm']->permissions as $permission => $useless) {
-                $html .= "<option value='$permission'>$permission</option>";
+                $settings->addElement(new LinkElement(
+                    ucfirst($permission),
+                    $this->url_for('start/edit_defaults/' . $permission),
+                    'icons/16/blue/link-intern.png', array('data-dialog' => '')
+                ));
             }
-            $html .= "</select><br>";
-            $html .= Studip\Button::create(_('Übernehmen'));
-            $html .= "</form>";
-            $defaulter = new SidebarWidget();
-            $defaulter->setTitle(_('Einstellungen'));
-            $defaulter->addElement(new WidgetElement($html));
-            $sidebar->addWidget($defaulter);
+
+            $sidebar->addWidget($settings);
         }
         
         if ($actions) {
@@ -125,6 +126,46 @@ class StartController extends AuthenticatedController
             $this->redirect('start' . $post_url);
         }
         $this->widgets = WidgetHelper::getAvailableWidgets($GLOBALS['user']->id);
+    }
+
+
+    /**
+     * Edit the default startpage configuration for users by permissions
+     *
+     * @param string $permission
+     *
+     * @throws InvalidArgumentException
+     */
+    public function edit_defaults_action($permission)
+    {
+        if (in_array($permission, array_keys($GLOBALS['perm']->permissions)) === false) {
+            throw new InvalidArgumentException('There is no such permission!');
+        }
+
+        $this->widgets = WidgetHelper::getAvailableWidgets();
+        $this->permission = $permission;
+
+        $this->initial_widgets = WidgetHelper::getInitialPositions($permission);
+    }
+
+    /**
+     * Store the edited default startpage configuration for users by permissions
+     *
+     * @param string $permission
+     *
+     * @throws InvalidArgumentException
+     */
+    function update_defaults_action($permission) {
+        $GLOBALS['perm']->check('root');
+
+        if (in_array($permission, array_keys($GLOBALS['perm']->permissions)) === false) {
+            throw new InvalidArgumentException('There is no such permission!');
+        }
+
+        WidgetHelper::storeInitialPositions(0, Request::getArray('left'), $permission);
+        WidgetHelper::storeInitialPositions(1, Request::getArray('right'), $permission);
+
+        $this->render_nothing();
     }
 
     /**
@@ -166,15 +207,5 @@ class StartController extends AuthenticatedController
     {
         WidgetHelper::storeNewPositions(Request::get('widget'), Request::get('position'), Request::get('column'));
         $this->render_nothing();
-    }
-    
-    /**
-     * 
-     */
-    function storeAsDefault_action() {
-        $GLOBALS['perm']->check('root');
-        $group = Request::get('usergroup');
-        WidgetHelper::setAsInitialPositions($GLOBALS['user']->id, $group);
-        $this->redirect('start');
     }
 }

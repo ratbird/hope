@@ -112,20 +112,29 @@ class WidgetHelper {
      */
      static function storeInitialPositions($col, $ids, $perm)
      {
-         $statement = DBManager::get()->prepare('DELETE FROM widget_default WHERE `perm` = ? AND `column` = ?;');
-         $statement->execute(array($perm, $col));
+         $stmt = DBManager::get()->prepare('DELETE FROM widget_default WHERE `perm` = ? AND `col` = ?;');
+         $stmt->execute(array($perm, $col));
 
-         if(is_array($ids)) {
-             foreach ($ids as $pos => $id)
-             {
-                 if($id != ""){
+         if (is_array($ids)) {
+             foreach ($ids as $id => $pos) {
+                 if ($id != ""){
                      $pos = intVal($pos);
-                     $statement = DBManager::get()->prepare("REPLACE INTO widget_default (`pluginid`,`column`, `row`, `perm`) VALUES (?,?,?,?);");
-                     $statement->execute(array($id, $col, $pos, $perm));
+                     $stmt = DBManager::get()->prepare("REPLACE INTO widget_default (`pluginid`,`col`, `position`, `perm`) VALUES (?,?,?,?);");
+                     $stmt->execute(array($id, $col, $pos, $perm));
                  }
+             }
 
-             } return true;
-         } else return false;
+             return true;
+         }
+
+         return false;
+     }
+
+     static function getInitialPositions($perm)
+     {
+         return DBManager::get()->fetchGroupedPairs("SELECT col, pluginid, position FROM widget_default "
+                 . "WHERE perm = ? "
+                 . "ORDER BY col ASC, position ASC", array($perm));
      }
      
      /**
@@ -285,13 +294,17 @@ class WidgetHelper {
      *
      * @return array All available widgets.
      */
-    static function getAvailableWidgets($user_id) {
+    static function getAvailableWidgets($user_id = null) {
         $all_widgets = PluginEngine::getPlugins('PortalPlugin');
-        $used_widgets = DBManager::get()->fetchFirst("SELECT `pluginid` FROM `widget_user` WHERE `range_id`=? ORDER BY `pluginid`", array($user_id));
+
+        $used_widgets = is_null($user_id)
+                ? array()
+                : DBManager::get()->fetchFirst("SELECT `pluginid` FROM `widget_user` WHERE `range_id`=? ORDER BY `pluginid`", array($user_id));
+
         $available = array();
         foreach ($all_widgets as $widget) {
             if (!in_array($widget->getPluginId(), $used_widgets)) {
-                $available[] = $widget;
+                $available[$widget->getPluginId()] = $widget;
             }
         }
         return $available;

@@ -62,19 +62,19 @@
 }
 
 .ui-widget_columnl {
-    float: left;    
+    float: left;
     width: 100%;
 }
-.ui-widgetContainer {    
+.ui-widgetContainer {
     color: white;
-    background-image: none;    
+    background-image: none;
 }
 
 .ui-widget_columnr {
     float: right;
 }
 
-.ui-widget_head {    
+.ui-widget_head {
     line-height: 30px;
 
     text-align: center;
@@ -88,7 +88,7 @@
 
 }
 .ui-widget_head h1 {
-    line-height: 100px;    
+    line-height: 100px;
     text-align: center;
     color: black;
 }
@@ -149,6 +149,37 @@ div.start-widgetcontainer {
         &.move {
             border: @base-color-80 dashed 1px;
         }
+    }
+}
+
+div.edit-widgetcontainer {
+    .start-widgetcontainer {
+        min-height: 60px;
+        margin-bottom: 2em;
+    }
+}
+div.available-widgets {
+    ul {
+        .box-sizing(border-box);
+        display: inline-block;
+
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            float: left;
+            margin-right: 5px;
+        }
+
+        &.move {
+            border: @base-color-80 dashed 1px;
+        }
+    }
+
+    .studip-widget {
+        width: 250px;
+        display: inline-block;
     }
 }
 

@@ -1076,7 +1076,7 @@ class UserManagement
         if (get_config('ELEARNING_INTERFACE_ENABLE')){
             if(ElearningUtils::initElearningInterfaces()){
                 foreach($GLOBALS['connected_cms'] as $cms){
-                    if(is_object($cms->user)){
+                    if ($cms->auth_necessary && ($cms->user instanceOf ConnectedUser)) {
                         $user_auto_create = $cms->USER_AUTO_CREATE;
                         $cms->USER_AUTO_CREATE = false;
                         $userclass = strtolower(get_class($cms->user));

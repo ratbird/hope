@@ -51,23 +51,23 @@ class StartController extends AuthenticatedController
     {
         $this->left = array();
         $this->right = array();
-        
+
 
         $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
         $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
-        
+
         if (!(count($this->left) + count($this->right)) ) {
             WidgetHelper::setInitialPositions();
             $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
             $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
         }
-        
+
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $sidebar = Sidebar::get();
         $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
         $sidebar->setTitle(_("Meine Startseite"));
-        
+
         $nav = new NavigationWidget();
         $nav->setTitle(_('Sprungmarken'));
         foreach (array_merge($this->left, $this->right) as $widget) {
@@ -75,7 +75,7 @@ class StartController extends AuthenticatedController
                           $this->url_for('start#widget-' . $widget->widget_id));
         }
         $sidebar->addWidget($nav);
-        
+
         // Show action to add widget only if not all widgets have already been added.
         if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
             $actions = new ActionsWidget();
@@ -83,13 +83,13 @@ class StartController extends AuthenticatedController
                               $this->url_for('start/add'),
                               'icons/16/blue/add.png')->asDialog();
         }
-        
+
         // Root may set initial positions
         if ($GLOBALS['perm']->have_perm('root')) {
 
             $settings = new ActionsWidget();
-            $settings->setTitle(_('Standard-Startseite bearbeiten'));
-
+            $settings->setTitle(_('Einstellungen'));
+            $settings->addElement(new WidgetElement(_('Standard-Startseite bearbeiten:')));
             foreach ($GLOBALS['perm']->permissions as $permission => $useless) {
                 $settings->addElement(new LinkElement(
                     ucfirst($permission),
@@ -100,12 +100,12 @@ class StartController extends AuthenticatedController
 
             $sidebar->addWidget($settings);
         }
-        
+
         if ($actions) {
             $sidebar->addWidget($actions);
         }
     }
-    
+
     /**
      *  This actions adds a new widget to the start page
      *
@@ -146,6 +146,10 @@ class StartController extends AuthenticatedController
         $this->permission = $permission;
 
         $this->initial_widgets = WidgetHelper::getInitialPositions($permission);
+        $available_plugin_ids = array_keys($this->widgets);
+        $this->initial_widgets[0] = array_intersect((array)$this->initial_widgets[0], $available_plugin_ids);
+        $this->initial_widgets[1] = array_intersect((array)$this->initial_widgets[1], $available_plugin_ids);
+
     }
 
     /**

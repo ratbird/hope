@@ -64,9 +64,9 @@
     </div>
 <? else : ?>
     <?=
-    PageLayout::postMessage(MessageBox::info(sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen.
-    Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen oder wï¿½hlen Sie ein anderes Semester aus."),
-        "<a href=\"sem_portal.php\">", "</a>")))?>
+    PageLayout::postMessage(MessageBox::info(sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen können.
+    Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzufügen</b>%s um neue Veranstaltungen aufzunehmen oder wählen Sie ein anderes Semester aus."),
+        '<a href="' . URLHelper::getLink('sem_portal.php') . '">', '</a>')))?>
 <? endif ?>
 
 <? if (count($my_bosses)) : ?>

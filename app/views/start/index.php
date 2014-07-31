@@ -22,22 +22,20 @@ if (get_config('BANNER_ADS_ENABLE')) {
 <? endif; ?>
 
 <div class="start-widgetcontainer">
-    <ul class="portal-widget-list">
-        <? foreach ($left as $widget) : ?>
-            <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
-                <div class="ui-widget-content studip-widget">
-                    <?= $this->render_partial('start/_widget', compact('widget')) ?>
-                </div>
-            </li>
-        <? endforeach; ?>
-    </ul>
-    <ul class="portal-widget-list">
-        <? foreach ($right as $widget) : ?>
-            <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
-                <div class="ui-widget-content studip-widget">
-                    <?= $this->render_partial('start/_widget', compact('widget')) ?>
-                </div>
-            </li>
-        <? endforeach; ?>
-    </ul>
+    <? foreach (array($left, $right) as $column): ?>
+        <ul class="portal-widget-list">
+            <? foreach ($column as $widget): ?>
+                <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
+                    <div class="ui-widget-content studip-widget">
+                        <? if ($template = $widget->getPortalTemplate()): ?>
+                            <? $template->set_layout($this->_factory->open('start/_widget')) ?>
+                            <?= $this->render_partial($template, compact('widget')) ?>
+                        <? else: ?>
+                            <?= $this->render_partial('start/_widget', compact('widget')) ?>
+                        <? endif ?>
+                    </div>
+                </li>
+            <? endforeach ?>
+        </ul>
+    <? endforeach ?>
 </div>

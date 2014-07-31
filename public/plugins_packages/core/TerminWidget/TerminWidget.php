@@ -21,19 +21,11 @@ class TerminWidget extends StudIPPlugin implements PortalPlugin {
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;
 
+        $navigation = new Navigation('', 'calendar.php', array('cmd' => 'edit'));
+        $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Neuen Termin anlegen')));
+
+        $template->icons = array($navigation);
+        $template->title = _('Meine aktuellen Termine');
         return $template;
-    }
-
-    function getHeaderOptions() {
-        global $perm, $user;
-        $options = array();
-        $options[] = array('url' => URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())),
-                'img' => 'icons/16/blue/admin.png',
-                'tooltip' =>_('Neuen Termin anlegen'));
-        return $options;
-    }
-
-    function getPluginName(){
-        return _("Meine aktuellen Termine");
     }
 }

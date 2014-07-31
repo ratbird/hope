@@ -23,25 +23,15 @@ class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
             $template = $GLOBALS['template_factory']->open('shared/string');
             $template->content = $response->body;
 
+            if ($GLOBALS['perm']->have_perm('root')) {
+                $navigation = new Navigation('', 'admin_vote.php', array('page' => 'overview', 'showrangeID' => 'studip'));
+                $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Umfragen bearbeiten')));
+                $template->icons = array($navigation);
+            }
+
+            $template->title = _('Umfragen');
+
             return $template;
         }
-    }
-
-    public function getPluginName()
-    {
-        return _('Umfragen');
-    }
-
-    public function getHeaderOptions()
-    {
-        $options = array();
-        $show_admin = $GLOBALS['perm']->have_perm('root');
-
-        if ($show_admin) {
-            $options[] = array('url' => URLHelper::getLink('admin_vote.php?page=overview&showrangeID=studip'),
-                               'img' => 'icons/16/blue/admin.png',
-                               'tooltip' =>_('Umfragen bearbeiten'));
-        }
-        return $options;
     }
 }

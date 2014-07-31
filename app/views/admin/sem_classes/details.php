@@ -2,7 +2,7 @@
 
 /*
  *  Copyright (c) 2012  Rasmus Fuhse <fuhse@data-quest.de>
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -105,7 +105,6 @@
                 <select id="default_read_level">
                     <option value="0"<?= $sem_class['default_read_level'] == 0 ? " selected" : "" ?>><?= _("Unangemeldet an Veranstaltung") ?></option>
                     <option value="1"<?= $sem_class['default_read_level'] == 1 ? " selected" : "" ?>><?= _("Angemeldet an Veranstaltung") ?></option>
-                    <option value="2"<?= $sem_class['default_read_level'] == 2 ? " selected" : "" ?>><?= _("Nur mit Passwort") ?></option>
                 </select>
             </td>
         </tr>
@@ -115,7 +114,6 @@
                 <select id="default_write_level">
                     <option value="0"<?= $sem_class['default_write_level'] == 0 ? " selected" : "" ?>><?= _("Unangemeldet an Veranstaltung") ?></option>
                     <option value="1"<?= $sem_class['default_write_level'] == 1 ? " selected" : "" ?>><?= _("Angemeldet an Veranstaltung") ?></option>
-                    <option value="2"<?= $sem_class['default_write_level'] == 2 ? " selected" : "" ?>><?= _("Nur mit Passwort") ?></option>
                 </select>
             </td>
         </tr>
@@ -129,13 +127,11 @@
             </td>
         </tr>
         <tr class="sub">
-            <td><label for="admission_type_default"><?= _("Teilnahmebeschränkung") ?></label></td>
+            <td><label for="admission_type_default"><?= _("Anmeldung gesperrt") ?></label></td>
             <td>
                 <select id="admission_type_default">
-                    <option value="0"<?= $sem_class['admission_type_default'] == 0 ? " selected" : "" ?>><?= _("keine") ?></option>
-                    <option value="1"<?= $sem_class['admission_type_default'] == 1 ? " selected" : "" ?>><?= _("nach Anmeldereihenfolge") ?></option>
-                    <option value="2"<?= $sem_class['admission_type_default'] == 2 ? " selected" : "" ?>><?= _("per Losverfahren") ?></option>
-                    <option value="3"<?= $sem_class['admission_type_default'] == 3 ? " selected" : "" ?>><?= _("gesperrt") ?></option>
+                    <option value="0"<?= $sem_class['admission_type_default'] == 0 ? " selected" : "" ?>><?= _("Nein") ?></option>
+                    <option value="3"<?= $sem_class['admission_type_default'] == 3 ? " selected" : "" ?>><?= _("Ja") ?></option>
                 </select>
             </td>
         </tr>
@@ -150,7 +146,7 @@
             <td><label for="write_access_nobody"><?= _("Unangemeldete Nutzer (nobody) dürfen posten.") ?></label></td>
             <td><input type="checkbox" id="write_access_nobody" value="1"<?= $sem_class['write_access_nobody'] ? " checked" : "" ?>></td>
         </tr>
-        
+
         <tr>
             <td colspan="2"><h3><?= _("Anzeige") ?></h3></td>
         </tr>
@@ -162,7 +158,7 @@
             <td><label for="show_browse"><?= _("Zeige im Veranstaltungsbaum an.") ?></label></td>
             <td><input type="checkbox" id="show_browse" value="1"<?= $sem_class['show_browse'] ? " checked" : "" ?>></td>
         </tr>
-        
+
         <tr>
             <td colspan="2"><h3><?= _("Sonstiges") ?></h3></td>
         </tr>

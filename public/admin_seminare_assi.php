@@ -42,6 +42,7 @@ require_once ('lib/classes/DataFieldEntry.class.php');
 require_once ('lib/classes/SeminarCategories.class.php');
 require_once 'lib/classes/Seminar.class.php';
 require_once ('lib/deputies_functions.inc.php');
+require_once 'lib/classes/admission/CourseSet.class.php';
 
 $sem_create_perm = (in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent');
 
@@ -62,10 +63,7 @@ if ($GLOBALS['RESOURCES_ENABLE']) {
 
 function redirect_to_course_admin($course_id) {
     $course = new Seminar($course_id);
-    if ($_SESSION['sem_create_data']["sem_admission"]) {
-        header("Location: " . URLHelper::getUrl('dispatch.php/course/admission', array('cid' => $course_id)));
-        return;
-    }
+
     $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
     if ($sem_class) {
         $nav = array_shift($sem_class->getNavigationForSlot("admin", $course_id));
@@ -376,7 +374,7 @@ if ($start_level) { //create defaults
         }
 
         if ($SEM_CLASS[$class]['admission_type_default'] && !array_key_exists('sem_admission', $_SESSION['sem_create_data'])) {
-            $_SESSION['sem_create_data']['sem_admission'] = $SEM_CLASS[$class]['admission_type_default'];
+            $_SESSION['sem_create_data']['sem_admission'] = $SEM_CLASS[$class]['admission_type_default'] == 3 ? 3 : 0; //nur noch gesperrt möglich
         }
 
         //if current user is 'dozent' add to list of lecturers
@@ -1889,6 +1887,18 @@ if (($form == 6) && (Request::submitted('jump_next')))
                     }
                 }
             }
+            //Anmeldeset gesperrt anlegen, wenn gewünscht
+            if ($_SESSION['sem_create_data']['sem_admission'] == 3) {
+                $course_set = new CourseSet();
+                $rule = new LockedAdmission();
+                $course_set->setName($rule->getName() . ': ' . $sem->name);
+                $rule->store();
+                $course_set->setPrivate(true);
+                $course_set->addAdmissionRule($rule);
+                $course_set->setAlgorithm(new RandomAlgorithm());//TODO
+                $course_set->setCourses(array($sem->id));
+                $course_set->store();
+            }
 
             //end of the seminar-creation process
             openSem($_SESSION['sem_create_data']["sem_id"]); //open Veranstaltung to administrate in the admin-area
@@ -2197,20 +2207,22 @@ elseif ((!$level) || ($level == 1)) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                <?=_("Teilnahme- beschr&auml;nkung:"); ?>
+                <?=_("Anmeldung gesperrt:"); ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="30%" colspan=1>
                 &nbsp; <input type="radio" name="sem_admission" value=0 <? if (!$_SESSION['sem_create_data']["sem_admission"]) echo 'checked'?>>
                 <?=_("Nein"); ?> &nbsp; <br>
-                &nbsp; <input type="radio" name="sem_admission" value=1 <? if ($_SESSION['sem_create_data']["sem_admission"]==1) echo 'checked'?>>
-                <?=_("Ja"); ?> <br>
+                &nbsp; <input type="radio" name="sem_admission" value=3 <? if ($_SESSION['sem_create_data']["sem_admission"]==3) echo 'checked'?>>
+                <?=_("Ja"); ?>
+                <?= tooltipIcon(_("Geben Sie hier an, ob die Veranstaltungsanmeldung gesperrt sein soll.")) ?>
+                <br>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                 <?=_("maximale Teilnehmeranzahl:"); ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="50%">
                 &nbsp; <input type="text" name="sem_turnout" size=6 maxlength=5 value="<? echo (int)$_SESSION['sem_create_data']["sem_turnout"] ?>">
-                <?= tooltipIcon(_("Geben Sie hier die maximale Teilnehmerzahl an. Stud.IP kann auf Wunsch für Sie ein Anmeldeverfahren starten, wenn Sie »Teilnahmebeschränkung: per Losverfahren / nach Anmeldereihenfolge« benutzen.")) ?>
+                <?= tooltipIcon(_("Geben Sie hier die erwartete Teilnehmerzahl an. Sie müssen eine teilnahmebeschränkte Anmeldung nach dem Anlegen der Veranstaltung unter Zugangsberechtigungen konfigurieren.")) ?>
             </td>
         </tr>
         <tr<? $cssSw->switchClass() ?>>
@@ -2760,14 +2772,13 @@ elseif ($level == 2) {
             </td>
         </tr>
     <? endif ?>
-
+    <? if (!$_SESSION['sem_create_data']["sem_admission"]) : ?>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
             <?=_("Lesezugriff:"); ?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
             <?
-            if (!$_SESSION['sem_create_data']["sem_admission"]) {
                 if (!isset($_SESSION['sem_create_data']["sem_sec_lese"]) || $_SESSION['sem_create_data']["sem_sec_lese"]==3)
                     $_SESSION['sem_create_data']["sem_sec_lese"] = "1"; //Vorgabe: nur angemeldet oder es war Teilnahmebegrenzung gesetzt
                 if (get_config('ENABLE_FREE_ACCESS')){
@@ -2781,11 +2792,7 @@ elseif ($level == 2) {
                 }
                 ?>
                 <input type="radio" name="sem_sec_lese" value="1" <?php print $_SESSION['sem_create_data']["sem_sec_lese"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet"); ?> &nbsp;
-                <?= tooltipIcon(_("Hier geben Sie an, ob der Lesezugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist.")) ?>
-            <?
-            } else
-                print "&nbsp; <font size=-1>"._("Leseberechtigung nach erfolgreichem Anmeldeprozess")."</font>"
-            ?>
+                <?= tooltipIcon(_("Hier geben Sie an, ob der Lesezugriff auf die Veranstaltung frei (jeder) oder beschränkt (nur registrierte Stud.IP-User) ist.")) ?>
         </td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
@@ -2794,7 +2801,6 @@ elseif ($level == 2) {
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
             <?
-            if (!$_SESSION['sem_create_data']["sem_admission"]) {
                 if (!isset($_SESSION['sem_create_data']["sem_sec_schreib"]) || $_SESSION['sem_create_data']["sem_sec_schreib"]==3)
                     $_SESSION['sem_create_data']["sem_sec_schreib"] = "1";  //Vorgabe: nur angemeldet
                 if (get_config('ENABLE_FREE_ACCESS') && $SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["write_access_nobody"]) {
@@ -2809,13 +2815,10 @@ elseif ($level == 2) {
                 }
                 ?>
                 <input type="radio" name="sem_sec_schreib" value="1" <?php print $_SESSION['sem_create_data']["sem_sec_schreib"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet"); ?> &nbsp;
-                <?= tooltipIcon(_("Hier geben Sie an, ob der Schreibzugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist.")) ?>
-            <?
-            } else
-                print "&nbsp; <font size=-1>"._("Schreibberechtigung nach erfolgreichem Anmeldeprozess")."</font>"
-            ?>
+                <?= tooltipIcon(_("Hier geben Sie an, ob der Schreibzugriff auf die Veranstaltung frei (jeder) oder beschränkt (nur registrierte Stud.IP-User) ist.")) ?>
         </td>
     </tr>
+    <? endif ?>
     <? if (count(($all_domains = UserDomain::getUserDomains()))) {?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%">
@@ -2914,7 +2917,7 @@ elseif ($level == 2) {
 elseif ($level == 3) {
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
-    
+
     Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
     Sidebar::get()->setTitle(_('Schritt 3: Zeiten & Termine'));
 

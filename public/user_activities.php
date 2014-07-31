@@ -33,7 +33,7 @@ $perm->check("root");
 include 'lib/seminar_open.php';       // initialise Stud.IP-Session
 
 PageLayout::setTitle(_('Informationen zu einem Nutzer'));
-Navigation::activateItem('/admin/config/user');
+Navigation::activateItem('/admin/user/index');
 
 /**
  * Returns an overview of certain documents
@@ -262,7 +262,7 @@ foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
     $table = $plugin->getEntryTableInfo();
     $queries[] = array(
         'desc'  => $plugin->getPluginName() .' - ' . _("Anzahl der Postings"),
-        'query' => 'SELECT COUNT(*) FROM `'. $table['table'] .'` 
+        'query' => 'SELECT COUNT(*) FROM `'. $table['table'] .'`
             WHERE `'. $table['user_id'] .'` = ?
             GROUP BY `'. $table['user_id'] .'`'
     );
@@ -297,10 +297,10 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
     $statement->bindParam(':user_id', $user_id);
     $statement->execute();
     $files['seminars'] = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
+
     foreach ($files['seminars'] as $index => $file) {
         $is_open = $_SESSION['_user_activities']['open'][$file['id']] ? 'open' : 'close';
-        
+
         $title = sprintf('%s (%s%s)', $file['Name'], $file['startsem'],
                                       $file['startsem'] != $file['endsem'] ? ' - ' . $file['endsem'] : '');
         $title = sprintf('<a href="%s"%s class="tree">%s</a>',
@@ -325,7 +325,7 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
     $statement->bindParam(':user_id', $user_id);
     $statement->execute();
     $files['institutes'] = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
+
 
     foreach ($files['institutes'] as $index => $file) {
         $is_open = $_SESSION['_user_activities']['open'][$file['id']] ? 'open' : 'close';
@@ -386,7 +386,7 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
         $title = sprintf('%s (%s%s)', $course['Name'], $course['startsem'],
                                       $course['startsem'] != $course['endsem'] ? ' - ' . $course['endsem'] : '');
         $title = sprintf('<a href="%s" class="tree">%s</a>',
-                         URLHelper::getLink('seminar_main.php', 
+                         URLHelper::getLink('seminar_main.php',
                                             array('auswahl' => $course['Seminar_id'])),
                         htmlReady($title));
 

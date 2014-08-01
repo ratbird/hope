@@ -2666,8 +2666,24 @@ section.contentbox {
   transition: all 300ms ease 0s;
 }
 section.contentbox header {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
   padding: 2px;
   background-color: #e7ebf1;
+}
+section.contentbox header h1,
+section.contentbox header nav {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
 }
 section.contentbox header h1 {
   padding: 5px;
@@ -2681,10 +2697,9 @@ section.contentbox header h1 img {
   margin-right: 5px;
 }
 section.contentbox header nav {
-  display: inline-block;
   vertical-align: middle;
   margin-right: 4px;
-  float: right;
+  text-align: right;
 }
 section.contentbox header nav * {
   padding: 3px;

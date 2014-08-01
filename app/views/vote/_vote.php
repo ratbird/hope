@@ -2,6 +2,11 @@
 ?>
 <article class="<?= ContentBoxHelper::classes($vote->id, $is_new) ?>" id="<?= $vote->id ?>">
     <header>
+        <h1>
+            <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
+                <?= htmlReady($vote->title) ?>
+            </a>
+        </h1>
         <nav>
             <a href="<?= $vote->author ? URLHelper::getLink('dispatch.php/profile', array('username' => $vote->author->username)) : '' ?>">
                 <?= $vote->author ? htmlReady($vote->author->getFullName()) : '' ?>
@@ -18,11 +23,6 @@
                 </a>
             <? endif; ?>
         </nav>
-        <h1>
-            <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
-                <?= htmlReady($vote->title) ?>
-            </a>
-        </h1>
     </header>
     <?= $this->render_partial('vote/_votecontent.php', array('vote' => $vote)); ?>
 </article>

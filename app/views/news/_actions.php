@@ -19,9 +19,9 @@ if ($new['allow_comments']):
 
     <? if ($isnew): ?>
         <span style="color: red;" title="<?= sprintf(_('%s neue(r) Kommentar(e)'), $isnew) ?>">
-        <? else: ?>
-            <span style="color: #aa6;">
-            <? endif; ?>
+    <? else: ?>
+        <span style="color: #aa6;">
+    <? endif; ?>
             <?= $num ?>
         </span>
     <? endif; ?>

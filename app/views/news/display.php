@@ -1,38 +1,40 @@
 <?= $question ?>
-<? if($perm || $news): ?>
+<? if ($perm || $news): ?>
 <section class="contentbox">
     <header>
+        <h1>
+            <?= Assets::img('icons/16/black/news.png') ?>
+                
+            <?= _('Ankündigungen') ?>
+        </h1>
         <nav>
-            <? if ($perm): ?>
+        <? if ($perm): ?>
             <a href="<?= $controller->link_for('news/edit_news/new/' . $range); ?>" rel="get_dialog">
                 <?= Assets::img('icons/16/blue/add.png'); ?>
             </a>
-            <? endif; ?>
-            <? if ($rss_id): ?>
+        <? endif; ?>
+        <? if ($rss_id): ?>
             <a href="<?= URLHelper::getLink('rss.php', array('id' => $rss_id)) ?>">
                 <img src="<?= Assets::image_path('icons/16/blue/rss.png') ?>"
                      <?= tooltip(_('RSS-Feed')) ?>>
             </a>
-            <? endif; ?>
+        <? endif; ?>
         </nav>
-        <h1>
-            <?= Assets::img('icons/16/black/news.png') ?><?= _('Ankündigungen') ?>
-        </h1>
     </header>
     <? foreach ($news as $new): ?>
     <? $is_new = ($new['chdate'] >= object_get_visit($new->id, 'news', false, false))
             && ($new['user_id'] != $GLOBALS['user']->id); ?>
     <article class="<?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>">
         <header>
-            <nav>
-                <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>
-            </nav>
             <h1>
                 <?= Assets::img('icons/16/grey/news.png'); ?>
                 <a href="<?= ContentBoxHelper::href($new->id) ?>">
                     <?= htmlReady($new['topic']); ?>
                 </a>
             </h1>
+            <nav>
+                <?= $this->render_partial('news/_actions.php', array('new' => $new, 'range' => $range)) ?>
+            </nav>
         </header>
         <section>
             <?= formatReady($new['body']) ?>

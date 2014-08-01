@@ -1,5 +1,11 @@
 <article class="<?= ContentBoxHelper::classes($termin['id']) ?>" id="<?= $termin['id'] ?>">
     <header>
+        <h1>
+            <a href="<?= ContentBoxHelper::href($termin['id']) ?>">
+                <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom')) ?>
+                <?= htmlReady($termin['title']) ?>
+            </a>
+        </h1>
         <nav>
             <span>
                 <?= $termin['room'] ? _('Raum') . ': ' . htmlReady($termin['room']) : '' ?>
@@ -10,12 +16,6 @@
             </a>
             <? endif; ?>
         </nav>
-        <h1>
-            <a href="<?= ContentBoxHelper::href($termin['id']) ?>">
-                <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom')) ?>
-                <?= htmlReady($termin['title']) ?>
-            </a>
-        </h1>
     </header>
     <p>
         <?= $termin['description'] ? : _('Keine Beschreibung vorhanden') ?>

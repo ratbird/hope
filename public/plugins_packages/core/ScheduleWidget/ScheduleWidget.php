@@ -17,6 +17,11 @@ require_once('app/models/calendar/schedule.php');
 
 class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 {
+    public function getPluginName()
+    {
+        return _('Mein Stundenplan');
+    }
+
     public function getPortalTemplate()
     {
         $view = CalendarScheduleModel::getUserCalendarView($GLOBALS['user']->id, true);
@@ -24,7 +29,6 @@ class ScheduleWidget extends StudIPPlugin implements PortalPlugin
 
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $view->render();
-        $template->title = _('Mein Stundenplan');
 
         return $template;
     }

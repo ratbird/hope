@@ -13,6 +13,11 @@ require_once 'app/controllers/vote.php';
 
 class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
 {
+    public function getPluginName()
+    {
+        return _('Umfragen');
+    }
+
     public function getPortalTemplate()
     {
         // include and show votes and tests
@@ -28,8 +33,6 @@ class EvaluationsWidget extends StudIPPlugin implements PortalPlugin
                 $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Umfragen bearbeiten')));
                 $template->icons = array($navigation);
             }
-
-            $template->title = _('Umfragen');
 
             return $template;
         }

@@ -12,9 +12,15 @@
 
 require_once 'app/controllers/termine.php';
 
-class TerminWidget extends StudIPPlugin implements PortalPlugin {
-    
-    public function getPortalTemplate() {
+class TerminWidget extends StudIPPlugin implements PortalPlugin
+{
+    public function getPluginName()
+    {
+        return _('Meine aktuellen Termine');
+    }
+
+    public function getPortalTemplate()
+    {
         $dispatcher = new StudipDispatcher();
         $controller = new TermineController($dispatcher);
         $response = $controller->relay('calendar/contentbox/display/'.$GLOBALS['user']->id);
@@ -23,9 +29,8 @@ class TerminWidget extends StudIPPlugin implements PortalPlugin {
 
         $navigation = new Navigation('', 'calendar.php', array('cmd' => 'edit'));
         $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Neuen Termin anlegen')));
-
         $template->icons = array($navigation);
-        $template->title = _('Meine aktuellen Termine');
+
         return $template;
     }
 }

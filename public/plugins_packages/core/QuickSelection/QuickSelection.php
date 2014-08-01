@@ -11,6 +11,11 @@
 
 class QuickSelection extends StudIPPlugin implements PortalPlugin
 {
+    public function getPluginName()
+    {
+        return _('Schnellzugriff');
+    }
+
     public function getPortalTemplate()
     {
         PageLayout::addScript($this->getPluginUrl() . '/js/QuickSelection.js');
@@ -27,7 +32,6 @@ class QuickSelection extends StudIPPlugin implements PortalPlugin
         ));
 
         $template->icons = array($navigation);
-        $template->title = _('Schnellzugriff');
 
         return $template;
     }

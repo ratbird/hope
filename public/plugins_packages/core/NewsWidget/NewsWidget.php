@@ -13,6 +13,11 @@ require_once 'app/controllers/news.php';
 
 class NewsWidget extends StudIPPlugin implements PortalPlugin
 {
+    public function getPluginName()
+    {
+        return _('Ankündigungen');
+    }
+
     function getPortalTemplate()
     {
         $dispatcher = new StudipDispatcher();
@@ -33,7 +38,6 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
             $icons[] = $navigation;
         }
 
-        $template->title = _('Ankündigungen');
         $template->icons = $icons;
 
         return $template;

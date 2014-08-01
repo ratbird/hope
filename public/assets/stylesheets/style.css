@@ -232,10 +232,11 @@ a.link-intern:before {
   display: inline-block;
   height: 16px;
   padding-right: 2px;
-  background-image: url("../images/icons/16/blue/link-intern.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/link-intern.png") 1x, url("../images/icons/32/blue/link-intern.png") 2x);
+  background-image: url("../images/icons/32/blue/link-intern.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/link-intern.png") 1x, url("../images/icons/64/blue/link-intern.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 a.link-extern:before {
   background-repeat: no-repeat;
@@ -243,10 +244,11 @@ a.link-extern:before {
   display: inline-block;
   height: 16px;
   padding-right: 2px;
-  background-image: url("../images/icons/16/blue/link-extern.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/link-extern.png") 1x, url("../images/icons/32/blue/link-extern.png") 2x);
+  background-image: url("../images/icons/32/blue/link-extern.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/link-extern.png") 1x, url("../images/icons/64/blue/link-extern.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 a img {
   border: 0;
@@ -1247,10 +1249,11 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/32/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .css-tree.collapsable input[type=checkbox] + label:before {
   -webkit-transition: transform 300ms;
@@ -1275,10 +1278,11 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x, url("../images/icons/32/blue/arr_1down.png") 2x);
+  background-image: url("../images/icons/32/blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1down.png") 1x, url("../images/icons/64/blue/arr_1down.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
   background-repeat: no-repeat;
@@ -1286,10 +1290,11 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/32/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
   -webkit-transform: rotate(90deg);
@@ -2501,10 +2506,11 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   padding-right: 2px;
-  background-image: url("../images/icons/16/white/link-intern.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/link-intern.png") 1x, url("../images/icons/32/white/link-intern.png") 2x);
+  background-image: url("../images/icons/32/white/link-intern.png");
+  background-image: -webkit-image-set(url("../images/icons/32/white/link-intern.png") 1x, url("../images/icons/64/white/link-intern.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .sidebar a.link-extern:before {
   background-repeat: no-repeat;
@@ -2512,10 +2518,11 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   padding-right: 2px;
-  background-image: url("../images/icons/16/white/link-extern.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/link-extern.png") 1x, url("../images/icons/32/white/link-extern.png") 2x);
+  background-image: url("../images/icons/32/white/link-extern.png");
+  background-image: -webkit-image-set(url("../images/icons/32/white/link-extern.png") 1x, url("../images/icons/64/white/link-extern.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 /*
 .sidebar-widget.sidebar-infobox {
@@ -2766,10 +2773,11 @@ section.contentbox article header h1:before {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1right.png") 1x, url("../images/icons/32/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/32/blue/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 section.contentbox article header h1:before {
   -webkit-transition: all 300ms ease 0s;
@@ -2837,10 +2845,11 @@ section.contentbox article.new header h1:before {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/red/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1right.png") 1x, url("../images/icons/32/red/arr_1right.png") 2x);
+  background-image: url("../images/icons/32/red/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/32/red/arr_1right.png") 1x, url("../images/icons/64/red/arr_1right.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 #header .badge {
   position: relative;
@@ -3290,10 +3299,11 @@ a.message-tag:before {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/blue/tag.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/tag.png") 1x, url("../images/icons/32/blue/tag.png") 2x);
+  background-image: url("../images/icons/32/blue/tag.png");
+  background-image: -webkit-image-set(url("../images/icons/32/blue/tag.png") 1x, url("../images/icons/64/blue/tag.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 #message-move-handle {
   background-color: rgba(255, 255, 255, 0.3);
@@ -3309,10 +3319,11 @@ a.message-tag:before {
   display: inline-block;
   height: 20px;
   padding-right: 2px;
-  background-image: url("../images/icons/20/blue/mail.png");
-  background-image: -webkit-image-set(url("../images/icons/20/blue/mail.png") 1x, url("../images/icons/40/blue/mail.png") 2x);
+  background-image: url("../images/icons/40/blue/mail.png");
+  background-image: -webkit-image-set(url("../images/icons/40/blue/mail.png") 1x, url("../images/icons/80/blue/mail.png") 2x);
   vertical-align: text-top;
   width: 20px;
+  background-size: 100% 100%;
 }
 #messages-tags.dragging .sidebar-widget-content {
   background-color: #fff8d6;
@@ -3572,10 +3583,11 @@ div.clear {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/grey/info-circle.png");
-  background-image: -webkit-image-set(url("../images/icons/16/grey/info-circle.png") 1x, url("../images/icons/32/grey/info-circle.png") 2x);
+  background-image: url("../images/icons/32/grey/info-circle.png");
+  background-image: -webkit-image-set(url("../images/icons/32/grey/info-circle.png") 1x, url("../images/icons/64/grey/info-circle.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .tooltip.tooltip-icon.tooltip-important:before {
   background-repeat: no-repeat;
@@ -3583,10 +3595,11 @@ div.clear {
   display: inline-block;
   height: 16px;
   padding-right: 0;
-  background-image: url("../images/icons/16/red/info-circle.png");
-  background-image: -webkit-image-set(url("../images/icons/16/red/info-circle.png") 1x, url("../images/icons/32/red/info-circle.png") 2x);
+  background-image: url("../images/icons/32/red/info-circle.png");
+  background-image: -webkit-image-set(url("../images/icons/32/red/info-circle.png") 1x, url("../images/icons/64/red/info-circle.png") 2x);
   vertical-align: text-top;
   width: 16px;
+  background-size: 100% 100%;
 }
 .tooltip .tooltip-content {
   position: relative;

@@ -165,8 +165,28 @@
             ajaxRequest = null;
             lastAjaxDuration = +(new Date()) - dateOfLastCall;
 
+            // If logged out
             if (arguments.length === 3 && arguments[1] === 'error' && arguments[0].status === 403) {
+                // Stop updater
                 STUDIP.JSUpdater.stop();
+
+                // Present appropriate message in dialog
+                var message = 'Bitte laden Sie die Seite neu, um fortzufahren'.toLocaleString(),
+                    buttons = {};
+                buttons['Neu laden'.toLocaleString()] = function () {
+                    location.reload();
+                }
+
+                $('<div>').html(message).css({
+                    textAlign: 'center',
+                    padding: '2em 0'
+                }).dialog({
+                    dialogClass: 'no-close',
+                    width: '50%',
+                    modal: true,
+                    buttons: buttons,
+                    title: 'Sie sind nicht mehr im System angemeldet.'.toLocaleString()
+                });
             } else {
                 registerNextPoll();
             }

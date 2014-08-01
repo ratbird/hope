@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -5235,6 +5235,9 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
   background-image: url("../images/icons/16/white/decline.png");
   background-image: -webkit-image-set(url("../images/icons/16/white/decline.png") 1x, url("../images/icons/32/white/decline.png") 2x);
+}
+.ui-dialog.no-close .ui-dialog-titlebar-close {
+  display: none;
 }
 .ui-dialog .ui-dialog-buttonpane {
   padding: 0.5em 0.4em;

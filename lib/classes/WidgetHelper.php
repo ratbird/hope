@@ -16,7 +16,8 @@
  * @since    3.1
  */
 
-class WidgetHelper {
+class WidgetHelper
+{
 
     /**
      * array of submitted widget parameter values
@@ -88,11 +89,10 @@ class WidgetHelper {
      *
      * @return void
      */
-    static function addInitialPositions($col, $ids, $range_id){
-        if(is_array($ids))
-        {
-             foreach ($ids as $pos => $id)
-             {
+    static function addInitialPositions($col, $ids, $range_id)
+    {
+        if(is_array($ids)) {
+             foreach ($ids as $pos => $id) {
                   $pos = intVal($pos);
                   $query = "REPLACE INTO widget_user (`pluginid`, `position`, `range_id`) VALUES (?,?,?);";
                   $statement = DBManager::get()->prepare($query);
@@ -143,7 +143,8 @@ class WidgetHelper {
       * @param string $range_id The range id of the user that defines the setting
       * @param string $group The usergroup
       */
-     static function setAsInitialPositions($range_id, $group) {
+     static function setAsInitialPositions($range_id, $group)
+     {
          DBManager::get()->execute('DELETE FROM widget_default WHERE `perm` = ?', array($group));
          DBManager::get()->execute('INSERT INTO widget_default (SELECT pluginid, col, position, ? as perm  FROM widget_user WHERE range_id = ?)', array($group, $range_id));
      }
@@ -261,8 +262,8 @@ class WidgetHelper {
      * 
      * @return string widget_name 
      */
-    static function getWidgetName($id) {
-
+    static function getWidgetName($id)
+    {
         $query = "SELECT `pluginid` FROM `widget_user` WHERE `id`=?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($id));
@@ -294,7 +295,8 @@ class WidgetHelper {
      *
      * @return array All available widgets.
      */
-    static function getAvailableWidgets($user_id = null) {
+    static function getAvailableWidgets($user_id = null)
+    {
         $all_widgets = PluginEngine::getPlugins('PortalPlugin');
 
         $used_widgets = is_null($user_id)
@@ -311,4 +313,3 @@ class WidgetHelper {
     }
 
 }
-?>

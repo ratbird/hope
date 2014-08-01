@@ -49,10 +49,6 @@ class StartController extends AuthenticatedController
      */
     function index_action($action = false, $widgetId = null)
     {
-        $this->left = array();
-        $this->right = array();
-
-
         $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
         $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
 
@@ -77,16 +73,21 @@ class StartController extends AuthenticatedController
         $sidebar->addWidget($nav);
 
         // Show action to add widget only if not all widgets have already been added.
+        $actions = new ActionsWidget();
+
         if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
-            $actions = new ActionsWidget();
             $actions->addLink(_('Neues Widget hinzufügen'),
                               $this->url_for('start/add'),
                               'icons/16/blue/add.png')->asDialog();
         }
 
+        $actions->addLink(_('Standard wiederherstellen'),
+                          $this->url_for('start/reset'),
+                          'icons/16/blue/accept.png');
+        $sidebar->addWidget($actions);
+
         // Root may set initial positions
         if ($GLOBALS['perm']->have_perm('root')) {
-
             $settings = new ActionsWidget();
             $settings->setTitle(_('Einstellungen'));
             $settings->addElement(new WidgetElement(_('Standard-Startseite bearbeiten:')));
@@ -99,10 +100,6 @@ class StartController extends AuthenticatedController
             }
 
             $sidebar->addWidget($settings);
-        }
-
-        if ($actions) {
-            $sidebar->addWidget($actions);
         }
     }
 
@@ -199,6 +196,28 @@ class StartController extends AuthenticatedController
                                WidgetHelper::getWidgetName($id));
             $this->flash['question'] = createQuestion2($message, array(), array(), $this->url_for('start/delete/' . $id));
         }
+        $this->redirect('start');
+    }
+
+    /**
+     * Resets widget to initial default state.
+     */
+    public function reset_action()
+    {
+        $widgets = array_merge(
+            WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0),
+            WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1)
+        );
+
+        foreach ($widgets as $widget) {
+            $name = WidgetHelper::getWidgetName($widget->widget_id);
+            WidgetHelper::removeWidget($widget->widget_id, $name, $GLOBALS['user']->id);
+        }
+
+        WidgetHelper::setInitialPositions();
+
+        $message = _('Die Widgets wurden auf die Standardkonfiguration zurückgesetzt.');
+        PageLayout::postMessage(MessageBox::success($message));
         $this->redirect('start');
     }
 

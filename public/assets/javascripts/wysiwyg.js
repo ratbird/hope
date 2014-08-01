@@ -307,11 +307,6 @@ jQuery(function ($) {
             $(window).resize(stickyTools);
             editor.on('focus', stickyTools); // hidden toolbar might scroll off screen
 
-            // set toolbar's z-index higher than editor's
-            // NOTE +1000 because source-view also has higher z-index than editor
-            var editorZ = Number(editor.container.getStyle('z-index')) || 0;
-            toolbar.css('z-index', editorZ + 1000);
-
             // focus the editor so the user can immediately hack away...
             editor.focus();
         });
@@ -319,26 +314,27 @@ jQuery(function ($) {
 
     // editor utilities
     function updateStickyTools(editor) {
-        var MARGIN = 25,
+        var MARGIN = $('#barBottomContainer').length ? $('#barBottomContainer').height() : 25,
             toolbarId = editor.config.sharedSpaces.top,
             toolbar = $('#' + toolbarId),
             placeholder = $('#' + toolbarId + '-placeholder'),
             outOfView = $(window).scrollTop() + MARGIN
-                        > placeholder.offset().top;
+                        > placeholder.offset().top,
+            width = $(editor.container.$).outerWidth(true);
 
         // is(':visible'): offset() is wrong for hidden elements
         if (toolbar.is(':visible') && outOfView) {
             toolbar.css({
                 position: 'fixed',
                 top: MARGIN,
-                'max-width': editor.window.getViewPaneSize().width
+                width: width
             });
             placeholder.css('height', toolbar.height());
         } else {
             toolbar.css({
                 position: 'relative',
                 top: '',
-                'max-width': editor.container.getStyle('width')
+                width: width
             });
             placeholder.css('height', 0);
         }

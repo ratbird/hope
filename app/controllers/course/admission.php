@@ -87,7 +87,7 @@ class Course_AdmissionController extends AuthenticatedController
     {
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
-        
+
         $this->all_domains = UserDomain::getUserDomains();
         $this->seminar_domains = array_map(function($d) {return $d->getId();}, UserDomain::getUserDomainsForSeminar($this->course_id));
         $this->current_courseset = CourseSet::getSetForCourse($this->course_id);
@@ -330,8 +330,7 @@ class Course_AdmissionController extends AuthenticatedController
         if (Request::submitted('change_course_set_assign') && Request::get('course_set_assign') && !LockRules::Check($this->course_id, 'admission_type')) {
             $cs = new CourseSet(Request::option('course_set_assign'));
             if ($cs->isUserAllowedToAssignCourse($this->user_id, $this->course_id)) {
-                $cs->addCourse($this->course_id);
-                $cs->store();
+                CourseSet::addCourseToSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (in_array($this->course_id, $cs->getCourses())) {
                     PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde durchgeführt."), htmlReady($cs->getName()))));
@@ -344,8 +343,7 @@ class Course_AdmissionController extends AuthenticatedController
                 $question = sprintf(_("In dieser Veranstaltung existiert eine Warteliste. Die bestehende Warteliste mit %s Einträgen wird gelöscht. Sind sie sicher?"), $this->course->getNumWaiting());
             }
             if (!$question && ($cs = CourseSet::getSetForCourse($this->course_id))) {
-                $cs->removeCourse($this->course_id);
-                $cs->store();
+                CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
                 $cs->load();
                 if (!in_array($this->course_id, $cs->getCourses())) {
                     PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde aufgehoben."), htmlReady($cs->getName()))));
@@ -386,7 +384,7 @@ class Course_AdmissionController extends AuthenticatedController
         $cs = new CourseSet(Request::option('set_id'));
         if ($cs->getId()) {
             $template = $GLOBALS['template_factory']->open('shared/tooltip');
-            $this->render_text($template->render(array('text' => $cs->toString())));
+            $this->render_text($template->render(array('text' => $cs->toString(true))));
         } else {
             $this->render_nothing();
         }
@@ -406,7 +404,11 @@ class Course_AdmissionController extends AuthenticatedController
             $course_set = CourseSet::getSetForRule($rule_id) ?: new CourseSet();
             if ((Request::isPost() && Request::submitted('save')) || $rule instanceof LockedAdmission) {
                 if ($rule instanceof LockedAdmission) {
-                     $course_set->setName($rule->getName() . ': ' . $this->course->name);
+                    $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
+                    CourseSet::addCourseToSet($course_set_id, $this->course_id);
+                    PageLayout::postMessage(MessageBox::success(_("Die Veranstaltung wurde gesperrt.")));
+                    $this->redirect($this->url_for('/index'));
+                    return;
                 } else {
                     CSRFProtection::verifyUnsafeRequest();
                     $rule->setAllData(Request::getInstance());
@@ -420,22 +422,22 @@ class Course_AdmissionController extends AuthenticatedController
                     } else {
                         $course_set->setName(trim(Request::get('instant_course_set_name')));
                     }
-                }
-                if (count($errors)) {
-                    PageLayout::postMessage(MessageBox::error(_("Speichern fehlgeschlagen"), array_map('htmlready', $errors)));
-                } else {
-                    $rule->store();
-                    $course_set->setPrivate(true);
-                    $course_set->addAdmissionRule($rule);
-                    $course_set->setAlgorithm(new RandomAlgorithm());//TODO
-                    $course_set->setCourses(array($this->course_id));
-                    if ($another_rule) {
-                        $course_set->addAdmissionRule($another_rule);
+                    if (count($errors)) {
+                        PageLayout::postMessage(MessageBox::error(_("Speichern fehlgeschlagen"), array_map('htmlready', $errors)));
+                    } else {
+                        $rule->store();
+                        $course_set->setPrivate(true);
+                        $course_set->addAdmissionRule($rule);
+                        $course_set->setAlgorithm(new RandomAlgorithm());//TODO
+                        $course_set->setCourses(array($this->course_id));
+                        if ($another_rule) {
+                            $course_set->addAdmissionRule($another_rule);
+                        }
+                        $course_set->store();
+                        PageLayout::postMessage(MessageBox::success(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen.")));
+                        $this->redirect($this->url_for('/index'));
+                        return;
                     }
-                    $course_set->store();
-                    PageLayout::postMessage(MessageBox::success(_("Die Anmelderegel wurde erzeugt und der Veranstaltung zugewiesen.")));
-                    $this->redirect($this->url_for('/index'));
-                    return;
                 }
             }
             if (!$course_set->getId()) {

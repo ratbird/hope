@@ -137,9 +137,11 @@ class Admission_CoursesetController extends AuthenticatedController {
                     $this->myInstitutes[$id] = new Institute($id);
                 }
                 $this->selectedInstitutes = $this->myInstitutes;
-                $allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId, array(), $this->courseset->getSemester());
                 $selectedCourses = $this->courseset->getCourses();
-                $this->selectedSemester = $this->courseset->getSemester();
+                if (!$this->instant_course_set_view) {
+                    $allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId, array(), $this->courseset->getSemester());
+                    $this->selectedSemester = $this->courseset->getSemester();
+                }
             } else {
                 $this->myInstitutes = array();
                 $this->selectedInstitutes = array();
@@ -165,9 +167,11 @@ class Admission_CoursesetController extends AuthenticatedController {
                 foreach ($selectedInstitutes as $id => $selected) {
                     $this->selectedInstitutes[$id] = new Institute($id);
                 }
-                $allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId, array(), $this->courseset->getSemester(), $this->onlyOwnCourses);
                 $selectedCourses = $this->courseset->getCourses();
-                $this->selectedSemester = $this->courseset->getSemester();
+                if (!$this->instant_course_set_view) {
+                    $allCourses = CoursesetModel::getInstCourses(array_keys($this->selectedInstitutes), $coursesetId, array(), $this->courseset->getSemester(), $this->onlyOwnCourses);
+                    $this->selectedSemester = $this->courseset->getSemester();
+                }
             } else {
                 $this->selectedSemester = Semester::findCurrent()->semester_id;
                 $this->selectedInstitutes = $this->myInstitutes;
@@ -212,7 +216,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             if ($this->flash['infotext']) {
                 $this->courseset->setInfoText($this->flash['infotext']);
             }
-            if ($this->flash['privatet']) {
+            if ($this->flash['private']) {
                 $this->courseset->setPrivate($this->flash['private']);
             }
         }
@@ -241,7 +245,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Saves the given course set to database.
-     * 
+     *
      * @param String $coursesetId the course set to save or empty if it is a
      * new course set
      */
@@ -305,7 +309,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Deletes the given course set.
-     * 
+     *
      * @param String $coursesetId the course set to delete
      */
     public function delete_action($coursesetId) {
@@ -322,7 +326,7 @@ class Admission_CoursesetController extends AuthenticatedController {
     /**
      * Fetches courses at institutes specified by a given course set, filtered by a
      * given semester.
-     * 
+     *
      * @param String $coursesetId The courseset to fetch institute assignments
      * from
      * @see CoursesetModel::getInstCourses
@@ -358,7 +362,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Configure settings for several courses at once.
-     * 
+     *
      * @param String $set_id course set ID to fetch courses from
      * @param String $csv    export course members to file
      */
@@ -485,8 +489,8 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Show users who are on an assigned user factor list.
-     * 
-     * @param String $set_id course set to fetch the user lists from  
+     *
+     * @param String $set_id course set to fetch the user lists from
      */
     public function factored_users_action($set_id)
     {
@@ -503,7 +507,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Gets the list of applicants for the courses belonging to this course set.
-     * 
+     *
      * @param String $set_id course set ID
      * @param String $csv    export users to file
      */
@@ -547,7 +551,7 @@ class Admission_CoursesetController extends AuthenticatedController {
 
     /**
      * Gets courses fulfilling the given condition.
-     * 
+     *
      * @param String $seminare_condition SQL condition
      */
     function get_courses($seminare_condition)

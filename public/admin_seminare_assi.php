@@ -1889,15 +1889,8 @@ if (($form == 6) && (Request::submitted('jump_next')))
             }
             //Anmeldeset gesperrt anlegen, wenn gewünscht
             if ($_SESSION['sem_create_data']['sem_admission'] == 3) {
-                $course_set = new CourseSet();
-                $rule = new LockedAdmission();
-                $course_set->setName($rule->getName() . ': ' . $sem->name);
-                $rule->store();
-                $course_set->setPrivate(true);
-                $course_set->addAdmissionRule($rule);
-                $course_set->setAlgorithm(new RandomAlgorithm());//TODO
-                $course_set->setCourses(array($sem->id));
-                $course_set->store();
+                $course_set_id = CourseSet::getGlobalLockedAdmissionSetId();
+                CourseSet::addCourseToSet($course_set_id, $sem->id);
             }
 
             //end of the seminar-creation process

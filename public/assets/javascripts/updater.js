@@ -165,7 +165,11 @@
             ajaxRequest = null;
             lastAjaxDuration = +(new Date()) - dateOfLastCall;
 
-            registerNextPoll();
+            if (arguments.length === 3 && arguments[1] === 'error' && arguments[0].status === 403) {
+                STUDIP.JSUpdater.stop();
+            } else {
+                registerNextPoll();
+            }
         });
     }
 

@@ -15,7 +15,37 @@ require_once 'app/controllers/authenticated_controller.php';
  * converts the textstrings to utf8 and returns it as a json-object to the
  * internal javascript-function "STUDIP.JSUpdater.process(json)".
  */
-class JsupdaterController extends AuthenticatedController {
+class JsupdaterController extends AuthenticatedController
+{
+    // Allow nobody to prevent login screen
+    // Refers to http://develop.studip.de/trac/ticket/4771
+    protected $allow_nobody = true;
+
+    /**
+     * Checks whether we have a valid logged in user,
+     * send "Forbidden" otherwise
+     *
+     * @param String $action The action to perform
+     * @param Array  $args   Potential arguments
+     */
+    public function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+
+        // Check for a valid logged in user (only when an ajax request occurs)
+        if (Request::isXHR() && (!is_object($GLOBALS['user']) || $GLOBALS['user']->id === 'nobody')) {
+            $this->response->set_status(403);
+            $action = 'nop';
+        }
+    }
+    
+    /**
+     * Does and renders absolute nothing.
+     */
+    public function nop_action()
+    {
+        $this->render_nothing();
+    }
 
     /**
      * Main action that returns a json-object like
@@ -26,7 +56,8 @@ class JsupdaterController extends AuthenticatedController {
      * This action is called by STUDIP.JSUpdater.poll and the result processed
      * the internal STUDIP.JSUpdater.process method
      */
-    public function get_action() {
+    public function get_action()
+    {
         $data = UpdateInformation::getInformation();
         $data = array_merge($data, $this->coreInformation());
         $data = studip_utf8encode($data);
@@ -40,7 +71,8 @@ class JsupdaterController extends AuthenticatedController {
      * in the list in the header.
      * @param string $id : hash-id of the notification
      */
-    public function mark_notification_read_action($id) {
+    public function mark_notification_read_action($id)
+    {
         PersonalNotifications::markAsRead($id);
         if (Request::isXhr()) {
             $this->render_nothing();
@@ -59,7 +91,8 @@ class JsupdaterController extends AuthenticatedController {
      * not annoy the user anymore. But he/she is still able to see the notificaion-list.
      * Just sets a unix-timestamp in the user-config NOTIFICATIONS_SEEN_LAST_DATE.
      */
-    public function notifications_seen_action() {
+    public function notifications_seen_action()
+    {
         UserConfig::get($GLOBALS['user']->id)->store('NOTIFICATIONS_SEEN_LAST_DATE', time());
         $this->render_text(time());
     }
@@ -70,7 +103,8 @@ class JsupdaterController extends AuthenticatedController {
      * collected and set here.
      * @return array: array(array('js_function' => $data), ...)
      */
-    protected function coreInformation() {
+    protected function coreInformation()
+    {
         $data = array();
         if (PersonalNotifications::isActivated()) {
             $notifications = PersonalNotifications::getMyNotifications();
@@ -110,7 +144,8 @@ class JsupdaterController extends AuthenticatedController {
      * @param array $data: any array with strings in windows-1252 encoded
      * @return array: almost the same array but strings are now utf8-encoded
      */
-    protected function recursive_studip_utf8encode(array $data) {
+    protected function recursive_studip_utf8encode(array $data)
+    {
         foreach ($data as $key => $component) {
             if (is_array($component)) {
                 $data[$key] = $this->recursive_studip_utf8encode($component);

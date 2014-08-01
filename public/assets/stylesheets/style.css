@@ -231,7 +231,7 @@ a.link-intern:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 2px;
+  margin-right: 2px;
   background-image: url("../images/icons/32/blue/link-intern.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/link-intern.png") 1x, url("../images/icons/64/blue/link-intern.png") 2x);
   vertical-align: text-top;
@@ -243,7 +243,7 @@ a.link-extern:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 2px;
+  margin-right: 2px;
   background-image: url("../images/icons/32/blue/link-extern.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/link-extern.png") 1x, url("../images/icons/64/blue/link-extern.png") 2x);
   vertical-align: text-top;
@@ -1248,7 +1248,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/blue/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
@@ -1277,7 +1277,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/blue/arr_1down.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1down.png") 1x, url("../images/icons/64/blue/arr_1down.png") 2x);
   vertical-align: text-top;
@@ -1289,7 +1289,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/blue/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
@@ -2505,7 +2505,7 @@ select.sidebar-selectlist {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 2px;
+  margin-right: 2px;
   background-image: url("../images/icons/32/white/link-intern.png");
   background-image: -webkit-image-set(url("../images/icons/32/white/link-intern.png") 1x, url("../images/icons/64/white/link-intern.png") 2x);
   vertical-align: text-top;
@@ -2517,7 +2517,7 @@ select.sidebar-selectlist {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 2px;
+  margin-right: 2px;
   background-image: url("../images/icons/32/white/link-extern.png");
   background-image: -webkit-image-set(url("../images/icons/32/white/link-extern.png") 1x, url("../images/icons/64/white/link-extern.png") 2x);
   vertical-align: text-top;
@@ -2772,7 +2772,7 @@ section.contentbox article header h1:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/blue/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
   vertical-align: text-top;
@@ -2844,7 +2844,7 @@ section.contentbox article.new header h1:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/red/arr_1right.png");
   background-image: -webkit-image-set(url("../images/icons/32/red/arr_1right.png") 1x, url("../images/icons/64/red/arr_1right.png") 2x);
   vertical-align: text-top;
@@ -3298,7 +3298,7 @@ a.message-tag:before {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/blue/tag.png");
   background-image: -webkit-image-set(url("../images/icons/32/blue/tag.png") 1x, url("../images/icons/64/blue/tag.png") 2x);
   vertical-align: text-top;
@@ -3318,7 +3318,7 @@ a.message-tag:before {
   content: ' ';
   display: inline-block;
   height: 20px;
-  padding-right: 2px;
+  margin-right: 2px;
   background-image: url("../images/icons/40/blue/mail.png");
   background-image: -webkit-image-set(url("../images/icons/40/blue/mail.png") 1x, url("../images/icons/80/blue/mail.png") 2x);
   vertical-align: text-top;
@@ -3582,7 +3582,7 @@ div.clear {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/grey/info-circle.png");
   background-image: -webkit-image-set(url("../images/icons/32/grey/info-circle.png") 1x, url("../images/icons/64/grey/info-circle.png") 2x);
   vertical-align: text-top;
@@ -3594,7 +3594,7 @@ div.clear {
   content: ' ';
   display: inline-block;
   height: 16px;
-  padding-right: 0;
+  margin-right: 0;
   background-image: url("../images/icons/32/red/info-circle.png");
   background-image: -webkit-image-set(url("../images/icons/32/red/info-circle.png") 1x, url("../images/icons/64/red/info-circle.png") 2x);
   vertical-align: text-top;

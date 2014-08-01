@@ -2606,13 +2606,17 @@ select.sidebar-selectlist {
   margin: 0 10px;
   padding: 0;
 }
+.helpbar .helpbar-widgets a {
+  vertical-align: text-bottom;
+}
 .helpbar .helpbar-widgets a:link,
 .helpbar .helpbar-widgets a:visited {
   color: #fff;
 }
 .helpbar .helpbar-widgets a:hover,
 .helpbar .helpbar-widgets a:active {
-  color: #ff3333;
+  color: #c3c8cc;
+  text-decoration: underline;
 }
 .helpbar .helpbar-widgets > li {
   border-top: 1px solid #899ab9;

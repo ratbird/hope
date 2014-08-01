@@ -188,6 +188,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                     }
                     $this->room_categories = $room_categories;
                     $this->new_room_request_type = Request::option('new_room_request_type');
+                    $this->is_resources_admin = getGlobalPerms($GLOBALS['user']->id);
                     $title = _("Verwaltung von Raumanfragen");
                     if ((Request::submitted('save') || Request::submitted('save_close'))) {
                        if ($request->getSettedPropertiesCount() || $request->getResourceId()) {

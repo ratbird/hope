@@ -299,7 +299,11 @@ class MessagesController extends AuthenticatedController {
         } else if (!count(array_filter(Request::getArray('message_to')))) {
             PageLayout::postMessage(MessageBox::error(_('Sie haben nicht angegeben, wer die Nachricht empfangen soll!')));
         }
-        $this->redirect("messages/sent");
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;Charset=windows-1252');
+            $this->response->add_header('X-Title', _("Nachricht verschicken"));
+        }
     }
 
     public function tag_action($message_id) {

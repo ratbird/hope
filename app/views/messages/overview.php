@@ -90,7 +90,8 @@ $actions->addLink(
 if (Navigation::getItem('/messaging/messages/inbox')->isActive()) {
     $actions->addLink(
         _('Alle als gelesen markieren'),
-        $controller->url_for('messages/overview', array('read_all' => 1))
+        $controller->url_for('messages/overview', array('read_all' => 1)),
+        'icons/16/blue/accept.png'
     );
 }
 $sidebar->addWidget($actions);

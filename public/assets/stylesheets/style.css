@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -232,11 +232,15 @@ a.link-intern:before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/blue/link-intern.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/link-intern.png") 1x, url("../images/icons/64/blue/link-intern.png") 2x);
+  background-image: url("../images/icons/16/blue/link-intern.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  a.link-intern:before {
+    background-image: url("../images/icons/32/blue/link-intern.png");
+    background-size: 16 16;
+  }
 }
 a.link-extern:before {
   background-repeat: no-repeat;
@@ -244,11 +248,15 @@ a.link-extern:before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/blue/link-extern.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/link-extern.png") 1x, url("../images/icons/64/blue/link-extern.png") 2x);
+  background-image: url("../images/icons/16/blue/link-extern.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  a.link-extern:before {
+    background-image: url("../images/icons/32/blue/link-extern.png");
+    background-size: 16 16;
+  }
 }
 a img {
   border: 0;
@@ -458,9 +466,14 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
   background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x, url("../images/icons/32/blue/arr_1down.png") 2x);
   color: #000;
   cursor: pointer;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .collapsable .toggle-indicator a {
+    background-image: url("../images/icons/32/blue/arr_1down.png");
+    background-size: 16 16;
+  }
 }
 .collapsable .empty .toggle-indicator a {
   background-image: url("../images/icons/16/grey/arr_1right.png");
@@ -599,15 +612,25 @@ tr.sortable th.sortasc {
   background-repeat: no-repeat;
   background-position: left center;
   background-image: url("../images/dreieck_up.png");
-  background-image: -webkit-image-set(url("../images/dreieck_up.png") 1x, url("../images/dreieck_up@2x.png") 2x);
   padding-left: 17px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  tr.sortable th.sortasc {
+    background-image: url("../images/dreieck_up@2x.png");
+    background-size: 16px 16px;
+  }
 }
 tr.sortable th.sortdesc {
   background-repeat: no-repeat;
   background-position: left center;
   background-image: url("../images/dreieck_down.png");
-  background-image: -webkit-image-set(url("../images/dreieck_down.png") 1x, url("../images/dreieck_down@2x.png") 2x);
   padding-left: 17px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  tr.sortable th.sortdesc {
+    background-image: url("../images/dreieck_down@2x.png");
+    background-size: 16px 16px;
+  }
 }
 /* styles for settings tables */
 .settings {
@@ -807,14 +830,14 @@ table.default caption header p {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -829,7 +852,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -881,7 +904,12 @@ table.default caption .caption-actions {
 }
 table.default tbody.toggleable.toggled .toggle-switch {
   background-image: url("../images/icons/16//blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1right.png") 1x, url("../images/icons/32//blue/arr_1right.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  table.default tbody.toggleable.toggled .toggle-switch {
+    background-image: url("../images/icons/32//blue/arr_1right.png");
+    background-size: 16 16;
+  }
 }
 table.default tbody.toggleable.toggled tr:not(:first-child) {
   display: none;
@@ -893,12 +921,17 @@ table.default tbody.toggleable .toggle-switch {
   background-color: transparent;
   border: 0;
   background-image: url("../images/icons/16//blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16//blue/arr_1down.png") 1x, url("../images/icons/32//blue/arr_1down.png") 2x);
   display: inline-block;
   height: 16px;
   text-align: center;
   vertical-align: top;
   width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  table.default tbody.toggleable .toggle-switch {
+    background-image: url("../images/icons/32//blue/arr_1down.png");
+    background-size: 16 16;
+  }
 }
 table.default dfn,
 table.default small {
@@ -982,7 +1015,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -1249,11 +1282,15 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/blue/arr_1right.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .css-tree.collapsable input[type=checkbox] + label:before {
+    background-image: url("../images/icons/32/blue/arr_1right.png");
+    background-size: 16 16;
+  }
 }
 .css-tree.collapsable input[type=checkbox] + label:before {
   -webkit-transition: transform 300ms;
@@ -1278,11 +1315,15 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1down.png") 1x, url("../images/icons/64/blue/arr_1down.png") 2x);
+  background-image: url("../images/icons/16/blue/arr_1down.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .css-tree.collapsable input[type=checkbox]:checked + label:before {
+    background-image: url("../images/icons/32/blue/arr_1down.png");
+    background-size: 16 16;
+  }
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
   background-repeat: no-repeat;
@@ -1290,11 +1331,15 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/blue/arr_1right.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
+    background-image: url("../images/icons/32/blue/arr_1right.png");
+    background-size: 16 16;
+  }
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
   -webkit-transform: rotate(90deg);
@@ -1954,12 +1999,17 @@ li#notification_container:hover .list {
   border: 0;
   background-repeat: no-repeat;
   background-image: url("../images/logos/studip-logo.png");
-  background-image: -webkit-image-set(url("../images/logos/studip-logo.png") 1x, url("../images/logos/studip-logo@2x.png") 2x);
   background-image: none, url("../images/logos/studip-logo.svg");
   background-size: 168px 57px;
   display: block;
   width: 168px;
   height: 57px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .studip-logo {
+    background-image: url("../images/logos/studip-logo@2x.png");
+    background-size: 168px 57px;
+  }
 }
 #barTopStudip {
   position: absolute;
@@ -2097,7 +2147,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 #layout-sidebar {
   background: #fff;
@@ -2422,11 +2472,21 @@ ul.widget-list > li {
 }
 .sidebar-widget .widget-options .options-checkbox.options-checked {
   background-image: url("../images/icons/16/blue/checkbox-checked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/checkbox-checked.png") 1x, url("../images/icons/32/blue/checkbox-checked.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-widget .widget-options .options-checkbox.options-checked {
+    background-image: url("../images/icons/32/blue/checkbox-checked.png");
+    background-size: 16 16;
+  }
 }
 .sidebar-widget .widget-options .options-checkbox.options-unchecked {
   background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/checkbox-unchecked.png") 1x, url("../images/icons/32/blue/checkbox-unchecked.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-widget .widget-options .options-checkbox.options-unchecked {
+    background-image: url("../images/icons/32/blue/checkbox-unchecked.png");
+    background-size: 16 16;
+  }
 }
 .sidebar-widget .widget-options .options-radio {
   background-repeat: no-repeat;
@@ -2436,11 +2496,21 @@ ul.widget-list > li {
 }
 .sidebar-widget .widget-options .options-radio.options-checked {
   background-image: url("../images/icons/16/blue/radiobutton-checked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/radiobutton-checked.png") 1x, url("../images/icons/32/blue/radiobutton-checked.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-widget .widget-options .options-radio.options-checked {
+    background-image: url("../images/icons/32/blue/radiobutton-checked.png");
+    background-size: 16 16;
+  }
 }
 .sidebar-widget .widget-options .options-radio.options-unchecked {
   background-image: url("../images/icons/16/blue/radiobutton-unchecked.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/radiobutton-unchecked.png") 1x, url("../images/icons/32/blue/radiobutton-unchecked.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-widget .widget-options .options-radio.options-unchecked {
+    background-image: url("../images/icons/32/blue/radiobutton-unchecked.png");
+    background-size: 16 16;
+  }
 }
 select.sidebar-selectlist {
   width: 100%;
@@ -2464,12 +2534,17 @@ select.sidebar-selectlist {
   width: 29px;
   height: 20px;
   background-image: url("../images/icons/16/white/search.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/search.png") 1x, url("../images/icons/32/white/search.png") 2x);
   float: left;
   background-position: center 3px;
   background-repeat: no-repeat;
   vertical-align: top;
   margin-left: -30px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-search input[type=submit] {
+    background-image: url("../images/icons/32/white/search.png");
+    background-size: 16 16;
+  }
 }
 .sidebar-search ul.needles {
   list-style: none;
@@ -2506,11 +2581,15 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/white/link-intern.png");
-  background-image: -webkit-image-set(url("../images/icons/32/white/link-intern.png") 1x, url("../images/icons/64/white/link-intern.png") 2x);
+  background-image: url("../images/icons/16/white/link-intern.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar a.link-intern:before {
+    background-image: url("../images/icons/32/white/link-intern.png");
+    background-size: 16 16;
+  }
 }
 .sidebar a.link-extern:before {
   background-repeat: no-repeat;
@@ -2518,11 +2597,15 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/white/link-extern.png");
-  background-image: -webkit-image-set(url("../images/icons/32/white/link-extern.png") 1x, url("../images/icons/64/white/link-extern.png") 2x);
+  background-image: url("../images/icons/16/white/link-extern.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar a.link-extern:before {
+    background-image: url("../images/icons/32/white/link-extern.png");
+    background-size: 16 16;
+  }
 }
 /*
 .sidebar-widget.sidebar-infobox {
@@ -2589,12 +2672,17 @@ select.sidebar-selectlist {
 }
 .helpbar .helpbar-title {
   background-image: url("../images/icons/24/white/question-circle.png");
-  background-image: -webkit-image-set(url("../images/icons/24/white/question-circle.png") 1x, url("../images/icons/48/white/question-circle.png") 2x);
   background-position: right top;
   background-repeat: no-repeat;
   margin: 4px 4px -2px;
   overflow: hidden;
   padding: 2px 0 10px 6px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .helpbar .helpbar-title {
+    background-image: url("../images/icons/48/white/question-circle.png");
+    background-size: 24px 24px;
+  }
 }
 .helpbar .helpbar-title label {
   cursor: pointer;
@@ -2629,19 +2717,34 @@ select.sidebar-selectlist {
 }
 .helpbar .help-tours a {
   background-image: url("../images/icons/16/white/play.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/play.png") 1x, url("../images/icons/32/white/play.png") 2x);
   background-position: left 2px;
   background-repeat: no-repeat;
   display: block;
   padding-left: 20px;
 }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .helpbar .help-tours a {
+    background-image: url("../images/icons/32/white/play.png");
+    background-size: 16 16;
+  }
+}
 .helpbar .help-tours a.tour-paused {
   background-image: url("../images/icons/16/white/pause.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/pause.png") 1x, url("../images/icons/32/white/pause.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .helpbar .help-tours a.tour-paused {
+    background-image: url("../images/icons/32/white/pause.png");
+    background-size: 16 16;
+  }
 }
 .helpbar .help-tours a.tour-completed {
   background-image: url("../images/icons/16/white/accept.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/accept.png") 1x, url("../images/icons/32/white/accept.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .helpbar .help-tours a.tour-completed {
+    background-image: url("../images/icons/32/white/accept.png");
+    background-size: 16 16;
+  }
 }
 .helpbar {
   width: 32px;
@@ -2777,11 +2880,15 @@ section.contentbox article header h1:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/blue/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/arr_1right.png") 1x, url("../images/icons/64/blue/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/blue/arr_1right.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  section.contentbox article header h1:before {
+    background-image: url("../images/icons/32/blue/arr_1right.png");
+    background-size: 16 16;
+  }
 }
 section.contentbox article header h1:before {
   -webkit-transition: all 300ms ease 0s;
@@ -2849,11 +2956,15 @@ section.contentbox article.new header h1:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/red/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/32/red/arr_1right.png") 1x, url("../images/icons/64/red/arr_1right.png") 2x);
+  background-image: url("../images/icons/16/red/arr_1right.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  section.contentbox article.new header h1:before {
+    background-image: url("../images/icons/32/red/arr_1right.png");
+    background-size: 16 16;
+  }
 }
 #header .badge {
   position: relative;
@@ -3089,23 +3200,48 @@ button.button[disabled] {
 }
 .button.accept:before {
   background-image: url("../images/icons/16/blue/accept.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1x, url("../images/icons/32/blue/accept.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .button.accept:before {
+    background-image: url("../images/icons/32/blue/accept.png");
+    background-size: 16 16;
+  }
 }
 .button.cancel:before {
   background-image: url("../images/icons/16/blue/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1x, url("../images/icons/32/blue/decline.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .button.cancel:before {
+    background-image: url("../images/icons/32/blue/decline.png");
+    background-size: 16 16;
+  }
 }
 .button.edit:before {
   background-image: url("../images/icons/16/blue/edit.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/edit.png") 1x, url("../images/icons/32/blue/edit.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .button.edit:before {
+    background-image: url("../images/icons/32/blue/edit.png");
+    background-size: 16 16;
+  }
 }
 .button.move-up:before {
   background-image: url("../images/icons/16/blue/arr_1up.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1up.png") 1x, url("../images/icons/32/blue/arr_1up.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .button.move-up:before {
+    background-image: url("../images/icons/32/blue/arr_1up.png");
+    background-size: 16 16;
+  }
 }
 .button.move-down:before {
   background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down.png") 1x, url("../images/icons/32/blue/arr_1down.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .button.move-down:before {
+    background-image: url("../images/icons/32/blue/arr_1down.png");
+    background-size: 16 16;
+  }
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */
@@ -3303,11 +3439,15 @@ a.message-tag:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/blue/tag.png");
-  background-image: -webkit-image-set(url("../images/icons/32/blue/tag.png") 1x, url("../images/icons/64/blue/tag.png") 2x);
+  background-image: url("../images/icons/16/blue/tag.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  a.message-tag:before {
+    background-image: url("../images/icons/32/blue/tag.png");
+    background-size: 16 16;
+  }
 }
 #message-move-handle {
   background-color: rgba(255, 255, 255, 0.3);
@@ -3323,11 +3463,15 @@ a.message-tag:before {
   display: inline-block;
   height: 20px;
   margin-right: 2px;
-  background-image: url("../images/icons/40/blue/mail.png");
-  background-image: -webkit-image-set(url("../images/icons/40/blue/mail.png") 1x, url("../images/icons/80/blue/mail.png") 2x);
+  background-image: url("../images/icons/20/blue/mail.png");
   vertical-align: text-top;
   width: 20px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  #message-move-handle:before {
+    background-image: url("../images/icons/40/blue/mail.png");
+    background-size: 20 20;
+  }
 }
 #messages-tags.dragging .sidebar-widget-content {
   background-color: #fff8d6;
@@ -3587,11 +3731,15 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/grey/info-circle.png");
-  background-image: -webkit-image-set(url("../images/icons/32/grey/info-circle.png") 1x, url("../images/icons/64/grey/info-circle.png") 2x);
+  background-image: url("../images/icons/16/grey/info-circle.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .tooltip.tooltip-icon:before {
+    background-image: url("../images/icons/32/grey/info-circle.png");
+    background-size: 16 16;
+  }
 }
 .tooltip.tooltip-icon.tooltip-important:before {
   background-repeat: no-repeat;
@@ -3599,11 +3747,15 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/32/red/info-circle.png");
-  background-image: -webkit-image-set(url("../images/icons/32/red/info-circle.png") 1x, url("../images/icons/64/red/info-circle.png") 2x);
+  background-image: url("../images/icons/16/red/info-circle.png");
   vertical-align: text-top;
   width: 16px;
-  background-size: 100% 100%;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .tooltip.tooltip-icon.tooltip-important:before {
+    background-image: url("../images/icons/32/red/info-circle.png");
+    background-size: 16 16;
+  }
 }
 .tooltip .tooltip-content {
   position: relative;
@@ -5231,14 +5383,24 @@ div.available-widgets .studip-widget {
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon {
   background-image: url("../images/icons/16/white/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/decline.png") 1x, url("../images/icons/32/white/decline.png") 2x);
   background-position: 0;
   margin: 0;
   display: inline-block;
 }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .ui-dialog .ui-dialog-titlebar-close .ui-icon {
+    background-image: url("../images/icons/32/white/decline.png");
+    background-size: 16 16;
+  }
+}
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
   background-image: url("../images/icons/16/white/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/white/decline.png") 1x, url("../images/icons/32/white/decline.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
+    background-image: url("../images/icons/32/white/decline.png");
+    background-size: 16 16;
+  }
 }
 .ui-dialog.no-close .ui-dialog-titlebar-close {
   display: none;
@@ -5327,12 +5489,22 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept .ui-button-text:before {
   background: no-repeat;
   background-image: url("../images/icons/16/blue/accept.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1x, url("../images/icons/32/blue/accept.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .ui-dialog .ui-dialog-buttonpane .ui-button.accept .ui-button-text:before {
+    background-image: url("../images/icons/32/blue/accept.png");
+    background-size: 16 16;
+  }
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel .ui-button-text:before {
   background: no-repeat;
   background-image: url("../images/icons/16/blue/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1x, url("../images/icons/32/blue/decline.png") 2x);
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .ui-dialog .ui-dialog-buttonpane .ui-button.cancel .ui-button-text:before {
+    background-image: url("../images/icons/32/blue/decline.png");
+    background-size: 16 16;
+  }
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
   padding: 0;

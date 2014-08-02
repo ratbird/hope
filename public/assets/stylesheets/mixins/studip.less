@@ -40,15 +40,18 @@
 @one: ~"1x";
 @two: ~"2x";
 
-.retina-background-image(@image0, @image1) {
+.retina-background-image(@image0, @image1, @width: 100%, @height: @width) {
     background-image: url("@{image-path}/@{image0}");
-    background-image: -webkit-image-set(
-        url("@{image-path}/@{image0}") @one,
-        url("@{image-path}/@{image1}") @two);
+    @media (-webkit-min-device-pixel-ratio: 2),
+           (min-resolution: 192dpi)
+    {
+        background-image: url("@{image-path}/@{image1}");
+        background-size: @width @height;
+    }
 }
 .retina-background-icon(@icon, @size: 16) {
     @retina: @size * 2;
-    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}");
+    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}", @size);
 }
 
 // Icon before
@@ -59,10 +62,9 @@
         display: inline-block;
         height: ~"@{size}px";
         margin-right: @padding;
-        .retina-background-icon(@icon, @size * 2);
+        .retina-background-icon(@icon, @size);
         vertical-align: text-top;
         width: ~"@{size}px";
-        background-size: 100% 100%;
     }
 }
 

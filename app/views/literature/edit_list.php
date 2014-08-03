@@ -37,3 +37,6 @@ $widget = new SidebarWidget();
 $widget->setTitle(_('Merkliste'));
 $widget->addElement(new WidgetElement($content));
 $sidebar->addWidget($widget);
+$widget = new ExportWidget();
+$widget->addLink(_('Druckansicht'), URLHelper::getLink('dispatch.php/literature/print_view?_range_id='.$_range_id), 'icons/16/black/print.png', array('target' => '_blank'));
+$sidebar->addWidget($widget);

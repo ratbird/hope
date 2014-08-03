@@ -243,7 +243,7 @@ class LiteratureController extends AuthenticatedController
         }
         $_the_tree = TreeAbstract::GetInstance("StudipLitList", $_range_id);
         $this->title = sprintf(_("Literatur %s"), $_the_tree->root_name);
-        $this->list = StudipLitList::GetFormattedListsByRange($_SESSION["SessionSeminar"], false, false);
+        $this->list = StudipLitList::GetFormattedListsByRange($_range_id, false, false);
     }
     
     /**

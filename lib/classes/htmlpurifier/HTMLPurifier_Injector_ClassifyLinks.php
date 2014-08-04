@@ -9,7 +9,7 @@ require_once 'lib/visual.inc.php'; // import isLinkIntern
 class HTMLPurifier_Injector_ClassifyLinks extends HTMLPurifier_Injector
 {
     public $name = 'ClassifyLinks';
-    public $needed = array('a' => ['href', 'class']);
+    public $needed = array('a' => array('href', 'class'));
 
     private $sanitizer;
     private $config;

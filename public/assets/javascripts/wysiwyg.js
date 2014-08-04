@@ -77,7 +77,7 @@ jQuery(function ($) {
             extraPlugins: 'widget,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course__files').length > 0 ? ',studip-upload' : ''),
-            removePlugins: 'magic-line',
+            removePlugins: 'magicline',
             enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {

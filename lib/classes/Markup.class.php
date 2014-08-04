@@ -22,6 +22,7 @@ namespace Studip;
 
 require_once 'vendor/HTMLPurifier/HTMLPurifier.auto.php';
 require_once 'htmlpurifier/HTMLPurifier_Injector_Unlinkify.php';
+require_once 'htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
 
 class Markup
 {
@@ -145,6 +146,7 @@ class Markup
         $config->set('Core.RemoveInvalidImg', true);
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
+        $config->set('AutoFormat.Custom', array('ClassifyLinks'));
 
         // avoid <img src="evil_CSRF_stuff">
         $def = $config->getHTMLDefinition(true);

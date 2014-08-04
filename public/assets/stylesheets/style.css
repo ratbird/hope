@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -239,7 +239,7 @@ a.link-intern:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   a.link-intern:before {
     background-image: url("../images/icons/32/blue/link-intern.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 a.link-extern:before {
@@ -255,7 +255,7 @@ a.link-extern:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   a.link-extern:before {
     background-image: url("../images/icons/32/blue/link-extern.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 a img {
@@ -472,7 +472,7 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .collapsable .toggle-indicator a {
     background-image: url("../images/icons/32/blue/arr_1down.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .collapsable .empty .toggle-indicator a {
@@ -830,14 +830,14 @@ table.default caption header p {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   text-align: left;
 }
 table.default tbody td {
@@ -852,7 +852,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.19999999999999996);
+  background-color: rgba(105, 118, 127, 0.2);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -908,7 +908,7 @@ table.default tbody.toggleable.toggled .toggle-switch {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   table.default tbody.toggleable.toggled .toggle-switch {
     background-image: url("../images/icons/32//blue/arr_1right.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 table.default tbody.toggleable.toggled tr:not(:first-child) {
@@ -930,7 +930,7 @@ table.default tbody.toggleable .toggle-switch {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   table.default tbody.toggleable .toggle-switch {
     background-image: url("../images/icons/32//blue/arr_1down.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 table.default dfn,
@@ -1015,7 +1015,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.19999999999999996);
+  background-color: rgba(105, 118, 127, 0.2);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -1289,7 +1289,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .css-tree.collapsable input[type=checkbox] + label:before {
     background-image: url("../images/icons/32/blue/arr_1right.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .css-tree.collapsable input[type=checkbox] + label:before {
@@ -1322,7 +1322,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .css-tree.collapsable input[type=checkbox]:checked + label:before {
     background-image: url("../images/icons/32/blue/arr_1down.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
@@ -1338,7 +1338,7 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
     background-image: url("../images/icons/32/blue/arr_1right.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .csstransforms .css-tree.collapsable input[type=checkbox]:checked + label:before {
@@ -2147,7 +2147,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
 }
 #layout-sidebar {
   background: #fff;
@@ -2476,7 +2476,7 @@ ul.widget-list > li {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-widget .widget-options .options-checkbox.options-checked {
     background-image: url("../images/icons/32/blue/checkbox-checked.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .sidebar-widget .widget-options .options-checkbox.options-unchecked {
@@ -2485,7 +2485,7 @@ ul.widget-list > li {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-widget .widget-options .options-checkbox.options-unchecked {
     background-image: url("../images/icons/32/blue/checkbox-unchecked.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .sidebar-widget .widget-options .options-radio {
@@ -2500,7 +2500,7 @@ ul.widget-list > li {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-widget .widget-options .options-radio.options-checked {
     background-image: url("../images/icons/32/blue/radiobutton-checked.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .sidebar-widget .widget-options .options-radio.options-unchecked {
@@ -2509,7 +2509,7 @@ ul.widget-list > li {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-widget .widget-options .options-radio.options-unchecked {
     background-image: url("../images/icons/32/blue/radiobutton-unchecked.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 select.sidebar-selectlist {
@@ -2543,7 +2543,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar-search input[type=submit] {
     background-image: url("../images/icons/32/white/search.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .sidebar-search ul.needles {
@@ -2588,7 +2588,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar a.link-intern:before {
     background-image: url("../images/icons/32/white/link-intern.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .sidebar a.link-extern:before {
@@ -2604,7 +2604,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .sidebar a.link-extern:before {
     background-image: url("../images/icons/32/white/link-extern.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 /*
@@ -2725,7 +2725,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .helpbar .help-tours a {
     background-image: url("../images/icons/32/white/play.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .helpbar .help-tours a.tour-paused {
@@ -2734,7 +2734,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .helpbar .help-tours a.tour-paused {
     background-image: url("../images/icons/32/white/pause.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .helpbar .help-tours a.tour-completed {
@@ -2743,7 +2743,7 @@ select.sidebar-selectlist {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .helpbar .help-tours a.tour-completed {
     background-image: url("../images/icons/32/white/accept.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .helpbar {
@@ -2887,7 +2887,7 @@ section.contentbox article header h1:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   section.contentbox article header h1:before {
     background-image: url("../images/icons/32/blue/arr_1right.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 section.contentbox article header h1:before {
@@ -2963,7 +2963,7 @@ section.contentbox article.new header h1:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   section.contentbox article.new header h1:before {
     background-image: url("../images/icons/32/red/arr_1right.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 #header .badge {
@@ -3204,7 +3204,7 @@ button.button[disabled] {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .button.accept:before {
     background-image: url("../images/icons/32/blue/accept.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .button.cancel:before {
@@ -3213,7 +3213,7 @@ button.button[disabled] {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .button.cancel:before {
     background-image: url("../images/icons/32/blue/decline.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .button.edit:before {
@@ -3222,7 +3222,7 @@ button.button[disabled] {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .button.edit:before {
     background-image: url("../images/icons/32/blue/edit.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .button.move-up:before {
@@ -3231,7 +3231,7 @@ button.button[disabled] {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .button.move-up:before {
     background-image: url("../images/icons/32/blue/arr_1up.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .button.move-down:before {
@@ -3240,7 +3240,7 @@ button.button[disabled] {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .button.move-down:before {
     background-image: url("../images/icons/32/blue/arr_1down.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 /****************************************************************************/
@@ -3446,7 +3446,7 @@ a.message-tag:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   a.message-tag:before {
     background-image: url("../images/icons/32/blue/tag.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 #message-move-handle {
@@ -3470,7 +3470,7 @@ a.message-tag:before {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   #message-move-handle:before {
     background-image: url("../images/icons/40/blue/mail.png");
-    background-size: 20 20;
+    background-size: 20px 20px;
   }
 }
 #messages-tags.dragging .sidebar-widget-content {
@@ -3738,7 +3738,7 @@ div.clear {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .tooltip.tooltip-icon:before {
     background-image: url("../images/icons/32/grey/info-circle.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .tooltip.tooltip-icon.tooltip-important:before {
@@ -3754,7 +3754,7 @@ div.clear {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .tooltip.tooltip-icon.tooltip-important:before {
     background-image: url("../images/icons/32/red/info-circle.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .tooltip .tooltip-content {
@@ -5390,7 +5390,7 @@ div.available-widgets .studip-widget {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .ui-dialog .ui-dialog-titlebar-close .ui-icon {
     background-image: url("../images/icons/32/white/decline.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
@@ -5399,7 +5399,7 @@ div.available-widgets .studip-widget {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
     background-image: url("../images/icons/32/white/decline.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .ui-dialog.no-close .ui-dialog-titlebar-close {
@@ -5493,7 +5493,7 @@ div.available-widgets .studip-widget {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .ui-dialog .ui-dialog-buttonpane .ui-button.accept .ui-button-text:before {
     background-image: url("../images/icons/32/blue/accept.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel .ui-button-text:before {
@@ -5503,7 +5503,7 @@ div.available-widgets .studip-widget {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .ui-dialog .ui-dialog-buttonpane .ui-button.cancel .ui-button-text:before {
     background-image: url("../images/icons/32/blue/decline.png");
-    background-size: 16 16;
+    background-size: 16px 16px;
   }
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {

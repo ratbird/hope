@@ -51,7 +51,7 @@
 }
 .retina-background-icon(@icon, @size: 16) {
     @retina: @size * 2;
-    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}", @size);
+    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}", ~"@{size}px");
 }
 
 // Icon before

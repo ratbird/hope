@@ -189,6 +189,15 @@ class Helpbar extends WidgetContainer
             }
             $tour_data = $widget->tour_data;
         }
+        // add wiki link and remove it from navigation
+        if (Navigation::hasItem('/links/help')) {
+            $nav = Navigation::getItem('/links/help');
+            Navigation::removeItem('/links/help');
+
+            $this->addLink(_('Weiterführende Hilfe'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
+
+            Navigation::removeItem('/footer/help');
+        }
 
         $content = '';
 

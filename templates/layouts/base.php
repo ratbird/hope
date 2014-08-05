@@ -28,16 +28,6 @@ if ($navigation) {
     }
 }
 
-// Remove help from navigation and set it to help center
-if (Navigation::hasItem('/links/help')) {
-    $nav = Navigation::getItem('/links/help');
-    Navigation::removeItem('/links/help');
-
-    Helpbar::get()->insertLink(_('Weiterführende Hilfe'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
-
-    Navigation::removeItem('/footer/help');
-}
-
 // TODO: Remove this after sidebar migration has been completed
 if ($infobox && is_array($infobox)) {
     $sidebar = Sidebar::get();

@@ -137,6 +137,7 @@ class Course_MembersController extends AuthenticatedController
         $this->order = Request::option('order', 'desc');
         $this->sort_status = Request::get('sort_status');
 
+        Navigation::activateItem('/course/members/view');
         if (Request::int('toggle')) {
             $this->order = $this->order == 'desc' ? 'asc' : 'desc';
         }

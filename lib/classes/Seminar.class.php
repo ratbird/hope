@@ -2043,6 +2043,18 @@ class Seminar
 
         AutoInsert::deleteSeminar($s_id);
 
+        //Anmeldeset Zordnung entfernen
+        $cs = $this->getCourseSet();
+        if ($cs) {
+            CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
+            if (!count($cs->getCourses())
+                && !($GLOBALS['perm']->have_perm('admin', $cs->getUserId())
+                    || ($GLOBALS['perm']->have_perm('dozent', $cs->getUserId()) && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))
+                    )
+                && $cs->getPrivate()) {
+                $cs->delete();
+            }
+        }
         // und das Seminar loeschen.
         $this->course->delete();
         $this->restore();

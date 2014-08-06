@@ -434,6 +434,9 @@ function isURL($url) {
 
 function isLinkIntern($url) {
     $pum = @parse_url($url);
+    if (!isset($pum['port'])) {
+        $pum['port'] = '';
+    }
     if (($pum['scheme'] === 'http' || $pum['scheme'] === 'https')
             && ($pum['host'] == $_SERVER['HTTP_HOST'] || $pum['host'].':'.$pum['port'] == $_SERVER['HTTP_HOST'])
             && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {

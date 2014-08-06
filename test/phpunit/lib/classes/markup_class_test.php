@@ -19,11 +19,7 @@
  * @author      Robert Costa <rcosta@uos.de>
  */
 require_once dirname(__FILE__) . '/../../bootstrap.php';
-
-# common set-up, usually done by lib/bootstraph.php and
-# config/config_local.inc.php when run on web server
-$STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/../../../..');
-$ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH . '/public/';
+require_once 'test/phpunit/fakeserver.php';
 
 # needed by visual.inc.php
 require_once 'lib/classes/DbView.class.php';
@@ -35,98 +31,6 @@ require_once 'lib/classes/Config.class.php';
 
 # class and functions that are tested by this script
 require_once 'lib/classes/Markup.class.php';
-
-# helper functions
-
-function fakeServer($uri) {
-    $urlComponents = parse_url($uri);
-
-    if (isset($urlComponents['host'])) {
-        $_SERVER['SERVER_NAME'] = $urlComponents['host'];
-        $_SERVER['HTTP_HOST'] = $urlComponents['host'];
-    }
-
-    $_SERVER['HTTPS'] = false;
-    $_SERVER['SERVER_PORT'] = 80;
-    if (isset($urlComponents['scheme'])
-        && strtolower($urlComponents['scheme']) == 'https'
-    ) {
-        $_SERVER['HTTPS'] = 'on';
-        $_SERVER['SERVER_PORT'] = 443;
-    }
-
-    if (isset($urlComponents['port'])) {
-        $_SERVER['SERVER_PORT'] = $urlComponents['port'];
-    }
-
-    $path = '';
-    if (isset($urlComponents['path'])) {
-        $_SERVER['PHP_SELF'] = $urlComponents['path'];
-        $path = $urlComponents['path'];
-    }
-
-    $query = isset($urlComponents['query']) ? ('?' . $urlComponents['query']) : '';
-    $fragment = isset($urlComponents['fragment']) ? ('#' . $urlComponents['fragment']) : '';
-    $_SERVER['REQUEST_URI'] = $path . $query . $fragment;
-
-    if (!isset($GLOBALS['CONVERT_IDNA_URL'])) {
-        $GLOBALS['CONVERT_IDNA_URL'] = false;
-    }
-}
-
-function computeRelativePath() {
-    // computes the value of $CANONICAL_RELATIVE_PATH_STUDIP
-    global $_SERVER, $CANONICAL_RELATIVE_PATH_STUDIP;
-
-    // code copied from config/config_local.inc.php
-    $CANONICAL_RELATIVE_PATH_STUDIP = dirname($_SERVER['PHP_SELF']);
-    if (DIRECTORY_SEPARATOR != '/') {
-        $CANONICAL_RELATIVE_PATH_STUDIP = str_replace(
-            DIRECTORY_SEPARATOR, '/', $CANONICAL_RELATIVE_PATH_STUDIP
-        );
-    }
-
-    if (substr($CANONICAL_RELATIVE_PATH_STUDIP, -1) != '/') {
-        $CANONICAL_RELATIVE_PATH_STUDIP .= '/';
-    }
-}
-
-function computeAbsoluteURI() {
-    // computes the value of $ABSOLUTE_URI_STUDIP
-    global $_SERVER, $ABSOLUTE_URI_STUDIP, $CANONICAL_RELATIVE_PATH_STUDIP;
-
-    // code copied from config/config_local.inc.php
-    if (isset($_SERVER['SERVER_NAME'])) {
-        // work around possible bug in lighttpd
-        if (strpos($_SERVER['SERVER_NAME'], ':') !== false) {
-            list($_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']) =
-                explode(':', $_SERVER['SERVER_NAME']);
-        }
-
-        $https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
-        $ABSOLUTE_URI_STUDIP = $https ? 'https' : 'http';
-        $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
-
-        if ($https && $_SERVER['SERVER_PORT'] != 443 ||
-            !$https && $_SERVER['SERVER_PORT'] != 80
-        ) {
-            $ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
-        }
-
-        $ABSOLUTE_URI_STUDIP .= $CANONICAL_RELATIVE_PATH_STUDIP;
-    }
-}
-
-function echoWebGlobals()
-{
-    echo PHP_EOL . "base path\t" . $GLOBALS['STUDIP_BASE_PATH'];
-    echo PHP_EOL . "PHP self\t" . $_SERVER['PHP_SELF'];
-    echo PHP_EOL . "relative path\t" . $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']; 
-    echo PHP_EOL . "server name\t" . $_SERVER['SERVER_NAME'];
-    echo PHP_EOL . "server port\t" . $_SERVER['SERVER_PORT'];
-    echo PHP_EOL . "HTTPS\t\t" . $_SERVER['HTTPS'];
-    echo PHP_EOL . "absolute URI\t" . $GLOBALS['ABSOLUTE_URI_STUDIP'];
-}
 
 # Seminar_Session cannot be mocked since it uses static functions.
 # Also, including phplib_local.inc.php, where Seminar_Session is
@@ -142,16 +46,19 @@ class Seminar_Session
     }
 }
 
-# the actual test
-
+/**
+ * Test case for Markup class.
+ */
 class MarkupTest extends PHPUnit_Framework_TestCase
 {
+    # check for all errors in this test
+
     private static $originalErrorReporting;
 
     public static function setUpBeforeClass()
     {
         MarkupTest::$originalErrorReporting = error_reporting();
-        // check for all errors in this test
+
         // E_STRICT was not part of E_ALL in PHP < 5.4.0
         error_reporting(E_ALL | E_STRICT);
     }
@@ -160,6 +67,8 @@ class MarkupTest extends PHPUnit_Framework_TestCase
     {
         error_reporting(MarkupTest::$originalErrorReporting);
     }
+
+    # unit tests
 
     public function testRemoveHTML()
     {
@@ -197,8 +106,6 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
     public function testGetMediaUrl()
     {
-        global $_SERVER, $STUDIP_DOMAINS, $STUDIP_BASE_PATH;
-
         # mock class Config
         $configStub = $this->getMockBuilder('Config')
         ->disableOriginalConstructor()
@@ -300,11 +207,7 @@ class MarkupTest extends PHPUnit_Framework_TestCase
             $index++;
 
             # fake Stud.IP web server set-up
-            fakeServer($test['uri']);
-            $STUDIP_DOMAINS = $test['domains'];
-            unset($GLOBALS['TransformInternalLinks_domainData']);
-            computeRelativePath();
-            computeAbsoluteURI();
+            fakeServer($test['uri'], $test['domains']);
             Config::get()->LOAD_EXTERNAL_MEDIA = $test['externalMedia'];
             //echoWebGlobals(); // call to help with debugging
 

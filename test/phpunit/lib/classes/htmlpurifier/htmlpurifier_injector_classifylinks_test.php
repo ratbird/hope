@@ -34,12 +34,13 @@ require_once 'lib/classes/htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
  */
 class HTMLPurifier_Injector_ClassifyLinksTest extends PHPUnit_Framework_TestCase
 {
+    // check for all errors in this test
+
     private static $originalErrorReporting;
 
     public static function setUpBeforeClass()
     {
         self::$originalErrorReporting = error_reporting();
-        // check for all errors in this test
         // E_STRICT was not part of E_ALL in PHP < 5.4.0
         error_reporting(E_ALL | E_STRICT);
     }
@@ -49,34 +50,75 @@ class HTMLPurifier_Injector_ClassifyLinksTest extends PHPUnit_Framework_TestCase
         error_reporting(self::$originalErrorReporting);
     }
 
-    public function testClassifyLinks()
-    {
-        $config = \HTMLPurifier_Config::createDefault();
-        $config->set('Core.RemoveInvalidImg', true);
-        $config->set('Attr.AllowedFrameTargets', array('_blank'));
-        $config->set('Attr.AllowedRel', array('nofollow'));
-        $config->set('AutoFormat.Custom', array('ClassifyLinks'));
+    // run tests
 
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testClassifyLinks($uri, $domains, $in, $out)
+    {
+        # create purifier
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('AutoFormat.Custom', array('ClassifyLinks'));
         $purifier = new \HTMLPurifier($config);
 
-        # domains
+        # run test
+        fakeServer($uri, $domains);
+        $this->assertEquals($out, $purifier->purify($in));
+    }
+
+    /**
+     * Data provider for testClassifyLinks.
+     */
+    public function dataProvider()
+    {
+        // domains of faked Stud.IP server
         $domains = array(
-            'org' => 'example.org:80/studip',
-            'home' => 'example.org:80/~home',
-            'net' => 'example.net:80/studip',
+            'org' => 'example.org/studip',
+            'home' => 'example.org/~home',
+            'net' => 'example.net/studip',
         );
 
-        $getUrl = function ($domainKey, $path) use (&$domains) {
+        // return absolute URL for a path on one of the faked domains
+        $url = function ($domainKey, $path) use (&$domains) {
             return 'http://' . $domains[$domainKey] . '/' . $path;
         };
+        $a = function ($url, $className, $content) {
+            $href = ' href="' . $url . '"';
+            $class = empty($className) ? '' : ' class="' . $className . '"';
+            return '<a' . $href . $class . '>' . $content . '</a>';
+        };
 
-        # fake web server
-        fakeServer($getUrl('org', 'index.php'), $domains);
+        // class names for internal and external links
+        $in = 'link-intern';
+        $ex = 'link-extern';
 
-        # run tests
-        $in = '<a href="http://www.google.de">Google</a>';
-        $out = '<a href="http://www.google.de" class="link-extern">Google</a>';
-
-        $this->assertEquals($out, $purifier->purify($in));
+        // return test data
+        return array(
+            array(
+                $url('org', 'index.php'),
+                $domains,
+                $a('http://www.google.de', '', 'Google'),
+                $a('http://www.google.de', $ex, 'Google')
+            ),
+            array(
+                $url('org', 'index.php'),
+                $domains,
+                $a($url('org', 'index.php'), '', 'Main Page'),
+                $a($url('org', 'index.php'), $in, 'Main Page')
+            ),
+            array(
+                $url('org', 'index.php'),
+                $domains,
+                $a($url('home', 'index.php'), '', 'Main Page'),
+                $a($url('home', 'index.php'), $in, 'Main Page')
+            ),
+            array(
+                $url('org', 'index.php'),
+                $domains,
+                $a($url('net', 'index.php'), '', 'Main Page'),
+                $a($url('net', 'index.php'), $in, 'Main Page')
+            ),
+        );
     }
 }

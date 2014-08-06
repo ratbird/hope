@@ -433,7 +433,7 @@ function isURL($url) {
 }
 
 function isLinkIntern($url) {
-    $pum = @parse_url($url);
+    $pum = @parse_url(TransformInternalLinks($url));
     if (!isset($pum['port'])) {
         $pum['port'] = '';
     }

@@ -205,7 +205,7 @@ function selectSem ($sem_id)
         $_SESSION['SessSemName'] =& $SessSemName;
 
         URLHelper::addLinkParam('cid', $SessionSeminar);
-        
+
                 // if the aux data is forced for this seminar forward all user that havent made an input to this site
         if ($course["aux_lock_rule_forced"] && !$perm->have_studip_perm('tutor', $course["Seminar_id"]) && $_SERVER['PATH_INFO'] != '/course/members/additional_input') {
             $statement = DBManager::get()->prepare("SELECT 1 FROM datafields_entries WHERE range_id = ? AND sec_range_id = ? LIMIT 1");
@@ -2054,20 +2054,12 @@ function relsize($size, $verbose = true, $displayed_levels = 1, $glue = ', ')
  * extracts route
  *
  * @param string $route           route (optional, uses REQUEST_URI otherwise)
- * 
+ *
  * @return  string  route
  */
-function get_route($route = '') 
+function get_route($route = '')
 {
-    if (!$route) {
-        $route = str_replace($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'], '', $_SERVER['REQUEST_URI']);
-    } else {
-        $route = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], '', $route);
-    }
-    if (FALSE !== ($pos = strpos($route, '?')))
-        $route = substr($route, 0, $pos);
-    if (FALSE !== ($pos = strpos($route, '#')))
-        $route = substr($route, 0, $pos);
+    $route = substr(parse_url($route ?: $_SERVER['REQUEST_URI'], PHP_URL_PATH), strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']));
     if (strpos($route, 'plugins.php/') !== false) {
         $trails = explode('plugins.php/', $route);
         $pieces = explode('/', $trails[1]);
@@ -2078,12 +2070,14 @@ function get_route($route = '')
         $pieces = explode('/', $trails[1]);
         foreach ($pieces as $index => $piece) {
             $trail .= ($trail ? '/' : '') . $piece;
-            if ($dispatcher->file_exists($trail . '.php'))
+            if ($dispatcher->file_exists($trail . '.php')) {
                 $route = 'dispatch.php/' . $trail . ($pieces[$index+1] ? '/' . $pieces[$index+1] : '');
+            }
         }
     }
-    while (substr($route, strlen($route)-6, 6) == '/index')
+    while (substr($route, strlen($route)-6, 6) == '/index') {
         $route = substr($route, 0, strlen($route)-6);
+    }
     return $route;
 }
 
@@ -2092,10 +2086,10 @@ function get_route($route = '')
  *
  * @param string $requested_route         requested route (for help content or tour)
  * @param string $current_route           current route (optional)
- * 
+ *
  * @return  boolean  result
  */
-function match_route($requested_route, $current_route = '') 
+function match_route($requested_route, $current_route = '')
 {
     if (!$current_route) {
         $current_route = get_route();
@@ -2108,12 +2102,15 @@ function match_route($requested_route, $current_route = '')
     if (!$route_parts[1])
         return true;
     // extract vars and check if they are set accordingly
-    preg_match_all('/([^?&=#]+)=([^&#]*)/', $route_parts[1], $vars);
-    if (!count($vars))
+    $vars = array();
+    parse_str($route_parts[1], $vars);
+    if (!count($vars)) {
         return false;
-    foreach ($vars[1] as $index => $var_name) {
-        if ($_REQUEST[$var_name] != $vars[2][$index])
+    }
+    foreach ($vars as $name => $value) {
+        if (@$_REQUEST[$name] != $value) {
             return false;
+        }
     }
     return true;
 }

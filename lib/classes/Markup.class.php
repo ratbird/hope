@@ -21,8 +21,8 @@
 namespace Studip;
 
 require_once 'vendor/HTMLPurifier/HTMLPurifier.auto.php';
-require_once 'htmlpurifier/HTMLPurifier_Injector_Unlinkify.php';
 require_once 'htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
+require_once 'htmlpurifier/HTMLPurifier_Injector_Unlinkify.php';
 
 class Markup
 {

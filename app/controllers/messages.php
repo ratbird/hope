@@ -17,10 +17,25 @@ class MessagesController extends AuthenticatedController {
 
     protected $number_of_displayed_messages = 50;
 
-    public function overview_action()
+    function before_filter (&$action, &$args)
     {
+        parent::before_filter($action, $args);
+
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
+
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
+        }
+        $this->set_content_type('text/html;charset=windows-1252');
+    }
+
+    public function overview_action()
+    {
         Navigation::activateItem('/messaging/messages/inbox');
 
         if (Request::isPost() && Request::get("delete_message")) {
@@ -51,8 +66,6 @@ class MessagesController extends AuthenticatedController {
 
     public function sent_action()
     {
-        PageLayout::setTitle(_("Nachrichten"));
-        PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
         Navigation::activateItem('/messaging/messages/sent');
 
         if (Request::isPost() && Request::get("delete_message")) {
@@ -99,13 +112,11 @@ class MessagesController extends AuthenticatedController {
                                             ->render(array('message' => $message, 'received' => (bool) Request::int("received")));
         }
 
-        $this->render_text(json_encode(studip_utf8encode($this->output)));
+        $this->render_json($this->output);
     }
 
     public function read_action($message_id)
     {
-        PageLayout::setTitle(_("Nachrichten"));
-        PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
         $this->message = new Message($message_id);
         if (!$this->message->permissionToRead()) {
             throw new AccessDeniedException("Kein Zugriff");
@@ -116,8 +127,6 @@ class MessagesController extends AuthenticatedController {
             Navigation::activateItem('/messaging/messages/inbox');
         }
         if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;Charset=windows-1252');
             $this->response->add_header('X-Title', _("Betreff").": ".$this->message["subject"]);
             $this->response->add_header('X-Tags', json_encode($this->message->getTags()));
             $this->response->add_header('X-All-Tags', json_encode(Message::getUserTags()));
@@ -130,9 +139,7 @@ class MessagesController extends AuthenticatedController {
      */
     public function write_action()
     {
-        PageLayout::setTitle(_("Nachrichten"));
-        PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
-        Navigation::activateItem('/messaging/messages/sent');
+        PageLayout::setTitle(_("Neue Nachricht schreiben"));
 
         //collect possible default adressees
         $this->to = array();
@@ -143,7 +150,7 @@ class MessagesController extends AuthenticatedController {
             $this->default_message->receivers[] = $user;
         }
         if (Request::getArray("rec_uname")) {
-            foreach (Request::getArray("rec_uname") as $username) {
+            foreach (Request::usernameArray("rec_uname") as $username) {
                 $user = new MessageUser();
                 $user->setData(array('user_id' => get_userid($username), 'snd_rec' => "rec"));
                 $this->default_message->receivers[] = $user;
@@ -181,7 +188,7 @@ class MessagesController extends AuthenticatedController {
             }
             $this->default_message->receivers = DBManager::get()->fetchAll($query, $params, 'MessageUser::build');
         }
-        
+
         if (Request::option('prof_id') && Request::option('deg_id') && $GLOBALS['perm']->have_perm('root')) {
             $query = "SELECT DISTINCT user_id,'rec' as snd_rec
             FROM user_studiengang
@@ -191,7 +198,7 @@ class MessagesController extends AuthenticatedController {
                 Request::option('deg_id')
             ), 'MessageUser::build');
         }
-        
+
         if (Request::option('sd_id') && $GLOBALS['perm']->have_perm('root')) {
             $query = "SELECT DISTINCT user_id,'rec' as snd_rec
             FROM user_studiengang
@@ -200,7 +207,7 @@ class MessagesController extends AuthenticatedController {
                 Request::option('sd_id')
             ), 'MessageUser::build');
         }
-        
+
         if (Request::option('sp_id') && $GLOBALS['perm']->have_perm('root')) {
             $query = "SELECT DISTINCT user_id,'rec' as snd_rec
             FROM user_studiengang
@@ -209,7 +216,7 @@ class MessagesController extends AuthenticatedController {
                 Request::option('sp_id')
             ), 'MessageUser::build');
         }
-        
+
         if (!$this->default_message->receivers->count() && is_array($_SESSION['sms_data']['p_rec'])) {
             $this->default_message->receivers = DBManager::get()->fetchAll("SELECT user_id,'rec' as snd_rec FROM auth_user_md5 WHERE username IN(?) ORDER BY Nachname,Vorname", array($_SESSION['sms_data']['p_rec']), 'MessageUser::build');
         }
@@ -220,7 +227,11 @@ class MessagesController extends AuthenticatedController {
             }
             if (!Request::get('forward')) {
                 if (Request::option("quote") === $old_message->getId()) {
-                    $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
+                    if (Studip\Markup::isHtml($old_message['message'])) {
+                        $this->default_message['message'] = "<div>[quote]\n".$old_message['message']."\n[/quote]</div>";
+                    } else {
+                        $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
+                    }
                 }
                 $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
                 $user = new MessageUser();
@@ -233,7 +244,12 @@ class MessagesController extends AuthenticatedController {
                 $message .= "\n" . _("Datum") . ": " . strftime('%x %X', $old_message['mkdate']);
                 $message .= "\n" . _("Von") . ": " . get_fullname($old_message['autor_id']);
                 $message .= "\n" . _("An") . ": " . join(', ', $old_message->getRecipients()->getFullname());
-                $message .= "\n\n" . $old_message['message'];
+                $message .= "\n\n";
+                if (Studip\Markup::isHtml($old_message['message'])) {
+                    $message = '<div>' . htmlReady($message,false,true) . '</div>' . $old_message['message'];
+                } else {
+                    $message .= $old_message['message'];
+                }
                 if (count($old_message->attachments)) {
                     Request::set('message_id', $old_message->getNewId());
                     foreach($old_message->attachments as $attachment) {
@@ -260,19 +276,25 @@ class MessagesController extends AuthenticatedController {
         if (Request::get("default_subject")) {
             $this->default_message['subject'] = Request::get("default_subject");
         }
+        $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
+        $this->mailforwarding = Request::get('emailrequest') ? true : $settings['send_as_email'];
+        if (trim($settings['sms_sig'])) {
+            if (Studip\Markup::isHtml($this->default_message['message'])) {
+                $this->default_message['message'] .= formatReady("\n\n--\n" . $settings['sms_sig']);
+            } else {
+                $this->default_message['message'] .= "\n\n--\n" . $settings['sms_sig'];
+            }
+        }
         NotificationCenter::postNotification("DefaultMessageForComposerCreated", $this->default_message);
 
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;Charset=windows-1252');
-            $this->response->add_header('X-Title', _("Neue Nachricht schreiben"));
-        }
+
     }
 
     /**
      * Sends a message and redirects the user.
      */
     public function send_action() {
+        PageLayout::setTitle(_("Nachricht verschicken"));
         if (Request::isPost() && count(array_filter(Request::getArray("message_to"))) && Request::submitted("message_body")) {
             $messaging = new messaging();
             $rec_uname = array();
@@ -282,6 +304,7 @@ class MessagesController extends AuthenticatedController {
                 }
             }
             $messaging->provisonal_attachment_id = Request::option("message_id");
+            $messaging->send_as_email =  Request::int("message_mail");
             $messaging->insert_message(
                 Request::get("message_body"),
                 $rec_uname,
@@ -299,20 +322,17 @@ class MessagesController extends AuthenticatedController {
         } else if (!count(array_filter(Request::getArray('message_to')))) {
             PageLayout::postMessage(MessageBox::error(_('Sie haben nicht angegeben, wer die Nachricht empfangen soll!')));
         }
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;Charset=windows-1252');
-            $this->response->add_header('X-Title', _("Nachricht verschicken"));
-        }
     }
 
     public function tag_action($message_id) {
         if (Request::isPost()) {
+            $message = Message::find($message_id);
+            if (!$message->permissionToRead()) {
+                throw new AccessDeniedException("Kein Zugriff");
+            }
             if (Request::get('add_tag')) {
-                $message = new Message($message_id);
                 $message->addTag(Request::get('add_tag'));
             } elseif (Request::get('remove_tag')) {
-                $message = new Message($message_id);
                 $message->removeTag(Request::get('remove_tag'));
             }
         }
@@ -486,9 +506,18 @@ class MessagesController extends AuthenticatedController {
     public function preview_action()
     {
         if (Request::isXhr()) {
-            $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
-            $this->render_text(studip_utf8encode(formatReady(studip_utf8decode(Request::get("text"))."\n".$settings['sms_sig'])));
+            $this->render_text(formatReady(Request::get("text")));
         }
+    }
+
+    function after_filter($action, $args)
+    {
+        if (Request::isXhr()) {
+            if (PageLayout::getTitle()) {
+                $this->response->add_header('X-Title', PageLayout::getTitle());
+            }
+        }
+        parent::after_filter($action, $args);
     }
 
 }

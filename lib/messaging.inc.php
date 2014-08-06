@@ -222,12 +222,12 @@ class messaging
     {
         $receiver     = User::find($rec_user_id);
         $to           = $receiver->Email;
-                    
+
         // do not try to send mails to users without a mail address
         if (!$to) {
             return;
         }
-        
+
         $rec_fullname = $receiver->getFullName();
 
         setTempLanguage($rec_user_id);
@@ -318,17 +318,10 @@ class messaging
 
         $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
 
-        if (basename($_SERVER['PHP_SELF']) == 'dispatch.php/messages/send'){
-            $sms_data = $_SESSION['sms_data'];
-        } else {
-            $sms_data['tmpsavesnd'] = $my_messaging_settings['save_snd'];
-            $sms_data['sig'] = $my_messaging_settings['addsignature'];
-        }
-
         // wenn kein subject uebergeben
         $subject = $subject ?: _('Ohne Betreff');
 
-        $email_request = ($sms_data['tmpemailsnd'] == 1) ? 1 : 0;
+        $email_request = $this->send_as_email ?: $my_messaging_settings['send_as_email'];
 
         // wenn keine zeit uebergeben
         $time = $time ?: time();
@@ -342,13 +335,8 @@ class messaging
         # send message now
         if ($user_id != '____%system%____')  { // real-user message
             $snd_user_id = $user_id;
-            $set_deleted = $set_deleted ?: ($sms_data['tmpsavesnd'] != '1'); // don't save sms in outbox
+            $set_deleted = $set_deleted ?: ($my_messaging_settings['save_snd'] != '1'); // don't save sms in outbox
 
-            // personal-signatur
-            if ($sms_data['sig'] == '1') {
-                $signature = $signature ?: $my_messaging_settings["sms_sig"];
-                $message .= $this->sig_string.$signature;
-            }
         } else { // system-message
             $set_deleted = '1';
             // system-signatur

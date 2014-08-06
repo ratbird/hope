@@ -1,5 +1,3 @@
-<? $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS ?>
-
 <form action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;" data-dialog>
     <? $message_id = Request::option("message_id") ?: md5(uniqid("neWMesSagE")) ?>
     <input type="hidden" name="message_id" id="message_id" value="<?= htmlReady($message_id) ?>">
@@ -64,16 +62,8 @@
     <div>
         <label>
             <h4><?= _("Nachricht") ?></h4>
-            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar"><?= htmlReady($default_message['message']) ?></textarea>
+            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar"><?= htmlReady($default_message['message'],false) ?></textarea>
         </label>
-        <? if ($settings['sms_sig']) : ?>
-        <div>
-            <h4><?= _("Signatur") ?></h4>
-            <p class="message_body">
-                <?= formatReady($settings['sms_sig']) ?>
-            </p>
-        </div>
-        <? endif ?>
     </div>
     <div>
         <ul style="list-style-type: none; text-align: center;">

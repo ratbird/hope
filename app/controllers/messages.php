@@ -28,6 +28,8 @@ class MessagesController extends AuthenticatedController {
             $this->set_layout(null);
             $request = Request::getInstance();
             foreach ($request as $key => $value) {
+                //preserve defaults encoded in links
+                if (Request::isGet() && in_array($key, words('default_body default_subject'))) continue;
                 $request[$key] = studip_utf8decode($value);
             }
         }

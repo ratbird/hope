@@ -21,6 +21,4 @@
 
 require_once '../lib/bootstrap.php';
 
-$sem_id = Request::option('sem_id');
-
-header('Location: ' .URLHelper::getURL('dispatch.php/course/details', array('sem_id' => $sem_id)));
+header('Location: ' .URLHelper::getURL('dispatch.php/course/details', $_GET));

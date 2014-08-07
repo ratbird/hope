@@ -33,6 +33,9 @@ class Course_DetailsController extends AuthenticatedController
         }
 
         $this->course                = Course::find($course_id);
+        if (!$this->course) {
+            throw new Trails_Exception(400);
+        }
         $this->send_from_search_page = Request::get('send_from_search_page');
 
         if ($GLOBALS['SessionSeminar'] != $this->course->id

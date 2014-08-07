@@ -301,6 +301,7 @@ class Step00240CourseSets extends Migration
         $admission = $db->fetchAll("SELECT `seminar_id`,`seminare`.`name`,`start_time`,`duration_time`,`institut_id`,`admission_turnout`,`admission_type`,`admission_starttime`,`admission_endtime`,`admission_endtime_sem`, seminare.chdate
             FROM `seminare` left join `admission_group` on(`group_id`=`admission_group`) WHERE `admission_type` in (1,2) AND `group_id` is null");
         $now = mktime();
+        $preserve_waitlists = array();
         foreach ($admission as $course) {
             /*
              * Check, ob Anmeldeverfahren in der Vergangenheit schon
@@ -334,6 +335,12 @@ class Step00240CourseSets extends Migration
                             $cs->addAdmissionRule($rule2);
                         }
                         $cs->setName('Losverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
+                        //Losliste übernehmen
+                        $db->execute("INSERT INTO `priorities` (`user_id`, `set_id`, `seminar_id`,
+                                                    `priority`, `mkdate`, `chdate`)
+                         SELECT user_id,'".$cs->getId()."',seminar_id,1,mkdate,UNIX_TIMESTAMP()
+                         FROM `admission_seminar_user` WHERE `status` = 'claiming' AND seminar_id=?", array($course['seminar_id']));
+
                     // Chronologische Anmeldung
                     } else {
                         // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
@@ -351,6 +358,7 @@ class Step00240CourseSets extends Migration
                             $cs->addAdmissionRule($rule2);
                         }
                         $cs->setName('Chronologisches Anmeldeverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
+                        $preserve_waitlists[] = $course['seminar_id'];
                     }
                 // Losen oder Anmeldezeitraum vorbei => sperren.
                 } else {
@@ -383,7 +391,9 @@ class Step00240CourseSets extends Migration
         }
 
         //Warte und Anmeldelisten löschen
-        $db->exec("DELETE FROM admission_seminar_user WHERE status <> 'accepted'");
+        $db->exec("DELETE FROM admission_seminar_user WHERE status = 'claiming'");
+        $db->execute("DELETE FROM admission_seminar_user WHERE status = 'awaiting' AND seminar_id NOT IN(?)", array($preserve_waitlists));
+
         $db->exec("DROP TABLE admission_seminar_studiengang");
         $db->exec("DROP TABLE admission_group");
         $db->exec("ALTER TABLE `seminare` DROP `Passwort`");

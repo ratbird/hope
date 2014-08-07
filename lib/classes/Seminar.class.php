@@ -2046,7 +2046,8 @@ class Seminar
         //Anmeldeset Zordnung entfernen
         $cs = $this->getCourseSet();
         if ($cs) {
-            CourseSet::removeCourseFromSet($cs->getId(), $this->course_id);
+            CourseSet::removeCourseFromSet($cs->getId(), $this->getId());
+            $cs->load();
             if (!count($cs->getCourses())
                 && !($GLOBALS['perm']->have_perm('admin', $cs->getUserId())
                     || ($GLOBALS['perm']->have_perm('dozent', $cs->getUserId()) && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))

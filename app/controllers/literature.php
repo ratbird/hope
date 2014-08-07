@@ -97,14 +97,13 @@ class LiteratureController extends AuthenticatedController
     {
         global $_msg;
         
-        if (Request::get('admin_inst_id')) {
-            $this->view = 'lit_inst';
-        }
-
         if (Request::option('_range_id') == "self"){
             $this->_range_id = $GLOBALS['user']->id;
         } else if (Request::option('_range_id')){
             $this->_range_id = Request::option('_range_id');
+        } else if (Request::get('admin_inst_id')) {
+            $this->view = 'lit_inst';
+            $this->_range_id = Request::option('admin_inst_id');
         } else {
             $this->_range_id = $_SESSION['_lit_range'];
         }
@@ -120,17 +119,7 @@ class LiteratureController extends AuthenticatedController
         PageLayout::setTitle(_("Verwaltung von Literaturlisten"));
         
         if (Request::option('list') || Request::option('view') || Request::option('view_mode') || $this->_range_id != $GLOBALS['user']->id){
-            if ($GLOBALS['perm']->have_perm('admin')) {
-                include 'lib/admin_search.inc.php';
-
-                if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
-                    Navigation::activateItem('/admin/course/literature');
-                } else {
-                    Navigation::activateItem('/admin/institute/literature');
-                }
-            } else {
-                Navigation::activateItem('/course/literature/edit');
-            }
+            Navigation::activateItem('/course/literature/edit');
             $this->_range_id = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->_range_id;
         } else {
             Navigation::activateItem('/tools/literature/edit_list');
@@ -147,7 +136,6 @@ class LiteratureController extends AuthenticatedController
         $xmlfile_size = $_FILES['xmlfile']['size'];
         $this->plugin_name  = Request::quoted('plugin_name');
         if ($cmd=="import_lit_list" && $xmlfile) {
-            echo "import";
             StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $this->plugin_name, $this->_range_id);
         }
         $this->msg = $_msg;
@@ -268,16 +256,7 @@ class LiteratureController extends AuthenticatedController
         $_SESSION['_lit_range'] = $this->return_range;
         
         if ($this->return_range != $GLOBALS['user']->id) {
-            if ($GLOBALS['perm']->have_perm('admin')) {
-                include 'lib/admin_search.inc.php';
-                if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
-                    Navigation::activateItem('/admin/course/literature/search');
-                } else {
-                    Navigation::activateItem('/admin/institute/literature/search');
-                }
-            } else {
-                Navigation::activateItem('/course/literature/search');
-            }
+            Navigation::activateItem('/course/literature/search');
             $this->return_range = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->return_range;
         } else {
             Navigation::activateItem('/tools/literature/search');

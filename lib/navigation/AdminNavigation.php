@@ -89,10 +89,6 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem&list=TRUE'));
         }
 
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php?list=TRUE&view=literatur_sem'));
-        }
-
         $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'dispatch.php/course/admission', array('list' => 'TRUE')));
         $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'admin_statusgruppe.php?list=TRUE'));
         $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));
@@ -120,10 +116,6 @@ class AdminNavigation extends Navigation
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst&list=TRUE'));
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
-        }
-
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'dispatch.php/literature/edit_list.php?list=TRUE&view=literatur_inst'));
         }
 
         $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));

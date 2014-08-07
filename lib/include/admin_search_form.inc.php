@@ -551,9 +551,6 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 case "raumzeit.php":
                     printf(_("Zeiten / Räume") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('seminar_id' => $seminar_id))));
                     break;
-                case "admin_lit_list.php":
-                    printf(_("Literatur") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('_range_id'=> $seminar_id))));
-                    break;
                 case "admin_statusgruppe.php":
                     printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('ebene' => 'sem', 'range_id' => $seminar_id))));
@@ -671,7 +668,7 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                             LinkButton::create(_("Bearbeiten"), $this->url_for('course/plus/index/' . $seminar_id));
                     } elseif ($this instanceof Course_AdmissionController){
                         echo _("Zugangsberechtigungen") . '<br>',
-                        LinkButton::create(_("Bearbeiten"), $this->url_for('course/admission/index/' . $seminar_id));
+                            LinkButton::create(_("Bearbeiten"), $this->url_for('course/admission/index/' . $seminar_id));
                     }
                     break;
                 default:

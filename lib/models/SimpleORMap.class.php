@@ -64,7 +64,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * db table metadata
      * @var array $schemes;
      */
-    protected static $schemes = array();
+    protected static $schemes = null;
 
     /**
      * configuration data for subclasses

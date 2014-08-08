@@ -30,7 +30,7 @@ class ContentModule
     var $is_connected;
     var $is_dummy;
     var $allowed_operations;
-    
+
     var $db_class;
     var $view;
     /**
@@ -41,11 +41,11 @@ class ContentModule
     * @param string $module_id module-id
     * @param string $module_type module-type
     * @param string $cms_type system-type
-    */ 
+    */
     function ContentModule($module_id = "", $module_type, $cms_type)
     {
         global $connected_cms, $RELATIVE_PATH_ELEARNING_INTERFACE;
-        
+
         $this->is_dummy = false;
         $this->setCMSType($cms_type);
         $this->setModuleType($module_type);
@@ -53,7 +53,7 @@ class ContentModule
         {
             $this->setId($module_id);
 /*          if ($connected_cms[$this->cms_type]->RELATIVE_PATH_DB_CLASSES != false)
-            {   
+            {
                 require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/" . $connected_cms[$this->cms_type]->RELATIVE_PATH_DB_CLASSES . "/" . $connected_cms[$this->cms_type]->db_classes["content"]["file"] );
                 $classname = $connected_cms[$this->cms_type]->db_classes["content"]["classname"];
                 $this->db_class = new $classname();
@@ -64,12 +64,12 @@ class ContentModule
 
 /**/    }
 
-/*  // Dummy-method. Must be overwritten by subclass.   
+/*  // Dummy-method. Must be overwritten by subclass.
     function readData()
     {
         return false;
     }
-*/  
+*/
 
     /**
     * set id
@@ -243,7 +243,7 @@ class ContentModule
     {
         return $this->authors;
     }
-    
+
     /**
     * set connection
     *
@@ -318,9 +318,16 @@ class ContentModule
     */
     function getIcon()
     {
-        return "<img src=\"" . $this->icon_file . "\">";
+        if (!$this->icon_file) {
+            $this->icon_file = 'icons/16/grey/learnmodule.png';
+        }
+        if (strpos('http', $this->icon_file) === 0) {
+            return "<img src=\"" . $this->icon_file . "\">";
+        } else {
+            return Assets::img($this->icon_file);
+        }
     }
-    
+
     /**
     * get module-status
     *
@@ -343,7 +350,7 @@ class ContentModule
     function createDummyForErrormessage($error = "unknown")
     {
         global $connected_cms;
-        
+
         switch($error)
         {
             case "no permission":
@@ -361,8 +368,8 @@ class ContentModule
             default:
                 $this->setTitle(_("--- Es ist ein unbekannter Fehler aufgetreten! ---"));
                 $this->setDescription(sprintf(_("Unbekannter Fehler beim Lernmodul mit der Referenz-ID \"%s\" im LCMS \"%s\""), $this->getId(), $this->getCMSName()));
-        }   
-    
+        }
+
         $this->is_dummy = true;
     }
 

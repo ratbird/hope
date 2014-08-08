@@ -30,8 +30,8 @@ class MultipersonsearchController extends AuthenticatedController {
         if (strlen($searchterm) >= 3) {
             $mp = MultiPersonSearch::load($name);
             $searchObject = $mp->getSearchObject();
-            $result = $searchObject->getResults($searchterm, array("cid" => Request::get('cid')));
-            $this->result = new SimpleCollection(User::findMany($result, 'ORDER BY nachname asc, vorname asc LIMIT 50'));
+            $result = array_map(function($r) {return $r['user_id'];}, $searchObject->getResults($searchterm, array(), 50));
+            $this->result = User::findMany($result, 'ORDER BY nachname asc, vorname asc');
             $this->alreadyMember = $mp->getDefaultSelectedUsersIDs();
         }
         $this->render_template('multipersonsearch/ajax.php');
@@ -62,15 +62,15 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->quickfilter = $mp->getQuickfilterIds();
         $this->additionHTML = $mp->getAdditionHTML();
         foreach ($this->quickfilter as $title => $users) {
-            $tmp = new SimpleCollection(User::findMany($users, 'ORDER BY nachname asc, vorname asc'));
+            $tmp = User::findMany($users, 'ORDER BY nachname asc, vorname asc');
             $this->quickfilter[$title] = $tmp;
         }
         $this->executeURL = $mp->getExecuteURL();
         $this->jsFunction = $mp->getJSFunctionOnSubmit();
 
-        $tmp = new SimpleCollection(User::findMany($mp->getDefaultSelectableUsersIDs(), 'ORDER BY nachname asc, vorname asc'));
+        $tmp = User::findMany($mp->getDefaultSelectableUsersIDs(), 'ORDER BY nachname asc, vorname asc');
         $this->defaultSelectableUsers = $tmp;
-        $tmp = new SimpleCollection(User::findMany($mp->getDefaultSelectedUsersIDs(), 'ORDER BY nachname asc, vorname asc'));
+        $tmp = User::findMany($mp->getDefaultSelectedUsersIDs(), 'ORDER BY nachname asc, vorname asc');
         $this->defaultSelectedUsers = $tmp;
         $this->ajax = Request::isXhr();
 
@@ -128,8 +128,7 @@ class MultipersonsearchController extends AuthenticatedController {
             $this->selectedUsers = User::findMany($previousSelectedUsers);
             $searchterm = Request::get('freesearch');
             $searchObject = $mp->getSearchObject();
-            $result = $searchObject->getResults($searchterm, array("cid" => Request::get('cid')));
-
+            $result = array_map(function($r) {return $r['user_id'];}, $searchObject->getResults($searchterm, array(), 50));
             $this->selectableUsers = User::findMany($result);
 
             // remove already selected users

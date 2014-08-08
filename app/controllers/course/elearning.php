@@ -29,7 +29,7 @@ class Course_ElearningController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-
+        
         if (!Config::Get()->ELEARNING_INTERFACE_ENABLE ) {
             throw new AccessDeniedException(_('Elearning-Interface ist nicht aktiviert.'));
         } else
@@ -43,7 +43,9 @@ class Course_ElearningController extends AuthenticatedController
         object_set_visit_module('elearning_interface');
 
         $this->search_key = Request::get('search_key');
+        $GLOBALS['search_key'] = $this->search_key;
         $this->cms_select = Request::option('cms_select');
+        $GLOBALS['cms_select'] = $this->cms_select;
         $this->open_all = Request::get('open_all');
         $this->close_all = Request::get('close_all');
         $this->new_account_cms = Request::get('new_account_cms');
@@ -88,7 +90,8 @@ class Course_ElearningController extends AuthenticatedController
     {
         global $connected_cms, $current_module;
         Navigation::activateItem('/course/elearning/show');
-    
+        $GLOBALS['view'] = 'show';
+
         // Zugeordnete Ilias-Kurse ermitteln und ggf. aktualisieren
         $this->course_output = ELearningUtils::getIliasCourses($this->seminar_id);
         if (!empty($this->new_account_cms)) {
@@ -151,7 +154,6 @@ class Course_ElearningController extends AuthenticatedController
             }
         $this->sidebar->addWidget($widget);
         $this->new_account = $this->new_account_cms;
-        $this->view = 'show';
         $this->content_modules = $content_modules_list;
     }
 
@@ -164,6 +166,7 @@ class Course_ElearningController extends AuthenticatedController
         if (! $this->rechte)
             throw new AccessDeniedException(_('Keine Berechtigung zum Bearbeiten der Lernmodul-Verknüpfungen.'));
         Navigation::activateItem('/course/elearning/edit');
+        $GLOBALS['view'] = 'edit';
         // ggf. neuen Ilias4-Kurs anlegen
         if (Request::submitted('create_course') AND $this->rechte) {
             ELearningUtils::loadClass($this->cms_select);
@@ -329,7 +332,6 @@ class Course_ElearningController extends AuthenticatedController
         }
         $this->sidebar->addWidget($widget);
         $this->new_account = $this->new_account_cms;
-        $this->view = 'edit';
         $this->is_inst = ($_SESSION['SessSemName']['class']=='inst');
         if ($this->cms_select) {
             $this->cms_name = $connected_cms[$this->cms_select]->getName();

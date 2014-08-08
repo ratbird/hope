@@ -377,7 +377,7 @@ class MyRealmModel
                         $my_obj['last_modified'] = $result['last_modified'];
                     }
                 }
-                $nav = new Navigation('elearning', 'dispatch/course/elearning/show');
+                $nav = new Navigation('elearning', 'dispatch.php/course/elearning/show');
                 if ((int)$result['neue']) {
                     $nav->setImage('icons/20/red/new/learnmodule.png',
                         array('title' => sprintf('%s %s, %s %s', $result['count'], _('Lernmodul(e)'), $result['neue'], _('neue'))));

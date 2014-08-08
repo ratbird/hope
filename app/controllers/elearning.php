@@ -42,6 +42,7 @@ class ElearningController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.Ilias');
 
         $this->cms_select = Request::option('cms_select');
+        $GLOBALS['cms_select'] = $this->cms_select;
         $this->cms_list = array();
         if ($_SESSION['elearning_open_close']["type"] != "user") {
             unset($_SESSION['elearning_open_close']);

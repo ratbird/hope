@@ -142,7 +142,7 @@ class Markup
      */
     private static function createPurifier()
     {
-        $config = \HTMLPurifier_Config::createDefault();
+        $config = self::createDefaultPurifier();
         $config->set('Core.RemoveInvalidImg', true);
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
@@ -181,13 +181,20 @@ class Markup
     }
 
     public static function removeHTML($html) {
-        $config = \HTMLPurifier_Config::createDefault();
+        $config = self::createDefaultPurifier();
         $config->set('Core.Encoding', 'ISO-8859-1');
         $config->set('HTML.Allowed', 'a[href],img[src]');
         $config->set('AutoFormat.Custom', array('Unlinkify'));
 
         $purifier = new \HTMLPurifier($config);
         return $purifier->purify($html);
+    }
+
+    private static function createDefaultPurifier() {
+        global $TMP_PATH;
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', realpath($TMP_PATH));
+        return $config;
     }
 }
 

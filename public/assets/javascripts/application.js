@@ -239,7 +239,7 @@ jQuery.ui.accordion.prototype.options.icons = {
 jQuery(function ($) {
     // Activate sticky sidebar only on displays with a minimum width of
     // 1024px
-    if (window.matchMedia && window.matchMedia('(min-width:1024px)')) {
+    if (window.matchMedia && window.matchMedia('(min-width:1024px)').matches) {
         // Store document height (we will need this to check for changes)
         var doc_height = $(document).height();
 

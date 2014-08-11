@@ -86,6 +86,22 @@ class StudipVote extends SimpleORMap {
     }
 
     public function getEndinfo() {
+        $stopdate = $this->stopdate ?: ($this->timespan ? $this->startdate + $this->timespan : 0);
+
+        if ($stopdate) {
+            if ($stopdate < time()) {
+                $format = _('Die Umfrage wurde beendet am %x um %R Uhr.');
+            } else if ($this->userVoted()) {
+                if ($this->changeable) {
+                    $format = _('Sie können Ihre Antwort ändern bis zum %x um %R Uhr.');
+                } else {
+                    $format = _('Die Umfrage wird voraussichtlich beendet am %x um %R Uhr.');
+                }
+            } else {
+                $format = _('Sie können abstimmen bis zum %x um %R Uhr.');
+            }
+            return strftime($format, $stopdate);
+        }
         return _('Der Endzeitpunkt dieser Umfrage steht noch nicht fest.');
     }
 

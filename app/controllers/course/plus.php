@@ -22,9 +22,16 @@ class Course_PlusController extends AuthenticatedController
     public function index_action($range_id = null)
     {
 
+
+
+        PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
+
+        $GLOBALS['view_mode'] = $_SESSION['links_admin_data']['topkat'] ?: 'sem';
+        require_once 'lib/admin_search.inc.php';
+        $id = $range_id ?: $_SESSION['SessionSeminar'];
+
         if ($GLOBALS['perm']->have_perm('admin')) {
-            require_once 'lib/admin_search.inc.php';
-            if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
+            if ($GLOBALS['view_mode'] == 'sem') {
                 Navigation::activateItem('/admin/course/modules');
             } else {
                 Navigation::activateItem('/admin/institute/modules');
@@ -33,14 +40,16 @@ class Course_PlusController extends AuthenticatedController
             Navigation::activateItem('/course/modules');
         }
 
-        PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
-
-        $id = $range_id ?: $_SESSION['SessionSeminar'];
-
         if (!$id) {
+            if ($GLOBALS['perm']->have_perm('admin')) {
+
             include 'lib/include/admin_search_form.inc.php';  // will not return
             die(); //must not return
+            } else {
+                throw new Trails_Exception(400);
         }
+        }
+
         $object_type = get_object_type($id);
 
         if (!$GLOBALS['perm']->have_studip_perm($object_type === 'sem' ? 'tutor' : 'admin', $id)) {
@@ -254,7 +263,7 @@ class Course_PlusController extends AuthenticatedController
             }
             if( $changes ){
                 PageLayout::postMessage(MessageBox::success(_('Die veränderte Konfiguration wurde übernommen.')));
-                $this->redirect('course/plus');
+                $this->redirect('course/plus/index/' . $seminar_id);
             }
         }
     }

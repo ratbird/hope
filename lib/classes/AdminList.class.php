@@ -153,9 +153,10 @@ class AdminList {
      */
     public function getSelectTemplate($course_id)
     {
-        if (count($this->results)) {
+        $results = count($this->results) ? $this->results : (is_array($_SESSION['MY_COURSES_LIST']) ? $_SESSION['MY_COURSES_LIST'] : array());
+        if ($results) {
             $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');
-            $adminList->set_attribute('adminList', $this->results);
+            $adminList->set_attribute('adminList', $results);
             $adminList->set_attribute('course_id', $course_id);
             return $adminList;
         }
@@ -168,9 +169,10 @@ class AdminList {
      */
     public function getTopLinkTemplate($course_id)
     {
-        if (count($this->results)) {
+        $results = count($this->results) ? $this->results : (is_array($_SESSION['MY_COURSES_LIST']) ? $_SESSION['MY_COURSES_LIST'] : array());
+        if ($results) {
             $adminTopLinks = $GLOBALS['template_factory']->open("admin/topLinks.php");
-            $adminTopLinks->set_attribute('adminList', $this->results);
+            $adminTopLinks->set_attribute('adminList', $results);
             $adminTopLinks->set_attribute('course_id', $course_id);
             return $adminTopLinks;
         }

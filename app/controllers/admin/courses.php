@@ -134,7 +134,10 @@ class Admin_CoursesController extends AuthenticatedController
             if (!empty($this->courses)) {
                 $teachers = $this->filterTeacher($this->courses);
             }
-
+            $_SESSION['MY_COURSES_LIST'] = array_map(function($c,$id) {
+                        return array('Name' => $c['Name'],
+                                    'Seminar_id' => $id);
+            }, array_values($this->courses), array_keys($this->courses));
         }
         $this->all_lock_rules = array_merge(array(array('name'    => '--' . _("keine Sperrebene") . '--',
                                                         'lock_id' => 'none')),
@@ -430,17 +433,13 @@ class Admin_CoursesController extends AuthenticatedController
         $actions = array(
             1  => array('name'        => 'Grunddaten',
                         'button_name' => 'Grunddaten',
-                        'url'         => 'dispatch.php/course/basicdata/view/%s'),
+                        'url'         => 'dispatch.php/course/basicdata/view?cid=%s'),
             2  => array('name'        => 'Studienbereiche',
                         'button_name' => 'Studienbereiche',
-                        'url'         => 'dispatch.php/course/study_areas/show/%s',
-                        'attributes'      => array('data-dialog' => 'true')),
+                        'url'         => 'dispatch.php/course/study_areas/show?cid=%s'),
             3  => array('name'        => 'Zeiten / Räume',
                         'button_name' => 'Zeiten / Räume',
-                        'url'         => 'raumzeit.php?seminar_id=%s'),
-            4  => array('name'        => 'Raumanfragen',
-                        'button_name' => 'Raumanfragen',
-                        'url'         => 'dispatch.php/course/room_requests/index/%s'),
+                        'url'         => 'raumzeit.php?cid=%s'),
             8  => array('name'        => 'Sperrebene',
                         'button_name' => 'Sperrebenen',
                         'url'         => 'dispatch.php/admin/courses/set_lockrule',
@@ -456,14 +455,19 @@ class Admin_CoursesController extends AuthenticatedController
             11 => array('name'        => 'Veranstaltung kopieren',
                         'button_name' => 'Kopieren',
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
-            14 => array('name'        => 'Literatur',
-                        'button_name' => 'Literatur',
-                        'url'         => 'admin_lit_list.php?_range_id=%s'),
+            14 => array('name'        => 'Zugangsberechtigungen',
+                        'button_name' => 'Zugangsberechtigungen',
+                        'url'         => 'dispatch.php/course/admission?cid=%s'),
             16 => array('name'        => 'Archivieren',
                         'button_name' => 'Archivieren',
                         'url'         => 'archiv_assi.php',
                         'multimode'   => true)
         );
+        if (get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
+            $actions[4] = array('name'        => 'Raumanfragen',
+                                'button_name' => 'Raumanfragen',
+                                'url'         => 'dispatch.php/course/room_requests/index?cid=%s');
+        }
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
             $actions[get_class($plugin)] = array(
                 'name'        => $plugin->getPluginName(),

@@ -140,7 +140,7 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
 } else {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
-//include 'tools/debug/StudipDebugPDO.class.php';
+include 'tools/debug/StudipDebugPDO.class.php';
 /**
  * @deprecated
  */
@@ -598,6 +598,9 @@ class Seminar_Auth extends Auth {
         // load the default set of plugins
         PluginEngine::loadPlugins();
 
+        if (Request::isXHR()) {
+            throw new AccessDeniedException('thou shalt not request login with xhr');
+        }
         if (Request::get('loginname') && !$_COOKIE[$GLOBALS['sess']->name]) {
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {

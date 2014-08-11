@@ -87,7 +87,17 @@ class Course_AdmissionController extends AuthenticatedController
     {
         $this->sidebar = Sidebar::get();
         $this->sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
-
+        if ($GLOBALS['perm']->have_perm('admin') &&
+            ($adminList = AdminList::getInstance()->getSelectTemplate($this->course_id))) {
+            $list = new SelectorWidget();
+            $list->setUrl("?#admin_top_links");
+            $list->setSelectParameterName("cid");
+            foreach ($adminList->adminList as $seminar) {
+                $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+            }
+            $list->setSelection($adminList->course_id);
+            $this->sidebar->addWidget($list);
+        }
         $this->all_domains = UserDomain::getUserDomains();
         $this->seminar_domains = array_map(function($d) {return $d->getId();}, UserDomain::getUserDomainsForSeminar($this->course_id));
         $this->current_courseset = CourseSet::getSetForCourse($this->course_id);

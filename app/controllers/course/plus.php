@@ -47,12 +47,14 @@ class Course_PlusController extends AuthenticatedController
             throw new AccessDeniedException(_("Keine Berechtigung."));
         }
 
-        PageLayout::setTitle(Course::find($id)->getFullname() . " - " . PageLayout::getTitle());
-
         if ($object_type === "sem") {
-            $this->sem           = new Seminar($id);
+            $this->sem           = Course::find($id);
             $this->sem_class     = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$this->sem->status]['class']];
+        } else {
+            $this->sem           = Institute::find($id);
         }
+
+        PageLayout::setTitle($this->sem->getFullname() . " - " . PageLayout::getTitle());
 
         $this->save();
 

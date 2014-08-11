@@ -49,14 +49,13 @@ class VoteController extends AuthenticatedController {
         // Check if we got expired
         if (Request::get('show_expired')) {
             $show_votes[] = 'stopvis';
-        }
-        if ($this->admin) {
-            $this->evaluations = array_merge($this->evaluations, StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED)));
-            $show_votes[] = 'stopinvis';
+            if ($this->admin) {
+                $this->evaluations = array_merge($this->evaluations, StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED)));
+                $show_votes[] = 'stopinvis';
+            }
         }
 
         $this->votes = StudipVote::findBySQL('range_id = ? AND state IN (?) ORDER BY mkdate desc', array($range_id,$show_votes));
-
 
         if (Request::option('contentbox_open')) {
             object_set_visit(Request::option('contentbox_open'), 'vote');

@@ -46,10 +46,10 @@ class StudipVote extends SimpleORMap {
             $result = array();
             foreach ($this->answers as $answer) {
                 foreach ($answer->users as $user) {
-                    $result[] = $user;
+                    $result[$user->user_id] = $user;
                 }
             }
-            return SimpleORMapCollection::createFromArray($result);
+            return SimpleCollection::createFromArray(array_values($result));
         }
     }
 
@@ -105,8 +105,17 @@ class StudipVote extends SimpleORMap {
         return _('Der Endzeitpunkt dieser Umfrage steht noch nicht fest.');
     }
 
-    public function userVoted() {
-        return $this->users->findOneBy('user_id', $GLOBALS['user']->id);
+    public function userVoted($user_id = null) {
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+        if ($this->anonymous) {
+            $query = "SELECT 1 FROM vote_user WHERE user_id = ? AND vote_id = ?";
+        } else {
+            $query = "SELECT 1
+                      FROM voteanswers_user AS a
+                      JOIN voteanswers AS b USING(answer_id)
+                      WHERE a.user_id = ? AND b.vote_id = ?";
+        }
+        return DBManager::get()->fetchColumn($query, array($user_id, $this->id));
     }
 
     public function getMaxvotes() {

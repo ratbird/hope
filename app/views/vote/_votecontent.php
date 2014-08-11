@@ -1,4 +1,6 @@
 <?= $GLOBALS['vote_message'][$vote->id] ?>
+<? $show_result = $controller->showResult($vote) ?>
+<? $maxvotes = $vote->maxvotes ?>
 <section>
     <?= formatReady($vote->question) ?>
 </section>
@@ -6,16 +8,17 @@
     <section class="answers">
         <? foreach (Request::submitted('sort') ? $vote->answers->orderBy("count desc") : $vote->answers as $answer): ?>
         <div class="answer">
-            <? if ($controller->showResult($vote)): ?>
+            <? if ($show_result): ?>
             <div class="bar">
                 <div class="percent">
-                    <?= htmlReady($answer->percent) ?>%
+                    <?= htmlReady(round($answer->count * 100 / $vote->count)) ?>%
                 </div>
-                <div style="display: inline-block; 
-                     border:1px solid black; 
-                     width: <?= 100 * ($answer->width) ?>px; 
-                     height: 8px; 
-                     background-color: rgb(<?= 255 - round(215 * ($answer->width)) ?>, <?= 255 - round(182 * ($answer->width)) ?>, <?= 255 - round(131 * ($answer->width)) ?>); ">
+                <? $width = $maxvotes ? $answer->count / $maxvotes : 0; ?>
+                <div style="display: inline-block;
+                     border:1px solid black;
+                     width: <?= 100 * ($width) ?>px;
+                     height: 8px;
+                     background-color: rgb(<?= 255 - round(215 * ($width)) ?>, <?= 255 - round(182 * ($width)) ?>, <?= 255 - round(131 * ($width)) ?>); ">
                 </div>
             </div>
             <div class="text">
@@ -25,7 +28,7 @@
                 (<?= $answer->count ?> <?= $answer->count == 1 ? _("Stimme") : _("Stimmen") ?>)
                 <? if (Request::get('revealNames') && $vote->namesvisibility): ?>
                 ( <?= join(', ', $answer->getUsernames()) ?> )
-                <? endif; ?>      
+                <? endif; ?>
             </div>
             <? else: ?>
             <label>
@@ -45,11 +48,10 @@
         <? if ($vote->multiplechoice): ?>
         <?= _('Sie konnten mehrere Antworten auswählen.') ?>
         <? endif; ?>
-        <?= $vote->countInfo ?> 
-        <?= $vote->anonymousInfo ?> 
+        <?= $vote->countInfo ?>
+        <?= $vote->anonymousInfo ?>
         <?= $vote->endInfo ?>
         <div class="buttons">
-            <?= $this->render_partial('vote/_buttons.php', array('vote' => $vote)); ?>
         </div>
     </footer>
 </form>

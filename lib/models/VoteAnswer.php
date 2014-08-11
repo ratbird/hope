@@ -29,8 +29,6 @@ class VoteAnswer extends SimpleORMap
         );
         $config['additional_fields']['count'] = true;
         $config['additional_fields']['prepare'] = true;
-        $config['additional_fields']['percent'] = true;
-        $config['additional_fields']['width'] = true;
         $config['additional_fields']['usernames'] = true;
         parent::configure($config);
     }
@@ -41,34 +39,8 @@ class VoteAnswer extends SimpleORMap
      * @return int Number of votes
      */
     public function getCount() {
-        if (count($this->users)) {
-            return count($this->users);
-        }
+
         return $this->counter;
-    }
-
-    /**
-     * Returns the percentage
-     *
-     * @return int
-     */
-    public function getPercent() {
-        if (!$this->count) {
-            return 0;
-        }
-        return round($this->count * 100 / $this->vote->count);
-    }
-
-    /**
-     * Returns the width of the answerbar
-     *
-     * @return int width
-     */
-    public function getWidth() {
-        if (!$this->vote->maxvotes) {
-            return 0;
-        }
-        return $this->count / $this->vote->maxvotes;
     }
 
     /**

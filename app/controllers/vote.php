@@ -41,23 +41,24 @@ class VoteController extends AuthenticatedController {
         // Check if we ned administration icons
         $this->admin = $range_id == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id);
 
-        $this->votes = SimpleCollection::createFromArray(StudipVote::findBySQL('range_id = ? ORDER BY mkdate desc', array($range_id)));
 
         // Load evaluations
         $eval_db = new EvaluationDB();
-        $this->evaluations = SimpleCollection::createFromArray(StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_ACTIVE)));
-
+        $this->evaluations = StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_ACTIVE));
+        $show_votes[] = 'active';
         // Check if we got expired
-        if (!Request::get('show_expired')) {
-            $this->votes = $this->votes->filter(
-                    function($vote) {
-                return $vote->isRunning();
-            });
-        } elseif ($this->admin) {
-            $this->evaluations->merge(new SimpleCollection(StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED))));
+        if (Request::get('show_expired')) {
+            $show_votes[] = 'stopvis';
+        }
+        if ($this->admin) {
+            $this->evaluations = array_merge($this->evaluations, StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_STOPPED)));
+            $show_votes[] = 'stopinvis';
         }
 
-        if ($this->votes->findOneBy('id', Request::option('contentbox_open'))) {
+        $this->votes = StudipVote::findBySQL('range_id = ? AND state IN (?) ORDER BY mkdate desc', array($range_id,$show_votes));
+
+
+        if (Request::option('contentbox_open')) {
             object_set_visit(Request::option('contentbox_open'), 'vote');
         }
     }

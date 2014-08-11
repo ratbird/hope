@@ -2,6 +2,11 @@
 ?>
 <article class="<?= ContentBoxHelper::classes($evaluation->id, $is_new) ?>" id="<?= $evaluation->id ?>">
     <header>
+        <h1>
+            <a href="<?= ContentBoxHelper::switchhref($evaluation->id) ?>">
+                <?= htmlReady($evaluation->title) ?>
+            </a>
+        </h1>
         <nav>
             <a href="<?= $evaluation->author ? URLHelper::getLink('dispatch.php/profile', array('username' => $evaluation->author->username)) : '' ?>">
                 <?= $evaluation->author ? htmlReady($evaluation->author->getFullName()) : '' ?>
@@ -31,11 +36,6 @@
                 </a>
             <? endif; ?>
         </nav>
-        <h1>
-            <a href="<?= ContentBoxHelper::switchhref($evaluation->id) ?>">
-                <?= htmlReady($evaluation->title) ?>
-            </a>
-        </h1>
     </header>
     <section>
         <?= formatReady($evaluation->text); ?>

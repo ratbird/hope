@@ -237,36 +237,47 @@ jQuery.ui.accordion.prototype.options.icons = {
 
 
 jQuery(function ($) {
-    var doc_height = $(document).height();
-    
-    function stickySidebar () {
-        $('#layout-sidebar .sidebar').stick_in_parent({
-            offset_top: $('#barBottomContainer').outerHeight(true),
-            inner_scrolling: true
-        });
-    };
-    stickySidebar();
+    // Activate sticky sidebar only on displays with a minimum width of
+    // 1024px
+    if (window.matchMedia && window.matchMedia('(min-width:1024px)')) {
+        // Store document height (we will need this to check for changes)
+        var doc_height = $(document).height();
 
-    $(document).on('tourstart.studip', function () {
-        $('#layout-sidebar .sidebar').trigger('sticky_kit:detach');
-    }).on('tourend.studip', function () {
+        // This function inits the sticky sidebar by using the StickyKit lib
+        // <http://leafo.net/sticky-kit/>
+        function stickySidebar () {
+            $('#layout-sidebar .sidebar').stick_in_parent({
+                offset_top: $('#barBottomContainer').outerHeight(true),
+                inner_scrolling: true
+            });
+        };
         stickySidebar();
-    });
+
+        // (De|Re)activate when help tours start|stop
+        $(document).on('tourstart.studip', function () {
+            $('#layout-sidebar .sidebar').trigger('sticky_kit:detach');
+        }).on('tourend.studip', function () {
+            stickySidebar();
+        });
     
-    // Recalculcate positions on ajax and img load events
-    $(document).on('ajaxComplete', function () {
-        var curr_height = $(document).height();
-        if (doc_height !== curr_height) {
-            doc_height = curr_height;
-            $(document.body).trigger('sticky_kit:recalc');
-        }
-    });
-    $(document).on('load', '#layout_content img', function () {
-        if (doc_height !== curr_height) {
-            doc_height = curr_height;
-            $(document.body).trigger('sticky_kit:recalc');
-        }
-    });
+        // Recalculcate positions on ajax and img load events.
+        // Inside the handlers the current document height is compared
+        // to the previous height before the event occured so recalculation
+        // only happens on actual changes
+        $(document).on('ajaxComplete', function () {
+            var curr_height = $(document).height();
+            if (doc_height !== curr_height) {
+                doc_height = curr_height;
+                $(document.body).trigger('sticky_kit:recalc');
+            }
+        });
+        $(document).on('load', '#layout_content img', function () {
+            if (doc_height !== curr_height) {
+                doc_height = curr_height;
+                $(document.body).trigger('sticky_kit:recalc');
+            }
+        });
+    }
     
     $('a.print_action').live('click', function (event) {
         var url_to_print = this.href;

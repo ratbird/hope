@@ -237,12 +237,14 @@ jQuery.ui.accordion.prototype.options.icons = {
 
 
 jQuery(function ($) {
-    var stickySidebar = function () {
+    var doc_height = $(document).height();
+    
+    function stickySidebar () {
         $('#layout-sidebar .sidebar').stick_in_parent({
             offset_top: $('#barBottomContainer').outerHeight(true),
             inner_scrolling: true
         });
-    }
+    };
     stickySidebar();
 
     $(document).on('tourstart.studip', function () {
@@ -253,10 +255,17 @@ jQuery(function ($) {
     
     // Recalculcate positions on ajax and img load events
     $(document).on('ajaxComplete', function () {
-        $(document.body).trigger('sticky_kit:recalc');
+        var curr_height = $(document).height();
+        if (doc_height !== curr_height) {
+            doc_height = curr_height;
+            $(document.body).trigger('sticky_kit:recalc');
+        }
     });
     $(document).on('load', '#layout_content img', function () {
-        $(document.body).trigger('sticky_kit:recalc');
+        if (doc_height !== curr_height) {
+            doc_height = curr_height;
+            $(document.body).trigger('sticky_kit:recalc');
+        }
     });
     
     $('a.print_action').live('click', function (event) {

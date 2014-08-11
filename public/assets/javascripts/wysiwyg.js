@@ -317,8 +317,14 @@ jQuery(function ($) {
         var MARGIN = $('#barBottomContainer').length ? $('#barBottomContainer').height() : 25,
             toolbarId = editor.config.sharedSpaces.top,
             toolbar = $('#' + toolbarId),
-            placeholder = $('#' + toolbarId + '-placeholder'),
-            outOfView = $(window).scrollTop() + MARGIN
+            placeholder = $('#' + toolbarId + '-placeholder');
+
+        if (toolbar.length === 0 || placeholder.length === 0) {
+            // toolbar/editor removed by some JS code (e.g. when sending messages)
+            return;
+        }
+
+        var outOfView = $(window).scrollTop() + MARGIN
                         > placeholder.offset().top,
             width = $(editor.container.$).outerWidth(true);
 

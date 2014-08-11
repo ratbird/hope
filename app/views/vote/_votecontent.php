@@ -52,6 +52,7 @@
         <?= $vote->anonymousInfo ?>
         <?= $vote->endInfo ?>
         <div class="buttons">
+            <?= $this->render_partial('vote/_buttons.php', array('vote' => $vote)); ?>
         </div>
     </footer>
 </form>

@@ -48,13 +48,21 @@ if ($flash['error']) {
         <input type="text" size="60" maxlength="255" name="name"
             value="<?= $courseset ? htmlReady($courseset->getName()) : '' ?>"
             required="required" aria-required="true"/>
-        <? if (!$courseset || ($courseset->getUserId() == $GLOBALS['user']->id && !$instant_course_set_view)) : ?>
+        <? if (!$courseset || (($GLOBALS['perm']->have_perm('admin') || $courseset->getUserId() == $GLOBALS['user']->id) && !$instant_course_set_view)) : ?>
             <label for="private" class="caption">
                 <?= _('Sichtbarkeit:') ?>
             </label>
-            <input type="checkbox" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : 'checked' ?>/>
-            <?= _('Dieses Anmeldeset soll nur für mich selbst sichtbar und benutzbar sein.') ?>
+            <input type="checkbox" id="private" name="private"<?= $courseset ? ($courseset->getPrivate() ? ' checked="checked"' : '') : 'checked' ?>/>
+            <?= _('Dieses Anmeldeset soll nur für mich selbst und alle Administratoren sichtbar und benutzbar sein.') ?>
         <?  endif ?>
+        <? if ($courseset) : ?>
+        <label class="caption">
+            <?= _('Besitzer des Anmeldesets:') ?>
+        </label>
+        <div>
+        <?= htmlReady(get_fullname($courseset->getUserId())) ?>
+        </div>
+        <? endif ;?>
         <label for="institutes" class="caption">
             <?= _('Einrichtungszuordnung:') ?>
             <span class="required">*</span>

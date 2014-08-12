@@ -334,6 +334,8 @@ class Admission_CoursesetController extends AuthenticatedController {
     public function instcourses_action($coursesetId='') {
         CSRFProtection::verifyUnsafeRequest();
         $this->selectedCourses = array();
+        //autoload
+        $courseset = new CourseSet();
         if ($coursesetId && !Request::getArray('courses')) {
             $courseset = new CourseSet($coursesetId);
             $this->selectedCourses = $courseset->getCourses();
@@ -370,7 +372,6 @@ class Admission_CoursesetController extends AuthenticatedController {
     {
         if (Request::isXhr()) {
             $this->response->add_header('X-Title', _('Ausgewählte Veranstaltungen konfigurieren'));
-            $this->response->add_header('X-No-Buttons', 1);
         }
         $courseset = new CourseSet($set_id);
         $this->set_id = $courseset->getId();

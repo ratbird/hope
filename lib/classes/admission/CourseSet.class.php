@@ -368,7 +368,7 @@ class CourseSet
             LEFT JOIN seminare s ON s.seminar_id = sc.seminar_id
             WHERE ci.`institute_id`=?";
         $parameters = array($instituteId);
-        if (!$GLOBALS['perm']->have_perm('root')) {
+        if (!$GLOBALS['perm']->have_perm('admin')) {
             $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
             $parameters[] = $GLOBALS['user']->id;
         }
@@ -854,9 +854,11 @@ class CourseSet
             $stmt->execute(array($this->id, $institute, time()));
         }
         // Delete removed course assignments from database.
-        DBManager::get()->exec("DELETE FROM `seminar_courseset`
-            WHERE `set_id`='".$this->id."' AND `seminar_id` NOT IN ('".
-            implode("', '", array_keys($this->courses))."')");
+        DBManager::get()->execute("DELETE FROM `seminar_courseset`
+            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, array_keys($this->courses)));
+        //Delete other associations, only one set possible
+        DBManager::get()->execute("DELETE FROM `seminar_courseset`
+            WHERE `set_id` <> ? AND `seminar_id` IN (?)", array($this->id, array_keys($this->courses)));
         // Store associated course IDs.
         foreach ($this->courses as $course => $associated) {
             $stmt = DBManager::get()->prepare("INSERT IGNORE INTO `seminar_courseset`
@@ -864,6 +866,7 @@ class CourseSet
                 VALUES (?, ?, ?)");
             $stmt->execute(array($this->id, $course, time()));
         }
+
         // Delete removed user list assignments from database.
         DBManager::get()->exec("DELETE FROM `courseset_factorlist`
             WHERE `set_id`='".$this->id."' AND `factorlist_id` NOT IN ('".
@@ -970,7 +973,7 @@ class CourseSet
         if (!$i_am_the_boss && ($perm->have_perm('admin', $user_id) || ($perm->have_perm('dozent', $user_id) && get_config('ALLOW_DOZENT_COURSESET_ADMIN')))) {
             foreach ($this->getInstituteIds() as $one) {
                 if ($perm->have_studip_perm('dozent', $one, $user_id)) {
-                    $i_am_the_boss = !$this->getPrivate();
+                    $i_am_the_boss = true;
                     break;
                 }
             }

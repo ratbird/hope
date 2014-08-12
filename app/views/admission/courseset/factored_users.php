@@ -16,6 +16,3 @@
         <? endforeach ?>
     </tbody>
 </table>
-<div style="text-align:center">
-<?= Studip\LinkButton::create(_("Abbrechen"), '#', array('rel' => 'close'))?>
-</div>

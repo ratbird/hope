@@ -41,10 +41,9 @@
         <?= Assets::img('icons/16/blue/file-xls.png')?></a>
     <? endif ?>
 </div>
-<div style="text-align:center">
+<div data-dialog-button>
 <?= Studip\Button::create(_("Speichern"), 'configure_courses_save') ?>
 <?= Studip\LinkButton::create(_("Download"), $controller->url_for('admission/courseset/configure_courses/' . $set_id .'/csv')) ?>
-<?= Studip\LinkButton::create(_("Abbrechen"), '#', array('rel' => 'close'))?>
 </div>
 <?= CSRFProtection::tokenTag()?>
 </form>

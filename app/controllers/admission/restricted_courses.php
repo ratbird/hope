@@ -43,6 +43,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         Sidebar::get()->setImage('sidebar/admin-sidebar.png');
 
         $sem_condition = "AND EXISTS (SELECT * FROM seminar_courseset INNER JOIN courseset_rule USING(set_id) WHERE type='ParticipantRestrictedAdmission' AND seminar_courseset.seminar_id=seminare.seminar_id) ";
+        foreach (words('current_institut_id sem_name_prefix') as $param) {
+            $this->$param = $_SESSION[get_class($this)][$param];
+        }
         if (Request::isPost()) {
             if (Request::submitted('choose_institut')) {
                 $this->current_institut_id = Request::option('choose_institut_id');
@@ -67,6 +70,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $this->my_inst = $this->get_institutes($sem_condition);
         }
         $this->courses = $this->get_courses($sem_condition);
+        foreach (words('current_institut_id sem_name_prefix') as $param) {
+            $_SESSION[get_class($this)][$param] = $this->$param;
+        }
         if (Request::get('csv')) {
             $captions = array(_("Anmeldeset"),
                     _("Nummer"),
@@ -95,6 +101,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 $row[] = $course['end_time'] ? strftime('%x %R', $course['end_time']) : '';
                 $data[] = $row;
             }
+
             $tmpname = md5(uniqid('tmp'));
             if (array_to_csv($data, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
                 $this->redirect(GetDownloadLink($tmpname, 'teilnahmebeschraenkteVeranstaltungen.csv', 4, 'force'));
@@ -146,7 +153,7 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
         $statement = DBManager::get()->prepare($sql);
         $statement->execute($parameters);
         $csets = array();
-
+        $ret = array();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $seminar_id = $row['seminar_id'];
             $ret[$seminar_id] = $row;

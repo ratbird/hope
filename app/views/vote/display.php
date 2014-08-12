@@ -25,6 +25,7 @@
         <? foreach ($evaluations as $evaluation): ?>
             <?= $this->render_partial('vote/_evaluation.php', array('evaluation' => $evaluation)); ?>
         <? endforeach; ?>
+    <? endif; ?>
         <footer>
             <? if (Request::get('show_expired')): ?>
                 <a href="<?= URLHelper::getLink('', array('show_expired' => 0)) ?>"><?= _('Abgelaufene Umfragen ausblenden') ?></a>
@@ -32,6 +33,5 @@
                 <a href="<?= URLHelper::getLink('', array('show_expired' => 1)) ?>"><?= _('Abgelaufene Umfragen einblenden') ?></a>
             <? endif; ?>
         </footer>
-    <? endif; ?>
 </section>
 <? endif; ?>

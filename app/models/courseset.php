@@ -46,13 +46,12 @@ class CoursesetModel {
                 $parameters = array_merge($parameters, array($currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id));
             }
             $courses = $db->fetchFirst($query, $parameters);
-        } elseif (strlen($filter) > 2) {
-            $courses = $db->fetchFirst("SELECT DISTINCT si.seminar_id FROM seminar_inst si
-                INNER JOIN seminare s USING(seminar_id)
+        } elseif (strlen($filter) > 1) {
+            $courses = $db->fetchFirst("SELECT DISTINCT s.seminar_id FROM seminare s
                 INNER JOIN seminar_user su ON s.seminar_id=su.seminar_id AND su.status='dozent'
                 INNER JOIN auth_user_md5 aum USING(user_id)
                 WHERE s.status NOT IN(:studygroup_types) AND s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
-                AND si.Institut_id IN(:institutes)
+                AND s.Institut_id IN(:institutes)
                 AND (s.name LIKE :filter OR s.Veranstaltungsnummer LIKE :filter OR Nachname LIKE :filter)",
                      array('studygroup_types' => studygroup_sem_types() ? studygroup_sem_types() : array(''),
                             'sembegin' => $currentSemester->beginn,
@@ -63,7 +62,10 @@ class CoursesetModel {
         //filter courses from other sets out
         if (count($courses)) {
             $found = DBManager::get()->fetchFirst(
-                    "SELECT seminar_id FROM seminar_courseset WHERE seminar_id IN(?)", array($courses));
+                    "SELECT DISTINCT seminar_id FROM seminar_courseset
+                    LEFT JOIN courseset_rule USING(set_id)
+                    WHERE type NOT IN ('LockedAdmission','PasswordAdmission')
+                    AND seminar_id IN(?)", array($courses));
             $courses = array_diff($courses, $found);
         }
         
@@ -77,7 +79,7 @@ class CoursesetModel {
             $courses = array_merge($courses, $selectedCourses);
         }
         $data = array();
-        $callable = function ($course) use (&$data) {
+        $callable = function ($course) use (&$data, $coursesetId) {
             $data[$course->id] =
             array(
                     'seminar_id' => $course->Seminar_id,
@@ -85,6 +87,14 @@ class CoursesetModel {
                     'Name' => $course->Name . ($course->duration_time == -1 ? ' ' . _('(unbegrenzt)') : ''),
                     'admission_turnout' => $course->admission_turnout,
             );
+            $data[$course->id]['admission_type'] =
+            DBManager::get()->fetchColumn(
+            "SELECT type FROM seminar_courseset
+            INNER JOIN courseset_rule USING (set_id)
+            WHERE type IN ('LockedAdmission','PasswordAdmission')
+            AND seminar_id = ? " . ($coursesetId ? "AND set_id <> ?" : ""),
+            array($course->id, $coursesetId));
+
         };
         Course::findEachMany($callable, array_unique($courses),"ORDER BY start_time DESC, VeranstaltungsNummer ASC, Name ASC");
         

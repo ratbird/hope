@@ -1,8 +1,8 @@
-<? if (get_config('VOTE_ENABLE') && ($admin || $votes)): ?>
+<? if ($admin || $votes || $evaluations): ?>
 <section class="contentbox">
     <header>
         <h1>
-            <?= Assets::img('icons/16/black/vote.png'); ?>    
+            <?= Assets::img('icons/16/black/vote.png'); ?>
             <?= _('Umfragen') ?>
         </h1>
         <nav>
@@ -27,7 +27,7 @@
         <? endforeach; ?>
         <footer>
             <? if (Request::get('show_expired')): ?>
-                <a href="<?= URLHelper::getLink('', array('show_expired' => 0)) ?>"><?= _('Abgelaufene Umfragen ausblenden') ?></a>        
+                <a href="<?= URLHelper::getLink('', array('show_expired' => 0)) ?>"><?= _('Abgelaufene Umfragen ausblenden') ?></a>
             <? else: ?>
                 <a href="<?= URLHelper::getLink('', array('show_expired' => 1)) ?>"><?= _('Abgelaufene Umfragen einblenden') ?></a>
             <? endif; ?>

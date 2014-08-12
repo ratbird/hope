@@ -39,7 +39,14 @@
             </td>
             <td>
                 <label for="<?= $course['seminar_id'] ?>">
+                <a href="<?=URLHelper::getScriptLink('dispatch.php/course/details/index/' . $course['seminar_id']) ?>"  data-dialog>
+                <?= Assets::img('icons/16/grey/info-circle.png', array('title' =>_('Veranstaltungsdetails aufrufen')))?>
+                </a>
                     <?= htmlReady($title) ?>
+                <? if ($course['admission_type']) : ?>
+                <? $typename = call_user_func($course['admission_type'] . '::getName') ?>
+                    <?= Assets::img('icons/16/red/exclaim-circle.png', array('title' => sprintf(_("vorhandene Anmelderegel: %s"), $typename))); ?>
+                <? endif ?>
                 </label>
             </td>
         </tr>

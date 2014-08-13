@@ -236,16 +236,45 @@ jQuery(function ($) {
             var editor = event.editor,
                 $textarea = $(editor.element.$);
 
+            // NOTE some HTML elements are output on their own line so that old
+            // markup code and older plugins run into less problems
+
+            // output divivisons as
+            // text before
+            // <div>
+            // Text
+            // </div>
+            // text after
+            editor.dataProcessor.writer.setRules('div', {
+                indent: false,
+                breakBeforeOpen: true,
+                breakAfterOpen: true,
+                breakBeforeClose: true,
+                breakAfterClose: true
+            });
+
             // output paragraphs as
+            // text before
             // <p>
             // Text
             // </p>
+            // text after
             editor.dataProcessor.writer.setRules('p', {
                 indent: false,
                 breakBeforeOpen: true,
                 breakAfterOpen: true,
                 breakBeforeClose: true,
                 breakAfterClose: true
+            });
+
+            // output line breaks on their own line:
+            // first line
+            // <br>
+            // second line
+            editor.dataProcessor.writer.setRules('br', {
+                indent: false,
+                breakBeforeOpen: true,
+                breakAfterOpen: true
             });
 
             // auto-resize editor area in source view mode, and keep focus!

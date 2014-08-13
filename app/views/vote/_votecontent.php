@@ -37,7 +37,7 @@
                 <? else: ?>
                 <input type="radio" name="vote_answers[]" value="<?= $answer->position ?>">
                 <? endif ?>
-                <?= htmlReady($answer->answer) ?>
+                <?= formatReady($answer->answer) ?>
             </label>
             <? endif; ?>
         </div>

@@ -93,7 +93,7 @@ class CoursesetModel {
             INNER JOIN courseset_rule USING (set_id)
             WHERE type IN ('LockedAdmission','PasswordAdmission')
             AND seminar_id = ? " . ($coursesetId ? "AND set_id <> ?" : ""),
-            array($course->id, $coursesetId));
+            $coursesetId ? array($course->id, $coursesetId) : array($course->id));
 
         };
         Course::findEachMany($callable, array_unique($courses),"ORDER BY start_time DESC, VeranstaltungsNummer ASC, Name ASC");

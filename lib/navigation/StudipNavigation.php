@@ -20,7 +20,6 @@ require_once 'CalendarNavigation.php';
 require_once 'CommunityNavigation.php';
 require_once 'CourseNavigation.php';
 require_once 'FooterNavigation.php';
-require_once 'HelpNavigation.php';
 require_once 'LoginNavigation.php';
 require_once 'MessagingNavigation.php';
 require_once 'ProfileNavigation.php';
@@ -126,9 +125,6 @@ class StudipNavigation extends Navigation
 
             $links->addSubNavigation('settings', $navigation);
         }
-
-        // help
-        $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
 
         // login / logout
         if (is_object($user) && $user->id != 'nobody') {

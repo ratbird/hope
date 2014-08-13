@@ -29,9 +29,6 @@ class FooterNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        // help
-        $this->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
-
         // sitemap
         if (is_object($user) && $user->id != 'nobody') {
             $this->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));

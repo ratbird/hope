@@ -181,6 +181,7 @@ class Helpbar extends WidgetContainer
     {
         // add content
         $this->loadContent();
+
         // add tour links
         if (Config::get()->TOURS_ENABLE) {
             $widget = new HelpbarTourWidget();
@@ -189,15 +190,12 @@ class Helpbar extends WidgetContainer
             }
             $tour_data = $widget->tour_data;
         }
+
         // add wiki link and remove it from navigation
-        if (Navigation::hasItem('/links/help')) {
-            $nav = Navigation::getItem('/links/help');
-            Navigation::removeItem('/links/help');
-
-            $this->addLink(_('Weiterführende Hilfe'), $nav->getURL(), 'icons/16/white/link-extern.png', '_blank');
-
-            Navigation::removeItem('/footer/help');
-        }
+        $this->addLink(_('Weiterführende Hilfe'),
+                       format_help_url(PageLayout::getHelpKeyword()),
+                       'icons/16/white/link-extern.png',
+                       '_blank');
 
         $content = '';
 

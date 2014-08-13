@@ -26,7 +26,7 @@
             </div>
             <div class="infotext">
                 (<?= $answer->count ?> <?= $answer->count == 1 ? _("Stimme") : _("Stimmen") ?>)
-                <? if (Request::get('revealNames') && $vote->namesvisibility): ?>
+                <? if (Request::get('revealNames') === $vote->id && !$vote->anonymous && ($admin || $vote->namesvisibility)): ?>
                 ( <?= join(', ', $answer->getUsernames()) ?> )
                 <? endif; ?>
             </div>

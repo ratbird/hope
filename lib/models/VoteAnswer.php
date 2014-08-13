@@ -62,11 +62,7 @@ class VoteAnswer extends SimpleORMap
      * @return array alls users
      */
     public function getUsernames() {
-        $result = array();
-        foreach ($this->users as $user) {
-            $result[] = $user->user->getFullName();
+       return array_map(function ($user_id) {return get_fullname($user_id, 'no_title');}, $this->users->pluck('user_id'));
         }
-        return $result;
-    }
 
 }

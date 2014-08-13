@@ -47,15 +47,19 @@ class Settings_AvatarController extends Settings_SettingsController
     }
 
     /**
-     * Upload a new avatar.
-     * Sends an information email to the user if the action was not invoked
+     * Upload a new avatar or removes the current avatar.
+     * Upon Sends an information email to the user if the action was not invoked
      * by himself.
      */
     public function upload_action()
     {
         $this->check_ticket();
 
-        if (Request::submitted('upload')) {
+        if (Request::submitted('reset')) {
+            Avatar::getAvatar($this->user->user_id)->reset();
+            Visibility::removePrivacySetting('picture', $this->user->user_id);
+            $this->reportSuccess(_('Bild gel&ouml;scht.'));
+        } elseif (Request::submitted('upload')) {
             try {
                 Avatar::getAvatar($this->user->user_id)->createFromUpload('imgfile');
 
@@ -73,21 +77,6 @@ class Settings_AvatarController extends Settings_SettingsController
             } catch (Exception $e) {
                 $this->reportError($e->getMessage());
             }
-        }
-        $this->redirect('settings/avatar');
-    }
-
-    /**
-     * Resets/removes a user's avatar.
-     */
-    public function reset_action()
-    {
-        $this->check_ticket();
-
-        if (Request::submitted('reset')) {
-            Avatar::getAvatar($this->user->user_id)->reset();
-            Visibility::removePrivacySetting('picture', $this->user->user_id);
-            $this->reportSuccess(_('Bild gel&ouml;scht.'));
         }
         $this->redirect('settings/avatar');
     }

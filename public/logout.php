@@ -36,11 +36,6 @@ if ($auth->auth["uid"]!="nobody")
 
     $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
 
-    //Wenn Option dafuer gewaehlt, vorliegende Nachrichen loeschen
-    if ($my_messaging_settings["delete_messages_after_logout"]) {
-        $sms->delete_all_messages();
-    }
-
     //Wenn Option dafuer gewaehlt, alle ungelsesenen Nachrichten als gelesen speichern
     if ($my_messaging_settings["logout_markreaded"]) {
         $sms->set_read_all_messages();

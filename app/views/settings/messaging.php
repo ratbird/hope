@@ -10,19 +10,6 @@
         0 => _('Text'),
         1 => _('HTML'),
     );
-    $confirmation_types = array(
-        1 => _('ignorieren'),
-        2 => _('immer automatisch bestätigen'),
-        3 => _('je Nachricht selbst entscheiden'),
-    );
-    $timefilters = array(
-        'new'   => _('neue Nachrichten'),
-        'all'   => _('alle Nachrichten'),
-        '24h'   => _('letzte 24 Stunden'),
-        '7d'    => _('letzte 7 Tage'),
-        '30d'   => _('letzte 30 Tage'),
-        'older' => _('älter als 30 Tage'),
-    );
 ?>
 
 <? if ($verify_action === 'reset'): ?>
@@ -59,24 +46,6 @@
             </tr>
             <tr>
                 <td>
-                    <label for="opennew"><?= _('Neue Nachrichten immer aufgeklappt') ?></label>
-                </td>
-                <td>
-                    <input type="checkbox" value="1" name="opennew" id="opennew"
-                           <? if ($settings['opennew'] == 1) echo 'checked'; ?>>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="openall"><?= _('Alle Nachrichten immer aufgeklappt') ?></label>
-                </td>
-                <td>
-                    <input type="checkbox" value="1" name="openall" id="openall"
-                           <? if ($settings['openall'] == 1) echo 'checked'; ?>>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <label for="save_snd"><?= _('Gesendete Nachrichten im Postausgang speichern') ?></label>
                 </td>
                 <td>
@@ -95,16 +64,6 @@
                 </td>
             </tr>
         <? endif ?>
-            <tr>
-                <td>
-                    <label for="delete_messages_after_logout"><?= _('Beim Logout alle Nachrichten löschen') ?></label>
-                    <dfn>(<?= _('davon ausgenommen sind geschützte Nachrichten') ?>)</dfn>
-                </td>
-                <td>
-                    <input type="checkbox" value="1" name="delete_messages_after_logout" id="delete_messages_after_logout"
-                           <? if ($settings['delete_messages_after_logout'] == 1) echo 'checked'; ?>>
-                </td>
-            </tr>
             <tr>
                 <td>
                     <label for="logout_markreaded"><?= _('Beim Logout alle Nachrichten als gelesen speichern') ?></label>
@@ -148,21 +107,6 @@
         <? endif; ?>
             <tr>
                 <td>
-                    <label><?= _('Umgang mit angeforderter Lesebestätigung') ?></label>
-                </td>
-                <td>
-                <? foreach ($confirmation_types as $key => $label): ?>
-                    <label>
-                        <input type="radio" name="confirm_reading" value="<?= $key ?>"
-                               <? if ($settings['confirm_reading'] == $key) echo 'checked'; ?>>
-                        <?= htmlReady($label) ?>
-                    </label>
-                    <br>
-                <? endforeach; ?>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <label for="search_exp"><?= _('Weiterleitung empfangener Nachrichten') ?></label>
                 </td>
                 <td>
@@ -186,21 +130,6 @@
                 <? endif; ?>
                 </td>
             </tr>
-
-            <tr>
-                <td>
-                    <label for="timefilter"><?= _('Zeitfilter der Anzeige in Postein- bzw. ausgang') ?></label>
-                </td>
-                <td>
-                    <select name="timefilter" id="timefilter">
-                    <? foreach ($timefilters as $key => $label): ?>
-                        <option value="<?= $key ?>" <? if ($settings['timefilter'] == $key) echo 'selected'; ?>>
-                            <?= htmlReady($label) ?>
-                        </option>
-                    <? endforeach; ?>
-                    </select>
-                </td>
-            </tr>
         </tbody>
         <tbody>
             <tr>
@@ -214,19 +143,6 @@
                 </td>
                 <td>
                     <textarea class="add_toolbar" name="sms_sig" id="signature" aria-label="<?= _('Signatur') ?>" style="width: 100%;" rows="3"><?= htmlready($settings['sms_sig']) ?></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="addsignature">
-                        <?= _('Signatur gesendeten Nachrichten anhängen') ?>
-                    </label>
-                </td>
-                <td>
-                    <label>
-                        <input type="checkbox" value="1" id="addsignature" name="addsignature"<? if ($settings['addsignature']) echo 'checked'; ?>>
-                        <?= _('Signatur anhängen') ?>
-                    </label>
                 </td>
             </tr>
         </tbody>

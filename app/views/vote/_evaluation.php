@@ -1,6 +1,6 @@
 <? $is_new = ($evaluation->chdate >= object_get_visit($evaluation->id, 'eval', false, false)) && ($evaluation->author_id != $GLOBALS['user']->id);
 ?>
-<article class="<?= ContentBoxHelper::classes($evaluation->id, $is_new) ?>" id="<?= $evaluation->id ?>">
+<article class="<?= ContentBoxHelper::classes($evaluation->id, $is_new) ?>" id="<?= $evaluation->id ?>" data-contentboxvisit="eval">
     <header>
         <h1>
             <a href="<?= ContentBoxHelper::switchhref($evaluation->id) ?>">
@@ -45,7 +45,7 @@
     </section>
     <footer>
         <p>
-            <?= _('Teilnehmer') ?>: <?= count($evaluation->participants) ?>
+            <?= _('Teilnehmer') ?>: <?= $evaluation->getNumberOfVotes() ?>
         </p>
         <p>
             <?= _('Anonym') ?>: <?= $evaluation->anonymous ? _('Ja') : _('Nein') ?>

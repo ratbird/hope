@@ -1,9 +1,9 @@
 <? $is_new = ($vote->chdate >= object_get_visit($vote->id, 'vote', false, false)) && ($vote->author_id != $GLOBALS['user']->id);
 ?>
-<article class="<?= ContentBoxHelper::classes($vote->id, $is_new) ?>" id="<?= $vote->id ?>">
+<article class="<?= ContentBoxHelper::classes($vote->id, $is_new) ?>" id="<?= $vote->id ?>" data-visiturl="<?=URLHelper::getScriptLink('dispatch.php/vote/visit')?>">
     <header>
         <h1>
-            <a href="<?= ContentBoxHelper::switchhref($vote->id) ?>">
+            <a href="<?= ContentBoxHelper::switchhref($vote->id, array('contentbox_type' => 'vote')) ?>">
                 <?= htmlReady($vote->title) ?>
             </a>
         </h1>

@@ -24,11 +24,11 @@
     <? foreach ($news as $new): ?>
     <? $is_new = ($new['chdate'] >= object_get_visit($new->id, 'news', false, false))
             && ($new['user_id'] != $GLOBALS['user']->id); ?>
-    <article class="<?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>">
+    <article class="<?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>" data-visiturl="<?=URLHelper::getScriptLink('dispatch.php/news/visit')?>">
         <header>
             <h1>
                 <?= Assets::img('icons/16/grey/news.png'); ?>
-                <a href="<?= ContentBoxHelper::href($new->id) ?>">
+                <a href="<?= ContentBoxHelper::href($new->id, array('contentbox_type' => 'news')) ?>">
                     <?= htmlReady($new['topic']); ?>
                 </a>
             </h1>

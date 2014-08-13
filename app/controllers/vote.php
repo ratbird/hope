@@ -56,10 +56,21 @@ class VoteController extends AuthenticatedController {
         }
 
         $this->votes = StudipVote::findBySQL('range_id = ? AND state IN (?) ORDER BY mkdate desc', array($range_id,$show_votes));
+        $this->visit();
 
-        if (Request::option('contentbox_open')) {
-            object_set_visit(Request::option('contentbox_open'), 'vote');
         }
+
+    function visit()
+    {
+        if (Request::option('contentbox_open') && in_array(Request::option('contentbox_type'), words('vote eval'))) {
+            object_set_visit(Request::option('contentbox_open'), Request::option('contentbox_type'));
+    }
+    }
+
+    function visit_action()
+    {
+        $this->visit();
+        $this->render_nothing();
     }
 
     /**

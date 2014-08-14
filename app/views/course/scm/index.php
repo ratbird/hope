@@ -45,7 +45,7 @@
     <tfoot class="table_footer">
         <tr>
             <td colspan="2">
-                <?= LinkButton::create(_('Bearbeiten'), $controller->url_for('course/scm/edit/' . $scm->id)) ?>
+                <?= LinkButton::create(_('Bearbeiten'), $controller->url_for('course/scm/edit/' . $scm->id), array('data-dialog' => '')) ?>
         <? if (count($scms) > 1): ?>
             <? if ($scm->position == 0): ?>
                 <?= Button::create(_('Nach vorne'), array('disabled' => 'disabled')) ?>

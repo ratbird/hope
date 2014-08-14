@@ -51,7 +51,7 @@
         </tbody>
         <tfoot class="table_footer">
             <tr>
-                <td colspan="2">
+                <td colspan="2" data-dialog-button>
                     <?= Button::createAccept(_('Speichern'), 'submit') ?>
                 <? if ($first_entry): ?>
                     <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('seminar_main.php')) ?>

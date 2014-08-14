@@ -38,12 +38,6 @@ class CoreScm implements StudipModule {
                 $navigation->addSubNavigation($scm->id, $nav);
             }
 
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
-                $scm_link = URLHelper::getLink('dispatch.php/course/scm/create');
-                $nav = new Navigation(_('Neuen Eintrag anlegen'), $scm_link);
-                $navigation->addSubNavigation('new_entry', $nav);
-            }
-
             return array('scm' => $navigation);
         } else {
             return null;

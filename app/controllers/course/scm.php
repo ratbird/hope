@@ -63,7 +63,11 @@ class Course_ScmController extends StudipController
                                    && $GLOBALS['auth']->auth['uid'] == 'nobody');
         $this->priviledged = $GLOBALS['perm']->have_studip_perm('tutor', $GLOBALS['SessSemName'][1]);
 
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        if (Request::isXhr()) {
+            $this->set_content_type('text/html;charset=Windows-1252');
+        } else {
+            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        }
 
         if (!in_array($action, words('index create edit move delete'))) {
             array_unshift($args, $action);
@@ -72,6 +76,15 @@ class Course_ScmController extends StudipController
 
         if (in_array($action, words('create edit move delete')) && !$this->priviledged) {
             throw new AccessDeniedException(_('Sie sind nicht berechtigt, auf diesen Bereich zuzugreifen'));
+        }
+
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
+            $widget = new ActionsWidget();
+            $widget->addLink(_('Neuen Eintrag anlegen'),
+                             URLHelper::getLink('dispatch.php/course/scm/create'),
+                             'icons/16/blue/add.png')
+                   ->asDialog();
+            Sidebar::get()->addWidget($widget);
         }
 
         PageLayout::setHelpKeyword('Basis.Informationsseite');
@@ -120,9 +133,8 @@ class Course_ScmController extends StudipController
         $this->scm->chdate  = time();
 
         $this->first_entry = StudipScmEntry::countBySql('range_id = ?', array($GLOBALS['SessSemName'][1])) == 0;
-        
+
         $this->set_title(_('Neue Informationsseite anlegen'));
-        Navigation::activateItem('/course/scm/new_entry');
 
         $this->render_action('edit');
     }
@@ -210,7 +222,7 @@ class Course_ScmController extends StudipController
             $this->redirect('course/scm');
             return;
         }
-        
+
         PageLayout::postMessage(MessageBox::error(_('Es ist ein Fehler aufgetreten. Bitte versuchen Sie erneut, diese Seite zu löschen.')));
         $this->redirect('course/scm/' . $id);
     }
@@ -224,6 +236,10 @@ class Course_ScmController extends StudipController
     public function after_filter($action, $args)
     {
         parent::after_filter($action, $args);
+
+        if (Request::isXhr()) {
+            $this->response->add_header('X-Title', PageLayout::getTitle());
+        }
 
         page_close();
     }

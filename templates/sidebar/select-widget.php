@@ -1,4 +1,4 @@
-<form action="<?= $url ?>" method="get">
+<form action="<?= $url ?>" method="<?= $method ?>">
 <? foreach ($params as $key => $value): ?>
     <input type="hidden" name="<?= htmlReady($key) ?>" value="<?= htmlReady($value) ?>">
 <? endforeach; ?>

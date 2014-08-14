@@ -11,12 +11,13 @@ class SelectWidget extends SidebarWidget
     /**
      * Constructs the widget by defining a special template.
      */
-    public function __construct($title, $url, $name)
+    public function __construct($title, $url, $name, $method = 'get')
     {
         $this->template = 'sidebar/select-widget';
         $this->setTitle($title);
         $this->setUrl($url);
         $this->setSelectParameterName($name);
+        $this->setRequestMethod($method);
     }
 
     public function setUrl($url) 
@@ -41,5 +42,10 @@ class SelectWidget extends SidebarWidget
     public function setSelection($value) 
     {
         $this->template_variables['value'] = $value;
+    }
+    
+    public function setRequestMethod($method)
+    {
+        $this->template_variables['method'] = $method;
     }
 }

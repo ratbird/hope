@@ -185,14 +185,14 @@ class Course_EnrolmentController extends AuthenticatedController {
                     $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
                     PageLayout::postMessage(MessageBox::success($success));
                     $this->enrol_user = true;
-                    
+
                     if (StudygroupModel::isInvited($user_id, $this->course_id)) {
                         // delete an existing invitation
                         StudygroupModel::cancelInvitation(get_username($user_id),$this->course_id);
                     }
                 }
             }
-            unset($this->courset_message);
+            unset($this->courseset_message);
         }
         StudipLock::release();
     }

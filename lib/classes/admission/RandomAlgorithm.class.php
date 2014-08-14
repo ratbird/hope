@@ -21,7 +21,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
 
     /**
      * Runs the algorithm, thus distributing course seats.
-     * 
+     *
      * @param CourseSet $courseSet The course set containing the courses
      * that seats shall be distributed for.
      * @see CourseSet
@@ -37,7 +37,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
     /**
      * Distribute seats for several courses in a course set.
      * No priorities are given.
-     * 
+     *
      * @param CourseSet $courseSet The course set containing the courses
      * that seats shall be distributed for.
      * @see CourseSet
@@ -91,7 +91,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
     /**
      * Distribute seats for several courses in a course set using the given
      * user priorities.
-     * 
+     *
      * @param CourseSet $courseSet The course set containing the courses
      * that seats shall be distributed for.
      * @see CourseSet
@@ -177,33 +177,35 @@ class RandomAlgorithm extends AdmissionAlgorithm {
                     $remaining_ones = array_slice(array_keys($current_claiming), $free_seats);
                     foreach ($remaining_ones as $one) {
                         $bonus_users[$one]++;
-                        $waiting_users[$course_id][] = $one;
+                        $waiting_users[$current_prio][$course_id][] = $one;
                     }
                 }
             }
         }
         //distribute to waitlists if applicable
-        //Log::DEBUG('waiting list: ' . print_r($waiting_users, 1));
-        foreach ($waiting_users as $course_id => $users) {
-            $users = array_filter($users, function($user_id) use ($distributed_users, $max_seats_users) {
-                return $distributed_users[$user_id] < $max_seats_users[$user_id];});
-            $course = Course::find($course_id);
-            Log::DEBUG(sprintf('distribute waitlist of %s in course %s', count($users), $course->id));
-            if (!$course->admission_disable_waitlist) {
-                $free_seats_waitlist = $course->admission_waitlist_max ?: count($users);
-                $waiting_list_ones = array_slice($users, $free_seats , $free_seats_waitlist);
-                Log::DEBUG('waiting list ones: ' . print_r($waiting_list_ones, 1));
-                $this->addUsersToWaitlist($waiting_list_ones, $course, $prio_mapper($waiting_list_ones, $course->id));
-                foreach ($waiting_list_ones as $one) {
-                    $distributed_users[$one]++;
+        Log::DEBUG('waiting list: ' . print_r($waiting_users, 1));
+        foreach ($waiting_users as $current_prio => $current_prio_waiting_courses) {
+            foreach ($current_prio_waiting_courses as $course_id => $users) {
+                $users = array_filter($users, function($user_id) use ($distributed_users, $max_seats_users) {
+                    return $distributed_users[$user_id] < $max_seats_users[$user_id];});
+                $course = Course::find($course_id);
+                Log::DEBUG(sprintf('distribute waitlist of %s with prio %s in course %s', count($users), $current_prio, $course->id));
+                if (!$course->admission_disable_waitlist) {
+                    $free_seats_waitlist = $course->admission_waitlist_max ?: count($users);
+                    $waiting_list_ones = array_slice($users, $free_seats , $free_seats_waitlist);
+                    Log::DEBUG('waiting list ones: ' . print_r($waiting_list_ones, 1));
+                    $this->addUsersToWaitlist($waiting_list_ones, $course, $prio_mapper($waiting_list_ones, $course->id));
+                    foreach ($waiting_list_ones as $one) {
+                        $distributed_users[$one]++;
+                    }
+                } else {
+                    $free_seats_waitlist = 0;
                 }
-            } else {
-                $free_seats_waitlist = 0;
-            }
-            if ($free_seats_waitlist < count($users)) {
-                $remaining_ones = array_slice($users, $free_seats_waitlist);
-                Log::DEBUG('remaining ones: ' . print_r($remaining_ones, 1));
-                $this->notifyRemainingUsers($remaining_ones, $course, $prio_mapper($remaining_ones, $course->id));
+                if ($free_seats_waitlist < count($users)) {
+                    $remaining_ones = array_slice($users, $free_seats_waitlist);
+                    Log::DEBUG('remaining ones: ' . print_r($remaining_ones, 1));
+                    $this->notifyRemainingUsers($remaining_ones, $course, $prio_mapper($remaining_ones, $course->id));
+                }
             }
         }
     }
@@ -211,7 +213,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
     /**
      * Notify users about the fact that they couldn't get a seat and the
      * waiting list is disabled in a course.
-     * 
+     *
      * @param Array  $user_list Users to be notified
      * @param Course $course    The course without waiting list
      * @param int    $prio      User's priority for the given course.
@@ -234,7 +236,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
     /**
      * Notify users that they couldn't get a seat but are now on the waiting
      * list for a given course.
-     * 
+     *
      * @param Array  $user_list Users to be notified
      * @param Course $course    The course without waiting list
      * @param int    $prio      User's priority for the given course.
@@ -266,7 +268,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
 
     /**
      * Add the lucky ones who got a seat to the given course.
-     * 
+     *
      * @param Array  $user_list users to add as members
      * @param Course $course    course to add users to
      * @param int    $prio      user's priority for the given course
@@ -313,7 +315,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
 
     /**
      * How many users have gotten a seat in distribution?
-     * 
+     *
      * @return Number of users who where lucky enough to be course members now.
      */
     public function countParticipatingUsers($course_ids, $user_ids)

@@ -205,4 +205,3 @@ if (count($filter)) {
 
 echo $template->render();
 page_close();
-?>

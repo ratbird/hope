@@ -42,6 +42,11 @@ STUDIP.QuickSearch = {
             jQuery('#' + name).autocomplete({
                 delay: 500,
                 minLength: 3,
+                create: function () {
+                    if ($($this).is('[autofocus]')) {
+                        $(this).focus();
+                    }
+                },
                 source: function (input, add) {
                     //get the variables that should be sent:
                     var send_vars = {

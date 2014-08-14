@@ -162,7 +162,7 @@
     </div>
 
     <div style="text-align: center;" data-dialog-button>
-        <?= \Studip\Button::create(_("abschicken")) ?>
+        <?= \Studip\Button::create(_('Abschicken')) ?>
     </div>
 
 </form>

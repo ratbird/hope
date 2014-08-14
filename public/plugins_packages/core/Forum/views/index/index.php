@@ -31,7 +31,6 @@ if ($constraint['depth'] == 0 && $section == 'index') {
     $actions->addLink(_('Tour starten'), "javascript:STUDIP.Forum.startTour();", 'icons/16/blue/info.png');
 }
 
-$eintraege = array();
 if ($section == 'index') {
     if (ForumPerm::has('abo', $seminar_id)) {
         if (ForumAbo::has($constraint['topic_id'])) :
@@ -48,10 +47,6 @@ if ($section == 'index') {
         endif;
         
         $actions->addLink($abo_text, $abo_url, 'icons/16/blue/link-intern.png');
-    }
-
-    if (ForumPerm::has('pdfexport', $seminar_id)) {
-        $actions->addLink(_('Beiträge als PDF exportieren'), PluginEngine::getURL('coreforum/index/pdfexport/' . $constraint['topic_id']), 'icons/16/blue/file-pdf.png');
     }
 
     if (ForumPerm::has('close_thread', $seminar_id) && $constraint['depth'] > 1) {
@@ -125,6 +120,13 @@ if ($section == 'index') {
 
 $sidebar->addWidget($actions);
 
+if ($section === 'index' && ForumPerm::has('pdfexport', $seminar_id)) {
+    $export = new ExportWidget();
+    $export->addLink(_('Beiträge als PDF exportieren'),
+                     $controller->url_for('index/pdfexport/' . $constraint['topic_id']),
+                     'icons/16/blue/file-pdf.png');
+    $sidebar->addWidget($export);
+}
 ?>
 
 <!-- Breadcrumb navigation -->

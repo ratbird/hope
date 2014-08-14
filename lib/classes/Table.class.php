@@ -24,64 +24,65 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 /**
-* HTML table abstraction class.
-*
-* Encapsulates creation of html tables. Tables, rows and cells are created by 
-* openXXX methods and closed by closeXXX methods. Closing of embedded elements
-* can be omitted, i.e. openRow() closes the current row, if still open.
-* Rows and cells have default attributes that can be set by corresponding
-* setRowXXX and setCellXXX methods and are overridden by explicit parameters
-* to single openRow and openCell calls.
-*
-* @access public
-* @author Tobias Thelen <tthelen@uni-osnabrueck.de>
-*
-**/
+ * HTML table abstraction class.
+ *
+ * Encapsulates creation of html tables. Tables, rows and cells are created by 
+ * openXXX methods and closed by closeXXX methods. Closing of embedded elements
+ * can be omitted, i.e. openRow() closes the current row, if still open.
+ * Rows and cells have default attributes that can be set by corresponding
+ * setRowXXX and setCellXXX methods and are overridden by explicit parameters
+ * to single openRow and openCell calls.
+ *
+ * @access public
+ * @author Tobias Thelen <tthelen@uni-osnabrueck.de>
+ * @todo   This class misses some documentation. 
+ * @todo   We should decide whether this class is considered deprecated.
+ **/
 class Table {
 
     /**
     * Constructor for a HTML table.
     * @param    array   List of attribute/value pairs for html styles.
     **/
-    function Table($styles="") 
+    function Table($styles = array()) 
     {
         // properties for entire table
-        $this->table_width=$styles["width"];
-        $this->table_bgcolor=$styles["bgcolor"];
-        $this->table_border=$styles["border"];
-        $this->table_align=$styles["align"];
-        $this->table_padding=$styles["padding"];
-        $this->table_spacing=$styles["spacing"];
-        $this->table_class=$styles["class"];
-        $this->table_style=$styles["style"];
-        $this->table_id=$styles["id"];
+        $this->table_width   = @$styles['width'];
+        $this->table_bgcolor = @$styles['bgcolor'];
+        $this->table_border  = @$styles['border'];
+        $this->table_align   = @$styles['align'];
+        $this->table_padding = @$styles['padding'];
+        $this->table_spacing = @$styles['spacing'];
+        $this->table_class   = @$styles['class'];
+        $this->table_style   = @$styles['style'];
+        $this->table_id      = @$styles['id'];
     
         // default properties for rows
-        $this->row_bgcolor="";
-        $this->row_align="";
-        $this->row_valign="";
-        $this->row_class="";
-        $this->row_style="";
-        $this->row_id="";
-        $this->row_mouse_over="";
-        $this->row_mouse_out="";
+        $this->row_bgcolor    = '';
+        $this->row_align      = '';
+        $this->row_valign     = '';
+        $this->row_class      = '';
+        $this->row_style      = '';
+        $this->row_id         = '';
+        $this->row_mouse_over = '';
+        $this->row_mouse_out  = '';
 
         // default properties for cells
-        $this->cell_bgcolor="";
-        $this->cell_align="";
-        $this->cell_valign="";
-        $this->cell_height="";
-        $this->cell_width="";
-        $this->cell_colspan="";
-        $this->cell_nowrap="";
-        $this->cell_class="";
-        $this->cell_style="";
-        $this->cell_id="";
+        $this->cell_bgcolor = '';
+        $this->cell_align   = '';
+        $this->cell_valign  = '';
+        $this->cell_height  = '';
+        $this->cell_width   = '';
+        $this->cell_colspan = '';
+        $this->cell_nowrap  = '';
+        $this->cell_class   = '';
+        $this->cell_style   = '';
+        $this->cell_id      = '';
 
         // state variables
-        $this->tableopen=FALSE;
-        $this->rowopen=FALSE;
-        $this->cellopen=FALSE;
+        $this->tableopen = FALSE;
+        $this->rowopen   = FALSE;
+        $this->cellopen  = FALSE;
     }
 
     /**
@@ -91,7 +92,7 @@ class Table {
     **/
     function setTableClass($class) 
     {
-        $this->table_class=$class;
+        $this->table_class = $class;
     }
 
     /**
@@ -101,7 +102,7 @@ class Table {
     **/
     function setTableStyle($style) 
     {
-        $this->table_style=$style;
+        $this->table_style = $style;
     }
 
     /**
@@ -111,7 +112,7 @@ class Table {
     **/
     function setTableID($id) 
     {
-        $this->table_id=$id;
+        $this->table_id = $id;
     }
 
     /**
@@ -121,7 +122,7 @@ class Table {
     **/
     function setTableWidth($width)
     {
-        $this->table_width=$width;
+        $this->table_width = $width;
     }
 
     /**
@@ -131,7 +132,7 @@ class Table {
     **/
     function setTableBorder($border)
     {
-        $this->table_border=$border;
+        $this->table_border = $border;
     }
 
     /**
@@ -141,7 +142,7 @@ class Table {
     **/
     function setTableCellpadding($padding)
     {
-        $this->table_padding=$padding;
+        $this->table_padding = $padding;
     }
 
     /**
@@ -151,7 +152,7 @@ class Table {
     **/
     function setTableCellspacing($spacing)
     {
-        $this->table_spacing=$spacing;
+        $this->table_spacing = $spacing;
     }
 
     /**
@@ -161,7 +162,7 @@ class Table {
     **/
     function setTableAlign($align)
     {
-        $this->table_align=$align;
+        $this->table_align = $align;
     }
 
     /**
@@ -171,7 +172,7 @@ class Table {
     **/
     function setTableBgcolor($bgcolor)
     {
-        $this->table_bgcolor=$bgcolor;
+        $this->table_bgcolor = $bgcolor;
     }
 
     /**
@@ -179,47 +180,64 @@ class Table {
     * Includes code for closing table if there's a table still open.
     * @param    array   Key/value pairs overriding default attributes for table
     **/
-    function open($styles="")
+    function open($styles = array())
     {
-        $code="";
-        if ($this->tableopen==TRUE) {
+        $code = '';
+        if ($this->tableopen == TRUE) {
             $this->close();
         }
+
         $code .= "\n<table ";
-        $width= isset($styles["width"]) ? $styles["width"] : $this->table_width;
-        $border=isset($styles["border"]) ? $styles["border"] : $this->table_border;
-        $align=isset($styles["align"]) ? $styles["align"] : $this->table_align;
-        $padding=isset($styles["padding"]) ? $styles["padding"] : $this->table_padding;
-        $spacing=isset($styles["spacing"])? $styles["spacing"] : $this->table_spacing;
-        $bgcolor=isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->table_bgcolor;
-        $class=isset($styles["class"]) ? $styles["class"] : $this->table_class;
-        $style= isset($styles["style"]) ? $styles["style"] : $this->table_style;
-        $id=isset($styles["id"]) ? $styles["id"] : $this->table_id;
-        if ($width) { $code .= "width=\"".$width."\" "; }
-        if ($class) { $code .= "class=\"".$class."\" "; }
-        if ($style) { $code .= "style=\"".$style."\" "; }
-        if ($id) { $code .= "id=\"".$id."\" "; }
-        if ($align) { $code .= "align=\"".$align."\" "; }
-        if ($bgcolor) { $code .= "bgcolor=\"".$bgcolor."\" "; }
+
+        $width   = @$styles['width'] ?: $this->table_width;
+        $border  = @$styles['border'] ?: $this->table_border;
+        $align   = @$styles['align'] ?: $this->table_align;
+        $padding = @$styles['padding'] ?: $this->table_padding;
+        $spacing = @$styles['spacing'] ?: $this->table_spacing;
+        $bgcolor = @$styles['bgcolor'] ?: $this->table_bgcolor;
+        $class   = @$styles['class'] ?: $this->table_class;
+        $style   = @$styles['style'] ?: $this->table_style;
+        $id      = @$styles['id'] ?: $this->table_id;
+
+        if ($width) {
+            $code .= 'width="' . $width . '" ';
+        }
+        if ($class) {
+            $code .= 'class="' . $class . '" ';
+        }
+        if ($style) {
+            $code .= 'style=\"' . $style . '" ';
+        }
+        if ($id) {
+             $code .= 'id="' . $id . '" ';
+        }
+        if ($align) {
+            $code .= 'align="' . $align . '" ';
+        }
+        if ($bgcolor) {
+            $code .= 'bgcolor="' . $bgcolor . '" ';
+        }
         if ($border) { 
-            $code .= "border=\"".$border."\" ";
+            $code .= 'border="' . $border . '" ';
         } else {
-            $code .= "border=\"0\" ";
+            $code .= 'border="0" ';
         }
         if ($padding) {
-            $code .= "cellpadding=\"".$padding."\" ";
+            $code .= 'cellpadding="' . $padding . '" ';
         } else {
-            $code .= "cellpadding=\"0\" ";
+            $code .= 'cellpadding="0" ';
         }
         if ($spacing) {
-            $code .= "cellspacing=\"".$spacing."\" ";
+            $code .= 'cellspacing="' . $spacing . '" ';
         } else {
-            $code .= "cellspacing=\"0\" ";
+            $code .= 'cellspacing="0" ';
         }
         $code .= ">\n";
-        $this->rowopen=FALSE;
-        $this->cellopen=FALSE;
-        $this->tableopen=TRUE;
+
+        $this->rowopen   = FALSE;
+        $this->cellopen  = FALSE;
+        $this->tableopen = TRUE;
+
         return $code;
     }
 
@@ -231,139 +249,156 @@ class Table {
     {
         $code = $this->closeRow();
         $code .= "</table>\n";
-        $this->tableopen=FALSE;
+        $this->tableopen = FALSE;
         return $code;
     }
 
     function setRowBgcolor($bgcolor) 
     {
-        $this->row_bgcolor=$bgcolor;
+        $this->row_bgcolor = $bgcolor;
     }
 
     function setRowAlign($align) 
     {
-        $this->row_align=$align;
+        $this->row_align = $align;
     }
 
     function setRowVAlign($valign) 
     {
-        $this->row_valign=$valign;
+        $this->row_valign = $valign;
     }
 
     function setRowClass($class) 
     {
-        $this->row_class=$class;
+        $this->row_class = $class;
     }
 
     function setRowStyle($style) 
     {
-        $this->row_style=$style;
+        $this->row_style = $style;
     }
 
     function setRowID($id) 
     {
-        $this->row_id=$id;
+        $this->row_id = $id;
     }
 
-    function openRow($styles="")
+    function openRow($styles = array())
     {
-        $code = "";
+        $code = '';
         if (!$this->tableopen) {
             $code .= $this->open();
         }
         if ($this->rowopen) {
             $code .= $this->closeRow();
         }
-        $code .= "<tr ";
-        $bgcolor= isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->row_bgcolor;
-        $align = isset($styles["align"]) ? $styles["align"] : $this->row_align;
-        $valign = isset($styles["valign"]) ? $styles["valign"] : $this->row_valign;
-        $class = isset($styles["class"]) ? $styles["class"] : $this->row_class;
-        $style = isset($styles["style"]) ? $styles["style"] : $this->row_style;
-        $mouseover = isset($styles["onMouseOver"]) ? $styles["onMouseOver"] : $this->row_mouseover;
-        $mouseout = isset($styles["onMouseOut"]) ? $styles["onMouseOut"] : $this->row_mouseout;
-        $id = $styles["id"] ? $styles["id"] : $this->row_id;
-        if ($bgcolor) { $code .= "bgcolor=\"" . $bgcolor . "\" "; }
-        if ($align) { $code .= "align=\"" . $align . "\" "; }
-        if ($valign) { $code .= "valign=\"" . $valign . "\" "; }
-        if ($class) { $code .= "class=\"" . $class . "\" "; }
-        if ($style) { $code .= "style=\"" . $style . "\" "; }
-        if ($mouseover) { $code .= "onMouseOver=" . $mouseover . " "; }
-        if ($mouseout) { $code .= "onMouseOut=" . $mouseout . " "; }
-        if ($id) { $code .= "id=\"" . $id . "\" "; }
-        $code .= ">";
-        $this->rowopen=TRUE;
+        $code .= '<tr ';
+
+        $bgcolor   = @$styles['bgcolor'] ?: $this->row_bgcolor;
+        $align     = @$styles['align'] ?: $this->row_align;
+        $valign    = @$styles['valign'] ?: $this->row_valign;
+        $class     = @$styles['class'] ?: $this->row_class;
+        $style     = @$styles['style'] ?: $this->row_style;
+        $mouseover = @$styles['onMouseOver'] ?: $this->row_mouseover;
+        $mouseout  = @$styles['onMouseOut'] ?: $this->row_mouseout;
+        $id        = @$styles['id'] ?: $this->row_id;
+        
+        if ($bgcolor) {
+            $code .= 'bgcolor="' . $bgcolor . '" ';
+        }
+        if ($align) {
+            $code .= 'align="' . $align . '" ';
+        }
+        if ($valign) {
+            $code .= 'valign="' . $valign . '" ';
+        }
+        if ($class) {
+            $code .= 'class="' . $class . '" ';
+        }
+        if ($style) {
+            $code .= 'style="' . $style . '" ';
+        }
+        if ($mouseover) {
+            $code .= 'onMouseOver="' . $mouseover . '" '; }
+        if ($mouseout) {
+            $code .= 'onMouseOut="' . $mouseout . '" ';
+        }
+        if ($id) {
+            $code .= 'id="' . $id . '" ';
+        }
+        $code .= '>';
+        $this->rowopen = TRUE;
         return $code;
     }
 
     function closeRow()
     {
-        $code = "";
+        $code = '';
         if ($this->rowopen) {
             $code .= "</tr>\n";
-            $this->rowopen=FALSE;
+            $this->rowopen = FALSE;
         }
         return $code;
     }
 
     function setCellBgcolor($bgcolor) 
     {
-        $this->cell_bgcolor=$bgcolor;
+        $this->cell_bgcolor = $bgcolor;
     }
 
     function setCellAlign($align) 
     {
-        $this->cell_align=$align;
+        $this->cell_align = $align;
     }
 
     function setCellVAlign($valign) 
     {
-        $this->cell_valign=$valign;
+        $this->cell_valign = $valign;
     }
 
     function setCellHeight($height) 
     {
-        $this->cell_height=$height;
+        $this->cell_height = $height;
     }
 
     function setCellWidth($width) 
     {
-        $this->cell_width=$width;
+        $this->cell_width = $width;
     }
 
     function setCellColspan($colspan) 
     {
-        $this->cell_colspan=$colspan;
+        $this->cell_colspan = $colspan;
     }
 
     function setCellClass($class) 
     {
-        $this->cell_class=$class;
+        $this->cell_class = $class;
     }
 
     function setCellStyle($style) 
     {
-        $this->cell_style=$style;
+        $this->cell_style = $style;
     }
 
     function setCellID($id) 
     {
-        $this->cell_id=$id;
+        $this->cell_id = $id;
     }
 
     function setCellNowrap($nowrap) 
     {
-        $this->cell_nowrap=$nowrap;
+        $this->cell_nowrap = $nowrap;
     }
 
-    function openHeaderCell($styles="") 
+    function openHeaderCell($styles = array()) 
     {
-        $this->openCell($styles, "th");
+        $this->openCell($styles, 'th');
     }
 
-    function openCell($styles="", $tag="td")
+    function openCell($styles = array(), $tag = 'td')
     {
-        $code = "";
+        $code = '';
         if (!$this->tableopen) {
             $code .= $this->open();
         }
@@ -373,71 +408,92 @@ class Table {
         if ($this->cellopen) {
             $code .= $this->closeCell();
         }
-        $code .= "<".$tag." ";
-        $bgcolor= isset($styles["bgcolor"]) ? $styles["bgcolor"] : $this->cell_bgcolor;
-        $align = isset($styles["align"]) ? $styles["align"] : $this->cell_align;
-        $valign = isset($styles["valign"]) ? $styles["valign"] : $this->cell_valign;
-        $height = isset($styles["height"]) ? $styles["height"] : $this->cell_height;
-        $width = isset($styles["width"]) ? $styles["width"] : $this->cell_width;
-        $colspan = isset($styles["colspan"]) ? $styles["colspan"] : $this->cell_colspan;
-        $nowrap = isset($styles["nowrap"]) ? $styles["nowrap"] : $this->cell_nowrap;
-        $class = isset($styles["class"]) ? $styles["class"] : $this->cell_class;
-        $style = isset($styles["style"]) ? $styles["style"] : $this->cell_style;
-        $id = isset($styles["id"]) ? $styles["id"] : $this->cell_id;
+        $code .= '<' . $tag . ' ';
 
-        if ($bgcolor) { $code .= "bgcolor=\"" . $bgcolor . "\" "; }
-        if ($align) { $code .= "align=\"" . $align . "\" "; }
-        if ($valign) { $code .= "valign=\"" . $valign . "\" "; }
-        if ($width) { $code .= "width=\"" . $width . "\" "; }
-        if ($height) { $code .= "height=\"" . $height . "\" "; }
-        if ($colspan) { $code .= "colspan=\"" . $colspan . "\" "; }
-        if ($nowrap) { $code .= "nowrap "; }
-        if ($class) { $code .= "class=\"" . $class . "\" "; }
-        if ($style) { $code .= "style=\"" . $style . "\" "; }
-        if ($id) { $code .= "id=\"" . $id . "\" "; }
+        $bgcolor = @$styles['bgcolor'] ?: $this->cell_bgcolor;
+        $align   = @$styles['align'] ?: $this->cell_align;
+        $valign  = @$styles['valign'] ?: $this->cell_valign;
+        $height  = @$styles['height'] ?: $this->cell_height;
+        $width   = @$styles['width'] ?: $this->cell_width;
+        $colspan = @$styles['colspan'] ?: $this->cell_colspan;
+        $nowrap  = @$styles['nowrap'] ?: $this->cell_nowrap;
+        $class   = @$styles['class'] ?: $this->cell_class;
+        $style   = @$styles['style'] ?: $this->cell_style;
+        $id      = @$styles['id'] ?: $this->cell_id;
 
-        $code .= ">";
-        $this->cellopen=TRUE;
-        $this->cellopentag=$tag;
+        if ($bgcolor) {
+            $code .= 'bgcolor="' . $bgcolor . '" ';
+        }
+        if ($align) {
+            $code .= 'align="' . $align . '" ';
+        }
+        if ($valign) {
+            $code .= 'valign="' . $valign . '" ';
+        }
+        if ($width) {
+            $code .= 'width="' . $width . '" ';
+        }
+        if ($height) {
+            $code .= 'height="' . $height . '" ';
+        }
+        if ($colspan) {
+            $code .= 'colspan="' . $colspan . '" ';
+        }
+        if ($nowrap) {
+            $code .= 'nowrap ';
+        }
+        if ($class) {
+            $code .= 'class="' . $class . '" ';
+        }
+        if ($style) {
+            $code .= 'style="' . $style . '" ';
+        }
+        if ($id) {
+            $code .= 'id="' . $id . '" ';
+        }
+
+        $code .= '>';
+        $this->cellopen    = TRUE;
+        $this->cellopentag = $tag;
         return $code;
     }
 
     function closeCell()
     {
-        $code = "";
+        $code = '';
         if ($this->cellopen) {
-            $code .= "</".$this->cellopentag.">";
-            $this->cellopen=FALSE;
+            $code .= '</' . $this->cellopentag . '>';
+            $this->cellopen = FALSE;
         }
         return $code;
     }
 
-    function cell($content, $styles="")
+    function cell($content, $styles = array())
     {
-        $code = "";
+        $code = '';
         $code .= $this->openCell($styles);
         $code .= $content;
         $code .= $this->closeCell();
         return $code;
     }
 
-    function headerCell($content, $styles="")
+    function headerCell($content, $styles = array())
     {
-        $code = "";
+        $code = '';
         $code .= $this->openHeaderCell($styles);
         $code .= $content;
         $code .= $this->closeCell();
         return $code;
     }
 
-    function blankCell($styles="")
+    function blankCell($styles = array())
     {
-        return $this->cell("&nbsp;",$styles);
+        return $this->cell('&nbsp;',$styles);
     }
 
-    function row($cells, $styles="") 
+    function row($cells, $styles = array()) 
     {
-        $code = "";
+        $code = '';
         $code .= $this->openRow($styles);
         foreach ($cells as $i) {
             $code .= $this->cell($i);
@@ -446,8 +502,8 @@ class Table {
         return $code;
     }
 
-    function blankRow($styles="")
+    function blankRow($styles = array())
     {
-        return $this->row(array("&nbsp;"),$styles);
+        return $this->row(array('&nbsp;'), $styles);
     }
 }

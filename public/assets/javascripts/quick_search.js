@@ -43,7 +43,7 @@ STUDIP.QuickSearch = {
                 delay: 500,
                 minLength: 3,
                 create: function () {
-                    if ($($this).is('[autofocus]')) {
+                    if ($(this).is('[autofocus]')) {
                         $(this).focus();
                     }
                 },

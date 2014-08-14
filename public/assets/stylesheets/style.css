@@ -226,6 +226,10 @@ a:hover.tree {
 a:hover.toolbar {
   color: #eee;
 }
+a.link-intern,
+a.link-extern {
+  white-space: nowrap;
+}
 a.link-intern:before {
   background-repeat: no-repeat;
   content: ' ';

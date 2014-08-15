@@ -409,10 +409,8 @@ class CourseSet
             LEFT JOIN seminare s ON s.seminar_id = sc.seminar_id
             WHERE ci.institute_id IS NULL";
         $parameters = array();
-        if (!$GLOBALS['perm']->have_perm('root')) {
-            $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
-            $parameters[] = $GLOBALS['user']->id;
-        }
+        $query .= " AND (c.`private`=0 OR c.`user_id`=?)";
+        $parameters[] = $GLOBALS['user']->id;
         if ($filter['course_set_name']) {
             $query .= " AND c.name LIKE ?";
             $parameters[] = $filter['course_set_name'] . '%';

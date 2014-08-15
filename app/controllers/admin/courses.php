@@ -548,9 +548,7 @@ class Admin_CoursesController extends AuthenticatedController
                 $sortby = sprintf('%s %s', $sortby, $sortFlag);
             }
         } else {
-            if ($sortby == "" || $sortby == false) {
-                $sortby = sprintf('VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag);
-            }
+            $sortby = sprintf('VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag);
         }
 
         $where = '';

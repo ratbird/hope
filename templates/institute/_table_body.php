@@ -90,7 +90,7 @@ use Studip\Button, Studip\LinkButton;
             }
         }
 
-        if (sizeof($GLOBALS['dview']) == 0) {
+        if (sizeof($dview) == 0) {
             if ($structure['raum']) echo '<td>'. htmlReady($member['raum']) .'</td>';
             if ($structure['sprechzeiten']) echo '<td>'. htmlReady($member['sprechzeiten']) .'</td>';
             if ($structure['telefon']) echo '<td>'. htmlReady($member['Telefon']) .'</td>';
@@ -142,7 +142,7 @@ use Studip\Button, Studip\LinkButton;
                     echo '</font></td>';
                     if (sizeof($entries) > 0) {
                         foreach ($entries as $e_id => $entry) {
-                            if (in_array($e_id, $GLOBALS['dview']) === TRUE) {
+                            if (in_array($e_id, $dview) === TRUE) {
                                 echo '<td><font size="-1">';
                                 if ($entry->getValue() == 'default_value') {
                                     echo $default_entries[$e_id]->getDisplayValue();

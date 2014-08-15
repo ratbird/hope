@@ -382,6 +382,7 @@ class Institute_MembersController extends AuthenticatedController
 
             $this->datafields_list = DataFieldStructure::getDataFieldStructures("userinstrole");
 
+            $dview = array();
             if ($this->extend == 'yes') {
                 if (is_array($GLOBALS['INST_ADMIN_DATAFIELDS_VIEW']['extended'])) {
                     $dview = $GLOBALS['INST_ADMIN_DATAFIELDS_VIEW']['extended'];
@@ -561,7 +562,7 @@ class Institute_MembersController extends AuthenticatedController
             if ($this->show == "funktion") {
                 $all_statusgruppen = $this->groups;
                 if ($all_statusgruppen) {
-                    $this->display_recursive($all_statusgruppen);
+                    $this->display_recursive($all_statusgruppen, 0, '', $dview);
                 }
                 if ($GLOBALS['perm']->have_perm('admin')) {
                     $assigned = GetAllSelected($this->auswahl) ?: array('');
@@ -606,6 +607,7 @@ class Institute_MembersController extends AuthenticatedController
                         $template->datafields_list = $this->datafields_list;
                         $template->group_list = $this->group_list;
                         $template->admin_view = $this->admin_view;
+                        $template->dview = $dview;
                         $this->table_content .= $template->render();
                     }
                 }
@@ -655,6 +657,7 @@ class Institute_MembersController extends AuthenticatedController
                         $template->datafields_list = $this->datafields_list;
                         $template->group_list = $this->group_list;
                         $template->admin_view = $this->admin_view;
+                        $template->dview = $dview;
                         $this->table_content .= $template->render();
                     }
                 }
@@ -746,6 +749,7 @@ class Institute_MembersController extends AuthenticatedController
                         $template->datafields_list = $this->datafields_list;
                         $template->group_list = $this->group_list;
                         $template->admin_view = $this->admin_view;
+                        $template->dview = $dview;
                         $this->table_content .= $template->render();
                     }
                 }
@@ -753,7 +757,7 @@ class Institute_MembersController extends AuthenticatedController
         }
     }
     
-    function display_recursive($roles, $level = 0, $title = '') {
+    function display_recursive($roles, $level = 0, $title = '', $dview = array()) {
         foreach ($roles as $role_id => $role) {
             if ($title == '') {
                 $zw_title = $role['role']->getName();
@@ -813,11 +817,12 @@ class Institute_MembersController extends AuthenticatedController
                 $template->datafields_list = $this->datafields_list;
                 $template->group_list = $this->group_list;
                 $template->admin_view = $this->admin_view;
+                $template->dview = $dview;
                 $this->table_content .= $template->render();
                 
             }
             if ($role['child']) {
-                $this->display_recursive($role['child'], $level + 1, $zw_title);
+                $this->display_recursive($role['child'], $level + 1, $zw_title, $dview);
             }
         }
     }

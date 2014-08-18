@@ -77,33 +77,6 @@ class Messages extends \RESTAPI\RouteMap
     }
 
     /**
-     * Legt einen neuen Ordner in der (In|Out)box eines Nutzers an.
-     *
-     * @post /user/:user_id/:box
-     */
-    public function createFolder($user_id, $box)
-    {
-
-        if (!isset($this->data['name'])
-            || !strlen($name = trim($this->data['name'])) ) {
-            $this->error(400, 'No suitable folder name provided');
-        }
-
-        $folders = self::getUserFolders($user_id, $box);
-        if (in_array($name, $folders)) {
-            $this->error(409, 'Duplicate');
-        }
-
-        $settings = \UserConfig::get($user_id)->MESSAGING_SETTINGS ?: array();
-        $settings['folder'][$_box = substr($box, 0, -3)][] = $name;
-        $status = \UserConfig::get($user_id)->store('MESSAGING_SETTINGS', $settings);
-        page_close();
-
-        $this->redirect($this->folderUrl($user_id, $box, sizeof($settings['folder'][$_box]) - 1), 201);
-    }
-
-
-    /**
      * Liefert die Daten der angegebenen Nachricht zurück.
      *
      * @get /message/:message_id
@@ -240,8 +213,7 @@ class Messages extends \RESTAPI\RouteMap
 
     private static function getUserFolders($user_id, $box)
     {
-        $settings = \UserConfig::get($user_id)->MESSAGING_SETTINGS ?: array();
-        $folders = $settings['folder'];
+        $folders = array();
         $folders['in'][0]  = _('Posteingang');
         $folders['out'][0] = _('Postausgang');
 
@@ -291,7 +263,7 @@ class Messages extends \RESTAPI\RouteMap
     {
         $user_id = self::currentUser();
 
-        $my_mu = $message->users->filter(
+        $my_mu = $message->receivers->filter(
             function ($mu) use ($user_id) { return $mu->user_id === $user_id; });
 
         $my_roles = array(
@@ -341,15 +313,15 @@ class Messages extends \RESTAPI\RouteMap
             $json['folders'][] =
                 $this->folderURL($user_id,
                                  $mu->snd_rec === 'rec' ? 'inbox' : 'outbox',
-                                 $mu->folder);
+                                 0);
         }
         return $json;
     }
 
     private static function folder($user_id, $sndrec, $folder, $unread = null)
     {
-        $temp = \MessageUser::findBySQL('user_id = ? AND snd_rec = ? AND folder = ? AND deleted = 0',
-                                        array($user_id, $sndrec, $folder));
+        $temp = \MessageUser::findBySQL('user_id = ? AND snd_rec = ? AND deleted = 0',
+                                        array($user_id, $sndrec));
         $messages = \SimpleORMapCollection::createFromArray($temp);
         if ($unread !== null) {
             $messages = $messages->filter(function ($message) use ($unread) {

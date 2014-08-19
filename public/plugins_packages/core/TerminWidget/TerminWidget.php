@@ -28,7 +28,7 @@ class TerminWidget extends StudIPPlugin implements PortalPlugin
         $template->content = $response->body;
 
         $navigation = new Navigation('', 'calendar.php', array('cmd' => 'edit'));
-        $navigation->setImage('icons/16/blue/admin.png', array('title' => _('Neuen Termin anlegen')));
+        $navigation->setImage('icons/16/blue/add.png', array('title' => _('Neuen Termin anlegen')));
         $template->icons = array($navigation);
 
         return $template;

@@ -2618,7 +2618,7 @@ class Seminar
     {
         $cs = $this->getCourseSet();
         return ($cs && $cs->hasAdmissionRule('TimedAdmission')) ?
-            array(array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime()),
-                array('end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime())) : null;
+            array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime(),
+                  'end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime()) : null;
     }
 }

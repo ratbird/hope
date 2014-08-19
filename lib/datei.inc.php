@@ -2903,7 +2903,7 @@ function check_protected_download($document_id)
                 $timed_admission = $seminar->getAdmissionTimeFrame();
                 if( $seminar->isPasswordProtected() ||
                     $seminar->isAdmissionLocked()
-                    || ($timed_admission['start_time'] > 0 && $timed_admission['end_time'] < time())){
+                    || ($timed_admission['end_time'] > 0 && $timed_admission['end_time'] < time())){
                     $ok = true;
                 }
             }

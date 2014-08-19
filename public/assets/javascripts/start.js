@@ -30,6 +30,7 @@
 
         init: function () {
             $('.start-widgetcontainer .portal-widget-list').sortable({
+                handle: '.widget-header',
                 connectWith: 'ul.portal-widget-list',
                 start: function () {
                     $(this).closest('.start-widgetcontainer').find('.portal-widget-list').addClass('ui-sortable move');
@@ -48,6 +49,7 @@
 
         init_edit: function (perm) {
             $('.edit-widgetcontainer .portal-widget-list').sortable({
+                handle: '.widget-header',
                 connectWith: '.edit-widgetcontainer .portal-widget-list',
                 start: function () {
                     $(this).closest('.edit-widgetcontainer').find('.portal-widget-list').addClass('ui-sortable move');

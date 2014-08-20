@@ -93,4 +93,3 @@
 </div>
 
 <?= $this->render_partial('area/_js_templates') ?>
-<?= $this->render_partial('joyride/areas') ?>

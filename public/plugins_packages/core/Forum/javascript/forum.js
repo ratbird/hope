@@ -453,10 +453,6 @@ STUDIP.Forum = {
             + action + '?cid=' + STUDIP.Forum.seminar_id))
     },
     
-    startTour: function() {
-        jQuery('#joyRideTipContent').joyride();
-    },
-    
     showDialog: function(question, confirm, highlight_element) {
         if (highlight_element !== null) {
             // STUDIP.Forum.highlightedElement = highlight_element;

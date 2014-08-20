@@ -27,10 +27,6 @@ if (ForumPerm::has('search', $seminar_id)) {
 
 $actions = new ActionsWidget();
 
-if ($constraint['depth'] == 0 && $section == 'index') {
-    $actions->addLink(_('Tour starten'), "javascript:STUDIP.Forum.startTour();", 'icons/16/blue/info.png');
-}
-
 if ($section == 'index') {
     if (ForumPerm::has('abo', $seminar_id)) {
         if (ForumAbo::has($constraint['topic_id'])) :

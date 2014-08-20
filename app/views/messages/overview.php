@@ -76,6 +76,15 @@
     <span class="title"></span>
 </div>
 
+<? if ($message_id): ?>
+<script>
+jQuery(function ($) {
+    var url = '<?= $controller->url_for('messages/read/' . $message_id) ?>';
+    $('<a href="' + url + '" data-dialog>').hide().appendTo('body').click().remove();
+});
+</script>
+<? endif; ?>
+
 <?php
 $sidebar = Sidebar::get();
 $sidebar->setImage(Assets::image_path("sidebar/mail-sidebar.png"));

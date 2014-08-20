@@ -36,7 +36,7 @@ class MessagesController extends AuthenticatedController {
         $this->set_content_type('text/html;charset=windows-1252');
     }
 
-    public function overview_action()
+    public function overview_action($message_id = null)
     {
         Navigation::activateItem('/messaging/messages/inbox');
 
@@ -62,11 +62,12 @@ class MessagesController extends AuthenticatedController {
             Request::get("tag"),
             Request::get("search")
         );
-        $this->received = 1;
-        $this->tags = Message::getUserTags();
+        $this->received   = true;
+        $this->tags       = Message::getUserTags();
+        $this->message_id = $message_id;
     }
 
-    public function sent_action()
+    public function sent_action($message_id = null)
     {
         Navigation::activateItem('/messaging/messages/sent');
 
@@ -87,8 +88,9 @@ class MessagesController extends AuthenticatedController {
             Request::get("tag"),
             Request::get("search")
         );
-        $this->received = 0;
-        $this->tags = Message::getUserTags();
+        $this->received   = false;
+        $this->tags       = Message::getUserTags();
+        $this->message_id = $message_id;
 
         $this->render_action("overview");
     }

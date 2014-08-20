@@ -378,10 +378,12 @@ class MyCoursesController extends AuthenticatedController
      */
     public function tabularasa_action($sem = 'all', $timestamp = null)
     {
+        $deputies_enabled = Config::get()->DEPUTIES_ENABLE;
+
         $semesters   = MyRealmModel::getSelectedSemesters($sem);
         $min_sem_key = min($semesters);
         $max_sem_key = max($semesters);
-        $courses     = MyRealmModel::getCourses($min_sem_key, $max_sem_key);
+        $courses     = MyRealmModel::getCourses($min_sem_key, $max_sem_key, compact('deputies_enabled'));
         $courses     = $courses->toArray('seminar_id modules status');
 
         $modules = new Modules();

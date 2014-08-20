@@ -15,8 +15,8 @@
  * @category    Stud.IP
  * @since       3.1
  */
-class StudipVote extends SimpleORMap {
-
+class StudipVote extends SimpleORMap
+{
     protected static function configure($config = array())
     {
         $config['db_table'] = 'vote';
@@ -36,56 +36,57 @@ class StudipVote extends SimpleORMap {
         $config['additional_fields']['countinfo'] = true;
         $config['additional_fields']['anonymousinfo'] = true;
         $config['additional_fields']['endinfo'] = true;
+
         parent::configure($config);
     }
 
-    public function getUsers() {
+    public function getUsers()
+    {
         if ($this->anonymous) {
             return $this->anonymous_users;
-        } else {
-            $result = array();
-            foreach ($this->answers as $answer) {
-                foreach ($answer->users as $user) {
-                    $result[$user->user_id] = $user;
-                }
-            }
-            return SimpleCollection::createFromArray(array_values($result));
         }
-    }
-
-    public function getCount() {
+        
+        $result = array();
         foreach ($this->answers as $answer) {
-            $result += $answer->count;
-        }
-        return $result;
-    }
-
-    public function getCountinfo() {
-        switch ($this->count) {
-            case 1:
-                if ($this->userVoted()) {
-                    return _('Sie waren bisher der/die einzige TeilnehmerIn.');
-                }
-                return _('Es hat bisher') . " " . $this->count . " " . _('Person teilgenommen.');
-            default:
-                return _('Es haben bisher') . " " . $this->count . " " . _('Personen teilgenommen.');
-        }
-    }
-
-    public function getAnonymousinfo() {
-        if ($this->isRunning()) {
-            if ($this->anonymous) {
-                return _('Die Teilnahme war anonym.');
+            foreach ($answer->users as $user) {
+                $result[$user->user_id] = $user;
             }
-            return _('Die Teilnahme war nicht anonym.');
         }
-        if ($this->anonymous) {
-            return _('Die Teilnahme ist anonym.');
-        }
-        return _('Die Teilnahme ist nicht anonym.');
+        return SimpleCollection::createFromArray(array_values($result));
     }
 
-    public function getEndinfo() {
+    public function getCount()
+    {
+        return count($this->getUsers());
+    }
+
+    public function getCountinfo()
+    {
+        if ($this->count === 1 && $this->userVoted()) {
+            return _('Sie waren bisher der/die einzige TeilnehmerIn.');
+        }
+
+        $template = $this->count === 1
+                  ? _('Es hat bisher %u Person teilgenommen')
+                  : _('Es haben bisher %u Personen teilgenommen.');
+        return sprintf($template, $this->count);
+    }
+
+    public function getAnonymousinfo()
+    {
+        if ($this->isRunning()) {
+            return $this->anonymous
+                ? _('Die Teilnahme ist anonym.')
+                : _('Die Teilnahme ist nicht anonym.');
+        }
+
+        return $this->anonymous
+            ? _('Die Teilnahme war anonym.')
+            : _('Die Teilnahme war nicht anonym.');
+    }
+
+    public function getEndinfo()
+    {
         $stopdate = $this->stopdate ?: ($this->timespan ? $this->startdate + $this->timespan : 0);
 
         if ($stopdate) {
@@ -105,7 +106,8 @@ class StudipVote extends SimpleORMap {
         return _('Der Endzeitpunkt dieser Umfrage steht noch nicht fest.');
     }
 
-    public function userVoted($user_id = null) {
+    public function userVoted($user_id = null)
+    {
         $user_id = $user_id ?: $GLOBALS['user']->id;
         if ($this->anonymous) {
             $query = "SELECT 1 FROM vote_user WHERE user_id = ? AND vote_id = ?";
@@ -118,20 +120,23 @@ class StudipVote extends SimpleORMap {
         return DBManager::get()->fetchColumn($query, array($user_id, $this->id));
     }
 
-    public function getMaxvotes() {
-        return max($this->answers->pluck("count"));
+    public function getMaxvotes()
+    {
+        return max($this->answers->pluck('count'));
     }
 
-    public function isRunning() {
+    public function isRunning()
+    {
         return $this->hasStarted() && !$this->hasStopped();
     }
 
-    public function hasStarted() {
+    public function hasStarted()
+    {
         return $this->startdate < time();
     }
 
-    public function hasStopped() {
-
+    public function hasStopped()
+    {
         // if we have a direct stop time check if it is reached
         if ($this->stopdate) {
             return $this->stopdate < time();
@@ -146,17 +151,20 @@ class StudipVote extends SimpleORMap {
         return false;
     }
 
-    public function insertVote($answers, $user_id) {
+    public function insertVote($answers, $user_id)
+    {
 
         if (!$answers) {
             throw new Exception(_('Sie haben keine Antwort ausgewählt.'));
         }
+
         $answers = $this->checkValidAnswers($answers);
         if (!count($answers)) {
-            throw new Exception(_('Sie haben keine Antwort ausgewählt. (Keine Validen antoweren)'));
+            throw new Exception(_('Sie haben keine gültige Antwort ausgewählt.'));
         }
+
         if (!$this->multiplechoice && count($answers) != 1) {
-            throw new Exception(_('Sie haben zu viele Antwort ausgewählt.'));
+            throw new Exception(_('Sie haben zu viele Antworten ausgewählt.'));
         }
 
         /*
@@ -195,7 +203,9 @@ class StudipVote extends SimpleORMap {
         }
     }
 
-    private function checkValidAnswers($answers) {
+    private function checkValidAnswers($answers)
+    {
+        $result = array();
         foreach ($answers as $answer) {
             $result[] = $this->answers->findOneBy('position', $answer);
         }
@@ -205,11 +215,11 @@ class StudipVote extends SimpleORMap {
     /**
      * Checks if the user may see the result
      */
-    public function showResult() {
+    public function showResult()
+    {
         if (Request::submitted('change') && $this->changeable) {
             return false;
         }
         return $this->userVoted() || Request::submitted('preview');
     }
-
 }

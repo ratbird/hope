@@ -453,14 +453,6 @@ class StreamsController extends PluginController {
             $posting['seminar_id'] = $thread['Seminar_id'];
             $posting['root_id'] = $posting['parent_id'] = $thread->getId();
             $posting['name'] = "Re: ".$thread['name'];
-            $posting->store();
-
-            BlubberPosting::$mention_posting_id = $posting->getId();
-            StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', null, "BlubberPosting::mention");
-            StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', null, "BlubberPosting::mention");
-            $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-
-            $posting['description'] = $content;
             if ($GLOBALS['user']->id !== "nobody") {
                 $posting['user_id'] = $GLOBALS['user']->id;
             } else {
@@ -476,6 +468,15 @@ class StreamsController extends PluginController {
                 }
             }
             $posting['author_host'] = $_SERVER['REMOTE_ADDR'];
+            $posting['description'] = Request::get("content");
+            $posting->store();
+
+            BlubberPosting::$mention_posting_id = $posting->getId();
+            StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', null, "BlubberPosting::mention");
+            StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', null, "BlubberPosting::mention");
+            $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
+
+            $posting['description'] = $content;
             if ($posting->store()) {
                 $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views/streams");
                 $template = $factory->open("comment.php");

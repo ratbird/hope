@@ -559,10 +559,13 @@ class MyRealmModel
 
     public static function getDeputies($user_id)
     {
-        $query     = "SELECT DISTINCT range_id as seminar_id FROM deputies WHERE user_id = ?";
+        $query = "SELECT DISTINCT range_id AS seminar_id
+                  FROM deputies
+                  JOIN seminare ON range_id = seminar_id
+                  WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
-        $data = $statement->fetchALL(PDO::FETCH_ASSOC);
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $data;
     }
 

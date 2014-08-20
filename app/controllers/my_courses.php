@@ -481,8 +481,7 @@ class MyCoursesController extends AuthenticatedController
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($GLOBALS['user']->id, $course_id));
                 if ($statement->rowCount() == 0) {
-                    PageLayout::postMessage(MessageBox::error(_('In der ausgewählten Veranstaltung wurde der/die gewünschte
-                    TeilnehmerIn nicht gefunden und konnter daher nicht ausgetragen werden.')));
+                    PageLayout::postMessage(MessageBox::error(_('In der ausgewählten Veranstaltung wurde der/die gewünschte TeilnehmerIn nicht gefunden und konnte daher nicht ausgetragen werden.')));
                 } else {
                     // LOGGING
                     StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst ausgetragen');

@@ -575,7 +575,6 @@ class MyRealmModel
         return $statement->fetch(PDO::FETCH_COLUMN);
     }
 
-
     /**
      * Get the start_ and end_sem_number for a given course
      * @param $course
@@ -673,6 +672,12 @@ class MyRealmModel
                 $sem_nrs     = self::getCourseSemNumbers($course);
                 $member_ship = User::findCurrent()->course_memberships->findOneBy('seminar_id', $course->id);
 
+                if(!$member_ship && isDeputy($GLOBALS['user']->id, $course->id)) {
+                    $user_status = 'dozent';
+                } else {
+                    $user_status = $member_ship->status;
+                }
+
                 // get teachers only if grouping selected (for better performance)
                 if ($group_field == 'dozent_id') {
                     $teachers = new SimpleCollection($course->getMembersWithStatus('dozent'));
@@ -683,7 +688,7 @@ class MyRealmModel
 
                 $_course['last_visitdate'] = object_get_visit($course->id, 'sem', 'last');
                 $_course['visitdate']      = object_get_visit($course->id, 'sem', '');
-                $_course['user_status']    = $member_ship->status;
+                $_course['user_status']    = $user_status;
                 $_course['gruppe']         = !empty($member_ship->gruppe) ? $member_ship->gruppe : self::getDeputieGroup($course->id);
                 $_course['sem_number_end'] = $sem_nrs['sem_number_end'];
                 $_course['sem_number']     = $sem_nrs['sem_number'];

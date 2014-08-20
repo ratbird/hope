@@ -477,15 +477,15 @@ class MyCoursesController extends AuthenticatedController
             $this->redirect('my_courses/index');
         } else {
             if (!LockRules::Check($course_id, 'participants') && $ticket_check && Request::option('cmd') != 'back' && Request::get('cmd') != 'kill_admission') {
-                // LOGGING
-                StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst ausgetragen');
                 $query     = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($GLOBALS['user']->id,
-                    $course_id));
+                $statement->execute(array($GLOBALS['user']->id, $course_id));
                 if ($statement->rowCount() == 0) {
-                    PageLayout::postMessage(MessageBox::error(_('Datenbankfehler!')));
+                    PageLayout::postMessage(MessageBox::error(_('In der ausgewählten Veranstaltung wurde der/die gewünschte
+                    TeilnehmerIn nicht gefunden und konnter daher nicht ausgetragen werden.')));
                 } else {
+                    // LOGGING
+                    StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst ausgetragen');
                     // enable others to do something after the user has been deleted
                     NotificationCenter::postNotification('UserDidLeaveCourse', $course_id, $GLOBALS['user']->id);
 

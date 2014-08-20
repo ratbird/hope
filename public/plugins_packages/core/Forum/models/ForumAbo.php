@@ -119,7 +119,7 @@ class ForumAbo {
             PersonalNotifications::add(
                 $user_id,
                 UrlHelper::getUrl(
-                    'plugins.php/coreforum/index/index/' . $parent_id,
+                    'plugins.php/coreforum/index/index/' . $topic['topic_id'] . '#topic_id',
                     array('cid' => $topic['seminar_id']),
                     true
                 ),

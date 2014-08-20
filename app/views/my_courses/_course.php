@@ -22,7 +22,7 @@
             <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $course['seminar_id'])) ?>"
                 <?= $course['visitdate'] <= $course['chdate'] ? 'style="color: red;"' : '' ?>>
                 <?= htmlReady($course['name']) ?>
-
+                <?= ($course['is_deputy'] ? ' ' . _("[Vertretung]") : '');?>
             </a>
             <? if ($course['visible'] == 0) : ?>
                 <? $infotext = _("Versteckte Veranstaltungen können über die Suchfunktionen nicht gefunden werden."); ?>

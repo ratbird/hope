@@ -659,7 +659,7 @@ class MyRealmModel
         if (!empty($courses)) {
             // filtering courses
             $modules = new Modules();
-
+            $member_ships = User::findCurrent()->course_memberships->toGroupedArray('seminar_id', 'status gruppe');
             foreach ($courses as $index => $course) {
                 // export object to array for simple handling
                 $_course                   = $course->toArray($param_array);
@@ -673,12 +673,13 @@ class MyRealmModel
 
                 // the sem numbers for a given course
                 $sem_nrs     = self::getCourseSemNumbers($course);
-                $member_ship = User::findCurrent()->course_memberships->findOneBy('seminar_id', $course->id);
 
-                if(!$member_ship && isDeputy($GLOBALS['user']->id, $course->id)) {
+                $user_status = @$member_ships[$course->id]['status'];
+                if(!$user_status && Config::get()->DEPUTIES_ENABLE && isDeputy($GLOBALS['user']->id, $course->id)) {
                     $user_status = 'dozent';
+                    $is_deputy = true;
                 } else {
-                    $user_status = $member_ship->status;
+                    $is_deputy = false;
                 }
 
                 // get teachers only if grouping selected (for better performance)
@@ -692,12 +693,13 @@ class MyRealmModel
                 $_course['last_visitdate'] = object_get_visit($course->id, 'sem', 'last');
                 $_course['visitdate']      = object_get_visit($course->id, 'sem', '');
                 $_course['user_status']    = $user_status;
-                $_course['gruppe']         = !empty($member_ship->gruppe) ? $member_ship->gruppe : self::getDeputieGroup($course->id);
+                $_course['gruppe']         = !$is_deputy ? @$member_ships[$course->id]['gruppe'] : self::getDeputieGroup($course->id);
                 $_course['sem_number_end'] = $sem_nrs['sem_number_end'];
                 $_course['sem_number']     = $sem_nrs['sem_number'];
                 $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
                 $_course['name']           = $course->name;
                 $_course['temp_name']      = $course->name;
+                $_course['is_deputy']      = $is_deputy;
 
                 // add the the course to the correct semester
                 for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
@@ -1309,4 +1311,4 @@ class MyRealmModel
         }
         return array_reverse($temp);
     }
-} 
+}

@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="text">
-                <?= htmlReady($answer->answer) ?>
+                <?= formatReady($answer->answer) ?>
             </div>
             <div class="infotext">
                 (<?= $answer->count ?> <?= $answer->count == 1 ? _("Stimme") : _("Stimmen") ?>)

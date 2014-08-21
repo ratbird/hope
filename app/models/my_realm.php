@@ -665,6 +665,7 @@ class MyRealmModel
                 $_course                   = $course->toArray($param_array);
                 $_course['start_semester'] = $course->start_semester->name;
                 $_course['end_semester']   = $course->end_semester->name;
+                $_course['sem_class']      = $course->getSemClass();
                 $_course['obj_type']       = 'sem';
 
                 if ($group_field == 'sem_tree_id') {
@@ -1050,14 +1051,9 @@ class MyRealmModel
     public static function getObjectValues(&$course)
     {
 
-        if (!isset($course['sem_class'])) {
-            $sem_class           = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course['status']]['class']];
-            $course['sem_class'] = $sem_class;
-        }
-
         if (!isset($course['navigation'])) {
             // get additional navigation items
-            $course['navigation'] = self::getAdditionalNavigations($course['seminar_id'], $course, $sem_class, $GLOBALS['user']->id);
+            $course['navigation'] = self::getAdditionalNavigations($course['seminar_id'], $course, $course['sem_class'], $GLOBALS['user']->id);
         }
     }
 
@@ -1226,6 +1222,7 @@ class MyRealmModel
         $param_array .= 'chdate admission_binding modules admission_prelim';
         $courses = Course::findAndMapMany(function ($course) use ($param_array, $studygroups, $modules) {
             $ret                   = $course->toArray($param_array);
+            $ret['sem_class']      = $course->getSemClass();
             $ret['start_semester'] = $course->start_semester->name;
             $ret['end_semester']   = $course->end_semester->name;
             $ret['obj_type']       = 'sem';

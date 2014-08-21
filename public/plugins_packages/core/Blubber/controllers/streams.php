@@ -270,7 +270,7 @@ class StreamsController extends PluginController {
             }
         }
 
-        $thread['description'] = Request::get("content");
+        $thread['description'] = studip_utf8decode(Request::get("content"));
         $thread->store();
 
         BlubberPosting::$mention_posting_id = $thread->getId();
@@ -468,7 +468,7 @@ class StreamsController extends PluginController {
                 }
             }
             $posting['author_host'] = $_SERVER['REMOTE_ADDR'];
-            $posting['description'] = Request::get("content");
+            $posting['description'] = studip_utf8decode(Request::get("content"));
             $posting->store();
 
             BlubberPosting::$mention_posting_id = $posting->getId();

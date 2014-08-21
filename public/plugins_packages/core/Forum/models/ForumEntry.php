@@ -28,7 +28,7 @@ class ForumEntry {
 
     /**
      * is used for posting-preview. replaces all newlines with spaces
-     * 
+     *
      * @param string $text the text to work on
      * @returns string
      */
@@ -54,7 +54,7 @@ class ForumEntry {
 
     /**
      * add the edit-html to a posting
-     * 
+     *
      * @param string $description the posting-content
      * @return string the content with the edit-mark
      */
@@ -66,7 +66,7 @@ class ForumEntry {
 
     /**
      * convert the edit-html to raw text
-     * 
+     *
      * @param string $description the posting-content
      * @return string the content with the raw text version of the edit-mark
      */
@@ -75,15 +75,15 @@ class ForumEntry {
         // TODO figure out if this function can be removed
         //      has been replaced with getContentAsHTML in core code
         $content = ForumEntry::killEdit($description);
-        $comment = ForumEntry::getEditComment($description, $anonymous);        
+        $comment = ForumEntry::getEditComment($description, $anonymous);
         return $content . ($comment ? "\n\n%%" . $comment .'%%' : '');
     }
 
     /**
      * Get content with appended edit comment as HTML.
-     * 
+     *
      * @param string  $description  Database entry of forum entry's body.
-     * @param bool    $anonymous    True, if only root is allowed to see 
+     * @param bool    $anonymous    True, if only root is allowed to see
      *                              authors.
      * @return string  Content and edit comment as HTML.
      */
@@ -98,7 +98,7 @@ class ForumEntry {
      * Get author and time of an edited forum entry as a string.
      *
      * @param string  $description  Database entry of forum entry's body.
-     * @param bool    $anonymous    True, if only root is allowed to see 
+     * @param bool    $anonymous    True, if only root is allowed to see
      *                              authors.
      * @return string  Author and time or empty string if not edited.
      */
@@ -131,7 +131,7 @@ class ForumEntry {
 
     /**
      * remove the [quote]-tags from the passed posting
-     * 
+     *
      * @param string $description the posting-content
      * @return string the posting without [quote]-tags
      */
@@ -143,25 +143,25 @@ class ForumEntry {
 
     /**
      * calls Stud.IP's kill_format and additionally removes any found smiley-tag
-     * 
+     *
      * @param string $text the text to parse
      * @return string the text without format-tags and without smileys
      */
     static function killFormat($text)
     {
-        
+
         $text = kill_format($text);
-        
+
         // find stuff which is enclosed between to colons
         preg_match('/:.*:/U', $text, $matches);
-        
+
         // remove the match if it is a smiley
         foreach ($matches as $match) {
             if (Smiley::getByName($match) || Smiley::getByShort($match)) {
                 $text = str_replace($match, '', $text);
             }
         }
-        
+
         return $text;
     }
 
@@ -191,13 +191,13 @@ class ForumEntry {
 
         return $data;
     }
-    
+
     /**
      * return the topic_id of the parent element, false if there is none (ie the
      * passed topic_id is already the upper-most node in the tree)
-     * 
+     *
      * @param string $topic_id the topic_id for which the parent shall be found
-     * 
+     *
      * @return string the topic_id of the parent element or false
      */
     static function getParentTopicId($topic_id)
@@ -205,26 +205,26 @@ class ForumEntry {
         $path = ForumEntry::getPathToPosting($topic_id);
         array_pop($path);
         $data = array_pop($path);
-        
+
         return $data['id'] ?: false;
     }
-    
-    
+
+
     /**
      * get the topic_ids of all childs of the passed topic including itself
-     * 
+     *
      * @param string $topic_id the topic_id to find the childs for
      * @return array a list if topic_ids
      */
     static function getChildTopicIds($topic_id)
     {
         $constraints = ForumEntry::getConstraints($topic_id);
-        
+
         $stmt = DBManager::get()->prepare("SELECT topic_id
             FROM forum_entries WHERE lft >= ? AND rgt <= ?
                 AND seminar_id = ?");
         $stmt->execute(array($constraints['lft'], $constraints['rgt'], $constraints['seminar_id']));
-        
+
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
@@ -258,17 +258,17 @@ class ForumEntry {
 
     /**
      * return the id for the oldest unread child-posting for the passed topic.
-     * 
+     *
      * @param string $parent_id
      * @return string  id of oldest unread posting
      */
     static function getLastUnread($parent_id)
     {
         $constraint = ForumEntry::getConstraints($parent_id);
-        
+
         // take users visitdate into account
         $visitdate = ForumVisit::getLastVisit($constraint['seminar_id']);
-        
+
         // get the first unread entry
         $stmt = DBManager::get()->prepare("SELECT * FROM forum_entries
             WHERE lft > ? AND rgt < ? AND seminar_id = ?
@@ -276,7 +276,7 @@ class ForumEntry {
             ORDER BY mkdate ASC LIMIT 1");
         $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id'], $visitdate));
         $last_unread = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         return $last_unread ? $last_unread['topic_id'] : null;
     }
 
@@ -300,16 +300,16 @@ class ForumEntry {
         if (!$data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return false;
         }
-        
+
         return $data;
     }
 
     /**
      * returns a hashmap with arrays containing id and name with the entries
      * which lead to the passed topic
-     * 
+     *
      * @param string $topic_id the topic to get the path for
-     * 
+     *
      * @return array
      */
     static function getPathToPosting($topic_id)
@@ -338,31 +338,31 @@ class ForumEntry {
 
         return $ret;
     }
-    
+
     /**
      * returns a hashmap where key is topic_id and value a posting-title from the
      * entries which lead to the passed topic.
-     * 
+     *
      * WARNING: This function ommits postings with an empty title. For a full
      * list please use ForumEntry::getPathToPosting()!
-     * 
+     *
      * @param string $topic_id the topic to get the path for
-     * 
+     *
      * @return array
-     */    
+     */
     static function getFlatPathToPosting($topic_id)
     {
         // use only the part of the path until the thread, no posting title
         $postings = array_slice(self::getPathToPosting($topic_id), 0, 3);
-        
+
         // var_dump($postings);
-        
+
         foreach ($postings as $post) {
             if ($post['name']) {
                 $ret[$post['id']] = $post['name'];
             }
         }
-        
+
         return $ret;
     }
 
@@ -417,36 +417,36 @@ class ForumEntry {
      * Returns an array of the following structure:
      * Array (
      *     'list'  => Array (
-     *         'author'          => 
-     *         'topic_id'        => 
+     *         'author'          =>
+     *         'topic_id'        =>
      *         'name'            => formatReady()
-     *         'name_raw'        => 
+     *         'name_raw'        =>
      *         'content'         => formatReady()
-     *         'content_raw'     => 
-     *         'content_short'   => 
-     *         'chdate'          => 
-     *         'mkdate'          => 
-     *         'user_id'        => 
-     *         'raw_title'       => 
-     *         'raw_description' => 
-     *         'fav'             => 
-     *         'depth'           => 
+     *         'content_raw'     =>
+     *         'content_short'   =>
+     *         'chdate'          =>
+     *         'mkdate'          =>
+     *         'user_id'        =>
+     *         'raw_title'       =>
+     *         'raw_description' =>
+     *         'fav'             =>
+     *         'depth'           =>
      *         'sticky'          =>
      *         'closed'          =>
      *         'seminar_id'      =>
      *     )
      *     'count' =>
      * )
-     * 
+     *
      * @param type $parent_id    id of parent-element to get entries for.
      * @param type $with_childs  if true, the whole subtree is fetched
      * @param type $add          for additional constraints in the WHERE-part of the query
      * @param type $sort_order   can be ASC or DESC
      * @param type $start        can be used for pagination, is used for the LIMIT-part of the query
      * @param type $limit        number of entries to fetch, defaults to ForumEntry::POSTINGS_PER_PAGE
-     * 
+     *
      * @return array
-     * 
+     *
      * @throws Exception  if the retrieval failed, an Exception is thrown
      */
     static function getEntries($parent_id, $with_childs = false, $add = '',
@@ -478,7 +478,7 @@ class ForumEntry {
                 . ') '. $add
                 . " ORDER BY forum_entries.mkdate $sort_order");
             $count_stmt->execute(array($GLOBALS['user']->id, $depth, $seminar_id, $constraint['lft'], $constraint['rgt']));
-            $count = $count_stmt->fetchColumn();            
+            $count = $count_stmt->fetchColumn();
         }
 
         // use the last page if the requested page does not exist
@@ -487,7 +487,7 @@ class ForumEntry {
             ForumHelpers::setPage($page);
             $start = max(1, $page - 1) * ForumEntry::POSTINGS_PER_PAGE;
         }
-        
+
         if ($with_childs) {
             $stmt = DBManager::get()->prepare("SELECT forum_entries.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
                     FROM forum_entries
@@ -524,7 +524,7 @@ class ForumEntry {
     /**
      * Takes a posting-array like the one generated by ForumEntry::getList()
      * and adds the child-posting with the freshest creation-date to it.
-     * 
+     *
      * @param array $postings
      * @return array
      */
@@ -552,7 +552,7 @@ class ForumEntry {
                 $last_posting['text'] = $text;
             }
 
-            $postings[$key]['last_posting'] = $last_posting;            
+            $postings[$key]['last_posting'] = $last_posting;
             if (!$postings[$key]['last_unread']  = ForumEntry::getLastUnread($posting['topic_id'])) {
                 $postings[$key]['last_unread'] = $last_posting['topic_id'];
             }
@@ -566,7 +566,7 @@ class ForumEntry {
 
     /**
      * get a list of postings of a special type
-     * 
+     *
      * @param string $type one of 'area', 'list', 'postings', 'latest', 'favorites', 'dump', 'flat'
      * @param string $parent_id the are to fetch from
      * @return array array('list' => ..., 'count' => ...);
@@ -627,14 +627,14 @@ class ForumEntry {
                         AND rgt < :right AND (mkdate >= :mkdate OR chdate >= :mkdate)
                     ORDER BY mkdate ASC
                     LIMIT $start, ". ForumEntry::POSTINGS_PER_PAGE);
-                
+
                 $stmt->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt->bindParam(':left', $constraint['lft']);
                 $stmt->bindParam(':right', $constraint['rgt']);
                 $stmt->bindParam(':mkdate', ForumVisit::getLastVisit($constraint['seminar_id']));
                 $stmt->bindParam(':user_id', $GLOBALS['user']->id);
                 $stmt->execute();
-                
+
                 $postings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 $postings = ForumEntry::parseEntries($postings);
@@ -646,7 +646,7 @@ class ForumEntry {
                     WHERE seminar_id = :seminar_id AND lft > :left
                         AND rgt < :right AND mkdate >= :mkdate
                     ORDER BY mkdate ASC");
-                
+
                 $stmt_count->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt_count->bindParam(':left', $constraint['lft']);
                 $stmt_count->bindParam(':right', $constraint['rgt']);
@@ -666,19 +666,19 @@ class ForumEntry {
                 $add = "AND ou.topic_id IS NOT NULL";
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, $add, 'DESC', $start);
                 break;
-            
+
             case 'dump':
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, '', 'ASC', 0, false);
                 break;
-            
+
             case 'flat':
                 $constraint = ForumEntry::getConstraints($parent_id);
-                
+
                 $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
                     WHERE lft > ? AND rgt < ? AND seminar_id = ? AND depth = ?
                     ORDER BY name ASC");
                 $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id'], $constraint['depth'] + 1));
-                
+
                 $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 $posting_list = array();
@@ -704,46 +704,46 @@ class ForumEntry {
 
                 return array('list' => $posting_list, 'count' => $count);
                 break;
-                
+
             case 'depth_to_large':
                 $constraint = ForumEntry::getConstraints($parent_id);
-                
+
                 $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
                     WHERE lft > ? AND rgt < ? AND seminar_id = ? AND depth > 3
                     ORDER BY name ASC");
                 $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id']));
-                
+
                 $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
 
                 return array('list' => $stmt->fetchAll(PDO::FETCH_ASSOC), 'count' => $count);
                 break;
         }
     }
-    
+
     /**
      * Get the latest forum entries for the passed entries childs
-     * 
+     *
      * @param string $parent_id
      * @param int $since  timestamp
-     * 
+     *
      * @return array list of postings
      */
     function getLatestSince($parent_id, $since)
     {
         $constraint = ForumEntry::getConstraints($parent_id);
-                
+
         $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
             WHERE lft > ? AND rgt < ? AND seminar_id = ?
                 AND mkdate >= ?
             ORDER BY name ASC");
         $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id'], $since));
-        
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
      ** returns a list of postings for the passed search-term
-     * 
+     *
      * @param string $parent_id the area to search in (can be a whole seminar)
      * @param string $_searchfor the term to search for
      * @param array $options filter-options: search_title, search_content, search_author
@@ -795,7 +795,7 @@ class ForumEntry {
                 if ($options['search_author']) {
                     $zw_search_string[] .= "author LIKE " . DBManager::get()->quote($search_word);
                 }
-                
+
                 if (!empty($zw_search_string)) {
                     $search_string[] = '(' . implode(' OR ', $zw_search_string) . ')';
                 }
@@ -815,7 +815,7 @@ class ForumEntry {
 
     /**
      * returns the entry for the passed topic_id
-     * 
+     *
      * @param string $topic_id
      * @return array hash-array with the entries fields
      */
@@ -826,9 +826,9 @@ class ForumEntry {
 
     /**
      * Count the number of child-elements that the passed entry has and return it.
-     * 
+     *
      * @param string $parent_id
-     * 
+     *
      * @return int  the number of child entries for the passed entry
      */
     static function countEntries($parent_id)
@@ -839,11 +839,11 @@ class ForumEntry {
 
     /**
      * Count all entries the passed user has ever written and return the result
-     * 
+     *
      * @staticvar type $entries
-     * 
+     *
      * @param string $user_id
-     * 
+     *
      * @return int  number of entries user has ever written
      */
     static function countUserEntries($user_id, $seminar_id = null)
@@ -861,7 +861,7 @@ class ForumEntry {
 
         return $entries[$user_id];
     }
-    
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *   D   A   T   A   -   C   R   E   A   T   I   O   N   *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -881,7 +881,7 @@ class ForumEntry {
      *
      * @return void
      */
-    static function insert($data, $parent_id) 
+    static function insert($data, $parent_id)
     {
         $constraint = ForumEntry::getConstraints($parent_id);
 
@@ -902,7 +902,7 @@ class ForumEntry {
         // update "latest_chdate" for easier sorting of actual threads
         DBManager::get()->exec("UPDATE forum_entries SET latest_chdate = UNIX_TIMESTAMP()
             WHERE topic_id = '" . $constraint['topic_id'] . "'");
-        
+
         NotificationCenter::postNotification('ForumAfterInsert', $data['topic_id'], $data);
     }
 
@@ -945,7 +945,7 @@ class ForumEntry {
     function delete($topic_id)
     {
         NotificationCenter::postNotification('ForumBeforeDelete', $topic_id);
-        
+
         $constraints = ForumEntry::getConstraints($topic_id);
         $parent      = ForumEntry::getConstraints(ForumEntry::getParentTopicId($topic_id));
 
@@ -1030,7 +1030,7 @@ class ForumEntry {
         // make some space by updating the lft and rgt values of the target node
         $constraints_destination = ForumEntry::getConstraints($destination);
         $size = $constraints['rgt'] - $constraints['lft'] + 1;
-        
+
         DBManager::get()->exec("UPDATE forum_entries SET lft = lft + $size
             WHERE lft > ". $constraints_destination['rgt'] ." AND seminar_id = '". $constraints_destination['seminar_id'] ."'");
         DBManager::get()->exec("UPDATE forum_entries SET rgt = rgt + $size
@@ -1039,11 +1039,11 @@ class ForumEntry {
         //move the entries from "outside" the tree to the target node
         $constraints_destination = ForumEntry::getConstraints($destination);
 
-        
+
         // update the depth to reflect the new position in the tree
         // determine if we need to add, subtract or even do nothing to/from the depth
         $depth_mod = $constraints_destination['depth'] - $constraints['depth'] + 1;
-        
+
         DBManager::get()->exec("UPDATE forum_entries
             SET depth = depth + (" . $depth_mod .")
             WHERE seminar_id = '". $constraints_destination['seminar_id'] ."'
@@ -1057,7 +1057,7 @@ class ForumEntry {
             WHERE seminar_id = '". $constraints_destination['seminar_id'] ."'
                 AND lft < 0");
     }
-    
+
     /**
      * close the passed topic
      *
@@ -1073,7 +1073,7 @@ class ForumEntry {
             WHERE topic_id = ?");
         $stmt->execute(array($topic_id));
     }
-    
+
     /**
      * open the passed topic
      *
@@ -1089,7 +1089,7 @@ class ForumEntry {
             WHERE topic_id = ?");
         $stmt->execute(array($topic_id));
     }
-    
+
     /**
      * make the passed topic sticky
      *
@@ -1105,7 +1105,7 @@ class ForumEntry {
             WHERE topic_id = ?");
         $stmt->execute(array($topic_id));
     }
-    
+
     /**
      * make the passed topic unsticky
      *
@@ -1144,15 +1144,15 @@ class ForumEntry {
         }
 
         // make sure, that the category "Allgemein" exists
-        $stmt = DBManager::get()->prepare("REPLACE INTO forum_categories
+        $stmt = DBManager::get()->prepare("INSERT IGNORE INTO forum_categories
             (category_id, seminar_id, entry_name) VALUES (?, ?, 'Allgemein')");
         $stmt->execute(array($seminar_id, $seminar_id));
-        
+
         // make sure that the default area "Allgemeine Diskussionen" exists, if there is nothing else present
-        $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries 
+        $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries
             WHERE seminar_id = ? AND depth = 1");
         $stmt->execute(array($seminar_id));
-        
+
         // add default area
         if ($stmt->fetchColumn() == 0) {
             $data = array(
@@ -1167,10 +1167,10 @@ class ForumEntry {
             ForumEntry::insert($data, $seminar_id);
         }
     }
-    
+
     /**
      * returns the ten most active seminars
-     * 
+     *
      * @return array
      */
     static function getTopTenSeminars()
@@ -1184,20 +1184,20 @@ class ForumEntry {
             ORDER BY count DESC
             LIMIT 10")->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     /**
      * count all entries that exists in the whole installation and return it.
-     * 
+     *
      * @return int
      */
     static function countAllEntries()
     {
         return DBManager::get()->query("SELECT COUNT(*) FROM forum_entries")->fetchColumn();
     }
-    
+
     /**
      * updates the user-entries and replaces the old user-id by the new one
-     * 
+     *
      * @param string $user_from
      * @param string $user_to
      */
@@ -1208,22 +1208,22 @@ class ForumEntry {
 
         $stmt = DBManager::get()->prepare("UPDATE IGNORE forum_favorites SET user_id = ? WHERE user_id = ?");
         $stmt->execute(array($user_to, $user_from));
-        
+
         $stmt = DBManager::get()->prepare("UPDATE IGNORE forum_visits SET user_id = ? WHERE user_id = ?");
         $stmt->execute(array($user_to, $user_from));
-        
+
         $stmt = DBManager::get()->prepare("UPDATE IGNORE forum_likes SET user_id = ? WHERE user_id = ?");
-        $stmt->execute(array($user_to, $user_from));        
-        
+        $stmt->execute(array($user_to, $user_from));
+
         $stmt = DBManager::get()->prepare("UPDATE IGNORE forum_abo_users SET user_id = ? WHERE user_id = ?");
-        $stmt->execute(array($user_to, $user_from));        
+        $stmt->execute(array($user_to, $user_from));
     }
 
     /**
      * returns the complete seminar or only the passed sub-tree as a html-string
-     * 
+     *
      * @param string $seminar_id
-     * 
+     *
      * @return string
      */
     static function getDump($seminar_id, $parent_id = null)
@@ -1238,12 +1238,12 @@ class ForumEntry {
                 $content .= $entry['content'] .'<br><br>';
             } else if ($entry['depth'] == 2) {
                 $content .= '<h3 style="margin-bottom: 0px;">'. _('Thema') .': '. $entry['name'] .'</h3>';
-                $content .= '<i>' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                $content .= '<i>' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']),
                     strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '</i><br>';
                 $content .= $entry['content'] .'<br><br>';
             } else if ($entry['depth'] == 3) {
                 $content .= '<b>'.$entry['name'] .'</b><br>';
-                $content .= '<i>' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                $content .= '<i>' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']),
                     strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '</i><br>';
                 $content .= $entry['content'] .'<hr><br>';
             }

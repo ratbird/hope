@@ -475,47 +475,47 @@ class StreamsController extends PluginController {
             StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', null, "BlubberPosting::mention");
             StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', null, "BlubberPosting::mention");
             $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-
             $posting['description'] = $content;
-            if ($posting->store()) {
-                $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views/streams");
-                $template = $factory->open("comment.php");
-                $template->set_attribute('posting', $posting);
-                $template->set_attribute('course_id', $thread['Seminar_id']);
-                $output['content'] = $template->render($template->render());
-                $output['mkdate'] = time();
-                $output['posting_id'] = $posting->getId();
+            $posting->store();
 
-                //Notifications:
-                $user_ids = array();
-                if ($thread['user_id'] && $thread['user_id'] !== $GLOBALS['user']->id) {
-                    $user_ids[] = $thread['user_id'];
-                }
-                foreach ((array) $thread->getChildren() as $comment) {
-                    if ($comment['user_id'] && ($comment['user_id'] !== $GLOBALS['user']->id) && (!$comment['external_contact'])) {
-                        $user_ids[] = $comment['user_id'];
-                    }
-                }
-                $user_ids = array_unique($user_ids);
-                foreach ($user_ids as $user_id) {
-                    setTempLanguage($user_id);
-                    $avatar = Visibility::verify('picture', $GLOBALS['user']->id, $user_id)
-                            ? Avatar::getAvatar($GLOBALS['user']->id)
-                            : Avatar::getNobody();
-                    PersonalNotifications::add(
-                        $user_id,
-                        PluginEngine::getURL(
-                            $this->plugin,
-                            array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null),
-                            "streams/thread/".$thread->getId()
-                        ),
-                        sprintf(_("%s hat einen Kommentar geschrieben"), get_fullname()),
-                        "posting_".$posting->getId(),
-                        $avatar->getURL(Avatar::MEDIUM)
-                    );
-                    restoreLanguage();
+            $factory = new Flexi_TemplateFactory($this->plugin->getPluginPath()."/views/streams");
+            $template = $factory->open("comment.php");
+            $template->set_attribute('posting', $posting);
+            $template->set_attribute('course_id', $thread['Seminar_id']);
+            $output['content'] = $template->render($template->render());
+            $output['mkdate'] = time();
+            $output['posting_id'] = $posting->getId();
+
+            //Notifications:
+            $user_ids = array();
+            if ($thread['user_id'] && $thread['user_id'] !== $GLOBALS['user']->id) {
+                $user_ids[] = $thread['user_id'];
+            }
+            foreach ((array) $thread->getChildren() as $comment) {
+                if ($comment['user_id'] && ($comment['user_id'] !== $GLOBALS['user']->id) && (!$comment['external_contact'])) {
+                    $user_ids[] = $comment['user_id'];
                 }
             }
+            $user_ids = array_unique($user_ids);
+            foreach ($user_ids as $user_id) {
+                setTempLanguage($user_id);
+                $avatar = Visibility::verify('picture', $GLOBALS['user']->id, $user_id)
+                        ? Avatar::getAvatar($GLOBALS['user']->id)
+                        : Avatar::getNobody();
+                PersonalNotifications::add(
+                    $user_id,
+                    PluginEngine::getURL(
+                        $this->plugin,
+                        array('cid' => $thread['context_type'] === "course" ? $thread['Seminar_id'] : null),
+                        "streams/thread/".$thread->getId()
+                    ),
+                    sprintf(_("%s hat einen Kommentar geschrieben"), get_fullname()),
+                    "posting_".$posting->getId(),
+                    $avatar->getURL(Avatar::MEDIUM)
+                );
+                restoreLanguage();
+            }
+
             $this->render_json($output);
         } else {
             $this->render_json(array(

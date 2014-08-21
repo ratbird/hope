@@ -113,7 +113,7 @@
             message = max
                     ? "Zeichen verbleibend: ".toLocaleString()
                     : "Eingegebene Zeichen: ".toLocaleString();
-            element = $('<span class="length-hint">').text();
+            element = $('<span class="length-hint">').text(message);
             counter = $('<span class="length-hint-counter">');
             element.append(counter).insertAfter(this);
         }

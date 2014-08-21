@@ -1,5 +1,7 @@
+/**
+ * This file provides a set of global handlers.
+ */
 (function ($) {
-    // Global handler:
     // Use a checkbox as a proxy for a set of other checkboxes. Define
     // proxied elements by a css selector in attribute "data-proxyfor".
     $(document).on('change', ':checkbox[data-proxyfor]', function (event) {
@@ -27,7 +29,6 @@
         }).trigger('update.studip');
     });
 
-    // Global handler:
     // Use a checkbox as a toggle switch for the disabled attribute of another
     // element. Define element to disable if checkbox is neither :checked nor
     // :indeterminate by a css selector in attribute "data-activates".
@@ -39,7 +40,6 @@
         $(':checkbox[data-activates]').trigger('change');
     });
 
-    // Global handler:
     // Use a select as a toggle switch for the disabled attribute of another
     // element. Define element to disable if select has a value different from
     // an empty string by a css selector in attribute "data-activates".
@@ -51,7 +51,6 @@
         $('select[data-activates]').trigger('change');
     });
 
-    // Global handler:
     // Enable the user to set the checked state on a subset of related
     // checkboxes by clicking the first checkbox of the subset and then
     // clicking the last checkbox of the subset while holding down the shift
@@ -85,6 +84,41 @@
         }
 
         last_element = event.target;
+    });
+    
+    // Display a visible hint that indicates how many characters the user has
+    // already input into a text field or how many remaining characters he may
+    // input if the element has a maxlength restriction.
+    // By providing a css selector in the "data-length-hint" attribute you
+    // are able to specify a custom element for the character display. If none
+    // is provided or the selector does not point to a valid element, the
+    // display element is created next to the attributed element.
+    $(document).on('focus propertychange keyup', '[data-length-hint]', function (event) {
+        var selector = $(this).data().lengthHint,
+            counter  = $(selector),
+            count    = $(this).val().length,
+            max      = parseInt($(this).attr('maxlength')),
+            element,
+            message;
+
+        if (max) {
+            count = max - count;
+        }
+
+        if (counter.length === 0) {
+            counter =  $(this).next('.length-hint').find('.length-hint-counter');
+        }
+
+        if (counter.length === 0) {
+            message = max
+                    ? "Zeichen verbleibend: ".toLocaleString()
+                    : "Eingegebene Zeichen: ".toLocaleString();
+            element = $('<span class="length-hint">').text();
+            counter = $('<span class="length-hint-counter">');
+            element.append(counter).insertAfter(this);
+        }
+
+        counter.text(count);
     });
 
 }(jQuery));

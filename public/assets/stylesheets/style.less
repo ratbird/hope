@@ -518,3 +518,13 @@ div.info { padding-left: 1%; }
 .no-js #enrollment ul{
     cursor: auto;
 }
+
+.length-hint {
+    color: @light-gray-color;
+    &:before {
+        content: '(';
+    }
+    &:after {
+        content: ')';
+    }
+}

@@ -72,7 +72,6 @@ javascripts:
     - javascripts/tour.js
     - javascripts/tables.js
     - javascripts/jquery/jquery.scrollTo.js
-    - javascripts/scm.js
     - javascripts/start.js
     - *header
     - *toolbar

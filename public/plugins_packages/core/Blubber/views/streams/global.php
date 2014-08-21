@@ -48,7 +48,7 @@
                         </label>
                     </td>
                     <td style="width: 70%">
-                        <?= _("Dein Beitrag wird allen angezeigt, die Dich als Buddy hinzugefügt haben.") ?>
+                        <?= _("Dein Beitrag wird allen angezeigt.") ?>
                     </td>
                     <td style="width: 15%">
                         <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>

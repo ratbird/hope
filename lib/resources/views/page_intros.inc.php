@@ -107,7 +107,6 @@ switch ($view) {
         if ($view_mode === 'no_nav') {
             $navigation = new Navigation(_('Zurück zum Belegungsplan'),
                                          URLHelper::getLink('?quick_view=view_schedule&quick_view_mode=' . $view_mode));
-            $navigation->setImage('icons/16/black/schedule.png');
             Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
         } else {
             $page_intro = '<h2>' . sprintf(_('Raum: %s'), $currentObject->getName()) . '</h2>';
@@ -120,13 +119,12 @@ switch ($view) {
                 $widget = new ActionsWidget();
                 $widget->addLink(_('Neue Belegung erstellen'),
                                  URLHelper::getLink('?cancel_edit_assign=1&quick_view=' . $qv . '&quick_view_mode=' . $view_mode),
-                                 'icons/16/black/add/date.png');
+                                 'icons/16/blue/add/date.png');
                 $sidebar->addWidget($widget);
             }
 
             $navigation = new Navigation(_('Zur Ressourcensuche'),
                                          URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
-            $navigation->setImage('icons/16/black/search.png');
             Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
         }
     break;
@@ -147,11 +145,11 @@ switch ($view) {
         $widget = new ViewsWidget();
         $widget->addLink(_('Eigenschaften anzeigen'),
                          URLHelper::getLink('?quick_view=view_details&quick_view_mode=' . $view_mode),
-                         'icons/16/black/resources.png');
+                         'icons/16/blue/resources.png');
         if (Config::get()->RESOURCES_ENABLE_SEM_SCHEDULE) {
             $widget->addLink(_('Semesterplan anzeigen'),
                              URLHelper::getLink('?quick_view=view_sem_schedule&quick_view_mode=' . $view_mode),
-                             'icons/16/black/schedule.png');
+                             'icons/16/blue/schedule.png');
         }
         $sidebar->addWidget($widget);
 
@@ -163,7 +161,7 @@ switch ($view) {
             $widget = new ActionsWidget();
             $widget->addLink(_('Neue Belegung erstellen'),
                              URLHelper::getLink('?cancel_edit_assign=1&quick_view=' . $qv . '&quick_view_mode=' . $view_mode),
-                             'icons/16/black/add/date.png');
+                             'icons/16/blue/add/date.png');
             $sidebar->addWidget($widget);
         }
 
@@ -171,26 +169,23 @@ switch ($view) {
             if ($SessSemName['class'] === 'sem') {
                 $navigation = new Navigation(_('Zurück zur Veranstaltung'),
                                              URLHelper::getLink('seminar_main.php'));
-                $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
             if ($SessSemName['class'] === 'inst') {
                 $navigation = new Navigation(_('Zurück zur Einrichtung'),
                                              URLHelper::getLink('dispatch.php/institute/overview'));
-                $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
         }
 
         $navigation = new Navigation(_('Zur Ressourcensuche'),
                                      URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
-        $navigation->setImage('icons/16/black/search.png');
         Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
 
         $widget = new ExportWidget();
         $widget->addLink(_('Druckansicht'),
                          URLHelper::getLink('?view=view_schedule&print_view=1'),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     break;
@@ -203,7 +198,7 @@ switch ($view) {
         $widget = new ViewsWidget();
         $widget->addLink(_('Eigenschaften anzeigen'),
                          URLHelper::getLink('?quick_view=view_details&quick_view_mode=' . $view_mode),
-                         'icons/16/black/resources.png');
+                         'icons/16/blue/resources.png');
         if ($view_mode === 'no_nav') {
             $qv = $view_mode === 'oobj'
                 ? 'openobject_schedule'
@@ -211,7 +206,7 @@ switch ($view) {
 
             $widget->addLink(_('Belegungsplan anzeigen'),
                              URLHelper::getLink('?quick_view=' . $qv . '&quick_view_mode=no_nav'),
-                             'icons/16/black/schedule.png');
+                             'icons/16/blue/schedule.png');
         }
         $sidebar->addWidget($widget);
 
@@ -223,7 +218,7 @@ switch ($view) {
             $widget = new ActionsWidget();
             $widget->addLink(_('Neue Belegung erstellen'),
                              URLHelper::getLink('?cancel_edit_assign=1&quick_view=' . $qv . '&quick_view_mode=' . $view_mode),
-                             'icons/16/black/add/date.png');
+                             'icons/16/blue/add/date.png');
             $sidebar->addWidget($widget);
         }
 
@@ -231,26 +226,23 @@ switch ($view) {
             if ($SessSemName['class'] === 'sem') {
                 $navigation = new Navigation(_('Zurück zur Veranstaltung'),
                                              URLHelper::getLink('seminar_main.php'));
-                $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
             if ($SessSemName['class'] === 'inst') {
                 $navigation = new Navigation(_('Zurück zur Einrichtung'),
                                              URLHelper::getLink('dispatch.php/institute/overview'));
-                $navigation->setImage('icons/16/black/schedule.png');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
         }
 
         $navigation = new Navigation(_('Zur Ressourcensuche'),
                                      URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
-        $navigation->setImage('icons/16/black/search.png');
         Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
 
         $widget = new ExportWidget();
         $widget->addLink(_('Druckansicht'),
                          URLHelper::getLink('?view=view_sem_schedule&print_view=1'),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     break;
@@ -262,7 +254,7 @@ switch ($view) {
         $widget = new ExportWidget();
         $widget->addLink(_('Druckansicht'),
                          URLHelper::getLink('?view=view_group_schedule&print_view=1'),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     break;
@@ -274,7 +266,7 @@ switch ($view) {
         $widget = new ExportWidget();
         $widget->addLink(_('Druckansicht'),
                          URLHelper::getLink('?view=view_group_schedule_daily&print_view=1'),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     break;
@@ -309,11 +301,11 @@ switch ($view) {
         $widget = new ActionsWidget();
         $widget->addLink(_('Ressourcen suchen'),
                          URLHelper::getLink('resources.php?view=search&quick_view_mode=no_nav'),
-                         'icons/16/black/search.png',
+                         'icons/16/blue/search.png',
                          array('onclick' => "windows.open(this.href, '', 'scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');return false;"));
         $widget->addLink(_('Nachrichten zu zugewiesenen Anfragen versenden'),
                          URLHelper::getLink('?snd_closed_request_sms=TRUE'),
-                         'icons/16/black/mail.png');
+                         'icons/16/blue/mail.png');
         $sidebar->addWidget($widget);
 
         $widget = new OptionsWidget();
@@ -357,7 +349,7 @@ switch ($view) {
             $widget = new ViewsWidget();
             $widget->addLink(_('Belegungsplan anzeigen'),
                              URLHelper::getLink('?quick_view=view_schedule&quick_view_mode=no_nav'),
-                             'icons/16/black/schedule.png');
+                             'icons/16/blue/schedule.png');
             $sidebar->addWidget($widget);
 
             if ($ActualObjectPerms->havePerm('autor')) {
@@ -399,7 +391,7 @@ switch ($view) {
         $widget = new ExportWidget();
         $widget->addLink(_('Druckansicht'),
                          URLHelper::getLink('?view=openobject_group_schedule&print_view=1'),
-                         'icons/16/black/print.png',
+                         'icons/16/blue/print.png',
                          array('target' => '_blank'));
         $sidebar->addWidget($widget);
     break;
@@ -410,7 +402,7 @@ switch ($view) {
         $widget = new ViewsWidget();
         $widget->addLink(_('Semesterplan'),
                          URLHelper::getLink('resources.php?actual_object=' . $_SESSION['resources_data']['resolve_requests_one_res'] . '&quick_view=view_sem_schedule&quick_view_mode=no_nav'),
-                         'icons/16/black/schedule.png',
+                         'icons/16/blue/schedule.png',
                          array('onclick' => "window.open(this.href, '', 'scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');return false;"));
         $sidebar->addWidget($widget);
     break;

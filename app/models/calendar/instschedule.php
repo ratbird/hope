@@ -29,7 +29,7 @@ class CalendarInstscheduleModel
 {
 
     /**
-     * Returns an schedule entry of a course
+     * Returns a schedule entry for a course
      *
      * @param string  $seminar_id  the ID of the course
      * @param string  $user_id     the ID of the user
@@ -90,14 +90,14 @@ class CalendarInstscheduleModel
         // fetch seminar-entries, show invisible seminars if the user has enough perms
         $visibility_perms = $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'));
 
-        $stmt = DBManager::get()->prepare("SELECT * FROM seminare 
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare
             LEFT JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.seminar_id)
             WHERE seminar_inst.institut_id = :institute
                 AND (start_time = :begin
-                    OR (start_time < :begin AND duration_time = -1) 
+                    OR (start_time < :begin AND duration_time = -1)
                     OR (start_time + duration_time >= :begin AND start_time <= :begin)) "
                     . (!$visibility_perms ? " AND visible='1'" : ""));
-      
+
         $stmt->bindParam(':begin', $semester['beginn']);
         $stmt->bindParam(':institute', $institute_id);
         $stmt->execute();
@@ -105,7 +105,7 @@ class CalendarInstscheduleModel
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['Seminar_id']] = $entry;
         }
-        
+
         if (is_array($seminars)) foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
@@ -119,7 +119,7 @@ class CalendarInstscheduleModel
 
                     $entry['color'] = DEFAULT_COLOR_SEM;
 
-                    $day_number = ($entry['day']-1) % 7;
+                    $day_number = ($entry['day'] + 6) % 7;
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = CalendarColumn::create($day_number);
                     }

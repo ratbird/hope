@@ -77,5 +77,3 @@ $infobox['content'][1]['eintrag'][] = array (
 </div>
 
 <?= $calendar_view->render() ?>
-<?= $this->render_partial('calendar/schedule/_entry.php'); ?>
-<?= $this->render_partial('calendar/schedule/_entry_details') ?>

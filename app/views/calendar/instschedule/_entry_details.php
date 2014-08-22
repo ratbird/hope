@@ -1,42 +1,29 @@
-<?
-# Lifter010: TODO
-
-use Studip\Button, Studip\LinkButton;
-
-if (!$show_entry) return;
-
-foreach ($show_entry['seminars'] as $sem_id) {
-    $seminars[] = Seminar::getInstance($sem_id);
-}
-?>
-<form action="<?= $controller->url_for('calendar/schedule/editseminar/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;">
-    <?= CSRFProtection::tokenTag() ?>
-    <table class="default">
-        <thead>
-            <tr>
-                <th><?= _('Nummer') ?></th>
-                <th><?= _('Name') ?></th>
+<table class="default">
+    <caption>
+        <?= sprintf(_('Veranstaltungen mit regelmäßigen Zeiten am %s, %s Uhr'), htmlReady($day), htmlReady($start) .' - '. htmlReady($end)) ?>
+    </caption>
+    <colgroup>
+        <col width="15%">
+        <col width="85%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th><?= _('Nummer') ?></th>
+            <th><?= _('Name') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <? foreach ($seminars as $seminar) : ?>
+            <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even')?>">
+                <td><?= htmlReady($seminar->getNumber()) ?></td>
+                <td>
+                    <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $seminar->getId())) ?>">
+                        <?= Assets::img('icons/16/blue/link-intern.png') ?>
+                        <?= htmlReady($seminar->getName()) ?>
+                    </a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <? foreach ($seminars as $seminar) : ?>
-                <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even')?>">
-                    <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
-                    <td width="85%">
-                        <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $seminar->getId())) ?>">
-                            <?= Assets::img('icons/16/blue/link-intern.png') ?>
-                            <?= htmlReady($seminar->getName()) ?>
-                        </a>
-                    </td>
-                </tr>
-            <? endforeach ?>
-        </tbody>
-    </table>
-    <br>
-
-    <div style="text-align: center">
-        <?= LinkButton::createCancel(_('Schliessen'),
-                                     $controller->url_for('calendar/schedule'),
-                                     array('onclick' => "return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')")) ?>
-    </div>
-</form>
+        <? endforeach ?>
+    </tbody>
+</table>
+<br>

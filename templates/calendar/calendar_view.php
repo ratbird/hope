@@ -169,7 +169,7 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
                             if ($max == 1) $this->width = '98';
 
                             if ($calendar_view->isGrouped()) {
-                                echo $this->render_partial('calendar/entries/grouped_entry');
+                                echo $this->render_partial('calendar/entries/grouped_entry', array('day' => $column->getId()));
                             } else {
                                 echo $this->render_partial('calendar/entries/entry');
                             }

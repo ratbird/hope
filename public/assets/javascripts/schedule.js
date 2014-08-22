@@ -250,12 +250,10 @@ STUDIP.Instschedule = {
      * @param  string  the id of the grouped-entry to be displayed
      */
     showInstituteDetails: function (id) {
-        jQuery('#edit_inst_entry').fadeOut('fast');
-        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/instschedule/groupedentry/' + id + '/true'), function (data) {
-            jQuery('#edit_inst_entry').remove();
-            jQuery('body').append(data);
+        jQuery.get(STUDIP.URLHelper.getURL('dispatch.php/calendar/instschedule/groupedentry/' + id), function (data) {
+            STUDIP.Dialog.show(data, {
+                title : 'Detaillierte Veranstaltungsliste'.toLocaleString()
+            });
         });
-
-        return false;
     }
 };

@@ -53,7 +53,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         URLHelper::bindLinkParam('semester_id', $this->current_semester['semester_id']);
         URLHelper::bindLinkParam('show_hidden', $this->show_hidden);
-        
+
         PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
         PageLayout::setTitle(_('Mein Stundenplan'));
     }
@@ -71,7 +71,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         global $user;
 
         $schedule_settings = CalendarScheduleModel::getScheduleSettings();
-        
+
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         if ($inst_mode) {
@@ -166,10 +166,6 @@ class Calendar_ScheduleController extends AuthenticatedController
         } else {
             PageLayout::addStylesheet('print.css', array('media' => 'print'));
         }
-
-        $this->calendar_view->setInsertFunction("function (entry, column, hour, end_hour) {
-            STUDIP.Schedule.newEntry(entry, column, hour, end_hour)
-        }");
 
         $this->show_hidden    = $show_hidden;
 
@@ -314,37 +310,39 @@ class Calendar_ScheduleController extends AuthenticatedController
     /**
      * Returns an HTML fragment of a grouped entry in the schedule of an institute.
      *
-     * @param string  the start time of the group, e.g. "1000"
-     * @param string  the end time of the group, e.g. "1200"
-     * @param string  the ID of the institute
-     * @param string  true if this is an Ajax request
+     * @param string $start the start time of the group, e.g. "1000"
+     * @param string $end   the end time of the group, e.g. "1200"
+     * @param string $seminars  the IDs of the courses
+     * @param string $day  numeric day to show
+     *
      * @return void
      */
-    function groupedentry_action($start, $end, $seminars, $ajax = false)
+    function groupedentry_action($start, $end, $seminars, $day)
     {
+        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+
         // strucutre of an id: seminar_id-cycle_id
         // we do not need the cycle id here, so we trash it.
         $seminar_list = array();
 
         foreach (explode(',', $seminars) as $seminar) {
             $zw = explode('-', $seminar);
-            $seminar_list[] = $zw[0];
+            $this->seminars[$zw[0]] = Seminar::getInstance($zw[0]);
         }
 
-        $this->show_entry = array(
-            'type'     => 'inst',
-            'seminars' => $seminar_list,
-            'start'    => $start,
-            'end'      => $end
-        );
+        $this->timespan = substr($start, 0, 2) .':'. substr($start, 2, 2)
+                        . ' - '. substr($end, 0, 2) .':'. substr($end, 2, 2);
+        $this->start    = $start;
+        $this->end      = $end;
 
-        if ($ajax) {
-            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
-            $this->render_template('calendar/schedule/_entry_inst');
-        } else {
-            $this->flash['entry'] = $this->show_entry;
-            $this->redirect('calendar/schedule/');
-        }
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),
+            _("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
+
+        $this->day        = (int)$day;
+        $this->day_name   = $day_names[$this->day];
+
+
+        $this->render_template('calendar/schedule/_entry_inst');
     }
 
     /**

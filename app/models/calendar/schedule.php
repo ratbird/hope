@@ -300,7 +300,7 @@ class CalendarScheduleModel
     static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
     {
         $seminars = array();
-        
+
         // get all virtually added seminars
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare as c
             LEFT JOIN seminare as s ON (s.Seminar_id = c.Seminar_id)
@@ -338,7 +338,7 @@ class CalendarScheduleModel
                 if (($entry['start'] >= $start_hour * 100 && $entry['start'] <= $end_hour * 100
                     || $entry['end'] >= $start_hour * 100 && $entry['end'] <= $end_hour * 100)
                     && ($show_hidden || (!$show_hidden && $entry['visible']))) {
-                    $day_number = ($entry['day']-1) % 7;
+                    $day_number = ($entry['day'] + 6) % 7;
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = new CalendarColumn();
                     }
@@ -396,7 +396,7 @@ class CalendarScheduleModel
 
                     $entry['color'] = DEFAULT_COLOR_SEM;
 
-                    $day_number = ($entry['day']-1) % 7;
+                    $day_number = ($entry['day'] + 6) % 7;
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = CalendarColumn::create($entry['day']);
                     }
@@ -413,19 +413,26 @@ class CalendarScheduleModel
     /**
      * Returns the ID of the cycle of a course specified by start and end.
      *
-     * @param  Seminar  an instance of a Seminar
-     * @param  string   the start of the cycle
-     * @param  string   the end of the cycle
-     * @return string   the ID of the cycle
+     * @param  Seminar $seminar  an instance of a Seminar
+     * @param  string  $start  the start of the cycle
+     * @param  string  $end  the end of the cycle
+     * @return string  $day  numeric day
      */
-    static function getSeminarCycleId(Seminar $seminar, $start, $end)
+    static function getSeminarCycleId(Seminar $seminar, $start, $end, $day)
     {
+        $ret = array();
+
+        $day = ($day + 1) % 7;
+
         foreach ($seminar->getCycles() as $cycle) {
             if (leadingZero($cycle->getStartStunde()) . leadingZero($cycle->getStartMinute()) == $start
-                && leadingZero($cycle->getEndStunde()) . leadingZero($cycle->getEndMinute()) == $end) {
-                return $cycle->getMetadateId();
+                && leadingZero($cycle->getEndStunde()) . leadingZero($cycle->getEndMinute()) == $end
+                && $cycle->getDay() == $day) {
+                $ret[] = $cycle;
             }
         }
+
+        return $ret;
     }
 
     /**
@@ -487,7 +494,7 @@ class CalendarScheduleModel
     }
 
     /**
-     * 
+     *
      *
      * @param  string  $user_id
      * @param  mixed   $semester  the data for the semester to be displayed
@@ -533,7 +540,7 @@ class CalendarScheduleModel
      *
      * @param array $entries  an array of CalendarColumn-objects
      * @param array $days     an array of int's, denoting the days to be displayed
-     * @return array 
+     * @return array
      */
     static function addDayChooser($entries, $days, $controller = 'schedule') {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),
@@ -722,7 +729,6 @@ class CalendarScheduleModel
 
         // group entries in institute calendar
         $view->groupEntries();  // if enabled, group entries with same start- and end-date
-        $view->setReadOnly();
 
         return $view;
     }
@@ -765,6 +771,9 @@ class CalendarScheduleModel
 
         $view->setHeight(40 + (20 * $schedule_settings['zoom']));
         $view->setRange($schedule_settings['glb_start_time'], $schedule_settings['glb_end_time']);
+        $view->setInsertFunction("function (entry, column, hour, end_hour) {
+            STUDIP.Schedule.newEntry(entry, column, hour, end_hour)
+        }");
 
         return $view;
     }

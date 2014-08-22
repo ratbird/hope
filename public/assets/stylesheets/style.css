@@ -4755,6 +4755,9 @@ div.schedule_settings div {
   left: 50%;
   margin: -200px 0 0 -300px;
 }
+td.schedule-adminbind > span {
+  margin-right: 10px;
+}
 /* --- Studienbereichsauswahl ----------------------------------------------- */
 #study_area_selection {
   padding: 1em;

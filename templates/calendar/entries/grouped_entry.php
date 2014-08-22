@@ -1,13 +1,6 @@
-<?
+<?php
 # Lifter010: TODO
-$cat = 1;
-
-// do we have a category-color?
-foreach ($GLOBALS['PERS_TERMIN_KAT'] as $key => $data) :
-    if ($data['color'] == $entry[0]['color']) :
-        $cat = $key; break;
-    endif;
-endforeach;
+$color_background = Color::brighten($entry[0]['color'], 20);
 
 $title = $heading = $ids = array();
 
@@ -25,7 +18,7 @@ $element_id = md5(uniqid());
 ?>
 
 <? if ($show || $show_hidden) : ?>
-<div id="schedule_entry_<?= $element_id ?>_<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>" class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>"
+<div id="schedule_entry_<?= $element_id ?>_<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) .'/'. $day ?>" class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>"
     style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>"
     title="<?= htmlReady(implode(', ', $title)) ?>">
 
@@ -35,7 +28,7 @@ $element_id = md5(uniqid());
     <!-- for safari5 we need to set the height for the dl as well -->
     <dl <?= $calendar_view->getReadOnly() ? '' : 'class="hover"' ?> style="height: <?= $height ?>px;
         border: 1px solid <?= $entry[0]['color'] ?>;
-        background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
+        background-color: <?= $color_background ?>">
         <dt style="background-color: <?= $entry[0]['color'] ?>">
             <?= $entry[0]['start_formatted'] ?> - <?= $entry[0]['end_formatted'] ?>
             <?= (count($heading) ? ', <b>' . htmlReady(implode(', ', $heading)) . '</b>' : '') ?>

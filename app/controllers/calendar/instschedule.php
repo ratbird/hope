@@ -77,16 +77,10 @@ class Calendar_InstscheduleController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
         PageLayout::setTitle($GLOBALS['SessSemName']['header_line'].' - '._('Veranstaltungs-Stundenplan'));
 
-        // have we chosen an entry to display?
-        if ($this->flash['entry']) {
-            $this->show_entry = $this->flash['entry'];
-        }
-
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
         $this->calendar_view->setHeight(40 + (20 * Request::int('zoom', 0)));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
-        $this->calendar_view->setReadOnly();
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
 
 
@@ -108,39 +102,34 @@ class Calendar_InstscheduleController extends AuthenticatedController
     /**
      * Returns an HTML fragment of a grouped entry in the schedule of an institute.
      *
-     * @param string  the start time of the group, e.g. "1000"
-     * @param string  the end time of the group, e.g. "1200"
-     * @param string  the IDs of the courses
-     * @param string  true if this is an Ajax request
+     * @param string $start the start time of the group, e.g. "1000"
+     * @param string $end   the end time of the group, e.g. "1200"
+     * @param string $seminars  the IDs of the courses
+     * @param string $day  numeric day to show
+     *
      * @return void
      */
-    function groupedentry_action($start, $end, $seminars, $ajax = false)
+    function groupedentry_action($start, $end, $seminars, $day)
     {
+        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+
         // strucutre of an id: seminar_id-cycle_id
         // we do not need the cycle id here, so we trash it.
         $seminar_list = array();
 
         foreach (explode(',', $seminars) as $seminar) {
             $zw = explode('-', $seminar);
-            $seminar_list[] = $zw[0];
+            $this->seminars[$zw[0]] = Seminar::getInstance($zw[0]);
         }
 
-        $this->show_entry = array(
-            'type'     => 'inst',
-            'seminars' => $seminar_list,
-            'start'    => $start,
-            'end'      => $end
-        );
+        $this->start = substr($start, 0, 2) .':'. substr($start, 2, 2);
+        $this->end   = substr($end, 0, 2) .':'. substr($end, 2, 2);
 
-        if ($ajax) {
-            $this->render_template('calendar/instschedule/_entry_details');
-        } else {
-            if (Request::option('show_hidden')) {
-                $this->flash['show_hidden'] = true;
-            }
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),
+            _("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
-            $this->flash['entry'] = $this->show_entry;
-            $this->redirect('calendar/instschedule/');
-        }
+        $this->day   = $day_names[(int)$day];
+
+        $this->render_template('calendar/instschedule/_entry_details');
     }
 }

@@ -3,63 +3,58 @@
 
 use Studip\Button, Studip\LinkButton;
 
-foreach ($show_entry['seminars'] as $sem_id) {
-    $seminars[] = Seminar::getInstance($sem_id);
-}
-
 ?>
-<form action="<?= $controller->url_for('calendar/schedule/editseminar/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;">
-    <?= CSRFProtection::tokenTag() ?>
-    <table class="default">
-        <thead>
-            <tr>
-                <th><?= _('Nummer') ?></th>
-                <th><?= _('Name') ?></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <? foreach ($seminars as $seminar) : ?>
-                <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
-                    <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
-                    <td width="60%">
-                        <a href="<?= URLHelper::getLink('dispatch.php/course/details/?sem_id='. $seminar->getId()) ?>">
-                            <?= Assets::img('icons/16/blue/link-intern.png') ?>
-                            <?= htmlReady($seminar->getName()) ?>
-                        </a>
-                    </td>
-                    <td width="25%">
-                        <? $cycle_id = CalendarScheduleModel::getSeminarCycleId($seminar, $show_entry['start'], $show_entry['end']) ?>
-                        <? $visible = CalendarScheduleModel::isSeminarVisible($seminar->getId(), $cycle_id) ?>
+<table class="default">
+    <caption>
+        <?= sprintf(_('Veranstaltungen mit regelmäßigen Zeiten am %s, %s Uhr'), htmlReady($day), htmlReady($timespan)) ?>
+    </caption>
+    <thead>
+        <tr>
+            <th><?= _('Nummer') ?></th>
+            <th><?= _('Name') ?></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <? foreach ($seminars as $seminar) : ?>
+            <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
+                <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
+                <td width="45%">
+                    <a href="<?= URLHelper::getLink('dispatch.php/course/details/?sem_id='. $seminar->getId()) ?>">
+                        <?= Assets::img('icons/16/blue/link-intern.png') ?>
+                        <?= htmlReady($seminar->getName()) ?>
+                    </a>
+                </td>
+                <td width="40%" class="schedule-adminbind">
+                    <? $cycles = CalendarScheduleModel::getSeminarCycleId($seminar, $start, $end, $day) ?>
+
+                    <? foreach ($cycles as $cycle) : ?>
+                        <span><?= $cycle->toString() ?></span>
+
+                        <? $visible = CalendarScheduleModel::isSeminarVisible($seminar->getId(), $cycle->getMetadateId()) ?>
 
                         <?= LinkButton::create(
                                 _('Ausblenden'),
-                                $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/0'),
+                                $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle->getMetadateId() .'/0'),
                                 array(
-                                    'id'      => $seminar->getId() . '_' . $cycle_id . '_hide',
-                                    'onclick' => "STUDIP.Schedule.instSemUnbind('" . $seminar->getId() . "','" . $cycle_id . "'); return false;",
+                                    'id'      => $seminar->getId() . '_' . $cycle->getMetadateId() . '_hide',
+                                    'onclick' => "STUDIP.Schedule.instSemUnbind('" . $seminar->getId() . "','" . $cycle->getMetadateId() . "'); return false;",
                                     'style'   => ($visible ? '' : 'display: none')
                                 )) ?>
 
                         <?= LinkButton::create(
                                 _('Einblenden'),
-                                $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/1'),
+                                $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle->getMetadateId() .'/1'),
                                 array(
-                                    'id'      => $seminar->getId() . '_' . $cycle_id . '_show',
-                                    'onclick' => "STUDIP.Schedule.instSemBind('" . $seminar->getId() . "','" . $cycle_id . "'); return false;",
+                                    'id'      => $seminar->getId() . '_' . $cycle->getMetadateId() . '_show',
+                                    'onclick' => "STUDIP.Schedule.instSemBind('" . $seminar->getId() . "','" . $cycle->getMetadateId() . "'); return false;",
                                     'style'   => ($visible ?  'display: none' : '')
                                 )) ?>
-                    </td>
-                </tr>
-            <? endforeach ?>
-        </tbody>
-    </table>
-    <br>
-
-    <div style="text-align: center" data-dialog-button>
-        <?= LinkButton::createCancel(
-                _('Schliessen'), 
-                $controller->url_for('calendar/schedule'),
-                array('onclick' => "return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')")) ?>
-    </div>
-</form>
+                        <br>
+                    <? endforeach ?>
+                </td>
+            </tr>
+        <? endforeach ?>
+    </tbody>
+</table>
+<br>

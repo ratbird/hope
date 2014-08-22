@@ -322,7 +322,6 @@ class Step00240CourseSets extends Migration
                         $rule = new ParticipantRestrictedAdmission();
                         // Loszeitpunkt übernehmen.
                         $rule->setDistributionTime($course['admission_endtime']);
-                        $rule->first_come_first_served_allowed = false;
                         // Falls Anmeldezeitraum eingestellt, diesen übernehmen.
                         if ($course['admission_starttime'] != -1 || $course['admission_endtime_sem'] != -1) {
                             $rule2 = new TimedAdmission();
@@ -334,7 +333,7 @@ class Step00240CourseSets extends Migration
                             }
                             $cs->addAdmissionRule($rule2);
                         }
-                        $cs->setName('Losverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
+                        $cs->setName('Beschränkte Teilnehmeranzahl: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
                         //Losliste übernehmen
                         $db->execute("INSERT INTO `priorities` (`user_id`, `set_id`, `seminar_id`,
                                                     `priority`, `mkdate`, `chdate`)
@@ -346,7 +345,7 @@ class Step00240CourseSets extends Migration
                         // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
                         $cs = new CourseSet();
                         $rule = new ParticipantRestrictedAdmission();
-                        $rule->first_come_first_served_allowed = true;
+                        $rule->setDistributionTime(0);
                         if ($course['admission_starttime'] != -1 || $course['admission_endtime_sem'] != -1) {
                             $rule2 = new TimedAdmission();
                             if ($course['admission_starttime'] != -1) {
@@ -357,7 +356,7 @@ class Step00240CourseSets extends Migration
                             }
                             $cs->addAdmissionRule($rule2);
                         }
-                        $cs->setName('Chronologisches Anmeldeverfahren: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
+                        $cs->setName('Beschränkte Teilnehmeranzahl: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
                         $preserve_waitlists[] = $course['seminar_id'];
                     }
                 // Losen oder Anmeldezeitraum vorbei => sperren.

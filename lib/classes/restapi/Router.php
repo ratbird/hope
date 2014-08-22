@@ -386,7 +386,7 @@ class Router
         $was_setup = true;
 
         // Register default routes
-        $routes = words('Contacts Course Discovery Events Files Forum Messages News Schedule Semester Studip User Wiki');
+        $routes = words('Blubber Contacts Course Discovery Events Files Forum Messages News Schedule Semester Studip User Wiki');
 
         foreach ($routes as $route) {
             require_once "app/routes/$route.php";

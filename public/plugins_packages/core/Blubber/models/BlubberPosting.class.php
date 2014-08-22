@@ -240,6 +240,8 @@ class BlubberPosting extends SimpleORMap {
             $hashtags = $hashtags[2];
             $current_tags = array_merge($current_tags, $hashtags);
         }
+        $deleted = 0;
+        $inserted = 0;
         $delete_tag_statement = DBManager::get()->prepare(
             "DELETE FROM blubber_tags " .
             "WHERE topic_id = :topic_id " .
@@ -250,6 +252,7 @@ class BlubberPosting extends SimpleORMap {
                 'topic_id' => $this['root_id'],
                 'tag' => $delete_tag
             ));
+            $deleted += $delete_tag_statement->rowCount();
         }
         $insert_statement = DBManager::get()->prepare(
             "INSERT IGNORE INTO blubber_tags " .
@@ -261,10 +264,9 @@ class BlubberPosting extends SimpleORMap {
                 'topic_id' => $this['root_id'],
                 'tag' => $insert_tag
             ));
+            $inserted += $insert_statement->rowCount();
         }
-        $current_tags = array_map(function ($t) { return strtolower($t); }, $current_tags);
-        $old_hashtags = array_map(function ($t) { return strtolower($t); }, $old_hashtags);
-        if (count(array_diff($current_tags, $old_hashtags)) or count(array_diff($old_hashtags, $current_tags))) {
+        if ($deleted || $inserted) {
             $thread = BlubberPosting::find($this['root_id']);
             $thread['chdate'] = time();
             $thread->store();

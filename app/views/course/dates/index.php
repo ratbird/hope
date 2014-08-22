@@ -10,7 +10,7 @@ $lastSemester = null;
 $allSsemesters = array();
 foreach ($dates as $key => $date) {
     $currentSemester = Semester::findByTimestamp($date['date']);
-    if (!$lastSemester || ($currentSemester && ($currentSemester->getId() !== $lastSemester->getId()))) {
+    if ($currentSemester && (!$lastSemester || ($currentSemester->getId() !== $lastSemester->getId()))) {
         $allSsemesters[] = $currentSemester;
         $lastSemester = $currentSemester;
     }
@@ -35,7 +35,7 @@ $lostDateKeys = array();
     </thead>
     <tbody>
     <? foreach ($dates as $key => $date) : ?>
-        <? $dateSemester = Semester::findByTimestamp($date['date']) ?>
+        <? $dateSemester = Semester::findByTimestamp($date['date']) ;?>
         <? if ($dateSemester && ($semester->getId() === $dateSemester->getId())) : ?>
         <?= $this->render_partial("course/dates/_date_row.php", compact("date", "dates", "key")) ?>
         <? elseif(!$dateSemester && !in_array($key, $lostDateKeys)) : ?>

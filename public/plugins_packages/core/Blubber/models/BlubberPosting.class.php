@@ -262,6 +262,8 @@ class BlubberPosting extends SimpleORMap {
                 'tag' => $insert_tag
             ));
         }
+        $current_tags = array_map(function ($t) { return strtolower($t); }, $current_tags);
+        $old_hashtags = array_map(function ($t) { return strtolower($t); }, $old_hashtags);
         if (count(array_diff($current_tags, $old_hashtags)) or count(array_diff($old_hashtags, $current_tags))) {
             $thread = BlubberPosting::find($this['root_id']);
             $thread['chdate'] = time();

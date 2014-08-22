@@ -78,7 +78,7 @@ class Course_ScmController extends StudipController
             throw new AccessDeniedException(_('Sie sind nicht berechtigt, auf diesen Bereich zuzugreifen'));
         }
 
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $GLOBALS['SessSemName'][1])) {
             $widget = new ActionsWidget();
             $widget->addLink(_('Neuen Eintrag anlegen'),
                              URLHelper::getLink('dispatch.php/course/scm/create'),

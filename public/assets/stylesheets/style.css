@@ -2256,9 +2256,6 @@ ul.widget-list > li {
 .widget-links span[disabled] {
   text-decoration: line-through;
 }
-.widget-links.sidebar-navigation > li {
-  padding-left: 5px;
-}
 .widget-links.sidebar-navigation > li.active {
   background: #a9b6cb;
   -webkit-box-shadow: inset 0 0 0 1px #7e92b0;
@@ -2267,7 +2264,6 @@ ul.widget-list > li {
   position: relative;
   display: inline-block;
   margin-right: -12px;
-  display: block;
 }
 .widget-links.sidebar-navigation > li.active:before {
   border: 10px solid rgba(126, 146, 176, 0);
@@ -2296,16 +2292,6 @@ ul.widget-list > li {
 .widget-links.sidebar-navigation > li.active a {
   color: #fff;
 }
-.widget-links.sidebar-navigation > li.active:before,
-.widget-links.sidebar-navigation > li.active:after {
-  margin-left: -1px;
-}
-.widget-links.sidebar-navigation > li.active:before {
-  border-left-width: 6px;
-}
-.widget-links.sidebar-navigation > li.active:after {
-  border-left-width: 5px;
-}
 .widget-links.sidebar-views > li.active {
   background: #ffe985;
   -webkit-box-shadow: inset 0 0 0 1px #faaf99;
@@ -2314,7 +2300,6 @@ ul.widget-list > li {
   position: relative;
   display: inline-block;
   margin-right: -12px;
-  display: block;
 }
 .widget-links.sidebar-views > li.active:before {
   border: 10px solid rgba(250, 175, 153, 0);
@@ -2340,13 +2325,25 @@ ul.widget-list > li {
   top: 50%;
   margin-top: -9px;
 }
+.widget-links.sidebar-navigation > li,
+.widget-links.sidebar-views > li {
+  padding-left: 5px;
+}
+.widget-links.sidebar-navigation > li.active,
+.widget-links.sidebar-views > li.active {
+  display: block;
+}
+.widget-links.sidebar-navigation > li.active:before,
 .widget-links.sidebar-views > li.active:before,
+.widget-links.sidebar-navigation > li.active:after,
 .widget-links.sidebar-views > li.active:after {
   margin-left: -1px;
 }
+.widget-links.sidebar-navigation > li.active:before,
 .widget-links.sidebar-views > li.active:before {
   border-left-width: 6px;
 }
+.widget-links.sidebar-navigation > li.active:after,
 .widget-links.sidebar-views > li.active:after {
   border-left-width: 5px;
 }
@@ -2615,7 +2612,7 @@ select.sidebar-selectlist {
 .sidebar-widget.sidebar-infobox {
     border-color: @red;
     background: @light-gray-color-20;
-    
+
     .sidebar-widget-header {
         background: @red-40;
     }

@@ -108,6 +108,11 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
                 return;
             }
         }
+        if (is_array($this->not_distributed_coursesets)) {
+            PageLayout::postMessage(MessageBox::info(
+                _("Es existieren Anmeldesets, die zum Zeitpunkt der Platzverteilung nicht gelost wurden. Stellen Sie sicher, dass der Cronjob \"Losverfahren überprüfen\" ausgeführt wird."),
+                array_unique($this->not_distributed_coursesets)));
+        }
     }
 
     function get_courses($seminare_condition)
@@ -174,6 +179,9 @@ class Admission_RestrictedCoursesController extends AuthenticatedController
             $cs = $csets[$row['set_id']];
             $ret[$seminar_id]['cs_name'] = $cs->getName();
             $ret[$seminar_id]['distribution_time'] = $cs->getSeatDistributionTime();
+            if ($ret[$seminar_id]['distribution_time'] < (time() - 1000) && !$cs->hasAlgorithmRun()) {
+                $this->not_distributed_coursesets[] = $cs->getName();
+            }
             if ($ta = $cs->getAdmissionRule('TimedAdmission')) {
                 $ret[$seminar_id]['start_time'] = $ta->getStartTime();
                 $ret[$seminar_id]['end_time'] = $ta->getEndTime();

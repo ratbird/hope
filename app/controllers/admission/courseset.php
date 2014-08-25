@@ -121,6 +121,16 @@ class Admission_CoursesetController extends AuthenticatedController {
         foreach (words('current_institut_id current_rule_types set_name_prefix current_semester_id current_rule_types') as $param) {
             $_SESSION[get_class($this)][$param] = $this->$param;
         }
+        $not_distributed_coursesets = array_filter(array_map(function ($cs) {
+                return ($cs->isSeatDistributionEnabled() && $cs->getSeatDistributionTime() < (time() - 1000) && !$cs->hasAlgorithmRun())
+                        ? $cs->getName()
+                        : null;
+        }, $this->coursesets));
+        if (count($not_distributed_coursesets)) {
+            PageLayout::postMessage(MessageBox::info(
+                _("Es existieren Anmeldesets, die zum Zeitpunkt der Platzverteilung nicht gelost wurden. Stellen Sie sicher, dass der Cronjob \"Losverfahren überprüfen\" ausgeführt wird."),
+                array_unique($not_distributed_coursesets)));
+        }
     }
 
     /**

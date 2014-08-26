@@ -79,8 +79,7 @@
 <? if ($message_id): ?>
 <script>
 jQuery(function ($) {
-    var url = '<?= $controller->url_for('messages/read/' . $message_id) ?>';
-    $('<a href="' + url + '" data-dialog>').hide().appendTo('body').click().remove();
+    STUDIP.Dialog.fromURL('<?= $controller->url_for('messages/read/' . $message_id) ?>');
 });
 </script>
 <? endif; ?>

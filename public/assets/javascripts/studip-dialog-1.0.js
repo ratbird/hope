@@ -174,30 +174,37 @@
         }
 
         options.origin = element;
+        options.title  = options.title || STUDIP.Dialog.getInstance(options.id).options.title || $(element).attr('title') || $(element).filter('a,button').text();
+        options.method = 'get';
+        options.data   = {};
 
-        var title = options.title || STUDIP.Dialog.getInstance(options.id).options.title || $(element).attr('title') || $(element).filter('a,button').text(),
-            url,
-            method = 'get',
-            data = {};
+        var url;
 
         // Predefine options
         if ($(element).is('form,button')) {
             url = $(element).closest('form').attr('action');
-            method = $(element).closest('form').attr('method');
-            data = $(element).closest('form').serializeArray();
+            options.method = $(element).closest('form').attr('method');
+            options.data = $(element).closest('form').serializeArray();
 
             if ($(element).is('button')) {
-                data.push({
+                options.data.push({
                     name: $(element).attr('name'),
                     value: $(element).val()
                 });
             } else if ($(element).data().triggeredBy) {
-                data.push($(element).data().triggeredBy);
+                options.data.push($(element).data().triggeredBy);
             }
         } else {
             url = $(element).attr('href');
         }
 
+        return STUDIP.Dialog.fromURL(url, options);
+    };
+
+    // Creates a dialog from a passed url
+    STUDIP.Dialog.fromURL = function (url, options) {
+        options = options || {};
+        
         // Append overlay
         if (STUDIP.Overlay) {
             if (STUDIP.Dialog.getInstance(options.id).open) {
@@ -210,12 +217,12 @@
         // Send ajax request
         $.ajax({
             url: url,
-            type: (method || 'get').toUpperCase(),
-            data: data || {},
+            type: (options.method || 'get').toUpperCase(),
+            data: options.data || {},
             headers: {'X-Dialog': true}
         }).done(function (response, status, xhr) {
             // Trigger event
-            $(options.origin).trigger('dialog-load', {xhr: xhr, options: options});
+            $(options.origin || document).trigger('dialog-load', {xhr: xhr, options: options});
             
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
@@ -229,7 +236,7 @@
                 return;
             }
 
-            options.title   = xhr.getResponseHeader('X-Title') || title;
+            options.title   = xhr.getResponseHeader('X-Title') || options.title;
             options.buttons = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
 
             STUDIP.Dialog.show(response, options);

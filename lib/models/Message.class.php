@@ -222,10 +222,13 @@ class Message extends SimpleORMap
     {
         $user_id || $user_id = $GLOBALS['user']->id;
         $statement = DBManager::get()->prepare("
-            INSERT IGNORE INTO message_tags
+            INSERT INTO message_tags
             SET message_id = :message_id,
                 user_id = :user_id,
-                tag = :tag
+                tag = :tag,
+                mkdate = UNIX_TIMESTAMP()
+            ON DUPLICATE KEY
+                UPDATE chdate = UNIX_TIMESTAMP()
         ");
         return $statement->execute(array(
             'message_id' => $this->getId(),

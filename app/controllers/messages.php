@@ -125,13 +125,15 @@ class MessagesController extends AuthenticatedController {
         if (!$this->message->permissionToRead()) {
             throw new AccessDeniedException("Kein Zugriff");
         }
+
+        PageLayout::setTitle(_('Betreff') . ': ' . $this->message['subject']);
+
         if ($this->message['autor_id'] === $GLOBALS['user']->id) {
             Navigation::activateItem('/messaging/messages/sent');
         } else {
             Navigation::activateItem('/messaging/messages/inbox');
         }
         if (Request::isXhr()) {
-            $this->response->add_header('X-Title', _("Betreff").": ".$this->message["subject"]);
             $this->response->add_header('X-Tags', json_encode($this->message->getTags()));
             $this->response->add_header('X-All-Tags', json_encode(Message::getUserTags()));
         }

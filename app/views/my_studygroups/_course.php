@@ -4,8 +4,8 @@
         <td>
             <?=
             CourseAvatar::getAvatar($group['seminar_id'])->is_customized()
-                ? CourseAvatar::getAvatar($group['seminar_id'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($group['name'])))
-                : Assets::img('icons/20/blue/studygroup.png') ?>
+                ? CourseAvatar::getAvatar($group['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2(htmlReady($group['name'])))
+                : Assets::img('icons/20/blue/studygroup.png', tooltip2(htmlReady($group['name']))) ?>
         </td>
         <td style="text-align: left">
             <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $group['seminar_id'])) ?>"

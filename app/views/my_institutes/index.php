@@ -46,8 +46,8 @@
                 <td style="width:1px"></td>
                 <td>
                     <?=
-                    (InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) != '' ? Assets::img('icons/20/blue/institute.png') :
-                        InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name'])))) ?>
+                    (InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, tooltip2(htmlReady($values['name']))) != '' ? Assets::img('icons/20/blue/institute.png', tooltip2(htmlReady($values['name']))) :
+                        InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, tooltip2(htmlReady($values['name'])))) ?>
                 </td>
 
                 <td style="text-align: left">

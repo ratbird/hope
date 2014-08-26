@@ -66,7 +66,7 @@
     <?=
     PageLayout::postMessage(MessageBox::info(sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen können.
     Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzufügen</b>%s um neue Veranstaltungen aufzunehmen oder wählen Sie ein anderes Semester aus."),
-        '<a href="' . URLHelper::getLink('sem_portal.php') . '">', '</a>')))?>
+        '<a href="' . URLHelper::getLink('dispatch.php/search/courses') . '">', '</a>')))?>
 <? endif ?>
 
 <? if (count($my_bosses)) : ?>

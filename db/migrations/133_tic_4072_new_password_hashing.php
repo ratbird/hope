@@ -13,7 +13,7 @@ Class Tic4072NewPasswordHashing extends Migration {
         $db->exec("ALTER TABLE `auth_user_md5` CHANGE `password` `password` VARBINARY( 64 ) NOT NULL DEFAULT ''");
         $hasher = UserManagement::getPwdHasher();
         $pwd_up = $db->prepare("UPDATE auth_user_md5 SET password=? WHERE user_id=?");
-        foreach($db->query("SELECT user_id,password FROM auth_user_md5 WHERE auth_plugin='standard'") as $row) {
+        foreach($db->query("SELECT user_id,password FROM auth_user_md5 WHERE auth_plugin='standard' AND password <> ''") as $row) {
             $new_pwd = $hasher->HashPassword($row['password']);
             $pwd_up->execute(array($new_pwd, $row['user_id']));
         }

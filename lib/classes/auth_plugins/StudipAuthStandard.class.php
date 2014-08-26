@@ -62,7 +62,7 @@ class StudipAuthStandard extends StudipAuthAbstract
     function isAuthenticated($username, $password)
     {
         $user = User::findByUsername($username);
-        if (!$user || strlen($password) > 72) {
+        if (!$user || !$password || strlen($password) > 72) {
             $this->error_msg= _("Ungültige Benutzername/Passwort-Kombination!") ;
             return false;
         } elseif ($user->username != $username) {

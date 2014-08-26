@@ -283,8 +283,17 @@ class MessagesController extends AuthenticatedController {
         $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
         $this->mailforwarding = Request::get('emailrequest') ? true : $settings['send_as_email'];
         if (trim($settings['sms_sig'])) {
-            if (Studip\Markup::isHtml($this->default_message['message'])) {
-                $this->default_message['message'] .= formatReady("\n\n--\n" . $settings['sms_sig']);
+            if (Studip\Markup::isHtml($this->default_message['message']) || Studip\Markup::isHtml($settings['sms_sig'])) {
+                if (!Studip\Markup::isHtml($this->default_message['message'])) {
+                    $this->default_message['message'] = '<div>' . nl2br($this->default_message['message']) . '</div>';
+                }
+                $this->default_message['message'] .= '<br><br>--<br>';
+                if (Studip\Markup::isHtml($settings['sms_sig'])) {
+                    $this->default_message['message'] .= $settings['sms_sig'];
+                } else {
+                    $this->default_message['message'] .= formatReady($settings['sms_sig']);
+                }
+                
             } else {
                 $this->default_message['message'] .= "\n\n--\n" . $settings['sms_sig'];
             }

@@ -11,8 +11,8 @@
             <? else : ?>
                 <?=
                 CourseAvatar::getAvatar($course['seminar_id'])->is_customized()
-                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2($course['Name']))
-                    : Assets::img('icons/20/blue/seminar.png', tooltip2($course['Name'])) ?>
+                    ? CourseAvatar::getAvatar($course['seminar_id'])->getImageTag(Avatar::SMALL, tooltip2($course['name']))
+                    : Assets::img('icons/20/blue/seminar.png', tooltip2($course['name'])) ?>
             <? endif ?>
         </td>
         <? if($config_sem_number) :?>

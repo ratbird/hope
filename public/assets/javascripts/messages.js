@@ -139,14 +139,15 @@ STUDIP.Messages = {
     },
     checkAdressee: function () {
         // Check if recipients added (one element is always there -> template)
+        var quicksearch = jQuery('form[name="write_message"] input[name="user_id_parameter"]');
         if (jQuery('li.adressee').children('input[name^="message_to"]').length <= 1) {
-            jQuery('#user_id_1').attr('required', 'required')
-            					.attr('value', '')
-            					[0].setCustomValidity('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'.toLocaleString());
+            quicksearch.attr('required', 'required')
+                       .attr('value', '');
+            quicksearch[0].setCustomValidity('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'.toLocaleString());
             return true
         } else {
-            jQuery('#user_id_1').removeAttr('required')
-            					[0].setCustomValidity('');
+            quicksearch.removeAttr('required');
+            quicksearch[0].setCustomValidity('');
             return true;
         }
     },

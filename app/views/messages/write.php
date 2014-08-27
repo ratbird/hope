@@ -1,4 +1,4 @@
-<form action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;" data-dialog>
+<form name="write_message" action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;" data-dialog>
     <? $message_id = Request::option("message_id") ?: md5(uniqid("neWMesSagE")) ?>
     <input type="hidden" name="message_id" id="message_id" value="<?= htmlReady($message_id) ?>">
     <div>

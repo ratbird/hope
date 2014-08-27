@@ -78,7 +78,7 @@
             <td colspan="2">&nbsp;</td>
             <td class="document-icon">
                 <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>">
-                    <?= Assets::img('icons/24/blue/arr_1up.png', tooltip2(_('Eine Ordner-Ebene höher springen'))) ?>
+                    <?= Assets::img('icons/24/blue/arr_1up.png', tooltip2(_('Ein Verzeichnis nach oben wechseln'))) ?>
                 </a>
             </td>
             <td colspan="5">
@@ -113,7 +113,7 @@
             </td>
             <td>
                 <a href="<?= $controller->url_for('document/files/index/' . $file->id) ?>">
-                    <?= htmlReady($file->file->filename) ?>
+                    <?= htmlReady($file->name) ?>
                 </a>
             <? if ($file->description): ?>
                 <small><?= htmlReady($file->description) ?></small>
@@ -156,7 +156,7 @@
                 </a>
             </td>
             <td>
-                <a href="<?= $file->getDownloadLink() ?>" title="<?= htmlReady($file->file->filename) ?>">
+                <a href="<?= $file->getDownloadLink() ?>">
                     <?= htmlReady($file->name) ?>
                 </a>
             <? if ($file->file->restricted): ?>

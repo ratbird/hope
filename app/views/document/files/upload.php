@@ -12,12 +12,14 @@
             </label>
         </fieldset>
 
+<?/*
         <fieldset>
             <label>
                 <?= _('Titel') ?>
                 <input type="text" name="title" placeholder="<?= _('Titel') ?>">
             </label>
         </fieldset>
+*/?>
 
         <fieldset>
             <label>
@@ -25,6 +27,7 @@
                 <textarea name="description" placeholder="<?= _('Optionale Beschreibung') ?>"></textarea>
             </label>
         </fieldset>
+
 <?/*
         <fieldset>
             <label>
@@ -38,6 +41,7 @@
         </fieldset>
     </fieldset>
 */?>
+
     <div data-dialog-button>
         <?= Studip\Button::createAccept(_('Hochladen'), 'upload') ?>
         <?= Studip\LinkButton::createCancel(_('Abbrechen'),

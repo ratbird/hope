@@ -47,16 +47,8 @@ class Document_FolderController extends DocumentController
                 $parent_dir = new RootDirectory($this->context_id);
             }
 
-            do {
-                $check = true;
-                try {
-                    $directory = $parent_dir->mkdir($name, $description);
-                } catch (Exception $e) {
-                    $check = false;
-
-                    $name = FileHelper::AdjustFilename($name);
-                }
-            } while (!$check);
+            $name      = $parent_dir->ensureUniqueFilename($name);
+            $directory = $parent_dir->mkdir($name, $description);
 
             $directory->file->filename = $name;
             $directory->file->store();

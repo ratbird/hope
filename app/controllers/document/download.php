@@ -149,12 +149,14 @@ class Document_DownloadController extends AuthenticatedController
         
         $path = rtrim($path, '/');
         if ($entry instanceof StudipDirectory) {
-            $path = ltrim($path . '/' . $entry->filename, '/');
-            if ($path && true !== $zip->addEmptyDir($path)) {
-                throw new Exception('Can not add dir "' . $path . '"');
-            }
-            foreach ($entry->listFiles() as $file) {
-                $this->addToZip($zip, $file, $path, $remove);
+            if ($entry->countFiles(true, false) > 0) {
+                $path = ltrim($path . '/' . $entry->filename, '/');
+                if ($path && true !== $zip->addEmptyDir($path)) {
+                    throw new Exception('Can not add dir "' . $path . '"');
+                }
+                foreach ($entry->listFiles() as $file) {
+                    $this->addToZip($zip, $file, $path, $remove);
+                }
             }
         } else {
             $tmp_file = tempnam($GLOBALS['TMP_PATH'], 'zip');

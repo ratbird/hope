@@ -26,11 +26,11 @@ class DocumentController extends AuthenticatedController
         }
 
         CSRFProtection::verifySecurityToken();
-        if ($ticket = Request::get('studip-ticket') && !check_ticket($ticket)) {
+        if (($ticket = Request::get('studip-ticket')) && !check_ticket($ticket)) {
             $message = _('Bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten.') . "\n"
                      . _('Bitte versuchen Sie es erneut.');
             PageLayout::postMessage(MessageBox::error($message));
-            $this->redirect('documents/files/index');
+            $this->redirect('document/files/index');
         }
     }
 

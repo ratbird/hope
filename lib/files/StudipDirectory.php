@@ -140,13 +140,31 @@ class StudipDirectory extends File
     }
 
     /**
-     * Returns number of linked files or folder in this directory.
-     * 
-     * @return int Number of linked files or folders
+     * Returns number of linked files or folders in this directory.
+     *
+     * @param bool $count_deep    Count recursively in directories?
+     * @param bool $count_folders Count folders?
+     * @return int  Number of linked files or folders
      */
-    public function countFiles()
+    public function countFiles($count_deep = false, $count_folders = true)
     {
-        return count($this->files);
+        // Fast shortcut for flat counting with folders
+        if (!$count_deep && $count_folders) {
+            return count($this->files);
+        }
+
+        // Iterate over files (and folders) and count them (recursively if
+        // specified)
+        $count = 0;
+        foreach ($this->files as $entry) {
+            if ($count_deep && $entry->isDirectory()) {
+                $count += $entry->file->countFiles($count_deep, $count_folders);
+            }
+            if ($count_folders || !$entry->isDirectory()) {
+                $count += 1;
+            }
+        }
+        return $count;
     }
 
     /**

@@ -44,7 +44,7 @@ class Document_FilesController extends DocumentController
         PageLayout::setTitle(_('Dateiverwaltung'));
         PageLayout::setHelpKeyword('Basis.Dateien');
         Navigation::activateItem('/profile/files');
-        
+
         PageLayout::addSqueezePackage('document');
     }
 
@@ -88,7 +88,7 @@ class Document_FilesController extends DocumentController
                 $dirEntry = new DirectoryEntry($folder_id);
                 $directory = $dirEntry->file;
             }
-            
+
             $title       = Request::get('title');
             $description = Request::get('description', '');
             $restricted  = Request::int('restricted', 0);
@@ -126,9 +126,8 @@ class Document_FilesController extends DocumentController
                        $failed[] = array($_FILES['file']['name'][$i], 'upload_quota');
 
                 } else {
-                     while ($directory->getEntry($filename) !== null) {
-                        $filename = FileHelper::AdjustFilename($filename);
-                    }
+                    $filename = $directory->ensureUniqueFilename($filename);
+
                     $this_title = $title;
                     if ($this_title && $count > 1) {
                         $this_title .= ' ' . sprintf(_('(%u von %u)'), $i + 1, $count);
@@ -136,15 +135,14 @@ class Document_FilesController extends DocumentController
 
                     $new_file = $directory->createFile($filename);
                     $new_file->description = $description;
-                    $new_file->name        = $this_title ?: $filename;
+                    $new_file->name        = $filename;
                     $new_file->store();
 
                     $handle = $new_file->file;
                     $handle->restricted = $restricted;
                     $handle->mime_type  = $mimetype;
-                    //echo $filesize;die;
-                    $handle->size = $filesize;
-                        
+                    $handle->size       = $filesize;
+
                     try {
                         $handle->setContentFromFile($tempname);
                         $handle->update();
@@ -218,7 +216,7 @@ class Document_FilesController extends DocumentController
 
         if (Request::isXhr()) {
             $this->response->add_header('X-Title', _('Datei hochladen'));
-            
+
         }
     }
 
@@ -229,12 +227,12 @@ class Document_FilesController extends DocumentController
         if (Request::isPost()) {
             $name = Request::get('filename');
             $name = $entry->directory->ensureUniqueFilename($name, $entry->file);
-            
+
             $entry->file->filename   = $name;
             $entry->file->restricted = Request::int('restricted', 0);
             $entry->file->store();
 
-            $entry->name        = Request::get('name');
+            $entry->name        = $name;
             $entry->description = Request::get('description');
             $entry->store();
 
@@ -317,12 +315,12 @@ class Document_FilesController extends DocumentController
                 PageLayout::postMessage(MessageBox::error(_('Der Kopiervorgang wurde abgebrochen, '.
                     'da Ihnen nicht genügend freier Speicherplatz zur Verfügung steht')));
             }
-            
+
             $this->redirect('document/files/index/' . $source_id);
             return;
         }
-        
-        
+
+
         $this->file_id  = $file_id;
         $this->dir_tree = FileHelper::getDirectoryTree($this->context_id);
 
@@ -341,7 +339,7 @@ class Document_FilesController extends DocumentController
             $this->parent_file_id = $this->context_id;
         }
     }
-    
+
     public function checkCopyQuota($ids)
     {
         $size = 0;
@@ -353,7 +351,7 @@ class Document_FilesController extends DocumentController
 
         return $restQuota > $copySize;
     }
-    
+
     public function delete_action($id)
     {
         $entry = DirectoryEntry::find($id);
@@ -412,8 +410,16 @@ class Document_FilesController extends DocumentController
         }
     }
 
+    /**
+     * Defines the elements in the sidebar.
+     *
+     * @param String $current_dir Id of the current directory
+     */
     private function setupSidebar($current_dir)
     {
+        $root_dir   = RootDirectory::find($this->context_id);
+        $root_count = $root_dir->countFiles(true, false);
+
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/files-sidebar.png');
 
@@ -433,21 +439,51 @@ class Document_FilesController extends DocumentController
                          'icons/16/blue/add/folder-empty.png')
                ->asDialog();
 
+        $attributes = $root_count > 0
+                    ? array()
+                    : array(
+                        'disabled' => true,
+                        'title'    => _('Ihr Dateibereich enthält keine Dateien'),
+                      );
+
         $widget->addLink(_('Dateibereich leeren'),
                          $this->url_for('document/folder/delete/all'),
-                         'icons/16/blue/trash.png');
+                         'icons/16/blue/trash.png',
+                         $attributes);
+
         $sidebar->addWidget($widget);
 
         // Show export options only if zip extension is loaded
         // TODO: Implement fallback
         if (extension_loaded('zip')) {
             $widget = new ExportWidget();
+
+            $this_dir = $current_dir === $this->context_id
+                      ? $root_dir
+                      : DirectoryEntry::find($current_dir)->file;
+
+            $attributes = $this_dir->countFiles(true, false) > 0
+                        ? array()
+                        : array(
+                            'disabled' => true,
+                            'title'    => _('Dieser Ordner enthält keine Dateien'),
+                          );
             $widget->addLink(_('Inhalt dieses Ordners herunterladen'),
                              $this->url_for('document/download/' . $current_dir),
-                             'icons/16/blue/file-archive.png');
+                             'icons/16/blue/file-archive.png',
+                             $attributes);
+
+            $attributes = $root_count > 0
+                        ? array()
+                        : array(
+                            'disabled' => true,
+                            'title'    => _('Ihr Dateibereich enthält keine Dateien'),
+                          );
             $widget->addLink(_('Alle meine Dateien herunterladen'),
                              $this->url_for('document/download/' . $this->context_id),
-                             'icons/16/blue/download.png');
+                             'icons/16/blue/download.png',
+                             $attributes);
+
             $sidebar->addWidget($widget);
         }
     }

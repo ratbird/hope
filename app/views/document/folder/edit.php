@@ -1,4 +1,5 @@
 <form action="<?= $controller->url_for('document/folder/edit/' . $folder->id) ?>" method="post" class="studip_form">
+    <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>

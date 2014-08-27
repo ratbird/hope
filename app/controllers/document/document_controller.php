@@ -24,6 +24,14 @@ class DocumentController extends AuthenticatedController
         if($this->userConfig['area_close'] == 1){
             $this->redirect('document/closed/index');
         }
+
+        CSRFProtection::verifySecurityToken();
+        if ($ticket = Request::get('studip-ticket') && !check_ticket($ticket)) {
+            $message = _('Bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten.') . "\n"
+                     . _('Bitte versuchen Sie es erneut.');
+            PageLayout::postMessage(MessageBox::error($message));
+            $this->redirect('documents/files/index');
+        }
     }
 
     protected function setDialogLayout($icon = false)

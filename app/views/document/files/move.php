@@ -1,4 +1,7 @@
 <form action="<?= $controller->url_for('document/files/move/'. $file_id . '/' . $parent_id) ?>" method="post">
+    <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
+    <?= CSRFProtection::tokenTag() ?>
+
 <? if ($file_id === 'flashed'): ?>
 <? foreach ($flashed as $id): ?>
     <input type="hidden" name="file_id[]" value="<?= $id ?>">

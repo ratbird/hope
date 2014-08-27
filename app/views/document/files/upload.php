@@ -1,6 +1,7 @@
 <form enctype="multipart/form-data" method="post" class="studip_form"
       action="<?= $controller->url_for('document/files/upload/' . $folder_id) ?>">
 
+    <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>

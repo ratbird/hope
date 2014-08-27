@@ -3,6 +3,9 @@
 <? endif; ?>
 
 <form action="<?= $controller->url_for('document/files/bulk/' . $dir_id) ?>" method="post" data-shiftcheck>
+    <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
+    <?= CSRFProtection::tokenTag() ?>
+
 <table class="default documents">
     <caption>
         <div class="caption-container">

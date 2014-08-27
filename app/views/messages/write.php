@@ -162,7 +162,7 @@
     </div>
 
     <div style="text-align: center;" data-dialog-button>
-        <?= \Studip\Button::create(_('Abschicken')) ?>
+        <?= \Studip\Button::create(_('Abschicken'), null, array('onclick' => "STUDIP.Messages.checkAdressee();")) ?>
     </div>
 
 </form>

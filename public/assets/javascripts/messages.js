@@ -137,15 +137,18 @@ STUDIP.Messages = {
             }
         });
     },
-    send: function (form) {
+    checkAdressee: function () {
         // Check if recipients added (one element is always there -> template)
         if (jQuery('li.adressee').children('input[name^="message_to"]').length <= 1) {
-            alert('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'.toLocaleString());
-            jQuery(form).attr('onsubmit', 'return false;');
+            jQuery('#user_id_1').attr('required', 'required')
+            					.attr('value', '')
+            					[0].setCustomValidity('Sie haben nicht angegeben, wer die Nachricht empfangen soll!'.toLocaleString());
+            return true
         } else {
-            jQuery(form).removeAttr('onsubmit');
+            jQuery('#user_id_1').removeAttr('required')
+            					[0].setCustomValidity('');
+            return true;
         }
-        return false;
     },
     setTags: function (message_id, tags) {
         var container = jQuery('#message_' + message_id).find('.tag-container').empty(),

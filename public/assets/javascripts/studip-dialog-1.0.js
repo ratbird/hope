@@ -111,7 +111,8 @@
                 cancel = $(this).is('.cancel'),
                 handler;
 
-            handler = function () {
+            handler = function (event) {
+                event.target.disabled = true;
                 this.click();
             };
             handler = handler.bind(this);

@@ -1,3 +1,4 @@
+<h2><?= _('Wählen Sie das Zielverzeichnis aus') ?></h2>
 <form action="<?= $controller->url_for('document/files/copy/'. $file_id . '/' . $parent_id) ?>" method="post">
     <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>

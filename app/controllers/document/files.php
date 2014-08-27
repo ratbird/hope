@@ -51,7 +51,6 @@ class Document_FilesController extends DocumentController
     public function index_action($dir_id = null)
     {
         $dir_id = $dir_id ?: $this->context_id;
-        $this->setupSidebar($dir_id);
         try {
             $directory = new DirectoryEntry($dir_id);
             $this->directory = $directory->file;
@@ -65,7 +64,7 @@ class Document_FilesController extends DocumentController
         }
 
         if (isset($directory)) {
-            $this->parent_id = $directory->directory->id ?: $this->context_id;
+            $this->parent_id = FileHelper::getParentId($directory->id) ?: $this->context_id;
         }
 
         $this->dir_id = $dir_id;
@@ -75,6 +74,8 @@ class Document_FilesController extends DocumentController
         $config = DocUsergroupConfig::getUserConfig($GLOBALS['user']->id);
         $this->space_used  = DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
         $this->space_total = $config['quota'];
+
+        $this->setupSidebar($this->directory->id);
     }
 
     public function upload_action($folder_id)
@@ -308,7 +309,7 @@ class Document_FilesController extends DocumentController
                 foreach ($ids as $id) {
                     $source_id = $source_id ? : FileHelper::getParentId($file_id) ?: $this->context_id;
                     $entry = DirectoryEntry::find($id);
-                    $folder->copy($entry->file, sprintf('%s (%s)', $entry->name, _('Kopie')), $entry->description);
+                    $folder->copy($entry->file, FileHelper::ExtendFilename($entry->name, _('Kopie')), $entry->description);
                  }
                 PageLayout::postMessage(MessageBox::success(_('Die ausgewählten Dateien wurden erfolgreich kopiert')));
             } else {
@@ -355,7 +356,7 @@ class Document_FilesController extends DocumentController
     public function delete_action($id)
     {
         $entry = DirectoryEntry::find($id);
-        $parent_id = $entry->directory->id ?: $this->context_id;
+        $parent_id = FileHelper::getParentId($id) ?: $this->context_id;
 
         if (!Request::isPost()) {
             $question = createQuestion2(_('Soll die Datei wirklich gelöscht werden?'),
@@ -363,7 +364,7 @@ class Document_FilesController extends DocumentController
                                         $this->url_for('document/files/delete/' . $id));
             $this->flash['question'] = $question;
         } elseif (Request::isPost() && Request::submitted('yes')) {
-            File::get($entry->directory->file->id)->unlink($entry->name);
+            File::get($entry->directory->id)->unlink($entry->name);
             PageLayout::postMessage(MessageBox::success(_('Die Datei wurde gelöscht.')));
         }
         $this->redirect('document/files/index/' . $parent_id);
@@ -432,12 +433,12 @@ class Document_FilesController extends DocumentController
                              ? array('disabled' => '',
                                      'title' => _('Ihre Upload-Funktion wurde gesperrt.'))
                              : array())
-               ->asDialog();
+               ->asDialog('size=auto');
 
         $widget->addLink(_('Neuen Ordner erstellen'),
                          $this->url_for('document/folder/create/' . $current_dir),
                          'icons/16/blue/add/folder-empty.png')
-               ->asDialog();
+               ->asDialog('size=auto');
 
         $attributes = $root_count > 0
                     ? array()
@@ -460,7 +461,7 @@ class Document_FilesController extends DocumentController
 
             $this_dir = $current_dir === $this->context_id
                       ? $root_dir
-                      : DirectoryEntry::find($current_dir)->file;
+                      : StudipDirectory::find($current_dir);
 
             $attributes = $this_dir->countFiles(true, false) > 0
                         ? array()

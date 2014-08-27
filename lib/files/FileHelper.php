@@ -33,15 +33,25 @@ class FileHelper
     {
         $pathinfo = pathinfo($filename);
 
+        // Try to extract previous number
         if (preg_match('/\s?\((\d+)\)$/', $pathinfo['filename'], $match)) {
-            $filename = str_replace($match[0], '', $pathinfo['filename']);
             $number = $match[1] + 1;
+
+            $replacement = str_replace($match[0], '', $pathinfo['filename']);
+            $filename    = str_replace($pathinfo['filename'], $replacement, $filename);
         } else {
-            $filename = $pathinfo['filename'];
             $number = 1;
         }
-        
-        $filename .= sprintf(' (%u)', $number);
+
+        return self::ExtendFilename($filename, $number);
+    }
+    
+    public static function ExtendFilename($filename, $extension, $wrap = array('(', ')'))
+    {
+        $pathinfo = pathinfo($filename);
+
+        $filename  = $pathinfo['filename'];
+        $filename .= ' ' . $wrap[0] . $extension . $wrap[1];
 
         if (!empty($pathinfo['extension'])) {
             $filename .= '.' . $pathinfo['extension'];

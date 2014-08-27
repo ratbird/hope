@@ -4331,7 +4331,7 @@ table.contact-header td.empty a {
 }
 .documents .bread-crumbs.extendable:hover > a,
 .documents .bread-crumbs.extendable:hover > ul {
-  box-shadow: 0 4px 3px #444;
+  box-shadow: 0 4px 3px #aaa;
 }
 .documents .bread-crumbs.extendable:hover ul {
   display: -ms-flexbox;

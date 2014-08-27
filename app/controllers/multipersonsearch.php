@@ -34,8 +34,6 @@ class MultipersonsearchController extends AuthenticatedController {
             $this->result = User::findMany($result, 'ORDER BY nachname asc, vorname asc');
             $this->alreadyMember = $mp->getDefaultSelectedUsersIDs();
         }
-        
-        $this->set_content_type('text/html;charset=windows-1252');
         $this->render_template('multipersonsearch/ajax.php');
     }
 

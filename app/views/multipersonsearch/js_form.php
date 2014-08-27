@@ -1,7 +1,7 @@
 <? if (isset($title)): ?>
     <h1><?=$title?></h1>
 <? endif; ?>
-<div class="mpscontainer" data-dialogname="<?= $name; ?>"><p><?= $description; ?></p>
+<div class="mpscontainer" data-dialogname="<?= $name; ?>"><p><?= htmlReady(studip_utf8encode($description)); ?></p>
 <form method="POST" action="<?= URLHelper::getLink('dispatch.php/multipersonsearch/js_form_exec/?name=' . $name); ?>" id="<?= $name; ?>"<?= $jsFunction ? ' onSubmit="return '.htmlReady($jsFunction).'(this);"' : "" ?>>
     <input id="<?= $name . '_searchinput'; ?>" type="text" placeholder="<?= _("Suchen"); ?>" value="" name="<?= $name . '_searchinput'; ?>" style="width: 210px;" aria-label="<?= _("Suchen"); ?>"></input>
     <img title="<?= _('Suche starten'); ?>" src="<?= Assets::image_path("icons/16/blue/search.png"); ?>" onclick="STUDIP.MultiPersonSearch.search()">

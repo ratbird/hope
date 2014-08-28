@@ -112,7 +112,7 @@
                 handler;
 
             handler = function (event) {
-                event.target.disabled = true;
+//                event.target.disabled = true;
                 this.click();
             };
             handler = handler.bind(this);

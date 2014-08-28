@@ -386,23 +386,23 @@ STUDIP.Blubber = {
             if (diff < 86400) {
                 if (diff < 2 * 60 * 60) {
                     if (Math.floor(diff / 60) === 0) {
-                        new_text = "Vor wenigen Sekunden";
+                        new_text = "Vor wenigen Sekunden".toLocaleString();
                     }
                     if (Math.floor(diff / 60) === 1) {
-                        new_text = "Vor einer Minute";
+                        new_text = "Vor einer Minute".toLocaleString();
                     }
                     if (Math.floor(diff / 60) > 1) {
-                        new_text = "Vor " + Math.floor(diff / 60) + " Minuten";
+                        new_text = _.template("Vor <%= distance %> Minuten".toLocaleString(), {distance: Math.floor(diff / 60)});
                     }
                 } else {
-                    new_text = "Vor " + Math.floor(diff / (60 * 60)) + " Stunden";
+                    new_text = _.template("Vor <%= distance %> Stunden".toLocaleString(), {distance: Math.floor(diff / (60 * 60))});
                 }
             } else {
                 if (Math.floor(diff / 86400) < 8) {
                     if (Math.floor(diff / 86400) === 1) {
-                        new_text = "Vor einem Tag";
+                        new_text = "Vor einem Tag".toLocaleString();
                     } else {
-                        new_text = "Vor " + Math.floor(diff / 86400) + " Tagen";
+                        new_text = _.template("Vor <%= distance %> Tagen".toLocaleString(), {distance: Math.floor(diff / 86400)});
                     }
                 } else {
                     date = new Date(posting_time * 1000);
@@ -518,7 +518,7 @@ STUDIP.Blubber = {
             'success': function (html) {
                 jQuery('<div id="blubber_public_panel"/>').html(html).dialog({
                     'modal': true,
-                    'title': "Sichtbarkeit",
+                    'title': "Sichtbarkeit".toLocaleString(),
                     'width': "80%",
                     'show': "fade",
                     'hide': "fade",
@@ -542,7 +542,7 @@ STUDIP.Blubber = {
             'success': function (html) {
                 jQuery('<div id="blubber_private_panel"/>').html(html).dialog({
                     'modal': true,
-                    'title': "Sichtbarkeit",
+                    'title': "Sichtbarkeit".toLocaleString(),
                     'width': "80%",
                     'show': "fade",
                     'hide': "fade",

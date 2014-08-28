@@ -18,6 +18,15 @@ $translations = array(
     'Blenden Sie die restlichen Termine ein' => _('Blenden Sie die restlichen Termine ein'),
     'Ihre Eingaben wurden bislang noch nicht gespeichert.' => _('Ihre Eingaben wurden bislang noch nicht gespeichert.'),
 
+    // public/assets/javascripts/calendar.js
+    'Montag' => _('Montag'),
+    'Dienstag' => _('Dienstag'),
+    'Mittwoch' => _('Mittwoch'),
+    'Donnerstag' => _('Donnerstag'),
+    'Freitag' => _('Freitag'),
+    'Samstag' => _('Samstag'),
+    'Sonntag' => _('Sonntag'),
+
     // public/assets/javascripts/forms.js
     'Bitte ändern Sie ihre Eingabe' => _('Bitte ändern Sie ihre Eingabe'),
     'Bitte wählen Sie einen Wert aus.' => _('Bitte wählen Sie einen Wert aus.'),
@@ -44,6 +53,7 @@ $translations = array(
 
     // public/assets/javascripts/news.js
     'Dialog wird geladen...' => _('Dialog wird geladen...'),
+    'Fehler beim Aufruf des News-Controllers' => _('Fehler beim Aufruf des News-Controllers'),
 
     // public/assets/javascripts/raumzeit.js
     'Nicht buchbare Räume:' => _('Nicht buchbare Räume:'),
@@ -90,9 +100,20 @@ $translations = array(
     'Bedingung konfigurieren' => _('Bedingung konfigurieren'),
     'oder' => _('oder'),
 
+    // public/plugins_packages/core/Blubber/assets/javascripts/blubber.js
+    'Vor wenigen Sekunden' => _('Vor wenigen Sekunden'),
+    'Vor einer Minute' => _('Vor einer Minute'),
+    'Vor <%= distance %> Minuten' => _('Vor <%= distance %> Minuten'),
+    'Vor <%= distance %> Stunden' => _('Vor <%= distance %> Stunden'),
+    'Vor einem Tag' => _('Vor einem Tag'),
+    'Vor <%= distance %> Tagen' => _('Vor <%= distance %> Tagen'),
+    'Sichtbarkeit' => _('Sichtbarkeit'),
+
     // public/plugins_packages/core/Forum/javascript/forum.js
     'Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!' => _('Wenn Sie die Seite verlassen, gehen ihre Änderungen verloren!'),
+    'Sind sie sicher, dass Sie diese Kategorie entfernen möchten? ' => _('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? '),
     'Alle Bereiche werden dann nach "Allgemein" verschoben!' => _('Alle Bereiche werden dann nach "Allgemein" verschoben!'),
+    'Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' => _('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '),
     'Es werden auch alle Beiträge in diesem Bereich gelöscht!' => _('Es werden auch alle Beiträge in diesem Bereich gelöscht!'),
     'Anonym' => _('Anonym'),
     'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. ' => _('Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '),

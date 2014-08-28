@@ -103,7 +103,7 @@ STUDIP.Forum = {
     },
 
     deleteCategory: function (category_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? ' 
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? '.toLocaleString() 
             + 'Alle Bereiche werden dann nach "Allgemein" verschoben!'.toLocaleString(),
             'javascript:STUDIP.Forum.approveDelete()',
             'table[data-category-id=' + category_id +'] td.areaentry');
@@ -176,7 +176,7 @@ STUDIP.Forum = {
     },
 
     deleteArea: function (element, area_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' 
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '.toLocaleString() 
             + 'Es werden auch alle Beiträge in diesem Bereich gelöscht!'.toLocaleString(),
             'javascript:STUDIP.Forum.approveDelete()',
             'tr[data-area-id=' + area_id +'] td.areaentry');

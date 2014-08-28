@@ -13,13 +13,13 @@ STUDIP.Calendar = {
     click_in_progress: false,
 
     day_names: [
-        "Montag",
-        "Dienstag",
-        "Mittwoch",
-        "Donnerstag",
-        "Freitag",
-        "Samstag",
-        "Sonntag"
+        "Montag".toLocaleString(),
+        "Dienstag".toLocaleString(),
+        "Mittwoch".toLocaleString(),
+        "Donnerstag".toLocaleString(),
+        "Freitag".toLocaleString(),
+        "Samstag".toLocaleString(),
+        "Sonntag".toLocaleString()
     ],
 
     /**

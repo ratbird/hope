@@ -135,7 +135,7 @@ STUDIP.News = {
                 }
             },
             'fail': function () {
-                alert("Fehler beim Aufruf des News-Controllers");
+                alert("Fehler beim Aufruf des News-Controllers".toLocaleString());
             }
         });
     },
@@ -190,7 +190,7 @@ STUDIP.News = {
                 },
                 'fail': function () {
                 	STUDIP.News.pending_ajax_request = false;
-                    alert("Fehler beim Aufruf des News-Controllers");
+                    alert("Fehler beim Aufruf des News-Controllers".toLocaleString());
                 }
             });
         }

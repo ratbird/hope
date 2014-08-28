@@ -395,11 +395,13 @@ STUDIP.Forum = {
     forwardEntry: function(topic_id) {
         var title   = jQuery('span[data-edit-topic=' + topic_id +'] [name=name]').attr('value');
         var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val();
-        var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '
-                    + "\n\n" + 'Link zum Beitrag: ' + "\n";
+        var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '.toLocaleString()
+                    + "\n\n"
+                    + 'Link zum Beitrag: '.toLocaleString()
+                    + "\n";
         
         STUDIP.Forum.postToUrl(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
-            'default_message' :  text.toLocaleString()
+            'default_message' :  text
                 + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
                 + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
                 + "\n\n" + content + "\n\n",

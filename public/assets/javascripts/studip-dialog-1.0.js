@@ -112,7 +112,9 @@
                 handler;
 
             handler = function (event) {
-//                event.target.disabled = true;
+                if ($(this).is(':not(button)') || ($(this).closest('form')[0].checkValidity && $(this).closest('form')[0].checkValidity())) {
+                    event.target.disabled = true;
+                }
                 this.click();
             };
             handler = handler.bind(this);

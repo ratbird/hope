@@ -90,7 +90,7 @@ STUDIP.Tour = {
                 },
                 'fail': function () {
                     STUDIP.Tour.pending_ajax_request = false;
-                    alert("Fehler beim Aufruf des Tour-Controllers");
+                    alert("Fehler beim Aufruf des Tour-Controllers".toLocaleString());
                 }
             });
         }

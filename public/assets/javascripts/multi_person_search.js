@@ -28,7 +28,7 @@ STUDIP.MultiPersonSearch = {
         
         $('#' + name + '_selectbox').multiSelect({
             selectableHeader: "<div>" + "Suchergebnisse".toLocaleString() + "</div>",
-            selectionHeader: "<div>Sie haben <span id='" + this.name + "_count'>0</span> " + "Personen ausgewählt".toLocaleString() + ".</div>",
+            selectionHeader: "<div>" + _.template('Sie haben <%= count %> Personen ausgewählt'.toLocaleString(), {count: "<span id='" + this.name + "_count'>0</span>"}) + ".</div>",
             selectableFooter: '<a href="javascript:STUDIP.MultiPersonSearch.selectAll();">' + 'Alle hinzufügen'.toLocaleString() + '</a>',
             selectionFooter: '<a href="javascript:STUDIP.MultiPersonSearch.unselectAll();">' + 'Alle entfernen'.toLocaleString() + '</a>'
         });
@@ -87,7 +87,7 @@ STUDIP.MultiPersonSearch = {
             STUDIP.MultiPersonSearch.refresh();
             
             if (searchcount == 0) {
-                STUDIP.MultiPersonSearch.append('--', 'Es wurden keine neuen Ergebnisse für'.toLocaleString() + ' "' + searchterm + '" ' +  'gefunden.'.toLocaleString(), true);
+                STUDIP.MultiPersonSearch.append('--', _.template('Es wurden keine neuen Ergebnisse für "<%= needle %>" gefunden.'.toLocaleString(), {needle: searchterm}), true);
                 STUDIP.MultiPersonSearch.refresh();
             }
         });

@@ -309,7 +309,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $class = get_called_class();
         $record = new $class();
-        $record->setData($data, true);
+        $record->setData($data, false);
         if ($record->store()) {
             return $record;
         } else {
@@ -1585,7 +1585,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
             foreach ($this->db_fields as $field => $meta) {
                 $value = $this->content[$field];
-                if ($field == 'chdate' && !$this->isFieldDirty($field) && ($this->isDirty() || $this->isNew())) {
+                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
                     $value = time();
                 }
                 if ($field == 'mkdate') {

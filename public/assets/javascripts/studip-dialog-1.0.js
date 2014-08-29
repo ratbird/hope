@@ -112,7 +112,7 @@
                 handler;
 
             handler = function (event) {
-                // TODO: Find a convenient way to disable the button if the corresponding validates
+                // TODO: Find a convenient way to disable the button if the corresponding form validates
                 // and will be submitted.
                 if ($(this).is(':not(button)')) {
                     event.target.disabled = true;

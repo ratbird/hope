@@ -112,7 +112,9 @@
                 handler;
 
             handler = function (event) {
-                if ($(this).is(':not(button)') || ($(this).closest('form')[0].checkValidity && $(this).closest('form')[0].checkValidity())) {
+                // TODO: Find a convenient way to disable the button if the corresponding validates
+                // and will be submitted.
+                if ($(this).is(':not(button)')) {
                     event.target.disabled = true;
                 }
                 this.click();

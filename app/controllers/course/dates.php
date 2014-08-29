@@ -10,6 +10,8 @@ class Course_DatesController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+        checkObject();
+        checkObjectModule("schedule");
         $course = Course::findCurrent();
         if ($course) {
             PageLayout::setTitle(sprintf('%s - %s', $course->getFullname(), _("Termine")));
@@ -20,12 +22,8 @@ class Course_DatesController extends AuthenticatedController
 
     public function index_action()
     {
-        
         Navigation::activateItem('/course/schedule/dates');
-       
 
-        checkObject();
-        checkObjectModule("schedule");
         object_set_visit_module("schedule");
         PageLayout::addScript("jquery/jquery.tablesorter.js");
         $this->dates = Course::findCurrent()->getDatesWithExdates();
@@ -46,6 +44,9 @@ class Course_DatesController extends AuthenticatedController
     }
 
     public function add_topic_action() {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         if (!Request::get("title")) {
             throw new Exception("Geben Sie einen Titel an.");
         }
@@ -74,6 +75,9 @@ class Course_DatesController extends AuthenticatedController
     }
 
     public function remove_topic_action() {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException("Kein Zugriff");
+        }
         $topic = new CourseTopic(Request::option("issue_id"));
         $date = new CourseDate(Request::option("termin_id"));
         $date->removeTopic($topic);
@@ -83,9 +87,7 @@ class Course_DatesController extends AuthenticatedController
     }
 
     public function export_action() {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff");
-        }
+
         $course = new Course($_SESSION['SessionSeminar']);
         $sem = new Seminar($_SESSION['SessionSeminar']);
         $themen =& $sem->getIssues();

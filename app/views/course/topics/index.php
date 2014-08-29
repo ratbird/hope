@@ -9,7 +9,7 @@
     <tbody>
     <? foreach ($topics as $key => $topic) : ?>
         <tr class="<?= Request::get("open") === $topic->getId() ? "open" : "" ?>">
-            <td><a href="" onClick="jQuery(this).closest('tr').toggleClass('open'); return false;"><?= htmlReady($topic['title']) ?></a></td>
+            <td><a href="" name="<?=$topic->getId()?>" onClick="jQuery(this).closest('tr').toggleClass('open'); return false;"><?= htmlReady($topic['title']) ?></a></td>
             <td>
                 <ul class="clean">
                     <? foreach ($topic->dates as $date) : ?>

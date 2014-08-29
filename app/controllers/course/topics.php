@@ -7,6 +7,8 @@ class Course_TopicsController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+        checkObject();
+        checkObjectModule("schedule");
         PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("Themen")));
     }
 

@@ -35,11 +35,10 @@ jQuery(function ($) {
     // visible textareas only
     function replaceVisibleTextareas() {
         $('textarea.add_toolbar').each(function() {
-            var editor = CKEDITOR.dom.element.get(this).getEditor(),
-                $this = $(this);
-            if (!editor && $this.is(':visible')) {
+            var editor = CKEDITOR.dom.element.get(this).getEditor();
+            if (!editor && $(this).is(':visible')) {
                 replaceTextarea(this);
-            } else if (editor && $this.parent().is(':hidden')) {
+            } else if (editor && $(this).parent().is(':hidden')) {
                 editor.destroy(true);
             }
         });

@@ -109,8 +109,8 @@ jQuery(function ($) {
 
             // configure dialogs
             removeDialogTabs: 'image:Link;image:advanced;'
-                + 'link:target;link:advanced;'
-                + 'table:advanced',
+                + 'link:target;link:advanced;',
+                //+ 'table:advanced',
 
             // convert special chars except latin ones to html entities
             entities: false,
@@ -330,6 +330,23 @@ jQuery(function ($) {
             editor.focus();
         });
     }
+
+    // customize existing dialog windows
+    CKEDITOR.on('dialogDefinition', function(ev) {
+        var dialogName = ev.data.name,
+            dialogDefinition = ev.data.definition;
+
+        if (dialogName == 'table') {
+            var infoTab = dialogDefinition.getContents('info');
+            infoTab.get('txtBorder')['default'] = '';
+            infoTab.get('txtWidth')['default'] = '';
+            infoTab.get('txtCellSpace')['default'] = '';
+            infoTab.get('txtCellPad')['default'] = '';
+
+            var advancedTab = dialogDefinition.getContents('advanced');
+            advancedTab.get('advCSSClasses')['default'] = 'content';
+        }
+    });
 
     // editor utilities
     function updateStickyTools(editor) {

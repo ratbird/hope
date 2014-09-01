@@ -146,6 +146,10 @@ class Markup
         $config->set('Core.RemoveInvalidImg', true);
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
         $config->set('Attr.AllowedRel', array('nofollow'));
+        $config->set(
+            'HTML.ForbiddenAttributes',
+            'table@cellpadding,table@cellspacing,table@border'
+        );
         $config->set('AutoFormat.Custom', array('ClassifyLinks'));
 
         // avoid <img src="evil_CSRF_stuff">

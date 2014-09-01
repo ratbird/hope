@@ -3,7 +3,7 @@
 <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
     <?= htmlReady($user->getFullName()) ?>
 </a>
-<span>
+<span title="<?=($perm ? _("Ablaufdatum") . ': ' . date('d.m.Y', $new['date'] + $new['expire']) : '')?>">
     <?= date('d.m.Y', $new['date']) ?>
 </span>
 <span style="color: #050">

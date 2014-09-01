@@ -59,10 +59,10 @@ class NewsController extends StudipController
     {
         page_close();
     }
-    
+
     /**
      * Widget controller to produce the formally known show_votes()
-     * 
+     *
      * @param String $range_id range id of the news to get displayed
      * @return array() Array of votes
      */
@@ -114,8 +114,14 @@ class NewsController extends StudipController
             }
         }
 
-        $this->news = StudipNews::GetNewsByRange($range_id, true, true);
         $this->perm = StudipNews::haveRangePermission('edit', $range_id);
+        $this->show_all_news = Request::get('nshow_all') && $this->perm;
+        $news = StudipNews::GetNewsByRange($range_id, !$this->show_all_news);
+        if ($this->show_all_news) {
+            URLHelper::addLinkParam('nshow_all', 1);
+        }
+        $this->news = StudipNews::GetNewsByRange($range_id, !$this->show_all_news, true);
+        $this->count_all_news  = $this->show_all_news ? count($this->news) : count(StudipNews::GetNewsByRange($range_id, false));
         $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
         $this->range = $range_id;
 

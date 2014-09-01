@@ -38,7 +38,7 @@ jQuery(function ($) {
             var editor = CKEDITOR.dom.element.get(this).getEditor();
             if (!editor && $(this).is(':visible')) {
                 replaceTextarea(this);
-            } else if (editor && $(this).parent().is(':hidden')) {
+            } else if (editor && editor.container && $(editor.container.$).is(':hidden')) {
                 editor.destroy(true);
             }
         });

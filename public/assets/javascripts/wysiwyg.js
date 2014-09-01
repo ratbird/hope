@@ -267,16 +267,6 @@ jQuery(function ($) {
                 breakAfterClose: true
             });
 
-            // output line breaks on their own line:
-            // first line
-            // <br>
-            // second line
-            editor.dataProcessor.writer.setRules('br', {
-                indent: false,
-                breakBeforeOpen: true,
-                breakAfterOpen: true
-            });
-
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function (event) {
                 var editor = event.editor;

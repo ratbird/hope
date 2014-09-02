@@ -37,25 +37,25 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
     var $operations;
     var $allowed_operations;
     var $tree_allowed_operations;
-    
+
     var $USER_OPERATIONS;
     var $AUTHOR_OPERATIONS;
     /**
     * constructor
     *
     * init class.
-    * @access 
+    * @access
     * @param string $cms system-type
-    */ 
+    */
     function Ilias3ConnectedPermissions($cms)
     {
         global $connected_cms;
 
         parent::ConnectedPermissions($cms);
         $this->readData();
-        
+
         if ($connected_cms[$this->cms_type]->user->isConnected())
-        {   
+        {
             $roles = $this->getUserRoles();
             $connected_cms[$this->cms_type]->user->setRoles( $roles );
         }
@@ -90,7 +90,7 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
     function checkUserPermissions($course_id = "")
     {
         global $connected_cms, $SemUserStatus, $messages;
-    
+
         if ($course_id == "")
             return false;
         if ($connected_cms[$this->cms_type]->user->getId() == "")
@@ -111,7 +111,7 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
                     if ( strpos( $role_data["title"], $user_crs_role) > 0 )
                         $proper_role = $role_data["obj_id"];
                 }
-    //          if ($GLOBALS["debug"] == true) 
+    //          if ($GLOBALS["debug"] == true)
     //              echo "P$proper_role A$active_role U" . $user_crs_role . " R" . implode($connected_cms[$this->cms_type]->user->getRoles(), ".")."<br>";
 
         // is user already course-member? otherwise add member with proper role
@@ -124,15 +124,15 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
             $type = "";
             switch ($user_crs_role)
             {
-                case "admin": 
+                case "admin":
                     $member_data["role"] = CRS_ADMIN_ROLE;
                     $type = "Admin";
                     break;
-                case "tutor": 
+                case "tutor":
                     $member_data["role"] = CRS_TUTOR_ROLE;
                     $type = "Tutor";
                     break;
-                case "member": 
+                case "member":
                     $member_data["role"] = CRS_MEMBER_ROLE;
                     $type = "Member";
                     break;
@@ -140,9 +140,9 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
             }
             $member_data["passed"] = CRS_PASSED_VALUE;
             if ($type != "")
-            {   
+            {
                 $connected_cms[$this->cms_type]->soap_client->addMember( $connected_cms[$this->cms_type]->user->getId(), $type, $course_id );
-                if ($GLOBALS["debug"] == true) 
+                if ($GLOBALS["debug"] == true)
                     echo "addMember";
                 $this->permissions_changed = true;
             }
@@ -155,14 +155,14 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
             if ($active_role != "")
             {
                 $connected_cms[$this->cms_type]->soap_client->deleteUserRoleEntry( $connected_cms[$this->cms_type]->user->getId(), $active_role);
-                if ($GLOBALS["debug"] == true) 
+                if ($GLOBALS["debug"] == true)
                     echo "Role $active_role deleted.";
             }
 
             if ($proper_role != "")
             {
                 $connected_cms[$this->cms_type]->soap_client->addUserRoleEntry( $connected_cms[$this->cms_type]->user->getId(), $proper_role);
-                if ($GLOBALS["debug"] == true) 
+                if ($GLOBALS["debug"] == true)
                     echo "Role $proper_role added.";
             }
             $this->permissions_changed = true;
@@ -174,14 +174,14 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
 //          unset($connected_cms[$this->cms_type]->content_module);
         if (! $this->getContentModulePerms( $course_id ))
         {
-//          if ($GLOBALS["debug"] == true)      
+//          if ($GLOBALS["debug"] == true)
             $messages["info"] .= _("F&uuml;r den zugeordneten ILIAS-Kurs konnten keine Berechtigungen ermittelt werden.") . "<br>";
         }
 //      if (! $this->isAllowed(OPERATION_READ))
 //          echo "NIX DA";
-        
+
     }
-    
+
     /**
     * get user roles
     *
@@ -212,7 +212,7 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
             return true;
         $this->allowed_operations = array();
         $this->tree_allowed_operations = $connected_cms[$this->cms_type]->soap_client->getObjectTreeOperations(
-                    $module_id, 
+                    $module_id,
                     $connected_cms[$this->cms_type]->user->getId()
                     );
 //      echo "MID".$module_id."UID".$connected_cms[$this->cms_type]->user->getId()."OPS".implode($this->tree_allowed_operations,"-") ;
@@ -220,13 +220,15 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
             return false;
 
         $no_permission = false;
-        if ((! in_array($this->operations[OPERATION_READ], $this->tree_allowed_operations)) OR (! in_array($this->operations[OPERATION_VISIBLE], $this->tree_allowed_operations)))
-            $no_permission = true;
-            
-        if ($no_permission == false)
-            $connected_cms[$this->cms_type]->content_module[$current_module]->allowed_operations = $this->tree_allowed_operations;
-        else
-            $connected_cms[$this->cms_type]->content_module[$current_module]->allowed_operations = false;
+        if (isset($current_module)) { //TODO: fixes Warning:Creating default object from empty value - possible side effects
+            if ((! in_array($this->operations[OPERATION_READ], $this->tree_allowed_operations)) OR (! in_array($this->operations[OPERATION_VISIBLE], $this->tree_allowed_operations)))
+                $no_permission = true;
+
+            if ($no_permission == false)
+                $connected_cms[$this->cms_type]->content_module[$current_module]->allowed_operations = $this->tree_allowed_operations;
+            else
+                $connected_cms[$this->cms_type]->content_module[$current_module]->allowed_operations = false;
+        }
         return true;
     }
 

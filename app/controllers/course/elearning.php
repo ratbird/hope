@@ -29,7 +29,7 @@ class Course_ElearningController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        
+
         if (!Config::Get()->ELEARNING_INTERFACE_ENABLE ) {
             throw new AccessDeniedException(_('Elearning-Interface ist nicht aktiviert.'));
         } else
@@ -100,7 +100,7 @@ class Course_ElearningController extends AuthenticatedController
         } else {
             //Instanz mit den Zuordnungen von Content-Modulen zur Veranstaltung
             $object_connections = new ObjectConnections($this->seminar_id);
-        
+
             $connected_modules = $object_connections->getConnections();
         }
         $this->module_count = 0;
@@ -145,11 +145,11 @@ class Course_ElearningController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::info(_('Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet.')));
             }
         }
-        
+
         $widget = new ActionsWidget();
         $widget->addLink(_('Externe Accounts verwalten'), URLHelper::getURL('dispatch.php/elearning/my_accounts'), 'icons/16/blue/person.png');
         if (count($this->course_output['courses']))
-            foreach ($this->course_output['courses'] as $course) {        
+            foreach ($this->course_output['courses'] as $course) {
                 $widget->addLink(sprintf(_('Direkt zum Kurs in %s'), $course['cms_name']), $course['url'], 'icons/16/blue/link-extern.png', array('target' => '_blank'));
             }
         $this->sidebar->addWidget($widget);
@@ -185,7 +185,7 @@ class Course_ElearningController extends AuthenticatedController
                     $connected_cms[$this->cms_select]->updateConnections( ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $this->cms_select) );
             }
         }
-    
+
         // Zugeordnete Ilias-Kurse ermitteln und ggf. aktualisieren
         $this->course_output = ELearningUtils::getIliasCourses($this->seminar_id);
         if ($this->new_account_cms == "") {
@@ -214,7 +214,7 @@ class Course_ElearningController extends AuthenticatedController
         }
         //Instanz mit den Zuordnungen von Content-Modulen zur Veranstaltung
         $object_connections = new ObjectConnections($this->seminar_id);
-        
+
         $connected_modules = $object_connections->getConnections();
         $this->module_count = 0;
         $content_modules_list = array();
@@ -309,7 +309,7 @@ class Course_ElearningController extends AuthenticatedController
                     $statement->execute(array($this->cms_select));
                     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                         if ($GLOBALS['perm']->have_studip_perm('dozent', $row['object_id'])) {
-                            $existing_courses[$row['object_id']] = my_substr($row['Name'],0,60)." ".sprintf(_("(Kurs-ID %s)"), $row['module_id']); 
+                            $existing_courses[$row['object_id']] = my_substr($row['Name'],0,60)." ".sprintf(_("(Kurs-ID %s)"), $row['module_id']);
                         }
                     }
                 }
@@ -339,6 +339,7 @@ class Course_ElearningController extends AuthenticatedController
             $this->user_modules = $user_modules_list;
             $this->search_modules = $search_modules_list;
             $this->existing_courses = $existing_courses;
+            $this->show_ilias_empty_course = $show_ilias_empty_course;
         }
         $this->content_modules = $content_modules_list;
     }

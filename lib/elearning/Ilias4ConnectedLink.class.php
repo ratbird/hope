@@ -75,7 +75,7 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
             $result = $connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId());
         }
         if ($result) {
-            $output .= "<i>Pfad: ". htmlReady($connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId())) . "</i><br><br>";
+            $output .= "<i>Pfad: ". htmlReady($result) . "</i><br><br>";
         }
         $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();

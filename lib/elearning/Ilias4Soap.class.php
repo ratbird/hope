@@ -141,7 +141,7 @@ class Ilias4Soap extends Ilias3Soap
             $s = simplexml_load_string(studip_utf8encode($result));
 
             foreach ($s->rows->row as $row) {
-                $path[] = htmlReady(studip_utf8decode((string)$row->column[2]));
+                $path[] = studip_utf8decode((string)$row->column[2]);
             }
         }
 

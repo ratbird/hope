@@ -224,7 +224,7 @@ else
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();
-$template->infobox = $infobox ?: null;
-    echo $template->render();
+$template->infobox = $infobox ? array('content' => $infobox) : null;
+echo $template->render();
 
 page_close();

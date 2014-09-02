@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * - a 99%-width centred table with 2 columns
  * - the content
  * Content areas are normally part of a container table.
- * 
+ *
  * Example:
  *
  * $container=new ContainerTable();
@@ -50,10 +50,10 @@ class ContentTable extends Table {
     function ContentTable($styles="")
     {
         Table::Table($styles);
-        if (! $styles["width"]) {
+        if (!@$styles["width"]) {
             $this->table_width="99%";
         }
-        if (! $styles["align"]) {
+        if (!@$styles["align"]) {
             $this->table_align="center";
         }
     }

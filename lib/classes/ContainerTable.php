@@ -38,13 +38,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  **/
 class ContainerTable extends Table {
-    function ContainerTable($styles="") 
+    function ContainerTable($styles="")
     {
         Table::Table($styles);
-        if (! $styles["width"]) {
+        if (!@$styles["width"]) {
             $this->table_width="100%";
         }
-        if (! $styles["class"]) {
+        if (!@$styles["class"]) {
             $this->table_class="blank";
         }
         $this->row_class="blank";
@@ -52,10 +52,10 @@ class ContainerTable extends Table {
     }
 
     function headerRow($header, $styles=array()) {
-        if (!$styles["class"]) {
+        if (!@$styles["class"]) {
             $styles["class"]="table_header_bold";
         }
-        if (!$styles["colspan"]) {
+        if (!@$styles["colspan"]) {
             $styles["colspan"]="2";
         }
         $code="";

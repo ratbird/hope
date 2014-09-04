@@ -75,7 +75,7 @@ class Document_FilesController extends DocumentController
         $this->space_used  = DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
         $this->space_total = $config['quota'];
 
-        $this->setupSidebar($this->directory->id);
+        $this->setupSidebar($dir_id, $this->directory->id);
     }
 
     public function upload_action($folder_id)
@@ -416,7 +416,7 @@ class Document_FilesController extends DocumentController
      *
      * @param String $current_dir Id of the current directory
      */
-    private function setupSidebar($current_dir)
+    private function setupSidebar($current_entry, $current_dir)
     {
         $root_dir   = RootDirectory::find($this->context_id);
         $root_count = $root_dir->countFiles(true, false);
@@ -427,7 +427,7 @@ class Document_FilesController extends DocumentController
         $widget = new ActionsWidget();
 
         $widget->addLink(_('Datei hochladen'),
-                         $this->url_for('document/files/upload/' . $current_dir),
+                         $this->url_for('document/files/upload/' . $current_entry),
                          'icons/16/blue/upload.png',
                          $this->userConfig['forbidden']
                              ? array('disabled' => '',
@@ -436,7 +436,7 @@ class Document_FilesController extends DocumentController
                ->asDialog('size=auto');
 
         $widget->addLink(_('Neuen Ordner erstellen'),
-                         $this->url_for('document/folder/create/' . $current_dir),
+                         $this->url_for('document/folder/create/' . $current_entry),
                          'icons/16/blue/add/folder-empty.png')
                ->asDialog('size=auto');
 

@@ -238,7 +238,7 @@ class StartNavigation extends Navigation
 
         // elearning
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-            $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'my_elearning.php'));
+            $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'dispatch.php/elearning/my_accounts'));
         }
 
         // export

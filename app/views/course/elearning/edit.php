@@ -57,7 +57,7 @@
             <div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">
                 <?=sprintf(_('Sie können im System %s nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben.'),
                            $cms_name)?><br>
-                <a href="<?=URLHelper::getLink('my_elearning.php')?>">
+                <a href="<?=URLHelper::getLink('dispatch.php/elearning/my_accounts')?>">
                 <?=_('Jetzt einen Account erstellen.')?><br>
                 </a>
             </div>

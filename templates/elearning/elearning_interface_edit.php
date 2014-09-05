@@ -4,13 +4,13 @@
     <? if (!count($content_modules)) : ?>
         <? if (count($course_output['courses'])) : ?>
             <?=$course_output['text']?><br>
-            <? foreach ($course_output['courses'] as $course) : ?>        
+            <? foreach ($course_output['courses'] as $course) : ?>
                 <a href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
                 <br>
             <? endforeach ?>
         <? endif ?>
     <? else : ?>
-        <?foreach ($content_modules as $module) : ?>        
+        <?foreach ($content_modules as $module) : ?>
             <? if ($module['show_header']) : ?>
                 <?=ELearningUtils::getModuleHeader(_("Angebundene Lernmodule"))?>
             <? endif ?>
@@ -22,7 +22,7 @@
     <? if ($cms_select AND ! count($user_modules)) : ?>
         <? if (count($course_output['courses'])) : ?>
             <?=$course_output['text']?><br>
-            <? foreach ($course_output['courses'] as $course) : ?>        
+            <? foreach ($course_output['courses'] as $course) : ?>
                 <a href="<?=$course['url']?>"><?=sprintf(_('Kurs in %s'), $course['cms_name'])?></a>
                 <br>
             <? endforeach ?>
@@ -34,7 +34,7 @@
         <br>
         <? if (count($user_modules)) : ?>
             <?=ELearningUtils::getModuleHeader(sprintf(_("Ihre Lernmodule in %s"), $cms_name))?>
-            <?foreach ($user_modules as $module) : ?>        
+            <?foreach ($user_modules as $module) : ?>
                 <?=$module['module']?>
                 <br>
             <? endforeach ?>
@@ -66,7 +66,7 @@
             <div class="messagebox messagebox_info" style="background-image: none; padding-left: 15px">
                 <?=sprintf(_('Sie können im System %s nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben.'),
                            $cms_name)?><br>
-                <a href="<?=URLHelper::getLink('my_elearning.php')?>">
+                <a href="<?=URLHelper::getLink('dispatch.php/elearning/my_accounts')?>">
                 <?=_('Jetzt einen Account erstellen.')?><br>
                 </a>
             </div>
@@ -92,7 +92,7 @@
             </div>
             </form>
         <? endif ?>
-        <? if (count($existing_courses)) : ?> 
+        <? if (count($existing_courses)) : ?>
             <form method="POST" action="<?=URLHelper::getLink() . "#anker"?>>
             <?=CSRFProtection::tokenTag()?>
             <?=ELearningUtils::getHeader(_("Verknüpfung mit einem bestehenden Kurs"))?>

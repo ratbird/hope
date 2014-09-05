@@ -1,16 +1,18 @@
 <?php
+/* Copyright (c) 1998-2014 ILIAS open source, Extended GPL, see docs/LICENSE */
+
 /**
 * redirect script for studip-users
-* copy to Ilias webroot
 *
-* @author Arne Schröder <schroeder@data-quest.de>
+* @author Arne Schroeder <schroeder@data-quest.de>
+* @author Andre Noack <noack@data-quest.de>
 *
 */
 
-/* ILIAS Version 4.0.x, 4.1.x, 4.2.x */
+/* ILIAS Version 4.3.x, 4.4.x */
 
 if(file_exists("./ilias.ini.php")){
-    require_once("classes/class.ilIniFile.php");
+    require_once("./Services/Init/classes/class.ilIniFile.php");
     $ilIliasIniFile = new ilIniFile("./ilias.ini.php");
     $ilIliasIniFile->read();
     $serverSettings = $ilIliasIniFile->readGroup("server");
@@ -34,144 +36,85 @@ if(file_exists("./ilias.ini.php")){
 
     require_once "./include/inc.header.php";
 
-    $jump_to = 'index.php';
+    $base_url= "ilias.php?baseClass=ilPersonalDesktopGUI";
+
 
     // redirect to specified page
     $redirect = false;
     switch($_GET['target'])
     {
-        case 'start':
-            switch($_GET['type'])
-            {
-                case 'cat':
-                    $_GET['cmd'] = 'frameset';
-                    $jump_to = 'repository.php';
-                break;
-                case 'crs':
-                    $_GET['cmd'] = 'frameset';
-                    $jump_to = 'repository.php';
-                break;
-                case 'lm':
-                    $_GET['baseClass'] = 'ilLMPresentationGUI';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'tst':
-                    $_GET['cmd'] = 'infoScreen';
-                    $_GET['baseClass'] = 'ilObjTestGUI';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'sahs':
-                    $jump_to = 'ilias.php?baseClass=ilSAHSPresentationGUI&ref_id='.$_GET['ref_id'];
-                    $redirect = true;
-                break;
-                case 'htlm':
-                    $_GET['baseClass'] = 'ilHTLMPresentationGUI';
-                    $jump_to = 'ilias.php';
-                    break;
-                case 'glo':
-                    $_GET['baseClass'] = 'ilGlossaryPresentationGUI';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'svy':
-                    $_GET['baseClass'] = 'ilObjSurveyGUI';
-                    $_GET['cmd'] = 'infoScreen';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'exc':
-                    $_GET['baseClass'] = 'ilExerciseHandlerGUI';
-                    $_GET['cmd'] = 'infoScreen';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'dbk':
-                    $_GET['baseClass'] = 'ilLMPresentationGUI';
-                    $jump_to = 'ilias.php';
-                break;
-                case 'webr':
-                    $_GET['baseClass'] = 'ilLinkResourceHandlerGUI';
-                    $_GET['cmd'] = 'calldirectlink';
-                    $jump_to = 'ilias.php';
-                break;
-                default:
-                    unset($jump_to);
-            }
+    case 'start':
+        switch($_GET['type'])
+        {
+        case 'lm':
+            $base_url= "ilias.php?baseClass=ilLMPresentationGUI";
+            break;
+        case 'tst':
+            $base_url= "ilias.php?cmd=infoScreen&cmdClass=ilobjtestgui&baseClass=ilRepositoryGUI";
+            break;
+        case 'svy':
+            $base_url= "ilias.php?cmd=infoScreen&cmdClass=ilObjSurveyGUI&baseClass=ilRepositoryGUI";
+            break;
+        case 'exc':
+            $base_url= "ilias.php?cmd=infoScreen&cmdClass=ilExerciseHandlerGUI&baseClass=ilRepositoryGUI";
+            break;
+        case 'sahs':
+            $base_url = "ilias.php?baseClass=ilSAHSPresentationGUI";
+            break;
+        case 'htlm':
+            $base_url = "ilias.php?baseClass=ilHTLMPresentationGUI";
+            break;
+        case 'glo':
+            $base_url = "ilias.php?baseClass=ilGlossaryPresentationGUI";
+            break;
+        case 'cat':
+        case 'crs':
+            $base_url= "ilias.php?cmd=render&cmdClass=ilrepositorygui&baseClass=ilRepositoryGUI";
+            break;
+        case 'webr':
+            $base_url= "ilias.php?cmd=calldirectlink&baseClass=ilLinkResourceHandlerGUI";
+            break;
+        }
         break;
-        case 'new':
-            $_POST['new_type'] =
-            $_GET['new_type'] =
-            $_REQUEST['new_type'] = $_GET['type'];
-            $_POST['cmd']['create'] = '1';
-            $_GET['cmd'] = 'post';
-            $_GET[ilCtrl::IL_RTOKEN_NAME] = $ilCtrl->getRequestToken();
-            $jump_to = 'repository.php';
+    case 'new':
+        $base_url = "ilias.php?baseClass=ilRepositoryGUI&cmd=create&new_type=".preg_replace('/[^a-z]/', '', $_GET['type']);
         break;
-        case 'edit':
-            switch($_GET['type'])
-                {
-                    case 'cat':
-                        $_GET['cmd'] = 'edit';
-                        $jump_to = 'repository.php';
-                    break;
-                    case 'crs':
-                        $_GET['cmd'] = 'edit';
-                        $jump_to = 'repository.php';
-                    break;
-                    case 'lm':
-                        $_GET['baseClass'] = 'ilLMEditorGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'tst':
-                        $_GET['cmd'] = '';
-                        $_GET['baseClass'] = 'ilObjTestGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'sahs':
-                        $_GET['baseClass'] = 'ilSAHSEditGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'htlm':
-                        $_GET['baseClass'] = 'ilHTLMEditorGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'glo':
-                        $_GET['baseClass'] = 'ilGlossaryEditorGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'svy':
-                        $_GET['baseClass'] = 'ilObjSurveyGUI';
-                        $_GET['cmd'] = 'properties';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'exc':
-                        $_GET['baseClass'] = 'ilExerciseHandlerGUI';
-                        $_GET['cmd'] = 'edit';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'dbk':
-                        $_GET['baseClass'] = 'ilLMEditorGUI';
-                        $jump_to = 'ilias.php';
-                    break;
-                    case 'webr':
-                        $_GET['baseClass'] = 'ilLinkResourceHandlerGUI';
-                        $_GET['cmd'] = 'editLinks';
-                        $jump_to = 'ilias.php';
-                    break;
-                    default:
-                        unset($jump_to);
-                }
+    case 'edit':
+        switch($_GET['type'])
+        {
+        case 'lm':
+            $base_url = "ilias.php?baseClass=ilLMEditorGUI";
+            break;
+        case 'tst':
+            $base_url = "ilias.php?baseClass=ilObjTestGUI";
+            break;
+        case 'sahs':
+            $base_url = "ilias.php?baseClass=ilSAHSEditGUI";
+            break;
+        case 'htlm':
+            $base_url = "ilias.php?baseClass=ilHTLMEditorGUI";
+            break;
+        case 'glo':
+            $base_url = "ilias.php?baseClass=ilGlossaryEditorGUI";
+            break;
+        case 'svy':
+            $base_url = "ilias.php?baseClass=ilObjSurveyGUI";
+            break;
+        case 'exc':
+            $base_url = "ilias.php?baseClass=ilExerciseHandlerGUI";
+            break;
+        case 'webr':
+            $base_url = "ilias.php?baseClass=ilLinkResourceHandlerGUI";
+            break;
+        }
         break;
-        case 'login':
-        break;
-        default:
-        unset($jump_to);
     }
-    if ($redirect)
+    if ($base_url)
     {
-        header("Location: ".$jump_to);
+        $base_url .= "&ref_id=".(int)$_GET['ref_id'];
+        $base_url = html_entity_decode($ilCtrl->appendRequestTokenParameterString($base_url));
+        header("Location: " . $base_url);
         exit();
-    }
-    elseif(isset($jump_to))
-    {
-        include($jump_to);
     }
 }
 ?>

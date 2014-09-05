@@ -75,7 +75,6 @@ javascripts:
     - javascripts/start.js
     - *header
     - *toolbar
-    - *wysiwyg
     - *dialog
     - javascripts/studip-css.js
     - javascripts/studip-tooltip.js
@@ -111,12 +110,11 @@ javascripts:
     - javascripts/enrolment.js
 
   document:
-    - javascripts/document.js 
+    - javascripts/document.js
 
 css:
   base:
     # filename : media
-    wysiwyg.css: screen, print
     jquery-ui-1.9.1.custom.css: screen, print
     jquery-ui-studip.css: screen, print
     jquery-ui-timepicker-addon.css: screen, print
@@ -124,3 +122,6 @@ css:
     style.css:  screen
     smiley.css: screen, print
     print.css:  print
+
+  wysiwyg:
+    wysiwyg.css: screen, print

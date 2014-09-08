@@ -349,10 +349,10 @@ auf diese Nachricht nicht antworten.") . "\n\n";
 
                 echo '<p style="font-weight: bold;"><a href="' . $url . '" target="_blank">' . htmlReady($url) . '</a></p>';
                 echo '<p>';
-                echo LinkButton::create(_("Neue Adresse generieren."), URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
+                echo LinkButton::create(_("Neue Adresse generieren."), URLHelper::getURL('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
                 echo _("(Achtung: Die alte Adresse wird damit ungültig!)");
                 echo '</p><p>';
-                echo LinkButton::create(_("Adresse löschen."), URLHelper::getLink('', array('cmd' => 'export', 'delid' => '1', 'ticket' => get_ticket())));
+                echo LinkButton::create(_("Adresse löschen."), URLHelper::getURL('', array('cmd' => 'export', 'delid' => '1', 'ticket' => get_ticket())));
                 echo _("(Ein Zugriff auf Ihre Termine über diese Adresse ist dann nicht mehr möglich!)");
                 echo '</p>';
                 echo '<form action="' . URLHelper::getLink('') . '" method="post">';
@@ -366,7 +366,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 echo '<p>';
                 echo _("Sie können sich eine Adresse generieren lassen, mit der Sie Termine aus Ihrem Stud.IP-Terminkalender in externen Terminkalendern einbinden können.");
                 echo '</p><p align="center">';
-                echo LinkButton::create(_("Adresse generieren!"), URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
+                echo LinkButton::create(_("Adresse generieren!"), URLHelper::getURL('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())));
                 echo '</p>';
             }
             echo "</td></tr>\n";

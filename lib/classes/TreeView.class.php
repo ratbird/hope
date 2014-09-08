@@ -208,7 +208,7 @@ class TreeView {
     for ($j = 0; $j < $num_items; ++$j){
         $this->printLevelOutput($items[$j]);
         $this->printItemOutput($items[$j]);
-        if ($this->tree->hasKids($items[$j]) && $this->open_ranges[$items[$j]]){
+        if ($this->tree->hasKids($items[$j]) && $this->open_ranges[$items[$j]] === true){
             $this->showTree($this->tree->tree_childs[$items[$j]]);
         }
     }
@@ -260,8 +260,9 @@ class TreeView {
         echo "\n</td><td class=\"printhead\" align=\"left\" width=\"99%\" nowrap valign=\"bottom\">";
         echo $this->getItemHead($item_id);
         echo "</td></tr></table>";
-        if ($this->open_items[$item_id])
+        if ($this->open_items[$item_id]) {
             $this->printItemDetails($item_id);
+        }
         return;
     }
 

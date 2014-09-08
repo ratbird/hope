@@ -376,10 +376,12 @@ function exportVCard($contacts){
     else
         $filename = $contacts[0]["NICKNAME"];
 
-    header("Content-type: text/x-vCard"); //application/octet-stream MIME
+    $charset = 'windows-1252';
+
+    header("Content-type: text/x-vCard;charset=" . $charset); //application/octet-stream MIME
     header("Content-disposition: attachment; filename=".$filename.".vcf");
     header("Pragma: private");
-
+    
     $br = "=0D=0A";
 
     for ($i=0;$i<=sizeof($contacts)-2;$i++){
@@ -388,10 +390,10 @@ function exportVCard($contacts){
             . "VERSION:2.1\r\n";
 
         // the full name
-        $vcard .= "FN:".$contacts[$i]["FN"]."\r\n";
+        $vcard .= "FN;CHARSET=${charset}:".$contacts[$i]["FN"]."\r\n";
 
         // the name in parts
-        $vcard .= "N:";
+        $vcard .= "N;CHARSET=${charset}:";
             //Family Name
             $vcard .= $contacts[$i]["fname"];
             $vcard .= ";";
@@ -412,7 +414,7 @@ function exportVCard($contacts){
         // the nick-name: 'NICKNAME:'
 
         // the private adress
-        $vcard .= "ADR;HOME:;;";
+        $vcard .= "ADR;HOME;CHARSET=${charset}:;;";
         $vcard .= $contacts[$i]["ADR"];
         $vcard .= "\r\n";
 
@@ -436,7 +438,7 @@ function exportVCard($contacts){
         // if there is any workplace
         if (sizeof($contacts[$i]["fak"]) > 0){
             // the work adress
-            $vcard .= "ADR;WORK:";
+            $vcard .= "ADR;WORK;CHARSET=${charset}:";
             //name
 //          if ($contacts[$i]["fak"][0]["fak_name"]){
 //              $vcard .= $contacts[$i]["fak"][0]["fak_name"];
@@ -460,13 +462,13 @@ function exportVCard($contacts){
 
             // the position
             if ($contacts[$i]["fak"][0]["fak_position"]){
-                $vcard .= "TITLE:"
+                $vcard .= "TITLE;CHARSET=${charset}:"
                     . $contacts[$i]["fak"][0]["fak_position"]
                     . "\r\n";
             }
 
             // the work org
-            $vcard .= "ORG;WORK:";
+            $vcard .= "ORG;WORK;CHARSET=${charset}:";
             if ($contacts[$i]["fak"][0]["fak_name"]){
                 $vcard .= $contacts[$i]["fak"][0]["fak_name"];
 //              $vcard .= ",";
@@ -495,14 +497,14 @@ function exportVCard($contacts){
             $vcard .= "\r\n";
 
             // the consulting hours
-            $vcard .= "LABEL;WORK;ENCODING=QUOTED-PRINTABLE:";
+            $vcard .= "LABEL;WORK;CHARSET=${charset};ENCODING=QUOTED-PRINTABLE:";
             $vcard .= _("Sprechstunde: ");
             $vcard .= $contacts[$i]["fak"][0]["consultation_hours"];
             $vcard .= "\r\n";
         }
         // if there are more than one workplace
         if (sizeof($contacts[$i]["fak"]) > 1){
-            $vcard .= "NOTE;"
+            $vcard .= "NOTE;CHARSET=${charset};"
                 . "ENCODING=QUOTED-PRINTABLE:";
             $vcard .= _("Weitere Arbeitsplaetze").": ".$br;
             for ($j=1;$j<=sizeof($contacts[$i]["fak"])-1;$j++){

@@ -6,7 +6,7 @@
     <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
-<table class="default documents">
+<table class="default documents <? if (!empty($files)) echo 'sortable-table'; ?>">
     <caption>
         <div class="caption-container">
             <? $last_crumb = end($breadcrumbs); ?>
@@ -59,33 +59,38 @@
     </colgroup>
     <thead>
         <tr>
-            <th>&nbsp;</th>
-            <th>
+            <th data-sort="false">&nbsp;</th>
+            <th data-sort="false">
                 <input type="checkbox" data-proxyfor=":checkbox[name='ids[]']"
                        data-activates="table.documents tfoot button">
             </th>
-            <th><?= _('Typ') ?></th>
-            <th><?= _('Name') ?></th>
-            <th><?= _('Größe') ?></th>
-            <th><?= _('Autor/in') ?></th>
-            <th><?= _('Datum') ?></th>
-            <th><?= _('Aktionen') ?></th>
+            <th data-sort="htmldata"><?= _('Typ') ?></th>
+            <th data-sort="text"><?= _('Name') ?></th>
+            <th data-sort="htmldata"><?= _('Größe') ?></th>
+            <th data-sort="htmldata"><?= _('Autor/in') ?></th>
+            <th data-sort="htmldata"><?= _('Datum') ?></th>
+            <th data-sort="false"><?= _('Aktionen') ?></th>
         </tr>
     </thead>
     <tbody>
 <? if (!$directory->isRootDirectory()): ?>
-        <tr class="chdir-up" data-folder="<?= $folder_id ?>">
-            <td colspan="2">&nbsp;</td>
+        <tr class="chdir-up" data-folder="<?= $folder_id ?>" data-sort-fixed>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td class="document-icon">
                 <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>">
                     <?= Assets::img('icons/24/blue/arr_1up.png', tooltip2(_('Ein Verzeichnis nach oben wechseln'))) ?>
                 </a>
             </td>
-            <td colspan="5">
+            <td>
                 <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>" title="<?= _('Ein Verzeichnis nach oben wechseln') ?>">
                     ..
                 </a>
             </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
         </tr>
 <? endif; ?>
 <? if (empty($files)): ?>
@@ -102,7 +107,7 @@
                 <input type="checkbox" name="ids[]" value="<?= $file->id ?>" <? if (in_array($file->id, $marked)) echo 'checked'; ?>>
             </td>
         <? if ($file->isDirectory()): ?>
-            <td class="document-icon">
+            <td class="document-icon" data-sort-value="0">
                 <a href="<?= $controller->url_for('document/files/index/' . $file->id) ?>">
                 <? if ($file->file->isEmpty()): ?>
                     <?= Assets::img('icons/24/blue/folder-empty.png') ?>
@@ -119,8 +124,11 @@
                 <small><?= htmlReady($file->description) ?></small>
             <? endif; ?>
             </td>
-            <td><?= sprintf(ngettext('%u Eintrag', '%u Einträge', $count = $file->file->countFiles()), $count) ?></td>
-            <td>
+            <? // -number + file count => directories should be sorted apart from files ?>
+            <td data-sort-value="<?= -1000000 + ($count = $file->file->countFiles()) ?>">
+                <?= sprintf(ngettext('%u Eintrag', '%u Einträge', $count), $count) ?>
+            </td>
+            <td data-sort-value="<?= htmlReady($file->file->owner->getFullName('no_title')) ?>">
             <? if ($file->file->owner->id !== $GLOBALS['user']->id): ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $file->file->owner->username) ?>">
                     <?= htmlReady($file->file->owner->getFullName()) ?>
@@ -129,7 +137,7 @@
                 <?= htmlReady($file->file->owner->getFullName()) ?>
             <? endif; ?>
             </td>
-            <td title="<?= strftime('%x %X', $file->file->mkdate) ?>">
+            <td title="<?= strftime('%x %X', $file->file->mkdate) ?>" data-sort-value="<?= $file->file->mkdate ?>">
                 <?= reltime($file->file->mkdate) ?>
             </td>
             <td class="options">
@@ -150,7 +158,7 @@
                 </a>
             </td>
         <? else: ?>
-            <td class="document-icon">
+            <td class="document-icon" data-sort-value="1">
                 <a href="<?= $file->getDownloadLink(true) ?>">
                     <?= Assets::img('icons/24/blue/'. get_icon_for_mimetype($file->file->mime_type)) ?>
                 </a>
@@ -166,10 +174,10 @@
                 <small><?= htmlReady($file->description) ?></small>
             <? endif; ?>
             </td>
-            <td title="<?= number_format($file->file->size, 0, ',', '.') . ' Byte' ?>">
+            <td title="<?= number_format($file->file->size, 0, ',', '.') . ' Byte' ?>" data-sort-value="<?= $file->file->size ?>">
                 <?= relSize($file->file->size, false) ?>
             </td>
-            <td>
+            <td data-sort-value="<?= $file->file->owner->getFullName('no_title') ?>">
             <? if ($file->file->owner->id !== $GLOBALS['user']->id): ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $file->file->owner->username) ?>">
                     <?= htmlReady($file->file->owner->getFullName()) ?>
@@ -178,7 +186,7 @@
                 <?= htmlReady($file->file->owner->getFullName()) ?>
             <? endif; ?>
             </td>
-            <td title="<?= strftime('%x %X', $file->file->mkdate) ?>">
+            <td title="<?= strftime('%x %X', $file->file->mkdate) ?>" data-sort-value="<?= $file->file->mkdate ?>">
                 <?= reltime($file->file->mkdate) ?>
             </td>
             <td class="options">

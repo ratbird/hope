@@ -1052,6 +1052,46 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 .no-js table.withdetails tr.details {
   display: table-row;
 }
+.sortable-table .header {
+  white-space: nowrap;
+  color: #28497c;
+}
+.sortable-table .header:hover {
+  color: #ff3333;
+  cursor: pointer;
+}
+.sortable-table .headerSortUp:after {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/16/yellow/arr_1down.png");
+  vertical-align: text-top;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortUp:after {
+    background-image: url("../images/icons/32/yellow/arr_1down.png");
+    background-size: 16px 16px;
+  }
+}
+.sortable-table .headerSortDown:after {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 16px;
+  margin-right: 0;
+  background-image: url("../images/icons/16/yellow/arr_1up.png");
+  vertical-align: text-top;
+  width: 16px;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sortable-table .headerSortDown:after {
+    background-image: url("../images/icons/32/yellow/arr_1up.png");
+    background-size: 16px 16px;
+  }
+}
 .studip_form .caption {
   font-weight: bold;
   color: #24437c;

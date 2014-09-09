@@ -660,3 +660,21 @@ table.withdetails {
 .no-js table.withdetails tr.details {
     display: table-row;
 }
+
+.sortable-table {
+    .header {
+        white-space: nowrap;
+        
+        color: @base-color;
+        &:hover {
+            color: @active-color;
+            cursor: pointer;
+        }
+    }
+    .headerSortUp {
+        .icon-after('yellow/arr_1down.png');
+    }
+    .headerSortDown {
+        .icon-after('yellow/arr_1up.png');
+    }
+}

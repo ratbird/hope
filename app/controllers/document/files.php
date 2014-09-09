@@ -50,6 +50,8 @@ class Document_FilesController extends DocumentController
 
     public function index_action($dir_id = null)
     {
+        PageLayout::addScript('jquery/jquery.tablesorter.js');
+        
         $dir_id = $dir_id ?: $this->context_id;
         try {
             $directory = new DirectoryEntry($dir_id);

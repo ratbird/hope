@@ -207,10 +207,11 @@ $class_changer = new CssClassSwitcher();
 echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\" style=\"font-size:10pt;\">"
     . sprintf(_("Anzahl an Referenzen für diesen Eintrag: %s"), (int)$_the_element->reference_count) ."</td>";
 echo "<td " . $class_changer->getFullClass() . " align=\"center\">";
-if ($_the_element->isChangeable()){
+if ($_the_element->isChangeable()) {
     echo $_the_form->getFormButton("send") .  $_the_form->getFormButton("delete") . $_the_form->getFormButton("reset");
-} elseif ($_catalog_id != "new_entry") {
-    echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen")));
+    if ($_catalog_id != "new_entry") {
+        echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen")));
+    }
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
 echo LinkButton::create(_('Neu anlegen'), URLHelper::getURL('?cmd=new_entry'), array('title' => _("Neuen Eintrag anlegen")));

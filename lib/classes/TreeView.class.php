@@ -2,8 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // TreeView.class.php
@@ -112,14 +111,20 @@ class TreeView {
     * @param    string  $tree_class_name    name of used tree class
     * @param    mixed   $args               argument passed to the tree class
     */
-    function TreeView($tree_class_name,$args = null){
+    public function TreeView($tree_class_name,$args = null)
+    {
         $this->tree_class_name = $tree_class_name;
-        $this->tree = TreeAbstract::GetInstance($tree_class_name,$args);
-        $this->pic_open = ($this->use_aging) ? "forumgraurunt2.png" : "icons/16/blue/arr_1down.png";
-        $this->pic_close = ($this->use_aging) ? "forumgrau2.png" : "icons/16/blue/arr_1right.png";
+        $this->tree            = TreeAbstract::GetInstance($tree_class_name, $args);
+        $this->pic_open        = $this->use_aging
+                               ? 'forumgraurunt2.png'
+                               : 'icons/16/blue/arr_1down.png';
+        $this->pic_close       = $this->use_aging
+                               ? 'forumgrau2.png'
+                               : 'icons/16/blue/arr_1right.png';
 
-        URLHelper::bindLinkParam("open_ranges", $this->open_ranges);
-        URLHelper::bindLinkParam("open_items", $this->open_items);
+        URLHelper::bindLinkParam('open_ranges', $this->open_ranges);
+        URLHelper::bindLinkParam('open_items', $this->open_items);
+
         $this->handleOpenRanges();
     }
 
@@ -128,65 +133,63 @@ class TreeView {
     *
     * @access   private
     */
-    function handleOpenRanges(){
-        $close_range = Request::optionArray('close_range');
-        if (!empty($close_range)){
-            if (Request::get('close_range') == 'root'){
+    private function handleOpenRanges()
+    {
+        $close_range = Request::option('close_range');
+        if ($close_range) {
+            if ($close_range === 'root'){
                 $this->open_ranges = null;
-                $this->open_items = null;
+                $this->open_items  = null;
             } else {
-                $kidskids = $this->tree->getKidsKids($close_range);
+                $kidskids   = $this->tree->getKidsKids($close_range);
                 $kidskids[] = $close_range;
-                $num_kidskids = count($kidskids);
-                for ($i = 0; $i < $num_kidskids; ++$i){
-                    if ($this->open_ranges[$kidskids[$i]]){
-                        unset($this->open_ranges[$kidskids[$i]]);
-                    }
-                    if ($this->open_items[$kidskids[$i]]){
-                        unset($this->open_items[$kidskids[$i]]);
-                    }
+                foreach ($kidskids as $kid) {
+                    unset($this->open_ranges[$kid]);
+                    unset($this->open_items[$kid]);
                 }
             }
-        $this->anchor = $close_range;
-        }
-        $open_range = Request::optionArray('open_range');
-        if ($open_range){
-            $kidskids = $this->tree->getKidsKids($open_range);
-            $kidskids[] = $open_range;
-            $num_kidskids = count($kidskids);
-            for ($i = 0; $i < $num_kidskids; ++$i){
-                if (!$this->open_ranges[$kidskids[$i]]){
-                    $this->open_ranges[$kidskids[$i]] = true;
-                }
-            }
-        $this->anchor = $open_range;
+            $this->anchor = $close_range;
         }
 
-        if (Request::option('close_item') || Request::option('open_item')){
-            $toggle_item = (Request::option('close_item')) ? Request::option('close_item') : Request::option('open_item');
-            if (!$this->open_items[$toggle_item]){
-                $this->open_items[$toggle_item] = true;
-                $this->open_ranges[$toggle_item] = true;
-            } else {
-                unset($this->open_items[$toggle_item]);
+        $open_range = Request::option('open_range');
+        if ($open_range) {
+            $kidskids   = $this->tree->getKidsKids($open_range);
+            $kidskids[] = $open_range;
+            foreach ($kidskids as $kid) {
+                $this->open_ranges[$kid] = true;
             }
-        $this->anchor = $toggle_item;
+            $this->anchor = $open_range;
         }
-        if (Request::option('item_id'))
+
+        $toggle_item = Request::option('close_item') ?: Request::option('open_item');
+        if ($toggle_item){
+            if ($this->open_items[$toggle_item]) {
+                unset($this->open_items[$toggle_item]);
+            } else {
+                $this->openItem($toggle_item);
+                $this->openRange($toggle_item);
+            }
+            $this->anchor = $toggle_item;
+        }
+
+        if (Request::option('item_id')) {
             $this->anchor = Request::option('item_id');
+        }
     }
 
-    function openItem($item_id){
+    function openItem($item_id)
+    {
         $this->open_items[$item_id] = true;
         $this->openRange($this->tree->tree_data[$item_id]['parent_id']);
     }
 
-    function openRange($item_id){
+    function openRange($item_id)
+    {
         $this->open_ranges[$item_id] = true;
+
         $parents = $this->tree->getParents($item_id);
-        $num_parents = count($parents);
-        for ($i = 0; $i < $num_parents; ++$i){
-            $this->open_ranges[$parents[$i]] = true;
+        foreach ($parents as $parent) {
+            $this->open_ranges[$parent] = true;
         }
     }
 
@@ -208,7 +211,7 @@ class TreeView {
     for ($j = 0; $j < $num_items; ++$j){
         $this->printLevelOutput($items[$j]);
         $this->printItemOutput($items[$j]);
-        if ($this->tree->hasKids($items[$j]) && $this->open_ranges[$items[$j]] === true){
+        if ($this->tree->hasKids($items[$j]) && $this->open_ranges[$items[$j]]) {
             $this->showTree($this->tree->tree_childs[$items[$j]]);
         }
     }
@@ -418,5 +421,3 @@ class TreeView {
         return "?" . $param . "#anchor";
     }
 }
-//test
-?>

@@ -354,17 +354,18 @@ class TreeAbstract {
     * @param    string  $item_id
     * @return   array
     */
-    function getParents($item_id){
-        if (!$this->tree_data[$item_id])
-            return false;
-        if ($item_id == "root")
-            return false;
-        $ret = array();
-        while($item_id && $item_id != "root"){
-            $item_id = $this->tree_data[$item_id]['parent_id'];
-            $ret[] = $item_id;
+    public function getParents($item_id)
+    {
+        if (!$this->tree_data[$item_id]) {
+            return array();
         }
-        return $ret;
+
+        $result = array();
+        while ($item_id && $item_id !== 'root') {
+            $item_id   = $this->tree_data[$item_id]['parent_id'];
+            $retsult[] = $item_id;
+        }
+        return $result;
     }
 
     function getShortPath($item_id, $length = null, $delimeter = ">", $offset = 0){

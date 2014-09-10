@@ -155,7 +155,7 @@ class DB_Seminar extends DB_Sql {
 }
 
 //software version - please leave it as it is!
-$SOFTWARE_VERSION = '3.1.alpha-svn';
+$SOFTWARE_VERSION = '3.1.beta-svn';
 
 // set dummy navigation until db is ready
 Navigation::setRootNavigation(new Navigation(''));

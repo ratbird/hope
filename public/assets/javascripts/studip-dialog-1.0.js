@@ -250,6 +250,19 @@
         return true;
     };
 
+    // Calculate dialogs margins (outer width - inner width of the dialog) in
+    // order to properly calculated needed dialog widths. Otherwise horizontal
+    // scrollbars will occur. This is located here because it is only
+    // used in Dialog.show().
+    var dialog_margin = 0;
+    $(document).ready(function () {
+        var temp = $('<div class="ui-dialog" style="position: absolute;left:-1000px;top:-1000px;"></div>');
+        temp.html('<div class="ui-dialog-content ui-widget-content"><div style="width: 100%">foo</div></div>');
+        temp.appendTo('body');
+        dialog_margin = temp.outerWidth(true) - $('.ui-dialog-content', temp).width();
+        temp.remove();
+    });
+
     // Opens or updates the dialog
     STUDIP.Dialog.show = function (content, options) {
         options = $.extend({}, STUDIP.Dialog.options, options);
@@ -273,9 +286,13 @@
         // Adjust size if neccessary
         if (options.size && options.size === 'auto') {
             // Render off screen
-            helper = $('<div style="position: absolute;left:-1000px;top:-1000px;">').html(content).appendTo('body');
-            width  = Math.max(300, Math.min(helper.width(), width));
+            helper = $('<div style="position:absolute;left:-1000px;top:-1000px;">').html(content).appendTo('body');
+            // Hide buttons so they do not account to width or height
+            $('[data-dialog-button]', helper).hide();
+            // Calculate width and height
+            width  = Math.max(300, Math.min(helper.outerWidth(true) + dialog_margin, width));
             height = Math.max(200, Math.min(helper.height() + 130, height));
+            // Remove helper element
             helper.remove();
         } else if (options.size && options.size.match(/^\d+x\d+$/)) {
             temp = options.size.split('x');

@@ -1,23 +1,30 @@
 <?php
-
 /**
- * files.php
+ * folder.php
  *
  * Der Controller stellt angemeldeten Benutzer/innen einen Dateimanager
- * fuer deren persoenlichen Dateibereich im Stud.IP zur Verfuegung.
+ * fuer deren persönlichen Dateibereich im Stud.IP zur Verfuegung. In
+ * diesem Controller werden sämtliche Operationen auf Verzeichnissen
+ * gekapselt.
  *
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @author      Stefan Osterloh <s.osterloh@uni-oldenburg.de>
- * @license     http://www.gnu.org/licenses/gpl-3.0
- * @copyright   Stud.IP Core-Group
- * @since       3.1
+ * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author    Stefan Osterloh <s.osterloh@uni-oldenburg.de>
+ * @license   GPL2 or any later version
+ * @copyright Stud.IP Core-Group
+ * @since     3.1
  */
 
 require_once 'document_controller.php';
 
 class Document_FolderController extends DocumentController
 {
+    /**
+     * Before filter, basically initializes the controller by actvating the
+     * according navigation entry.
+     *
+     * @param String $action Action to execute
+     * @param Array $args    Arguments passed for the action (might be empty)
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -33,8 +40,15 @@ class Document_FolderController extends DocumentController
         }
     }
 
+    /**
+     * Create a new folder.
+     *
+     * @param String $parent_id Directory entry id of the parent directory
+     */
     public function create_action($parent_id)
     {
+        PageLayout::setTitle(_('Ordner erstellen'));
+        
         $this->parent_id = $parent_id;
 
         if (Request::isPost()) {
@@ -58,8 +72,15 @@ class Document_FolderController extends DocumentController
         }
     }
 
+    /**
+     * Edits a folder.
+     *
+     * @param String $folder_id Directory entry id of the folder
+     */
     public function edit_action($folder_id)
     {
+        PageLayout::setTitle(_('Ordner bearbeiten'));
+
         $folder    = new DirectoryEntry($folder_id);
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
 
@@ -75,16 +96,17 @@ class Document_FolderController extends DocumentController
             $this->redirect('document/files/index/' . $parent_id);
         }
 
-        if (Request::isXhr()) {
-            header('X-Title: ' . _('Ordner bearbeiten'));
-        }
-
-        $this->setDialogLayout('icons/48/blue/edit.png');
+        $this->setDialogLayout('icons/100/lightblue/folder-' . ($folder->file->isEmpty() ? 'empty' : 'full') . '.png');
 
         $this->folder_id = $folder_id;
         $this->folder    = $folder;
     }
 
+    /**
+     * Deletes a folder.
+     *
+     * @param String $folder_id Directory entry id of the folder
+     */
     public function delete_action($folder_id)
     {
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;

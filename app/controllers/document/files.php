@@ -4,25 +4,23 @@
  * files.php
  *
  * Der Controller stellt angemeldeten Benutzer/innen einen Dateimanager
- * fuer deren persoenlichen Dateibereich im Stud.IP zur Verfuegung.
+ * fuer deren persönlichen Dateibereich im Stud.IP zur Verfügung. In
+ * diesem Controller werden sämtliche Dateioperationen gekapselt.
  *
+ * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author    Stefan Osterloh <s.osterloh@uni-oldenburg.de>
+ * @license   GPL2 or any later version
+ * @copyright Stud.IP Core-Group
+ * @since     3.1
  *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @author      Stefan Osterloh <s.osterloh@uni-oldenburg.de>
- * @license     http://www.gnu.org/licenses/gpl-3.0
- * @copyright   Stud.IP Core-Group
- * @since       3.1
- *
- * @todo        Remove user dir creation from this controller, it is storage type specific
- * @todo        Extends file extension black list to mime type black list?
- * @todo        Info page for # of downloads
- * @todo        Inline display of media
- * @todo        AJAX file upload
- * @todo        Admin/root handling needs to be improved
- * @todo        ZIP extract in local file space?
- * @todo        Test another storage type (DB? FTP?)
- * @todo        Drag and drop move operation
- * @todo        ?? Trash functionality (store deleted files in trash for X days)
+ * @todo Remove user dir creation from this controller, it is storage type specific
+ * @todo Extends file extension black list to mime type black list?
+ * @todo Inline display of media
+ * @todo AJAX file upload
+ * @todo Admin/root handling needs to be improved
+ * @todo Test another storage type (DB? FTP?)
+ * @todo Drag and drop move operation
+ * @todo ?? Trash functionality (store deleted files in trash for X days)
  */
 
 require_once 'document_controller.php';
@@ -30,6 +28,13 @@ require_once 'document_controller.php';
 
 class Document_FilesController extends DocumentController
 {
+    /**
+     * Before filter, basically initializes the controller by actvating the
+     * according navigation entry and other settings.
+     *
+     * @param String $action Action to execute
+     * @param Array $args    Arguments passed for the action (might be empty)
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -48,6 +53,11 @@ class Document_FilesController extends DocumentController
         PageLayout::addSqueezePackage('document');
     }
 
+    /**
+     * Displays the files in a speicfic folder.
+     *
+     * @param mixed $dir_id Directory entry id of the folder (default to root)
+     */
     public function index_action($dir_id = null)
     {
         PageLayout::addScript('jquery/jquery.tablesorter.js');
@@ -80,8 +90,15 @@ class Document_FilesController extends DocumentController
         $this->setupSidebar($dir_id, $this->directory->id);
     }
 
+    /**
+     * Upload a new file.
+     *
+     * @param String $folder_id Directory entry id of the folder to upload to
+     */
     public function upload_action($folder_id)
     {
+        PageLayout::setTitle(_('Datei hochladen'));
+
         $folder_id = $folder_id ?: $this->context_id;
 
         if (Request::isPost()) {
@@ -215,16 +232,18 @@ class Document_FilesController extends DocumentController
 
         $this->folder_id = $folder_id;
 
-        $this->setDialogLayout('icons/48/blue/upload.png');
-
-        if (Request::isXhr()) {
-            $this->response->add_header('X-Title', _('Datei hochladen'));
-
-        }
+        PageLayout::setTitle(_('Datei hochladen'));
     }
 
+    /**
+     * Edits a file.
+     *
+     * @param String $entry_id Directory entry id of the file
+     */
     public function edit_action($entry_id)
     {
+        PageLayout::setTitle(_('Datei bearbeiten'));
+
         $entry = new DirectoryEntry($entry_id);
 
         if (Request::isPost()) {
@@ -244,17 +263,24 @@ class Document_FilesController extends DocumentController
             return;
         }
 
-        $this->setDialogLayout('icons/48/blue/edit.png');
+        $this->setDialogLayout('icons/100/lightblue/' . get_icon_for_mimetype($entry->file->mime_type));
 
         $this->entry = $entry;
-
-        if (Request::isXhr()) {
-            $this->response->add_header('X-Title', _('Datei bearbeiten'));
-        }
     }
 
+    /**
+     * Move a file to another folder.
+     * 
+     * @param String $file_id   Direcory entry id of the file to move
+     *                          (use 'flashed' to read ids from from flash
+     *                          memory for a bulk operation)
+     * @param mixed  $source_id Optional folder id to return to after
+     *                          operation has succeeded
+     */
     public function move_action($file_id, $source_id = null)
     {
+        PageLayout::setTitle(_('Datei verschieben'));
+        
         if (Request::isPost()) {
             $folder_id = Request::option('folder_id');
 
@@ -297,8 +323,19 @@ class Document_FilesController extends DocumentController
         }
     }
 
+    /**
+     * Copy a file to another folder.
+     * 
+     * @param String $file_id   Direcory entry id of the file to copy
+     *                          (use 'flashed' to read ids from from flash
+     *                          memory for a bulk operation)
+     * @param mixed  $source_id Optional folder id to return to after
+     *                          operation has succeeded
+     */
     public function copy_action($file_id, $source_id = null)
     {
+        PageLayout::setTitle(_('Datei kopieren'));
+        
          if (Request::isPost()) {
             $folder_id = Request::option('folder_id');
             $folder = StudipDirectory::get($folder_id);
@@ -343,6 +380,13 @@ class Document_FilesController extends DocumentController
         }
     }
 
+    /**
+     * Checks whether it is possible to copy the files (given by their ids)
+     * to another folder by determining whether the remaining disk space is
+     * sufficient for the files.
+     *
+     * @param Array $ids Directory entry ids of the files to copy
+     */
     public function checkCopyQuota($ids)
     {
         $size = 0;
@@ -350,11 +394,16 @@ class Document_FilesController extends DocumentController
             $size += DirectoryEntry::find($id)->getSize();
         }
 
-        $restQuota = $this->userConfig['quota'] -  DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
+        $restQuota = $this->userConfig['quota'] - DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
 
         return $restQuota > $copySize;
     }
 
+    /**
+     * Deletes a file.
+     *
+     * @param String $id Directory entry id of the file to delete
+     */
     public function delete_action($id)
     {
         $entry = DirectoryEntry::find($id);
@@ -372,6 +421,16 @@ class Document_FilesController extends DocumentController
         $this->redirect('document/files/index/' . $parent_id);
     }
 
+    /**
+     * General handler for bulk actions. Support the following actions:
+     *
+     * - Download
+     * - Move
+     * - Copy
+     * - Delete
+     *
+     * @param String $folder_id Directory entry id of the origin folder
+     */
     public function bulk_action($folder_id)
     {
         $ids = Request::optionArray('ids');
@@ -416,7 +475,8 @@ class Document_FilesController extends DocumentController
     /**
      * Defines the elements in the sidebar.
      *
-     * @param String $current_dir Id of the current directory
+     * @param String $current_entry Directory entry id of the current folder
+     * @param String $current_dir   File id of the current folder
      */
     private function setupSidebar($current_entry, $current_dir)
     {

@@ -3,10 +3,9 @@
 /**
  * closed.php
  *
- *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @author      Stefan Osterloh <s.osterloh@uni-oldenburg.de>
- * @license     http://www.gnu.org/licenses/gpl-3.0
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     GPL2 or any later version
  * @copyright   Stud.IP Core-Group
  * @since       3.1
  */
@@ -29,11 +28,10 @@ class Document_ClosedController  extends AuthenticatedController
 
     public function index_action()
     {
-        if(strlen($this->userConfig['area_close_text']) == 0 || 
-                empty($this->userConfig)){
-            $this->message = sprintf('%s','keine Begründung');
-        }else{
-            $this->message = sprintf('%s',$this->userConfig['area_close_text']);
+        if (empty($this->userConfig) || strlen($this->userConfig['area_close_text']) == 0) {
+            $this->message = _('keine Begründung');
+        } else {
+            $this->message = $this->userConfig['area_close_text'];
         }
         $contact = new SiteinfoMarkupEngine();
         $this->support = $contact->uniContact();

@@ -2,16 +2,24 @@
 /**
  * download.php
  *
- * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
- * @license     http://www.gnu.org/licenses/gpl-3.0
- * @copyright   Stud.IP Core-Group
- * @since       3.1
+ * Encapsules all download possibilites of the personal file area.
+ *
+ * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license   GPL2 or any later version
+ * @copyright Stud.IP Core-Group
+ * @since     3.1
  */
 
 require_once 'app/controllers/authenticated_controller.php';
 
 class Document_DownloadController extends AuthenticatedController
 {
+    /**
+     * Overwritten constructor of the controller. Ensures no cid
+     * is present the request.
+     *
+     * @param Trails_Dispatcher $dispatcher
+     */
     public function __construct($dispatcher)
     {
         if (Request::get('cid')) {
@@ -26,6 +34,12 @@ class Document_DownloadController extends AuthenticatedController
     protected $download_handle = null;
     protected $download_remove = null;
 
+    /**
+     * Before filter ensures index is the action to be called.
+     * 
+     * @param String $action Action to execute
+     * @param Array $args    Arguments passed for the action (might be empty)
+     */
     public function before_filter(&$action, &$args)
     {
         if ($action !== 'index') {
@@ -36,6 +50,15 @@ class Document_DownloadController extends AuthenticatedController
         parent::before_filter($action, $args);
     }
 
+    /**
+     * Downloads a file, a folder or a bunch of either.
+     *
+     * @param String $entry_id Directory entry id of the file or folder or
+     *                         'flashed' for a bulk operation
+     * @param bool   $inline   Indicates whether the download should be
+     *                         marked as inline (to display the file in the
+     *                         browser)
+     */
     public function index_action($entry_id, $inline = false)
     {
         $download_files = array();
@@ -96,6 +119,12 @@ class Document_DownloadController extends AuthenticatedController
         }
     }
 
+    /**
+     * Downloads a single file.
+     *
+     * @param DirectoryEntry $entry  Directory entry to download
+     * @param bool           $inline Download as inline
+     */
     protected function download_file(DirectoryEntry $entry, $inline)
     {
         $file = $entry->file;
@@ -111,6 +140,12 @@ class Document_DownloadController extends AuthenticatedController
         $this->initiateDownload($inline, $file->filename, $file->mime_type, $file->size, $storage->open('r'));
     }
     
+    /**
+     * Downloads a bunch of files as a zip archive.
+     *
+     * @param Array  $files    Directory entries or files to download
+     * @param String $filename Filename for the archive.
+     */
     protected function download_files($files, $filename = 'Stud-IP.zip')
     {
         $files = (array)$files;
@@ -138,6 +173,17 @@ class Document_DownloadController extends AuthenticatedController
         
     }
 
+    /**
+     * Adds a file or folder to the zip archive.
+     *
+     * @param ZipArchive $zip    The actual zip archive
+     * @param mixed      $entry  Directory entry or file to add
+     * @param String     $path   Path to add the entry to (for subdirs)
+     * @param Array      $remove Since files are copied to temp folder,
+     *                           this array will contain the names of the
+     *                           copied files so they can be removed after
+     *                           the archive has been sent
+     */
     protected function addToZip(&$zip, $entry, $path = '', &$remove = array())
     {
         if ($entry instanceof DirectoryEntry) {
@@ -177,6 +223,13 @@ class Document_DownloadController extends AuthenticatedController
         }
     }
 
+    /**
+     * Sanitizes a filename by translating all umlauts to ascii characters,
+     * compressing dashes and whitespace and removing all invalid characters.
+     *
+     * @param String $filename "Dirty" filename
+     * @return String Sanitized filename
+     */
     protected function sanitizeFilename($filename)
     {
         // Remove umlauts, seems hackish but works great
@@ -193,6 +246,17 @@ class Document_DownloadController extends AuthenticatedController
         return $filename;
     }
 
+    /**
+     * Initiates the download. Sets correct headers and prepares the download
+     * handle which will be used to transmit the file in the after filter.
+     *
+     * @param bool     $inline    Send the file inline?
+     * @param String   $filename  Transmitted filename
+     * @param String   $mime_type Transmitted mime type
+     * @param int      $size      Transmitted file size
+     * @param resource $handle    Underlying file resource handle
+     * @see Document_DownloadController::after_filter
+     */
     protected function initiateDownload($inline, $filename, $mime_type, $size, $handle)
     {
         $response = $this->response;
@@ -219,6 +283,14 @@ class Document_DownloadController extends AuthenticatedController
         $this->download_handle = $handle;
     }
 
+    /**
+     * After filter of the controller actually transmit the file contents and
+     * removes all files that were created or copied during the download
+     * process.
+     *
+     * @param String $action Action that was executed
+     * @param Array  $args   Arguments that were passed
+     */
     public function after_filter($action, $args)
     {
         parent::after_filter($action, $args);

@@ -33,6 +33,14 @@ class DocumentController extends AuthenticatedController
             $this->redirect('document/files/index');
         }
     }
+    
+    public function after_filter($action, $args)
+    {
+        if (Request::isXhr() && PageLayout::getTitle()) {
+            $this->response->add_header('X-Title', PageLayout::getTitle());
+        }
+        parent::after_filter($action, $args);
+    }
 
     protected function setDialogLayout($icon = false)
     {

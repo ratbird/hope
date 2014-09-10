@@ -84,7 +84,7 @@
             </td>
             <td>
                 <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>" title="<?= _('Ein Verzeichnis nach oben wechseln') ?>">
-                    ..
+                    .. <small><?= _('Ein Verzeichnis nach oben wechseln') ?></small>
                 </a>
             </td>
             <td>&nbsp;</td>

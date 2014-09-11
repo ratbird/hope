@@ -272,11 +272,20 @@ jQuery(function ($) {
             }
         });
         $(document).on('load', '#layout_content img', function () {
+            var curr_height = $(document).height();
             if (doc_height !== curr_height) {
                 doc_height = curr_height;
                 $(document.body).trigger('sticky_kit:recalc');
             }
         });
+
+        // Specialized handler to trigger recalculation when wysiwyg
+        // instances are created.
+        if (STUDIP.WYSIWYG) {
+            $(document).on('load.wysiwyg', 'textarea', function () {
+                $(document.body).trigger('sticky_kit:recalc');
+            });
+        }
     }
     
     $('a.print_action').live('click', function (event) {

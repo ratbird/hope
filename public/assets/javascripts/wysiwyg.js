@@ -326,8 +326,10 @@ jQuery(function ($) {
             $(window).resize(stickyTools);
             editor.on('focus', stickyTools); // hidden toolbar might scroll off screen
 
-            // Trigger sticky_kit:recalc event on body so the sidebar will remain sticky
-            $(document.body).trigger('sticky_kit:recalc');
+            // Trigger load event for the editor event. Uses the underlying
+            // textarea element to ensure that the event will be catchable by
+            // jQuery.
+            $textarea.trigger('load.wysiwyg');
 
             // focus the editor so the user can immediately hack away...
             editor.focus();

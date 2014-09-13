@@ -43,8 +43,8 @@
             <? endif ?>
         </td>
         <td style="text-align: right">
-            <? if (in_array($values["status"], array("dozent", "tutor"))) : ?>
-                <? $adminmodule = $sem_class->getModule("admin"); ?>
+            <? if (in_array($group["user_status"], array("dozent", "tutor"))) : ?>
+                <? $adminmodule = $group["sem_class"]->getModule("admin"); ?>
                 <? if ($adminmodule) : ?>
                     <? $adminnavigation = $adminmodule->getIconNavigation($group['seminar_id'], 0, $GLOBALS['user']->id); ?>
                 <? endif ?>
@@ -57,7 +57,7 @@
                     </a>
                 <? endif ?>
 
-            <? elseif ($values["binding"]) : ?>
+            <? elseif ($group["binding"]) : ?>
                 <a href="<?= URLHelper::getLink('', array('auswahl' => $group['seminar_id'], 'cmd' => 'no_kill')) ?>">
                     <?= Assets::img('icons/20/grey/decline/door-leave.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
                 </a>

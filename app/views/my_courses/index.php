@@ -28,7 +28,7 @@
                     <? endif ?>
                     <col>
                     <col width="45px">
-                    <col width="<?= $nav_elements * 24 ?>px">
+                    <col width="<?= $nav_elements * 27 ?>px">
                     <col width=45px>
                 </colgroup>
                 <thead>

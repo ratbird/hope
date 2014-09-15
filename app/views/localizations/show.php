@@ -91,6 +91,9 @@ $translations = array(
     'Zeichen verbleibend: ' => _('Zeichen verbleibend: '),
     'Eingegebene Zeichen: ' => _('Eingegebene Zeichen: '),
 
+    // public/assets/javascripts/tour.js
+    'Fehler beim Aufruf des Tour-Controllers' => _('Fehler beim Aufruf des Tour-Controllers'),
+
     // public/assets/javascripts/updater.js
     'Bitte laden Sie die Seite neu, um fortzufahren' => _('Bitte laden Sie die Seite neu, um fortzufahren'),
     'Neu laden' => _('Neu laden'),

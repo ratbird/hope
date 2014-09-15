@@ -38,7 +38,13 @@
  */
 class CronjobTask extends SimpleORMap
 {
+    public $valid = false;
 
+    /**
+     * Configures the model.
+     *
+     * @param Array $config Optional configuration passed from derived class
+     */
     protected static function configure($config = array())
     {
         $config['db_table'] = 'cronjobs_tasks';
@@ -51,22 +57,37 @@ class CronjobTask extends SimpleORMap
     }
 
     /**
-     *
+     * The constructor sets the after_initialize callback which will load
+     * the associated php class.
      */
     public function __construct($id = null)
     {
-
         $this->registerCallback('after_initialize', 'loadClass');
 
         parent::__construct($id);
-
-//        $this->loadClass();
     }
 
+    /**
+     * Tries to load the underlying php class. This also determines the valid
+     * state of the task. If the class does not exists, the task is marked
+     * as not valid.
+     */
     protected function loadClass()
     {
-        if (!empty($this->class) && !class_exists($this->class)) {
-            require_once $GLOBALS['STUDIP_BASE_PATH'] . '/' . $this->filename;
+        if (empty($this->class)) {
+            return;
+        }
+
+        if (class_exists($this->class)) {
+            $this->valid = true;
+            return;
+        }
+
+        $filename = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $this->filename;
+
+        if (file_exists($filename)) {
+            $this->valid = true;
+            require_once $filename;
         }
     }
 
@@ -81,15 +102,22 @@ class CronjobTask extends SimpleORMap
     }
 
     /**
+     * Executes the task.
      *
+     * @param String $last_result Result of last executions
+     * @param Array  $parameters  Parameters to pass to the task
      */
     public function engage($last_result, $parameters = array())
     {
-        $task = new $this->class;
+        if ($this->valid) {
+            $task = new $this->class;
 
-        $task->setUp();
-        $result = $task->execute($last_result, $parameters);
-        $task->tearDown();
+            $task->setUp();
+            $result = $task->execute($last_result, $parameters);
+            $task->tearDown();
+        } else {
+            $result = $last_result;
+        }
 
         return $result;
     }
@@ -104,8 +132,17 @@ class CronjobTask extends SimpleORMap
     public function getValue($field)
     {
         if (in_array($field, words('description name parameters'))) {
-            $method = 'get' . ucfirst($field);
-            return call_user_func("{$this->class}::{$method}");
+            if ($this->valid) {
+                $method = 'get' . ucfirst($field);
+                return call_user_func("{$this->class}::{$method}");
+            } elseif ($field === 'description') {
+                return _('Unbekannt');
+            } elseif ($field === 'name') {
+                return preg_replace('/(_Cronjob)?(\.class)?\.php$/', '', basename($this->filename))
+                     . ' (' . _('fehlerhaft') . ')';
+            } elseif ($field === 'parameters') {
+                return array();
+            }
         }
         return parent::getValue($field);
     }

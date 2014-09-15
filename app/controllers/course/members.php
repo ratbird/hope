@@ -116,7 +116,7 @@ class Course_MembersController extends AuthenticatedController
         // Create new MembersModel, to get additionanl informations to a given Seminar
         $this->members = new MembersModel($this->course_id, $this->course_title);
         $this->members->checkUserVisibility();
-        
+
         // Set default sidebar image
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/person-sidebar.png');
@@ -288,7 +288,7 @@ class Course_MembersController extends AuthenticatedController
 
         $this->redirect('course/members/index');
     }
-    
+
     /**
      * Add members to a seminar.
      * @throws AccessDeniedException
@@ -299,11 +299,11 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-        
+
         // load MultiPersonSearch object
         $mp = MultiPersonSearch::load("add_autor" . $this->course_id);
         $sem = Seminar::GetInstance($this->course_id);
-        
+
         $countAdded = 0;
         foreach ($mp->getAddedUsers() as $a) {
             $msg = $this->members->addMember($a, 'autor', Request::get('consider_contingent'));
@@ -318,7 +318,7 @@ class Course_MembersController extends AuthenticatedController
         PageLayout::postMessage(MessageBox::success($text));
         $this->redirect('course/members/index');
     }
-    
+
      /**
      * Add dozents to a seminar.
      * @throws AccessDeniedException
@@ -329,7 +329,7 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_dozent) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-        
+
         // load MultiPersonSearch object
         $mp = MultiPersonSearch::load("add_dozent" . $this->course_id);
         $fail = false;
@@ -345,10 +345,10 @@ class Course_MembersController extends AuthenticatedController
         if ($fail === true) {
             PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.')));
         }
-        
+
         $this->redirect('course/members/index');
     }
-    
+
     /**
      * Helper function to add dozents to a seminar.
      */
@@ -377,15 +377,15 @@ class Course_MembersController extends AuthenticatedController
                 }
             }
             // new dozent was successfully insert
-            
+
             return MessageBox::success(sprintf(_('%s wurde hinzugefügt.'), get_title_for_status('dozent', 1, $sem->status)));
         } else {
             // sorry that was a fail
             return false;
-            
+
         }
     }
-    
+
     /**
      * Add tutors to a seminar.
      * @throws AccessDeniedException
@@ -396,16 +396,16 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
-        
+
         // load MultiPersonSearch object
         $mp = MultiPersonSearch::load("add_tutor" . $this->course_id);
-        
+
         foreach ($mp->getAddedUsers() as $a) {
             $this->addTutor($a);
         }
         $this->redirect('course/members/index');
     }
-    
+
     private function addTutor($tutor) {
         $sem = Seminar::GetInstance($this->course_id);
         if ($sem->addMember($tutor, "tutor")) {
@@ -435,8 +435,8 @@ class Course_MembersController extends AuthenticatedController
             $this->redirect('course/members/index');
         }
     }
-    
-    
+
+
     function import_autorlist_action() {
         global $perm;
         if (!Request::isXhr()) {
@@ -449,9 +449,9 @@ class Course_MembersController extends AuthenticatedController
             }
         }
         $this->accessible_df = $accessible_df;
-        
+
     }
-    
+
     /**
      * Old version of CSV import (copy and paste from teilnehmer.php
      * @global Object $perm
@@ -1050,7 +1050,7 @@ class Course_MembersController extends AuthenticatedController
             foreach ($course->members->findBy('status', 'autor') as $member) {
                 $course->aux->updateMember($member, Request::getArray($member->user_id));
             }
-        }       
+        }
         if (Request::submitted('export')) {
             $aux = $course->aux->getCourseData($course, true);
             $tmp_name = uniqid();
@@ -1139,7 +1139,7 @@ class Course_MembersController extends AuthenticatedController
     private function createSidebar($filtered_members)
     {
         $sidebar = Sidebar::get();
-        
+
         if ($this->is_tutor) {
             $widget = new ActionsWidget();
 
@@ -1169,14 +1169,14 @@ class Course_MembersController extends AuthenticatedController
                             'institute' => $sem_institutes)
                     );
 
-                    
+
                     // quickfilter: dozents of institut
                     $sql = "SELECT user_id FROM user_inst WHERE Institut_id = ? AND inst_perms = 'dozent'";
                     $db = DBManager::get();
                     $statement = $db->prepare($sql, array(PDO::FETCH_NUM));
                     $statement->execute(array(Seminar::getInstance($this->course_id)->getInstitutId()));
                     $membersOfInstitute = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-                    
+
                     // add "add dozent" to infobox
                     $mp = MultiPersonSearch::get('add_dozent' . $this->course_id)
                         ->setLinkText(sprintf(_('Neue/n %s eintragen'), $this->status_groups['dozent']))
@@ -1200,21 +1200,21 @@ class Course_MembersController extends AuthenticatedController
                     } else {
                         $search_template = 'user';
                     }
-                    
+
                     // create new search for tutor
                     $searchType = new PermissionSearch(
                             $search_template, sprintf(_('%s suchen'), get_title_for_status('tutor', 1, $sem->status)), 'user_id', array('permission' => array('dozent', 'tutor'),
                         'exclude_user' => array(),
                         'institute' => $sem_institutes)
                     );
-                    
+
                     // quickfilter: tutors of institut
                     $sql = "SELECT user_id FROM user_inst WHERE Institut_id = ? AND inst_perms = 'tutor'";
                     $db = DBManager::get();
                     $statement = $db->prepare($sql, array(PDO::FETCH_NUM));
                     $statement->execute(array(Seminar::getInstance($this->course_id)->getInstitutId()));
                     $membersOfInstitute = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-                    
+
                     // add "add tutor" to infobox
                     $mp = MultiPersonSearch::get("add_tutor" . $this->course_id)
                         ->setLinkText(sprintf(_('Neue/n %s eintragen'), $this->status_groups['tutor']))
@@ -1269,7 +1269,7 @@ class Course_MembersController extends AuthenticatedController
                              'icons/16/blue/add/community.png');
 
             $sidebar->addWidget($widget);
-        
+
             if (Config::get()->EXPORT_ENABLE) {
                 include_once $GLOBALS['PATH_EXPORT'] . '/export_linking_func.inc.php';
 
@@ -1287,17 +1287,17 @@ class Course_MembersController extends AuthenticatedController
                                  'icons/16/blue/export/file-text.png');
 
                 if (count($this->awaiting) > 0) {
-                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", "awaiting", _("Warteliste als rtf-Dokument exportieren"), 'passthrough');
+                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", $this->waiting_type, _("Warteliste als rtf-Dokument exportieren"), 'passthrough');
                     $widget->addLink(_('Warteliste als rtf-Dokument exportieren'),
                                      $this->parseHref($awaiting_rtf),
                                      'icons/16/blue/export/file-office.png');
 
-                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", "awaiting", _("Warteliste als csv-Dokument exportieren"), 'passthrough');
+                    $awaiting_csv = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "csv", "csv-warteliste", $this->waiting_type, _("Warteliste als csv-Dokument exportieren"), 'passthrough');
                     $widget->addLink(_('Warteliste als csv-Dokument exportieren'),
                                      $this->parseHref($awaiting_csv),
                                      'icons/16/blue/export/file-text.png');
                 }
-            
+
                 $sidebar->addWidget($widget);
             }
         } else {
@@ -1322,7 +1322,7 @@ class Course_MembersController extends AuthenticatedController
             $sidebar->addWidget($actions);
         }
     }
-    
+
     private function parseHref($string)
     {
         $temp = preg_match('/href="(.*?)"/', $string, $match); // Yes, you're absolutely right - this IS horrible!

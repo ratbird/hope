@@ -558,7 +558,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         $gruppe['no'] = _('keiner Funktion oder Gruppe zugeordnet');
     } else {
 
-        if ($filter != 'awaiting') {
+        if (!in_array($filter, words('awaiting claiming'))) {
             if (!$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['workgroup_mode']) {
                 $gruppe = array(
                     'dozent'   => _('DozentInnen'),
@@ -577,7 +577,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                 );
             }
         } else {
-            $gruppe['awaiting'] = _('Anmeldeliste');
+            $gruppe[$filter] = _('Anmeldeliste');
         }
     }
 
@@ -644,6 +644,23 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                         WHERE asu.seminar_id = :seminar_id AND asu.status != 'accepted'
                         GROUP BY aum.user_id ORDER BY position";
             $parameters[':seminar_id'] = $ex_sem_id;
+        } elseif ($key1 == 'claiming') {
+            $cs = CourseSet::getSetForCourse($ex_sem_id);
+            if (is_object($cs) && !$cs->hasAlgorithmRun()) {
+                $parameters[':users'] = array_keys(AdmissionPriority::getPrioritiesByCourse($cs->getId(), $ex_sem_id));
+            } else {
+                $parameters[':users'] = array();
+            }
+            $query = "SELECT ui.*, aum.*, '' as comment,
+                             0  AS admission_position,
+                             GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, user_studiengang.semester) SEPARATOR '; ') AS nutzer_studiengaenge
+                        FROM auth_user_md5 AS aum
+                        INNER JOIN user_info AS ui USING(user_id)
+                        LEFT JOIN user_studiengang USING(user_id)
+                        LEFT JOIN studiengaenge AS sg ON (user_studiengang.studiengang_id = sg.studiengang_id)
+                        LEFT JOIN abschluss AS a USING (abschluss_id)
+                        WHERE aum.user_id IN (:users)
+                        GROUP BY aum.user_id ORDER BY Nachname";
         } else {
             $query = "SELECT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) AS registration_date,
                              GROUP_CONCAT(CONCAT_WS(',', sg.name, a.name, us.semester) SEPARATOR '; ') AS nutzer_studiengaenge

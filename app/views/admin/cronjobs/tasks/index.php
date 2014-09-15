@@ -52,9 +52,11 @@
             <? endif; ?>
             </td>
             <td style="text-align: right">
-                <a data-lightbox href="<?= $controller->url_for('admin/cronjobs/tasks/execute/', $tasks[$i]->task_id) ?>">
+            <? if ($tasks[$i]->valid): ?>
+                <a data-dialog href="<?= $controller->url_for('admin/cronjobs/tasks/execute', $tasks[$i]->task_id) ?>">
                     <?= Assets::img('icons/16/blue/play', tooltip2(_('Aufgabe ausführen'))) ?>
                 </a>
+            <? endif; ?>
                 <a href="<?= $controller->url_for('admin/cronjobs/logs/task', $tasks[$i]->task_id) ?>">
                     <?= Assets::img('icons/16/blue/log', tooltip2(_('Log anzeigen'))) ?>
                 </a>

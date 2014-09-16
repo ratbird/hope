@@ -5,84 +5,106 @@
         list-style-type: none;
     }
 </style>
-<?
-$lastSemester = null;
-$allSsemesters = array();
-foreach ($dates as $key => $date) {
-    $currentSemester = Semester::findByTimestamp($date['date']);
-    if ($currentSemester && (!$lastSemester || ($currentSemester->getId() !== $lastSemester->getId()))) {
-        $allSsemesters[] = $currentSemester;
-        $lastSemester = $currentSemester;
+<?php
+    $lastSemester = null;
+    $allSemesters = array();
+    foreach ($dates as $key => $date) {
+        $currentSemester = Semester::findByTimestamp($date['date']);
+        if ($currentSemester && (
+            !$lastSemester ||
+            $currentSemester->getId() !== $lastSemester->getId()
+        )) {
+            $allSemesters[] = $currentSemester;
+            $lastSemester = $currentSemester;
+        }
     }
-}
-$lostDateKeys = array();
+    $lostDateKeys = array();
+
+    if (!count($dates)) {
+        PageLayout::postMessage(
+            MessageBox::info(_('Keine Termine vorhanden'))
+        );
+    }
+
+    foreach ($allSemesters as $semester) {
 ?>
-
-<? if (!count($dates)) : ?>
-    <? PageLayout::postMessage(MessageBox::info(_("Keine Termine vorhanden"))) ?>
-<? endif ?>
-
-<? foreach ($allSsemesters as $semester) : ?>
 <table class="dates default">
     <caption><?= htmlReady($semester['name']) ?></caption>
     <thead>
         <tr class="sortable">
-            <th class="sortasc"><?= _("Zeit") ?></th>
-            <th><?= _("Typ") ?></th>
-            <th><?= _("Thema") ?></th>
-            <th><?= _("Raum") ?></th>
+            <th class="sortasc"><?= _('Zeit') ?></th>
+            <th><?= _('Typ') ?></th>
+            <th><?= _('Thema') ?></th>
+            <th><?= _('Raum') ?></th>
         </tr>
     </thead>
     <tbody>
-    <? foreach ($dates as $key => $date) : ?>
-        <? $dateSemester = Semester::findByTimestamp($date['date']) ;?>
-        <? if ($dateSemester && ($semester->getId() === $dateSemester->getId())) : ?>
-        <?= $this->render_partial("course/dates/_date_row.php", compact("date", "dates", "key")) ?>
-        <? elseif(!$dateSemester && !in_array($key, $lostDateKeys)) : ?>
-            <? $lostDateKeys[] = $key ?>
-        <? endif ?>
-    <? endforeach ?>
+    <?php
+        foreach ($dates as $key => $date) {
+            $dateSemester = Semester::findByTimestamp($date['date']);
+            if ($dateSemester &&
+                $semester->getId() === $dateSemester->getId()
+            ) {
+                echo $this->render_partial(
+                    'course/dates/_date_row.php',
+                    compact('date', 'dates', 'key')
+                );
+            } elseif (!$dateSemester && !in_array($key, $lostDateKeys)) {
+                $lostDateKeys[] = $key;
+            }
+        }
+    ?>
     </tbody>
 </table>
-<? endforeach ?>
+<?php
+    }
 
-<? if (count($lostDateKeys)) : ?>
+    if (count($lostDateKeys)) {
+?>
 <table class="dates default">
-    <caption><?= _("Ohne Semester") ?></caption>
+    <caption><?= _('Ohne Semester') ?></caption>
     <thead>
     <tr class="sortable">
-        <th class="sortasc"><?= _("Zeit") ?></th>
-        <th><?= _("Typ") ?></th>
-        <th><?= _("Thema") ?></th>
-        <th><?= _("Raum") ?></th>
+        <th class="sortasc"><?= _('Zeit') ?></th>
+        <th><?= _('Typ') ?></th>
+        <th><?= _('Thema') ?></th>
+        <th><?= _('Raum') ?></th>
     </tr>
     </thead>
     <tbody>
-    <? foreach ($lostDateKeys as $key) : ?>
-        <? $date = $dates[$key] ?>
-        <?= $this->render_partial("course/dates/_date_row.php", compact("date", "dates", "key")) ?>
-    <? endforeach ?>
+    <?php 
+        foreach ($lostDateKeys as $key) {
+            $date = $dates[$key];
+            echo $this->render_partial(
+                'course/dates/_date_row.php',
+                compact('date', 'dates', 'key')
+            );
+        }
+    ?>
     </tbody>
 </table>
-<? endif ?>
-
+<?php
+    }
+?>
 <script>
-    jQuery(function () {
-        jQuery(".dates").tablesorter({
-            textExtraction: function (node) { return jQuery(node).data('timestamp') ? jQuery(node).data('timestamp') : jQuery(node).text();},
+    jQuery(function($) {
+        $('.dates').tablesorter({
+            textExtraction: function(node) {
+                var $node = $(node);
+                return $node.data('timestamp') || $node.text();
+            },
             cssAsc: 'sortasc',
             cssDesc: 'sortdesc'
         });
     });
 </script>
-
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
+$sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
 
 $actions = new ActionsWidget();
 $actions->addLink(
-    _("Als Doc-Datei runterladen"),
-    URLhelper::getURL("dispatch.php/course/dates/export")
+    _('Als Doc-Datei runterladen'),
+    URLhelper::getURL('dispatch.php/course/dates/export')
 );
 $sidebar->addWidget($actions);

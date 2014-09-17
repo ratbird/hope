@@ -112,7 +112,12 @@ jQuery(function($) {
             return String($node.data('timestamp') || $node.text()).trim();
         },
         cssAsc: 'sortasc',
-        cssDesc: 'sortdesc'
+        cssDesc: 'sortdesc',
+        sortList: [[0, 0], [3, 0]],
+        headers: {
+            0: { sortInitialOrder: 'asc' },
+            3: { sortInitialOrder: 'asc' }    
+        }
     });
 });
 </script>

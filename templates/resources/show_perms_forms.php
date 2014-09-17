@@ -28,42 +28,6 @@ use Studip\Button, Studip\LinkButton;
             <? endif; ?>
             </td>
 
-            <!-- Infobox -->
-            <td rowspan="8" valign="top" style="padding-left: 20px" align="right">
-            <?
-                $content[] = array('kategorie' => _("Raum:"),
-                    'eintrag' => array(
-                        array(
-                            'icon' => 'icons/16/black/info.png',
-                            'text' => htmlReady($resObject->getName())
-                        )
-                    )
-                );
-                $content[] = array('kategorie' => _("Informationen:"),
-                    'eintrag' => array(
-                        array(
-                            'icon' => 'icons/16/black/info.png',
-                            'text' => _("Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.") ."<br>".
-                                _("<b>Achtung:</b> Alle hier erteilten Berechtigungen gelten ebenfalls für die Ressourcen, die der gewählten Ressource untergeordnet sind!")
-                        ),
-
-                        array(
-                            'icon' => 'icons/16/black/search.png',
-                            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
-                                   . _('zur Ressourcensuche') . '</a>'
-                        )
-                    )
-                );
-
-                $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
-
-                $infobox->picture = 'sidebar/resources-sidebar.png';
-                $infobox->content = $content;
-
-                echo $infobox->render();
-            ?>
-            </td>
-
         </tr>
         <tr>
             <td>&nbsp;</td>
@@ -186,3 +150,12 @@ use Studip\Button, Studip\LinkButton;
     </tbody>
 </table>
 </form>
+
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(htmlReady($resObject->getName()));
+$action = new ActionsWidget();
+$action->addLink(_('Ressourcensuche'), URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
+
+$sidebar->addWidget($action);
+?>

@@ -67,28 +67,7 @@ use Studip\Button,
             <? endif; ?>
             </td>
 
-            <!-- Infobox -->
-            <? if (!$GLOBALS['suppress_infobox']) : ?>
-            <td rowspan="5" valign="top" style="padding-left: 20px" align="right">
-                <?
-                    $content[] = array('kategorie' => _("Informationen:"),
-                        'eintrag' => array(
-                            array(
-                                "icon" => "icons/16/black/info.png",
-                                'text' => _("Sie sehen hier die Einzelheiten der Belegung. Falls Sie über entsprechende Rechte verfügen, können Sie sie bearbeiten oder eine neue Belegung erstellen.")
-                            )
-                        )
-                    );
-
-                    $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
-
-                    $infobox->set_attribute('picture', 'sidebar/resources-sidebar.png' );
-                    $infobox->set_attribute('content', $content );
-
-                    echo $infobox->render();
-                ?>
-            </td>
-            <? endif ?>
+            
         </tr>
 
         <tr>

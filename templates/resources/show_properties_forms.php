@@ -45,39 +45,6 @@ use Studip\Button, Studip\LinkButton;
                 </label>
             </td>
 
-            <!-- Infobox -->
-            <td class="blank" rowspan="5" valign="top" style="padding-left: 20px" align="right">
-            <?
-                $content[] = array('kategorie' => _("Raum:"),
-                    'eintrag' => array(
-                        array(
-                            'icon' => 'icons/16/black/info.png',
-                            'text' => htmlReady($resObject->getName())
-                        )
-                    )
-                );
-                $content[] = array('kategorie' => _("Informationen:"),
-                    'eintrag' => array(
-                        array(
-                            'icon' => 'icons/16/black/info.png',
-                            'text' => _("Hier können Sie Ressourcen-Eigenschaften bearbeiten.")
-                        ),
-
-                        array(
-                            'icon' => 'icons/16/black/search.png',
-                            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
-                                   . _('zur Ressourcensuche') . '</a>'
-                        )
-                    )
-                );
-
-                $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
-                $infobox->picture = 'sidebar/resources-sidebar.png';
-                $infobox->content = $content;
-
-                echo $infobox->render();
-            ?>
-            </td>
         </tr>
         <tr>
             <td>&nbsp;</td>
@@ -215,3 +182,11 @@ use Studip\Button, Studip\LinkButton;
 
 </form>
 <br><br>
+<?
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(htmlReady($resObject->getName()));
+$action = new ActionsWidget();
+$action->addLink(_('Ressourcensuche'), URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
+
+$sidebar->addWidget($action);
+?>

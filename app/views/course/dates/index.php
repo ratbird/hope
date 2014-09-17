@@ -90,7 +90,7 @@
     </tr>
     </thead>
     <tbody>
-    <?php 
+    <?php
         foreach ($lostDateKeys as $key) {
             $date = $dates[$key];
             echo $this->render_partial(
@@ -105,16 +105,16 @@
     }
 ?>
 <script>
-    jQuery(function($) {
-        $('.dates').tablesorter({
-            textExtraction: function(node) {
-                var $node = $(node);
-                return $node.data('timestamp') || $node.text();
-            },
-            cssAsc: 'sortasc',
-            cssDesc: 'sortdesc'
-        });
+jQuery(function($) {
+    $('.dates').tablesorter({
+        textExtraction: function(node) {
+            var $node = $(node);
+            return String($node.data('timestamp') || $node.text()).trim();
+        },
+        cssAsc: 'sortasc',
+        cssDesc: 'sortdesc'
     });
+});
 </script>
 <?php
 $sidebar = Sidebar::get();

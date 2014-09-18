@@ -66,10 +66,7 @@ use Studip\Button,
                 <? endif; ?>
             <? endif; ?>
             </td>
-
-            
         </tr>
-
         <tr>
             <td valign="top">
                 <?=_("Datum/erster Termin:")?><br>

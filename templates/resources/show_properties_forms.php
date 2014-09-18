@@ -86,12 +86,12 @@ use Studip\Button, Studip\LinkButton;
                 <? foreach ($EditResourceData->selectFaculties() as $institute_id => $faculty): ?>
                     <option style="font-weight:bold;" value="<?= $institute_id ?>"
                             <? if ($institute_id == $resObject->getInstitutId()) echo 'selected'; ?>>
-                        <?= my_substr($faculty['Name'], 0, 50) ?>
+                        <?= htmlReady(my_substr($faculty['Name'], 0, 50)) ?>
                     </option>
                     <? foreach ($faculty['institutes'] as $institute_id => $name): ?>
                         <option style="padding-left: 1.5em;" value="<?= $institute_id ?>"
                                 <? if ($institute_id == $resObject->getInstitutId()) echo 'selected'; ?>>
-                            <?= my_substr($name, 0, 50) ?>
+                            <?= htmlReady(my_substr($name, 0, 50)) ?>
                         </option>
                     <? endforeach; ?>
                 <? endforeach; ?>

@@ -237,55 +237,68 @@ jQuery.ui.accordion.prototype.options.icons = {
 
 
 jQuery(function ($) {
-    // Activate sticky sidebar only on displays with a minimum width of
-    // 1024px
-    if (window.matchMedia && window.matchMedia('(min-width:1024px)').matches) {
-        // Store document height (we will need this to check for changes)
-        var doc_height = $(document).height();
+    // Store document height (we will need this to check for changes)
+    var doc_height = $(document).height();
 
-        // This function inits the sticky sidebar by using the StickyKit lib
-        // <http://leafo.net/sticky-kit/>
-        function stickySidebar () {
+    // This function inits the sticky sidebar by using the StickyKit lib
+    // <http://leafo.net/sticky-kit/>
+    function stickySidebar (is_sticky) {
+        if (arguments.length === 0) {
+            is_sticky = true;
+        }
+        if (is_sticky) {
             $('#layout-sidebar .sidebar').stick_in_parent({
                 offset_top: $('#barBottomContainer').outerHeight(true),
                 inner_scrolling: true
+            }).on('sticky_kit:stick sticky_kit:unbottom', function () {
+                var stuckHandler = function (top, left) {
+                    $('#layout-sidebar .sidebar').css('margin-left', -left);
+                };
+                STUDIP.Scroll.addHandler('sticky.horizontal', stuckHandler);
+                stuckHandler(0, $(window).scrollLeft());
+            }).on('sticky_kit:unstick sticky_kit:bottom', function () {
+                STUDIP.Scroll.removeHandler('sticky.horizontal');
+                $(this).css('margin-left', 0);
             });
-        };
-        stickySidebar();
-
-        // (De|Re)activate when help tours start|stop
-        $(document).on('tourstart.studip', function () {
-            $('#layout-sidebar .sidebar').trigger('sticky_kit:detach');
-        }).on('tourend.studip', function () {
-            stickySidebar();
-        });
-    
-        // Recalculcate positions on ajax and img load events.
-        // Inside the handlers the current document height is compared
-        // to the previous height before the event occured so recalculation
-        // only happens on actual changes
-        $(document).on('ajaxComplete', function () {
-            var curr_height = $(document).height();
-            if (doc_height !== curr_height) {
-                doc_height = curr_height;
-                $(document.body).trigger('sticky_kit:recalc');
-            }
-        });
-        $(document).on('load', '#layout_content img', function () {
-            var curr_height = $(document).height();
-            if (doc_height !== curr_height) {
-                doc_height = curr_height;
-                $(document.body).trigger('sticky_kit:recalc');
-            }
-        });
-
-        // Specialized handler to trigger recalculation when wysiwyg
-        // instances are created.
-        if (STUDIP.WYSIWYG) {
-            $(document).on('load.wysiwyg', 'textarea', function () {
-                $(document.body).trigger('sticky_kit:recalc');
-            });
+        } else {
+            STUDIP.Scroll.removeHandler('sticky.horizontal');
+            $('#layout-sidebar .sidebar').trigger('sticky_kit:unstick').trigger('sticky_kit:detach');
         }
+    };
+    stickySidebar();
+
+    // (De|Re)activate when help tours start|stop
+    $(document).on('tourstart.studip', function () {
+        stickySidebar(false);
+    }).on('tourend.studip', function () {
+        stickySidebar();
+    });
+
+    // Recalculcate positions on ajax and img load events.
+    // Inside the handlers the current document height is compared
+    // to the previous height before the event occured so recalculation
+    // only happens on actual changes
+    $(document).on('ajaxComplete', function () {
+        var curr_height = $(document).height();
+        if (doc_height !== curr_height) {
+            doc_height = curr_height;
+            $(document.body).trigger('sticky_kit:recalc');
+        }
+    });
+    $(document).on('load', '#layout_content img', function () {
+        var curr_height = $(document).height();
+        if (doc_height !== curr_height) {
+            doc_height = curr_height;
+            $(document.body).trigger('sticky_kit:recalc');
+        }
+    });
+
+    // Specialized handler to trigger recalculation when wysiwyg
+    // instances are created.
+    if (STUDIP.WYSIWYG) {
+        $(document).on('load.wysiwyg', 'textarea', function () {
+            $(document.body).trigger('sticky_kit:recalc');
+        });
     }
     
     $('a.print_action').live('click', function (event) {

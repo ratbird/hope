@@ -340,7 +340,12 @@ class Course extends SimpleORMap
     {
         $dates = $this->ex_dates->findBy('content', '', '<>');
         $dates->merge($this->dates);
-        $dates->orderBy('date', SORT_NUMERIC);
+        $dates->uasort(function($a, $b) {
+            if ($a->date === $b->date) {
+                return strnatcasecmp($a->getRoomName(), $b->getRoomName());
+            }
+            return $a->date < $b->date ? -1 : 1;
+        });
         return $dates;
     }
 }

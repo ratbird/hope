@@ -40,25 +40,8 @@
     </thead>
     <tbody>
     <?php
-        // convert $dates object into an array
-        $dateArray = array();
-        foreach ($dates as $key => $date) {
-            $dateArray[$key] = $date;
-        }
-
-        // sort the dates array by start time and room name
-        usort($dateArray, function($a, $b) {
-            if ($a->date === $b->date) {
-                // two dates at the same time shouldn't have the same room
-                // and if they have, they are indistinguishable (user-wise)
-                // therefore ignore 0 value for a->room === b->room
-                return $a->getRoom() <= $b->getRoom() ? -1 : 1;
-            }
-            return $a->date < $b->date ? -1 : 1;
-        });
-
         // print dates
-        foreach ($dateArray as $key => $date) {
+        foreach ($dates as $key => $date) {
             $dateSemester = Semester::findByTimestamp($date['date']);
             if ($dateSemester &&
                 $semester->getId() === $dateSemester->getId()
@@ -113,11 +96,7 @@ jQuery(function($) {
         },
         cssAsc: 'sortasc',
         cssDesc: 'sortdesc',
-        sortList: [[0, 0], [3, 0]],
-        headers: {
-            0: { sortInitialOrder: 'asc' },
-            3: { sortInitialOrder: 'asc' }    
-        }
+        sortList: [[0, 0]],
     });
 });
 </script>

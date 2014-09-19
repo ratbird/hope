@@ -356,7 +356,7 @@ class NewsController extends StudipController
         // perform search
         if (Request::submitted('area_search') OR Request::submitted('area_search_preset')) {
             $this->anker = 'news_areas';
-            $this->search_term = utf8_decode(Request::quoted('area_search_term'));
+            $this->search_term = studip_utf8decode(Request::quoted('area_search_term'));
             if (Request::submitted('area_search'))
                 $this->area_options_selectable = $this->search_area($this->search_term);
             else {

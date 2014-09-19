@@ -180,13 +180,6 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 
 // template-like output
 ?>
-<script>
-jQuery(function () {
-    STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
-    STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
-    STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
-});
-</script>
 <table width="99%" border="0" cellpadding="2" cellspacing="0">
 
 <?php
@@ -629,6 +622,11 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
     $widget->addElement($element);
     $sidebar->addWidget($widget);
 }
+PageLayout::addHeadElement('script', array('type' => 'text/javascript'),
+"jQuery(function () {
+    STUDIP.RoomRequestDialog.reloadUrlOnClose = '". URLHelper::getUrl() ."';
+    STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '". URLHelper::getUrl()."';
+});");
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');
 $template->content_for_layout = ob_get_clean();

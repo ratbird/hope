@@ -363,7 +363,7 @@ class TreeAbstract {
         $result = array();
         while ($item_id && $item_id !== 'root') {
             $item_id   = $this->tree_data[$item_id]['parent_id'];
-            $retsult[] = $item_id;
+            $result[] = $item_id;
         }
         return $result;
     }

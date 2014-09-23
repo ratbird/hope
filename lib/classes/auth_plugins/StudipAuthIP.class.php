@@ -26,7 +26,7 @@ class StudipAuthIP extends StudipAuthAbstract {
      * @return user ip
      */
     private static function getUserIP() {
-        $fields = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR');
+        $fields = array('REMOTE_ADDR');
         foreach ($fields as $field) {
             $ip = filter_input(INPUT_SERVER, $field);
             if (filter_var($ip, FILTER_VALIDATE_IP)) {

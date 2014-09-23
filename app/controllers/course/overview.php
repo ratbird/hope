@@ -13,7 +13,6 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/Seminar.class.php';
 include 'lib/showNews.inc.php';
-include 'lib/show_dates.inc.php';
 if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }

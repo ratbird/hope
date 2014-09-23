@@ -48,7 +48,6 @@ javascripts:
     - javascripts/news.js
     - javascripts/markup.js
     - javascripts/messages.js
-    - javascripts/termine.js
     - javascripts/quick_search.js
     - javascripts/multi_select.js
     - javascripts/multi_person_search.js

@@ -10,7 +10,7 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/termine.php';
+require_once 'app/controllers/calendar/contentbox.php';
 
 class TerminWidget extends StudIPPlugin implements PortalPlugin
 {
@@ -22,7 +22,7 @@ class TerminWidget extends StudIPPlugin implements PortalPlugin
     public function getPortalTemplate()
     {
         $dispatcher = new StudipDispatcher();
-        $controller = new TermineController($dispatcher);
+        $controller = new Calendar_ContentboxController($dispatcher);
         $response = $controller->relay('calendar/contentbox/display/'.$GLOBALS['user']->id);
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;

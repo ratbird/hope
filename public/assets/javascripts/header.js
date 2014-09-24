@@ -39,7 +39,10 @@
 
 STUDIP.HeaderIcons = {
     canvasRender: function () {
-        var img = this;
+        var img = jQuery("<img>")
+                .css({width:"56px", height:"56px"})
+                .attr({"src": this.src, 'data-badge': jQuery(this).attr("data-badge")});
+        console.log(img);
         var canvas_normal = jQuery(this).parent().find(".normal");
         var canvas_highlighted = jQuery(this).parent().find(".highlighted");
         var drawCanvas = function (img, canvas, highlight) {
@@ -102,7 +105,7 @@ STUDIP.HeaderIcons = {
         };
         drawCanvas(img, canvas_normal, false);
         drawCanvas(img, canvas_highlighted, true);
-        jQuery(img).closest("a").addClass("canvasready");
+        jQuery(this).closest("a").addClass("canvasready");
     },
     render: function (selector) {
         jQuery.each(jQuery(selector), function (index, img) {

@@ -130,10 +130,9 @@ class ExternElementStudipLink extends ExternElement {
                 $this->config->getValue($this->name, "linktext"));
         if ($this->config->getValue($this->name, "image")) {
             if ($image_url = $this->config->getValue($this->name, "imageurl"))
-                $img = "<img border=\"0\" align=\"absmiddle\" src=\"$image_url\">";
+                $img = Assets::img($image_url);
             else {
-                $img = '<img border="0" src="';
-                $img .= $GLOBALS['ASSETS_URL'] . 'images/icons/16/blue/door-enter.png" align="absmiddle">';
+                $img = Assets::img('icons/16/blue/door-enter.png');
             }
             $out .= sprintf("&nbsp;<a href=\"%s\"%s target=\"_blank\">%s</a>", $args['link'],
                     $this->config->getAttributes($this->name, "a"), $img);

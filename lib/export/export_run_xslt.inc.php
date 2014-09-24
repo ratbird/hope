@@ -160,18 +160,24 @@ else
         }
 
 
-        $xml_printimage = ' <a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '" target="_blank"><img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
+        $xml_printimage = ' <a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '" target="_blank">';
+        $xml_printimage.= Assets::img($export_icon['xml'], array('class' => 'text-top'));
+        $xml_printimage.= '</a>';
         $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '" class="tree">' . htmlReady($xml_filename) . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . '<br>';
 
-        $xslt_printimage = ' <a href="'. GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xslt'] . '"></a>';
+        $xslt_printimage = ' <a href="'. GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) . '">';
+        $xslt_printimage.= Assets::img($export_icon['xslt'], array('class' => 'text-top'));
+        $xslt_printimage.= '</a>';
         $xslt_printlink = ' <a href="' . GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) .  '" class="tree"> ' . $xslt_files[$choose]['name'] . '.xsl</a>';
         $xslt_printdesc = _("XSLT-Datei");
         $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu öffnen.") . '<br>';
 
         if ($xslt_process) {
-            $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '"></a>';
+            $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '">';
+            $result_printimage.= Assets::img($export_icon[$format], array('class' => 'text-top'));
+            $result_printimage.= '</a>';
             $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree"> ' . htmlReady($xslt_filename) . '.' . htmlReady($format) . '</a>';
             $result_printdesc = _("Ausgabe-Datei");
             $result_printcontent = _("Dies ist die fertige Ausgabedatei.") . "<br>";

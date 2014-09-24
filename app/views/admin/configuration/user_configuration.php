@@ -107,7 +107,7 @@ use Studip\Button, Studip\LinkButton;
 <?
 $sidebar = Sidebar::Get();
 $sidebar->setTitle(PageLayout::getTitle() ? : _('Konfiguration'));
-$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setImage('sidebar/admin-sidebar.png');
 
 $actions = new ActionsWidget();
 $actions->addLink(_('Globale Konfiguration'),$controller->url_for('admin/configuration/configuration'), 'icons/16/blue/admin.png');

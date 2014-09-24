@@ -60,7 +60,7 @@ class CourseNavigation extends Navigation
         parent::__construct($coursetext, $courselink);
 
         if (is_object($user) && !$perm->have_perm('root')) {
-            $this->setImage('icons/28/lightblue/seminar.png', array('title' => $courseinfo, "@2x" => TRUE));
+            $this->setImage('icons/lightblue/seminar.svg', array('title' => $courseinfo));
         }
     }
 

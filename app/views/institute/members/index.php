@@ -48,7 +48,10 @@ if ($inst_id != '' && $inst_id != '0') {
                     <td class="table_row_even">
                         <font size="-1">
                             <br>
-                            <?=sprintf(_("Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken."), "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",  '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/mail.png" border="0">', "</a>");?>
+                            <?= sprintf(_('Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken.'),
+                                "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",
+                                Assets::img('icons/16/blue/mail.png'),
+                                "</a>");?>
                         </font>
                     </td>
                 </tr>
@@ -58,7 +61,7 @@ if ($inst_id != '' && $inst_id != '0') {
                             <br>
                             <?=sprintf(_("Klicken Sie auf %s%s Stud.IP Nachricht an alle MitarbeiterInnen%s, um eine interne Nachricht an alle MitarbeiterInnen zu verschicken."),
                                 "<a href=\"".URLHelper::getLink("sms_send.php?inst_id=$inst_id&subject=" . urlencode(_("MitarbeiterInnen-Rundmail - ". $SessSemName[0])))."\">",
-                                '<img src="'.Assets::image_path('icons/16/blue/mail.png').'" border="0">',
+                                Assets::img('icons/16/blue/mail.png'),
                                 "</a>"
                             );?>
                         </font>
@@ -114,7 +117,7 @@ if ($inst_id != '' && $inst_id != '0') {
     <?
 }
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
+$sidebar->setImage('sidebar/person-sidebar.png');
 $widget = new ViewsWidget();
 $widget->addLink(_('Standard'), URLHelper::getURL('?extend=no'))->setActive($extend != 'yes');
 $widget->addLink(_('Erweitert'), URLHelper::getURL('?extend=yes'))->setActive($extend == 'yes');

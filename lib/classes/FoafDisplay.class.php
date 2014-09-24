@@ -196,8 +196,6 @@ class FoafDisplay
         $titel="<a href=\"$link\" class=\"tree\">$titel</a>";
 
         // AB HIER AUSGABE
-        //TODO: in template umwandeln, was ist mit $GLOBALS['ASSETS_URL'], gibt
-        // es da nicht ein Step, dass anstelle von Globals eine Assets-Klasse benutzt werden soll?
 
         // kopfzeile
         echo '<a name="foaf"></a>';

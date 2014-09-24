@@ -159,7 +159,9 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
         $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
         $export_weiter_button = "<br><br><center>" . Button::create('<< ' . _('Zurück'), 'back') . "</center></form>";
-        $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
+        $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '">';
+        $xml_printimage.= Assets::img($export_icon['xml']);
+        $xml_printimage.= '</a>';
         $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '" class="tree">' . htmlReady($xml_filename) . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . "<br>";

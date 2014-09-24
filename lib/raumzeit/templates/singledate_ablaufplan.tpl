@@ -7,12 +7,15 @@ use Studip\Button, Studip\LinkButton;
 <TR style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL'].(($_SESSION['issue_open'][$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
+            <?= Assets::img($_SESSION['issue_open'][$tpl['sd_id']]
+                            ? 'images/icons/16/blue/arr_1down.png'
+                            : 'images/icons/16/blue/arr_1right.png',
+                            array('class' => 'middle')) ?>
         </A>
     </TD>
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
-        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
+        <?= Assets::img('icons/16/blue/date.png', array('class' => 'middle')) ?>
     </TD>
     <TD nowrap="nowrap" class="<?=$tpl['class']?>" valign="bottom">
         <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
@@ -115,11 +118,11 @@ use Studip\Button, Studip\LinkButton;
 <? elseif ($tpl['comment']) : ?>
 <tr style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
-        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL']. 'images/icons/16/blue/arr_1right.png'?>">
+        <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'middle')) ?>
     </TD>
     <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
-        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
+        <?= Assets::img('icons/16/blue/date.png', array('class' => 'middle')) ?>
     </TD>
     <TD nowrap="nowrap" class="content_title_red" valign="bottom">
                 <i><?= htmlReady($tpl['art']) ?>:&nbsp;</i>

@@ -52,8 +52,11 @@ $inputs = array(
 
                 <td style="text-align: right; vertical-align: bottom;">
                     <input type="hidden" name="lock_id[]" value="<?= $lock['lock_id'] ?>">
-    
-                    <input type="image" name="lock_sent" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" border="0" <?= tooltip(_('Diesen Eintrag speichern')) ?> class="text-top">
+
+                    <?= Assets::input('icons/16/blue/accept.png', tooltip2(_('Diesen Eintrag speichern')) + array(
+                            'name' => 'lock_sent',
+                            'class' => 'text-top',
+                    )) ?>
                     <a href="<?= URLHelper::getLink('?kill_lock=' . $lock['lock_id']) ?>">
                         <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diesen Eintrag löschen'))) ?>
                     </a>

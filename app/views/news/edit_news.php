@@ -1,8 +1,8 @@
 <? use Studip\Button, Studip\LinkButton ?>
 <? if(!empty($flash['question_text'])) : ?>
     <? $form_content = array('news_isvisible' => htmlReady(serialize($news_isvisible)),
-              'news_selectable_areas' => htmlReady(serialize($area_options_selectable)), 
-              'news_selected_areas' => htmlReady(serialize($area_options_selected)), 
+              'news_selectable_areas' => htmlReady(serialize($area_options_selectable)),
+              'news_selected_areas' => htmlReady(serialize($area_options_selected)),
               'news_basic_js' => '',
               'news_comments_js' => '',
               'news_areas_js' => '',
@@ -19,12 +19,12 @@
 <? endif ?>
 <form action="<?=URLHelper::getURL('dispatch.php/'.$route.'#anker')?>" method="POST" rel="<?=Request::isXhr() ? 'update_dialog' : ''?>">
 <?=CSRFProtection::tokenTag(); ?>
-<input type="hidden" name="news_basic_js" value=""> 
-<input type="hidden" name="news_comments_js" value=""> 
-<input type="hidden" name="news_areas_js" value=""> 
-<input type="hidden" name="news_isvisible" value="<?=htmlReady(serialize($news_isvisible))?>"> 
-<input type="hidden" name="news_selectable_areas" value="<?=htmlReady(serialize($area_options_selectable));?>"> 
-<input type="hidden" name="news_selected_areas" value="<?=htmlReady(serialize($area_options_selected))?>"> 
+<input type="hidden" name="news_basic_js" value="">
+<input type="hidden" name="news_comments_js" value="">
+<input type="hidden" name="news_areas_js" value="">
+<input type="hidden" name="news_isvisible" value="<?=htmlReady(serialize($news_isvisible))?>">
+<input type="hidden" name="news_selectable_areas" value="<?=htmlReady(serialize($area_options_selectable));?>">
+<input type="hidden" name="news_selected_areas" value="<?=htmlReady(serialize($area_options_selected))?>">
 <div id="news_dialog_content" class="news_dialog_content">
 <? if (count($_SESSION['messages'])) : ?>
     <? $anker = ''; ?>
@@ -38,8 +38,10 @@
         <table class="default nohover news_category_header">
             <thead><tr>
                 <th width="26">
-                    <input name="toggle_news_basic" type="image" aria-label="<?= _('Formular für Grunddaten der Ankündigung einblenden oder ausblenden') ?>"
-                        src="<?=$news_isvisible['news_basic'] ? Assets::image_path('icons/16/blue/arr_1down.png') : Assets::image_path('icons/16/blue/arr_1right.png')?>" <?= tooltip(_('Grunddaten ein-/ausblenden')) ?>>
+                    <?= Assets::input('icons/16/blue/' . ($news_isvisible['news_basic'] ? 'arr_1down' : 'arr_1right') . '.png',
+                                      tooltip2(_('Formular für Grunddaten der Ankündigung einblenden oder ausblenden')) + array(
+                                          'name' => 'toggle_news_basic',
+                    )) ?>
                 </th>
                 <th><?=_("Grunddaten")?></th>
             </tr></thead>
@@ -50,7 +52,7 @@
                 <tr>
                     <td colspan="2">
                         <label><?= _("Titel") ?><br>
-                        <input type="text" name="news_topic" class="news_topic news_prevent_submit" aria-label="<?= _('Titel der Ankündigung') ?>" 
+                        <input type="text" name="news_topic" class="news_topic news_prevent_submit" aria-label="<?= _('Titel der Ankündigung') ?>"
                                value="<?= htmlReady($news['topic']) ?>"></label>
                     </td>
                 </tr>
@@ -58,8 +60,8 @@
                     <td colspan="2">
                         <label><?= _("Inhalt") ?><br>
                         <? list ($body, $admin_msg) = explode("<admin_msg>", $news['body']); ?>
-                        <textarea class="news_body add_toolbar" name="news_body" rows="6" 
-                            wrap="virtual" placeholder="<?= _('Geben Sie hier den Ankündigungstext ein') ?>" 
+                        <textarea class="news_body add_toolbar" name="news_body" rows="6"
+                            wrap="virtual" placeholder="<?= _('Geben Sie hier den Ankündigungstext ein') ?>"
                             aria-label="<?= _('Inhalt der Ankündigung') ?>"><?= htmlReady($body) ?></textarea></label>
                     </td>
                 </tr>
@@ -79,11 +81,15 @@
                         <a name='anker'></a>
                     <? endif ?>
                     <? if ($news['allow_comments']): ?>
-                        <input type="hidden" name="news_allow_comments" value="1"> 
-                        <input type="image" name="comments_status_deny" src="<?= Assets::image_path('icons/16/blue/checkbox-checked.png')?>" aria-label="<?= _('Kommentare sperren') ?>">
+                        <input type="hidden" name="news_allow_comments" value="1">
+                        <?= Assets::input('icons/16/blue/checkbox-checkbox.png', tooltip2(_('Kommentare sperren')) + array(
+                                'name' => 'comments_status_deny',
+                        )) ?>
                         <?= _('Kommentare zulassen') ?>
                     <? else : ?>
-                        <input type="image" name="comments_status_allow" src="<?= Assets::image_path('icons/16/blue/checkbox-unchecked.png')?>" aria-label="<?= _('Kommentare zulassen') ?>">
+                        <?= Assets::input('icons/16/blue/checkbox-unchecked.png', tooltip2(_('Kommentare zulassen')) + array(
+                                'name' => 'comments_status_allow',
+                        )) ?>
                         <?= _('Kommentare zulassen') ?>
                     <? endif ?>
                     </td>
@@ -99,11 +105,13 @@
         <thead>
             <tr>
                 <th width="26">
-                    <input name="toggle_news_comments" type="image" aria-label="<?= _('Formular für Kommentarverwaltung der Ankündigung einblenden oder ausblenden') ?>"
-                        src="<?=$news_isvisible['news_comments'] ? Assets::image_path('icons/16/blue/arr_1down.png') : Assets::image_path('icons/16/blue/arr_1right.png')?>" <?= tooltip(_('Kommentare ein-/ausblenden')) ?>>
+                    <?= Assets::input('icons/16/blue/' . ($news_isvisible['news_comments'] ? 'arr_1down' : 'arr_1right') . '.png',
+                                      tooltip2(_('Formular für Kommentarverwaltung der Ankündigung einblenden oder ausblenden')) + array(
+                                          'name' => 'toggle_news_comments',
+                    ))?>
                 </th>
                 <th>
-                <? if ($news['allow_comments']) : ?>        
+                <? if ($news['allow_comments']) : ?>
                     <?=_("Kommentare zu dieser Ankündigung")?>
                 <? else : ?>
                     <?=_("Kommentare zu dieser Ankündigung")?>
@@ -146,8 +154,10 @@
         <thead>
             <tr>
                 <th width="26">
-                    <input name="toggle_news_areas" type="image" aria-label="<?= _('Formular für Bereichszuordnungen der Ankündigung einblenden oder ausblenden') ?>" 
-                        src="<?=$news_isvisible['news_areas'] ? Assets::image_path('icons/16/blue/arr_1down.png') : Assets::image_path('icons/16/blue/arr_1right.png')?>" <?= tooltip(_('Bereiche ein-/ausblenden')) ?>>
+                    <?= Assets::input('icons/16/blue/' . ($news_isvisible['news_areas'] ? 'arr_1down' : 'arr_1right') . '.png',
+                                      tooltip2(_('Formular für Bereichszuordnungen der Ankündigung einblenden oder ausblenden')) + array(
+                                          'name' => 'toggle_news_areas',
+                    )) ?>
                 </th>
                 <th colspan="2"><?=_('In weiteren Bereichen anzeigen')?></th>
             </tr>
@@ -158,7 +168,7 @@
             <tbody>
                 <tr>
                     <td colspan="3">
-                        <select name="search_preset" aria-label="<?= _('Vorauswahl bestimmter Bereiche, alternativ zur Suche') ?>" 
+                        <select name="search_preset" aria-label="<?= _('Vorauswahl bestimmter Bereiche, alternativ zur Suche') ?>"
                                 onchange="jQuery('input[name=area_search_preset]').click()">
                         <option><?=_('--- Suchvorlagen ---')?></option>
                         <? foreach($search_presets as $value => $title) : ?>
@@ -166,17 +176,20 @@
                                 <?=htmlReady($title)?>
                             </option>
                         <? endforeach ?>
-                        </select>                
-                        <input type="image" name="area_search_preset" src="<?= Assets::image_path('icons/16/blue/accept.png')?>" aria-label="<?= _('Vorauswahl anwenden') ?>">
+                        </select>
+                        <?= Assets::input('icons/16/blue/accept.png', tooltip2(_('Vorauswahl anwenden')) + array(
+                                'name' => 'area_search_preset',
+                        )) ?>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3">
                         <label>
-                        <input name="area_search_term" class="news_search_term" type="text" placeholder="<?=_('Suchen')?>" 
-                               aria-label="<?= _('Suchbegriff') ?>"> 
-                        <input type="image" name="area_search" src="<?= Assets::image_path('icons/16/blue/search.png')?>" 
-                               aria-label="<?= _('Suche starten') ?>">
+                        <input name="area_search_term" class="news_search_term" type="text" placeholder="<?=_('Suchen')?>"
+                               aria-label="<?= _('Suchbegriff') ?>">
+                        <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Suche starten')) + array(
+                                'name' => 'area_search',
+                        )) ?>
                         </label>
                     </td>
                 </tr>
@@ -184,12 +197,12 @@
                     <td colspan="3">
                         <div class="news_area_selectable">
                             <label><?=_('Suchergebnis')?><br>
-                            <select name="area_options_selectable[]" class="news_area_options" size="7" multiple 
+                            <select name="area_options_selectable[]" class="news_area_options" size="7" multiple
                                     aria-label="<?= _('Gefundene Bereiche, die der Ankündigung hinzugefügt werden können') ?>"
                                     ondblclick="jQuery('input[name=news_add_areas]').click()">
                             <? foreach ($area_structure as $area_key => $area_data) : ?>
                                 <? if (count($area_options_selectable[$area_key])) : ?>
-                                    <option disabled class="news_area_title" 
+                                    <option disabled class="news_area_title"
                                             style="background-image: url('<?=Assets::image_path('icons/16/white/'.$area_data['icon'])?>');">
                                         <?=htmlReady($area_data['title'])?>
                                     </option>
@@ -208,12 +221,16 @@
                             <br>
                             <br>
                             <br>
-                            <input type="image" name="news_add_areas" src="<?= Assets::image_path('icons/16/blue/arr_2right.png')?>" aria-label="<?= _('In den Suchergebnissen markierte Bereiche der Ankündigung hinzufügen') ?>">
+                            <?= Assets::input('icons/16/blue/arr_2right.png', tooltip2(_('In den Suchergebnissen markierte Bereiche der Ankündigung hinzufügen')) + array(
+                                    'name' => 'news_add_areas',
+                            )) ?>
                             <br><br>
-                            <input type="image" name="news_remove_areas" src="<?= Assets::image_path('icons/16/blue/arr_2left.png')?>" aria-label="<?= _('Bei den bereits ausgewählten Bereichen die markierten Bereiche entfernen') ?>">
+                            <?= Assets::input('icons/16/blue/arr_2left.png', tooltip2(_('Bei den bereits ausgewählten Bereichen die markierten Bereiche entfernen')) + array(
+                                    'name' => 'news_remove_areas',
+                            )) ?>
                         </div>
                         <div class="news_area_selected">
-                            <? foreach ($area_structure as $area_key => $area_data) : 
+                            <? foreach ($area_structure as $area_key => $area_data) :
                                 $area_count += (int) count($area_options_selected[$area_key]);
                             endforeach ?>
                             <label>
@@ -226,17 +243,17 @@
                                     <?=sprintf(_('%s Bereiche ausgewählt'), $area_count)?>
                                 <? endif ?>
                             </div>
-                            <select name="area_options_selected[]" class="news_area_options" size="7" multiple 
+                            <select name="area_options_selected[]" class="news_area_options" size="7" multiple
                                     aria-label="<?= _('Bereiche, in denen die Ankündigung angezeigt wird') ?>"
                                     ondblclick="jQuery('input[name=news_remove_areas]').click()">
                             <? foreach ($area_structure as $area_key => $area_data) : ?>
                                 <? if (count($area_options_selected[$area_key])) : ?>
-                                    <option disabled  class="news_area_title" 
+                                    <option disabled  class="news_area_title"
                                             style="background-image: url('<?=Assets::image_path('icons/16/black/'.$area_data['icon'])?>');">
                                         <?=htmlReady($area_data['title'])?>
                                     </option>
                                     <? foreach ($area_options_selected[$area_key] as $area_option_key => $area_option_title) : ?>
-                                        <option <?= (StudipNews::haveRangePermission('edit', $area_option_key) OR $may_delete) ? 'value="'.$area_option_key.'"' : 'disabled'?> 
+                                        <option <?= (StudipNews::haveRangePermission('edit', $area_option_key) OR $may_delete) ? 'value="'.$area_option_key.'"' : 'disabled'?>
                                                 <?=tooltip($area_option_title);?>>
                                             <?= htmlReady(mila($area_option_title))?>
                                         </option>
@@ -255,7 +272,7 @@
     <br>
 </div>
 <div class="news_dialog_buttons">
-<?  if ($news["mkdate"]) : ?>    
+<?  if ($news["mkdate"]) : ?>
     <?= Button::createAccept(_('Änderungen speichern'), 'save_news') ?>
 <? else : ?>
     <?= Button::createAccept(_('Ankündigung erstellen'), 'save_news') ?>
@@ -274,7 +291,7 @@
     });
     jQuery('input[name=area_search_term]').keydown(function(event) {
         if (event.which === 13) {
-            jQuery('input[name=area_search]').click(); 
+            jQuery('input[name=area_search]').click();
             event.preventDefault();
         }
     });

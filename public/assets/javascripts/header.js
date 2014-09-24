@@ -40,42 +40,30 @@
 STUDIP.HeaderIcons = {
     canvasRender: function () {
         var img = this;
-        jQuery(img).closest("a").find("canvas.headericon").each(function (index, canvas) {
-            jQuery(canvas).attr({
-                'width': "42px",
-                'height': "32px"
-            });
-
+        var canvas = jQuery("<canvas/>").attr({width: "84px", height: "64px"});
+        var drawCanvas = function (img, canvas, highlight) {
             var icon   = jQuery(img)[0];
             var number = parseInt(jQuery(img).data("badge"), 10);
             canvas = jQuery(canvas)[0];
             var ctx = canvas.getContext("2d");
-            if (window.devicePixelRatio) {
-                var hidefCanvasWidth = parseInt(jQuery(canvas).attr('width'), 10);
-                var hidefCanvasHeight = parseInt(jQuery(canvas).attr('height'), 10);
-                var hidefCanvasCssWidth = hidefCanvasWidth;
-                var hidefCanvasCssHeight = hidefCanvasHeight;
-                jQuery(canvas).attr('width', hidefCanvasWidth * window.devicePixelRatio);
-                jQuery(canvas).attr('height', hidefCanvasHeight * window.devicePixelRatio);
-                jQuery(canvas).css('width', hidefCanvasCssWidth);
-                jQuery(canvas).css('height', hidefCanvasCssHeight);
-                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-            }
 
-            ctx.clearRect(0,0,42,32);
+            ctx.clearRect(0,0,84,64);
             var image = new Image();
             image.src = icon.src;
-            if (image.width === 128) {
+            if (image.width === 128 && image.height === 32) {
                 //old 32x128 header images
                 ctx.drawImage(icon, 0, 5, 106, 28, 5, 5,  28 * (image.width / image.height), 28);
             } else {
-                ctx.drawImage(icon, 7, 2,  28 * (image.width / image.height), 28);
+                if (!image.width) {
+                    image.width = image.height = 56;
+                }
+                ctx.drawImage(image, 14, 8,  56 * (image.width / image.height), 56);
             }
             var filterCanvas = function (filter) {
                 if (canvas.width > 0 && canvas.height > 0) {
                     var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     filter(imageData);
-                    ctx.clearRect(0,0,42,32);
+                    ctx.clearRect(0,0,84,64);
                     ctx.putImageData(imageData, 0, 0);
                 }
             }
@@ -88,44 +76,51 @@ STUDIP.HeaderIcons = {
                 }
                 return pixels;
             };
-            if (jQuery(canvas).is(".highlighted")) {
+            if (highlight) {
                 filterCanvas(brightness);
             }
 
-
             if (number > 0) {
-                var x = 34;
+                var x = 68;
                 ctx.globalCompositeOperation = "destination-out";
                 ctx.beginPath();
-                ctx.arc(x, 8, 11, 0, 2*Math.PI);
+                ctx.arc(x, 16, 22, 0, 2*Math.PI);
                 ctx.fill();
 
                 ctx.globalCompositeOperation = "source-over";
                 ctx.beginPath();
-                ctx.arc(x, 8, 8, 0, 2*Math.PI);
+                ctx.arc(x, 16, 16, 0, 2*Math.PI);
                 ctx.fillStyle="#d60000";
                 ctx.fill();
 
-                ctx.font = "10px " + jQuery("body").css("font-family");
+                ctx.font = "20px " + jQuery("body").css("font-family");
                 ctx.textAlign = "center";
                 ctx.fillStyle="white";
-                ctx.fillText("" + number ,x, 11);
+                ctx.fillText("" + number ,x, 22);
             }
-        });
+        };
+        drawCanvas(img, canvas, false);
+        console.log(canvas);
+        jQuery(img).closest("a").find("img.normal").attr("src", canvas[0].toDataURL());
+        drawCanvas(img, canvas, true);
+        jQuery(img).closest("a").find("img.highlighted").attr("src", canvas[0].toDataURL());
+
         jQuery(img).closest("a").addClass("canvasready");
     },
-    render: function (selector, hovered) {
+    render: function (selector) {
         jQuery.each(jQuery(selector), function (index, img) {
             if (img.complete) {
                 STUDIP.HeaderIcons.canvasRender.call(img);
             } else {
-                jQuery(img).on('load', STUDIP.HeaderIcons.canvasRender);
+                jQuery(img).bind('load', STUDIP.HeaderIcons.canvasRender);
             }
         });
     }
 };
 
 jQuery(function () {
-    STUDIP.HeaderIcons.render("img.headericon");
-    jQuery("img.headericon").on("badgechange", function () { STUDIP.HeaderIcons.render(this); });
+    window.setTimeout(function () {
+        STUDIP.HeaderIcons.render("img.headericon.original");
+        jQuery("img.headericon.original").on("badgechange", function () { STUDIP.HeaderIcons.render(this); });
+    }, 300);
 });

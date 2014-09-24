@@ -12,7 +12,7 @@ use Studip\Button, Studip\LinkButton;
  */
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+$sidebar->setImage("sidebar/admin-sidebar.png");
 
 $widget = new ActionsWidget();
 $widget->addLink(_('Bild ändern'),

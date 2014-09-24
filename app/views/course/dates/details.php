@@ -74,4 +74,4 @@
 
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/date-sidebar.png"));
+$sidebar->setImage('sidebar/date-sidebar.png');

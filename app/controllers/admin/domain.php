@@ -123,7 +123,7 @@ class Admin_DomainController extends AuthenticatedController
     function set_sidebar()
     {
         $sidebar = Sidebar::Get();
-        $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
         $actions = new ActionsWidget();
         $actions->addLink(_('Neue Nutzerdomäne anlegen'), $this->url_for('admin/domain/new'), 'icons/16/black/add.png');
         $sidebar->addWidget($actions);

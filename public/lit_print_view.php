@@ -52,7 +52,9 @@ if ( ($list = StudipLitList::GetFormattedListsByRange($_range_id, false, false))
     echo _("Es wurde noch keine Literatur erfasst");
 }
 echo "<table width=100% border=0 cellpadding=2 cellspacing=0>";
-echo "<tr><td><i><font size=-1>" . _("Stand:") . " ".date("d.m.y, G:i",time())."</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logos/logo2b.png\"><br>&copy; ".date("Y", time())." v.$SOFTWARE_VERSION&nbsp; &nbsp; </font></td></tr>";
+echo "<tr><td><i><font size=-1>" . _("Stand:") . " ".date('d.m.y, G:i')."</font></i></td><td align=\"right\"><font size=-2>";
+echo Assets::img('logos/logo2b.png');
+echo "<br>&copy; ".date('Y')." v.$SOFTWARE_VERSION&nbsp; &nbsp; </font></td></tr>";
 echo "</table>\n";
 include ('lib/include/html_end.inc.php');
 

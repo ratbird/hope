@@ -359,9 +359,13 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
     if (is_array($_SESSION['_lit_data'])) {
         echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><th align=\"left\">";
         if (is_array($_SESSION['_open']) && count($_SESSION['_open'])){
-            echo "\n<a href=\"".URLHelper::getLink('?cmd=close_all')."\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1down.png') ."\"> " . _("Alle Einträge zuklappen") . "</a>";
+            echo "\n<a href=\"".URLHelper::getLink('?cmd=close_all')."\" class=\"tree\">";
+            echo Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-top'));
+            echo " " . _("Alle Einträge zuklappen") . "</a>";
         } else {
-            echo "\n<a href=\"".URLHelper::getLink('?cmd=open_all')."\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1right.png') ."\"> " . _("Alle Einträge aufklappen") . "</a>";
+            echo "\n<a href=\"".URLHelper::getLink('?cmd=open_all')."\" class=\"tree\">";
+            echo Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top'));
+            echo " " . _("Alle Einträge aufklappen") . "</a>";
         }
         echo "\n</th><th align=\"right\">";
         echo "<a href=\"lit_overview_print_view.php\" class=\"tree\" target=\"_blank\">" . Assets::img('icons/16/blue/print.png', array('class' => 'text-top')) . " " . _("Druckansicht") ."</a></th>";
@@ -389,7 +393,9 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         $ampel_pic = 'icons/16/red/decline.png';
                         $tt =_("nicht gefunden");
                     }
-                    $ampel = '<span ' . tooltip($tt,false) . '><img class="middle" src="' . Assets::image_path($ampel_pic) . '" > (' . $_SESSION['_check_plugin'] . ')</span>&nbsp;&nbsp;';
+                    $ampel  = '<span ' . tooltip($tt,false) . '>';
+                    $ampel .= Assets::img($ampel_pic, array('class' => 'middle'));
+                    $ampel .= ' (' . $_SESSION['_check_plugin'] . ')</span>&nbsp;&nbsp;';
                 }
                 $addon = $ampel . '<input type="checkbox" style="vertical-align:middle;" name="_check_list[]" value="' . $element->getValue('catalog_id') . '" '
                         . (is_array($_SESSION['_check_list']) && in_array($element->getValue('catalog_id'), $_SESSION['_check_list']) ? 'checked' : '') .' >';

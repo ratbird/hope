@@ -454,14 +454,14 @@ class CalendarEvent extends Event
         $index = $this->getCategory();
         if ($index) {
             return array('image' => $image_size == 'small' ?
-                        "{$GLOBALS['ASSETS_URL']}images/calendar/category{$index}_small.jpg" :
-                        "{$GLOBALS['ASSETS_URL']}images/calendar/category{$index}.jpg",
+                        Assets::image_path("calendar/category{$index}_small.jpg") :
+                        Assets::image_path("calendar/category{$index}.jpg"),
                 'color' => $PERS_TERMIN_KAT[$index]['color']);
         }
 
         return array('image' => $image_size == 'small' ?
-                    "{$GLOBALS['ASSETS_URL']}images/calendar/category1_small.jpg" :
-                    "{$GLOBALS['ASSETS_URL']}images/calendar/category1.jpg",
+                    Assets::image_path("calendar/category1_small.jpg") :
+                    Assets::image_path("calendar/category1.jpg"),
             'color' => $PERS_TERMIN_KAT[1]['color']);
     }
 

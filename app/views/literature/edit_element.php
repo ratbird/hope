@@ -55,11 +55,11 @@
                 <?= LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=clone_entry&_catalog_id='.$catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen"), 'data-dialog' => '')) ?>
             <? endif ?>
             <? if ($catalog_id != "new_entry") : ?>
-                <img src="<?= $GLOBALS['ASSETS_URL']."images/blank.gif" ?>" height="28" width="15" border="0">
+                <?= Assets::img('blank.gif', array('size' => '15@28')) ?>
                 <?= LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=check_entry&_catalog_id='.$catalog_id), array('title' =>  _("Verfügbarkeit überprüfen"), 'data-dialog' => '')) ?>
             <? endif ?>
             <? if ($catalog_id != "new_entry" && !$clipboard->isInClipboard($catalog_id)) : ?>
-                <img src="<?= $GLOBALS['ASSETS_URL']."images/blank.gif" ?>" height="28" width="15" border="0">
+                <?= Assets::img('blank.gif', array('size' => '15@28')) ?>
                 <?= LinkButton::create(_('Merkliste'), URLHelper::getURL('dispatch.php/literature/edit_element?cmd=in_clipboard&_catalog_id='.$catalog_id), array('title' =>  _("Eintrag in Merkliste aufnehmen"), 'data-dialog' => '')) ?>
             <? endif ?>
         </div>

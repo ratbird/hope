@@ -102,7 +102,7 @@ jQuery(function($) {
 </script>
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
+$sidebar->setImage('sidebar/date-sidebar.png');
 
 $actions = new ActionsWidget();
 $actions->addLink(

@@ -42,31 +42,40 @@
     <tr>
         <td valign="top">
 
-            <?
-            $search_exp = Request::get('search_exp');
-            if ($search_exp) :
-                $users = getSearchResults(trim($search_exp), $range_id, 'sem');
-                if ($users) :
-            ?>
-            <select name="searchPersons[]" size="5" multiple style="width: 90%;">
+    <?
+        $search_exp = Request::get('search_exp');
+        if ($search_exp):
+            $users = getSearchResults(trim($search_exp), $range_id, 'sem');
+            if ($users): ?>
+                <select name="searchPersons[]" size="5" multiple style="width: 90%;">
                 <? if (is_array($users)) foreach ($users as $user) : ?>
-                <option value="<?= $user['username']?>">
-                    <?= htmlReady(my_substr($user['fullname'],0,35)) ?> (<?= $user['username'] ?>), <?= $user['perms'] ?>
-                </option>
+                    <option value="<?= htmlReady($user['username']) ?>">
+                        <?= htmlReady(my_substr($user['fullname'],0,35)) ?> (<?= $user['username'] ?>), <?= $user['perms'] ?>
+                    </option>
                 <? endforeach; ?>
-            </select>
-            <input type="image" valign="bottom" name="search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" value="<?=_("Personen suchen")?>" <?= tooltip(_("neue Suche")) ?>>&nbsp;
-            <br>
-                <? else : // no users there ?>
-            <?= _("kein Treffer") ?>
-            <input type="image" valign="bottom" name="search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" value="<?=_("Personen suchen")?>" <?= tooltip(_("neue Suche")) ?>>&nbsp;
-                <? endif; // users there? ?>
-            <? else : ?>
-                <input type="text" name="search_exp" value="" style="width: 90%;">
-                <input type="image" name="search" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" value="Personen suchen" <?= tooltip(_("Person suchen")) ?>>&nbsp;
-                <br><br>
-            <? endif;   ?>
-
+                </select>
+                <?= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Personen suchen')), array(
+                        'valign' => 'bottom',
+                        'name' => 'search',
+                        'value' => _('Personen suchen'),
+                )) ?>
+                <br>
+            <? else : // no users there ?>
+                <?= _('kein Treffer') ?>
+                <?= Assets::input('icons/16/blue/refresh.png', tooltip2(_('neue Suche')) + array(
+                        'valign' => 'bottom',
+                        'name' => 'search',
+                        'value' => _('Personen suchen'),
+                )) ?>
+            <? endif; // users there? ?>
+        <? else: ?>
+            <input type="text" name="search_exp" value="" style="width: 90%;">
+            <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Person suchen')) + array(
+                    'name' => 'search',
+                    'value' => _('Personen suchen'),
+            )) ?>
+            <br><br>
+        <? endif; ?>
         </td>
     </tr>
     <? endif;?>

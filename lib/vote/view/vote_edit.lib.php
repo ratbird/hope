@@ -343,12 +343,14 @@ function printAnswerFields ( $answers ) {
     if( $pageMode != MODE_RESTRICTED ) {
         if( count($answers) > 1 ) {
         $html .= "<td align=center>";
-        $html .= "<input type=image name=\"move_up[$i]\" "
-            . "src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" "
-            . tooltip(_("Antwort hochschieben")) . " align=bottom>\n"
-            . "<input type=image name=\"move_down[$i]\" "
-            . "src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" "
-            . tooltip(_("Antwort runterschieben")) . " align=bottom>\n";
+        $html .= Assets::input('icons/16/yellow/arr_2up.png', tooltip2(_('Antwort hochschieben')) + array(
+                     'name' => 'move_up[' . $i . ']',
+                     'align' => 'bottom',
+                 ));
+        $html .= Assets::input('icons/16/yellow/arr_2down.png', tooltip2(_('Antwort runterschieben')) + array(
+                     'name' => 'move_down[' . $i . ']',
+                     'align' => 'bottom',
+                 ));
         $html .= "</td>";
         }
         $html .= "<td align=center><input type=checkbox id=deleteCheckboxes name=\"deleteAnswers[$i]\"></td>";
@@ -637,8 +639,10 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $startDate = ($startMode=="immediate") ? time() : $startDate;
 
-    $html .= " <input class=\"middle\" type=\"image\" name=\"updatetimespanbutton\" src=\""
-         . Assets::image_path('icons/16/blue/refresh.png') ."\" ". tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
+    $html .= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Endzeitpunkt neu berechnen')) + array(
+                 'name' => 'updatetimespanbutton',
+                 'class' => 'middle',
+             ));
     $html .= sprintf( _(" (<b>%s</b> um <b>%s</b> Uhr)"),
               strftime( "%d.%m.%Y", $startDate + $timeSpan ),
               strftime( "%H:%M", $startDate + $timeSpan ) );
@@ -897,7 +901,7 @@ function image_if_true($option)
     if ($option)
         return Assets::img('icons/16/grey/decline.png');
     else
-        return " <img width=16 height=16 src=\"".Assets::image_path('blank.gif')."\"> ";
+        return Assets::img('blank.gif', array('size' => '16@16'));
 }
 
 ?>

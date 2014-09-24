@@ -231,7 +231,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 <tr>
                     <td class="table_row_odd" colspan="3" align="center">
                         <a href="<?= URLHelper::getLink("?cmd=openAll") ?>">
-                            <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/blue/arr_1down.png" title="<?=_("Alle Themen aufklappen")?>" border="0">
+                            <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('Alle Themen aufklappen'))) ?>
                         </a>
                     </td>
                 </tr>

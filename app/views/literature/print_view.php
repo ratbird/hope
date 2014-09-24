@@ -12,7 +12,8 @@
             <i><font size=-1><?=_("Stand:") . " ".date("d.m.y, G:i",time())?></font></i>
         </td>
         <td align="right">
-            <font size=-2><img src="<?=$GLOBALS['ASSETS_URL']."images/logos/logo2b.png"?>">
+            <font size=-2>
+                <?= Assets::img('logos/logo2b.png') ?>
             <br>&copy; <?=date("Y", time())." v.".$GLOBALS['SOFTWARE_VERSION']?>&nbsp; &nbsp; 
             </font>
         </td>

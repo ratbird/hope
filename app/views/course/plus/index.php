@@ -148,4 +148,4 @@ foreach ($available_plugins as $plugin) {
 
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/plugin-sidebar.png"));
+$sidebar->setImage('sidebar/plugin-sidebar.png');

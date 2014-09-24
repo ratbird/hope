@@ -400,16 +400,16 @@ class ExternEditModule extends ExternEditHtml {
 
                     // move up
                 $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
-                $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
-                $out .= " ".tooltip(_("Datenfeld verschieben"));
-                $out .= "border=\"0\" align=\"middle\">\n";
+                $out .= Assets::inpit('icons/16/yellow/arr_2up.png', tooltip2(_('Datenfeld verschieben')) + array(
+                            'name' => $this->element_name . '_move_left[' . $i . ']',
+                            'align' => 'middle',
+                        ));
 
                 // move down
-                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
-                $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
-                $out .= " ".tooltip(_("Datenfeld verschieben"));
-                $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
+                $out .= Assets::inpit('icons/16/yellow/arr_2down.png', tooltip2(_('Datenfeld verschieben')) + array(
+                            'name' => $this->element_name . '_move_right[' . $i . ']',
+                            'align' => 'middle',
+                        ));
                 $out .= "</td>\n";
 
                 // visibility

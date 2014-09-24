@@ -118,7 +118,7 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
             break;
     }
 
-    $ampel_status = "<img src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
+    $ampel_status = Assets::img($color) . ' ' . $ampel_state["text"];
 
     if ($print == TRUE) {
         echo $ampel_status;
@@ -206,7 +206,7 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
             break;
     }
 
-    $ampel_status = "<img src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
+    $ampel_status = Assets::img($color) . " ". $ampel_state["text"];
 
     if ($print == TRUE) {
         echo $ampel_status;
@@ -633,30 +633,29 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
     if ($link)
         $print .= "<a href=\"".$link."\">";
 
-    $print .= "<img src=\"";
     if ($open == "open")
         $titel = "<b>" . $titel . "</b>";
 
+    $print .= "<img src=\"";
+    
+    $img = $open === 'close'
+         ? 'forumgrau2.png'
+         : 'forumgraurunt2.png';
+    $attr = array();
+    
     if ($link) {
-        $addon = '';
-        if ($index) $addon =  " ($indikator: $index)";
-        if ($open == "close") {
-            $print .= Assets::image_path('forumgrau2.png') . "\"" . tooltip(_("Objekt aufklappen") . $addon);
-        }
-        else {
-            $print .= Assets::image_path('forumgraurunt2.png') . "\"" . tooltip(_("Objekt zuklappen") . $addon);
-        }
-    }
-    else {
-        if ($open == "close") {
-            $print .= Assets::image_path('forumgrau2.png') . "\"";
-        }
-        else {
-            $print .= Assets::image_path('forumgraurunt2.png') . "\"";
-        }
+        // TODO [tlx] What is addon used for? This seems to lead to invalid html
+        //      so i will ditch it for now in the output
+        $addon = $index
+               ? " ($indikator: $index)"
+               : '';
+
+        $attr = $open === 'close'
+              ? tooltip2(_('Objekt aufklappen'))
+              : tooltip2(_('Objekt zuklappen'));
     }
 
-    $print .= " > ";
+    $print .= Assets::img($img, $attr) . " ";
     if ($link) {
         $print .= "</a> ";
     }
@@ -680,16 +679,20 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
     $print .= $inhalt;
 
     if ($edit) {
-        $print .= "<br><br><div align=\"center\">$edit</div><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"6\">";
-        if ($addon!="")
-            if (substr($addon,0,5)=="open:") // es wird der öffnen-Pfeil mit Link ausgegeben
-                $print .= "</td><td valign=\"middle\" class=\"table_row_even\" nowrap><a href=\"".substr($addon,5)."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1left.png')."\" align=\"middle\"".tooltip(_("Bewertungsbereich öffnen"))."></a>&nbsp;";
-            else {              // es wird erweiterter Inhalt ausgegeben
+        $print .= "<br><br><div align=\"center\">$edit</div>";
+        if ($addon!="") {
+            if (substr($addon,0,5)=="open:") { // es wird der öffnen-Pfeil mit Link ausgegeben
+                $print .= "</td><td valign=\"middle\" class=\"table_row_even\" nowrap><a href=\"".substr($addon,5)."\">";
+                $print .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_('Bewertungsbereich öffnen')));
+                $print .= "</a>&nbsp;";
+            } else {              // es wird erweiterter Inhalt ausgegeben
                 $print .= "</td><td class=\"content_body_panel\" nowrap>";
                 $print .= "<font size=\"-2\" color=\"#444444\">$addon";
-    }       }
-    else
+            }
+        }
+    } else {
         $print .= "<br>";
+    }
 
     $print .= "</td>";
 

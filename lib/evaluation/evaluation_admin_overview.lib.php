@@ -1690,9 +1690,11 @@ class EvalOverview {
         $html .= "<table border=0 align=center cellspacing=0 cellpadding=4 width=\"100%\">\n";
         $html .= "<tr><td colspan=\"2\">\n";
         $html .= "<b>" . _("Einstellungen zur Start- und Endzeit:") . "</b>";
-        $html .= " <img src=\"" . Assets::image_path('icons/16/grey/info-circle.png') . "\" class=\"middle\" "
-                . tooltip(($eval->isTemplate() ? _("Legen Sie  fest, von wann bis wann alle eingehängten und kopierten Instanzen dieser Evaluationsvorlage in Stud.IP öffentlich sichtbar sein sollen.") : _("Legen Sie  fest, von wann bis wann die Evaluation in Stud.IP öffentlich sichtbar sein soll.")), FALSE, TRUE)
-                . ">";
+        $tooltip = $eval->isTemplate()
+                 ? _('Legen Sie fest, von wann bis wann alle eingehängten und kopierten Instanzen dieser Evaluationsvorlage in Stud.IP öffentlich sichtbar sein sollen.')
+                 : _('Legen Sie fest, von wann bis wann die Evaluation in Stud.IP öffentlich sichtbar sein soll.');
+        $html .= " ";
+        $html .= Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip) + array('class' => 'middle'));
         $html .= "</td></tr>";
         $html .= "<tr>";
 
@@ -1800,8 +1802,11 @@ class EvalOverview {
 
                 $startDate = ($startMode == "immediate") ? time() : $startDate;
 
-                $html .= "&nbsp;<input type=image name=\"save2_button\" align=middle "
-                        . Assets::image_path('icons/16/blue/refresh.png') . " " . tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
+                $html .= "&nbsp;";
+                $html .= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Endzeitpunkt neu berechnen')) + array(
+                             'name' => 'save2_button',
+                             'align' => 'middle',
+                         ));
                 $html .= sprintf(_(" (<b>%s</b> um <b>%s</b> Uhr)"), strftime("%d.%m.%Y", $startDate + $timeSpan), strftime("%H:%M", $startDate + $timeSpan));
             }
             $html .= "</td></tr>";

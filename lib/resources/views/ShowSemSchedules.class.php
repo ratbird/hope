@@ -219,9 +219,7 @@ class ShowSemSchedules extends ShowSchedules {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
-                </td>
+                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
                     <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_sem=1')?>"><?= Assets::img("icons/16/blue/arr_2left.png", array('alt' => _("Vorheriges Semester anzeigen"), 'title' => _("Vorheriges Semester anzeigen"), 'border' => 0)) ?></a>
                 </td>

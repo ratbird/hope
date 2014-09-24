@@ -93,7 +93,7 @@ class StudipSemTreeView extends TreeView {
         echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         if ($this->start_item_id != 'root'){
             echo "\n<tr><td class=\"printhead\" align=\"left\" valign=\"top\">" . $this->getSemPath()
-            . "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"  border=\"0\" height=\"20\" width=\"1\"></td></tr>";
+            . Assets::img('forumleer.gif', array('size' => '1@20')) . "</td></tr>";
         }
         echo "\n<tr><td class=\"blank\"  align=\"left\" valign=\"top\">";
         $this->showTree($this->start_item_id);
@@ -123,21 +123,19 @@ class StudipSemTreeView extends TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-        $head .= ($this->open_items[$item_id]) ? "icons/16/blue/arr_1down.png" : "icons/16/blue/arr_1right.png";
-        $head .= "\">";
-        $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\">" : "";
+        $head .= Assets::img($this->open_items[$item_id]
+                            ? 'icons/16/blue/arr_1down.png'
+                            : 'icons/16/blue/arr_1right.png');
+        $head .= (!$this->open_items[$item_id]) ? Assets::img('forumleer.gif', array('size' => '5')) : "";
         $head .= "</a>";
         if ($this->tree->hasKids($item_id)){
-            $head .= "<img class=\"text-top\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
-            $head .= "\" ";
-            $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelement öffnen")) : tooltip(_("Alle Unterelemente schliessen"));
-            $head .= ">";
+            $head .= Assets::img('icons/16/blue/folder-full.png',
+                                 tooltip2($this->open_ranges[$item_id]
+                                          ? _('Alle Unterelement schliessen')
+                                          : _('Alle Unterelemente öffnen')) +
+                                 array('class' => 'text-top'));
         } else {
-            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-empty.png" : "icons/16/blue/folder-empty.png";
-            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
+            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
         }
     return $head;
     }

@@ -213,14 +213,14 @@ if ($_the_element->isChangeable()) {
         echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen")));
     }
 }
-echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+echo Assets::img('blank.gif', array('size' => '15@28'));
 echo LinkButton::create(_('Neu anlegen'), URLHelper::getURL('?cmd=new_entry'), array('title' => _("Neuen Eintrag anlegen")));
 if ($_catalog_id != "new_entry"){
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+    echo Assets::img('blank.gif', array('size' => '15@28'));
     echo LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('?cmd=check_entry&_catalog_id='.$_catalog_id), array('title' => _("Verfügbarkeit überprüfen")));
 }
 if ($_catalog_id != "new_entry" && !$_the_clipboard->isInClipboard($_catalog_id)){
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+    echo Assets::img('blank.gif', array('size' => '15@28'));
     echo LinkButton::create(_('Merkliste'), URLHelper::getURL('?cmd=in_clipboard&_catalog_id='.$_catalog_id), array('title' => _("Eintrag in Merkliste aufnehmen")));
 }
 echo "</td></tr>";
@@ -267,14 +267,14 @@ if ($_the_element->isChangeable()){
 } elseif ($_catalog_id != "new_entry") {
     echo LinkButton::create(_('Kopie erstellen'), URLHelper::getURL('?cmd=clone_entry&_catalog_id='.$_catalog_id), array('title' => _("Eine Kopie dieses Eintrages anlegen")));
 }
-echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+echo Assets::img('blank.gif', array('size' => '15@28'));
 echo LinkButton::create(_('Neu anlegen'), URLHelper::getURL('?cmd=new_entry'), array('title' =>  _("Neuen Eintrag anlegen")));
 if ($_catalog_id != "new_entry"){
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+    echo Assets::img('blank.gif', array('size' => '15@28'));
     echo LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('?cmd=check_entry&_catalog_id='.$_catalog_id), array('title' =>  _("Verfügbarkeit überprüfen")));
 }
 if ($_catalog_id != "new_entry" && !$_the_clipboard->isInClipboard($_catalog_id)){
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
+    echo Assets::img('blank.gif', array('size' => '15@28'));
     echo LinkButton::create(_('Merkliste'), URLHelper::getURL('?cmd=in_clipboard&_catalog_id='.$_catalog_id), array('title' =>  _("Eintrag in Merkliste aufnehmen")));
 }
 echo "</td></tr>";
@@ -310,7 +310,7 @@ print_infobox($infobox, "sidebar/literature-sidebar.png");
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()),(array) $_attributes['lit_select']))?>
-    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg); background-repeat:repeat-y; margin:3px; height: 2px;"> </div>
+    <div align="center" style="background-image:url(<?= Assets::image_path('border.jpg') ?>); background-repeat:repeat-y; margin:3px; height: 2px;"> </div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
     <?=$_the_clip_form->getFormButton("clip_ok", array('style'=>'vertical-align:middle; margin:3px;'))?>

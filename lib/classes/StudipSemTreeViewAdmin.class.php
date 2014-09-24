@@ -462,15 +462,13 @@ class StudipSemTreeViewAdmin extends TreeView {
         $head = $this->getItemHeadFrontPic($item_id);
         $head .= "\n<td  class=\"printhead\" nowrap  align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
-            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
-            $head .= "\" ";
-            $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelement öffnen")) : tooltip(_("Alle Unterelemente schliessen"));
-            $head .= ">";
+            $head .= Assets::img('icons/16/blue/folder-full.png',
+                                 tooltip2($this->open_ranges[$item_id]
+                                          ? _('Alle Unterelement schliessen')
+                                          : _('Alle Unterelemente öffnen')) +
+                                 array('class' => 'text-top'));
         } else {
-            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-empty.png" : "icons/16/blue/folder-empty.png";
-            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . " >";
+            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
         }
         return $head . "</td>";
     }

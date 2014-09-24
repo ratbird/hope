@@ -33,7 +33,9 @@ $author_url = $author->getURL();
                 <?= (date("j.n.Y", $posting['mkdate']) == date("j.n.Y")) ? sprintf(_("%s Uhr"), date("G:i", $posting['mkdate'])) : date("j.n.Y", $posting['mkdate']) ?>
             </span>
             <? if ($GLOBALS['perm']->have_studip_perm("tutor", $posting['Seminar_id']) or ($posting['user_id'] === $GLOBALS['user']->id)) : ?>
-            <a href="#" class="edit" onClick="return false;" alt="<?= _("Bearbeiten") ?>" title="<?= _("Bearbeiten") ?>" style="vertical-align: middle; opacity: 0.6; width: 14px; height:14px; display: inline-block; background: url('<?= Assets::image_path("icons/16/grey/tools.png") ?>') center center; background-position: center center;"></a>
+            <a href="#" class="edit" onClick="return false;" style="vertical-align: middle; opacity: 0.6;">
+                <?= Assets::img('icons/16/grey/tools.png', tooltip2(_('Bearbeiten')) + array('size' => '14')) ?>
+            </a>
             <? endif ?>
         </div>
         <div class="name">

@@ -53,7 +53,7 @@ $groups = Statusgruppen::findBySeminar_id($_SESSION['SessionSeminar']);
             if (get_class($plugin) == $forum_slot) :
                 if ($count = $plugin->getNumberOfPostingsForIssue($tpl['issue_id'])) : ?>
                 <a href="<?= $plugin->getLinkToThread($tpl['issue_id']) ?>">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/forum.png" <?= tooltip(sprintf(_("%s Foreneinträge vorhanden"), $count)) ?>>
+                    <?= Assets::img('icons/16/blue/forum.png', tooltip2(sprintf(_('%u Foreneinträge vorhanden'), $count))) ?>
                 </a>
             <? endif;
             endif;
@@ -65,7 +65,7 @@ $groups = Statusgruppen::findBySeminar_id($_SESSION['SessionSeminar']);
     <td width="1%" class="<?=$tpl['class']?>" nowrap="nowrap">
     <? if ($tpl['fileCountAll'] > 0) : ?>
         <a href="<?=URLHelper::getLink("folder.php?open=".$tpl['folder_id']."&cmd=tree#anker")?>">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/download.png" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>>
+            <?= Assets::img('icons/16/blue/download.png', tooltip2(sprintf(_('%u Dokument(e) vorhanden'), $tpl['fileCountAll']))) ?>
         </a>
     <? endif; ?>
     </td>
@@ -127,11 +127,11 @@ $groups = Statusgruppen::findBySeminar_id($_SESSION['SessionSeminar']);
 <? else:    // Gelöschter Termin... ?>
 <tr style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
-        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL']. 'images/icons/16/blue/arr_1right.png'?>">
+        <?= Assets::img('icons/16/blue/arr_1right.png') ?>
     </TD>
     <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
-        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
+        <?= Assets::img('icons/16/blue/date.png', array('class' => 'middle')) ?>
     </TD>
     <TD nowrap="nowrap" class="content_title_red" valign="bottom">
                 <i><?= htmlReady($tpl['art']) ?>:&nbsp;</i>

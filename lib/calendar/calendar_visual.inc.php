@@ -825,8 +825,7 @@ function info_icons(&$event)
 
     $out = '';
     if ($event->havePermission(Event::PERMISSION_READABLE) && (strtolower(get_class($event)) == 'seminarcalendarevent' || strtolower(get_class($event)) == 'seminarevent')) {
-        $out .= "<img src=\"{$GLOBALS['ASSETS_URL']}images/projectevent-icon.gif\" ";
-        $out .= "border=\"0\"" . tooltip(_("Veranstaltungstermin") . ' - ' . $event->getSemName()) . " valign>";
+        $out .= Assets::img('images/projectevent-icon.gif', tooltip2(_('Veranstaltungstermin') . ' - ' . $event->getSemName()));
     }
 
     if ($event->getType() == 'PUBLIC') {

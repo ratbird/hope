@@ -143,7 +143,7 @@ use Studip\Button, Studip\LinkButton;
 
 <?
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
+$sidebar->setImage('sidebar/person-sidebar.png');
 if (get_config('SCORE_ENABLE')) {
     $widget = new NavigationWidget();
     $widget->addLink(_('Zur Stud.IP-Rangliste'), URLHelper::getLink('dispatch.php/score'));

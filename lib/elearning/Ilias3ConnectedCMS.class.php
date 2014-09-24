@@ -166,7 +166,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "<b>" . _("Kategorie: ") . "</b>";
         echo "</td><td>";
         echo "<input type=\"text\" size=\"20\" border=0 value=\"" . $cat["title"] . "\" name=\"cat_name\">&nbsp;";
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("Geben Sie hier den Namen einer bestehenden ILIAS 3 - Kategorie ein, in der die Lernmodule und User-Kategorien abgelegt werden sollen."), TRUE, TRUE) . ">";
+        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Geben Sie hier den Namen einer bestehenden ILIAS 3 - Kategorie ein, in der die Lernmodule und User-Kategorien abgelegt werden sollen.')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo " (ID " . $this->main_category_node_id;
         if ($cat["description"] != "")
@@ -180,7 +180,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "<b>" . _("Rollen-Template f&uuml;r die per&ouml;nliche Kategorie: ") . "</b>";
         echo "</td><td>";
         echo "<input type=\"text\" size=\"20\" border=0 value=\"" . ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type) . "\" name=\"role_template_name\">&nbsp;";
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\")."), TRUE, TRUE) . ">"  ;
+        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\").')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo " (ID " . $this->user_role_template_id;
         echo ")";
@@ -194,7 +194,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         if ($encrypt_passwords == "md5")
             echo " checked";
         echo ">&nbsp;" . _("ILIAS-Passw&ouml;rter verschl&uuml;sselt speichern.");
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("Wählen Sie diese Option, wenn die ILIAS-Passwörter der zugeordneten Accounts verschlüsselt in der Stud.IP-Datenbank abgelegt werden sollen."), TRUE, TRUE) . ">"   ;
+        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Wählen Sie diese Option, wenn die ILIAS-Passwörter der zugeordneten Accounts verschlüsselt in der Stud.IP-Datenbank abgelegt werden sollen.')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo "<br>\n";
         echo "<br>\n";
@@ -206,7 +206,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         if ($style_setting == "studip")
             echo " checked";
         echo ">&nbsp;" . _("Stud.IP-Style f&uuml;r neue Nutzer-Accounts voreinstellen.");
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("Wählen Sie diese Option, wenn für alle von Stud.IP angelegten ILIAS-Accounts das Stud.IP-Layout als System-Style eingetragen werden soll. ILIAS-seitig angelegte Accounts erhalten weiterhin den Standard-Style."), TRUE, TRUE) . ">";
+        echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Wählen Sie diese Option, wenn für alle von Stud.IP angelegten ILIAS-Accounts das Stud.IP-Layout als System-Style eingetragen werden soll. ILIAS-seitig angelegte Accounts erhalten weiterhin den Standard-Style.')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo "<br>\n";
         echo "<br>\n";

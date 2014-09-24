@@ -3,7 +3,7 @@
 
 //Infobox:
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+$sidebar->setImage('sidebar/admin-sidebar.png');
 
 if ($adminList) {
     $list = new SelectorWidget();

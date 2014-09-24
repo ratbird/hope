@@ -219,7 +219,6 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
             <? else : ?>
                 <?= Assets::img('icons/16/blue/arr_1right.png') ?>
             <? endif ?>
-                <? /* <img style="vertical-align:top;" src="<?=. Assets::image_path( ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png') */ ?>
                 <?= htmlReady($row['name']) ?>
             </a>
         </td>
@@ -235,15 +234,15 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         <?
         echo '<td class="table_header' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" width="1%">';
         if ($cal_group) {
-            echo '<img src="' . Assets::image_path('icons/16/blue/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
+            echo Assets::img('icons/16/blue/schedule.png', tooltip2(_('Kalendergruppe')));
             echo '</td><td class="table_header ' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="whitespace: width="5%">';
         }
 
         echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
-        echo '<img src="' . Assets::image_path('icons/16/blue/edit.png') . '" ';
-        echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
+        echo Assets::img('icons/16/blue/edit.png', tooltip2(_('Gruppenname oder -größe anpassen')));
+        echo '</a></td>';
 
-        printf("<td align=\"right\" width=\"1%%\" class=\"table_header%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " table_header_bold_red" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $row['name']), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf("<td align=\"right\" width=\"1%%\" class=\"table_header%s\"><a href=\"%s\">%s</a></td>", ($edit_id == $statusgruppe_id ? " table_header_bold_red" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $row['name']), Assets::img('icons/16/blue/trash.png', tooltip2(_('Gruppe mit Personenzuordnung entfernen'))));
         echo "\n</tr>";
 
         // if the current statusgroup is opened, display associated users
@@ -448,10 +447,11 @@ if (is_array($msgs)) {
                         <label><?= _('im Kalender auswählbar:') ?>
                         <input type="checkbox" name="is_cal_group" value="1" class="text-top"></label>
                     <? endif ?>
-                    &nbsp; &nbsp; &nbsp; <b><?= _("Einf&uuml;gen") ?></b>&nbsp;
-                <?
-                printf("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("neue Statusgruppe"), tooltip(_("neue Gruppe anlegen")));
-                ?>
+                    &nbsp; &nbsp; &nbsp; <b><?= _("Einfügen") ?></b>&nbsp;
+                    <?= Assets::input('icons/16/yellow/arr_2down.png', tooltip2(_('neue Gruppe anlegen')) + array(
+                            'name' => 'add_new_statusgruppe',
+                            'value' => _('neue Statusgruppe'),
+                    )) ?>
                 </form>
                     <?
                 } else { // editieren einer bestehenden Statusgruppe
@@ -478,9 +478,10 @@ if (is_array($msgs)) {
                         <input type="checkbox" name="is_cal_group" value="1" class="text-top"<?= ($temp['calendar_group'] ? ' checked' : '') ?>></label>
                     <? endif ?>
                     &nbsp; &nbsp; &nbsp; <b><?= _("&Auml;ndern") ?></b>&nbsp;
-                    <?
-                    printf("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));
-                    ?>
+                    <?= Assets::input('icons/16/green/accept.png', tooltip2(_('Gruppe anpassen')) + array(
+                            'name' => 'add_new_statusgruppe',
+                            'value' => _('Gruppe anpassen'),
+                    )) ?>
                 </form>
                     <?
                 }

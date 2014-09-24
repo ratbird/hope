@@ -93,8 +93,9 @@ $factor = 8;
     <div id="search">
         <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
         <?= CSRFProtection::tokenTag() ?>
-        <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2down') ?>"
-               <?= tooltip(_('Person hinzufügen')) ?> border="0" name="add_user">
+        <?= Assets::input('icons/16/yellow/arr_2down.png',
+                          tooltip2('Person hinzufügen') +
+                          array('name' => 'add_user')) ?>
         <?= $search ?>
         <br/><br/>
         <div id="users">

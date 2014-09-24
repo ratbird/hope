@@ -9,10 +9,10 @@ use Studip\Button, Studip\LinkButton;
         <INPUT type="checkbox" name="themen[]" value="<?=$tpl['issue_id']?>"<?=$tpl['selected']?>>
         <? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
             <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" class="text-bottom">
+                <?= Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-bottom')) ?>
         <? } else { ?>
             <A href="<?= URLHelper::getLink('?cmd=open&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png" border="0" class="text-bottom">
+                <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-bottom')) ?>
         <? } ?>
         </A>
     </TD>
@@ -30,16 +30,16 @@ use Studip\Button, Studip\LinkButton;
     <TD width="20%" align="right" class="table_header" nowrap>
         <? if (!$tpl['first']) { ?>
         <A href="<?= URLHelper::getLink('?newPriority='. ($tpl['priority'] - 1) .'&issueID='. $tpl['issue_id'] .'&cmd=changePriority') ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2up.png" border="0" class="text-bottom">
+            <?= Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-bottom')) ?>
         </A>
         <? } ?>
         <? if (!$tpl['last']) { ?>
         <A href="<?= URLHelper::getLink('?newPriority='. ($tpl['priority'] + 1) .'&issueID='. $tpl['issue_id'] .'&cmd=changePriority') ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2down.png" border="0" class="text-bottom">
+            <?= Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-bottom')) ?>
         </A>
         <? } ?>
         <A href="<?= URLHelper::getLink('?cmd=deleteIssue&issue_id='. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/trash.png" border="0" class="text-bottom">
+            <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-bottom')) ?>
         </A>
     </TD>
 </TR>

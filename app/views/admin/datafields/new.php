@@ -150,7 +150,7 @@ use Studip\Button, Studip\LinkButton;
 
 <?
 $sidebar = Sidebar::Get();
-$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Datenfelder'));
 
 $actions = new ActionsWidget();

@@ -18,7 +18,10 @@
         <? endfor; ?>
     </select>
     <span style="padding: 0px 5px 0px 5px">
-        <input type="image" name="choosePreset" value="choosePreset" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" title="<?= _("in Namensfeld übernehmen") ?>">
+        <?= Assets::input('icons/16/yellow/arr_2right.png', tooltip2(_('in Namensfeld übernehmen')) + array(
+                'name' => 'choosePreset',
+                'value' => 'choosePreset',
+        )) ?>
     </span>
     <? endif; ?>
 

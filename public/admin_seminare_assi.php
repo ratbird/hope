@@ -2032,7 +2032,7 @@ if (isset($valid) && !$valid) {
 }
 //Before we start, let's decide the category (class) of the Veranstaltung
 elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(' ');
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -2085,7 +2085,7 @@ elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
 
 //Level 1: Hier werden die Grunddaten abgefragt.
 elseif ((!$level) || ($level == 1)) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 1: Grunddaten'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -2473,7 +2473,7 @@ elseif ((!$level) || ($level == 1)) {
 
 //Level 2: Hier werden weitere Einzelheiten (Personendaten und Zeiten) abgefragt
 elseif ($level == 2) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 2: Personen & Bereiche'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -2575,8 +2575,10 @@ elseif ($level == 2) {
         </td>
         <td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
             <?php
-            print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
-            print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
+            printf(_("%s hinzufügen"), get_title_for_status('dozent', 1, $seminar_type));
+            print "<br>";
+            print Assets::input('icons/16/yellow/arr_2left.png',
+                                tooltip2(_('NutzerIn hinzufügen')) + array('name' => 'send_doz'));
 
             if (SeminarCategories::getByTypeId($_SESSION['sem_create_data']["sem_status"])->only_inst_user) {
                 $search_template = "user_inst";
@@ -2641,8 +2643,10 @@ elseif ($level == 2) {
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                 <?php
-                print _("Vertretung hinzuf&uuml;gen");
-                print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\"> ";
+                print _("Vertretung hinzufügen");
+                print "<br>";
+                print Assets::input('icons/16/yellow/arr_2left.png',
+                                    tooltip2(_('NutzerIn hinzufügen')) + array('name' => 'send_dep'));
 
                 $deputysearch = new PermissionSearch('user',
                     sprintf(_("%s auswählen"), get_title_for_status('deputy', 1, $seminar_type)),
@@ -2722,8 +2726,10 @@ elseif ($level == 2) {
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
             <?php
-            print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
-            print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
+            print sprintf(_("%s hinzufügen"), get_title_for_status('tutor', 1, $seminar_type));
+            print "<br>";
+            print Assets::input('icons/16/yellow/arr_2left.png',
+                                tooltip2(_('NutzerIn hinzufügen')) + array('name' => 'send_tut'));
 
             $searchForTutorUser = new PermissionSearch($search_template,
                 sprintf(_("%s auswählen"), get_title_for_status('tutor', 1, $seminar_type)),
@@ -2911,7 +2917,7 @@ elseif ($level == 3) {
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
 
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 3: Zeiten & Termine'));
 
     ?>
@@ -3172,7 +3178,7 @@ elseif ($level == 4) {
     if ($GLOBALS['RESOURCES_ENABLE'])
         $resList = new ResourcesUserRoomsList($user_id->id, TRUE, FALSE, TRUE);
 
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 4: Orts- & Raumangaben'));
 
     ?>
@@ -3446,7 +3452,7 @@ elseif ($level == 4) {
 
 //Level 5: Hier wird der Rest abgefragt
 elseif ($level == 5) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 5: Sonstige Daten'));
 
     ?>
@@ -3616,7 +3622,7 @@ elseif ($level == 5) {
 
 //Level 6: Seminar anlegen
 elseif ($level == 6) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 6: Anlegen'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -3646,7 +3652,7 @@ elseif ($level == 6) {
 
 //Level 6:Statusmeldungen nach dem Anlegen und weiter zum den Einzelheiten
 elseif ($level == 7) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 6: Anlegen'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -3841,7 +3847,7 @@ elseif ($level == 7) {
 
 //Level 8: Erstellen des Simple-Content-Bereichs
 elseif ($level == 8) {
-    Sidebar::get()->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+    Sidebar::get()->setImage('sidebar/seminar-sidebar.png');
     Sidebar::get()->setTitle(_('Schritt 7: Informationsseite'));
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>

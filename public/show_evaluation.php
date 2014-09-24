@@ -109,6 +109,7 @@ $form->html(CSRFProtection::tokenTag());
 if (Request::isXHR()) {
     header('X-Title:' . _("Stud.IP Online-Evaluation"));
 } else {
+    // TODO: This should use Assets::img() but on the other hand it should also use templates
     $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
     $form->cont( $titlebar );
 }

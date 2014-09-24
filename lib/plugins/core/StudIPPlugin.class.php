@@ -203,7 +203,7 @@ abstract class StudIPPlugin {
                 ILess_Autoloader::register();
                 $parser = new ILess_Parser();
                 $parser->setVariables(array(
-                    'image-path' => '"' . substr(Assets::image_path('placeholder.png'), 0, -15) . '"',
+                    'image-path' => '"' . Assets::url('images') . '"',
                 ));
                 $parser->parseString($less);
                 $css = $parser->getCSS();

@@ -274,15 +274,17 @@ class StudipForm {
             } else {
                 $atime = time();
             }
-            $ret .= "&nbsp; <img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" ";
-            $ret .= "onClick=\"window.open('";
-            $ret .= URLHelper::getLink("termin_eingabe_dispatch.php",
-                 array("form_name" => $this->form_name,
-                       "element_switch" => $this->form_name."_".$name,
-                       "imt" => $atime,
-                       "atime" => $atime));
-            $ret .= "', 'InsertDate', ";
-            $ret .= "'dependent=yes, width=210, height=210, left=500, top=150')\">";
+            $onclick  = "window.open('";
+            $onclick .= URLHelper::getLink('termin_eingabe_dispatch.php',
+                                           array(
+                                               'form_name' => $this->form_name,
+                                               'element_switch' => $this->form_name . '_' . $name,
+                                               'imt' => $atime,
+                                               'atime' => $atime));
+            $onclick .= "', 'InsertDate', ";
+            $onClick .= "'dependent=yes, width=210, height=210, left=500, top=150'";
+            $ret .= "&nbsp; ";
+            $ret .= Assets::img('popupcalendar.png', compact('onclick'));
         }
         $ret .= '</fieldset>';
         return $ret;
@@ -434,11 +436,11 @@ class StudipForm {
             }
             $ret = Button::$create($caption, $this->form_name . "_" . $name, $attributes);
         } else {
-            $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
-            $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
-            $ret .= tooltip($this->form_buttons[$name]['info'], true);
-            $ret .= $this->getAttributes($attributes);
-            $ret .= ">";
+            // Yes, this is kinda ugly
+            $ret = Assets::input($this->form_buttons[$name]['type'],
+                                 tooltip2($this->form_buttons[$name]['info'])
+                                 + (array)$attributes
+                                 + array('name' => $this->form_name . '_' . $name));
         }
         return $ret;
     }
@@ -454,8 +456,7 @@ class StudipForm {
     }
 
     function getFormFieldInfo($name){
-        return "\n<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\""
-                . tooltip($this->form_fields[$name]['info'], TRUE, TRUE) . " align=\"absmiddle\">";
+        return tooltipIcon($this->form_fields[$name]['info']);
     }
 
     function getFormStart($action = false, $attributes = false){

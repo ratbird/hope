@@ -111,7 +111,7 @@ foreach ($plugins as $plugin) {
 
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+$sidebar->setImage('sidebar/seminar-sidebar.png');
 $links = new ActionsWidget();
 $links->addLink(_("Druckansicht"),
     URLHelper::getScriptLink("dispatch.php/course/details/index/" . $course->id),

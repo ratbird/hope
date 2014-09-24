@@ -163,7 +163,10 @@ $termine = getAllSortedSingleDates($sem);
                 <tr>
                     <td class="table_row_odd" colspan="6" height="24" align="center">
                         <a href="<?= URLHelper::getLink("?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
-                            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.png" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
+                            <?= Assets::img($openAll ? 'close_all.png' : 'open_all.png',
+                                            tooltip2($openAll
+                                                     ? _('Alle Termine zuklappen')
+                                                     : _('Alle Termine aufklappen'))) ?>
                         </a>
                     </td>
                 </tr>
@@ -234,9 +237,12 @@ $termine = getAllSortedSingleDates($sem);
 
                     // calendar jump
                     $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?caluser=self&cmd=showweek&atime=". $singledate->getStartTime());
-                    $tpl['calendar'] .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/schedule.png\" ";
-                    $tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m", $singledate->getStartTime())));
-                    $tpl['calendar'] .= '></a>';
+                    $tpl['calendar'] .= "\">";
+                    $tpl['calendar'] .= Assets::img('icons/16/blue/schedule.png',
+                                                    tooltip2(sprintf(_('Zum %s in den persönlichen Terminkalender springen'),
+                                                                     date('d.m', $singledate->getStartTime())))
+                                                    + array('class' => 'text-top'));
+                    $tpl['calendar'] .= '</a>';
 
                         // activated modules
                         $tpl['modules'] = $modules;

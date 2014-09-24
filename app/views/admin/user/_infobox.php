@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 $sidebar = Sidebar::Get();
-$sidebar->setImage(Assets::image_path("sidebar/person-sidebar.png"));
+$sidebar->setImage('sidebar/person-sidebar.png');
 $actions = new ViewsWidget();
 $actions->addLink(_('Benutzer verwalten'), $controller->url_for('admin/user'))->setActive($action == 'index');
 if (in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN'])) {

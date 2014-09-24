@@ -43,22 +43,24 @@ use Studip\Button,
                     ?>
                     <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                         <br>
-                        <?= sprintf( _("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie diese auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
-                            "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;<a href=\"raumzeit.php?cid=". $seminarID ."\" onClick=\"return check_opener(this)\">",
-                            "</a>");
+                        <?= sprintf(_("Um die Belegung zu verändern, ändern Sie diese auf der Seite %sZeiten / Räume%s der Veranstaltung"),
+                                    Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
+                                    "<a href=\"raumzeit.php?cid=". $seminarID ."\" onClick=\"return check_opener(this)\">",
+                                    "</a>");
                         ?>
                     <? endif; ?>
                 <? elseif ($owner_type == "date") : ?>
                     <?= sprintf (_("Diese Belegung ist ein Einzeltermin der Veranstaltung %s, die in diesem Raum stattfindet."),
                         ($perm->have_studip_perm("user", $seminarID)) ?
-                            "<a href=\"seminar_main.php?auswahl=". $seminarID ."\" onClick=\"return check_opener(this)\">". htmlReady($seminarName) ."</a>" :
+                            "<a href=\"seminar_main.php?auswahl=" . $seminarID . "\" onClick=\"return check_opener(this)\">". htmlReady($seminarName) ."</a>" :
                             "<a href=\"dispatch.php/course/details/?&sem_id=". $seminarID ."\" onClick=\"return check_opener(this)\">". htmlReady($seminarName) ."</a>");
                         ?>
                     <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                         <br>
-                        <?= sprintf (_("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie bitte den Termin auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
-                            "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;<a href=\"raumzeit.php?cid=".
-                                $seminarID . "#irregular_dates\" onClick=\"return check_opener(this)\">", "</a>");
+                        <?= sprintf(_("Um die Belegung zu verändern, ändern Sie bitte den Termin auf der Seite %sZeiten / Räume%s der Veranstaltung"),
+                                   Assets::img('icons/16/black/schedule.png') . "&nbsp;" .
+                                   "<a href=\"raumzeit.php?cid=" . $seminarID . "#irregular_dates\" onClick=\"return check_opener(this)\">",
+                                   "</a>");
                         ?>
                     <? endif ?>
                 <? else : ?>

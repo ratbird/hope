@@ -154,11 +154,13 @@ class StudipSemTreeViewSimple {
             if ($this->tree->hasKids($item_id) && $num_all_entries){
                 if ($this->show_entries != "sublevels"){
                     if ($num_all_entries <= 100) echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen"), false) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id={$this->start_item_id}_withkids")) ."\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo '&nbsp;';
                 } else {
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo '&nbsp;';
                 }
-                printf(_("<b>%s</b> Eintr&auml;ge in allen Unterebenen vorhanden"), $num_all_entries);
+                printf(_("<b>%s</b> Einträge in allen Unterebenen vorhanden"), $num_all_entries);
                 if ($this->show_entries != "sublevels"){
                     echo "</a>";
                 }
@@ -167,11 +169,13 @@ class StudipSemTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen"), false) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id=$item_id")) ."\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo '&nbsp;';
                 } else {
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo '&nbsp;';
                 }
-                printf(_("<b>%s</b> Eintr&auml;ge auf dieser Ebene.&nbsp;"),$num_entries);
+                printf(_("<b>%s</b> Einträge auf dieser Ebene.&nbsp;"),$num_entries);
                 if ($this->show_entries != "level"){
                     echo "</a>";
                 }

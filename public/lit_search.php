@@ -205,16 +205,20 @@ if (($num_hits = $_the_search->getNumHits())){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2left.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\">";
+    echo Assets::img('icons/16/blue/arr_2left.png', array('hspace' => 3));
+    echo "</a>";
 } else {
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
+    echo Assets::img('forumleer.gif', array('size' => '17@18'));
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2right.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\">";
+    echo Assets::img('icons/16/blue/arr_2right.png', array('hspace' => 3));
+    echo "</a>";
 } else {
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
+    echo Assets::img('forumleer.gif', array('size' => '17@18'));
 }
 ?>
 </td></tr>
@@ -226,13 +230,17 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";
         $link=URLHelper::getLink('',array('cmd'=>'add_to_clipboard','catalog_id'=>$element->getValue("catalog_id")));
         if ($_the_clipboard->isInClipboard($element->getValue("catalog_id"))) {
-            $addon="<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" hspace=\"4\"  border=\"0\" " .
-                tooltip(_("Dieser Eintrag ist bereits in Ihrer Merkliste")) . ">";
+            $addon = Assets::img('icons/16/red/exclaim.png',
+                                 tooltip2(_('Dieser Eintrag ist bereits in Ihrer Merkliste')) +
+                                 array('hspace' => 4));
         } else {
-            $addon="<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\"  border=\"0\" " .
-                tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
+            $addon = "<a href=\"$link\">";
+            $addon .= Assets::img('icons/16/blue/exclaim.png',
+                                  tooltip2(_('Eintrag in Merkliste aufnehmen')) +
+                                  array('hspace' => 4));
+            $addon .= "</a>";
         }
-        printhead(0,0,false,"open",true,"<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/literature.png\" border=\"0\" align=\"bottom\">",
+        printhead(0,0,false,"open",true, Assets::img('icons/16/blue/literature.png'),
               htmlReady(my_substr($element->getShortName(),0,85)),$addon);
         echo "\n</tr></table>";
         $content = "";
@@ -271,16 +279,20 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2left.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\">";
+    echo Assets::img('icons/16/yellow/arr_2left.png', array('hspace' => 3));
+    echo "</a>";
 } else {
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
+    echo Assets::img('forumleer.gif', array('size' => '17@18'));
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2right.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\">";
+    echo Assets::img('icons/16/blue/arr_2right.png', array('hspace' => 3));
+    echo "</a>";
 } else {
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
+    echo Assets::img('forumleer.gif', array('size' => '17@18'));
 }
 ?>
 </td></tr>
@@ -320,7 +332,6 @@ print_infobox ($infobox, "sidebar/literature-sidebar.png");
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()), (array)$_attributes['lit_select']))?>
-    <div align="center"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
     <?=$_the_clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>

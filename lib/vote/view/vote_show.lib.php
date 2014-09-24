@@ -689,11 +689,11 @@ function createVoteResult ($vote, $preview = NO)
       } else {
           $bar = VOTE_BAR_MIDDLE . '50.png';
       }
-      $html .= "&nbsp;<img src=\"".VOTE_BAR_LEFT."\" width=1 height=10 class=middle>";
-      $html .= "<img src=\"". Assets::image_path($bar) ."\"";
-      $html .= " width=\"" . ($val/$max * 100 + 1) . "\" height=10 class=middle>";
-      $html .= "<img src=\"".VOTE_BAR_RIGHT."\" width=1 height=10 class=middle>";
-      }
+      $html .= "&nbsp;";
+      $html .= Assets::img(VOTE_BAR_LEFT, array('size' => '1@10', 'class' => 'middle'));
+      $html .= Assets::img($bar, array('size' => ($val/$max * 100 + 1) . '@10', 'class' => 'middle'));
+      $html .= Assets::img(VOTE_BAR_RIGHT, array('size' => '1@10', 'class' => 'middle'));
+    }
       $html .= "&nbsp;</td>\n";
 
       if ($co_visibility) {

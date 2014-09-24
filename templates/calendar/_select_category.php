@@ -9,6 +9,6 @@
         </option>
         <? endforeach; ?>
     </select>
-    <input type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" border="0" class="text-top">
+    <?= Assets::input('icons/16/blue/accept.png', array('class' => 'text-top')) ?>
 </form>
 

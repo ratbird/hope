@@ -5,7 +5,7 @@
                 <tr>
                     <td align="center" width="10%" height="40">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime - 86400)) ?>">
-                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1left.png') ?>"<?= tooltip(_("zurück")) ?>>
+                            <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_('zurück'))) ?>
                         </a>
                     </td>
                     <td class="calhead" width="80%">
@@ -14,14 +14,14 @@
                     </td>
                     <td align="center" width="10%">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime + 86400)) ?>">
-                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1right.png') ?>"<?= tooltip(_("vor")) ?>>
+                            <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_('vor'))) ?>
                         </a>
                     </td>
                 </tr>
             <? if ($start > 0) : ?>
                 <tr><td align="center" colspan="3">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime - (date('G', $atime) * 3600 - $start + 3600)))) ?>">
-                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1up.png') ?>"<?= tooltip(_("zeig davor")) ?>>
+                            <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
                         </a>
                     </td>
                 </tr>
@@ -40,7 +40,7 @@
     <tr>
         <td align="center">
             <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime + $end - date('G', $atime) * 3600 + 3600))) ?>">
-                <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1down.png') ?>"<?= tooltip(_("zeig danach")) ?>>
+                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
             </a>
         </td>
     </tr>

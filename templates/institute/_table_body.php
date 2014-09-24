@@ -12,16 +12,22 @@ use Studip\Button, Studip\LinkButton;
         if ($mail_gruppe) { 
             ?>
             <th colspan="2" height="20">
-            <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
-            <img src="<?= Assets::image_path('icons/16/blue/mail.png') ?>" <?= tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $th_title)) ?> border="0"></a>&nbsp;
+                <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
+                    <?= Assets::img('icons/16/blue/mail.png',
+                                    tooltip2(sprintf(_('Nachricht an alle Mitglieder mit dem Status %s verschicken'),
+                                                     $th_title))) ?>
+                </a>
             </th>
             <? 
         } 
         elseif ($mail_status) { 
             ?>
             <th colspan="2" height="20">
-            <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&group_id=".$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
-            <img src="<?= Assets::image_path('icons/16/blue/mail.png') ?>" <?= tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $th_title)) ?> border="0"></a>&nbsp;
+                <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&group_id=".$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
+                    <?= Assets::img('icons/16/blue/mail.png',
+                                    tooltip2(sprintf(_('Nachricht an alle Mitglieder der Gruppe %s verschicken'),
+                                                     $th_title))) ?>
+                </a>
             </th>
             <? 
         } 
@@ -44,7 +50,7 @@ use Studip\Button, Studip\LinkButton;
         print "<tr>\n";
         if ($member['fullname']) {
             print "<td>";
-            echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"2\" height=\"1\">";
+            echo Assets::img('blank.gif', array('size' => '2@1'));
             echo '<font size="-1">';
             if ($admin_view) {
                 printf("<a href=\"%s\">%s</a>\n",
@@ -101,9 +107,9 @@ use Studip\Button, Studip\LinkButton;
         if ($structure["nachricht"]) {
             print "<td align=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n";
             printf("<a href=\"%s\">", URLHelper::getLink("dispatch.php/messages/write?rec_uname=".$member['username']));
-            printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an Benutzer verschicken"));
-            printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
-            echo '</td>';
+            print Assets::img('icons/16/blue/mail.png', tooltip2(_('Nachricht an Benutzer verschicken')) + array('valign' => 'baseline'));
+            print '</a>';
+            print '</td>';
 
             if ($admin_view && !LockRules::Check($range_id, 'participants')) {
                 echo '<td width="1%" nowrap>';

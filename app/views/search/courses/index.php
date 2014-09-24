@@ -18,7 +18,7 @@
 
 <?
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+$sidebar->setImage('sidebar/seminar-sidebar.png');
 
 // add search options to sidebar
 $widget = new OptionsWidget();

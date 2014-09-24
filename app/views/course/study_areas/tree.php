@@ -15,8 +15,9 @@
       <?= $this->render_partial('course/study_areas/entry', array('area' => $area, 'show_link' => $area !== $last)) ?>
 
       <? if ($area === $last) : ?>
-        <input type="image" name="study_area_selection[showall_button]" title="Alle Unterebenen einblenden"
-               alt="Alle Unterebenen einblenden" src="<?= Assets::image_path('sem_tree.gif') ?>">
+        <?= Assets::input('sem_tree.gif',
+                          tooltip2(_('Alle Unterebenen einblenden')) +
+                          array('name' => 'study_area_selection[showall_button]')) ?>
       <? endif ?>
 <? endforeach ?>
 

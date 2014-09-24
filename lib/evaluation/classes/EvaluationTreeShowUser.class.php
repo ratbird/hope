@@ -143,7 +143,7 @@ class EvaluationTreeShowUser {
         /* a little space to indent subgroups */
         $level_output .=
         "<td valign=\"top\" width=\"".INDENT_PIXELS."\" height=\"1\" nowrap>".
-        "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"".INDENT_PIXELS."\" height=\"1\" border=\"0\" alt=\"\">".
+        Assets::img('forumleer.gif', array('size' => INDENT_PIXELS . '@1')).
         "</td>";
     }
 
@@ -200,7 +200,7 @@ class EvaluationTreeShowUser {
         echo "</td>";
 
         echo "<td width=\"1\">\n";
-        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"2\" height=\"1\" border=\"0\" alt=\"\"></td>";
+        echo Assets::img('forumleer.gif', array('size' => '2@1'));
         echo "</td>\n";
 
     } else {
@@ -232,7 +232,8 @@ class EvaluationTreeShowUser {
 
         /* a little space to indent subgroups */
         $level_output = "<td width=\"".INDENT_PIXELS."\">".
-        "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"".INDENT_PIXELS."\" height=\"1\" border=\"0\" alt=\"\"></td>".
+        Assets::img('forumleer.gif', array('size' => INDENT_PIXELS . '@1')).
+        "</td>".
         $level_output;
     }
 

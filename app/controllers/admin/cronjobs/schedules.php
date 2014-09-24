@@ -86,7 +86,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         // http://www.flickr.com/photos/robbie73/5924985913/
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Cronjobs'));
-        $sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
+        $sidebar->setImage('sidebar/date-sidebar.png');
 
 
         // Aktionen
@@ -200,7 +200,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
         $sidebar = Sidebar::Get();
-        $sidebar->setImage(Assets::image_path('sidebar/date-sidebar.png'));
+        $sidebar->setImage('sidebar/date-sidebar.png');
         $sidebar->setTitle(_('Cronjobs'));
 
         $actions = new ActionsWidget();

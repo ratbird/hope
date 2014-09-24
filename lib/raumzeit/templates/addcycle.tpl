@@ -19,7 +19,7 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
                 <TD width="2%" align="right" valign="top" class="<?=$class?>">
-                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" align="abstop">
+                    <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                 </TD>
                 <TD width="98%" nowrap class="<?=$class?>" colspan="8">
                     <FONT size="-1">

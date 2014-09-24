@@ -238,7 +238,7 @@ class Admin_StudycourseController extends AuthenticatedController
     {
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Studiengänge'));
-        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
 
         $links = new ActionsWidget();
         $links->addLink(_('Gruppierung nach Fächer'), $this->url_for('admin/studycourse/profession'), 'icons/16/blue/visibility-visible.png');

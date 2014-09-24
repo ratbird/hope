@@ -143,14 +143,16 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
     </div>
     <div class="content_column">
         <div class="timer">
-            <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/thread/' . $thread->getId(), array('cid' => $thread['Seminar_id'])) ?>" class="permalink" title="<?= _("Permalink") ?>" style="background-image: url('<?= Assets::image_path("icons/16/grey/group") ?>');">
+            <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/thread/' . $thread->getId(), array('cid' => $thread['Seminar_id'])) ?>" class="permalink" title="<?= _("Permalink") ?>">
                 <span class="time" data-timestamp="<?= (int) $thread['mkdate'] ?>">
                     <?= (date("j.n.Y", $thread['mkdate']) == date("j.n.Y")) ? sprintf(_("%s Uhr"), date("G:i", $thread['mkdate'])) : date("j.n.Y", $thread['mkdate']) ?>
                 </span>
             </a>
             <? if (($thread['Seminar_id'] !== $thread['user_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $thread['Seminar_id']))
                     or ($thread['user_id'] === $GLOBALS['user']->id)) : ?>
-            <a href="#" class="edit icon" alt="<?= _("Bearbeiten") ?>" title="<?= _("Bearbeiten") ?>" onClick="return false;" style="background-image: url('<?= Assets::image_path("icons/16/grey/tools") ?>');"></a>
+            <a href="#" class="edit icon" onClick="return false;">
+                <?= Assets::img('icons/16/grey/tools.png', tooltip2(_('Bearbeiten')) + array('size' => 14)) ?>
+            </a>
             <? endif ?>
         </div>
         <div class="name">

@@ -6,24 +6,22 @@
 <table id="news_box" role="article" class="index_box" <? if ($width): ?>style="width: <?= $width ?>;"<? endif; ?>>
     <tr>
         <td class="table_header_bold">
-            <img src="<?= Assets::image_path('icons/16/white/news.png') ?>" 
-                 <?= tooltip(_('Newsticker. Klicken Sie rechts auf die Zahnräder, '
-                              .'um neue Ankündigungen in diesen Bereich einzustellen. '
-                              .'Klicken Sie auf die Pfeile am linken Rand, um den '
-                              .'ganzen Nachrichtentext zu lesen.')) ?>>
+            <?= Assets::img('icons/16/white/news.png', 
+                            tooltip2(_('Newsticker. Klicken Sie rechts auf die Zahnräder, '
+                                      .'um neue Ankündigungen in diesen Bereich einzustellen. '
+                                      .'Klicken Sie auf die Pfeile am linken Rand, um den '
+                                      .'ganzen Nachrichtentext zu lesen.'))) ?>
             <b><?= _('Ankündigungen') ?></b>
         </td>
         <td align="right" class="table_header_bold">
         <? if ($rss_id): ?>
             <a href="rss.php?id=<?= $rss_id ?>">
-                <img src="<?= Assets::image_path('icons/16/white/rss.png') ?>"
-                     <?= tooltip(_('RSS-Feed')) ?>>
+                <?= Assets::img('icons/16/white/rss.png', tooltip2(_('RSS-Feed'))) ?>
             </a>
         <? endif; ?>
         <? if ($may_add): ?>
             <a href="<?= URLHelper::getURL('dispatch.php/news/edit_news/new/'.$range_id)?>" rel="get_dialog" target="_blank">
-                <img src="<?= Assets::image_path('icons/16/white/add.png') ?>" 
-                     <?= tooltip(_('Ankündigung erstellen')) ?>>
+                <?= Assets::img('icons/16/white/add.png', tooltip2(_('Ankündigung erstellen'))) ?>
             </a>
         <? endif; ?>
         </td>

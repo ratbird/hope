@@ -43,7 +43,7 @@ echo $message;
 <?
 $sidebar = Sidebar::Get();
 $sidebar->setTitle(_('Sperrebenen'));
-$sidebar->setImage(Assets::image_path('sidebar/lock-sidebar.png'));
+$sidebar->setImage('sidebar/lock-sidebar.png');
 
 if ($GLOBALS['perm']->have_perm('root')) {
 $actions = new ActionsWidget();

@@ -14,8 +14,10 @@
         <label>
             <input name="freesearch" type="text" placeholder="<?=_('Suchen')?>"
                    aria-label="<?= _('Suchbegriff') ?>" style="width: 45%" value="<?= htmlReady($search) ?>">
-            <input type="image" name="submit_search" class="stay_on_dialog" src="<?= Assets::image_path('icons/16/blue/search.png')?>"
-                   aria-label="<?= _('Suche starten') ?>">
+            <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Suche starten')) + array(
+                    'name' => 'submit_search',
+                    'class' => 'stay_on_dialog',
+            )) ?>
         </label>
         <br><br>
          <select name="search_preset" aria-label="<?= _('Vorauswahl bestimmter Bereiche, alternativ zur Suche') ?>"
@@ -25,7 +27,10 @@
                 <?= _("aktuelle Einrichtung"); ?>
             </option>
         </select>
-        <input type="image" name="submit_search_preset" class="stay_on_dialog" src="<?= Assets::image_path('icons/16/blue/accept.png')?>" aria-label="<?= _('Vorauswahl anwenden') ?>">
+        <?= Assets::input('icons/16/blue/accept.png', tooltip2(_('Vorauswahl anwenden')) + array(
+                'name' => 'submit_search_preset',
+                'class' => 'stay_on_dialog',
+        )) ?>
 
         <div id="search_persons_content">
             <div style="display: inline-block; float: left; width: 44%; height: 100%">
@@ -44,9 +49,21 @@
                 <br>
                 <br>
                 <br>
-                <input type="image" id="search_persons_add" class="stay_on_dialog" name="search_persons_add" src="<?= Assets::image_path('icons/16/blue/arr_2right.png')?>" aria-label="<?= _('In den Suchergebnissen markierte Bereiche der Gruppe hinzufügen') ?>">
+                <?= Assets::input('icons/16/blue/arr_2right.png',
+                                  tooltip2(_('In den Suchergebnissen markierte Bereiche der Gruppe hinzufügen')) +
+                                  array(
+                                      'id' => 'search_persons_add',
+                                      'name' => 'search_persons_add',
+                                      'class' => 'stay_on_dialog',
+                )) ?>
                 <br><br>
-                <input type="image" id="search_persons_remove" class="stay_on_dialog" name="search_persons_remove" src="<?= Assets::image_path('icons/16/blue/arr_2left.png')?>" aria-label="<?= _('Bei den bereits ausgewählten Personen die markierten Personen entfernen') ?>">
+                <?= Assets::input('icons/16/blue/arr_2left.png',
+                                  tooltip2(_('Bei den bereits ausgewählten Personen die markierten Personen entfernen')) +
+                                  array(
+                                      'id' => 'search_persons_remove',
+                                      'name' => 'search_persons_remove',
+                                      'class' => 'stay_on_dialog',
+                )) ?>
             </div>
             <div style="display: inline-block; float: right; width: 44%">
                 <label>

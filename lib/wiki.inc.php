@@ -674,7 +674,7 @@ function listPages($mode, $sortby = NULL) {
         echo "<tr><td class=\"blank\" colspan=\"2\">";
         echo "<table id=\"main_content\" role=\"main\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
         echo "<tr height=28>";
-        $s = "<td class=\"content_title\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
+        $s = "<td class=\"content_title\" width=\"%d%%\" align=\"%s\">%s</td>";
         printf($s, 3, "left", "&nbsp;");
         printf($s, 39,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$titlesortlink")."\">"._("Titel")."</a></b></font>");
         printf($s, 10,"center",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$versionsortlink")."\">"._("Änderungen")."</a></b></font>");
@@ -1261,7 +1261,7 @@ function getShowPageInfobox($keyword, $latest_version)
     }
 
     $element = new WidgetElement($toccont_empty ? _('Keine QuickLinks vorhanden') : $toccont);
-    $element->icon = Assets::image_path('icons/16/blue/link-intern.png');
+    $element->icon = 'icons/16/blue/link-intern.png';
     $widget->addElement($element);
     $sidebar->addWidget($widget);
 
@@ -1473,7 +1473,8 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
 
     if ($perm->have_studip_perm("autor", $SessSemName[1])) {
         if (!$latest_version) {
-            $edit='<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/lock-locked.png">'. _("Ältere Version, nicht bearbeitbar!");
+            $edit  = Assets::img('icons/16/black/lock-locked.png');
+            $edit .= _("Ältere Version, nicht bearbeitbar!");
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
@@ -1673,7 +1674,7 @@ function showComboDiff($keyword, $db=NULL) {
             if ($count % 4 == 0) {
                 $content.= "<tr width=\"100%\">";
             }
-            $content.= "<td bgcolor=".create_color($count)." width=14><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=12 height=12></td><td><font size=-1>".get_fullname($i->who,'full',1)."</font></td><td><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=12 height=12></td>";
+            $content.= "<td bgcolor=".create_color($count)." width=14>&nbsp;</td><td><font size=-1>".get_fullname($i->who,'full',1)."</font></td><td>&nbsp;</td>";
             if ($count % 4 == 3) {
                 $content .= "</tr>";
             }
@@ -1696,8 +1697,7 @@ function showComboDiff($keyword, $db=NULL) {
                 $col=create_color($idx);
                 echo "<tr bgcolor=$col>";
                 echo "<td width=30 align=center valign=top>";
-                echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=3 width=3><br>";
-                echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" ". tooltip(_("Änderung von").' ' . get_fullname($last_author), TRUE, TRUE). ">";
+                echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_("Änderung von").' ' . get_fullname($last_author)));
                 echo "</td>";
                 echo "<td><font size=-1>";
                 echo wikiReady($collect);

@@ -106,7 +106,7 @@ class ShowList extends ShowTreeRow{
             if (!$resObject->getCategoryIconnr())
                 $icon = Assets::img('icons/16/grey/folder-full.png', array('class' => 'text-top'));
             else
-                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
+                $icon = Assets::img('cont_res' . $resObject->getCategoryIconnr() . '.gif');
 
             if ($_SESSION['resources_data']["structure_opens"][$resObject->id]) {
                 $link = URLHelper::getLink('?structure_close=' . $resObject->id . $link_add . '#a');

@@ -915,12 +915,12 @@ function form($refresh = FALSE)
     $print.= "\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"".(ini_get('upload_max_filesize')*1048576)."\" />";
     $print.= CSRFProtection::tokenTag();
     if ($folder_system_data['zipupload'])
-        $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgew&auml;hlt:")
+        $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgewählt:")
             . '<br>' . _("Die Dateien und Ordner, die im hochzuladenden Ziparchiv enthalten sind, werden in diesen Ordner entpackt.") .  "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
     else if (!$refresh)
-        $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgew&auml;hlt:") . "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
+        $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgewählt:") . "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
     else
-        $print .= "\n<br><br>" . _("Sie haben diese Datei zum Aktualisieren ausgew&auml;hlt. Sie <b>&uuml;berschreiben</b> damit die vorhandene Datei durch eine neue Version!") . "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
+        $print .= "\n<br><br>" . _("Sie haben diese Datei zum Aktualisieren ausgewählt. Sie <b>überschreiben</b> damit die vorhandene Datei durch eine neue Version!") . "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
     $print.="\n";
     $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>";
 
@@ -929,7 +929,7 @@ function form($refresh = FALSE)
         if ($UPLOAD_TYPES[$SessSemName["art_num"]]) {
             if ($UPLOAD_TYPES[$SessSemName["art_num"]]["type"] == "allow") {
                 $i=1;
-                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
+                $print.= _("Unzulässige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES[$SessSemName["art_num"]]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -939,7 +939,7 @@ function form($refresh = FALSE)
                 }
             else {
                 $i=1;
-                $print.= _("Zul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
+                $print.= _("Zulässige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES[$SessSemName["art_num"]]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -951,7 +951,7 @@ function form($refresh = FALSE)
         else {
             if ($UPLOAD_TYPES["default"]["type"] == "allow") {
                 $i=1;
-                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
+                $print.= _("Unzulässige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES["default"]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -961,7 +961,7 @@ function form($refresh = FALSE)
                 }
             else {
                 $i=1;
-                $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
+                $print.= _("Zulässige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES["default"]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -971,30 +971,30 @@ function form($refresh = FALSE)
                 }
             }
     } else {
-        $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
+        $print.= _("Zulässige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
         $print .= 'ZIP';
     }
     $print.="</font></td></tr>";
-    $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>" . _("Maximale Gr&ouml;&szlig;e:") . "</b></font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1><b>".($max_filesize / 1048576)." </b>" . _("Megabyte") . "</font></td></tr>";
+    $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>" . _("Maximale Größe:") . "</b></font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1><b>".($max_filesize / 1048576)." </b>" . _("Megabyte") . "</font></td></tr>";
     if ($folder_system_data['zipupload']) {
         $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>" . _("Maximaler Inhalt des Ziparchivs:")
             . "</b></font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>"
             . sprintf(_("<b>%d</b> Dateien und <b>%d</b> Ordner"),get_config('ZIP_UPLOAD_MAX_FILES'), get_config('ZIP_UPLOAD_MAX_DIRS'))
             . "</font></td></tr>";
     }
-    $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
+    $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuwählen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;<label for=\"the_file\">" . _("Dateipfad:") . "</label>&nbsp;</font><br>";
     $print.= "&nbsp;<input name=\"the_file\" id=\"the_file\" aria-required=\"true\" type=\"file\"  style=\"width: 70%\" size=\"30\">&nbsp;</td></td>";
     $print.= "\n</tr>";
     if (!$refresh && !$folder_system_data['zipupload']) {
-        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urheberrecht.") . "</font></td></tr>";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gemäß Urheberrecht.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>";
         $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja, dieses Dokument ist frei von Rechten Dritter") ;
         $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein, dieses Dokument ist <u>nicht</u> frei von Rechten Dritter");
         $print.= "</label></td></tr>";
 
-        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen f&uuml;r die Datei ein.") . "</font></td></tr>";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></label></td></tr>";
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
@@ -1003,7 +1003,7 @@ function form($refresh = FALSE)
     } else if ($folder_system_data['zipupload']) {
         $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
     } else {
-        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
     }
     $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
@@ -1088,7 +1088,7 @@ function validate_upload($the_file, $real_file_name='') {
     $the_file_name = $the_file['name'];
 
     if (!$the_file) { # haben wir eine Datei?
-        $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
+        $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgewählt!") . "§";
     } else { # pruefen, ob der Typ stimmt
         if ($i_page == "dispatch.php/messages/upload_attachment") {
             if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
@@ -1131,9 +1131,9 @@ function validate_upload($the_file, $real_file_name='') {
                 }
             if (!$t) {
                 if ($i==2)
-                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Sie d&uuml;rfen den Dateityp %s nicht hochladen!"), trim($exts)) . "§";
+                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht übertragen werden: Sie dürfen den Dateityp %s nicht hochladen!"), trim($exts)) . "§";
                 else
-                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Sie d&uuml;rfen die Dateitypen %s nicht hochladen!"), trim($exts)) . "§";
+                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht übertragen werden: Sie dürfen die Dateitypen %s nicht hochladen!"), trim($exts)) . "§";
                 if ($doc) {
                     $help_url = format_help_url("Basis.DateienUpload");
                     $emsg.= "info§" . sprintf(_("%sHier%s bekommen Sie Hilfe zum Upload von Word-Dokumenten."), "<a target=\"_blank\" href=\"".$help_url."\">", "</a>") . "§";
@@ -1152,9 +1152,9 @@ function validate_upload($the_file, $real_file_name='') {
                 }
             if (!$t) {
                 if ($i==2)
-                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Sie d&uuml;rfen nur den Dateityp %s hochladen!"), trim($exts)) . "§";
+                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht übertragen werden: Sie dürfen nur den Dateityp %s hochladen!"), trim($exts)) . "§";
                 else
-                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Sie d&uuml;rfen nur die Dateitypen %s hochladen!"), trim($exts)) . "§";
+                    $emsg.= "error§" . sprintf(_("Die Datei konnte nicht übertragen werden: Sie dürfen nur die Dateitypen %s hochladen!"), trim($exts)) . "§";
                 if ($doc) {
                     $help_url = format_help_url("Basis.DateienUpload");
                     $emsg.= "info§" . sprintf(_("%sHier%s bekommen Sie Hilfe zum Upload von Word-Dokumenten."), "<a target=\"_blank\" href=\"".$help_url."\">", "</a>") . "§";
@@ -1164,9 +1164,9 @@ function validate_upload($the_file, $real_file_name='') {
 
         //pruefen ob die Groesse stimmt.
         if ($the_file_size == 0) {
-            $emsg.= "error§" . _("Sie haben eine leere Datei zum Hochladen ausgew&auml;hlt!") . "§";
+            $emsg.= "error§" . _("Sie haben eine leere Datei zum Hochladen ausgewählt!") . "§";
         } else if ($the_file_size > $max_filesize) {
-            $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Die maximale Gr&ouml;sse f&uuml;r einen Upload (%s Megabyte) wurde &uuml;berschritten!"), $max_filesize / 1048576);
+            $emsg.= "error§" . sprintf(_("Die Datei konnte nicht übertragen werden: Die maximale Größe für einen Upload (%s Megabyte) wurde überschritten!"), $max_filesize / 1048576);
         }
     }
 
@@ -1198,7 +1198,7 @@ function upload($the_file, $refresh, $range_id)
     // wird noch in folder.php gebraucht
     $dokument_id = $doc->getId();
 
-    $msg = "msg§" . _("Die Datei wurde erfolgreich auf den Server &uuml;bertragen!");
+    $msg = "msg§" . _("Die Datei wurde erfolgreich auf den Server übertragen!");
     return TRUE;
 }
 
@@ -1247,7 +1247,8 @@ function JS_for_upload() {
     <div id="upload_window_template" style="display: none">
         <?= htmlReady(
             "<html><head><title>Datei Upload</title></head>" .
-            '<body bgcolor="#ffffff"><center><p><img src="'. $GLOBALS['ASSETS_URL'] .'images/alienupload.gif" width="165" height="125"></p>' .
+            '<body bgcolor="#ffffff"><center><p>' .
+            Assets::img('alienupload.gif', array('size' => '165@125')) . '</p>' .
             "<p><font face='arial, helvetica, sans-serif'><b>&nbsp;:file_only</b><br>&nbsp;"._("wird hochgeladen.") ."<br>&nbsp;" ._("Bitte haben Sie etwas Geduld!"). "<br></font></p></body></html>"
         ) ?>
     </div>
@@ -1436,7 +1437,7 @@ function link_form ($range_id, $updating=FALSE)
     $print.= "\n</tr>";
     if (!$refresh) {
 
-        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urheberrecht.") . "</font></td></tr>";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gemäß Urheberrecht.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dieses Dokument ist frei von Rechten Dritter:") . "&nbsp;";
         $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja");
         $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein");
@@ -1449,7 +1450,7 @@ function link_form ($range_id, $updating=FALSE)
         $print.= "\n&nbsp;<textarea name=\"description\" id=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea></label>&nbsp;</td></tr>";
         $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
     } else
-        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu überschreiben.") . "</font></td></tr>";
     $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
     $print .= '<div class="button-group">';
@@ -1521,7 +1522,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         } else {
             $content .= _("Keine Beschreibung vorhanden");
         }
-        $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
+        $content .=  "<br><br>" . sprintf(_("<b>Dateigröße:</b> %s kB"), round ($datei["filesize"] / 1024));
         $content .=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
         if ($all) {
             $content .= "<br>" . sprintf("<b>%s</b> <a class=\"link-intern\" title=\"%s\" href=\"%s\">%s</a>",
@@ -1533,7 +1534,8 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     }
 
     if ($move == $datei["dokument_id"])
-        $content.="<br>" . sprintf(_("Diese Datei wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um diese Datei in den gew&uuml;nschten Ordner zu verschieben / kopieren. Wenn Sie diese Datei in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus (sofern Sie Dozent oder Tutor in einer anderen Veranstaltung sind)."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen")) . ">");
+        $content.="<br>" . sprintf(_("Diese Datei wurde zum Verschieben / Kopieren markiert. Bitte wählen Sie das Einfügen-Symbol %s, um diese Datei in den gewünschten Ordner zu verschieben / kopieren. Wenn Sie diese Datei in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus (sofern Sie Dozent oder Tutor in einer anderen Veranstaltung sind)."),
+                                   Assets::img('icons/16/yellow/arr_2right.png', tooltip2(_("Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen"))));
 
     $content.= "\n";
 
@@ -1590,9 +1592,9 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>";
     if ($datei["protected"]) {
         if(check_protected_download($datei["dokument_id"])){
-            $detail .=_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist unzul&auml;ssig!");
+            $detail .=_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist unzulässig!");
         } else {
-            $detail .= _("Sie k&ouml;nnen diese Datei nicht herunterladen, so lange diese Veranstaltung einen offenen Teilnehmerkreis aufweist.");
+            $detail .= _("Sie können diese Datei nicht herunterladen, so lange diese Veranstaltung einen offenen Teilnehmerkreis aufweist.");
         }
         $content .= MessageBox::info(_("Diese Datei ist urheberrechtlich geschützt."), array($detail));
     }
@@ -1639,16 +1641,16 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
             "align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"bottom\"><a href=\"";
         print URLHelper::getLink("?close=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
-            $datei["dokument_id"]."', '".$SessionSeminar."')\"><img id=\"file_".
-            $datei["dokument_id"]."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL'].
-            "images/forumgraurunt2.png\"".tooltip(_("Objekt zuklappen"))."></a></td>";
+            $datei["dokument_id"]."', '".$SessionSeminar."')\">".
+            Assets::img('forumgraurunt2.png', tooltip2(_('Objekt zuklappen')) + array('id' => 'file_'. $datei["dokument_id"] . '_arrow_img')).
+            "</a></td>";
     } else {
         print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"bottom\"><a href=\"";
         print URLHelper::getLink("?open=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
-            $datei["dokument_id"]."', '".$SessionSeminar."')\"><img id=\"file_".
-            $datei["dokument_id"]."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL'].
-            "images/forumgrau2.png\"".tooltip(_("Objekt aufklappen"))."></a></td>";
+            $datei["dokument_id"]."', '".$SessionSeminar."')\">".
+            Assets::img('forumgraurunt2.png', tooltip2(_('Objekt aufklappen')) + array('id' => 'file_'. $datei["dokument_id"] . '_arrow_img')).
+            "</a></td>";
     }
 
     // -> Pfeile zum Verschieben (bzw. die Ziehfläche)
@@ -1763,20 +1765,23 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     //Ausgabe der Optionen zu dem Ordner mit Beschreibung, Knöpfen und PiPaPo
     print "<tr>";
 
-    if ((($document_count > 0) || ($folder_tree->hasKids($folder_id))) && ($folder_tree->isReadable($folder_id)))
-        print "<td style=\"background-image: url(".$GLOBALS['ASSETS_URL']."images/datatree_grau.gif); background-repeat: repeat-y;\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_grau.gif\"></td>";
-    else
+    if ((($document_count > 0) || ($folder_tree->hasKids($folder_id))) && ($folder_tree->isReadable($folder_id))) {
+        print "<td style=\"background-image: url(".Assets::image_path('datatree_grau.gif') . "); background-repeat: repeat-y;\">";
+        print Assets::img('datatree_grau.gif');
+        print "</td>";
+    } else {
         print "<td class=\"printcontent\">&nbsp;</td>";
+    }
     print "<td width=100% class=\"printcontent\" style=\"font-align: center\">";
 
     $content='';
     if ($super_folder){
-        $content .=  '<img class=\"texttop\" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/lock-locked.png">&nbsp;'
+        $content .=  Assets::img('icons/16/grey/lock-locked.png', array('class' => 'texttop')) . '&nbsp;'
             . sprintf(_("Dieser Ordner ist nicht zugänglich, da der übergeordnete Ordner \"%s\" nicht lesbar oder nicht sichtbar ist!"), htmlReady($folder_tree->getValue($super_folder,'name')))
             . '<hr>';
     }
     if ($folder_tree->isExerciseFolder($folder_id)){
-        $content .=  '<img  class=\"texttop\" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/edit.png">&nbsp;'
+        $content .=  Assets::img('icons/16/grey/edit.png', array('class' => 'texttop')) . '&nbsp;'
                 . _("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden.")
                 . (!$rechte ? _("Sie selbst haben folgende Dateien in diesen Ordner eingestellt:")
                 . '<br><b>' . htmlReady(join('; ', get_user_documents_in_folder($folder_id, $GLOBALS['user']->id))).'</b>' : '')
@@ -1807,9 +1812,9 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         if($rechte){
             if ($folder_tree->permissions_activated){
                 $content.= "\n<label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isReadable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_read\">&nbsp;";
-                $content.= '<b>r</b> - ' . _("Lesen (Dateien k&ouml;nnen heruntergeladen werden)");
+                $content.= '<b>r</b> - ' . _("Lesen (Dateien können heruntergeladen werden)");
                 $content.= "</label>\n<br><label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isWritable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_write\">&nbsp;";
-                $content.= '<b>w</b> - ' . _("Schreiben (Dateien k&ouml;nnen heraufgeladen werden)");
+                $content.= '<b>w</b> - ' . _("Schreiben (Dateien können heraufgeladen werden)");
                 $content.= "</label>\n<br><label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isExecutable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_exec\">&nbsp;";
                 $content.= '<b>x</b> - ' . _("Sichtbarkeit (Ordner wird angezeigt)") . '</label>';
             }
@@ -1839,8 +1844,12 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     else
         $content .= _("Keine Beschreibung vorhanden");
     if ($move == $result["folder_id"]){
-        $content .="<br>" . sprintf(_("Dieser Ordner wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um ihn in den gew&uuml;nschten Ordner zu verschieben."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Klicken Sie auf dieses Symbol, um diesen Ordner in einen anderen Ordner einzufügen.")) . ">");
-        if($rechte) $content .= _("Wenn Sie den Ordner in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus.");
+        $content .= "<br>"
+                  . sprintf(_("Dieser Ordner wurde zum Verschieben / Kopieren markiert. Bitte wählen Sie das Einfügen-Symbol %s, um ihn in den gewünschten Ordner zu verschieben."),
+                            Assets::img('icons/16/yellow/arr_2right.png', tooltip2(_("Klicken Sie auf dieses Symbol, um diesen Ordner in einen anderen Ordner einzufügen."))));
+        if ($rechte) {
+            $content .= _("Wenn Sie den Ordner in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus.");
+        }
     }
     if ($upload == $folder_id) {
         $content .= form($refresh);
@@ -2079,12 +2088,16 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         //print "<td width=1px class=\"printhead\">&nbsp;</td>";
         print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"bottom\">";
         print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker");
-        print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"".tooltip(_("Objekt zuklappen"))."></a>";
+        print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
+        print Assets::img('forumgraurunt2.png', tooltip2(_('Objekt zuklappen')) + array('id' => 'folder_' . $folder_id . '_arrow_img'));
+        print "</a>";
         print "</td>";
         //print ($javascriptok ? "<td class=\"printhead\"><a href=\"Javascript: changefolderbody('".$folder_id."')\" class=\"tree\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">" :
         print "<td class=\"printhead\" valign=\"bottom\">";
         if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-                print "<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\"></a>&nbsp;";
+                print "<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\">";
+                print Assets::img('icons/16/yellow/arr_2right.png');
+                print "</a>&nbsp;";
         }
         if (($anchor_id == $folder_id) || (($move == $folder_id))) {
             print "<a name=\"anker\"></a>";
@@ -2095,10 +2108,14 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"bottom\">";
         print "<a href=\"";
         print URLHelper::getLink("?open=".$folder_id."#anker");
-        print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau2.png\"".tooltip(_("Objekt aufklappen"))." border=0></a></td>";
+        print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
+        print Assets::img('forumgrau2.png', tooltip2(_('Objekt aufklappen')) + array('id' => 'folder_' . $folder_id . '_arrow_img'));
+        print "</a></td>";
         print "<td class=\"printhead\" valign=\"bottom\">";
         if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-            print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a>&nbsp";
+            print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\">";
+            print Assets::img('icons/16/yellow/arr_2right.png');
+            print "</a>&nbsp";
         }
         print "<a href=\"".URLHelper::getLink("?open=".$folder_id."#anker")."\" class=\"tree\" " .
                 "onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" " .
@@ -2107,14 +2124,17 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     $document_count = doc_count($folder_id);
 
-    if ($document_count > 0)
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
-    else
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-empty.png\" border=0>&nbsp;";
+    if ($document_count > 0) {
+        print Assets::img('icons/16/blue/folder-full.png') . '&nbsp;';
+    } else {
+        print Assets::img('icons/16/blue/folder-empty.png') . '&nbsp;';
+    }
 
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-        print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a></span>";
+        print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\">";
+        print Assets::img('icons/16/yellow/arr_2right.png');
+        print "</a></span>";
         if ($open[$folder_id])
             print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
         else
@@ -2182,14 +2202,17 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     print "</a>&nbsp;";
 
     // Schloss, wenn Folder gelockt
-    if ($folder_tree->isLockedFolder($folder_id))
-        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/lock-locked.png\">";
+    if ($folder_tree->isLockedFolder($folder_id)) {
+        print Assets::img('icons/16/grey/lock-locked.png', tooltip2(_('Dieser Ordner ist gesperrt.')) + array('class' => 'text-bottom'));
+    }
     //Wenn verdeckt durch gesperrten übergeordneten Ordner
-    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) )
-        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/lock-locked.png\">";
+    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) ) {
+        print Assets::img('icons/16/grey/lock-locked.png', tooltip2(_('Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist.')) + array('class' => 'text-bottom'));
+    }
     // Wenn es ein Hausaufgabenordner ist
-    if ($folder_tree->isExerciseFolder($folder_id))
-        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/edit.png\">";
+    if ($folder_tree->isExerciseFolder($folder_id)) {
+        print Assets::img('icons/16/grey/edit.png', tooltip2(_('Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden.')) + array('class' => 'text-bottom'));
+    }
 
     print "</td>";
 
@@ -2477,16 +2500,16 @@ function delete_folder($folder_id, $delete_subfolders = false)
         $statement->execute(array($folder_id));
         if ($statement->rowCount()) {
             if ($deleted) {
-                $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> und %s Dokument(e) wurden gel&ouml;scht"), htmlReady($foldername), $deleted) . "§";
+                $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> und %s Dokument(e) wurden gelöscht"), htmlReady($foldername), $deleted) . "§";
             } else {
-                $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> wurde gel&ouml;scht"),htmlReady($foldername)) . "§";
+                $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> wurde gelöscht"),htmlReady($foldername)) . "§";
                 return TRUE;
             }
         } else {
             if ($deleted){
-                $msg.="error§" . sprintf(_("Probleme beim L&ouml;schen des Ordners <b>%s</b>. %s Dokument(e) wurden gel&ouml;scht"),htmlReady($foldername), $deleted) . "§";
+                $msg.="error§" . sprintf(_("Probleme beim Löschen des Ordners <b>%s</b>. %u Dokument(e) wurden gelöscht"),htmlReady($foldername), $deleted) . "§";
             }else{
-                $msg.="error§" . sprintf(_("Probleme beim L&ouml;schen des Ordners <b>%s</b>"),htmlReady($foldername)) . "§";
+                $msg.="error§" . sprintf(_("Probleme beim Löschen des Ordners <b>%s</b>"),htmlReady($foldername)) . "§";
             }
             return FALSE;
         }
@@ -2640,25 +2663,25 @@ function upload_zip_item() {
     global $msg;
 
     if(!$_FILES['the_file']['name']) {
-        $msg .= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
+        $msg .= "error§" . _("Sie haben keine Datei zum Hochladen ausgewählt!") . "§";
         return FALSE;
     }
     $ext = strtolower(getFileExtension($_FILES['the_file']['name']));
     if($ext != "zip") {
-        $msg .= "error§" . _("Die Datei kann nicht entpackt werden: Sie d&uuml;rfen nur den Dateityp .ZIP hochladen!") . "§";
+        $msg .= "error§" . _("Die Datei kann nicht entpackt werden: Sie dürfen nur den Dateityp .ZIP hochladen!") . "§";
         return FALSE;
     }
     $tmpname = md5(uniqid('zipupload',1));
     if (move_uploaded_file($_FILES['the_file']['tmp_name'], $GLOBALS['TMP_PATH'] . '/' . $tmpname)){
         if(unzip_file($GLOBALS['TMP_PATH'] . '/' . $tmpname, false, true)) {
-            $msg .= "error§" . _("Die ZIP-Datei kann nicht ge&ouml;ffnet werden!") . "§";
+            $msg .= "error§" . _("Die ZIP-Datei kann nicht geöffnet werden!") . "§";
             @unlink($GLOBALS['TMP_PATH'] . '/' . $tmpname);
             return FALSE;
         }
         $tmpdirname = $GLOBALS['TMP_PATH'] . '/' . md5(uniqid('zipupload',1));
         @mkdir($tmpdirname);
         if (unzip_file($GLOBALS['TMP_PATH'] . '/' . $tmpname , $tmpdirname)){
-            $msg .= "error§" . _("Die ZIP-Datei kann nicht ge&ouml;ffnet werden!") . "§";
+            $msg .= "error§" . _("Die ZIP-Datei kann nicht geöffnet werden!") . "§";
             @rmdirr($tmpdirname);
             @unlink($GLOBALS['TMP_PATH'] . '/' . $tmpname);
             return FALSE;

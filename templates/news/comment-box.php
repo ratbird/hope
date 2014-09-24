@@ -17,7 +17,9 @@
         </td>
         <td width="20">
         <? if ($comments_admin): ?>
-            <input type="image" name="news_delete_comment_<?=$comment['comment_id']?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" <?=tooltip(_("Kommentar entfernen"),false)?>>
+            <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Kommentar entfernen')) + array(
+                    'name' => 'news_delete_comment_' . $comment['comment_id']
+            )) ?>
         <? endif ?>
         </td>
     </tr>

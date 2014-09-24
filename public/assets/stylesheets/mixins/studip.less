@@ -46,12 +46,18 @@
            (min-resolution: 192dpi)
     {
         background-image: url("@{image-path}/@{image1}");
-        background-size: @width @height;
+        .background-size(@width @height);
     }
 }
 .retina-background-icon(@icon, @size: 16) {
-    @retina: @size * 2;
-    .retina-background-image("icons/@{size}/@{icon}", "icons/@{retina}/@{icon}", unit(@size, px));
+    @temp-icon: replace(@icon, "\.(png|svg)$", '', g);
+    @temp-size: ceil(unit(@size) / 16) * 16;
+    @png: "@{image-path}/icons/@{temp-size}/@{temp-icon}.png";
+    @svg: "@{image-path}/icons/@{temp-icon}.svg";
+
+    background-image: url("@{png}");
+    background-image: none, url("@{svg}");
+    .background-size(unit(@size, px) unit(@size, px));
 }
 
 // Icon before

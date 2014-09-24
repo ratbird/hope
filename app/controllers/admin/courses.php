@@ -146,7 +146,7 @@ class Admin_CoursesController extends AuthenticatedController
                                                         'lock_id' => 'none')),
             AuxLockRules::getAllLockRules());
         $sidebar              = Sidebar::get();
-        $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+        $sidebar->setImage("sidebar/seminar-sidebar.png");
 
         if ($this->sem_create_perm) {
             $actions = new ActionsWidget();

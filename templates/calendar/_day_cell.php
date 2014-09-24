@@ -17,7 +17,8 @@ if ($calendar->view instanceof DbCalendarDay) {
 <td class="<?= $style_cell ?>" align="right"  valign="middle"<?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
     <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
-        <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
+        <?= Assets::img('calplus.gif',
+                        tooltip2(strftime(_('neuer Termin um %R Uhr'), $row * $step + $start - 3600))) ?>
     </a>
     <? endif ?>
 </td>
@@ -60,7 +61,8 @@ if ($calendar->view instanceof DbCalendarDay) {
             <td class="<?= $style_cell ?>"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?> align="right" valign="middle">
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                 <a style="display: block; width: 11px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
-                    <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
+                    <?= Assets::img('calplus.gif',
+                                    tooltip2(strftime(_('neuer Termin um %R Uhr'), $row * $step + $start - 3600))) ?>
                 </a>
                 <? endif ?>
             </td>
@@ -73,7 +75,7 @@ if ($calendar->view instanceof DbCalendarDay) {
     <td style="width: 0.1%;" class="<?= $style_cell ?>" align="right" valign="middle">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
         <a style="display: block; width: 10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
-            <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
+            <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $row * $step + $start - 3600))) ?>
         </a>
         <? endif ?>
     </td>

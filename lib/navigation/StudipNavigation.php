@@ -90,7 +90,7 @@ class StudipNavigation extends Navigation
             $navigation = new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'resources'));
 
             if (is_object($user) && $perm->have_perm('admin')) {
-                $navigation->setImage('icons/28/lightblue/resources.png', array('title' => _('Zur Ressourcenverwaltung'), "@2x" => TRUE));
+                $navigation->setImage('icons/lightblue/resources.svg', array('title' => _('Zur Ressourcenverwaltung')));
             }
 
             $this->addSubNavigation('resources', $navigation);

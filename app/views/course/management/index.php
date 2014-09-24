@@ -5,7 +5,7 @@
  * * * * * * * * * * * * */
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+$sidebar->setImage('sidebar/admin-sidebar.png');
 
 $links = new ActionsWidget();
 foreach (Navigation::getItem('/course/admin/main') as $nav) {

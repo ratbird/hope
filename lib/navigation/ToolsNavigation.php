@@ -28,7 +28,7 @@ class ToolsNavigation extends Navigation
     {
         parent::__construct(_('Tools'));
 
-        $this->setImage('icons/28/lightblue/tools.png', array('title' => _('Tools'), "@2x" => TRUE));
+        $this->setImage('icons/lightblue/tools.svg', array('title' => _('Tools')));
     }
 
     /**

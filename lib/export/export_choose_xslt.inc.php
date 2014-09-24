@@ -220,12 +220,16 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
     $export_pagecontent .= CSRFProtection::tokenTag();
 
-    $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
+    $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '">';
+    $xml_printimage.= Assets::img($export_icon['xml'], array('class' => 'text-top'));
+    $xml_printimage.= '</a>';
     $xml_printlink = '<a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '">' . htmlReady($xml_filename) . '</a>';
     $xml_printdesc = _("XML-Daten");
     $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . "<br>";
 
-    $xslt_printimage = '<a href="' . GetDownloadLink( $xslt_files[$choose]['file'], $xslt_files[$choose]['name'] . '.xsl', 3). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xslt'] . '" border=0></a>';
+    $xslt_printimage = '<a href="' . GetDownloadLink( $xslt_files[$choose]['file'], $xslt_files[$choose]['name'] . '.xsl', 3). '">';
+    $xslt_printimage.= Assets::img($export_icon['xslt'], array('class' => 'text-top'));
+    $xslt_printimage.= '</a>';
     $xslt_printlink = '<a href="'.GetDownloadLink( $xslt_files[$choose]['file'], $xslt_files[$choose]['name'] . '.xsl', 3).'">' . $xslt_files[$choose]['name'] . '.xsl</a>';
     $xslt_printdesc = _("XSLT-Datei");
     $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu &ouml;ffnen.") . "<br>";

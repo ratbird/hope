@@ -470,12 +470,19 @@ reset($votes);
         if (($counter % 2) == 0)    $html .="    <td class=\"content_body\" colspan=\"9\">\n";
         else                        $html .="    <td class=\"content_body\" colspan=\"9\">\n";
         $html .="    <center>\n";
-        if (($mode == VOTE_STATE_ACTIVE) && ($openID == ("openallactive")))
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
-        elseif (($mode == VOTE_STATE_STOPPED) && ($openID == ("openallstopped")))
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
-        else
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID&openID=openall".$mode."#openvote")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1down.png')."\" alt=\"".$label["arrow_open_all"]."\" title=\"".$label["arrow_open_all"]."\"></a> \n";
+        if (($mode == VOTE_STATE_ACTIVE) && ($openID == ("openallactive"))) {
+            $html .= "     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\">";
+            $html .= Assets::img('icons/16/blue/arr_1up.png', tooltip2($label['arrow_close_all']));
+            $html .= "</a> \n";
+        } elseif (($mode == VOTE_STATE_STOPPED) && ($openID == ("openallstopped"))) {
+            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\">";
+            $html .= Assets::img('icons/16/blue/arr_1up.png', tooltip2($label["arrow_close_all"]));
+            $html .= "</a> \n";
+        } else {
+            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID&openID=openall".$mode."#openvote")."\">";
+            $html .= Assets::img('icons/16/blue/arr_1down.png', tooltip2($label["arrow_open_all"]));
+            $html .= "</a> \n";
+        }
         $html .="    </center></td>\n"
               . "   </tr>\n";
     }
@@ -525,7 +532,7 @@ reset($votes);
  */
 
 function makeTableHeaderCell($text = "&nbsp;", $width = "5%", $align = "center", $colspan = "1"){
-   if ($text == "blindgif") $text = "<img width=\"$width\" align=\"middle\" height=\"1\" src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"\">";
+   if ($text == "blindgif") $text = Assets::img('blank.gif', array('size' => '1@1'));
    $html = "     <td class=\"table_header\" style=\"vertical-align:bottom;\" colspan=\"$colspan\" align=\"$align\" width=\"$width\">\n"
       . "     <font size=-1><b>$text</b></font>\n"
       . "    </td>\n";
@@ -541,7 +548,9 @@ function makeTableHeaderCell($text = "&nbsp;", $width = "5%", $align = "center",
  * @return string a string with a table-head
 */
 function makeTableDataCell($text = "&nbsp;", $class = "table_row_even", $align = "center", $width = "5%", $colspan = "1"){
-    if ($text == "blindgif") $text = "<img width=\"$width\" height=\"1\" src=\"".Assets::image_path('blank.gif')."\" alt=\"\">";
+    if ($text == "blindgif") {
+        $text = Assets::img('blank.gif', array('size' => $width . '@1', 'alt' => ''));
+    }
     $html = "    <td class=\"$class\" align=\"$align\" width=\"$width\" colspan=\"$colspan\">\n"
           . "     <font size=\"-1\">$text</font>\n"
           . "    </td>\n";
@@ -611,7 +620,12 @@ function makeTableDataCellForm( $displayclass = "table_row_even",
     }
     else{
         $button .= "<a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN, $linkparams)."\">";
-        $button .= "<img src=\"" . Assets::image_path('icons/16/blue/visibility-' . $button_name . '.png') . "\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" class=\"middle\"></a>";
+        $button .= Assets::img('icons/16/blue/visibility-' . $button_name . '.png',
+                               array(
+                                   'alt' => $button_name,
+                                   'title' => $button_tooltip,
+                                   'class' => 'middle'
+                               ));
     }
 
     $html.="     <td class=$displayclass width=\"93\" align=\"center\" style=\"vertical-align:middle;\">\n"
@@ -781,7 +795,7 @@ function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
         $html.= "         <a href=\"".URLHelper::getLink($oclink)."\" title=\"".$label["arrow_closethis"]."\">\n";
 
 
-    $html.= "     <img src=\"" . Assets::image_path($icon) . "\" class=\"middle\"";
+    $html.= Assets::img($icon, array('class' => 'middle'));
     if ($open == "closed")
         $html.= $label["arrow_openthis"];
     else

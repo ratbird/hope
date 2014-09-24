@@ -61,7 +61,7 @@ class StartController extends AuthenticatedController
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $sidebar = Sidebar::get();
-        $sidebar->setImage(Assets::image_path("sidebar/home-sidebar.png"));
+        $sidebar->setImage('sidebar/home-sidebar.png');
         $sidebar->setTitle(_("Meine Startseite"));
 
         $nav = new NavigationWidget();

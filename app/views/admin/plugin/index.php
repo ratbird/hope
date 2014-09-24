@@ -122,7 +122,7 @@ use Studip\Button, Studip\LinkButton;
 <?
 $sidebar = Sidebar::Get();
 $sidebar->setTitle(_('Plugins'));
-$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));
+$sidebar->setImage('sidebar/plugin-sidebar.png');
 
 
 

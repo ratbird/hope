@@ -142,7 +142,7 @@
 <?php
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/blubber-sidebar.png"));
+$sidebar->setImage("sidebar/blubber-sidebar.png");
 
 if (count($tags) && $tags[0]) {
     $cloud = new LinkCloudWidget();

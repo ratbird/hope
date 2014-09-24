@@ -900,7 +900,7 @@ function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = 
 
         if ($role['user_there']) {
             $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                    .  '<img src="'.$GLOBALS['ASSETS_URL'].'/images/forumgrau2.png">'
+                    .  Assets::img('forumgrau2.png')
                     .  '&nbsp;</td><td colspan="2"><b>'. htmlReady($new_pred) .'</b></td></tr>';
             $zw = '<td %class%></td><td %class%><font size="-1">'. htmlReady($new_pred) .'</font></td>';
         }

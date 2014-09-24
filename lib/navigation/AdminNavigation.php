@@ -23,7 +23,7 @@ class AdminNavigation extends Navigation
     {
         parent::__construct(_('Admin'));
 
-        $this->setImage('icons/28/lightblue/admin.png', array('title' => _('Zu Ihrer Administrationsseite'), "@2x" => TRUE));
+        $this->setImage('icons/lightblue/admin.svg', array('title' => _('Zu Ihrer Administrationsseite')));
     }
 
     /**

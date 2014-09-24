@@ -335,20 +335,16 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
             ?>
             <tr height=28>
                 <td width="10%" class="table_header" valign=bottom>
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width=1 height=20>
-                    &nbsp;<a href="<?=URLHelper::getLink('?adminarea_sortby=start_time'. $show_rooms_check_url)?>"><b><?=_("Semester")?></b></a>
+                    <a href="<?=URLHelper::getLink('?adminarea_sortby=start_time'. $show_rooms_check_url)?>"><b><?=_("Semester")?></b></a>
                 </td>
                 <td width="5%" class="table_header" valign=bottom>
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width=1 height=20>
-                    &nbsp; <a href="<?=URLHelper::getLink('?adminarea_sortby=VeranstaltungsNummer'. $show_rooms_check_url)?>"><b><?=_("Nr.")?></b></a>
+                    <a href="<?=URLHelper::getLink('?adminarea_sortby=VeranstaltungsNummer'. $show_rooms_check_url)?>"><b><?=_("Nr.")?></b></a>
                 </td>
                 <td width="45%" class="table_header" valign=bottom>
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width=1 height=20>
-                    &nbsp; <a href="<?=URLHelper::getLink('?adminarea_sortby=Name'. $show_rooms_check_url)?>"><b><?=_("Name")?></b></a>
+                    <a href="<?=URLHelper::getLink('?adminarea_sortby=Name'. $show_rooms_check_url)?>"><b><?=_("Name")?></b></a>
                 </td>
                 <? if ($show_rooms_check_url) : ?>
                 <td width="25%" class="table_header" valign=bottom>
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width=1 height=20>
                     <b><?=_("Raum")?></b>
                 </td>
                 <? endif; ?>

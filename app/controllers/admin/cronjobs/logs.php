@@ -88,7 +88,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
         // Aktionen
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Cronjobs'));
-        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
 
         $actions = new ViewsWidget();
         $actions->addLink(_('Cronjobs verwalten'),$this->url_for('admin/cronjobs/schedules'));

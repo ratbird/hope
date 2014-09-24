@@ -13,7 +13,7 @@
 <?php
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/forum-sidebar.png"));
+$sidebar->setImage('sidebar/forum-sidebar.png');
 
 if (ForumPerm::has('search', $seminar_id)) {
     $search = new SearchWidget(PluginEngine::getLink('coreforum/index/search?backend=search'));
@@ -52,7 +52,7 @@ if ($section == 'index') {
             $close = new LinkElement(
                 _('Thema schließen'), 
                 $close_url, 
-                Assets::image_path('icons/16/blue/lock-locked.png'),
+                'icons/16/blue/lock-locked.png',
                 array(
                     'onclick' => 'STUDIP.Forum.closeThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -66,7 +66,7 @@ if ($section == 'index') {
             $open = new LinkElement(
                 _('Thema öffnen'),
                 $open_url,
-                Assets::image_path('icons/16/blue/lock-unlocked.png'),
+                'icons/16/blue/lock-unlocked.png',
                 array(
                     'onclick' => 'STUDIP.Forum.openThreadFromThread(\'' . $constraint['topic_id'] . '\', '
                                 . ForumHelpers::getPage() . '); return false;',
@@ -84,7 +84,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Thema hervorheben'),
                 $emphasize_url,
-                Assets::image_path('icons/16/blue/staple.png'),
+                'icons/16/blue/staple.png',
                 array(
                     'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',
@@ -98,7 +98,7 @@ if ($section == 'index') {
             $emphasize = new LinkElement(
                 _('Hervorhebung aufheben'),
                 $unemphasize_url,
-                Assets::image_path('icons/16/blue/staple.png'),
+                'icons/16/blue/staple.png',
                 array(
                     'onclick' => 'STUDIP.Forum.makeThreadStickyFromThread(\'' . $constraint['topic_id'] . '\', '
                             . ForumHelpers::getPage() . '); return false;',

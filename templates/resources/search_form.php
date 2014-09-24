@@ -1,10 +1,10 @@
 <? if ($search_string): ?>
 
     <input type="hidden" name="search_string_<?= $name ?>" value="<?= htmlReady($search_string) ?>">
-    <input type="image" name="send_<?= $name ?>"
-           src="<?= Assets::image_path('icons/16/yellow/arr_2' . $img_dir) ?>"
-           value="<?= _('übernehmen') ?>" 
-           <?= tooltip(_('diesen Eintrag übernehmen')) ?>>
+    <?= Assets::input('icons/16/yellow/arr_2' . $img_dir, tooltip2(_('diesen Eintrag übernehmen')) + array(
+            'name' => 'send_' . $name,
+            'value' => _('übernehmen'),
+    )) ?>
 
     <select align="absmiddle" name="submit_<?= $name ?>">
     <? if ($allow_all): ?>
@@ -22,19 +22,20 @@
     <? endforeach; ?>
     </select>
 
-    <input type="image" align="absmiddle" name="reset_<?= $name ?>"
-           src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>"
-           value="<?= _('neue Suche') ?>"
-           <?=tooltip (_("Suche zurücksetzen")) ?>
-           border="0">
+    <?= Assets::input('icons/16/blue/refresh.png', tooltip2(_('Suche zurücksetzen')) + array(
+            'align' => 'absmiddle',
+            'name' => 'reset_' . $name,
+            'value' => _('neue Suche'),
+    )) ?>
 
 <? else: ?>
 
     <input type="text" align="absmiddle" size="30" maxlength="255"
            name="search_string_<?= $name ?>">
-    <input type="image" align="absmiddle" name="do_<?= $name ?>" border="0"
-           src="<?= Assets::image_path('icons/16/blue/search.png') ?>"
-           value="<?=_('suchen')?>"
-           <?= tooltip(_('Starten Sie hier Ihre Suche')) ?>>
+    <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Starten Sie hier Ihre Suche')) + array(
+            'align' => 'absmiddle',
+            'name' => 'do_' . $name,
+            'value' => _('suchen'),
+    )) ?>
 
 <? endif; ?>

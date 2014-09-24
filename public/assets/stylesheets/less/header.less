@@ -5,31 +5,49 @@
 }
 
 #barTopMenu {
-    canvas.headericon {
-        display: none;
-    }
-    a.canvasready {
-        img.headericon {
+    a {
+        canvas.headericon {
             display: none;
         }
-        canvas.headericon:not(.highlighted) {
-            display: inline-block;
+        img.original {
+            margin-left: 6px;
+            margin-right: 6px;
+            margin-top: 4px;
+            margin-bottom: 0px;
+            width: 28px;
+            height: 28px;
         }
-        &:hover {
-            canvas.headericon:not(.highlighted) {
+        img.headericon.normal, img.headericon.highlighted {
+            display: none;
+            margin: 0px;
+            width: 42px;
+            height: 32px;
+        }
+        &.canvasready {
+            img.headericon.original, img.headericon.highlighted {
                 display: none;
             }
-            canvas.headericon.highlighted {
+            img.headericon.normal {
                 display: inline-block;
+            }
+            &:hover {
+                img.headericon.normal {
+                    display: none;
+                }
+                img.headericon.highlighted {
+                    display: inline-block;
+                }
             }
         }
     }
     li.active a.canvasready {
-        canvas.headericon:not(.highlighted) {
-            display: none;
-        }
-        canvas.headericon.highlighted {
-            display: inline-block;
+        img.headericon {
+            &.original, &.normal {
+                display: none;
+            }
+            &.highlighted {
+               display: inline-block;
+            }
         }
     }
 }

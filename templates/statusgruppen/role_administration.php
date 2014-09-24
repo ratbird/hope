@@ -79,9 +79,9 @@
                         </td>
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap>
-                            <input
-                                src="<?= Assets::image_path('icons/16/yellow/arr_eol-right.png') ?>"
-                                name="do_person_sort[<?= $person['username'] ?>]" type="image">
+                            <?= Assets::input('icons/16/yellow/arr_eol-right.png', array(
+                                    'name' => 'do_person_sort[' . $person['username'] . ']'
+                            )) ?>
                         </td>
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 6px;">

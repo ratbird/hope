@@ -52,7 +52,7 @@
 <?
 
 $sidebar = Sidebar::Get();
-$sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+$sidebar->setImage('sidebar/admin-sidebar.png');
 $sidebar->setTitle(_('Zusatzangaben'));
 $actions = new ActionsWidget();
 $actions->addLink(_('Neue Regel anlegen'), $controller->url_for('admin/specification/edit'), 'icons/16/blue/add.png');

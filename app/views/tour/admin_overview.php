@@ -61,8 +61,10 @@
                     <td><?=count($tour->steps)?></td>
                     <!-- td>
                     <a href="<?=URLHelper::getURL('dispatch.php/help/admin_tour_details/'.$tour_id)?>" <?=tooltip(_('Tour bearbeiten'))?>>
-                    <img src="<?= Assets::image_path('icons/16/blue/edit.png')?>"></a>
-                    <input type="image" name="tour_remove_<?=$tour_id?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" aria-label="<?= _('Tour löschen')?>" <?=tooltip(_("Tour löschen"),false)?>>
+                    <?= Assets::img('icons/16/blue/edit.png') ?></a>
+                    <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Tour löschen')) + array(
+                            'name' => 'tour_remove_' . $tour_id,
+                    )) ?>
                     </td-->
                     </tr>
                 <? endforeach ?>

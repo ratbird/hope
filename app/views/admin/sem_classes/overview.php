@@ -83,7 +83,7 @@ STUDIP.sem_classes = {
 <?
 $sidebar = Sidebar::Get();
 $sidebar->setTitle(_(PageLayout::getTitle()));
-$sidebar->setImage(Assets::image_path('sidebar/plugin-sidebar.png'));
+$sidebar->setImage('sidebar/plugin-sidebar.png');
 $links = new ActionsWidget();
 $links->addLink(_('Neue Kategorie anlegen'), '#', 'icons/16/blue/add.png', array('onClick' => 'STUDIP.sem_classes.add(); return false;'));
 $sidebar->addWidget($links);

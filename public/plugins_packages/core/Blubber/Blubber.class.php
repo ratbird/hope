@@ -112,13 +112,27 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
     }
 
     /**
+     * Initializes the plugin when actually invoked. Injects stylesheets into
+     * the page layout.
+     */
+    public function initialize()
+    {
+        $this->addStylesheet('assets/stylesheets/blubberforum.less');
+
+        $assets_url = $this->getPluginURL() . '/assets/';
+        PageLayout::addHeadElement('script', array('src' => $assets_url . '/javascripts/autoresize.jquery.min.js'), '');
+        PageLayout::addHeadElement('script', array('src' => $assets_url . '/javascripts/blubber.js'), '');
+        PageLayout::addHeadElement('script', array('src' => $assets_url . '/javascripts/formdata.js'), '');
+    }
+
+    /**
      * Returns a navigation for the tab displayed in the course.
      * @param string $course_id of the course
      * @return \AutoNavigation
      */
     public function getTabNavigation($course_id) {
         $tab = new AutoNavigation($this->getDisplayTitle(), PluginEngine::getLink($this, array(), "streams/forum"));
-        $tab->setImage(Assets::image_path("icons/16/white/blubber"));
+        $tab->setImage('icons/16/white/blubber.png');
         return array('blubberforum' => $tab);
     }
 
@@ -154,11 +168,11 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         "")->fetch(PDO::FETCH_COLUMN, 0);
         if ($new_ones) {
             $title = $new_ones > 1 ? sprintf(_("%s neue Blubber"), $new_ones) : _("1 neuer Blubber");
-            $icon->setImage(Assets::image_path("icons/20/red/blubber"), array('title' => $title));
+            $icon->setImage('icons/20/red/blubber.png', compact('title'));
             $icon->setTitle($title);
             $icon->setBadgeNumber($new_ones);
         } else {
-            $icon->setImage(Assets::image_path("icons/20/grey/blubber"), array('title' => $this->getDisplayTitle()));
+            $icon->setImage('icons/20/grey/blubber', array('title' => $this->getDisplayTitle()));
         }
         return $icon;
     }

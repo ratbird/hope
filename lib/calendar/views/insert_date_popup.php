@@ -246,11 +246,12 @@ if (intval($submit) == 1) {
 }
 if ($preset_error != '')
     $zeiten = false;
+$stylesheet = Assets::stylesheet_path('style.css');
 echo <<<EOT
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
 <title>$title</title>
-<link rel="stylesheet" type="text/css" href="{$GLOBALS['ASSETS_URL']}stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="{$stylesheet}">
 <script type="text/javascript">
 <!--
 window.setTimeout("window.close()", 120000); // Fenster automatisch wieder schließen :-)

@@ -21,13 +21,8 @@ class StreamsController extends PluginController {
     function before_filter($action, $args)
     {
         parent::before_filter($action, $args);
-        $this->assets_url = $this->plugin->getPluginURL()."/assets/";
-        PageLayout::addHeadElement("link",
-            array(
-                "href" => $this->assets_url.'stylesheets/blubberforum.css',
-                "rel" => "stylesheet"
-            ),
-            "");
+        $this->assets_url = $this->plugin->getPluginURL() . '/assets/';
+
         PageLayout::setHelpKeyword("Basis/InteraktionBlubber");
     }
 
@@ -35,9 +30,6 @@ class StreamsController extends PluginController {
      * Displays global-stream
      */
     public function global_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle(_("Globaler Blubberstream"));
         Navigation::activateItem("/community/blubber");
 
@@ -86,11 +78,8 @@ class StreamsController extends PluginController {
         if (!$this->commentable) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
-        Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
+        Navigation::getItem("/course/blubberforum")->setImage('icons/16/black/blubber.png');
         Navigation::activateItem("/course/blubberforum");
         $coursestream = BlubberStream::getCourseStream($_SESSION['SessionSeminar']);
         $this->tags = $coursestream->fetchTags();
@@ -110,10 +99,6 @@ class StreamsController extends PluginController {
      * Displays the profile-stream with all threads by the given user.
      */
     public function profile_action() {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-
         if (Request::get("extern")) {
             $this->user = BlubberExternalContact::find(Request::option("user_id"));
         } else {
@@ -656,10 +641,6 @@ class StreamsController extends PluginController {
      */
     public function thread_action($thread_id)
     {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
         $this->thread = new BlubberPosting($thread_id);
         if ($this->thread['context_type'] === "private") {
             if (!in_array($GLOBALS['user']->id, $this->thread->getRelatedUsers())) {
@@ -679,7 +660,7 @@ class StreamsController extends PluginController {
         }
 
         if ($this->thread['context_type'] === "course") {
-            Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
+            Navigation::getItem("/course/blubberforum")->setImage('icons/16/black/blubber');
             Navigation::activateItem('/course/blubberforum');
         } elseif($this->thread['context_type'] === "public") {
             if (Navigation::hasItem('/profile')) {
@@ -736,10 +717,6 @@ class StreamsController extends PluginController {
     }
 
     public function custom_action($stream_id) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
         $this->stream = new BlubberStream($stream_id);
         $this->tags = $this->stream->fetchTags();
         if ($this->stream['user_id'] !== $GLOBALS['user']->id) {
@@ -757,10 +734,6 @@ class StreamsController extends PluginController {
      * @param string,null $stream_id
      */
     public function edit_action($stream_id = null) {
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubber.js"), "");
-        PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
-        
         $this->stream = new BlubberStream($stream_id);
         if ($GLOBALS['user']->id === "nobody") {
             throw new AccessDeniedException("Access denied!");

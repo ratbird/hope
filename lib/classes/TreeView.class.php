@@ -229,16 +229,24 @@ class TreeView {
         $level_output = "";
         if ($item_id != $this->start_item_id){
             if ($this->tree->isLastKid($item_id))
-                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\" ></td>"; //last
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap>"
+                              . Assets::img('forumstrich2.gif')
+                              . "</td>"; //last
             else
-                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\" ></td>"; //crossing
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap>"
+                              . Assets::img('forumstrich3.gif')
+                              . "</td>"; //crossing
             $parent_id = $item_id;
             while($this->tree->tree_data[$parent_id]['parent_id'] != $this->start_item_id){
                 $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
                 if ($this->tree->isLastKid($parent_id))
-                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" width=\"10\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\"></td>" . $level_output; //nothing
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" width=\"10\" nowrap>"
+                                  . Assets::img('forumleer.gif', array('size' => '10@20'))
+                                  . "</td>" . $level_output; //nothing
                 else
-                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"></td>" . $level_output; //vertical line
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap>"
+                                  . Assets::img('forumstrich.gif')
+                                  . "</td>" . $level_output; //vertical line
             }
         }
         echo "\n<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>$level_output";
@@ -257,7 +265,7 @@ class TreeView {
         echo "\n<td class=\"printhead\" nowrap width=\"1\" valign=\"middle\">";
         if ($this->anchor == $item_id)
             echo "<a name=\"anchor\">";
-        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" height=\"20\" width=\"1\">";
+        echo Assets::img('forumleer.gif', array('size' => '1@20'));
         if ($this->anchor == $item_id)
             echo "</a>";
         echo "\n</td><td class=\"printhead\" align=\"left\" width=\"99%\" nowrap valign=\"bottom\">";
@@ -277,22 +285,34 @@ class TreeView {
     */
     function printItemDetails($item_id){
         if (!$this->tree->hasKids($item_id) || !$this->open_ranges[$item_id] || $item_id == $this->start_item_id)
-            $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output;
+            $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumleer.gif') . "\">"
+                          . Assets::img('forumleer.gif', array('size' => '10@20'))
+                          . "</td>" . $level_output;
         else
-            $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output;
+            $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumstrich.gif') . "\">"
+                          . Assets::img('forumleer.gif', array('size' => '10@20'))
+                          . "</td>" . $level_output;
 
         if (($this->tree->isLastKid($item_id) && !($item_id == $this->start_item_id)) || (!$this->open_ranges[$item_id] && $item_id == $this->start_item_id) || ($item_id == $this->start_item_id && !$this->tree->hasKids($item_id)))
-            $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output;
+            $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumleer.gif') . "\">"
+                          . Assets::img('forumleer.gif', array('size' => '10@20'))
+                          . "</td>" . $level_output;
         else
-            $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output;
+            $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumstrich.gif') ."\">"
+                          . Assets::img('forumleer.gif', array('size' => '10@20'))
+                          . "</td>" . $level_output;
         if ($item_id != $this->start_item_id){
             $parent_id = $item_id;
             while($this->tree->tree_data[$parent_id]['parent_id'] != $this->start_item_id){
                 $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
                 if ($this->tree->isLastKid($parent_id))
-                    $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output; //nothing
+                    $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumleer.gif') . "\">"
+                                  . Assets::img('forumleer.gif', array('size' => '10@20'))
+                                  . "</td>" . $level_output; //nothing
                 else
-                    $level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output; //vertical line
+                    $level_output = "<td class=\"blank\" background=\"" . Assets::image_path('forumstrich.gif') . "\">"
+                                  . Assets::img('forumleer.gif', array('size' => '10@20'))
+                                  . "</td>" . $level_output; //vertical line
             }
         }
         //$level_output = "<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"20\" height=\"20\" border=\"0\" ></td>" . $level_output;
@@ -318,15 +338,15 @@ class TreeView {
         if ($this->tree->hasKids($item_id)){
             $head .= "<a href=\"";
             $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
-            $head .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
-            $head .= "\" ";
-            $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelemente öffnen")) : tooltip(_("Alle Unterelemente schließen"));
-            $head .= "></a>";
+            $head .= "\">";
+            $head .= Assets::img('icons/16/blue/folder-full.png',
+                                 tooltip2($this->open_ranges[$item_id]
+                                          ? _('Alle Unterelemente schließen')
+                                          : _('Alle Unterelemente öffnen')) + 
+                                 array('class' => 'text-top'));
+            $head .= "</a>";
         } else {
-            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-empty.png" : "icons/16/blue/folder-empty.png";
-            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
+            $head .= Assets::img('icons/16/blue/folder-empty.png', tooltip2(_('Dieses Element hat keine Unterelemente')));
         }
     return $head . "</td>";
     }
@@ -343,9 +363,7 @@ class TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-        $head .= ($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close;
-        $head .= "\">";
+        $head .= Assets::img($this->open_items[$item_id] ? $this->pic_open : $this->pic_close);
         #$head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
         $head .= "</a>";
         $head .= '</td>';

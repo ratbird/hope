@@ -44,10 +44,10 @@ class ScheduleWeekRequests extends ScheduleWeek {
         
         parent::ScheduleWeek($start_hour, $end_hour, $show_days, $start_date);
         $this->categories[5] = array(
-                                "bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category12_small.jpg",
+                                "bg-picture"   => Assets::image_path('calendar/category12_small.jpg'),
                                 "border-color" => "#2C5964");
         $this->categories[6] = array(
-                                "bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category10_small.jpg",
+                                "bg-picture"   => Assets::image_path('calendar/category10_small.jpg'),
                                 "border-color" => "#957C29");
 
     }
@@ -62,4 +62,3 @@ class ScheduleWeekRequests extends ScheduleWeek {
     }
     
 }
-?>

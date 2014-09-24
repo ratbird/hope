@@ -55,15 +55,15 @@ class ShowTreeRow {
         for ($i=0;$i<$level;$i++) {
             if ($i==($level-1)) {
                 if ($this->lines[$i+1]>1)
-                    $striche.= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\" border=0>";      //Kreuzung
+                    $striche.= Assets::img('forumstrich3.gif');      //Kreuzung
                 else
-                    $striche.= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\" border=0>";      //abknickend
+                    $striche.= Assets::img('forumstrich2.gif');      //abknickend
                 $this->lines[$i+1] -= 1;
             } else {
                 if ($this->lines[$i+1]==0)
-                    $striche .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0>";            //Leerzelle
+                    $striche .= Assets::img('forumleer.gif');            //Leerzelle
                 else
-                    $striche .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\" border=0>";      //Strich
+                    $striche .= Assets::img('forumstrich.gif');      //Strich
             }
         }
 
@@ -84,23 +84,31 @@ class ShowTreeRow {
             <tr>
                 <?
                 //wiederum Striche fuer Struktur
-                ?><td class="blank" nowrap background="<?= $GLOBALS['ASSETS_URL'] ?>images/forumleer.gif"></td>
+                ?><td class="blank" nowrap background="<?= Assets::image_path('forumleer.gif') ?>"></td>
                 <?
                 $striche='';
                 if ($level)
                     for ($i=1;$i<=$level;$i++) {
                         if ($this->lines[$i]==0) {
-                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
-                            }
-                        else {
-                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer2.gif\"></td>";
-                            }
+                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"" . Assets::image_path('forumleer.gif') . "\">";
+                            $striche.= Assets::img('forumleer.gif');
+                            $striche.= "</td>";
+                        } else {
+                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"" . Assets::image_path('forumstrich.gif') . "\">";
+                            $striche.= Assets::img('forumleer2.gif');
+                            $striche.= "</td>";
+                        }
                     }
 
-                if ($weitere)
-                    $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
-                else
-                    $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+                if ($weitere) {
+                    $striche.= "<td class=\"blank tree-indent\" nowrap background=\"" . Assets::image_path('forumstrichgrau.gif') . "\">";
+                    $striche.= Assets::img('forumleer.gif');
+                    $striche.= "</td>";
+                } else {
+                    $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8\">";
+                    $striche.= Assets::img('forumleer.gif');
+                    $striche.= "</td>";
+                }
 
                 echo $striche;
 

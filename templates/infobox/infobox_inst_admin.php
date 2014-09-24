@@ -13,7 +13,7 @@
 
   <tr>
     <td class="infoboxrahmen" width="100%">
-    <table background="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
+    <table align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
 
       <!-- Informationen -->
 

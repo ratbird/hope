@@ -39,7 +39,7 @@ class SitemapController extends AuthenticatedController
         
         // Add sidebar
         $sidebar = Sidebar::get();
-        $sidebar->setImage(Assets::image_path("sidebar/admin-sidebar.png"));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
         
         $info = new InfoboxWidget();
         $info->setTitle(_('Hinweise'));

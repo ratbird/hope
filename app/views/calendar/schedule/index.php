@@ -3,7 +3,7 @@
 $zoom = $my_schedule_settings['zoom'];
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/schedule-sidebar.png"));
+$sidebar->setImage('sidebar/schedule-sidebar.png');
 
 $semester_widget = new SidebarWidget();
 $semester_widget->setTitle(_('Angezeigtes Semester'));

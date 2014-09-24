@@ -236,19 +236,17 @@ function setLocaleEnv($language, $language_domain = ''){
 }
 
 function localeButtonUrl($filename) {
-  return localeUrl($filename, 'LC_BUTTONS');
+    return localeUrl($filename, 'LC_BUTTONS');
 }
 
 function localePictureUrl($filename) {
-  return localeUrl($filename, 'LC_PICTURES');
+    return localeUrl($filename, 'LC_PICTURES');
 }
 
 function localeUrl($filename, $category) {
-  return sprintf('%simages/locale/%s/%s/%s',
-                 $GLOBALS['ASSETS_URL'],
-                 $GLOBALS['_language_path'],
-                 $category,
-                 $filename);
+    $path = sprintf('locale/%s/%s/%s',
+                    $GLOBALS['_language_path'],
+                    $category,
+                    $filename);
+    return Assets::image_path($path);
 }
-
-?>

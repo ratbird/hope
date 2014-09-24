@@ -726,12 +726,12 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
         if ($this->tree->isLastKid($item_id) || $item_id == ROOT_BLOCK)
             $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  "
                 . "nowrap>"
-                . "<img src=\"". Assets::image_path("forumstrich2.gif")."\">"
+                . Assets::img('forumstrich2.gif')
                 . "</td>"; //last
         else
             $level_output = "   <td class=\"blank tree-indent\" valign=\"top\" "
                 . "nowrap>"
-                . "<img src=\"". Assets::image_path("forumstrich3.gif")."\">"
+                . Assets::img('forumstrich3.gif')
                 . "</td>"; //crossing
 
         $parent_id = $item_id;
@@ -747,12 +747,13 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
             if ($this->tree->isLastKid($parent_id)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
                     . "width=\"10\" nowrap>"
-                    . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
+                    . Assets::img('forumleer.gif')
                     . "</td>"
                     . $level_output; //nothing
             } else {
                 $level_output = "   <td class=\"blank tree-indent\" valign=\"top\"  "
-                    . "nowrap><img src=\"" . Assets::image_path("forumstrich.gif")."\">"
+                    . "nowrap>"
+                    . Assets::img('forumstrich.gif')
                     . "</td>"
                     . $level_output; //vertical line
             }
@@ -765,7 +766,7 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
             ($this->tree->tree_data[$item_id]['parent_id'] == ROOT_BLOCK)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
                     . "width=\"10\" nowrap>"
-                    . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
+                    . Assets::img('forumleer.gif')
                     . "</td>"
                     . $level_output; //nothing
         }
@@ -795,7 +796,7 @@ function createTreeItemOutput($item_id){
         . "  <td class=\"printhead\" nowrap width=\"1\" valign=\"middle\">\n";
     if ($this->anchor == $item_id)
         $html .= "<a name=\"anchor\">";
-    $html .= "<img src=\"".Assets::image_path("forumleer.gif")."\">";
+    $html .= Assets::img('forumleer.gif');
     if ($this->anchor == $item_id)
         $html .= "</a>";
     $html .= "\n"

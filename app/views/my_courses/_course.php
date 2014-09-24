@@ -52,6 +52,7 @@
                 <? foreach (MyRealmModel::array_rtrim($course['navigation']) as $key => $nav)  : ?>
                     <? if (isset($nav) && $nav->isVisible(true)) : ?>
                         <? $image = $nav->getImage(); ?>
+                        <? $image['width'] = "20px" ?>
                         <a href="<?=
                         UrlHelper::getLink('seminar_main.php',
                             array('auswahl'     => $course['seminar_id'],

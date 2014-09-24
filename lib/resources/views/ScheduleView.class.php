@@ -67,15 +67,15 @@ class ScheduleView {
 
         //the categories configuration (color's and bg-image)
         $this->categories = array(
-            "0" => array("bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category3_small.jpg",
+            "0" => array("bg-picture"   => Assets::image_path('calendar/category3_small.jpg'),
                          "border-color" => "#5C2D64"),  // is now obsolete
-            "1" => array("bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category5_small.jpg",
+            "1" => array("bg-picture"   => Assets::image_path('calendar/category5_small.jpg'),
                          "border-color" => "#505064"),
-            "2" => array("bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category9_small.jpg",
+            "2" => array("bg-picture"   => Assets::image_path('calendar/category9_small.jpg'),
                          "border-color" => "#957C29"),
-            "3" => array("bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category11_small.jpg",
+            "3" => array("bg-picture"   => Assets::image_path('calendar/category11_small.jpg'),
                          "border-color" => "#66954F"),
-            "4" => array("bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category13_small.jpg",
+            "4" => array("bg-picture"   => Assets::image_path('calendar/category13_small.jpg'),
                          "border-color" => "#951408"));
     }
 
@@ -308,8 +308,10 @@ class ScheduleView {
         }
 
         if ($print_view) {
-            echo "<tr><td colspan=$glb_colspan><i>"._("Erstellt am")." ",date("d.m.y", time())," um ", date("G:i", time())," Uhr.</i></td>
-            <td align=\"right\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logos/logo2b.png\"></td></tr></tr>";
+            echo "<tr><td colspan=$glb_colspan><i>"._("Erstellt am")." ",date("d.m.y")," um ", date("G:i")," Uhr.</i></td>";
+            echo "<td align=\"right\">";
+            echo Assets::img('logos/logo2b.png');
+            echo "</td></tr></tr>";
         } else {;
             //print view bottom
         }
@@ -322,8 +324,13 @@ class ScheduleView {
 
     function getAddLink($l,$i){
         $add_link_timestamp = $this->base_date + (($l-1) * 24 * 60 * 60) + ($i * 60 * 60);
-        return sprintf ("class=\"table_row_even\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calplus.gif\" %s border=\"0\"></a></td>",
-        $this->add_link, $add_link_timestamp, tooltip(sprintf(_("Eine neue Belegung von %s bis %s Uhr anlegen"), date ("H:i", $add_link_timestamp), date ("H:i", $add_link_timestamp + (2 * 60 * 60)))));
+        return sprintf("class=\"table_row_even\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\">%s</a></td>",
+                       $this->add_link,
+                       $add_link_timestamp,
+                       Assets::img('calplus.gif',
+                                   tooltip2(sprintf(_('Eine neue Belegung von %s bis %s Uhr anlegen'),
+                                                    date('H:i', $add_link_timestamp),
+                                                    date('H:i', $add_link_timestamp + 2 * 60 * 60)))));
 
     }
 

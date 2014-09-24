@@ -1,0 +1,358 @@
+#blubber_threads, #blubber_threads > li > ul {
+    list-style-type: none;
+}
+#blubber_threads {
+    padding: 0px;
+    margin: 5px;
+    border-left: thin solid @base-color-40;
+}
+#blubber_threads > li.thread .hiddeninfo {
+    display: none;
+}
+#blubber_threads > li.thread .contextinfo {
+    display: table-cell;
+    width: 100px;
+    margin-left: -108px;
+    margin-top: -8px;
+    height: 100px;
+    background-size: auto 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    float: left;
+    opacity: 0.2;
+    .transition(all 1s);
+
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#blubber_threads > li.thread .contextinfo > .empty {
+    min-width: 1px;
+    min-height: 100px;
+    vertical-align: middle;
+    display: inline-block;
+}
+#blubber_threads > li.thread .contextinfo > .name {
+    font-weight: bold;
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0px 0px 3px black;
+    font-size: 0.8em;
+    vertical-align: middle;
+    display: inline-block;
+    white-space: normal;
+    opacity: 0;
+    max-width: 100%;
+}
+#blubber_threads > li.thread.public .contextinfo > .name, #blubber_threads > li.thread.private .contextinfo > .name {
+    font-size: 0.9em;
+    color: #eeeeee;
+    margin-top: -25px;
+}
+#blubber_threads > li.thread:hover .contextinfo {
+    opacity: 1;
+}
+#blubber_threads > li.thread .contextinfo:hover {
+    opacity: 1;
+}
+#blubber_threads > li.thread.public .contextinfo:hover, #blubber_threads > li.thread.private .contextinfo:hover {
+    cursor: pointer;
+}
+#blubber_threads > li.thread:hover .contextinfo > .name {
+    opacity: 1;
+}
+#blubber_threads.coursestream > li.thread .contextinfo, #blubber_threads.profilestream > li.thread .contextinfo  {
+    display: none;
+}
+#blubber_threads li.thread .reshares {
+    padding: 0px;
+    display: table;
+    margin: 0px;
+    margin-bottom: 5px;
+    visibility: hidden;
+}
+#blubber_threads li.thread:hover .reshares, html.touch #blubber_threads li.thread .reshares, #blubber_threads li.thread .reshares.reshared {
+    visibility: visible;
+}
+#blubber_threads .reshare_blubber {
+    cursor: pointer;
+}
+#blubber_threads > li.thread .additional_tags {
+    margin-top: 3px;
+    margin-bottom: 7px;
+}
+#blubber_threads > li.thread .additional_tags a {
+    color: #888888;
+}
+#blubber_threads > li.thread .additional_tags a:hover {
+    color: @active-color;
+}
+#blubber_threads.globalstream {
+    margin-left: 100px;
+}
+#blubber_threads > li > ul {
+    border-left: thin solid @base-color-40;
+    background-color: #e7ebf1;
+    margin-left: 60px;
+    padding-left: 0px;
+}
+#blubber_threads .more, #blubber_threads .loading {
+    text-align: center;
+}
+#blubber_threads > li, #blubber_threads > li > ul > li {
+    border-top: thin solid @base-color-40;
+    padding: 7px;
+    margin: 0px;
+}
+#blubber_threads > li:first-child, #blubber_threads > li > ul > li:first-child {
+    border: none;
+}
+
+#blubber_threads .content {
+    margin-bottom: 5px;
+}
+#blubber_threads .timer {
+    float: right;
+    color: #bbbbbb;
+    font-size: 0.8em;
+    visibility: hidden;
+}
+#blubber_threads .content_column:hover > .timer, html.touch #blubber_threads .content_column:hover > .timer {
+    visibility: visible;
+}
+#blubber_threads .content_column .timer a, #blubber_threads .content_column .timer a:hover {
+    color: #606060;
+}
+#blubber_threads .content_column > .timer .icon {
+    vertical-align: middle; 
+    opacity: 0.6; 
+}
+#blubber_threads .content_column .permalink {
+    opacity: 0.6;
+}
+#blubber_threads .content_column .permalink:hover {
+    .icon-before('grey/group.png', 14);
+}
+#blubber_threads .writer {
+    margin-left: 60px;
+    margin-top: 5px;
+}
+#blubber_threads .writer textarea {
+    width: 97%;
+    height: 20px;
+}
+#blubber_threads .writer textarea.hovered, #new_posting.hovered, #blubber_threads textarea.corrector {
+    background-color: @content-color-20;
+    opacity: 1.0;
+}
+#blubber_threads .writer textarea {
+    opacity: 0.5;
+}
+#blubber_threads .writer textarea:hover {
+    opacity: 1;
+}
+#blubber_threads textarea.uploading {
+    background: url("@{image-path}/ajax_indicator_small.gif") bottom right no-repeat;
+    background-color: yellow;
+}
+#blubber_threads .avatar, #blubber_threads .content {
+    vertical-align: middle;
+    display: inline-block;
+}
+#blubber_threads .content h1, #blubber_threads .content h2, #blubber_threads .content h3, #blubber_threads .content h4, #blubber_threads .content h5, #blubber_threads .content h6 {
+    display: block;
+    margin-top: 4px;
+}
+#blubber_threads {
+    .avatar_column {
+        vertical-align: top;
+        padding: 5px;
+        width: 55px;
+        max-width: 55px;
+        overflow: hidden;
+        text-align: center;
+        display: table-cell;
+        .avatar_image {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50px;
+            height: 50px;
+            background-size: 100%; 
+            background-repeat: no-repeat; 
+            background-position: center center; 
+        }
+    }
+    .content_column {
+        display: table-cell;
+        padding: 5px;
+        width: 100%;
+        > .name {
+            color: #888888;
+            font-weight: bold;
+            font-size: 0.8em;
+            a {
+                color: #888888;
+            }
+        }
+        > .content {
+            margin-top: 7px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            hyphens: auto;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            a {
+                word-break: break-all;
+            }
+        }
+    }
+}
+#blubber_threads .posting img, #blubber_threads .posting video, #blubber_threads .content_column > .content {
+    max-width: 600px;
+}
+#blubber_threads.globalstream .posting img, #blubber_threads.globalstream .posting video, #blubber_threads.globalstream .content_column > .content {
+    max-width: 500px;
+}
+#blubber_threads.singlethread .posting img, #blubber_threads.singlethread .posting video, #blubber_threads.singlethread .content_column > .content {
+    max-width: 800px;
+}
+#blubber_threads .comment img, #blubber_threads .comment video, #blubber_threads .comment .content_column > .content {
+    max-width: 550px;
+}
+#blubber_threads.globalstream .comment img, #blubber_threads.globalstream .comment video, #blubber_threads.globalstream  .comment .content_column > .content {
+    max-width: 450px;
+}
+#blubber_threads.singlethread .comment img, #blubber_threads.singlethread .comment video, #blubber_threads.singlethread  .comment .content_column > .content {
+    max-width: 750px;
+}
+
+#blubber_threads {
+    li.more {
+        cursor: pointer;
+        color: #bbbbbb;
+        
+        &:hover {
+            background-color: #e5e5ff;
+            color: #777777;
+        }
+    }
+    textarea.corrector {
+        width: 100%;
+        height: 20px;
+        background-color: white;
+    }
+    .related_users {
+        display: none;
+    }
+}
+
+#context_background {
+    #gradient > .horizontal(white, @content-color-20);
+    background-size: 100px 100%;
+    background-repeat: no-repeat;
+}
+
+#threadwriter {
+    margin: 5px;
+    width: 97%;
+    display: table;
+    padding: 5px;
+    margin-bottom: 15px;
+    
+    > .row {
+        display: table-row;
+    }
+    textarea {
+        display: table-cell;
+        width: 100%;
+        height: 20px;
+        vertical-align: middle;
+    }
+    .context_selector {
+        padding: 5px;
+        display: table-cell;
+        width: 100px;
+        text-align: center;
+        vertical-align: middle;
+       .transition(all 1s);
+        opacity: 0.2;
+
+        img {
+            cursor: pointer;
+            display: none;
+        }
+        &.select img.select,
+        &.public img.public,
+        &.private img.private,
+        &.seminar img.seminar {
+            display: inline;
+        }
+    }
+    &:hover .context_selector {
+        opacity: 1;
+    }
+}
+
+#context_selector table > tbody > tr {
+    opacity: 0.5;
+    img.check {
+        display: none;
+    }
+    
+    &.selected {
+        opacity: 1;
+        
+        img.check {
+            display: block;
+        }
+        img.uncheck {
+            display: none;
+        }
+    }
+}
+
+/* editing custom streams */
+table.select {
+    td {
+        border: thin solid #aaaaaa;
+        text-align: center;
+        
+        img.check, input[type=checkbox] {
+            display: none;
+        }
+        
+        &.selected {
+            background-color: #eeeeee;
+
+            img.check {
+                display: inline;
+            }
+            img.uncheck {
+                display: none;
+            }
+        }
+    }
+    th {
+        border-left: 1px solid @table-header-color;
+        border-right: 1px solid @table-header-color;
+    }
+}
+
+#additional_settings {
+    table, input[type=text], select {
+        width: 100%;
+    }
+}
+
+.blubber_contacts {
+    list-style: none;
+    padding: 0px;
+    text-align: center;
+    
+    > li {
+        display: inline-block;
+    }
+    .want_to_share {
+        cursor: pointer;
+    }
+}

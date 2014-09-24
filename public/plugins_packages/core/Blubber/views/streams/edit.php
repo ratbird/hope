@@ -255,7 +255,7 @@
 
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/blubber-sidebar.png"));
+$sidebar->setImage("sidebar/blubber-sidebar.png");
 $streamAvatar = StreamAvatar::getAvatar($stream->getId());
 if ($streamAvatar->is_customized()) {
     $sidebar->setContextAvatar($streamAvatar);

@@ -69,7 +69,7 @@
                 <td>
                     <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $temp_language_key => $temp_language): ?>
                         <a href="index.php?set_language=<?= $temp_language_key ?>">
-                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/languages/<?= $temp_language['picture'] ?>" border="0" <?= tooltip($temp_language['name']) ?>>
+                            <?= Assets::img('languages/' . $temp_language['picture'], tooltip2($temp_language['name'])) ?>
                         </a>
                     <? endforeach; ?>
                 </td>
@@ -82,7 +82,7 @@
         </table>
 
         <a href="http://www.studip.de">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logos/logoklein@2x.png" border="0" width="215" height="83"  <?= tooltip(_("Zur Portalseite")) ?> >
+            <?= Assets::img('logos/logoklein@2x.png', tooltip2(_('Zur Portalseite')) + array('size' => '125@83')) ?>
         </a>
     </footer>
 </div>

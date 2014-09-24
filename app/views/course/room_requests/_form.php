@@ -49,7 +49,7 @@ if ($request_resource_id = $request->getResourceId()) :
     <td colspan="2">
         <table class="default">
             <tr>
-                <td width="50%" style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line2.gif'); background-repeat: repeat-y; background-position: right;">
+                <td width="50%" style="background-image: url(<?= Assets::image_path('line2.gif') ?>); background-repeat: repeat-y; background-position: right;">
                     <?
                     print "<b>"._("Raumeigenschaften angeben:")."</b><br><br>";
                     if ($request->getCategoryId()) {

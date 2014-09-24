@@ -258,8 +258,8 @@ class Admin_SmileysController extends AuthenticatedController
     private function setSidebar($view)
     {
         $sidebar = Sidebar::Get();
-        $sidebar->setImage(Assets::image_path('sidebar/smiley-sidebar.png'));
-        $sidebar->setTitle(PageLayout::getTitle() ? : _('Smileys'));
+        $sidebar->setImage('sidebar/smiley-sidebar.png');
+        $sidebar->setTitle(PageLayout::getTitle() ?: _('Smileys'));
 
         // Render items
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');

@@ -28,7 +28,7 @@ class SearchNavigation extends Navigation
     {
         parent::__construct(_('Suche'));
 
-        $this->setImage('icons/28/lightblue/search.png', array('title' => _('Suche'), "@2x" => TRUE));
+        $this->setImage('icons/lightblue/search.svg', array('title' => _('Suche')));
     }
 
     /**

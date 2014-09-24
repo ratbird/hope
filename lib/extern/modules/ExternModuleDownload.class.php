@@ -217,15 +217,16 @@ class ExternModuleDownload extends ExternModule {
                 }
 
                 if ($icon) {
-                    $picture_file = $GLOBALS['ASSETS_URL']."images/$icon";
+                    $picture_file = $icon;
                 }
                 
                 $download_link = GetDownloadLink($row['dokument_id'], $row['filename']);
                 
                 // Aufbereiten der Daten
                 $table_row_data["content"] = array(
-                    "icon"        => sprintf("<a href=\"%s\"><img border=\"0\" src=\"%s\"></a>"
-                                                        , $download_link, $picture_file),
+                    "icon"        => sprintf("<a href=\"%s\">%s</a>",
+                                             $download_link,
+                                             Assets::img($picture_file)),
                                                                              
                     "filename"    => $this->elements["Link"]->toString(array("content" =>
                                                         htmlReady($row['filename']), "link" => $download_link)),
@@ -342,12 +343,12 @@ class ExternModuleDownload extends ExternModule {
             }
 
             if ($icon)
-                $picture_file = $GLOBALS['ASSETS_URL']."images/$icon";
+                $picture_file = $icon;
 
             // Aufbereiten der Daten
             $table_row_data["content"] = array(
                 "icon"        => $this->elements["Link"]->toString(array("content" =>
-                                                    "<img border=\"0\" src=\"$picture_file\">", "link" => "")),
+                                                    Assets::img($picture_file), "link" => "")),
 
                 "filename"    => $this->elements["Link"]->toString(array("content" =>
                                                     htmlReady($db["filename"]), "link" => "")),

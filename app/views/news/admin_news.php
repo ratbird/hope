@@ -53,7 +53,7 @@
                     <table class="default">
                     <? if (!$area_type) : ?>
                         <caption>
-                            <img src="<?=Assets::image_path('icons/32/grey/'.$area_data['icon'])?>" class="news_area_icon">&nbsp;
+                            <?= Assets::img('icons/32/grey/'.$area_data['icon'], array('class' => 'news_area_icon')) ?>
                             <div class="news_area_title"><?=htmlReady($area_data['title'])?></div>
                         </caption>
                     <? endif ?>
@@ -93,13 +93,19 @@
                         <td><?=strftime("%d.%m.%y", $news['object']->date + $news['object']->expire)?></td>
                         <td>
                         <a href="<?=URLHelper::getURL('dispatch.php/news/edit_news/'.$news['object']->news_id)?>" rel="get_dialog" target="_blank" <?=tooltip(_('Ankündigung bearbeiten'))?>>
-                        <img src="<?= Assets::image_path('icons/16/blue/edit.png')?>"></a>
+                            <?= Assets::img('icons/16/blue/edit.png')?>
+                        </a>
                         <a href="<?=URLHelper::getURL('dispatch.php/news/edit_news/new/template/'.$news['object']->news_id)?>" rel="get_dialog" target="_blank" aria-label="<?= _('Kopieren, um neue Ankündigung zu erstellen')?>" <?=tooltip(_('Kopieren, um neue Ankündigung zu erstellen'))?>>
-                        <img src="<?= Assets::image_path('icons/16/blue/export/news.png')?>"></a>
+                            <?= Assets::img('icons/16/blue/export/news.png')?>
+                        </a>
                         <? if ($news['object']->havePermission('unassign', $news['range_id'])) : ?>
-                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/remove.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung aus diesem Bereich entfernen"),false)?>>
+                            <?= Assets::input('icons/16/blue/remove.png',
+                                              tooltip2(_('Ankündigung aus diesem Bereich entfernen')) +
+                                              array('name' => 'news_remove_' . $news['object']->news_id . '_' . $news['range_id'])) ?>
                         <? else : ?>
-                            <input type="image" name="news_remove_<?=$news['object']->news_id?>_<?=$news['range_id']?>" src="<?= Assets::image_path('icons/16/blue/trash.png')?>" aria-label="<?= _('Ankündigung löschen')?>" <?=tooltip(_("Ankündigung löschen"),false)?>>
+                            <?= Assets::input('icons/16/blue/trash.png',
+                                              tooltip2(_('Ankündigung löschen')) +
+                                              array('name' => 'news_remove_' . $news['object']->news_id . '_' . $news['range_id'])) ?>
                         <? endif ?>
                         </td>
                         </tr>

@@ -90,10 +90,14 @@ class ShowThread extends ShowTreeRow {
             if (!$resObject->getCategoryIconnr())
                 $icon = Assets::img('icons/16/grey/folder-full.png', array('class' => 'text-top'));
             else
-                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
+                $icon = Assets::img('cont_res' . $resObject->getCategoryIconnr() . '.gif');
 
-            if ($_SESSION['resources_data']["move_object"])
-                $icon="&nbsp;<a href=\"".URLHelper::getLink('?target_object='.$resObject->id)."#a\"><img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" alt=\""._("Objekt in diese Ebene verschieben")."\"></a>".$icon;
+            if ($_SESSION['resources_data']["move_object"]) {
+                $temp  = "&nbsp;<a href=\"".URLHelper::getLink('?target_object='.$resObject->id)."#a\">";
+                $temp .= Assets::img('icons/16/yellow/arr_2right.png', tooltip2(_('Objekt in diese Ebene verschieben')));
+                $temp .= "</a>";
+                $icon = $temp . $icon;
+            }
 
             if ($_SESSION['resources_data']["structure_opens"][$resObject->id]) {
                 $link = URLHelper::getLink('?structure_close=' . $resObject->id . '#a');
@@ -145,8 +149,13 @@ class ShowThread extends ShowTreeRow {
                 } else {
                     $content=htmlReady($resObject->getDescription());
                 }
-                if ($_SESSION['resources_data']["move_object"] == $resObject->id)
-                    $content.= sprintf ("<br>"._("Dieses Objekt wurde zum Verschieben markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um es in die gew&uuml;nschte Ebene zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" alt=\""._("Klicken Sie auf dieses Symbol, um dieses Objekt in eine andere Ebene zu verschieben")."\">");
+                if ($_SESSION['resources_data']["move_object"] == $resObject->id) {
+                    $content .= '<br>';
+                    $content .= sprintf(_('Dieses Objekt wurde zum Verschieben markiert. '
+                                         .'Bitte wählen Sie das Einfügen-Symbol %s, um es in die gewünschte Ebene zu verschieben.'),
+                                        Assets::img('icons/16/yellow/arr_2right.png',
+                                                    tooltip2(_('Klicken Sie auf dieses Symbol, um dieses Objekt in eine andere Ebene zu verschieben'))));
+                }
 
                 if ($resObject->getCategoryId()) {
                     $edit .= LinkButton::create(_('Belegung'), URLHelper::getURL('?view=view_schedule&show_object=' . $resObject->id));

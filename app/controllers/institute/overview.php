@@ -64,7 +64,7 @@ class Institute_OverviewController extends AuthenticatedController
     function index_action()
     {
         $this->sidebar = Sidebar::get();
-        $this->sidebar->setImage(Assets::image_path("sidebar/institute-sidebar.png"));
+        $this->sidebar->setImage('sidebar/institute-sidebar.png');
 
         if (get_config('NEWS_RSS_EXPORT_ENABLE') && $this->institute_id){
             $rss_id = StudipNews::GetRssIdFromRangeId($this->institute_id);

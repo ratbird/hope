@@ -17,7 +17,7 @@
 <? $treeview->showTree(); ?>
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/literature-sidebar.png"));
+$sidebar->setImage('sidebar/literature-sidebar.png');
 $widget = new ActionsWidget();
 $widget->addLink(_('Literatur importieren'), URLHelper::getLink('dispatch.php/literature/import_list?return_range='.$_range_id), 'icons/16/black/add/literature.png', array('data-dialog' => ''));
 $widget->addLink(_('Neue Literatur anlegen'), URLHelper::getLink('dispatch.php/literature/edit_element?_range_id=new_entry&return_range='.$_range_id), 'icons/16/black/add/literature.png', array('data-dialog' => ''));

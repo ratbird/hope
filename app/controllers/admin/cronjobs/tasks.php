@@ -71,7 +71,7 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
         // http://www.flickr.com/photos/robbie73/5924985913/
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Cronjobs'));
-        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
 
         // Aktionen
         $actions = new ViewsWidget();

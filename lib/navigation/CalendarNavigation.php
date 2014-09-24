@@ -30,7 +30,7 @@ class CalendarNavigation extends Navigation
             $planerinfo = _('Termine');
         }
 
-        $this->setImage('icons/28/lightblue/schedule.png', array('title' => $planerinfo, "@2x" => TRUE));
+        $this->setImage('icons/lightblue/schedule.svg', array('title' => $planerinfo));
     }
 
     /**

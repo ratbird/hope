@@ -359,7 +359,7 @@ function GetUserInfo($user_id)
         if(UserConfig::get($user_id)->SKYPE_ONLINE_STATUS){
             $img = sprintf('<img src="http://mystatus.skype.com/smallicon/%s" style="border: none;vertical-align:middle" width="16" height="16" alt="My status">', htmlReady(UserConfig::get($user_id)->SKYPE_NAME));
         } else {
-            $img = '<img src="' . $GLOBALS['ASSETS_URL'] . 'images/icon_small_skype.gif" style="border: none;vertical-align:middle">';
+            $img = Assets::img('icon_small_skype.gif', array('style' => 'vertical-align:middle'));
         }
         $userinfo[_('Skype')] = sprintf('<a href="skype:%1$s?call">%2$s&nbsp;%1$s</a><br>',
                                 htmlReady(UserConfig::get($user_id)->SKYPE_NAME), $img);

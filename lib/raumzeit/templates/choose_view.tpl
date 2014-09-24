@@ -6,27 +6,22 @@
         <TD colspan="5" class="blank" height="10"></TD>
     </TR>
     <TR>
-        <TD class="table_header" valign="middle">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" height="22" width="5">
-        </TD>
+        <TD class="table_header" valign="middle">&nbsp;</TD>
         <TD class="table_header" valign="middle" nowrap>
-            <FONT size="-1"> Ansicht:&nbsp;</FONT>
+            <FONT size="-1"><?= _('Ansicht') ?>:</FONT>
         </TD>
 <? foreach ($tpl['view'] as $key => $val) {
     if ($tpl['selected'] == $key) { ?>
         <TD class="table_header_bold" nowrap="nowrap" valign="middle">
-            &nbsp;
             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
-            <FONT size="-1"><?=$val?></FONT> &nbsp;
+            <FONT size="-1"><?=$val?></FONT>
         </TD>
 <? } else { ?>
         <TD class="table_header" nowrap="nowrap" valign="middle">
-            &nbsp;
             <A href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=' . $key) ?>">
                 <?= Assets::img('icons/16/blue/arr_1right.png', array('align' => 'text-top')) ?>
                 <font color="#555555" size="-1"><?=$val?></font>
             </A>
-            &nbsp;
         </TD>
 <?
     }

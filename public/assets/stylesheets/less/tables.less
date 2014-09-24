@@ -16,7 +16,7 @@ table.header, .table_header { //normale Tabellenheader
     font-size: 12pt;
     padding: 3px 5px;
 
-    img { vertical-align: middle; } // for the topic-icons
+    img, svg { vertical-align: middle; } // for the topic-icons
 }
 
 
@@ -40,7 +40,7 @@ table.logintable {
 .gradient-bar(@flow-content: true) when (@flow-content) {
     &:last-child { padding-right: 5px; }
 
-    img {
+    img,svg {
         padding: 0 2px;
         vertical-align: text-bottom;
     }
@@ -90,8 +90,10 @@ table.blank, td.blank, td.onlineinfo, td.blanksmall {
     background-color: #fff;
 }
 
-td.tree-indent img {
-    vertical-align: bottom;
+td.tree-indent {
+    img, svg {
+        vertical-align: bottom;
+    }
 }
 
 td.tree-elbow-line {
@@ -106,9 +108,10 @@ td.tree-elbow-end {
     width: 5px;
 }
 
-td.tree-elbow-line img,
-td.tree-elbow-end img {
-    display: block;
+td.tree-elbow-line, td.tree-elbow-end {
+    img, svg {
+        display: block;
+    }
 }
 
 /* Zebra styles for tables */
@@ -481,7 +484,7 @@ table.default {
     .actions {
         float: right;
         text-align: right;
-        img {
+        img, svg {
             vertical-align: middle;
         }
     }
@@ -601,7 +604,7 @@ table.default2 {
     .actions {
         float: right;
         text-align: right;
-        img {
+        img, svg {
             vertical-align: middle;
         }
     }

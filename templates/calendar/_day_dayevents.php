@@ -26,7 +26,7 @@
                     <? if ($show_edit_link) : ?>
                         <td style="width: 1%; vertical-align:top;" rowspan="<?= sizeof($em['day_events']) ?>">
                             <a style="display: block; min-width: 11px;" href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $wday->getTs(), 'devent' => '1')) ?>">
-                                <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
+                                <?= Assets::img('calplus.gif', tooltip2(_('neuer Tagestermin'))) ?>
                             </a>
                         </td>
                         <?
@@ -39,7 +39,7 @@
 <? else : ?>
     <? if ($show_edit_link) : ?>
         <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $wday->getTs(), 'devent' => '1')) ?>">
-            <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
+            <?= Assets::img('calplus.gif', tooltip2(_('neuer Tagestermin'))) ?>
         </a>
     <? endif; ?>
 <? endif; ?>

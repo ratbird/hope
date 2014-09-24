@@ -98,4 +98,4 @@
 
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/mail-sidebar.png"));
+$sidebar->setImage('sidebar/mail-sidebar.png');

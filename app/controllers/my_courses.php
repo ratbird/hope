@@ -166,7 +166,7 @@ class MyCoursesController extends AuthenticatedController
         }
 
         $sidebar = Sidebar::get();
-        $sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+        $sidebar->setImage('sidebar/seminar-sidebar.png');
         $setting_widget = new ActionsWidget();
 
         if ($new_contents) {

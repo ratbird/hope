@@ -86,7 +86,7 @@ class Course_AdmissionController extends AuthenticatedController
     function index_action()
     {
         $this->sidebar = Sidebar::get();
-        $this->sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+        $this->sidebar->setImage("sidebar/seminar-sidebar.png");
         if ($GLOBALS['perm']->have_perm('admin') &&
             ($adminList = AdminList::getInstance()->getSelectTemplate($this->course_id))) {
             $list = new SelectorWidget();

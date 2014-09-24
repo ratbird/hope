@@ -62,11 +62,11 @@ class SemGroupScheduleDayOfWeek extends ScheduleView {
         }
         //the categories configuration (color's and bg-image)
         $this->categories = array(
-            "0"=>array("bg-picture"=>$GLOBALS['ASSETS_URL']."images/calendar/category5.jpg", "border-color"=>"#505064"),
-            "1"=>array("bg-picture"=>$GLOBALS['ASSETS_URL']."images/calendar/category3.jpg", "border-color"=>"#5C2D64"),
-            "2"=>array("bg-picture"=>$GLOBALS['ASSETS_URL']."images/calendar/category9.jpg", "border-color"=>"#957C29"),
-            "3"=>array("bg-picture"=>$GLOBALS['ASSETS_URL']."images/calendar/category11.jpg", "border-color"=>"#66954F"),
-            "4"=>array("bg-picture"=>$GLOBALS['ASSETS_URL']."images/calendar/category13.jpg", "border-color"=>"#951408"),
+            "0"=>array("bg-picture"=>Assets::image_path('calendar/category5.jpg'), "border-color"=>"#505064"),
+            "1"=>array("bg-picture"=>Assets::image_path('calendar/category3.jpg'), "border-color"=>"#5C2D64"),
+            "2"=>array("bg-picture"=>Assets::image_path('calendar/category9.jpg'), "border-color"=>"#957C29"),
+            "3"=>array("bg-picture"=>Assets::image_path('calendar/category11.jpg'), "border-color"=>"#66954F"),
+            "4"=>array("bg-picture"=>Assets::image_path('calendar/category13.jpg'), "border-color"=>"#951408"),
             );
     }
 
@@ -91,8 +91,12 @@ class SemGroupScheduleDayOfWeek extends ScheduleView {
     function getAddLink($l, $i){
         $add_link_timestamp = $this->base_date + ($i * 60 * 60);
         $add_link_timestamp .= "&show_object=" . $this->show_columns[$l];
-        return sprintf ("class=\"table_row_even\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calplus.gif\" %s border=\"0\"></a></td>",
-                        $this->add_link, $add_link_timestamp, tooltip(sprintf(_("Eine neue Belegung von %s bis %s Uhr anlegen"), date ("H:i", $add_link_timestamp), date ("H:i", $add_link_timestamp + (2 * 60 * 60)))));
+        return sprintf ("class=\"table_row_even\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\">%s</a></td>",
+                        $this->add_link,
+                        $add_link_timestamp,
+                        Assets::img('calplus.gif', 
+                                    tooltip2(sprintf(_('Eine neue Belegung von %s bis %s Uhr anlegen'),
+                                                     date('H:i', $add_link_timestamp),
+                                                     date('H:i', $add_link_timestamp + 2 * 60 * 60)))));
     }
 }
-?>

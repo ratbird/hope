@@ -43,7 +43,7 @@ class ProfileNavigation extends Navigation
         
         $hp_txt .= sprintf(' (%s, %s)', $user->username, $user->perms);
         $this->setURL($hp_link);
-        $this->setImage('icons/28/lightblue/person.png', array('title' => $hp_txt, 'class' => $hp_class, "@2x" => TRUE));
+        $this->setImage('icons/lightblue/person.svg', array('title' => $hp_txt, 'class' => $hp_class));
     }
 
     /**

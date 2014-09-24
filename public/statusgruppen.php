@@ -255,7 +255,7 @@ if($self_assign_exclusive) {
 
 if ($rechte) {
     $sidebar = Sidebar::get();
-    $sidebar->setImage(Assets::image_path('sidebar/group-sidebar.png'));
+    $sidebar->setImage('sidebar/group-sidebar.png');
 
     $actions = new ActionsWidget();
     if (groupmail($SessSemName[1], 'all')) {

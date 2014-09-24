@@ -582,9 +582,11 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
     $q = ($ss !== '')? "&ss={$ss}&sm={$sm}&es={$es}&em={$em}":'';
     $txt .= "<a href=\"javascript:window.open('";
     $txt .= "termin_eingabe_dispatch.php?mcount={$km}&element_switch={$t}&c={$n}{$at}{$q}{$bla}', 'kalender', 'dependent=yes $sb, width=$kx, height=$ky');void(0);";
-    $txt .= '"><img src="' . Assets::image_path('popupcalendar.png') . '" class="text-top" ';
-    $txt .= tooltip(_("Für eine Eingabehilfe zur einfacheren Terminwahl bitte hier klicken."),TRUE,FALSE);
-    $txt .= '></a>';
+    $txt .= '">';
+    $txt .= Assets::img('popupcalendar.png',
+                        tooltip2(_('Für eine Eingabehilfe zur einfacheren Terminwahl bitte hier klicken.')) +
+                        array('class' => 'middle'));
+    $txt .= '</a>';
 
     return  $txt;
 }

@@ -129,7 +129,7 @@ if ($level == "s" && $SessSemName[1] && $SessSemName["class"] == "inst") {
 }
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/seminar-sidebar.png"));
+$sidebar->setImage('sidebar/seminar-sidebar.png');
 $semester = new SelectWidget(_("Semester:"), URLHelper::getURL(), 'select_sem');
 foreach (array_reverse(Semester::getAll()) as $one) {
     $semester->addElement(new SelectElement($one->id, $one->name, $one->id == $show_semester));

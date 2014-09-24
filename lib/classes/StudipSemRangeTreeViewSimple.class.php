@@ -132,9 +132,11 @@ class StudipSemRangeTreeViewSimple {
             if ($this->tree->hasKids($item_id) && ($num_entries = $this->tree->getNumEntries($this->start_item_id,true))){
                 if ($this->show_entries != "sublevels"){
                     echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id={$this->start_item_id}_withkids")) ."\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1right.png');
+                    echo '&nbsp;';
                 } else {
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/blue/arr_1down.png');
+                    echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge in allen Unterebenen vorhanden"), $num_entries);
                 if ($this->show_entries != "sublevels"){
@@ -145,9 +147,11 @@ class StudipSemRangeTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id=$item_id")) ."\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/red/arr_1right.png');
+                    echo '&nbsp;';
                 } else {
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo Assets::img('icons/16/red/arr_1down.png');
+                    echo '&nbsp;';
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge auf dieser Ebene.&nbsp;"),$num_entries);
                 if ($this->show_entries != "level"){
@@ -174,7 +178,9 @@ class StudipSemRangeTreeViewSimple {
             $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . URLHelper::getLink($this->getSelf("start_item_id={$this->start_item_id}",false)) . "\">" . htmlReady($this->tree->tree_data[$this->start_item_id]["name"]) . "</a>";
 
         }
-        $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" border=\"0\" align=\"absmiddle\"></a>";
+        $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . ">";
+        $ret .= Assets::img('icons/16/grey/info-circle.png');
+        $ret .= "</a>";
         return $ret;
     }
 

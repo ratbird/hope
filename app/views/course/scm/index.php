@@ -66,4 +66,4 @@
 
 <?php
 $sidebar = Sidebar::get();
-$sidebar->setImage(Assets::image_path("sidebar/info-sidebar.png"));
+$sidebar->setImage('sidebar/info-sidebar.png');

@@ -494,7 +494,9 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                print tooltipicon(_('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:')
+                                                  . "\n" . $resObj->getPlainProperties(TRUE),
+                                                  $resObj->getOwnerId() == 'global');
                                 if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
@@ -572,7 +574,9 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                print tooltipicon(_('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:')
+                                                  . "\n" . $resObj->getPlainProperties(TRUE),
+                                                  $resObj->getOwnerId() == 'global');
                                 if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
@@ -631,7 +635,9 @@ class ShowToolsRequests
                                     <input type="text" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]?>">
                                     <a href="<?=URLHelper::getLink('?inc_limit_high=1') ?>">+</a>
 
-                                    <input type="image" name="matching_rooms_limit_submit" src="<?= Assets::image_path('icons/16/yellow/arr_2up.png') ?>" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>>
+                                    <?= Assets::input('icons/16/yellow/arr_2up.png', tooltip2('ausgewählten Bereich anzeigen') + array(
+                                            'name' => 'matching_rooms_limit_submit',
+                                    )) ?>
                                 </font>
                             </td>
                         </tr>
@@ -655,7 +661,9 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                print tooltipicon(_('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:')
+                                                  . "\n" . $resObj->getPlainProperties(TRUE),
+                                                  $resObj->getOwnerId() == 'global');
                                 if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
@@ -667,7 +675,7 @@ class ShowToolsRequests
                                 foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($key == $val2["resource_id"]) {
-                                        print "<img src=\"".Assets::image_path('icons/16/blue/accept.png')." ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                        print Assets::img('icons/16/blue/accept.png', tooltip2(_('Dieser Raum ist augenblicklich gebucht')));
                                     } else {
                                         $overlap_status = $this->showGroupOverlapStatus($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                         print $overlap_status["html"];
@@ -710,7 +718,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("gew&uuml;nschte Raumeigenschaften:")?></b><br><br>
+                    <font size="-1"><b><?=_("gewünschte Raumeigenschaften:")?></b><br><br>
                     <?
                     $properties = $reqObj->getProperties();
                     if (sizeof($properties)) {
@@ -751,7 +759,7 @@ class ShowToolsRequests
                         </table>
                         <?
                     } else
-                        print _("Es wurden keine Raumeigenschaften gew&uuml;nscht.");
+                        print _("Es wurden keine Raumeigenschaften gewünscht.");
                     ?>
                     </font>
                 </td>
@@ -889,7 +897,7 @@ class ShowToolsRequests
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
-                $html = "<img src=\"" . Assets::image_path('icons/16/red/progress.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = Assets::img('icons/16/red/progress.png', tooltip2($desc));
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -901,11 +909,11 @@ class ShowToolsRequests
                             else
                                 $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val2["begin"]), date("H:i", $val2["begin"]), date("H:i", $val2["end"]));
                 }
-                $html = "<img src=\"" . Assets::image_path('icons/16/yellow/progress.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = Assets::img('icons/16/yellow/progress.png', tooltip2($desc));
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"" . Assets::image_path('icons/16/green/progress.png') . "\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
+            $html = Assets::img('icons/16/green/progress.png', tooltip2(_('Es existieren keine Überschneidungen')));
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);
@@ -929,7 +937,7 @@ class ShowToolsRequests
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
-                $html = "<img src=\"" . Assets::image_path('icons/16/red/decline.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = Assets::img('icons/16/red/decline.png', tooltip2($desc));
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -939,11 +947,11 @@ class ShowToolsRequests
                     else
                         $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
                 }
-                $html = "<img src=\"" . Assets::image_path('icons/16/grey/exclaim-circle.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = Assets::img('icons/16/grey/exclaim-circle.png', tooltip2($desc));
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
+            $html = Assets::img('icons/16/green/accept.png', tooltip2(_('Es existieren keine Überschneidungen')));
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);

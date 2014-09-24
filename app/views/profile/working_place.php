@@ -45,7 +45,8 @@
             <? endif; ?>
 
             <? foreach ($inst_result['role'] as $role): ?>
-                <div><img src="<?= $GLOBALS['ASSETS_URL'].'/images/forumgrau2.png' ?>">
+                <div>
+                    <?= Assets::img('forumgrau2.png') ?>
                     <b><?=$role ?></b></div>
             <? endforeach; ?>
         </li>

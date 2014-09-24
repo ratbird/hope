@@ -4,8 +4,12 @@
 <div class="mpscontainer" data-dialogname="<?= $name; ?>"><p><?= htmlReady(studip_utf8encode($description)); ?></p>
 <form method="POST" action="<?= URLHelper::getLink('dispatch.php/multipersonsearch/js_form_exec/?name=' . $name); ?>" id="<?= $name; ?>"<?= $jsFunction ? ' onSubmit="return '.htmlReady($jsFunction).'(this);"' : "" ?>>
     <input id="<?= $name . '_searchinput'; ?>" type="text" placeholder="<?= _("Suchen"); ?>" value="" name="<?= $name . '_searchinput'; ?>" style="width: 210px;" aria-label="<?= _("Suchen"); ?>"></input>
-    <img title="<?= _('Suche starten'); ?>" src="<?= Assets::image_path("icons/16/blue/search.png"); ?>" onclick="STUDIP.MultiPersonSearch.search()">
-    <img title="<?= _('Suche zur&uuml;cksetzen'); ?>" src="<?= Assets::image_path("icons/16/blue/decline.png"); ?>" onclick="STUDIP.MultiPersonSearch.resetSearch()">
+    <?= Assets::img('icons/16/blue/search.png',
+                    tooltip2(_('Suche starten')) +
+                    array('onclick' => 'STUDIP.MultiPersonSearch.search()')) ?>
+    <?= Assets::img('icons/16/blue/decline.png',
+                    tooltip2(_('Suche zurücksetzen')),
+                    array('onclick' => 'STUDIP.MultiPersonSearch.resetSearch()')) ?>
     <p><? foreach($quickfilter as $title => $users) : ?>
         <? $title = studip_utf8encode($title); ?>
         <a href="#" class="quickfilter" data-quickfilter="<?= md5($title); ?>"><?= htmlReady($title); ?> (<?= count($users); ?>)</a>

@@ -857,7 +857,9 @@ if ($question) {
             if ($folder_tree->isFolder($folder_system_data["move"])) {
                 echo "\n" . '<td class="blank">&nbsp;</td>';
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
-                echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
+                echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
+                                          tooltip2(_('Auf die obere Ebene verschieben / kopieren')) +
+                                          array('name' => 'move_to_top_folder', 'class' => 'middle'));
                 echo '&nbsp;' . _("Auf die obere Ebene verschieben / kopieren") . '</td>';
                 echo "\n" . '<td class="blank">';
                 echo Button::create($button_name, "move_to_top_folder");
@@ -867,7 +869,11 @@ if ($question) {
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Veranstaltung") .':';
             echo '</div></td><td class="blank" width="60%" style="white-space: nowrap;">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_sem" id="move_to_sem_arrow" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
+            echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
+                                      tooltip2(_('In diese Veranstaltung verschieben / kopieren')) +
+                                      array('name' => 'move_to_sem',
+                                            'id' => 'move_to_sem_arrow',
+                                            'class' => 'middle'));
             echo "\n" . '<select id="sem_move_id" name="sem_move_id[]" style="width:60%">';
             foreach ($my_sem as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
@@ -884,7 +890,9 @@ if ($question) {
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Einrichtung").':';
             echo '</div></td><td class="blank" width="60%" style="white-space: nowrap;">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" id="move_to_inst_arrow" class="middle" name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
+            echo "\n" . Assets::input('icons/16/yellow/arr_2right.png',
+                                      tooltip2(_('In diese Einrichtung verschieben / kopieren')) +
+                                      array('name' => 'move_to_inst', 'id' => 'move_to_inst_arrow', 'class' => 'middle'));
             echo "\n" . '<select id="inst_move_id" name="inst_move_id[]" style="width:60%">';
             foreach ($my_inst as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
@@ -1145,30 +1153,30 @@ div.droppable.hover {
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "type") ? "?orderby=type" : "?orderby=type_rev"))."\">";
             print "<b>"._("Typ")."</b>".
                 ($folder_system_data['orderby'] == "type"
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : ($folder_system_data['orderby'] == "type_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : ($folder_system_data['orderby'] == "type_rev" ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "filename") ? "?orderby=filename" : "?orderby=filename_rev"))."\">";
             print "<b>"._("Name")."</b>".
                 ($folder_system_data['orderby'] == "filename"
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : ($folder_system_data['orderby'] == "filename_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : ($folder_system_data['orderby'] == "filename_rev" ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "size_rev") ? "?orderby=size_rev" : "?orderby=size"))."\">";
             print "<b>"._("Größe")."</b>".
                 ($folder_system_data['orderby'] == "size"
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : ($folder_system_data['orderby'] == "size_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : ($folder_system_data['orderby'] == "size_rev" ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "downloads_rev") ? "?orderby=downloads_rev" : "?orderby=downloads"))."\">";
             print "<b>"._("Downloads")."</b>".
                 ($folder_system_data['orderby'] == "downloads"
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : ($folder_system_data['orderby'] == "downloads_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : ($folder_system_data['orderby'] == "downloads_rev" ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
             print "</td><td class=\"content_seperator\" align=right>";
@@ -1176,15 +1184,15 @@ div.droppable.hover {
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "autor") ? "?orderby=autor" : "?orderby=autor_rev"))."\">";
             print "<b>"._("Autor")."</b>".
                 ($folder_system_data['orderby'] == "autor"
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : ($folder_system_data['orderby'] == "autor_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : ($folder_system_data['orderby'] == "autor_rev" ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "date_rev") ? "?orderby=date_rev" : "?orderby=date"))."\">";
             print "<b>"._("Datum")."</b>".
                 (($folder_system_data['orderby'] == "date")
-                    ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
-                    : (($folder_system_data['orderby'] == "date_rev") ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
+                    ? Assets::img($dreieck_hoch, array('style' => 'vertical-align: middle'))
+                    : (($folder_system_data['orderby'] == "date_rev") ? Assets::img($dreieck_runter, array('style' => 'vertical-align: middle')) : "")).
                 "</a>&nbsp;&nbsp; ";
 
             print "</td</tr></table></td><td>";

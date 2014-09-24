@@ -315,7 +315,7 @@ class Admin_SemesterController extends AuthenticatedController
     {
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Semester'));
-        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
+        $sidebar->setImage('sidebar/admin-sidebar.png');
 
         $links = new ActionsWidget();
         $links->addLink(_('Neues Semester anlegen'), $this->url_for('admin/semester/edit_semester'),'icons/16/blue/add.png');

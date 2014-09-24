@@ -90,7 +90,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
                         endfor ?>
 
                         <? if (sizeof($js_events)) : ?>
-                            <td width="<?= $width1 ?>%" class="<?= $css_class ?>" align="right" style="background-image: url('<?= Assets::url('images/calendar/category5_small.jpg') ?>">
+                            <td width="<?= $width1 ?>%" class="<?= $css_class ?>" align="right" style="background-image: url('<?= Assets::image_path('calendar/category5_small.jpg') ?>');">
                         <? else : ?>
                             <td width="<?= $width1 ?>%" class="<?= $css_class ?>" align="right" class="<?= $css_class ?>">
                         <? endif ?>
@@ -110,7 +110,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
                         <? endfor ?>
 
                         <? if (sizeof($js_events)) : ?>
-                            <td width="<?= $width1 ?>%" align="right" nowrap="nowrap" style="background-image: url('<?= Assets::url('/images/calendar/category5_small.jpg') ?>">
+                            <td width="<?= $width1 ?>%" align="right" nowrap="nowrap" style="background-image: url('<?= Assets::image_path('calendar/category5_small.jpg') ?>');">
                         <? else : ?>
                             <td width="<?= $width1 ?>%" align="right" nowrap="nowrap" class="<?= $css_class ?>">
                         <? endif ?>

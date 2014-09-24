@@ -53,7 +53,7 @@ $choose = Request::quoted('choose');
 $range_id = Request::option('range_id');
 
 $sidebar = Sidebar::Get();
-$sidebar->setImage(Assets::image_path("sidebar/export-sidebar.png"));
+$sidebar->setImage('sidebar/export-sidebar.png');
 
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 {

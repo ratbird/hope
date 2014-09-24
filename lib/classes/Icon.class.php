@@ -180,7 +180,7 @@ class Icon
             'width'  => $this->get_size(),
             'height' => $this->get_size(),
         );
-        unset($this->attributes['alt']);
+        unset($this->attributes['alt'], $this->attributes['src']);
 
         $svg_attributes = array_merge($this->attributes, array(
             'width'  => $this->get_size(),

@@ -558,9 +558,6 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 case "admin_modules.php":
                     printf(_("Module") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('range_id' => $seminar_id))));
                     break;
-                case "admin_news.php":
-                    printf(_("Ankündigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURl('', array('range_id' => $seminar_id))));
-                    break;
                 case 'admin_vote.php':
                     printf(_("Umfragen und Tests") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('view' => 'vote_sem', 'showrangeID' => $seminar_id))));
@@ -670,7 +667,7 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 default:
                     echo _(PageLayout::getTitle())."<br>";
                     echo  LinkButton::create(_("Bearbeiten"), URLHelper::getLink('', array("range_id" => $seminar_id)));
-                
+
             }
             echo "</tr>";
         }

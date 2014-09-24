@@ -42,7 +42,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once 'lib/dates.inc.php';
     require_once 'lib/functions.php';
 
-   
+
 
     $userConfig = UserConfig::get($GLOBALS['user']->id); // tic #650
 
@@ -163,7 +163,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             OR ($i_page == "admin_roles.php" AND $_SESSION['links_admin_data']["view"] == "statusgruppe_inst")
             OR ($i_page == "dispatch.php/literature/edit_list.php" AND $_SESSION['links_admin_data']["view"] == "literatur_inst")
             OR $i_page == "dispatch.php/institute/members.php"
-            OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"] == "news_inst")
             OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_inst")
             OR ($i_page == "admin_extern.php" AND $_SESSION['links_admin_data']["view"] == "extern_inst")
             OR ($i_page == "admin_vote.php" AND $_SESSION['links_admin_data']["view"] == "vote_inst")
@@ -186,7 +185,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             OR $i_page == "copy_assi.php"
             OR $i_page == "adminarea_start.php"
             OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_sem")
-            OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"]=="news_sem")
             OR ($i_page == "admin_vote.php" AND $_SESSION['links_admin_data']["view"]=="vote_sem")
             OR ($i_page == "admin_evaluation.php" AND $_SESSION['links_admin_data']["view"]=="eval_sem")
             ) {

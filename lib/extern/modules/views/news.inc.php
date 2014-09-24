@@ -42,7 +42,7 @@ if ($this->config->getValue("Main", "studiplink")) {
     echo "width=\"" . $this->config->getValue("TableHeader", "table_width");
     echo "\" align=\"" . $this->config->getValue("TableHeader", "table_align") . "\">\n";
 
-    $studip_link = URLHelper::getLink('admin_news.php?view=news_inst&cid='. $this->config->range_id);
+    $studip_link = URLHelper::getLink('dispatch.php/institute/overview?again=yes&cid='. $this->config->range_id);
     if ($this->config->getValue("Main", "studiplink") == "top") {
         $args = array("width" => "100%",
         "height" => "40", "link" => $studip_link);
@@ -109,7 +109,7 @@ else {
                                         "link_args" => "username=" . get_username($news_detail['user_id']),
                                         "module" => "Persondetails"));
         }
-        
+
         switch ($show_date_author) {
             case 'date' :
                 $data["content"]["date"] = strftime($dateform, $news_detail["date"]);
@@ -120,14 +120,14 @@ else {
             default :
                 $data["content"]["date"] = strftime($dateform, $news_detail["date"]) . "<br>" . $author_name;
         }
-                
+
         $data["content"]["topic"] = $this->elements["ContentNews"]->toString(array("content" =>
                                     array("topic" => htmlReady($news_detail["topic"]),
                                     "body" => formatReady($content, TRUE, TRUE))));
-        
+
         $this->elements["TableRow"]->printout($data);
     }
-    
+
     echo "\n</table>";
 }
 if ($this->config->getValue("Main", "studiplink")) {

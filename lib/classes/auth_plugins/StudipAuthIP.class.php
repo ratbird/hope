@@ -16,22 +16,6 @@ class StudipAuthIP extends StudipAuthAbstract {
      * {@inheritdoc}
      */
     function isAuthenticated($username, $password) {
-        return $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username] && in_array(self::getUserIP(), $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username]);
+        return $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username] && in_array($_SERVER['REMOTE_ADDR'], $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username]);
     }
-
-    /**
-     * Fetches the ip of the calling user
-     * 
-     * @return user ip
-     */
-    private static function getUserIP() {
-        $fields = array('REMOTE_ADDR');
-        foreach ($fields as $field) {
-            $ip = filter_input(INPUT_SERVER, $field);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
-        }
-    }
-
 }

@@ -30,8 +30,8 @@
                 <li id="nav_<?= $path ?>"<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
                     <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?>>
                         <img class="headericon original" src="<?= $image['src'] ?>" data-icon="<?= $image['src'] ?>" data-badge="<?= (int) $nav->getBadgeNumber() ?>">
-                        <img class="headericon normal" src="<?= $image['src'] ?>" data-icon="<?= $image['src'] ?>" data-badge="<?= (int) $nav->getBadgeNumber() ?>">
-                        <img class="headericon highlighted" src="<?= $image['src'] ?>" data-icon="<?= $image['src'] ?>" data-badge="<?= (int) $nav->getBadgeNumber() ?>">
+                        <canvas class="headericon normal" width="84px" height="64px"></canvas>
+                        <canvas class="headericon highlighted" width="84px" height="64px"></canvas>
                         <br>
                        <?= htmlReady($nav->getTitle()) ?>
                    </a>

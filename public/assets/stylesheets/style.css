@@ -48,20 +48,30 @@
  */
 .scrollbox-vertical {
   overflow: auto;
-  background: linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
-  background: linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: /* Shadow covers */
+ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */
+ radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: /* Shadow covers */
+ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */
+ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
   /* Opera doesn't support this in the shorthand */
+
   background-attachment: local, local, scroll, scroll;
 }
 .scrollbox-horizontal {
   overflow: auto;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */
+ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
+ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */
+ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
+ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
+
   background-attachment: local, local, scroll, scroll;
 }
 .sr-only {
@@ -118,7 +128,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -236,8 +246,8 @@ a.link-intern:before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-intern.png");
-  background-image: none, url("../images/icons/blue/link-intern.svg");
+  background-image: url("../images/icons/16/replace('blue/link-intern.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/link-intern.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -251,8 +261,8 @@ a.link-extern:before {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-extern.png");
-  background-image: none, url("../images/icons/blue/link-extern.svg");
+  background-image: url("../images/icons/16/replace('blue/link-extern.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/link-extern.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -473,8 +483,8 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 }
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/16/replace("blue/arr_1down.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/arr_1down.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -846,14 +856,14 @@ table.default caption header p {
 }
 table.default thead th {
   background-color: #e7ebf1;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
 table.default tbody th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
   text-align: left;
 }
 table.default tbody td {
@@ -868,7 +878,7 @@ table.default tbody tr:last-child td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.default tfoot td {
   background-color: #e7ebf1;
@@ -920,8 +930,8 @@ table.default caption .caption-actions {
   align-self: flex-end;
 }
 table.default tbody.toggleable.toggled .toggle-switch {
-  background-image: url("../images/icons/16//blue/arr_1right.png");
-  background-image: none, url("../images/icons//blue/arr_1right.svg");
+  background-image: url("../images/icons/16/replace("/blue/arr_1right.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("/blue/arr_1right.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -936,8 +946,8 @@ table.default tbody.toggleable .toggle-switch {
   text-shadow: none;
   background-color: transparent;
   border: 0;
-  background-image: url("../images/icons/16//blue/arr_1down.png");
-  background-image: none, url("../images/icons//blue/arr_1down.svg");
+  background-image: url("../images/icons/16/replace("/blue/arr_1down.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("/blue/arr_1down.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1031,7 +1041,7 @@ table.withdetails > tbody > tr:not(.details) > td:first-child {
   padding-left: 20px;
 }
 table.withdetails > tbody > tr.open > td {
-  background-color: rgba(105, 118, 127, 0.2);
+  background-color: rgba(105, 118, 127, 0.19999999999999996);
 }
 table.withdetails > tbody > tr.open > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1down.png");
@@ -1078,8 +1088,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/yellow/arr_1down.png");
-  background-image: none, url("../images/icons/yellow/arr_1down.svg");
+  background-image: url("../images/icons/16/replace('yellow/arr_1down.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('yellow/arr_1down.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1093,8 +1103,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/yellow/arr_1up.png");
-  background-image: none, url("../images/icons/yellow/arr_1up.svg");
+  background-image: url("../images/icons/16/replace('yellow/arr_1up.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('yellow/arr_1up.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1336,8 +1346,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/16/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1368,8 +1378,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/16/replace('blue/arr_1down.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/arr_1down.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1383,8 +1393,8 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/16/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -1457,11 +1467,16 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
 }
 #layout_content {
   overflow: auto;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */
+ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
+ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: /* Shadow covers */
+ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */
+ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
+
   background-attachment: local, local, scroll, scroll;
   margin: 0 12px 12px 20px;
   vertical-align: top;
@@ -1714,31 +1729,31 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   width: 28px;
   height: 28px;
 }
-#barTopMenu a img.headericon.normal,
-#barTopMenu a img.headericon.highlighted {
+#barTopMenu a canvas.headericon.normal,
+#barTopMenu a canvas.headericon.highlighted {
   display: none;
   margin: 0px;
   width: 42px;
   height: 32px;
 }
 #barTopMenu a.canvasready img.headericon.original,
-#barTopMenu a.canvasready img.headericon.highlighted {
+#barTopMenu a.canvasready canvas.headericon.highlighted {
   display: none;
 }
-#barTopMenu a.canvasready img.headericon.normal {
+#barTopMenu a.canvasready canvas.headericon.normal {
   display: inline-block;
 }
-#barTopMenu a.canvasready:hover img.headericon.normal {
+#barTopMenu a.canvasready:hover canvas.headericon.normal {
   display: none;
 }
-#barTopMenu a.canvasready:hover img.headericon.highlighted {
+#barTopMenu a.canvasready:hover canvas.headericon.highlighted {
   display: inline-block;
 }
-#barTopMenu li.active a.canvasready img.headericon.original,
-#barTopMenu li.active a.canvasready img.headericon.normal {
+#barTopMenu li.active a.canvasready .headericon.original,
+#barTopMenu li.active a.canvasready .headericon.normal {
   display: none;
 }
-#barTopMenu li.active a.canvasready img.headericon.highlighted {
+#barTopMenu li.active a.canvasready .headericon.highlighted {
   display: inline-block;
 }
 #barBottom {
@@ -2218,7 +2233,7 @@ table.infobox td.infobox-img {
 }
 td.infoboxrahmen {
   background-color: #dee2e8;
-  border-bottom: 1px solid rgba(137, 154, 185, 0.2);
+  border-bottom: 1px solid rgba(137, 154, 185, 0.19999999999999996);
 }
 #layout-sidebar {
   background: #fff;
@@ -2539,16 +2554,16 @@ ul.widget-list > li {
   padding-left: 20px;
 }
 .sidebar-widget .widget-options .options-checkbox.options-checked {
-  background-image: url("../images/icons/16/blue/checkbox-checked.png");
-  background-image: none, url("../images/icons/blue/checkbox-checked.svg");
+  background-image: url("../images/icons/16/replace('blue/checkbox-checked.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/checkbox-checked.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .sidebar-widget .widget-options .options-checkbox.options-unchecked {
-  background-image: url("../images/icons/16/blue/checkbox-unchecked.png");
-  background-image: none, url("../images/icons/blue/checkbox-unchecked.svg");
+  background-image: url("../images/icons/16/replace('blue/checkbox-unchecked.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/checkbox-unchecked.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2561,16 +2576,16 @@ ul.widget-list > li {
   padding-left: 20px;
 }
 .sidebar-widget .widget-options .options-radio.options-checked {
-  background-image: url("../images/icons/16/blue/radiobutton-checked.png");
-  background-image: none, url("../images/icons/blue/radiobutton-checked.svg");
+  background-image: url("../images/icons/16/replace('blue/radiobutton-checked.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/radiobutton-checked.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .sidebar-widget .widget-options .options-radio.options-unchecked {
-  background-image: url("../images/icons/16/blue/radiobutton-unchecked.png");
-  background-image: none, url("../images/icons/blue/radiobutton-unchecked.svg");
+  background-image: url("../images/icons/16/replace('blue/radiobutton-unchecked.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/radiobutton-unchecked.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2597,8 +2612,8 @@ select.sidebar-selectlist {
   border: 0;
   width: 29px;
   height: 20px;
-  background-image: url("../images/icons/16/white/search.png");
-  background-image: none, url("../images/icons/white/search.svg");
+  background-image: url("../images/icons/16/replace('white/search.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/search.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2644,8 +2659,8 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-intern.png");
-  background-image: none, url("../images/icons/blue/link-intern.svg");
+  background-image: url("../images/icons/16/replace('blue/link-intern.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/link-intern.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2659,8 +2674,8 @@ select.sidebar-selectlist {
   display: inline-block;
   height: 16px;
   margin-right: 2px;
-  background-image: url("../images/icons/16/blue/link-extern.png");
-  background-image: none, url("../images/icons/blue/link-extern.svg");
+  background-image: url("../images/icons/16/replace('blue/link-extern.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/link-extern.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2677,8 +2692,7 @@ select.sidebar-selectlist {
         background: @red-40;
     }
 }
-*/
-.helpbar-container {
+*/.helpbar-container {
   background: #fff;
   clear: both;
   height: 3em;
@@ -2732,8 +2746,8 @@ select.sidebar-selectlist {
   right: 0;
 }
 .helpbar .helpbar-title {
-  background-image: url("../images/icons/32/white/question-circle.png");
-  background-image: none, url("../images/icons/white/question-circle.svg");
+  background-image: url("../images/icons/32/replace('white/question-circle.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/question-circle.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 24px 24px;
   -moz-background-size: 24px 24px;
   -o-background-size: 24px 24px;
@@ -2776,8 +2790,8 @@ select.sidebar-selectlist {
   padding: 0;
 }
 .helpbar .help-tours a {
-  background-image: url("../images/icons/16/white/play.png");
-  background-image: none, url("../images/icons/white/play.svg");
+  background-image: url("../images/icons/16/replace('white/play.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/play.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2788,16 +2802,16 @@ select.sidebar-selectlist {
   padding-left: 20px;
 }
 .helpbar .help-tours a.tour-paused {
-  background-image: url("../images/icons/16/white/pause.png");
-  background-image: none, url("../images/icons/white/pause.svg");
+  background-image: url("../images/icons/16/replace('white/pause.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/pause.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .helpbar .help-tours a.tour-completed {
-  background-image: url("../images/icons/16/white/accept.png");
-  background-image: none, url("../images/icons/white/accept.svg");
+  background-image: url("../images/icons/16/replace('white/accept.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/accept.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -2938,8 +2952,8 @@ section.contentbox article header h1:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/arr_1right.png");
-  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  background-image: url("../images/icons/16/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/arr_1right.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3013,8 +3027,8 @@ section.contentbox article.new header h1:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/red/arr_1right.png");
-  background-image: none, url("../images/icons/red/arr_1right.svg");
+  background-image: url("../images/icons/16/replace('red/arr_1right.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('red/arr_1right.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3037,6 +3051,7 @@ section.contentbox article.new header h1:before {
   margin: 0px;
   padding: 1px 5px;
   /* border: 2px solid white; */
+
   background-color: #D60000;
   color: white;
   font-size: 10px;
@@ -3255,40 +3270,40 @@ button.button[disabled] {
   width: 16px;
 }
 .button.accept:before {
-  background-image: url("../images/icons/16/blue/accept.png");
-  background-image: none, url("../images/icons/blue/accept.svg");
+  background-image: url("../images/icons/16/replace("blue/accept.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/accept.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.cancel:before {
-  background-image: url("../images/icons/16/blue/decline.png");
-  background-image: none, url("../images/icons/blue/decline.svg");
+  background-image: url("../images/icons/16/replace("blue/decline.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/decline.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.edit:before {
-  background-image: url("../images/icons/16/blue/edit.png");
-  background-image: none, url("../images/icons/blue/edit.svg");
+  background-image: url("../images/icons/16/replace("blue/edit.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/edit.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-up:before {
-  background-image: url("../images/icons/16/blue/arr_1up.png");
-  background-image: none, url("../images/icons/blue/arr_1up.svg");
+  background-image: url("../images/icons/16/replace("blue/arr_1up.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/arr_1up.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
 .button.move-down:before {
-  background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: none, url("../images/icons/blue/arr_1down.svg");
+  background-image: url("../images/icons/16/replace("blue/arr_1down.png", "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace("blue/arr_1down.png", "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3490,8 +3505,8 @@ a.message-tag:before {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/blue/tag.png");
-  background-image: none, url("../images/icons/blue/tag.svg");
+  background-image: url("../images/icons/16/replace('blue/tag.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/tag.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3513,8 +3528,8 @@ a.message-tag:before {
   display: inline-block;
   height: 20px;
   margin-right: 2px;
-  background-image: url("../images/icons/32/blue/mail.png");
-  background-image: none, url("../images/icons/blue/mail.svg");
+  background-image: url("../images/icons/32/replace('blue/mail.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/mail.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 20px 20px;
   -moz-background-size: 20px 20px;
   -o-background-size: 20px 20px;
@@ -3780,8 +3795,8 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/grey/info-circle.png");
-  background-image: none, url("../images/icons/grey/info-circle.svg");
+  background-image: url("../images/icons/16/replace('grey/info-circle.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('grey/info-circle.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -3795,8 +3810,8 @@ div.clear {
   display: inline-block;
   height: 16px;
   margin-right: 0;
-  background-image: url("../images/icons/16/red/info-circle.png");
-  background-image: none, url("../images/icons/red/info-circle.svg");
+  background-image: url("../images/icons/16/replace('red/info-circle.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('red/info-circle.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -4183,6 +4198,7 @@ td.tddaterowpx {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
+
   *zoom: 1;
   padding: 0 0.5em;
 }
@@ -4428,8 +4444,8 @@ table.contact-header td.empty a {
   float: left;
   width: 150px;
   padding-top: 100px;
-  background-image: url("../images/icons/112/lightblue/file-generic.png");
-  background-image: none, url("../images/icons/lightblue/file-generic.svg");
+  background-image: url("../images/icons/112/replace('lightblue/file-generic.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('lightblue/file-generic.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 100px 100px;
   -moz-background-size: 100px 100px;
   -o-background-size: 100px 100px;
@@ -5454,8 +5470,8 @@ div.available-widgets .studip-widget {
   padding: 0;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon {
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/16/replace('white/decline.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/decline.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -5465,8 +5481,8 @@ div.available-widgets .studip-widget {
   display: inline-block;
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon:hover {
-  background-image: url("../images/icons/16/white/decline.png");
-  background-image: none, url("../images/icons/white/decline.svg");
+  background-image: url("../images/icons/16/replace('white/decline.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('white/decline.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -5558,8 +5574,8 @@ div.available-widgets .studip-widget {
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept .ui-button-text:before {
   background: no-repeat;
-  background-image: url("../images/icons/16/blue/accept.png");
-  background-image: none, url("../images/icons/blue/accept.svg");
+  background-image: url("../images/icons/16/replace('blue/accept.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/accept.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;
@@ -5567,8 +5583,8 @@ div.available-widgets .studip-widget {
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel .ui-button-text:before {
   background: no-repeat;
-  background-image: url("../images/icons/16/blue/decline.png");
-  background-image: none, url("../images/icons/blue/decline.svg");
+  background-image: url("../images/icons/16/replace('blue/decline.png', "\.(png|svg)$", '', g).png");
+  background-image: none, url("../images/icons/replace('blue/decline.png', "\.(png|svg)$", '', g).svg");
   -webkit-background-size: 16px 16px;
   -moz-background-size: 16px 16px;
   -o-background-size: 16px 16px;

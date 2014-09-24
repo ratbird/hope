@@ -17,31 +17,31 @@
             width: 28px;
             height: 28px;
         }
-        img.headericon.normal, img.headericon.highlighted {
+        canvas.headericon.normal, canvas.headericon.highlighted {
             display: none;
             margin: 0px;
             width: 42px;
             height: 32px;
         }
         &.canvasready {
-            img.headericon.original, img.headericon.highlighted {
+            img.headericon.original, canvas.headericon.highlighted {
                 display: none;
             }
-            img.headericon.normal {
+            canvas.headericon.normal {
                 display: inline-block;
             }
             &:hover {
-                img.headericon.normal {
+                canvas.headericon.normal {
                     display: none;
                 }
-                img.headericon.highlighted {
+                canvas.headericon.highlighted {
                     display: inline-block;
                 }
             }
         }
     }
     li.active a.canvasready {
-        img.headericon {
+        .headericon {
             &.original, &.normal {
                 display: none;
             }

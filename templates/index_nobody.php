@@ -82,7 +82,7 @@
         </table>
 
         <a href="http://www.studip.de">
-            <?= Assets::img('logos/logoklein@2x.png', tooltip2(_('Zur Portalseite')) + array('size' => '125@83')) ?>
+            <?= Assets::img('logos/logoklein@2x.png', tooltip2(_('Zur Portalseite')) + array('size' => '215@83')) ?>
         </a>
     </footer>
 </div>

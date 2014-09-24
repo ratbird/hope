@@ -11,7 +11,7 @@
             <? if ($show_result): ?>
             <div class="bar">
                 <div class="percent">
-                    <?= htmlReady(round($answer->count * 100 / $vote->count)) ?>%
+                    <?= htmlReady($vote->count ? (round($answer->count * 100 / $vote->count)) : 0) ?>%
                 </div>
                 <? $width = $maxvotes ? $answer->count / $maxvotes : 0; ?>
                 <div style="display: inline-block;

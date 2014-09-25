@@ -131,7 +131,7 @@ class AdmissionPriority
             $db->exec("SET @$priovar:=0");
             $db->execute("UPDATE priorities SET priority = @$priovar:=@$priovar+1 WHERE user_id=? AND set_id=? ORDER BY priority", array($userId, $courseSetId));
             StudipLog::log('SEM_USER_DEL', $courseId,
-            $userId, 'Anmeldung zur Platzvergabe zurÃ¼ckgezogen', sprintf('Anmeldeset: %s', $courseSetId));
+            $userId, 'Anmeldung zur Platzvergabe zurückgezogen', sprintf('Anmeldeset: %s', $courseSetId));
         }
         return $deleted;
     }
@@ -204,4 +204,3 @@ class AdmissionPriority
 
 } /* end of class AdmissionPriority */
 
-?>

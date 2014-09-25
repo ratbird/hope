@@ -94,7 +94,7 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
     log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, $log_message);
 
     // actually insert the user into the seminar
-    $stmt = DBManager::get()->prepare('INSERT INTO seminar_user
+    $stmt = DBManager::get()->prepare('INSERT IGNORE INTO seminar_user
         (Seminar_id, user_id, status, comment, gruppe, mkdate)
         VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->execute(array($seminar_id, $user_id, $status, $admission_comment, $colour_group, $mkdate));

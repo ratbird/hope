@@ -193,7 +193,7 @@ class MessagesController extends AuthenticatedController {
                     case 'prelim':
                         $query = "SELECT user_id,'rec' as snd_rec FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = ? AND status='accepted' ORDER BY Nachname, Vorname";
                         break;
-                    case 'waiting':
+                    case 'awaiting':
                         $query = "SELECT user_id,'rec' as snd_rec FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = ? AND status='awaiting' ORDER BY Nachname, Vorname";
                         break;
                     case 'inst_status':

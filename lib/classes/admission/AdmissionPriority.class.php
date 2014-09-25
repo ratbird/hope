@@ -104,7 +104,12 @@ class AdmissionPriority
                     `chdate`=VALUES(`chdate`)");
         $stmt->execute(array($userId, $courseSetId, $courseId,
             $priority, time(), time()));
-        return $stmt->rowCount();
+        $ok = $stmt->rowCount();
+        if ($ok) {
+            StudipLog::log('SEM_USER_ADD', $courseId,
+            $userId, 'Anmeldung zur Platzvergabe', sprintf('Prio: %s Anmeldeset: %s', $priority, $courseSetId));
+        }
+        return $ok;
     }
 
     /**
@@ -125,6 +130,8 @@ class AdmissionPriority
             $priovar = md5($courseSetId . $userId);
             $db->exec("SET @$priovar:=0");
             $db->execute("UPDATE priorities SET priority = @$priovar:=@$priovar+1 WHERE user_id=? AND set_id=? ORDER BY priority", array($userId, $courseSetId));
+            StudipLog::log('SEM_USER_DEL', $courseId,
+            $userId, 'Anmeldung zur Platzvergabe zurückgezogen', sprintf('Anmeldeset: %s', $courseSetId));
         }
         return $deleted;
     }

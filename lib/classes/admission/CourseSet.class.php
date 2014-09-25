@@ -851,9 +851,23 @@ class CourseSet
                 VALUES (?, ?, ?)");
             $stmt->execute(array($this->id, $institute, time()));
         }
-        // Delete removed course assignments from database.
+        // log removed course assignments.
+        DBManager::get()->fetchAll("SELECT seminar_id,set_id FROM `seminar_courseset`
+            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, array_keys($this->courses)),
+            function ($row) {
+                StudipLog::log('SEM_CHANGED_ACCESS', $row['seminar_id'],
+                null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $row['set_id']));
+            });
+        //removed course assignments
         DBManager::get()->execute("DELETE FROM `seminar_courseset`
             WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, array_keys($this->courses)));
+        //log removing other associations
+        DBManager::get()->execute("SELECT seminar_id,set_id FROM `seminar_courseset`
+            WHERE `set_id` <> ? AND `seminar_id` IN (?)", array($this->id, array_keys($this->courses)),
+            function ($row) {
+                StudipLog::log('SEM_CHANGED_ACCESS', $row['seminar_id'],
+                null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $row['set_id']));
+            });
         //Delete other associations, only one set possible
         DBManager::get()->execute("DELETE FROM `seminar_courseset`
             WHERE `set_id` <> ? AND `seminar_id` IN (?)", array($this->id, array_keys($this->courses)));
@@ -863,6 +877,10 @@ class CourseSet
                 (`set_id`, `seminar_id`, `mkdate`)
                 VALUES (?, ?, ?)");
             $stmt->execute(array($this->id, $course, time()));
+            if ($stmt->rowCount()) {
+                StudipLog::log('SEM_CHANGED_ACCESS', $course,
+                null, 'Zuordnung zu Anmeldeset', sprintf('Anmeldeset: %s', $this->id));
+            }
         }
 
         // Delete removed user list assignments from database.
@@ -1019,13 +1037,23 @@ class CourseSet
     public static function addCourseToSet($set_id, $course_id)
     {
         $db = DBManager::get();
-        return $db->execute("INSERT IGNORE INTO seminar_courseset (set_id,seminar_id,mkdate) VALUES (?,?,UNIX_TIMESTAMP())", array($set_id, $course_id));
+        $ok = $db->execute("INSERT IGNORE INTO seminar_courseset (set_id,seminar_id,mkdate) VALUES (?,?,UNIX_TIMESTAMP())", array($set_id, $course_id));
+        if ($ok) {
+            StudipLog::log('SEM_CHANGED_ACCESS', $course_id,
+                null, 'Zuordnung zu Anmeldeset', sprintf('Anmeldeset: %s', $set_id));
+        }
+        return $ok;
     }
 
     public static function removeCourseFromSet($set_id, $course_id)
     {
         $db = DBManager::get();
-        return $db->execute("DELETE FROM seminar_courseset WHERE set_id=? AND seminar_id=? LIMIT 1", array($set_id, $course_id));
+        $ok =  $db->execute("DELETE FROM seminar_courseset WHERE set_id=? AND seminar_id=? LIMIT 1", array($set_id, $course_id));
+        if ($ok) {
+            StudipLog::log('SEM_CHANGED_ACCESS', $course_id,
+                null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $set_id));
+        }
+        return $ok;
     }
 
 } /* end of class CourseSet */

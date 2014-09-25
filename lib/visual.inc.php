@@ -635,8 +635,6 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
 
     if ($open == "open")
         $titel = "<b>" . $titel . "</b>";
-
-    $print .= "<img src=\"";
     
     $img = $open === 'close'
          ? 'forumgrau2.png'

@@ -312,4 +312,33 @@ class WidgetHelper
         return $available;
     }
 
+    /**
+     * hasWidget - returns whether has a certain widget activated
+     *
+     * @param string $user_id Id of the user
+     * @param mixed  $widget  Id or name of the widget (you may omit the
+     *                        'Widget' in the name)
+     * @return bool indicating whether the widget is activated
+     */
+    public static function hasWidget($user_id, $widget)
+    {
+        if (ctype_digit($widget)) {
+            $query = "SELECT 1
+                      FROM widget_user
+                      WHERE range_id = :user_id AND pluginid = :widget";
+        } else {
+            $query = "SELECT 1
+                      FROM widget_user
+                      JOIN plugins USING (pluginid)
+                      WHERE range_id = :user_id
+                        AND pluginname IN (:widget, CONCAT(:widget, 'Widget'))
+                        AND plugintype = 'PortalPlugin'
+                        AND enabled = 'yes'";
+        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':widget', $widget);
+        $statement->execute();
+        return (bool)$statement->fetchColumn();
+    }
 }

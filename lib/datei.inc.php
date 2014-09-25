@@ -1649,7 +1649,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         print URLHelper::getLink("?open=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
             $datei["dokument_id"]."', '".$SessionSeminar."')\">".
-            Assets::img('forumgraurunt2.png', tooltip2(_('Objekt aufklappen')) + array('id' => 'file_'. $datei["dokument_id"] . '_arrow_img')).
+            Assets::img('forumgrau2.png', tooltip2(_('Objekt aufklappen')) + array('id' => 'file_'. $datei["dokument_id"] . '_arrow_img')).
             "</a></td>";
     }
 

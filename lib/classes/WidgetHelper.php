@@ -338,7 +338,12 @@ class WidgetHelper
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
         $statement->bindValue(':widget', $widget);
-        $statement->execute();
-        return (bool)$statement->fetchColumn();
+        
+        try {
+            $statement->execute();
+            return (bool)$statement->fetchColumn();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

@@ -157,8 +157,8 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                 $assEvtLst->events[] = $assEvt;
         }
         //in between days
-        $date_ao_r_end = new DateTime("@$ao_r_end");
-        $num_days = $date_ao_r_end->diff(new DateTime("@$ao_begin"))->days;
+        $date_ao_r_end = new DateTime("@" . strtotime('T12:00', $ao_r_end));
+        $num_days = $date_ao_r_end->diff(new DateTime("@" . strtotime('T12:00',$ao_begin)))->days;
         for ($d=date("j",$ao_begin)+1; $d < date("j",$ao_begin) + $num_days; $d++) {
             $temp_ts=mktime(0, 0, 0,
                     date("n",$ao_begin),

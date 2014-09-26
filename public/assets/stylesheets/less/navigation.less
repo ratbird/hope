@@ -31,9 +31,76 @@
             // Icon state: new
             &.new { background-position: -64px 0; }
         }
+
+        img.original {
+            margin-left: 6px;
+            margin-right: 6px;
+            margin-top: 4px;
+            margin-bottom: 0px;
+            width: 28px;
+            height: 28px;
+        }
+        canvas.punch {
+            display: none;
+            margin: 0px;
+            width: 42px;
+            height: 32px;
+        }
+        &[data-badge]:not([data-badge="0"]) {
+            position: relative;
+
+            &.canvasready {
+                img.original {
+                    display: none;
+                }
+                canvas.punch {
+                    display: inline-block;
+                }
+            }
+
+            &:before, &:after {
+                position: absolute;
+                left: 50%;
+                margin-left: 5px;
+                top: 0;
+            }
+
+            // Just draw the badge
+            &:before {
+                background-color: @red;
+                border-radius: 8px;
+                content: ' ';
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+            }
+
+            // Write the text on top of the badge so it will never
+            // expand the badge into regions we don't want.
+            // Text may overflow into the icon. There's no good way
+            // to prevent that...
+            &:after {
+                content: attr(data-badge);
+                color: white;
+                width: 16px;
+                text-align: right;
+
+                font-size: 10px;
+                text-align: center;
+                text-overflow: ellipsis;
+                vertical-align: top;
+                white-space: nowrap;
+            }
+        }
     }
     a:hover, li.active a {
         color: #fff;
+
+        canvas, img {
+            filter: url('filter.svg#brightness');
+            filter: brightness(200%);
+            -webkit-filter: brightness(200%);
+        }
 
         // Icon state: hover
         span     { background-position: -32px 0; }

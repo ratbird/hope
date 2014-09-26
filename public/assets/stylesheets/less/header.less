@@ -4,54 +4,6 @@
     top: 150px;
 }
 
-#barTopMenu {
-    a {
-        canvas.headericon {
-            display: none;
-        }
-        img.original {
-            margin-left: 6px;
-            margin-right: 6px;
-            margin-top: 4px;
-            margin-bottom: 0px;
-            width: 28px;
-            height: 28px;
-        }
-        canvas.headericon.normal, canvas.headericon.highlighted {
-            display: none;
-            margin: 0px;
-            width: 42px;
-            height: 32px;
-        }
-        &.canvasready {
-            img.headericon.original, canvas.headericon.highlighted {
-                display: none;
-            }
-            canvas.headericon.normal {
-                display: inline-block;
-            }
-            &:hover {
-                canvas.headericon.normal {
-                    display: none;
-                }
-                canvas.headericon.highlighted {
-                    display: inline-block;
-                }
-            }
-        }
-    }
-    li.active a.canvasready {
-        .headericon {
-            &.original, &.normal {
-                display: none;
-            }
-            &.highlighted {
-               display: inline-block;
-            }
-        }
-    }
-}
-
 #barBottom {
     background-color: @brand-color-lighter;
     left: 0;

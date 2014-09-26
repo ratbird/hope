@@ -34,93 +34,46 @@
             STUDIP.HeaderMagic.enable();
         }
     });
-
 }(jQuery, window.document));
 
-STUDIP.HeaderIcons = {
-    canvasRender: function () {
-        var img = jQuery("<img>")
-                .css({width:"56px", height:"56px"})
-                .attr({"src": this.src, 'data-badge': jQuery(this).attr("data-badge")});
-        console.log(img);
-        var canvas_normal = jQuery(this).parent().find(".normal");
-        var canvas_highlighted = jQuery(this).parent().find(".highlighted");
-        var drawCanvas = function (img, canvas, highlight) {
-            var icon   = jQuery(img)[0];
-            var number = parseInt(jQuery(img).data("badge"), 10);
-            canvas = jQuery(canvas)[0];
-            var ctx = canvas.getContext("2d");
+(function ($) {
 
-            ctx.clearRect(0,0,84,64);
-            var image = new Image();
-            image.src = icon.src;
-            if (image.width === 128 && image.height === 32) {
-                //old 32x128 header images
-                ctx.drawImage(icon, 0, 5, 106, 28, 5, 5,  28 * (image.width / image.height), 28);
-            } else {
-                if (!image.width) {
-                    image.width = image.height = 56;
-                }
-                ctx.drawImage(image, 14, 8,  56 * (image.width / image.height), 56);
-            }
-            var filterCanvas = function (filter) {
-                if (canvas.width > 0 && canvas.height > 0) {
-                    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    filter(imageData);
-                    ctx.clearRect(0,0,84,64);
-                    ctx.putImageData(imageData, 0, 0);
-                }
-            }
-            var brightness = function(pixels, args) {
-                var d = pixels.data;
-                for (var i = 0; i < d.length; i += 4) {
-                    d[i] = 255;     // red
-                    d[i + 1] = 255; // green
-                    d[i + 2] = 255; // blue
-                }
-                return pixels;
-            };
-            if (highlight) {
-                filterCanvas(brightness);
-            }
+    // Render a version of the icon with a punched out area for the badge
+    function renderCanvas(canvas, width, height) {
+        var target       = canvas.getContext('2d'),
+            aspect_ratio = height ? width / height : 1;
 
-            if (number > 0) {
-                var x = 68;
-                ctx.globalCompositeOperation = "destination-out";
-                ctx.beginPath();
-                ctx.arc(x, 16, 22, 0, 2*Math.PI);
-                ctx.fill();
+        target.clearRect(0, 0, canvas.width, canvas.height);
 
-                ctx.globalCompositeOperation = "source-over";
-                ctx.beginPath();
-                ctx.arc(x, 16, 16, 0, 2*Math.PI);
-                ctx.fillStyle="#d60000";
-                ctx.fill();
+        if (width === 128 && height === 32) {
+            target.drawImage(this, 0, 5, 106, 28, 5, 5, 28 * aspect_ratio, 28);
+        } else {
+            target.drawImage(this, 14, 8, 56 * aspect_ratio, 56);
+        }
 
-                ctx.font = "20px " + jQuery("body").css("font-family");
-                ctx.textAlign = "center";
-                ctx.fillStyle="white";
-                ctx.fillText("" + number ,x, 22);
-            }
-        };
-        drawCanvas(img, canvas_normal, false);
-        drawCanvas(img, canvas_highlighted, true);
-        jQuery(this).closest("a").addClass("canvasready");
-    },
-    render: function (selector) {
-        jQuery.each(jQuery(selector), function (index, img) {
-            if (img.complete) {
-                STUDIP.HeaderIcons.canvasRender.call(img);
-            } else {
-                jQuery(img).bind('load', STUDIP.HeaderIcons.canvasRender);
-            }
-        });
+        target.globalCompositeOperation = 'destination-out';
+        target.beginPath();
+        target.arc(canvas.width - 16, 16, 22, 0, 2 * Math.PI);
+        target.fill();
+
+        $(canvas).closest('a').addClass('canvasready');
     }
-};
 
-jQuery(function () {
-    window.setTimeout(function () {
-        STUDIP.HeaderIcons.render("img.headericon.original");
-        jQuery("img.headericon.original").on("badgechange", function () { STUDIP.HeaderIcons.render(this); });
-    }, 300);
-});
+    $(document).ready(function () {
+        $('html.canvas img.headericon.original').each(function () {
+            var canvas = $('<canvas width="84" height="64">').addClass('headericon punch').insertAfter(this),
+                width  = $(this).width(),
+                height = $(this).height(),
+                img    = new Image();
+
+            // The callback is bound back to the original image because
+            // context.drawImage requires the image to be in the dom or
+            // the result is quirky.
+            // The onload is neccessary due to the various browsers handling
+            // the load event differently.
+            img.onload = renderCanvas.bind(this, canvas[0], width, height);
+            img.src    = this.src;
+        });
+    });
+
+}(jQuery));

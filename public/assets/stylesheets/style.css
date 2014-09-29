@@ -5249,6 +5249,8 @@ div.available-widgets .studip-widget {
   }
   div.start-widgetcontainer ul:last-child {
     margin-left: 0;
+    min-width: 100%;
+    max-width: 100%;
   }
 }
 @media only screen and (max-width: 768px) {

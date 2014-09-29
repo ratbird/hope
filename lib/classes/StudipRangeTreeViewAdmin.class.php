@@ -444,12 +444,12 @@ class StudipRangeTreeViewAdmin extends TreeView{
             if ($updated){
                 $this->msg[$item_id] = "msg§" . sprintf(_("Es wurden %s Datenfelder aktualisiert."),$updated);
                 if ($inserted) {
-                    $this->msg[$item_id] .= _(" Ein neues Datenfeld wurde eingefügt.");
+                    $this->msg[$item_id] .= _("Ein neues Datenfeld wurde eingefügt.");
                 }
             } elseif ($inserted){
                 $this->msg[$item_id] = "msg§" . _("Ein neues Datenfeld wurde eingefügt.");
             } else {
-                $this->msg[$item_id] = "info§" . _("Keine Veründerungen vorgenommen.");
+                $this->msg[$item_id] = "info§" . _("Keine Veränderungen vorgenommen.");
             }
         }
         $this->anchor = $item_id;

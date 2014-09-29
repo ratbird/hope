@@ -131,7 +131,7 @@ class StudipSemTreeView extends TreeView {
         if ($this->tree->hasKids($item_id)){
             $head .= Assets::img('icons/16/blue/folder-full.png',
                                  tooltip2($this->open_ranges[$item_id]
-                                          ? _('Alle Unterelement schliessen')
+                                          ? _('Alle Unterelemente schliessen')
                                           : _('Alle Unterelemente öffnen')) +
                                  array('class' => 'text-top'));
         } else {

@@ -1397,13 +1397,13 @@ function execCommandDeleteItem(){
         if ($numberofchildren){
             $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> und alle darin enthaltenen Fragen (insgesamt %s) wurden gelöscht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurden gelöscht. "), $title);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurde gelöscht. "), $title);
         }
     } else {
         if ($numberofchildren){
             $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> und alle Unterblöcke (insgesamt %s) wurden gelöscht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurden gelöscht. "), $title);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurde gelöscht. "), $title);
         }
     }
 

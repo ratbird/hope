@@ -355,15 +355,15 @@ class ContentModule
         {
             case "no permission":
                 $this->setTitle(_("--- Keine Lese-Berechtigung! ---"));
-                $this->setDescription(sprintf(_("Sie haben im System \"%s\" keine Lese-Berechtigung für das Lernmodul, dass dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet ist."), $this->getCMSName()));
+                $this->setDescription(sprintf(_("Sie haben im System \"%s\" keine Lese-Berechtigung für das Lernmodul, das dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet ist."), $this->getCMSName()));
                 break;
             case "not found":
                 $this->setTitle(_("--- Dieses Content-Modul existiert nicht mehr im angebundenen System! ---"));
-                $this->setDescription(sprintf(_("Das Lernmodul, dass dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet war, existiert nicht mehr. Dieser Fehler tritt auf, wenn das angebundene LCMS \"%s\" nicht erreichbar ist oder wenn das Lernmodul innerhalb des angebundenen Systems gelöscht wurde."), $this->getCMSName()));
+                $this->setDescription(sprintf(_("Das Lernmodul, das dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet war, existiert nicht mehr. Dieser Fehler tritt auf, wenn das angebundene LCMS \"%s\" nicht erreichbar ist oder wenn das Lernmodul innerhalb des angebundenen Systems gelöscht wurde."), $this->getCMSName()));
                 break;
             case "deleted":
                 $this->setTitle(_("--- Dieses Content-Modul wurde im angebundenen System gelöscht! ---"));
-                $this->setDescription(sprintf(_("Das Lernmodul, dass dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet war, wurde gelöscht."), $this->getCMSName()));
+                $this->setDescription(sprintf(_("Das Lernmodul, das dieser Veranstaltung / Einrichtung an dieser Stelle zugeordnet war, wurde gelöscht."), $this->getCMSName()));
                 break;
             default:
                 $this->setTitle(_("--- Es ist ein unbekannter Fehler aufgetreten! ---"));

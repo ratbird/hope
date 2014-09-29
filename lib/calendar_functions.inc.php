@@ -111,84 +111,84 @@ function holiday ($tmstamp, $mod = "") {
     $doy = date("z", $tmstamp) + 1;
     $dif = $doy - $easterday;
     switch ($dif) {
-        case -48: $name = "Rosenmontag"; $col = 1; break;
-        case -47: $name = "Fastnacht"; $col = 1; break;
-        case -46: $name = "Aschermittwoch"; $col = 1; break;
-    //  case -8: $name = "Palmsonntag"; $col = 1; break;
-        case  -2: $name = "Karfreitag"; $col = 3; break;
-        case   0: $name = "Ostersonntag"; $col = 3; break;
-        case   1: $name = "Ostermontag"; $col = 3; break;
-        case  39: $name = "Christi Himmelfahrt"; $col = 3; break;
-        case  49: $name = "Pfingstsonntag"; $col = 3; break;
-        case  50: $name = "Pfingstmontag"; $col = 3; break;
-        case  60: $name = "Fronleichnam"; $col = 1; break;
+        case -48: $name = _("Rosenmontag"); $col = 1; break;
+        case -47: $name = _("Fastnacht"); $col = 1; break;
+        case -46: $name = _("Aschermittwoch"); $col = 1; break;
+    //  case -8: $name = _("Palmsonntag"); $col = 1; break;
+        case  -2: $name = _("Karfreitag"); $col = 3; break;
+        case   0: $name = _("Ostersonntag"); $col = 3; break;
+        case   1: $name = _("Ostermontag"); $col = 3; break;
+        case  39: $name = _("Christi Himmelfahrt"); $col = 3; break;
+        case  49: $name = _("Pfingstsonntag"); $col = 3; break;
+        case  50: $name = _("Pfingstmontag"); $col = 3; break;
+        case  60: $name = _("Fronleichnam"); $col = 1; break;
     }
 
     // die unveraenderlichen Feiertage
     switch ($doy) {
-        case   1: $name = "Neujahr"; $col = 3; break;
-        case   6: $name = "Hl. Drei Könige"; $col = 1; break;
+        case   1: $name = _("Neujahr"); $col = 3; break;
+        case   6: $name = _("Hl. Drei Könige"); $col = 1; break;
     }
 
     // Schaltjahre nicht vergessen
     if (date("L", $tmstamp))
         $doy--;
     switch ($doy) {
-        case  79: $name = "Frühlingsanfang"; $col = 1; break;
-        case 121: $name = "Maifeiertag"; $col = 3; break;
-//      case 125: $name = "Europatag"; $col = 1; break;
-        case 172: $name = "Sommeranfang"; $col = 1; break;
-        case 266: $name = "Herbstanfang"; $col = 1; break;
-        case 276: $name = "Tag der deutschen Einheit"; $col = 3; break;
-        case 304: $name = "Reformationstag"; $col = 2; break;
-        case 305: $name = "Allerheiligen"; $col = 1; break;
-        case 315: $name = "Martinstag"; $col = 1; break;
-        case 340: $name = "Nikolaus"; $col = 1; break;
-        case 355: $name = "Winteranfang"; $col = 1; break;
-        case 358: $name = "Hl. Abend"; $col = 1; break;
-        case 359: $name = "1. Weihnachtstag"; $col = 3; break;
-        case 360: $name = "2. Weihnachtstag"; $col = 3; break;
-        case 365: $name = "Sylvester"; $col = 1; break;
+        case  79: $name = _("Frühlingsanfang"); $col = 1; break;
+        case 121: $name = _("Maifeiertag"); $col = 3; break;
+//      case 125: $name = _("Europatag"); $col = 1; break;
+        case 172: $name = _("Sommeranfang"); $col = 1; break;
+        case 266: $name = _("Herbstanfang"); $col = 1; break;
+        case 276: $name = _("Tag der deutschen Einheit"); $col = 3; break;
+        case 304: $name = _("Reformationstag"); $col = 2; break;
+        case 305: $name = _("Allerheiligen"); $col = 1; break;
+        case 315: $name = _("Martinstag"); $col = 1; break;
+        case 340: $name = _("Nikolaus"); $col = 1; break;
+        case 355: $name = _("Winteranfang"); $col = 1; break;
+        case 358: $name = _("Hl. Abend"); $col = 1; break;
+        case 359: $name = _("1. Weihnachtstag"); $col = 3; break;
+        case 360: $name = _("2. Weihnachtstag"); $col = 3; break;
+        case 365: $name = _("Sylvester"); $col = 1; break;
     }
 
     // Die Sonntagsfeiertage
     if (date("w", $tmstamp) == 0) {
         if ($doy > 127 && $doy < 135) {
-            $name = "Muttertag";
+            $name = _("Muttertag");
             $col = 1;
         }
         else if ($doy > 266 && $doy < 274) {
-            $name = "Erntedank";
+            $name = _("Erntedank");
             $col = 1;
         }
         else if ($doy > 316 && $doy < 324) {
-            $name = "Volkstrauertag";
+            $name = _("Volkstrauertag");
             $col = 2;
         }
         else if ($doy > 323 && $doy < 331) {
-            $name = "Totensonntag";
+            $name = _("Totensonntag");
             $col = 1;
         }
         else if ($doy > 330 && $doy < 338) {
-            $name = "1. Advent";
+            $name = _("1. Advent");
             $col = 2;
         }
         else if ($doy > 337 && $doy < 345) {
-            $name = "2. Advent";
+            $name = _("2. Advent");
             $col = 2;
         }
         else if ($doy > 344 && $doy < 352) {
-            $name = "3. Advent";
+            $name = _("3. Advent");
             $col = 2;
         }
         else if ($doy > 351 && $doy < 359) {
-            $name = "4. Advent";
+            $name = _("4. Advent");
             $col = 2;
         }
     }
 
     if ($name)
-        return array("name" => _($name), "col" => $col);
+        return array("name" => $name, "col" => $col);
 
     return FALSE;
 }

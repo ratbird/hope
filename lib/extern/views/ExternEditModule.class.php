@@ -76,7 +76,7 @@ class ExternEditModule extends ExternEditHtml {
         $out .= "<tr" . $this->css->getFullClass() . ">\n";
         $out .= "<td><font size=\"2\"><b>" . _("Datenfeld") . "</b></font></td>\n";
         if (!in_array('aliases', $hide))
-            $out .= "<td><font size=\"2\"><b>" . _("&Uuml;berschrift") . "</b></font></td>\n";
+            $out .= "<td><font size=\"2\"><b>" . _("Überschrift") . "</b></font></td>\n";
         if (!in_array("width", $hide))
             $out .= "<td><font size=\"2\"><b>" . _("Breite") . "</b></font></td>\n";
         if (!in_array("sort", $hide))
@@ -351,7 +351,7 @@ class ExternEditModule extends ExternEditHtml {
         $out = "<tr><td><table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
         $out .= "<tr" . $this->css->getFullClass() . ">\n";
         $out .= "<td><font size=\"2\"><b>" . _("Datenfeld") . "</b></font></td>\n";
-        $out .= "<td><font size=\"2\"><b>" . _("&Uuml;berschrift") . "</b></font></td>\n";
+        $out .= "<td><font size=\"2\"><b>" . _("Überschrift") . "</b></font></td>\n";
         $out .= "<td align=\"center\"><font size=\"2\"><b>" . _("Reihenfolge") . "</b></font></td>\n";
         $out .= "<td align=\"center\"><font size=\"2\"><b>" . _("Sichtbarkeit") . "</b></font></td>\n";
         $out .= "</tr>\n";

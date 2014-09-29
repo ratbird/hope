@@ -122,11 +122,11 @@ if ($_the_clip_form->isClicked("clip_ok")){
             if ($inserted){
                 $_the_tree->init();
                 $_the_treeview->open_ranges[$clip_cmd[1]] = true;
-                $_msg .= "msg§" . sprintf(_("%s Eintr&auml;ge aus Ihrer Merkliste wurden in <b>%s</b> eingetragen."),
+                $_msg .= "msg§" . sprintf(_("%s Einträge aus Ihrer Merkliste wurden in <b>%s</b> eingetragen."),
                 $inserted, htmlReady($_the_tree->tree_data[$clip_cmd[1]]['name'])) . "§";
             }
         } else {
-            $_msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgew&auml;hlt!") . "§";
+            $_msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgewählt!") . "§";
         }
     }
     $_the_clipboard->doClipCmd();
@@ -207,9 +207,9 @@ if (!$_the_tree->getNumKids('root')){
         }
     }
     $infobox[0]["eintrag"][] = array('icon' => "icons/16/black/visibility-visible.png",
-                                    "text"  => sprintf(_("%s öffentlich sichtbare Listen, insgesamt %s Eintr&auml;ge"),$list_count['visible'],$list_count['visible_entries']));
+                                    "text"  => sprintf(_("%s öffentlich sichtbare Listen, insgesamt %s Einträge"),$list_count['visible'],$list_count['visible_entries']));
     $infobox[0]["eintrag"][] = array('icon' => "icons/16/black/visibility-invisible.png",
-                                    "text" => sprintf(_("%s unsichtbare Listen, insgesamt %s Eintr&auml;ge"),$list_count['invisible'],$list_count['invisible_entries']) );
+                                    "text" => sprintf(_("%s unsichtbare Listen, insgesamt %s Einträge"),$list_count['invisible'],$list_count['invisible_entries']) );
 }
 
 $infobox[1] = array ("kategorie" => _("Aktionen:"));

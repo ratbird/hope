@@ -56,7 +56,7 @@ class ExternElementContentNews extends ExternElement {
             $this->config = $config;
         
         $this->name = "ContentNews";
-        $this->real_name = _("&Uuml;berschrift und Beschreibung der News");
+        $this->real_name = _("Überschrift und Beschreibung der News");
         $this->description = _("Eigenschaften der Überschrift und der Beschreibung einer News.");
     }
     

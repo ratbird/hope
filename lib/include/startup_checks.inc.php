@@ -19,7 +19,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // admin_modules.php
-// ueberprueft, oba alle Voraussetzungen zum Anlegen von Veranstaltungen erf&uuml;llt sind. Wenn alles in Ordnung ist, wird keine Ausgabe erzeugt.
+// ueberprueft, oba alle Voraussetzungen zum Anlegen von Veranstaltungen erfüllt sind. Wenn alles in Ordnung ist, wird keine Ausgabe erzeugt.
 // Copyright (C) 2002 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ if ($problems_found) {
         <tr>
              <td class="blank" colspan=2>
                 <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, 
-                da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen.".$moreProbs), $problems); ?>
+                da zunächst die folgenden Voraussetzungen geschaffen werden müssen.".$moreProbs), $problems); ?>
             </td>
         </tr>
         <tr <? $cssSw->switchClass() ?>>

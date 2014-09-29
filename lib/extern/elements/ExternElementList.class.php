@@ -53,8 +53,8 @@ class ExternElementList extends ExternElement {
             $this->config = $config;
         
         $this->name = "List";
-        $this->real_name = _("Aufz&auml;hlungsliste");
-        $this->description = _("Eigenschaften einer Aufz&auml;hlungsliste.");
+        $this->real_name = _("Aufzählungsliste");
+        $this->description = _("Eigenschaften einer Aufzählungsliste.");
     }
     
     function toStringEdit ($post_vars = "", $faulty_values = "",

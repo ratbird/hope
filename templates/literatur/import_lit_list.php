@@ -23,7 +23,7 @@ use Studip\Button, Studip\LinkButton;
                 <?= strlen($plugin["description"]) > 0 ? Assets::img('icons/16/grey/info-circle.png') : '' ?>
                 <?= formatReady($plugin["description"]) ?><br>
                 <br>
-                <?= _("1. W&auml;hlen Sie mit <b>Durchsuchen</b> eine Datei von Ihrer Festplatte aus.") ?><br>
+                <?= _("1. Wählen Sie mit <b>Durchsuchen</b> eine Datei von Ihrer Festplatte aus.") ?><br>
                 <input name="xmlfile" type="file" style="width:250px" accept="text/xml" maxlength="8000000"><br>
                 <br>
                 <?= _("2. Klicken Sie auf <b>Absenden</b>, um die Datei hochzuladen.") ?><br>

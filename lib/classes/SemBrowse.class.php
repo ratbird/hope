@@ -299,7 +299,7 @@ class SemBrowse {
         echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_lecturer\">" . _("DozentIn:") . "</label> </td>";
         echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("lecturer", array('id' => 'search_sem_lecturer', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_combination\">" . _("Verkn&uuml;pfung:") . "</label> </td>";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_combination\">" . _("Verknüpfung:") . "</label> </td>";
         echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("combination",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_combination'));
         echo "</td></tr>\n";

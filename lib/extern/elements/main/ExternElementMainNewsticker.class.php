@@ -52,7 +52,7 @@ class ExternElementMainNewsticker extends ExternElementMain {
                 'name', 'rows', 'length', 'pause', 'frequency',
                 'starttext', 'endtext', 'nodatatext', 'automaticstart', 'jsonly', 'style');
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
 

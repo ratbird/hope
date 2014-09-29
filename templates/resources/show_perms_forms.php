@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
             <td>
             <? if ($owner_perms) : ?>
-                <?= _('verantworlicheN NutzerIn &auml;ndern:') ?><br>
+                <?= _('verantworlicheN NutzerIn ändern:') ?><br>
                 <? showSearchForm('search_owner', $search_string_search_owner, FALSE,TRUE); ?>
             <? else : ?>
                 <?= MessageBox::info(_('Sie können den/die verantwortlicheN NutzerIn nicht ändern.')) ?>
@@ -35,7 +35,7 @@ use Studip\Button, Studip\LinkButton;
                 <?= _('Berechtigungen:') ?>
             </td>
             <td valign="top">
-                <?= _('Berechtigung hinzuf&uuml;gen')?><br>
+                <?= _('Berechtigung hinzufügen')?><br>
                 <? showSearchForm('search_perm_user', $search_string_search_perm_user, FALSE, FALSE, FALSE, TRUE) ?>
             </td>
         </tr>
@@ -104,11 +104,11 @@ use Studip\Button, Studip\LinkButton;
             </td>
             <td>
             <? if ($perm == 'admin'): ?>
-                <?= _('Nutzer ist <b>Admin</b> und kann s&auml;mtliche Belegungen und Eigenschaften &auml;ndern und Rechte vergeben.') ?>
+                <?= _('Nutzer ist <b>Admin</b> und kann sämtliche Belegungen und Eigenschaften ändern und Rechte vergeben.') ?>
             <? elseif ($perm == 'tutor'): ?>
-                <?= _('Nutzer ist <b>Tutor</b> und kann s&auml;mtliche Belegungen &auml;ndern.') ?>
+                <?= _('Nutzer ist <b>Tutor</b> und kann sämtliche Belegungen ändern.') ?>
             <? elseif ($perm == 'autor'): ?>
-                <?= _('Nutzer ist <b>Autor</b> und kann nur eigene Belegungen &auml;ndern.') ?>
+                <?= _('Nutzer ist <b>Autor</b> und kann nur eigene Belegungen ändern.') ?>
             <? endif; ?>
             </td>
         </tr>

@@ -207,14 +207,14 @@ class CalendarSynchronizer
         }
 
         if (sizeof($int) > $this->max_events) {
-            $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die zu synchronisierende Datei enth&auml;lt zu viele Termine."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die zu synchronisierende Datei enthält zu viele Termine."));
             return FALSE;
         }
 
         // OK, work is done, import and export the events
         if (sizeof($del)) {
             $db->deleteFromDatabase('SINGLE', $del);
-            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurde(n) %s Termin(e) in Ihrem Stud.IP-Terminkalender gel&ouml;scht."), sizeof($del)));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurde(n) %s Termin(e) in Ihrem Stud.IP-Terminkalender gelöscht."), sizeof($del)));
         }
         $db->writeObjectsIntoDatabase($int, 'REPLACE');
         //  if (!$create_export) {

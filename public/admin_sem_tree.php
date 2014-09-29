@@ -79,9 +79,9 @@ if (is_array($_possible_open_items)) {
 
 if ($search_obj->search_done){
     if ($search_obj->search_result->numRows > 50){
-        $_msg = "error§" . _("Es wurden mehr als 50 Veranstaltungen gefunden! Bitte schr&auml;nken Sie Ihre Suche weiter ein.");
+        $_msg = "error§" . _("Es wurden mehr als 50 Veranstaltungen gefunden! Bitte schränken Sie Ihre Suche weiter ein.");
     } elseif ($search_obj->search_result->numRows > 0){
-        $_msg = "msg§" .sprintf(_("Es wurden %s Veranstaltungen gefunden, und in Ihre Merkliste eingef&uuml;gt"),$search_obj->search_result->numRows);
+        $_msg = "msg§" .sprintf(_("Es wurden %s Veranstaltungen gefunden, und in Ihre Merkliste eingefügt"),$search_obj->search_result->numRows);
         if (is_array($_SESSION['_marked_sem']) && count($_SESSION['_marked_sem'])){
             $_SESSION['_marked_sem'] = array_merge((array)$_SESSION['_marked_sem'], (array)$search_obj->search_result->getDistinctRows("seminar_id"));
         } else {
@@ -134,9 +134,9 @@ if ($the_tree->mode == "MoveItem" || $the_tree->mode == "CopyItem"){
         $_msg .= "§";
     }
     if ($the_tree->mode == "MoveItem"){
-        $text = _("Der Verschiebemodus ist aktiviert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element <b>%s</b> an diese Stelle zu verschieben.%s");
+        $text = _("Der Verschiebemodus ist aktiviert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element <b>%s</b> an diese Stelle zu verschieben.%s");
     } else {
-        $text = _("Der Kopiermodus ist aktiviert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element <b>%s</b> an diese Stelle zu kopieren.%s");
+        $text = _("Der Kopiermodus ist aktiviert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element <b>%s</b> an diese Stelle zu kopieren.%s");
     }
     $_msg .= "info§" . sprintf($text ,
                                 Assets::img('icons/16/yellow/arr_2right.png', tooltip2(_('Einfügesymbol'))),
@@ -243,14 +243,14 @@ $the_tree->showSemTree();
     </select><br>&nbsp;<br><select name="mark_list_aktion" style="font-size:8pt;width:100%;">
     <?
     if (is_array($_possible_open_items) && count($_possible_open_items) && !(count($_possible_open_items) == 1 && $_possible_open_items['root'])){
-        echo "\n<option  value=\"insert_all\">" . _("Markierte in alle ge&ouml;ffneten Bereiche eintragen") . "</option>";
+        echo "\n<option  value=\"insert_all\">" . _("Markierte in alle geöffneten Bereiche eintragen") . "</option>";
         foreach ($_possible_open_items as $item_id => $value){
             echo "\n<option value=\"insert_{$item_id}\">"
                 . sprintf(_("Markierte in \"%s\" eintragen"),htmlReady(my_substr($the_tree->tree->tree_data[$item_id]['name'],0,floor($cols * .8)))) . "</option>";
         }
     }
     ?>
-    <option value="del"><?=_("Markierte aus der Merkliste l&ouml;schen")?></option>
+    <option value="del"><?=_("Markierte aus der Merkliste löschen")?></option>
     </select>
     <div align="right">
     <?= Button::create(_('OK'), array('title' => _("Gewählte Aktion starten"))); ?>

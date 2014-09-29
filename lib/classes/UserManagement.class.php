@@ -515,7 +515,7 @@ class UserManagement
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
-            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu ver&auml;ndern.") . "§";
+            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu verändern.") . "§";
             return FALSE;
         }
         if (!$perm->is_fak_admin() && $newuser['auth_user_md5.perms'] == "admin") {
@@ -528,16 +528,16 @@ class UserManagement
         }
         if (!$perm->have_perm("root")) {
             if (!$perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin") {
-                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Admin-Accounts</em> zu ver&auml;ndern.") . "§";
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Admin-Accounts</em> zu verändern.") . "§";
                 return FALSE;
             }
             if ($this->user_data['auth_user_md5.perms'] == "root") {
-                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu ver&auml;ndern.") . "§";
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu verändern.") . "§";
                 return FALSE;
             }
             if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin") {
                 if (!$this->adminOK()) {
-                    $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu ver&auml;ndern.") . "§";
+                    $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu verändern.") . "§";
                     return FALSE;
                 }
             }
@@ -628,7 +628,7 @@ class UserManagement
             return false;
         }
 
-        $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";
+        $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" verändert."), $this->user_data['auth_user_md5.username']) . "§";
         if ($auth_plugin !== null) {
             // Automated entering new users, based on their status (perms)
             $result = AutoInsert::instance()->saveUser( $this->user_data['auth_user_md5.user_id'],$newuser['auth_user_md5.perms']);
@@ -661,7 +661,7 @@ class UserManagement
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             if (($db_ar = $statement->rowCount()) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Veranstaltungen gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus Veranstaltungen gelöscht."), $db_ar) . "§";
                 array_map('update_admission', $seminar_ids);
             }
             // delete all entries from waiting lists
@@ -674,7 +674,7 @@ class UserManagement
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             if (($db_ar = $statement->rowCount()) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Wartelisten gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus Wartelisten gelöscht."), $db_ar) . "§";
                 array_map('update_admission', $seminar_ids);
             }
             // delete 'Studiengaenge'
@@ -682,11 +682,11 @@ class UserManagement
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             if (($db_ar = $statement->rowCount()) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studieng&auml;ngen gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studiengängen gelöscht."), $db_ar) . "§";
             }
             // delete all private appointments of this user
             if ($db_ar = delete_range_of_dates($this->user_data['auth_user_md5.user_id'], FALSE) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Terminen gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus den Terminen gelöscht."), $db_ar) . "§";
             }
         }
 
@@ -697,7 +697,7 @@ class UserManagement
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             if (($db_ar = $statement->rowCount()) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus MitarbeiterInnenlisten gelöscht."), $db_ar) . "§";
             }
         }
         if ($newuser['auth_user_md5.perms'] == "root") {
@@ -707,7 +707,7 @@ class UserManagement
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             if (($db_ar = $statement->rowCount()) > 0) {
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus MitarbeiterInnenlisten gelöscht."), $db_ar) . "§";
             }
         }
 
@@ -796,17 +796,17 @@ class UserManagement
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
-            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu l&ouml;schen.") . "§";
+            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu löschen.") . "§";
             return FALSE;
         }
 
         if (!$perm->have_perm("root")) {
             if ($this->user_data['auth_user_md5.perms'] == "root") {
-                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu l&ouml;schen.") . "§";
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu löschen.") . "§";
                 return FALSE;
             }
             if ($this->user_data['auth_user_md5.perms'] == "admin" && !$this->adminOK()) {
-                $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu l&ouml;schen.") . "§";
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu löschen.") . "§";
                 return FALSE;
             }
         }
@@ -836,7 +836,7 @@ class UserManagement
         }
 
         if ($active_count) {
-            $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
+            $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gelöscht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
             return FALSE;
 
         //founder of studygroup?
@@ -925,7 +925,7 @@ class UserManagement
                 }
             }
             if ($temp_count) {
-                $this->msg .= "info§" . sprintf(_("%s leere Ordner gel&ouml;scht."), $temp_count) . "§";
+                $this->msg .= "info§" . sprintf(_("%s leere Ordner gelöscht."), $temp_count) . "§";
             }
 
             // folder left?
@@ -934,7 +934,7 @@ class UserManagement
             $statement->execute(array($this->user_data['auth_user_md5.user_id']));
             $count = $statement->fetchColumn();
             if ($count) {
-                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $count);
+                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gelöscht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $count);
             }
         }
         // kill all the ressources that are assigned to the user (and all the linked or subordinated stuff!)
@@ -950,7 +950,7 @@ class UserManagement
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Veranstaltungen gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus Veranstaltungen gelöscht."), $db_ar) . "§";
         }
 
         // delete user from waiting lists
@@ -963,7 +963,7 @@ class UserManagement
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Wartelisten gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus Wartelisten gelöscht."), $db_ar) . "§";
             array_map('update_admission', $seminar_ids);
         }
 
@@ -974,12 +974,12 @@ class UserManagement
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus MitarbeiterInnenlisten gelöscht."), $db_ar) . "§";
         }
 
         // delete user from Statusgruppen
         if ($db_ar = RemovePersonFromAllStatusgruppen(get_username($this->user_data['auth_user_md5.user_id']))  > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Funktionen / Gruppen gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus Funktionen / Gruppen gelöscht."), $db_ar) . "§";
         }
 
         // delete user from archiv
@@ -987,15 +987,15 @@ class UserManagement
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Zugriffsberechtigungen f&uuml;r das Archiv gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus den Zugriffsberechtigungen für das Archiv gelöscht."), $db_ar) . "§";
         }
 
         // delete all personal news from this user
         if (($db_ar = StudipNews::DeleteNewsByAuthor($this->user_data['auth_user_md5.user_id']))) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Ankündigungen gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus den Ankündigungen gelöscht."), $db_ar) . "§";
         }
         if (($db_ar = StudipNews::DeleteNewsRanges($this->user_data['auth_user_md5.user_id']))) {
-            $this->msg .= "info§" . sprintf(_("%s Verweise auf Ankündigungen gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Verweise auf Ankündigungen gelöscht."), $db_ar) . "§";
         }
 
         //delete entry in news_rss_range
@@ -1006,13 +1006,13 @@ class UserManagement
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0)
-            $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studieng&auml;ngen gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studiengängen gelöscht."), $db_ar) . "§";
 
         // delete all private appointments of this user
         if (get_config('CALENDAR_ENABLE')) {
             $calendar = new CalendarDriver($this->user_data['auth_user_md5.user_id']);
             if ($appkills = $calendar->deleteFromDatabase('ALL'))
-                $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Terminen gel&ouml;scht."), $appkills) ."§";
+                $this->msg .= "info§" . sprintf(_("%s Einträge aus den Terminen gelöscht."), $appkills) ."§";
         }
 
         // delete all messages send or received by this user
@@ -1022,7 +1022,7 @@ class UserManagement
         // delete user from all foreign adressbooks and empty own adressbook
         $buddykills = RemoveUserFromBuddys($this->user_data['auth_user_md5.user_id']);
         if ($buddykills > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Adressb&uuml;chern gel&ouml;scht."), $buddykills) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Einträge aus Adressbüchern gelöscht."), $buddykills) . "§";
         }
         $msg = DeleteAdressbook($this->user_data['auth_user_md5.user_id']);
         if ($msg) {
@@ -1066,7 +1066,7 @@ class UserManagement
         $avatar = Avatar::getAvatar($this->user_data["auth_user_md5.user_id"]);
         if ($avatar->is_customized()) {
             $avatar->reset();
-            $this->msg .= "info§" . _("Bild gel&ouml;scht.") . "§";
+            $this->msg .= "info§" . _("Bild gelöscht.") . "§";
         }
 
         // delete visibility settings
@@ -1109,7 +1109,7 @@ class UserManagement
             $this->msg .= "error§<em>" . _("Fehler:") . "</em> " . $query . "§";
             return FALSE;
         } else {
-            $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" gel&ouml;scht."), $this->user_data['auth_user_md5.username']) . "§";
+            $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" gelöscht."), $this->user_data['auth_user_md5.username']) . "§";
         }
         log_event("USER_DEL",$this->user_data['auth_user_md5.user_id'],NULL,sprintf("%s %s (%s)", $this->user_data['auth_user_md5.Vorname'], $this->user_data['auth_user_md5.Nachname'], $this->user_data['auth_user_md5.username'])); //log with Vorname Nachname (username) as info string
 

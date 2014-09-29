@@ -775,7 +775,7 @@ function js_hover(Event $aterm)
     }
     if (!($aterm instanceof SeminarEvent)) {
         if ($aterm->toStringPriority()) {
-            $jscript_text .= '<b>' . _("Priorit&auml;t:") . ' </b>'
+            $jscript_text .= '<b>' . _("Priorität:") . ' </b>'
                     . htmlReady($aterm->toStringPriority()) . '<br>';
         }
         $jscript_text .= '<b>' . _("Zugriff:") . ' </b>'

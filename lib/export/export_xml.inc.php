@@ -130,7 +130,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
     if ($object_counter<1)
     {
         $xml_export_text = _("Es wurden keine Daten gefunden!");
-        $export_error = _("Es wurden keine Daten gefunden! Die &uuml;bergebene ID ist mit keinen Veranstaltungs- / Personendaten verbunden.");
+        $export_error = _("Es wurden keine Daten gefunden! Die übergebene ID ist mit keinen Veranstaltungs- / Personendaten verbunden.");
         $export_pagecontent .= "<br><br><br><center>" 
                             . LinkButton::create('<< ' .  _('Zurück'), URLHelper::getURL("", array('range_id' => $range_id, 'ex_type' => $ex_type, 'ex_sem' => $ex_sem, 'o_mode' => 'start')))  
                             . "</center>";

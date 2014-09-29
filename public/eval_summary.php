@@ -581,7 +581,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     echo "    <td colspan=\"2\" class=\"blank\"><font size=\"-1\">\n";
     echo "      &nbsp;&nbsp;".$number_of_votes." "._("Teilnehmer insgesamt").".&nbsp;";
     echo "      "._("Die Teilnahme war")." ". ($evaluation['anonymous']==0 ? _("nicht") : "") . " "._("anonym").".";
-    echo "      "._("Eigent&uuml;mer").": ".$db_owner.". ".("Erzeugt am").": ".date('d.m.Y H:i:s');
+    echo "      "._("Eigentümer").": ".$db_owner.". ".("Erzeugt am").": ".date('d.m.Y H:i:s');
     echo "    </font></td>\n";
     echo "  </tr>\n";
   }

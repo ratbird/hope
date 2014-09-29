@@ -127,14 +127,14 @@ function holiday ($tmstamp, $mod = "") {
     // die unveraenderlichen Feiertage
     switch ($doy) {
         case   1: $name = "Neujahr"; $col = 3; break;
-        case   6: $name = "Hl. Drei K&ouml;nige"; $col = 1; break;
+        case   6: $name = "Hl. Drei Könige"; $col = 1; break;
     }
 
     // Schaltjahre nicht vergessen
     if (date("L", $tmstamp))
         $doy--;
     switch ($doy) {
-        case  79: $name = "Fr&uuml;hlingsanfang"; $col = 1; break;
+        case  79: $name = "Frühlingsanfang"; $col = 1; break;
         case 121: $name = "Maifeiertag"; $col = 3; break;
 //      case 125: $name = "Europatag"; $col = 1; break;
         case 172: $name = "Sommeranfang"; $col = 1; break;

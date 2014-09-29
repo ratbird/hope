@@ -36,7 +36,7 @@
                 <strong><?= _('Sie haben sich noch keinen Einrichtungen zugeordnet.') ?></strong><br>
                 <br>
                 <?= _('Wenn Sie auf Ihrem Profil Ihre Einrichtungen '
-                     .'auflisten wollen, k&ouml;nnen Sie diese Einrichtungen hier eintragen.') ?>
+                     .'auflisten wollen, können Sie diese Einrichtungen hier eintragen.') ?>
             </td>
         </tr>
     <? endif; ?>
@@ -71,13 +71,13 @@
 
                 <?= _('Wenn Sie aus Einrichtungen wieder ausgetragen werden möchten, '
                      .'markieren Sie die entsprechenden Felder in der linken Tabelle.') ?><br>
-                <?= _('Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.') ?><br>
+                <?= _('Mit einem Klick auf <b>Übernehmen</b> werden die gewählten Änderungen durchgeführt.') ?><br>
                 <br>
 
                 <?= Button::create(_('Übernehmen'), 'store_in', array('title' => _('Änderungen übernehmen'))) ?>
             <? else: ?>
                 <?= _('Die Informationen zu Ihrer Einrichtung werden vom System verwaltet, '
-                     .'und k&ouml;nnen daher von Ihnen nicht ge&auml;ndert werden.') ?>
+                     .'und können daher von Ihnen nicht geändert werden.') ?>
             <? endif; ?>
             </td>
         </tr>

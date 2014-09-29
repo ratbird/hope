@@ -435,7 +435,7 @@ class MyCoursesController extends AuthenticatedController
         if (Request::option('cmd') != 'kill' && Request::option('cmd') != 'kill_admission') {
             if ($current_seminar->admission_binding) {
                 PageLayout::postMessage(MessageBox::error(sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt.
-                    Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."),
+                    Wenn Sie sich austragen wollen, müssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."),
                     htmlReady($current_seminar->name))));
                 $this->redirect('my_courses/index');
                 return;
@@ -517,7 +517,7 @@ class MyCoursesController extends AuthenticatedController
                     //Pruefen, ob es Nachruecker gibt
                     update_admission($course_id);
                     PageLayout::postMessage(MessageBox::success(sprintf(_("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben.
-                    Wenn Sie an der Veranstaltung teilnehmen wollen, m&uuml;ssen Sie sich erneut bewerben."), htmlReady($current_seminar->name))));
+                    Wenn Sie an der Veranstaltung teilnehmen wollen, müssen Sie sich erneut bewerben."), htmlReady($current_seminar->name))));
                 }
             }
 

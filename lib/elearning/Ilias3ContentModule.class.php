@@ -94,7 +94,7 @@ class Ilias3ContentModule extends ContentModule
                 break;
             case "no_permission":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keine Leseberechtigung f&uuml;r dieses Modul.") . "</i>");
+                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keine Leseberechtigung für dieses Modul.") . "</i>");
                 return false;
                 break;
             case "missing_precondition":
@@ -107,7 +107,7 @@ class Ilias3ContentModule extends ContentModule
                 break;
             case "no_parent_access":
                 $this->allowed_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray($operations );
-                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keinen Zugriff auf die &uuml;bergeordneten Objekte dieses Moduls.") . "</i>");
+                $this->setDescription($object_data["description"] . "<br><br><i>" . _("Sie haben keinen Zugriff auf die übergeordneten Objekte dieses Moduls.") . "</i>");
                 return false;
                 break;
             case "object_deleted":

@@ -46,62 +46,62 @@ $this->msg[1] = array (
 $this->msg[2] = array (
         "mode" => "error",
         "titel" => _("NutzerIn hat keine Berechtigung") ,
-        "msg"=> _("Sie versuchen, eineN NutzerIn einzutragen, der/die nicht selbst in der Lage ist, die Belegung zu bearbeiten oder zu l&ouml;schen. Sie k&ouml;nnen dieseN NutzerIn leider nicht eintragen"));
+        "msg"=> _("Sie versuchen, eineN NutzerIn einzutragen, der/die nicht selbst in der Lage ist, die Belegung zu bearbeiten oder zu löschen. Sie können dieseN NutzerIn leider nicht eintragen"));
 $this->msg[3] = array (
         "mode" => 'success',
         "titel" => _("Belegung eingetragen"),
         "msg"=> _("Die Belegung wurde eingetragen"));
 $this->msg[4] = array (
         "mode" => 'success',
-        "titel" => _("Belegung ver&auml;ndert"),
-        "msg"=> _("Die Belegung wurde ver&auml;ndert"));
+        "titel" => _("Belegung verändert"),
+        "msg"=> _("Die Belegung wurde verändert"));
 $this->msg[5] = array (
         "mode" => 'success',
-        "titel" => _("Belegung gel&ouml;scht"),
-        "msg"=> _("Die Belegung wurde gel&ouml;scht"));
+        "titel" => _("Belegung gelöscht"),
+        "msg"=> _("Die Belegung wurde gelöscht"));
 $this->msg[6] = array (
         "mode" => 'success',
-        "titel" => _("Eigenschaften ver&auml;ndert"),
-        "msg"=> _("Die Eigenschaften der Ressource wurden ver&auml;ndert"));
+        "titel" => _("Eigenschaften verändert"),
+        "msg"=> _("Die Eigenschaften der Ressource wurden verändert"));
 $this->msg[7] = array (
         "mode" => 'success',
-        "titel" => _("Ressource gel&ouml;scht"),
-        "msg"=> _("Die Ressource wurde gel&ouml;scht"));
+        "titel" => _("Ressource gelöscht"),
+        "msg"=> _("Die Ressource wurde gelöscht"));
 $this->msg[8] = array (
         "mode" => 'success',
-        "titel" => _("Berechtigungen ver&auml;ndert"),
-        "msg"=> _("Die Berechtigungseinstellungen der Ressource wurden ver&auml;ndert"));
+        "titel" => _("Berechtigungen verändert"),
+        "msg"=> _("Die Berechtigungseinstellungen der Ressource wurden verändert"));
 $this->msg[9] = array (
         "mode" => 'success',
         "titel" => _("Ressource verschoben"),
         "msg"=> _("Die Ressource wurde verschoben"));
 $this->msg[10] = array (
         "mode" => "error",
-        "msg"=> _("Bitte geben Sie eineN NutzerIn f&uuml;r die Belegung an, um diese Belegung zu speichern!"));
+        "msg"=> _("Bitte geben Sie eineN NutzerIn für die Belegung an, um diese Belegung zu speichern!"));
 $this->msg[11] = array (
         "mode" => "error",
-        "msg"=> _("Die Belegung konnte nicht gespeichert werden, da Sie sich mit einer anderen Belegung &uuml;berschneidet!"));
+        "msg"=> _("Die Belegung konnte nicht gespeichert werden, da Sie sich mit einer anderen Belegung überschneidet!"));
 $this->msg[12] = array (
         "mode" => "info",
-        "msg"=> _("Es existieren keine Ressourcen oder Ebenen, auf die Sie Zugriff haben.")."<br>"._("Um Ressourcen anzulegen, erzeugen Sie zun&auml;chst eine neue Ebene, indem Sie &raquo;Neue Hierarchie erzeugen&laquo; anw&auml;hlen.")." <br>"._("Anschließend k&ouml;nnen auf dieser Ebene Ressourcen anlegen"));
+        "msg"=> _("Es existieren keine Ressourcen oder Ebenen, auf die Sie Zugriff haben.")."<br>"._("Um Ressourcen anzulegen, erzeugen Sie zunächst eine neue Ebene, indem Sie &raquo;Neue Hierarchie erzeugen&laquo; anwählen.")." <br>"._("Anschließend können auf dieser Ebene Ressourcen anlegen"));
 $this->msg[13] = array (
         "mode" => "info",
-        "msg"=> _("Es existieren keine Ressourcen, die Sie im Rahmen dieser Veranstaltung belegen d&uuml;rfen."));
+        "msg"=> _("Es existieren keine Ressourcen, die Sie im Rahmen dieser Veranstaltung belegen dürfen."));
 $this->msg[14] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Ebene ausgew&auml;hlt. Daher kann keine Liste erzeugt werden.")." <br>"._("Benutzen Sie die Suchfunktion oder w&auml;hlen Sie unter &raquo;&Uuml;bersicht&laquo; einen Ebene bzw. Ressource in der Hierarchie aus."));
+        "msg"=> _("Sie haben keine Ebene ausgewählt. Daher kann keine Liste erzeugt werden.")." <br>"._("Benutzen Sie die Suchfunktion oder wählen Sie unter &raquo;Übersicht&laquo; einen Ebene bzw. Ressource in der Hierarchie aus."));
 $this->msg[15] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben kein Objekt zum Bearbeiten ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben kein Objekt zum Bearbeiten ausgewählt.")." <br>"._("Bitte wählen Sie zunächst ein Objekt aus."));
 $this->msg[16] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben kein Objekt zum Anzeigen ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben kein Objekt zum Anzeigen ausgewählt.")." <br>"._("Bitte wählen Sie zunächst ein Objekt aus."));
 $this->msg[17] = array (
         "mode" => "error",
-        "msg"=> _("Bitte geben Sie g&uuml;ltige Werte f&uuml;r Datum, Beginn und Ende der Belegung an!"));
+        "msg"=> _("Bitte geben Sie gültige Werte für Datum, Beginn und Ende der Belegung an!"));
 $this->msg[18] = array (
         "mode" => "error",
-        "msg"=> _("Bitte geben Sie einen g&uuml;ltigen Wert f&uuml;r das Ende der Wiederholung an!"));
+        "msg"=> _("Bitte geben Sie einen gültigen Wert für das Ende der Wiederholung an!"));
 $this->msg[19] = array (
         "mode" => "error",
         "msg"=> _("Das Ende der Wiederholung darf nicht vor dem ersten Termin der Wiederholung liegen!"));
@@ -110,16 +110,16 @@ $this->msg[20] = array (
         "msg"=> _("Die Endzeit darf nicht vor der Startzeit liegen!"));
 $this->msg[21] = array (
         "mode" => "error",
-        "msg"=> _("Die j&auml;hrliche Wiederholung darf maximal 10 Jahre dauern!"));
+        "msg"=> _("Die jährliche Wiederholung darf maximal 10 Jahre dauern!"));
 $this->msg[22] = array (
         "mode" => "error",
         "msg"=> _("Die monatliche Wiederholung darf maximal 10 Jahre dauern!"));
 $this->msg[23] = array (
         "mode" => "error",
-        "msg"=> _("Die w&ouml;chentliche Wiederholung darf maximal 50 Mal wiederholt stattfinden!"));
+        "msg"=> _("Die wöchentliche Wiederholung darf maximal 50 Mal wiederholt stattfinden!"));
 $this->msg[24] = array (
         "mode" => "error",
-        "msg"=> _("Die t&auml;gliche Wiederholung darf maximal 100 Mal wiederholt stattfinden!"));
+        "msg"=> _("Die tägliche Wiederholung darf maximal 100 Mal wiederholt stattfinden!"));
 $this->msg[25] = array (
         "mode" => "error",
         "titel" => _("Fehlende Berechtigung"),
@@ -129,56 +129,56 @@ $this->msg[26] = array (
         "msg"=> _("Fehler in den Sperrzeiten, bitte korrigieren Sie die Zeiten!"));
 $this->msg[27] = array (
         "mode" => 'success',
-        "msg"=> _("Die Sperrzeiten wurden ge&auml;ndert."));
+        "msg"=> _("Die Sperrzeiten wurden geändert."));
 $this->msg[28] = array (
         "mode" => 'success',
-        "msg"=> _("Die Sperrzeit wurde gel&ouml;scht. Falls die Blockierung aktiviert war, und der gel&ouml;schte Zeitraum bereits l&auml;uft, k&ouml;nnen berechtigte Nutzer wieder Belegungen erstellen."));
+        "msg"=> _("Die Sperrzeit wurde gelöscht. Falls die Blockierung aktiviert war, und der gelöschte Zeitraum bereits läuft, können berechtigte Nutzer wieder Belegungen erstellen."));
 $this->msg[29] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben den Raum als <u>blockierbar</u> markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>blockierbar</u> markieren?")
+        "msg"=> _("Sie haben den Raum als <u>blockierbar</u> markiert. Wollen Sie auch alle untergeordneten Räume ebenfalls als <u>blockierbar</u> markieren?")
             . "<br>". LinkButton::createAccept(_('JA!'), '%s')
             . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[30] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben den Raum als <u>nicht</u> mehr blockierbar markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>nicht</u> blockierbar markieren?")
+        "msg"=> _("Sie haben den Raum als <u>nicht</u> mehr blockierbar markiert. Wollen Sie auch alle untergeordneten Räume ebenfalls als <u>nicht</u> blockierbar markieren?")
             . "<br>". LinkButton::createAccept(_('JA!'), '%s')
             . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[31] = array (
         "mode" => "info",
         "msg"=> "<font size=\"-1\">"._("<b>Ressourcenblockierung vom %s bis zum %s.</b>")."</font><br>".
-            _("Sie versuchen, ein Objekt zu bearbeiten, das zur Zeit f&uuml;r eine Bearbeitung gesperrt ist. Nur der globale Ressourcenadministrator hat Zugriff auf dieses Objekt! <br>(Wenn Sie normalerweise Zugriff auf dieses Objekt haben, wird Ihnen der Zugriff nach Aufhebung der Blockierung wieder gew&auml;hrt.)"));
+            _("Sie versuchen, ein Objekt zu bearbeiten, das zur Zeit für eine Bearbeitung gesperrt ist. Nur der globale Ressourcenadministrator hat Zugriff auf dieses Objekt! <br>(Wenn Sie normalerweise Zugriff auf dieses Objekt haben, wird Ihnen der Zugriff nach Aufhebung der Blockierung wieder gewährt.)"));
 $this->msg[32] = array (
         "mode" => 'success',
-        "msg"=> _("Die ausgew&auml;hlten Eintr&auml;ge wurden in die aktuelle Anfrage &uuml;bernommen."));
+        "msg"=> _("Die ausgewählten Einträge wurden in die aktuelle Anfrage übernommen."));
 $this->msg[33] = array (
         "mode" => 'success',
-        "msg"=> _("Folgende R&auml;ume wurden gebucht und der Veranstaltung zugewiesen: <font size=\"-1\" color=\"black\">%s</font>"));
+        "msg"=> _("Folgende Räume wurden gebucht und der Veranstaltung zugewiesen: <font size=\"-1\" color=\"black\">%s</font>"));
 $this->msg[34] = array (
         "mode" => "error",
-        "msg"=> _("Folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden: <font size=\"-1\" color=\"black\">%s</font>"));
+        "msg"=> _("Folgende Räume konnten wegen Überschneidungen nicht gebucht werden: <font size=\"-1\" color=\"black\">%s</font>"));
 $this->msg[35] = array (
         "mode" => "error",
-        "msg"=> _("Die folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden:")."<br>"._("Eine neue Anfrage, die einzeln bearbeitet werden mu&szlig;, wurde f&uuml;r jede Belegungszeit erstellt.  <font size=\"-1\" color=\"black\">%s</font>"));
+        "msg"=> _("Die folgende Räume konnten wegen Überschneidungen nicht gebucht werden:")."<br>"._("Eine neue Anfrage, die einzeln bearbeitet werden muß, wurde für jede Belegungszeit erstellt.  <font size=\"-1\" color=\"black\">%s</font>"));
 // message 36 is not used anymore
 $this->msg[37] = array (
         "mode" => 'success',
-        "msg"=> _("Die regelm&auml;&szlig;ige Belegung wurde in Einzeltermine umgewandelt."));
+        "msg"=> _("Die regelmäßige Belegung wurde in Einzeltermine umgewandelt."));
 $this->msg[38] = array (
         "mode" => 'success',
         "msg"=> _("Belegung wurde in die Ressource &raquo;%s&laquo; verschoben."));
 $this->msg[39] = array (
         "mode" => "error",
-        "msg"=> _("Die Belegung konnte nicht verschoben werden, da Sie sich in der gew&uuml;nschten Ressource mit einer anderen Belegung &uuml;berschneidet!"));
+        "msg"=> _("Die Belegung konnte nicht verschoben werden, da Sie sich in der gewünschten Ressource mit einer anderen Belegung überschneidet!"));
 $this->msg[40] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben bereits Anfragen, die Sie ausgew&auml;hlt haben, bearbeitet. Klicken Sie auf &raquo;absenden&laquo;, um Nachrichten zu aufgel&ouml;sten Anfragen versenden.")
+        "msg"=> _("Sie haben bereits Anfragen, die Sie ausgewählt haben, bearbeitet. Klicken Sie auf &raquo;absenden&laquo;, um Nachrichten zu aufgelösten Anfragen versenden.")
             . " ". LinkButton::createAccept(_('Absenden'), '%s'));
 $this->msg[41] = array (
         "mode" => "info",
         "msg"=> _("Mit den von ihnen ausgewählten Einstellungen sind keine Anfragen, die Sie auflösen könnten, vorhanden."));
 $this->msg[42] = array (
         "mode" => "info",
-        "msg"=> _("Folgenden Einzelterminen wurde kein Raum zugewiesen, da gesonderte Anfragen zu diesem Termine vorliegen, die einzeln bearbeitet werden m&uuml;ssen:")."<font size=\"-1\" color=\"black\">%s</font>");
+        "msg"=> _("Folgenden Einzelterminen wurde kein Raum zugewiesen, da gesonderte Anfragen zu diesem Termine vorliegen, die einzeln bearbeitet werden müssen:")."<font size=\"-1\" color=\"black\">%s</font>");
 $this->msg[43] = array (
         "mode" => "info",
         "msg"=> "<form action=\"%s\" method=\"post\">"
@@ -197,7 +197,7 @@ $this->msg[44] = array (
             ."<br><font size=\"-1\" color=\"black\">%s</font>");
 $this->msg[45] = array (
         "mode" => 'success',
-        "msg"=> _("Es wurden %s Raumanfragen gel&ouml;scht."));
+        "msg"=> _("Es wurden %s Raumanfragen gelöscht."));
 $this->msg[46] = array (
     'mode' => 'error',
     'msg'  => _("Sie müssen eineN NutzerIn eintragen oder eine freie Eingabe zur Belegung eintragen, um diese Belegung speichern zu können!")
@@ -207,7 +207,7 @@ $this->msg[47] = array (
         "msg"=> _("Belegung wurde in die Ressource &raquo;%s&laquo; kopiert."));
 $this->msg[48] = array (
         "mode" => "error",
-        "msg"=> _("Die Belegung konnte nicht in die Ressource &raquo;%s&laquo; kopiert werden, da sie sich mit einer anderen Belegung &uuml;berschneidet:") . "<br><font size=\"-1\" color=\"black\">%s</font>");
+        "msg"=> _("Die Belegung konnte nicht in die Ressource &raquo;%s&laquo; kopiert werden, da sie sich mit einer anderen Belegung überschneidet:") . "<br><font size=\"-1\" color=\"black\">%s</font>");
 $this->msg[49] = array(
     'mode' => 'info',
     'msg'  => _('Sie können den Anfragenplan nur anzeigen, wenn Sie Anfragen für einen bestimmten Raum auflösen.')

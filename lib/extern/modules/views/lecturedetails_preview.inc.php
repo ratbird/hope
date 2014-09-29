@@ -52,7 +52,7 @@ $data_sem["teilnehmer"] = str_repeat(_("Teilnehmer") . " ", 6);
 $data_sem["requirements"] = str_repeat(_("Voraussetzungen") . " ", 6);
 $data_sem["lernorga"] = str_repeat(_("Lernorganisation") . " ", 6);
 $data_sem["leistung"] = str_repeat(_("Leistungsnachweis") . " ", 6);
-$data_sem["range_path"] = _("Fakult&auml;t &gt; Studiengang &gt; Bereich");
+$data_sem["range_path"] = _("Fakultät &gt; Studiengang &gt; Bereich");
 $data_sem["misc"] = str_repeat(_("Sonstiges") . " ", 6);
 $data_sem["ects"] = "4";
 

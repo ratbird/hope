@@ -500,7 +500,7 @@ class Vote extends StudipObject {
      return $this->throwError (1, _("Wenn die Namen der Teilnehmer sichtbar gemacht werden sollen, darf die Ergebnissichtbarkeit nicht auf \"nie\" stehen."));
       elseif ($namesvisibility == YES &&
           $this->isAnonymous ())
-     return $this->throwError (2, _("Die Namen der Teilnehmer k&ouml;nnen nicht sichtbar gemacht werden, wenn die Auswertung anonym ist."));
+     return $this->throwError (2, _("Die Namen der Teilnehmer können nicht sichtbar gemacht werden, wenn die Auswertung anonym ist."));
 
       $this->namesvisibility = $namesvisibility;
    }

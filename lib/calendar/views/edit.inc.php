@@ -37,9 +37,9 @@ if (!empty($err)) {
 
 if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     if ($_calendar->getRange() == Calendar::RANGE_USER) {
-        $error_message = sprintf(_("Der Kalender von %s ist f&uuml;r Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), get_fullname($_calendar->getUserId()));
+        $error_message = sprintf(_("Der Kalender von %s ist für Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), get_fullname($_calendar->getUserId()));
     } else {
-        $error_message = sprintf(_("Der Kalender von %s ist f&uuml;r Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), $SessSemName[1]);
+        $error_message = sprintf(_("Der Kalender von %s ist für Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), $SessSemName[1]);
     }
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
@@ -132,7 +132,7 @@ if (!$set_recur_x) {
     echo "{document.edit_event.elements['start_h'].value = '00'; document.edit_event.elements['start_m'].value = '00'; ";
     echo "document.edit_event.elements['end_h'].value = '23'; document.edit_event.elements['end_m'].value = '55';}\"";
     echo ($wholeday ? ' checked="checked"' : '') . "$disabled> &nbsp;";
-    echo _("ganzt&auml;gig");
+    echo _("ganztägig");
     $info = _("Als ganztägig markierte Termine beginnen um 00:00 Uhr am angegebenen Starttag und enden um 23.59 am angegeben Endtag.");
     echo '&nbsp;&nbsp;&nbsp;' . tooltipicon($info) . "\n";
     echo "</td>\n</tr>\n";
@@ -239,7 +239,7 @@ if (!$set_recur_x) {
             if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
                 $info = _("Private und vertrauliche Termine sind nur für Sie sichtbar. Öffentliche Termine werden auf ihrer internen Homepage auch anderen Nutzern bekanntgegeben.");
                 $via_names = array(
-                    'PUBLIC' => _("&ouml;ffentlich"),
+                    'PUBLIC' => _("öffentlich"),
                     'PRIVATE' => _("privat"),
                     'CONFIDENTIAL' => _("vertraulich"));
             } elseif ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
@@ -262,7 +262,7 @@ if (!$set_recur_x) {
             echo "</select>&nbsp;&nbsp;&nbsp;";
             echo tooltipicon($info) . "\n";
 
-            echo "&nbsp;&nbsp;&nbsp;" . _("Priorit&auml;t:");
+            echo "&nbsp;&nbsp;&nbsp;" . _("Priorität:");
             echo "&nbsp;&nbsp;<select name=\"priority\" size=\"1\">\n";
             $priority_names = array(
                 _("keine Angabe"),
@@ -280,7 +280,7 @@ if (!$set_recur_x) {
 
         if ($_calendar->event instanceof SeminarCalendarEvent) {
             echo "<tr><td>\n";
-            echo _("Priorit&auml;t:") . "&nbsp;&nbsp;<select $disabled name=\"priority\" size=\"1\">\n";
+            echo _("Priorität:") . "&nbsp;&nbsp;<select $disabled name=\"priority\" size=\"1\">\n";
             $priority_names = array(
                 _("keine Angabe"),
                 _("hoch"),
@@ -683,7 +683,7 @@ else {
              */
 
             echo Assets::input("icons/16/blue/trash.png", array('type' => "image", 'class' => "middle", 'name' => "del_exc", 'title' => _('ausgewählte Ausnahme löschen')));
-            echo _("ausgew&auml;hlte l&ouml;schen");
+            echo _("ausgewählte löschen");
         }
         echo "</td></tr></table>\n</td>\n</tr>\n";
     } else {
@@ -727,7 +727,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     // create infobox entries
     switch ($_calendar->getRange()) {
         case Calendar::RANGE_USER :
-            $info_box['sem1'] = sprintf(_("Dieser Termin geh&ouml;rt zur Veranstaltung:<p>%s</p>Veranstaltungstermine k&ouml;nnen nicht im pers&ouml;nlichen Terminkalender bearbeitet werden."), $link_to_seminar);
+            $info_box['sem1'] = sprintf(_("Dieser Termin gehört zur Veranstaltung:<p>%s</p>Veranstaltungstermine können nicht im persönlichen Terminkalender bearbeitet werden."), $link_to_seminar);
             break;
         case Calendar::RANGE_SEM :
             $info_box['sem1'] = _("Dieser Termin ist ein Termin aus dem Ablaufplan.");
@@ -808,16 +808,16 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     // create infobox entries
     if ($count_events >= $CALENDAR_MAX_EVENTS) {
         // max number of events reached
-        $info_box['count'] = _("Sie k&ouml;nnen keine weiteren Termine mehr speichern!")
+        $info_box['count'] = _("Sie können keine weiteren Termine mehr speichern!")
                 . '<br><br>'
-                . sprintf(_("L&ouml;schen Sie &auml;ltere Termine, oder w&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
+                . sprintf(_("Löschen Sie ältere Termine, oder wählen Sie eine automatische Löschfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
     } elseif ($count_events >= ($CALENDAR_MAX_EVENTS - $CALENDAR_MAX_EVENTS / 20)) {
         // only 5% of max number of events free
-        $info_box['count'] = sprintf(_("Sie k&ouml;nnen noch %s Termine speichern."), $CALENDAR_MAX_EVENTS - $count_events);
+        $info_box['count'] = sprintf(_("Sie können noch %s Termine speichern."), $CALENDAR_MAX_EVENTS - $count_events);
         $info_box['count'] .= '<br><br>';
-        $info_box['count'] .= sprintf(_("W&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s, um &auml;ltere Termine zu l&ouml;schen."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
+        $info_box['count'] .= sprintf(_("Wählen Sie eine automatische Löschfunktion in Ihren %sKalenderoptionen%s, um ältere Termine zu löschen."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
     } else {
-        $info_box['count'] = sprintf(_("Sie k&ouml;nnen abgelaufene Termine automatisch l&ouml;schen lassen. W&auml;hlen Sie dazu eine L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
+        $info_box['count'] = sprintf(_("Sie können abgelaufene Termine automatisch löschen lassen. Wählen Sie dazu eine Löschfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
     }
     $info_box['all'][0]['kategorie'] = _("Information:");
     $info_box['all'][0]['eintrag'][] = array('icon' => 'icons/16/black/info.png',

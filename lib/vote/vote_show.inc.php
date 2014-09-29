@@ -280,7 +280,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
      echo createFormHeader ($vote);
 
      if (Request::option('voteaction')=="saved" && $voteID == Request::option('voteID'))
-        echo createReportMessage (_("Die &Auml;nderungen wurden gespeichert"),
+        echo createReportMessage (_("Die Änderungen wurden gespeichert"),
                       VOTE_ICON_SUCCESS, VOTE_COLOR_SUCCESS).
         "<br>\n";
 

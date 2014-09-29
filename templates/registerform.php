@@ -34,7 +34,7 @@ jQuery(document).ready(function() {
     <tr>
         <td class="blank" style="padding-top: 5px">
             <h2><?= _("Herzlich willkommen!") ?></h2>
-            <?= _("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:") ?>
+            <?= _("Bitte füllen Sie zur Anmeldung das Formular aus:") ?>
             <br><br>
             
             <form name="login" action="<?= URLHelper::getLink() ?>" method="post" onsubmit="return STUDIP.register.checkdata();">
@@ -51,7 +51,7 @@ jQuery(document).ready(function() {
                     </tr>
 
                     <tr valign=top align=left>
-                        <td colspan="2"><?= _("Passwortbest&auml;tigung:") ?></td>
+                        <td colspan="2"><?= _("Passwortbestätigung:") ?></td>
                         <td><input type="password" name="password2" onchange="STUDIP.register.checkpassword2()" size=32 maxlength=31></td>
                     </tr>
 

@@ -58,7 +58,7 @@ class ExternElementSelectSubjectAreas extends ExternElement {
 
         $this->name = "SelectSubjectAreas";
         $this->real_name = _("Auswahl der anzuzeigenden Studienbereiche");
-        $this->description = _("Sie k&ouml;nnen hier die Studienbereiche ausw&auml;hlen, die auf der externen Seite ausgegeben werden sollen.");
+        $this->description = _("Sie können hier die Studienbereiche auswählen, die auf der externen Seite ausgegeben werden sollen.");
         $this->attributes = array('subjectareasselected', 'selectallsubjectareas', 'reverseselection');
 
     }

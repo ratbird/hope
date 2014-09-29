@@ -77,7 +77,7 @@ class StudipSemTreeViewSimple {
         echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
             echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
-            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</a>";
+            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zurück'))). "</a>";
         } else {
             echo "&nbsp;";
         }
@@ -180,7 +180,7 @@ class StudipSemTreeViewSimple {
                     echo "</a>";
                 }
             } else {
-                    echo _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!");
+                    echo _("Keine Einträge auf dieser Ebene vorhanden!");
             }
         }
         echo "\n</div>";

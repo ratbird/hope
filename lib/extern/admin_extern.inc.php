@@ -103,7 +103,7 @@ if (Request::option('com') == "do_upload_config") {
     } else if (!store_config($range_id, $config_id, $jsonconfig)) {
         $msg ="error§". _("Die Konfigurationsdatei konnte nicht hochgeladen werden!"). "§";
     } else {
-        $msg = "info§". _("Die Datei wurde erfolgreich &uuml;bertragen!"). "§";
+        $msg = "info§". _("Die Datei wurde erfolgreich übertragen!"). "§";
     }
 }
 
@@ -113,7 +113,7 @@ include 'lib/include/admin_search_form.inc.php';
 
 ob_start();
 
-require_once('lib/msg.inc.php'); //Funktionen f&uuml;r Nachrichtenmeldungen
+require_once('lib/msg.inc.php'); //Funktionen für Nachrichtenmeldungen
 require_once('lib/classes/cssClassSwitcher.inc.php');
 require_once('lib/language.inc.php');
 
@@ -151,7 +151,7 @@ echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
 if (Request::option('com') == 'delete_sec') {
     $config = ExternConfig::GetConfigurationMetaData($range_id, $config_id);
 
-    $message = sprintf(_("Wollen Sie die Konfiguration <b>&quot;%s&quot;</b> des Moduls <b>%s</b> wirklich l&ouml;schen?"), $config["name"], $GLOBALS["EXTERN_MODULE_TYPES"][$config["type"]]["name"]);
+    $message = sprintf(_("Wollen Sie die Konfiguration <b>&quot;%s&quot;</b> des Moduls <b>%s</b> wirklich löschen?"), $config["name"], $GLOBALS["EXTERN_MODULE_TYPES"][$config["type"]]["name"]);
     $message .= '<br><br>';
     $message .= LinkButton::createAccept("JA", URLHelper::getURL('?com=delete&config_id='.$config_id));
     $message .= LinkButton::createCancel("NEIN", URLHelper::getURL('?list=TRUE&view=extern_inst'));
@@ -270,7 +270,7 @@ if ($choose_module_form != '') {
         echo CSRFProtection::tokenTag();
         echo "<blockquote><font size=\"2\">";
         $choose_module_form = "<select name=\"mod\">\n$choose_module_form</select>\n";
-        printf(_("Neue Konfiguration f&uuml;r Modul %s anlegen.") . " ", $choose_module_form);
+        printf(_("Neue Konfiguration für Modul %s anlegen.") . " ", $choose_module_form);
         echo Button::create(_("Neu anlegen"));
         echo "</font></blockquote>\n";
         echo "</form>\n";
@@ -323,7 +323,7 @@ if ($choose_module_form != '') {
 }
 else {
     echo "<blockquote><font size=\"2\">";
-    echo _("Sie haben bereits für alle Module die maximale Anzahl von Konfigurationen angelegt. Um eine neue Konfiguration anzulegen, m&uuml;ssen Sie erst eine bestehende im gew&uuml;nschten Modul l&ouml;schen.");
+    echo _("Sie haben bereits für alle Module die maximale Anzahl von Konfigurationen angelegt. Um eine neue Konfiguration anzulegen, müssen Sie erst eine bestehende im gewünschten Modul löschen.");
     echo "</font></blockquote>\n";
 }
 
@@ -444,7 +444,7 @@ $info_max_configs = sprintf(_("Sie können pro Modul maximal %s Konfigurationen a
 
 if (sizeof($configurations)) {
     $info_set_default = _("Klicken Sie auf diesen Button, um eine Konfiguration zur Standard-Konfiguration zu erklären.");
-    $info_no_default = _("Wenn Sie keine Konfiguration als Standard ausgew&auml;hlt haben, wird die Stud.IP-Konfiguration verwendet.");
+    $info_no_default = _("Wenn Sie keine Konfiguration als Standard ausgewählt haben, wird die Stud.IP-Konfiguration verwendet.");
     $info_is_default = _("Dieses Symbol kennzeichnet die Standard-Konfiguration, die zur Formatierung herangezogen wird, wenn Sie beim Aufruf dieses Moduls keine Konfiguration angeben.");
     $info_further_info = _("Klicken Sie auf diesen Button um weitere Informationen über diese Konfiguration zu erhalten. Hier finden Sie auch die Links, über die Sie die Module in Ihrer Website einbinden können.");
     $info_content = array(

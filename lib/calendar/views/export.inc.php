@@ -149,7 +149,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         }
 
         if ($_SESSION['calendar_sess_export']['count_export']) {
-            $info['export'] = sprintf(_("Die zum Download zur Verf&uuml;gung stehende Datei enthält %s Termine."), $_SESSION['calendar_sess_export']['count_export']);
+            $info['export'] = sprintf(_("Die zum Download zur Verfügung stehende Datei enthält %s Termine."), $_SESSION['calendar_sess_export']['count_export']);
         } else {
             $info['export'] = _("Ihr Stud.IP-Kalender enthält keine neueren Termine als die hochgeladene iCalendar-Datei. Es wurde keine Ausgabedatei erzeugt.");
         }
@@ -199,10 +199,10 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         $params['content'] = '';
         if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             $tooltip = _("Es werden nur Termine von Veranstaltungen exportiert, die zuvor im Menüpunkt \"Veranstaltungstermine\" ausgewählt wurden.");
-            $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
+            $params['content'] = _("Bitte wählen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
                     . "<br>&nbsp; &nbsp; <select name=\"extype\" size=\"1\">\n"
                     . "<option value=\"PERS\"" . ($extype == 'PERS' ? 'selected="selected"' : '')
-                    . ">" . _("Nur pers&ouml;nliche Termine") . "</option>\n"
+                    . ">" . _("Nur persönliche Termine") . "</option>\n"
                     . "<option value=\"SEM\"" . ($extype == 'SEM' ? 'selected="selected"' : '')
                     . ">" . _("Nur Veranstaltungstermine") . "</option>\n"
                     . "<option value=\"ALL\"" . ($extype == 'ALL' ? 'selected="selected"' : '')
@@ -213,10 +213,10 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
                 $params['content'] = '<input type="hidden" name="extype" value="ALL">';
             } else {
-                $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
+                $params['content'] = _("Bitte wählen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
                         . "<br>&nbsp; &nbsp; <select name=\"extype\" size=\"1\">\n"
                         . "<option value=\"PERS\"" . ($extype == 'PERS' ? 'selected="selected"' : '')
-                        . ">" . _("Nur pers&ouml;nliche Termine") . "</option>\n"
+                        . ">" . _("Nur persönliche Termine") . "</option>\n"
                         . "<option value=\"SEM\"" . ($extype == 'SEM' ? 'selected="selected"' : '')
                         . ">" . _("Nur Veranstaltungstermine") . "</option>\n"
                         . "<option value=\"ALL\"" . ($extype == 'ALL' ? 'selected="selected"' : '')
@@ -302,9 +302,9 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $params['form'] = '<form action="' . URLHelper::getLink('', array('cmd' => 'export', 'atime' => $atime)) . "\" method=\"post\" "
                     . "enctype=\"multipart/form-data\" name=\"import_form\" id=\"calendar_import\">\n";
             $params['form'] .= CSRFProtection::tokenTag();
-            $params['content'] = _("Sie k&ouml;nnen Termine importieren, die sich in einer iCalendar-Datei befinden.")
+            $params['content'] = _("Sie können Termine importieren, die sich in einer iCalendar-Datei befinden.")
                     . "<br><br>&nbsp; &nbsp; <input type=\"checkbox\" name=\"import_as_private_imp\" value=\"1\" checked=\"checked\">\n&nbsp;"
-                    . _("Alle &ouml;ffentlichen Termine als \"privat\" importieren.")
+                    . _("Alle öffentlichen Termine als \"privat\" importieren.")
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip1, true, true))
                     . "<br>&nbsp; &nbsp; <input type=\"checkbox\" name=\"import_sem_imp\" value=\"1\">\n&nbsp;"
                     . _("Termine aus abonnierten Veranstaltungen importieren.")
@@ -324,9 +324,9 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $params['form'] = '<form action="' . URLHelper::getLink('', array('cmd' => 'export', 'atime' => $atime)) . "\" method=\"post\" "
                     . "enctype=\"multipart/form-data\" name=\"sync_form\" id=\"calendar_sync\">\n";
             $params['form'] .= CSRFProtection::tokenTag();
-            $params['content'] = _("Sie k&ouml;nnen Termine synchronisieren, die sich in einer iCalendar-Datei befinden.")
+            $params['content'] = _("Sie können Termine synchronisieren, die sich in einer iCalendar-Datei befinden.")
                     . "<br><br>&nbsp; &nbsp; <input type=\"checkbox\" name=\"import_as_private_sync\" value=\"1\" checked=\"checked\">\n&nbsp;"
-                    . _("Alle &ouml;ffentlichen Termine als \"privat\" importieren.")
+                    . _("Alle öffentlichen Termine als \"privat\" importieren.")
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip, true, true))
                     . "<br>&nbsp; &nbsp; <input type=\"checkbox\" name=\"import_sem_sync\" value=\"1\">\n&nbsp;"
                     . _("Termine aus abonnierten Veranstaltungen importieren.")
@@ -386,7 +386,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         } else {
             $info['all'][0]['kategorie'] = _("Information:");
             $info['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
-                'text' => _("Sie k&ouml;nnen Termindaten importieren, exportieren und synchronisieren."));
+                'text' => _("Sie können Termindaten importieren, exportieren und synchronisieren."));
         }
         echo "</table>\n";
     }
@@ -419,7 +419,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     }
 
     if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
-        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Export konnte nicht durchgef&uuml;hrt werden!");
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Export konnte nicht durchgeführt werden!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL)) {
             $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
         }
@@ -454,14 +454,14 @@ auf diese Nachricht nicht antworten.") . "\n\n";
 
         if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
             $_SESSION['calendar_sess_export']['count_import'] = 0;
-            $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
+            $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgeführt werden!");
             while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
                 $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
             while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
                 $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
         } else {
             $_SESSION['calendar_sess_export']['count_import'] = $import->getCount();
-            $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Der Import wurde erfolgreich durchgef&uuml;hrt!");
+            $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Der Import wurde erfolgreich durchgeführt!");
             if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_WARNING)) {
                 $warnings = array();
                 $_SESSION['calendar_sess_export']['msg'] .= '§info§';
@@ -472,8 +472,8 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             }
         }
     } else {
-        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
-        $_SESSION['calendar_sess_export']['msg'] .= '<br>' . _("Die zu importierende Datei enth&auml;lt zuviele Termine.");
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgeführt werden!");
+        $_SESSION['calendar_sess_export']['msg'] .= '<br>' . _("Die zu importierende Datei enthält zuviele Termine.");
     }
 
     page_close();
@@ -502,7 +502,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         unset($_SESSION['calendar_sess_export']['count_import']);
         unset($_SESSION['calendar_sess_export']['count_export']);
         unset($_SESSION['calendar_sess_export']['count_synchronized']);
-        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Die Synchronisation konnte nicht durchgef&uuml;hrt werden!");
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Die Synchronisation konnte nicht durchgeführt werden!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
             $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
@@ -512,7 +512,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         $_SESSION['calendar_sess_export']['count_import'] = $import->getCount();
         $_SESSION['calendar_sess_export']['count_export'] = $export->getCount();
         $_SESSION['calendar_sess_export']['count_synchronized'] = $synchronizer->getCount();
-        $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Die Synchronisation wurde erfolgreich durchgef&uuml;hrt!");
+        $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Die Synchronisation wurde erfolgreich durchgeführt!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_MESSAGE))
             $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         $warnings = array();

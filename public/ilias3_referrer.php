@@ -53,10 +53,10 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             include ('lib/include/deprecated_tabs_layout.php');
             parse_window('error§'
                     . sprintf(_("Automatischer Login für das System <b>%s</b> (Nutzername:%s) fehlgeschlagen."), htmlReady($connected_cms[$cms_select]->getName()), $connected_cms[$cms_select]->user->getUsername()),'§'
-                    , _("Login nicht m&ouml;glich")
+                    , _("Login nicht möglich")
                     , '<div style="margin:10px">'
                     ._("Dieser Fehler kann dadurch hervorgerufen werden, dass Sie Ihr Passwort geändert haben. In diesem Fall versuchen Sie bitte Ihren Account erneut zu verknüpfen.")
-                    .  '<br>' . sprintf(_("%sZur&uuml;ck%s zu Meine Lernmodule"), '<a href="'.URLHelper::getLink("dispatch.php/elearning/my_accounts").'"><b>', '</b></a>') . '</div>');
+                    .  '<br>' . sprintf(_("%sZurück%s zu Meine Lernmodule"), '<a href="'.URLHelper::getLink("dispatch.php/elearning/my_accounts").'"><b>', '</b></a>') . '</div>');
             include ('lib/include/html_end.inc.php');
             page_close();
             die;

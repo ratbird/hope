@@ -160,7 +160,7 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
         unset($choose);
     $export_pagename .= _("Auswahl des Ausgabemoduls");
 
-    $export_info = _("W&auml;hlen Sie bitte eine der folgenden XSLT-Dateien und klicken Sie auf 'weiter'");
+    $export_info = _("Wählen Sie bitte eine der folgenden XSLT-Dateien und klicken Sie auf 'weiter'");
 
     $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
     $export_pagecontent .= CSRFProtection::tokenTag();
@@ -216,7 +216,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
 {
     $export_pagename .= _("Download der Dateien");
 
-    $export_info = _("Die ben&ouml;tigten Dateien liegen nun zum Download bereit.");
+    $export_info = _("Die benötigten Dateien liegen nun zum Download bereit.");
     $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
     $export_pagecontent .= CSRFProtection::tokenTag();
 
@@ -232,7 +232,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $xslt_printimage.= '</a>';
     $xslt_printlink = '<a href="'.GetDownloadLink( $xslt_files[$choose]['file'], $xslt_files[$choose]['name'] . '.xsl', 3).'">' . $xslt_files[$choose]['name'] . '.xsl</a>';
     $xslt_printdesc = _("XSLT-Datei");
-    $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu &ouml;ffnen.") . "<br>";
+    $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu öffnen.") . "<br>";
 
     $export_pagecontent .= "";
     $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"3\">";
@@ -251,7 +251,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $export_weiter_button = "<center>" . Button::create('<< ' . _('Zurück'), 'back') . "&nbsp;";
     if ($XSLT_ENABLE)
     {
-        $export_pagecontent .= _("Um die Daten mit dem installierten XSLT-Prozessor in das gew&uuml;nschte Format zu bringen, klicken Sie bitte auf 'weiter'") . "<br><br>";
+        $export_pagecontent .= _("Um die Daten mit dem installierten XSLT-Prozessor in das gewünschte Format zu bringen, klicken Sie bitte auf 'weiter'") . "<br><br>";
         $export_weiter_button .= LinkButton::create(_('Weiter') . ' >>', '#', array('name' => 'next'));
     } else {
         $export_pagecontent .= "<br><br><br>";

@@ -1,7 +1,7 @@
 <? SkipLinks::addIndex(_("Wartelisten"), 'my_waitlists') ?>
 <table class="default collapsable" id="my_waitlists">
     <caption>
-        <?= _("Anmelde- und Wartelisteneintr&auml;ge") ?>
+        <?= _("Anmelde- und Wartelisteneinträge") ?>
     </caption>
     <colgroup>
         <col width="1px">

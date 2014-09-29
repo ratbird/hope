@@ -150,7 +150,7 @@ else
 {
     //TODO: Globales Fehlertemplate erzeugen und nur die Fehlermeldung übergeben
     // Start of Output
-    parse_window ("error§" . _("Das Exportmodul ist nicht eingebunden. Damit Daten im XML-Format exportiert werden k&ouml;nnen, muss das Exportmodul in den Systemeinstellungen freigeschaltet werden. Wenden Sie sich bitte an die Administratoren."), "§",
+    parse_window ("error§" . _("Das Exportmodul ist nicht eingebunden. Damit Daten im XML-Format exportiert werden können, muss das Exportmodul in den Systemeinstellungen freigeschaltet werden. Wenden Sie sich bitte an die Administratoren."), "§",
                 _("Exportmodul nicht eingebunden"));
 }
 $template = $GLOBALS['template_factory']->open('layouts/base.php');

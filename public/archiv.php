@@ -349,7 +349,7 @@ PageLayout::setHelpKeyword("Basis.SuchenArchiv");
                             </td>
                         </tr>
                         <tr>
-                            <td><?= _('Suche &uuml;ber <b>alle</b> Felder:') ?></td>
+                            <td><?= _('Suche über <b>alle</b> Felder:') ?></td>
                             <td>
                                 <input type="text" size=30 maxlength=255 name="all" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["all"])) ?>">
                             </td>
@@ -546,9 +546,9 @@ if ($_SESSION['archiv_data']["perform_search"]) {
             // doppelt haelt besser: noch mal die Extras
 
                 if ($view == 1) {
-                    echo "<br><br><li><a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank><font size=\"-1\">" . _("&Uuml;bersicht der Veranstaltungsinhalte") . "</font></a></li>";
+                    echo "<br><br><li><a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank><font size=\"-1\">" . _("Übersicht der Veranstaltungsinhalte") . "</font></a></li>";
                     if (!$result['forumdump']=='')
-                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?forum_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Beitr&auml;ge des Forums") . "</a></font></li>";
+                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?forum_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Beiträge des Forums") . "</a></font></li>";
                     if (!$result['wikidump']=='')
                         echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?wiki_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Wikiseiten") . "</a></font></li>";
                     if (!$result['archiv_file_id']=='') {
@@ -566,10 +566,10 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                             echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?hide_grants=yes") ."#anker\">" . _("Zugriffsberechtigungen ausblenden") . "</a></font></li>";
                     }
                 } else
-                    echo "<br><br><li><font size=\"-1\">" . _("Die Veranstaltungsinhalte, Beitr&auml;ge im Forum und das Dateiarchiv sind nicht zug&auml;ngig, da Sie an dieser Veranstaltung nicht teilgenommen haben.") . "</font></li>";
+                    echo "<br><br><li><font size=\"-1\">" . _("Die Veranstaltungsinhalte, Beiträge im Forum und das Dateiarchiv sind nicht zugängig, da Sie an dieser Veranstaltung nicht teilgenommen haben.") . "</font></li>";
 
                 if ($_SESSION['archiv_data']["edit_grants"]) {
-                    echo "<br><br><hr><b><font size=\"-1\">" . _("Folgende Personen haben Zugriff auf die Daten der Veranstaltung (&Uuml;bersicht, Beitr&auml;ge und Dateiarchiv):") . "</font></b><br><br>";
+                    echo "<br><br><hr><b><font size=\"-1\">" . _("Folgende Personen haben Zugriff auf die Daten der Veranstaltung (Übersicht, Beiträge und Dateiarchiv):") . "</font></b><br><br>";
                     $query = "SELECT {$_fullname_sql['full']} AS fullname, archiv_user.status, username, user_id
                               FROM archiv_user
                               LEFT JOIN auth_user_md5 USING (user_id)
@@ -605,7 +605,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                             echo "<form action=\"". URLHelper::getLink() ."#anker\">";
                             echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br><br>";
                             echo "<b><font size=\"-1\">" . sprintf(_("Es wurden %s Personen gefunden"), count($temp)) . " </font></b><br>";
-                            echo "<font size=\"-1\">" . _("Bitte w&auml;hlen Sie die Person aus der Liste aus:") . "</font>&nbsp;<br><font size=\"-1\"><select name=\"add_user\">";
+                            echo "<font size=\"-1\">" . _("Bitte wählen Sie die Person aus der Liste aus:") . "</font>&nbsp;<br><font size=\"-1\"><select name=\"add_user\">";
                             foreach ($temp as $row) {
                                 echo "<option value=\"".$row['user_id']."\">".htmlReady($row['fullname']). " (".$row['username'].") </option>";
                             }

@@ -39,19 +39,19 @@ class StudipLitSearchPluginHSfMFL_Weimar extends StudipLitSearchPluginGvk{
 
     function StudipLitSearchPluginHSfMFL_Weimar(){
         parent::StudipLitSearchPluginGvk();
-        $this->description = 'Bibliothek der Hochschule f&uuml;r Musik Franz Liszt Weimar';
+        $this->description = 'Bibliothek der Hochschule für Musik Franz Liszt Weimar';
         $this->z_host = "z3950.gbv.de:20010/hfmfl_opc";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
-                    '4' => _("Titelstichw&ouml;rter [TIT]"),
-                    '5' => _("Serienstichw&ouml;rter [SER]"),
+                    '4' => _("Titelstichwörter [TIT]"),
+                    '5' => _("Serienstichwörter [SER]"),
                     '21' => _("alle Klassifikationen [SYS]"),
                     '54' => _("Signatur [SGN]"),
                     '1004' => _("Person, Author [PER]"),
-                    '1005' => _("K&ouml;rperschaften [KOR]"),
+                    '1005' => _("Körperschaften [KOR]"),
                     '1006' => _("Kongresse [KON]"),
                     '1007' => _("alle Nummern [NUM]"),
-                    '5040' => _("Schlagw&ouml;rter [SLW]"),
-                    '8062' => _("alle Titelanf&auml;nge [TAF]"),
+                    '5040' => _("Schlagwörter [SLW]"),
+                    '8062' => _("alle Titelanfänge [TAF]"),
                     '8580' => _("Verlagsort, Verlag [PUB]")
                     );
     }

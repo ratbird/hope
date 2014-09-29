@@ -174,7 +174,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                 <tr>
                     <td class="table_row_even">
-                        <font size=-1><br><b><?=_("Bitte w&auml;hlen Sie die Einrichtung und das Semester aus, f&uuml;r die Sie die Literaturliste anschauen wollen:")?></b><br>&nbsp; </font>
+                        <font size=-1><br><b><?=_("Bitte wählen Sie die Einrichtung und das Semester aus, für die Sie die Literaturliste anschauen wollen:")?></b><br>&nbsp; </font>
                     </td>
                 </tr>
                 <tr>
@@ -236,7 +236,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $statement->execute($parameters);
                     $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                    printf ("<option value=\"-1\">%s</option>\n", _("-- bitte Einrichtung ausw&auml;hlen --"));
+                    printf ("<option value=\"-1\">%s</option>\n", _("-- bitte Einrichtung auswählen --"));
                     foreach ($institutes as $institute) {
                         printf("<option value=\"%s\" style=\"%s\" %s>%s </option>\n",
                                $institute['Institut_id'],
@@ -478,7 +478,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         $_SESSION['_lit_data'][$cid]['check_accession'] = StudipLitSearch::CheckZ3950($element->getValue('accession_number'));
                     }
                     if (is_array($_SESSION['_lit_data'][$cid]['check_accession'])){
-                        $content .= "<div style=\"margin-top: 10px;border: 1px solid black;padding: 5px; width:96%;\"<b>" ._("Verf&uuml;gbarkeit in externen Katalogen:") . "</b><br>";
+                        $content .= "<div style=\"margin-top: 10px;border: 1px solid black;padding: 5px; width:96%;\"<b>" ._("Verfügbarkeit in externen Katalogen:") . "</b><br>";
                         foreach ( $_SESSION['_lit_data'][$cid]['check_accession'] as $plugin_name => $ret){
                             $content .= "<b>&nbsp;{$plugin_name}&nbsp;</b>";
                             if ($ret['found']){

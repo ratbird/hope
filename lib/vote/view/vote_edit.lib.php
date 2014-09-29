@@ -263,7 +263,7 @@ function printAnswerFields ( $answers ) {
 
     $html = "<table cellspacing=0 cellpadding=0 border=0 width=\"100%\"><tr>\n"
     . "<td align=left><b>"
-    . "<font size=-1>" . _("Antwortm&ouml;glichkeiten:") . "</font>"
+    . "<font size=-1>" . _("Antwortmöglichkeiten:") . "</font>"
     . "</b></td>"
     . "</tr></table>\n";
 
@@ -279,7 +279,7 @@ function printAnswerFields ( $answers ) {
     if( $pageMode != MODE_RESTRICTED ) {
     if( count($answers) > 1 )
         $html .= "<th>" . _("Position") . "</th>";
-    $html .= "<th>" . _("L&ouml;schen") . "</th>";
+    $html .= "<th>" . _("Löschen") . "</th>";
     }
     $html .= "</tr>";
 
@@ -373,7 +373,7 @@ function printAnswerFields ( $answers ) {
    
     if( count($answers) >= 10 && $auth->auth["jscript"])
         $html .= "(<a href=\"#markAll\" onClick=\"markAllAnswers(document.voteform.deleteCheckboxes);\" title=\""
-        . _("Alle Antworten zum L&ouml;schen (de)markieren")."\">". _("Alle markieren") . "</a>)&nbsp;";
+        . _("Alle Antworten zum Löschen (de)markieren")."\">". _("Alle markieren") . "</a>)&nbsp;";
 
     $html .= Button::create(_('Löschen'), 'deleteAnswersButton', array('title' => _('Markierte Antworten löschen')))
         ."\n";
@@ -411,37 +411,37 @@ function printRightRegion ( ) {
         : _("Es hat bereits jemand an dieser Umfrage teilgenommen!");
 
     $action_text1 = ($vote->isAnonymous())
-        ? _("Sie k&ouml;nnen daher nur noch den Titel, den Endzeitpunkt und die Ergebnissichtbarkeit ver&auml;ndern.")
-        : _("Sie k&ouml;nnen daher nur noch den Titel, den Endzeitpunkt, die Ergebnissichtbarkeit und die Revidierbarkeit ver&auml;ndern.");
+        ? _("Sie können daher nur noch den Titel, den Endzeitpunkt und die Ergebnissichtbarkeit verändern.")
+        : _("Sie können daher nur noch den Titel, den Endzeitpunkt, die Ergebnissichtbarkeit und die Revidierbarkeit verändern.");
 
     break;
 
     case MODE_MODIFY:
     /* -------------------------------------------------------- */
     $info_text = ( $type == "test" )
-        ? _("Sie k&ouml;nnen diesen Test noch ver&auml;ndern, solange niemand abstimmt.")
-        : _("Sie k&ouml;nnen diese Umfrage noch ver&auml;ndern, solange niemand abstimmt.");
+        ? _("Sie können diesen Test noch verändern, solange niemand abstimmt.")
+        : _("Sie können diese Umfrage noch verändern, solange niemand abstimmt.");
 
     $action_text1 = ( $type == "test" )
-        ? _("Ver&auml;ndern Sie links die Frage und die Antworten Ihres Tests. ")
-        : _("Ver&auml;ndern Sie links die Frage und die Antworten Ihrer Umfrage. ");
+        ? _("Verändern Sie links die Frage und die Antworten Ihres Tests. ")
+        : _("Verändern Sie links die Frage und die Antworten Ihrer Umfrage. ");
 
     break;
 
     case MODE_CREATE:
     /* -------------------------------------------------------- */
     $info_text = ( $type == "test" )
-        ? _("Auf dieser Seite k&ouml;nnen Sie einen neuen Test anlegen.")
-        : _("Auf dieser Seite k&ouml;nnen Sie eine neue Umfrage anlegen.");
+        ? _("Auf dieser Seite können Sie einen neuen Test anlegen.")
+        : _("Auf dieser Seite können Sie eine neue Umfrage anlegen.");
 
     $action_text1 = ( $type == "test" )
-        ? _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihres Tests ein. ")
-        : _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihrer Umfrage ein. ");
+        ? _("Geben Sie links die Frage und die möglichen Antworten Ihres Tests ein. ")
+        : _("Geben Sie links die Frage und die möglichen Antworten Ihrer Umfrage ein. ");
 
     break;
     }
 
-    $action_text2 = _("Im unteren Bereich k&ouml;nnen Sie weitere spezielle Einstellungen vornehmen.");
+    $action_text2 = _("Im unteren Bereich können Sie weitere spezielle Einstellungen vornehmen.");
     $action_text3 = _("Wenn Sie zufrieden sind, klicken Sie auf 'speichern'.");
 
     /* -------------------------------------------------------- */
@@ -564,7 +564,7 @@ function printRuntimeSettings ( $startMode = "manual",
 
     if( $pageMode != MODE_RESTRICTED ) {
     $html .= "<tr><td><input type=radio name=startMode value=manual".$checkManualStart.">&nbsp;";
-    $html .= "<font size=-1>" . _("sp&auml;ter manuell starten") . "</font>";
+    $html .= "<font size=-1>" . _("später manuell starten") . "</font>";
     $html .= "</td></tr>";
 
     $html .=  "<tr><td class=table_row_odd>";
@@ -784,8 +784,8 @@ function printProperties ( $multipleChoice,
 
     $html .= "<font size=-1>";
     $html .= ($type=="test")
-    ? _("Die Auswertung des Tests l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_odd>"
-    : _("Die Auswertung der Umfrage l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_even>";
+    ? _("Die Auswertung des Tests läuft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_odd>"
+    : _("Die Auswertung der Umfrage läuft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_even>";
     $html .= "<font size=-1>";
 
     if( $pageMode != MODE_RESTRICTED ) {
@@ -810,7 +810,7 @@ function printProperties ( $multipleChoice,
                           ."wenn die Ergebnissichtbarkeit nicht auf 'nie' steht."));
 
     $html .= "<font size=-1>";
-    $html .= _("Die Namen der Teilnehmer werden &ouml;ffentlich sichtbar gemacht:") . "</font>&nbsp;&nbsp;";
+    $html .= _("Die Namen der Teilnehmer werden öffentlich sichtbar gemacht:") . "</font>&nbsp;&nbsp;";
     $html .= ($type == "test")
     ? "</td><td align=left class=table_row_even>"
     : "</td><td align=left class=table_row_odd>";

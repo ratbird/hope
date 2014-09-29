@@ -1491,7 +1491,7 @@ class Seminar
         } else {
             $this->metadate->cycles[$cycle_id]->removeRequest($singledate_id, $this->filterStart, $this->filterEnd);
         }
-        $this->createMessage(_("Die Raumanfrage wurde zur&uuml;ckgezogen!"));
+        $this->createMessage(_("Die Raumanfrage wurde zurückgezogen!"));
         return TRUE;
     }
 
@@ -1920,7 +1920,7 @@ class Seminar
         // user aus den Statusgruppen rauswerfen
         $count = DeleteAllStatusgruppen($s_id);
         if ($count > 0) {
-            $this->createMessage(_("Eintr&auml;ge aus Funktionen / Gruppen gel&ouml;scht."));
+            $this->createMessage(_("Einträge aus Funktionen / Gruppen gelöscht."));
         }
 
         // Alle Eintraege aus dem Vorlesungsverzeichnis rauswerfen
@@ -1971,7 +1971,7 @@ class Seminar
 
         // Alle News-Verweise auf dieses Seminar löschen
         if ( ($db_ar = StudipNews::DeleteNewsRanges($s_id)) ) {
-            $this->createMessage(sprintf(_("%s Ankündigungen gel&ouml;scht."), $db_ar));
+            $this->createMessage(sprintf(_("%s Ankündigungen gelöscht."), $db_ar));
         }
         //delete entry in news_rss_range
         StudipNews::UnsetRssId($s_id);
@@ -2017,7 +2017,7 @@ class Seminar
                     ELearningUtils::loadClass($system);
                     $del_cms += $connected_cms[$system]->deleteConnectedModules($s_id);
                 }
-                $this->createMessage(sprintf(_("%s Verknüpfungen zu externen Systemen gel&ouml;scht."), $del_cms ));
+                $this->createMessage(sprintf(_("%s Verknüpfungen zu externen Systemen gelöscht."), $del_cms ));
             }
         }
 

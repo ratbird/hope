@@ -65,7 +65,7 @@ class ExternElementStudipLink extends ExternElement {
     function getDefaultConfig () {
 
         $config = array(
-            "linktext" => _("Daten &auml;ndern"),
+            "linktext" => _("Daten ändern"),
             "imageurl" => "",
             "image" => "1",
             "align" => "left"

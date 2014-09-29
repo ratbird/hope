@@ -184,7 +184,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $this->open_ranges[$item_id] = true;
             $this->open_items[$new_item_id] = true;
             if ($this->mode != "NewItem")
-                $this->msg[$new_item_id] = "info§" . _("W&auml;hlen Sie einen Namen für dieses Element, oder verlinken Sie es mit einer Einrichtung in Stud.IP");
+                $this->msg[$new_item_id] = "info§" . _("Wählen Sie einen Namen für dieses Element, oder verlinken Sie es mit einer Einrichtung in Stud.IP");
             $this->mode = "NewItem";
         }
         return false;
@@ -231,7 +231,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $this->mode = "EditItem";
             $this->anchor = $item_id;
             $this->edit_item_id = $item_id;
-            $this->msg[$item_id] = "info§" . _("W&auml;hlen Sie einen Namen für dieses Element, oder verlinken Sie es mit einer Einrichtung in Stud.IP");
+            $this->msg[$item_id] = "info§" . _("Wählen Sie einen Namen für dieses Element, oder verlinken Sie es mit einer Einrichtung in Stud.IP");
         }
         return false;
     }
@@ -256,7 +256,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                     $this->mode = "";
                     $this->anchor = $item_id;
                     $this->open_items[$item_id] = true;
-                    $this->msg[$item_id] = "msg§" . _("Dieses Element wurde neu eingef&uuml;gt.");
+                    $this->msg[$item_id] = "msg§" . _("Dieses Element wurde neu eingefügt.");
                 }
             }
         }
@@ -264,9 +264,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
             if ($this->isParentAdmin($item_id)){
                 $affected_rows = $this->tree->UpdateItem($item_name,$studip_object,$studip_object_id,$item_id);
                 if ($affected_rows){
-                    $this->msg[$item_id] = "msg§" . _("Element wurde ge&auml;ndert.");
+                    $this->msg[$item_id] = "msg§" . _("Element wurde geändert.");
                 } else {
-                    $this->msg[$item_id] = "info§" . _("Keine Ver&auml;nderungen vorgenommen.");
+                    $this->msg[$item_id] = "info§" . _("Keine Veränderungen vorgenommen.");
                 }
                 $this->mode = "";
                 $this->anchor = $item_id;
@@ -304,9 +304,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $item_id = Request::option('item_id');
         if ($this->isParentAdmin($item_id)){
             $this->mode = "AssertDeleteItem";
-            $this->msg[$item_id] = "info§" ._("Sie beabsichtigen dieses Element, inklusive aller Unterelemente, zu l&ouml;schen. ")
-                        . sprintf(_("Es werden insgesamt %s Elemente gel&ouml;scht!"),count($this->tree->getKidsKids($item_id))+1)
-                        . "<br>" . _("Wollen Sie diese Elemente wirklich l&ouml;schen?") . "<br>"
+            $this->msg[$item_id] = "info§" ._("Sie beabsichtigen dieses Element, inklusive aller Unterelemente, zu löschen. ")
+                        . sprintf(_("Es werden insgesamt %s Elemente gelöscht!"),count($this->tree->getKidsKids($item_id))+1)
+                        . "<br>" . _("Wollen Sie diese Elemente wirklich löschen?") . "<br>"
                         . '<div class="button-group">'
                         . LinkButton::createAccept(_("JA"), URLHelper::getURL($this->getSelf("cmd=DeleteItem&item_id=$item_id")))
                         . LinkButton::createCancel(_("NEIN"), URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=$item_id")))
@@ -325,12 +325,12 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $items_to_delete[] = $item_id;
             $deleted = $this->tree->DeleteItems($items_to_delete);
             if ($deleted['items']){
-                $this->msg[$this->anchor] = "msg§" . sprintf(_("Das Element <b>%s</b> und alle Unterelemente (insgesamt %s) wurden gel&ouml;scht. "),htmlReady($item_name),$deleted['items']);
+                $this->msg[$this->anchor] = "msg§" . sprintf(_("Das Element <b>%s</b> und alle Unterelemente (insgesamt %s) wurden gelöscht. "),htmlReady($item_name),$deleted['items']);
             } else {
-                $this->msg[$this->anchor] = "error§" . _("Fehler, es konnten keine Elemente gel&ouml;scht werden!");
+                $this->msg[$this->anchor] = "error§" . _("Fehler, es konnten keine Elemente gelöscht werden!");
             }
             if ($deleted['categories']){
-                $this->msg[$this->anchor] .= sprintf(_("<br>Es wurden %s Datenfelder gel&ouml;scht. "),$deleted['categories']);
+                $this->msg[$this->anchor] .= sprintf(_("<br>Es wurden %s Datenfelder gelöscht. "),$deleted['categories']);
             }
             $this->mode = "";
             $this->open_items[$this->anchor] = true;
@@ -444,12 +444,12 @@ class StudipRangeTreeViewAdmin extends TreeView{
             if ($updated){
                 $this->msg[$item_id] = "msg§" . sprintf(_("Es wurden %s Datenfelder aktualisiert."),$updated);
                 if ($inserted) {
-                    $this->msg[$item_id] .= _(" Ein neues Datenfeld wurde eingef&uuml;gt.");
+                    $this->msg[$item_id] .= _(" Ein neues Datenfeld wurde eingefügt.");
                 }
             } elseif ($inserted){
-                $this->msg[$item_id] = "msg§" . _("Ein neues Datenfeld wurde eingef&uuml;gt.");
+                $this->msg[$item_id] = "msg§" . _("Ein neues Datenfeld wurde eingefügt.");
             } else {
-                $this->msg[$item_id] = "info§" . _("Keine Ver&auml;nderungen vorgenommen.");
+                $this->msg[$item_id] = "info§" . _("Keine Veründerungen vorgenommen.");
             }
         }
         $this->anchor = $item_id;
@@ -465,7 +465,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $view->params[0] = $cat_id;
             $rs = $view->get_query("view:CAT_DEL");
             if ($rs->affected_rows()){
-                $this->msg[$item_id] = "msg§" . _("Ein Datenfeld wurde gel&ouml;scht.");
+                $this->msg[$item_id] = "msg§" . _("Ein Datenfeld wurde gelöscht.");
             }
         }
         $this->mode = "";
@@ -506,7 +506,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($item_id == $this->edit_item_id )
             return $this->getEditItemContent();
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), Assets::img("icons/16/yellow/arr_2right.png", array('alt' => "Einfügesymbol", 'title' => "Einfügesymbol")));
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), Assets::img("icons/16/yellow/arr_2right.png", array('alt' => "Einfügesymbol", 'title' => "Einfügesymbol")));
             }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         $content .= $this->getItemMessage($item_id);
@@ -543,7 +543,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 $content .= "\n<tr><td align=\"center\">";
                 $content .= "\n<form action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertFak")) . "\" method=\"post\">"
                     .  CSRFProtection::tokenTag()
-                    . _("Stud.IP Fakult&auml;t einf&uuml;gen:")
+                    . _("Stud.IP Fakultät einfügen:")
                     . "&nbsp;\n<select style=\"width:300px;vertical-align:middle;\" name=\"insert_fak\">";
                 while($rs->next_record()){
                     $content .= "\n<option value=\"" . $rs->f("Institut_id") . "\">" . htmlReady(my_substr($rs->f("Name") . '('.$rs->f('num').')',0,60)) . "</option>";

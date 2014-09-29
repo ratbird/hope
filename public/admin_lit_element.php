@@ -117,9 +117,9 @@ if ($_the_form->IsClicked("reset") || Request::option('cmd') == "new_entry"){
 
 if ($_the_form->IsClicked("delete") && $_catalog_id != "new_entry" && $_the_element->isChangeable()){
     if ($_the_element->reference_count){
-        $_msg = "info§" . sprintf(_("Sie k&ouml;nnen diesen Eintrag nicht l&ouml;schen, da er noch in %s Literaturlisten referenziert wird."),$_the_element->reference_count) ."§";
+        $_msg = "info§" . sprintf(_("Sie können diesen Eintrag nicht löschen, da er noch in %s Literaturlisten referenziert wird."),$_the_element->reference_count) ."§";
     } else {
-        $_msg = "info§" . _("Wollen Sie diesen Eintrag wirklich l&ouml;schen?") . "<br>"
+        $_msg = "info§" . _("Wollen Sie diesen Eintrag wirklich löschen?") . "<br>"
                 .LinkButton::createAccept(_('Ja'), URLHelper::getURL('?cmd=delete_element&_catalog_id=' . $_catalog_id), array('title' =>  _('löschen')))
                 . "&nbsp;"
                 .LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('?_catalog_id=' . $_catalog_id), array('title' =>  _('abbrechen')))
@@ -137,7 +137,7 @@ if (Request::option('cmd') == "in_clipboard" && $_catalog_id != "new_entry"){
 
 if (Request::option('cmd') == "check_entry"){
     $lit_plugin_value = $_the_element->getValue('lit_plugin');
-    $content = "<div style=\"font-size:70%\"<b>" ._("Verf&uuml;gbarkeit in externen Katalogen:") . "</b><br>";
+    $content = "<div style=\"font-size:70%\"<b>" ._("Verfügbarkeit in externen Katalogen:") . "</b><br>";
     foreach (StudipLitSearch::CheckZ3950($_the_element->getValue('accession_number')) as $plugin_name => $ret){
         $content .= "<b>&nbsp;" . htmlReady(StudipLitSearch::GetPluginDisplayName($plugin_name))."&nbsp;</b>";
         if ($ret['found']){

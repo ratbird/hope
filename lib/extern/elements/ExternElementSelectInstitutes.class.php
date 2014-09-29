@@ -55,7 +55,7 @@ class ExternElementSelectInstitutes extends ExternElement {
         
         $this->name = "SelectInstitutes";
         $this->real_name = _("Auswahl der anzuzeigenden Institute/Einrichtungen");
-        $this->description = _("Sie k&ouml;nnen hier die Institute/Einrichtungen auswählen, die auf der externen Seite ausgegeben werden sollen.");
+        $this->description = _("Sie können hier die Institute/Einrichtungen auswählen, die auf der externen Seite ausgegeben werden sollen.");
         $this->attributes = array('institutesselected');
     }
     

@@ -7,7 +7,7 @@
 </table>
 
 <br><br>
-<?=_("Unsch&ouml;n dass wir uns hier sehen... diese Seite ist das geheime Easteregg von Stud.IP. Wenn es jemand hierher geschafft hat, der nicht zum Team geh&ouml;rt, dann k&uuml;ndige ich.")?>
+<?=_("Unschön dass wir uns hier sehen... diese Seite ist das geheime Easteregg von Stud.IP. Wenn es jemand hierher geschafft hat, der nicht zum Team gehört, dann kündige ich.")?>
 <br><br>
 <i>Cornelis</i><br><br>
 

@@ -56,7 +56,7 @@ $sem_browse_obj = new SemBrowse(array('group_by' => 0));
 $sem_browse_obj->sem_browse_data['default_sem'] = "all";
 $sem_browse_obj->sem_number = false;
 $sem_browse_obj->target_url = "dispatch.php/course/details/";  //teilt der nachfolgenden Include mit, wo sie die Leute hinschicken soll
-$sem_browse_obj->target_id = "sem_id";        //teilt der nachfolgenden Include mit, wie die id die &uuml;bergeben wird, bezeichnet werden soll
+$sem_browse_obj->target_id = "sem_id";        //teilt der nachfolgenden Include mit, wie die id die übergeben wird, bezeichnet werden soll
 $sem_browse_obj->sem_browse_data['level'] = $level;
 if ($show_semester) {
     $sem_number = SemesterData::GetSemesterIndexById($show_semester);

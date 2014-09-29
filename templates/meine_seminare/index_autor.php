@@ -57,7 +57,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                 <? SkipLinks::addIndex(_("Wartelisten"), 'my_waitlists') ?>
                 <table class="default" id="my_waitlists">
                     <caption>
-                        <?=_("Anmelde- und Wartelisteneintr&auml;ge") ?>
+                        <?=_("Anmelde- und Wartelisteneinträge") ?>
                     </caption>
                     <colgroup>
                         <col width="10px">
@@ -152,9 +152,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                 <table class="">
                     <?
                     if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm("dozent")) {
-                        $meldung = "infoï¿½" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "ï¿½";
+                        $meldung = "info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§";
                     } else {
-                        $meldung = "infoï¿½" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer pers&ouml;nlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>") . "ï¿½";
+                        $meldung = "info§" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer persönlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>") . "§";
                     }
                     parse_msg($meldung);
                     ?>

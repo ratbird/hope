@@ -29,7 +29,7 @@ if ($termin_item['ort']) {
 }
 if ($termin_item['pri']) {
     
-    $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>'
+    $content .= '<br><b>' . _("Priorität:") . ' </b>'
             . $termin_item['pri']. ' </b>';
     $content .= "&nbsp; &nbsp; ";
 }

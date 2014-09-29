@@ -55,7 +55,7 @@ class ExternElementMainGlobal extends ExternElementMain {
                 'defaultadr'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
     
@@ -113,7 +113,7 @@ class ExternElementMainGlobal extends ExternElementMain {
         $info = _("Geben Sie das erste anzuzeigende Semester an. Die Angaben \"vorheriges\", \"aktuelles\" und \"nächstes\" beziehen sich immer auf das laufende Semester und werden automatisch angepasst.");
         $current_sem = get_sem_num_sem_browse();
         if ($current_sem === FALSE) {
-            $names = array(_("keine Auswahl"), _("aktuelles"), _("n&auml;chstes"));
+            $names = array(_("keine Auswahl"), _("aktuelles"), _("nächstes"));
             $values = array("", "current", "next");
         }
         else if ($current_sem === TRUE) {
@@ -121,7 +121,7 @@ class ExternElementMainGlobal extends ExternElementMain {
             $values = array("", "previous", "current");
         }
         else {
-            $names = array(_("keine Auswahl"), _("vorheriges"), _("aktuelles"), "n&auml;chstes");
+            $names = array(_("keine Auswahl"), _("vorheriges"), _("aktuelles"), "nächstes");
             $values = array("", "previous", "current", "next");
         }
         foreach ($semester_data as $sem_num => $sem) {

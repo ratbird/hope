@@ -545,20 +545,20 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
      if ($vote->isMultipleChoice ()) {
         if ($nrCorrect == 0)
            $html .= createReportMessage
-          (sprintf(_("Leider haben Sie keine der %s richtigen Antwort(en) gew&auml;hlt."),
+          (sprintf(_("Leider haben Sie keine der %s richtigen Antwort(en) gewählt."),
                $vote->getNumberOfCorrectAnswers()),
            VOTE_ICON_ERROR, VOTE_COLOR_ERROR );
 
         else if ($nrFalse == 0 &&
              ($nrCorrect == $vote->getNumberOfCorrectAnswers ()))
            $html .= createReportMessage
-          (sprintf(_("Gl&uuml;ckwunsch! Sie haben alle der %s richtigen Antwort(en) gew&auml;hlt."),
+          (sprintf(_("Glückwunsch! Sie haben alle der %s richtigen Antwort(en) gewählt."),
                $vote->getNumberOfCorrectAnswers()),
            VOTE_ICON_SUCCESS, VOTE_COLOR_SUCCESS );
         else
            if ($nrFalse > 0)
           $html .= createReportMessage
-             (sprintf(_("Sie haben von %s richtigen Antwort(en) %s gefunden und dar&uuml;ber hinaus %s falsche Antwort(en) gegeben."),
+             (sprintf(_("Sie haben von %s richtigen Antwort(en) %s gefunden und darüber hinaus %s falsche Antwort(en) gegeben."),
                   $vote->getNumberOfCorrectAnswers(),
                   $nrCorrect,
                   $nrFalse),
@@ -574,7 +574,7 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
 
         if ( $nrCorrect > 0 )
            $html .=
-          createReportMessage (_("Gl&uuml;ckwunsch! Ihre Antwort war richtig."),
+          createReportMessage (_("Glückwunsch! Ihre Antwort war richtig."),
                        VOTE_ICON_SUCCESS, VOTE_COLOR_SUCCESS );
         else
            $html .=
@@ -589,7 +589,7 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
    }
    elseif ($firstTime OR $changed) {
       $html .=
-     createReportMessage (_("Ihre Stimme wurde gez&auml;hlt."),
+     createReportMessage (_("Ihre Stimme wurde gezählt."),
                   VOTE_ICON_SUCCESS, VOTE_COLOR_SUCCESS );
    }
 
@@ -768,8 +768,8 @@ function createVoteInfo (&$vote, $isAssociated = NO)
    /* multiple choice? ----------------------------------------------------- */
    if ($vote->isMultipleChoice()) {
        $html .= ($isAssociated || $vote->isStopped())
-       ? _("Sie konnten mehrere Antworten ausw&auml;hlen.")
-       : _("Sie k&ouml;nnen mehrere Antworten ausw&auml;hlen.");
+       ? _("Sie konnten mehrere Antworten auswählen.")
+       : _("Sie können mehrere Antworten auswählen.");
        $html .= _(" Die Summe kann daher über 100% liegen.");
        $html .= " \n";
    }
@@ -820,7 +820,7 @@ function createVoteInfo (&$vote, $isAssociated = NO)
        else {
        if ($isAssociated) {
            if ($vote->isChangeable()) {
-           $html .= sprintf (_("Sie k&ouml;nnen Ihre Antwort &auml;ndern bis zum <b>%s</b> um <b>%s</b> Uhr."),
+           $html .= sprintf (_("Sie können Ihre Antwort ändern bis zum <b>%s</b> um <b>%s</b> Uhr."),
                      date ("d.m.Y", $stopdate),
                      date ("H:i", $stopdate));
            }
@@ -835,7 +835,7 @@ function createVoteInfo (&$vote, $isAssociated = NO)
            }
        }
        else {
-           $html .= sprintf (_("Sie k&ouml;nnen abstimmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
+           $html .= sprintf (_("Sie können abstimmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
                  date ("d.m.Y", $stopdate),
                  date ("H:i", $stopdate));
        }

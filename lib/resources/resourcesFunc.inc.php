@@ -271,7 +271,7 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
     //create bad message
     if ((is_array($overlaps)) && (($mode == "bad") || ($mode == "booth"))) {
         $i=0;
-        $bad_message = "error§"._("Folgende gew&uuml;nschte Raumbelegungen &uuml;berschneiden sich mit bereits vorhandenen Belegungen. Bitte &auml;ndern Sie die R&auml;ume oder Zeiten!");
+        $bad_message = "error§"._("Folgende gewünschte Raumbelegungen überschneiden sich mit bereits vorhandenen Belegungen. Bitte ändern Sie die Räume oder Zeiten!");
         //the overlaps (show only the earliest here, plus a message when more)
         foreach ($overlaps as $val) {
             $resObj = ResourceObject::Factory($val["resource_id"]);
@@ -280,13 +280,13 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
             list(, $val2) = each($val["overlap_assigns"]);
             $bad_message.=date("d.m, H:i",$val2["begin"])." - ".date("H:i",$val2["end"]);
             if (sizeof($val["overlap_assigns"]) >1)
-                $bad_message.=", ... (".sprintf (_("und %s weitere &Uuml;berschneidungen"), (sizeof($val["overlap_assigns"])-1)).")";
+                $bad_message.=", ... (".sprintf (_("und %s weitere Überschneidungen"), (sizeof($val["overlap_assigns"])-1)).")";
             $bad_message.= ", ".$resObj->getFormattedLink($val2["begin"], _("Raumplan anzeigen"));
             $i++;
         }
         $bad_message.="</font>";
         if ($locks) {
-            $bad_message.="<br><font size=\"+0\" color=\"red\">"._("Die gew&uuml;nschten Belegungen kollidieren mit folgenden Sperrzeiten:")."</font>";
+            $bad_message.="<br><font size=\"+0\" color=\"red\">"._("Die gewünschten Belegungen kollidieren mit folgenden Sperrzeiten:")."</font>";
             $bad_message.="<br><font size=\"-1\" color=\"black\">";
             foreach ($locks as $val) {
                 $bad_message.=date("d.m.Y, H:i",$val["begin"])." - ".date("d.m.Y, H:i",$val["end"])."<br>";
@@ -312,9 +312,9 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
 
     if ($rooms_booked)
         if ($i == 1)
-            $good_message.= sprintf ("msg§"._("Die Belegung des Raumes %s wurde in die Ressourcenverwaltung &uuml;bernommen.")."§", $rooms_booked);
+            $good_message.= sprintf ("msg§"._("Die Belegung des Raumes %s wurde in die Ressourcenverwaltung übernommen.")."§", $rooms_booked);
         elseif ($i)
-            $good_message.= sprintf ("msg§"._("Die Belegung der R&auml;ume %s wurden in die Ressourcenverwaltung &uuml;bernommen.")."§", $rooms_booked);
+            $good_message.= sprintf ("msg§"._("Die Belegung der Räume %s wurden in die Ressourcenverwaltung übernommen.")."§", $rooms_booked);
     }
 
     if ($mode == "bad")

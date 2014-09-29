@@ -256,7 +256,7 @@ if(Request::submitted('saveButton')) {
     // special case: creator wants to modify things in a running vote,
     // but in the meantime the first user has voted...
     if( $pageMode == MODE_RESTRICTED && !empty( $_POST["question"]) )
-    $vote->throwError(666, _("Inzwischen hat jemand abgestimmt! Sie k&ouml;nnen daher die meisten &Auml;nderungen nicht mehr vornehmen."), __LINE__, __FILE__);
+    $vote->throwError(666, _("Inzwischen hat jemand abgestimmt! Sie können daher die meisten Änderungen nicht mehr vornehmen."), __LINE__, __FILE__);
 
     if ($title == NULL && $question != NULL) {
         $title = my_substr(kill_format($question), 0, 50);

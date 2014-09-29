@@ -97,7 +97,7 @@ use Studip\Button, Studip\LinkButton;
                 <? endforeach; ?>
                 </select>
             <? else : ?>
-                <?= MessageBox::info(_('Sie k&ouml;nnen die Einordnung in die Orga-Struktur nicht &auml;ndern.')) ?>
+                <?= MessageBox::info(_('Sie können die Einordnung in die Orga-Struktur nicht ändern.')) ?>
             <? endif; ?>
             </td>
         </tr>
@@ -146,7 +146,7 @@ use Studip\Button, Studip\LinkButton;
         <tr>
             <td>&nbsp;</td>
             <td colspan="2" style="color: red">
-                <?= _('Das Objekt wurde noch keinem Typ zugewiesen. Um Eigenschaften bearbeiten zu k&ouml;nnen, m&uuml;ssen Sie vorher einen Typ festlegen!') ?>
+                <?= _('Das Objekt wurde noch keinem Typ zugewiesen. Um Eigenschaften bearbeiten zu können, müssen Sie vorher einen Typ festlegen!') ?>
             </td>
         </tr>
 <? endif; ?>
@@ -157,7 +157,7 @@ use Studip\Button, Studip\LinkButton;
                 <b><?= _('gleichzeitige Belegung') ?></b><br>
                 <br>
                 <label for="change_multiple_assign">
-                    <?= _('Die Ressource darf mehrfach zur gleichen Zeit belegt werden - <br>&Uuml;berschneidungschecks finden <u>nicht</u> statt!') ?>
+                    <?= _('Die Ressource darf mehrfach zur gleichen Zeit belegt werden - <br>Überschneidungschecks finden <u>nicht</u> statt!') ?>
                 </label>
             </td>
             <td>

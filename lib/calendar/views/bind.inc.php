@@ -84,8 +84,8 @@ $template->infobox = array(
             'eintrag'   => array(
                 array(
                     'icon' => 'icons/16/black/info.png',
-                    'text' => _('Termine aus den ausgew&auml;hlten Veranstaltungen
-                        werden in Ihren Terminkalender &uuml;bernommen.')
+                    'text' => _('Termine aus den ausgewählten Veranstaltungen
+                        werden in Ihren Terminkalender übernommen.')
                 )
             )
         )

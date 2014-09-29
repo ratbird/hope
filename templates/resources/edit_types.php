@@ -137,7 +137,7 @@
                                 <input type="hidden" name="requestable[]" value="_id1_<?= $type['category_id'] ?>">
                                 <input type="hidden" name="requestable[]" value="_id2_<?= $property['property_id'] ?>">
                                 <input type="checkbox" name="requestable[]" <? if ($property['requestable']) echo 'checked'; ?>>
-                                <?= _('w&uuml;nschbar') ?>
+                                <?= _('wünschbar') ?>
                             <? else: ?>
                                 &nbsp;
                             <? endif; ?>

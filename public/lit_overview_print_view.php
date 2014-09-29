@@ -83,7 +83,7 @@ if (is_array($_SESSION['_lit_data'])){
             $content .= ' / ' . (int)$participants;
             $content .= "<br>";
             if (is_array($_SESSION['_lit_data'][$cid]['check_accession'])){
-                $content .= "<div style=\"margin-top: 10px;border: 1px solid black;padding: 5px; width:96%;\"<b>" ._("Verf&uuml;gbarkeit in externen Katalogen:") . "</b><br>";
+                $content .= "<div style=\"margin-top: 10px;border: 1px solid black;padding: 5px; width:96%;\"<b>" ._("Verfügbarkeit in externen Katalogen:") . "</b><br>";
                 foreach ( $_SESSION['_lit_data'][$cid]['check_accession'] as $plugin_name => $ret){
                     $content .= "<b>&nbsp;{$plugin_name}&nbsp;</b>";
                     if ($ret['found']){

@@ -977,12 +977,12 @@ class Course_MembersController extends AuthenticatedController
 
             if ($msgs['success']) {
                 PageLayout::postMessage(MessageBox::success(sprintf(_('Das Hochstufen auf den Status  %s von %s
-                    wurde erfolgreich durchgef&uuml;hrt'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['success'])))));
+                    wurde erfolgreich durchgeführt'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['success'])))));
             }
 
             if ($msgs['no_tutor']) {
                 PageLayout::postMessage(MessageBox::error(sprintf(_('Das Hochstufen auf den Status  %s von %s
-                   konnte wegen fehlender Rechte nicht durchgef&uuml;hrt werden.'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['no_tutor'])))));
+                   konnte wegen fehlender Rechte nicht durchgeführt werden.'), htmlReady($this->decoratedStatusGroups[$next_status]), htmlReady(join(', ', $msgs['no_tutor'])))));
             }
         } else {
             PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine %s zum Hochstufen ausgewählt'), htmlReady($this->status_groups[$status]))));

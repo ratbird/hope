@@ -2,13 +2,13 @@
 <table width="100%" border="0" cellspacing="10" cellpadding="10">
 <tr>
 <td colspan=2><h1>Änderungen zur Sichtbarkeit in Stud.IP</h1>
-<p>Ab sofort sind Ihre Daten f&uuml;r andere NutzerInnen nur
-  noch mit Ihrem Einverst&auml;ndnis zug&auml;nglich. Sie haben <em>jetzt</em>
-  die M&ouml;glichkeit, sich zu entscheiden, weiterhin sichtbar zu sein und Stud.IP
-  wie gewohnt zu nutzen, oder unsichtbar zu sein, daf&uuml;r aber nicht mehr alle
-  Funktionen verwenden zu k&ouml;nnen.</p>
-<p>Sie k&ouml;nnen diese Einstellung jederzeit unter &quot;Pers&ouml;nliche Einstellungen&quot;
-  &auml;ndern.</p>
+<p>Ab sofort sind Ihre Daten für andere NutzerInnen nur
+  noch mit Ihrem Einverständnis zugänglich. Sie haben <em>jetzt</em>
+  die Möglichkeit, sich zu entscheiden, weiterhin sichtbar zu sein und Stud.IP
+  wie gewohnt zu nutzen, oder unsichtbar zu sein, dafür aber nicht mehr alle
+  Funktionen verwenden zu können.</p>
+<p>Sie können diese Einstellung jederzeit unter &quot;Persönliche Einstellungen&quot;
+  ändern.</p>
   </td>
 </tr>
   <tr>
@@ -19,21 +19,21 @@
     </tr>
     <tr>
     <td width="50%" valign="top"><ul>
-        <li> k&ouml;nnen Sie alle Kommunikationsm&ouml;glichkeiten wie gewohnt
+        <li> können Sie alle Kommunikationsmöglichkeiten wie gewohnt
           nutzen, </li>
-        <li>k&ouml;nnen Sie in Ihrem Profil trotzdem weitestgehend
-          entscheiden, was andere &uuml;ber Sie erfahren k&ouml;nnen,</li>
-        <li>k&ouml;nnen Sie von anderen gefunden und kontaktiert werden,</li>
+        <li>können Sie in Ihrem Profil trotzdem weitestgehend
+          entscheiden, was andere über Sie erfahren können,</li>
+        <li>können Sie von anderen gefunden und kontaktiert werden,</li>
         <li>leisten Sie einen Beitrag dazu, Stud.IP weiterhin zu einer aktiven
           und kommunikativen Plattform zu machen.</li>
       </ul></td>
     <td width="50%" valing="top">
     <ul>
-        <li>können Sie nicht mehr &uuml;ber die Personensuche gefunden werden,</li>
+        <li>können Sie nicht mehr über die Personensuche gefunden werden,</li>
         <li>können Sie nicht mehr in der "Wer-ist-online"-Liste erscheinen,</li>
         <li>können Sie nicht mehr Ihr Profil nutzen,</li>
-        <li>können Sie nicht mehr Ihre E-Mail-Adresse, Ihr G&auml;stebuch, Ihre Stud.IP-Punkte etc. anderen zugänglich machen,</li>
-        <li>k&ouml;nnen Sie nicht mehr im Adressbuch anderer NutzerInnen stehen. </li>
+        <li>können Sie nicht mehr Ihre E-Mail-Adresse, Ihr Gästebuch, Ihre Stud.IP-Punkte etc. anderen zugänglich machen,</li>
+        <li>können Sie nicht mehr im Adressbuch anderer NutzerInnen stehen. </li>
       </ul></td>
   </tr>
   <tr>
@@ -54,7 +54,7 @@
 <tr>
 <td width="50%" valign="top">
 <p><b>Ich möchte sichtbar sein und alle Möglichkeiten von Stud.IP nutzen können.</b></p>
-<p>Ich akzeptiere damit, dass die in den <a href="datenschutz.php" target="_blank">Erl&auml;uterungen zum Datenschutz</a> aufgeführten Informationen
+<p>Ich akzeptiere damit, dass die in den <a href="datenschutz.php" target="_blank">Erläuterungen zum Datenschutz</a> aufgeführten Informationen
 anderen zugänglich sind.</p>
 <p>&nbsp;</p>
 </td>
@@ -69,7 +69,7 @@ anderen zugänglich sind.</p>
 <tr>
 <td width="50%" valign="top">
 <p><b>Ich möchte unsichtbar sein und nehme Einschränkungen in der Nutzung in Kauf.</b>
-<p>Ich nehme damit zur Kenntnis, dass meine persönlichen Daten wie in den <a href="datenschutz.php" target="_blank">Erl&auml;uterungen zum Datenschutz</a>
+<p>Ich nehme damit zur Kenntnis, dass meine persönlichen Daten wie in den <a href="datenschutz.php" target="_blank">Erläuterungen zum Datenschutz</a>
 beschrieben und begründet dennoch AdministratorInnen und in Teilen den
 DozentInnen meiner Veranstaltungen zugänglich sind.
 </tr>

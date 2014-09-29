@@ -236,14 +236,14 @@ class ShowToolsRequests
         $zt->switchClass();
         echo $zt->openRow();
         echo $zt->cell("&nbsp;", array("class" => "content_seperator"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Z&auml;hler") . "</b></font>", array("class" => "content_seperator", 'colspan' => '3'));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Zähler") . "</b></font>", array("class" => "content_seperator", 'colspan' => '3'));
         echo $zt->cell("<font size=\"-1\"><b>" . _("V.-Nummer") . "</b></font>", array("class" => "content_seperator"));
         echo $zt->cell("<font size=\"-1\"><b>" . _("Titel") . "</b></font>", array("class" => "content_seperator"));
         echo $zt->cell("<font size=\"-1\"><b>" . _("Dozenten") . "</b></font>", array("class" => "content_seperator"));
         echo $zt->cell("<font size=\"-1\"><b>" . _("Anfrager") . "</b></font>", array("class" => "content_seperator"));
         echo $zt->cell("<font size=\"-1\"><b>" . _("Start-Semester") . "<b></font>", array("class" => "content_seperator"));
         if ($license_to_kill){
-            echo $zt->cell("<font size=\"-1\"><b>" . _("l&ouml;schen") . "<b></font>", array("class" => "content_seperator", 'width' => '5%'));
+            echo $zt->cell("<font size=\"-1\"><b>" . _("löschen") . "<b></font>", array("class" => "content_seperator", 'width' => '5%'));
         }
         echo $zt->closeRow();
         ?>
@@ -345,7 +345,7 @@ class ShowToolsRequests
                         }
                         print "<br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($names['inst_name'])."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakult&auml;t:")." ".htmlReady($names['fak_name'])."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakultät:")." ".htmlReady($names['fak_name'])."<br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl:")." ".$semObj->getNumberOfParticipants('total').'<br>';
                         ?>
                     </font>
@@ -394,7 +394,7 @@ class ShowToolsRequests
                                 }
                             ?>
                             <td width="29%" align="right">
-                                <!--<font style="font-size:10px;color:blue;"><?//=_("Kapazit&auml;t")?></font>-->
+                                <!--<font style="font-size:10px;color:blue;"><?//=_("Kapazität")?></font>-->
                             </td>
                         </tr>
                         <tr>
@@ -625,7 +625,7 @@ class ShowToolsRequests
                         <tr>
                             <td colspan="<?=$cols+2?>" align="center">
                                 <font size="-1">
-                                    <?=_("zeige R&auml;ume")?>
+                                    <?=_("zeige Räume")?>
                                     <a href="<?=URLHelper::getLink('?dec_limit_low=1')?>">-</a>
                                     <input type="text" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] + 1)?>">
                                     <a href="<?=URLHelper::getLink('?inc_limit_low=1')?>">+</a>
@@ -650,7 +650,7 @@ class ShowToolsRequests
                         ?>
                         <tr>
                             <td style="border-top:1px solid;" width="100%" colspan="<?=$cols+2?>">
-                                <font size="-1"><b><?=_("R&auml;ume aus der Merkliste:")?></b></font>
+                                <font size="-1"><b><?=_("Räume aus der Merkliste:")?></b></font>
                             </td>
                         </tr>
                         <?
@@ -861,7 +861,7 @@ class ShowToolsRequests
 
                 <?
                 if (sizeof($_SESSION['resources_data']["requests_open"]) > 1)
-                    printf ("<br><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgel&ouml;st.") . "</font>", sizeof($_SESSION['resources_data']["requests_open"]), sizeof($_SESSION['resources_data']["requests_working_on"]));
+                    printf ("<br><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgelöst.") . "</font>", sizeof($_SESSION['resources_data']["requests_open"]), sizeof($_SESSION['resources_data']["requests_working_on"]));
                     printf ("<br><font size=\"-1\">" . _("Aktueller Request: ")."<b>%s</b></font>", $_SESSION['resources_data']["requests_working_pos"]+1);
                 ?>
                 </td>

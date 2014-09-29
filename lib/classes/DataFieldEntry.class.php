@@ -735,7 +735,7 @@ class DataFieldPhoneEntry extends DataFieldEntry
         for($i = 3 - count($parts); $i > 0; $i --)
             array_unshift($parts, '');
         $size = array(3 , 6 , 10);
-        $title = array(_('Landesvorwahl ohne f&uuml;hrende Nullen') , _('Ortsvorwahl ohne f&uuml;hrende Null') , _('Rufnummer'));
+        $title = array(_('Landesvorwahl ohne führende Nullen') , _('Ortsvorwahl ohne führende Null') , _('Rufnummer'));
         $prefix = array('+' , '(0)' , ' / ');
         $ret = '';
         foreach($parts as $i => $part)

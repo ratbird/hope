@@ -450,7 +450,7 @@ if ($newCycle) {
     <tr>
         <td colspan="9" class="blue_gradient">
             <a name="irregular_dates"></a>
-            <b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
+            <b><?=_("Unregelmäßige Termine/Blocktermine")?></b>
         </td>
     </tr>
     <? if (!$_LOCKED) : ?>

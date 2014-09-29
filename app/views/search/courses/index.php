@@ -4,7 +4,7 @@
             if ($anzahl_seminare_class > 0) {
                 print $GLOBALS['SEM_CLASS'][$_SESSION['sem_portal']["bereich"]]["description"]."<br>" ;
             } elseif ($_SESSION['sem_portal']["bereich"] != "all") {
-                print "<br>"._("In dieser Kategorie sind keine Veranstaltungen angelegt.<br>Bitte w&auml;hlen Sie einen andere Kategorie!");
+                print "<br>"._("In dieser Kategorie sind keine Veranstaltungen angelegt.<br>Bitte wählen Sie einen andere Kategorie!");
             }
 
             echo "</td></tr>";

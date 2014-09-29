@@ -1330,32 +1330,32 @@ function execCommandAssertDeleteItem(){
         if ($numberofchildren){
             $this->msg[$this->itemID] .= ""
             . sprintf(
-                _("Sie beabsichtigen den Fragenblock <b>%s</b> inklusive aller Fragen zu l&ouml;schen. "),
+                _("Sie beabsichtigen den Fragenblock <b>%s</b> inklusive aller Fragen zu löschen. "),
                 $title)
-            . sprintf(_("Es werden insgesamt %s Fragen gel&ouml;scht!") ,$numberofchildren);
+            . sprintf(_("Es werden insgesamt %s Fragen gelöscht!") ,$numberofchildren);
         } else {
             $this->msg[$this->itemID] .= ""
             . sprintf(
-                _("Sie beabsichtigen den Fragenblock <b>%s</b> inklusive aller Fragen zu l&ouml;schen. "),
+                _("Sie beabsichtigen den Fragenblock <b>%s</b> inklusive aller Fragen zu löschen. "),
                 $title);
         }
         $this->msg[$this->itemID] .= "<br>"
-            . _("Wollen Sie diesen Fragenblock wirklich l&ouml;schen?");
+            . _("Wollen Sie diesen Fragenblock wirklich löschen?");
     } else {
         if ($numberofchildren){
             $this->msg[$this->itemID] .= ""
             . sprintf(
-                _("Sie beabsichtigen den Gruppierungsblock <b>%s</b> inklusive aller Unterbl&ouml;cke zu l&ouml;schen. "),
+                _("Sie beabsichtigen den Gruppierungsblock <b>%s</b> inklusive aller Unterblöcke zu löschen. "),
                 $title)
-            . sprintf(_("Es werden insgesamt %s Unterbl&ouml;cke gel&ouml;scht!"),$numberofchildren);
+            . sprintf(_("Es werden insgesamt %s Unterblöcke gelöscht!"),$numberofchildren);
         } else {
             $this->msg[$this->itemID] .= ""
             . sprintf(
-                _("Sie beabsichtigen den Gruppierungsblock <b>%s</b> inklusive aller Unterbl&ouml;cke zu l&ouml;schen. "),
+                _("Sie beabsichtigen den Gruppierungsblock <b>%s</b> inklusive aller Unterblöcke zu löschen. "),
                 $title);
         }
         $this->msg[$this->itemID] .= "<br>"
-        . _("Wollen Sie diesen Gruppierungsblock wirklich l&ouml;schen?");
+        . _("Wollen Sie diesen Gruppierungsblock wirklich löschen?");
     }
 
     $this->msg[$this->itemID] .= "<br><br>"
@@ -1395,15 +1395,15 @@ function execCommandDeleteItem(){
 
     if ($group->getChildType() == "EvaluationQuestion"){
         if ($numberofchildren){
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> und alle darin enthaltenen Fragen (insgesamt %s) wurden gel&ouml;scht. "),$title,$numberofchildren);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> und alle darin enthaltenen Fragen (insgesamt %s) wurden gelöscht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurden gel&ouml;scht. "), $title);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurden gelöscht. "), $title);
         }
     } else {
         if ($numberofchildren){
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> und alle Unterblöcke (insgesamt %s) wurden gel&ouml;scht. "),$title,$numberofchildren);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> und alle Unterblöcke (insgesamt %s) wurden gelöscht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurden gel&ouml;scht. "), $title);
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurden gelöscht. "), $title);
         }
     }
 

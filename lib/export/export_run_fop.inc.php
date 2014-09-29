@@ -108,7 +108,7 @@ else
             $export_pagecontent .= '<b>' . _("Ausgabe-Datei: ") . '</b>';
             $export_pagecontent .= '</td><td>' . $link2 . $xslt_filename . '.pdf</a>';
 //          $export_pagecontent .= "</td><td>" . $result_file . "</td></tr><tr><td colspan=\"2\">";
-//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link1 . _("Datei &ouml;ffnen") . "</a></td></tr><tr><td colspan=\"2\">";
+//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link1 . _("Datei öffnen") . "</a></td></tr><tr><td colspan=\"2\">";
 //          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link2 . _("Datei herunterladen") . "</a></td></tr>";
             $export_pagecontent .= '</td></tr></table><br>';
 
@@ -137,7 +137,7 @@ else
         $xml_printimage.= '</a>';
         $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree"> ' . $xml_filename . '</a>';
         $xml_printdesc = _("XML-Daten");
-        $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags k&ouml;nnen mit einem XSLT-Script verarbeitet werden.") . "<br>";
+        $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . "<br>";
 
         $xslt_printimage = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '">';
         $xslt_printimage.= Assets::img($export_icon[$format], array('class' => 'text-top'));

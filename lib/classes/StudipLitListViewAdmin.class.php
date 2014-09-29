@@ -142,17 +142,17 @@ class StudipLitListViewAdmin extends TreeView
             if (Request::get('edit_note')){
                 $affected_rows = $this->tree->updateElement(array('list_element_id' => $item_id, 'note' => Request::quoted('edit_note'), 'user_id' => $user_id));
                 if ($affected_rows){
-                    $this->msg[$item_id] = "msg§" . _("Anmerkung wurde ge&auml;ndert.");
+                    $this->msg[$item_id] = "msg§" . _("Anmerkung wurde geändert.");
                 } else {
-                    $this->msg[$item_id] = "info§" . _("Keine Ver&auml;nderungen vorgenommen.");
+                    $this->msg[$item_id] = "info§" . _("Keine Veränderungen vorgenommen.");
                 }
              } else if ( Request::get('edit_format') ) {
 
                 $affected_rows = $this->tree->updateList(array('list_id' => $item_id,'format' => Request::quoted('edit_format'),'name' => Request::quoted('edit_name'),'visibility' => Request::quoted('edit_visibility'), 'user_id' => $user_id));
                 if ($affected_rows){
-                    $this->msg[$item_id] = "msg§" . _("Listeneigenschaften wurden ge&auml;ndert.");
+                    $this->msg[$item_id] = "msg§" . _("Listeneigenschaften wurden geändert.");
                 } else {
-                    $this->msg[$item_id] = "info§" . _("Keine Ver&auml;nderungen vorgenommen.");
+                    $this->msg[$item_id] = "info§" . _("Keine Veränderungen vorgenommen.");
                 }
             }
         } else {
@@ -162,7 +162,7 @@ class StudipLitListViewAdmin extends TreeView
                 $this->mode = "";
                 $this->anchor = $item_id;
                 $this->open_items[$item_id] = true;
-                $this->msg[$item_id] = "msg§" . _("Diese Liste wurde neu eingef&uuml;gt.");
+                $this->msg[$item_id] = "msg§" . _("Diese Liste wurde neu eingefügt.");
             }
         }
         $this->mode = "";
@@ -204,9 +204,9 @@ class StudipLitListViewAdmin extends TreeView
         $user_id = $GLOBALS['auth']->auth['uid'];
         $visibility = ($this->tree->tree_data[$item_id]['visibility']) ? 0 : 1;
         if ($this->tree->updateList(array('list_id' => $item_id, 'visibility' => $visibility, 'user_id' => $user_id))){
-            $this->msg[$item_id] = "msg§" . _("Die Sichtbarkeit der Liste wurde ge&auml;ndert.");
+            $this->msg[$item_id] = "msg§" . _("Die Sichtbarkeit der Liste wurde geändert.");
         } else {
-            $this->msg[$item_id] = "error§" . _("Die Sichtbarkeit konnte nicht ge&auml;ndert werden.");
+            $this->msg[$item_id] = "error§" . _("Die Sichtbarkeit konnte nicht geändert werden.");
         }
         $this->anchor = $item_id;
         return true;
@@ -287,16 +287,16 @@ class StudipLitListViewAdmin extends TreeView
         if (!$this->tree->isElement($item_id) && $this->mode == "AssertDeleteItem"){
             $deleted = $this->tree->deleteList($item_id);
             if ($deleted){
-                $this->msg[$this->anchor] = "msg§" . sprintf(_("Die Liste <b>%s</b> und alle Eintr&auml;ge (insgesamt %s) wurden gel&ouml;scht. "),htmlReady($item_name),$deleted-1);
+                $this->msg[$this->anchor] = "msg§" . sprintf(_("Die Liste <b>%s</b> und alle Einträge (insgesamt %s) wurden gelöscht. "),htmlReady($item_name),$deleted-1);
             } else {
-                $this->msg[$this->anchor] = "error§" . _("Fehler, die Liste konnte nicht gel&ouml;scht werden!");
+                $this->msg[$this->anchor] = "error§" . _("Fehler, die Liste konnte nicht gelöscht werden!");
             }
         } else {
             $deleted = $this->tree->deleteElement($item_id);
             if ($deleted){
-                $this->msg[$this->anchor] = "msg§" . sprintf(_("Der Eintrag <b>%s</b> wurde gel&ouml;scht. "),htmlReady($item_name));
+                $this->msg[$this->anchor] = "msg§" . sprintf(_("Der Eintrag <b>%s</b> wurde gelöscht. "),htmlReady($item_name));
             } else {
-                $this->msg[$this->anchor] = "error§" . _("Fehler, der Eintrag konnte nicht gel&ouml;scht werden!");
+                $this->msg[$this->anchor] = "error§" . _("Fehler, der Eintrag konnte nicht gelöscht werden!");
             }
         }
         $this->mode = "";
@@ -404,7 +404,7 @@ class StudipLitListViewAdmin extends TreeView
         $content .= "\n<tr><td class=\"table_row_even\" align=\"left\">";
         $content .= "\n<form name=\"userlist_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=CopyUserList")) . "\" method=\"POST\">";
         $content .= CSRFProtection::tokenTag();
-        $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
+        $content .= "<b>" . _("Persönliche Literaturlisten:")
                 . "</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
         if (is_array($user_lists)) {
             foreach ($user_lists as $list_id => $list_name) {
@@ -474,7 +474,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getBottomRowForTableBox($item_id){
         $content .= "\n<tr><td class=\"table_row_odd\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
-        $content .= _("Letzte &Auml;nderung:");
+        $content .= _("Letzte Änderung:");
         $content .= strftime(" %d.%m.%Y ", $this->tree->tree_data[$item_id]['chdate']);
         $content .= "(<a href=\"dispatch.php/profile?username=";
         $content .= $this->tree->tree_data[$item_id]['username'];

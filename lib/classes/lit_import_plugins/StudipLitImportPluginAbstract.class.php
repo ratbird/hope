@@ -174,7 +174,7 @@ class StudipLitImportPluginAbstract {
                     return FALSE;
                 }
             } else {
-                $this->addError("error",_("Keine Listeneintr&auml;ge gefunden"));
+                $this->addError("error",_("Keine Listeneinträge gefunden"));
                 return FALSE;
             }
         }

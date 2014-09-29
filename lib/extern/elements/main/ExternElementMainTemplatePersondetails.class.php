@@ -51,7 +51,7 @@ class ExternElementMainTemplatePersondetails extends ExternElementMain {
                 'name', 'nameformat', 'dateformat', 'language', 'studiplink', 'defaultaddr', 'onlylecturers'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
 

@@ -86,7 +86,7 @@ class UserManagementRequestNewPassword extends UserManagement {
         $this->user_data['auth_user_md5.password'] = self::getPwdHasher()->HashPassword($password);
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "error§" . _("Die &Auml;nderung konnte nicht in die Datenbank geschrieben werden.") . "§";
+            $this->msg .= "error§" . _("Die Änderung konnte nicht in die Datenbank geschrieben werden.") . "§";
             return FALSE;
         }
 
@@ -135,7 +135,7 @@ if( $email != "" ) {
         } elseif ($stmt->rowCount() === 1) {
             $row = $stmt->fetch();
             if (strtolower($row['auth_plugin']) != 'standard') {
-                $msg[] = array('error', sprintf(_("Ihr Passwort kann nur durch einen Adminstrator ge&auml;ndert werden. Bitte fordern Sie gegebenenfalls %sper E-Mail%s ein neues Passwort an."), "<a href=\"mailto:{$GLOBALS['UNI_CONTACT']}?subject=" . rawurlencode( "Stud.IP Passwort vergessen - {$GLOBALS['UNI_NAME_CLEAN']}" ) . "&amp;body=" . rawurlencode( "Ich habe mein Passwort vergessen. Bitte senden Sie mir ein Neues.\nMein Nutzername: " . htmlReady( $uname ) . "\n" ) . "\">", "</a>"));
+                $msg[] = array('error', sprintf(_("Ihr Passwort kann nur durch einen Adminstrator geändert werden. Bitte fordern Sie gegebenenfalls %sper E-Mail%s ein neues Passwort an."), "<a href=\"mailto:{$GLOBALS['UNI_CONTACT']}?subject=" . rawurlencode( "Stud.IP Passwort vergessen - {$GLOBALS['UNI_NAME_CLEAN']}" ) . "&amp;body=" . rawurlencode( "Ich habe mein Passwort vergessen. Bitte senden Sie mir ein Neues.\nMein Nutzername: " . htmlReady( $uname ) . "\n" ) . "\">", "</a>"));
             } else {
                 // Bestätigungslink senden
                 $step = 2;

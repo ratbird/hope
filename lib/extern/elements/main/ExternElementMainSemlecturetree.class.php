@@ -54,7 +54,7 @@ class ExternElementMainSemLectureTree extends ExternElementMain {
                 'bodyclass'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
     
@@ -92,7 +92,7 @@ class ExternElementMainSemLectureTree extends ExternElementMain {
         $attributes = array("table_width", "table_align", "table_border", "table_bgcolor",
                 "table_bordercolor", "table_cellpadding", "table_cellspacing", "table_class",
                 "table_style");
-        $headline = array("table" => _("Umschlie&szlig;ende Tabelle"));
+        $headline = array("table" => _("Umschließende Tabelle"));
         $content_table .= $edit_form->getEditFormContent($attributes, $headline);
         $content_table .= $edit_form->editBlankContent();
         

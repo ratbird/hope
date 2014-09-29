@@ -43,16 +43,16 @@ class StudipLitSearchPluginThULB_Jena extends StudipLitSearchPluginGvk{
         $this->description = 'Thüringer Universitäts- und Landesbibliothek Jena';
         $this->z_host = "z3950.gbv.de:20010/thulb_opc";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
-                    '4' => _("Titelstichw&ouml;rter [TIT]"),
-                    '5' => _("Serienstichw&ouml;rter [SER]"),
+                    '4' => _("Titelstichwörter [TIT]"),
+                    '5' => _("Serienstichwörter [SER]"),
                     '21' => _("alle Klassifikationen [SYS]"),
                     '54' => _("Signatur [SGN]"),
                     '1004' => _("Person, Author [PER]"),
-                    '1005' => _("K&ouml;rperschaften [KOR]"),
+                    '1005' => _("Körperschaften [KOR]"),
                     '1006' => _("Kongresse [KON]"),
                     '1007' => _("alle Nummern [NUM]"),
-                    '5040' => _("Schlagw&ouml;rter [SLW]"),
-                    '8062' => _("alle Titelanf&auml;nge [TAF]"),
+                    '5040' => _("Schlagwörter [SLW]"),
+                    '8062' => _("alle Titelanfänge [TAF]"),
                     '8580' => _("Verlagsort, Verlag [PUB]")
                     );
     }

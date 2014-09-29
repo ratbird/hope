@@ -85,7 +85,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     </label>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
-                    <?=_("Eine Raumgruppe ausw&auml;hlen")?>:<br>
+                    <?=_("Eine Raumgruppe auswählen")?>:<br>
                     <select name="group_schedule_choose_group" onChange="document.schedule_form.submit()">
                     <?
                     $room_group = RoomGroups::GetInstance();

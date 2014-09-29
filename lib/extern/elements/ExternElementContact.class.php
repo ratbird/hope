@@ -99,7 +99,7 @@ class ExternElementContact extends ExternElement {
         $field_names = array(_("Raum"), _("Telefon"), _("Fax"), _("Email"), _("Homepage"), _("Sprechzeiten"));
         $table = $edit_form->editMainSettings($field_names, "", array("width", "sort", "widthpp"));
         
-        $title = _("&Uuml;berschrift:");
+        $title = _("Überschrift:");
         $info = _("Überschrift der Kontakt-Daten");
         $table .= $edit_form->editTextfieldGeneric("headline", $title, $info, 35, 100);
         
@@ -142,7 +142,7 @@ class ExternElementContact extends ExternElement {
         $attributes = array("fonttitle_face", "fonttitle_size", "fonttitle_color", "fonttitle_class",
                 "fonttitle_style", "fontcontent_face", "fontcontent_size", "fontcontent_color",
                 "fontcontent_class", "fontcontent_style");
-        $headlines = array("fonttitle" => _("Schriftformatierung der &Uuml;berschrift"),
+        $headlines = array("fonttitle" => _("Schriftformatierung der Überschrift"),
                 "fontcontent" => _("Schriftformatierung des Inhalts"));
         $content_table .= $edit_form->getEditFormContent($attributes, $headlines);
         $content_table .= $edit_form->editBlankContent();

@@ -59,7 +59,7 @@ if (Request::option('com') == 'new') {
                 $module = ExternModule::GetInstance($range_id, $type['module'], '', 'NEW');
             }
             else {
-                $message = sprintf(_("Es wurden bereits %s Konfigurationen angelegt. Sie k&ouml;nnen f&uuml;r dieses Module keine weiteren Konfigurationen anlegen.")
+                $message = sprintf(_("Es wurden bereits %s Konfigurationen angelegt. Sie können für dieses Module keine weiteren Konfigurationen anlegen.")
                         , $GLOBALS['EXTERN_MAX_CONFIGURATIONS']);
                 my_error($message, "blank", 1);
                 echo "<tr><td class=\"blank\" align=\"center\">\n";
@@ -174,7 +174,7 @@ echo "<table class=\"blank\" border=\"0\" width=\"100%\" ";
 echo "align=\"left\" cellspacing=\"0\" cellpadding=\"5\">\n";
 echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
 
-$info_edit_element = _("Um die Werte eines einzelnen Elements zu &auml;ndern, klicken Sie bitte den &quot;&Uuml;bernehmen&quot;-Button innerhalb des jeweiligen Elements.");
+$info_edit_element = _("Um die Werte eines einzelnen Elements zu ändern, klicken Sie bitte den &quot;Übernehmen&quot;-Button innerhalb des jeweiligen Elements.");
 // the type of this module is not Global
 if ($module->getType() != 0) {
     $info_preview = _("Um eine Vorschau der Seite zu erhalten, klicken Sie bitte hier:");
@@ -193,7 +193,7 @@ if ($module->getType() != 0) {
     $info_preview .= LinkButton::create(_("Vorschau"), $url, array("target" => "_blank"));
     $info_preview .= "</div><br>";
 
-    $info_preview .= _("Die Vorschau wird in einem neuen Fenster ge&ouml;ffnet.") . "<br>";
+    $info_preview .= _("Die Vorschau wird in einem neuen Fenster geöffnet.") . "<br>";
     $info_preview .= _("Es werden eventuell nicht alle Einstellungen in der Vorschau angezeigt.");
 
     $info_content = array(

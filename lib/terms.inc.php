@@ -57,14 +57,14 @@ function check_terms($userid, $_language_path) {
     </tr>
     <tr>
         <td class="blank">
-        <p><br><?=_("Stud.IP ist ein Open Source Projekt und steht unter der Gnu General Public License (GPL). Das System befindet sich in der st&auml;ndigen Weiterentwicklung.")?></p>
-        <p><?=_("Um den vollen Funktionsumfang von Stud.IP nutzen zu k&ouml;nnen, m&uuml;ssen Sie sich am System anmelden.")?><br>
-        <?=_("Das hat viele Vorz&uuml;ge:")?></p>
+        <p><br><?=_("Stud.IP ist ein Open Source Projekt und steht unter der Gnu General Public License (GPL). Das System befindet sich in der ständigen Weiterentwicklung.")?></p>
+        <p><?=_("Um den vollen Funktionsumfang von Stud.IP nutzen zu können, müssen Sie sich am System anmelden.")?><br>
+        <?=_("Das hat viele Vorzüge:")?></p>
         <ul>
-            <li><?=_("Zugriff auf Ihre Daten von jedem internetf&auml;higen Rechner weltweit,")?></li>
+            <li><?=_("Zugriff auf Ihre Daten von jedem internetfähigen Rechner weltweit,")?></li>
             <li><?=_("Anzeige neuer Mitteilungen oder Dateien seit Ihrem letzten Besuch,")?></li>
             <li><?=_("Ein eigenes Profil im System,")?></li>
-            <li><?=_("die M&ouml;glichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?></li>
+            <li><?=_("die Möglichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?></li>
             <li><?=_("und vieles mehr.")?></li>
         </ul>
         <p><?=_("Mit der Anmeldung werden die nachfolgenden Nutzungsbedingungen akzeptiert:")?></p>

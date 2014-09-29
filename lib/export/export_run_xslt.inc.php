@@ -109,8 +109,8 @@ else
     $xslt_process_file = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $PATH_EXPORT . "/" . $xslt_files[$choose]["file"];
 
     if (xslt_process($xh, "file://$xml_process_file" , "file://$xslt_process_file", "file://$result") && ($o_mode != "passthrough")) {
-        $export_msg .= sprintf(_("Die Daten wurden erfolgreich konvertiert. %s Sie k&ouml;nnen die Ausgabedatei jetzt herunterladen. %s"), "<br>", "<br>");
-        $xslt_info = _("Die Daten sind nun im gew&auml;hlten Format verf&uuml;gbar.");
+        $export_msg .= sprintf(_("Die Daten wurden erfolgreich konvertiert. %s Sie können die Ausgabedatei jetzt herunterladen. %s"), "<br>", "<br>");
+        $xslt_info = _("Die Daten sind nun im gewählten Format verfügbar.");
         $xslt_process = true;
         $link1 = "<a href=\"" . $TMP_PATH . "/" . $result_file . "\">";
         $link2 = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '">';

@@ -74,7 +74,7 @@ class StudipSemRangeTreeViewSimple {
         echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
             echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
-            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</a>";
+            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zurück'))). "</a>";
         } else {
             echo "&nbsp;";
         }
@@ -138,7 +138,7 @@ class StudipSemRangeTreeViewSimple {
                     echo Assets::img('icons/16/blue/arr_1down.png');
                     echo '&nbsp;';
                 }
-                printf(_("<b>%s</b> Eintr&auml;ge in allen Unterebenen vorhanden"), $num_entries);
+                printf(_("<b>%s</b> Einträge in allen Unterebenen vorhanden"), $num_entries);
                 if ($this->show_entries != "sublevels"){
                     echo "</a>";
                 }
@@ -153,12 +153,12 @@ class StudipSemRangeTreeViewSimple {
                     echo Assets::img('icons/16/red/arr_1down.png');
                     echo '&nbsp;';
                 }
-                printf(_("<b>%s</b> Eintr&auml;ge auf dieser Ebene.&nbsp;"),$num_entries);
+                printf(_("<b>%s</b> Einträge auf dieser Ebene.&nbsp;"),$num_entries);
                 if ($this->show_entries != "level"){
                     echo "</a>";
                 }
             } else {
-                    echo _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!");
+                    echo _("Keine Einträge auf dieser Ebene vorhanden!");
             }
         }
         echo "\n</div>";

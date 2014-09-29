@@ -15,7 +15,7 @@
             <th><?= _('Name') ?></th>
             <th style="text-align: center;"><?= _('Aktionen') ?></th>
             <th>&nbsp;</th>
-            <th style="text-align: center;"><?= _('Suchen/hinzuf&uuml;gen') ?></th>
+            <th style="text-align: center;"><?= _('Suchen/hinzufügen') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -27,7 +27,7 @@
             <td colspan="2">&nbsp;</td>
             <td valign="top">
                 <label>
-                    <?= _('NutzerInnen hinzuf&uuml;gen') ?><br>
+                    <?= _('NutzerInnen hinzufügen') ?><br>
                     <? showSearchForm('search_root_user', $search_string_search_root_user, TRUE, FALSE, TRUE) ?>
                 </label>
             </td>
@@ -42,11 +42,11 @@
                 (<?= get_username($user['user_id']); ?>)
                 <br>
             <? if ($user['perms'] == 'admin'): ?>
-                <?= _('<b>Admin</b>: Nutzer kann s&auml;mtliche Belegungen und Eigenschaften &auml;ndern und Rechte vergeben') ?>
+                <?= _('<b>Admin</b>: Nutzer kann sämtliche Belegungen und Eigenschaften ändern und Rechte vergeben') ?>
             <? elseif ($user['perms'] == 'tutor'): ?>
-                <?= _('<b>Tutor</b>: Nutzer kann s&auml;mtliche Belegungen &auml;ndern') ?>
+                <?= _('<b>Tutor</b>: Nutzer kann sämtliche Belegungen ändern') ?>
             <? elseif ($user['perms'] == 'autor'): ?>
-                <?= _('<b>Autor</b>: Nutzer kann nur eigene Belegungen &auml;ndern') ?>
+                <?= _('<b>Autor</b>: Nutzer kann nur eigene Belegungen ändern') ?>
             <? endif; ?>
             </td>
             <td valign="middle" align="center">

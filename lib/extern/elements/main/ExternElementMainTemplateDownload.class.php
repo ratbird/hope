@@ -56,7 +56,7 @@ class ExternElementMainTemplateDownload extends ExternElementMain {
                 'icondefault'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
         $this->edit_function = 'editSort';
     }
@@ -121,7 +121,7 @@ class ExternElementMainTemplateDownload extends ExternElementMain {
         
         $headline = $edit_form->editHeadline(_("Weitere Angaben"));
         
-        $title = _("Max. L&auml;nge der Beschreibung:");
+        $title = _("Max. Länge der Beschreibung:");
         $info = _("Geben Sie an, wieviele Zeichen der Beschreibung der Datei ausgegeben werden sollen.");
         $table = $edit_form->editTextfieldGeneric("lengthdesc", $title, $info, 3, 3);
         

@@ -69,7 +69,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                 _("Dateiname"),
                 _("Beschreibung"),
                 _("Datum"),
-                _("Gr&ouml;&szlig;e"),
+                _("Größe"),
                 _("Upload durch")
         );
 

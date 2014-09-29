@@ -301,12 +301,12 @@ class StudipLitCatElement {
         $this->dbv->params[0] = $this->getValue("catalog_id");
         $rs = $this->dbv->get_query("view:LIT_DEL_ELEMENT");
         if ($rs->affected_rows()){
-            $this->msg = "msg§" . _("Der Datensatz wurde gel&ouml;scht.") . "§";
+            $this->msg = "msg§" . _("Der Datensatz wurde gelöscht.") . "§";
             $this->initFields();
             $this->getElementData("new_entry");
             return true;
         } else {
-            $this->msg = "error§" . _("Der Datensatz konnte nicht gel&ouml;scht werden") . "§";
+            $this->msg = "error§" . _("Der Datensatz konnte nicht gelöscht werden") . "§";
             return false;
         }
     }
@@ -339,7 +339,7 @@ class StudipLitCatElement {
             }
         }
         if (is_array($missing_fields)){
-            $this->msg .= "error§" . sprintf(_("Bitte f&uuml;llen Sie folgende Felder aus: %s"), "\"" . join("\", \"",$missing_fields)) ."\"§";
+            $this->msg .= "error§" . sprintf(_("Bitte füllen Sie folgende Felder aus: %s"), "\"" . join("\", \"",$missing_fields)) ."\"§";
         }
         return is_array($missing_fields) ? false : true;
     }

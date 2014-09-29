@@ -90,9 +90,9 @@ class StudipLitClipBoard {
             }
         }
         if ($deleted == 1){
-            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus Ihrer Merkliste gel&ouml;scht.") . "§";
+            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus Ihrer Merkliste gelöscht.") . "§";
         } else if ($deleted){
-            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus Ihrer Merkliste gel&ouml;scht."), $deleted) . "§";
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus Ihrer Merkliste gelöscht."), $deleted) . "§";
         }
         $this->setDefaultValue();
         return $deleted;
@@ -173,7 +173,7 @@ class StudipLitClipBoard {
                     $this->deleteElement($selected);
                     $this->form_obj->doFormReset();
                 } else {
-                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgew&auml;hlt!") . "§";
+                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgewühlt!") . "§";
                 }
                 break;
         }

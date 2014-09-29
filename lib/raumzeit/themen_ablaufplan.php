@@ -108,7 +108,7 @@ $sem->processCommands();
 if ($sem->hasDatesOutOfDuration()) {
     $tpl['forceShowAll'] = TRUE;
     if ($_SESSION['raumzeitFilter'] != 'all') {
-        $sem->createInfo(_("Es gibt weitere Termine, die au&szlig;erhalb der regul&auml;ren Laufzeit der Veranstaltung liegen.<br> Um diese anzuzeigen w&auml;hlen Sie bitte \"Alle Semester\"!"));
+        $sem->createInfo(_("Es gibt weitere Termine, die auﬂerhalb der regul‰ren Laufzeit der Veranstaltung liegen.<br> Um diese anzuzeigen w‰hlen Sie bitte \"Alle Semester\"!"));
     }
 } else {
     $tpl['forceShowAll'] = FALSE;
@@ -120,7 +120,7 @@ if ($sem->hasDatesOutOfDuration()) {
  * * * * * * * * * * * * * * */
 
 if ($sem->getMetaDateCount()) {
-    $times_info .= '<b>'._("Typ").':</b> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $times_info .= '<b>'._("Typ").':</b> '._("regelm‰ﬂige Veranstaltung").'<br>';
     $z = 0;
     if (is_array($turnus = $sem->getFormattedTurnusDates())) {
         foreach ($turnus as $val) {
@@ -129,7 +129,7 @@ if ($sem->getMetaDateCount()) {
         }
     }
 } else {
-    $times_info .= '<b>'._("Typ").':</b> '._("unregelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $times_info .= '<b>'._("Typ").':</b> '._("unregelm‰ﬂige Veranstaltung").'<br>';
 }
 
 // infobox end

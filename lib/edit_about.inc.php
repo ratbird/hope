@@ -88,12 +88,12 @@ function edit_email($user, $email, $force=False) {
     }
 
     if (!$validator->ValidateEmailHost($email)) {     // Mailserver nicht erreichbar, ablehnen
-        $msg.=  "error§" . _("Der Mailserver ist nicht erreichbar. Bitte &uuml;berpr&uuml;fen Sie, ob Sie E-Mails mit der angegebenen Adresse verschicken k&ouml;nnen!") . "§";
+        $msg.=  "error§" . _("Der Mailserver ist nicht erreichbar. Bitte überprüfen Sie, ob Sie E-Mails mit der angegebenen Adresse verschicken können!") . "§";
         return array(False, $msg);
     } else {       // Server ereichbar
         if (!$validator->ValidateEmailBox($email)) {    // aber user unbekannt. Mail an abuse!
             StudipMail::sendAbuseMessage("edit_about", "Emailbox unbekannt\n\nUser: ". $username ."\nEmail: $email\n\nIP: $REMOTE_ADDR\nZeit: $Zeit\n");
-            $msg.=  "error§" . _("Die angegebene E-Mail-Adresse ist nicht erreichbar. Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben!") . "§";
+            $msg.=  "error§" . _("Die angegebene E-Mail-Adresse ist nicht erreichbar. Bitte überprüfen Sie Ihre Angaben!") . "§";
             return array(False, $msg);
         }
     }
@@ -115,7 +115,7 @@ function edit_email($user, $email, $force=False) {
 //    $statement->execute(array($email, $uid));
 
     if (StudipAuthAbstract::CheckField("auth_user_md5.validation_key", $auth_plugin)) {
-        $msg.= "msg§" . _("Ihre E-Mail-Adresse wurde ge&auml;ndert!") . "§";
+        $msg.= "msg§" . _("Ihre E-Mail-Adresse wurde geändert!") . "§";
         return array(True, $msg);
     } else {
         // auth_plugin does not map validation_key (what if...?)
@@ -405,7 +405,7 @@ class about extends messaging
     }
 
 
-    //Displays  Successmessages (Information &uuml;ber erfolgreiche Aktion, Symbol Haken)
+    //Displays  Successmessages (Information über erfolgreiche Aktion, Symbol Haken)
 
     function my_msg($msg)
     {

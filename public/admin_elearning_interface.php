@@ -135,7 +135,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             echo "<br>\n";
             echo _("Die Schnittstelle ist <b>aktiv</b>.");
             echo "<br><br>\n<center>";
-            echo _("Hier k&ouml;nnen Sie die Schnittstelle deaktivieren.");
+            echo _("Hier können Sie die Schnittstelle deaktivieren.");
             echo "<br><br>\n";
             echo Button::create(_('Deaktivieren'), 'deactivate')."</center>";
         }
@@ -148,7 +148,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             if ($error_count == 0)
             {
                 $status_info = "not active";
-                echo _("Hier k&ouml;nnen Sie die Schnittstelle aktivieren.");
+                echo _("Hier können Sie die Schnittstelle aktivieren.");
                 echo "<br><br>\n";
                 echo Button::create(_('Aktivieren'), 'activate')."</center>";
             }
@@ -179,7 +179,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
                             array ( "icon" => "icons/16/black/info.png",
-                                    "text"  => _("Hier k&ouml;nnen Sie an angebundene Systeme verwalten.")
+                                    "text"  => _("Hier können Sie an angebundene Systeme verwalten.")
                                  )
                             )
             )
@@ -193,12 +193,12 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         {
             case "active":
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/green/accept.png" ,
-                                        "text"  => sprintf(_("Die Verbindung zum System \"%s\" ist <b>aktiv</b>. Sie k&ouml;nnen die Einbindung des Systems in Stud.IP jederzeit deaktivieren."), $connected_cms[$cms_select]->getName())
+                                        "text"  => sprintf(_("Die Verbindung zum System \"%s\" ist <b>aktiv</b>. Sie können die Einbindung des Systems in Stud.IP jederzeit deaktivieren."), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "not active":
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/exclaim.png" ,
-                                        "text"  => sprintf(_("Die Verbindung zum System \"%s\" steht, das System ist jedoch nicht aktiviert. Sie k&ouml;nnen die Einbindung des Systems in Stud.IP jederzeit aktivieren. Solange die Verbindung nicht aktiviert wurde, werden die Module des Systems \"%s\" in Stud.IP nicht angezeigt."), $connected_cms[$cms_select]->getName(), $connected_cms[$cms_select]->getName())
+                                        "text"  => sprintf(_("Die Verbindung zum System \"%s\" steht, das System ist jedoch nicht aktiviert. Sie können die Einbindung des Systems in Stud.IP jederzeit aktivieren. Solange die Verbindung nicht aktiviert wurde, werden die Module des Systems \"%s\" in Stud.IP nicht angezeigt."), $connected_cms[$cms_select]->getName(), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "error":

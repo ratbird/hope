@@ -81,7 +81,7 @@ use Studip\Button, Studip\LinkButton;
                       <? endif ?>
                     <? endforeach; ?>
                     </select>
-                    <?= Assets::input("icons/16/blue/add.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzuf&uuml;gen'))) ?>
+                    <?= Assets::input("icons/16/blue/add.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzufügen'))) ?>
                 </td>
             </tr>
         <? endif ?>

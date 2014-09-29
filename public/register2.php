@@ -35,7 +35,7 @@ if (!$GLOBALS['ENABLE_SELF_REGISTRATION']){
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
     include ('lib/include/deprecated_tabs_layout.php');
-    parse_window ("error§" . _("In dieser Installation ist die M&ouml;glichkeit zur Registrierung ausgeschaltet."), "§",
+    parse_window ("error§" . _("In dieser Installation ist die Möglichkeit zur Registrierung ausgeschaltet."), "§",
                 _("Registrierung ausgeschaltet"), 
                 '<div style="margin:10px">'.$UNI_LOGIN_ADD.'</div>'
                 ."<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br>&nbsp;");
@@ -71,7 +71,7 @@ include ('lib/include/deprecated_tabs_layout.php');
     <td class="blank">&nbsp;
         <blockquote>
         <?=_("Ihre Registrierung wurde erfolgreich vorgenommen.")?><br><br>
-        <?=_("Das System wird Ihnen zur Best&auml;tigung eine E-Mail zusenden.")?><br>
+        <?=_("Das System wird Ihnen zur Bestätigung eine E-Mail zusenden.")?><br>
         <?=_("Bitte rufen Sie die E-Mail ab und folgen Sie den Anweisungen, um Schreibrechte im System zu bekommen.")?><br>
         <br>
         <? printf(_("%sHier%s geht es wieder zur Startseite."), "<a href=\"index.php\">", "</a>");?>

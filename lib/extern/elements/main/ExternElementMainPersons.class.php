@@ -54,7 +54,7 @@ class ExternElementMainPersons extends ExternElementMain {
                 'copyright', 'author', 'defaultadr'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
     
@@ -158,10 +158,10 @@ class ExternElementMainPersons extends ExternElementMain {
                 _("Dr. Peter Meyer"), _("Meyer, Peter, Dr."));
         $table = $edit_form->editOptionGeneric("nameformat", $title, $info, $values, $names);
         
-        $title = _("Spalten&uuml;berschriften<br>wiederholen:");
+        $title = _("Spaltenüberschriften<br>wiederholen:");
         $info = _("Wiederholung der Spaltenüberschriften über oder unter der Gruppierungszeile.");
         $values = array("above", "beneath", "");
-        $names = array(_("&uuml;ber"), _("unter Gruppenname"), _("keine"));
+        $names = array(_("über"), _("unter Gruppenname"), _("keine"));
         $table .= $edit_form->editRadioGeneric("repeatheadrow", $title, $info, $values, $names);
         
         $title = _("Standard-Adresse:");

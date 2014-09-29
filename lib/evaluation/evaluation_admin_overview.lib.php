@@ -1102,12 +1102,12 @@ class EvalOverview {
                     $safeguard .= $this->createSafeguard("", EvalCommon::createErrorReport($eval));
                     return $safeguard;
                 }
-                $safeguard .= $this->createSafeguard("ok", sprintf(_("Die Evaluation <b>%s</b> wurde zur&uuml;ckgesetzt."), $evalName));
+                $safeguard .= $this->createSafeguard("ok", sprintf(_("Die Evaluation <b>%s</b> wurde zurückgesetzt."), $evalName));
                 $evalChanged = YES;
                 break;
 
             case "restart_aborted":
-                $safeguard .= $this->createSafeguard("ok", sprintf(_("Die Evaluation <b>%s</b> wurde nicht zur&uuml;ckgesetzt."), $evalName), "", "", "", $referer);
+                $safeguard .= $this->createSafeguard("ok", sprintf(_("Die Evaluation <b>%s</b> wurde nicht zurückgesetzt."), $evalName), "", "", "", $referer);
                 break;
 
             case "copy_own_template":
@@ -1127,7 +1127,7 @@ class EvalOverview {
                 if ($no_permission_msg)
                     return $this->createSafeguard("ausruf", $no_permission_msg . "<br>" . _("Die Evaluation wurde nicht gelöscht."));
 
-                $text = $eval->isTemplate() ? sprintf(_("Die Evaluationsvorlage <b>%s </b>wirklich l&ouml;schen?"), $evalName) : sprintf(_("Die Evaluation <b>%s </b>wirklich l&ouml;schen?"), $evalName);
+                $text = $eval->isTemplate() ? sprintf(_("Die Evaluationsvorlage <b>%s </b>wirklich löschen?"), $evalName) : sprintf(_("Die Evaluation <b>%s </b>wirklich löschen?"), $evalName);
                 $safeguard .= $this->createSafeguard("ausruf", $text, "delete_request", $evalID, $showrangeID, $referer);
                 break;
 
@@ -1143,13 +1143,13 @@ class EvalOverview {
                     return $safeguard;
                 }
 
-                $text = $eval->isTemplate() ? _("Die Evaluationsvorlage <b>%s</b> wurde gel&ouml;scht.") : _("Die Evaluation <b>%s</b> wurde gel&ouml;scht.");
+                $text = $eval->isTemplate() ? _("Die Evaluationsvorlage <b>%s</b> wurde gelöscht.") : _("Die Evaluation <b>%s</b> wurde gelöscht.");
                 $safeguard .= $this->createSafeguard("ok", sprintf($text, $evalName), "", "", "", $referer);
                 $evalChanged = YES;
                 break;
 
             case "delete_aborted":
-                $text = $eval->isTemplate() ? _("Die Evaluationsvorlage <b>%s</b> wurde nicht gel&ouml;scht.") : _("Die Evaluation <b>%s</b> wurde nicht gel&ouml;scht.");
+                $text = $eval->isTemplate() ? _("Die Evaluationsvorlage <b>%s</b> wurde nicht gelöscht.") : _("Die Evaluation <b>%s</b> wurde nicht gelöscht.");
                 $safeguard .= $this->createSafeguard("ok", sprintf($text, $evalName), "", "", "", $referer);
                 break;
 
@@ -1187,7 +1187,7 @@ class EvalOverview {
             case "save2":
             case "save":
                 $eval = new Evaluation($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
-                $update_message = sprintf(_("Die Evaluation <b>%s</b> wurde mit den Ver&auml;nderungen gespeichert."), $evalName);
+                $update_message = sprintf(_("Die Evaluation <b>%s</b> wurde mit den Veränderungen gespeichert."), $evalName);
 
 
                 /* Timesettings ---------------------------------------------------- */
@@ -1412,13 +1412,13 @@ class EvalOverview {
 
                 if ($eval->isTemplate()) {
                     if (empty($link_range) && empty($copy_range) && empty($remove_range)) {
-                        $update_message = sprintf(_("Es wurden keine Ver&auml;nderungen an der Evaluationsvorlage <b>%s</b> gespeichert."), $evalName);
+                        $update_message = sprintf(_("Es wurden keine Veränderungen an der Evaluationsvorlage <b>%s</b> gespeichert."), $evalName);
                     }
                 } else {
                     // nothing changed
                     if (! Request::option('startMode') && ! Request::option('stopMode') &&
                             empty($link_range) && empty($copy_range) && empty($remove_range))
-                        $update_message = _("Es wurden keine Ver&auml;nderungen gespeichert.");
+                        $update_message = _("Es wurden keine Veränderungen gespeichert.");
 
                     // set new start date
                     if (Request::option("startMode") && !$time_msg) {
@@ -1561,7 +1561,7 @@ class EvalOverview {
         //TODO: auf messagebox bzw. createQuestion umstellen!!!
 
         $label = array(
-            "referer" => _("Zum vorherigen Bereich zur&uuml;ckkehren."),
+            "referer" => _("Zum vorherigen Bereich zurückkehren."),
             "yes" => _("Ja!"),
             "no" => _("Nein!"),
             "delete" => _("Löschen."),
@@ -1715,7 +1715,7 @@ class EvalOverview {
         if ($state == EVAL_STATE_NEW || $eval->isTemplate()) {
             $html .= "<tr><td class=\"table_row_even\">";
             $html .= "<input type=radio name=\"startMode\" value=\"manual\" " . ($startMode == "manual" ? "checked" : "") . ">&nbsp;";
-            $html .= _("sp&auml;ter manuell starten");
+            $html .= _("später manuell starten");
             $html .= "</td></tr>";
 
             $html .= "<tr><td class=table_row_odd>";

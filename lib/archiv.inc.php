@@ -419,7 +419,7 @@ function dumpExtraDatesSchedule($sem_id)
     $statement->execute(array($sem_id));
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    return dumpScheduleTable($data, _('zus&auml;tzliche Termine'));
+    return dumpScheduleTable($data, _('zusätzliche Termine'));
 }
 
 /**

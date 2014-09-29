@@ -51,7 +51,7 @@ $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getURL() .
 
 $export_pagecontent .= CSRFProtection::tokenTag();
 
-$export_pagecontent .="<br><b>". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</b><br><select name=\"range_id\">";
+$export_pagecontent .="<br><b>". _("Bitte wählen Sie eine Einrichtung: ") .  "</b><br><select name=\"range_id\">";
 
 // Prepare institutes statement for faculty
 $query = "SELECT Institut_id, Name
@@ -109,7 +109,7 @@ $export_pagecontent .= " value=\"person\">" . _("MitarbeiterInnendaten") .  "</o
 
 $export_pagecontent .= "</select><br><br><br><br>";
 
-$export_pagecontent .="<b>". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</b><br>";
+$export_pagecontent .="<b>". _("Aus welchem Semester sollen die Daten exportiert werden (für Veranstaltungsexport): ") .  "</b><br>";
 if (!isset($ex_sem)) {
     $ex_sem = (Semester::findCurrent() ? Semester::findCurrent()->getId() : null);
 }

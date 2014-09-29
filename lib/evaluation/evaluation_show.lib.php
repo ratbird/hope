@@ -169,8 +169,8 @@ class EvalShow
       /* multiple choice? ----------------------------------------------------- */
 #      if ($eval->isMultipleChoice()) {
 #     $html .= ($voted || $eval->isStopped())
-#         ? _("Sie konnten mehrere Antworten ausw&auml;hlen.")
-#         : _("Sie k&ouml;nnen mehrere Antworten ausw&auml;hlen.");
+#         ? _("Sie konnten mehrere Antworten auswählen.")
+#         : _("Sie können mehrere Antworten auswählen.");
 #     $html .= " \n";
 #      }
       /* ---------------------------------------------------------------------- */
@@ -245,7 +245,7 @@ class EvalShow
                     date ("H:i", $stopdate));
           }
           else {
-          $html .= sprintf (_("Sie k&ouml;nnen teilnehmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
+          $html .= sprintf (_("Sie können teilnehmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
                     date ("d.m.Y", $stopdate),
                     date ("H:i", $stopdate));
           }

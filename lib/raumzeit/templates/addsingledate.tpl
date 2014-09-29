@@ -57,7 +57,7 @@ use Studip\Button,
                     <? endif ?>
                     <?=_("freie Ortsangabe:")?>
                     <input name="freeRoomText" type="text" size="10" maxlength="255">
-                    <?=$GLOBALS['RESOURCES_ENABLE']? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)") : ''?>
+                    <?=$GLOBALS['RESOURCES_ENABLE']? _("(führt <em>nicht</em> zu einer Raumbuchung)") : ''?>
                 </TD>
                 <TD class="table_row_odd" colspan="2" valign="top" nowrap>
                     <?=_("Art:");?>

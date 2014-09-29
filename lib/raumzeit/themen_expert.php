@@ -447,7 +447,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     <tr>
                         <td class="printhead" colspan="3">
                             <font size="-1">
-                                &nbsp;<b><?=_("unregelm&auml;&szlig;ige Termine / Blocktermine")?></b>
+                                &nbsp;<b><?=_("unregelmäßige Termine / Blocktermine")?></b>
                             </font>
                         </td>
                     </tr>

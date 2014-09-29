@@ -58,7 +58,7 @@ class ExternElementLecturesInnerTable extends ExternElement {
         
         $this->name = "LecturesInnerTable";
         $this->real_name = _("Veranstaltungsname/Zeiten(Termine)/DozentIn");
-        $this->description = _("Formatierung von Veranstaltungsname/Zeiten(Termine)/DozentIn in der Veranstaltungs&uuml;bersicht.");
+        $this->description = _("Formatierung von Veranstaltungsname/Zeiten(Termine)/DozentIn in der Veranstaltungsübersicht.");
         
         $this->headlines = array(_("Angaben zum HTML-Tag &lt;tr&gt;"), _("Angaben zum HTML-Tag &lt;td&gt;"),
             _("Ausrichtung Veranstaltungsname"), _("Ausrichtung Zeiten(Termine)/DozentIn"),

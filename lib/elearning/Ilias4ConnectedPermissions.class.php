@@ -120,7 +120,7 @@ class Ilias4ConnectedPermissions extends Ilias3ConnectedPermissions
         }
 
         if (! $this->getContentModulePerms( $course_id )) {
-            $messages["info"] .= _("F&uuml;r den zugeordneten ILIAS-Kurs konnten keine Berechtigungen ermittelt werden.") . "<br>";
+            $messages["info"] .= _("Für den zugeordneten ILIAS-Kurs konnten keine Berechtigungen ermittelt werden.") . "<br>";
         }
 
         return true;

@@ -49,7 +49,7 @@ function themen_changeIssue() {
 function themen_openAll() {
     global $sem, $openAll;
 
-    $sem->createInfo(_("Es wurden alle Termine ge&ouml;ffnet. Sie k&ouml;nnen diese nun bearbeiten."));
+    $sem->createInfo(_("Es wurden alle Termine geöffnet. Sie können diese nun bearbeiten."));
     $openAll = TRUE;
 }
 

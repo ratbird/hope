@@ -181,7 +181,7 @@ class Institute_MembersController extends AuthenticatedController
 
                 if ($inst_perms && $inst_perms != 'user') {
                     // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
-                    my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
+                    my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu ändern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
                 } else {  // mal nach dem globalen Status sehen
                     $query = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname, perms
                               FROM auth_user_md5

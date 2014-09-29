@@ -76,7 +76,7 @@ $cal_step_weeks = array(
         </tr>
         <tr>
             <td>
-                <label for="cal_delete"><?= _('L&ouml;schen von Terminen'); ?></label>
+                <label for="cal_delete"><?= _('Löschen von Terminen'); ?></label>
             </td>
             <td>
                 <select name="cal_delete" id="cal_delete" size="1">

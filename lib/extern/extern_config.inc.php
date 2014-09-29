@@ -47,7 +47,7 @@ global
 
 
 $EXTERN_MODULE_TYPES[0] = array("module" => "Global", "name" => _("globale Konfiguration"), "level" => 1,
-                                                    "description" => _("Das Modul &quot;globale Konfiguration&quot; enthält Einstellungen, die für alle Module gelten, solange sie nicht in den jeweiligen Modulen &uuml;berschrieben werden."), 'order' => 1, 'view' => array('inst','fak','studip'));
+                                                    "description" => _("Das Modul &quot;globale Konfiguration&quot; enthält Einstellungen, die für alle Module gelten, solange sie nicht in den jeweiligen Modulen überschrieben werden."), 'order' => 1, 'view' => array('inst','fak','studip'));
 
 $EXTERN_MODULE_TYPES[1] = array("module" => "Persons", "name" => _("Mitarbeiter"), "level" => 1,
                                                     "description" => _("Das Modul &quot;Mitarbeiter&quot; gibt ein Mitarbeiterverzeichnis einer Einrichtung aus."), 'order' => 20, 'view' => array('inst','fak'));
@@ -65,7 +65,7 @@ $EXTERN_MODULE_TYPES[5] = array("module" => "News", "name" => _("News"), "level"
                                                     "description" => _("Das Modul &quot;News&quot; gibt alle News einer Einrichtung aus."), 'order' => 60, 'view' => array('inst','fak'));
 
 $EXTERN_MODULE_TYPES[6] = array("module" => "Download", "name" => _("Download"), "level" => 1,
-                                                    "description" => _("Das Modul &quot;Download&quot; stellt alle Dateien aus dem Dateibereich einer Einrichtung zum Download zur Verf&uuml;gung."), 'order' => 70, 'view' => array('inst','fak'));
+                                                    "description" => _("Das Modul &quot;Download&quot; stellt alle Dateien aus dem Dateibereich einer Einrichtung zum Download zur Verfügung."), 'order' => 70, 'view' => array('inst','fak'));
 /*
 $EXTERN_MODULE_TYPES[8] = array("module" => "Semlecturetree", "name" => _("Bereichsbaum Veranstaltungen"), "level" => 1,
                                                     "description" => _("Das Modul &quot;Veranstaltungen&quot; gibt alle Veranstaltungen einer Einrichtung aus."));
@@ -83,7 +83,7 @@ $EXTERN_MODULE_TYPES[9] = array("module" => "TemplatePersons", "name" => _("Mita
                                                     "description" => _("Das Modul &quot;Mitarbeiter&quot; gibt ein Mitarbeiterverzeichnis einer Einrichtung aus."), 'order' => 22, 'view' => array('inst','fak', 'studip'));
                                                     
 $EXTERN_MODULE_TYPES[10] = array("module" => "TemplateDownload", "name" => _("Download (templatebasiert)"), "level" => 1,
-                                                    "description" => _("Das Modul &quot;Download&quot; stellt alle Dateien aus dem Dateibereich einer Einrichtung zum Download zur Verf&uuml;gung."), 'order' => 72, 'view' => array('inst','fak'));
+                                                    "description" => _("Das Modul &quot;Download&quot; stellt alle Dateien aus dem Dateibereich einer Einrichtung zum Download zur Verfügung."), 'order' => 72, 'view' => array('inst','fak'));
 
 $EXTERN_MODULE_TYPES[11] = array("module" => "TemplateNews", "name" => _("News (templatebasiert)"), "level" => 1,
                                                     "description" => _("Das Modul &quot;News&quot; gibt alle News einer Einrichtung aus."), 'order' => 62, 'view' => array('inst','fak'));
@@ -106,7 +106,7 @@ $EXTERN_MODULE_TYPES[16] = array('module' => 'TemplatePersBrowse', 'name' => _("
 $EXTERN_MAX_CONFIGURATIONS = 6;
 
 // print this message instead of data if an error occurs
-$EXTERN_ERROR_MESSAGE = "<b>Ein Fehler ist aufgetreten. Die Daten k&ouml;nnen nicht angezeigt werden. Bitte wenden Sie sich an den Webmaster.</b>";
+$EXTERN_ERROR_MESSAGE = "<b>Ein Fehler ist aufgetreten. Die Daten können nicht angezeigt werden. Bitte wenden Sie sich an den Webmaster.</b>";
 
 // change this to match your class name, if you have extended the class ExternConfig to store configurations in a different manner
 $EXTERN_CONFIG_STORAGE_CONTAINER = 'DB';

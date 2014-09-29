@@ -94,7 +94,7 @@ class Settings_AccountController extends Settings_SettingsController
                     $errors[] = _('Der Vorname fehlt oder ist unsinnig!');
                 } else {
                     $this->user->Vorname = $vorname;
-                    $success[] = _('Ihr Vorname wurde ge&auml;ndert!');
+                    $success[] = _('Ihr Vorname wurde geändert!');
                 }
             }
 
@@ -106,7 +106,7 @@ class Settings_AccountController extends Settings_SettingsController
                     $errors[] = _('Der Nachname fehlt oder ist unsinnig!');
                 } else {
                     $this->user->Nachname = $nachname;
-                    $success[] = _('Ihr Nachname wurde ge&auml;ndert!');
+                    $success[] = _('Ihr Nachname wurde geändert!');
                 }
             }
 
@@ -119,7 +119,7 @@ class Settings_AccountController extends Settings_SettingsController
                     $errors[] =  _('Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen Sie einen anderen Usernamen!');
                 } else {
                     $this->user->username = $new_username;
-                    $success[] = _('Ihr Benutzername wurde ge&auml;ndert!');
+                    $success[] = _('Ihr Benutzername wurde geändert!');
 
                     $logout = true;
                 }
@@ -144,7 +144,7 @@ class Settings_AccountController extends Settings_SettingsController
                         $this->user->Email = $email1;
 
                         if (count($messages) < 2) {
-                            $success[] = _('Ihre E-Mail-Adresse wurde ge&auml;ndert!');
+                            $success[] = _('Ihre E-Mail-Adresse wurde geändert!');
                         }
                     }
 

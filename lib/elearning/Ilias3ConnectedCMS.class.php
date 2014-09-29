@@ -177,7 +177,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
 
 
-        echo "<b>" . _("Rollen-Template f&uuml;r die per&ouml;nliche Kategorie: ") . "</b>";
+        echo "<b>" . _("Rollen-Template für die perönliche Kategorie: ") . "</b>";
         echo "</td><td>";
         echo "<input type=\"text\" size=\"20\" border=0 value=\"" . ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type) . "\" name=\"role_template_name\">&nbsp;";
         echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\").')));
@@ -188,12 +188,12 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "<br>\n";
         echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
 
-        echo "<b>" . _("Passw&ouml;rter: ") . "</b>";
+        echo "<b>" . _("Passwörter: ") . "</b>";
         echo "</td><td><font size=\"-1\">";
         echo "<input type=\"checkbox\" border=0 value=\"md5\" name=\"encrypt_passwords\"";
         if ($encrypt_passwords == "md5")
             echo " checked";
-        echo ">&nbsp;" . _("ILIAS-Passw&ouml;rter verschl&uuml;sselt speichern.");
+        echo ">&nbsp;" . _("ILIAS-Passwörter verschlüsselt speichern.");
         echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Wählen Sie diese Option, wenn die ILIAS-Passwörter der zugeordneten Accounts verschlüsselt in der Stud.IP-Datenbank abgelegt werden sollen.')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo "<br>\n";
@@ -205,7 +205,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "<input type=\"checkbox\" border=0 value=\"studip\" name=\"style_setting\"";
         if ($style_setting == "studip")
             echo " checked";
-        echo ">&nbsp;" . _("Stud.IP-Style f&uuml;r neue Nutzer-Accounts voreinstellen.");
+        echo ">&nbsp;" . _("Stud.IP-Style für neue Nutzer-Accounts voreinstellen.");
         echo Assets::img('icons/16/grey/info-circle.png', tooltip2(_('Wählen Sie diese Option, wenn für alle von Stud.IP angelegten ILIAS-Accounts das Stud.IP-Layout als System-Style eingetragen werden soll. ILIAS-seitig angelegte Accounts erhalten weiterhin den Standard-Style.')));
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo "<br>\n";

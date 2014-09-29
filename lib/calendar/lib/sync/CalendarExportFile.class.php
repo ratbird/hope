@@ -109,14 +109,14 @@ class CalendarExportFile extends CalendarExport
                 $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Das Export-Verzeichnis konnte nicht angelegt werden!"), __FILE__, __LINE__);
             } else {
                 if (!chmod($this->path, 0777)) {
-                    $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Zugriffsrechte auf das Export-Verzeichnis konnten nicht ge&auml;ndert werden!")
+                    $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Zugriffsrechte auf das Export-Verzeichnis konnten nicht geändert werden!")
                             , __FILE__, __LINE__);
                 }
             }
         }
         if (file_exists($this->path . $this->tmp_file_name)) {
             if (!unlink($this->path . $this->tmp_file_name)) {
-                $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Eine bestehende Export-Datei konnte nicht gel&ouml;scht werden!"), __FILE__, __LINE__);
+                $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Eine bestehende Export-Datei konnte nicht gelöscht werden!"), __FILE__, __LINE__);
             }
         }
         $this->export = fopen($this->path . $this->tmp_file_name, "wb");

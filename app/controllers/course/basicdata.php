@@ -299,7 +299,7 @@ class Course_BasicdataController extends AuthenticatedController
                 _("Achtung:") .
                 "&nbsp;</b>" .
                 _("Diese Ortsangabe wird nur angezeigt, wenn keine " .
-                  "Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.") .
+                  "Angaben aus Zeiten oder Sitzungsterminen gemacht werden können.") .
                 "</span>",
             'name' => "course_location",
             'type' => 'textarea',

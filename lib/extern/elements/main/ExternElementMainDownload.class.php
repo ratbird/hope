@@ -56,7 +56,7 @@ class ExternElementMainDownload extends ExternElementMain {
                 'icondefault', 'copyright', 'author'
         );
         $this->real_name = _("Grundeinstellungen");
-        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
+        $this->description = _("In den Grundeinstellungen können Sie allgemeine Daten des Moduls ändern.");
         parent::ExternElementMain($module_name, $data_fields, $field_names, $config);
     }
     
@@ -69,7 +69,7 @@ class ExternElementMainDownload extends ExternElementMain {
             "order" => "|0|1|2|3|4|5",
             "visible" => "|1|1|1|1|1|1",
             "aliases" => "||"._("Name")."|"._("Beschreibung")."|"._("Upload am")."|"
-                    ._("Gr&ouml;&szlig;e")."|"._("Upload durch"),
+                    ._("Größe")."|"._("Upload durch"),
             "width" => "|1%|20%|25%|15%|15%|24%",
             "sort" => "|0|0|0|1|0|0",
             "wholesite" => "",
@@ -139,7 +139,7 @@ class ExternElementMainDownload extends ExternElementMain {
         $names = "";
         $table = $edit_form->editCheckboxGeneric("wholesite", $title, $info, $values, $names);
         
-        $title = _("Max. L&auml;nge der Beschreibung:");
+        $title = _("Max. Länge der Beschreibung:");
         $info = _("Geben Sie an, wieviele Zeichen der Beschreibung der Datei ausgegeben werden sollen.");
         $table .= $edit_form->editTextfieldGeneric("lengthdesc", $title, $info, 3, 3);
         

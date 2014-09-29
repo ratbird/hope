@@ -96,7 +96,7 @@ class ExternElementPersondetailsHeader extends ExternElement {
         
         $headline = $edit_form->editHeadline(_("Allgemeine Angaben zum Element Seitenkopf/Bild"));
         
-        $title = _("&Uuml;berschrift (Name) ausblenden:");
+        $title = _("Überschrift (Name) ausblenden:");
         $info = _("Unterdrückt die Anzeige des Namens als Überschrift.");
         $table .= $edit_form->editCheckboxGeneric("hidename", $title, $info, '1', '');
         
@@ -124,8 +124,8 @@ class ExternElementPersondetailsHeader extends ExternElement {
         
         $title = _("Ausrichtung:");
         $info = _("Ausrichtung des Bildes.");
-        $names = array(_("zentriert"), _("linksb&uuml;ndig"), _("rechtsb&uuml;ndig"),
-                _("obenb&uuml;ndig"), _("untenb&uuml;ndig"));
+        $names = array(_("zentriert"), _("linksbündig"), _("rechtsbündig"),
+                _("obenbündig"), _("untenbündig"));
         $values = array("center", "left", "right", "top", "bottom");
         $table = $edit_form->editOptionGeneric("img_align", $title, $info, $values, $names);
         

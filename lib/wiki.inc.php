@@ -977,7 +977,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $locks=getLock($keyword, $user_id);
     $cont="";
     if ($locks && $lock["user_id"]!=$user_id) {
-        $message = MessageBox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), htmlReady($locks)), array(_("Wenn Sie die Seite trotzdem &auml;ndern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und m&uuml;ssen von Hand zusammengef&uuml;hrt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
+        $message = MessageBox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), htmlReady($locks)), array(_("Wenn Sie die Seite trotzdem ändern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und müssen von Hand zusammengeführt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
         PageLayout::postMessage($message);
     }
     if ($keyword=='toc') {

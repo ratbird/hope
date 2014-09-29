@@ -15,7 +15,7 @@ global $SEM_TYPE;
                     <?= CSRFProtection::tokenTag() ?>
 
                     <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
-                        <?= _("Bitte w&auml;hlen Sie eine Einrichtung aus:") ?>
+                        <?= _("Bitte wählen Sie eine Einrichtung aus:") ?>
                     </div>
 
                     <div style="margin-left:10px;">

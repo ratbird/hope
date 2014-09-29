@@ -75,7 +75,7 @@ elseif ($perm->have_perm("tutor"))
 elseif ($perm->have_perm("autor"))    // allow creation of evaluations for autors as well, studygroup
     $rangemode = "dozent";
 else
-    printSafeguard("ausruf",_("Fehler: Sie haben keine Berechtigung f&uuml;r diese Seite."));
+    printSafeguard("ausruf",_("Fehler: Sie haben keine Berechtigung für diese Seite."));
 
 $userID = $user->id;
 if (($showrangeID) && ($voteaction != "search")){
@@ -109,7 +109,7 @@ if (($referer) && ($referer == "1")){
 /* ************************************************************************* */
 $voteDB = new VoteDB();
 
-$typen = array("user"=>_("Benutzer"),"sem"=>_("Veranstaltung"),"inst"=>_("Einrichtung"),"fak"=>_("Fakult&auml;t"));
+$typen = array("user"=>_("Benutzer"),"sem"=>_("Veranstaltung"),"inst"=>_("Einrichtung"),"fak"=>_("Fakultät"));
 
 if ($rangemode == "root"){
     $range[] = array("studip",_("Systemweite Umfragen und Tests"));
@@ -260,8 +260,8 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
             }
             else{
                 $type
-                ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem f&uuml;r die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID)
-                : $safeguard .= printSafeguard("ausruf", sprintf(_("Der Test \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem f&uuml;r die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID);
+                ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem für die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID)
+                : $safeguard .= printSafeguard("ausruf", sprintf(_("Der Test \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem für die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID);
             }
             break;
         case "setResultvisibility_confirmed":
@@ -278,14 +278,14 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $report;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde jetzt f&uuml;r die Teilnehmer sichtbar gemacht."),$votename))
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde jetzt f&uuml;r die Teilnehmer sichtbar gemacht."),$votename));
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde jetzt für die Teilnehmer sichtbar gemacht."),$votename))
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde jetzt für die Teilnehmer sichtbar gemacht."),$votename));
             $votechanged = 1;
             break;
         case "setResultvisibility_aborted":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde f&uuml;r die Teilnehmer nicht sichtbar gemacht."),$votename))
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde f&uuml;r die Teilnehmer nicht sichtbar gemacht."),$votename));
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde für die Teilnehmer nicht sichtbar gemacht."),$votename))
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde für die Teilnehmer nicht sichtbar gemacht."),$votename));
             break;
         case "start":
             $vote->executeStart();
@@ -331,14 +331,14 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $report;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde zur&uuml;ckgesetzt."),$votename))
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde zur&uuml;ckgesetzt."),$votename));
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde zurückgesetzt."),$votename))
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde zurückgesetzt."),$votename));
             $votechanged = 1;
             break;
         case "delete_request":
             $type
-            ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wirklich l&ouml;schen?"),$votename),"delete_request",$voteID, $showrangeID, $referer)
-            : $safeguard .= printSafeguard("ausruf", sprintf(_("Den Test \"%s\" wirklich l&ouml;schen?"),$votename),"delete_request",$voteID, $showrangeID, $referer);
+            ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wirklich löschen?"),$votename),"delete_request",$voteID, $showrangeID, $referer)
+            : $safeguard .= printSafeguard("ausruf", sprintf(_("Den Test \"%s\" wirklich löschen?"),$votename),"delete_request",$voteID, $showrangeID, $referer);
             break;
         case "delete_confirmed":
             $vote->executeRemove();
@@ -348,14 +348,14 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $report;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde gel&ouml;scht."),$votename),"","","",$referer)
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde gel&ouml;scht."),$votename),"","","",$referer);
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde gelöscht."),$votename),"","","",$referer)
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde gelöscht."),$votename),"","","",$referer);
             $votechanged = 1;
             break;
         case "delete_aborted":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde nicht gel&ouml;scht."),$votename),"","","",$referer)
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde nicht gel&ouml;scht."),$votename),"","","",$referer);
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde nicht gelöscht."),$votename),"","","",$referer)
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde nicht gelöscht."),$votename),"","","",$referer);
             break;
         case "created":
             $type
@@ -364,8 +364,8 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
             break;
         case "saved":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde mit den Ver&auml;nderungen gespeichert."),$votename))
-            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde mit den Ver&auml;nderungen gespeichert."),$votename));
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde mit den Veränderungen gespeichert."),$votename))
+            : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde mit den Veränderungen gespeichert."),$votename));
             break;
         case "nothing":
             break;
@@ -550,7 +550,7 @@ function createLabel(){
         "sitetitle_title" => _("Umfragen-Verwaltung"),
 
         // labels for printSafeguard
-        "referer" => _("Zum vorherigen Bereich zur&uuml;ckkehren."),
+        "referer" => _("Zum vorherigen Bereich zurückkehren."),
 
         // labels for printSelections
         "selections_text_vote" => _("Eine neue Umfrage"),
@@ -565,7 +565,7 @@ function createLabel(){
 
         // labels for printSearchResults
         "searchresults_title" => _("Suchergebnisse"),
-        "searchresults_no_string" => _("Bitte geben Sie ein l&auml;ngeres Suchmuster ein."),
+        "searchresults_no_string" => _("Bitte geben Sie ein längeres Suchmuster ein."),
         "searchresults_no_results" => _("Keine Suchergebnisse."),
         "searchresults_no_results_range" => _("Keine Suchergebnisse in diesem Bereich."),
 
@@ -587,7 +587,7 @@ function createLabel(){
 
         "arrow_openthis" => _("Diesen Eintrag aufklappen."),
         "arrow_closethis" => _("Diesen Eintrag zuklappen."),
-        "arrow_open_all" => _("Alle Umfragen und Tests &ouml;ffnen!"),
+        "arrow_open_all" => _("Alle Umfragen und Tests öffnen!"),
         "arrow_close_all" => _("Alle Umfragen und Tests schliessen!"),
 
 
@@ -600,11 +600,11 @@ function createLabel(){
 
         "visibility" => _("Sichtbarkeit"),
         "visibility_alt" => array(
-            "invis" => _("Dieser Eintrag ist f&uuml;r die Benutzer unsichtbar."),
-            "vis" => _("Dieser Eintrag ist f&uuml;r User sichtbar.")),
+            "invis" => _("Dieser Eintrag ist für die Benutzer unsichtbar."),
+            "vis" => _("Dieser Eintrag ist für User sichtbar.")),
         "visibility_tooltip" => array(
-            "invis" => _("Diesen Eintrag f&uuml;r die Benutzer sichtbar machen."),
-            "vis" => _("Diesen Eintrag f&uuml;r die Benutzer unsichtbar machen.")),
+            "invis" => _("Diesen Eintrag für die Benutzer sichtbar machen."),
+            "vis" => _("Diesen Eintrag für die Benutzer unsichtbar machen.")),
 
         "status" => _("Status"),
         "status_button_new" => "start",
@@ -615,7 +615,7 @@ function createLabel(){
         "status_tooltip_stopped" => _("Diesen Eintrag jetzt fortsetzen."),
 
         "restart_button" => "zuruecksetzen",
-        "restart_tooltip" => _("Alle abgegebenen Stimmen l&ouml;schen."),
+        "restart_tooltip" => _("Alle abgegebenen Stimmen löschen."),
 
         "edit" => _("Bearbeiten"),
         "edit_button" => "bearbeiten",
@@ -625,9 +625,9 @@ function createLabel(){
         "makecopy_button" => "kopieerstellen",
         "makecopy_tooltip" => _("Diesen Eintrag jetzt als Kopie neu erstellen."),
 
-        "delete" => _("L&ouml;schen"),
+        "delete" => _("Löschen"),
         "delete_button" => "loeschen",
-        "delete_tooltip" => _("Diesen Eintrag l&ouml;schen."),
+        "delete_tooltip" => _("Diesen Eintrag löschen."),
         "no_votes_message_new" => _("Keine nicht gestarteten Umfragen oder Tests vorhanden."),
         "no_votes_message_active" => _("Keine laufenden Umfragen oder Tests vorhanden."),
         "no_votes_message_stopped" => _("Keine gestoppten Umfragen oder Tests vorhanden."),

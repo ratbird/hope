@@ -52,12 +52,12 @@
                         <td style="padding-left:10px">
                             <b><?= _('Status:') ?></b><br>
                         <? if ($open_requests): ?>
-                            <?= sprintf(_('Es liegen insgesamt <b>%s</b> nicht aufgel&ouml;ste Anfragen vor '
+                            <?= sprintf(_('Es liegen insgesamt <b>%s</b> nicht aufgelöste Anfragen vor '
                                         . '- <br>davon <b>%s</b> von Veranstaltungen und <b>%s</b> auf '
                                         . 'Ressourcen, auf die Sie Zugriff haben.'),
                                         $open_requests, (int)$open_sem_requests, (int)$open_res_requests) ?>
                         <? else: ?>
-                            <?= _('Es liegen im Augenblick keine unaufgel&ouml;sten Anfragen vor.') ?>
+                            <?= _('Es liegen im Augenblick keine unaufgelösten Anfragen vor.') ?>
                         <? endif; ?>
                     <? if ($no_time): ?>
                             <br>
@@ -100,8 +100,8 @@
         <tr>
             <td>&nbsp;</td>
             <td>
-                <b><?= _('Optionen beim Aufl&ouml;sen') ?></b><br>
-                <?= _('Sie k&ouml;nnen die vorliegenden Anfragen mit folgenden Optionen aufl&ouml;sen:') ?><br>
+                <b><?= _('Optionen beim Auflösen') ?></b><br>
+                <?= _('Sie können die vorliegenden Anfragen mit folgenden Optionen auflösen:') ?><br>
                 <br>
 
                 <table border="0" cellpadding="2" cellspacing="0">
@@ -124,7 +124,7 @@
 
                             <label>
                                 <input type="radio" name="resolve_requests_mode" value="res">
-                                <?= _('nur Anfragen auf meine R&auml;ume') ?>
+                                <?= _('nur Anfragen auf meine Räume') ?>
                             </label>
                             <br>
 
@@ -155,13 +155,13 @@
 
                             <label>
                                 <input type="radio" name="resolve_requests_order" value="complex" checked>
-                                <?= _('komplexere zuerst (Raumgr&ouml;&szlig;e und  gew&uuml;nschte Eigenschaften)') ?>
+                                <?= _('komplexere zuerst (Raumgröße und  gewünschte Eigenschaften)') ?>
                             </label>
                             <br>
 
                             <label>
                                 <input type="radio" name="resolve_requests_order" value="oldest">
-                                <?= _('&auml;ltere zuerst') ?>
+                                <?= _('ältere zuerst') ?>
                             </label>
                             <br>
 

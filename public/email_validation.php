@@ -51,9 +51,9 @@ PageLayout::setTitle(_('Aktivierung'));
 //user bereits vorhanden
 if ($perm->have_perm('autor')) {
     $info = sprintf(_('Sie haben schon den Status <b>%s</b> im System.
-                       Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen'), $auth->auth['perm']);
+                       Eine Aktivierung des Accounts ist nicht mehr nötig, um Schreibrechte zu bekommen'), $auth->auth['perm']);
     $details = array();
-    $details[] = sprintf('<a href="%s">%s</a>', URLHelper::getLink('index.php'), _('zur&uuml;ck zur Startseite'));
+    $details[] = sprintf('<a href="%s">%s</a>', URLHelper::getLink('index.php'), _('zurück zur Startseite'));
     $message = MessageBox::info($info, $details);
 }
 

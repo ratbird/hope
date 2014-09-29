@@ -146,10 +146,10 @@ class ResourcesBrowse {
                     $top_level_name = _("Einrichtungsressourcen");
                 break;
                 case "fak":
-                    $top_level_name = _("Fakult&auml;tsressourcen");
+                    $top_level_name = _("Fakultätsressourcen");
                 break;
                 case "user":
-                    $top_level_name = _("pers&ouml;nliche Ressourcen");
+                    $top_level_name = _("persönliche Ressourcen");
                 break;
             }
 
@@ -437,7 +437,7 @@ class ResourcesBrowse {
                             . '&' . (!$way_back ? "reset=TRUE" : "open_level=$way_back")) ?>">
                     <?= Assets::img('icons/16/blue/arr_2left.png', array(
                         'class' => 'text-top',
-                        'title' =>_('eine Ebene zur&uuml;ck'))) ?>
+                        'title' =>_('eine Ebene zurück'))) ?>
                     </a>
                 <? endif ?>
             </td>
@@ -486,7 +486,7 @@ class ResourcesBrowse {
             <td <? echo ($this->mode == "browse") ? " colspan=\"2\"" : "" ?>>
                 <?$result_count=$this->list->showListObjects($this->open_object);
         if (!$result_count) {
-            echo MessageBox::info(_("Es existieren keine Eintr&auml;ge auf dieser Ebene.")); ?>
+            echo MessageBox::info(_("Es existieren keine Einträge auf dieser Ebene.")); ?>
             </td>
         </tr>
             <?
@@ -500,7 +500,7 @@ class ResourcesBrowse {
             <td <? echo ($this->mode == "browse") ? " colspan=\"2\"" : "" ?>>
                 <?$result_count=$this->list->showSearchList($this->searchArray, $check_assigns);
         if (!$result_count) {
-            echo MessageBox::info(_("Es wurden keine Eintr&auml;ge zu Ihren Suchkriterien gefunden.")); ?>
+            echo MessageBox::info(_("Es wurden keine Einträge zu Ihren Suchkriterien gefunden.")); ?>
             </td>
         </tr>
             <?

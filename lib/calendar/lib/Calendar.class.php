@@ -833,7 +833,7 @@ class Calendar
             } else if (strtolower(get_class($_calendar)) == 'groupcalendar') {
                 $this->headline = sprintf(_("Terminkalender der Gruppe %s - Termin anlegen/bearbeiten"), $this->getGroupName());
             } else if ($this->checkPermission(Calendar::PERMISSION_OWN)) {
-                $this->headline = _("Mein pers&ouml;nlicher Terminkalender - Termin anlegen/bearbeiten");
+                $this->headline = _("Mein persönlicher Terminkalender - Termin anlegen/bearbeiten");
             } else {
                 $this->headline = sprintf(_("Terminkalender von %s %s - Termin anlegen/bearbeiten"), get_fullname($this->getUserId()), $this->perm_string);
             }

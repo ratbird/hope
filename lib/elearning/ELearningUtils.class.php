@@ -316,7 +316,7 @@ class ELearningUtils
         } elseif (! $is_verified) {
             $output .= "<font size=\"-1\">";
             if (Request::submitted('start'))
-                $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen k&ouml;nnen, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), htmlReady($connected_cms[$new_account_cms]->getName())) . "<br><br>\n\n";
+                $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen können, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), htmlReady($connected_cms[$new_account_cms]->getName())) . "<br><br>\n\n";
         }
         $template = $GLOBALS['template_factory']->open('elearning/_new_account_form.php');
         $template->set_attribute('cms_title', htmlReady($connected_cms[$new_account_cms]->getName()));
@@ -495,7 +495,7 @@ class ELearningUtils
                 $connected_courses['text'] = _("Diese Veranstaltung ist mit folgenden Ilias-Kursen verknüpft. Hier gelangen Sie direkt in den jeweiligen Kurs: ");
             else
                 $connected_courses['text'] = _("Diese Veranstaltung ist mit einem Ilias-Kurs verknüpft. Hier gelangen Sie direkt in den Kurs: ");
-            $output["update"] .= "<font style=\"font-size: -1\">" . _("Hier k&ouml;nnen Sie die Zuordnungen zu den verkn&uuml;pften Kursen aktualisieren."). "<br></font>";
+            $output["update"] .= "<font style=\"font-size: -1\">" . _("Hier können Sie die Zuordnungen zu den verknüpften Kursen aktualisieren."). "<br></font>";
             $output["update"] .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
             $output["update"] .= CSRFProtection::tokenTag();
             $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . htmlReady($view) . "\">\n";
@@ -538,7 +538,7 @@ class ELearningUtils
             $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
-            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), Request::quoted('delete_cms'), $cmsystems[Request::quoted('delete_cms')]["accounts"]+$cmsystems[Request::quoted('delete_cms')]["modules"]+$cmsystems[Request::quoted('delete_cms')]["config"] ) . "</td></tr>";
+            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das Löschen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseinträge und Verknüpfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt löschen?"), Request::quoted('delete_cms'), $cmsystems[Request::quoted('delete_cms')]["accounts"]+$cmsystems[Request::quoted('delete_cms')]["modules"]+$cmsystems[Request::quoted('delete_cms')]["config"] ) . "</td></tr>";
             $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".Request::quoted('delete_cms')."\">";
             $messages["info"] .= '<div class="button-group">' . Button::create(_('Alle löschen'), 'confirm_delete') . Button::createCancel(_('Abbrechen'), 'abbruch') . '<div></td></tr>';
             $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
@@ -549,7 +549,7 @@ class ELearningUtils
         if (Request::submitted('confirm_delete')) {
             unset($cmsystems[Request::quoted('delete_cms')]);
 //          deleteCMSData(Request::quoted('delete_cms'));
-            $messages["info"] .= _("Daten wurden gel&ouml;scht.");
+            $messages["info"] .= _("Daten wurden gelöscht.");
         }
 
         foreach ($cmsystems as $cms_type =>$data) {
@@ -562,16 +562,16 @@ class ELearningUtils
                     $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 }
                 elseif ($data["config"] < 1)
-                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle f&uuml;r das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle für das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
                 elseif ($data["config"] < 1)
                     $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
 
                 if ($data["accounts"])
-                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit Accounts im System %s verkn&uuml;pft."), $data["accounts"], $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</td></tr>";
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit Accounts im System %s verknüpft."), $data["accounts"], $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</td></tr>";
                 if ($data["modules"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Objekte sind Stud.IP-Veranstaltungen oder -Einrichtungen zugeordnet."), $data["modules"]) . "</td></tr>";
                 if ($data["config"])
-                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Einträge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "</table>";
                 $output .= ELearningUtils::getCMSFooter(($ELEARNING_INTERFACE_MODULES[$cms_type]["logo_file"] ? "<img src=\"".$ELEARNING_INTERFACE_MODULES[$cms_type]["logo_file"]."\" border=\"0\">" : $cms_type));
@@ -582,15 +582,15 @@ class ELearningUtils
                 $output .= CSRFProtection::tokenTag();
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-                $output .= "<tr><td>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top')) . "</td><td><i>".sprintf(_("F&uuml;r das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
+                $output .= "<tr><td>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top')) . "</td><td><i>".sprintf(_("Für das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "<tr><td colspan=\"2\"><b>". _("In der Stud.IP-Datenbank sind noch folgende Informationen zu diesem System gespeichert:") . "</b></td></tr>";
                 if ($data["accounts"])
-                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit externen Accounts mit dem Index \"%s\" verkn&uuml;pft."), $data["accounts"], $cms_type) . "</td></tr>";
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit externen Accounts mit dem Index \"%s\" verknüpft."), $data["accounts"], $cms_type) . "</td></tr>";
                 if ($data["modules"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Objekte sind Stud.IP-Veranstaltungen oder -Einrichtungen zugeordnet."), $data["modules"]) . "</td></tr>";
                 if ($data["config"])
-                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Einträge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\">" . Button::create(_('Löschen'), 'delete') . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";

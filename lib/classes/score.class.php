@@ -264,22 +264,22 @@ class Score
         $titel[2]  =    array(0 => _("Unbeschriebenes Blatt"), 1 => _("Unbeschriebenes Blatt"));
         $titel[3]  =    array(0 => _("Neuling"), 1 => _("Neuling"));
         $titel[4]  =    array(0 => _("Greenhorn"), 1 => _("Greenhorn"));
-        $titel[5]  =    array(0 => _("Anf&auml;nger"), 1 => _("Anf&auml;ngerin"));
+        $titel[5]  =    array(0 => _("Anfänger"), 1 => _("Anfängerin"));
         $titel[6]  =    array(0 => _("Einsteiger"), 1 => _("Einsteigerin"));
         $titel[7]  =    array(0 => _("Beginner"), 1 => _("Beginnerin"));
         $titel[8]  =    array(0 => _("Novize"), 1 => _("Novizin"));
         $titel[9]  =    array(0 => _("Fortgeschrittener"), 1 => _("Fortgeschrittene"));
         $titel[10] =    array(0 => _("Kenner"), 1 => _("Kennerin"));
-        $titel[11] =    array(0 => _("K&ouml;nner"), 1 => _("K&ouml;nnerin"));
+        $titel[11] =    array(0 => _("Könner"), 1 => _("Könnerin"));
         $titel[12] =    array(0 => _("Profi"), 1 => _("Profi"));
         $titel[13] =    array(0 => _("Experte"), 1 => _("Expertin"));
         $titel[14] =    array(0 => _("Meister"), 1 => _("Meisterin"));
-        $titel[15] =    array(0 => _("Gro&szlig;meister"), 1 => _("Gro&szlig;meisterin"));
+        $titel[15] =    array(0 => _("Großmeister"), 1 => _("Großmeisterin"));
         $titel[16] =    array(0 => _("Idol"), 1 => _("Idol"));
         $titel[17] =    array(0 => _("Guru"), 1 => _("Hohepriesterin"));
         $titel[18] =    array(0 => _("Lichtgestalt"), 1 => _("Lichtgestalt"));
-        $titel[19] =    array(0 => _("Halbgott"), 1 => _("Halbg&ouml;ttin"));
-        $titel[20] =    array(0 => _("Gott"), 1 => _("G&ouml;ttin"));
+        $titel[19] =    array(0 => _("Halbgott"), 1 => _("Halbgöttin"));
+        $titel[20] =    array(0 => _("Gott"), 1 => _("Göttin"));
 
         return $titel[$logscore][$gender == 2 ? 1 : 0];
     }

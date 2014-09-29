@@ -88,13 +88,13 @@
                 <p>
                     <?= _('Wenn Sie einen Studiengang wieder austragen möchten, '
                          .'markieren Sie die entsprechenden Felder in der oberen Tabelle.') ?>
-                    <?= _('Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.') ?><br>
+                    <?= _('Mit einem Klick auf <b>Übernehmen</b> werden die gewählten Änderungen durchgeführt.') ?><br>
                     <br>
                     <?= Button::create(_('Übernehmen'), 'store_sg', array('title' => _('Änderungen übernehmen'))) ?>
                 </p>
             <? else: ?>
                 <?= _('Die Informationen zu Ihrem Studiengang werden vom System verwaltet, '
-                     .'und k&ouml;nnen daher von Ihnen nicht ge&auml;ndert werden.') ?>
+                     .'und können daher von Ihnen nicht geändert werden.') ?>
             <? endif; ?>
             </td>
         </tr>

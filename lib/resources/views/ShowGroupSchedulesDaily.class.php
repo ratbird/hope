@@ -85,7 +85,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                     <?= Button::create(_('Auswählen'), 'jump') ?><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="bottom">
-                    <?= ($view_mode == 'oobj' ? _("Eine Ressourcengruppe ausw&auml;hlen") : _("Eine Raumgruppe ausw&auml;hlen")) ?>:<br>
+                    <?= ($view_mode == 'oobj' ? _("Eine Ressourcengruppe auswählen") : _("Eine Raumgruppe auswählen")) ?>:<br>
                     <select name="group_schedule_choose_group" onChange="document.schedule_form.submit()">
                     <? foreach($this->resources_groups->getAvailableGroups() as $gid) :
                         echo '<option value="'.$gid.'" '

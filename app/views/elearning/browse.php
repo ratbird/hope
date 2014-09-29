@@ -84,11 +84,11 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
     $infobox = array    (array ("kategorie"  => _("Information:"),
             "eintrag" => array  (array (    "icon" => "icons/16/black/info.png",
-                                    "text"  => sprintf(_("Auf dieser Seite k&ouml;nnen Sie nach Lernmodulen im angebundenen ILIAS-System suchen.")) ) ) ) );
+                                    "text"  => sprintf(_("Auf dieser Seite können Sie nach Lernmodulen im angebundenen ILIAS-System suchen.")) ) ) ) );
 
     $infobox[1]["kategorie"] = _("Aktionen:");
     $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
-                                    "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suchen'. Die Suche bezieht sich auf den ausgew&auml;hlten Suchbereich.")));
+                                    "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suchen'. Die Suche bezieht sich auf den ausgewählten Suchbereich.")));
 
     ?>
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -132,7 +132,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
     if ($new_account_cms == "")
     {
-        echo _("Hier k&ouml;nnen Sie nach Lernmodulen suchen.");
+        echo _("Hier können Sie nach Lernmodulen suchen.");
         ?>
         <br><br>
         <?
@@ -162,9 +162,9 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
         echo "<br>\n";
         if ($cms_select == "")
-            echo ELearningUtils::getCMSSelectbox("<b>" . _("W&auml;hlen Sie ein angebundenes System f&uuml;r die Suche:") . "</b>");
+            echo ELearningUtils::getCMSSelectbox("<b>" . _("Wählen Sie ein angebundenes System für die Suche:") . "</b>");
         else
-            echo ELearningUtils::getCMSSelectbox(_("W&auml;hlen Sie ein angebundenes System f&uuml;r die Suche:"));
+            echo ELearningUtils::getCMSSelectbox(_("Wählen Sie ein angebundenes System für die Suche:"));
     }
 
 // Cachen der SOAP-Daten

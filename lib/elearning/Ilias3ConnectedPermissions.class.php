@@ -175,7 +175,7 @@ class Ilias3ConnectedPermissions extends ConnectedPermissions
         if (! $this->getContentModulePerms( $course_id ))
         {
 //          if ($GLOBALS["debug"] == true)
-            $messages["info"] .= _("F&uuml;r den zugeordneten ILIAS-Kurs konnten keine Berechtigungen ermittelt werden.") . "<br>";
+            $messages["info"] .= _("Für den zugeordneten ILIAS-Kurs konnten keine Berechtigungen ermittelt werden.") . "<br>";
         }
 //      if (! $this->isAllowed(OPERATION_READ))
 //          echo "NIX DA";

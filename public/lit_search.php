@@ -255,7 +255,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         $content .= "<b>" . _("Autor; weitere Beteiligte:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("authors"),true,true) . "<br>";
         $content .= "<b>" . _("Erschienen:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("published"),true,true) . "<br>";
         $content .= "<b>" . _("Identifikation:") ."</b>&nbsp;&nbsp;" . formatLinks($element->getValue("dc_identifier")) . "<br>";
-        $content .= "<b>" . _("Schlagw&ouml;rter:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_subject"),true,true) . "<br>";
+        $content .= "<b>" . _("Schlagwörter:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_subject"),true,true) . "<br>";
         if ($element->getValue("lit_plugin") != "Studip"){
             $content .= "<b>" . _("Externer Link:") ."</b>&nbsp;&nbsp;";
             if (($link = $element->getValue("external_link"))){
@@ -309,7 +309,7 @@ if ($_the_search->start_result + 4 < $num_hits) {
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
                                     array("icon" => "icons/16/black/search.png","text"  =>  _("Hier können Sie in verschiedenen Katalogen nach Literatur suchen.")),
-                                    array("icon" => "blank.gif","text"  =>  "<b>" . _("Ausgew&auml;hlter Katalog:") . "</b><br>" . $_the_search->search_plugin->description),
+                                    array("icon" => "blank.gif","text"  =>  "<b>" . _("Ausgewählter Katalog:") . "</b><br>" . $_the_search->search_plugin->description),
                                     )
                     );
 if ($num_hits){

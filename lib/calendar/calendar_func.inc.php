@@ -158,7 +158,7 @@ function holiday($tmstamp, $mod = "")
         case 1: $name = "Neujahr";
             $col = 3;
             break;
-        case 6: $name = "Hl. Drei K&ouml;nige";
+        case 6: $name = "Hl. Drei Könige";
             $col = 1;
             break;
     }
@@ -167,7 +167,7 @@ function holiday($tmstamp, $mod = "")
     if (date("L", $tmstamp))
         $doy--;
     switch ($doy) {
-        case 79: $name = "Fr&uuml;hlingsanfang";
+        case 79: $name = "Frühlingsanfang";
             $col = 1;
             break;
         case 121: $name = "Maifeiertag";

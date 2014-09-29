@@ -58,7 +58,7 @@ class Settings_AvatarController extends Settings_SettingsController
         if (Request::submitted('reset')) {
             Avatar::getAvatar($this->user->user_id)->reset();
             Visibility::removePrivacySetting('picture', $this->user->user_id);
-            $this->reportSuccess(_('Bild gel&ouml;scht.'));
+            $this->reportSuccess(_('Bild gelöscht.'));
         } elseif (Request::submitted('upload')) {
             try {
                 Avatar::getAvatar($this->user->user_id)->createFromUpload('imgfile');

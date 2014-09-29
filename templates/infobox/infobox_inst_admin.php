@@ -30,8 +30,8 @@
           </td>
           <td width="99%" align="left">
 
-                            <?= sprintf(_("Auf dieser Seite k&ouml;nnen Sie Personen der Einrichtung %s zuordnen."), "<b>" . htmlReady($inst_name) . "</b>") ?><br>
-                             <?= _("Um weitere Personen als Mitarbeiter hinzuzuf&uuml;gen, benutzen Sie die Suche."); ?>
+                            <?= sprintf(_("Auf dieser Seite können Sie Personen der Einrichtung %s zuordnen."), "<b>" . htmlReady($inst_name) . "</b>") ?><br>
+                             <?= _("Um weitere Personen als Mitarbeiter hinzuzufügen, benutzen Sie die Suche."); ?>
 
             <br>
           </td>

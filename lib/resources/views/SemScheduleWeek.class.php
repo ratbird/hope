@@ -20,7 +20,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ScheduleWeek.class.php
-// Modul zum Erstellen grafischer Belegungspl&auml;ne
+// Modul zum Erstellen grafischer Belegungspläne
 // Copyright (C) 2005 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or

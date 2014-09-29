@@ -477,7 +477,7 @@ if (is_array($msgs)) {
                         <label><?= _('im Kalender auswählbar:') ?>
                         <input type="checkbox" name="is_cal_group" value="1" class="text-top"<?= ($temp['calendar_group'] ? ' checked' : '') ?>></label>
                     <? endif ?>
-                    &nbsp; &nbsp; &nbsp; <b><?= _("&Auml;ndern") ?></b>&nbsp;
+                    &nbsp; &nbsp; &nbsp; <b><?= _("Ändern") ?></b>&nbsp;
                     <?= Assets::input('icons/16/green/accept.png', tooltip2(_('Gruppe anpassen')) + array(
                             'name' => 'add_new_statusgruppe',
                             'value' => _('Gruppe anpassen'),
@@ -511,8 +511,8 @@ if (is_array($msgs)) {
                     <?
                     $help_url = format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
                     $zusatz = array(
-                        _("Um f&uuml;r diesen Bereich Gruppen oder Funktionen anzulegen, nutzen Sie bitte die obere Zeile!"),
-                        _("Wenn Sie Gruppen angelegt haben, k&ouml;nnen Sie diesen Personen zuordnen. Jeder Gruppe k&ouml;nnen beliebig viele Personen zugeordnet werden. Jede Person kann beliebig vielen Gruppen zugeordnet werden."),
+                        _("Um für diesen Bereich Gruppen oder Funktionen anzulegen, nutzen Sie bitte die obere Zeile!"),
+                        _("Wenn Sie Gruppen angelegt haben, können Sie diesen Personen zuordnen. Jeder Gruppe können beliebig viele Personen zugeordnet werden. Jede Person kann beliebig vielen Gruppen zugeordnet werden."),
                         sprintf(_("Lesen Sie weitere Bedienungshinweise in der %sHilfe%s nach!"), "<a href=\"" . $help_url . "\">", "</a>")
                     );
 

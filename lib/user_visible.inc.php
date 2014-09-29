@@ -180,7 +180,7 @@ function vis_chooser($vis, $new = false) {
     if ($vis == '') $vis = 'unknown';
     $txt = array();
     $txt[] = '<select name="visible">';
-    if (!$new) $txt[] = '<option value="'.$vis.'">'._("keine &Auml;nderung").'</option>';
+    if (!$new) $txt[] = '<option value="'.$vis.'">'._("keine Änderung").'</option>';
     $txt[] = '<option value="always">'._("immer").'</option>';
     /* $txt[] = '<option value="yes">'._("ja").'</option>'; */
     $txt[] = '<option value="unknown"'.(($new)? ' selected="selected"':'').'>'._("unbekannt").'</option>';

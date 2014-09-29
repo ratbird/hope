@@ -160,7 +160,7 @@ process_news_commands($institut_main_data);
     }
 
     if ($institute->fakultaets_id) {
-        echo "<li><b>" . _("Fakult&auml;t:") . " </b>"; echo htmlReady(Institute::find($institute->fakultaets_id)->name); echo"</li>";
+        echo "<li><b>" . _("Fakultät:") . " </b>"; echo htmlReady(Institute::find($institute->fakultaets_id)->name); echo"</li>";
     }
 
     $localEntries = DataFieldEntry::getDataFieldEntries($institute_id);

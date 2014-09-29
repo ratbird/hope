@@ -145,7 +145,7 @@ class SingleCalendar extends Calendar
         if ($this->getRange() == Calendar::RANGE_SEM || $this->getRange() == Calendar::RANGE_INST) {
             $this->headline = getHeaderLine($this->user_id) . ' - ' . _("Terminkalender - Termin bearbeiten");
         } else if ($this->checkPermission(Calendar::PERMISSION_OWN)) {
-            $this->headline = _("Mein pers&ouml;nlicher Terminkalender - Termin bearbeiten");
+            $this->headline = _("Mein persönlicher Terminkalender - Termin bearbeiten");
         } else {
             if ($this->event->havePermission(Event::PERMISSION_WRITABLE)) {
                 $this->headline = sprintf(_("Terminkalender von %s %s - Termin bearbeiten"), get_fullname($this->getUserId()), $this->perm_string);
@@ -160,7 +160,7 @@ class SingleCalendar extends Calendar
     function restoreSeminarEvent($event_id)
     {
         $this->event = new SeminarEvent($event_id);
-        $this->headline = _("Mein pers&ouml;nlicher Terminkalender - Veranstaltungstermin");
+        $this->headline = _("Mein persönlicher Terminkalender - Veranstaltungstermin");
     }
 
     function createSeminarEvent($type)

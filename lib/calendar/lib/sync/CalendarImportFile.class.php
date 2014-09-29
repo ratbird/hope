@@ -136,7 +136,7 @@ class CalendarImportFile extends CalendarImport
         global $_calendar_error;
 
         if (!unlink($this->file['tmp_name'])) {
-            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Datei konnte nicht gel&ouml;scht werden!"));
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Datei konnte nicht gelöscht werden!"));
             return FALSE;
         }
 

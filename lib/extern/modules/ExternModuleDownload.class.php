@@ -65,7 +65,7 @@ class ExternModuleDownload extends ExternModule {
                 _("Dateiname"),
                 _("Beschreibung"),
                 _("Datum"),
-                _("Gr&ouml;&szlig;e"),
+                _("Größe"),
                 _("Upload durch")
         );
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);

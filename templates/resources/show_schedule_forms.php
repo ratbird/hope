@@ -36,7 +36,7 @@ use Studip\Button,
                 <br>
                 <?= Assets::img('icons/16/grey/info-circle.png') ?>
                 <? if ($owner_type == "sem") : ?>
-                    <?= sprintf ( _("Diese Belegung ist ein regelm&auml;&szlig;iger Termin der Veranstaltung %s, die in diesem Raum stattfindet."),
+                    <?= sprintf ( _("Diese Belegung ist ein regelmäßiger Termin der Veranstaltung %s, die in diesem Raum stattfindet."),
                         ($perm->have_studip_perm("user", $seminarID)) ?
                             "<a href=\"seminar_main.php?auswahl=". $seminarID ."\" onClick=\"return check_opener(this)\">". htmlReady($seminarName) ."</a>" :
                             "<a href=\"dispatch.php/course/details/?&sem_id=". $seminarID ."\" onClick=\"return check_opener(this)\">". htmlReady($seminarName) ."</a>");
@@ -84,12 +84,12 @@ use Studip\Button,
             <? if ($lockedAssign) :
                 if ($resAssign->getRepeatMode()=="w") :
                     if ($resAssign->getRepeatInterval() == 2)
-                        echo "<b>"._("zweiw&ouml;chentlich")."</b>";
+                        echo "<b>"._("zweiwöchentlich")."</b>";
                     else
-                        echo "<b>"._("w&ouml;chentlich")."</b>";
+                        echo "<b>"._("wöchentlich")."</b>";
                 else :
                     if (($owner_type == "date") && (isMetadateCorrespondingDate($resAssign->getAssignUserId())))
-                        echo "<b>"._("Einzeltermin zu regelm&auml;&szlig;igen Veranstaltungszeiten")."</b>";
+                        echo "<b>"._("Einzeltermin zu regelmäßigen Veranstaltungszeiten")."</b>";
                     else
                         echo "<b>"._("keine Wiederholung (Einzeltermin)")."</b>";
                 endif;
@@ -131,7 +131,7 @@ use Studip\Button,
             </td>
             <td width="40%" valign="top">
             <? if ($resAssign->getRepeatMode() != "na") : ?>
-                <?if ($resAssign->getRepeatMode() != "sd") print _("Wiederholung bis sp&auml;testens:"); else print _("Letzter Termin:"); ?><br>
+                <?if ($resAssign->getRepeatMode() != "sd") print _("Wiederholung bis spätestens:"); else print _("Letzter Termin:"); ?><br>
             <?
             if ($lockedAssign) :
                 echo "<b>".date("d.m.Y",$resAssign->getRepeatEnd())."</b>";
@@ -150,7 +150,7 @@ use Studip\Button,
 
         <tr>
             <td valign="top">
-                <?=_("eingetragen f&uuml;r die Belegung:")?><br>
+                <?=_("eingetragen für die Belegung:")?><br>
                 <?
                 $user_name=$resAssign->getUsername(FALSE);
                 if ($user_name)
@@ -167,7 +167,7 @@ use Studip\Button,
                     <? showSearchForm("search_user", $search_string_search_user, FALSE, TRUE, FALSE, FALSE, FALSE, "up") ?> <br>
                     <?=_("freie Eingabe zur Belegung:")?><br>
                     <input name="change_schedule_user_free_name" value="<?= htmlReady($resAssign->getUserFreeName()); ?>" size=40 maxlength="255">
-                    <br><?=_("<b>Beachten Sie:</b> Wenn Sie einen NutzerIn oder eine Einrichtung eintragen, kann diese NutzerIn oder berechtigte Personen die Belegung selbstst&auml;ndig aufheben. Sie k&ouml;nnen die Belegung aber auch frei eingeben.")?>
+                    <br><?=_("<b>Beachten Sie:</b> Wenn Sie einen NutzerIn oder eine Einrichtung eintragen, kann diese NutzerIn oder berechtigte Personen die Belegung selbstständig aufheben. Sie können die Belegung aber auch frei eingeben.")?>
                     <input type ="hidden" name="change_schedule_assign_user_id" value="<? echo $resAssign->getAssignUserId(); ?>">
                     <input type ="hidden" name="change_schedule_repeat_mode" value="<? echo $resAssign->getRepeatMode(); ?>">
                 <? endif; ?>
@@ -184,7 +184,7 @@ use Studip\Button,
                         $str[2]= _("jeden zweiten Tag");
                         $str[3]= _("jeden dritten Tag");
                         $str[4]= _("jeden vierten Tag");
-                        $str[5]= _("jeden f&uuml;nften Tag");
+                        $str[5]= _("jeden fünften Tag");
                         $str[6]= _("jeden sechsten Tag");
                         $max=6;
                     break;
@@ -200,7 +200,7 @@ use Studip\Button,
                         $str[2]= _("jeden zweiten Monat");
                         $str[3]= _("jeden dritten Monat");
                         $str[4]= _("jeden vierten Monat");
-                        $str[5]= _("jeden f&uuml;nften Monat");
+                        $str[5]= _("jeden fünften Monat");
                         $str[6]= _("jeden sechsten Monat");
                         $str[7]= _("jeden siebten Monat");
                         $str[8]= _("jeden achten Monat");
@@ -214,7 +214,7 @@ use Studip\Button,
                         $str[2]= _("jedes zweite Jahr");
                         $str[3]= _("jedes dritte Jahr");
                         $str[4]= _("jedes vierte Jahr");
-                        $str[5]= _("jedes f&uuml;nfte Jahr");
+                        $str[5]= _("jedes fünfte Jahr");
                         $max=5;
                     break;
                 endswitch;
@@ -292,7 +292,7 @@ use Studip\Button,
             if ($owner_type == "sem" || $owner_type == "date") {
                 ?>
                 <b><?=_("Belegung in anderen Raum verschieben:")?></b><br>
-                <?=_("Sie k&ouml;nnen diese Belegung in einen anderen Raum verschieben. <br>Alle anderen Angaben bleiben unver&auml;ndert.");?>
+                <?=_("Sie können diese Belegung in einen anderen Raum verschieben. <br>Alle anderen Angaben bleiben unverändert.");?>
                 <br>&nbsp;
                 <?
             } else {
@@ -373,8 +373,8 @@ use Studip\Button,
             <?
             if (!in_array($resAssign->getRepeatMode(), array('na','sd'))) :
                 ?>
-                <b><?=_("Regelm&auml;&szlig;ige Belegung in Einzeltermine umwandeln:")?></b><br><br>
-                <?=_("Nutzen Sie diese Funktion, um eine Terminserie in Einzeltermine umzuwandeln. Diese Einzeltermine k&ouml;nnen dann getrennt bearbeitet werden.");?>
+                <b><?=_("Regelmäßige Belegung in Einzeltermine umwandeln:")?></b><br><br>
+                <?=_("Nutzen Sie diese Funktion, um eine Terminserie in Einzeltermine umzuwandeln. Diese Einzeltermine können dann getrennt bearbeitet werden.");?>
                 <br><br>
                 <?= Button::create(_('Umwandeln'), 'change_meta_to_single_assigns') ?>
             <?

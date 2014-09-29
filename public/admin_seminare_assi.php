@@ -631,7 +631,7 @@ if ($form == 3 && Request::isPost())
     } else {
         if (!check_and_set_date(Request::option('vor_tag'), Request::option('vor_monat'), Request::option('vor_jahr'), Request::option('vor_stunde'), Request::option('vor_minute'), $_SESSION['sem_create_data'], "sem_vor_termin")
             || !check_and_set_date(Request::option('vor_tag'), Request::option('vor_monat'), Request::option('vor_jahr'), Request::option('vor_end_stunde'), Request::option('vor_end_minute'), $_SESSION['sem_create_data'], "sem_vor_end_termin")){
-            $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r Start- und Endzeit der Vorbesprechung ein!")."§";
+            $errormsg=$errormsg."error§"._("Bitte geben Sie gültige Zeiten für Start- und Endzeit der Vorbesprechung ein!")."§";
         } elseif ($_SESSION['sem_create_data']["sem_vor_termin"] >= $_SESSION['sem_create_data']["sem_vor_end_termin"]) {
             $errormsg .= "error§"._("Die Endzeit der Vorbesprechung darf nicht vor der Startzeit liegen!")."§";
         }
@@ -753,7 +753,7 @@ if ($form == 5 && Request::isPost()) {
         if ($jahr == _("jjjj")) $jahr = 0;
         if (!checkdate((int)$monat, (int)$tag, (int)$jahr))
         {
-            $errormsg=$errormsg."error§"._("Bitte geben Sie ein g&uuml;ltiges Datum ein!")."§";
+            $errormsg=$errormsg."error§"._("Bitte geben Sie ein gültiges Datum ein!")."§";
             $_SESSION['sem_create_data']["sem_start_termin"] = -1;
         }
         else {
@@ -803,12 +803,12 @@ if (($form == 1) && (Request::submitted('jump_next')))
     if (($_SESSION['sem_create_data']["sem_duration_time"]<0) && ($_SESSION['sem_create_data']["sem_duration_time"] != -1))
     {
         $level=3;
-        $errormsg=$errormsg."error§"._("Das Endsemester darf nicht vor dem Startsemester liegen. Bitte &auml;ndern Sie die entsprechenden Einstellungen!")."§";
+        $errormsg=$errormsg."error§"._("Das Endsemester darf nicht vor dem Startsemester liegen. Bitte ändern Sie die entsprechenden Einstellungen!")."§";
     }
     if (strlen($_SESSION['sem_create_data']["sem_name"]) <3)
     {
         $level=1; //wir bleiben auf der ersten Seite
-        $errormsg=$errormsg."error§"._("Bitte geben Sie einen g&uuml;ltigen Namen f&uuml;r die Veranstaltung ein!")."§";
+        $errormsg=$errormsg."error§"._("Bitte geben Sie einen gültigen Namen für die Veranstaltung ein!")."§";
     }
     if ($_SESSION['sem_create_data']["sem_start_time"] <0)
     {
@@ -818,12 +818,12 @@ if (($form == 1) && (Request::submitted('jump_next')))
     if (!$_SESSION['sem_create_data']["sem_inst_id"])
     {
         $level=1;
-        $errormsg=$errormsg.sprintf ("error§"._("Da Ihr Account keiner Einrichtung zugeordnet ist, k&ouml;nnen Sie leider noch keine Veranstaltung anlegen. Bitte wenden Sie sich an den/die zust&auml;ndigeN AdministratorIn der Einrichtung oder einen der %sAdministratoren%s des Systems!")."§", "<a href=\"".URLHelper::getLink("dispatch.php/siteinfo/show")."\">", "</a>");
+        $errormsg=$errormsg.sprintf ("error§"._("Da Ihr Account keiner Einrichtung zugeordnet ist, können Sie leider noch keine Veranstaltung anlegen. Bitte wenden Sie sich an den/die zuständigeN AdministratorIn der Einrichtung oder einen der %sAdministratoren%s des Systems!")."§", "<a href=\"".URLHelper::getLink("dispatch.php/siteinfo/show")."\">", "</a>");
     }
     if (($_SESSION['sem_create_data']["sem_turnout"] < 1) && ($_SESSION['sem_create_data']["sem_admission"]) && ($_SESSION['sem_create_data']["sem_admission"] != 3))
     {
         $level=1;
-        $errormsg=$errormsg."error§"._("Wenn Sie die Teilnahmebeschr&auml;nkung benutzen wollen, m&uuml;ssen Sie wenigstens einen Teilnehmer zulassen.")."§";
+        $errormsg=$errormsg."error§"._("Wenn Sie die Teilnahmebeschränkung benutzen wollen, müssen Sie wenigstens einen Teilnehmer zulassen.")."§";
         $_SESSION['sem_create_data']["sem_turnout"] =1;
     }
     if(!$_SESSION['sem_create_data']["sem_admission"]){
@@ -1026,19 +1026,19 @@ if (Request::submitted('search_doz') || Request::submitted('search_dep') || Requ
         }
     if ($badly_dozent_is_tutor) {
         $level=2; //wir bleiben auf der zweiten Seite
-        $errormsg=$errormsg."error§". sprintf(_("Sie d&uuml;rfen eine Person mit Status %s nicht gleichzeitig als %s eintragen!"), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]), get_title_for_status('tutor', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
+        $errormsg=$errormsg."error§". sprintf(_("Sie dürfen eine Person mit Status %s nicht gleichzeitig als %s eintragen!"), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]), get_title_for_status('tutor', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
     }
 
     if (sizeof($_SESSION['sem_create_data']["sem_doz"])==0)
     {
         $level=2; //wir bleiben auf der zweiten Seite
-        $errormsg=$errormsg."error§". sprintf(_("Bitte geben Sie mindestens eine Person mit Status %s f&uuml;r die Veranstaltung an!"), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
+        $errormsg=$errormsg."error§". sprintf(_("Bitte geben Sie mindestens eine Person mit Status %s für die Veranstaltung an!"), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
     }
     elseif ((!$perm->have_perm("root")) && (!$perm->have_perm("admin")))
     {
         if (!array_key_exists($user_id, $_SESSION['sem_create_data']['sem_doz']) && !array_key_exists($user_id, $_SESSION['sem_create_data']['sem_dep'])) {
             $level=2;
-            $errormsg=$errormsg."error§". sprintf(_("Sie m&uuml;ssen wenigstens sich selbst als %s f&uuml;r diese Veranstaltung angeben! Der Eintrag wird automatisch gesetzt."), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
+            $errormsg=$errormsg."error§". sprintf(_("Sie müssen wenigstens sich selbst als %s für diese Veranstaltung angeben! Der Eintrag wird automatisch gesetzt."), get_title_for_status('dozent', 1, $_SESSION['sem_create_data']["sem_status"]))."§";
             $_SESSION['sem_create_data']['sem_doz'][$user_id]= count($_SESSION['sem_create_data']['sem_doz']) + 1;
         }
     }
@@ -1046,18 +1046,18 @@ if (Request::submitted('search_doz') || Request::submitted('search_dep') || Requ
         if (sizeof($_SESSION['sem_create_data']["sem_bereich"]) == 0) {
             $level=2;
             $errormsg = $errormsg . "error§" .
-                _("Bitte geben Sie mindestens einen Studienbereich f&uuml;r die Veranstaltung an!")."§";
+                _("Bitte geben Sie mindestens einen Studienbereich für die Veranstaltung an!")."§";
         } else if ($false_mark) {
             $level=2;
             $errormsg = $errormsg . "error§" .
-                _("Sie haben eine oder mehrere Fach&uuml;berschriften (unterstrichen) ausgew&auml;hlt. Diese dienen nur der Orientierung und k&ouml;nnen nicht ausgew&auml;hlt werden!")."§";
+                _("Sie haben eine oder mehrere Fachüberschriften (unterstrichen) ausgewählt. Diese dienen nur der Orientierung und können nicht ausgewählt werden!")."§";
         }
     }
 
     if (($_SESSION['sem_create_data']["sem_sec_schreib"]) <($_SESSION['sem_create_data']["sem_sec_lese"]))
     {
         $level=2; //wir bleiben auf der zweiten Seite
-        $errormsg=$errormsg."error§"._("Es macht keinen Sinn, die Sicherheitsstufe f&uuml;r den Lesezugriff h&ouml;her zu setzen als f&uuml;r den Schreibzugriff!")."§";
+        $errormsg=$errormsg."error§"._("Es macht keinen Sinn, die Sicherheitsstufe für den Lesezugriff höher zu setzen als für den Schreibzugriff!")."§";
     }
     if (!$errormsg) {
         if ($_SESSION['sem_create_data']["term_art"]== -1) {
@@ -1149,18 +1149,18 @@ if (($form == 3) && (Request::submitted('jump_next')))
                 if (($_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] !== '') xor ($_SESSION['sem_create_data']["term_turnus_end_stunde"][$i]) !== '')
                 {
                     if (!$just_informed)
-                        $errormsg=$errormsg."error§"._("Bitte f&uuml;llen Sie beide Felder f&uuml;r Start- und Endzeit der regul&auml;ren Termine aus!")."§";
+                        $errormsg=$errormsg."error§"._("Bitte füllen Sie beide Felder für Start- und Endzeit der regulären Termine aus!")."§";
                     $just_informed=TRUE;
                 }
                 if ((($_SESSION['sem_create_data']["term_turnus_start_stunde"][$i]>23) || ($_SESSION['sem_create_data']["term_turnus_start_stunde"][$i]<0))  ||  (($_SESSION['sem_create_data']["term_turnus_start_minute"][$i]>59) || ($_SESSION['sem_create_data']["term_turnus_start_minute"][$i]<0))  ||  (($_SESSION['sem_create_data']["term_turnus_end_stunde"][$i]>23) ||($_SESSION['sem_create_data']["term_turnus_end_stunde"][$i]<0))  || (($_SESSION['sem_create_data']["term_turnus_end_minute"][$i]>59) || ($_SESSION['sem_create_data']["term_turnus_end_minute"][$i]<0)))
                 {
                     if (!$just_informed3)
-                        $errormsg=$errormsg."error§"._("Sie haben eine ung&uuml;ltige Zeit eingegeben. Bitte korrigieren Sie dies!")."§";
+                        $errormsg=$errormsg."error§"._("Sie haben eine ungültige Zeit eingegeben. Bitte korrigieren Sie dies!")."§";
                     $just_informed3=TRUE;
                 }
                 if (mktime((int)$_SESSION['sem_create_data']["term_turnus_start_stunde"][$i], (int)$_SESSION['sem_create_data']["term_turnus_start_minute"][$i], 0, 1, 1, 2001) >= mktime((int)$_SESSION['sem_create_data']["term_turnus_end_stunde"][$i], (int)$_SESSION['sem_create_data']["term_turnus_end_minute"][$i], 0, 1, 1, 2001))
                     if ((!$just_informed5) && (!$just_informed)) {
-                        $errormsg=$errormsg."error§"._("Der Endzeitpunkt eines regul&auml;ren Termins muss nach dem jeweiligen Startzeitpunkt liegen!")."§";
+                        $errormsg=$errormsg."error§"._("Der Endzeitpunkt eines regulären Termins muss nach dem jeweiligen Startzeitpunkt liegen!")."§";
                         $just_informed5=TRUE;
                     }
             }
@@ -1169,7 +1169,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
                     $empty_fields++;
                 else
                 {
-                    $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder der regul&auml;ren Termine ausgef&uuml;llt. Bitte f&uuml;llen Sie alle Felder aus!")."§";
+                    $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder der regulären Termine ausgefüllt. Bitte füllen Sie alle Felder aus!")."§";
                     $just_informed4=TRUE;
                 }
     }
@@ -1179,19 +1179,19 @@ if (($form == 3) && (Request::submitted('jump_next')))
                 if (($_SESSION['sem_create_data']["term_start_stunde"][$i] !== '') xor ($_SESSION['sem_create_data']["term_end_stunde"][$i] !== ''))
                 {
                     if (!$just_informed)
-                        $errormsg=$errormsg."error§"._("Bitte f&uuml;llen Sie beide Felder f&uuml;r Start- und Endzeit der jeweiligen Termine aus!")."§";
+                        $errormsg=$errormsg."error§"._("Bitte füllen Sie beide Felder für Start- und Endzeit der jeweiligen Termine aus!")."§";
                     $just_informed=TRUE;
                 }
                 if (!checkdate ((int)$_SESSION['sem_create_data']["term_monat"][$i], (int)$_SESSION['sem_create_data']["term_tag"][$i], (int)$_SESSION['sem_create_data']["term_jahr"][$i]))
                 {
                     if (!$just_informed2)
-                        $errormsg=$errormsg."error§"._("Sie haben ein ung&uuml;ltiges Datum eingegeben. Bitte korrigieren Sie das Datum!")."§";
+                        $errormsg=$errormsg."error§"._("Sie haben ein ungültiges Datum eingegeben. Bitte korrigieren Sie das Datum!")."§";
                     $just_informed2=TRUE;
                 }
                 if ((($_SESSION['sem_create_data']["term_start_stunde"][$i]>23) || ($_SESSION['sem_create_data']["term_start_stunde"][$i]<0))  ||  (($_SESSION['sem_create_data']["term_start_minute"][$i]>59) || ($_SESSION['sem_create_data']["term_start_minute"][$i]<0))  ||  (($_SESSION['sem_create_data']["term_end_stunde"][$i]>23) ||($_SESSION['sem_create_data']["term_end_stunde"][$i]<0))  || (($_SESSION['sem_create_data']["term_end_minute"][$i]>59) || ($_SESSION['sem_create_data']["term_end_minute"][$i]<0)))
                 {
                     if (!$just_informed3)
-                        $errormsg=$errormsg."error§"._("Sie haben eine ung&uuml;ltige Zeit eingegeben, bitte korrigieren Sie dies!")."§";
+                        $errormsg=$errormsg."error§"._("Sie haben eine ungültige Zeit eingegeben, bitte korrigieren Sie dies!")."§";
                     $just_informed3=TRUE;
                 }
                 if (mktime((int)$_SESSION['sem_create_data']["term_start_stunde"][$i], (int)$_SESSION['sem_create_data']["term_start_minute"][$i], 0, 1, 1, 2001) > mktime((int)$_SESSION['sem_create_data']["term_end_stunde"][$i], (int)$_SESSION['sem_create_data']["term_end_minute"][$i], 0, 1, 1, 2001))
@@ -1204,7 +1204,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
                 if (($_SESSION['sem_create_data']["term_tag"][$i] === '') && ($_SESSION['sem_create_data']["term_monat"][$i] === '') && ($_SESSION['sem_create_data']["term_jahr"][$i] === '') && ($_SESSION['sem_create_data']["term_start_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_start_minute"][$i] === '') && ($_SESSION['sem_create_data']["term_end_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_end_minute"][$i] === ''))
                     $empty_fields++;
                 else {
-                    $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder bei der Termineingabe ausgef&uuml;llt. Bitte f&uuml;llen Sie alle Felder aus!")."§";
+                    $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder bei der Termineingabe ausgefüllt. Bitte füllen Sie alle Felder aus!")."§";
                     $just_informed4=TRUE;
                 }
     }
@@ -1212,7 +1212,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
     if ($_SESSION['sem_create_data']["sem_vor_termin"] == -1);
     else {
         if (Request::quoted('vor_stunde') xor Request::quoted('vor_end_stunde'))
-            $errormsg=$errormsg."error§"._("Bitte f&uuml;llen Sie beide Felder f&uuml;r Start- und Endzeit der Vorbesprechung aus!")."§";
+            $errormsg=$errormsg."error§"._("Bitte füllen Sie beide Felder für Start- und Endzeit der Vorbesprechung aus!")."§";
 
         //check for room management: we dont allow the preliminary discussion matches a turnus date (in this case, a schedule schoudl be used!)
         if ((!$_SESSION['sem_create_data']["term_art"]) && ($GLOBALS['RESOURCES_ENABLE'])) {
@@ -1227,7 +1227,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
                         ($_SESSION['sem_create_data']["term_turnus_start_minute"][$i] == Request::optionArray('vor_minute')) &&
                         ($_SESSION['sem_create_data']["term_turnus_end_minute"][$i] == Request::optionArray('vor_end_minute')) &&
                         ($_SESSION['sem_create_data']["term_turnus_date"][$i] == $tmp_vor_day)) {
-                        $errormsg=$errormsg."error§"._("Der Termin f&uuml;r die Vorbesprechung findet zu den gleichen Zeiten wie die Veranstaltung statt. Bitte legen Sie in diesem Fall einen Ablaufplan in einem sp&auml;teren Schritt an und &auml;ndern einen Termin in den Typ \"Vorbesprechung\"")."§";
+                        $errormsg=$errormsg."error§"._("Der Termin für die Vorbesprechung findet zu den gleichen Zeiten wie die Veranstaltung statt. Bitte legen Sie in diesem Fall einen Ablaufplan in einem späteren Schritt an und ändern einen Termin in den Typ \"Vorbesprechung\"")."§";
                         break;
                     }
                 }
@@ -1371,7 +1371,7 @@ if (($form == 5) && (Request::submitted('jump_next')))
         $errormsg=$errormsg."error§"._("Bitte geben Sie einen ersten Termin an!")."§";
     else
         if (((Request::option('stunde')) && (!Request::option('end_stunde'))) || ((!Request::option('stunde')) && (Request::option('end_stunde'))))
-            $errormsg=$errormsg."error§"._("Bitte f&uuml;llen Sie beide Felder f&uuml;r Start- und Endzeit des ersten Termins aus!")."§";
+            $errormsg=$errormsg."error§"._("Bitte füllen Sie beide Felder für Start- und Endzeit des ersten Termins aus!")."§";
     //create overlap array
     if (is_array($checkResult)) {
         $overlaps_detected=FALSE;
@@ -1382,7 +1382,7 @@ if (($form == 5) && (Request::submitted('jump_next')))
 
     //generate bad msg if overlaps exists
     if ($overlaps_detected) {
-        $errormsg=$errormsg."error§"._("Folgende gew&uuml;nschte Raumbelegungen &uuml;berschneiden sich mit bereits vorhandenen Belegungen. Bitte &auml;ndern Sie die R&auml;ume oder Zeiten!");
+        $errormsg=$errormsg."error§"._("Folgende gewünschte Raumbelegungen überschneiden sich mit bereits vorhandenen Belegungen. Bitte ändern Sie die Räume oder Zeiten!");
         $i=0;
         foreach ($overlaps_detected as $val) {
             $resObj = ResourceObject::Factory($val["resource_id"]);
@@ -1413,38 +1413,38 @@ if (($form == 6) && (Request::submitted('jump_next')))
     //Rechte ueberpruefen
     if (!$perm->have_perm("dozent"))
     {
-        $errormsg .= "error§"._("Sie haben keine Berechtigung Veranstaltungen anzulegen Um eine Veranstaltung anlegen zu k&ouml;nnen, ben&ouml;tigen Sie mindestens den globalen Status &raquo;Dozent&laquo;. Bitte kontaktieren Sie den/die f&uuml;r Sie zust&auml;ndigeN AdministratorIn.")."§";
+        $errormsg .= "error§"._("Sie haben keine Berechtigung Veranstaltungen anzulegen Um eine Veranstaltung anlegen zu können, benötigen Sie mindestens den globalen Status &raquo;Dozent&laquo;. Bitte kontaktieren Sie den/die für Sie zuständigeN AdministratorIn.")."§";
         $run = FALSE;
     }
     if (!$perm->have_studip_perm("dozent",$_SESSION['sem_create_data']["sem_inst_id"]))
     {
-        $errormsg .= "error§"._("Sie haben keine Berechtigung f&uuml;r diese Einrichtung Veranstaltungen anzulegen.")."§";
+        $errormsg .= "error§"._("Sie haben keine Berechtigung für diese Einrichtung Veranstaltungen anzulegen.")."§";
         $run = FALSE;
     }
 
     //Nochmal Checken, ob wirklich alle Daten vorliegen. Kann zwar eigentlich hier nicht mehr vorkommen, aber sicher ist sicher.
     if (empty($_SESSION['sem_create_data']["sem_name"]))
     {
-        $errormsg  .= "error§"._("Bitte geben Sie einen Namen f&uuml;r die Veranstaltung ein!")."§";
+        $errormsg  .= "error§"._("Bitte geben Sie einen Namen für die Veranstaltung ein!")."§";
         $run = FALSE;
     }
 
     if (empty($_SESSION['sem_create_data']["sem_inst_id"]))
     {
-        $errormsg .= "error§"._("Bitte geben Sie eine Heimat-Einrichtung f&uuml;r die Veranstaltung an!")."§";
+        $errormsg .= "error§"._("Bitte geben Sie eine Heimat-Einrichtung für die Veranstaltung an!")."§";
         $run = FALSE;
     }
     if ($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["bereiche"])  {
         if (empty($_SESSION['sem_create_data']["sem_bereich"]))
         {
-            $errormsg .= "error§"._("Bitte geben Sie wenigstens einen Studienbereich f&uuml;r die Veranstaltung an!")."§";
+            $errormsg .= "error§"._("Bitte geben Sie wenigstens einen Studienbereich für die Veranstaltung an!")."§";
             $run = FALSE;
         }
     }
 
     if ($perm->have_perm("admin") && empty($_SESSION['sem_create_data']["sem_doz"]))
     {
-        $errormsg .= "error§"._("Bitte geben Sie wenigstens eine Dozentin oder einen Dozenten f&uuml;r die Veranstaltung an!")."§";
+        $errormsg .= "error§"._("Bitte geben Sie wenigstens eine Dozentin oder einen Dozenten für die Veranstaltung an!")."§";
         $run = FALSE;
     }
 
@@ -1809,7 +1809,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 $_SESSION['sem_create_data']['sem_inst_id']
             ));
 
-            //Standard Ordner im Foldersystem anlegen, damit Studis auch ohne Zutun des Dozenten Uploaden k&ouml;nnen
+            //Standard Ordner im Foldersystem anlegen, damit Studis auch ohne Zutun des Dozenten Uploaden können
             if ($_SESSION['sem_create_data']["modules_list"]["documents"]) {
                 create_folder(
                     _('Allgemeiner Dateiordner'),
@@ -2042,8 +2042,8 @@ elseif ((!$_SESSION['sem_create_data']["sem_class"]) && (!$level)){
         <tr>
             <td class="blank" valign="top">
                 <div class="info"><br>
-                    <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
-                    <?=_("Bitte geben Sie zun&auml;chst an, welche Art von Veranstaltung Sie neu anlegen m&ouml;chten:"); ?>
+                    <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie Schritt für Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
+                    <?=_("Bitte geben Sie zunächst an, welche Art von Veranstaltung Sie neu anlegen möchten:"); ?>
                 </div>
             </td>
         </tr>
@@ -2099,13 +2099,13 @@ elseif ((!$level) || ($level == 1)) {
     <tr>
         <td class="blank" valign="top">
             <div class="info">
-                <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie nun Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
+                <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie nun Schritt für Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?
                 if ($cmd=="do_copy") {
-                    echo _("Die Daten der zu kopierenden Veranstaltung werden &uuml;bernommen. Bitte &auml;ndern Sie die Informationen, die sich f&uuml;r die kopierte Veranstaltung ergeben.");
+                    echo _("Die Daten der zu kopierenden Veranstaltung werden übernommen. Bitte ändern Sie die Informationen, die sich für die kopierte Veranstaltung ergeben.");
                 }
                 ?><br><br>
-                <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
+                <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
             </div>
         </td>
     </tr>
@@ -2227,7 +2227,7 @@ elseif ((!$level) || ($level == 1)) {
                 <?= _("direkter Eintrag"); ?>&nbsp;
                 <?= tooltipIcon(_("Neue Teilnehmer werden direkt in die Veranstaltung eingetragen.")) ?>
                 &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($_SESSION['sem_create_data']["sem_payment"] == 1) echo 'checked'?>>
-                <?= _("vorl&auml;ufiger Eintrag"); ?>&nbsp;
+                <?= _("vorläufiger Eintrag"); ?>&nbsp;
                 <?= tooltipIcon(_("Neue Teilnehmer bekommen den Status \"vorläufig aktzeptiert\". Sie können von Hand die zugelassenen Teilnehmer auswählen. Vorläufig akzeptierte Teilnehmer haben keinen Zugriff auf die Veranstaltung.")) ?>
             </td>
         </tr>
@@ -2312,14 +2312,14 @@ elseif ((!$level) || ($level == 1)) {
             &nbsp; <select  name="term_art">
                 <?
                 if ($_SESSION['sem_create_data']["term_art"] == 0)
-                    echo "<option selected value=\"0\">"._("regelm&auml;&szlig;ig")."</option>";
+                    echo "<option selected value=\"0\">"._("regelmäßig")."</option>";
                 else
-                    echo "<option value=\"0\">"._("regelm&auml;&szlig;ig")."</option>>";
+                    echo "<option value=\"0\">"._("regelmäßig")."</option>>";
                 if ($_SESSION['sem_create_data']["modules_list"]["schedule"]) {
                     if ($_SESSION['sem_create_data']["term_art"] == 1)
-                        echo "<option selected value=\"1\">"._("unregelm&auml;&szlig;ig oder Blockveranstaltung")."</option>";
+                        echo "<option selected value=\"1\">"._("unregelmäßig oder Blockveranstaltung")."</option>";
                     else
-                        echo "<option value=\"1\">"._("unregelm&auml;&szlig;ig oder Blockveranstaltung")."</option>";
+                        echo "<option value=\"1\">"._("unregelmäßig oder Blockveranstaltung")."</option>";
                 }
                 if ($_SESSION['sem_create_data']["term_art"] == -1)
                     echo "<option selected value=\"-1\">"._("keine Termine eingeben")."</option>";
@@ -2493,7 +2493,7 @@ elseif ($level == 2) {
                 else
                     echo _("Geben Sie hier Personendaten und weitere Angaben zur Veranstaltung an.")."<br><br>";
                 ?>
- 	            <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
+ 	            <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
             </div>
         </td>
     </tr>
@@ -2567,7 +2567,7 @@ elseif ($level == 2) {
                 echo "</table>";
                 //     printf ("&nbsp; <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\" border=\"0\"></a> &nbsp; <font size=\"-1\"><b>%s (%s)&nbsp; &nbsp; <br>", URLHelper::getLink("?delete_doz=".get_username($key)), get_fullname($key,"full_rev",true), get_username($key));
             } else {
-                printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('dozent', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
+                printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gewählt."), get_title_for_status('dozent', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
             }
             ?>
             &nbsp; <?= tooltipIcon(sprintf(_("Die Namen der Benutzer, die die Veranstaltung leiten. Nutzen Sie die Suchfunktion, um weitere Eintragungen vorzunehmen, oder das Mülltonnensymbol, um Einträge zu löschen."), get_title_for_status('dozent', 2, $_SESSION['sem_create_data']["sem_status"]))) ?>
@@ -2636,7 +2636,7 @@ elseif ($level == 2) {
                     }
                     echo "</table>";
                 } else {
-                    printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('deputy', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
+                    printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gewählt."), get_title_for_status('deputy', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
                 }
                 ?>
                 &nbsp; <?= tooltipIcon(sprintf(_("Personen, die Sie hier eintragen, haben dieselben Rechte wie %s, erscheinen aber nicht nach außen. Nutzen Sie die Suchfunktion (Lupensymbol), um weitere Eintragungen vorzunehmen, oder das Mülltonnensymbol, um Einträge zu löschen."), get_title_for_status('dozent', 2, $_SESSION['sem_create_data']["sem_status"]))) ?>
@@ -2719,7 +2719,7 @@ elseif ($level == 2) {
                 }
                 echo "</table>";
             } else {
-                printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('tutor', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
+                printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gewählt."), get_title_for_status('tutor', 2, $_SESSION['sem_create_data']["sem_status"]))."</font><br >");
             }
             ?>
             &nbsp; <?= tooltipIcon(sprintf(_("Die Namen der %s, die in der Veranstaltung weitergehende Rechte erhalten (meist studentische Hilfskräfte). Nutzen Sie die Suchfunktion (Lupensymbol), um weitere Eintragungen vorzunehmen, oder das Mülltonnensymbol, um Einträge zu löschen."), get_title_for_status('tutor', 2, $_SESSION['sem_create_data']["sem_status"]))) ?>
@@ -2933,11 +2933,11 @@ elseif ($level == 3) {
         <td class="blank" valign="top">
             <div class="info">
                 <? if ($_SESSION['sem_create_data']["term_art"] ==0)
-                    print _("Bitte geben Sie hier ein, an welchen Tagen die Veranstaltung stattfindet. Wenn Sie nur einen Wochentag wissen, brauchen Sie nur diesen angeben.<br>Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
+                    print _("Bitte geben Sie hier ein, an welchen Tagen die Veranstaltung stattfindet. Wenn Sie nur einen Wochentag wissen, brauchen Sie nur diesen angeben.<br>Sie haben später noch die Möglichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
                 else
-                    print _("Bitte geben Sie hier die einzelnen Termine an, an denen die Veranstaltung stattfindet.<br> Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
+                    print _("Bitte geben Sie hier die einzelnen Termine an, an denen die Veranstaltung stattfindet.<br> Sie haben später noch die Möglichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
                 ?>
-                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
+                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
             </div>
         </td>
     </tr>
@@ -2961,11 +2961,11 @@ elseif ($level == 3) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                &nbsp; <?=_("Daten &uuml;ber die Termine:"); ?>
+                &nbsp; <?=_("Daten über die Termine:"); ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                &nbsp; <b><font size=-1><?=_("Regelm&auml;&szlig;ige Veranstaltung"); ?></font></b><br><br>
-                &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung &auml;ndern m&ouml;chten, gehen Sie bitte auf die erste Seite zur&uuml;ck."); ?></font><br><br>
+                &nbsp; <b><font size=-1><?=_("Regelmäßige Veranstaltung"); ?></font></b><br><br>
+                &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung ändern möchten, gehen Sie bitte auf die erste Seite zurück."); ?></font><br><br>
 
                 <br><br>&nbsp; <font size=-1><?=_("Die Veranstaltung findet immer zu diesen Zeiten statt:"); ?></font><br><br>
                 <?
@@ -3024,7 +3024,7 @@ elseif ($level == 3) {
                     echo "\n<select name=\"term_turnus_desc_chooser[$i]\" ";
                     echo "onChange=\"document.Formular.elements['term_turnus_desc[$i]'].value=document.Formular.elements['term_turnus_desc_chooser[$i]'].options[Formular.elements['term_turnus_desc_chooser[$i]'].selectedIndex].value;\" ";
                     echo ">";
-                    echo "\n<option value=\"\">" . _("ausw&auml;hlen oder wie Eingabe") . " --></option>";
+                    echo "\n<option value=\"\">" . _("auswählen oder wie Eingabe") . " --></option>";
                     foreach($TERMIN_TYP as $ttyp){
                         if ($ttyp['sitzung']) {
                             echo "\n<option ";
@@ -3074,11 +3074,11 @@ elseif ($level == 3) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                &nbsp; <?=_("Daten &uuml;ber die Termine:"); ?>
+                &nbsp; <?=_("Daten über die Termine:"); ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                &nbsp; <b><font size=-1><?=_("Veranstaltung an unregelm&auml;&szlig;igen Terminen"); ?></font></b><br><br>
-                &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung &auml;ndern m&ouml;chten, gehen Sie bitte auf die erste Seite zur&uuml;ck."); ?></font><br><br>
+                &nbsp; <b><font size=-1><?=_("Veranstaltung an unregelmäßigen Terminen"); ?></font></b><br><br>
+                &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung ändern möchten, gehen Sie bitte auf die erste Seite zurück."); ?></font><br><br>
                 &nbsp; <font size=-1><?=_("Die Veranstaltung findet an diesen Terminen statt:"); ?></font><br><br>
                 <?
                 if (empty($_SESSION['sem_create_data']["term_count"]))
@@ -3197,13 +3197,13 @@ elseif ($level == 4) {
                 if ($GLOBALS['RESOURCES_ENABLE']) {
                     if ($GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) {
                         if ($resList->roomsExist())
-                            print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden, buchen Sie konkrete R&auml;ume oder stellen Sie Raumw&uuml;nsche an die zentrale Raumverwaltung.")."<br><br>";
+                            print _("Bitte geben Sie hier ein, welche Angaben zu Räumen gemacht werden, buchen Sie konkrete Räume oder stellen Sie Raumwünsche an die zentrale Raumverwaltung.")."<br><br>";
                         else
-                            print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden oder stellen Sie Raumw&uuml;nsche an die zentrale Raumverwaltung.")."<br><br>";
+                            print _("Bitte geben Sie hier ein, welche Angaben zu Räumen gemacht werden oder stellen Sie Raumwünsche an die zentrale Raumverwaltung.")."<br><br>";
                     } elseif ($resList->roomsExist())
-                        print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden oder buchen Sie konkrete R&auml;ume.")."<br><br>";
+                        print _("Bitte geben Sie hier ein, welche Angaben zu Räumen gemacht werden oder buchen Sie konkrete Räume.")."<br><br>";
                 } else
-                    print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden.")."<br><br>";
+                    print _("Bitte geben Sie hier ein, welche Angaben zu Räumen gemacht werden.")."<br><br>";
                 ?>
         </td>
     </tr>
@@ -3230,7 +3230,7 @@ elseif ($level == 4) {
         &nbsp;
     </td>
     <td class="<? echo $cssSw->getClass() ?>" width="96%">
-    <font size="-1"><b><?=_("Raumw&uuml;nsche"); ?></b><br><br>
+    <font size="-1"><b><?=_("Raumwünsche"); ?></b><br><br>
     <?
     if (get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
         echo _("<u>Keine</u> Raumanfrage erstellen") . "&nbsp;&nbsp;";
@@ -3293,7 +3293,7 @@ elseif ($level == 4) {
                 <font size="-1"><b><?=_("Raumbuchungen"); ?></b></font><br><br>
                 <table border="0" width="100%" cellspaceing="2" cellpadding="0">
                     <?
-                    print "<font size=\"-1\">"._("Sie k&ouml;nnen zu jedem Termin einen Raum eintragen. Diese Eintragung wird beim Speichern der Veranstaltung in der Raumverwaltung gebucht.")."</font><br>";
+                    print "<font size=\"-1\">"._("Sie können zu jedem Termin einen Raum eintragen. Diese Eintragung wird beim Speichern der Veranstaltung in der Raumverwaltung gebucht.")."</font><br>";
                     if ($_SESSION['sem_create_data']["term_art"] == 0) {
                         if (is_array($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"])) {
                             foreach ($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"] as $val) {
@@ -3312,7 +3312,7 @@ elseif ($level == 4) {
                                 $resList->reset();
                                 if ($resList->numberOfRooms()) {
                                     print " &nbsp;<select name=\"term_turnus_resource_id[]\">";
-                                    printf ("<option %s value=\"FALSE\">["._("bitte ausw&auml;hlen")."]</option>", (!$val["resource_id"]) ? "selected" : "");
+                                    printf ("<option %s value=\"FALSE\">["._("bitte auswählen")."]</option>", (!$val["resource_id"]) ? "selected" : "");
                                     while ($res = $resList->next()) {
                                         printf ("<option %s value=\"%s\">%s</option>", ($val["resource_id"] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));                                                }
                                     print "</select><br>";
@@ -3329,7 +3329,7 @@ elseif ($level == 4) {
                                 $resList->reset();
                                 if ($resList->numberOfRooms()) {
                                     printf (" &nbsp;<select name=\"term_resource_id[%s]\">", $i);
-                                    printf ("<option %s value=\"FALSE\">["._("bitte ausw&auml;hlen")."]</option>", (!$_SESSION['sem_create_data']["term_resource_id"][$i]) ? "selected" : "");
+                                    printf ("<option %s value=\"FALSE\">["._("bitte auswählen")."]</option>", (!$_SESSION['sem_create_data']["term_resource_id"][$i]) ? "selected" : "");
                                     while ($res = $resList->next()) {
                                         printf ("<option %s value=\"%s\">%s</option>", ($_SESSION['sem_create_data']["term_resource_id"][$i] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));
                                     }
@@ -3346,7 +3346,7 @@ elseif ($level == 4) {
                         $resList->reset();
                         if ($resList->numberOfRooms()) {
                             print " &nbsp;<select name=\"vor_resource_id\">";
-                            printf ("<option %s value=\"FALSE\">["._("bitte ausw&auml;hlen")."]</option>", (!$_SESSION['sem_create_data']["sem_vor_resource_id"]) ? "selected" : "");
+                            printf ("<option %s value=\"FALSE\">["._("bitte auswählen")."]</option>", (!$_SESSION['sem_create_data']["sem_vor_resource_id"]) ? "selected" : "");
                             while ($res = $resList->next()) {
                                 printf ("<option %s value=\"%s\">%s</option>", ($_SESSION['sem_create_data']["sem_vor_resource_id"] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));
                             }
@@ -3369,10 +3369,10 @@ elseif ($level == 4) {
                 &nbsp;
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=3>
-                <font size="-1"><b><?=_("freie Angaben zu R&auml;umen"); ?></b></font><br><br>
+                <font size="-1"><b><?=_("freie Angaben zu Räumen"); ?></b></font><br><br>
                 <table border="0" width="100%" cellspaceing="2" cellpadding="0">
                     <?
-                    printf ("<font size=\"-1\">"._("%sSie k&ouml;nnen zu jedem Termin freie Angaben zu Raum bzw. Ort machen:")."</font><br>", (($GLOBALS['RESOURCES_ENABLE'] && $resList->roomsExist()) ? "<i><u>"._("oder:")."</u></i>&nbsp;" : ""));
+                    printf ("<font size=\"-1\">"._("%sSie können zu jedem Termin freie Angaben zu Raum bzw. Ort machen:")."</font><br>", (($GLOBALS['RESOURCES_ENABLE'] && $resList->roomsExist()) ? "<i><u>"._("oder:")."</u></i>&nbsp;" : ""));
                     if ($_SESSION['sem_create_data']["term_art"] == 0) {
                         if (is_array($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"])) {
                             foreach ($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"] as $val) {
@@ -3424,10 +3424,10 @@ elseif ($level == 4) {
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="96%"  colspan=3>
                 <font size="-1">
-                    <?=_("Sie k&ouml;nnen hier eine unspezifische Ortsangabe machen:")?><br>
+                    <?=_("Sie können hier eine unspezifische Ortsangabe machen:")?><br>
                     <textarea name="sem_room" cols=58 rows="4"><? echo  htmlReady(stripslashes($_SESSION['sem_create_data']["sem_room"])) ?></textarea>
                     <?= tooltipIcon(_("Sie können hier einen Ort eingeben, der nur angezeigt wird, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden können oder Sitzungstermine bereits abgelaufen sind und aus diesem Grund nicht mehr angezeigt werden.")) ?>
-                    <br><?=_("<b>Achtung:</b> Diese Ortsangabe wird nur angezeigt, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.");?>
+                    <br><?=_("<b>Achtung:</b> Diese Ortsangabe wird nur angezeigt, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden können.");?>
             </td>
         </tr>
     <?
@@ -3467,7 +3467,7 @@ elseif ($level == 5) {
         <tr>
             <td class="blank" valign="top">
                 <div class="info">
-                    <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
+                    <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
                 </div>
             </td>
         </tr>
@@ -3489,7 +3489,7 @@ elseif ($level == 5) {
                         <? if ($_SESSION['sem_create_data']["sem_payment"]=="1") { ?>
                             <tr<?$cssSw->switchClass()?>>
                                 <td class ="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                                    <? echo _("Hinweistext bei vorl&auml;ufigen Eintr&auml;gen:"); ?>
+                                    <? echo _("Hinweistext bei vorläufigen Einträgen:"); ?>
                                 </td>
                                 <td class="<? echo $cssSw->getClass() ?>" colspan=3>
                                     &nbsp;&nbsp;<textarea name="sem_paytxt" cols=58 rows=4><? echo htmlReady(stripslashes($_SESSION['sem_create_data']["sem_paytxt"])) ?></textarea>
@@ -3561,7 +3561,7 @@ elseif ($level == 5) {
 
                                             } else {
                                                 ?>
-                                                &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
+                                                &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zuständigen Administrator erfasst.")?></font>
                                                 <?= tooltipIcon(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst.")) ?>
                                             <?
                                             }
@@ -3637,7 +3637,7 @@ elseif ($level == 6) {
             <td class="blank" valign="top">
                 <div class="info">
                     <b><?=_("Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
-                    <?=_("Sie haben nun alle n&ouml;tigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP &uuml;bernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, &uuml;berpr&uuml;fen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
+                    <?=_("Sie haben nun alle nötigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP übernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, überprüfen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=6>
@@ -3689,12 +3689,12 @@ elseif ($level == 7) {
                         print _("Sie haben die Veranstaltung bereits angelegt.");
                         if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) || ($_SESSION['sem_create_data']["modules_list"]["scm"])) {
                             if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) && ($_SESSION['sem_create_data']["modules_list"]["scm"]))
-                                print " "._("Sie k&ouml;nnen nun mit der Informationsseite und dem Termin-Assistenten fortfahren oder an diesem Punkt abbrechen.");
+                                print " "._("Sie können nun mit der Informationsseite und dem Termin-Assistenten fortfahren oder an diesem Punkt abbrechen.");
                             if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) && (!$_SESSION['sem_create_data']["modules_list"]["scm"]))
-                                print " "._("Sie k&ouml;nnen nun mit dem Termin-Assistenten fortfahren oder an diesem Punkt abbrechen.");
+                                print " "._("Sie können nun mit dem Termin-Assistenten fortfahren oder an diesem Punkt abbrechen.");
                             if ((!$_SESSION['sem_create_data']["modules_list"]["schedule"]) && ($_SESSION['sem_create_data']["modules_list"]["scm"]))
-                                print " "._("Sie k&ouml;nnen nun mit der Informationsseite fortfahren oder an diesem Punkt abbrechen.");
-                            print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und diese Schritte sp&auml;ter nachzuholen.")."</font>";
+                                print " "._("Sie können nun mit der Informationsseite fortfahren oder an diesem Punkt abbrechen.");
+                            print "<br><br><font size=-1>"._("Sie haben jederzeit die Möglichkeit, die bereits erfassten Daten zu ändern und diese Schritte später nachzuholen.")."</font>";
                         }
                         ?>
                         <br><br>
@@ -3720,18 +3720,18 @@ elseif ($level == 7) {
             <tr>
                 <td class="blank" valign="top">
                     <div class="info">
-                        <b><?=_("Die Daten der Veranstaltung wurden in das System &uuml;bernommen"); ?></b><br><br>
+                        <b><?=_("Die Daten der Veranstaltung wurden in das System übernommen"); ?></b><br><br>
                         <?
                         print _("Die Veranstaltung ist jetzt eingerichtet.");
                         if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) || ($_SESSION['sem_create_data']["modules_list"]["scm"])) {
-                            print " "._("Wenn Sie nun auf &raquo;weiter >>&laquo; klicken, k&ouml;nnen Sie weitere -optionale- Daten f&uuml;r die Veranstaltung eintragen.");
+                            print " "._("Wenn Sie nun auf &raquo;weiter >>&laquo; klicken, können Sie weitere -optionale- Daten für die Veranstaltung eintragen.");
                             if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) && ($_SESSION['sem_create_data']["modules_list"]["scm"]))
-                                print " "._("Sie haben die M&ouml;glichkeit, eine Informationsseite anzulegen und können den Terminen im Ablaufplan Themen zuordnen.");
+                                print " "._("Sie haben die Möglichkeit, eine Informationsseite anzulegen und können den Terminen im Ablaufplan Themen zuordnen.");
                             if (($_SESSION['sem_create_data']["modules_list"]["schedule"]) && (!$_SESSION['sem_create_data']["modules_list"]["scm"]))
                                 print " "._("Sie können den Terminen im Ablaufplan Themen zuordnen.");
                             if ((!$_SESSION['sem_create_data']["modules_list"]["schedule"]) && ($_SESSION['sem_create_data']["modules_list"]["scm"]))
-                                print " "._("Sie haben die M&ouml;glichkeit,  eine Informationsseite anzulegen.");
-                            print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";
+                                print " "._("Sie haben die Möglichkeit,  eine Informationsseite anzulegen.");
+                            print "<br><br><font size=-1>"._("Sie haben jederzeit die Möglichkeit, die bereits erfassten Daten zu ändern und die nächsten Schritte später nachzuholen.")."</font>";
                         }
                         ?><br><br>
                         <?= _("Klicken Sie auf den Titel der Veranstaltung, um direkt zur neu angelegten Veranstaltung zu gelangen:") ?>
@@ -3768,22 +3768,22 @@ elseif ($level == 7) {
                                     <?
                                     printf ("<br><br><ul><li>"._("Veranstaltung <b>%s</b> erfolgreich angelegt.")."<br><br>", htmlReady(stripslashes($_SESSION['sem_create_data']["sem_name"])));
                                     if ($count_bet_inst==1)
-                                        print "<li>"._("Veranstaltung f&uuml;r <b>1</b> beteiligte Einrichtung angelegt.")."<br><br>";
+                                        print "<li>"._("Veranstaltung für <b>1</b> beteiligte Einrichtung angelegt.")."<br><br>";
                                     elseif ($count_bet_inst>1)
-                                        printf ("<li>"._("Veranstaltung f&uuml;r <b>%s</b> beteiligte Einrichtungen angelegt.")."<br><br>", $count_bet_inst);
-                                    printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_doz, get_title_for_status('dozent', $count_doz, $_SESSION['sem_create_data']["sem_status"]));
+                                        printf ("<li>"._("Veranstaltung für <b>%s</b> beteiligte Einrichtungen angelegt.")."<br><br>", $count_bet_inst);
+                                    printf("<li>"._("<b>%d</b> %s für die Veranstaltung eingetragen.")."<br><br>", $count_doz, get_title_for_status('dozent', $count_doz, $_SESSION['sem_create_data']["sem_status"]));
                                     if ($deputies_enabled && $count_dep > 0) {
-                                        printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_dep, get_title_for_status('deputy', $count_dep, $_SESSION['sem_create_data']["sem_status"]));
+                                        printf("<li>"._("<b>%d</b> %s für die Veranstaltung eingetragen.")."<br><br>", $count_dep, get_title_for_status('deputy', $count_dep, $_SESSION['sem_create_data']["sem_status"]));
                                     }
-                                    printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_tut, get_title_for_status('tutor', $count_tut, $_SESSION['sem_create_data']["sem_status"]));
+                                    printf("<li>"._("<b>%d</b> %s für die Veranstaltung eingetragen.")."<br><br>", $count_tut, get_title_for_status('tutor', $count_tut, $_SESSION['sem_create_data']["sem_status"]));
                                     if ($count_doms==1)
-                                        print "<li>"._("<b>1</b> Nutzerdom&auml;ne f&uuml;r die Veranstaltung eingetragen.")."<br><br>";
+                                        print "<li>"._("<b>1</b> Nutzerdomäne für die Veranstaltung eingetragen.")."<br><br>";
                                     elseif ($count_doms>1)
-                                        printf ("<li>"._("<b>%s</b> Nutzerdom&auml;nen f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_doms);
+                                        printf ("<li>"._("<b>%s</b> Nutzerdomänen für die Veranstaltung eingetragen.")."<br><br>", $count_doms);
                                     if ($count_bereich==1)
-                                        print "<li>"._("<b>1</b> Bereich f&uuml;r die Veranstaltung eingetragen.")."<br><br>";
+                                        print "<li>"._("<b>1</b> Bereich für die Veranstaltung eingetragen.")."<br><br>";
                                     elseif ($count_bereich)
-                                        printf ("<li>"._("<b>%s</b> Bereiche f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_bereich);
+                                        printf ("<li>"._("<b>%s</b> Bereiche für die Veranstaltung eingetragen.")."<br><br>", $count_bereich);
                                     //Show the result from the resources system
                                     if ($GLOBALS['RESOURCES_ENABLE']) {
                                         if (is_array($updateResult))
@@ -3808,7 +3808,7 @@ elseif ($level == 7) {
                                             if (sizeof($resources_booked) == 1)
                                                 printf ("<li>"._("Die Belegung des Raums %s wurde in die Ressourcenverwaltung eingetragen.")."<br><br>", $rooms);
                                             else
-                                                printf ("<li>"._("Die Belegung der R&auml;ume %s wurde in die Ressourcenverwaltung eingetragen."). "<br><br>", $rooms);
+                                                printf ("<li>"._("Die Belegung der Räume %s wurde in die Ressourcenverwaltung eingetragen."). "<br><br>", $rooms);
                                         }
                                         if ($resources_failed) {
                                             $i=0;
@@ -3821,10 +3821,10 @@ elseif ($level == 7) {
                                                 $i++;
                                             }
                                             if (sizeof($resources_failed) == 1)
-                                                printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen des Raumes %s konnte wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
+                                                printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen des Raumes %s konnte wegen Überschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
                                             else
-                                                printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen der R&auml;ume %s konnten wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
-                                            print _("Bitte &uuml;berpr&uuml;fen Sie manuell die Belegungen!")."</font><br><br>";
+                                                printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen der Räume %s konnten wegen Überschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
+                                            print _("Bitte überprüfen Sie manuell die Belegungen!")."</font><br><br>";
                                         }
                                     }
 
@@ -3861,10 +3861,10 @@ elseif ($level == 8) {
         <tr>
             <td class="blank" valign="top">
                 <div class="info">
-                    <? printf (_("Sie k&ouml;nnen nun eine frei gestaltbare Infomationsseite f&uuml;r die eben angelegte Veranstaltung <b>%s</b> eingeben."), $_SESSION['sem_create_data']["sem_name"]);
-                    print "<br>"._("Sie k&ouml;nnen die Bezeichnug dieser Seite frei bestimmten. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
+                    <? printf (_("Sie können nun eine frei gestaltbare Infomationsseite für die eben angelegte Veranstaltung <b>%s</b> eingeben."), $_SESSION['sem_create_data']["sem_name"]);
+                    print "<br>"._("Sie können die Bezeichnug dieser Seite frei bestimmten. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
                     if ($_SESSION['sem_create_data']["modules_list"]["schedule"])
-                        print "<br> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die M&ouml;glichkeit, mit dem Termin-Assistenten einen Ablaufplan f&uuml;r die Veranstaltung anzulegen.")
+                        print "<br> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die Möglichkeit, mit dem Termin-Assistenten einen Ablaufplan für die Veranstaltung anzulegen.")
                     ?>
                     <br><br>
                 </div>
@@ -3920,7 +3920,7 @@ elseif ($level == 8) {
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                                 <?
-                                print "<br><font size=\"-1\">"._("Sie k&ouml;nnen auf dieser Seite s&auml;mtliche Stud.IP Formatierungen verwenden. Sie k&ouml;nnen Links normal einegeben, diesen werden automatisch sp&auml;ter als Hyperlinks dargestellt.");
+                                print "<br><font size=\"-1\">"._("Sie können auf dieser Seite sämtliche Stud.IP Formatierungen verwenden. Sie können Links normal einegeben, diesen werden automatisch später als Hyperlinks dargestellt.");
 
                                 $help_url = format_help_url("Basis.VerschiedenesFormat");
                                 print "<br><br><a target=\"_blank\" href=\"".$help_url."\">"._("Hilfe zur Formatierung von Texten")."</a>";

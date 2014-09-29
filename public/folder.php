@@ -277,9 +277,9 @@ if ($rechte || $owner || $create_folder_perm) {
     //Loeschen von Dateien im wirklich-ernst Mode
     if ($open_cmd == 'rm') {
         if (delete_document($open_id))
-            $msg.="msg§" . _("Die Datei wurde gel&ouml;scht") . "§";
+            $msg.="msg§" . _("Die Datei wurde gelöscht") . "§";
         else
-            $msg.="error§" . _("Die Datei konnte nicht gel&ouml;scht werden") . "§";
+            $msg.="error§" . _("Die Datei konnte nicht gelöscht werden") . "§";
         }
 
     //Loeschen von verlinkten Dateien im wirklich-ernst Mode
@@ -930,7 +930,7 @@ if ($question) {
 
     if ($folder_system_data["cmd"]=="all") {
         print "<p class=\"info\">";
-        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen m&ouml;chten, w&auml;hlen Sie bitte die Ordneransicht und &ouml;ffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]);
+        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen möchten, wählen Sie bitte die Ordneransicht und öffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]);
         print "</p>";
     }
 

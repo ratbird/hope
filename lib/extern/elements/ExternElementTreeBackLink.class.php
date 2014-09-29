@@ -57,8 +57,8 @@ class ExternElementTreeBackLink extends ExternElement {
             $this->config = $config;
         
         $this->name = "TreeBackLink";
-        $this->real_name = _("Link auf &uuml;bergeordnete Ebene");
-        $this->description = _("Formatierung des Link auf die &uuml;bergeordnete Ebene in einer Baum-Navigation.");
+        $this->real_name = _("Link auf übergeordnete Ebene");
+        $this->description = _("Formatierung des Link auf die übergeordnete Ebene in einer Baum-Navigation.");
     }
     
     function toStringEdit ($post_vars = "", $faulty_values = "",
@@ -76,11 +76,11 @@ class ExternElementTreeBackLink extends ExternElement {
         
         $headline = $edit_form->editHeadline(_("Allgemeine Angaben"));
         $title = _("Link-Text:");
-        $info = _("Geben Sie den Text ein, der auf die &uuml;bergeordnete Ebene verweist (Link zur&uuml;ck).");
+        $info = _("Geben Sie den Text ein, der auf die übergeordnete Ebene verweist (Link zurück).");
         $content = $edit_form->editTextfieldGeneric("linktext", $title, $info, 25, 60);
         
         $title = _("Link-Bild (URL):");
-        $info = _("Geben Sie die URL eines Bildes ein, das als Link auf die &uuml;bergeordnete Ebene verweist (z.B. Back-Button).");
+        $info = _("Geben Sie die URL eines Bildes ein, das als Link auf die übergeordnete Ebene verweist (z.B. Back-Button).");
         $content .= $edit_form->editTextfieldGeneric("image", $title, $info, 40, 200);
         
         $content_table = $edit_form->editContentTable($headline, $content);

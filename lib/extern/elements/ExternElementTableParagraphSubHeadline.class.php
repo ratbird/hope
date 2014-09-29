@@ -56,8 +56,8 @@ class ExternElementTableParagraphSubHeadline extends ExternElement {
             $this->config = $config;
         
         $this->name = "TableParagraphSubHeadline";
-        $this->real_name = _("&Uuml;berschrift eines Unterabsatzes");
-        $this->description = _("Angaben zur Formatierung der &Uuml;berschrift eines Unterabsatzes.");
+        $this->real_name = _("Überschrift eines Unterabsatzes");
+        $this->description = _("Angaben zur Formatierung der Überschrift eines Unterabsatzes.");
     }
     
     function toStringEdit ($post_vars = "", $faulty_values = "",

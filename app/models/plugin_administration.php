@@ -52,6 +52,13 @@ class PluginAdministration
             throw new PluginInstallationException(_('Fehler beim Entpacken des Plugins.'));
         }
 
+        // check if the plugin might be located in a subfolder
+        $files = glob($packagedir . '/*');
+        $dirs  = array_filter($files, 'is_dir');
+        if (!file_exists($packagedir . '/plugin.manifest') && count($dirs) === 1) {
+            $packagedir = $dirs[0];
+        }
+
         // load the manifest
         $plugin_manager = PluginManager::getInstance();
         $manifest = $plugin_manager->getPluginManifest($packagedir);

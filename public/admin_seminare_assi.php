@@ -3862,7 +3862,7 @@ elseif ($level == 8) {
             <td class="blank" valign="top">
                 <div class="info">
                     <? printf (_("Sie können nun eine frei gestaltbare Infomationsseite für die eben angelegte Veranstaltung <b>%s</b> eingeben."), $_SESSION['sem_create_data']["sem_name"]);
-                    print "<br>"._("Sie können die Bezeichnug dieser Seite frei bestimmten. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
+                    print "<br>"._("Sie können die Bezeichnug dieser Seite frei bestimmen. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
                     if ($_SESSION['sem_create_data']["modules_list"]["schedule"])
                         print "<br> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die Möglichkeit, mit dem Termin-Assistenten einen Ablaufplan für die Veranstaltung anzulegen.")
                     ?>
@@ -3920,7 +3920,7 @@ elseif ($level == 8) {
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                                 <?
-                                print "<br><font size=\"-1\">"._("Sie können auf dieser Seite sämtliche Stud.IP Formatierungen verwenden. Sie können Links normal einegeben, diesen werden automatisch später als Hyperlinks dargestellt.");
+                                print "<br><font size=\"-1\">"._("Sie können auf dieser Seite sämtliche Stud.IP Formatierungen verwenden. Sie können Links normal eingeben, diesen werden automatisch später als Hyperlinks dargestellt.");
 
                                 $help_url = format_help_url("Basis.VerschiedenesFormat");
                                 print "<br><br><a target=\"_blank\" href=\"".$help_url."\">"._("Hilfe zur Formatierung von Texten")."</a>";

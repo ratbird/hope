@@ -179,14 +179,14 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
                             array ( "icon" => "icons/16/black/info.png",
-                                    "text"  => _("Hier können Sie an angebundene Systeme verwalten.")
+                                    "text"  => _("Hier können Sie angebundene Systeme verwalten.")
                                  )
                             )
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/info.png" ,
-                                        "text"  => _("Nachdem Sie ein angebundenes System ausgewählt haben, wird die Verbindung zum System geprüft.")
+                                        "text"  => _("Nachdem Sie ein angebundenes System ausgewählt haben wird die Verbindung zum System geprüft.")
                                     );
 
         switch($status_info)

@@ -173,7 +173,7 @@ class StudipLitClipBoard {
                     $this->deleteElement($selected);
                     $this->form_obj->doFormReset();
                 } else {
-                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgewühlt!") . "§";
+                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgewählt!") . "§";
                 }
                 break;
         }

@@ -432,6 +432,10 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
         $quickfilter_sem[] = $k;
     }
     $template->set_attribute('quickfilter_sem', $quickfilter_sem);
+    foreach (getPersons($range_id, 'sem_no_group') as $k=>$v) {
+        $quickfilter_sem_no_group[] = $k;
+    }
+    $template->set_attribute('quickfilter_sem_no_group', $quickfilter_sem_no_group);
     foreach (getPersons($range_id, 'inst') as $k=>$v) {
         $quickfilter_inst[] = $k;
     }

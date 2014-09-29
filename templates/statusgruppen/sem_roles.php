@@ -19,6 +19,7 @@ $mp = MultiPersonSearch::get("contacts_statusgroup_" . $id)
         ->setSearchObject($search_obj)
         ->addQuickfilter(_("VeranstaltungsteilnehmerInnen"), $quickfilter_sem)
         ->addQuickfilter(_("MitarbeiterInnen"), $quickfilter_inst) 
+        ->addQuickfilter(_("VeranstaltungsteilnehmerInnen ohne Gruppe"), $quickfilter_sem_no_group)
         ->render();
 ?>
 <a name="<?= $id ?>" ></a>

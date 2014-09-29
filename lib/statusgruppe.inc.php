@@ -1013,6 +1013,17 @@ function getPersons($range_id, $type = false)
                   LEFT JOIN user_info USING (user_id)
                   WHERE Seminar_id = :range_id
                   ORDER BY Nachname";
+    } else if ($type == 'sem_no_group') {
+        $query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
+                  FROM seminar_user
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE Seminar_id = :range_id AND
+                  NOT EXISTS (SELECT * FROM statusgruppe_user, statusgruppen
+                              WHERE statusgruppe_user.statusgruppe_id = statusgruppen.statusgruppe_id AND
+                              range_id = seminar_user.Seminar_id AND
+                              seminar_user.user_id = statusgruppe_user.user_id)
+                  ORDER BY Nachname";
     } else if ($type == 'inst') {
         $query = "SELECT a.user_id, username, {$_fullname_sql['full_rev']} AS fullname, inst_perms, perms
                   FROM seminar_inst d

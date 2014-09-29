@@ -12,7 +12,7 @@
         <? if (count($message->receivers) > 1) : ?>
             <?= sprintf(_("%s Personen"), count($message->receivers)) ?>
         <? else : ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($message['autor_id']))) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($message->receivers[0]['user_id']))) ?>">
             <?= htmlReady(get_fullname($message->receivers[0]['user_id'])) ?>
         </a>
         <? endif ?>

@@ -415,4 +415,34 @@ class Admin_PluginController extends AuthenticatedController
         $this->redirect('admin/plugin');
     }
 
+    public function edit_automaticupdate_action($plugin_id)
+    {
+        $this->plugin = PluginManager::getInstance()->getPluginInfoById($plugin_id);
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+            $this->check_ticket();
+            $token = $this->plugin['automatic_update_secret'] ?: md5(uniqid());
+            $statement = DBManager::get()->prepare("
+                UPDATE plugins
+                SET automatic_update_url = :url,
+                    automatic_update_secret = :secret
+                WHERE pluginid = :id
+            ");
+            $statement->execute(array(
+                'id' => $plugin_id,
+                'url' => Request::get("automatic_update_url"),
+                'secret' => Request::get("use_security_token") ? $token : null
+            ));
+            $this->msg[] = MessageBox::success(_("Daten gespeichert."));
+            if (Request::get("use_security_token")) {
+                $this->msg[] = MessageBox::info(_("Unten können Sie den Security Token jetzt heraus kopieren."));
+            }
+        }
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->response->add_header('X-Title', sprintf(_("Automatisches Update für %s"), $this->plugin['name']));
+            $this->set_content_type('text/html;charset=windows-1252');
+        }
+    }
+
 }

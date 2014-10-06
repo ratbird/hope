@@ -50,6 +50,16 @@ class PluginAdministration
         if (unzip_file($filename, $packagedir)) {
             rmdirr($packagedir);
             throw new PluginInstallationException(_('Fehler beim Entpacken des Plugins.'));
+        } else {
+            $tmpplugindir = $packagedir;
+            $files = scandir($packagedir);
+            if (count($files) === 3) {
+                foreach ($files as $file) {
+                    if (!in_array($file, array(".",".."))) {
+                        $tmpplugindir .= "/" . $file;
+                    }
+                }
+            }
         }
 
         // check if the plugin might be located in a subfolder
@@ -61,7 +71,7 @@ class PluginAdministration
 
         // load the manifest
         $plugin_manager = PluginManager::getInstance();
-        $manifest = $plugin_manager->getPluginManifest($packagedir);
+        $manifest = $plugin_manager->getPluginManifest($tmpplugindir);
 
         if ($manifest === NULL) {
             rmdirr($packagedir);
@@ -91,7 +101,7 @@ class PluginAdministration
         // is the plugin already installed?
         if (file_exists($plugindir)) {
             if ($pluginregistered) {
-                $this->updateDBSchema($plugindir, $packagedir, $manifest);
+                $this->updateDBSchema($plugindir, $tmpplugindir, $manifest);
             }
 
             rmdirr($plugindir);
@@ -109,7 +119,7 @@ class PluginAdministration
             mkdir($basepath . '/' . $origin);
         }
 
-        rename($packagedir, $plugindir);
+        rename($tmpplugindir, $plugindir);
 
         // create database schema if needed
         $this->createDBSchema($plugindir, $manifest, $pluginregistered);
@@ -130,6 +140,7 @@ class PluginAdministration
                 $plugin_manager->registerPlugin($class, $class, $pluginpath, $pluginid);
             }
         }
+        rmdirr($packagedir);
     }
 
     /**

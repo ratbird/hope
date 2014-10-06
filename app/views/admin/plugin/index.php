@@ -44,7 +44,7 @@ use Studip\Button, Studip\LinkButton;
                 <th><?= _('Version') ?></th>
                 <th><?= _('Schema') ?></th>
                 <th><?= _('Position') ?></th>
-                <th class="actions" colspan="4"><?= _('Aktionen') ?></th>
+                <th class="actions" colspan="5"><?= _('Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -90,6 +90,13 @@ use Studip\Button, Studip\LinkButton;
                         <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $pluginid) ?>">
                             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
+                    </td>
+                    <td class="actions" width="20">
+                        <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
+                        <a href="<?= $controller->url_for('admin/plugin/edit_automaticupdate', $pluginid) ?>" data-dialog>
+                            <?= Assets::img('icons/16/blue/move_down/plugin', array('title' => _('Automatisches Update verwalten'))) ?>
+                        </a>
+                        <? endif ?>
                     </td>
                     <td class="actions"  width="20">
                         <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>

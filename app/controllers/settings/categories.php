@@ -76,7 +76,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         $actions = new ActionsWidget();
         $actions->addLink(_('Neue Kategorie anlegen'),
                           $this->url_for('settings/categories/create'),
-                          'icons/16/black/add');
+                          'icons/16/blue/add');
         $sidebar->addWidget($actions);
     }
 

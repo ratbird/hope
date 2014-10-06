@@ -26,7 +26,7 @@
             var proxied = $(this).data('proxyfor');
             // The following seems like a hack but works perfectly fine.
             $(proxied).attr('data-proxiedby', true).data('proxiedby', this);
-        }).trigger('update.studip');
+        }).trigger('update.proxy');
     });
 
     // Use a checkbox as a toggle switch for the disabled attribute of another

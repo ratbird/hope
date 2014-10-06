@@ -23,7 +23,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-use Studip\Button, Studip\LinkButton; 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -102,6 +102,8 @@ if (isset($SessSemName[1]) && isset($selected)) {
     $form    =  "<form name=\"\" action=\"". URLHelper::getLink() ."\" method=\"post\">";
     $form   .= CSRFProtection::tokenTag();
     $form   .=  "<input type=\"hidden\" name=\"make_aux\" value=1>";
+    $form .= '<label><input type="checkbox" value="1" name="aux_sem_forced[' . $SessSemName[1] . ']" ' . ($seminar_data['aux_lock_rule_forced'] ? 'checked' : '') . '>';
+    $form .= _("Erzwungen") . '</label>&nbsp;';
     $form .=    "<select name=aux_sem[".$SessSemName[1]."]>";
     $form .= "<option value=\"null\">-- ". _("keine Zusatzangaben"). " --</option>";
     if(is_array($rules)){
@@ -114,8 +116,6 @@ if (isset($SessSemName[1]) && isset($selected)) {
         }
     }
     $form   .=  "</select>";
-    $form   .=  _("Erzwungen");
-$form   .=  "<input type='checkbox' value='1' name='{$SessSemName[1]}_forced' ". ($seminar_data['aux_lock_rule_forced'] ? "CHECKED" : "") .">";
     $form   .=  "<input type=\"hidden\" name=\"aux_all\" value=\"-1\">";
     $form   .=  Button::create(_('Zuweisen'));
     $form   .=  "</form>";
@@ -126,23 +126,23 @@ $form   .=  "<input type='checkbox' value='1' name='{$SessSemName[1]}_forced' ".
 if (!Request::submitted('aux_rule') && Request::optionArray('aux_sem') && (!$selected)) {
     $update_query     = "UPDATE seminare SET aux_lock_rule = ?, aux_lock_rule_forced = ? WHERE Seminar_id = ?";
     $update_statement = DBManager::get()->prepare($update_query);
-    
+    $aux_sem_forced = Request::optionArray('aux_sem_forced');
     foreach (Request::optionArray('aux_sem') as $key => $val) {
+        if (Request::option('make_aux')) {
+            $update_statement->execute(array($val == 'null' ? null : $val, (isset($aux_sem_forced[$key]) && $val != 'null'), $key));
+        }
         $aux_statement->execute(array($key));
         $aux_data = $aux_statement->fetch(PDO::FETCH_ASSOC);
         $aux_statement->closeCursor();
-        
+
         if ($aux_data) {
             $rule = AuxLockRules::getLockRuleById($val);
             if (!$rule['name']) {
                 $rule['name'] = '-- ' . _('keine Zusatzangaben') . ' --';
             }
-            echo $zt->row(array(htmlReady($aux_data['Veranstaltungsnummer']), htmlReady($aux_data['Name']), htmlReady($rule["name"])));
-            if (Request::option('make_aux')) {
-                $update_statement->execute(array($val == 'null' ? null : $val, Request::get($key."_forced"), $key));
-            }
+            echo $zt->row(array(htmlReady($aux_data['Veranstaltungsnummer']), htmlReady($aux_data['Name']), htmlReady($rule["name"]) . ($aux_data['aux_lock_rule_forced'] ? '&nbsp;' . _('(erzwungen)') : '') ));
         } else {
-            echo $zt->row(array("&nbsp;", $db->f("Name"), "<font color=red>". _("Änderung fehlgeschlagen") . "</font>"));
+            echo $zt->row(array("&nbsp;", htmlReady($aux_data['Name']), "<font color=red>". _("Änderung fehlgeschlagen") . "</font>"));
         }
     }
 }

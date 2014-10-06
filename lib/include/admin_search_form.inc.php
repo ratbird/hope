@@ -441,7 +441,10 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                     </td>
                     <td colspan="4" align="right">
                     <?
-                        echo '<select name="aux_all" size="1">';
+                    if (Request::option('aux_all') == 'null') Request::set('aux_all_forced', null);
+                    echo '<label><input type="checkbox" value="1" name="aux_all_forced" ' . (Request::get('aux_all_forced') ? 'checked' : '') . ' >';
+                    echo _("Erzwungen") . '</label>&nbsp;';
+                    echo '<select name="aux_all" size="1">';
                         echo '<option value="-1">'. _("Bitte auswählen"). '</option>';
                         echo '<option value="null" ' . (Request::option('aux_all') == 'null' ? 'selected=selected' : '') . '>-- '. _("keine Zusatzangaben") .' --</option>';
                         foreach ((array)$all_aux_rules as $lock_id => $data) {
@@ -595,8 +598,8 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                 break;
                 case "admin_aux.php":
 
-                    $db5query = "SELECT aux_lock_rule from seminare WHERE Seminar_id = ?";
-                    $db5params = array('03777689ada89ef61283886fa7ff2da7');
+                    $db5query = "SELECT aux_lock_rule,aux_lock_rule_forced from seminare WHERE Seminar_id = ?";
+                    $db5params = array($seminar_id);
                     $db5statement = DBManager::get()->prepare($db5query);
                     $db5statement->execute($db5params);
                     $db5row = $db5statement->fetch(PDO::FETCH_ASSOC);
@@ -604,6 +607,8 @@ if ($perm->have_perm('tutor')) {    // Navigationsleiste ab status "Tutor"
                     if ($perm->have_perm("dozent")) {
                         ?>
                         <input type="hidden" name="make_aux" value="1">
+                        <label><input type="checkbox" value="1" name="aux_sem_forced[<?= $seminar_id ?>]" <?=(($db5row['aux_lock_rule_forced'] && !Request::get('aux_all_forced') && !Request::submitted('aux_rule')) || Request::get('aux_all_forced') ? 'checked' : '')?>>
+                        <?=_("Erzwungen")?></label>&nbsp;
                         <select name=aux_sem[<? echo $seminar_id ?>]>
                         <option value="null">-- <?=_("keine Zusatzangaben")?> --</option>
                         <?

@@ -2056,6 +2056,7 @@ class Seminar
                 $cs->delete();
             }
         }
+        AdmissionPriority::unsetAllPrioritiesForCourse($this->getId());
         // und das Seminar loeschen.
         $this->course->delete();
         $this->restore();

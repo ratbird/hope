@@ -1063,7 +1063,7 @@ class MyRealmModel
         $claiming = DBManager::get()->fetchAll(
             "SELECT set_id, priorities.seminar_id,'claiming' as status, seminare.Name, seminare.Ort
             FROM priorities
-            LEFT JOIN seminare USING(seminar_id)
+            INNER JOIN seminare USING(seminar_id)
             WHERE user_id = ?", array($user_id));
         $csets    = array();
         foreach ($claiming as $k => $claim) {
@@ -1092,7 +1092,7 @@ class MyRealmModel
             "SELECT admission_seminar_user.*, seminare.status as sem_status, " .
             "seminare.Name, seminare.Ort " .
             "FROM admission_seminar_user " .
-            "LEFT JOIN seminare USING(seminar_id) " .
+            "INNER JOIN seminare USING(seminar_id) " .
             "WHERE user_id = ? " .
             "ORDER BY admission_seminar_user.status, name");
         $stmt->execute(array($user_id));

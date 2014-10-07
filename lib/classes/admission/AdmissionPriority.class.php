@@ -202,5 +202,18 @@ class AdmissionPriority
                 array($courseSetId));
     }
 
+    /**
+     * delete all priorities for one course
+     *
+     * @param  String course Id
+     * @return int Number of affected rows, if any.
+     */
+    public static function unsetAllPrioritiesForCourse($course_id)
+    {
+        return DBManager::get()
+        ->execute("DELETE FROM priorities WHERE seminar_id=?",
+                array($course_id));
+    }
+
 } /* end of class AdmissionPriority */
 

@@ -42,7 +42,7 @@ class MyRealmModel
             if (!$GLOBALS['perm']->have_perm('admin')) {
                 if ($my_obj['modules']['documents_folder_permissions'] || ($my_obj['obj_type'] == 'sem' && StudipDocumentTree::ExistsGroupFolders($object_id))) {
                     $must_have_perm = $my_obj['obj_type'] == 'sem' ? 'tutor' : 'autor';
-                    if ($GLOBALS['perm']->permissions[$my_obj['status']] < $GLOBALS['perm']->permissions[$must_have_perm]) {
+                    if ($GLOBALS['perm']->permissions[$my_obj['user_status']] < $GLOBALS['perm']->permissions[$must_have_perm]) {
                         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree',
                             array('range_id'    => $object_id,
                                   'entity_type' => $my_obj['obj_type']));
@@ -796,7 +796,7 @@ class MyRealmModel
                 $result = $statement->fetch(PDO::FETCH_ASSOC);
 
                 if (!empty($result)) {
-                    if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj['status'], words('dozent tutor'))) {
+                    if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj['user_status'], words('dozent tutor'))) {
                         $count = $result['count'];
                         $neue  = $result['neue'];
                         if ($my_obj['last_modified'] < $result['last_modified']) {

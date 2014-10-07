@@ -78,13 +78,13 @@ class PluginRepository
 
         foreach ($xml->plugin as $plugin) {
             foreach ($plugin->release as $release) {
-                $min_version = $release['studipMinVersion'];
-                $max_version = $release['studipMaxVersion'];
+                $min_version = trim($release['studipMinVersion']);
+                $max_version = trim($release['studipMaxVersion']);
 
-                if (isset($min_version) &&
-                      version_compare($min_version, $SOFTWARE_VERSION) > 0 ||
-                    isset($max_version) &&
-                      version_compare($max_version, $SOFTWARE_VERSION) < 0) {
+                if (($min_version &&
+                      version_compare($min_version, $SOFTWARE_VERSION) > 0) ||
+                    ($max_version &&
+                      version_compare($max_version, $SOFTWARE_VERSION) < 0)) {
                     // plugin is not compatible, so skip it
                     continue;
                 }

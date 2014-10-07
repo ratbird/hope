@@ -509,19 +509,17 @@ class Admin_CoursesController extends AuthenticatedController
         $teachers = array();
         if (!empty($seminars)) {
             foreach ($seminars as $index => $course) {
-                foreach ($course['dozenten'] as $user_id => $teacher) {
-                    if (Request::option('teacher_filter') && strcmp('all', Request::get('teacher_filter')) !== 0) {
-                        if ($user_id != Request::option('teacher_filter')) {
-                            unset($seminars[$index]);
-                        }
-                    }
-
-                    if (!isset($teachers[$user_id])) {
-                        $teachers[$user_id] = $teacher;
+                if (Request::option('teacher_filter') && strcmp('all', Request::get('teacher_filter')) !== 0) {
+                    if (!isset($course['dozenten'][Request::option('teacher_filter')])) {
+                        unset($seminars[$index]);
                     }
                 }
+                $teachers = array_merge($teachers, $course['dozenten']);
             }
         }
+        $teachers = SimpleCollection::createFromArray($teachers)
+                    ->orderBy('fullname asc')
+                    ->getArrayCopy();
         return $teachers;
     }
 
@@ -607,16 +605,16 @@ class Admin_CoursesController extends AuthenticatedController
 
         if (Request::get('search')) {
             $search_result = array_filter($seminars, function ($a) {
-                if (strpos($a['VeranstaltungsNummer'], Request::get('search')) !== false) {
+                if (stripos($a['VeranstaltungsNummer'], Request::get('search')) !== false) {
                     return $a;
                 }
 
-                if (strpos($a['Name'], Request::get('search')) !== false) {
+                if (stripos($a['Name'], Request::get('search')) !== false) {
                     return $a;
                 }
 
                 foreach ($a['dozenten'] as $teacher) {
-                    if (strpos($teacher['fullname'], Request::get('search')) !== false) {
+                    if (stripos($teacher['fullname'], Request::get('search')) !== false) {
                         return $a;
                     }
                 }
@@ -710,8 +708,7 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function set_semester_selector()
     {
-        $semesters = new SimpleCollection(Semester::getAll());
-        $semesters->orderBy('beginn desc');
+        $semesters = array_reverse(Semester::getAll());
         $sidebar = Sidebar::Get();
         $list    = new SelectWidget(_('Semester'), $this->url_for('admin/courses/set_selection'), 'sem_select');
         foreach ($semesters as $semester) {

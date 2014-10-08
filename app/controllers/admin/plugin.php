@@ -181,18 +181,18 @@ class Admin_PluginController extends AuthenticatedController
     }
 
     /**
-     * Install a given plugin, either by name (from the repository)
+     * Install a given plugin, either by URL (from the repository)
      * or using a file uploaded by the administrator.
-     *
-     * @param string    name of plugin to install (optional)
      */
-    public function install_action($pluginname = NULL)
+    public function install_action()
     {
+        $plugin_url = Request::get('plugin_url');
+
         $this->check_ticket();
 
         try {
-            if (isset($pluginname)) {
-                $this->plugin_admin->installPluginByName($pluginname);
+            if (isset($plugin_url)) {
+                $this->plugin_admin->installPluginFromURL($plugin_url);
             } else if (get_config('PLUGINS_UPLOAD_ENABLE')) {
                 // process the upload and register plugin in the database
                 $upload_file = $_FILES['upload_file']['tmp_name'];

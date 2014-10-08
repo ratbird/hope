@@ -66,8 +66,9 @@ use Studip\Button, Studip\LinkButton;
                     <? endfor ?>
                 </td>
                 <td class="plugin_install">
-                    <form action="<?= $controller->url_for('admin/plugin/install', $name) ?>" method="post">
+                    <form action="<?= $controller->url_for('admin/plugin/install') ?>" method="post">
                         <?= CSRFProtection::tokenTag() ?>
+                        <input type="hidden" name="plugin_url" value="<?= htmlReady($plugin['url']) ?>">
                         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
                         <?= Assets::input("icons/16/blue/install.png", array('type' => "image", 'class' => "middle", 'name' => "install", 'title' => _('Plugin installieren'))) ?>
                     </form>

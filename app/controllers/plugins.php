@@ -11,23 +11,6 @@ require_once 'app/models/plugin_administration.php';
 class PluginsController extends StudipController
 {
 
-    /**
-     * Everything from authenticated_controller but without showing login-screen for "nobody"-user
-     * @param $action
-     * @param $args
-     */
-    function before_filter(&$action, &$args)
-    {
-        parent::before_filter($action, $args);
-        page_open(array('sess' => 'Seminar_Session',
-            'auth' => $this->allow_nobody ? 'Seminar_Default_Auth' : 'Seminar_Auth',
-            'perm' => 'Seminar_Perm',
-            'user' => 'Seminar_User'));
-        $this->flash = Trails_Flash::instance();
-        include 'lib/seminar_open.php';
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-    }
-
     public function trigger_automaticupdate_action($class)
     {
         $plugin =  \PluginManager::getInstance()->getPluginInfo($class);

@@ -433,10 +433,11 @@ class Admin_PluginController extends AuthenticatedController
                 'url' => Request::get("automatic_update_url"),
                 'secret' => Request::get("use_security_token") ? $token : null
             ));
-            $this->msg[] = MessageBox::success(_("Daten gespeichert."));
+            PageLayout::postMessage(MessageBox::success(_("Daten gespeichert.")));
             if (Request::get("use_security_token")) {
-                $this->msg[] = MessageBox::info(_("Unten können Sie den Security Token jetzt heraus kopieren."));
+                PageLayout::postMessage(MessageBox::info(_("Unten können Sie den Security Token jetzt heraus kopieren.")));
             }
+            $this->redirect("admin/plugin/edit_automaticupdate/".$plugin_id);
         }
         if (Request::isXhr()) {
             $this->set_layout(null);

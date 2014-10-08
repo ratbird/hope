@@ -16,11 +16,9 @@ if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
 ?>
 
 <div>
-    <? if (isset($msg)) : ?>
-    <? foreach ($msg as $m) : ?>
+    <? foreach (PageLayout::getMessages() as $m) : ?>
         <?= $m ?>
     <? endforeach ?>
-    <? endif ?>
 </div>
 <form action="<?= $controller->url_for('admin/plugin/edit_automaticupdate/'.$plugin['id']) ?>" method="post" class="studip_form" data-dialog>
     <?= CSRFProtection::tokenTag() ?>

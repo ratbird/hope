@@ -12,8 +12,8 @@ class AddAutomaticUpdatesToPlugins extends Migration
     function up()
     {
         DBManager::get()->exec("
-            ALTER TABLE `plugins` ADD `automatic_update_url` VARCHAR( 256 ) NOT NULL AFTER `dependentonid` ,
-            ADD `automatic_update_secret` VARCHAR( 32 ) NULL AFTER `automatic_update_url`
+            ALTER TABLE `plugins` ADD `automatic_update_url` VARCHAR( 256 ) NULL DEFAULT NULL AFTER `dependentonid` ,
+            ADD `automatic_update_secret` VARCHAR( 32 ) NULL DEFAULT NULL AFTER `automatic_update_url`
         ");
     }
 

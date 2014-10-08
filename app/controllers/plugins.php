@@ -43,7 +43,7 @@ class PluginsController extends StudipController
 
     protected function verify_secret($secret) {
         if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
-            return true;
+            return false;
         }
         $signatureHeader = $_SERVER['HTTP_X_HUB_SIGNATURE'];
         $payload = file_get_contents('php://input');

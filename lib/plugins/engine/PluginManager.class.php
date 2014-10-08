@@ -84,15 +84,17 @@ class PluginManager
             $id = (int) $plugin['pluginid'];
 
             $this->plugins[$id] = array(
-                'id'          => $id,
-                'name'        => $plugin['pluginname'],
-                'class'       => $plugin['pluginclassname'],
-                'path'        => $plugin['pluginpath'],
-                'type'        => explode(',', $plugin['plugintype']),
-                'enabled'     => $plugin['enabled'] === 'yes',
-                'position'    => $plugin['navigationpos'],
-                'depends'     => (int) $plugin['dependentonid'],
-                'core'        => strpos($plugin['pluginpath'], 'core/') === 0
+                'id'                      => $id,
+                'name'                    => $plugin['pluginname'],
+                'class'                   => $plugin['pluginclassname'],
+                'path'                    => $plugin['pluginpath'],
+                'type'                    => explode(',', $plugin['plugintype']),
+                'enabled'                 => $plugin['enabled'] === 'yes',
+                'position'                => $plugin['navigationpos'],
+                'depends'                 => (int) $plugin['dependentonid'],
+                'core'                    => strpos($plugin['pluginpath'], 'core/') === 0,
+                'automatic_update_url'    => $plugin['automatic_update_url'],
+                'automatic_update_secret' => $plugin['automatic_update_secret']
             );
         }
     }

@@ -339,7 +339,7 @@ class MessagesController extends AuthenticatedController {
                 '',
                 null,
                 Request::get("message_subject"),
-                Request::get("message_mail") ? true : "",
+                "",
                 'normal',
                 trim(Request::get("message_tags")) ?: null
             );

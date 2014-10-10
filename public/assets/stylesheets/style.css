@@ -5222,11 +5222,11 @@ div.start-widgetcontainer > ul {
 }
 div.start-widgetcontainer > ul:first-child {
   -webkit-flex-grow: 2;
-  flex-grow: 2;
+  flex: 2;
 }
 div.start-widgetcontainer > ul:last-child {
   -webkit-flex-grow: 1;
-  flex-grow: 1;
+  flex: 1;
   margin-left: 20px;
   max-width: 33%;
   min-width: 33%;

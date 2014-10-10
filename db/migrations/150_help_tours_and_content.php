@@ -63,7 +63,7 @@ class HelpToursAndContent extends Migration
         // add steps
         $query = "INSERT IGNORE INTO `help_tour_steps` (`tour_id`, `step`, `title`, `tip`, `orientation`, `interactive`, `css_selector`, `route`, `author_id`, `mkdate`) VALUES
 ('96ea422f286fb5bbf9e41beadb484a9a', 3, 'Stud.IP-Score', 'Der Stud.IP-Score wächst mit den Aktivitäten in Stud.IP und repräsentiert so die Erfahrung mit Stud.IP.', 'BL', 0, '#layout_content TABLE:eq(0) TBODY:eq(0) TR:eq(0) TD:eq(0) A:eq(0)', 'dispatch.php/profile', '', 1406722657),
-('96ea422f286fb5bbf9e41beadb484a9a', 5, 'Neue Ankündigung', 'Klicken Sie auf das Plus-Zeichen, wenn Sie eine Ankündigung erstellen möchten.', 'BR', 0, '.contentbox:eq(0) header img:eq(0)', 'dispatch.php/profile', '', 1406722657),
+('96ea422f286fb5bbf9e41beadb484a9a', 5, 'Neue Ankündigung', 'Klicken Sie auf das Plus-Zeichen, wenn Sie eine Ankündigung erstellen möchten.', 'BR', 0, '.contentbox:eq(0) header img:eq(1)', 'dispatch.php/profile', '', 1406722657),
 ('96ea422f286fb5bbf9e41beadb484a9a', 1, 'Profil-Tour', 'Diese Tour gibt Ihnen einen Überblick über die wichtigsten Funktionen des \"Profils\".\r\n\r\nUm auf den nächsten Schritt zu kommen, klicken Sie bitte rechts unten auf \"Weiter\".', 'T', 0, '', 'dispatch.php/profile', '', 1406722657),
 ('96ea422f286fb5bbf9e41beadb484a9a', 6, 'Persönliche Daten', 'Das Bild sowie weitere Nutzerdaten können über diese Seiten geändert werden.', 'BL', 0, '#tabs li:eq(2)', 'dispatch.php/profile', '', 1406722657),
 ('96ea422f286fb5bbf9e41beadb484a9a', 2, 'Persönliches Bild', 'Wenn ein Bild hochgeladen wurde, wird es hier angezeigt. Dieses kann jederzeit geändert werden.', 'RT', 0, '.avatar-normal', 'dispatch.php/profile', '', 1406722657),

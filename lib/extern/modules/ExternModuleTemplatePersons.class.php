@@ -174,7 +174,8 @@ class ExternModuleTemplatePersons extends ExternModule {
         }
 
         if(!$grouping) {
-            $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms, Email, aum.user_id, username, ";
+            $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms, Email, aum.user_id, ";
+            $query .= 'username, aum.Vorname, title_front, title_rear, ';
             $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname, aum.Nachname ";
             if ($query_order != '') {
                 $query .= "FROM statusgruppe_user LEFT JOIN auth_user_md5 aum USING(user_id) ";

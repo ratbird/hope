@@ -27,10 +27,10 @@
 <div id="threadwriter" class="globalstream">
     <div class="row">
         <div class="context_selector select" title="<?= _("Kontext der Nachricht auswählen") ?>">
-            <?= Assets::img("icons/32/blue/group2", array('class' => "select")) ?>
-            <img src="<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public_32_blue.png" class="public">
-            <?= Assets::img("icons/32/blue/group3", array('class' => "private")) ?>
-            <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar")) ?>
+            <?= Assets::img("icons/32/blue/group2", array('class' => "select click")) ?>
+            <?= Assets::img($plugin->getPluginURL()."/assets/images/public_blue.svg", array('class' => "public click", 'height' => "32px")) ?>
+            <?= Assets::img("icons/32/blue/group3", array('class' => "private click")) ?>
+            <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar click")) ?>
         </div>
         <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady("#".$search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
     </div>
@@ -42,7 +42,7 @@
                 <tr onMousedown="$('#context_type').val('public'); $('#threadwriter .context_selector').removeAttr('class').addClass('public context_selector'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
                     <td style="text-align: center; width: 15%">
                         <label>
-                            <img src="<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public_32.png" class="text-bottom">
+                            <?= Assets::img($plugin->getPluginURL()."/assets/images/public.svg", array('class' => "text-bottom", 'height' => "32px")) ?>
                             <br>
                             <?= _("Öffentlich") ?>
                         </label>

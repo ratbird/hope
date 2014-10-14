@@ -640,7 +640,7 @@ jQuery(function () {
             STUDIP.Blubber.makeTextareasAutoresizable();
         });
     });
-    jQuery("#threadwriter .context_selector img").bind("click", STUDIP.Blubber.showContextWindow);
+    jQuery("#threadwriter .context_selector .click").bind("click", STUDIP.Blubber.showContextWindow);
 
     //for editing custom streams:
     jQuery("#edit_stream select, #edit_stream input").bind("change", STUDIP.Blubber.update_streams_threadnumber);

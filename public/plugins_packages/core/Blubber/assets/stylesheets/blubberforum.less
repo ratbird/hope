@@ -91,7 +91,7 @@
 }
 #blubber_threads > li > ul {
     border-left: thin solid @base-color-40;
-    background-color: #e7ebf1;
+    background-color: @content-color-20;
     margin-left: 60px;
     padding-left: 0px;
 }
@@ -248,6 +248,7 @@
 
 #context_background {
     #gradient > .horizontal(white, @content-color-20);
+    background-color: transparent;
     background-size: 100px 100%;
     background-repeat: no-repeat;
 }
@@ -277,14 +278,14 @@
        .transition(all 1s);
         opacity: 0.2;
 
-        img {
+        .click  {
             cursor: pointer;
             display: none;
         }
-        &.select img.select,
-        &.public img.public,
-        &.private img.private,
-        &.seminar img.seminar {
+        &.select .select,
+        &.public .public,
+        &.private .private,
+        &.seminar .seminar {
             display: inline;
         }
     }

@@ -144,13 +144,99 @@ class Markup
     {
         $config = self::createDefaultPurifier();
         $config->set('Core.RemoveInvalidImg', true);
+
+        // restrict allowed HTML tags and attributes
+        //
+        // note that changes here should also be reflected in CKEditor's
+        // settings!!
+        //
+        // NOTE The list could be restricted even further by allowing only 
+        // specific values for some attributes and CSS styles, but that is not 
+        // directly supported by HTMLPurifier and would need to be implemented 
+        // with a filter similar to ClassifyLinks.
+        //
+        // This is a list of further restrictions that can/should be introduced
+        // at a later time point maybe, if possible:
+        //
+        // - always open external links in a new tab or window
+        //   a[class="link-extern" href="..." target="_blank"]
+        // - only allow left margin and horizontal text alignment to be set in 
+        //   divs (NOTE maybe remove these two features completely?):
+        //   div[style="margin-left:(40|80|...)px; text-align:(center|right|justify)"]
+        // - only allow height and width to be set in an images `style`-attribute
+        //   (NOTE maybe max-height and max-width should be set instead?):
+        //   img[alt="..."; src="..."; style="height:123px; width:123px;"]
+        // - only allow text color and background color to be set in a span's 
+        //   style attribute (NOTE 'wiki-links' are currently set here due to 
+        //   implementation difficulties, but probably this should be 
+        //   changed...):
+        //   span[style="color:(#000000|#800000|...);
+        //               background-color:(#000000|#800000|...)"
+        //        class="wiki-link"]
+        // - tables should always have the class "content" (it should not be 
+        //   optional and no other class should be set):
+        //   table[class="content"]
+        // - table headings should have a column and/or a row scope or no scope 
+        //   at all, but nothing else:
+        //   th[scope="(col | row)"]
+        // - fonts: only Stud.IP-specific fonts should be allowed
+        //
+        $config->set('HTML.Allowed', '
+            a[class|href|target|rel]
+            br
+            caption
+            em
+            div[style]
+            h1
+            h2
+            h3
+            h4
+            h5
+            h6
+            hr
+            img[alt|src|style]
+            li
+            ol
+            p
+            pre
+            span[style|class]
+            strong
+            u
+            ul
+            s
+            sub
+            sup
+            table[class]
+            tbody
+            td
+            thead
+            th[scope]
+            tr
+        ');
+
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
+        //$config->set('Attr.TargetBlank', true);
         $config->set('Attr.AllowedRel', array('nofollow'));
-        $config->set(
-            'HTML.ForbiddenAttributes',
-            'table@cellpadding,table@cellspacing,table@border'
-        );
+        $config->set('Attr.AllowedClasses', array(
+            'content',
+            'link-extern',
+            'wiki-link'
+        ));
         $config->set('AutoFormat.Custom', array('ClassifyLinks'));
+        $config->set('CSS.AllowedFonts', array(
+            'serif',
+            'sans-serif',
+            'monospace',
+            'cursive'
+        ));
+        $config->set('CSS.AllowedProperties', array(
+            'margin-left',
+            'text-align',
+            'height',
+            'width',
+            'color',
+            'background-color'
+        ));
 
         // avoid <img src="evil_CSRF_stuff">
         $def = $config->getHTMLDefinition(true);

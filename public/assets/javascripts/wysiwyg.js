@@ -71,6 +71,77 @@ jQuery(function ($) {
 
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
+            allowedContent: {
+                // note that changes here should also be reflected in
+                // HTMLPurifier's settings!!
+                a: {
+                    // note that external links should always have
+                    // class="link-extern", target="_blank" and rel="nofollow"
+                    // and internal links should not have any attributes except
+                    // for href, but this cannot be enforced here
+                    attributes: ['!href', 'target', 'rel'],
+                    classes: 'link-extern'
+                },
+                br: {},
+                caption: {},
+                em: {},
+                div: {
+                    // only allow left margin and horizontal text alignment to
+                    // be set in divs
+                    // - margin-left should only be settable in multiples of
+                    //   40 pixels
+                    // - text-align should only be either "center", "right" or
+                    //   "justify"
+                    // - note that maybe these two features will be removed
+                    //   completely in future versions
+                    styles: ['margin-left', 'text-align']
+                },
+                h1: {},
+                h2: {},
+                h3: {},
+                h4: {},
+                h5: {},
+                h6: {},
+                hr: {},
+                img: {
+                    attributes: ['alt', '!src'],
+                    style: ['height', 'width']
+                },
+                li: {},
+                ol: {},
+                p: {},
+                pre: {},
+                span: {
+                    // note that 'wiki-links' are currently set as a span due
+                    // to implementation difficulties, but probably this
+                    // might be changed in future versions
+                    classes: 'wiki-link',
+
+                    // note that allowed (background-)colors should be further
+                    // restricted
+                    styles: ['color', 'background-color']
+                },
+                strong: {},
+                u: {},
+                ul: {},
+                s: {},
+                sub: {},
+                sup: {},
+                table: {
+                    // note that tables should always have the class "content"
+                    // (it should not be optional)
+                    classes: 'content'
+                },
+                tbody: {},
+                td: {},
+                thead: {},
+                th: {
+                    // note that allowed scope values should be restricted to
+                    // "col", "row" or "col row", if scope is set
+                    attributes: 'scope'
+                },
+                tr: {}
+            },
             width: textareaWidth,
             skin: 'studip',
             // NOTE widget plugin requires line utils plugin!!

@@ -22,6 +22,7 @@ namespace Studip;
 
 require_once 'vendor/HTMLPurifier/HTMLPurifier.auto.php';
 require_once 'htmlpurifier/HTMLPurifier_Injector_ClassifyLinks.php';
+require_once 'htmlpurifier/HTMLPurifier_Injector_ClassifyTables.php';
 require_once 'htmlpurifier/HTMLPurifier_Injector_Unlinkify.php';
 
 class Markup
@@ -222,7 +223,10 @@ class Markup
             'link-extern',
             'wiki-link'
         ));
-        $config->set('AutoFormat.Custom', array('ClassifyLinks'));
+        $config->set('AutoFormat.Custom', array(
+            'ClassifyLinks',
+            'ClassifyTables'
+        ));
         $config->set('CSS.AllowedFonts', array(
             'serif',
             'sans-serif',

@@ -181,7 +181,7 @@ jQuery(function ($) {
             // configure dialogs
             removeDialogTabs: 'image:Link;image:advanced;'
                 + 'link:target;link:advanced;',
-                //+ 'table:advanced',
+                + 'table:advanced',
 
             // convert special chars except latin ones to html entities
             entities: false,

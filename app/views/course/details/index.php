@@ -248,7 +248,7 @@
         </section>
     <? endif ?>
 
-    <? if ($study_areas) : ?>
+    <? if ($study_areas && count($study_areas) > 0) : ?>
         <section class="contentbox">
             <header>
                 <h1><?= _('Studienbereiche') ?></h1>

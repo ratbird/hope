@@ -415,7 +415,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $row[] = $course->getNumParticipants();
                 $row[] = $this->applications[$course->id]['c'];
                 $row[] = $this->applications[$course->id]['h'];
-                $row[] = $course->admission_disable_waitlist ? _("ja") : _("nein");
+                $row[] = $course->admission_disable_waitlist ? _("nein") : _("ja");
                 $row[] = $course->admission_waitlist_max > 0 ? $course->admission_waitlist_max : '';
                 $data[] = $row;
             }

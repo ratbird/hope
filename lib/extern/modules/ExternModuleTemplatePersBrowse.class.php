@@ -494,12 +494,12 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
            
             $state = DBManager::get()->prepare($query);
             $state->execute($parameters);
-            while ($row_count = $statement->fetch(PDO::FETCH_ASSOC)) {
+            while ($row_count = $state->fetch(PDO::FETCH_ASSOC)) {
             
                 if ($row_count['count_user'] > 0) {
                     $content['LIST_INSTITUTES']['INSTITUTE'][] = array(
-                        'INSTITUTE_NAME' => ExternModule::ExtHtmlReady($db->f('Name')),
-                        'INSTITUTE_COUNT_USER' => $db_count->f('count_user'),
+                        'INSTITUTE_NAME' => ExternModule::ExtHtmlReady($row['Name']),
+						'INSTITUTE_COUNT_USER' => $row_count['count_user'],
                         'URL_LIST_PERSONS' => $this->getLinkToModule('LinkInternListInstitutes', array('item_id' => $row['Institut_id'])));
                 }
             }

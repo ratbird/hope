@@ -117,6 +117,9 @@ class ParticipantRestrictedAdmission extends AdmissionRule
         if ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $this->message = $current['message'];
             $this->distributionTime = $current['distribution_time'];
+            if ($current['distribution_time'] > 0) {
+                $this->prio_exists = DBManager::get()->fetchColumn("SELECT 1 FROM courseset_rule INNER JOIN priorities USING(set_id) WHERE rule_id = ? LIMIT 1", array($this->id));
+            }
         }
     }
 

@@ -1,7 +1,8 @@
 <? $index = 1 ?>
 <? foreach ($course_group as $title => $course_collection) : ?>
-    <? foreach (array_values($course_collection) as $course) {
-        $last_modified = $course['last_modified'];
+    <? $last_modified = 0;
+    foreach (array_values($course_collection) as $course) {
+        $last_modified = max($last_modified, $course['last_modified']);
     }
     $id = md5($sem_key.$title);
     ?>

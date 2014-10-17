@@ -13,30 +13,34 @@ class PluginsController extends StudipController
 
     public function trigger_automaticupdate_action($class)
     {
-        $plugin =  PluginManager::getInstance()->getPluginInfo($class);
-        $low_cost_secret = md5($GLOBALS['STUDIP_INSTALLATION_ID'].$plugin['id']);
         $output = array();
+        if (Request::isPost()) {
+            $plugin =  PluginManager::getInstance()->getPluginInfo($class);
+            $low_cost_secret = md5($GLOBALS['STUDIP_INSTALLATION_ID'].$plugin['id']);
 
-        if ($plugin['automatic_update_url'] && ($low_cost_secret === \Request::option("s"))) {
-            if ($plugin['automatic_update_secret'] && !$this->verify_secret($plugin['automatic_update_secret'])) {
-                $output['error'] = "Incorrect payload.";
-            } else {
-                //everything fine, we can download and install the plugin
-                $update_url = $plugin['automatic_update_url'];
-                require_once 'app/models/plugin_administration.php';
+            if ($plugin['automatic_update_url'] && ($low_cost_secret === \Request::option("s"))) {
+                if ($plugin['automatic_update_secret'] && !$this->verify_secret($plugin['automatic_update_secret'])) {
+                    $output['error'] = "Incorrect payload.";
+                } else {
+                    //everything fine, we can download and install the plugin
+                    $update_url = $plugin['automatic_update_url'];
+                    require_once 'app/models/plugin_administration.php';
 
-                $plugin_admin = new PluginAdministration();
-                try {
-                    $plugin_admin->installPluginFromURL($update_url);
-                } catch (Exception $e) {
-                    $output['exception'] = $e->getMessage();
+                    $plugin_admin = new PluginAdministration();
+                    try {
+                        $plugin_admin->installPluginFromURL($update_url);
+                    } catch (Exception $e) {
+                        $output['exception'] = $e->getMessage();
+                    }
                 }
+            } else {
+                $output['error'] = "Wrong URL.";
+            }
+            if (!count($output)) {
+                $output['message'] = "ok";
             }
         } else {
-            $output['error'] = "Wrong URL.";
-        }
-        if (!count($output)) {
-            $output['message'] = "ok";
+            $output['error'] = "Only POST requests allowed.";
         }
         $this->render_json($output);
     }

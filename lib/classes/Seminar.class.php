@@ -2526,12 +2526,13 @@ class Seminar
      * @param string $user_id
      * @return integer 1 if successfull
      */
-    function addPreliminaryMember($user_id)
+    function addPreliminaryMember($user_id, $comment = '')
     {
         $new_admission_member = new AdmissionApplication();
         $new_admission_member->user_id = $user_id;
         $new_admission_member->position = 0;
         $new_admission_member->status = 'accepted';
+        $new_admission_member->comment = $comment;
         $this->course->admission_applicants[] = $new_admission_member;
         $ok = $new_admission_member->store();
         if ($ok && $this->isStudygroup()) {

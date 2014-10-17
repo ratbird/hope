@@ -75,6 +75,9 @@
                         array('style' => 'position: absolute; margin: 0px 0px 0px -15px')) : '' ?>
                     <?= htmlReady($fullname) ?>
                     </a>
+                    <? if ($accept['comment'] != '') : ?>
+                        <?= tooltipIcon(sprintf('<strong>%s</strong><br>%s', _('Bemerkung'), htmlReady($accept['comment'])), false, true) ?>
+                    <? endif ?>
                 </td>
                 <td>
                     <? if(!empty($accept['mkdate'])) : ?>
@@ -85,6 +88,9 @@
                     <?= $this->render_partial("course/members/_studycourse.php", array('study_courses' => UserModel::getUserStudycourse($accept['user_id']))) ?>
                 </td>
                 <td style="text-align: right">
+                    <a data-dialog title='<?= _('Bemerkung hinzufügen') ?>' href="<?=$controller->url_for('course/members/add_comment', $accept['user_id']) ?>">
+                            <?= Assets::img('icons/16/blue/comment.png') ?>
+                    </a>
                     <? if($user_id != $accept['user_id']) : ?>
                         <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                                     array('filter' => 'send_sms_to_all',

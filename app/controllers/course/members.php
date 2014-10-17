@@ -33,6 +33,9 @@ class Course_MembersController extends AuthenticatedController
 
         global $perm;
 
+        checkObject();
+        checkObjectModule("participants");
+
         $this->course_id = $_SESSION['SessSemName'][1];
         $this->course_title = $_SESSION['SessSemName'][0];
         $this->user_id = $GLOBALS['auth']->auth['uid'];
@@ -79,8 +82,6 @@ class Course_MembersController extends AuthenticatedController
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         }
 
-        checkObject();
-        checkObjectModule("participants");
         object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($this->course_id, 'participants');
 
@@ -243,11 +244,14 @@ class Course_MembersController extends AuthenticatedController
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
-        if (is_null($user_id)) {
-            $this->redirect('course/members/index');
-            return;
+        $course_member = CourseMember::find(array($this->course_id, $user_id));
+        if (!$course_member) {
+            $course_member = AdmissionApplication::find(array($user_id, $this->course_id));
         }
-        $this->comment = CourseMember::find(array($this->course_id, $user_id))->comment;
+        if (is_null($course_member)) {
+            throw new Trails_Exception(400);
+        }
+        $this->comment = $course_member->comment;
         $this->user = User::find($user_id);
         PageLayout::setTitle(sprintf(_('Bemerkung für %s'), $this->user->getFullName()));
 
@@ -272,15 +276,17 @@ class Course_MembersController extends AuthenticatedController
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
         }
 
-        if (!Request::submitted('save') || is_null($user_id)) {
-            $this->redirect('course/members/index');
-            return;
-        }
         CSRFProtection::verifyUnsafeRequest();
-        $course = CourseMember::find(array($this->course_id, $user_id));
-        $course->comment = Request::get('comment');
+        $course_member = CourseMember::find(array($this->course_id, $user_id));
+        if (!$course_member) {
+            $course_member = AdmissionApplication::find(array($user_id, $this->course_id));
+        }
+        if (!Request::submitted('save') || is_null($course_member)) {
+            throw new Trails_Exception(400);
+        }
+        $course_member->comment = Request::get('comment');
 
-        if ($course->store() !== false) {
+        if ($course_member->store() !== false) {
             PageLayout::postMessage(MessageBox::success(_('Bemerkung wurde erfolgreich gespeichert.')));
         } else {
             PageLayout::postMessage(MessageBox::error(_('Bemerkung konnte nicht erfolgreich gespeichert werden.')));

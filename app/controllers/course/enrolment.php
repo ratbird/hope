@@ -157,30 +157,37 @@ class Course_EnrolmentController extends AuthenticatedController {
         if ($enrol_user) {
             $course = Seminar::GetInstance($this->course_id);
             if ($course->admission_prelim) {
-                if ($course->addPreliminaryMember($user_id)) {
-                    if ($course->isStudygroup()) {
-                        if (StudygroupModel::isInvited($user_id, $this->course_id)) {
-                            // an invitation exists, so accept the join request automatically
-                            $status = $course->read_level === 1 ? 'user' : 'autor';
-                            StudygroupModel::accept_user(get_username($user_id),$this->course_id);
-                            StudygroupModel::cancelInvitation(get_username($user_id),$this->course_id);
-                            $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
-                            PageLayout::postMessage(MessageBox::success($success));
-                        } else {
-                            $success = sprintf(_("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $course->getName());
-                            PageLayout::postMessage(MessageBox::success($success));
-                        }
+                if (!$course->isStudygroup() && $course->admission_prelim_txt && !Request::submitted('apply')) {
+                    $this->admission_prelim_txt = $course->admission_prelim_txt;
+                    $this->admission_prelim_comment = Config::get()->ADMISSION_PRELIM_COMMENT_ENABLE;
+                    $this->admission_form = $this->render_template_as_string('course/enrolment/prelim');
+                } else {
+                    if (Request::get('admission_comment')) {
+                        $admission_comment = get_fullname() . ': ' . Request::get('admission_comment');
                     } else {
-                        $success = sprintf(_("Sie wurden in die Veranstaltung %s vorläufig eingetragen."), $course->getName());
-                        if ($course->admission_prelim_txt) {
-                            $success .= '<br>' . _("Lesen Sie bitte folgenden Hinweistext:") . '<br>';
-                            $success .= formatReady($course->admission_prelim_txt);
+                        $admission_comment = '';
+                    }
+                    if ($course->addPreliminaryMember($user_id, $admission_comment)) {
+                        if ($course->isStudygroup()) {
+                            if (StudygroupModel::isInvited($user_id, $this->course_id)) {
+                                // an invitation exists, so accept the join request automatically
+                                $status = 'autor';
+                                StudygroupModel::accept_user(get_username($user_id),$this->course_id);
+                                StudygroupModel::cancelInvitation(get_username($user_id),$this->course_id);
+                                $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
+                                PageLayout::postMessage(MessageBox::success($success));
+                            } else {
+                                $success = sprintf(_("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $course->getName());
+                                PageLayout::postMessage(MessageBox::success($success));
+                            }
+                        } else {
+                            $success = sprintf(_("Sie wurden in die Veranstaltung %s vorläufig eingetragen."), $course->getName());
+                            PageLayout::postMessage(MessageBox::success($success));
                         }
-                        PageLayout::postMessage(MessageBox::success($success));
                     }
                 }
             } else {
-                $status = $course->read_level === 1 ? 'user' : 'autor';
+                $status = 'autor';
                 if ($course->addMember($user_id, $status)) {
                     $success = sprintf(_("Sie wurden in die Veranstaltung %s als %s eingetragen."), $course->getName(), get_title_for_status($status, 1));
                     PageLayout::postMessage(MessageBox::success($success));

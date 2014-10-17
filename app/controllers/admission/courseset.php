@@ -296,7 +296,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             if (Request::submitted('userlists')) {
                 $courseset->setUserLists(Request::getArray('userlists'));
             }
-            if (!$this->instant_course_set_view && $courseset->getUserId() == $GLOBALS['user']->id) {
+            if (!$this->instant_course_set_view && $courseset->isUserAllowedToEdit($GLOBALS['user']->id)) {
                 $courseset->setPrivate((bool) Request::get('private'));
             }
             if (Request::submitted('infotext')) {

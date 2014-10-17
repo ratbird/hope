@@ -48,7 +48,7 @@ if ($flash['error']) {
         <input type="text" size="60" maxlength="255" name="name"
             value="<?= $courseset ? htmlReady($courseset->getName()) : '' ?>"
             required="required" aria-required="true"/>
-        <? if (!$courseset || (($GLOBALS['perm']->have_perm('admin') || $courseset->getUserId() == $GLOBALS['user']->id) && !$instant_course_set_view)) : ?>
+        <? if (!$courseset || ($courseset->isUserAllowedToEdit($GLOBALS['user']->id) && !$instant_course_set_view)) : ?>
             <label for="private" class="caption">
                 <?= _('Sichtbarkeit:') ?>
             </label>
@@ -92,7 +92,7 @@ if ($flash['error']) {
                     <?= Assets::img('icons/16/yellow/arr_2down.png', array(
                         'alt' => _('Einrichtung hinzufügen'),
                         'title' => _('Einrichtung hinzufügen'),
-                        'onclick' => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '". 
+                        'onclick' => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '".
                             $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
                             $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
                     <?= $instSearch ?>
@@ -185,7 +185,7 @@ if ($flash['error']) {
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
    <? if (!$instant_course_set_view) : ?>
-        
+
     <? if ($courseset && $courseset->getSeatDistributionTime()) :?>
         <label class="caption">
             <?= _('Nutzerlisten zuordnen:') ?>

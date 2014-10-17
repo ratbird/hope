@@ -853,14 +853,14 @@ class CourseSet
         }
         // log removed course assignments.
         DBManager::get()->fetchAll("SELECT seminar_id,set_id FROM `seminar_courseset`
-            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, array_keys($this->courses)),
+            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, count($this->courses) ? array_keys($this->courses) : ''),
             function ($row) {
                 StudipLog::log('SEM_CHANGED_ACCESS', $row['seminar_id'],
                 null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $row['set_id']));
             });
         //removed course assignments
         DBManager::get()->execute("DELETE FROM `seminar_courseset`
-            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, array_keys($this->courses)));
+            WHERE `set_id` = ? AND `seminar_id` NOT IN (?)", array($this->id, count($this->courses) ? array_keys($this->courses) : ''));
         //log removing other associations
         DBManager::get()->execute("SELECT seminar_id,set_id FROM `seminar_courseset`
             WHERE `set_id` <> ? AND `seminar_id` IN (?)", array($this->id, array_keys($this->courses)),

@@ -2,7 +2,7 @@
 
 /**
  * AdmissionRule.class.php
- * 
+ *
  * An abstract representation of rules for course admission.
  *
  * This program is free software; you can redistribute it and/or
@@ -30,11 +30,11 @@ abstract class AdmissionRule
     public $id = '';
 
     /**
-     * A customizable message that is shown to users that are rejected for admission 
+     * A customizable message that is shown to users that are rejected for admission
      * because of the current rule.
      */
     public $message = '';
-    
+
     /**
      * default message that is shown to users that are rejected for admission
      * because of the current rule.
@@ -51,11 +51,11 @@ abstract class AdmissionRule
      * performance reasons).
      */
     public $courseSetId = '';
-    
+
     /**
      * an array of AdmissionRules allowed to be combined with this rule
-     * 
-     * @var array 
+     *
+     * @var array
      */
     public $allowed_combinations = array();
 
@@ -69,7 +69,7 @@ abstract class AdmissionRule
     /**
      * Hook that can be called after the seat distribution on the courseset
      * has completed.
-     * 
+     *
      * @param CourseSet $courseset Current courseset.
      */
     public function afterSeatDistribution(&$courseset) {
@@ -78,7 +78,7 @@ abstract class AdmissionRule
 
     /**
      * Checks if we are in the rule validity time frame.
-     * 
+     *
      * @return True if the rule is valid because the time frame applies,
      *         otherwise false.
      */
@@ -100,20 +100,20 @@ abstract class AdmissionRule
      */
     public function delete() {
         // Delete rule assignment to coursesets.
-        $stmt = DBManager::get()->prepare("DELETE FROM `courseset_rule` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `courseset_rule`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
     }
 
     /**
      * Generate a new unique ID.
-     * 
+     *
      * @param  String tableName
      */
     public function generateId($tableName) {
         do {
             $newid = md5(uniqid(get_class($this).microtime(), true));
-            $db = DBManager::get()->query("SELECT `rule_id` 
+            $db = DBManager::get()->query("SELECT `rule_id`
                 FROM `".$tableName."` WHERE `rule_id`=" . DBManager::get()->quote($newid));
         } while ($db->fetch());
         return $newid;
@@ -122,7 +122,7 @@ abstract class AdmissionRule
     /**
      * Gets all users that are matched by thís rule.
      *
-     * @return Array An array containing IDs of users who are matched by 
+     * @return Array An array containing IDs of users who are matched by
      *      this rule.
      */
     public function getAffectedUsers()
@@ -132,7 +132,7 @@ abstract class AdmissionRule
 
     /**
      * Reads all available AdmissionRule subclasses and loads their definitions.
-     * 
+     *
      * @param  bool $activeOnly Show only active rules.
      * @return Array
      */
@@ -180,7 +180,7 @@ abstract class AdmissionRule
      * rules.
      * This static method provides the frame for rendering a full HTML form
      * around the fragments from subclasses.
-     * 
+     *
      * @return Array Start and end templates which wrap input form fragments
      *               from subclasses.
      */
@@ -190,9 +190,9 @@ abstract class AdmissionRule
             $GLOBALS['template_factory']->open('admission/rules/input_end')->render()
         );
     }
-    
+
     /**
-     * Gets some text that describes what this AdmissionRule (or respective 
+     * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
     public static function getDescription() {
@@ -244,7 +244,7 @@ abstract class AdmissionRule
 
     /**
      * Gets the template that provides a configuration GUI for this rule.
-     * 
+     *
      * @return String
      */
     public function getTemplate() {
@@ -260,7 +260,7 @@ abstract class AdmissionRule
     /**
      * Hook that can be called when the seat distribution on the courseset
      * starts.
-     * 
+     *
      * @param CourseSet The courseset this rule belongs to.
      */
     public function beforeSeatDistribution(&$courseset) {
@@ -268,7 +268,7 @@ abstract class AdmissionRule
     }
 
     /**
-     * Does the current rule allow the given user to register as participant 
+     * Does the current rule allow the given user to register as participant
      * in the given course?
      *
      * @param  String userId
@@ -284,7 +284,7 @@ abstract class AdmissionRule
      * Uses the given data to fill the object values. This can be used
      * as a generic function for storing data if the concrete rule type
      * isn't known in advance.
-     * 
+     *
      * @param Array $data
      * @return AdmissionRule This object.
      */
@@ -360,21 +360,25 @@ abstract class AdmissionRule
      */
     public function validate($data)
     {
-        return array();
+        $errors = array();
+        if ($data['start_date'] && $data['end_date'] && strtotime($data['end_date']) < strtotime($data['start_date'])) {
+            $errors[] = _('Das Enddatum darf nicht vor dem Startdatum liegen.');
+        }
+        return $errors;
     }
 
     /**
      * Standard string representation of this object.
-     * 
+     *
      * @return String
      */
     public function __toString() {
         return $this->toString();
     }
-    
+
     /**
      * checks if given admission rule is allowed to be combined with this rule
-     * 
+     *
      * @param AdmissionRule|string $admission_rule
      * @return boolean
      */

@@ -182,14 +182,25 @@ class Icon
         );
         unset($this->attributes['alt'], $this->attributes['src']);
 
+        $title = $this->attributes['title'] ?: false;
+        unset($this->attributes['title']);
+
         $svg_attributes = array_merge($this->attributes, array(
             'width'  => $this->get_size(),
             'height' => $this->get_size(),
         ));
 
-        return sprintf('<svg %s><image %s></svg>',
-                              $this->tag_options($svg_attributes),
-                              $this->tag_options($png_attributes));
+        $result = sprintf('<svg %s><image %s></svg>',
+                          $this->tag_options($svg_attributes),
+                          $this->tag_options($png_attributes));
+
+        if ($title) {
+            $result = sprintf('<span %s>%s</span>',
+                              $this->tag_options(compact('title')),
+                              $result);
+        }
+
+        return $result;
     }
 
     /**

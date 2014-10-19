@@ -133,7 +133,10 @@ jQuery(function ($) {
                     classes: 'content'
                 },
                 tbody: {},
-                td: {},
+                td: {
+                    attributes: ['colspan', 'rowspan'],
+                    styles: ['text-align']
+                },
                 thead: {},
                 th: {
                     // note that allowed scope values should be restricted to

@@ -209,7 +209,7 @@ class Markup
             sup
             table[class]
             tbody
-            td
+            td[colspan|rowspan|style]
             thead
             th[scope]
             tr

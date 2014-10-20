@@ -7,7 +7,7 @@ use Studip\Button, Studip\LinkButton;
 
 <form action="<?= $controller->url_for('admin/plugin/install_updates') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
+    <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <div style="margin: 1ex;">
         <? foreach ($plugins as $plugin): ?>
             <? $pluginid = $plugin['id'] ?>

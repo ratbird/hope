@@ -69,7 +69,7 @@ use Studip\Button, Studip\LinkButton;
                     <form action="<?= $controller->url_for('admin/plugin/install') ?>" method="post">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="plugin_url" value="<?= htmlReady($plugin['url']) ?>">
-                        <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
+                        <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
                         <?= Assets::input("icons/16/blue/install.png", array('type' => "image", 'class' => "middle", 'name' => "install", 'title' => _('Plugin installieren'))) ?>
                     </form>
                 </td>
@@ -122,7 +122,7 @@ use Studip\Button, Studip\LinkButton;
         <?= CSRFProtection::tokenTag() ?>
         <?= _('Plugin-Datei:') ?>
         <input name="upload_file" type="file" size="40">
-        <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
+        <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
 
         <?= Button::create(_('Hinzufügen'), 'hinzufuegen', array('title' => _('neues Plugin installieren')))?>
     </form>

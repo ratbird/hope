@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
 <h2><?= _("Bearbeiten von Konfigurationsparameter") ?></h2>
 <? endif; ?>
 
-<form action="<?= $controller->url_for('admin/configuration/edit_configuration/'.$edit['config_id']) ?>" method=post>
+<form action="<?= $controller->url_for('admin/configuration/edit_configuration?id='.$edit['config_id']) ?>" method=post>
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">

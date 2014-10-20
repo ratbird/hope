@@ -87,8 +87,9 @@ class Admin_ConfigurationController extends AuthenticatedController
      *
      * @param   md5 $config_id
      */
-    public function edit_configuration_action($config_id)
+    public function edit_configuration_action()
     {
+        $config_id = Request::option('id');
         if (Request::submitted('uebernehmen')) {
             if (Request::get('value') || Request::get('value')== 0) {
                 $conf_value = Request::get('value');

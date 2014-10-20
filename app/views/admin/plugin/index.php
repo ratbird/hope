@@ -18,7 +18,7 @@ use Studip\Button, Studip\LinkButton;
 <? if ($delete_plugin): ?>
     <?= $GLOBALS['template_factory']->render('shared/question',
         array('question' => sprintf(_('Wollen Sie wirklich "%s" deinstallieren?'), $delete_plugin['name']),
-              'approvalLink' => $controller->url_for('admin/plugin/delete', $delete_plugin['id']).'?ticket='.get_ticket(),
+              'approvalLink' => $controller->url_for('admin/plugin/delete', $delete_plugin['id']).'?studip_ticket='.get_ticket(),
               'disapprovalLink' => $controller->url_for('admin/plugin'))) ?>
 <? endif ?>
 
@@ -30,7 +30,7 @@ use Studip\Button, Studip\LinkButton;
 <? else: ?>
     <form action="<?= $controller->url_for('admin/plugin/save') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
+        <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
         <input type="hidden" name="plugin_filter" value="<?= $plugin_filter ?>">
         <table class="default">
         <caption>

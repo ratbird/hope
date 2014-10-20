@@ -48,7 +48,7 @@ class Admin_PluginController extends AuthenticatedController
      */
     private function check_ticket()
     {
-        if (!check_ticket(Request::option('ticket'))) {
+        if (!check_ticket(Request::option('studip_ticket'))) {
             throw new InvalidArgumentException(_('Das Ticket für diese Aktion ist ungültig.'));
         }
 

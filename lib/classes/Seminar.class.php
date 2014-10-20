@@ -2508,10 +2508,14 @@ class Seminar
             $info['description'] = _("Die Veranstaltung ist gesperrt, Sie können sich nicht eintragen!");
             return $info;
         }
-        if ($courseset = CourseSet::getSetForCourse($this->getId())) {
+        if ($courseset = $this->getCourseSet()) {
             $info['enrolment_allowed'] = true;
             $info['cause'] = 'courseset';
             $info['description'] = _("Die Anmeldung zu dieser Veranstaltung folgt speziellen Regeln. Lesen Sie den Hinweistext.");
+            $user_prio = AdmissionPriority::getPrioritiesByUser($courseset->getId(), $user_id);
+            if (isset($user_prio[$this->getId()])) {
+                $info['description'] .= ' ' . sprintf(_("(Sie stehen auf der Anmeldeliste für die automatische Platzverteilung mit der Priorität %s.)"), $user_prio[$this->getId()]);
+            }
             return $info;
         }
         $info['enrolment_allowed'] = true;

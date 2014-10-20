@@ -61,6 +61,11 @@ class ParticipantRestrictedAdmission extends AdmissionRule
      * Deletes the admission rule and all associated data.
      */
     public function delete() {
+        if ($this->prio_exists) {
+            $set_id = DBManager::get()->fetchColumn("SELECT set_id FROM courseset_rule WHERE rule_id = ? LIMIT 1", array($this->id));
+            //Delete priorities
+            AdmissionPriority::unsetAllPriorities($set_id);
+        }
         parent::delete();
         // Delete rule data.
         $stmt = DBManager::get()->prepare("DELETE FROM `participantrestrictedadmissions`

@@ -825,6 +825,8 @@ class CourseSet
             }
             if (!$this->getSeatDistributionTime()) {
                 $this->setAlgorithmRun(true);
+                //Delete priorities
+                AdmissionPriority::unsetAllPriorities($this->getId());
             }
             if ($this->getSeatDistributionTime() > time()) {
                 $this->setAlgorithmRun(false);
@@ -857,6 +859,8 @@ class CourseSet
             function ($row) {
                 StudipLog::log('SEM_CHANGED_ACCESS', $row['seminar_id'],
                 null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $row['set_id']));
+                //Delete priorities
+                AdmissionPriority::unsetAllPrioritiesForCourse($row['seminar_id']);
             });
         //removed course assignments
         DBManager::get()->execute("DELETE FROM `seminar_courseset`
@@ -867,6 +871,8 @@ class CourseSet
             function ($row) {
                 StudipLog::log('SEM_CHANGED_ACCESS', $row['seminar_id'],
                 null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $row['set_id']));
+                //Delete priorities
+                AdmissionPriority::unsetAllPrioritiesForCourse($row['seminar_id']);
             });
         //Delete other associations, only one set possible
         DBManager::get()->execute("DELETE FROM `seminar_courseset`
@@ -1052,6 +1058,8 @@ class CourseSet
         if ($ok) {
             StudipLog::log('SEM_CHANGED_ACCESS', $course_id,
                 null, 'Entfernung von Anmeldeset', sprintf('Anmeldeset: %s', $set_id));
+            //Delete priorities
+            AdmissionPriority::unsetAllPrioritiesForCourse($course_id);
         }
         return $ok;
     }

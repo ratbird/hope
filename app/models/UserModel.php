@@ -534,6 +534,23 @@ class UserModel
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 
+        //Blubber
+        $query = "UPDATE IGNORE blubber SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        $query = "UPDATE IGNORE blubber_follower SET studip_user_id = ? WHERE studip_user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        $query = "UPDATE IGNORE blubber_mentions SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        $query = "UPDATE IGNORE blubber_reshares SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        $query = "UPDATE IGNORE blubber_streams SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
         NotificationCenter::postNotification('UserDidMigrate', $old_id, $new_id);
 
         $messages[] = _('Dateien, Termine, Adressbuch, Nachrichten und weitere Daten wurden migriert.');

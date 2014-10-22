@@ -824,53 +824,53 @@ table.default caption {
   padding: 5px;
   text-align: left;
 }
-table.default caption {
+table.default > caption {
   background-color: transparent;
   padding-top: 0px;
   color: #444;
   font-size: 1.4em;
   text-align: left;
 }
-table.default caption header h2 {
+table.default > caption header > h2 {
   border: 0;
   font-size: inherit;
   font-weight: normal;
   margin: 0;
   padding: 0;
 }
-table.default caption header p {
+table.default > caption header > p {
   font-size: 0.7em;
   font-weight: normal;
   margin: 0;
   padding: 0;
 }
-table.default thead th {
+table.default > thead > tr > th {
   background-color: #e7ebf1;
   border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   border-top: 1px solid #1e3e70;
   font-size: 1.0em;
 }
-table.default tbody th {
+table.default > tbody > tr > th {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
   border-bottom: 1px solid rgba(137, 154, 185, 0.2);
   text-align: left;
 }
-table.default tbody td {
+table.default > tbody > tr > td {
   border-bottom: 1px solid #d1d1d1;
   transition: background-color 0.3s;
 }
-table.default tbody td.dragHandle {
+table.default > tbody > tr > td.dragHandle {
   background: #ffffff url("../images/anfasser_24.png") center no-repeat;
   cursor: move;
 }
-table.default tbody tr:last-child td {
+table.default > tbody > tr:last-child > td {
   border-bottom: 1px solid #1e3e70;
 }
 table.default:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
   background-color: rgba(105, 118, 127, 0.2);
 }
-table.default tfoot td {
+table.default > tfoot > tr > td {
   background-color: #e7ebf1;
   border-top: 1px solid #1e3e70;
 }
@@ -882,7 +882,7 @@ table.default .actions img,
 table.default .actions svg {
   vertical-align: middle;
 }
-table.default caption .actions {
+table.default > caption .actions {
   border-left: 1px solid #1e3e70;
   margin-bottom: -5px;
   padding-bottom: 7px;
@@ -892,7 +892,7 @@ table.default td.actions,
 table.default th.actions {
   float: none;
 }
-table.default caption .caption-container {
+table.default > caption .caption-container {
   display: -ms-flexbox;
   display: -webkit-box;
   display: -webkit-box-flex;
@@ -907,7 +907,7 @@ table.default caption .caption-container {
   justify-content: space-between;
   margin-bottom: -5px;
 }
-table.default caption .caption-content {
+table.default > caption .caption-content {
   -webkit-flex-grow: 1;
   flex-grow: 1;
   border-right: 1px solid #1e3e70;
@@ -915,11 +915,11 @@ table.default caption .caption-content {
   padding-right: 0.5em;
   margin-right: 0.5em;
 }
-table.default caption .caption-actions {
+table.default > caption .caption-actions {
   -webkit-align-self: flex-end;
   align-self: flex-end;
 }
-table.default tbody.toggleable.toggled .toggle-switch {
+table.default > tbody.toggleable.toggled .toggle-switch {
   background-image: url("../images/icons/16//blue/arr_1right.png");
   background-image: none, url("../images/icons//blue/arr_1right.svg");
   -webkit-background-size: 16px 16px;
@@ -927,10 +927,10 @@ table.default tbody.toggleable.toggled .toggle-switch {
   -o-background-size: 16px 16px;
   background-size: 16px 16px;
 }
-table.default tbody.toggleable.toggled tr:not(:first-child) {
+table.default > tbody.toggleable.toggled tr:not(:first-child) {
   display: none;
 }
-table.default tbody.toggleable .toggle-switch {
+table.default > tbody.toggleable .toggle-switch {
   font: 0/0 a;
   color: transparent;
   text-shadow: none;

@@ -421,7 +421,7 @@ table.default {
         padding: 5px;
         text-align: left;
     }
-    caption {
+    > caption {
         background-color: transparent;
         padding-top: 0px;
         color: #444;
@@ -429,14 +429,14 @@ table.default {
         text-align: left;
 
         header {
-           h2 {
+           > h2 {
                border: 0;
                font-size: inherit;
                font-weight: normal;
                margin: 0;
                padding: 0;
            }
-           p {
+           > p {
                font-size: 0.7em;
                font-weight: normal;
                margin: 0;
@@ -444,30 +444,32 @@ table.default {
            }
        }
     }
-    thead {
-        th {
+    > thead {
+        > tr > th {
             background-color: @content-color-20;
             border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
             border-top: 1px solid @brand-color-darker;
             font-size: 1.0em;
         }
     }
-    tbody {
-        th {
-            background-color: @content-color-20;
-            border-top: 1px solid @brand-color-darker;
-            border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
-            text-align: left;
+    > tbody {
+        > tr {
+            > th {
+                background-color: @content-color-20;
+                border-top: 1px solid @brand-color-darker;
+                border-bottom: 1px solid fadeout(@brand-color-lighter, 80%);
+                text-align: left;
+            }
+            > td {
+                border-bottom: 1px solid @table-header-color;
+                transition: background-color 0.3s;
+            }
+            > td.dragHandle {
+                background: #ffffff url("@{image-path}/anfasser_24.png") center no-repeat;
+                cursor: move;
+            }
         }
-        td {
-            border-bottom: 1px solid @table-header-color;
-            transition: background-color 0.3s;
-        }
-        td.dragHandle {
-            background: #ffffff url("@{image-path}/anfasser_24.png") center no-repeat;
-            cursor: move;
-        }
-        tr:last-child td {
+        > tr:last-child > td {
             border-bottom: 1px solid @brand-color-darker;
         }
     }
@@ -475,8 +477,8 @@ table.default {
     &:not(.nohover) > tbody:not(.nohover) > tr:not(.nohover):hover > td {
         background-color: fadeout(@light-gray-color, 80%);
     }
-    tfoot {
-        td {
+    > tfoot {
+        > tr > td {
             background-color: @content-color-20;
             border-top: 1px solid @brand-color-darker;
         }
@@ -488,7 +490,7 @@ table.default {
             vertical-align: middle;
         }
     }
-    caption .actions {
+    > caption .actions {
         border-left: 1px solid @brand-color-darker;
         margin-bottom: -5px;
         padding-bottom: 7px;
@@ -498,7 +500,7 @@ table.default {
         float: none;
     }
     
-    caption {
+    > caption {
         .caption-container {
             .flex();
             .flex-align-items(stretch);
@@ -517,7 +519,7 @@ table.default {
         }
     }
 
-    tbody.toggleable {
+    > tbody.toggleable {
         &.toggled {
             .toggle-switch {
                 .retina-background-icon("/blue/arr_1right.png");

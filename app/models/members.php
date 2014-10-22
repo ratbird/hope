@@ -365,7 +365,7 @@ class MembersModel
             foreach (AdmissionPriority::getPrioritiesByCourse($cs->getId(), $this->course_id) as $user_id => $p) {
                 $user = User::find($user_id);
                 $data = $user->toArray('user_id username vorname nachname email');
-                $data['fullname'] = $user->getFullname();
+                $data['fullname'] = $user->getFullname('full_rev');
                 $data['position'] = $p;
                 $data['visible'] = 'unknown';
                 $data['status'] = 'claiming';

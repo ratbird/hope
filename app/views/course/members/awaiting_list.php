@@ -44,25 +44,14 @@
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
-                <? if ($waiting_type === 'awaiting') : ?>
                     <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == $waiting_type) ?
                         sprintf('class="sort%s"', $order) : '' ?>>
                         <? ($sort_status != $waiting_type) ? $order = 'desc' : $order = $order ?>
-                        <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status=awaiting&order=%s&toggle=%s',
+                        <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status='.$waiting_type.'&order=%s&toggle=%s',
                                 $order, ($sort_by == 'position'))) ?>#awaiting">
-                            <?= _('Position') ?>
+                            <?= $waiting_type === 'awaiting' ? _('Position') : _('Priorität') ?>
                         </a>
                     </th>
-                <? else : ?>
-                    <th style="text-align: center" <?= ($sort_by == 'mkdate' && $sort_status == $waiting_type) ?
-                        sprintf('class="sort%s"', $order) : '' ?>>
-                        <? ($sort_status != $waiting_type) ? $order = 'desc' : $order = $order ?>
-                        <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=claiming&order=%s&toggle=%s',
-                                $order, ($sort_by == 'mkdate'))) ?>#awaiting">
-                            <?= _('Priorität') ?>
-                        </a>
-                    </th>
-                <? endif ?>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
         </thead>

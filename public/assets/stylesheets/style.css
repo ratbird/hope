@@ -2436,6 +2436,8 @@ ul.widget-list > li {
 .sidebar-widget-cloud {
   margin: 0px;
   padding: 0px;
+  max-width: 100%;
+  overflow: hidden;
 }
 .sidebar-widget-cloud > li {
   display: inline-block;

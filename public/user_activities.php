@@ -156,12 +156,12 @@ if (!is_array($_SESSION['_user_activities'])){
 $queries = array();
 $msg = array();
 
-if (Request::quoted('username')){
-    $_SESSION['_user_activities']['username'] = Request::quoted('username');
+if (Request::get('username')){
+    $_SESSION['_user_activities']['username'] = Request::username('username');
     $_SESSION['_user_activities']['open'] = array();
     $_SESSION['_user_activities']['details'] = 'files';
 }
-if (Request::get('details')) $_SESSION['_user_activities']['details'] = Request::quoted('details');
+if (Request::get('details')) $_SESSION['_user_activities']['details'] = Request::option('details');
 if (Request::get('open')) $_SESSION['_user_activities']['open'][Request::get('open')] = time();
 if (Request::get('close')) unset($_SESSION['_user_activities']['open'][Request::get('close')]);
 $user_id = get_userid($_SESSION['_user_activities']['username']);
@@ -195,18 +195,27 @@ $queries[] = array(
     'query'   => "SELECT CONCAT_WS(' / ', SUM(su.status = 'dozent'), SUM(su.status = 'tutor'),
                                           SUM(su.status = 'autor'), SUM(su.status = 'user'))
                   FROM seminar_user AS su
-                  INNER JOIN seminare USING (Seminar_id)
-                  WHERE user_id = ? AND (Schreibzugriff > 2 OR Lesezugriff > 2)
+                  INNER JOIN seminar_courseset sc USING (seminar_id)
+                  INNER JOIN courseset_rule cr ON cr.set_id=sc.set_id AND cr.type='ParticipantRestrictedAdmission'
+                  WHERE user_id = ?
                   GROUP BY user_id",
     'details' => "details=seminar_closed",
 );
 $queries[] = array(
-    'desc'    => _("Eingetragen in Wartelisten (chronologisch / los / vorläufig akzeptiert)"),
-    'query'   => "SELECT CONCAT_WS(' / ', SUM(status = 'awaiting'), SUM(status = 'claiming'), SUM(status = 'accepted'))
+    'desc'    => _("Eingetragen in Wartelisten (wartend / vorläufig akzeptiert)"),
+    'query'   => "SELECT CONCAT_WS(' / ', SUM(status = 'awaiting'), SUM(status = 'accepted'))
                   FROM admission_seminar_user
                   WHERE user_id = ?
                   GROUP BY user_id",
     'details' => "details=seminar_wait",
+);
+$queries[] = array(
+    'desc'    => _("Eingetragen in Anmeldelisten"),
+    'query'   => "SELECT COUNT(*)
+                  FROM priorities
+                  WHERE user_id = ?
+                  GROUP BY user_id",
+    'details' => "details=seminar_claiming",
 );
 $queries[] = array(
     'desc'    => _("Eingetragen in Einrichtungen (admin / dozent / tutor / autor)"),
@@ -345,7 +354,7 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
     $template->open    = $_SESSION['_user_activities']['open'];
     $template->user_id = $user_id;
     $details = $template->render();
-} elseif (in_array($_SESSION['_user_activities']['details'], words('seminar seminar_closed seminar_wait'))) {
+} elseif (in_array($_SESSION['_user_activities']['details'], words('seminar seminar_closed seminar_wait seminar_claiming'))) {
     $table = $status = $desc = $where = '';
 
     switch ($_SESSION['_user_activities']['details']){
@@ -357,13 +366,18 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
         case 'seminar_closed':
             $table  = 'seminar_user';
             $status = 'seminar_user.status';
-            $where  = " AND (Schreibzugriff > 2 OR Lesezugriff > 2) ";
+            $where  = " AND (EXISTS SELECT * FROM seminar_courseset sc INNER JOIN courseset_rule cr ON cr.set_id=sc.set_id AND cr.type='ParticipantRestrictedAdmission' WHERE sc.seminar_id=s.seminar_id) ";
             $desc   = _('Übersicht geschlossene Veranstaltungen');
             break;
         case 'seminar_wait':
             $table  = 'admission_seminar_user';
             $status = "IF(admission_seminar_user.status = 'awaiting', CONCAT('awaiting at ', admission_seminar_user.position), admission_seminar_user.status)";
             $desc   = _('Übersicht Wartelisten von Veranstaltungen');
+        break;
+        case 'seminar_claiming':
+            $table  = 'priorities';
+            $status = "CONCAT('prio ', priorities.priority)";
+            $desc   = _('Übersicht Anmeldelisten von Veranstaltungen mit automatischer Platzvergabe');
         break;
     }
 

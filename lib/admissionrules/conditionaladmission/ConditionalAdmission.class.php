@@ -2,7 +2,7 @@
 
 /**
  * ConditionalAdmission.class.php
- * 
+ *
  * An admission rule that specifies conditions for course admission, like
  * degree, study course or semester.
  *
@@ -28,14 +28,14 @@ class ConditionalAdmission extends AdmissionRule
      */
     public $conditions = array();
 
-    public $allowed_combinations = array('ParticipantRestrictedAdmission', 'LimitedAdmission','ConditionalAdmission','TimedAdmission','PasswordAdmission');
-    
+    public $allowed_combinations = array('ParticipantRestrictedAdmission', 'LimitedAdmission','ConditionalAdmission','TimedAdmission','PasswordAdmission','CourseMemberAdmission');
+
     // --- OPERATIONS ---
 
     /**
      * Standard constructor.
      *
-     * @param  String ruleId If this rule has been saved previously, it 
+     * @param  String ruleId If this rule has been saved previously, it
      *      will be loaded from database.
      * @return AdmissionRule the current object (this).
      */
@@ -69,7 +69,7 @@ class ConditionalAdmission extends AdmissionRule
     public function delete() {
         parent::delete();
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `conditionaladmissions` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `conditionaladmissions`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
         // Delete all associated conditions...
@@ -77,7 +77,7 @@ class ConditionalAdmission extends AdmissionRule
             $condition->delete();
         }
         // ... and their connection to this rule.
-        $stmt = DBManager::get()->prepare("DELETE FROM `admission_condition` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `admission_condition`
             WHERE `rule_id`=?");
         $stmt->execute(array($this->id));
     }
@@ -85,7 +85,7 @@ class ConditionalAdmission extends AdmissionRule
     /**
      * Gets all users that are matched by thís rule.
      *
-     * @return Array An array containing IDs of users who are matched by 
+     * @return Array An array containing IDs of users who are matched by
      *      this rule.
      */
     public function getAffectedUsers()
@@ -108,7 +108,7 @@ class ConditionalAdmission extends AdmissionRule
     }
 
     /**
-     * Gets some text that describes what this AdmissionRule (or respective 
+     * Gets some text that describes what this AdmissionRule (or respective
      * subclass) does.
      */
     public static function getDescription() {
@@ -128,7 +128,7 @@ class ConditionalAdmission extends AdmissionRule
 
     /**
      * Gets the template that provides a configuration GUI for this rule.
-     * 
+     *
      * @return String
      */
     public function getTemplate() {
@@ -136,7 +136,7 @@ class ConditionalAdmission extends AdmissionRule
         $tpl = $GLOBALS['template_factory']->open('admission/rules/configure');
         $tpl->set_attribute('rule', $this);
         $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        // Now open specific template for this rule and insert base template. 
+        // Now open specific template for this rule and insert base template.
         $tpl2 = $factory->open('configure');
         $tpl2->set_attribute('rule', $this);
         $tpl2->set_attribute('tpl', $tpl->render());
@@ -149,7 +149,7 @@ class ConditionalAdmission extends AdmissionRule
      */
     public function load() {
         // Load basic data.
-        $stmt = DBManager::get()->prepare("SELECT * 
+        $stmt = DBManager::get()->prepare("SELECT *
             FROM `conditionaladmissions` WHERE `rule_id`=? LIMIT 1");
         $stmt->execute(array($this->id));
         if ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -157,7 +157,7 @@ class ConditionalAdmission extends AdmissionRule
             $this->startTime = $current['start_time'];
             $this->endTime = $current['end_time'];
             // Retrieve conditions.
-            $stmt = DBManager::get()->prepare("SELECT * 
+            $stmt = DBManager::get()->prepare("SELECT *
                 FROM `admission_condition` WHERE `rule_id`=?");
             $stmt->execute(array($this->id));
             $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -186,10 +186,10 @@ class ConditionalAdmission extends AdmissionRule
      * admission conditions. Only one of the conditions needs to be
      * fulfilled (logical operator OR). The fields in a condition are
      * in conjunction (logical operator AND).
-     * 
+     *
      * @param String $userId
      * @param String $courseId
-     * @return Array Array with conditions that have failed. If array 
+     * @return Array Array with conditions that have failed. If array
      *               is empty, everything's all right.
      */
     function ruleApplies($userId, $courseId) {
@@ -215,7 +215,7 @@ class ConditionalAdmission extends AdmissionRule
      * Uses the given data to fill the object values. This can be used
      * as a generic function for storing data if the concrete rule type
      * isn't known in advance.
-     * 
+     *
      * @param Array $data
      * @return AdmissionRule This object.
      */
@@ -244,7 +244,7 @@ class ConditionalAdmission extends AdmissionRule
         $stmt->execute(array($this->id, $this->message, (int)$this->startTime,
             (int)$this->endTime, time(), time()));
         // Delete removed conditions from DB.
-        $stmt = DBManager::get()->prepare("SELECT `filter_id` FROM 
+        $stmt = DBManager::get()->prepare("SELECT `filter_id` FROM
             `admission_condition` WHERE `rule_id`=? AND `filter_id` NOT IN ('".
             implode("', '", array_keys($this->conditions))."')");
         $stmt->execute(array($this->id));
@@ -302,7 +302,7 @@ class ConditionalAdmission extends AdmissionRule
         }
         return $errors;
     }
-    
+
     public function getMessage($condition = null)
     {
         $message = parent::getMessage();

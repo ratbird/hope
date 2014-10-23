@@ -27,7 +27,7 @@ class LimitedAdmission extends AdmissionRule
      */
     public $maxNumber = 1;
 
-    public $allowed_combinations = array('ParticipantRestrictedAdmission', 'ConditionalAdmission','TimedAdmission','PasswordAdmission');
+    public $allowed_combinations = array('ParticipantRestrictedAdmission', 'ConditionalAdmission','TimedAdmission','PasswordAdmission','CourseMemberAdmission');
 
     // --- OPERATIONS ---
 

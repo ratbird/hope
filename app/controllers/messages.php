@@ -134,8 +134,8 @@ class MessagesController extends AuthenticatedController {
             Navigation::activateItem('/messaging/messages/inbox');
         }
         if (Request::isXhr()) {
-            $this->response->add_header('X-Tags', json_encode($this->message->getTags()));
-            $this->response->add_header('X-All-Tags', json_encode(Message::getUserTags()));
+            $this->response->add_header('X-Tags', json_encode(studip_utf8encode($this->message->getTags())));
+            $this->response->add_header('X-All-Tags', json_encode(studip_utf8encode(Message::getUserTags())));
         }
         $this->message->markAsRead($GLOBALS["user"]->id);
     }

@@ -13,7 +13,7 @@
                     array('filter' => 'send_sms_to_all',
                         'who' => 'autor',
                         'course_id' => $course_id,
-                        'subject' => $subject))
+                        'default_subject' => $subject))
                 ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/inbox.png',
                             tooltip2(sprintf(_('Nachricht an alle %s versenden'), htmlReady($status_groups['autor'])))) ?>
@@ -116,7 +116,7 @@
                         <a href="<?= URLHelper::getLink('dispatch.php/messages/write',
                                     array('filter' => 'send_sms_to_all',
                                     'rec_uname' => $autor['username'],
-                                    'subject' => $subject))
+                                    'default_subject' => $subject))
                                 ?>
                         " data-dialog>
                             <?= Assets::img('icons/16/blue/mail.png',

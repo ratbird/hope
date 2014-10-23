@@ -404,12 +404,13 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->count_multi_members = count($multi_members);
 
         if ($csv == 'csv') {
-            $captions = array(_("Nummer"), _("Name"), _("Dozenten"), _("max. Teilnehmer"), _("Teilnehmer aktuell"), _("Anzahl Anmeldungen"),_("Anzahl Anmeldungen Prio 1"), _("Warteliste"), _("max. Anzahl Warteliste"));
+            $captions = array(_("Nummer"), _("Name"), _("Zeiten"), _("Dozenten"), _("max. Teilnehmer"), _("Teilnehmer aktuell"), _("Anzahl Anmeldungen"),_("Anzahl Anmeldungen Prio 1"), _("Warteliste"), _("max. Anzahl Warteliste"), _("vorläufige Anmeldung"), _("verbindliche Anmeldung"));
             $data = array();
             foreach ($this->courses as $course) {
                 $row = array();
                 $row[] = $course->veranstaltungsnummer;
                 $row[] = $course->name;
+                $row[] = join('; ', $course->cycles->toString());
                 $row[] = join(', ', $course->members->findBy('status','dozent')->orderBy('position')->pluck('Nachname'));
                 $row[] = $course->admission_turnout;
                 $row[] = $course->getNumParticipants();
@@ -417,6 +418,8 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $row[] = $this->applications[$course->id]['h'];
                 $row[] = $course->admission_disable_waitlist ? _("nein") : _("ja");
                 $row[] = $course->admission_waitlist_max > 0 ? $course->admission_waitlist_max : '';
+                $row[] = $course->admission_prelim ? _("ja") : _("nein");
+                $row[] = $course->admission_binding ? _("ja") : _("nein");
                 $data[] = $row;
             }
             $tmpname = md5(uniqid('tmp'));
@@ -481,12 +484,16 @@ class Admission_CoursesetController extends AuthenticatedController {
             $admission_turnouts = Request::intArray('configure_courses_turnout');
             $admission_waitlists = Request::intArray('configure_courses_disable_waitlist');
             $admission_waitlists_max = Request::intArray('configure_courses_waitlist_max');
+            $admission_bindings = Request::intArray('configure_courses_binding');
+            $admission_prelims = Request::intArray('configure_courses_prelim');
             $ok = 0;
             foreach($this->courses as $course) {
                 if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
                     $course->admission_turnout = $admission_turnouts[$course->id];
                     $course->admission_disable_waitlist = isset($admission_waitlists[$course->id]) ? 0 : 1;
                     $course->admission_waitlist_max = $course->admission_disable_waitlist ? 0 : $admission_waitlists_max[$course->id];
+                    $course->admission_binding = @$admission_bindings[$course->id] ?: 0;
+                    $course->admission_prelim = @$admission_prelims[$course->id] ?: 0;
                     $ok += $course->store();
                 }
             }
@@ -545,11 +552,15 @@ class Admission_CoursesetController extends AuthenticatedController {
                 $row[] = $courses->findOneBy('id', $course_id)->name;
                 $row[] = $courses->findOneBy('id', $course_id)->veranstaltungsnummer;
                 $row[] = $prio;
+                if ($csv) {
+                    $row[] = $user->email;
+                }
                 $data[] = $row;
             }
         }
         if ($csv) {
             $tmpname = md5(uniqid('tmp'));
+            $captions[] = _("Email");
             if (array_to_csv($data, $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
                 $this->redirect(GetDownloadLink($tmpname, 'Anmeldungen_' . $courseset->getName() . '.csv', 4, 'force'));
                 return;
@@ -558,6 +569,21 @@ class Admission_CoursesetController extends AuthenticatedController {
         $this->captions = $captions;
         $this->data = $data;
         $this->set_id = $courseset->getId();
+    }
+
+    public function applicants_message_action($set_id)
+    {
+        $courseset = new CourseSet($set_id);
+        $applicants = AdmissionPriority::getPriorities($set_id);
+        $_SESSION['sms_data'] = array();
+        $_SESSION['sms_data']['p_rec'] = User::findAndMapMany(function ($u) {
+            return $u->username;
+        }, array_unique(array_keys($applicants)));
+        $this->redirect(URLHelper::getURL('dispatch.php/messages/write',
+            array('default_subject' => _("Anmeldung:") . ' ' . $courseset->getName(),
+                  'emailrequest'    => 1
+            )
+        ));
     }
 
     /**

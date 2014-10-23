@@ -143,6 +143,10 @@ if ($flash['error']) {
                             $controller->url_for('admission/courseset/applications_list/' . $courseset->getId()),
                             array('data-dialog' => '')
                             ); ?>
+                        <?= LinkButton::create(_('Nachricht an alle Angemeldeten'),
+                                $controller->url_for('admission/courseset/applicants_message/' . $courseset->getId()),
+                                array('data-dialog' => '')
+                            ); ?>
                         <? endif ?>
                 </div>
             <? endif ?>

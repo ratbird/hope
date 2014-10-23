@@ -4,6 +4,8 @@
             <tr>
                 <th><?= _("Name")?></th>
                 <th><?= _("Dozenten")?></th>
+                <th><?= _("vorläufige Anmeldung")?></th>
+                <th><?= _("verbindliche Anmeldung")?></th>
                 <th><?= _("max. Teilnehmer")?></th>
                 <th><?= _("Teilnehmer aktuell")?></th>
                 <th><?= _("Anmeldungen")?></th>
@@ -14,8 +16,12 @@
     <? foreach ($courses as $course) : ?>
     <? $editable = !$GLOBALS['perm']->have_studip_perm('admin', $course->id) ? 'disabled' : '' ?>
         <tr>
-            <td><?= htmlReady(($course->veranstaltungsnummer ? $course->veranstaltungsnummer .'|' : '') . $course->name)?></td>
+            <td><?= htmlReady(($course->veranstaltungsnummer ? $course->veranstaltungsnummer .'|' : '')
+                    . $course->name
+                    . ($course->cycles ? ' (' . join('; ', $course->cycles->toString()) . ')' : ''))?></td>
             <td><?= htmlReady(join(', ', $course->members->findBy('status','dozent')->orderBy('position')->limit(3)->pluck('Nachname')))?></td>
+            <td><input <?=$editable?> type="checkbox" name="configure_courses_prelim[<?= $course->id?>]" value="1" <?= $course->admission_prelim ? 'checked' : ''?>></td>
+            <td><input <?=$editable?> type="checkbox" name="configure_courses_binding[<?= $course->id?>]" value="1" <?= $course->admission_binding ? 'checked' : ''?>></td>
             <td><input <?=$editable?> type="text" size="2" name="configure_courses_turnout[<?= $course->id?>]" value="<?= (int)$course->admission_turnout ?>"></td>
             <td><?= $course->getNumParticipants() ?></td>
             <td><?= sprintf("%d / %d", $applications[$course->id]['c'],$applications[$course->id]['h']) ?></td>

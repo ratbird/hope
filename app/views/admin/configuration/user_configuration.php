@@ -86,7 +86,7 @@ use Studip\Button, Studip\LinkButton;
             <?= htmlReady($give_all['description'])?>
         </td>
         <td align="right">
-            <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$give_all['config_id'])?>">
+            <a class="load-in-new-row" href="<?= $controller->url_for('admin/configuration/edit_configuration/?id=' . $give_all['config_id']) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
             </a>
         </td>

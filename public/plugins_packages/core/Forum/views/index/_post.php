@@ -1,5 +1,6 @@
 <? if (!is_array($highlight)) $highlight = array(); ?>
 <? $is_new =  ((isset($visitdate) && $post['mkdate'] >= $visitdate) || !(isset($visitdate))) ?>
+<? if (!$constraint) $constraint = ForumEntry::getConstraints (ForumEntry::getParentTopicId($post['topic_id'])) ?>
 <!-- Anker, um zu diesem Posting springen zu können -->
 <a name="<?= $post['topic_id'] ?>"></a>
 
@@ -44,6 +45,13 @@
             </span>
             <? else : ?>
                 <? $parent_topic = ForumEntry::getConstraints(ForumEntry::getParentTopicId($post['topic_id'])) ?>
+
+                <? if($constraint['closed']) : ?>
+                <?= Assets::img('icons/16/black/lock-locked.png', array(
+                    'title' => _('Dieses Thema wurde geschlossen. Sie können daher nicht auf diesen Beitrag antworten.')
+                )) ?>
+                <? endif ?>
+
                 <span data-edit-topic="<?= $post['topic_id'] ?>">
                     <span name="name" value="<?= htmlReady($parent_topic['name']) ?>"></span>
                 </span>
@@ -94,7 +102,7 @@
                 
         <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
             <!-- Aktions-Buttons für diesen Beitrag -->
-                
+
             <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
                 <?= Studip\LinkButton::create(_('Beitrag zitieren'), PluginEngine::getLink('coreforum/index/cite/' . $post['topic_id']), array(
                     'onClick' => "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."'); return false;",

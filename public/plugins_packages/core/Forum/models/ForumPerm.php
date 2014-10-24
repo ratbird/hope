@@ -207,5 +207,11 @@ class ForumPerm {
                 $topic_id
             ));
         }
+
+        if ($data['closed']) {
+            throw new AccessDeniedException(
+                _('Sie dürfen keinen Beitrag in einem geschlossen Thema erstellen!')
+            );
+        }
     }
 }

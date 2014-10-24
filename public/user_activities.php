@@ -366,7 +366,7 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
         case 'seminar_closed':
             $table  = 'seminar_user';
             $status = 'seminar_user.status';
-            $where  = " AND (EXISTS SELECT * FROM seminar_courseset sc INNER JOIN courseset_rule cr ON cr.set_id=sc.set_id AND cr.type='ParticipantRestrictedAdmission' WHERE sc.seminar_id=s.seminar_id) ";
+            $where  = " AND EXISTS (SELECT * FROM seminar_courseset sc INNER JOIN courseset_rule cr ON cr.set_id=sc.set_id AND cr.type='ParticipantRestrictedAdmission' WHERE sc.seminar_id=s.seminar_id) ";
             $desc   = _('Übersicht geschlossene Veranstaltungen');
             break;
         case 'seminar_wait':

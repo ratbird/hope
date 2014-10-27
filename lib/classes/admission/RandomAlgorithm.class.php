@@ -191,7 +191,12 @@ class RandomAlgorithm extends AdmissionAlgorithm {
                 $course = Course::find($course_id);
                 Log::DEBUG(sprintf('distribute waitlist of %s with prio %s in course %s', count($users), $current_prio, $course->id));
                 if (!$course->admission_disable_waitlist) {
-                    $free_seats_waitlist = $course->admission_waitlist_max ?: count($users);
+                    if ($course->admission_waitlist_max) {
+                        $free_seats_waitlist = $course->admission_waitlist_max - $course->getNumWaiting();
+                        $free_seats_waitlist = $free_seats_waitlist < 0 ? 0 : $free_seats_waitlist;
+                    } else {
+                        $free_seats_waitlist = count($users);
+                    }
                     $waiting_list_ones = array_slice($users, 0, $free_seats_waitlist);
                     Log::DEBUG('waiting list ones: ' . print_r($waiting_list_ones, 1));
                     $this->addUsersToWaitlist($waiting_list_ones, $course, $prio_mapper($waiting_list_ones, $course->id));

@@ -49,10 +49,10 @@ class Course_ElearningController extends AuthenticatedController
         $this->open_all = Request::get('open_all');
         $this->close_all = Request::get('close_all');
         $this->new_account_cms = Request::get('new_account_cms');
-        $this->module_system_type = Request::option('module_system_type');
-        $this->module_id = Request::option('module_id');
-        $this->module_type = Request::option('module_type');
-        $this->anker_target = Request::option('anker_target');
+        $this->module_system_type = Request::get('module_system_type');
+        $this->module_id = Request::get('module_id');
+        $this->module_type = Request::get('module_type');
+        $this->anker_target = Request::get('anker_target');
         $this->seminar_id = $_SESSION['SessSemName'][1];
         $this->rechte = $GLOBALS['perm']->have_studip_perm('tutor', $this->seminar_id);
         if (!isset($GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->new_account_cms])) {

@@ -182,13 +182,13 @@ if (!$set_recur_x) {
         echo '<tr><td>';
         echo _("Zusammenfassung:") . "&nbsp;&nbsp;</td>\n";
         echo "<td>";
-        echo '<input type="text" name="txt" size="50" maxlength="255" value="' . htmlReady($txt) . '"' . $disabled . '></input>';
+        echo '<input type="text" name="txt" size="90" maxlength="255" value="' . htmlReady($txt) . '"' . $disabled . '></input>';
         printf("%s</td>\n", ($err["titel"] ? $error_sign : ""));
         echo "</tr><tr>\n";
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
         echo '<td>';
         echo _("Beschreibung:") . "&nbsp;&nbsp;</td>";
-        echo "<td><textarea name=\"content\" cols=\"48\" rows=\"5\" wrap=\"virtual\"$disabled>";
+        echo "<td><textarea name=\"content\" cols=\"90\" rows=\"5\" wrap=\"virtual\"$disabled>";
         echo htmlReady($content);
         echo "</textarea></td>\n";
         echo "</tr>\n</table>\n</td>\n</tr>\n";
@@ -804,35 +804,11 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
       } elseif (!$set_recur_x || $evtype == 'semcal') {
         echo Button::create('<< '._('Zurück'), 'cancel')."\n";
     }
-
-    // create infobox entries
-    if ($count_events >= $CALENDAR_MAX_EVENTS) {
-        // max number of events reached
-        $info_box['count'] = _("Sie können keine weiteren Termine mehr speichern!")
-                . '<br><br>'
-                . sprintf(_("Löschen Sie ältere Termine, oder wählen Sie eine automatische Löschfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
-    } elseif ($count_events >= ($CALENDAR_MAX_EVENTS - $CALENDAR_MAX_EVENTS / 20)) {
-        // only 5% of max number of events free
-        $info_box['count'] = sprintf(_("Sie können noch %s Termine speichern."), $CALENDAR_MAX_EVENTS - $count_events);
-        $info_box['count'] .= '<br><br>';
-        $info_box['count'] .= sprintf(_("Wählen Sie eine automatische Löschfunktion in Ihren %sKalenderoptionen%s, um ältere Termine zu löschen."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
-    } else {
-        $info_box['count'] = sprintf(_("Sie können abgelaufene Termine automatisch löschen lassen. Wählen Sie dazu eine Löschfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('dispatch.php/settings/calendar') . '">', '</a>');
-    }
-    $info_box['all'][0]['kategorie'] = _("Information:");
-    $info_box['all'][0]['eintrag'][] = array('icon' => 'icons/16/black/info.png',
-        'text' => $info_box['count']);
-    if ($termin_id) {
-        $info_box['all'][1]['kategorie'] = _("Aktion:");
-        $info_box['all'][1]['eintrag'][] = $info_box['export'];
-    }
 }
 
 
 echo "</td></tr></table></form>\n</td>\n";
-echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"270\">\n";
-print_infobox($info_box['all'], "sidebar/schedule-sidebar.png");
-echo "</td></tr>\n";
+echo "</tr>\n";
 echo "</table></td></tr></table><br>\n";
 echo "</td></tr></table>\n";
 //SCRRIPT for Datepicker

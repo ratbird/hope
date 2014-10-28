@@ -59,7 +59,7 @@ class Admin_CoursesController extends AuthenticatedController
         $this->insts            = Institute::getMyInstitutes($GLOBALS['user']->id);
         $selected_inst_id       = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
         $this->selected_inst_id = $selected_inst_id == '' ? $this->insts[0]['Institut_id'] : $selected_inst_id;
-        $this->selected_inst    = Institute::find(($this->selected_inst_id == '' ? : $this->selected_inst_id));
+        $this->selected_inst    = Institute::find(($this->selected_inst_id == '' ?: $this->selected_inst_id));
 
         // Semester selection
         $config_sem = $GLOBALS['user']->cfg->getValue('MY_COURSES_SELECTED_CYCLE');
@@ -134,9 +134,9 @@ class Admin_CoursesController extends AuthenticatedController
             if (!empty($this->courses)) {
                 $teachers = $this->filterTeacher($this->courses);
             }
-            $_SESSION['MY_COURSES_LIST'] = array_map(function($c,$id) {
-                        return array('Name' => $c['Name'],
-                                    'Seminar_id' => $id);
+            $_SESSION['MY_COURSES_LIST'] = array_map(function ($c, $id) {
+                return array('Name'       => $c['Name'],
+                             'Seminar_id' => $id);
             }, array_values($this->courses), array_keys($this->courses));
         }
         $this->all_lock_rules = array_merge(array(array('name'    => '--' . _("keine Sperrebene") . '--',
@@ -163,7 +163,7 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setActionsWidget($this->selected_action);
         $this->setViewWidget($this->view_filter);
 
-        if($this->sem_create_perm) {
+        if ($this->sem_create_perm) {
             $export = new ExportWidget();
             $export->addLink(_('Als Excel exportieren'),
                 URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
@@ -201,7 +201,7 @@ class Admin_CoursesController extends AuthenticatedController
                 'semester_id' => $this->semester->id,
                 'show_room'   => true
             ));
-            $_room    = $_room ? : _('nicht angegeben');
+            $_room    = $_room ?: _('nicht angegeben');
             $dozenten = "";
             array_walk($course['dozenten'], function ($a) use (&$dozenten) {
                 $user = User::findByUsername($a['username']);
@@ -495,7 +495,10 @@ class Admin_CoursesController extends AuthenticatedController
             _('Veranstaltungstyp'),
             _('Raum/Zeit'),
             _('DozentIn'),
-            _('TeilnehmerInnen'),);
+            _('TeilnehmerInnen'),
+            _('TeilnehmerInnen auf Warteliste'),
+            _('Vorläufige Anmeldungen'),
+            _('Inhalt'));
     }
 
     /**
@@ -518,8 +521,8 @@ class Admin_CoursesController extends AuthenticatedController
             }
         }
         $teachers = SimpleCollection::createFromArray($teachers)
-                    ->orderBy('fullname asc')
-                    ->getArrayCopy();
+            ->orderBy('fullname asc')
+            ->getArrayCopy();
         return $teachers;
     }
 
@@ -537,9 +540,10 @@ class Admin_CoursesController extends AuthenticatedController
         $sortby     = $params['sortby'];
         $sortFlag   = $params['sortFlag'];
         $typeFilter = $params['typeFilter'];
+        $pluginsFilter = in_array('Inhalt', $params['view_filter']);
 
 
-        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {
+        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer waiting prelim'))) {
             if ($sortby == "status") {
                 $sortby = sprintf('sc.name %s, st.name %s, VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag, $sortFlag, $sortFlag);
             } else {
@@ -569,10 +573,16 @@ class Admin_CoursesController extends AuthenticatedController
                          seminare.modules, COUNT(seminar_user.user_id) AS teilnehmer,
                          IFNULL(visitdate, 0) AS visitdate,
                          sd1.name AS startsem, IF (duration_time = -1, :unlimited, sd2.name) AS endsem,
-                         sc.name as sem_class_name, seminare.lock_rule, seminare.aux_lock_rule
+                         sc.name as sem_class_name, seminare.lock_rule, seminare.aux_lock_rule,
+                         (SELECT COUNT(seminar_id)
+                          FROM admission_seminar_user
+                          WHERE seminar_id = seminare.Seminar_id AND status = 'accepted')AS prelim,
+                          (SELECT COUNT(seminar_id)
+                          FROM admission_seminar_user
+                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting')AS waiting
                   FROM Institute
                   INNER JOIN seminare ON (seminare.Institut_id = Institute.Institut_id {$sem_condition})
-                  STRAIGHT_JOIN seminar_user ON (seminare.seminar_id = seminar_user.seminar_id)
+                  LEFT JOIN seminar_user on (seminare.seminar_id=seminar_user.seminar_id AND seminar_user.status != 'dozent' and seminar_user.status != 'tutor')
                   LEFT JOIN object_user_visits AS ouv
                     ON (ouv.object_id = seminare.Seminar_id AND ouv.user_id = :user_id AND ouv.type = 'sem')
                   LEFT JOIN semester_data AS sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende)
@@ -593,13 +603,15 @@ class Admin_CoursesController extends AuthenticatedController
         }
         $statement->execute();
         $seminars = array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
-
         $statement->closeCursor();
         if (!empty($seminars)) {
             foreach ($seminars as $seminar_id => $seminar) {
                 $dozenten                          = $this->getTeacher($seminar_id);
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
+                if($pluginsFilter) {
+                    $seminars[$seminar_id]['navigations'] = MyRealmModel::getPluginNavigationForSeminar($seminar_id, object_get_visit($seminar_id, 'sem', ''));
+                }
             }
         }
 
@@ -685,7 +697,7 @@ class Admin_CoursesController extends AuthenticatedController
         $size = count($filters);
         for ($i = 0; $i < $size; $i++) {
             $state = in_array($filters[$i], $configs);
-            $checkbox_widget->addCheckbox(_($filters[$i]), $state, $this->url_for('admin/courses/set_view_filter/' . $i . '/' . $state));
+            $checkbox_widget->addCheckbox($filters[$i], $state, $this->url_for('admin/courses/set_view_filter/' . $i . '/' . $state));
         }
         $sidebar->addWidget($checkbox_widget);
     }
@@ -709,8 +721,8 @@ class Admin_CoursesController extends AuthenticatedController
     private function set_semester_selector()
     {
         $semesters = array_reverse(Semester::getAll());
-        $sidebar = Sidebar::Get();
-        $list    = new SelectWidget(_('Semester'), $this->url_for('admin/courses/set_selection'), 'sem_select');
+        $sidebar   = Sidebar::Get();
+        $list      = new SelectWidget(_('Semester'), $this->url_for('admin/courses/set_selection'), 'sem_select');
         foreach ($semesters as $semester) {
             $list->addElement(new SelectElement($semester->id, $semester->name, $semester->id == $this->semester->id), 'sem_select-' . $semester->id);
         }

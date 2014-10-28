@@ -436,7 +436,10 @@ class Admin_CoursesController extends AuthenticatedController
                         'url'         => 'dispatch.php/course/basicdata/view?cid=%s'),
             2  => array('name'        => 'Studienbereiche',
                         'button_name' => 'Studienbereiche',
-                        'url'         => 'dispatch.php/course/study_areas/show?cid=%s'),
+                        'url'         => 'dispatch.php/course/study_areas/show?cid=%s',
+                        'attributes' => array(
+                            'data-dialog' => 'size=50%'
+                        )),
             3  => array('name'        => 'Zeiten / Räume',
                         'button_name' => 'Zeiten / Räume',
                         'url'         => 'raumzeit.php?cid=%s'),
@@ -457,7 +460,10 @@ class Admin_CoursesController extends AuthenticatedController
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
             14 => array('name'        => 'Zugangsberechtigungen',
                         'button_name' => 'Zugangsberechtigungen',
-                        'url'         => 'dispatch.php/course/admission?cid=%s'),
+                        'url'         => 'dispatch.php/course/admission?cid=%s',
+                        'attributes' => array(
+                            'data-dialog' => 'size=50%'
+                        )),
             16 => array('name'        => 'Archivieren',
                         'button_name' => 'Archivieren',
                         'url'         => 'archiv_assi.php',

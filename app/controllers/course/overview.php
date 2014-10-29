@@ -83,8 +83,10 @@ class Course_OverviewController extends AuthenticatedController
         }
 
         // Fetch dates
-        $response = $this->relay("calendar/contentbox/display/{$this->course_id}/1210000");
-        $this->dates = $response->body;
+        if (!$this->studygroup_mode) {
+            $response = $this->relay("calendar/contentbox/display/{$this->course_id}/1210000");
+            $this->dates = $response->body;
+        }
     }
 
 }

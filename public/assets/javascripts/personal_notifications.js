@@ -29,7 +29,8 @@
                 if (typeof Notification !== "undefined" && Notification.permission === "granted") {
                     if (typeof sessionStorage !== "undefined" && !sessionStorage['desktop.notification.exists.' + notification.id]) {
                         // If it's okay let's create a notification
-                        var message = new Notification(notification.text, {
+                        var message = new Notification(STUDIP.STUDIP_SHORT_NAME, {
+                            "body": notification.text,
                             "icon": notification.avatar,
                             "tag": notification.id
                         });

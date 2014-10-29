@@ -66,6 +66,7 @@ if ($infobox && is_array($infobox)) {
     <script>
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
         STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
+        STUDIP.STUDIP_SHORT_NAME = "<?= $GLOBALS['STUDIP_SHORT_NAME'] ?>";
         String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
         <? if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('autor') && PersonalNotifications::isActivated()) : ?>
         STUDIP.jsupdate_enable = true;

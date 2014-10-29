@@ -141,6 +141,7 @@ class PluginAdministration
             }
         }
         rmdirr($packagedir);
+        return $pluginid;
     }
 
     /**
@@ -156,8 +157,9 @@ class PluginAdministration
             throw new PluginInstallationException(_('Das Herunterladen des Plugins ist fehlgeschlagen.'));
         }
 
-        $this->installPlugin($temp_name);
+        $pluginid = $this->installPlugin($temp_name);
         unlink($temp_name);
+        return $pluginid;
     }
 
     /**

@@ -415,12 +415,18 @@ class Admin_PluginController extends AuthenticatedController
         $this->redirect('admin/plugin');
     }
 
-    public function edit_automaticupdate_action($plugin_id)
+    public function edit_automaticupdate_action($plugin_id = null)
     {
-        $this->plugin = PluginManager::getInstance()->getPluginInfoById($plugin_id);
+        $this->plugin = $plugin_id
+                        ? PluginManager::getInstance()->getPluginInfoById($plugin_id)
+                        : array();
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
             $this->check_ticket();
+            if (!$plugin_id) {
+                $plugin_id = $this->plugin_admin->installPluginFromURL(Request::get("automatic_update_url"));
+                $this->plugin = PluginManager::getInstance()->getPluginInfoById($plugin_id);
+            }
             $token = $this->plugin['automatic_update_secret'] ?: md5(uniqid());
             $statement = DBManager::get()->prepare("
                 UPDATE plugins
@@ -441,7 +447,11 @@ class Admin_PluginController extends AuthenticatedController
         }
         if (Request::isXhr()) {
             $this->set_layout(null);
-            $this->response->add_header('X-Title', sprintf(_("Automatisches Update für %s"), $this->plugin['name']));
+            if ($plugin_id) {
+                $this->response->add_header('X-Title', sprintf(_("Automatisches Update für %s"), $this->plugin['name']));
+            } else {
+                $this->response->add_header('X-Title', _("Plugin von URL installieren"));
+            }
             $this->set_content_type('text/html;charset=windows-1252');
         }
     }

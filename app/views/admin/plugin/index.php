@@ -71,7 +71,7 @@ use Studip\Button, Studip\LinkButton;
                         <?= htmlReady($migrations[$pluginid]['schema_version']) ?>
                             <? if ($migrations[$pluginid]['schema_version'] < $migrations[$pluginid]['migration_top_version']) :?>
                                 <a href="<?= $controller->url_for('admin/plugin/migrate', $pluginid) ?>" title="<?= sprintf(_("Update auf Version %d verfügbar"), $migrations[$pluginid]['migration_top_version']) ?>">
-                                <?= Assets::img('icons/16/blue/new/plugin.png');?>
+                                <?= Assets::img('icons/20/blue/new/plugin.png');?>
                                 </a>
                             <? endif; ?>
                         <? endif; ?>
@@ -82,33 +82,33 @@ use Studip\Button, Studip\LinkButton;
                     <td class="actions" width="20">
                         <? if (in_array('StandardPlugin', $plugin['type'])): ?>
                             <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
-                                <?= Assets::img('icons/16/blue/add/seminar.png', array('title' => _('In Veranstaltungen aktivieren'))) ?>
+                                <?= Assets::img('icons/20/blue/add/seminar.png', array('title' => _('In Veranstaltungen aktivieren'))) ?>
                             </a>
                         <? endif ?>
                     </td>
                     <td class="actions"  width="20">
                         <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $pluginid) ?>">
-                            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
+                            <?= Assets::img('icons/20/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
                     </td>
                     <td class="actions" width="20">
                         <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                         <a href="<?= $controller->url_for('admin/plugin/edit_automaticupdate', $pluginid) ?>" data-dialog>
-                            <?= Assets::img('icons/16/blue/move_down/plugin', array('title' => _('Automatisches Update verwalten'))) ?>
+                            <?= Assets::img('icons/20/blue/move_down/plugin', array('title' => _('Automatisches Update verwalten'))) ?>
                         </a>
                         <? endif ?>
                     </td>
                     <td class="actions"  width="20">
                         <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/download', $pluginid) ?>">
-                                <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
+                                <?= Assets::img('icons/20/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
                     <td class="actions"  width="20">
                         <? if (!$plugin['depends'] && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/ask_delete', $pluginid) ?>">
-                                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
+                                <?= Assets::img('icons/20/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
                             </a>
                         <? endif ?>
                     </td>
@@ -136,6 +136,7 @@ $sidebar->setImage('sidebar/plugin-sidebar.png');
 if (get_config('PLUGINS_UPLOAD_ENABLE')) {
     $actions = new ActionsWidget();
     $actions->addLink(_('Weitere Plugins installieren'), $controller->url_for('admin/plugin/search'), 'icons/16/blue/add.png');
+    $actions->addLink(_('Plugin von URL installieren'), $controller->url_for('admin/plugin/edit_automaticupdate'), 'icons/16/blue/download.png', array('data-dialog' => "true"));
     $sidebar->addWidget($actions);
 
     $widget = new SidebarWidget();

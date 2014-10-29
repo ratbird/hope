@@ -31,7 +31,7 @@ if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
             <input type="url" name="automatic_update_url" value="<?= htmlReady($plugin['automatic_update_url']) ?>">
         </label>
         <label>
-            <?= _("Absichern über Sicherheitstoken (optional)") ?>
+            <?= _("Automatisches Update absichern über Sicherheitstoken (optional)") ?>
             <input type="checkbox" name="use_security_token" value="1"<?= $plugin['automatic_update_secret'] || !$plugin['automatic_update_url'] ? " checked" : "" ?>>
         </label>
     </fieldset>

@@ -168,14 +168,15 @@ jQuery(function ($) {
                 top: toolbarId
             },
             toolbarGroups: [
-                {name: 'basicstyles', groups: ['mode', 'basicstyles', 'cleanup']},
+                {name: 'basicstyles', groups: ['undo', 'basicstyles', 'cleanup']},
                 {name: 'paragraph',   groups: ['list', 'indent', 'blocks', 'align']},
                 '/',
                 {name: 'styles'},
                 {name: 'colors'},
                 {name: 'tools'},
                 {name: 'links'},
-                {name: 'insert'}
+                {name: 'insert'},
+                {name: 'html', groups: ['mode']}
             ],
             removeButtons: 'Font,FontSize,Anchor',
             toolbarCanCollapse: true,

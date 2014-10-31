@@ -102,9 +102,8 @@ class Course_DatesController extends AuthenticatedController
                     $tmp_ids = $singledate->getIssueIDs();
                     $title = $description = '';
                     if (is_array($tmp_ids)) {
-                        $thema_id = array_pop($tmp_ids);
-                        $title = $themen[$thema_id]->getTitle();
-                        $description = $themen[$thema_id]->getDescription();
+                        $title = trim(join("\n", array_map(function ($tid) use ($themen) {return $themen[$tid]->getTitle();}, $tmp_ids)));
+                        $description = trim(join("\n\n", array_map(function ($tid) use ($themen) {return $themen[$tid]->getDescription();}, $tmp_ids)));
                     }
 
                     $dates[] = array(

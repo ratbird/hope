@@ -259,7 +259,7 @@ class SingleDateDB
                   FROM themen_termine AS tt
                   LEFT JOIN themen AS t USING (issue_id)
                   WHERE termin_id = ?
-                    AND issue_id IS NOT NULL AND issue_id != ''";
+                    AND issue_id IS NOT NULL AND issue_id != '' ORDER BY t.priority, t.title";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin_id));
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);

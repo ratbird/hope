@@ -187,7 +187,6 @@ class Markup
             br
             caption
             em
-            div[style]
             h1
             h2
             h3
@@ -198,7 +197,7 @@ class Markup
             img[alt|src|style]
             li
             ol
-            p
+            p[style]
             pre
             span[style|class]
             strong

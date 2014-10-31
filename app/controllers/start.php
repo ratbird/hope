@@ -116,7 +116,7 @@ class StartController extends AuthenticatedController
             $position = Request::int('position');
 
             $post_url = '';
-            if (check_ticket($ticket)) {
+            if (isset($widget) && check_ticket($ticket)) {
                 $id = WidgetHelper::addWidget($widget, $GLOBALS['user']->id);
                 $post_url = '#widget-' . $id;
             }

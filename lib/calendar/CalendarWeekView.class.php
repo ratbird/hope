@@ -26,8 +26,6 @@ require_once 'lib/calendar/CalendarView.class.php';
 
 class CalendarWeekView extends CalendarView
 {
-    protected $read_only  = false; //irgendwann mal ersetzen durch insertFunction
-
     protected $days       = array(1,2,3,4,5);
     protected static $day_names  = array("Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag","Sonntag");
     
@@ -69,23 +67,6 @@ class CalendarWeekView extends CalendarView
         }
     }
     
-    /**
-     * @param bool  $readonly  true to make it read only, false otherwise
-     * @return void
-     */
-    public function setReadOnly($readonly = true)
-    {
-        $this->read_only = $readonly;
-    }
-
-    /**
-     * @return mixed the content of read_only
-     */
-    public function getReadOnly() {
-        return $this->read_only;
-    }
-
-
     /* * * * * * * * * * * * * * *
      * * *   G E T T E R S   * * *
      * * * * * * * * * * * * * * */
@@ -127,6 +108,7 @@ class CalendarWeekView extends CalendarView
      * @return  array  of CalendarColumn
      */
     public function getColumns() {
+        // remove links and urls if calendar-view is read-only
         if ($this->read_only) {
             foreach ($this->entries as $column) {
                 $column->setURL(false);

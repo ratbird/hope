@@ -53,6 +53,7 @@ class CalendarView
     protected $end_hour       = 21;
     protected $insertFunction = "";
     protected $templates      = array();
+    protected $read_only      = false;
 
     static protected $number_of_instances = 1;
     protected $view_id;
@@ -316,4 +317,26 @@ class CalendarView
     public function getColumns() {
         return $this->entries;
     }
+
+    /**
+     * Set the read-only status of the calendar
+     *
+     * @param bool  $readonly  true to make it read only, false otherwise
+     *
+     * @return void
+     */
+    public function setReadOnly($readonly = true)
+    {
+        $this->read_only = $readonly;
+    }
+
+    /**
+     * Return the read-only status of this calendar
+     *
+     * @return bool the read-only status of this calendar
+     */
+    public function getReadOnly() {
+        return $this->read_only;
+    }
+
 }

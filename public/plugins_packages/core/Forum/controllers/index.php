@@ -480,9 +480,11 @@ class IndexController extends ForumController
         ForumPerm::check('move_thread', $this->getId(), $thread_id);
         ForumPerm::check('move_thread', $this->getId(), $destination);
 
+        $current_area = ForumEntry::getParentTopicId($thread_id);
+
         ForumEntry::move($thread_id, $destination);
 
-        $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $thread_id .'#'. $thread_id));
+        $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $current_area .'/'. ForumHelpers::getPage()));
     }
 
     /**

@@ -40,17 +40,15 @@ if ($args) {
 
             $plugin_admin = new PluginAdministration();
 
-            // make sure file exists
-            if (!file_exists($zipfile)) {
-                echo 'Die Datei '. $zipfile .' wurde nicht gefunden!\n';
-                exit(1);
-            }
-
             try {
-                $plugin_admin->installPlugin($zipfile);
+                if (parse_url($zipfile, PHP_URL_SCHEME)) {
+                    $plugin_admin->installPluginFromURL($zipfile);
+                } else {
+                    $plugin_admin->installPlugin($zipfile);
+                }
                 echo 'Das Plugin wurde erfolgreich installiert.' . "\n";
             } catch (PluginInstallationException $ex) {
-                echo $ex->getMessage();
+                echo $ex->getMessage() . "\n";
             }
 
             exit(0);
@@ -261,7 +259,7 @@ if ($args) {
             $plugin_manager = PluginManager::getInstance();
             $plugins = $plugin_manager->getPluginInfos();
             if ($pluginname) {
-                $plugins = array_filter($plugins, function($p) use ($pluginname) {return strtolower($pluginname) == strtolower($p['name']);});
+                $plugins = array_filter($plugins, function($p) use ($pluginname) {return stripos($p['name'], $pluginname) !== false;});
             }
             $basepath = get_config('PLUGINS_PATH');
             foreach ($plugins as $plugin) {

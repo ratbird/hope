@@ -36,11 +36,24 @@ class Settings_MessagingController extends Settings_SettingsController
 
     public function index_action($verify_action = null)
     {
+        
+        $search_obj = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+                        . "FROM auth_user_md5 "
+                        . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+                        . "WHERE "
+                        . "username LIKE :input OR Vorname LIKE :input "
+                        . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
+                        . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
+                        . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
+                        . " ORDER BY fullname ASC",
+                        _("Nutzer suchen"), "user_id");
+        $this->singlePersonSearch = SinglePersonSearch::get("forward_message")->setSearchObject($search_obj);
+        
         if (Request::submitted('store')) {
             $this->check_ticket();
 
-            if (Request::get('new_smsforward_rec')) {
-                $this->user->smsforward_rec  = get_userid(Request::get('new_smsforward_rec'));
+            if ($this->singlePersonSearch->getSelectedUser()) {
+                $this->user->smsforward_rec  = get_userid($this->singlePersonSearch->getSelectedUser());
                 $this->user->smsforward_copy = 1;
             } else if (Request::int('smsforward_copy') && !$this->user->smsforward_copy) {
                 $this->user->smsforward_copy = 1;
@@ -68,7 +81,7 @@ class Settings_MessagingController extends Settings_SettingsController
             $this->redirect('settings/messaging');
         }
 
-        if (!$this->user->smsforward_rec && Request::submitted('gosearch')) {
+        /*if (!$this->user->smsforward_rec && Request::submitted('gosearch')) {
             $vis_query = get_vis_query('auth_user_md5');
             $query = "SELECT user_id, username, {$GLOBALS['_fullname_sql']['full_rev']} AS fullname, perms
                       FROM auth_user_md5
@@ -86,8 +99,8 @@ class Settings_MessagingController extends Settings_SettingsController
         } else {
             $matches = false;
         }
-
-        $this->matches       = $matches;
+        
+        $this->matches       = $matches;*/
         $this->verify_action = $verify_action;
     }
 

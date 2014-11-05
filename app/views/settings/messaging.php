@@ -126,7 +126,7 @@
                         <?= _('Kopie im persönlichen Posteingang speichern.') ?>
                     </label>
                 <? else: ?>
-                    <?= QuickSearch::get('new_smsforward_rec', new StandardSearch('username'))->withButton()->render() ?>
+                    <?= $singlePersonSearch->render(); ?>
                 <? endif; ?>
                 </td>
             </tr>

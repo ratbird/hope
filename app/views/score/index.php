@@ -2,8 +2,8 @@
     <caption>
         <span class="actions" style="font-size: 0.9em;">
             <?= _('Ihre Punkte:') ?>
-            <strong><?= number_format($score->score, 0, ',', '.') ?></strong>
-            (<?= $score->title ?>)
+            <strong><?= number_format($score->ReturnMyScore(), 0, ',', '.') ?></strong>
+            (<?= $score->ReturnMyTitle() ?>)
         </span>
         <?= _('Stud.IP-Rangliste')?>
     </caption>
@@ -28,23 +28,25 @@
         </tr>
     </thead>
     <tbody>
-    <? foreach ($persons as $person): ?>
+    <? foreach ($persons as $index => $person): ?>
         <tr>
             <td style="text-align: right;">
-                <?= ++$offset ?>.
+                <?= $offset + $index + 1 ?>.
             </td>
             <td>
                 <?= Avatar::getAvatar($person['user_id'])->getImageTag(Avatar::SMALL) ?>
             </td>
             <td>
-                <?= ObjectdisplayHelper::link($person->user) ?>
-            <? foreach ($person->king as $type => $text): ?>
+                <a href="<?= URLHelper::getLink('dispatch.php/profile?username='. $person['username']) ?>">
+                    <?= htmlReady($person['fullname']) ?>
+                </a>
+            <? foreach ($person['is_king'] as $type => $text): ?>
                 <?= Assets::img('icons/16/yellow/crown.png', array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
             <? endforeach ?>
             </td>
-            <td><?= $person->GetScoreContent() ?></td>
+            <td><?= $score->GetScoreContent($person['user_id']) ?></td>
             <td><?= number_format($person['score'], 0, ',', '.') ?></td>
-            <td><?= $person->title ?></td>
+            <td><?= $score->GetTitel($person['score'], $person['geschlecht']) ?></td>
             <td style="text-align: right">
             <? if($person['user_id'] == $GLOBALS['user']->id): ?>
                 <a href="<?= $controller->url_for('score/unpublish') ?>">

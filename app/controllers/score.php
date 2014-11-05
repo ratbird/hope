@@ -25,6 +25,7 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/score.class.php';
 
 class ScoreController extends AuthenticatedController
 {
@@ -63,8 +64,14 @@ class ScoreController extends AuthenticatedController
      */
     public function index_action($page = 1)
     {
+        $vis_query = get_vis_query('b');
 
-        $count        = Score::countBySql("public = 1");
+        $query = "SELECT COUNT(*)
+                  FROM user_info AS a
+                  LEFT JOIN auth_user_md5 AS b USING (user_id)
+                  WHERE score > 0 AND locked = 0 AND {$vis_query}";
+        $statement = DBManager::get()->query($query);
+        $count        = $statement->fetchColumn();
 
         // Calculate offsets
         $max_per_page = get_config('ENTRIES_PER_PAGE');
@@ -78,11 +85,22 @@ class ScoreController extends AuthenticatedController
 
         $offset = max(0, ($page - 1) * $max_per_page);
 
-        $this->persons         = Score::findBySQL("public = 1 ORDER BY score DESC LIMIT ?,?" , array((int)$offset, (int)$max_per_page));
-        $this->persons = SimpleORMapCollection::createFromArray($this->persons);
-        
-        // Reorder if score had to be updated
-        $this->persons->orderBy('score DESC');
+        // Liste aller die mutig (oder eitel?) genug sind
+        $query = "SELECT a.user_id,username,score,geschlecht, {$GLOBALS['_fullname_sql']['full']} AS fullname
+                  FROM user_info AS a
+                  LEFT JOIN auth_user_md5 AS b USING (user_id)
+                  WHERE score > 0 AND locked = 0 AND {$vis_query}
+                  ORDER BY score DESC
+                  LIMIT " . (int)$offset . "," . (int)$max_per_page;
+        $result = DBManager::get()->query($query);
+
+        $persons = array();
+        while ($row = $result->fetch()) {
+            $row['is_king'] = StudipKing::is_king($row['user_id'], true);
+            $persons[] = $row;
+        }
+
+        $this->persons         = $persons;
         $this->numberOfPersons = $count;
         $this->page            = $page;
         $this->offset          = $offset;
@@ -94,7 +112,7 @@ class ScoreController extends AuthenticatedController
         $sidebar->setImage('sidebar/medal-sidebar.png');
 
         $actions = new OptionsWidget();
-        $published = $this->score->public;
+        $published = $this->score->ReturnPublik();
         $actions->addCheckbox(_('Ihren Wert veröffentlichen'),
                               $published,
                               $this->url_for('score/publish'),
@@ -109,8 +127,7 @@ class ScoreController extends AuthenticatedController
      */
     public function publish_action()
     {
-        $this->score->public = 1;
-        $this->score->store();
+        $this->score->PublishScore();
         PageLayout::postMessage(MessageBox::success(_('Ihr Wert wurde auf der Rangliste veröffentlicht.')));
         $this->redirect('score');
     }
@@ -120,8 +137,7 @@ class ScoreController extends AuthenticatedController
      */
     public function unpublish_action()
     {
-        $this->score->public = 0;
-        $this->score->store();
+        $this->score->KillScore();
         PageLayout::postMessage(MessageBox::success(_('Ihr Wert wurde von der Rangliste gelöscht.')));
         $this->redirect('score');
     }

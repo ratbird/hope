@@ -22,7 +22,6 @@ require_once 'lib/object.inc.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 
-require_once 'lib/classes/score.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 
@@ -101,14 +100,9 @@ class ProfileController extends AuthenticatedController
 
         // GetScroreList
         if (get_config('SCORE_ENABLE')) {
-            $score  = new Score($this->current_user->user_id);
-            if ($score->IsMyScore()) {
-                $this->score        = $score->ReturnMyScore();
-                $this->score_title  = $score->ReturnMyTitle();
-            } elseif ($score->ReturnPublik()) {
-                $this->score         = $score->GetScore($this->current_user->user_id);
-                $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
-            }
+            $score = new Score($this->current_user->user_id);
+            $this->score  = $score->score;
+            $this->score_title = $score->title;
         }
         
         // Additional user information
@@ -148,15 +142,13 @@ class ProfileController extends AuthenticatedController
 
         // get kings informations
         if (Config::Get()->SCORE_ENABLE) {
-            if ($score->IsMyScore() || $score->ReturnPublik()) {
-                $kings = $this->profile->getKingsInformations();
-    
-                if ($kings != null) {
-                    $this->kings = $kings;
-                }
+            $kings = $this->profile->getKingsInformations();
+
+            if ($kings != null) {
+                $this->kings = $kings;
             }
         }
-        
+
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
         if ($this->profile->checkVisibility('news') OR $show_admin === true) {

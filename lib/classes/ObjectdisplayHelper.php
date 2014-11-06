@@ -52,10 +52,10 @@ class ObjectdisplayHelper {
         $mapping = array(
             'User' => array(
                 'link' => function($obj) {
-            return URLHelper::getLink('dispatch.php/profile', array('username' => $obj->username));
+            return URLHelper::getLink('dispatch.php/profile', array('username' => htmlReady($obj->username)));
         },
                 'name' => function($obj) {
-            return $obj->getFullname();
+            return htmlReady($obj->getFullname());
         },
                 'avatar' => function($obj) {
             return Avatar::getAvatar($obj->id)->getImageTag($size = Avatar::SMALL);
@@ -66,7 +66,7 @@ class ObjectdisplayHelper {
             return URLHelper::getLink('seminar_main.php', array('auswahl' => $obj->id));
         },
                 'name' => function($obj) {
-            return $obj->name;
+            return htmlReady($obj->name);
         },
                 'avatar' => function($obj) {
             return CourseAvatar::getAvatar($obj->id)->getImageTag($size = CourseAvatar::SMALL);

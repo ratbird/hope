@@ -215,7 +215,6 @@ class Markup
         ');
 
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
-        //$config->set('Attr.TargetBlank', true);
         $config->set('Attr.AllowedRel', array('nofollow'));
         $config->set('Attr.AllowedClasses', array(
             'content',
@@ -226,6 +225,7 @@ class Markup
             'ClassifyLinks',
             'ClassifyTables'
         ));
+        $config->set('AutoFormat.RemoveSpansWithoutAttributes', true);
         $config->set('CSS.AllowedFonts', array(
             'serif',
             'sans-serif',

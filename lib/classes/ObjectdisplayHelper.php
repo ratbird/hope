@@ -52,7 +52,7 @@ class ObjectdisplayHelper {
         $mapping = array(
             'User' => array(
                 'link' => function($obj) {
-            return URLHelper::getLink('dispatch.php/profile', array('username' => htmlReady($obj->username)));
+            return URLHelper::getLink('dispatch.php/profile', array('username' => $obj->username));
         },
                 'name' => function($obj) {
             return htmlReady($obj->getFullname());

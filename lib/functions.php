@@ -2114,3 +2114,56 @@ function match_route($requested_route, $current_route = '')
     }
     return true;
 }
+
+function studip_default_exception_handler($exception) {
+    require_once('lib/visual.inc.php');
+
+    // send exception to metrics backend
+    if (class_exists('Metrics')) {
+        $exception_class = strtolower(
+            preg_replace(
+                '/(?<=\w)([A-Z])/',
+                '_\\1',
+                get_class($exception)));
+        Metrics::increment('core.exception.' . $exception_class);
+    }
+
+    if ($exception instanceof AccessDeniedException) {
+        $status = 403;
+        $template = 'access_denied_exception';
+    } else if ($exception instanceof CheckObjectException) {
+        $status = 403;
+        $template = 'check_object_exception';
+    } else {
+        if ($exception instanceOf Trails_Exception) {
+            $status = $exception->getCode();
+        } else {
+            $status = 500;
+        }
+        error_log($exception->__toString());
+        $template = 'unhandled_exception';
+    }
+
+    header('HTTP/1.1 ' . $status . ' ' . $exception->getMessage());
+
+    // ajax requests return JSON instead
+    // re-use the http status code determined above
+    if (!strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest')) {
+        header('Content-Type: application/json; charset=UTF-8');
+        $template = 'json_exception';
+    }
+
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
+    try {
+        $args = compact('exception', 'status');
+        ob_start();
+        echo $GLOBALS['template_factory']->render($template, $args);
+    } catch (Exception $e) {
+        ob_end_clean();
+        echo 'Error: ' . htmlReady($e->getMessage());
+    }
+    exit;
+}

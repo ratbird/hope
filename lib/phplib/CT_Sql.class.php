@@ -16,7 +16,7 @@ class CT_Sql {
     ## deriving your own class from it (recommened)
     ##
     
-    var $database_table = "";
+    var $database_table = "session_data";
     var $gzip_level = 0;
     var $exists = '';
     

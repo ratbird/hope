@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginHAAB_Weimar.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,20 +27,22 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
 * @package
 **/
-class StudipLitSearchPluginHAAB_Weimar extends StudipLitSearchPluginGvk{
+class StudipLitSearchPluginHAAB_Weimar extends StudipLitSearchPluginGvk
+{
 
-    function StudipLitSearchPluginHAAB_Weimar(){
-        parent::StudipLitSearchPluginGvk();
+    function __construct()
+    {
+        parent::__construct();
         $this->description = 'Herzogin Anna Amalia Bibliothek Weimar';
-        $this->z_host = "z3950.gbv.de:20010/haab_opc";
+        $this->z_host = "sru.gbv.de:20010/opac-de-32";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
                     '4' => _("Titelstichwörter [TIT]"),
                     '5' => _("Serienstichwörter [SER]"),

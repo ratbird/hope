@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginFH_Jena.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,20 +27,22 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
 * @package
 **/
-class StudipLitSearchPluginFH_Jena extends StudipLitSearchPluginGvk{
+class StudipLitSearchPluginFH_Jena extends StudipLitSearchPluginGvk
+{
 
-    function StudipLitSearchPluginFH_Jena(){
-        parent::StudipLitSearchPluginGvk();
-        $this->description = 'Bibliothek der Fachhochschule Jena';
-        $this->z_host = "z3950.gbv.de:20010/fhje_opc";
+    function __construct()
+    {
+        parent::__construct();
+        $this->description = 'Bibliothek der EAH Jena';
+        $this->z_host = "sru.gbv.de/opac-de-j59";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
                     '4' => _("Titelstichwörter [TIT]"),
                     '5' => _("Serienstichwörter [SER]"),

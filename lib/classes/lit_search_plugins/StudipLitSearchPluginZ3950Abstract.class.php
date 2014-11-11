@@ -163,7 +163,11 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         yaz_search($zid,"rpn", $rpn);
         yaz_wait(($options = array('timeout' => $this->z_timeout)));
         if (yaz_errno($zid)){
-            $this->addError("error", sprintf(_("Fehler bei der Suche: %s"), yaz_error($this->z_id)));
+            $error_msg = yaz_error($zid);
+            if ($error_info = yaz_addinfo($zid)) {
+                $error_msg .= ' - ' . $error_info;
+            }
+            $this->addError("error", sprintf(_("Fehler bei der Suche: %s"), $error_msg));
             return false;
         } else {
             return yaz_hits($zid);

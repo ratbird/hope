@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginFH_Nordhausen.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,20 +27,22 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
 * @package
 **/
-class StudipLitSearchPluginFH_Nordhausen extends StudipLitSearchPluginGvk{
+class StudipLitSearchPluginFH_Nordhausen extends StudipLitSearchPluginGvk
+{
 
-    function StudipLitSearchPluginFH_Nordhausen(){
-        parent::StudipLitSearchPluginGvk();
+    function __construct()
+    {
+        parent::__construct();
         $this->description = 'Bibliothek der Fachhochschule Nordhausen';
-        $this->z_host = "z3950.gbv.de:20010/fhnh_opc";
+        $this->z_host = "sru.gbv.de/opac-de-564";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
                     '4' => _("Titelstichwörter [TIT]"),
                     '5' => _("Serienstichwörter [SER]"),

@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginHSfMFL_Weimar.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 Andr? Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,20 +27,22 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   Andr? Noack <noack@data-quest.de>
 * @package
 **/
-class StudipLitSearchPluginHSfMFL_Weimar extends StudipLitSearchPluginGvk{
+class StudipLitSearchPluginHSfMFL_Weimar extends StudipLitSearchPluginGvk
+{
 
-    function StudipLitSearchPluginHSfMFL_Weimar(){
-        parent::StudipLitSearchPluginGvk();
+    function __construct()
+    {
+        parent::__construct();
         $this->description = 'Bibliothek der Hochschule für Musik Franz Liszt Weimar';
-        $this->z_host = "z3950.gbv.de:20010/hfmfl_opc";
+        $this->z_host = "sru.gbv.de/opac-de-wim8";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
                     '4' => _("Titelstichwörter [TIT]"),
                     '5' => _("Serienstichwörter [SER]"),

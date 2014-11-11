@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginUB_Erfurt.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,20 +27,23 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
 * @package
 **/
-class StudipLitSearchPluginUB_Erfurt extends StudipLitSearchPluginGvk{
+class StudipLitSearchPluginUB_Erfurt extends StudipLitSearchPluginGvk
+{
 
-    function StudipLitSearchPluginUB_Erfurt(){
-        parent::StudipLitSearchPluginGvk();
-        $this->description = 'Universitätsbibliothek Erfurt';
-        $this->z_host = "z3950.gbv.de:20010/ube_opc";
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->description = 'Online-Katalog der Universitäts- und Forschungsbibliothek Erfurt/Gotha';
+        $this->z_host = "sru.gbv.de/opac-de-547";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"),
                     '4' => _("Titelstichwörter [TIT]"),
                     '5' => _("Serienstichwörter [SER]"),

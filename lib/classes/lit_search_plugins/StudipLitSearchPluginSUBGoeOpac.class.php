@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginRkgoe.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -27,26 +27,27 @@
 require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php");
 
 /**
-* Plugin for retrieval using Z39.50 
+* Plugin for retrieval using Z39.50
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
-class StudipLitSearchPluginSUBGoeOpac extends StudipLitSearchPluginGvk{
-    
-    
-    function StudipLitSearchPluginSUBGoeOpac(){
-        parent::StudipLitSearchPluginGvk();
+class StudipLitSearchPluginSUBGoeOpac extends StudipLitSearchPluginGvk
+{
+
+
+    function __construct()
+    {
+        parent::__construct();
         $this->description = "Göttinger Universitätskatalog (GUK)
 Enthalten sind die Bestände folgender Einrichtungen:
 Niedersächsische Staats- und Universitätsbibliothek Göttingen (SUB)
 (Monografien 1946 - 1976 sowie Dissertationen vor 1909 und 1937 - 1977 noch unvollständig)
 Bereichsbibliotheken (vollständig), Instituts- und Seminarbibliotheken (im Aufbau)";
-        $this->z_host = "z3950.gbv.de:20012/subgoe_opc";
-        $this->z_record_encoding = 'utf-8';
+        $this->z_host = "sru.gbv.de/opac-de-7";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"), '4' => _("Titelstichwörter [TIT]"),
                                 '5' => _("Serienstichwörter [SER]"), '21' => _("alle Klassifikationen [SYS]"),
                                 '1004' => _("Person, Author [PER]"), '1005' => _("Körperschaften [KOR]"),

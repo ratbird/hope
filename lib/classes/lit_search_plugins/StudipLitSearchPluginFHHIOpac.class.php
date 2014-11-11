@@ -43,7 +43,7 @@ class StudipLitSearchPluginFHHIOpac extends StudipLitSearchPluginGvk
     {
         parent::__construct();
         $this->description = "Bibliotheken der Fachhochschule Hildesheim/Holzminden/Göttingen";
-        $this->z_host = "z3950.gbv.de:20010/fhhi_opc";
+        $this->z_host = "sru.gbv.de/opac-de-hil3";
         $this->z_profile = array('1016' => _("Basisindex [ALL]"), '4' => _("Titelstichwörter [TIT]"),
                                 '5' => _("Serienstichwörter [SER]"), '21' => _("alle Klassifikationen [SYS]"),
                                 '1004' => _("Person, Author [PER]"), '1005' => _("Körperschaften [KOR]"),

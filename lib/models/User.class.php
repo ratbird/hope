@@ -261,4 +261,15 @@ class User extends AuthUserMd5
         return  $ret;
     }
 
+    /**
+     * Returns whether the user was assigned a certain role.
+     *
+     * @param string $role         The role to check
+     * @param string $institute_id An optional institute_id
+     * @return bool True if the user was assigned this role, false otherwise
+     */
+    public function hasRole($role, $institute_id = '')
+    {
+        return RolePersistence::isAssignedRole($this->user_id, $role, $institute_id);
+    }
 }

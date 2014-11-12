@@ -10,7 +10,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
-require_once 'lib/phplib/perm.inc';
+require_once 'lib/phplib/Seminar_Perm.class.php';
 require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
@@ -30,7 +30,7 @@ class AvatarTestCase extends PHPUnit_Framework_TestCase {
 
     function setUp()
     {
-        $stub = $this->getMock('Perm');
+        $stub = $this->getMock('Seminar_Perm');
         // Configure the stub.
         $stub->expects($this->any())
             ->method('have_perm')

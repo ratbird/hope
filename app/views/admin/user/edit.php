@@ -38,10 +38,22 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
-            <?= _("globaler Status:") ?>
+            <label for="permission">
+                <?= _('globaler Status:') ?>
+            </label>
         </td>
         <td colspan="2">
-            <?= (StudipAuthAbstract::CheckField("auth_user_md5.perms", $user['auth_plugin'])) ? $user['perms'] : $perm->perm_sel("perms", $user['perms']) ?>
+        <? if (StudipAuthAbstract::CheckField('auth_user_md5.perms', $user['auth_plugin'])): ?>
+             <?= htmlReady($user['perms']) ?>
+        <? else: ?>
+            <select name="perms[]" id="permission">
+            <? foreach (array_keys($perm->permissions) as $permission): ?>
+                <option <? if ($permission === $user['perms']) echo 'selected'; ?>>
+                    <?= htmlReady($permission) ?>
+                </option>
+            <? endforeach; ?>
+            </select>
+        <? endif; ?>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">

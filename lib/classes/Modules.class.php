@@ -219,7 +219,7 @@ class Modules {
             $this->clearBit($bitmask, $this->registered_modules[$modul]['id']);
         }
 
-        if ($this->checkGlobal($modul)) {
+        if (!$this->checkGlobal($modul)) {
             return false;
         }
 

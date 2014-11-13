@@ -331,7 +331,7 @@ class about extends messaging
         $statement = DBManager::get()->query($query);
         $studiengaenge = $statement->fetchGrouped(PDO::FETCH_COLUMN);
 
-        echo '<select name="new_studiengang" aria-label="'._('-- Bitte Fach auswählen --').'">'."\n";
+        echo '<select name="new_studiengang" id="new_studiengang" aria-label="'._('-- Bitte Fach auswählen --').'">'."\n";
         echo '<option selected value="none">' . _('-- Bitte Fach auswählen --') . '</option>'."\n";
         foreach ($studiengaenge as $id => $name) {
             printf('<option value="%s">%s</option>' . "\n", $id, htmlReady(my_substr($name, 0, 50)));
@@ -363,7 +363,7 @@ class about extends messaging
         $all_domains  = UserDomain::getUserDomains();
         $domains      = array_diff($all_domains, $user_domains);
 
-        echo '<select name="new_userdomain">'."\n";
+        echo '<select name="new_userdomain" id="new_userdomain">'."\n";
         echo '<option selected value="none">' . _('-- Bitte Nutzerdomäne auswählen --') . '</option>'."\n";
         foreach ($domains as $domain) {
             printf('<option value="%s">%s</option>' . "\n", $domain->getID(), htmlReady(my_substr($domain->getName(), 0, 50)));

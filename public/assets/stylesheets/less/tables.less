@@ -9,9 +9,9 @@ table.header, .table_header { //normale Tabellenheader
 
 .table_header_bold { //formerly known as topic(-header)
     background-color: @brand-color-lighter;
-	border-color: @brand-color-darker;
-	border-style: solid;
-	border-width: 0 0 1px 0;
+    border-color: @brand-color-darker;
+    border-style: solid;
+    border-width: 0 0 1px 0;
     color: #FFFFFF;
     font-size: 12pt;
     padding: 3px 5px;
@@ -185,21 +185,24 @@ table.zebra-horizontal > tbody > tr > td {
 
         a {
             background: left center no-repeat;
-            .retina-background-icon("blue/arr_1down.png");
+            .retina-background-icon('blue/arr_1down.png');
             color: #000;
             cursor: pointer;
         }
     }
     .empty .toggle-indicator a { 
-    	background-image: url("@{image-path}/icons/16/grey/arr_1right.png"); 
-  		background-image: -webkit-image-set(
-      		url("@{image-path}/icons/16/grey/arr_1right.png") ~"1x",
-      		url("@{image-path}/icons/32/grey/arr_1right.png") ~"2x");    
+        .retina-background-icon('grey/arr_1right.png');
  }
-    .collapsed .toggle-indicator a { background-image: url("@{image-path}/icons/16/blue/arr_1right.png"); }
+    .collapsed .toggle-indicator a { 
+        .retina-background-icon('blue/arr_1right.png');
+    }
     td.label-cell, .toggle-indicator a, .empty .toggle-indicator { padding-left: 20px; }
-    > .collapsed > tr { display: none; }
-    .collapsed .header-row { display: table-row !important; }
+    > .collapsed > tr {
+        display: none;
+    }
+    .collapsed .header-row {
+        display: table-row !important;
+    }
 }
 * + html .collapsable .collapsed .header-row { display: inline-block !important; } // IE-Hack
 

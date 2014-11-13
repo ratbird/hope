@@ -176,11 +176,15 @@ function get_ext_vis_query($table_alias = 'aum') {
  * @param   $vis    visibility-state
  * @returns string  gives back a string with the chooser
  */
-function vis_chooser($vis, $new = false) {
-    if ($vis == '') $vis = 'unknown';
+function vis_chooser($vis, $new = false, $id = false) {
+    if ($vis == '') {
+        $vis = 'unknown';
+    }
     $txt = array();
-    $txt[] = '<select name="visible">';
-    if (!$new) $txt[] = '<option value="'.$vis.'">'._("keine Änderung").'</option>';
+    $txt[] = sprintf('<select name="visible"%s>', $id ? 'id="' . htmlReady($id) . '"' : '');
+    if (!$new) {
+        $txt[] = '<option value="'.$vis.'">'._("keine Änderung").'</option>';
+    }
     $txt[] = '<option value="always">'._("immer").'</option>';
     /* $txt[] = '<option value="yes">'._("ja").'</option>'; */
     $txt[] = '<option value="unknown"'.(($new)? ' selected="selected"':'').'>'._("unbekannt").'</option>';

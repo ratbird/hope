@@ -484,10 +484,19 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 }
 .collapsable .empty .toggle-indicator a {
   background-image: url("../images/icons/16/grey/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1x, url("../images/icons/32/grey/arr_1right.png") 2x);
+  background-image: none, url("../images/icons/grey/arr_1right.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
 }
 .collapsable .collapsed .toggle-indicator a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
+  background-image: none, url("../images/icons/blue/arr_1right.svg");
+  -webkit-background-size: 16px 16px;
+  -moz-background-size: 16px 16px;
+  -o-background-size: 16px 16px;
+  background-size: 16px 16px;
 }
 .collapsable td.label-cell,
 .collapsable .toggle-indicator a,
@@ -1101,6 +1110,11 @@ table.withdetails tr.open + tr.details > td > .detailscontainer {
   background-size: 16px 16px;
   vertical-align: text-top;
   width: 16px;
+}
+label.required:after {
+  color: red;
+  content: '*';
+  text-align: super;
 }
 .studip_form .caption {
   font-weight: bold;

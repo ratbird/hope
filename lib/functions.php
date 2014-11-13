@@ -1958,47 +1958,57 @@ function array_flatten($ary)
 function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance = 5)
 {
     if ($verbose) {
-        $glue = ', ';
+        $glue = array(', ', _(' und '));
         $levels = array(
-            array(60, array(_('vor %u Sekunde'), _('vor %u Sekunden')), array(_('in %u Sekunde'), _('in %u Sekunden'))),
-            array(60, array(_('vor %u Minute'),  _('vor %u Minuten')),  array(_('in %u Minute'),  _('in %u Minuten'))),
-            array(24, array(_('vor %u Stunde'),  _('vor %u Stunden')),  array(_('in %u Stunde'),  _('in %u Stunden'))),
-            array(30, array(_('vor %u Tag'),     _('vor %u Tagen')),    array(_('in %u Tag'),     _('in %u Tagen'))),
-            array(12, array(_('vor %u Monat'),   _('vor %u Monaten')),  array(_('in %u Monat'),   _('in %u Monaten'))),
-            array(99, array(_('vor %u Jahr'),    _('vor %u Jahren')),   array(_('in %u Jahr'),    _('in %u Jahren'))),
+            array(60, _('%u Sekunde'), _('%u Sekunden')),
+            array(60, _('%u Minute'),  _('%u Minuten')),
+            array(24, _('%u Stunde'),  _('%u Stunden')),
+            array(30, _('%u Tag'),     _('%u Tagen')),
+            array(12, _('%u Monat'),   _('%u Monaten')),
+            array(99, _('%u Jahr'),    _('%u Jahren')),
         );
     } else {
-        $glue = '';
+        $glue = array('', '');
         $levels = array(
-            array(60, array(_('%us'),   _('%us')),   array(_('%us'),   _('%us'))),
-            array(60, array(_('%umin'), _('%umin')), array(_('%umin'), _('%umin'))),
-            array(24, array(_('%uh'),   _('%uh')),   array(_('%uh'),   _('%uh'))),
-            array(30, array(_('%ud'),   _('%ud')),   array(_('%ud'),   _('%ud'))),
-            array(12, array(_('%uM'),   _('%uM')),   array(_('%uM'),   _('%uM'))),
-            array(99, array(_('%uy'),   _('%uy')),   array(_('%uy'),   _('%uy'))),
+            array(60, _('%us'),   _('%us')),
+            array(60, _('%umin'), _('%umin')),
+            array(24, _('%uh'),   _('%uh')),
+            array(30, _('%ud'),   _('%ud')),
+            array(12, _('%uM'),   _('%uM')),
+            array(99, _('%uy'),   _('%uy')),
         );
     }
 
     $now   = time();
     $diff  = abs($timestamp - $now);
-    $index = $timestamp < $now ? 1 : 2;
 
     if ($diff < $tolerance) {
         return _('jetzt');
     }
 
-    $result = array();
+    $chunks = array();
     for ($i = 0; $i < count($levels) && $diff > 0; $i++) {
         $remainder = $diff % $levels[$i][0];
         if ($remainder > 0) {
-            $result[] = sprintf(ngettext($levels[$i][$index][0], $levels[$i][$index][1], $remainder), $remainder);
+            $chunks[] = sprintf(ngettext($levels[$i][1], $levels[$i][2], $remainder), $remainder);
         }
         $diff = floor($diff / $levels[$i][0]);
         if ($diff === 0) {
             break;
         }
     }
-    return implode($glue, array_reverse(array_slice($result, -$displayed_levels)));
+    
+    $chunks = array_reverse($chunks);
+    $chunks = array_slice($chunks, 0, $displayed_levels);
+    if (count($chunks) == 1) {
+        $result = $chunks[0];
+    } else {
+        $result = $chunks[0] . $glue[1] . implode($glue[0], array_slice($chunks, 1));
+    }
+    if ($verbose) {
+        $result = sprintf($timestamp < $now ? _('vor %s') : _('in %s'), $result);
+    }
+    return $result;
 }
 
 /**

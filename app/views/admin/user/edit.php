@@ -6,25 +6,29 @@ use Studip\Button, Studip\LinkButton;
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
 <? endif ?>
 
-<h2>
+<form method="post" action="<?= $controller->url_for('admin/user/edit/' . $user['user_id']) ?>">
+<?= CSRFProtection::tokenTag() ?>
+<table class="default collapsable">
+<caption>
     <?= _('Benutzerverwaltung für ') ?><?= htmlReady($user['Vorname']) ?> <?= htmlReady($user['Nachname']) ?>
     <?= ($prelim ? ' (' . _("vorläufiger Benutzer") . ')' : '')?>
     <?= ($user['locked']) ? '<br><span style="color: red">(' . _('gesperrt von') . ' ' . htmlReady(get_fullname($user['locked_by'])) : '' ?>
     <?= ($user['lock_comment']) ? ', Kommentar: '. htmlReady($user['lock_comment']) : '' ?>
     <?= ($user['locked']) ? ')</span>' : '' ?>
-</h2>
-
-<form method="post" action="<?= $controller->url_for('admin/user/edit/' . $user['user_id']) ?>">
-<?= CSRFProtection::tokenTag() ?>
-<table class="default collapsable">
+</caption>
+<colgroup>
+    <col width="25%">
+    <col>
+    <col width="60px">
+</colgroup>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
-            <a class="toggler"><b><?= _('Allgemeine Daten') ?></b></a>
-        </td>
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
+            <a class="toggler"><?= _('Allgemeine Daten') ?></a>
+        </th>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
-        <td width="25%">
+    <tr>
+        <td>
             <?= _("Benutzername:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
         </td>
@@ -36,7 +40,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <label for="permission">
                 <?= _('globaler Status:') ?>
@@ -56,7 +60,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif; ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Sichtbarkeit:") ?>
         </td>
@@ -64,7 +68,7 @@ use Studip\Button, Studip\LinkButton;
             <?= (!$prelim ? vis_chooser($user['visible']) : '') ?> <small>(<?= $user['visible'] ?>)</small>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Vorname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -77,7 +81,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Nachname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -90,7 +94,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Geschlecht:") ?>
         </td>
@@ -104,7 +108,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Titel:") ?>
         </td>
@@ -121,7 +125,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?=_("Titel nachgestellt:") ?>
         </td>
@@ -140,15 +144,15 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 </tbody>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Registrierungsdaten') ?></b></a>
-        </td>
+        </th>
     </tr>
 
     <? if (!$user['locked']) : ?>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
-        <td width="25%">
+    <tr>
+        <td>
             <?= _("Benutzer sperren:") ?>
         </td>
         <td colspan="2">
@@ -159,7 +163,7 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
 
     <? if ($perm->have_perm('root') && get_config('ALLOW_ADMIN_USERACCESS') && !StudipAuthAbstract::CheckField("auth_user_md5.password", $user['auth_plugin']) && !$prelim) : ?>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Neues Passwort:") ?>
         </td>
@@ -167,7 +171,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" name="pass_1" type="password" id="pass_1">
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Passwortwiederholung:") ?>
         </td>
@@ -178,7 +182,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
 
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("E-Mail:") ?>
             <? if (!$prelim) : ?>
@@ -197,7 +201,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("inaktiv seit:") ?>
         </td>
@@ -215,7 +219,7 @@ use Studip\Button, Studip\LinkButton;
         <?= $inactive ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("registriert seit:") ?>
         </td>
@@ -223,7 +227,7 @@ use Studip\Button, Studip\LinkButton;
             <?= ($user["mkdate"]) ? date("d.m.Y", $user["mkdate"]) : _('unbekannt') ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Authentifizierung:") ?>
         </td>
@@ -237,7 +241,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 
     <? if ($user['validation_key']) : ?>
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?=_("Validation-Key:")?>
         </td>
@@ -248,7 +252,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
 
-    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr>
         <td>
             <?= _("Ablaufdatum:") ?>
         </td>
@@ -261,14 +265,14 @@ use Studip\Button, Studip\LinkButton;
 
 <? if (in_array($user['perms'], array('autor', 'tutor', 'dozent'))) : ?>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Studiendaten') ?></b></a>
-        </td>
+        </th>
     </tr>
     <? if (!StudipAuthAbstract::CheckField("studiengang_id", $auth_plugin)) : ?>
-    <tr class="table_row_even">
-        <td width="25%">
+    <tr>
+        <td>
             <?= _('Neuer Studiengang')?>
         </td>
         <td colspan="2">
@@ -284,7 +288,7 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
     <? if (count($studycourses) > 0) : ?>
     <? foreach ($studycourses as $i => $studiengang) : ?>
-    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+    <tr>
         <td>
             <?= $i+1 ?>. <?= _('Studiengang')?>
         </td>
@@ -301,7 +305,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endforeach ?>
     <? endif ?>
-    <tr class="table_row_even">
+    <tr>
         <td>
             <?= _('Neue Einrichtung')?>
         </td>
@@ -318,7 +322,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($student_institutes) > 0) : ?>
     <? foreach (array_values($student_institutes) as $i => $institute) : ?>
-    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+    <tr>
         <td>
             <?= $i+1 ?>. <?= _('Einrichtung')?>
         </td>
@@ -340,13 +344,13 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($user['perms'] != 'root') : ?>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Einrichtungsdaten') ?></b></a>
-        </td>
+        </th>
     </tr>
-    <tr class="table_row_even">
-        <td width="25%">
+    <tr>
+        <td>
             <?= _('Neue Einrichtung')?>
         </td>
         <td colspan="2">
@@ -365,14 +369,14 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($institutes) > 0) : ?>
     <? foreach (array_values($institutes) as $i => $institute) : ?>
-    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+    <tr>
         <td>
             <?= $i+1 ?>. <?= _('Einrichtung')?>
         </td>
         <td>
             <?= htmlReady($institute['Name']) ?>
         </td>
-        <td align="right">
+        <td class="actions">
             <? if ($GLOBALS['perm']->have_studip_perm("admin", $institute['Institut_id'])) : ?>
             <a class="load-in-new-row" href="<?= $controller->url_for('admin/user/edit_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung bearbeiten'))) ?>
@@ -390,13 +394,13 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($user['perms'] != 'root') : ?>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Nutzerdomänen') ?></b></a>
-        </td>
+        </th>
     </tr>
-    <tr class="table_row_even">
-        <td width="25%">
+    <tr>
+        <td>
             <?= _('Neue Nutzerdomäne')?>
         </td>
         <td colspan="2">
@@ -405,14 +409,14 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($userdomains) > 0) : ?>
     <? foreach ($userdomains as $i => $domain) : ?>
-    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+    <tr>
         <td>
             <?= $i+1 ?>. <?= _('Nutzerdomäne')?>
         </td>
         <td>
             <?= htmlReady($domain->getName()) ?>
         </td>
-        <td align="right">
+        <td class="actions">
             <a href="<?= $controller->url_for('admin/user/delete_userdomain/' . $user['user_id'] . '?domain_id=' . $domain->getID()) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Aus dieser Nutzerdomäne austragen'))) ?>
             </a>
@@ -425,13 +429,13 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($GLOBALS['perm']->have_perm('root') && count(LockRule::findAllByType('user')) > 0) : ?>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Sperrebene') ?></b></a>
-        </td>
+        </th>
     </tr>
-    <tr class="table_row_even">
-       <td width="25%">
+    <tr>
+       <td>
             <?= _('Sperrebene')?>
         </td>
         <td colspan="2">
@@ -448,15 +452,15 @@ use Studip\Button, Studip\LinkButton;
 
 <? if (count($userfields) > 0) : ?>
 <tbody>
-    <tr class="table_header header-row">
-        <td colspan="3" class="toggle-indicator">
+    <tr class="header-row">
+        <th colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Datenfelder') ?></b></a>
-        </td>
+        </th>
     </tr>
 <? foreach ($userfields as $entry) : ?>
     <? if ($entry->isVisible()) : ?>
-        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
-            <td width="25%">
+        <tr>
+            <td>
                 <?= htmlReady($entry->getName()) ?>:
             </td>
             <td colspan="2">
@@ -471,18 +475,22 @@ use Studip\Button, Studip\LinkButton;
 <? endforeach ?>
 </tbody>
 <? endif ?>
+<tbody>
     <tr>
         <td colspan="3">
             <input id="u_edit_send_mail" name="u_edit_send_mail" value="1" checked type="checkbox">
             <label style="padding-left:0.5em" for="u_edit_send_mail"><?=_("Emailbenachrichtigung bei Änderung der Daten verschicken?")?></label>
         </td>
     </tr>
+</tbody>
+<tfoot>
     <tr>
-        <td colspan="3" align="center">
+        <td colspan="3" style="text-align:center">
             <?= Button::createAccept(_('Speichern'),'edit')?>
             <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort') )?>
         </td>
     </tr>
+</tfoot>
 </table>
 </form>
 

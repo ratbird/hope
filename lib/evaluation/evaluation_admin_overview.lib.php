@@ -1849,7 +1849,7 @@ class EvalOverview {
         // search results
         if (Request::get("search"))
             $results = $evalDB->search_range(Request::get("search"));
-        elseif ($globalperm == "dozent")
+        else
             $results = $evalDB->search_range("");
 
         if ($globalperm == "root") {
@@ -1864,7 +1864,8 @@ class EvalOverview {
 
         if ($globalperm == "autor")
             $range_types = array(
-                "user" => _("Benutzer"));
+                "user" => _("Benutzer"),
+                "sem" => _("Veranstaltung"));
         elseif ($globalperm == "dozent")
             $range_types = array(
                 "user" => _("Benutzer"),
@@ -2187,7 +2188,7 @@ class EvalOverview {
             $results[$user->id] = array("type" => "user", "name" => _("Profil"));
         }
 
-        if ($globalperm == "dozent" || $perm == "autor" || $search)
+        if ($globalperm == "dozent" || $globalperm == "autor" || $search)
             $showsearchresults = 1;
 
         if ($globalperm == "admin")

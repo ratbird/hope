@@ -21,7 +21,7 @@ class Seminar_Session
 
 
     /**
-     * [Current] Session name.
+     * Current session name also cookie name
      *
      * @var  string
      * @see  name(), Session()
@@ -33,13 +33,6 @@ class Seminar_Session
      * @var  string
      */
     private $cookie_path;
-
-
-    /**
-     * defaults to classname
-     * @var  strings
-     */
-    private $cookiename;
 
     /**
      * If set, the domain for which the session cookie is set.
@@ -140,11 +133,7 @@ class Seminar_Session
         if (is_object($GLOBALS['user'])) {
             $state = in_array($GLOBALS['user']->id, array('nobody', 'form')) ? 'nobody' : 'authenticated';
         } else {
-            $sess = $GLOBALS['sess'];
-            if (!is_object($sess)) {
-                $sess = new self();
-            }
-            $sid = $_COOKIE[$sess->cookiename];
+            $sid = $_COOKIE[__CLASS__];
             if ($sid) {
                 $session_vars = self::get_session_vars($sid);
                 $session_auth = $session_vars['auth']->auth;

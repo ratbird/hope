@@ -108,7 +108,7 @@ namespace {
     } else {
         DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
     }
-    //include 'tools/debug/StudipDebugPDO.class.php';
+    include 'tools/debug/StudipDebugPDO.class.php';
     /**
      * @deprecated
      */

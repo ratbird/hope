@@ -102,10 +102,7 @@ class ProfileController extends AuthenticatedController
         // GetScroreList
         if (get_config('SCORE_ENABLE')) {
             $score  = new Score($this->current_user->user_id);
-            if ($score->IsMyScore()) {
-                $this->score        = $score->ReturnMyScore();
-                $this->score_title  = $score->ReturnMyTitle();
-            } elseif ($score->ReturnPublik()) {
+            if ($this->current_user->user_id === $GLOBALS['user']->id || $score->ReturnPublik()) {
                 $this->score         = $score->ReturnMyScore($this->current_user->user_id);
                 $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
             }
@@ -148,7 +145,7 @@ class ProfileController extends AuthenticatedController
 
         // get kings informations
         if (Config::Get()->SCORE_ENABLE) {
-            if ($score->IsMyScore() || $score->ReturnPublik()) {
+            if ($this->current_user->user_id === $GLOBALS['user']->id || $score->ReturnPublik()) {
                 $kings = $this->profile->getKingsInformations();
     
                 if ($kings != null) {

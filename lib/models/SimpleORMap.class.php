@@ -689,26 +689,37 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $record = new $class();
         $param_arr = array();
         $where = '';
-        if (strpos($name, 'findby') === 0) {
-            $field = substr($name, 6);
-            $order = $arguments[1];
-            $param_arr[0] =& $where;
-            $param_arr[1] = array($arguments[0]);
-            $find = 'findbysql';
-        }
-        if (strpos($name, 'findeachby') === 0) {
-            $field = substr($name, 10);
-            $order = $arguments[2];
-            $param_arr[0] = $arguments[0];
-            $param_arr[1] =& $where;
-            $param_arr[2] = array($arguments[1]);
-            $find = 'findeachbysql';
+        $where_param = is_array($arguments[0]) ? $arguments[0] : words($arguments[0]);
+        $prefix = strstr($name, 'by', true);
+        $field = substr($name, strlen($prefix)+2);
+        switch ($prefix) {
+            case 'findone':
+                $order = $arguments[1];
+                $param_arr[0] =& $where;
+                $param_arr[1] = array($where_param);
+                $find = 'findonebysql';
+                break;
+            case 'find':
+            case 'findmany':
+                $order = $arguments[1];
+                $param_arr[0] =& $where;
+                $param_arr[1] = array($where_param);
+                $find = 'findbysql';
+                break;
+            case 'findeach':
+            case 'findeachmany':
+                $order = $arguments[2];
+                $param_arr[0] = $arguments[0];
+                $param_arr[1] =& $where;
+                $param_arr[2] = array($where_param);
+                $find = 'findeachbysql';
+                break;
         }
         if (isset($record->alias_fields[$field])) {
             $field = $record->alias_fields[$field];
         }
         if (isset($record->db_fields[$field])) {
-            $where = "`{$record->db_table}`.`$field` = ? " . $order;
+            $where = "`{$record->db_table}`.`$field` IN(?) " . $order;
             return call_user_func_array(array($class, $find), $param_arr);
         }
         throw new BadMethodCallException("Method $class::$name not found");

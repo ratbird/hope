@@ -183,7 +183,7 @@
 
         // Predefine options
         if ($(element).is('form,button')) {
-            url = $(element).closest('form').attr('action');
+            url = $(element).attr('formaction') || $(element).closest('form').attr('action');
             options.method = $(element).closest('form').attr('method');
             options.data = $(element).closest('form').serializeArray();
 
@@ -302,12 +302,15 @@
             width = height = options.size;
         }
 
+        console.log(options);
+
         dialog_options = {
             width:   width,
             height:  height,
             buttons: {},
             title:   $('<div>').text(options.title || '').html(), // kinda like htmlReady()
             modal:   true,
+            resizable: 'resize' in options ? options.resize : true,
             open: function () {
                 instance.open = true;
                 // Execute scripts
@@ -360,6 +363,10 @@
             } finally {
                 STUDIP.Dialog.removeInstance(options.id);
             }
+        }
+
+        if (options['reload-on-close']) {
+            window.location.reload();
         }
     };
 

@@ -20,7 +20,6 @@ class Score
 {
     var $score; // Score of the user
     var $publik;    // whether or not the score is published
-    var $ismyscore; // wheter or not this is my own score
     var $title; // Title that refers to the score
     var $myscore;   // my own Score
     var $mygender;
@@ -32,22 +31,10 @@ class Score
     // Konstruktor
     function Score($user_id)
     {
-        $this->ismyscore = $this->CheckOwner($user_id);
-        if ($this->ismyscore){
-            $this->myscore = $this->GetMyScore();
-        }
+        $this->myscore = $this->GetMyScore();
         $this->mygender = $this->GetGender($user_id);
         $this->title = $this->gettitel($this->myscore, $this->mygender);
         $this->publik = $this->CheckScore($user_id);
-    }
-
-    function CheckOwner($user_id)
-    {
-        global $user;
-        if ($user_id == $user->id)
-            return TRUE;
-        else
-            return FALSE;
     }
 
     function GetGender($user_id)
@@ -78,11 +65,6 @@ class Score
         $statement->execute(array($user->id));
         
         $this->publik = FALSE;
-    }
-
-    function IsMyScore()
-    {
-        return $this->ismyscore;
     }
 
     function ReturnMyScore()
@@ -198,7 +180,7 @@ class Score
             $this->doRefreshScoreContentCache();
         }
         $username = $this->score_content_cache[$user_id]['username'];
-        $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+        $content = Assets::img('blank.gif', array('width' => 16)) . ' ';
 
         // News
         if ($news = $this->score_content_cache[$user_id]['newscount']) {

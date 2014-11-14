@@ -302,8 +302,6 @@
             width = height = options.size;
         }
 
-        console.log(options);
-
         dialog_options = {
             width:   width,
             height:  height,

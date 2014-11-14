@@ -26,6 +26,8 @@ class Score
     var $mygender;
     var $score_content_cache = null;
 
+    // How long is the duration of a score-block?
+    const MEASURING_STEP = 1800; // half an hour
 
     // Konstruktor
     function Score($user_id)
@@ -290,146 +292,111 @@ class Score
     * @return       integer the score
     *
     */
-    function GetMyScore()
+    function GetMyScore($user_id = null)
     {
-        global $user, $auth;
-
-        $user_id = $user->id; //damit keiner schummelt...
-
-        // Werte holen...
-
-        // Foren
-        $postings = 0;
-        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-            $postings += $plugin->getNumberOfPostingsForUser($user_id);
+        $cache = StudipCacheFactory::getCache();
+        if ($cache->read("user_score_of_".$user_id)) {
+            return $cache->read("user_score_of_".$user_id);
         }
+        $user_id || $user_id = $GLOBALS['user']->id;
+        //Behold! The all new mighty score algorithm!
+        //Step 1: Select all activities as mkdate-timestamps.
+        //Step 2: Group these activities to timeslots of halfhours
+        //        with COUNT(*) as a weigh of the timeslot.
+        //Step 3: Calculate the measurement of the timeslot from the weigh of it.
+        //        This makes the first activity count fully, the second
+        //        almost half and so on. We use log_n to make huge amounts of
+        //        activities to not count so much.
+        //Step 4: Calculate a single score for each timeslot depending on the
+        //        measurement and the mkdate-timestamp. Use arctan as the function
+        //        here so that older activities tend to zero.
+        //Step 5: Sum all scores from all timeslots together.
+        $sql = "
+            SELECT round(SUM((-atan(measurement / " . round(31556926 / self::MEASURING_STEP) . ") / PI() + 0.5) * 200)) as score
+            FROM (
+                SELECT ((unix_timestamp() / " . self::MEASURING_STEP . ") - timeslot) / (LN(weigh) + 1) AS measurement
+                FROM (
+                    SELECT (round(mkdate / " . self::MEASURING_STEP . ")) as timeslot, COUNT(*) AS weigh
+                    FROM (
+                        " . $this->createTimestampQuery() . "
+                    ) as mkdates
+                    GROUP BY timeslot
+                ) as measurements
+            ) as dates
+        ";
+        $stmt = DBManager::get()->prepare($sql);
+        $stmt->execute(array(':user' => $user_id));
+        $score = $stmt->fetchColumn();
 
-        $query = "SELECT COUNT(*) FROM dokumente WHERE user_id = ? AND range_id <> 'provisional'";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $dokumente = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM seminar_user WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $seminare = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM archiv_user WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $archiv = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM user_inst WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $institut = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM news WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $news = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(contact_id) FROM contact WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $contact = $statement->fetchColumn();
-
-        // TODO: Count only visible categories.
-        $query = "SELECT LEAST(50, COUNT(kategorie_id)) FROM kategorien WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $katcount = $statement->fetchColumn();
-
-        $query = "SELECT mkdate FROM user_info WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $age = $statement->fetchColumn() ?: 1011275740; // = Thu, 17 Jan 2002 13:55:40 GMT, TODO Why this exact date??
-        $age = (time() - $age) / 31536000; // = 365 * 24 * 60 * 60 = 1 year
-        $age = 2 + log($age);
-        if ($age < 1) {
-            $age = 1;
-        }
-
-        if (get_config('VOTE_ENABLE')) {
-            $query = "SELECT COUNT(*) FROM vote WHERE range_id = ? AND state IN ('active', 'stopvis')";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $vote = 2 * $statement->fetchColumn();
-
-            $query = "SELECT COUNT(*) FROM vote_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $vote += $statement->fetchColumn();
-
-            $query = "SELECT COUNT(DISTINCT vote_id)
-                      FROM voteanswers_user
-                      LEFT JOIN voteanswers USING (answer_id)
-                      WHERE user_id = ?
-                      GROUP BY user_id";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $vote += $statement->fetchColumn();
-
-            $query = "SELECT COUNT(*)
-                      FROM eval
-                      WHERE author_id = ? AND startdate < UNIX_TIMESTAMP()
-                        AND ((stopdate IS NULL AND timespan IS NULL)
-                             OR stopdate > UNIX_TIMESTAMP()
-                             OR stopdate + timespan > UNIX_TIMESTAMP())";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $vote += 2 * $statement->fetchColumn();
-
-            $query = "SELECT COUNT(*) FROM eval_user WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $vote += $statement->fetchColumn();
-        }
-
-        if (get_config('WIKI_ENABLE')) {
-            $query = "SELECT COUNT(*) FROM wiki WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($user_id));
-            $wiki = $statement->fetchColumn();
-        }
-
-        $query = "SELECT COUNT(*) FROM blubber WHERE user_id = ? AND context_type IN ('public','course')";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $blubber = $statement->fetchColumn();
-
-        $visits = object_return_views($user_id);
-
-        $scoreplugins = PluginEngine::getPlugins('SystemPlugin') + PluginEngine::getPlugins('StandardPlugin');
-        $pluginscore = 0;
-        $pluginscount = 0;
-
-        foreach ($scoreplugins as $scoreplugin) {
-            if ($scoreplugin instanceof AbstractStudIPSystemPlugin ||
-                $scoreplugin instanceof AbstractStudIPStandardPlugin) {
-                $pluginscore += $scoreplugin->getScore();
-                $pluginscount++;
-            }
-        }
-        if ($pluginscount > 0) {
-            $pluginscore = round($pluginscore / $pluginscount);
-        }
-
-
-        // Die HOCHGEHEIME Formel:
-        $score = (5*$postings) + (5*$news) + (20*$dokumente) + (2*$institut) + (10*$archiv*$age) + (10*$contact) + (20*$katcount) + (5*$seminare) + (1*$gaeste) + (5*$vote) + (5*$wiki) + (5*$blubber) + (3*$visits);
-        $score += $pluginscore;
-        $score = round($score/$age);
-
-        if (Avatar::getAvatar($user_id)->is_customized()) {
-            $score *=10;
-        }
-
-        //Schreiben des neuen Wertes
         $query = "UPDATE user_info SET score = ? WHERE user_id = ? AND score > 0";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($score, $user_id));
 
+        $cache->write("user_score_of_".$user_id, $score, 60 * 5);
+
         return $score;
+    }
+
+    protected function createTimestampQuery() {
+        $statements = array();
+        foreach ($this->getActivityTables() as $table) {
+            $statements[] = "SELECT "
+                . ($table['date_column'] ? : 'mkdate')
+                . " AS mkdate FROM "
+                . $table['table']
+                . " WHERE "
+                . ($table['user_id_column'] ? : 'user_id')
+                . " = :user "
+                . ($table['where'] ? (' AND ' . $table['where']) : '');
+        }
+        return join(' UNION ', $statements);
+    }
+
+    protected function getActivityTables() {
+        $tables = array();
+        $tables[] = array('table' => "user_info");
+        $tables[] = array('table' => "comments");
+        $tables[] = array('table' => "dokumente");
+        $tables[] = array('table' => "forum_entries");
+        $tables[] = array('table' => "news");
+        $tables[] = array('table' => "seminar_user");
+        $tables[] = array(
+            'table' => "blubber",
+            'where' => "context_type != 'private'"
+        );
+        $tables[] = array(
+            'table' => "kategorien",
+            'user_id_column' => "range_id"
+        );
+        $tables[] = array(
+            'table' => "message",
+            'user_id_column' => "autor_id"
+        );
+        $tables[] = array(
+            'table' => "vote",
+            'user_id_column' => "range_id"
+        );
+        $tables[] = array(
+            'table' => "voteanswers_user",
+            'date_column' => "votedate"
+        );
+        $tables[] = array(
+            'table' => "vote_user",
+            'date_column' => "votedate"
+        );
+        $tables[] = array(
+            'table' => "wiki",
+            'date_column' => "chdate"
+        );
+
+        foreach (PluginManager::getInstance()->getPlugins("ScorePlugin") as $plugin) {
+            foreach ((array) $plugin->getPluginActivityTables() as $table) {
+                if ($table['table']) {
+                    $tables[] = $table;
+                }
+            }
+        }
+
+        return $tables;
     }
 }

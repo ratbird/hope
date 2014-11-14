@@ -106,7 +106,7 @@ class ProfileController extends AuthenticatedController
                 $this->score        = $score->ReturnMyScore();
                 $this->score_title  = $score->ReturnMyTitle();
             } elseif ($score->ReturnPublik()) {
-                $this->score         = $score->GetScore($this->current_user->user_id);
+                $this->score         = $score->ReturnMyScore($this->current_user->user_id);
                 $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
             }
         }

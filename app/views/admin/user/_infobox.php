@@ -19,20 +19,10 @@ if (count($users) > 0) {
 }
 
 
-$search = new SidebarWidget();
-$search->setTitle(_('Suche'));
-$searchform = '<form id="user_search" action="' . $controller->url_for('admin/user/edit') . '" method="post">'
-    . CSRFProtection::tokenTag()
-    . QuickSearch::get('user', new StandardSearch('user_id'))
-        ->withButton()
-        ->fireJSFunctionOnSelect("selectUser")
-        ->render()
-    . '</form>'
-    . '<script>
-                var selectUser = function (user_id, name) {
-                    document.location = "' . $controller->url_for('admin/user/edit') . '/" + user_id;
-                };
-              </script>';
-
-$search->addElement(new WidgetElement($searchform));
-$sidebar->addWidget($search);
+$search = new SearchWidget();
+$search->addNeedle(_('Nutzer suchen'),
+                   'user_id',
+                   true,
+                   new StandardSearch('user_id'),
+                   'function (value) { document.location = "' . $controller->url_for('admin/user/edit') . '/" + value; }');
+Sidebar::get()->addWidget($search);

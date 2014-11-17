@@ -38,7 +38,7 @@ class JsupdaterController extends AuthenticatedController
             $action = 'nop';
         }
     }
-    
+
     /**
      * Does and renders absolute nothing.
      */
@@ -79,7 +79,7 @@ class JsupdaterController extends AuthenticatedController
         } else {
             $notification = new PersonalNotifications($id);
             if ($notification->url) {
-                $this->redirect(URLHelper::getUrl($notification->url));
+                $this->redirect(URLHelper::getUrl(TransformInternalLinks($notification->url)));
             } else {
                 $this->render_nothing();
             }

@@ -241,7 +241,7 @@
             options.buttons = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
 
             STUDIP.Dialog.show(response, options);
-        }).fail(function () {
+        }).always(function () {
             if (STUDIP.Overlay) {
                 STUDIP.Overlay.hide();
             }
@@ -339,11 +339,6 @@
 
         // Create/update dialog
         instance.element.dialog(dialog_options);
-
-        // Remove overlay
-        if (STUDIP.Overlay) {
-            STUDIP.Overlay.hide();
-        }
     };
 
     // Closes the dialog for good

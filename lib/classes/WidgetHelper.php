@@ -181,7 +181,7 @@ class WidgetHelper
                 $widget->widget_id = $db_widget['id'];
                 $widgets[$db_widget['position']] = $widget;
 
-                if (!in_array($db_widget, self::$initialized_widgets)) {
+                if (!in_array($db_widget['pluginid'], self::$initialized_widgets)) {
                     self::$initialized_widgets[] = $db_widget['pluginid'];
                     
                     if (is_callable(array($widget, 'initialize'))) {

@@ -18,6 +18,10 @@
 
 class WidgetHelper
 {
+    /**
+     * Stores the widgets that have been initialized.
+     */
+    protected static $initialized_widgets = array();
 
     /**
      * array of submitted widget parameter values
@@ -176,6 +180,14 @@ class WidgetHelper
                 $widget = clone $plugin_manager->getPluginById($db_widget['pluginid']);
                 $widget->widget_id = $db_widget['id'];
                 $widgets[$db_widget['position']] = $widget;
+
+                if (!in_array($db_widget, self::$initialized_widgets)) {
+                    self::$initialized_widgets[] = $db_widget['pluginid'];
+                    
+                    if (is_callable(array($widget, 'initialize'))) {
+                        $widget->initialize();
+                    }
+                }
             }
         }
         return $widgets;

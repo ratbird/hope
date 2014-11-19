@@ -108,9 +108,6 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               vertical-align: top;
           }
       </style>
-      <script>
-
-      </script>
       <table style="margin-left: auto; margin-right: auto; text-align: left;" id="leiterinnen_tabelle">
           <!-- Dozenten -->
           <tr>

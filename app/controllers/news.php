@@ -239,7 +239,7 @@ class NewsController extends StudipController
         // load news and comment data and check if user has permission to edit
         $news = new StudipNews($id);
         if (!$news->isNew())
-            $this->comments = StudipComments::GetCommentsForObject($id);
+            $this->comments = StudipComment::GetCommentsForObject($id);
         if ((!$news->havePermission('edit') AND (!$news->isNew()))) {
             $this->set_status(401);
             PageLayout::postMessage(MessageBox::error(_('Keine Berechtigung!')));
@@ -388,7 +388,7 @@ class NewsController extends StudipController
                                                    'delete_marked_comments' => 1);
             // reload comments
             if (!$this->flash['question_text']) {
-                $this->comments = StudipComments::GetCommentsForObject($id);
+                $this->comments = StudipComment::GetCommentsForObject($id);
                 $changed = true;
             }
         }

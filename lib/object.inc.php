@@ -115,7 +115,7 @@ function object_get_visit($object_id, $type, $mode = "last", $open_object_id = '
 
     if ($temp) {
         $cache[$object_id][$type][$user_id] = $temp;
-        
+
         return $mode == 'last'
              ? $temp['last_visitdate']
              : $temp['visitdate'];
@@ -204,86 +204,6 @@ function object_kill_views($object_id)
     }
 }
 
-function object_switch_fav ($object_id)
-{
-    $is_favorite = object_check_user($object_id, 'fav');
-
-    if ($is_favorite) {
-        $query = "DELETE FROM object_user WHERE object_id = ? AND user_id = ? AND flag = 'fav'";
-    } else {
-        $query = "INSERT INTO object_user (object_id, user_id, flag, mkdate)
-                  VALUES (?, ?, 'fav', UNIX_TIMESTAMP())";
-    }
-
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id, $GLOBALS['user']->id));
-
-    return !$is_favorite;
-}
-
-function object_check_user ($object_id, $flag)
-{
-    $query = "SELECT 1
-              FROM object_user
-              WHERE object_id = ? AND user_id = ? AND flag = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id, $GLOBALS['user']->id, $flag));
-    return $statement->fetchColumn();
-}
-
-function object_add_rate ($object_id, $rate)
-{
-    if (object_check_user($object_id, 'rate')) {
-        return _('Sie haben dieses Objekt bereits bewertet.');
-    }
-
-    $rate = (int)$rate;
-
-    $query = "INSERT INTO object_user (object_id, user_id, flag, mkdate)
-              VALUES (?, ?, 'rate', UNIX_TIMESTAMP())";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id, $GLOBALS['user']->id));
-    
-    $query = "INSERT INTO object_rate (object_id, rate, mkdate)
-              VALUES (?, ?, UNIX_TIMESTAMP())";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id, $rate));
-
-    return _('Sie haben das Objekt mit "' . $rate . '"  bewertet.');
-}
-
-function object_print_rate ($object_id)
-{
-    $query = "SELECT ROUND(AVG(rate), 1)
-              FROM object_rate
-              WHERE object_id = ?";
-    $statement = DBMananager::get()->prepare($query);
-    $statement->execute(array($object_id));
-    return $statement->fetchColumn() ?: '?';
-}
-
-
-
-function object_print_rates_detail ($object_id)
-{
-    $query = "SELECT DISTINCT COUNT(rate), rate
-              FROM object_rate
-              WHERE object_id = ?
-              GROUP BY rate";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id));
-    $result = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-
-    // Ensure a valid result
-    for ($i = 1; $i <= 5; $i++) {
-        if (!isset($result[$i])) {
-            $result[$i] = 0;
-        }
-    }
-
-    return $result;
-}
-
 function object_return_views ($object_id)
 {
     $query = "SELECT views FROM object_views WHERE object_id = ?";
@@ -292,10 +212,4 @@ function object_return_views ($object_id)
     return $statement->fetchColumn() ?: 0;
 }
 
-function object_return_ratecount ($object_id)
-{
-    $query = "SELECT COUNT(rate) FROM object_rate WHERE object_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id));
-    return $statement->fetchColumn() ?: 0;
-}
+

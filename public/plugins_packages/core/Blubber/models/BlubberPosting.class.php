@@ -8,8 +8,6 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once 'lib/classes/SimpleORMap.class.php';
-
 /**
  * Model class for blubber-postings derived from SimpleORMap.
  * Also provides a lot of static helper methods for finding and formating postings.

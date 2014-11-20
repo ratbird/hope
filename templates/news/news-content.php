@@ -17,14 +17,14 @@
                         <b><?= _('Kommentare') ?></b>
                         <? if ($may_edit): ?>
                             &nbsp;
-                            <a href="<?=URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id'].(count(StudipComments::GetCommentsForObject($news['news_id'])) ? '?news_comments_js=toggle&news_basic_js=toggle' : ''))?>"
+                            <a href="<?=URLHelper::getLink('dispatch.php/news/edit_news/'.$news['news_id'].(count(StudipComment::GetCommentsForObject($news['news_id'])) ? '?news_comments_js=toggle&news_basic_js=toggle' : ''))?>"
                                        rel = "get_dialog" target = "_blank">
                                 <?= Assets::img('icons/16/blue/admin.png', tooltip2(_('Bearbeiten'))) ?>
                             </a>
                         <? endif; ?>
                     </td>
                 </tr>
-            <? foreach (StudipComments::GetCommentsForObject($news['news_id']) as $index => $comment): ?>
+            <? foreach (StudipComment::GetCommentsForObject($news['news_id']) as $index => $comment): ?>
                 <?= $this->render_partial('news/comment-box', compact('index', 'comment')) ?>
             <? endforeach; ?>
             <tr>
@@ -54,10 +54,10 @@
         <? else: ?>
             <p align="center">
                 <a href="<?= URLHelper::getLink('?comopen=' . $news['news_id'] . $unamelink . '&r=' . rand() . '#anker') ?>">
-                    <?= sprintf(_('Kommentare lesen (%s) / Kommentar schreiben'), 
-                                StudipComments::NumCommentsForObject($news['news_id'])) ?>
+                    <?= sprintf(_('Kommentare lesen (%s) / Kommentar schreiben'),
+                                StudipComment::NumCommentsForObject($news['news_id'])) ?>
                 </a>
-            </p>            
+            </p>
         <? endif; ?>
     <? endif; ?>
         <? if ($may_edit): ?>

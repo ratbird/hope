@@ -63,7 +63,7 @@ function process_news_commands(&$cmd_data)
  * @param mixed $comment_id (single or array)
  * @return string text for confirmation question or empty string after deletion
  */
-function delete_comments($delete_comments_array = '') 
+function delete_comments($delete_comments_array = '')
 {
     $text = '';
     $confirmed = false;
@@ -75,7 +75,7 @@ function delete_comments($delete_comments_array = '')
     }
     if ($confirmed) {
         foreach ($delete_comments_array as $comment_id) {
-            $delete_comment = new StudipComments($comment_id);
+            $delete_comment = new StudipComment($comment_id);
             if (!$delete_comment->isNew()) {
                 if (!is_object($news[$delete_comment->getValue("object_id")]))
                     $news[$delete_comment->getValue("object_id")] = new StudipNews($delete_comment->getValue("object_id"));
@@ -109,7 +109,7 @@ function delete_comments($delete_comments_array = '')
  * @param mixed $delete_news_array (single id or array)
  * @return string text for confirmation question or empty string after deletion
  */
-function delete_news($delete_news_array) 
+function delete_news($delete_news_array)
 {
     $text = '';
     $confirmed = false;
@@ -157,7 +157,7 @@ function delete_news($delete_news_array)
  * @param string $range_id
  * @return string text for confirmation question or empty string after removal
  */
-function remove_news($remove_array) 
+function remove_news($remove_array)
 {
     $confirmed = false;
     $question_text = array();
@@ -173,7 +173,7 @@ function remove_news($remove_array)
         if (! is_array($ranges))
             $ranges = array($ranges);
         // should we delete news completely
-        if (count($ranges) == count($remove_news->getRanges())) {                
+        if (count($ranges) == count($remove_news->getRanges())) {
             $text = delete_news($news_id);
             if ($text)
                 $question_text[] = $text;
@@ -186,7 +186,7 @@ function remove_news($remove_array)
                         $remove_news->deleteRange($range_id);
                     } else {
                         unset($ranges[$key]);
-                        PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s" aus diesem Bereich.'), htmlReady($remove_news->getValue('topic')))));                            
+                        PageLayout::postMessage(MessageBox::error(sprintf(_('Keine Berechtigung zum Entfernen der Ankündigung "%s" aus diesem Bereich.'), htmlReady($remove_news->getValue('topic')))));
                     }
                     if (count($ranges)) {
                         if (count($ranges) == 1)
@@ -235,7 +235,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     if (is_array($news[Request::option('ndelete')])) {
         CSRFProtection::verifySecurityToken();
         $question_text = delete_news(Request::option('ndelete'));
-        $question_param = array('ndelete' => Request::option('ndelete'), 'yes' => 1);      
+        $question_param = array('ndelete' => Request::option('ndelete'), 'yes' => 1);
         // reload news items
         $news = StudipNews::GetNewsByRange($range_id, true);
         if ($question_text)
@@ -245,11 +245,11 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     elseif ($news[Request::option('nremove')]) {
         CSRFProtection::verifySecurityToken();
         $question_text = remove_news(array(Request::option('nremove') => $range_id));
-        $question_param = array('nremove' => Request::option('nremove'), 'yes' => 1);      
+        $question_param = array('nremove' => Request::option('nremove'), 'yes' => 1);
         // reload news items
         $news = StudipNews::GetNewsByRange($range_id, true);
     }
-    
+
     // Adjust news' open state
     foreach ($news as $id => &$news_item) {
         $news_item['open'] = ($id == $open);
@@ -445,7 +445,7 @@ function show_news_item_content($news_item, $cmd_data, $range_id)
         if (Request::isPost() && $cmd_data['comsubmit'] == $id) {
             $comment_content = trim(Request::get('comment_content'));
             if ($comment_content) {
-                $comment = new StudipComments();
+                $comment = new StudipComment();
                 $comment->setValue('object_id', $id);
                 $comment->setValue('user_id', $auth->auth['uid']);
                 $comment->setValue('content', stripslashes($comment_content));

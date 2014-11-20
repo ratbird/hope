@@ -5,10 +5,10 @@
                     <?= _('Kommentare') ?>
                 </h1>
 
-            <? foreach (StudipComments::GetCommentsForObject($new['news_id']) as $index => $comment): ?>
+            <? foreach (StudipComment::GetCommentsForObject($new['news_id']) as $index => $comment): ?>
                 <?= $this->render_partial('news/_commentbox', compact('index', 'comment')) ?>
             <? endforeach; ?>
-        
+
             <form action="<?= ContentBoxHelper::href($new->id, array('comments' => 1)) ?>" method="POST">
                 <?= CSRFProtection::tokenTag() ?>
                 <input type="hidden" name="comsubmit" value="<?= $new['news_id'] ?>">
@@ -21,7 +21,7 @@
 
         <? else: ?>
         <a href="<?= ContentBoxHelper::href($new['news_id'], array("comments" => 1)) ?>">
-                <?= sprintf(_('Kommentare lesen (%s) / Kommentar schreiben'), StudipComments::NumCommentsForObject($new['news_id']))
+                <?= sprintf(_('Kommentare lesen (%s) / Kommentar schreiben'), StudipComment::NumCommentsForObject($new['news_id']))
                 ?>
             </a>
         <? endif; ?>

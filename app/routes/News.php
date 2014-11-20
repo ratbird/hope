@@ -66,7 +66,7 @@ class News extends \RESTAPI\RouteMap
     {
         $news = $this->requireNews($news_id);
         $news_json = $this->newsToJson($news);
-        
+
         $this->lastmodified($news->chdate);
         $this->expires($news->expire);
         $this->etag(md5(serialize($news_json)));
@@ -230,7 +230,7 @@ class News extends \RESTAPI\RouteMap
             $this->error(400, 'Content required.');
         }
 
-        $comment = new \StudipComments();
+        $comment = new \StudipComment();
         $comment->setData(
             array(
                 'object_id' => $news_id,

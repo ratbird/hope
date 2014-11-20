@@ -7,9 +7,9 @@
 <span style="color: #050"><?= object_return_views($news_item['news_id']) ?></span> |
 
 <? if ($news_item['allow_comments']):
-    $num = StudipComments::NumCommentsForObject($news_item['news_id']);
+    $num = StudipComment::NumCommentsForObject($news_item['news_id']);
     $visited = object_get_visit($news_item['news_id'], 'news', false, false);
-    $new = StudipComments::NumCommentsForObjectSinceLastVisit($news_item['news_id'], $visited, $GLOBALS['user']->id);
+    $new = StudipComment::NumCommentsForObjectSinceLastVisit($news_item['news_id'], $visited, $GLOBALS['user']->id);
 ?>
 
 <? if ($new): ?>

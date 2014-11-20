@@ -18,7 +18,7 @@ STUDIP.Forum = {
 
     init: function () {
         jQuery('html').addClass('forum');
-       
+
         // make categories and areas sortable
         jQuery('#sortable_areas').sortable({
             axis: 'y',
@@ -62,7 +62,7 @@ STUDIP.Forum = {
     insertSmiley: function(textarea_id, element) {
         jQuery('textarea[data-textarea=' + textarea_id + ']').insertAtCaret(jQuery(element).attr('data-smiley'));
     },
-    
+
     approveDelete: function () {
         if (STUDIP.Forum.current_area_id) {
             // hide the area in the dom
@@ -103,7 +103,7 @@ STUDIP.Forum = {
     },
 
     deleteCategory: function (category_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? '.toLocaleString() 
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? '.toLocaleString()
             + 'Alle Bereiche werden dann nach "Allgemein" verschoben!'.toLocaleString(),
             'javascript:STUDIP.Forum.approveDelete()',
             'table[data-category-id=' + category_id +'] td.areaentry');
@@ -113,7 +113,7 @@ STUDIP.Forum = {
 
     editCategoryName: function (category_id) {
         var template = STUDIP.Forum.getTemplate('edit_category');
-        
+
         jQuery('table[data-category-id=' + category_id + '] span.category_name').hide()
             .parent().append(template({
                 category_id : category_id,
@@ -152,7 +152,7 @@ STUDIP.Forum = {
             data: name
         });
     },
-    
+
     saveAreaOrder: function() {
         // iterate over each category and get the areas there
         var areas = {};
@@ -176,7 +176,7 @@ STUDIP.Forum = {
     },
 
     deleteArea: function (element, area_id) {
-        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '.toLocaleString() 
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '.toLocaleString()
             + 'Es werden auch alle Beiträge in diesem Bereich gelöscht!'.toLocaleString(),
             'javascript:STUDIP.Forum.approveDelete()',
             'tr[data-area-id=' + area_id +'] td.areaentry');
@@ -190,11 +190,11 @@ STUDIP.Forum = {
         this.cancelAddArea();
 
         jQuery('table[data-category-id=' + category_id + '] tr.add_area').hide();
-        
+
         $(template({
             category_id : category_id,
         })).appendTo('table[data-category-id=' + category_id + ']');
-        
+
         // #FIXME: there should be a better way to initialize a single form
         STUDIP.Forms.initialize();
     },
@@ -203,7 +203,7 @@ STUDIP.Forum = {
         // store the area only if the validity check has passed
         if ($('form.add_area_form').data('validator').checkValidity()) {
             var values = $('form.add_area_form').serializeObject();
-            
+
             // disable submit and cancel buttons, there is no turning back now
             $('form.add_area_form a.button').attr('disabled', 'disabled');
 
@@ -214,10 +214,10 @@ STUDIP.Forum = {
                     // remove the add-form and enable the addition of another area
                     $('table[data-category-id=' + values.category_id +'] tr.new_area').remove();
                     $('table[data-category-id=' + values.category_id +'] tr.add_area').show();
-                    
+
                     // insert the new area at the end of the list (more precisely: add the exact position where the add-form has been)
                     $(data).appendTo('table[data-category-id=' + values.category_id + ']');
-                    
+
                     STUDIP.Forum.saveAreaOrder();
                 }
             });
@@ -232,7 +232,7 @@ STUDIP.Forum = {
     editArea: function (area_id) {
 
         var template = STUDIP.Forum.getTemplate('edit_area');
-        
+
         jQuery('tr[data-area-id=' + area_id + '] span.areadata').hide()
             .parent().append(template({
                 area_id : area_id,
@@ -253,7 +253,7 @@ STUDIP.Forum = {
         jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit textarea[name=content]').val(
             jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text().trim()
         );
-            
+
             jQuery('tr[data-area-id=' + area_id + '] span.areadata').parent().css('height', '');
     },
 
@@ -273,7 +273,7 @@ STUDIP.Forum = {
             type: 'POST',
             data: name
         });
-        
+
         jQuery('tr[data-area-id=' + area_id + '] span.edit_area').remove();
     },
 
@@ -281,7 +281,7 @@ STUDIP.Forum = {
         jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').attr('data-reset',
             jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').val()
         );
-            
+
         jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').attr('data-reset',
             jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val()
         );
@@ -295,24 +295,24 @@ STUDIP.Forum = {
                 jQuery('span[data-topic-name=' + topic_id +']').html(json.name);
                 jQuery('span[data-topic-content=' + topic_id +']').html(json.content);
                 STUDIP.Markup.element('span[data-topic-content=' + topic_id +']');
-                
+
                 // hide the other stuff
                 jQuery('div[id*=preview]').parent().hide();
                 jQuery('span[data-edit-topic=' + topic_id +']').hide();
-                jQuery('span[data-show-topic=' + topic_id +']').show();  
-                
+                jQuery('span[data-show-topic=' + topic_id +']').show();
+
             }
         });
     },
-    
+
     editEntry: function (topic_id) {
         jQuery('span[data-edit-topic*=]').hide();
         jQuery('span[data-show-topic*=]').show();
-        
+
         jQuery('span[data-show-topic=' + topic_id +']').hide();
         jQuery('span[data-edit-topic=' + topic_id +']').show().find('textarea').focus();
     },
-    
+
     cancelEditEntry: function (topic_id) {
         jQuery('div[id*=preview]').parent().hide();
 
@@ -325,7 +325,7 @@ STUDIP.Forum = {
         );
 
         jQuery('span[data-edit-topic=' + topic_id +']').hide();
-        jQuery('span[data-show-topic=' + topic_id +']').show();  
+        jQuery('span[data-show-topic=' + topic_id +']').show();
     },
 
     newEntry: function() {
@@ -340,10 +340,10 @@ STUDIP.Forum = {
 
         jQuery('#new_entry_button').show();
         jQuery('#new_entry_box').hide();
-        
+
         jQuery('#new_entry_box textarea, #new_entry_box input[name=name]').val('');
         jQuery('#forum_new_entry').data('validator').reset();
-        
+
         // hide and clear preview-window (if any);
         jQuery('#new_entry_preview').parent().hide();
         jQuery('#new_entry_preview').html('');
@@ -354,7 +354,7 @@ STUDIP.Forum = {
         $(window).on('beforeunload', function() {
             return STUDIP.Forum.warning_text;
         });
-        
+
         // move the new-entry-boy to the end of the page (may be displaced by citing-attempts)
         jQuery('#new_entry_box').insertAfter('#new_entry_button');
 
@@ -365,7 +365,7 @@ STUDIP.Forum = {
         $(window).on('beforeunload', function() {
             return STUDIP.Forum.warning_text;
         });
-    
+
         // hide and clear preview-window (if any);
         jQuery('#new_entry_preview').parent().hide();
         jQuery('#new_entry_preview').html('');
@@ -378,7 +378,7 @@ STUDIP.Forum = {
         } else {
             var name = jQuery('span.username[data-profile=' + topic_id + ']').text().trim();
         }
-        
+
         // add content from cited posting in [quote]-tags
         var content = '[quote=' + name + ']' + "\n"
             + jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val()
@@ -387,25 +387,34 @@ STUDIP.Forum = {
         jQuery('#new_entry_box textarea').val(content);
         jQuery('#new_entry_box').insertAfter('form[data-topicid=' + topic_id + ']');
         jQuery('#new_entry_box').addClass('cite_box');
-        
+
         jQuery('input[type=hidden][name=parent]').val(topic_id);
         STUDIP.Forum.newEntry();
     },
-    
+
     forwardEntry: function(topic_id) {
-        var title   = jQuery('span[data-edit-topic=' + topic_id +'] [name=name]').attr('value');
-        var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val();
+        var title   = 'WG: ' + jQuery('span[data-edit-topic=' + topic_id +'] [name=name]').attr('value');
+        var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val().trim();
+        var is_html = (content.indexOf('<') === 0 && content.lastIndexOf('>') === content.length -1);
+        var nl      = is_html ? '<br>' : "\n";
         var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '.toLocaleString()
-                    + "\n\n"
+                    + nl + nl
                     + 'Link zum Beitrag: '.toLocaleString()
-                    + "\n";
-        
-        STUDIP.Forum.postToUrl(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
-            'default_message' :  text
-                + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
-                + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
-                + "\n\n" + content + "\n\n",
-            'default_subject': 'WG: ' + title
+                    + nl
+                    + STUDIP.URLHelper.getURL('plugins.php/coreforum/index/index/'
+                    + topic_id + '?cid=' + STUDIP.Forum.seminar_id + '&again=yes#' + topic_id)
+                    + nl + nl
+                    + content
+                    + nl + nl;
+        if (is_html) {
+            text = '<div>' + text + '</div>';
+        }
+        STUDIP.Dialog.fromURL(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
+            data: {
+                default_body: text,
+                default_subject: title
+            },
+            method: 'post'
         });
     },
 
@@ -418,14 +427,14 @@ STUDIP.Forum = {
 
         // append it to the body-element
         jQuery('body').append(form);
-        
+
         // submit it
         jQuery(form).submit();
     },
 
     moveThreadDialog: function (topic_id) {
         jQuery('tr[data-area-id=' + topic_id +'] td.areaentry').addClass('selected');
-        jQuery('#dialog_' + topic_id).dialog({ 
+        jQuery('#dialog_' + topic_id).dialog({
             height: 400,
             width: 400,
             beforeClose: function() {
@@ -449,36 +458,36 @@ STUDIP.Forum = {
             }
         });
     },
-    
+
     loadAction: function(element, action) {
         jQuery(element).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/'
             + action + '?cid=' + STUDIP.Forum.seminar_id))
     },
-    
+
     showDialog: function(question, confirm, highlight_element) {
         if (highlight_element !== null) {
             // STUDIP.Forum.highlightedElement = highlight_element;
             jQuery(highlight_element).addClass('selected');
         }
-        
+
         jQuery('body').append(STUDIP.Forum.confirmDialog({
             question: question,
             confirm: confirm
         }));
     },
-    
+
     closeDialog: function() {
         jQuery('#forum td.selected').removeClass('selected');
         jQuery('div.modaloverlay').remove();
     },
-    
+
     setFavorite: function(topic_id) {
         jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/set_favorite/'
             + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
         jQuery('a.marked[data-topic-id=' + topic_id +']').show();
         return false;
     },
-    
+
     unsetFavorite: function(topic_id) {
         jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/unset_favorite/'
             + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
@@ -492,9 +501,9 @@ STUDIP.Forum = {
             jQuery('li[data-id=' + topic_id + '] ul').remove();
             return;
         }
-        
+
         // jQuery('li[data-id=' + topic_id + '] > a.tooltip2').showAjaxNotification();
-        
+
         // load children from server and show them
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/admin/childs/' + topic_id), {
             dataType: 'html',
@@ -542,7 +551,7 @@ STUDIP.Forum = {
         jQuery('li[data-id=' + topic_id +']').removeClass('selected');
         jQuery('li[data-id=' + topic_id + '] a[data-role=cut]').show();
         jQuery('li[data-id=' + topic_id + '] > a[data-role=cancel_cut]').hide();
-        
+
         delete STUDIP.Forum.clipboard[topic_id];
 
         // all children are now valid paste-targets again
@@ -580,7 +589,7 @@ STUDIP.Forum = {
                 jQuery('a[data-role=cut]').show();
                 jQuery('a[data-role=cancel_cut]').hide();
                 jQuery('a[data-role=paste]').hide();
-                jQuery('li.selected').removeClass('selected');                
+                jQuery('li.selected').removeClass('selected');
             }
         });
     },
@@ -596,27 +605,27 @@ STUDIP.Forum = {
             jQuery(this).find('a[data-role=paste]').hide();
         });
     },
-    
+
     openThreadFromOverview: function(topic_id, parent_topic_id, page) {
         var buttonText = "Thema schließen".toLocaleString();
         jQuery('#closeButton-' + topic_id + ' img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/black/lock-locked.png');
         jQuery('#closeButton-' + topic_id + ' img').attr('title', buttonText);
         jQuery('#closeButton-' + topic_id).attr('onclick', 'STUDIP.Forum.closeThreadFromOverview("' + topic_id + '", "' + parent_topic_id + '", ' + page + '); return false;');
         jQuery('#img-locked-' + topic_id).hide();
-        
+
         STUDIP.Forum.openThread(topic_id, parent_topic_id, page, false);
     },
-    
+
     openThreadFromThread: function(topic_id, page) {
         var buttonText = "Thema schließen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.closeThreadFromThread("' + topic_id + '", ' + page + '); return false;');
         jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-locked.png' + ")");
         jQuery('.hideWhenClosed').show();
-        
+
         STUDIP.Forum.openThread(topic_id, topic_id, page, true);
     },
-    
+
     openThread: function(topic_id, redirect, page, showSuccessMessage) {
         jQuery.ajax({
             type: 'GET',
@@ -627,33 +636,33 @@ STUDIP.Forum = {
                 }
             }
         });
-                
+
         return false;
     },
-    
+
     closeThreadFromOverview: function(topic_id, parent_topic_id, page) {
         var buttonText = "Thema öffnen".toLocaleString();
         jQuery('#closeButton-' + topic_id + ' img').attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-unlocked.png');
         jQuery('#closeButton-' + topic_id + ' img').attr('title', buttonText);
         jQuery('#closeButton-' + topic_id).attr('onclick', 'STUDIP.Forum.openThreadFromOverview("' + topic_id + '", ' + page + '); return false;');
-        
+
         jQuery('#img-locked-' + topic_id).show();
-        
+
         STUDIP.Forum.closeThread(topic_id, parent_topic_id, page, false);
     },
-    
+
     closeThreadFromThread: function(topic_id, page) {
         var buttonText = "Thema öffnen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.openThreadFromThread("' + topic_id + '", '+ page +'); return false;');
         jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-unlocked.png' + ")");
         jQuery('.hideWhenClosed').hide();
-        
+
         STUDIP.Forum.closeThread(topic_id, topic_id, page, true);
     },
-    
+
     closeThread: function(topic_id, redirect, page, showSuccessMessage) {
-        
+
         jQuery.ajax({
             type: 'GET',
             url: STUDIP.URLHelper.getURL('plugins.php/coreforum/index/close_thread/' + topic_id + '/' + redirect + '/' + page),
@@ -663,10 +672,10 @@ STUDIP.Forum = {
                 }
             }
         });
-        
+
         return false;
     },
-    
+
     makeThreadStickyFromThread: function(topic_id) {
         jQuery.ajax({
             type: 'GET',
@@ -678,10 +687,10 @@ STUDIP.Forum = {
                 jQuery('#stickyButton').attr('onclick', 'STUDIP.Forum.makeThreadUnstickyFromThread("' + topic_id + '"); return false;');
             }
         });
-        
+
         return false;
     },
-    
+
     makeThreadUnstickyFromThread: function(topic_id) {
         jQuery.ajax({
             type: 'GET',
@@ -693,7 +702,7 @@ STUDIP.Forum = {
                 jQuery('#stickyButton').attr('onclick', 'STUDIP.Forum.makeThreadStickyFromThread("' + topic_id + '"); return false;');
             }
         });
-        
+
         return false;
     },
 };
@@ -732,7 +741,7 @@ jQuery.fn.extend({
     }
 });
 
-/** 
+/**
  * Thanks to Tobias Cohen for this function
  * http://stackoverflow.com/questions/1184624/convert-form-data-to-js-object-with-jquery
  */

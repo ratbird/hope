@@ -131,6 +131,10 @@ class Course_AdmissionController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::info(_("Diese Veranstaltung ist teilnahmebeschränkt, aber die maximale Teilnehmeranzahl ist nicht gesetzt.")));
             }
         }
+        $lockdata = LockRules::getObjectRule($this->course_id);
+        if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id, $lockdata['permission'])) {
+            PageLayout::postMessage(MessageBox::info(formatLinks($lockdata['description'])));
+        }
     }
 
     /**

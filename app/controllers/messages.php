@@ -377,7 +377,7 @@ class MessagesController extends AuthenticatedController {
                 join(', ', $message->getRecipients()->getFullname()) :
                 $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), count($message->receivers)-1);
             $this->msg['attachments'] = $message->attachments->toArray('filename filesize');
-            PageLayout::setTitle($data['subject']);
+            PageLayout::setTitle($this->msg['subject']);
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         } else {
             $this->set_status(400);

@@ -300,7 +300,7 @@ jQuery(function ($) {
             $(document.body).trigger('sticky_kit:recalc');
         });
     }
-    
+
     $('a.print_action').live('click', function (event) {
         var url_to_print = this.href;
         $('<iframe/>', {
@@ -369,3 +369,26 @@ jQuery(document).ready(function ($) {
     $('#checkAll').attr('checked', $('.sem_checkbox:checked').length !== 0);
 });
 
+
+/* notify MathJax about new content*/
+jQuery(document)
+    .on('dialog-open',
+        function (event) {
+            if (typeof MathJax !== 'undefined') {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.dialog]);
+            }
+        });
+
+/*override window.print to allow mathjax rendering to finish before printing*/
+(function (origPrint) {
+     window.print = function () {
+       if (typeof MathJax !== 'undefined') {
+          MathJax.Hub.Queue(
+              ["Delay",MathJax.Callback,700],
+                origPrint
+                );
+         } else {
+            origPrint();
+         }
+     }
+})(window.print);

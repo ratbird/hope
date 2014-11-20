@@ -13,6 +13,10 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
+ * @property string vote_id database column
+ * @property string user_id database column
+ * @property string votedate database column
+ * @property string id computed column read/write
  */
 class VoteUser extends SimpleORMap
 {

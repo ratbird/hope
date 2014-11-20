@@ -49,6 +49,9 @@
  * @property string admission_waitlist_max database column
  * @property string admission_disable_waitlist_move database column
  * @property string end_time computed column read/write
+ * @property SimpleORMapCollection topics has_many CourseTopic
+ * @property SimpleORMapCollection dates has_many CourseDate
+ * @property SimpleORMapCollection ex_dates has_many CourseExDate
  * @property SimpleORMapCollection members has_many CourseMember
  * @property SimpleORMapCollection statusgruppen has_many Statusgruppen
  * @property SimpleORMapCollection admission_applicants has_many AdmissionApplication

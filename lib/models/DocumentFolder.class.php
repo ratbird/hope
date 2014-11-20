@@ -24,6 +24,7 @@
  * @property string mkdate database column
  * @property string chdate database column
  * @property string priority database column
+ * @property SimpleORMapCollection files has_many StudipDocument
  */
 
 class DocumentFolder extends SimpleORMap

@@ -34,6 +34,7 @@
  * @property SimpleORMapCollection members has_many InstituteMember
  * @property SimpleORMapCollection home_courses has_many Course
  * @property SimpleORMapCollection sub_institutes has_many Institute
+ * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
  * @property Institute faculty belongs_to Institute
  * @property SimpleORMapCollection courses has_and_belongs_to_many Course
  */

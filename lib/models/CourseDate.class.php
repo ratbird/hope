@@ -10,6 +10,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string termin_id database column
+ * @property string id alias column for termin_id
+ * @property string range_id database column
+ * @property string autor_id database column
+ * @property string content database column
+ * @property string description database column
+ * @property string date database column
+ * @property string end_time database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string date_typ database column
+ * @property string topic_id database column
+ * @property string raum database column
+ * @property string metadate_id database column
+ * @property User author belongs_to User
+ * @property Course course belongs_to Course
+ * @property SeminarCycleDate cycle belongs_to SeminarCycleDate
+ * @property ResourceAssignment room_assignment has_one ResourceAssignment
+ * @property SimpleORMapCollection topics has_and_belongs_to_many CourseTopic
+ * @property SimpleORMapCollection statusgruppen has_and_belongs_to_many Statusgruppen
+ * @property SimpleORMapCollection dozenten has_and_belongs_to_many User
  */
 
 class CourseDate extends SimpleORMap {

@@ -29,17 +29,20 @@
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
- * @property string tour_id database column
- * @property string id alias column for tour_id
- * @property string name database column
- * @property string description database column
- * @property string type database column
- * @property string roles database column
- * @property string version database column
+ * @property string content_id database column
  * @property string language database column
+ * @property string label database column
+ * @property string icon database column
+ * @property string content database column
+ * @property string route database column
  * @property string studip_version database column
- * @property string installation_id column
- * @property int mkdate database column
+ * @property string position database column
+ * @property string custom database column
+ * @property string visible database column
+ * @property string author_id database column
+ * @property string installation_id database column
+ * @property string mkdate database column
+ * @property string id computed column read/write
  */
 class HelpContent extends SimpleORMap {
     

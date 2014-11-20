@@ -19,11 +19,11 @@
  * @property string message database column
  * @property string mkdate database column
  * @property string readed database column
- * @property string reading_confirmation database column
  * @property string priority database column
- * @property SimpleORMapCollection users has_many MessageUser
+ * @property SimpleORMapCollection receivers has_many MessageUser
  * @property SimpleORMapCollection attachments has_many StudipDocument
  * @property User author has_one User
+ * @property MessageUser originator has_one MessageUser
  */
 
 class Message extends SimpleORMap

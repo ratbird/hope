@@ -18,7 +18,7 @@
  * @property string chdate database column
  * @property string version database column
  * @property string id computed column read/write
- * @property User author has_one User
+ * @property User author belongs_to User
  */
 
 class WikiPage extends SimpleORMap {

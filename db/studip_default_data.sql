@@ -97,7 +97,7 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('8481ee7faec9805d577de600a0835bc3', '', 'EXTERN_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die externen Seiten global verfügbar sind.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ded48fe2ca250e104dc33fb6f0b42c67', '', 'VOTE_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die Umfragen global verfügbar sind.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('46a02bfefc7b643a1ea40b7e10d4c037', '', 'ELEARNING_INTERFACE_ENABLE', '0', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die Lernmodule global verfügbar sind.', '', '');
-INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('13352bc45ff23f577340eb88e343a3ec', '', 'STM_ENABLE', '0', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die Studienmodule global verfügbar sind.', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('55241293c1a418caa62c72af8b3c2506', '', 'MY_COURSES_ENABLE_STUDYGROUPS', '0', 0, 'boolean', 'global', 'MeineVeranstaltungen', 0, 1416496224, 1416496224, 'Sollen Studiengruppen in einem eigenen Bereich angezeigt werden (Neues Navigationelement in Meine Veranstaltungen)?.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ad82e1d6bd97320244362974c460bc7d', '', 'WIKI_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob das Wiki global verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('250306a36a09d6465ee3fd24c66932f4', '', 'SMILEYADMIN_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die Administration der Smileys verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('bdc9e8e9f5174f3ef668a87adef906eb', '', 'LOG_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob das Log global verfügbar ist.', '', '');
@@ -145,6 +145,12 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('38328e236221a3f14ddaee121e30e48a', '', 'ENABLE_COURSESET_FCFS', '0', 1, 'boolean', 'global', 'coursesets', 0, 1403258021, 1403258021, 'Soll first-come-first-served (Windhundverfahren) bei der Anmeldung erlaubt sein?', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('e8cd96580149cde65ad69b6cf18d5c4A', '', 'WYSIWYG', '0', 1, 'boolean', 'global', 'global', 0, 1403258021, 1403258021, 'Aktiviert den WYSIWYG Editor im JavaScript.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('e6b6b8be6caf8abf0904c29e30e9b129', '', 'SCORE_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1403258021, 1403258021, 'Schaltet ein oder aus, ob die Rangliste und die Score-Funktion global verfügbar sind.', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('aff56f98d59aabf19d82b38e06487b1a', '', 'TOURS_ENABLE', '1', 1, 'boolean', 'global', 'global', 0, 1416496223, 1416496223, 'Aktiviert die Funktionen zum Anbieten von Touren in Stud.IP', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('3a7d9b0a0c876fd30594637dd7c070ec', '', 'MY_COURSES_ENABLE_ALL_SEMESTERS', '0', 0, 'boolean', 'global', 'MeineVeranstaltungen', 0, 1416496224, 1416496224, 'Ermöglicht die Anzeige von allen Semestern unter meine Veranstaltungen.', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('8aea17b0efc1ea0f2398c9994dacbf6b', '', 'PERSONALDOCUMENT_ENABLE', '0', 1, 'boolean', 'global', 'files', 0, 1416496270, 1416496270, 'Aktiviert den persoenlichen Dateibereich', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('c2ccf01a7f229f94b76cd37ec9360a7d', '', 'COURSE_SEM_TREE_DISPLAY', '0', 1, 'boolean', 'global', 'global', 0, 1416496270, 1416496270, 'Zeigt den Studienbereichsbaum als Baum an', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('c0c57c05aebfb9b54953bea7948a0578', '', 'COURSE_SEM_TREE_CLOSED_LEVELS', '[1]', 1, 'array', 'global', 'global', 0, 1416496270, 1416496270, 'Gibt an, welche Ebenen der Studienbereichszuordnung geschlossen bleiben sollen', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('008df4d1780faecb957bbee3d3140918', '', 'HELP_CONTENT_CURRENT_VERSION', '3.1', 1, 'string', 'global', 'global', 0, 1416496271, 1416496271, 'Aktuelle Version der Helpbar-Einträge in Stud.IP', '', '');
 
 --
 -- Daten für Tabelle `cronjobs_schedules`
@@ -281,6 +287,11 @@ INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, 
 
 INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(1, 'Blubber', 'core/Blubber', 'Blubber', 'StandardPlugin,SystemPlugin', 'yes', 1, NULL);
 INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(2, 'CoreForum', 'core/Forum', 'Forum', 'ForumModule,StandardPlugin,StudipModule', 'yes', 2, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(3, 'EvaluationsWidget', 'core/EvaluationsWidget', 'EvaluationsWidget', 'PortalPlugin', 'yes', 3, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(4, 'NewsWidget', 'core/NewsWidget', 'NewsWidget', 'PortalPlugin', 'yes', 4, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(5, 'QuickSelection', 'core/QuickSelection', 'QuickSelection', 'PortalPlugin', 'yes', 5, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(6, 'ScheduleWidget', 'core/ScheduleWidget', 'ScheduleWidget', 'PortalPlugin', 'yes', 6, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(7, 'TerminWidget', 'core/TerminWidget', 'TerminWidget', 'PortalPlugin', 'yes', 7, NULL);
 
 --
 -- Dumping data for table `roles`
@@ -300,18 +311,49 @@ INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(7, 'Nobody', 'y');
 
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 3);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 4);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 5);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 6);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 7);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(7, 1);
 INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(7, 2);
+
 
 --
 -- Dumping data for table `roles_studipperms`
@@ -336,20 +378,20 @@ INSERT INTO `roles_user` (`roleid`, `userid`, `institut_id`) VALUES(7, 'nobody',
 -- Dumping data for table `schema_version`
 --
 
-INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 136);
+INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 150);
 
 --
 -- Dumping data for table `semester_data`
 --
 
-INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('f2b4fdf5ac59a9cb57dd73c4d3bbb651', 'SS 2014', '', '', 1396303200, 1412114399, 1397426400, 1405720799);
+INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('f2b4fdf5ac59a9cb57dd73c4d3bbb651', 'SS 2015', '', '', 1427839200, 1443650399, 1428962400, 1437256799);
 INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('eb828ebb81bb946fac4108521a3b4697', 'WS 2013/14', '', '', 1380578400, 1396303199, 1382306400, 1391900399);
 
 --
 -- Dumping data for table `semester_holiday`
 --
 
-INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`) VALUES('75a24d5f6f0c4f633d5293221629b9a6', '1', 'Weihnachtsferien 2013/2014', '', 1387839600, 1388617199);
+INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`) VALUES('75a24d5f6f0c4f633d5293221629b9a6', '1', 'Weihnachtsferien 2014/2015', '', 1419375600, 1420153199);
 
 --
 -- Dumping data for table `sem_classes`
@@ -397,3 +439,47 @@ INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `c
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(1, NULL, '[lang=de]Kontakt[/lang][lang=en]Contact[/lang]');
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(2, NULL, '[lang=de]Über Stud.IP[/lang][lang=en]About Stud.IP[/lang]');
 
+--
+-- Daten für Tabelle `doc_filetype`
+--
+
+INSERT INTO `doc_filetype` (`id`, `type`, `description`) VALUES(1, 'exe', NULL);
+INSERT INTO `doc_filetype` (`id`, `type`, `description`) VALUES(2, 'com', NULL);
+INSERT INTO `doc_filetype` (`id`, `type`, `description`) VALUES(3, 'pif', NULL);
+INSERT INTO `doc_filetype` (`id`, `type`, `description`) VALUES(4, 'bat', NULL);
+INSERT INTO `doc_filetype` (`id`, `type`, `description`) VALUES(5, 'scr', NULL);
+
+--
+-- Daten für Tabelle `doc_usergroup_config`
+--
+
+INSERT INTO `doc_usergroup_config` (`id`, `usergroup`, `upload_quota`, `upload_unit`, `quota`, `quota_unit`, `upload_forbidden`, `area_close`, `area_close_text`, `is_group_config`) VALUES(1, 'default', '5242880', 'MB', '52428800', 'MB', 0, 0, NULL, 1);
+
+--
+-- Daten für Tabelle `widget_default`
+--
+
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'user');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'autor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'tutor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'dozent');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'admin');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(5, 0, 0, 'root');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'user');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'autor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'tutor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'dozent');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'admin');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(4, 0, 1, 'root');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'user');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'autor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'tutor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'dozent');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'admin');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(7, 0, 2, 'root');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'user');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'autor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'tutor');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'dozent');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'admin');
+INSERT INTO `widget_default` (`pluginid`, `col`, `position`, `perm`) VALUES(3, 0, 3, 'root');

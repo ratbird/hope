@@ -24,7 +24,6 @@
  * @property string class database column
  * @property string type database column
  * @property SimpleORMapCollection events has_many LogEvent
- * @property d on_delete d d
  */
 class LogAction extends SimpleORMap
 {

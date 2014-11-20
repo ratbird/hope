@@ -23,10 +23,12 @@ require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
  * @property string termin_id database column
  * @property string metadate_id database column
  * @property string user_id database column
+ * @property string last_modified_by database column
  * @property string resource_id database column
  * @property string category_id database column
  * @property string comment database column
  * @property string reply_comment database column
+ * @property string reply_recipients database column
  * @property string closed database column
  * @property string mkdate database column
  * @property string chdate database column

@@ -24,13 +24,13 @@
  * @property string visible database column
  * @property string label database column
  * @property string bind_calendar database column
- * @property string vorname computed column
- * @property string nachname computed column
- * @property string username computed column
- * @property string email computed column
- * @property string title_front computed column
- * @property string title_rear computed column
- * @property string course_name computed column
+ * @property string vorname computed column read/write
+ * @property string nachname computed column read/write
+ * @property string username computed column read/write
+ * @property string email computed column read/write
+ * @property string title_front computed column read/write
+ * @property string title_rear computed column read/write
+ * @property string course_name computed column read/write
  * @property string id computed column read/write
  * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
  * @property User user belongs_to User

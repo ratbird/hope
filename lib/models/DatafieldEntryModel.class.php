@@ -19,7 +19,7 @@
  * @property string mkdate database column
  * @property string chdate database column
  * @property string sec_range_id database column
- * @property string name computed column
+ * @property string name computed column read/write
  * @property string id computed column read/write
  * @property Datafield datafield belongs_to Datafield
  */

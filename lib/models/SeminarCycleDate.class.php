@@ -29,6 +29,9 @@
  * @property string start_minute computed column read/write
  * @property string end_hour computed column read/write
  * @property string end_minute computed column read/write
+ * @property SimpleORMapCollection dates has_many CourseDate
+ * @property Course course belongs_to Course
+ * @property RoomRequest room_request has_one RoomRequest
  */
 
 class SeminarCycleDate extends SimpleORMap

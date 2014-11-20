@@ -33,6 +33,7 @@
  * @property string tour_id database column
  * @property string range_id database column
  * @property string type database column
+ * @property string id computed column read/write
  */
 class HelpTourAudience extends SimpleORMap
 {

@@ -32,8 +32,9 @@
  * 
  * @property string tour_id database column
  * @property string user_id database column
- * @property int step database column
- * @property int completed database column
+ * @property string step_nr database column
+ * @property string completed database column
+ * @property string id computed column read/write
  */
 class HelpTourUser extends SimpleORMap
 {

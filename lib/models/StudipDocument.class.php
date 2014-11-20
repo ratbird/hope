@@ -47,6 +47,12 @@
  * @property string protected database column
  * @property string priority database column
  * @property string author_name database column
+ * @property DocumentFolder folder belongs_to DocumentFolder
+ * @property User author belongs_to User
+ * @property Message message belongs_to Message
+ * @property Course course belongs_to Course
+ * @property Institute institute belongs_to Institute
+ * @property User user belongs_to User
  */
 class StudipDocument extends SimpleORMap {
 

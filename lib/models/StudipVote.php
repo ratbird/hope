@@ -14,6 +14,34 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.1
+ * @property string vote_id database column
+ * @property string id alias column for vote_id
+ * @property string author_id database column
+ * @property string range_id database column
+ * @property string type database column
+ * @property string title database column
+ * @property string question database column
+ * @property string state database column
+ * @property string startdate database column
+ * @property string stopdate database column
+ * @property string timespan database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string resultvisibility database column
+ * @property string multiplechoice database column
+ * @property string anonymous database column
+ * @property string changeable database column
+ * @property string co_visibility database column
+ * @property string namesvisibility database column
+ * @property string users computed column
+ * @property string count computed column
+ * @property string maxvotes computed column
+ * @property string countinfo computed column
+ * @property string anonymousinfo computed column
+ * @property string endinfo computed column
+ * @property SimpleORMapCollection answers has_many VoteAnswer
+ * @property SimpleORMapCollection anonymous_users has_many VoteUser
+ * @property User author belongs_to User
  */
 class StudipVote extends SimpleORMap
 {

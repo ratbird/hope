@@ -31,7 +31,8 @@
  * @category    Stud.IP
  * 
  * @property string tour_id database column
- * @property int active database column
+ * @property string id alias column for tour_id
+ * @property string active database column
  * @property string access database column
  */
 class HelpTourSettings extends SimpleORMap

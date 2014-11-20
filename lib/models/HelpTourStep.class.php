@@ -31,15 +31,17 @@
  * @category    Stud.IP
  * 
  * @property string tour_id database column
- * @property int step database column
+ * @property string step database column
  * @property string title database column
  * @property string tip database column
  * @property string orientation database column
+ * @property string interactive database column
  * @property string css_selector database column
  * @property string route database column
  * @property string author_id database column
- * @property string route database column
- * @property int mkdate database column
+ * @property string mkdate database column
+ * @property string id computed column read/write
+ * @property HelpTours help_tour belongs_to HelpTours
  */
 class HelpTourStep extends SimpleORMap
 {

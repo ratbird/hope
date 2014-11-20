@@ -13,6 +13,26 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string assign_id database column
+ * @property string id alias column for assign_id
+ * @property string resource_id database column
+ * @property string assign_user_id database column
+ * @property string user_free_name database column
+ * @property string begin database column
+ * @property string end database column
+ * @property string repeat_end database column
+ * @property string repeat_quantity database column
+ * @property string repeat_interval database column
+ * @property string repeat_month_of_year database column
+ * @property string repeat_day_of_month database column
+ * @property string repeat_week_of_month database column
+ * @property string repeat_day_of_week database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property string comment_internal database column
+ * @property ResourceObject resource belongs_to ResourceObject
+ * @property CourseDate date belongs_to CourseDate
+ * @property User user belongs_to User
  */
 
 class ResourceAssignment extends SimpleORMap

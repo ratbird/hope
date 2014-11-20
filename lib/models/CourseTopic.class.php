@@ -10,6 +10,19 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string issue_id database column
+ * @property string id alias column for issue_id
+ * @property string seminar_id database column
+ * @property string author_id database column
+ * @property string title database column
+ * @property string description database column
+ * @property string priority database column
+ * @property string mkdate database column
+ * @property string chdate database column
+ * @property DocumentFolder folder belongs_to DocumentFolder
+ * @property Course course belongs_to Course
+ * @property User author belongs_to User
+ * @property SimpleORMapCollection dates has_and_belongs_to_many CourseDate
  */
 
 class CourseTopic extends SimpleORMap {

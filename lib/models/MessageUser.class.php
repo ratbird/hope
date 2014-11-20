@@ -16,13 +16,12 @@
  * @property string readed database column
  * @property string deleted database column
  * @property string snd_rec database column
- * @property string folder database column
  * @property string confirmed_read database column
  * @property string answered database column
  * @property string mkdate database column
  * @property string id computed column read/write
- * @property User user has_one User
- * @property Message message has_one Message
+ * @property User user belongs_to User
+ * @property Message message belongs_to Message
  */
 
 class MessageUser extends SimpleORMap

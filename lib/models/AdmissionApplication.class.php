@@ -20,11 +20,13 @@
  * @property string position database column
  * @property string comment database column
  * @property string visible database column
- * @property string vorname computed column
- * @property string nachname computed column
- * @property string username computed column
- * @property string email computed column
- * @property string course_name computed column
+ * @property string vorname computed column read/write
+ * @property string nachname computed column read/write
+ * @property string username computed column read/write
+ * @property string email computed column read/write
+ * @property string title_front computed column read/write
+ * @property string title_rear computed column read/write
+ * @property string course_name computed column read/write
  * @property string id computed column read/write
  * @property User user belongs_to User
  * @property Course course belongs_to Course

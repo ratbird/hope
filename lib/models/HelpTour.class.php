@@ -38,10 +38,11 @@ require_once 'lib/object.inc.php';
  * @property string version database column
  * @property string language database column
  * @property string studip_version database column
- * @property string installation_id column
- * @property int mkdate database column
- * @property SimpleORMapCollection audiences has_many HelpTourAudience
+ * @property string installation_id database column
+ * @property string mkdate database column
  * @property SimpleORMapCollection steps has_many HelpTourStep
+ * @property SimpleORMapCollection audiences has_many HelpTourAudience
+ * @property HelpTourSettings settings has_one HelpTourSettings
  */
 class HelpTour extends SimpleORMap {
 

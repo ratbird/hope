@@ -14,6 +14,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
+ * @property string answer_id database column
+ * @property string id alias column for answer_id
+ * @property string vote_id database column
+ * @property string answer database column
+ * @property string position database column
+ * @property string counter database column
+ * @property string correct database column
+ * @property string count computed column
+ * @property string prepare computed column
+ * @property string usernames computed column
+ * @property SimpleORMapCollection users has_many VoteAnswerUser
+ * @property StudipVote vote belongs_to StudipVote
  */
 class VoteAnswer extends SimpleORMap
 {

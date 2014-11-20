@@ -26,6 +26,7 @@
  * @property string fakultaet database column
  * @property string dump database column
  * @property string archiv_file_id database column
+ * @property string archiv_protected_file_id database column
  * @property string mkdate database column
  * @property string forumdump database column
  * @property string wikidump database column

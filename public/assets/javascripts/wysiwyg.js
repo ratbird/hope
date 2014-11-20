@@ -104,8 +104,7 @@ jQuery(function ($) {
                 h6: {},
                 hr: {},
                 img: {
-                    attributes: ['alt', '!src'],
-                    style: ['height', 'width']
+                    attributes: ['alt', '!src', 'height', 'width']
                 },
                 li: {},
                 ol: {},

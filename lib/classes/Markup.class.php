@@ -194,7 +194,7 @@ class Markup
             h5
             h6
             hr
-            img[alt|src|style]
+            img[alt|src|height|width]
             li
             ol
             p[style]
@@ -235,8 +235,6 @@ class Markup
         $config->set('CSS.AllowedProperties', array(
             'margin-left',
             'text-align',
-            'height',
-            'width',
             'color',
             'background-color'
         ));

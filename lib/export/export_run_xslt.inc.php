@@ -38,8 +38,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) require_once('vendor/php4-to-php5/xslt-php4-to-php5.php');
-
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
     $perm->check("tutor");
 
@@ -99,8 +97,7 @@ if (!CheckParamRUN())
 }
 else
 {
-    // Allocate a new XSLT processor
-    $xh = xslt_create();
+
 
     // Process the document
     $result_file = md5(uniqid(rand())) . "." . $format;
@@ -108,22 +105,35 @@ else
     $xml_process_file = "" . $TMP_PATH . "/export/" . $xml_file_id;
     $xslt_process_file = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $PATH_EXPORT . "/" . $xslt_files[$choose]["file"];
 
-    if (xslt_process($xh, "file://$xml_process_file" , "file://$xslt_process_file", "file://$result") && ($o_mode != "passthrough")) {
-        $export_msg .= sprintf(_("Die Daten wurden erfolgreich konvertiert. %s Sie können die Ausgabedatei jetzt herunterladen. %s"), "<br>", "<br>");
-        $xslt_info = _("Die Daten sind nun im gewählten Format verfügbar.");
+    $xh = new XSLTProcessor();
+    $xml_doc = new DOMDocument();
+    $xml_doc->load($xml_process_file);
+    $xsl_doc = new DOMDocument();
+    $xsl_doc->load($xslt_process_file);
+    $xh->importStylesheet($xsl_doc);
+    $result_doc = $xh->transformToXML($xml_doc);
+    if ($result_doc) {
+        $processed = true;
+        file_put_contents($result, $result_doc);
+    } else {
+        $xh = libxml_get_last_error();
+    }
+
+
+    if ( $processed && ($o_mode != "passthrough")) {
+        $export_msg .= sprintf(_("Die Daten wurden erfolgreich konvertiert. %s Sie k&ouml;nnen die Ausgabedatei jetzt herunterladen. %s"), "<br>", "<br>");
+        $xslt_info = _("Die Daten sind nun im gew&auml;hlten Format verf&uuml;gbar.");
         $xslt_process = true;
         $link1 = "<a href=\"" . $TMP_PATH . "/" . $result_file . "\">";
         $link2 = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '">';
 
     } elseif ($o_mode != "passthrough") {
 
-        $export_error .= sprintf(_("Bei der Konvertierung ist ein Fehler aufgetreten. %sDer XSLT-Prozessor meldet den Fehler Nr. %s: %s %s"), "<br>", xslt_errno($xh), xslt_error($xh), "<br>");
+        if ($xh) $export_error .= sprintf(_("Bei der Konvertierung ist ein Fehler aufgetreten. %sDer XSLT-Prozessor meldet den Fehler  %s %s"), "<br>", $xh->code, "<br>");
         $xslt_info = _("Bei der Konvertierung ist ein Fehler aufgetreten.");
         $xslt_process = false;
         $export_error_num++;
     }
-
-    xslt_free($xh);
 
 
     if ($o_mode == "passthrough")

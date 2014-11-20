@@ -48,7 +48,7 @@ class Score
     function PublishScore()
     {
         global $user;
-        
+
         $query = "UPDATE user_info SET score = ? WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->myscore, $user->id));
@@ -59,11 +59,11 @@ class Score
     function KillScore()
     {
         global $user;
-        
+
         $query = "UPDATE user_info SET score = 0 WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user->id));
-        
+
         $this->publik = FALSE;
     }
 
@@ -105,7 +105,7 @@ class Score
                   LEFT JOIN auth_user_md5 AS b USING (user_id)
                   WHERE score > 0";
         $statement = DBManager::get()->query($query);
-        
+
         $s = 0;
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $this->score_content_cache[$row['user_id']]['username'] = $row['username'];
@@ -276,11 +276,11 @@ class Score
     */
     function GetMyScore($user_id = null)
     {
+        $user_id || $user_id = $GLOBALS['user']->id;
         $cache = StudipCacheFactory::getCache();
         if ($cache->read("user_score_of_".$user_id)) {
             return $cache->read("user_score_of_".$user_id);
         }
-        $user_id || $user_id = $GLOBALS['user']->id;
         //Behold! The all new mighty score algorithm!
         //Step 1: Select all activities as mkdate-timestamps.
         //Step 2: Group these activities to timeslots of halfhours

@@ -237,8 +237,9 @@
                 return;
             }
 
-            options.title   = xhr.getResponseHeader('X-Title') || options.title;
-            options.buttons = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
+            options.wiki_link = xhr.getResponseHeader('X-Wikilink');
+            options.title     = xhr.getResponseHeader('X-Title') || options.title;
+            options.buttons   = options.buttons && !xhr.getResponseHeader('X-No-Buttons');
 
             STUDIP.Dialog.show(response, options);
         }).always(function () {
@@ -310,6 +311,13 @@
             modal:   true,
             resizable: 'resize' in options ? options.resize : true,
             open: function () {
+                var helpbar_element = $('.helpbar a[href*="docs.studip.de"]'),
+                    tooltip = helpbar_element.text(),
+                    link    = options.wiki_link || helpbar_element.attr('href'),
+                    element = $('<a class="ui-dialog-titlebar-wiki" target="_blank">').attr('href', link).attr('title', tooltip);
+
+                $(this).siblings('.ui-dialog-titlebar').find('.ui-dialog-titlebar-close').before(element);
+
                 instance.open = true;
                 // Execute scripts
                 $('head').append(scripts);

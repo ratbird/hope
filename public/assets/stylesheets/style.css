@@ -5680,6 +5680,23 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
   padding: 0;
 }
+.ui-dialog-titlebar-wiki {
+  background-image: url("../images/icons/32/white/question-circle.png");
+  background-image: none, url("../images/icons/white/question-circle.svg");
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin-top: -16px;
+  top: 50%;
+  right: 34px;
+}
 .modal-overlay {
   background: rgba(40, 73, 124, 0.5);
   opacity: 1;

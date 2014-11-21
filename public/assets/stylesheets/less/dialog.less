@@ -94,6 +94,17 @@
         }
     }
 }
+.ui-dialog-titlebar-wiki {
+    .retina-background-icon('white/question-circle.png', 24);
+    background-position: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    position: absolute;
+    .square(32px);
+    margin-top: -16px;
+    top: 50%;
+    right: 34px; // This is ugly but hard to avoid since the close button's position on a dialog is also hardcoded
+}
 
 .modal-overlay {
     .ui-widget-overlay;

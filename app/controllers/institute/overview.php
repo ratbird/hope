@@ -19,7 +19,6 @@ class Institute_OverviewController extends AuthenticatedController
     protected $allow_nobody = true;
 
     function before_filter(&$action, &$args) {
-        global $SEM_TYPE, $SEM_CLASS;
 
         if (Request::option('auswahl')) {
             Request::set('cid', Request::option('auswahl'));
@@ -51,7 +50,7 @@ class Institute_OverviewController extends AuthenticatedController
         }
 
         PageLayout::setHelpKeyword("Basis.Einrichtungen");
-        PageLayout::setTitle($_SESSION['SessSemName']["header_line"]. " - " ._("Kurzinfo"));
+        PageLayout::setTitle($this->institute->getFullName() . " - " ._("Kurzinfo"));
         Navigation::activateItem('/course/main/info');
 
     }

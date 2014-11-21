@@ -11,11 +11,6 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/Seminar.class.php';
-include 'lib/showNews.inc.php';
-if (get_config('VOTE_ENABLE')) {
-    include_once ("lib/vote/vote_show.inc.php");
-}
 
 class Course_OverviewController extends AuthenticatedController
 {
@@ -41,9 +36,8 @@ class Course_OverviewController extends AuthenticatedController
 
 
         $this->sem = Seminar::getInstance($this->course_id);
-        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$this->sem->status]['class']];
-        $sem_class || $sem_class = SemClass::getDefaultSemClass();
-        $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$this->sem->status]["class"]]["studygroup_mode"];
+        $sem_class = $this->sem->getSemClass();
+        $this->studygroup_mode = $sem_class["studygroup_mode"];
 
     }
 

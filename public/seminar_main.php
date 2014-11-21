@@ -55,10 +55,7 @@ if (Request::get('redirect_to')) {
     die;
 }
 
-
-$sem = new Seminar($course_id);
-$sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']];
-$sem_class || $sem_class = SemClass::getDefaultSemClass();
+$sem_class = Seminar::getInstance($course_id)->getSemClass();
 
 if ($sem_class->getSlotModule("overview")) {
     foreach ($sem_class->getNavigationForSlot("overview") as $nav) {

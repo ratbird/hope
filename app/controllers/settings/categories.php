@@ -48,9 +48,6 @@ class Settings_CategoriesController extends Settings_SettingsController
     public function index_action($verify_action = null, $verify_id = null)
     {
         $categories = Kategorie::findByUserId($this->user->user_id);
-        usort($categories, function ($a, $b) {
-            return $a['priority'] - $b['priority'];
-        });
 
         $visibilities = array();
         $hidden_count = 0;

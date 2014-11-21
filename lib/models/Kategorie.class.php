@@ -37,7 +37,7 @@ class Kategorie extends SimpleORMap
      */
     public static function findByUserId($user_id)
     {
-        return self::findByRange_id($user_id);
+        return self::findByRange_id($user_id, 'ORDER BY priority');
     }
 
     /**

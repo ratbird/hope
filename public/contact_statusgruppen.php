@@ -45,9 +45,6 @@ $edit_id = Request::option('edit_id');
 $statusgruppe_id = Request::option('statusgruppe_id');
 
 require_once ('lib/contact.inc.php');
-require_once ('config.inc.php');
-require_once ('lib/visual.inc.php');
-require_once 'lib/functions.php';
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/user_visible.inc.php');
 

@@ -38,13 +38,8 @@
 
 global $RELATIVE_PATH_ELEARNING_INTERFACE;
 
-require_once 'lib/functions.php';
-require_once ('config.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/dates.inc.php');
-require_once ('lib/classes/ModulesNotification.class.php');
-require_once ('lib/classes/StudipLitList.class.php');
-require_once ('lib/classes/StudipDocumentTree.class.php');
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
 if (get_config('CALENDAR_ENABLE')) {
@@ -200,10 +195,10 @@ class AdminModules extends ModulesNotification {
             ->prepare("DELETE FROM scm WHERE range_id = ?")
             ->execute(array($range_id));
     }*/
-    
+
     /**
      * prepares the database when activating the scm module.
-     * 
+     *
      * @param $range_id id
      */
     function moduleScmActivate($range_id) {
@@ -212,7 +207,7 @@ class AdminModules extends ModulesNotification {
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         $existingItems = $statement->fetchColumn();
-        
+
         global $user, $SCM_PRESET;
         if ($existingItems) {
             return;

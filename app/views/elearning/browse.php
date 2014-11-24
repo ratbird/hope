@@ -35,8 +35,6 @@ $cms_select = Request::quoted('cms_select');
 $new_account_cms = Request::quoted('new_account_cms');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-require_once ('config.inc.php');
-include_once ('lib/visual.inc.php');
 require_once ('lib/messaging.inc.php');
 
 PageLayout::setTitle(_("Lernmodulsuche"));
@@ -65,7 +63,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
     elseif (Request::option('do_close'))
         $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
-    
+
 
     if ($search_key != "")
     {

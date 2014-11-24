@@ -50,9 +50,6 @@ Navigation::activateItem('/search/archive');
 ob_start();
 
 require_once('lib/msg.inc.php');
-require_once('config.inc.php');
-require_once('lib/visual.inc.php');
-require_once 'lib/functions.php';
 require_once('lib/datei.inc.php');
 require_once('lib/log_events.inc.php');
 
@@ -105,16 +102,16 @@ if (($delete_id) && Request::submitted('delete_really')){
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($delete_id));
         $seminar = $statement->fetch(PDO::FETCH_ASSOC);
-        
+
         // Delete from archive
         $query = "DELETE FROM archiv WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($delete_id));        
+        $statement->execute(array($delete_id));
         if ($statement->rowCount()) {
             $message = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($seminar['name']));
             log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$seminar['name']." (".$seminar['semester'].")"); // ...logging...
         }
-        
+
         if ($seminar['archiv_file_id']) {
             if (unlink ($ARCHIV_PATH."/".$seminar['archiv_file_id'])){
                 $details[] = _("Das Zip-Archiv der Veranstaltung wurde aus dem Archiv gelöscht.");
@@ -382,7 +379,7 @@ PageLayout::setHelpKeyword("Basis.SuchenArchiv");
 // wollen wir was Suchen?
 
 if ($_SESSION['archiv_data']["perform_search"]) {
-    
+
     //searchstring to short?
     if ((((strlen($_SESSION['archiv_data']["all"]) < 4) && ($_SESSION['archiv_data']["all"]))
         || ((strlen($_SESSION['archiv_data']["name"]) < 4) && ($_SESSION['archiv_data']["name"]))
@@ -395,7 +392,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
 
     $parameters = array();
     if ($_SESSION['archiv_data']['pers']) {
-        $query = "SELECT seminar_id, name, untertitel, beschreibung, 
+        $query = "SELECT seminar_id, name, untertitel, beschreibung,
                          start_time, semester, studienbereiche, heimat_inst_id,
                          institute, dozenten, fakultaet, archiv_file_id,archiv_protected_file_id,
                          forumdump, wikidump
@@ -423,7 +420,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
         $query .= " OR dozenten LIKE CONCAT('%', :needle, '%')";
         $query .= " OR fakultaet LIKE CONCAT('%', :needle, '%')";
         $query .= ")";
-        
+
         $parameters['needle'] = trim($_SESSION['archiv_data']['all']);
     } else {
         if ($_SESSION['archiv_data']['name']) {

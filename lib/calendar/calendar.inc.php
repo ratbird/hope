@@ -17,9 +17,6 @@
  * @package     calendar
  */
 
-require_once('config.inc.php');
-require_once('lib/visual.inc.php');
-require_once('lib/functions.php');
 require_once('lib/calendar_functions.inc.php');
 require_once($RELATIVE_PATH_CALENDAR . '/calendar_visual.inc.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/calendar_misc_func.inc.php');

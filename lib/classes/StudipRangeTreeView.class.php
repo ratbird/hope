@@ -8,8 +8,8 @@
 // This file is part of Stud.IP
 // StudipRangeTreeView.class.php
 // Class to print out the "range tree"
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -25,10 +25,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-require_once("lib/classes/StudipRangeTree.class.php");
-require_once("lib/classes/TreeView.class.php");
-require_once("lib/classes/RangeTreeObject.class.php");
-require_once("config.inc.php");
+
 /**
 * class to print out the "range tree"
 *
@@ -36,7 +33,7 @@ require_once("config.inc.php");
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class StudipRangeTreeView extends TreeView{
 
@@ -47,9 +44,9 @@ class StudipRangeTreeView extends TreeView{
     */
     function StudipRangeTreeView(){
         $this->root_content = $GLOBALS['UNI_INFO'];
-        parent::TreeView("StudipRangeTree"); //calling the baseclass constructor 
+        parent::TreeView("StudipRangeTree"); //calling the baseclass constructor
     }
-    
+
     function getItemContent($item_id){
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
@@ -74,7 +71,7 @@ class StudipRangeTreeView extends TreeView{
                     "<a href=\"".URLHelper::getLink("dispatch.php/institute/overview?auswahl=".$range_object->item_data['studip_object_id'])."\"" .
                     tooltip(_("Seite dieser Einrichtung in Stud.IP aufrufen")) . ">" .
                     htmlReady($range_object->item_data['name']) . "</a>&nbsp;" ._("in Stud.IP") ."</td></tr>";
-            
+
         } elseif (!$range_object->item_data['studip_object']){
             $content .= "\n<tr><td class=\"blank\" align=\"left\">" .
                         _("Dieses Element ist keine Stud.IP-Einrichtung, es hat daher keine Grunddaten.") . "</td></tr>";
@@ -95,7 +92,7 @@ class StudipRangeTreeView extends TreeView{
         return $content;
     }
 }
-//test 
+//test
 //page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 //include 'lib/include/html_head.inc.php';
 //$test = new StudipRangeTreeView();

@@ -46,11 +46,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'config.inc.php';
-require_once 'lib/visual.inc.php';
-
-require_once ('lib/classes/StudipSemTree.class.php');
-require_once ('lib/classes/StudipRangeTree.class.php');
 
 require_once ('lib/object.inc.php');
 require_once ('lib/user_visible.inc.php');
@@ -1997,7 +1992,7 @@ function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance 
             break;
         }
     }
-    
+
     $chunks = array_reverse($chunks);
     $chunks = array_slice($chunks, 0, $displayed_levels);
     if (count($chunks) == 1) {

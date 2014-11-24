@@ -31,13 +31,9 @@ $perm->check("tutor");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-require_once ('config.inc.php');
-require_once ('lib/visual.inc.php');
-require_once 'lib/functions.php';
 require_once ('lib/admission.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/datei.inc.php');
-require_once ('lib/classes/SeminarCategories.class.php');
 require_once 'lib/admin_search.inc.php';
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
@@ -155,13 +151,13 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
 }
 
 /*
- * Add persons to a statusgroup. This function is used by the multi 
+ * Add persons to a statusgroup. This function is used by the multi
  * person search dialog.
  */
 function addToStatusgroup($range_id, $statusgruppe_id, $workgroup_mode) {
     $mp = MultiPersonSearch::load("contacts_statusgroup_" . $statusgruppe_id);
     if (count($mp->getAddedUsers()) !== 0) {
-        
+
         foreach ($mp->getAddedUsers() as $m) {
             $quickfilters = $mp->getQuickfilterIds();
             if (in_array($m, $quickfilters[_("VeranstaltungsteilnehmerInnen")])) {
@@ -310,7 +306,7 @@ if (Request::option('cmd') == 'deleteRole') {
         $message .= LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::option('role_id'))));
         $message .= '&nbsp;&nbsp;&nbsp;&nbsp;';
         $message .= LinkButton::createCancel(_('NEIN!'), URLHelper::getURL(''));
-        
+
         PageLayout::postMessage(MessageBox::info($message));
     }
 }
@@ -359,7 +355,7 @@ if ($self_assign_exclusive) {
             $multis .= '<li>' . htmlReady(get_fullname($one['user_id']) . ' ('. $one['gruppen'] . ')').'</li>';
         }
         $multis .= '</ul>';
-        
+
         $message  = _('Achtung, der exklusive Selbsteintrag wurde ausgeschaltet, da folgende Teilnehmer in mehr als einer Gruppe eingetragen sind. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag wieder einzuschalten.');
         $message .= '<br>' . $multis;
         PageLayout::postMessage(MessageBox::error($message));
@@ -426,7 +422,7 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
         $template->set_attribute('role_data', array('name' => Request::quoted('presetName')));
     }
     $template->set_attribute('show_search_and_members_form', !LockRules::Check($range_id, 'participants'));
-    
+
     // quickfilters
     foreach (getPersons($range_id, 'sem') as $k=>$v) {
         $quickfilter_sem[] = $k;

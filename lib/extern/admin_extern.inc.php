@@ -40,7 +40,6 @@
 use Studip\Button, Studip\LinkButton;
 
 include('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once('config.inc.php');         //wir brauchen die Seminar-Typen
 require_once($RELATIVE_PATH_EXTERN . '/extern_config.inc.php');
 require_once($RELATIVE_PATH_EXTERN . '/lib/extern_functions.inc.php');
 require_once($RELATIVE_PATH_EXTERN . '/lib/ExternConfig.class.php');
@@ -92,7 +91,7 @@ if (Request::option('com') == "do_upload_config") {
 
     // revert the changes done by indentJson
     $file_content_wo_tabs = str_replace("\t", '', str_replace("\n", '', $file_content));
-    
+
     $jsonconfig = json_decode($file_content_wo_tabs, true);
 
     // utf8-decode the values after json_decode has worked on it

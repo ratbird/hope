@@ -29,11 +29,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once "lib/classes/StudipSemTree.class.php";
-require_once "lib/classes/TreeView.class.php";
-require_once "lib/functions.php";
-require_once "config.inc.php";
-
 
 /**
 * class to print out the seminar tree (admin mode)
@@ -215,11 +210,11 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->msg[$item_id] = "info§" ._("Sie beabsichtigen diesen Bereich inklusive aller Unterbereiche zu löschen. ")
             . sprintf(_("Es werden insgesamt %s Bereiche gelöscht!"),count($this->tree->getKidsKids($item_id))+1)
             . "<br>" . _("Wollen Sie diese Bereiche wirklich löschen?") . "<br>"
-            . LinkButton::createAccept(_('JA!'), 
+            . LinkButton::createAccept(_('JA!'),
                     URLHelper::getURL($this->getSelf('cmd=DeleteItem&item_id='.$item_id)),
                     array('title' => _('löschen')))
             . "&nbsp;"
-            . LinkButton::createCancel(_('NEIN!'), 
+            . LinkButton::createCancel(_('NEIN!'),
                     URLHelper::getURL($this->getSelf('cmd=Cancel&item_id='. $item_id)),
                     array('title' => _('abbrechen')));
         }
@@ -487,25 +482,25 @@ class StudipSemTreeViewAdmin extends TreeView {
         $content .= "\n<tr><td style=\"font-size:10pt;\" align=\"center\">";
         if(!$is_not_editable){
         if ($this->isItemAdmin($item_id) ){
-            $content .= LinkButton::create(_('Neues Objekt'), 
-                    URLHelper::getURL($this->getSelf('cmd=NewItem&item_id='.$item_id)), 
+            $content .= LinkButton::create(_('Neues Objekt'),
+                    URLHelper::getURL($this->getSelf('cmd=NewItem&item_id='.$item_id)),
                     array('title' => _('Innerhalb dieser Ebene ein neues Element einfügen'))) . '&nbsp;';
         }
         if ($this->isParentAdmin($item_id) && $item_id != "root"){
-            $content .= LinkButton::create(_('Bearbeiten'), 
-                    URLHelper::getURL($this->getSelf('cmd=EditItem&item_id=' . $item_id)), 
+            $content .= LinkButton::create(_('Bearbeiten'),
+                    URLHelper::getURL($this->getSelf('cmd=EditItem&item_id=' . $item_id)),
                     array('title' => 'Dieses Element bearbeiten')) . '&nbsp;';
 
-            $content .= LinkButton::create(_('Löschen'), 
+            $content .= LinkButton::create(_('Löschen'),
                     URLHelper::getURL($this->getSelf('cmd=AssertDeleteItem&item_id=' . $item_id)),
                     array('title' => _('Dieses Element löschen'))) . '&nbsp;';
-            
+
             if ($this->move_item_id == $item_id && ($this->mode == "MoveItem" || $this->mode == "CopyItem")){
-                $content .= LinkButton::create(_('Abbrechen'), 
+                $content .= LinkButton::create(_('Abbrechen'),
                         URLHelper::getURL($this->getSelf('cmd=Cancel&item_id=' . $item_id)),
                         array('title' => _('Verschieben / Kopieren abbrechen'))) . '&nbsp;';
             } else {
-                $content .= LinkButton::create(_('Verschieben'), 
+                $content .= LinkButton::create(_('Verschieben'),
                         URLHelper::getURL($this->getSelf('cmd=MoveItem&item_id='.$item_id)),
                         array('title' => _('Dieses Element in eine andere Ebene verschieben'))) . '&nbsp;';
                 $content .= LinkButton::create(_('Kopieren'),
@@ -658,7 +653,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $content .= "<option value=\"del_mark\">" . _("löschen und in Merkliste übernehmen") . "</option>
             <option value=\"del\">" . _("löschen") . "</option>";
         }
-        $content .= "</select>" . Button::createAccept(_('OK'), array('title' => _("Gewählte Aktion starten"))) 
+        $content .= "</select>" . Button::createAccept(_('OK'), array('title' => _("Gewählte Aktion starten")))
                  . "</td></tr> </form>";
         return $content;
     }
@@ -696,10 +691,10 @@ class StudipSemTreeViewAdmin extends TreeView {
         $content .= "<tr><td class=\"table_row_even\"  width=\"1%\">" . _("Infotext:") . "</td><td class=\"table_row_even\">"
         . "<textarea style=\"width:100%\" rows=\"5\" name=\"edit_info\" wrap=\"virtual\">" .htmlReady($this->tree->tree_data[$this->edit_item_id]['info']) . "</textarea>"
         . "</td></tr><tr><td class=\"table_row_even\" align=\"right\" valign=\"top\" colspan=\"2\">"
-        . Button::createAccept(_('Absenden'), array('title' => _('Einstellungen übernehmen')))       
+        . Button::createAccept(_('Absenden'), array('title' => _('Einstellungen übernehmen')))
         . "&nbsp;"
-        . LinkButton::createCancel(_('Abbrechen'), 
-                URLHelper::getURL($this->getSelf('cmd=Cancel&item_id='.$buttonlink_id)) , 
+        . LinkButton::createCancel(_('Abbrechen'),
+                URLHelper::getURL($this->getSelf('cmd=Cancel&item_id='.$buttonlink_id)) ,
                 array('title' => _('Aktion abbrechen')))
         . "</td></tr>";
 

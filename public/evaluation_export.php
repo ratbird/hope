@@ -60,10 +60,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough")) {
 //$GLOBALS['PATH_EXPORT'] = "export";
 // -- here you have to put initialisations for the current page
 
-require_once ('lib/visual.inc.php');
-require_once 'lib/functions.php';
 require_once ('lib/msg.inc.php');
-require_once ('config.inc.php');
 
 # Include all required files ================================================ #
 require_once('lib/evaluation/evaluation.config.php');
@@ -146,7 +143,7 @@ if (get_config('EXPORT_ENABLE'))
     }
     if (($page==2) AND get_config('XSLT_ENABLE') AND get_config('skip_page_3'))
         $page=3;
-    
+
 
     //Exportmodul einbinden
     if (($page != 3) AND ($o_mode == "choose") AND ($export_error_num < 1))

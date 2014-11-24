@@ -38,7 +38,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once ("config.inc.php");   // Stud.IP - Konfigurationsdatei
 require_once ("$PATH_EXPORT/export_xslt_vars.inc.php");   // XSLT-Variablen
 
 $semester = new SemesterData;

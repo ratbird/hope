@@ -7,8 +7,8 @@
 // This file is part of Stud.IP
 // RangeTreeObjectInst.class.php
 // Class to handle items in the "range tree"
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -24,8 +24,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-require_once ("lib/classes/RangeTreeObject.class.php");
-require_once ("config.inc.php");
 /**
 * class for items in the "range tree"
 *
@@ -33,10 +31,10 @@ require_once ("config.inc.php");
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class RangeTreeObjectInst extends RangeTreeObject {
-    
+
     /**
     * Constructor
     *
@@ -45,15 +43,15 @@ class RangeTreeObjectInst extends RangeTreeObject {
     * @param    string  $item_id
     */
     function RangeTreeObjectInst($item_id) {
-        parent::RangeTreeObject($item_id); //calling the baseclass constructor 
+        parent::RangeTreeObject($item_id); //calling the baseclass constructor
         $this->initItemDetail();
         $this->item_data_mapping = array('Strasse' => _("Straße"), 'Plz' => _("Ort"), 'telefon' => _("Tel."), 'fax' => _("Fax"),
                                         'url' => _("Homepage"), 'email' => _("Kontakt"));
         $this->item_data['type_num'] = $this->item_data['type'];
         $this->item_data['type'] = ($this->item_data['type']) ? $GLOBALS['INST_TYPE'][$this->item_data['type']]['name'] : $GLOBALS['INST_TYPE'][1]['name'];
-        
+
     }
-    
+
     /**
     * Returns true, if fakultaets_id of the item is found in its parents
     *
@@ -68,6 +66,6 @@ class RangeTreeObjectInst extends RangeTreeObject {
             return false;
         }
     }
-    
+
 }
 ?>

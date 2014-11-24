@@ -5,7 +5,6 @@
 # Lifter010: TODO
 
 
-require_once 'config.inc.php';
 require_once 'lib/classes/cssClassSwitcher.inc.php';
 include_once 'vendor/idna_convert/idna_convert.class.php';
 include_once 'lib/classes/searchtypes/SQLSearch.class.php';
@@ -635,12 +634,12 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
 
     if ($open == "open")
         $titel = "<b>" . $titel . "</b>";
-    
+
     $img = $open === 'close'
          ? 'forumgrau2.png'
          : 'forumgraurunt2.png';
     $attr = array();
-    
+
     if ($link) {
         // TODO [tlx] What is addon used for? This seems to lead to invalid html
         //      so i will ditch it for now in the output

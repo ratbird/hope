@@ -17,7 +17,6 @@
 
 
 # Include all required files ================================================ #
-require_once ('config.inc.php');
 require_once ('lib/classes/cssClassSwitcher.inc.php');
 # ====================================================== end: including files #
 
@@ -101,9 +100,9 @@ function createBoxHeader ($title, $width, $extraTitle = "",
           "<td align=\"right\" class=\"table_header_bold\">";
 
        if ($adminURL) {
-            $html .= 
+            $html .=
             "<a href=\"".URLHelper::getLink($adminURL)."\">
-            ".Assets::img($adminImgURL, array('title' => $adminTitle))."</a>";    
+            ".Assets::img($adminImgURL, array('title' => $adminTitle))."</a>";
        }
 
        $html .=
@@ -240,7 +239,7 @@ function createErrorReport (&$object, $errortitle = "") {
         $errors[] = $error["string"];
     }
     $html = MessageBox::error($errortitle, $errors);
-   
+
    return $html;
 }
 # ===================================================== end: public functions #

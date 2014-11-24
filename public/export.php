@@ -47,7 +47,7 @@ $xslt_filename = Request::quoted('xslt_filename');
 $page = Request::option('page');
 $filter = Request::option('filter');
 $ex_type = Request::quoted('ex_type');
-$ex_sem = Request::option('ex_sem'); 
+$ex_sem = Request::option('ex_sem');
 $format = Request::option('format');
 $choose = Request::quoted('choose');
 $range_id = Request::option('range_id');
@@ -66,12 +66,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 //$PATH_EXPORT = "export";
 // -- here you have to put initialisations for the current page
 
-require_once ('lib/visual.inc.php');
-require_once 'lib/functions.php';
 require_once ('lib/msg.inc.php');
-require_once ('lib/classes/DataFieldEntry.class.php');
-
-require_once ('config.inc.php');
 
 PageLayout::setHelpKeyword("Basis.Export");
 ob_start();

@@ -28,11 +28,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once("lib/classes/StudipRangeTree.class.php");
-require_once("lib/classes/TreeView.class.php");
-require_once("lib/classes/RangeTreeObject.class.php");
-require_once("config.inc.php");
-
 /**
 * class to print out the admin view of the "range tree"
 *
@@ -71,11 +66,11 @@ class StudipRangeTreeViewAdmin extends TreeView{
     * @access public
     */
     function StudipRangeTreeViewAdmin(){
-        
+
         $this->root_content = $GLOBALS['UNI_INFO'];
         parent::TreeView("StudipRangeTree"); //calling the baseclass constructor
         $this->marked_item =& $_SESSION['_marked_item'];
-       
+
         $this->initTreeStatus();
         $this->parseCommand();
     }

@@ -62,12 +62,7 @@ if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $G
     die();
 }
 
-require_once('lib/visual.inc.php');
-require_once('config.inc.php');
-
 require_once('lib/msg.inc.php');
-include('lib/classes/UserManagement.class.php');
-
 
 class UserManagementRequestNewPassword extends UserManagement {
 

@@ -13,8 +13,6 @@ $perm->check("admin");
 require_once ('lib/dbviews/literatur.view.php');
 require_once ('lib/classes/StudipLitCatElement.class.php');
 
-require_once ('lib/visual.inc.php');
-require_once ('config.inc.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -106,7 +104,7 @@ if (Request::option('_catalog_id')){
 }
 
 if (Request::option('cmd') == 'markall' && is_array($_SESSION['_lit_data'])){
-    
+
     $_SESSION['_check_list'] = array_keys($_SESSION['_lit_data']);
 }
 if (Request::option('cmd') == 'open_all' && is_array($_SESSION['_lit_data'])){

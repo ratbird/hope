@@ -24,8 +24,7 @@ use Studip\Button, Studip\LinkButton;
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once ('config.inc.php');
-require_once ('lib/visual.inc.php');
+
 $atime = Request::int('atime');
 $element_switch = Request::get('element_switch', 0); // Wert für Auswahl der Feldbezeichner
 $element_depending = (!is_null(Request::get('element_depending')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('element_depending'))) ? Request::get('element_depending') : '';

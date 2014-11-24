@@ -22,12 +22,8 @@ require '../lib/bootstrap.php';
 
 if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
 
-require_once 'lib/visual.inc.php';
 require_once "vendor/phplot/phplot.php";
 require_once 'lib/msg.inc.php';
-require_once 'lib/visual.inc.php';
-require_once 'config.inc.php';
-require_once 'lib/functions.php';
 require_once 'lib/datei.inc.php';
 require_once 'lib/evaluation/evaluation.config.php';
 require_once EVAL_FILE_EVAL;

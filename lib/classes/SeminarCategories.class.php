@@ -31,8 +31,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-require_once ('config.inc.php');
-require_once ('lib/classes/Seminar.class.php');
 
 class SeminarCategories {
 
@@ -58,7 +56,7 @@ class SeminarCategories {
         }
         return self::$seminar_categories[$id];
     }
-    
+
     /**
      * Enter description here...
      *
@@ -71,7 +69,7 @@ class SeminarCategories {
         }
         return $ret;
     }
-    
+
     /**
      * Enter description here...
      *

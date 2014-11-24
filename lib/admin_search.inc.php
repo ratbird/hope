@@ -38,9 +38,7 @@ global  $archiv_assi_data,
 
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
-    require_once 'config.inc.php';
     require_once 'lib/dates.inc.php';
-    require_once 'lib/functions.php';
 
 
 

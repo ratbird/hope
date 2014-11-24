@@ -36,9 +36,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'lib/functions.php';
-require_once ("config.inc.php");
-
 class StartupChecks {
     var $registered_checks = array (
         "institutes" => array("perm" => "root"),

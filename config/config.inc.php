@@ -36,9 +36,6 @@
 
 global
   $CALENDAR_MAX_EVENTS,
-  $export_ex_types,
-  $export_icon,
-  $export_o_modes,
   $FLASHPLAYER_DEFAULT_CONFIG_MIN,
   $FLASHPLAYER_DEFAULT_CONFIG_MAX,
   $INST_ADMIN_DATAFIELDS_VIEW,
@@ -47,12 +44,9 @@ global
   $INST_TYPE,
   $LIT_LIST_FORMAT_TEMPLATE,
   $NAME_FORMAT_DESC,
-  $output_formats,
   $PERS_TERMIN_KAT,
-  $record_of_study_templates,
   $SCM_PRESET,
   $SEM_STATUS_GROUPS,
-  $skip_page_3,
   $SMILE_SHORT,
   $SYMBOL_SHORT,
   $TERMIN_TYP,
@@ -65,9 +59,6 @@ global
   $UNI_LOGOUT_ADD,
   $UNI_URL,
   $UPLOAD_TYPES,
-  $username_prefix,
-  $xml_filename,
-  $xslt_filename_default,
   $SEM_TREE_TYPES,
   $NOT_HIDEABLE_FIELDS,
   $TEILNEHMER_IMPORT_DATAFIELDS,
@@ -358,48 +349,6 @@ $LIT_IMPORT_PLUGINS[2] = array('name' => 'GenericXML', 'visual_name' => _("Einfa
         _("Jeder Abschnitt darf mehrfach vorkommen oder kann weggelassen werden, mindestens ein Titel pro Eintrag muss vorhanden sein."));
 $LIT_IMPORT_PLUGINS[3] = array('name' => 'CSV', 'visual_name' => _("CSV mit Semikolon als Trennzeichen"), 'description' => _("Exportieren Sie Ihre Literaturliste in eine mit Trennzeichen getrennte Datei (CSV). Wichtig hierbei ist die Verwendung des Semikolons als Trennzeichen. Folgende Formatierung wird dabei in jeder Zeile erwartet:").'[pre]'._("Titel;Verfasser oder Urheber;Verleger;Herausgeber;Thema und Stichworte;ISBN").'[/pre]');
 $LIT_IMPORT_PLUGINS[4] = array('name' => 'StudipLitList', 'visual_name' => _("Literaturliste im Stud.IP Format"), 'description' => _("Benutzen Sie die Export-Funktion innerhalb von Stud.IP, um eine Literaturliste im Stud.IP Format zu exportieren."));
-
-// <<-- EXPORT-SETTINGS
-// Export modes
-$export_o_modes = array("start","file","choose", "direct","processor","passthrough");
-// Exportable output-types
-$export_ex_types = array("veranstaltung", "person", "forschung");
-
-$skip_page_3 = true;
-// name of generated XML-file
-$xml_filename = "data.xml";
-// name of generated output-file
-$xslt_filename_default = "studip";
-
-// existing output formats
-$output_formats = array(
-    "html"      =>      "Hypertext Markup Language (HTML)",
-    "rtf"       =>      "Rich Text Format (RTF)",
-    "txt"       =>      "Text (TXT)",
-    "csv"       =>      "Comma Separated Values (Excel)",
-    "fo"        =>      "Adobe Postscript (PDF)",
-    "xml"       =>      "Extensible Markup Language (XML)"
-);
-
-// Icons für die Ausgabeformate
-$export_icon["xml"] = "icons/16/blue/file-generic.png";
-$export_icon["xslt"] = "icons/16/blue/file-office.png";
-$export_icon["xsl"] = "icons/16/blue/file-office.png";
-$export_icon["rtf"] = "icons/16/blue/file-text.png";
-$export_icon["fo"] = "icons/16/blue/file-pdf.png";
-$export_icon["pdf"] = "icons/16/blue/file-pdf.png";
-$export_icon["html"] = "icons/16/blue/file-text.png";
-$export_icon["htm"] = "icons/16/blue/file-text.png";
-$export_icon["txt"] = "icons/16/blue/file-text.png";
-$export_icon["csv"] = "icons/16/blue/file-office.png";
-// more icons can be added here
-
-// PDF- templates for the "record of study" course-export
-// title = Description of the template
-// template = PDF-template in '/export'
-$record_of_study_templates[1] = array("title" => "Allgemeine Druckvorlage", "template" =>"general_template.pdf");
-$record_of_study_templates[2] = array("title" => "Studienbuch", "template" => "recordofstudy_template.pdf");
-// EXPORT -->>
 
 // cofiguration for flash player
 $FLASHPLAYER_DEFAULT_CONFIG_MIN = "&amp;showstop=1&amp;showvolume=1&amp;bgcolor=A6B6C6&amp;bgcolor1=A6B6C6&amp;bgcolor2=7387AC&amp;playercolor=7387AC&amp;buttoncolor=254580&amp;buttonovercolor=E9EFFD&amp;slidercolor1=CAD7E1&amp;slidercolor2=A6B6C6&amp;sliderovercolor=E9EFFD&amp;loadingcolor=E9B21A&amp;buffer=5&amp;buffercolor=white&amp;buffershowbg=0&amp;playeralpha=90&amp;playertimeout=500&amp;shortcut=1&amp;phpstream=0&amp;onclick=playpause&amp;showloading=always";

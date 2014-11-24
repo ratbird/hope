@@ -122,7 +122,6 @@ $MEDIA_CACHE_MAX_FILES = 3000;
 //path to Stud.IP modules (this folders only have to exist, if the corresponcing module is active)
 $RELATIVE_PATH_RESOURCES = "lib/resources";                         //Stud.IP module: resourge management
 $RELATIVE_PATH_CALENDAR = "lib/calendar";                           //Stud.IP module: calendar
-$RELATIVE_PATH_ADMIN_MODULES = "lib/admin";                         //Stud.IP module: admin tools
 $RELATIVE_PATH_EXTERN = "lib/extern";                           //Stud.IP module: SRI-System for including Stud.IP data in other websites
 $RELATIVE_PATH_ELEARNING_INTERFACE = "lib/elearning";                   //Stud.IP module: Ilias 3 lerningmodules-connection / general E-Learning-interface
 $RELATIVE_PATH_SOAP = "lib/soap";

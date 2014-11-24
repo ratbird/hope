@@ -10,6 +10,7 @@
  */
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
+require_once 'config.inc.php'; //$SMILE_SHORT and $SYMBOL_SHORT needed by formatReady
 require_once 'lib/models/OpenGraphURL.class.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
@@ -24,10 +25,10 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
         );
 
         Config::set(new Config($config));
-        
+
         $GLOBALS['SMILEY_NO_DB'] = true;
     }
-    
+
     public function tearDown()
     {
         $GLOBALS['SMILEY_NO_DB'] = false;

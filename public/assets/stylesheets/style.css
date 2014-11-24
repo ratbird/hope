@@ -5532,6 +5532,9 @@ div.available-widgets .studip-widget {
   -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
+.ui-dialog .hide-in-dialog {
+  display: none;
+}
 .ui-dialog .ui-dialog-titlebar {
   background: #1e3e70;
   border: 0;

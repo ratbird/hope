@@ -20,6 +20,8 @@ class Seminar_Register_Auth extends Seminar_Auth
      */
     protected $mode = "reg";
 
+    protected static $magic = 'dsdfjhgretha';
+
     /**
      *
      */
@@ -166,7 +168,7 @@ class Seminar_Register_Auth extends Seminar_Auth
         if ($new_user->user_id) {
             // Abschicken der Bestaetigungsmail
             $to = $Email;
-            $secret = md5("$new_user->user_id:$this->magic");
+            $secret = self::get_validation_hash($new_user->id);
             $url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "email_validation.php?secret=" . $secret;
             $mail = new StudipMail();
             $abuse = $mail->getReplyToEmail();
@@ -179,5 +181,10 @@ class Seminar_Register_Auth extends Seminar_Auth
             $this->auth["perm"] = $new_user->perms;
             return $new_user->user_id;
         }
+    }
+
+    static function get_validation_hash($user_id)
+    {
+        return md5("$user_id:" . self::$magic);
     }
 }

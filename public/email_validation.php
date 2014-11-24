@@ -35,14 +35,8 @@ $perm->check('user');
 // nobody hat hier nix zu suchen...
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
-require_once 'config.inc.php';
-require_once 'lib/functions.php';
-require_once 'lib/classes/UserManagement.class.php';
 
-$magic = 'dsdfjhgretha';  // Challenge seed.
-// MUSS IDENTISCH ZU DEM IN SEMINAR_REGISTER_AUTH IN LOCAL.INC SEIN!
-
-$hash = md5("$user->id:$magic");
+$hash = Seminar_Register_Auth::get_validation_hash($user->id);
 // hier wird noch mal berechnet, welches secret in der Bestaetigungsmail uebergeben wurde
 $secret = Request::option('secret');
 PageLayout::setHelpKeyword('Basis.AnmeldungMail');

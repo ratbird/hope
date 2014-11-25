@@ -55,6 +55,7 @@ namespace {
     require 'lib/phplib/page_open.php';
 
     require 'config_local.inc.php';
+    require 'config.inc.php';
     require_once 'lib/functions.php';
     require_once 'lib/deputies_functions.inc.php';
     require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';

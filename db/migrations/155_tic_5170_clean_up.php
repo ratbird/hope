@@ -17,6 +17,8 @@ class Tic5170CleanUp extends Migration {
         $db->exec("DROP TABLE object_user");
         $db->exec("DROP TABLE px_topics");
         $db->exec("DROP TABLE rss_feeds");
+        $db->exec("DELETE FROM user_visibility_settings WHERE plugin IS NOT NULL");
+        $db->exec("DELETE FROM user_visibility_settings WHERE identifier = 'plugins'");
         SimpleORMap::expireTableScheme();
     }
 

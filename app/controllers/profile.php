@@ -32,7 +32,7 @@ class ProfileController extends AuthenticatedController
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        
+
         // Remove cid
         URLHelper::removeLinkParam('cid');
         unset($_SESSION['SessionSeminar']);
@@ -107,7 +107,7 @@ class ProfileController extends AuthenticatedController
                 $this->score_title   = $score->gettitel($score->GetScore($this->current_user->user_id), $score->GetGender($this->current_user->user_id));
             }
         }
-        
+
         // Additional user information
         $this->public_email = get_visible_email($this->current_user->user_id);
         $this->motto        = $this->profile->getVisibilityValue('motto');
@@ -147,25 +147,25 @@ class ProfileController extends AuthenticatedController
         if (Config::Get()->SCORE_ENABLE) {
             if ($this->current_user->user_id === $GLOBALS['user']->id || $score->ReturnPublik()) {
                 $kings = $this->profile->getKingsInformations();
-    
+
                 if ($kings != null) {
                     $this->kings = $kings;
                 }
             }
         }
-        
+
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
         if ($this->profile->checkVisibility('news') OR $show_admin === true) {
             $response = $this->relay('news/display/' . $this->current_user->user_id);
             $this->news = $response->body;
         }
-        
+
 
         // calendar
         if (get_config('CALENDAR_ENABLE')) {
             if (!in_array($this->current_user->perms, words('admin root'))) {
-                if ($this->profile->checkVisibility('termine')) { 
+                if ($this->profile->checkVisibility('termine')) {
             $response = $this->relay('calendar/contentbox/display/' . $this->current_user->user_id);
             $this->dates = $response->body;
                 }
@@ -215,7 +215,7 @@ class ProfileController extends AuthenticatedController
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
 
         foreach ($homepageplugins as $homepageplugin) {
-            if ($homepageplugin->isActivated($this->current_user->user_id, 'user') && Visibility::verify("plugin" . $homepageplugin->getPluginID(), $this->current_user->user_id)) {
+            if ($homepageplugin->isActivated($this->current_user->user_id, 'user')) {
                 // get homepageplugin tempaltes
                 $template = $homepageplugin->getHomepageTemplate($this->current_user->user_id);
                 // create output of the plugins

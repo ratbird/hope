@@ -19,6 +19,14 @@ abstract class StudipController extends Trails_Controller
         $this->current_action = $action;
         // allow only "word" characters in arguments
         $this->validate_args($args);
+        
+        // Set default layout and encoding
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;Charset=windows-1252');
+        } else {
+            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        }
         parent::before_filter($action, $args);
     }
 

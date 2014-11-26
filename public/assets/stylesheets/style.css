@@ -5701,6 +5701,9 @@ div.available-widgets .studip-widget {
   right: 34px;
 }
 .studip-dialog-centered .ui-dialog-content {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   display: table !important;
   width: 100% !important;
 }

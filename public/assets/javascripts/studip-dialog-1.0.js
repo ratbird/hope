@@ -269,7 +269,7 @@
         options = $.extend({}, STUDIP.Dialog.options, options);
 
         var scripts = $('<div>' + content + '</div>').filter('script'), // Extract scripts
-            dialog_options,
+            dialog_options = {},
             width  = options.width || $('body').width() * 2 / 3,
             height = options.height || $('body').height()  * 2 / 3,
             temp,
@@ -280,6 +280,11 @@
             options.title = options.title || instance.element.dialog('option', 'title');
         }
         instance.options = options;
+
+        if (options['center-content']) {
+            content = '<div class="studip-dialog-centered-helper">' + content + '</div>';
+            dialog_options.dialogClass = 'studip-dialog-centered';
+        }
 
         // Hide and update container
         instance.element.hide().html(content);
@@ -303,7 +308,7 @@
             width = height = options.size;
         }
 
-        dialog_options = {
+        dialog_options = $.extend(dialog_options, {
             width:   width,
             height:  height,
             buttons: {},
@@ -329,7 +334,7 @@
 
                 STUDIP.Dialog.close(options);
             }
-        };
+        });
 
         // Create buttons
         if (!options.hasOwnProperty('buttons') || options.buttons) {

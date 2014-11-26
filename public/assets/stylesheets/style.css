@@ -5700,6 +5700,15 @@ div.available-widgets .studip-widget {
   top: 50%;
   right: 34px;
 }
+.studip-dialog-centered .ui-dialog-content {
+  display: table !important;
+  width: 100% !important;
+}
+.studip-dialog-centered-helper {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
 .modal-overlay {
   background: rgba(40, 73, 124, 0.5);
   opacity: 1;

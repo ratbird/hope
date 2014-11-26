@@ -110,6 +110,18 @@
     right: 34px; // This is ugly but hard to avoid since the close button's position on a dialog is also hardcoded
 }
 
+// Centered content in dialog
+.studip-dialog-centered .ui-dialog-content {
+    display: table !important; // jQuery UI sets these values directly on
+    width: 100% !important;    // the element, thus we need to force it!
+}
+.studip-dialog-centered-helper {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
 .modal-overlay {
     .ui-widget-overlay;
 

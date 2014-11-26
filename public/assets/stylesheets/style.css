@@ -5700,7 +5700,7 @@ div.available-widgets .studip-widget {
   top: 50%;
   right: 34px;
 }
-.ui-dialog-title {
+.ui-dialog .ui-dialog-title {
   margin-right: 48px;
 }
 .studip-dialog-centered .ui-dialog-content {

@@ -29,6 +29,65 @@ require_once 'lib/wiki.inc.php'; // getAllWikiPages for dump
 require_once 'lib/language.inc.php';
 require_once 'lib/user_visible.inc.php';
 
+/**
+ * This function returns the last activity in the course.
+ *
+ * @param  string $sem_id the id of the course
+ * @return int timestamp of last activity (max chdate)
+ */
+function lastActivity ($sem_id)
+{
+    // Cache query generation
+    static $query = null;
+    if ($query === null) {
+        $queries = array(
+            // Veranstaltungs-data
+            "SELECT chdate FROM seminare WHERE Seminar_id = :id",
+            // Folder
+            "SELECT MAX(chdate) AS chdate FROM folder WHERE range_id = :id",
+            // Dokuments
+            "SELECT MAX(chdate) AS chdate FROM dokumente WHERE seminar_id = :id",
+            // SCM
+            "SELECT MAX(chdate) AS chdate FROM scm WHERE range_id = :id",
+            // Dates
+            "SELECT MAX(chdate) AS chdate FROM termine WHERE range_id = :id",
+            // News
+            "SELECT MAX(`date`) AS chdate FROM news_range LEFT JOIN news USING (news_id) WHERE range_id = :id",
+            // Literature
+            "SELECT MAX(chdate) AS chdate FROM lit_list WHERE range_id = :id",
+        );
+
+        // Votes
+        if (get_config('VOTE_ENABLE')) {
+            $queries[] = "SELECT MAX(chdate) AS chdate FROM vote WHERE range_id = :id";
+        }
+
+        // Wiki
+        if (get_config('WIKI_ENABLE')) {
+            $queries[] = "SELECT MAX(chdate) AS chdate FROM wiki WHERE range_id = :id";
+        }
+
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $table = $plugin->getEntryTableInfo();
+            $queries[] = 'SELECT MAX(`'. $table['chdate'] .'`) AS chdate FROM `'. $table['table'] .'` WHERE `'. $table['seminar_id'] .'` = :id';
+        }
+
+        $query = "SELECT MAX(chdate) FROM (" . implode(' UNION ', $queries) . ") AS tmp";
+    }
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindValue(':id', $sem_id);
+    $statement->execute();
+    $timestamp = $statement->fetchColumn() ?: 0;
+
+    //correct the timestamp, if date in the future (news can be in the future!)
+    if ($timestamp > time()) {
+        $timestamp = time();
+    }
+
+    return $timestamp;
+}
+
 // Liefert den dump des Seminars
 function dump_sem($sem_id, $print_view = false)
 {

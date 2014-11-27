@@ -974,65 +974,6 @@ table.default label.required:after {
   padding-left: 5px;
   vertical-align: middle;
 }
-table.default2 {
-  border-collapse: collapse;
-  width: 100%;
-}
-table.default2 th,
-table.default2 td,
-table.default2 caption {
-  padding: 5px;
-  text-align: left;
-}
-table.default2 caption {
-  background-color: #899ab9;
-  border-bottom: 1px solid #1e3e70;
-  color: #fff;
-  font-size: 1.2em;
-  font-weight: bold;
-  text-align: left;
-}
-table.default2 thead th {
-  background-color: #d1d1d1;
-  border-bottom: 1px solid #1e3e70;
-  font-size: 1.1em;
-}
-table.default2 tbody th {
-  background-color: #cddaef;
-  border-top: 1px solid #575757;
-  border-bottom: 1px solid #575757;
-  text-align: left;
-}
-table.default2 tbody td {
-  border-bottom: 1px solid #d1d1d1;
-}
-table.default2 tbody tr:hover td {
-  background-color: rgba(137, 154, 185, 0.25);
-}
-table.default2 tbody tr:last-child td {
-  border-bottom: 0;
-}
-table.default2 tfoot td {
-  background-color: #d1d1d1;
-  border-top: 1px solid #1e3e70;
-}
-table.default2 .actions {
-  float: right;
-  text-align: right;
-}
-table.default2 .actions img,
-table.default2 .actions svg {
-  vertical-align: middle;
-}
-table.default2 td.actions,
-table.default2 th.actions {
-  float: none;
-}
-table.default2 tbody.togglable th:before {
-  content: url("../images/icons/16/blue/arr_1down.png");
-  margin-right: 3px;
-  vertical-align: middle;
-}
 table.withdetails > tbody > tr:not(.details) > td:first-child {
   background-image: url("../images/icons/16/blue/arr_1right.png");
   background-repeat: no-repeat;

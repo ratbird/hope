@@ -19,6 +19,7 @@ require_once 'migration.php';
  * Abstract base class for database schema migrations.
  *
  * @package migrations
+ * @deprecated since DB_Seminar is considered deprecated
  */
 class DBMigration extends Migration
 {

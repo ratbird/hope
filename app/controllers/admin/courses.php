@@ -56,11 +56,12 @@ class Admin_CoursesController extends AuthenticatedController
             }
         }
 
-        $this->insts            = Institute::getMyInstitutes($GLOBALS['user']->id);
-        $selected_inst_id       = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
+        $this->insts      = Institute::getMyInstitutes($GLOBALS['user']->id);
+        $selected_inst_id = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
 
         // Look for Inst-Perms
-        $this->selected_inst_id = $selected_inst_id == '' || !$GLOBALS['perm']->have_studip_perm('admin', $selected_inst_id)? $this->insts[0]['Institut_id'] : $selected_inst_id;
+        $this->selected_inst_id = ($selected_inst_id == '' || !$GLOBALS['perm']->have_studip_perm('admin', $selected_inst_id))
+            ? $this->insts[0]['Institut_id'] : $selected_inst_id;
         $this->selected_inst    = Institute::find(($this->selected_inst_id == '' ?: $this->selected_inst_id));
 
         // Semester selection
@@ -439,7 +440,7 @@ class Admin_CoursesController extends AuthenticatedController
             2  => array('name'        => 'Studienbereiche',
                         'button_name' => 'Studienbereiche',
                         'url'         => 'dispatch.php/course/study_areas/show?cid=%s',
-                        'attributes' => array(
+                        'attributes'  => array(
                             'data-dialog' => 'size=50%'
                         )),
             3  => array('name'        => 'Zeiten / Räume',
@@ -463,7 +464,7 @@ class Admin_CoursesController extends AuthenticatedController
             14 => array('name'        => 'Zugangsberechtigungen',
                         'button_name' => 'Zugangsberechtigungen',
                         'url'         => 'dispatch.php/course/admission?cid=%s',
-                        'attributes' => array(
+                        'attributes'  => array(
                             'data-dialog' => 'size=50%'
                         )),
             16 => array('name'        => 'Archivieren',
@@ -545,9 +546,9 @@ class Admin_CoursesController extends AuthenticatedController
     private function getCourses($user_id, $params = array())
     {
         // Init
-        $sortby     = $params['sortby'];
-        $sortFlag   = $params['sortFlag'];
-        $typeFilter = $params['typeFilter'];
+        $sortby        = $params['sortby'];
+        $sortFlag      = $params['sortFlag'];
+        $typeFilter    = $params['typeFilter'];
         $pluginsFilter = in_array('Inhalt', $params['view_filter']);
 
 
@@ -617,7 +618,7 @@ class Admin_CoursesController extends AuthenticatedController
                 $dozenten                          = $this->getTeacher($seminar_id);
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
-                if($pluginsFilter) {
+                if ($pluginsFilter) {
                     $seminars[$seminar_id]['navigations'] = MyRealmModel::getPluginNavigationForSeminar($seminar_id, object_get_visit($seminar_id, 'sem', ''));
                 }
             }

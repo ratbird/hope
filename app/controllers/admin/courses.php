@@ -698,12 +698,13 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function setViewWidget($configs = array())
     {
-        $sidebar = Sidebar::Get();
-        $filters = $this->getViewFilters();
-
+        $configs         = $configs ?: array();
+        $sidebar         = Sidebar::Get();
+        $filters         = $this->getViewFilters();
         $checkbox_widget = new OptionsWidget();
         $checkbox_widget->setTitle(_('Darstellungs-Filter'));
         $size = count($filters);
+
         for ($i = 0; $i < $size; $i++) {
             $state = in_array($filters[$i], $configs);
             $checkbox_widget->addCheckbox($filters[$i], $state, $this->url_for('admin/courses/set_view_filter/' . $i . '/' . $state));

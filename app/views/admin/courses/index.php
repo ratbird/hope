@@ -6,6 +6,5 @@
         <?= MessageBox::info(_(sprintf('Im %s sind bisher keine Veranstaltungen vorhanden.', $semester->name))); ?>
     <? endif ?>
 <? else : ?>
-    <?= MessageBox::info(_(sprintf("Sie wurden noch keinen Einrichtungen zugeordnet.
-        Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>")) ?>
+    <?= MessageBox::info(_(sprintf("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s.", "<a href=\"dispatch.php/siteinfo/show\">", "</a>"))) ?>
 <? endif ?>

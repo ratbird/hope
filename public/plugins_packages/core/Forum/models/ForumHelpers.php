@@ -227,6 +227,11 @@ class ForumHelpers {
         $document->setHeaderTitle(sprintf(_("Forum \"%s\""), $seminar_name['name']));
 
         foreach ($data['list'] as $entry) {
+            if (Config::get()->FORUM_ANONYMOUS_POSTINGS && $entry['anonymous']) {
+                $author = _('anonym');
+            } else {
+                $author = htmlReady($entry['author']);
+            }
             if ($entry['depth'] == 1) {
                 $document->addContent($content);
                 $document->addPage();
@@ -237,12 +242,12 @@ class ForumHelpers {
                 $content .= $entry['content_raw'] ."\n\n";
             } else if ($entry['depth'] == 2) {
                 $content .= '++**'. _('Thema') .': '. $entry['name_raw'] .'**++' . "\n";
-                $content .= '%%' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                $content .= '%%' . sprintf(_('erstellt von %s am %s'), $author,
                     strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '%%' . "\n";
                 $content .= $entry['content_raw'] ."\n\n";
             } else if ($entry['depth'] == 3) {
                 $content .= '**'.$entry['name_raw'] .'**' . "\n";
-                $content .= '%%' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                $content .= '%%' . sprintf(_('erstellt von %s am %s'), $author,
                     strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '%%' . "\n";
                 $content .= $entry['content_raw'] ."\n--\n";
             }

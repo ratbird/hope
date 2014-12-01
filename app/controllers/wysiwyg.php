@@ -30,6 +30,13 @@ class WysiwygException extends Exception {};
 
 class WysiwygHttpException extends WysiwygException {};
 
+class WysiwygHttpExceptionBadRequest extends WysiwygHttpException
+{
+    public function __construct($message = '', $previous = null) {
+        parent::__construct($message, 400, $previous);
+    }
+}
+
 class WysiwygHttpExceptionForbidden extends WysiwygHttpException
 {
     public function __construct($message = '', $previous = null) {
@@ -276,7 +283,9 @@ class WysiwygController extends \AuthenticatedController
             );
         } else {
             // TODO throw a better exception...
-            throw new WysiwygHttpExceptionNotFound(_('invalid parameters'));
+            throw new WysiwygHttpExceptionBadRequest(
+                _('Die Anfrage enthält ungültige Werte.')
+            );
         }
         // all unknown parameters are ignored
     }

@@ -257,8 +257,6 @@ class WysiwygController extends \AuthenticatedController
      * @param array $arguments Must contain exactly one entry: 'current'.
      */
     private function setSettings($group, $arguments) {
-        // 
-        //
         $user = array_shift($arguments);
         if ($group !== 'users' || $user !== 'current') {
             throw new WysiwygHttpExceptionForbidden(
@@ -282,7 +280,6 @@ class WysiwygController extends \AuthenticatedController
                 (boolean)$data->disabled
             );
         } else {
-            // TODO throw a better exception...
             throw new WysiwygHttpExceptionBadRequest(
                 _('Die Anfrage enthält ungültige Werte.')
             );

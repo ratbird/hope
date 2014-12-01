@@ -53,13 +53,13 @@ class StudipSemTree extends TreeAbstract {
     function StudipSemTree($args) {
         $this->root_name = $GLOBALS['UNI_NAME_CLEAN'];
         if (isset($args['visible_only'])){
-            $this->visible_only = $args['visible_only'];
+            $this->visible_only = (int)$args['visible_only'];
         }
         if (isset($args['sem_number']) ){
-            $this->sem_number = $args['sem_number'];
+            $this->sem_number = array_map('intval', $args['sem_number']);
         }
         if ($args['sem_status']){
-            $this->sem_status = $args['sem_status'];
+            $this->sem_status = array_map('intval', $args['sem_status']);
         } else {
             foreach ($GLOBALS['SEM_CLASS'] as $key => $value){
                 if ($value['bereiche']){

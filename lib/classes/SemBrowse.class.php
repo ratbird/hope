@@ -44,22 +44,22 @@ class SemBrowse {
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
             $persistend_field = $this->persistent_fields[$i];
             if (Request::get($persistend_field) != null) {
-                $this->sem_browse_data[$persistend_field] = Request::get($persistend_field);
+                $this->sem_browse_data[$persistend_field] = Request::option($persistend_field);
             }
         }
         $this->search_obj = new StudipSemSearch("search_sem", false, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))),$this->sem_browse_data['show_class']);
 
-        if (Request::quoted($this->search_obj->form_name . "_scope_choose")){
-            $this->sem_browse_data["start_item_id"] = Request::quoted($this->search_obj->form_name . "_scope_choose");
+        if (Request::get($this->search_obj->form_name . "_scope_choose")){
+            $this->sem_browse_data["start_item_id"] = Request::option($this->search_obj->form_name . "_scope_choose");
         }
-        if (Request::quoted($this->search_obj->form_name . "_range_choose")){
-            $this->sem_browse_data["start_item_id"] = Request::quoted($this->search_obj->form_name . "_range_choose");
+        if (Request::get($this->search_obj->form_name . "_range_choose")){
+            $this->sem_browse_data["start_item_id"] = Request::option($this->search_obj->form_name . "_range_choose");
         }
-        if (Request::quoted($this->search_obj->form_name . "_sem")){
-            $this->sem_browse_data['default_sem'] = Request::quoted($this->search_obj->form_name . "_sem");
+        if (Request::get($this->search_obj->form_name . "_sem")){
+            $this->sem_browse_data['default_sem'] = Request::option($this->search_obj->form_name . "_sem");
         }
 
-        if (Request::quoted('keep_result_set') || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
+        if (Request::get('keep_result_set') || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
             $this->show_result = true;
         }
 

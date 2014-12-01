@@ -7,8 +7,8 @@
 // This file is part of Stud.IP
 // StudipRangeTree.class.php
 // Class to handle structure of the "range tree"
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -34,14 +34,14 @@ DbView::addView('range_tree');
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class StudipRangeTree extends TreeAbstract {
-    
+
     var $sem_number;
-    
+
     var $sem_status;
-    
+
     var $sem_dates;
 
     /**
@@ -49,19 +49,19 @@ class StudipRangeTree extends TreeAbstract {
     *
     * do not use directly, call TreeAbstract::GetInstance("StudipRangeTree")
     * @access private
-    */ 
+    */
     function StudipRangeTree($args) {
         $this->root_name = $GLOBALS['UNI_NAME_CLEAN'];
         $this->studip_objects['inst'] = array('pk' => 'Institut_id', 'table' => 'Institute');
         $this->studip_objects['fak'] = array('pk' => 'Institut_id', 'table' => 'Institute');
         if (isset($args['sem_number']) ){
-            $this->sem_number = $args['sem_number'];
+            $this->sem_number = array_map('intval', $args['sem_number']);
         }
         if (isset($args['sem_status']) ){
-            $this->sem_status = $args['sem_status'];
+            $this->sem_status = array_map('intval', $args['sem_status']);
         }
-        $this->visible_only = $args['visible_only'];
-        parent::TreeAbstract(); //calling the baseclass constructor 
+        $this->visible_only = (int)$args['visible_only'];
+        parent::TreeAbstract(); //calling the baseclass constructor
         $this->sem_dates = SemesterData::GetSemesterArray();
     }
 
@@ -86,14 +86,14 @@ class StudipRangeTree extends TreeAbstract {
             $this->storeItem($db->f("item_id"), $db->f("parent_id"), $item_name, $db->f("priority"));
         }
     }
-    
+
     function initEntries(){
         $this->view->params[0] = (isset($this->sem_status)) ? " AND d.status IN('" . join("','", $this->sem_status) . "')" : " ";
         $this->view->params[0] .= $this->visible_only ? " AND visible=1 " : "";
-        $this->view->params[1] = (isset($this->sem_number)) ? " WHERE ((" . $this->view->sem_number_sql 
+        $this->view->params[1] = (isset($this->sem_number)) ? " WHERE ((" . $this->view->sem_number_sql
                                 . ") IN (" . join(",",$this->sem_number) .") OR ((" . $this->view->sem_number_sql
-                                .") <= " . $this->sem_number[count($this->sem_number)-1] 
-                                . "  AND ((" . $this->view->sem_number_end_sql . ") >= " . $this->sem_number[count($this->sem_number)-1] 
+                                .") <= " . $this->sem_number[count($this->sem_number)-1]
+                                . "  AND ((" . $this->view->sem_number_end_sql . ") >= " . $this->sem_number[count($this->sem_number)-1]
                                 . " OR (" . $this->view->sem_number_end_sql  . ") = -1))) " : "";
 
         $db = $this->view->get_query("view:TREE_GET_SEM_ENTRIES");
@@ -102,7 +102,7 @@ class StudipRangeTree extends TreeAbstract {
         }
         $this->entries_init_done = true;
     }
-    
+
     /**
     * Returns Stud.IP range_id of the next "real" object
     *
@@ -110,7 +110,7 @@ class StudipRangeTree extends TreeAbstract {
     * useful for the user rights management
     * @access   public
     * @param    string  $item_id
-    * @return   array   of primary keys from table "institute" 
+    * @return   array   of primary keys from table "institute"
     */
     function getAdminRange($item_id){
         if (!$this->tree_data[$item_id])
@@ -151,7 +151,7 @@ class StudipRangeTree extends TreeAbstract {
     * @param    string  $item_id
     * @return   string
     */
-    
+
     function getNextLink($item_id){
     if (!$this->tree_data[$item_id])
             return false;
@@ -161,7 +161,7 @@ class StudipRangeTree extends TreeAbstract {
         }
         return $ret_id;
     }
-    
+
     function getSemIds($item_id,$ids_from_kids = false){
         if (!$this->tree_data[$item_id])
             return false;
@@ -177,29 +177,29 @@ class StudipRangeTree extends TreeAbstract {
         }
         return $ret;
     }
-    
+
     function getNumEntries($item_id, $num_entries_from_kids = false){
         if (!$this->tree_data[$item_id])
             return false;
         if (!$this->entries_init_done) $this->initEntries();
-        
+
         return parent::getNumEntries($item_id, $num_entries_from_kids);
     }
-    
+
     function InsertItem($item_id, $parent_id, $item_name, $priority,$studip_object,$studip_object_id){
         $view = new DbView();
         $view->params = array($item_id,$parent_id,$item_name,$priority,$studip_object,$studip_object_id);
         $rs = $view->get_query("view:TREE_INS_ITEM");
         return $rs->affected_rows();
     }
-    
+
     function UpdateItem($item_name,$studip_object,$studip_object_id,$item_id){
         $view = new DbView();
         $view->params = array($item_name,$studip_object,$studip_object_id,$item_id);
         $rs = $view->get_query("view:TREE_UPD_ITEM");
         return $rs->affected_rows();
     }
-    
+
     function DeleteItems($items_to_delete){
         $view = new DbView();
         $view->params[0] = (is_array($items_to_delete)) ? $items_to_delete : array($items_to_delete);

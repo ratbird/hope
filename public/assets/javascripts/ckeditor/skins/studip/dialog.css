@@ -543,6 +543,14 @@ a.cke_dialog_ui_button {
 	filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#ffffff', endColorstr='#ccd4e1');
 }
 
+a.cke_dialog_ui_button.cke_disabled {
+    background-image: none;
+    filter: none;
+    background: #e6e6e6 none;
+    cursor: default;
+    opacity: 0.65;
+}
+
 span.cke_dialog_ui_button
 {
 	padding: 0 12px;

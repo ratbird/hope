@@ -63,13 +63,19 @@ $may_edit_faculty = $perm->is_fak_admin()
                             <?= _('Diese Einrichtung hat den Status einer Fakultät.') ?>
                         </option>
                     <? endif; ?>
-                    <? foreach ($faculties as $id => $name): ?>
-                        <option value="<?= $id ?>"
-                                <? if ($id == Request::option('Fakultaet', $institute['fakultaets_id'])) echo 'selected'; ?>
-                        >
-                            <?= htmlReady($name) ?>
+                    <? if ($may_edit_faculty) : ?>
+                        <? foreach ($faculties as $id => $name): ?>
+                            <option value="<?= $id ?>"
+                                    <? if ($id == Request::option('Fakultaet', $institute['fakultaets_id'])) echo 'selected'; ?>
+                            >
+                                <?= htmlReady($name) ?>
+                            </option>
+                        <? endforeach; ?>
+                    <? else : ?>
+                        <option value="<?= $institute['fakultaets_id'] ?>">
+                        <?= htmlReady($institute['fak_name']) ?>
                         </option>
-                    <? endforeach; ?>
+                    <? endif; ?>
                     </select>
                 <? endif; ?>
                 </td>

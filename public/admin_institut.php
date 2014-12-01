@@ -384,12 +384,12 @@ switch ($submitted_task) {
         // delete all contents in forum-modules
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
             $plugin->deleteContents($i_id);  // delete content irrespective of plugin-activation in the seminar
-            
+
             if ($plugin->isActivated($i_id)) {   // only show a message, if the plugin is activated, to not confuse the user
                 $message = sprintf(_('Einträge in %s gelöscht.'), $plugin->getPluginName());
                 PageLayout::postMessage(MessageBox::success($message));
             }
-        }                
+        }
 
         $db_ar = delete_all_documents($i_id);
         if ($db_ar > 0) {
@@ -516,7 +516,9 @@ if (!$_num_inst) {
         $query = "SELECT a.Institut_id, Name
                   FROM user_inst AS a
                   LEFT JOIN Institute USING (Institut_id)
-                  WHERE user_id = ? AND inst_perms = 'admin' AND fakultaets_id = ?
+                  WHERE user_id = ? AND inst_perms = 'admin'
+                  AND a.Institut_id=fakultaets_id
+                  AND fakultaets_id <> ?
                   ORDER BY Name";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user->id, $i_view ?: ''));

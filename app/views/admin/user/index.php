@@ -160,7 +160,3 @@ use Studip\Button, Studip\LinkButton;
 <? if (count($users) > 0 && $users != 0) : ?>
 <?= $this->render_partial("admin/user/_results", array('users' => $users)) ?>
 <? endif ?>
-
-<? //infobox
-include '_infobox.php';
-

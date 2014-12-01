@@ -50,9 +50,10 @@ class Admin_UserController extends AuthenticatedController
             $this->set_layout(null);
         }
 
-
         $this->action = $action;
         $this->args = $args;
+
+        NotificationCenter::addObserver($this, 'addSidebar', 'SidebarWillRender');
     }
 
     /**
@@ -504,7 +505,7 @@ class Admin_UserController extends AuthenticatedController
 
         $this->perm = $perm;
         $this->prelim = $prelim;
-        
+
         //check auth_plugins
         if (!in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN']) && !$prelim) {
             PageLayout::postMessage(MessageBox::info(_("Die Standard-Authentifizierung ist ausgeschaltet. Das Anlegen von neuen Benutzern ist nicht möglich!")));
@@ -743,7 +744,7 @@ class Admin_UserController extends AuthenticatedController
     /**
      * Migrate 2 users to 1 account. This is a part of the old numit-plugin
      */
-    function migrate_action()
+    function migrate_action($user_id = null)
     {
         //check submitted form
         if (Request::submitted('umwandeln')) {
@@ -780,6 +781,7 @@ class Admin_UserController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::error(_("Bitte wählen Sie zwei gültige Benutzer aus.")));
             }
         }
+        $this->user = $user_id ? User::find($user_id) : null;
     }
 
     /**
@@ -938,5 +940,99 @@ class Admin_UserController extends AuthenticatedController
 
         PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.'), $details));
         $this->redirect('admin/user/edit/' . $user_id);
+    }
+
+    public function addSidebar()
+    {
+        $sidebar = Sidebar::Get();
+        $sidebar->setImage('sidebar/person-sidebar.png');
+
+        $actions = new ActionsWidget();
+
+        if (in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
+            $actions->addLink(_('Neuen Benutzer anlegen'),
+                              $this->url_for('admin/user/new'),
+                              'icons/16/blue/add/person.png')
+                    ->asDialog();
+        }
+        $actions->addLink(_('Neuen vorläufigen Benutzer anlegen'),
+                          $this->url_for('admin/user/new/prelim'),
+                          'icons/16/blue/add/date.png')
+                ->asDialog();
+        $actions->addLink(_('Benutzer zusammenführen'),
+                          $this->url_for('admin/user/migrate/' . (($this->user && is_array($this->user)) ? $this->user['user_id'] : '')),
+                          'icons/16/blue/new/persons.png');
+
+        $search = new SearchWidget();
+        $search->addNeedle(_('Nutzer suchen'),
+                           'user_id',
+                           true,
+                           new StandardSearch('user_id'),
+                           'function (value) { document.location = "' . $this->url_for('admin/user/edit') . '/" + value; }');
+
+        $sidebar->addWidget($actions);
+        $sidebar->addWidget($search);
+
+        if ($this->action === 'index' && count($this->users) > 0) {
+            $export = new ExportWidget();
+            $export->addLink(_('Suchergebnis exportieren'),
+                             $this->url_for('admin/user?export=1'),
+                             'icons/16/blue/move_right/persons.png');
+            $sidebar->addWidget($export);
+        }
+
+        if (!$this->user || !is_array($this->user)) {
+            return;
+        }
+
+        $user_actions = new ActionsWidget();
+        $user_actions->setTitle(sprintf(_('Aktionen für "%s"'), $this->user['username']));
+
+        $user_actions->addLink(_('Nachricht an Benutzer verschicken'),
+                               URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $this->user['username']),
+                               'icons/16/blue/mail.png')
+                     ->asDialog();
+
+        if ($this->user['locked']) {
+            $user_actions->addLink(_('Benutzer entsperren'),
+                                   $this->url_for('admin/user/unlock/' . $this->user['user_id']),
+                                   'icons/16/blue/lock-unlocked.png');
+        }
+        if ($this->user['auth_plugin'] !== 'preliminary' && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($this->user['perms'], words('root admin')))) {
+            if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $this->user['auth_plugin'])) {
+                $user_actions->addLink(_('Neues Passwort setzen'),
+                                       $this->url_for('admin/user/change_password/' . $this->user['user_id']),
+                                       'icons/16/blue/key.png');
+            }
+            $user_actions->addLink(_('Benutzer löschen'),
+                                   $this->url_for('admin/user/delete/' . $this->user['user_id'] . '/edit'),
+                                   'icons/16/blue/trash.png');
+        }
+
+        $sidebar->insertWidget($user_actions, 'actions', 'user_actions');
+
+        $views   = new ViewsWidget();
+
+        $views->addLink(_('Zurück zur Übersicht'),
+                        $this->url_for('admin/user'))
+              ->setActive(false);
+        $views->addLink(_('Benutzer verwalten'),
+                        $this->url_for('admin/user/edit/' . $this->user['user_id']))
+              ->setActive(true);
+        $views->addLink(_('Zum Benutzerprofil'),
+                        URLHelper::getLink('dispatch.php/profile?username=' . $this->user['username']),
+                        'icons/16/blue/person.png');
+
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $views->addLink(_('Datei- und Aktivitätsübersicht'),
+                            URLHelper::getLink('user_activities.php?username=' . $this->user['username']),
+                            'icons/16/blue/vcard.png');
+            if ($GLOBALS['LOG_ENABLE']) {
+                $views->addLink(_('Benutzereinträge im Log'),
+                                URLHelper::getLink('dispatch.php/event_log/show?search=' . $this->user['username'] .'&type=user&object_id=' .$user['user_id']),
+                                'icons/16/blue/log.png');
+            }
+        }
+        $sidebar->insertWidget($views, 'user_actions', 'views');
     }
 }

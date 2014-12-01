@@ -554,27 +554,3 @@ use Studip\Button, Studip\LinkButton;
 <script>
     jQuery('#expiration_date').datepicker();
 </script>
-
-<? //infobox
-
-include '_infobox.php';
-
-$actions->addLink(_('Zum Benutzerprofil'), URLHelper::getLink('dispatch.php/profile?username=' . $user['username']), 'icons/16/blue/person.png');
-$actions->addLink(_('Nachricht an Benutzer verschicken'), URLHelper::getLink('dispatch.php/messages/write?rec_uname=' . $user['username']), 'icons/16/blue/mail.png');
-
-if ($GLOBALS['perm']->have_perm('root')) {
-    $actions->addLink(_('Datei- und Aktivitätsübersicht'), URLHelper::getLink('user_activities.php?username=' . $user['username']), 'icons/16/blue/vcard.png');
-    if ($GLOBALS['LOG_ENABLE']) {
-        $actions->addLink(_('Benutzereinträge im Log'), URLHelper::getLink('dispatch.php/event_log/show?search=' . $user['username'] .'&type=user&object_id=' .$user['user_id']), 'icons/16/blue/log.png');
-    }
-}
-if ($user['locked']) {
-    $actions->addLink(_('Benutzer entsperren'), $controller->url_for('admin/user/unlock/' . $user['user_id'] . ''), 'icons/16/blue/lock-unlocked.png');
-}
-if (!$prelim && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user['perms'], words('root admin')))) {
-    if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $user['auth_plugin'])) {
-        $actions->addLink(_('Neues Passwort setzen'), $controller->url_for('admin/user/change_password/' . $user['user_id'] . '') , 'icons/16/blue/lock-locked.png');
-    }
-    $actions->addLink(_('Benutzer löschen'), $controller->url_for('admin/user/delete/' . $user['user_id'] . '/edit') , 'icons/16/blue/trash.png');
-}
-

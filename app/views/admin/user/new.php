@@ -158,7 +158,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
     </tr>
 <? endif ?>
-    <tr>
+    <tr data-dialog-button>
         <td colspan="2" align="center">
             <?= Button::createAccept(_('Speichern'),'speichern', array('title' => _('Einen neuen Benutzer anlegen')))?>
             <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort'))?>
@@ -166,9 +166,3 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 </table>
 </form>
-
-<? //infobox
-
-include '_infobox.php';
-
-?>

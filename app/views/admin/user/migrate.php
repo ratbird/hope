@@ -4,11 +4,12 @@
 use Studip\Button, Studip\LinkButton;
 
 ?>
-<h2><?= _('Benutzermigration') ?></h2>
-
 <form action="<?= $controller->url_for('admin/user/migrate') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
+        <caption>
+            <?= _('Benutzermigration') ?>
+        </caption>
         <colgroup>
             <col width="250px">
             <col>
@@ -19,7 +20,13 @@ use Studip\Button, Studip\LinkButton;
                     <?= _('Alter Benutzer:') ?>
                 </td>
                 <td>
+                <? if ($user !== null): ?>
+                    <?= QuickSearch::get('old_id', new StandardSearch('user_id'))
+                                   ->defaultValue($user->id, $user->getFullname() . ' (' . $user->username . ')')
+                                   ->render() ?>
+                <? else: ?>
                     <?= QuickSearch::get('old_id', new StandardSearch('user_id'))->render() ?>
+                <? endif; ?>
                 </td>
             </tr>
             <tr>
@@ -63,12 +70,9 @@ use Studip\Button, Studip\LinkButton;
                     <?= Button::create(_('Umwandeln'),
                                        'umwandeln',
                                        array('title' => _('Den ersten Benutzer in den zweiten Benutzer migrieren'))) ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/user/index')) ?>
                 </td>
             </tr>
         </tfoot>
     </table>
 </form>
-
-<? //infobox
-
-include '_infobox.php';

@@ -81,6 +81,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
     public function setActive($active = true)
     {
         $this->active = $active;
+        return $this;
     }
 
     public function asDialog($state = '')
@@ -90,6 +91,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
         } else {
             unset($this->attributes['data-dialog']);
         }
+        return $this;
     }
 
     public function setTarget($target)
@@ -99,6 +101,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
         } else {
             unset($this->attributes['target']);
         }
+        return $this;
     }
     
     public function addClass($class)
@@ -106,6 +109,7 @@ class LinkElement extends WidgetElement implements ArrayAccess
         $this->attributes['class'] = $this->attributes['class'] 
             ? $this->attributes['class']." ".$class 
             : $class;
+        return $this;
     }
     
     public function render()

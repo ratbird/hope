@@ -942,6 +942,13 @@ class Admin_UserController extends AuthenticatedController
         $this->redirect('admin/user/edit/' . $user_id);
     }
 
+    public function reset_notification_action($user_id)
+    {
+        $resetted = DBManager::get()->execute("UPDATE seminar_user SET notification=0 WHERE user_id=?", array($user_id));
+        PageLayout::postMessage(MessageBox::success(sprintf(_('Die Benachrichtigungseinstellungen für %s Veranstaltungen wurden zurück gesetzt.'), $resetted)));
+        $this->redirect('admin/user/edit/' . $user_id);
+    }
+
     public function addSidebar()
     {
         $sidebar = Sidebar::Get();
@@ -1008,6 +1015,11 @@ class Admin_UserController extends AuthenticatedController
                                    $this->url_for('admin/user/delete/' . $this->user['user_id'] . '/edit'),
                                    'icons/16/blue/trash.png');
         }
+        if (get_config('MAIL_NOTIFICATION_ENABLE') && CourseMember::findOneBySQL("user_id = ? AND notification <> 0", array($this->user['user_id']))) {
+            $user_actions->addLink(_('Benachrichtigungen zurücksetzen'),
+                $this->url_for('admin/user/reset_notification/' . $this->user['user_id']),
+                'icons/16/blue/remove');
+        }
 
         $sidebar->insertWidget($user_actions, 'actions', 'user_actions');
 
@@ -1029,7 +1041,7 @@ class Admin_UserController extends AuthenticatedController
                             'icons/16/blue/vcard.png');
             if ($GLOBALS['LOG_ENABLE']) {
                 $views->addLink(_('Benutzereinträge im Log'),
-                                URLHelper::getLink('dispatch.php/event_log/show?search=' . $this->user['username'] .'&type=user&object_id=' .$user['user_id']),
+                                URLHelper::getLink('dispatch.php/event_log/show?search=' . $this->user['username'] .'&type=user&object_id=' .$this->user['user_id']),
                                 'icons/16/blue/log.png');
             }
         }

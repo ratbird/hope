@@ -55,7 +55,7 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
     private static $originalErrorReporting;
 
-    public static function setUpBeforeClass()
+    public function setUp()
     {
         MarkupTest::$originalErrorReporting = error_reporting();
 
@@ -63,7 +63,7 @@ class MarkupTest extends PHPUnit_Framework_TestCase
         error_reporting(E_ALL | E_STRICT);
     }
 
-    public static function tearDownAfterClass()
+    public function tearDown()
     {
         error_reporting(MarkupTest::$originalErrorReporting);
     }

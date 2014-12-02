@@ -11,6 +11,7 @@
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'config.inc.php'; //$SMILE_SHORT and $SYMBOL_SHORT needed by formatReady
+require_once 'lib/models/SimpleORMap.class.php';
 require_once 'lib/models/OpenGraphURL.class.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';

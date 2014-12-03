@@ -1,6 +1,5 @@
 02.12.2014 v 3.1
 http://develop.studip.de/trac/query?milestone=Stud.IP+3.1
-- summary [#id]
 - Tabellen nicht vom CKEditor stylen lassen [#4933]
 - Beitrag zerstört Forum-Layout [#5122]
 - Lifter001: Unterstützung von Tabbed Browsing [#68]

@@ -36,11 +36,10 @@ abstract class StudipController extends Trails_Controller
 
             // show login-screen, if authentication is "nobody"
             $GLOBALS['auth']->login_if((Request::get('again') || !$this->allow_nobody) && $GLOBALS['user']->id == 'nobody');
-        }
 
-        $this->flash = Trails_Flash::instance();
+            // Setup flash instance
+            $this->flash = Trails_Flash::instance();
 
-        if ($this->with_session) {
             // set up user session
             include 'lib/seminar_open.php';
         }
@@ -61,9 +60,13 @@ abstract class StudipController extends Trails_Controller
         #
         #   $this->set_layout(NULL)
         #
-        $this->set_layout($GLOBALS['template_factory']->open(Request::isXhr() ? 'layouts/dialog' : 'layouts/base'));
+        $layout_file = Request::isXhr()
+                     ? 'layouts/dialog.php'
+                     : 'layouts/base.php'
+        $layout = $GLOBALS['template_factory']->open($layout_file);
+        $this->set_layout($layout);
 
-        $this->set_content_type('text/html;charset='.$this->encoding);
+        $this->set_content_type('text/html;charset=' . $this->encoding);
     }
 
     /**
@@ -74,7 +77,14 @@ abstract class StudipController extends Trails_Controller
      *
      * @return void
      */
-    function after_filter($action, $args) {
+    function after_filter($action, $args)
+    {
+        parent::after_filter($action, $args);
+
+        if (Request::isXhr() && !isset($this->response->headers['X-Title']) && PageLayout::hasTitle()) {
+            $this->response->add_header('X-Title', PageLayout::getTitle());
+        }
+
         if ($this->with_session) {
             page_close();
         }
@@ -307,6 +317,13 @@ abstract class StudipController extends Trails_Controller
         return $this->response;
     }
 
+    /**
+     * Renders a given template and returns the resulting string.
+     *
+     * @param string $template Name of the template file
+     * @param mixed  $layout   Optional layout
+     * @return string
+     */
     function render_template_as_string($template, $layout = null)
     {
         $template = $this->get_template_factory()->open($template);

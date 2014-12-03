@@ -105,6 +105,7 @@ class PageLayout
 
     /**
      * Set the page title to the given text.
+     * @param string $title Page title
      */
     public static function setTitle($title)
     {
@@ -112,7 +113,17 @@ class PageLayout
     }
 
     /**
+     * Returns whether a title has been set
+     * @return bool
+     */
+    public static function hasTitle()
+    {
+        return isset(self::$title);
+    }
+
+    /**
      * Get the current page title (defaults to $UNI_NAME_CLEAN).
+     * @return string
      */
     public static function getTitle()
     {

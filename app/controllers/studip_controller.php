@@ -13,21 +13,71 @@
 
 abstract class StudipController extends Trails_Controller
 {
+    protected $with_session = false; //do we need to have a session for this controller
+    protected $allow_nobody = true; //should 'nobody' allowed for this controller or redirected to login?
+    protected $encoding     = "windows-1252";
 
     function before_filter(&$action, &$args)
     {
         $this->current_action = $action;
         // allow only "word" characters in arguments
         $this->validate_args($args);
-        
-        // Set default layout and encoding
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;Charset=windows-1252');
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-        }
+
         parent::before_filter($action, $args);
+
+        if ($this->with_session) {
+            # open session
+            page_open(array(
+                'sess' => 'Seminar_Session',
+                'auth' => $this->allow_nobody ? 'Seminar_Default_Auth' : 'Seminar_Auth',
+                'perm' => 'Seminar_Perm',
+                'user' => 'Seminar_User'
+            ));
+
+            // show login-screen, if authentication is "nobody"
+            $GLOBALS['auth']->login_if((Request::get('again') || !$this->allow_nobody) && $GLOBALS['user']->id == 'nobody');
+        }
+
+        $this->flash = Trails_Flash::instance();
+
+        if ($this->with_session) {
+            // set up user session
+            include 'lib/seminar_open.php';
+        }
+
+        # Set base layout
+        #
+        # If your controller needs another layout, overwrite your controller's
+        # before filter:
+        #
+        #   class YourController extends AuthenticatedController {
+        #     function before_filter(&$action, &$args) {
+        #       parent::before_filter($action, $args);
+        #       $this->set_layout("your_layout");
+        #     }
+        #   }
+        #
+        # or unset layout by sending:
+        #
+        #   $this->set_layout(NULL)
+        #
+        $this->set_layout($GLOBALS['template_factory']->open(Request::isXhr() ? 'layouts/dialog' : 'layouts/base'));
+
+        $this->set_content_type('text/html;charset='.$this->encoding);
+    }
+
+    /**
+     * Callback function being called after an action is executed.
+     *
+     * @param string Name of the action to perform.
+     * @param array  An array of arguments to the action.
+     *
+     * @return void
+     */
+    function after_filter($action, $args) {
+        if ($this->with_session) {
+            page_close();
+        }
     }
 
     /**

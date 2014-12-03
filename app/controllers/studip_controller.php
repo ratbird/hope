@@ -15,7 +15,8 @@ abstract class StudipController extends Trails_Controller
 {
     protected $with_session = false; //do we need to have a session for this controller
     protected $allow_nobody = true; //should 'nobody' allowed for this controller or redirected to login?
-    protected $encoding     = "windows-1252";
+    protected $encoding = "windows-1252";
+    protected $utf8decode_xhr = false; //uf8decode request parameters from XHR ?
 
     function before_filter(&$action, &$args)
     {
@@ -65,8 +66,15 @@ abstract class StudipController extends Trails_Controller
                      : 'layouts/base.php';
         $layout = $GLOBALS['template_factory']->open($layout_file);
         $this->set_layout($layout);
-
-        $this->set_content_type('text/html;charset=' . $this->encoding);
+        if ($this->encoding) {
+            $this->set_content_type('text/html;charset=' . $this->encoding);
+        }
+        if (Request::isXhr() && $this->utf8decode_xhr) {
+            $request = Request::getInstance();
+            foreach ($request as $key => $value) {
+                $request[$key] = studip_utf8decode($value);
+            }
+        }
     }
 
     /**

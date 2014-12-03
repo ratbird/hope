@@ -10,6 +10,7 @@
             'votes'               => 'vote',
             'basic_data'          => 'seminar',
             'participants'        => 'persons',
+            'plugins'             => 'plugin'
         );
         return sprintf('icons/16/%s/%s.png', $color, $mapping[$area] ?: $area);
     }

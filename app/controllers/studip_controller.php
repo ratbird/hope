@@ -62,7 +62,7 @@ abstract class StudipController extends Trails_Controller
         #
         $layout_file = Request::isXhr()
                      ? 'layouts/dialog.php'
-                     : 'layouts/base.php'
+                     : 'layouts/base.php';
         $layout = $GLOBALS['template_factory']->open($layout_file);
         $this->set_layout($layout);
 

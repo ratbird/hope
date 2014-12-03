@@ -21,7 +21,7 @@
             _.bindAll(this, 'compress', 'uncompress');
             if ((this.list = $(element)).length) {
                 if (!childSelector) {
-                    childSelector = 'li a span';
+                    childSelector = 'li a span.tab-title';
                 }
                 this.items = $(childSelector, this.list);
                 _.each(this.items.text(function () {

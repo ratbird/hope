@@ -24,10 +24,10 @@ foreach (Navigation::getItem("/")->getSubNavigation() as $path => $nav) {
                         <? if ($image = $nav->getImage()) : ?>
                             <?= Assets::img($image['src'], array('class' => "tab-icon", 'alt' => htmlReady($nav->getTitle()), 'title' => $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()))) ?>
                         <? endif ?>
-                        <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) :  htmlReady($nav->getTitle())?>" ><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
+                        <span title="<?= $nav->getDescription() ? htmlReady($nav->getDescription()) :  htmlReady($nav->getTitle())?>" class="tab-title"><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
                     </a>
                 <? else: ?>
-                    <span class="quiet">
+                    <span class="quiet tab-title">
                         <? if ($image = $nav->getImage()) : ?>
                             <?= Assets::img($image['src'], array('class' => "tab-icon", 'alt' => htmlReady($nav->getTitle()), 'title' => htmlReady($nav->getTitle()))) ?>
                         <? endif ?>

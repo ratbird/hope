@@ -20,9 +20,7 @@ class StartNavigation extends Navigation
      */
     public function __construct()
     {
-
-        parent::__construct(_('Start'), 'index.php');
-
+        parent::__construct(_('Start'), URLHelper::getLink('dispatch.php/start'));
     }
 
     public function initItem()

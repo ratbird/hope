@@ -15,26 +15,39 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class MultipersonsearchController extends AuthenticatedController {
 
+    protected $utf8decode_xhr = true;
+
     /**
      * Ajax action used for searching persons.
      *
      * @param $name string name of MultiPersonSearch object
-     * @param $searchterm string searchterm
      */
-    public function ajax_search_action($name) {
-        $searchterm = studip_utf8decode(Request::get("s"));
+    public function ajax_search_action($name)
+    {
+        $searchterm = Request::get("s");
         $searchterm = str_replace(",", " ", $searchterm);
         $searchterm = preg_replace('/\s+/', ' ', $searchterm);
 
+        $result = array();
         // execute searchobject if searchterm is at least 3 chars long
         if (strlen($searchterm) >= 3) {
             $mp = MultiPersonSearch::load($name);
             $searchObject = $mp->getSearchObject();
-            $result = array_map(function($r) {return $r['user_id'];}, $searchObject->getResults($searchterm, array(), 50));
-            $this->result = User::findMany($result, 'ORDER BY nachname asc, vorname asc');
-            $this->alreadyMember = $mp->getDefaultSelectedUsersIDs();
+            $result = array_map(function ($r) {
+                return $r['user_id'];
+            }, $searchObject->getResults($searchterm, array(), 50));
+            $result = User::findMany($result, 'ORDER BY nachname asc, vorname asc');
+            $alreadyMember = $mp->getDefaultSelectedUsersIDs();
         }
-        $this->render_template('multipersonsearch/ajax.php');
+        $output = array();
+
+        foreach ($result as $user) {
+            $output[] = array('user_id' => $user->id,
+                              'avatar'  => Avatar::getAvatar($user->id)->getURL(Avatar::SMALL),
+                              'text'    => $user->nachname . ", " . $user->vorname . " -- " . htmlReady($user->perms) . " (" . htmlReady($user->username) . ")",
+                              'member'  => in_array($user->id, $alreadyMember));
+        }
+        $this->render_json($output);
     }
 
     /**
@@ -98,6 +111,7 @@ class MultipersonsearchController extends AuthenticatedController {
      * usability for no-JavaScript users as for JavaScript users.
      */
     public function no_js_form_action() {
+
         if (!empty($_POST)) {
             CSRFProtection::verifyUnsafeRequest();
         }

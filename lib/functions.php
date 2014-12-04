@@ -2072,6 +2072,10 @@ function studip_default_exception_handler($exception) {
         Metrics::increment('core.exception.' . $exception_class);
     }
 
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    $layout = 'layouts/base.php';
     if ($exception instanceof AccessDeniedException) {
         $status = 403;
         $template = 'access_denied_exception';
@@ -2097,16 +2101,14 @@ function studip_default_exception_handler($exception) {
     if (!strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest')) {
         header('Content-Type: application/json; charset=UTF-8');
         $template = 'json_exception';
+        $layout = null;
     }
 
-    while (ob_get_level()) {
-        ob_end_clean();
-    }
 
     try {
         $args = compact('exception', 'status');
         ob_start();
-        echo $GLOBALS['template_factory']->render($template, $args);
+        echo $GLOBALS['template_factory']->render($template, $args, $layout);
     } catch (Exception $e) {
         ob_end_clean();
         echo 'Error: ' . htmlReady($e->getMessage());

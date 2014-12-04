@@ -1,13 +1,6 @@
 <?php
-# Lifter010: DONE - no form elements in this page
-
-include 'lib/include/html_head.inc.php';
-
 $current_page = _('Kein Objekt gewählt')
 ?>
-
-<?= $this->render_partial('header', compact('current_page')) ?>
-
     <?= MessageBox::exception(htmlReady($exception->getMessage()), array(
             _('Dieser Teil des Systems kann nur genutzt werden, wenn Sie vorher ein Objekt (Veranstaltung oder Einrichtung) gewählt haben.'),
             sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.')))) ?>
@@ -23,5 +16,3 @@ $current_page = _('Kein Objekt gewählt')
     <p>
       <?= _('Zurück zur') ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _('Startseite') ?></a>
     </p>
-
-<? include 'lib/include/html_end.inc.php'; ?>

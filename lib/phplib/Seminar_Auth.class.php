@@ -312,6 +312,14 @@ class Seminar_Auth
      */
     function auth_loginform()
     {
+        if (Request::isXhr()) {
+            if (isset($_SERVER['HTTP_X_DIALOG'])) {
+                header('X-Location: ' . URLHelper::getURL($_SERVER['REQUEST_URI']));
+                page_close();
+                die();
+            }
+            throw new AccessDeniedException();
+        }
         // first of all init I18N because seminar_open is not called here...
         global $_language_path;
 

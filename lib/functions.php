@@ -2078,6 +2078,8 @@ function studip_default_exception_handler($exception) {
     } else if ($exception instanceof CheckObjectException) {
         $status = 403;
         $template = 'check_object_exception';
+    } elseif ($exception instanceof LoginException) {
+        $GLOBALS['auth']->login_if(true);
     } else {
         if ($exception instanceOf Trails_Exception) {
             $status = $exception->getCode();

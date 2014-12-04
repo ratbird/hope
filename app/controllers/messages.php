@@ -16,6 +16,7 @@ require_once 'app/controllers/authenticated_controller.php';
 class MessagesController extends AuthenticatedController {
 
     protected $number_of_displayed_messages = 50;
+    protected $utf8decode_xhr = true;
 
     function before_filter (&$action, &$args)
     {
@@ -24,16 +25,12 @@ class MessagesController extends AuthenticatedController {
         PageLayout::setTitle(_("Nachrichten"));
         PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
 
-        if (Request::isXhr()) {
-            $this->set_layout(null);
+        if (Request::isXhr()&& Request::isGet()) {
             $request = Request::getInstance();
-            foreach ($request as $key => $value) {
-                //preserve defaults encoded in links
-                if (Request::isGet() && in_array($key, words('default_body default_subject'))) continue;
-                $request[$key] = studip_utf8decode($value);
+            foreach(words('default_body default_subject') as $key) {
+                $request[$key] = Request::removeMagicQuotes($_GET[$key]);
             }
         }
-        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     public function overview_action($message_id = null)

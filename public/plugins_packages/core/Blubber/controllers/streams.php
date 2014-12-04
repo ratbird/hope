@@ -328,7 +328,7 @@ class StreamsController extends PluginController {
             throw new AccessDeniedException("Kein Zugriff");
         }
         $this->set_content_type('text/text');
-        $this->render_text(studip_utf8encode($posting['description']));
+        $this->render_text($posting['description']);
     }
 
     /**
@@ -396,7 +396,7 @@ class StreamsController extends PluginController {
             $posting->delete();
         }
         BlubberPosting::$course_hashes = ($thread['user_id'] !== $thread['Seminar_id'] ? $thread['Seminar_id'] : false);
-        $this->render_text(studip_utf8encode(BlubberPosting::format($posting['description'])));
+        $this->render_text(BlubberPosting::format($posting['description']));
     }
 
     /**
@@ -411,7 +411,7 @@ class StreamsController extends PluginController {
             throw new AccessDeniedException("Kein Zugriff");
         }
         BlubberPosting::$course_hashes = ($thread['context_type'] === "course" ? $thread['Seminar_id'] : false);
-        $this->render_text(studip_utf8encode(BlubberPosting::format($posting['description'])));
+        $this->render_text(BlubberPosting::format($posting['description']));
     }
 
     /**
@@ -889,7 +889,7 @@ class StreamsController extends PluginController {
         $template->set_attributes($this->get_assigned_variables());
         $template->set_layout(null);
         $output = $template->render();
-        $this->render_text(studip_utf8encode($output));
+        $this->render_text($output);
     }
     
     public function public_panel_action() {
@@ -902,8 +902,7 @@ class StreamsController extends PluginController {
         $template->set_attributes($this->get_assigned_variables());
         $template->set_layout(null);
         $output = $template->render();
-        echo studip_utf8encode($output);
-        $this->render_nothing();
+        $this->render_text($output);
     }
     
     public function private_panel_action() {
@@ -916,8 +915,7 @@ class StreamsController extends PluginController {
         $template->set_attributes($this->get_assigned_variables());
         $template->set_layout(null);
         $output = $template->render();
-        echo studip_utf8encode($output);
-        $this->render_nothing();
+        $this->render_text($output);
     }
     
     public function get_possible_mentions_action() {

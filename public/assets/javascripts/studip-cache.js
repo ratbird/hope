@@ -1,5 +1,5 @@
 /**
- * Studip Caching in JavaScript
+ * Stud.IP: Caching in JavaScript
  *
  * Uses session storage or local storage for persistent storage across
  * browser sessions for items with a given expiry.
@@ -16,9 +16,28 @@
  * Pass set() an expiry duration in seconds to allow persistent storage
  * across browser sessions.
  *
+ * You may pass get() a creator function as an optional second parameter
+ * so the value will be generated on the fly if not found in cache.
+ *
+ * Example:
+ *
+ *     var cache = STUDIP.Cache.getInstance(),
+ *         creator = function (index) { return 'Hello ' + index; };
+ *     cache.remove('World');
+ *     console.log(cache.get('World', creator));
+ *     // Will result in 'Hello World' both on the console and in cache
+ * 
  * Cache instances may use prefixes to avoid conflicts with other js
  * functions (this is the single reason why the lib was designed to use a
  * getInstance() method).
+ *
+ * Example:
+ *
+ *     var cache0 = STUDIP.Cache.getInstance(''),
+ *         cache1 = STUDIP.Cache.getInstance('foo');
+ *     cache0.set('foobar', 'baz');
+ *     console.log([cache0.get('bar'), cache1.get('bar')]);
+ *     // Will result in [undefined, 'baz']
  *
  * If the browser does not support any of the storage types, a dummy polyfill
  * will be used that doesn't actually store data.
@@ -135,15 +154,20 @@
 
     /**
      * Retrieves an object from the cache for the given key.
+     * You may provide an additional creator function if the
+     * value was not found to immediately create and set it.
+     * The function will be passed the index as it's only argument.
      *
-     * @param String index Key used to store the item
+     * @param String index   Key used to store the item
+     * @param mixed  creator Optional creator function for the value
+     * @param mixed  expires Optional storage duration in seconds
      * @return mixed Value of the item or null if not found.
      */
     Cache.prototype.get = function (index, setter, expires) {
         var result = this.locate(index);
         if (result === null && setter && typeof setter === 'function') {
             result = setter(index);
-            this.set(index, result, expires)
+            this.set(index, result, expires);
         }
         return result;
     };

@@ -194,11 +194,13 @@ abstract class StudipController extends Trails_Controller
      */
     public function redirect($to)
     {
-        if (func_num_args() > 1) {
+        $from_dialog = Request::isXhr() && isset($_SERVER['HTTP_X_DIALOG']);
+
+        if (func_num_args() > 1 || $from_dialog) {
             $to = call_user_func_array(array($this, 'url_for'), func_get_args());
         }
-        
-        if (Request::isXhr() && isset($_SERVER['HTTP_X_DIALOG'])) {
+
+        if ($from_dialog) {
             $this->response->add_header('X-Location', $to);
             $this->render_nothing();
         } else {

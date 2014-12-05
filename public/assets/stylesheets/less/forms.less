@@ -102,7 +102,7 @@ label.required {
         border-radius: 4px;
         color: #333;
         margin-top:1ex;
-        transition: all 0.3s ease-out;
+        .transition(all 0.3s ease-out);
         
         &:hover {
             border-radius: 4px
@@ -128,5 +128,16 @@ label.required {
 
     .studip_input_wrapper {
         padding: 1ex;
+    }
+}
+.studip-checkbox {
+    opacity: 0;
+    position: absolute;
+    + label {
+        .icon-before('blue/checkbox-unchecked.png', 16, 5px);
+        cursor: pointer;
+    }
+    &:checked + label {
+        .icon-before('blue/checkbox-checked.png', 16, 5px);
     }
 }

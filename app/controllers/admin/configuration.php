@@ -1,19 +1,13 @@
 <?php
-# Lifter010: TODO
 /**
  * configuration.php - controller class for the configuration
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Nico Müller <nico.mueller@uni-oldenburg.de>
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @package     admin
- * @since       2.0
+ * @author  Jan-Hendrik Willms <tleilax+stuip@gmail.com>
+ * @author  Nico Müller <nico.mueller@uni-oldenburg.de>
+ * @author  Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @license GPL2 or any later version
+ * @package admin
+ * @since   2.0
  */
 
 //Imports
@@ -22,201 +16,247 @@ require_once 'app/models/configuration.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
 
-
 class Admin_ConfigurationController extends AuthenticatedController
 {
     /**
-     * Common tasks for all actions.
+     * Common before filter for all actions.
+     *
+     * @param String $action Called actions
+     * @param Array  $args   Passed arguments
      */
     public function before_filter(&$action, &$args)
     {
-        global $perm;
-
         parent::before_filter($action, $args);
 
         // user must have root permission
-        $perm->check('root');
+        $GLOBALS['perm']->check('root');
 
         // set navigation
         Navigation::activateItem('/admin/config/configuration');
+
+        $this->setupSidebar(strpos($action, 'user') !== false);
+    }
+
+    /**
+     * Specialized redirect function that handles ajax request and
+     * can be invoked in the same way as url_for.
+     *
+     * @param String $to Location to redirect to
+     */
+    public function redirect($to)
+    {
+        $to = call_user_func_array(array($this, 'url_for'), func_get_args());
+        
+        if (Request::isXhr()) {
+            $this->response->add_header('X-Location', $to);
+            $this->render_nothing();
+        } else {
+            parent::redirect($to);
+        }
     }
 
     /**
      * Maintenance view for the configuration parameters
      *
-     * @param   string $section
+     * @param mixed $section Open section
      */
-    public function configuration_action($section = null)
+    public function configuration_action($open_section = null)
     {
         PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
 
-        $config_filter = Request::option('config_filter', null);
-        if ($config_filter == '-1') {
-            $config_filter = null;
+        // Display only one section?
+        $section = Request::option('section');
+        if ($section == '-1') {
+            $section = null;
+        }
+
+        // Search for specific entries?
+        $needle = trim(Request::get('needle')) ?: null;
+        if ($needle) {
+            $this->subtitle = _('Suchbegriff:') . ' "' . $needle . '"';
         }
 
         // set variables for view
-        $this->config_filter = $config_filter;
-        $this->allconfigs = ConfigurationModel::getConfig();
-        $this->current_section = $section;
-        $this->allsections = array_keys($this->allconfigs);
+        $this->only_section = $section;
+        $this->open_section = $open_section ?: $section;
+        $this->needle       = $needle;
+        $this->sections     = ConfigurationModel::getConfig($section, $needle);
 
-        // adjust variables if neccessary
-        if (!is_null($config_filter)) {
-            $this->allconfigs = array($config_filter => $this->allconfigs[$config_filter]);
-        }
-    }
+        $this->title     = _('Verwaltung von Systemkonfigurationen');
+        $this->linkchunk = 'admin/configuration/edit_configuration?id=';
+        $this->has_sections = true;
 
-    /**
-     * Searchview: filter = field
-     */
-    public function results_configuration_action()
-    {
-        if (Request::get('search_config')) {
-            $this->search_filter = ConfigurationModel::searchConfig(Request::get('search_config'));
-            $this->search = Request::get('search_config');
-        } else {
-            $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
+        if ($needle && empty($this->sections)) {
+            $message = sprintf(_('Es wurden keine Ergebnisse zu dem Suchbegriff "%s" gefunden.'), $needle);
+            PageLayout::postMessage(MessageBox::error($message));
             $this->redirect('admin/configuration/configuration');
         }
-        PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
     }
 
     /**
      * Editview: Edit the configuration parameters: value, comment, section
-     *
-     * @param   md5 $config_id
      */
     public function edit_configuration_action()
     {
-        $config_id = Request::option('id');
-        if (Request::submitted('uebernehmen')) {
-            if (Request::get('value') || Request::get('value')== 0) {
-                $conf_value = Request::get('value');
-                $conf_sec = Request::get('section');
-                $conf_sec_new = Request::get('section_new');
-                $conf_comment = Request::get('comment');
+        PageLayout::setTitle(_('Konfigurationsparameter editieren'));
 
-                if (!empty($conf_sec_new)) {
-                    $conf_sec = $conf_sec_new;
-                }
-                $config  = ConfigurationModel::getConfigInfo($config_id);
-                if($config['type'] == 'integer' && !is_numeric($conf_value)) {
-                    $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
-                } elseif ($config['type'] == 'array' && !is_array($conf_value = json_decode(studip_utf8encode($conf_value),true)) ) {
-                    $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'array' ein Array oder Objekt in korrekter JSON Notation ein!");
-                } else {
-                    Config::get()->store($config_id, array(
-                                                           'value'   => $conf_value,
-                                                           'section' => $conf_sec,
-                                                           'comment' => $conf_comment
-                                                           ));
-                    $this->flash['success'] = sprintf(_("Der Konfigurationseintrag %s wurde erfolgreich übernommen!"), Request::get('field'));
-                    $this->redirect('admin/configuration/configuration/'.$conf_sec);
-                }
-            } else {
-                $this->flash['error'] = _("Im value-Feld wurde nichts eingetragen!");
+        $field = Request::get('id');
+        $value = Request::get('value');
+
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            if ($this->validateInput($field, $value)) {
+                $section = Request::get('section_new') ?: Request::get('section');
+                $comment = Request::get('comment');
+
+                Config::get()->store($field, compact(words('value section comment')));
+
+                $message = sprintf(_('Der Konfigurationseintrag "%s" wurde erfolgreich übernommen!'), $field);
+                PageLayout::postMessage(MessageBox::success($message));
+
+                $this->redirect('admin/configuration/configuration/' . $section);
             }
         }
 
         // set variables for view
-        $this->edit = ConfigurationModel::getConfigInfo($config_id);
+        $this->config     = ConfigurationModel::getConfigInfo($field);
         $this->allconfigs = ConfigurationModel::getConfig();
-        PageLayout::setTitle(_("Konfigurationsparameter editieren"));
-
-
-        //ajax
-        if (Request::isXhr()) {
-            $this->via_ajax = true;
-            $this->set_layout(null);
-            $this->response->add_header('Content-Type', 'text/html;charset=windows-1252');
-        } else {
-            $this->infobox = $this->setSidebar();
-        }
     }
 
     /**
      * Userview: Show all user-parameter for a user or show the system user-parameter
      *
-     * @param   string $give_all
+     * @param mixed $give_all
      */
-    public function user_configuration_action($give_all = NULL)
+    public function user_configuration_action($give_all = null)
     {
+        PageLayout::setTitle(_('Verwalten von Nutzerkonfigurationen'));
 
-        if ($give_all == 'update') {
-
-            $config = Config::get()->getMetadata(Request::get('field'));
-            $conf_value = Request::get('value');
-            if ($config['type'] == 'integer' && !is_numeric($conf_value)) {
-                $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
-            } elseif ($config['type'] == 'array' && !is_array($conf_value = json_decode(studip_utf8encode($conf_value),true)) ) {
-                $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'array' ein Array oder Objekt in korrekter JSON Notation ein!");
-            } else {
-                UserConfig::get(Request::get('user_id'))->store(Request::get('field'), $conf_value);
-                $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
-            }
-            if ($this->flash['error']) {
-                return $this->redirect($this->url_for('admin/configuration/edit_user_config/'.Request::get('user_id').'/'.Request::get('field')));
-            }
+        $user_id = Request::option('user_id');
+        if ($user_id) {
+            $this->configs   = ConfigurationModel::searchUserConfiguration($user_id);
+            $this->title     = sprintf(_('Vorhandene Konfigurationsparameter für den Nutzer "%s"'),
+                                       User::find($user_id)->getFullname());
+            $this->linkchunk = 'admin/configuration/edit_user_config/' . $user_id . '?id=';
+        } else {
+            $this->configs   = ConfigurationModel::searchUserConfiguration(null, true);
+            $this->title     = _('Globale Konfigurationsparameter für alle Nutzer');
+            $this->linkchunk = 'admin/configuration/edit_configuration/?id=';
         }
-
-        if (Request::submitted('user_id')) {
-            $this->user_id = Request::get('user_id');
-            if ($this->user_id) {
-                $this->search_users = ConfigurationModel::searchUserConfiguration($this->user_id);
-            } else {
-                $this->flash['error'] = _("Es liegen keine Informationen vor!");
-            }
-        }
-
-        if ($give_all == 'giveAll' || Request::submitted('user_id') != true) {
-            $this->give_alls = ConfigurationModel::searchUserConfiguration($this->user_id, true);
-        }
-
-
-
-        PageLayout::setTitle(_("Verwalten von Nutzerkonfigurationen"));
+        $this->has_sections = false;
     }
 
     /**
      * Editview: Change user-parameter for one user (value)
      *
-     * @param   md5 $user_id
-     * @param   md5 $field
+     * @param String $user_id
      */
-    public function edit_user_config_action($user_id, $field)
+    public function edit_user_config_action($user_id)
     {
-        if ($field && $user_id) {
-            $this->search_user = ConfigurationModel::showUserConfiguration($user_id, $field);
-            $this->user_id = $user_id;
-        } else {
-            false;
-        }
+        PageLayout::setTitle(_('Konfigurationsparameter editieren'));
 
-        PageLayout::setTitle(_("Konfigurationsparameter editieren"));
-        $this->infobox = $this->setSidebar();
+        $field = Request::get('id');
+        
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+            
+            $value = Request::get('value');
+            if ($this->validateInput($field, $value)) {
+                UserConfig::get($user_id)->store($field, $value);
 
-        //ajax
-        if (@$_SERVER['HTTP_X_REQUESTED_WITH']=='XMLHttpRequest') {
-            $this->via_ajax = true;
-            $this->set_layout(null);
+                $message = sprintf(_('Der Konfigurationseintrag: %s wurde erfolgreich geändert!'), $field);
+                PageLayout::postMessage(MessageBox::success($message));
+
+                $this->redirect('admin/configuration/user_configuration?user_id=' . $user_id);
+            }
         }
+        
+        $this->config  = ConfigurationModel::showUserConfiguration($user_id, $field);
+        $this->user_id = $user_id;
+        $this->field   = $field;
+        $this->value   = $this->flash['value'] ?: null;
     }
 
+    /**
+     * Validates given input
+     *
+     * @param String $field Config field to validate
+     * @param String $value Value that has been input
+     * @return boolean indicating whether the value is valid
+     */
+    protected function validateInput($field, &$value)
+    {
+        $config = Config::get()->getMetadata($field);
+
+        // Step 1: Prepare input
+        if ($config['type'] === 'array') {
+            $value = json_decode(studip_utf8encode($value), true);
+        }
+
+        // Step 2: Validate
+        if (strlen($value) === 0) {
+            $error = _('Es wurde kein gültiger Wert eingetragen!');
+        } elseif ($config['type'] === 'integer' && !is_numeric($value)) {
+            $error = _('Bitte geben Sie bei Parametern vom Typ "integer" nur Zahlen ein!');
+        } elseif ($config['type'] === 'array' && !is_array($value)) {
+            $error = _('Bitte geben Sie bei Parametern vom Typ "array" ein Array oder Objekt in korrekter JSON Notation ein!');
+        } else {
+            return true;
+        }
+
+        PageLayout::postMessage(MessageBox::error($error));
+
+        return false;
+    }
 
     /**
-     * Create the messagebox
+     * Sets up the sidebar
+     *
+     * @param bool $user_section Adjust sidebar to user section?
      */
-    private function setSidebar()
+    protected function setupSidebar($user_section = false)
     {
+        // Basic info and layout
         $sidebar = Sidebar::Get();
-        $sidebar->setTitle(PageLayout::getTitle() ? : _('Konfiguration'));
-        $sidebar->setImage('sidebar/admin-sidebar.png');
+        $sidebar->setTitle(_('Konfiguration'));
+        $sidebar->setImage(Assets::image_path('sidebar/admin-sidebar.png'));
 
-        $actions = new ActionsWidget();
-        $actions->addLink(_('Übersicht'),$this->url_for('admin/configuration/configuration'), 'icons/16/blue/admin.png');
-        $actions->addLink(_('Nutzerparameter abrufen'),$this->url_for('admin/configuration/user_configuration'), 'icons/16/blue/person.png');
-        $sidebar->addWidget($actions);
+        // Views
+        $views = new ViewsWidget();
+        $views->addLink(_('Globale Konfiguration'),
+                        $this->url_for('admin/configuration/configuration'))
+              ->setActive(!$user_section);
+        $views->addLink(_('Nutzerkonfiguration'),
+                        $this->url_for('admin/configuration/user_configuration'))
+              ->setActive($user_section);
+        $sidebar->addWidget($views);
 
+        // Add section selector when not in user mode
+        if (!$user_section) {
+            $options = array();
+            foreach (ConfigurationModel::getConfig() as $key => $value) {
+                $options[$key] = $key ?: '- ' . _('Ohne Kategorie') . ' -';
+            }
+            $widget = new SelectWidget(_('Anzeigefilter'),
+                                       $this->url_for('admin/configuration/configuration'),
+                                       'section', 'get');
+            $widget->addElement(new SelectElement(-1, _('alle anzeigen')));
+            $widget->setOptions($options);
+            $sidebar->addWidget($widget);
+        }
+
+        // Add specific searches (specific user when in user mode, keyword
+        // otherwise)
+        if ($user_section) {
+            $search = new SearchWidget($this->url_for('admin/configuration/user_configuration'));
+            $search->addNeedle(_('Nutzer suchen'), 'user_id', true,
+                               new StandardSearch('user_id'),
+                               'function () { $(this).closest("form").submit(); }');
+        } else {
+            $search = new SearchWidget($this->url_for('admin/configuration/configuration'));
+            $search->addNeedle(_('Suchbegriff'), 'needle', true);
+        }
+        $sidebar->addWidget($search);
     }
 }

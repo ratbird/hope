@@ -188,6 +188,7 @@ table.zebra-horizontal > tbody > tr > td {
             .retina-background-icon('blue/arr_1down.png');
             color: #000;
             cursor: pointer;
+            display: block;
         }
     }
     .empty .toggle-indicator a { 
@@ -419,6 +420,10 @@ table.default {
     border-collapse: collapse;
     margin-bottom: 1em;
     width: 100%;
+
+    .wrap-content {
+        word-break: break-all;
+    }
 
     th, td, caption {
         padding: 5px;

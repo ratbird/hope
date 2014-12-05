@@ -14,7 +14,8 @@
             <input type="text" id="needle-<?= $hash ?>"
                    name="<?= htmlReady($needle['name']) ?>"
                    value="<?= htmlReady($needle['value']) ?>"
-                   <? if ($needle['placeholder']) printf('placeholder="%s"', htmlReady($needle['label'])); ?>>
+                   <? if ($needle['placeholder']) printf('placeholder="%s"', htmlReady($needle['label'])); ?>
+                   <? if (count($needles) === 1) echo 'required'; ?>>
         <? endif; ?>
             <input type="submit" value="<?= _('Suchen') ?>">
         </li>

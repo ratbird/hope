@@ -48,4 +48,13 @@ class SelectWidget extends SidebarWidget
     {
         $this->template_variables['method'] = $method;
     }
+    
+    public function setOptions(Array $options)
+    {
+        $selected = Request::get($this->template_variables['name']);
+        foreach ($options as $key => $label) {
+            $element = new SelectElement($key, $label, $selected === $key);
+            $this->addElement($element);
+        }
+    }
 }

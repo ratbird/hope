@@ -38,24 +38,6 @@ class Admin_ConfigurationController extends AuthenticatedController
     }
 
     /**
-     * Specialized redirect function that handles ajax request and
-     * can be invoked in the same way as url_for.
-     *
-     * @param String $to Location to redirect to
-     */
-    public function redirect($to)
-    {
-        $to = call_user_func_array(array($this, 'url_for'), func_get_args());
-        
-        if (Request::isXhr()) {
-            $this->response->add_header('X-Location', $to);
-            $this->render_nothing();
-        } else {
-            parent::redirect($to);
-        }
-    }
-
-    /**
      * Maintenance view for the configuration parameters
      *
      * @param mixed $section Open section

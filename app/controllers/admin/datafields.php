@@ -38,12 +38,6 @@ class Admin_DatafieldsController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        // ajax
-        if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-            $this->via_ajax = true;
-            $this->set_layout(null);
-        }
-
         // user must have root permission
         $GLOBALS['perm']->check('root');
 
@@ -85,7 +79,7 @@ class Admin_DatafieldsController extends AuthenticatedController
         $this->current_class = $class;
         $this->allclass = array_keys($this->allclasses);
         $this->edit_id = Request::option('edit_id');
-        
+
     }
 
     /**
@@ -95,7 +89,6 @@ class Admin_DatafieldsController extends AuthenticatedController
      */
     public function edit_action($datafield_id)
     {
-        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if (Request::submitted('uebernehmen')) {
             $struct = new DataFieldStructure(compact('datafield_id'));
             $struct->load();
@@ -111,13 +104,11 @@ class Admin_DatafieldsController extends AuthenticatedController
                 $struct->store();
 
                 $this->flash['success'] = _('Die Änderungen am generischen Datenfeld wurden übernommen.');
+                $this->redirect('admin/datafields/index/'.$struct->getObjectType().'#item_'.$datafield_id);
             } else {
                 $this->flash['error'] = _("Es wurde keine Bezeichnung eingetragen!");
             }
 
-            if ($this->via_ajax || Request::get('datafield_name')) {
-                $this->redirect('admin/datafields/index/'.$struct->getObjectType().'#item_'.$datafield_id);
-            }
         }
 
         //save changes

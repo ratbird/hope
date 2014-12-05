@@ -246,7 +246,7 @@ class DataFieldStructure
         $data = array_merge($row, $data);
     }
 
-    if (!in_array($data['type'], array('selectbox', 'radio', 'combo'))) {
+    if (!in_array($data['type'], array('selectbox', 'selectboxmultiple', 'radio', 'combo'))) {
         $data['typeparam'] = '';
     }
     $data['object_class'] = (int)$data['object_class'] ? (int)$data['object_class'] : null;

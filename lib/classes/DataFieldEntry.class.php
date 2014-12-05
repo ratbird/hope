@@ -226,7 +226,7 @@ abstract class DataFieldEntry
      */
     public static function getSupportedTypes()
     {
-        return array("bool" , "textline" , "textarea" , "selectbox" , "date" , "time" , "email" , "phone" , "radio" , "combo" , "link");
+        return array("bool" , "textline" , "textarea" , "selectbox" , "selectboxmultiple", "date" , "time" , "email" , "phone" , "radio" , "combo" , "link");
     }
 
     /**
@@ -335,7 +335,7 @@ abstract class DataFieldEntry
      */
     public function setValueFromSubmit($submitted_value)
     {
-        $this->setValue(remove_magic_quotes($submitted_value));
+        $this->setValue($submitted_value);
     }
 
     /**
@@ -618,6 +618,46 @@ class DataFieldSelectboxEntry extends DataFieldEntry
     {
         $value = $this->is_assoc_param ? $this->type_param[$this->getValue()] : $this->getValue();
         return $entities ? htmlReady($value) : $value;
+    }
+}
+
+class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
+{
+
+    function getHTML($name)
+    {
+        $field_name = $name . '[' . $this->structure->getID() . '][]';
+        $field_id = $name . '_' . $this->structure->getID();
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        $ret = "<select multiple name=\"$field_name\" name=\"$field_id\" $require>";
+        $values = $this->getValue() ? explode('|', $this->getValue()) : array();
+        foreach($this->type_param as $pkey => $pval)
+        {
+            $value = $this->is_assoc_param ? (string) $pkey : $pval;
+            $sel = in_array($value, $values) ? 'selected' : '';
+            $ret .= sprintf('<option value="%s" %s>%s</option>', htmlReady($value), $sel, htmlReady($pval));
+        }
+        return $ret . "</select>";
+    }
+
+    function getDisplayValue($entities = true)
+    {
+        $value = $this->getValue();
+        if ($this->is_assoc_param && $value) {
+            $type_param = $this->type_param;
+            $value =  join('; ', (array_map(function ($a) use ($type_param){return $type_param[trim($a)];}, explode('|', $value))));
+        }
+        return $entities ? htmlReady($value) : $value;
+    }
+
+    function setValueFromSubmit($value)
+    {
+        if(is_array($value))
+        {
+            parent::setValueFromSubmit(join('|', array_unique(array_filter(array_map('trim',$value)))));
+        } else {
+            parent::setValueFromSubmit('');
+        }
     }
 }
 

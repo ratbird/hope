@@ -380,8 +380,7 @@ class Course_BasicdataController extends AuthenticatedController
             foreach (Request::getArray('datafields') as $datafield_id => $datafield_value) {
                 $datafield = $all_fields_types[$datafield_id];
                 $valueBefore = $datafield->getValue();
-                //the magic goes on and on: onDataFieldEntry::setValueFromSubmit() uses remove_magic_quotes()
-                $datafield->setValueFromSubmit(get_magic_quotes_gpc() ? Request::addslashes($datafield_value) : $datafield_value);
+                $datafield->setValueFromSubmit($datafield_value);
                 if ($valueBefore != $datafield->getValue()) {
                     if ($datafield->isValid()) {
                         $datafield->store();

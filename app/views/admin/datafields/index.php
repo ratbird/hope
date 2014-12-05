@@ -56,13 +56,13 @@
                 <?= htmlReady($val->getName()) ?>
             </td>
             <td>
-            <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
+            <? if (in_array($val->getType(), array('selectbox', 'selectboxmultiple', 'radio', 'combo'))): ?>
                 <a class="datafield_param_link" href="<?=$controller->url_for('admin/datafields/index/'. $current_class .'?edit_id='. $val->getID())?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('class'=> 'text-top', 'title' => 'Einträge bearbeiten')) ?>
                 </a>
             <? endif; ?>
              <span><?= htmlReady($val->getType()) ?></span>
-            <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
+            <? if (in_array($val->getType(), array('selectbox', 'selectboxmultiple','radio', 'combo'))): ?>
                    <?= $this->render_partial("admin/datafields/_param", array('datafield_id' => $val->getID(), 'typeparam' => $val->getTypeparam(), 'hidden' => $edit_id!=$val->getID() )) ?>
             <? endif; ?>
             </td>
@@ -87,7 +87,7 @@
               <?= Assets::img('icons/16/grey/'.(trim($val->getDescription())?'accept.png':'decline.png'))?>
              <? endif; ?>
             </td>
-            
+
             <td><?= $val->getPriority() ?></td>
             <td><?= $val->getCachedNumEntries() ?></td>
             <td style="text-align: right;">

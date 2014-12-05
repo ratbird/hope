@@ -245,13 +245,30 @@ class User extends AuthUserMd5
      */
     function getFullName($format = "full")
     {
+        static $concat,$left,$if,$quote;
+
         $sql = $GLOBALS['_fullname_sql'][$format];
-        $db = DBManager::get();
-        if (!$sql) {
+        if (!$sql || $format == 'no_title') {
             return $this->vorname . ' ' . $this->nachname;
         }
-        $data = array_map(array($db,'quote'), $this->toArray('vorname nachname username title_front title_rear motto perms'));
-        return $db->query("SELECT " . strtr(strtolower($sql), $data))->fetchColumn();
+        if ($format == 'no_title_rev') {
+            return $this->nachname . ' ' . $this->vorname;
+        }
+        if ($concat === null) {
+            $concat = function() {return join('', func_get_args());};
+            $left = function($str, $c = 0) {return substr($str,0,$c);};
+            $if = function($ok,$yes,$no) {return $ok ? $yes : $no;};
+            $quote = function($str) {return "'" . addcslashes($str, "\\'\0") . "'";};
+        }
+
+        $data = array_map($quote, $this->toArray('vorname nachname username title_front title_rear motto perms'));
+        $replace_func['CONCAT'] = '$concat';
+        $replace_func['LEFT'] = '$left';
+        $replace_func['UCASE'] = 'strtoupper';
+        $replace_func['IF'] = '$if';
+        $eval = strtr($sql, $replace_func);
+        $eval = strtr(strtolower($eval), $data);
+        return eval('return ' . $eval . ';');
     }
 
     function toArrayRecursive($only_these_fields = null)

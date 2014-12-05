@@ -79,6 +79,7 @@ javascripts:
     - javascripts/studip-tooltip.js
     - javascripts/studip-scroll.js
     - javascripts/studip-helper-attributes.js
+    - javascripts/studip-cache.js
     - javascripts/application.js
 
   raumzeit:

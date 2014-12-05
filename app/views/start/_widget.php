@@ -26,7 +26,7 @@
         <? endif ?>
 
         <a href="<?= $controller->url_for('start/delete/' . $widget->widget_id) ?>">
-            <?= Assets::img('icons/16/blue/decline.png', tooltip2(_('Entfernen'))) ?>
+            <?= Assets::img('icons/16/blue/decline.png', tooltip2(_('Widget entfernen'))) ?>
         </a>
     </span>
 </div>

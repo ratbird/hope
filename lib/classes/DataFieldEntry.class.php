@@ -630,7 +630,7 @@ class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
         $field_id = $name . '_' . $this->structure->getID();
         $require = $this->structure->getIsRequired() ? "required" : "";
         $ret = "<select multiple name=\"$field_name\" name=\"$field_id\" $require>";
-        $values = $this->getValue() ? explode('|', $this->getValue()) : array();
+        $values = $this->getValue() ? array_map('trim', explode('|', $this->getValue())) : array();
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
@@ -643,9 +643,14 @@ class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
     function getDisplayValue($entities = true)
     {
         $value = $this->getValue();
-        if ($this->is_assoc_param && $value) {
+        if ($value) {
             $type_param = $this->type_param;
-            $value =  join('; ', (array_map(function ($a) use ($type_param){return $type_param[trim($a)];}, explode('|', $value))));
+            $mapper = !$this->is_assoc_param ?
+                'trim' :
+                function ($a) use ($type_param) {
+                    return $type_param[trim($a)];
+                };
+            $value = join('; ', (array_map($mapper, explode('|', $value))));
         }
         return $entities ? htmlReady($value) : $value;
     }

@@ -19,7 +19,7 @@ doc: force_update
 	doxygen Doxyfile
 
 test: force_update
-	phpunit -c test/phpunit/phpunit.xml
+	vendor/bin/codecept run
 
 # recipe to compile all .less files to CSS
 less: $(STYLES)/style.css $(STYLES)/smiley.css

@@ -19,7 +19,7 @@
  * @author      Robert Costa <rcosta@uos.de>
  */
 require_once dirname(__FILE__) . '/../../bootstrap.php';
-require_once 'test/phpunit/fakeserver.php';
+require_once 'tests/unit/fakeserver.php';
 
 # needed by visual.inc.php
 require_once 'lib/classes/DbView.class.php';

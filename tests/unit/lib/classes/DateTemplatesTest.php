@@ -100,8 +100,6 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
     public function testHTMLTemplatesWithLink()
     {
-        $this->markTestSkipped('This test is currently broken.'); // TODO: Fix it
-        
         $data = renderTemplate('dates/seminar_html', $this->testData, array('show_room' => true));
         $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: '
                  . '<a onclick="window.open(...)">Hörsaal 1</a>, '
@@ -111,16 +109,19 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
 
         $data = renderTemplate('dates/seminar_html_location', $this->testData);
-        $compare = '<table class="default" style="width: auto;">
-        <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;"><a onclick="window.open(...)">Hörsaal 1</a></td>
-        <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
-    </tr>
-        <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
-        <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
-    </tr>
-    </table>';
+        $compare = '<table class="default">
+    <tr>
+    <td style="vertical-align: top"><a onclick="window.open(...)">Hörsaal 1</a></td>
+    <td>
+        
+                    Mo. 10:00 - 12:00 (2x)            </td>
+    <tr>
+    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
+    <td>
+        
+                    Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00            </td>
+  </table>';
+
         $this->assertEquals($compare, $data);
 
 
@@ -137,8 +138,6 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
     public function testHTMLTemplatesWithoutLink()
     {
-        $this->markTestSkipped('This test is currently broken.'); // TODO: Fix it
-
         $data = renderTemplate('dates/seminar_html', $this->testData, array('link' => false, 'show_room' => true));
         $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: Hörsaal 1 &lt;br&gt;, '
                  . '(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)<br>'
@@ -147,16 +146,19 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
 
         $data = renderTemplate('dates/seminar_html_location', $this->testData, array('link' => false));
-        $compare = '<table class="default" style="width: auto;">
-        <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">Hörsaal 1 &lt;br&gt;</td>
-        <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
-    </tr>
-        <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
-        <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
-    </tr>
-    </table>';
+        $compare = '<table class="default">
+    <tr>
+    <td style="vertical-align: top">Hörsaal 1 &lt;br&gt;</td>
+    <td>
+        
+                    Mo. 10:00 - 12:00 (2x)            </td>
+    <tr>
+    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
+    <td>
+        
+                    Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00            </td>
+  </table>';
+
         $this->assertEquals($compare, $data);
 
 

@@ -214,9 +214,8 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($then, $schedule->next_execution);
     }
 
-    /**
+    /*
      * @depends testPeriodicSchedule
-     */
     function testNextExecutionPeriodicYearly($schedule)
     {
         // Stop here and mark this test as incomplete.
@@ -234,6 +233,7 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($then, $schedule->next_execution);
     }
+    */
 
     /**
      * @depends testPeriodicSchedule

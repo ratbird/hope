@@ -44,4 +44,16 @@ class StudipDispatcher extends Trails_Dispatcher {
 
         parent::__construct($trails_root, $trails_uri, $default_controller);
     }
+
+    /**
+     * Adapted error method that just passes the exception to stud.ip's
+     * exception instead of the standard trails handling.
+     *
+     * @param Exception $exception The exception that occured
+     * @throws Exception
+     */
+    public function trails_error(Exception $exception)
+    {
+        throw $exception;
+    }
 }

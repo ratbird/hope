@@ -451,47 +451,15 @@ class PageLayout
      * Gets the id of the body element.
      * If non was set, it is dynamically generated base on the name of
      * the current PHP script, with the suffix removed and all
-     * non-alphanumeric characters replaced with '_' (except for -).
-     *
-     * If the current location is dispatched through dispatch.php or
-     * plugins.php, this method tries to generate an appropriate id
-     * matching the controller and method.
-     *
-     * In order to avoid clashes, these generated ids will be joined
-     * with a minus sign. Otherwise the controller "x" with action
-     * "y_z" would be given the same id as the controller "x/y" with
-     * the action "z", namely "x_y_z". With the minus sign this will
-     * result in the ids "x-y_z" and "x_y-z".
-     *
-     * Plugins will always have a leading 'plugins-' in front of the
-     * id.
-     * 
-     * Note: If you really want to rely on the id, you'd better use
-     * PageLayout::setBodyElementId() since the heuristics for
-     * identifying controller and method might be sloppy.
+     * non-alphanumeric characters replaced with '_'.
      *
      * @return String containing the body element id
      */
     public static function getBodyElementId()
     {
-        // Return the previously set id (if it actually was set)
-        if (self::$body_element_id) {
-            return self::$body_element_id;
-        }
-
-        // Dynamically generate id
-        $id = basename($_SERVER['PHP_SELF'], '.php');
-        if ($id === 'dispatch' || $id === 'plugins') {
-            $items = explode('/', $_SERVER['PATH_INFO']);
-            if ($id === 'plugins') {
-                array_unshift($items, 'plugins');
-            }
-            $items = array_filter($items, function ($item) {
-                return $item && !preg_match('/\W/', $item);
-            });
-            $id = implode('-', $items);
-        }
-        return preg_replace('/[^\w-]/', '_', $id);
+        // Return specific or dynamically generated body element id
+        return self::$body_element_id
+            ?: preg_replace('/\W/', '_', basename($_SERVER['PHP_SELF'], '.php'));
     }
 
     /**

@@ -78,6 +78,52 @@ abstract class StudipController extends Trails_Controller
     }
 
     /**
+     * Hooked perform method in order to inject body element id creation.
+     *
+     * In order to avoid clashes, these body element id will be joined
+     * with a minus sign. Otherwise the controller "x" with action
+     * "y_z" would be given the same id as the controller "x/y" with
+     * the action "z", namely "x_y_z". With the minus sign this will
+     * result in the ids "x-y_z" and "x_y-z".
+     *
+     * Plugins will always have a leading 'plugin-' and the decamelized
+     * plugin name in front of the id.
+     *
+     * @param String $unconsumed_path Path segment containing action and
+     *                                optionally arguments or format
+     * @return Trails_Response from parent controller
+     */
+    public function perform($unconsumed_path)
+    {
+        // Extract action from unconsumed path segment
+        list($action) = $this->extract_action_and_args($unconsumed_path);
+
+        // Extract decamelized controller name from class name
+        $controller = preg_replace('/Controller$/', '', get_class($this));
+        $controller = Trails_Inflector::underscore($controller);
+
+        // Build main parts of the body element id
+        $body_id_parts = explode('/', $controller);
+        $body_id_parts[] = $action;
+
+        // If the controller is from a plugin, Inject plugin identifier
+        // and name of plugin
+        if (basename($this->dispatcher->trails_uri, '.php') === 'plugins') {
+            $plugin = basename($this->dispatcher->trails_root);
+            $plugin = Trails_Inflector::underscore($plugin);
+            array_unshift($body_id_parts, $plugin);
+
+            array_unshift($body_id_parts, 'plugin');
+        }
+
+        // Create and set body element id
+        $body_id = implode('-', $body_id_parts);
+        PageLayout::setBodyElementId($body_id);
+
+        return parent::perform($unconsumed_path);
+    }
+
+    /**
      * Callback function being called after an action is executed.
      *
      * @param string Name of the action to perform.

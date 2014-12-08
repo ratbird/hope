@@ -53,14 +53,22 @@
  * If the browser does not support any of the storage types, a dummy polyfill
  * will be used that doesn't actually store data.
  *
+ * Internally, all items are prefixed with a 'studip.' in order to avoid
+ * clashes.
+ *
  * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license   GPL2 or any later version
  * @copyright Stud.IP core group
  * @since     Stud.IP 3.2
  */
 (function () {
+    var caches = {
+        local: window.localStorage || false,
+        session: window.sessionStorage || false
+    };
+
     // Create polyfills if neccessary
-    if (!Modernizr.localstorage || !Modernizr.sessionstorage) {
+    if (!caches.local || !caches.session) {
         (function () {
             var DummyStorage = function () {
                 return {
@@ -76,19 +84,14 @@
                     setItem: function () {}
                 };
             };
-            if (!Modernizr.localstorage) {
-                window.localStorage = new DummyStorage();
+            if (!caches.local) {
+                caches.local = new DummyStorage();
             }
-            if (!Modernizr.sessionstorage) {
-                window.sessionStorage = new DummyStorage();
+            if (!caches.session) {
+                caches.session = new DummyStorage();
             }
         }());
     }
-
-    var caches = {
-        local: window.localStorage,
-        session: window.sessionStorage
-    };
 
     /**
      * The main cache class' prototype.
@@ -96,7 +99,7 @@
      * @param String prefix Optional prefix for the cache
      */
     function Cache(prefix) {
-        this.prefix = prefix || '';
+        this.prefix = 'studip.' + (prefix || '');
     }
 
     /**

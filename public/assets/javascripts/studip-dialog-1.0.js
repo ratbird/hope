@@ -227,12 +227,15 @@
             
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
-                var timeout = setTimeout(function () {
+                if (document.location.href === xhr.getResponseHeader('X-Location')) {
                     document.location.reload(true);
-                }, 10);
-                $(window).on('unload', function () {
-                    clearTimeout(timeout);
-                })
+                } else {
+                    $(window).on('hashchange', function () {
+                        document.location.reload(true);
+                    }).on('unload', function () {
+                        $(window).off('hashchange');
+                    });
+                }
 
                 STUDIP.Dialog.close();
                 document.location = xhr.getResponseHeader('X-Location');

@@ -345,6 +345,7 @@ class WysiwygController extends \AuthenticatedController
             ));
         }
         $settings = new stdClass;
+        $settings->disabled = !\Config::get()->WYSIWYG;
         $settings->upload = new stdClass;
         $settings->upload->permission = self::UPLOAD_PERMISSION;
         $settings->upload->folder = new stdClass;

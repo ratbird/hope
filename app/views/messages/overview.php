@@ -95,7 +95,7 @@ $actions->addLink(
     'icons/16/blue/add/mail.png',
     array('data-dialog' => 'width=650;height=600')
 );
-if (Navigation::getItem('/messaging/messages/inbox')->isActive()) {
+if (Navigation::getItem('/messaging/messages/inbox')->isActive() && $messages) {
     $actions->addLink(
         _('Alle als gelesen markieren'),
         $controller->url_for('messages/overview', array('read_all' => 1)),

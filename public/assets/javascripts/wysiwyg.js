@@ -147,7 +147,7 @@ jQuery(function ($) {
             width: textareaWidth,
             skin: 'studip',
             // NOTE widget plugin requires line utils plugin!!
-            extraPlugins: 'widget,studip-wiki'
+            extraPlugins: 'widget,studip-settings,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             removePlugins: 'magicline',
@@ -175,7 +175,7 @@ jQuery(function ($) {
                 {name: 'tools'},
                 {name: 'links'},
                 {name: 'insert'},
-                {name: 'html', groups: ['mode']}
+                {name: 'others', groups: ['mode', 'settings']}
             ],
             removeButtons: 'Font,FontSize,Anchor',
             toolbarCanCollapse: true,

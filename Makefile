@@ -1,6 +1,8 @@
 PHP = php
 PLESSC = $(PHP) vendor/mishal-iless/bin/iless
 JLESSC = $(shell which lessc)
+CODECEPT_VENDOR = $(shell which vendor/bin/codecept)
+CODECEPT = $(shell which codecept)
 STYLES = public/assets/stylesheets
 JAVA   = $(shell which java)
 
@@ -9,6 +11,15 @@ ifneq ($(wildcard $(JLESSC)),)
 else
 	LESSC = $(PLESSC)
 endif
+
+ifneq ($(wildcard $(CODECEPT_VENDOR)),)
+	RUN_TESTS = $(CODECEPT_VENDOR) run
+else ifneq ($(wildcard $(CODECEPT)),)
+	RUN_TESTS = $(CODECEPT) run
+else
+	RUN_TESTS = phpunit --config=tests/phpunit.xml
+endif
+
 
 build: less squeeze
 
@@ -19,7 +30,7 @@ doc: force_update
 	doxygen Doxyfile
 
 test: force_update
-	vendor/bin/codecept run
+	$(RUN_TESTS)
 
 # recipe to compile all .less files to CSS
 less: $(STYLES)/style.css $(STYLES)/smiley.css

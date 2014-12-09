@@ -90,7 +90,7 @@ else
 
 echo $header_template->render();
 
-if ($GLOBALS['SHOW_TERMS_ON_FIRST_LOGIN'] && $GLOBALS['auth']->is_authenticated() && $GLOBALS['user']->id != 'nobody')
+if ($GLOBALS['SHOW_TERMS_ON_FIRST_LOGIN'] && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody')
 {
     require_once('lib/terms.inc.php');
     check_terms($GLOBALS['user']->id, $GLOBALS['_language_path']);

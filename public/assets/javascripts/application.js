@@ -208,6 +208,10 @@ jQuery.ui.accordion.prototype.options.icons = {
         yearSuffix: ''
     };
     $.datepicker.setDefaults($.datepicker.regional.de);
+
+    $(document).on('focus', '.has-date-picker', function () {
+        $(this).removeClass('has-date-picker').datepicker();
+    });
 }(jQuery));
 
 /* ------------------------------------------------------------------------

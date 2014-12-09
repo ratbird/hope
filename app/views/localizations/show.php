@@ -79,17 +79,22 @@ $translations = array(
     // public/assets/javascripts/settings.js
     'Die beiden Werte "$1" und "$2" stimmen nicht überein. ' => _('Die beiden Werte "$1" und "$2" stimmen nicht überein. '),
 
+    // public/assets/javascripts/single_person_search.js
+    'Das Suchwort ist zu kurz.' => _('Das Suchwort ist zu kurz.'),
+    'Kein Ergebnis gefunden.' => _('Kein Ergebnis gefunden.'),
+
     // public/assets/javascripts/smiley-picker.js
     'Smileys' => _('Smileys'),
     'Zur Gesamtübersicht' => _('Zur Gesamtübersicht'),
     'Schliessen' => _('Schliessen'),
 
-    // public/assets/javascripts/studip-dialog-1.0.js
+    // public/assets/javascripts/studip-dialog.js
     'Schließen' => _('Schließen'),
 
     // public/assets/javascripts/studip-helper-attributes.js
     'Zeichen verbleibend: ' => _('Zeichen verbleibend: '),
     'Eingegebene Zeichen: ' => _('Eingegebene Zeichen: '),
+    'Wollen Sie die Aktion wirklich ausführen?' => _('Wollen Sie die Aktion wirklich ausführen?'),
 
     // public/assets/javascripts/tour.js
     'Fehler beim Aufruf des Tour-Controllers' => _('Fehler beim Aufruf des Tour-Controllers'),

@@ -389,18 +389,22 @@
 
     // Actual dialog handler
     function dialogHandler(event) {
-        var options = $(this).data().dialog;
-        if (STUDIP.Dialog.fromElement(this, parseOptions(options))) {
-            event.preventDefault();
+        if (!event.isDefaultPrevented()) {
+            var options = $(this).data().dialog;
+            if (STUDIP.Dialog.fromElement(this, parseOptions(options))) {
+                event.preventDefault();
+            }
         }
     }
     
     function clickHandler(event) {
-        var form  = $(this).closest('form');
-        form.data('triggeredBy', {
-            name: $(this).attr('name'),
-            value: $(this).val()
-        });
+        if (!event.isDefaultPrevented()) {
+            var form  = $(this).closest('form');
+            form.data('triggeredBy', {
+                name: $(this).attr('name'),
+                value: $(this).val()
+            });
+        }
     }
 
     // Handle links, buttons and forms

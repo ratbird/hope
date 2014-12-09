@@ -1285,12 +1285,12 @@ class Course_MembersController extends AuthenticatedController
                 $csvExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'csv', 'csv-teiln', '', _('TeilnehmerInnen-Liste als csv-Dokument exportieren'), 'passthrough');
                 $widget->addLink(_('TeilnehmerInnen-Liste als csv-Dokument exportieren'),
                                  $this->parseHref($csvExport),
-                                 'icons/16/blue/export/file-office.png');
+                                 'icons/16/blue/file-office.png');
                 // create csv-export link
                 $rtfExport = export_link($this->course_id, "person", sprintf('%s %s', htmlReady($this->status_groups['autor']), htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '', _('TeilnehmerInnen-Liste als rtf-Dokument exportieren'), 'passthrough');
                 $widget->addLink(_('TeilnehmerInnen-Liste als rtf-Dokument exportieren'),
                                  $this->parseHref($rtfExport),
-                                 'icons/16/blue/export/file-text.png');
+                                 'icons/16/blue/file-text.png');
 
                 if (count($this->awaiting) > 0) {
                     $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), htmlReady($this->course_title)), "rtf", "rtf-warteliste", $this->waiting_type, _("Warteliste als rtf-Dokument exportieren"), 'passthrough');

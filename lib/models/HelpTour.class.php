@@ -192,7 +192,8 @@ class HelpTour extends SimpleORMap {
     function isVisible() {
         if (!$this->settings->active)
             return false;
-        if ((strpos($this->roles, $GLOBALS['perm']->get_perm()) === false))
+        $current_role = User::findCurrent() ? User::findCurrent()->perms : 'nobody';
+        if ((strpos($this->roles, $current_role) === false))
             return false;
         foreach ($this->audiences as $audience) {
             switch ($audience->type) {

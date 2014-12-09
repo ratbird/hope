@@ -13,9 +13,9 @@ else
 endif
 
 ifneq ($(wildcard $(CODECEPT_VENDOR)),)
-	RUN_TESTS = $(CODECEPT_VENDOR) run
+	RUN_TESTS = $(CODECEPT_VENDOR) run unit
 else ifneq ($(wildcard $(CODECEPT)),)
-	RUN_TESTS = $(CODECEPT) run
+	RUN_TESTS = $(CODECEPT) run unit
 else
 	RUN_TESTS = phpunit -c tests/phpunit.xml
 endif

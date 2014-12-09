@@ -29,8 +29,8 @@ javascripts:
     - javascripts/wysiwyg.js
 
   dialog: &dialog
-    - javascripts/studip-overlay-1.0.js
-    - javascripts/studip-dialog-1.0.js
+    - javascripts/studip-overlay.js
+    - javascripts/studip-dialog.js
 
   base:
     - *jquery

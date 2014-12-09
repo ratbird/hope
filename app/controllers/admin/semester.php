@@ -1,19 +1,14 @@
 <?php
-# Lifter010: TODO
 /**
- * semester.php - model class for the semester-administration
+ * semester.php - controller class for the semester administration
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Hermann Schröder <hermann.schroeder@uni-oldenburg.de>
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @package     admin
- * @since       2.1
+ * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author    Hermann Schröder <hermann.schroeder@uni-oldenburg.de>
+ * @author    Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @license   GPL2 or any later version
+ * @category  Stud.IP
+ * @package   admin
+ * @since     2.1
  */
 require_once 'app/controllers/authenticated_controller.php';
 
@@ -21,287 +16,213 @@ class Admin_SemesterController extends AuthenticatedController
 {
     /**
      * common tasks for all actions
+     *
+     * @param String $action Action that has been called
+     * @param Array  $args   List of arguments
      */
-    function before_filter (&$action, &$args)
+    public function before_filter (&$action, &$args)
     {
         parent::before_filter($action, $args);
 
-        // ajax
-        if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-            $this->via_ajax = true;
-            $this->set_layout(null);
-        }
-
-        # user must have root permission
+        // user must have root permission
         $GLOBALS['perm']->check('root');
 
         //setting title and navigation
-        PageLayout::setTitle(_("Verwaltung von Semestern und Ferien"));
+        PageLayout::setTitle(_('Verwaltung von Semestern'));
         Navigation::activateItem('/admin/locations/semester');
 
-        //Infobox
-        $this->infobox = $this->setSidebar();
+        // Extract and bind filter option
+        $this->filter = Request::option('filter');
+        if ($this->filter) {
+            URLHelper::addLinkParam('filter', $this->filter);
+        }
+
+        // Setup sidebar
+        $this->setSidebar();
     }
 
     /**
-     * Display all informations about the semesters and holidays
+     * Display all informations about the semesters
      */
     public function index_action()
     {
-        $this->semesters = Semester::getAll(true);
-        $this->holidays = SemesterHoliday::getAll(true);
+        $this->semesters = Semester::getAll();
+
+        // Filter data?
+        if ($this->filter === 'current') {
+            $this->semesters = array_filter($this->semesters, function ($semester) {
+                return !$semester->past;
+            });
+        } elseif ($this->filter === 'past') {
+            $this->semesters = array_filter($this->semesters, function ($semester) {
+                return $semester->past;
+            });
+        }
     }
 
     /**
-     * This method deletes holiday and semester
-     * @param md5 $id
+     * This method edits an existing semester or creates a new semester.
+     *
+     * @param mixed $id Id of the semester or null to create a semester.
      */
-    public function delete_action($id = null, $mode)
+    public function edit_action($id = null)
     {
-        $this->flash['mode'] = $mode;
+        $this->semester = new Semester($id);
 
-        if(!Request::get('back')) {
-            //delete semester
-            if($mode == "semester") {
-                $semester_count = Semester::countAbsolutSeminars($id);
-                if ($semester_count > 0) {
-                    PageLayout::postMessage(MessageBox::error(_("Semester, in denen Veranstaltungen liegen, können nicht gelöscht werden!")));
+        PageLayout::setTitle($this->semester->isNew() ? _('Semester anlegen') : _('Semester bearbeiten'));
+
+        if (Request::isPost()) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            // Extract values
+            $this->semester->name           = Request::get('name');
+            $this->semester->description    = Request::get('description');
+            $this->semester->semester_token = Request::get('token');
+            $this->semester->beginn         = $this->getTimeStamp('beginn');
+            $this->semester->ende           = $this->getTimeStamp('ende', '23:59:59');
+            $this->semester->vorles_beginn  = $this->getTimeStamp('vorles_beginn');
+            $this->semester->vorles_ende    = $this->getTimeStamp('vorles_ende', '23:59:59');
+
+            // Validate 
+            $errors = $this->validateSemester($this->semester);
+
+            // If valid, try to store the semester
+            if (empty($errors) && $this->semester->isDirty() && !$this->semester->store()) {
+                $errors[] = _('Fehler bei der Speicherung Ihrer Daten. Bitte überprüfen Sie Ihre Angaben.');
+            }
+
+            // Output potential errors or show success message and relocate
+            if (count($errors) === 1) {
+                PageLayout::postMessage(MessageBox::error($errors[0]));
+            } elseif (!empty($errors)) {
+                $message = _('Ihre eingegebenen Daten sind ungültig.');
+                PageLayout::postMessage(MessageBox::error($message, $errors));
+            } else {
+                $message = _('Das Semester wurde erfolgreich gespeichert.');
+                PageLayout::postMessage(MessageBox::success($message));
+
+                $this->redirect('admin/semester');
+            }
+
+            $this->errors = $errors;
+        }
+    }
+
+    /**
+     * This method deletes a semester or a bundle of semesters.
+     *
+     * @param string $id Id of the semester (or 'bulk' for a bulk operation)
+     */
+    public function delete_action($id)
+    {
+        $ids = $id === 'bulk'
+             ? Request::optionArray('ids')
+             : array($id);
+
+        if (count($ids)) {
+            $errors  = array();
+            $deleted = 0;
+
+            $semesters = Semester::findMany($ids);
+            foreach ($semesters as $semester) {
+                if ($semester->absolute_seminars_count > 0) {
+                    $errors[] = sprintf(_('Das Semester "%s" hat noch Veranstaltungen und kann daher nicht gelöscht werden.'), $semester->name);
+                } elseif (!$semester->delete()) {
+                    $errors[] = sprintf(_('Fehler beim Löschen des Semesters "%s".'), $semester->name);
                 } else {
-                     $this->flash['delete'] = Semester::find($id);
-                }
-
-                //sicherheitsabfrage
-                if (Request::get('delete') == 1 && $semester_count == 0) {
-                    if (($semester = Semester::find($id)) && $semester->delete()) {
-                        PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gelöscht")));
-                    }
-                    $this->flash->discard();
-                }
-            //delete holiday
-            } elseif( $mode == "holiday" ) {
-                $this->flash['delete'] = SemesterHoliday::find($id);
-
-                //sicherheitsabfrage
-                if( Request::get('delete') == 1 ) {
-                    if (($holiday = SemesterHoliday::find($id)) && $holiday->delete()) {
-                        PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gelöscht")));
-                    }
-                    $this->flash->discard();
+                    $deleted += 1;
                 }
             }
+
+            if (count($errors) === 1) {
+                PageLayout::postMessage(MessageBox::error($errors[0]));
+            } elseif (!empty($errors)) {
+                $message = _('Beim Löschen der Semester sind folgende Fehler aufgetreten.');
+                PageLayout::postMessage(MessageBox::error($message, $errors));
+            }
+            if ($deleted > 0) {
+                $message = sprintf(_('%u Semester wurde(n) erfolgreich gelöscht.'), $deleted);
+                PageLayout::postMessage(MessageBox::success($message));
+            }
         }
+
         $this->redirect('admin/semester');
     }
 
-    /**
-     * This method edits and adds new semester
-     * @param md5 $id of a semester
-     */
-    public function edit_semester_action($id = null)
-    {
-        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
-        if (!is_null($id)) {
-            //get infos
-            $this->semester = Semester::find($id);
-            if (Semester::countAbsolutSeminars($id) > 0) {
-                $this->noteditable = true;
-            }
-
-            //save changes
-            if (Request::submitted('speichern')) {
-                $semester = Semester::find($id);
-                $data = array(
-                    'name' => Request::get('name', $semester->name),
-                    'description' => Request::get('description', $semester->description),
-                    'semester_token' => $semester->semester_token,
-                    'beginn' => Request::get('beginn') ? $this->getTimeStamp(Request::get('beginn')) : $semester->beginn,
-                    'ende' => Request::get('ende') ? $this->getTimeStamp(Request::get('ende'), '23:59:59') : $semester->ende,
-                    'vorles_beginn' => Request::get('vorles_beginn') ? $this->getTimeStamp(Request::get('vorles_beginn')) : $semester->vorles_beginn,
-                    'vorles_ende' => Request::get('vorles_ende') ? $this->getTimeStamp(Request::get('vorles_ende'), '23:59:59') : $semester->vorles_ende
-                );
-                $semester->setData($data);
-                //check parameters
-                if(!$this->validateSemester($semester)) {
-                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig.")));
-                } elseif (!$this->checkOverlap($semester)) {
-                    if (($ok = $semester->store()) !== false) {
-                        if ($ok > 0) {
-                            PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gespeichert.")));
-                        }
-                        $this->redirect('admin/semester');
-                    } else {
-                        PageLayout::postMessage(MessageBox::error(_("Fehler bei der Speicherung Ihrer Daten. Bitte überprüfen Sie Ihre Angaben.")));
-                    }
-                } else {
-                    PageLayout::postMessage(MessageBox::error(_("Bitte überprüfen Sie die Zeitangaben, da sie sich mit einem anderen Semester überlappen.")));
-                }
-                $this->semester = $semester;
-            }
-        }
-        // add new semester
-        elseif (Request::submitted('anlegen')) {
-            $this->semester = array(
-                'name' => Request::get('name'),
-                'description' => Request::get('description'),
-                'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59'),
-                'vorles_beginn' => $this->getTimeStamp(Request::get('vorles_beginn')),
-                'vorles_ende' => $this->getTimeStamp(Request::get('vorles_ende'), '23:59:59'),
-            );
-
-            //check parameters
-            if(!$this->validateSemester($this->semester)) {
-                PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig.")));
-            } elseif (!$this->checkOverlap($this->semester)) {
-                $semester = new Semester();
-                $semester->setData($this->semester);
-                if ($semester->store()) {
-                     PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gespeichert.")));
-                    $this->redirect('admin/semester');
-                } else {
-                    PageLayout::postMessage(MessageBox::error(_("Fehler bei der Speicherung Ihrer Daten. Bitte überprüfen Sie Ihre Angaben.")));
-                }
-            } else {
-                PageLayout::postMessage(MessageBox::error(_("Bitte überprüfen Sie die Zeitangaben, da sie sich mit einem anderen Semester überlappen.")));
-            }
-        }
-    }
 
     /**
-     * This method edits and adds new holidays
+     * Validates the semester for required valies, properness of values
+     * and possible overlaps with other semesters.
      *
-     * @param md5 $id of aholiday
-     */
-    public function edit_holidays_action($id = NULL)
-    {
-        $this->is_new = true;
-        if (!is_null($id) && !Request::submitted('anlegen')) {
-            $this->is_new = false;
-            $this->holiday = SemesterHoliday::find($id);
-
-            //save changes
-            if(Request::submitted('speichern')) {
-                $holiday = array(
-                    'name' => Request::get('name'),
-                    'description' => Request::get('description'),
-                    'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                    'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59')
-                );
-                $this->holiday->setData($holiday);
-                if($holiday['beginn'] == false || $holiday['ende'] == false
-                    || $holiday['name'] == "" || $holiday['beginn'] > $holiday['ende'] ) {
-
-                    $details = array();
-                    if ($holiday['beginn'] == false) {
-                        $details[] = _("Bitte geben Sie einen Ferienbeginn ein.");
-                    }
-                    if ($holiday['ende'] == false) {
-                        $details[] = _("Bitte geben Sie ein Ferienende ein.");
-                    }
-                    if ($holiday['name'] == "") {
-                        $details[] = _("Bitte geben Sie einen Namen ein.");
-                    }
-                    if ($holiday['beginn'] > $holiday['ende']) {
-                        $details[] = _("Das Ferienende liegt vor dem Beginn.");
-                    }
-                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig."), $details));
-
-                } elseif ($this->holiday->store() !== false) {
-                    PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
-                    $this->redirect('admin/semester');
-                }
-            }
-        }
-
-        // add new holiday
-        if(Request::submitted('anlegen')) {
-            $holiday = array(
-                'name' => Request::get('name'),
-                'description' => Request::get('description'),
-                'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59')
-            );
-            $this->holiday = new SemesterHoliday();
-            $this->holiday->setData($holiday);
-            if($this->holiday['beginn'] == false || $this->holiday['ende'] == false
-                || $this->holiday['name'] == ""
-                || $this->holiday['beginn'] > $this->holiday['ende'] ) {
-                $details = array();
-                if ($holiday['beginn'] == false) {
-                    $details[] = _("Bitte geben Sie einen Ferienbeginn ein.");
-                }
-                if ($holiday['ende'] == false) {
-                    $details[] = _("Bitte geben Sie ein Ferienende ein.");
-                }
-                if ($holiday['name'] == "") {
-                    $details[] = _("Bitte geben Sie einen Namen ein.");
-                }
-                if ($holiday['beginn'] > $holiday['ende']) {
-                    $details[] = _("Das Ferienende liegt vor dem Beginn.");
-                }
-                PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig."), $details));
-            } elseif ($this->holiday->store()) {
-                PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
-                $this->redirect('admin/semester');
-            }
-        }
-    }
-
-    /**
-     * This method was adopted from the old version.
-     * Examination of overlap
+     * The validation is also divided into these three steps, so the next
+     * validation step only occurs when the previous one succeeded.
      *
-     * @param array() $semesterdata
-     * @return bool
+     * @param Semester $semester Semester (data) to validate
+     * @return Array filled with errors
      */
-    private function checkOverlap($semesterdata)
+    protected function validateSemester(Semester $semester)
     {
-        $allSemesters = Semester::getAll();
+        // Validation, step 1: Check required values
+        $errors = array();
+        if (!$this->semester->name) {
+            $errors['name'] = _('Sie müssen den Namen des Semesters angeben.');
+        }
+        if (!$this->semester->beginn) {
+            $errors['beginn'] = _('Sie müssen den Beginn des Semesters angeben.');
+        }
+        if (!$this->semester->ende) {
+            $errors['ende'] = _('Sie müssen das Ende des Semesters angeben.');
+        }
+        if (!$this->semester->vorles_beginn) {
+            $errors['vorles_beginn'] = _('Sie müssen den Beginn der Vorlesungzeit angeben.');
+        }
+        if (!$this->semester->vorles_ende) {
+            $errors['vorles_ende'] = _('Sie müssen das Ende der Vorlesungzeit angeben.');
+        }
 
-        foreach ($allSemesters as $semester) {
-            if (($semesterdata["beginn"] < $semester["beginn"]) && ($semesterdata["ende"] > $semester["ende"])) {
-                if ($semesterdata["semester_id"] != $semester["semester_id"]) {
-                    return true;
+        // Validation, step 2: Check properness of values
+        if (empty($errors)) {
+            if ($this->semester->beginn > $this->semester->vorles_beginn) {
+                $errors['beginn'] = _('Der Beginn des Semester muss vor dem Beginn der Vorlesungszeit liegen.');
+            }
+            if ($this->semester->vorles_beginn > $this->semester->vorles_ende) {
+                $errors['vorles_beginn'] = _('Der Beginn der Vorlesungszeit muss vor ihrem Ende liegen.');
+            }
+            if ($this->semester->vorles_ende > $this->semester->ende) {
+                $errors['vorles_ende'] = _('Das Ende der Vorlesungszeit muss vor dem Semesterende liegen.');
+            }
+        }
+
+        // Validation, step 3: Check overlapping with other semesters
+        if (empty($errors)) {
+            foreach (Semester::getAll() as $semester) {
+                if ($semester->id === $this->semester->id) {
+                    continue;
+                }
+                if ($this->semester->beginn < $semester->beginn && $this->semester->ende > $semester->ende) {
+                    $errors[] = _('Der angegebene Zeitraum des Semester überschneidet sich mit einem anderen Semester');
+                    break;
                 }
             }
         }
-        return false;
+
+        return $errors;
     }
 
     /**
-     * Validate a semesterdata array()
+     * Checks a string if it is a valid date and returns the according
+     * unix timestamp if valid.
      *
-     * @param array() $semester
-     * @return bool
+     * @param string $name  Parameter name to extract from request
+     * @param string $time Optional time segment
+     * @return mixed Unix timestamp or false if not valid
      */
-    private function validateSemester($semester)
+    protected function getTimeStamp($name, $time = '0:00:00')
     {
-        if ($semester['beginn'] == false || $semester['ende'] == false
-            || $semester['vorles_beginn'] == false
-            || $semester['vorles_ende'] == false
-            || $semester['name'] == ""
-            || $semester['beginn'] > $semester['vorles_beginn']
-            || $semester['beginn'] > $semester['ende']
-            || $semester['beginn'] > $semester['vorles_ende']
-            || $semester['ende'] < $semester['vorles_ende']
-            || $semester['ende'] < $semester['beginn']
-            || $semester['ende'] < $semester['vorles_beginn']
-            || $semester['vorles_ende'] < $semester['vorles_beginn']) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * checks a string, if it is a valid date
-     * @param string $date
-     * @return timestamp or false
-     */
-    private function getTimeStamp($date, $time = '')
-    {
-        if (!empty($date)) {
-            $date_array = explode('.', $date);
-            if (checkdate($date_array[1], $date_array[0], $date_array[2])) {
+        $date = Request::get($name);
+        if ($date) {
+            list($day, $month, $year) = explode('.', $date);
+            if (checkdate($month, $day, $year)) {
                 return strtotime($date . ' ' . $time);
             }
         }
@@ -311,15 +232,29 @@ class Admin_SemesterController extends AuthenticatedController
     /**
      * Adds the content to sidebar
      */
-    private function setSidebar()
+    protected function setSidebar()
     {
         $sidebar = Sidebar::Get();
         $sidebar->setTitle(_('Semester'));
         $sidebar->setImage('sidebar/admin-sidebar.png');
 
+        $views = new ViewsWidget();
+        $views->addLink(_('Alle Einträge'),
+                        $this->url_for('admin/semester', array('filter' => null)))
+              ->setActive(!$this->filter);
+        $views->addLink(_('Aktuelle/zukünftige Einträge'),
+                        $this->url_for('admin/semester', array('filter' => 'current')))
+              ->setActive($this->filter === 'current');
+        $views->addLink(_('Vergangene Einträge'),
+                        $this->url_for('admin/semester', array('filter' => 'past')))
+              ->setActive($this->filter === 'past');
+        $sidebar->addWidget($views);
+
         $links = new ActionsWidget();
-        $links->addLink(_('Neues Semester anlegen'), $this->url_for('admin/semester/edit_semester'),'icons/16/blue/add.png');
-        $links->addLink(_('Neue Ferien anlegen'), $this->url_for('admin/semester/edit_holidays'),'icons/16/blue/add.png');
+        $links->addLink(_('Neues Semester anlegen'),
+                        $this->url_for('admin/semester/edit', array('filter' => null)),
+                        'icons/16/blue/add.png')
+              ->asDialog('size=auto');
         $sidebar->addWidget($links);
     }
 }

@@ -563,6 +563,17 @@ table.default {
         padding-left: 5px;
         vertical-align: middle;
     }
+    
+    &.has-form {
+        input[type=text], textarea {
+            .box-sizing(border-box);
+            min-width: 200px;
+            width: 100%;
+        }
+        textarea {
+            min-height: 100px;
+        }
+    }
 }
 
 table.withdetails {

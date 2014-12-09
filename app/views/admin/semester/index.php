@@ -1,118 +1,97 @@
-<?
-# Lifter010: TODO
-?>
-<? if (isset($flash['delete'])): ?>
-    <? if ($flash['mode']=='semester'): ?>
-        <?= createQuestion(sprintf(_('Wollen Sie das Semester "%s" wirklich löschen?'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/semester/delete/') . $flash['delete']['semester_id']."/semester"); ?>
-    <? elseif ($flash['mode']=='holiday'): ?>
-        <?= createQuestion(sprintf(_('Wollen Sie die Ferien "%s" wirklich löschen?'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/semester/delete/') . $flash['delete']['holiday_id']."/holiday"); ?>
-    <? endif; ?>
+<form action="<?= $controller->url_for('admin/semester/delete/bulk') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
+
+<table class="default" id="semesters">
+    <caption><?= _('Semester') ?></caption>
+    <colgroup>
+        <col width="20px">
+        <col>
+        <col width="10%">
+        <col width="15%">
+        <col width="15%">
+        <col width="20%">
+        <col width="48px">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                <input type="checkbox"
+                       data-proxyfor="#semesters tbody :checkbox"
+                       data-activates="#semesters tfoot button">
+            </th>
+            <th><?= _('Name') ?></th>
+            <th><?= _('Kürzel') ?></th>
+            <th><?= _('Zeitraum') ?></th>
+            <th><?= _('Vorlesungen') ?></th>
+            <th><?= _('Veranstaltungen') ?></th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+<? if (empty($semesters)): ?>
+        <tr>
+            <td colspan="4">
+            <? if ($filter): ?>
+                <?= _('In der gewählten Ansicht gibt es keine Einträge.') ?>
+            <? else: ?>
+                <?= _('Es wurden noch keine Semester angelegt.') ?>
+            <? endif; ?>
+            </td>
+        </tr>
+<? else: ?>
+    <? foreach ($semesters as $semester): ?>
+        <tr <? if ($semester->current) echo 'style="font-weight: bold;"'; ?>>
+            <td>
+                <input type="checkbox" name="ids[]" value="<?= $semester->id ?>"
+                       <? if ($semester->absolute_seminars_count) echo 'disabled'; ?>>
+            </td>
+            <td title="<?= htmlReady($semester->description) ?>">
+                <?= htmlReady($semester->name) ?>
+            </td>
+            <td>
+                <?= htmlReady($semester->semester_token ?: '- ' . _('keins') . ' -') ?>
+            </td>
+            <td>
+                <?= strftime('%x', $semester->beginn) ?>
+                -
+                <?= strftime('%x', $semester->ende) ?>
+            </td>
+            <td>
+                <?= strftime('%x', $semester->vorles_beginn) ?>
+                -
+                <?= strftime('%x', $semester->vorles_ende) ?>
+            </td>
+            <td>
+                <?= $semester->absolute_seminars_count ?>
+                <?= sprintf(_('(+%u implizit)'),
+                            $semester->continuous_seminars_count + $semester->duration_seminars_count) ?> 
+            </td>
+            <td class="actions">
+                <a data-dialog="size=auto" href="<?= $controller->url_for('admin/semester/edit/' . $semester->id) ?>">
+                    <?= Assets::img('icons/16/blue/edit.png', tooltip2(_('Semesterangaben bearbeiten'))) ?>
+                </a>
+            <? if ($semester->absolute_seminars_count): ?>
+                <?= Assets::img('icons/16/grey/trash.png', tooltip2(_('Semester hat Veranstaltungen und kann daher nicht gelöscht werden.'))) ?>
+            <? else: ?>
+                <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Semester löschen')) + array(
+                        'formaction'   => $controller->url_for('admin/semester/delete/' . $semester->id),
+                        'data-confirm' => _('Soll das Semester wirklich gelöscht werden?'),
+                )) ?>
+            <? endif; ?>
+            </td>
+        </tr>
+    <? endforeach; ?>
 <? endif; ?>
-
-<table class="default">
-<caption>
-    <?= _("Semester") ?>
-</caption>
-<thead>
-<tr>
-    <th><?= _("Name") ?></th>
-    <th><?= _("Beginn") ?></th>
-    <th><?= _("Ende") ?></th>
-    <th><?= _("Vorlesungsbeginn") ?></th>
-    <th><?= _("Vorlesungsende") ?></th>
-    <th><?= _("Anzahl der Veranstaltungen") ?></th>
-    <th colspan="2" width="2%"></th>
-</tr>
-</thead>
-<? foreach ($semesters as $single): ?>
-<tr>
-    <td title="<?= htmlReady($single["description"]) ?>"><?= htmlReady($single["name"]) ?></td>
-    <td><?= date("d.m.Y", $single["beginn"]) ?></td>
-    <td><?= date("d.m.Y", $single["ende"]) ?></td>
-    <td><?= date("d.m.Y", $single["vorles_beginn"]) ?></td>
-    <td><?= date("d.m.Y", $single["vorles_ende"]) ?></td>
-    <td>
-        <?= ($disallow_delete = Semester::countAbsolutSeminars($single["semester_id"])) ?>
-        <?= sprintf(_('(+ %s implizit)'), Semester::countContinuousSeminars($single["semester_id"])+Semester::countDurationSeminars($single["semester_id"])) ?>
-    </td>
-    <td class="actions">
-        <a class="load-in-new-row" href="<?= URLHelper::getLink('dispatch.php/admin/semester/edit_semester/' . $single["semester_id"]) ?>">
-            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Semesterangaben bearbeiten'))) ?>
-        </a>
-    </td>
-    <td class="actions">
-        <? if (!$disallow_delete) : ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/admin/semester/delete/' . $single["semester_id"] . '/semester') ?>">
-            <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Semester löschen'))) ?>
-        </a>
-        <? endif ?>
-    </td>
-</tr>
-<? endforeach ?>
-<tfoot>
-<tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td class="actions">
-        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_semester') ?>">
-            <?= Assets::img('icons/16/blue/add.png', array('title' => _('Neues Semester anlegen'))) ?>
-        </a>
-    </td>
-</tr>
-</tfoot>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">
+                <?= _('Markierte Einträge') ?>
+                <?= Studip\Button::create(_('Löschen'), 'delete', array(
+                        'data-confirm' => _('Sollen die Semester wirklich gelöscht werden?')
+                )) ?>
+            </td>
+        </tr>
+    </tfoot>
 </table>
-<br>
-
-<table class="default">
-<caption>
-    <?= _("Ferien") ?>
-</caption>
-<thead>
-<tr>
-    <th><?= _("Name") ?></th>
-    <th><?= _("Beginn") ?></th>
-    <th><?= _("Ende") ?></th>
-    <th></th>
-</tr>
-</thead>
-<? foreach ($holidays as $single): ?>
-<tr>
-    <td title="<?= htmlReady($single["description"]) ?>"><?= htmlReady($single["name"]) ?></td>
-    <td><?= date("d.m.Y", $single["beginn"]) ?></td>
-    <td><?= date("d.m.Y", $single["ende"]) ?></td>
-    <td class="actions">
-        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays/' . $single["holiday_id"]) ?>">
-            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Ferienangaben bearbeiten'))) ?>
-        </a>
-        <a href="<?=URLHelper::getLink('dispatch.php/admin/semester/delete/' . $single["holiday_id"] . '/holiday') ?>">
-            <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Ferien löschen'))) ?>
-        </a>
-    </td>
-</tr>
-<? endforeach ?>
-<tfoot>
-<tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td class="actions">
-        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays') ?>">
-            <?= Assets::img('icons/16/blue/add.png', array('title' => _('Neue Ferien anlegen'))) ?>
-        </a>
-    </td>
-</tr>
-</tfoot>
-</table>
-<script>
-    jQuery('body').bind('ajaxLoaded', function(){
-        jQuery('#beginn').datepicker();
-        jQuery('#ende').datepicker();
-        jQuery('#vorles_beginn').datepicker();
-        jQuery('#vorles_ende').datepicker();
-    });
-</script>
+</form>

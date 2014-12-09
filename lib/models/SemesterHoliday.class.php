@@ -24,6 +24,19 @@
 class SemesterHoliday extends SimpleORMap
 {
     /**
+     * Configures this model.
+     *
+     * @param Array $config
+     */
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'semester_holiday';
+        $config['default_values']['description'] = '';
+        $config['additional_fields']['current'] = true;
+        parent::configure($config);
+    }
+
+    /**
      * cache
      */
     private static $holiday_cache;
@@ -33,10 +46,10 @@ class SemesterHoliday extends SimpleORMap
      * @param string $id
      * @return NULL|SemesterHoliday
      */
-    static function find($id)
+    public static function find($id)
     {
         $holiday_cache = self::getAll();
-        return isset($holiday_cache[$id]) ? $holiday_cache[$id] : null;
+        return $holiday_cache[$id] ?: null;
     }
 
      /**
@@ -45,7 +58,7 @@ class SemesterHoliday extends SimpleORMap
      * @param integer $timestamp_end
      * @return array of SemesterHoliday
      */
-    static function findByTimestampRange($timestamp_start, $timestamp_end)
+    public static function findByTimestampRange($timestamp_start, $timestamp_end)
     {
         $ret = array();
         if ($timestamp_start < $timestamp_end) {
@@ -64,7 +77,7 @@ class SemesterHoliday extends SimpleORMap
      * @param mixed semester object or id as string or assoc array
      * @return array of SemesterHoliday
      */
-    static function findBySemester($semester)
+    public static function findBySemester($semester)
     {
         $semester = Semester::toObject($semester);
         return self::findByTimestampRange($semester->beginn, $semester->ende);
@@ -76,7 +89,7 @@ class SemesterHoliday extends SimpleORMap
      * @param boolean $force_reload
      * @return array
      */
-    static function getAll($force_reload = false)
+    public static function getAll($force_reload = false)
     {
         if (!is_array(self::$holiday_cache) || $force_reload) {
             self::$holiday_cache = array();
@@ -86,11 +99,14 @@ class SemesterHoliday extends SimpleORMap
         }
         return self::$holiday_cache;
     }
-
-    protected static function configure($config = array())
+    
+    /**
+     * Returns whether we currently have this holidays (yay).
+     *
+     * @return bool
+     */
+    public function getcurrent()
     {
-        $config['db_table'] = 'semester_holiday';
-        $config['default_values']['description'] = '';
-        parent::configure($config);
+        return $this->beginn < time() && $this->ende > time();
     }
 }

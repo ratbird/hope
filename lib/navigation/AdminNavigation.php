@@ -149,6 +149,7 @@ class AdminNavigation extends Navigation
 
             if (Config::get()->SEMESTER_ADMINISTRATION_ENABLE) {
                 $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
+                $navigation->addSubNavigation('holidays', new Navigation(_('Ferien'), 'dispatch.php/admin/holidays'));
             }
 
             if (Config::get()->EXTERN_ENABLE) {

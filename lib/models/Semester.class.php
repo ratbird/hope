@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
  * Semester.class.php
  * model class for table semester_data
@@ -29,20 +28,54 @@
 class Semester extends SimpleORMap
 {
     /**
+     * Configures this model.
+     *
+     * @param Array $config
+     */
+    protected static function configure($config = array())
+    {
+        $config['db_table'] = 'semester_data';
+
+        $config['default_values']['description']    = '';
+        $config['default_values']['semester_token'] = '';
+
+        $config['additional_fields']['first_sem_week'] = true;
+        $config['additional_fields']['last_sem_week'] = true;
+        $config['additional_fields']['current'] = true;
+        $config['additional_fields']['past'] = true;
+
+        $config['additional_fields']['absolute_seminars_count'] = array(
+            'get' => 'seminar_counter',
+            'set' => false,
+        );
+        $config['additional_fields']['duration_seminars_count'] = array(
+            'get' => 'seminar_counter',
+            'set' => false,
+        );
+        $config['additional_fields']['continuous_seminars_count'] = array(
+            'get' => 'seminar_counter',
+            'set' => false,
+        );
+
+        parent::configure($config);
+    }
+
+    /**
      * cache
      */
     private static $semester_cache;
     private static $current_semester;
+    
 
     /**
      * returns semester object for given id or null
      * @param string $id
      * @return NULL|Semester
      */
-    static function find($id)
+    public static function find($id)
     {
         $semester_cache = self::getAll();
-        return isset($semester_cache[$id]) ? $semester_cache[$id] : null;
+        return $semester_cache[$id] ?: null;
     }
 
     /**
@@ -50,15 +83,14 @@ class Semester extends SimpleORMap
      * @param integer $timestamp
      * @return null|Semester
      */
-    static function findByTimestamp($timestamp)
+    public static function findByTimestamp($timestamp)
     {
         foreach(self::getAll() as $semester) {
             if ($timestamp >= $semester->beginn && $timestamp <= $semester->ende) {
-                $found = $semester;
-                break;
+                return $semester;
             }
         }
-        return $found;
+        return null;
     }
 
     /**
@@ -66,21 +98,21 @@ class Semester extends SimpleORMap
      * @param integer $timestamp
      * @return null|Semester
      */
-    static function findNext($timestamp = null)
+    public static function findNext($timestamp = null)
     {
         $timestamp = $timestamp OR $timestamp = time();
         $semester = self::findByTimestamp($timestamp);
         if ($semester) {
             return self::findByTimestamp($semester->ende + 1);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
      * returns current Semester
      */
-    static function findCurrent()
+    public static function findCurrent()
     {
         self::getAll();
         return self::$current_semester;
@@ -92,13 +124,13 @@ class Semester extends SimpleORMap
      * @param boolean $force_reload
      * @return array
      */
-    static function getAll($force_reload = false)
+    public static function getAll($force_reload = false)
     {
         if (!is_array(self::$semester_cache) || $force_reload) {
             self::$semester_cache = array();
             foreach(self::findBySql('1 ORDER BY beginn') as $semester){
                 self::$semester_cache[$semester->getId()] = $semester;
-                if (time() >= $semester->beginn && time() < $semester->ende) {
+                if ($semester->current) {
                     self::$current_semester = $semester;
                 }
             }
@@ -106,29 +138,78 @@ class Semester extends SimpleORMap
         return self::$semester_cache;
     }
 
-    protected static function configure($config = array())
+    /**
+     * Caches seminar counts
+     */
+    protected $seminar_counts = null;
+
+    /**
+     * Counts the number of different seminar types in this semester.
+     * This method caches the result in $seminar_counts so the db
+     * will only be queried once per semester.
+     *
+     * @param String $field Name of the seminar (/additional_fields) type
+     * @return int The count of seminars of this type
+     */
+    protected function seminar_counter($field)
     {
-        $config['db_table'] = 'semester_data';
-        $config['default_values']['description'] = '';
-        $config['additional_fields']['first_sem_week'] = true;
-        $config['additional_fields']['last_sem_week'] = true;
-        $config['additional_fields']['past'] = true;
-        parent::configure($config);
+        if ($this->seminar_counts === null) {
+            $query = "SELECT SUM(duration_time = -1 AND start_time < :beginn) AS continuous,
+                             SUM(duration_time > 0 AND start_time < :beginn AND start_time + duration_time >= :ende) AS duration,
+                             SUM(start_time = :beginn) AS absolute
+                      FROM seminare
+                      WHERE start_time <= :beginn";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':beginn', $this['beginn']);
+            $statement->bindValue(':ende', $this['ende']);
+            $statement->execute();
+            $this->seminar_counts = $statement->fetch(PDO::FETCH_ASSOC);
+        }
+        
+        $index = str_replace('_seminars_count', '', $field);
+        return (int)$this->seminar_counts[$index];
     }
 
-    function getfirst_sem_week()
+    /**
+     * Returns the calendar week number of the first week of the lecture
+     * period.
+     *
+     * @return int Calendar week number of the first week of lecture
+     */
+    public function getfirst_sem_week()
     {
         return (int)strftime('%W', $this['vorles_beginn']);
     }
 
-    function getlast_sem_week()
+    /**
+     * Returns the calendar week number of the last week of the lecture
+     * period.
+     *
+     * @return int Calendar week number of the last week of lecture
+     */
+    public function getlast_sem_week()
     {
         return (int)strftime('%W', $this['vorles_ende']);
     }
 
-    function getpast()
+    /**
+     * Return whether this semester is in the past.
+     *
+     * @return bool Indicating whether this semester is in the past
+     */
+    public function getpast()
     {
         return $this['ende'] < time();
+    }
+
+    /**
+     * Returns whether this semester is the current semester.
+     *
+     * @return bool Indicating if this is the current semester
+     */
+    public function getcurrent()
+    {
+        return time() >= $this->beginn && time() < $this->ende;
     }
 
     /**
@@ -136,7 +217,7 @@ class Semester extends SimpleORMap
      * @param integer $timestamp
      * @return number|boolean
      */
-    function getSemWeekNumber($timestamp)
+    public function getSemWeekNumber($timestamp)
     {
         $current_sem_week = (int)strftime('%W', $timestamp);
         if(strftime('%Y', $timestamp) > strftime('%Y', $this->vorles_beginn)){
@@ -149,81 +230,8 @@ class Semester extends SimpleORMap
         }
         if($current_sem_week >= $this->first_sem_week && $current_sem_week <= $last_sem_week){
             return $current_sem_week - $this->first_sem_week + 1;
-        } else {
-            return false;
         }
-    }
 
-    /**
-     * Return the number of continuous seminars in a semester
-     *
-     * @param md5 $id of the semester
-     * @return int count of seminars
-     */
-    public static function countContinuousSeminars($id)
-    {
-        $semesterdata = self::find($id);
-
-        $query = "SELECT COUNT(*)
-                  FROM seminare
-                  WHERE duration_time = -1 AND start_time < ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $semesterdata['beginn'],
-        ));
-        return $statement->fetchColumn();
-    }
-
-    /**
-     * This method was adopted from the old version.
-     *
-     * @param md5 $id of the semester
-     * @return int count of seminars
-     */
-    public static function countDurationSeminars($id)
-    {
-        $semesterdata = self::find($id);
-
-        $query = "SELECT COUNT(*)
-                  FROM seminare
-                  WHERE duration_time > 0 AND start_time < ? AND
-                    start_time+duration_time >= ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $semesterdata['beginn'],
-            $semesterdata['ende']
-        ));
-        return $statement->fetchColumn();
-    }
-
-    /**
-     * Returns the number of absolute seminars in a semester
-     *
-     * @param md5 $id of the semester
-     * return int count of seminars
-     */
-    public static function countAbsolutSeminars($id)
-    {
-        $semesterdata = self::find($id);
-
-        $query = "SELECT COUNT(*)
-                  FROM seminare
-                  WHERE start_time = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $semesterdata['beginn'],
-        ));
-        return $statement->fetchColumn();
-    }
-
-    /**
-     * This method was adopted from the old version.
-     *
-     * @param md5 $id of the semester
-     * return int count of seminars
-     */
-    public static function getAbsolutAndDurationSeminars($id)
-    {
-        return (int)self::countAbsolutSeminars($id) + self::countDurationSeminars($id);
+        return false;
     }
 }

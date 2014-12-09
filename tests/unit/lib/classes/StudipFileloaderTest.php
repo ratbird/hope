@@ -60,7 +60,7 @@ class StudipFileloaderTestCase extends PHPUnit_Framework_TestCase {
   }
 
   /**
-   * @expectedException PHPUnit_Framework_Exception
+   * @expectedException PHPUnit_Framework_Error_Warning
    */
   function test_should_balk_upon_file_not_found()
   {

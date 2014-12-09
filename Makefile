@@ -17,7 +17,7 @@ ifneq ($(wildcard $(CODECEPT_VENDOR)),)
 else ifneq ($(wildcard $(CODECEPT)),)
 	RUN_TESTS = $(CODECEPT) run
 else
-	RUN_TESTS = phpunit --config=tests/phpunit.xml
+	RUN_TESTS = phpunit -c tests/phpunit.xml
 endif
 
 

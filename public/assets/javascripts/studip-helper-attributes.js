@@ -13,8 +13,8 @@
         }
     }).on('update.proxy', ':checkbox[data-proxyfor]', function () {
         var proxied = $(this).data('proxyfor'),
-            $proxied = $(proxied),
-            $checked = $proxied.filter(':not(:disabled)').filter(':checked');
+            $proxied = $(proxied).filter(':not(:disabled)'),
+            $checked = $proxied.filter(':checked');
         $(this).prop('checked', $proxied.length > 0 && $proxied.length === $checked.length);
         $(this).prop('indeterminate', $checked.length > 0 && $checked.length < $proxied.length);
         $(this).trigger('change');
@@ -120,5 +120,18 @@
 
         counter.text(count);
     });
+
+    // Lets the user confirm a specific action (submit or click event).
+    var confirmation_handler = function (event) {
+        if (!event.isDefaultPrevented()) {
+            var question = $(this).data().confirm
+                        || $(this).attr('title')
+                        || $(this).find('[title]:first').attr('title')
+                        || 'Wollen Sie die Aktion wirklich ausführen?'.toLocaleString();
+            return confirm(question);
+        }
+    };
+    $(document).on('click', 'a[data-confirm],input[data-confirm],button[data-confirm]', confirmation_handler);
+    $(document).on('submit', 'form[data-confirm]', confirmation_handler);
 
 }(jQuery));

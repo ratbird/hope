@@ -355,6 +355,7 @@ class Course_BasicdataController extends AuthenticatedController
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
         $sem = Seminar::getInstance($course_id);
         $this->msg = array();
+        $old_settings = $sem->getSettings();
         //Seminar-Daten:
         if ($perm->have_studip_perm("tutor", $sem->getId())) {
             $changemade = false;
@@ -412,8 +413,8 @@ class Course_BasicdataController extends AuthenticatedController
             $sem->store();
 
             // Logging
-            $before = array_diff_assoc($sem->old_settings, $sem->getSettings());
-            $after  = array_diff_assoc($sem->getSettings(), $sem->old_settings);
+            $before = array_diff_assoc($old_settings, $sem->getSettings());
+            $after  = array_diff_assoc($sem->getSettings(), $old_settings);
 
             //update admission, if turnout was raised
             if($after['admission_turnout'] > $before['admission_turnout'] && $sem->isAdmissionEnabled()) {

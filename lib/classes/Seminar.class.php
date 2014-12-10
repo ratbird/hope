@@ -49,7 +49,6 @@ class Seminar
     var $message_stack = array();
 
     var $user_number = 0;//?
-    var $old_settings; //?
     var $commands; //?
     var $BookedRoomsStatTemp; //???
 
@@ -466,8 +465,6 @@ class Seminar
         $this->issues = null;
         $this->_metadate = null;
         $this->course_set = null;
-
-        $this->old_settings = $this->getSettings();
 
         return TRUE;
     }

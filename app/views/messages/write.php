@@ -66,7 +66,8 @@
         </label>
     </div>
     <div>
-        <ul style="list-style-type: none; text-align: center;">
+        <ul style="list-style-type: none; margin: 0; padding: 0; text-align: center;">
+        <? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENT']): ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('attachments'); return false;">
                     <?= Assets::img("icons/40/blue/staple") ?>
@@ -74,6 +75,7 @@
                     <strong><?= _("Anhänge") ?></strong>
                 </a>
             </li>
+        <? endif; ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('tags'); return false;">
                     <?= Assets::img("icons/40/blue/star") ?>
@@ -98,6 +100,7 @@
         </ul>
     </div>
 
+<? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENT']): ?>
     <div id="attachments" style="<?= $default_attachments ? '' : 'display: none;'?>">
         <h4><?= _("Anhänge") ?></h4>
         <div>
@@ -135,6 +138,7 @@
             <div id="upload_received_data" style="display: none"><?= _("gespeichert") ?></div>
         </div>
     </div>
+<? endif; ?>
     <div id="tags" style="<?= Request::get("default_tags") ? "" : 'display: none; ' ?>">
         <label>
             <h4><?= _("Schlagworte") ?></h4>

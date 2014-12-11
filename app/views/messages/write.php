@@ -67,7 +67,7 @@
     </div>
     <div>
         <ul style="list-style-type: none; margin: 0; padding: 0; text-align: center;">
-        <? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENT']): ?>
+        <? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENTS']): ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('attachments'); return false;">
                     <?= Assets::img("icons/40/blue/staple") ?>
@@ -100,7 +100,7 @@
         </ul>
     </div>
 
-<? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENT']): ?>
+<? if ($GLOBALS['ENABLE_EMAIL_ATTACHMENTS']): ?>
     <div id="attachments" style="<?= $default_attachments ? '' : 'display: none;'?>">
         <h4><?= _("Anhänge") ?></h4>
         <div>

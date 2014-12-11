@@ -490,7 +490,7 @@ class MessagesController extends AuthenticatedController {
         if ($GLOBALS['user']->id === "nobody") {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        if (!$GLOBALS['ENABLE_EMAIL_ATTACHMENT']) {
+        if (!$GLOBALS['ENABLE_EMAIL_ATTACHMENTS']) {
             throw new AccessDeniedException(_('Mailanhänge sind nicht erlaubt.'));
         }
         $file = $_FILES['file'];

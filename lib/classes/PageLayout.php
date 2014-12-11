@@ -221,11 +221,10 @@ class PageLayout
      */
     public static function addStylesheet($source, $attributes = array())
     {
-        $style_attributes = array(
-            'rel'   => 'stylesheet',
-            'href'  => Assets::stylesheet_path($source));
+        $attributes['rel']  = 'stylesheet';
+        $attributes['href'] = Assets::stylesheet_path($source);
 
-        self::addHeadElement('link', array_merge($style_attributes, $attributes));
+        self::addHeadElement('link', $attributes);
     }
 
     /**
@@ -236,37 +235,36 @@ class PageLayout
      */
     public static function removeStylesheet($source, $attributes = array())
     {
-        $style_attributes = array(
-            'rel'   => 'stylesheet',
-            'href'  => Assets::stylesheet_path($source));
+        $attributes['rel']  = 'stylesheet';
+        $attributes['href'] = Assets::stylesheet_path($source);
 
-        self::removeHeadElement('link', array_merge($style_attributes, $attributes));
+        self::removeHeadElement('link', $attributes);
     }
 
     /**
      * Add a JavaScript SCRIPT element to the HTML HEAD section.
      *
      * @param string $source     URL of JS file or file in assets folder
+     * @param array $attributes  Additional parameters for the script tag
      */
-    public static function addScript($source)
+    public static function addScript($source, $attributes = array())
     {
-        $script_attributes = array(
-            'src'   => Assets::javascript_path($source));
+        $attributes['src'] = Assets::javascript_path($source);
 
-        self::addHeadElement('script', $script_attributes, '');
+        self::addHeadElement('script', $attributes, '');
     }
 
     /**
      * Remove a JavaScript SCRIPT element from the HTML HEAD section.
      *
      * @param string $source     URL of JS file or file in assets folder
+     * @param array $attributes  Additional parameters for the script tag
      */
-    public static function removeScript($source)
+    public static function removeScript($source, $attributes = array())
     {
-        $script_attributes = array(
-            'src'   => Assets::javascript_path($source));
+        $attributes['src'] = Assets::javascript_path($source);
 
-        self::removeHeadElement('script', $script_attributes);
+        self::removeHeadElement('script', $attributes);
     }
 
     /**

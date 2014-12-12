@@ -54,7 +54,9 @@ class CoreSchedule implements StudipModule {
                 'Veranstaltungstermine auf. Zur besseren Orientierung und zur '.
                 'inhaltlichen Einstimmung der Studierenden können Lehrende den '.
                 'Terminen Themen hinzufügen, die z. B. eine Kurzbeschreibung '.
-                'der Inhalte darstellen.')
+                'der Inhalte darstellen.'),
+            'displayname' => _('Ablaufplan'),
+            'category' => _('Lehrorganisation')
         );
     }
 }

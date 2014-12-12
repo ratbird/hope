@@ -112,6 +112,9 @@ javascripts:
   document:
     - javascripts/document.js
 
+  lightbox:
+    - javascripts/jquery/lightbox/lightbox.min.js
+
 css:
   base:
     # filename : media
@@ -125,3 +128,6 @@ css:
 
   wysiwyg:
     wysiwyg.css: screen, print
+
+  lightbox:
+    lightbox.css: screen

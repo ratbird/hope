@@ -100,7 +100,9 @@ class CoreDocuments implements StudipModule {
                 'können sofort angezeigt bzw. abgespielt werden. Über das '.
                 'PlugIn "Dateiordnerberechtigung" können Im Dateibereich '.
                 'bestimmte Rechte für Studierende, wie z.B. das Leserecht, '.
-                'festgelegt werden.')
+                'festgelegt werden.'),
+            'displayname' => _('Dateibereich'),
+            'category' => _('Lehrorganisation')
         );
     }
 }

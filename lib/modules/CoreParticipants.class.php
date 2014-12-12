@@ -84,7 +84,15 @@ class CoreParticipants implements StudipModule {
                 'Semesterangabe dargestellt. Die Liste kann in verschiedene '.
                 'Formate exportiert werden. Außerdem gibt es die '.
                 'Möglichkeiten, eine Rundmail an alle zu schreiben (nur '.
-                'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.')
+                'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
+            'displayname' => _('TeilnehmerInnen'),
+            'descriptionshort' => _('Liste aller Teilnehmenden einschließlich Nachrichtenfunktionen'),
+            'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Funktion '.
+                'in einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum als auch der '.
+                'Studiengang mit Semesterangabe dargestellt. Die Liste kann in verschiedene Formate '.
+                'exportiert werden. Außerdem gibt es die Möglichkeiten, eine Rundmail an alle zu schreiben '.
+                '(nur Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
+            'category' => _('Lehrorganisation')  
         );
     }
 }

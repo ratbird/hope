@@ -116,7 +116,9 @@ class CoreScm implements StudipModule {
                 'wird die Seite für die Angabe von Literatur genutzt als '.
                 'Alternative zum Plugin Literatur. Sie kann aber auch für '.
                 'andere beliebige Zusatzinformationen (Links, Protokolle '.
-                'etc.) verwendet werden.')
+                'etc.) verwendet werden.'),
+            'displayname' => _('Freie Informationsseite'),
+            'category' => _('Lehrorganisation')
         );
     }
 }

@@ -61,7 +61,9 @@ class CoreLiterature implements StudipModule {
                 'hochzuladen. Diese Listen können in Lehrveranstaltungen '.
                 'kopiert und sichtbar geschaltet werden. Je nach Anbindung '.
                 'kann im tatsächlichen Buchbestand der Hochschule '.
-                'recherchiert werden.')
+                'recherchiert werden.'),
+            'displayname' => _('Literatur'),
+            'category' => _('Lehrorganisation')
         );
      }
 }

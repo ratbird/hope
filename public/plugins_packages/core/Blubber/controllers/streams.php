@@ -327,7 +327,6 @@ class StreamsController extends PluginController {
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        $this->set_content_type('text/text');
         $this->render_text($posting['description']);
     }
 

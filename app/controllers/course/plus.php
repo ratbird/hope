@@ -355,11 +355,6 @@ class Course_PlusController extends AuthenticatedController
                         $check = ($_POST["plugin_" . $plugin->getPluginId()] == "TRUE");
                         $setting = $plugin->isActivated($seminar_id);
 
-                        $info = $plugin->getMetadata();
-                        if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$info ["category"]]) {
-                            $check = $setting;
-                        }
-
                         if ($check != $setting) {
                             array_push($_SESSION['plugin_toggle'], $plugin->getPluginId());
                         }

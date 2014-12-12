@@ -7,7 +7,7 @@ foreach ($filter->getFields() as $field) {
     }
     $valueNames = $field->getValidValues();
     $fieldText .= $field->getName()." ".$field->getCompareOperator().
-        " ".$valueNames[$field->getValue()];
+        " " . (count($valueNames) ? $valueNames[$field->getValue()] : $field->getValue());
     $i++;
 
 }

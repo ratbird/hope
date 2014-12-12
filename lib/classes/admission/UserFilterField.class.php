@@ -2,7 +2,7 @@
 
 /**
  * UserFilterField.class.php
- * 
+ *
  * A specification of a Stud.IP condition that must be fulfilled. One
  * or more instances of the UserFilterField subclasses make up a
  * UserFilter.
@@ -51,6 +51,8 @@ class UserFilterField
      */
     public $value = null;
 
+    public static $isParameterized = false;
+
     /**
      * Database tables and fields to get valid values and concrete user values
      * from.
@@ -64,12 +66,18 @@ class UserFilterField
 
     // --- OPERATIONS ---
 
+    public static function getParameterizedTypes()
+    {
+
+    }
+
+
     /**
      * Standard constructor.
      *
      * @param String $fieldId If a fieldId is given, the corresponding data is
      *                        loaded from database.
-     *                                 
+     *
      */
     public function __construct($fieldId='') {
         $this->validCompareOperators = array(
@@ -123,20 +131,20 @@ class UserFilterField
      */
     public function delete() {
         // Delete condition data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `userfilter_fields` 
+        $stmt = DBManager::get()->prepare("DELETE FROM `userfilter_fields`
             WHERE `field_id`=?");
         $stmt->execute(array($this->id));
     }
 
     /**
      * Generate a new unique ID.
-     * 
+     *
      * @param  String tableName
      */
     public function generateId() {
         do {
             $newid = md5(uniqid(get_class($this).microtime(), true));
-            $id = DBManager::get()->fetchColumn("SELECT `field_id` 
+            $id = DBManager::get()->fetchColumn("SELECT `field_id`
                 FROM `userfilter_fields` WHERE `field_id`=?", array($newid));
         } while ($id);
         return $newid;
@@ -151,14 +159,18 @@ class UserFilterField
         foreach (glob(realpath(dirname(__FILE__).'/userfilter').'/*.class.php') as $file) {
             require_once($file);
             // Try to auto-calculate class name from file name.
-            $className = substr(basename($file), 0, 
+            $className = substr(basename($file), 0,
                 strpos(basename($file), '.class.php'));
-            $current = new $className();
             // Check if class is right.
-            if (is_subclass_of($current, 'UserFilterField')) {
-                $fields[$className] = $className::getName();
+            if (is_subclass_of($className, 'UserFilterField')) {
+                if ($className::$isParameterized) {
+                    $fields = array_merge($fields, $className::getParameterizedTypes());
+                } else {
+                    $fields[$className] = $className::getName();
+                }
             }
         }
+        asort($fields);
         return $fields;
     }
 
@@ -197,11 +209,11 @@ class UserFilterField
      * and returns all users that fulfill the condition. This can be
      * an important information when checking on validity of a combination
      * of conditions.
-     * 
+     *
      * @param Array $restrictions values from other fields that restrict the valid
      *                            values for a user (e.g. a semester of study in
      *                            a given subject)
-     * @return Array All users that are affected by the current condition 
+     * @return Array All users that are affected by the current condition
      *               field.
      */
     public function getUsers($restrictions=array()) {
@@ -246,10 +258,10 @@ class UserFilterField
 
     /**
      * Gets the value for the given user that is relevant for this
-     * condition field. Here, this method looks up the study degree(s) 
+     * condition field. Here, this method looks up the study degree(s)
      * for the user. These can then be compared with the required degrees
      * whether they fit.
-     * 
+     *
      * @param  String $userId User to check.
      * @param  Array additional conditions that are required for check.
      * @return The value(s) for this user.
@@ -331,7 +343,7 @@ class UserFilterField
 
     /**
      * Connects the current field to a UserFilter.
-     * 
+     *
      * @param  String $id ID of a UserFilter object.
      * @return UserFilterField
      */
@@ -358,7 +370,7 @@ class UserFilterField
 
     /**
      * Stores data to DB.
-     * 
+     *
      * @param  String conditionId The condition this field belongs to.
      */
     public function store() {
@@ -367,13 +379,13 @@ class UserFilterField
             $this->id = $this->generateId();
         }
         // Store field data.
-        $stmt = DBManager::get()->prepare("INSERT INTO `userfilter_fields` 
-            (`field_id`, `filter_id`, `type`, `value`, `compare_op`, 
-            `mkdate`, `chdate`)  VALUES (?, ?, ?, ?, ?, ?, ?) 
-            ON DUPLICATE KEY UPDATE `filter_id`=VALUES(`filter_id`), 
-            `type`=VALUES(`type`),`value`=VALUES(`value`), 
+        $stmt = DBManager::get()->prepare("INSERT INTO `userfilter_fields`
+            (`field_id`, `filter_id`, `type`, `value`, `compare_op`,
+            `mkdate`, `chdate`)  VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE `filter_id`=VALUES(`filter_id`),
+            `type`=VALUES(`type`),`value`=VALUES(`value`),
             `compare_op`=VALUES(`compare_op`), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $this->conditionId, get_class($this), 
+        $stmt->execute(array($this->id, $this->conditionId, get_class($this),
             $this->value, $this->compareOperator, time(), time()));
     }
 

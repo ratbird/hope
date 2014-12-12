@@ -68,7 +68,8 @@ class Userfilter_FilterController extends AuthenticatedController {
         for ($i=0 ; $i<sizeof($fields) ; $i++) {
             $current = $fields[$i];
             if ($this->conditionFields[$current]) {
-                $field = new $current();
+                list($fieldType, $param) = explode('_', $current);
+                $field = new $fieldType($param);
                 $field->setCompareOperator($compareOps[$i]);
                 $field->setValue($values[$i]);
                 $condition->addField($field);

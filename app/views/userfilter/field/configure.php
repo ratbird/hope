@@ -1,14 +1,18 @@
 <?php if ($className) { ?>
-<select name="compare_operator[]" size="1" class="conditionfield_compare_op">
-    <?php foreach ($field->getValidCompareOperators() as $op => $text) { ?>
-    <option value="<?= $op ?>"><?= htmlReady($text) ?></option>
-    <?php } ?>
-</select>
-<select name="value[]" size="1" class="conditionfield_value">
-    <?php foreach ($field->getValidValues() as $id => $name) { ?>
-    <option value="<?= $id ?>"><?= htmlReady($name) ?></option>
-    <?php } ?>
-</select>
+    <select name="compare_operator[]" size="1" class="conditionfield_compare_op">
+        <?php foreach ($field->getValidCompareOperators() as $op => $text) { ?>
+        <option value="<?= $op ?>"><?= htmlReady($text) ?></option>
+        <?php } ?>
+    </select>
+    <? if (count($field->getValidValues())) : ?>
+        <select name="value[]" class="conditionfield_value">
+            <?php foreach ($field->getValidValues() as $id => $name) { ?>
+            <option value="<?= $id ?>"><?= htmlReady($name) ?></option>
+            <?php } ?>
+        </select>
+    <? else : ?>
+        <input type="text" name="value[]" class="conditionfield_value" value="">
+    <? endif ?>
 <?php } else { ?>
     <?= (!$is_first ? '<strong>' . _("und") . '</strong>' : '')?>
     <div class="conditionfield">

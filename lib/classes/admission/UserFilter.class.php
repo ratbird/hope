@@ -198,7 +198,13 @@ class UserFilter
                  * been removed since saving data to DB.
                  */
                 //try {
-                    $field = new $data['type']($data['field_id']);
+                    list($type, $param) = explode('_', $data['type']);
+                    if ($param) {
+                        $field = new $type($param, $data['field_id']);
+                    } else {
+                        $field = new $type($data['field_id']);
+                    }
+
                     $this->fields[$field->getId()] = $field;
                 //} catch (Exception $e) {}
             }

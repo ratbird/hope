@@ -48,9 +48,10 @@ class Userfilter_FieldController extends AuthenticatedController {
      */
     public function configure_action() {
         $this->conditionFields = UserFilterField::getAvailableFilterFields();
-        if ($fieldType = Request::option('fieldtype')) {
-            $this->className = $fieldType;
-            $this->field = new $fieldType();
+        if ($className = Request::option('fieldtype')) {
+            list($fieldType, $param) = explode('_', $className);
+            $this->className = $className;
+            $this->field = new $fieldType($param);
         }
     }
 

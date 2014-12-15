@@ -21,7 +21,7 @@ class vCard {
     public static function export($users) {
 
         // Non array fallback
-        if (!is_array($users)) {
+        if (!(is_array($users) || $users instanceof Traversable)) {
             $users = array($users);
         }
 
@@ -33,11 +33,11 @@ class vCard {
     }
 
     private static function exportUser($user) {
-
+        
         // vCard exportheader
         $vCard['BEGIN'] = 'VCARD';
         $vCard['VERSION'] = '3.0';
-        $vCard['PRODID'] = 'Stud.IP//' . $GLOBALS . '//DE';
+        $vCard['PRODID'] = 'Stud.IP//' . $GLOBALS['UNI_NAME_CLEAN'] . '//DE';
         $vCard['REV'] = date('Y-m-d  H:i:s');
         $vCard['TZ'] = date('O');
 

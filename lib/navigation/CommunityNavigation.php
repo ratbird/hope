@@ -57,7 +57,7 @@ class CommunityNavigation extends Navigation
         $this->addSubNavigation('online', $navigation);
 
         // contacts
-        $navigation = new AutoNavigation(_('Kontakte'));
+        $navigation = new Navigation(_('Kontakte'));
         $navigation->addSubNavigation('view', new Navigation(_('Meine Kontakte'), 'dispatch.php/contact'));
         $this->addSubNavigation('contacts', $navigation);
 

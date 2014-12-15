@@ -184,9 +184,20 @@ class User extends AuthUserMd5
             'on_delete' => 'delete',
             'on_store' => 'store',
         );
-        $config['has_many']['contacts'] = array(
-            'class_name' => 'Contact',
-            'assoc_foreign_key' => 'owner_id'
+        $config['has_and_belongs_to_many']['contacts'] = array(
+            'class_name' => 'User',
+            'thru_table' => 'contact',
+            'thru_key' => 'owner_id',
+            'thru_assoc_key' => 'user_id',
+            'order_by' => 'ORDER BY Nachname, Vorname',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
+        );
+        $config['has_many']['contactgroups'] = array(
+            'class_name' => 'Statusgruppen',
+            'assoc_foreign_key' => 'range_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
         );
         $config['has_one']['info'] = array(
             'class_name' => 'UserInfo',

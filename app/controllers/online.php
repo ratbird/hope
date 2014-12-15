@@ -56,6 +56,10 @@ class OnlineController extends AuthenticatedController
      **/
     public function index_action()
     {
+        
+        ###### TESTING ONLY : FAKE USERONLINE
+        DBManager::get()->query("UPDATE user_online SET last_lifesign = unix_timestamp() LIMIT 100");
+        
         $this->contact_count = GetSizeOfBook(); // Total number of contacts
 
         $this->users           = $this->getOnlineUsers($this->settings['show_groups']);
@@ -75,11 +79,11 @@ class OnlineController extends AuthenticatedController
         if ($this->buddy_count > 0) {
             $actions = new OptionsWidget();
             
-            $actions->addCheckbox(_('Nur Buddies in der Übersicht der aktiven Benutzer anzeigen'),
+            $actions->addCheckbox(_('Nur Kontakte in der Übersicht der aktiven Benutzer anzeigen'),
                                   $this->settings['show_only_buddys'],
                                   $this->url_for('online/config/show_buddies/' . get_ticket()));
 
-            $actions->addCheckbox(_('Kontaktgruppen bei der Buddy-Darstellung berücksichtigen'),
+            $actions->addCheckbox(_('Kontaktgruppen bei der Darstellung berücksichtigen'),
                                   $this->settings['show_groups'],
                                   $this->url_for('online/config/show_groups/' . get_ticket()));
 
@@ -100,13 +104,12 @@ class OnlineController extends AuthenticatedController
     {
         $username = Request::username('username');
 
-        $messaging = new messaging;
         if ($action === 'add' && $username !== null) {
-            $messaging->add_buddy($username);
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde zu Ihren Buddies hinzugefügt.')));
+            Contact::add($username);
+            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde zu Ihren Kontakten hinzugefügt.')));
         } elseif ($action === 'remove' && $username !== null) {
-            $messaging->delete_buddy($username);
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Buddies.')));
+            Contact::remove($username);
+            PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Kontakten.')));
         }
         $this->redirect('online');
     }
@@ -207,7 +210,7 @@ class OnlineController extends AuthenticatedController
                     $buddies[$username]['group_id']       = $group['statusgruppe_id'];
                     $buddies[$username]['group_position'] = $group['position'];
                 } else {
-                    $buddies[$username]['group']          = _('Buddies ohne Gruppenzuordnung');
+                    $buddies[$username]['group']          = _('Kontakte ohne Gruppenzuordnung');
                     $buddies[$username]['group_id']       = 'all';
                     $buddies[$username]['group_position'] = 100000;
                 }

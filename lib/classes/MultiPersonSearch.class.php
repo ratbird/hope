@@ -84,7 +84,7 @@ class MultiPersonSearch {
      * @return array containing all new persons
      */
     public function getAddedUsers() {
-        return $_SESSION['multipersonsearch'][$this->name]['added'];
+        return $_SESSION['multipersonsearch'][$this->name]['added'] ? : array();
     }
 
     /**

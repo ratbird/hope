@@ -54,7 +54,6 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->NOT_HIDEABLE_FIELDS = $GLOBALS['NOT_HIDEABLE_FIELDS'];
         $this->user_perm           = $GLOBALS['perm']->get_perm($this->user->user_id);
         $this->user_domains        = UserDomain::getUserDomains();
-        $this->FOAF_ENABLE         = $GLOBALS['FOAF_ENABLE'];
         
         // Calculate colWidth and colCount for different visibilities
         $this->colCount = Visibility::getColCount();

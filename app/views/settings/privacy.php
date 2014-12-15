@@ -115,19 +115,6 @@ use Studip\Button, Studip\LinkButton;
                 <? endif; ?>
                 </td>
             </tr>
-        <? if ($FOAF_ENABLE): ?>
-            <tr>
-                <td>
-                    <label for="foaf_show_identity">
-                    <?= _('Eigene Identität in Verbindungsketten zwischen Nutzern ("Friend of a friend"-Liste) offenlegen') ?>
-                    </label>
-                </td>
-                <td>
-                    <input type="checkbox" id="foaf_show_identity" name="foaf_show_identity" value="1"
-                           <? if ($config->getValue('FOAF_SHOW_IDENTITY')) echo 'checked'; ?>>
-                </td>
-            </tr>
-        <? endif; ?>
     <? endif; ?>
         </tbody>
         <tfoot>

@@ -157,9 +157,6 @@
 
 <?= $votes ?>
 
-<? if($foaf) $foaf->show(Request::option ('foaf_open'))?>
-
-
 <? if(!empty($ausgabe_inhalt)) : ?>
 <? foreach($ausgabe_inhalt as $key => $inhalt) :?>
 <section class="contentbox">

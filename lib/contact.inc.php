@@ -162,7 +162,7 @@ function CheckBuddy($username, $owner_id=FALSE)
     }
     $user_id = get_userid($username);
 
-    $query = "SELECT 1 FROM contact WHERE owner_id = ? AND user_id = ? AND buddy = 1";
+    $query = "SELECT 1 FROM contact WHERE owner_id = ? AND user_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($owner_id, $user_id));
     $buddy = (bool)$statement->fetchColumn();
@@ -174,7 +174,7 @@ function GetNumberOfBuddies()
 {
     global $user;
 
-    $query = "SELECT COUNT(*) FROM contact WHERE owner_id = ? AND buddy = 1";
+    $query = "SELECT COUNT(*) FROM contact WHERE owner_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($user->id));
     $buddies = $statement->fetchColumn();

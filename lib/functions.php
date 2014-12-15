@@ -1171,12 +1171,12 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
 
     $query = "SELECT a.username AS temp, a.username, {$GLOBALS['_fullname_sql'][$name_format]} AS name,
                      ABS(CAST(UNIX_TIMESTAMP() AS SIGNED) - CAST(last_lifesign AS SIGNED)) AS last_action,
-                     a.user_id, contact_id AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
+                     a.user_id, IF(owner_id IS NOT NULL, 1, 0) AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
               FROM user_online uo
               JOIN auth_user_md5 a ON (a.user_id = uo.user_id)
               LEFT JOIN user_info ON (user_info.user_id = uo.user_id)
               LEFT JOIN user_visibility ON (user_visibility.user_id = uo.user_id)
-              LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id AND buddy = 1)
+              LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id)
               WHERE last_lifesign > ? AND uo.user_id <> ?
               ORDER BY {$GLOBALS['_fullname_sql'][$name_format]} ASC";
     $statement = DBManager::get()->prepare($query);

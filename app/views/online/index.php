@@ -6,7 +6,7 @@
 <div class="online-list <? if (!$showOnlyBuddies) echo 'online-list-double'; ?>">
     <table class="default">
         <caption>
-            <?= _('Buddies') ?>
+            <?= _('Kontakte') ?>
         </caption>
         <colgroup>
             <col width="<?= reset(Avatar::getDimension(Avatar::SMALL)) ?>px">
@@ -47,7 +47,7 @@
                 <tbody>
                     <tr>
                         <td colspan="4">
-                            <?= _('Sie haben keine Buddies ausgewählt.') ?>
+                            <?= _('Sie haben keine Kontakte ausgewählt.') ?>
                         </td>
                     </tr>
                 </tbody>
@@ -55,7 +55,7 @@
                 <tbody>
                     <tr>
                         <td colspan="4">
-                            <?= _('Es sind keine Ihrer Buddies online.') ?>
+                            <?= _('Es sind keine Ihrer Kontakte online.') ?>
                         </td>
                     </tr>
                 </tbody>

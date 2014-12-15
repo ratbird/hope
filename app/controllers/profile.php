@@ -178,18 +178,6 @@ class ProfileController extends AuthenticatedController
             $this->votes = $response->body;
         }
 
-        // include and show friend-of-a-friend list
-        // (direct/indirect connection via buddy list
-        if ($GLOBALS['FOAF_ENABLE'] && ($this->user->user_id != $this->current_user->user_id)
-            && UserConfig::get($this->current_user->user_id)->FOAF_SHOW_IDENTITY)
-        {
-            include("lib/classes/FoafDisplay.class.php");
-
-            $foaf = new FoafDisplay($this->user->user_id, $this->current_user->user_id, $this->current_user->username);
-
-            $this->foaf = $foaf;
-        }
-
         // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
         $ausgabe_felder = array(
             'lebenslauf' => _('Lebenslauf'),
@@ -283,10 +271,10 @@ class ProfileController extends AuthenticatedController
     public function add_buddy_action()
     {
         $username = Request::username('username');
-
-        $msging = new messaging;
-        //Buddie hinzufuegen
-        $msging->add_buddy($username, 0);
+        $user = User::findByUsername($username);
+        $current = User::findCurrent();
+        $current->contacts[] = $user;
+        $current->store();
 
         PageLayout::postMessage(MessageBox::success(_('Der Nutzer wurde zu Ihren Kontakten hinzugefügt.')));
         $this->redirect('profile/index?username=' . $username);

@@ -748,12 +748,6 @@ class Course_StudygroupController extends AuthenticatedController {
         if ($this->rechte) {
             $actions = new ActionsWidget();
             
-            // add addressbook
-            $sql = "SELECT user_id FROM contact WHERE owner_id = ?";
-            $statement = DBManager::get()->prepare($sql);
-            $statement->execute(array($GLOBALS['user']->id));
-            $userArray = $statement->fetchAll(PDO::FETCH_COLUMN);
-        
             $mp = MultiPersonSearch::get('studygroup_invite_' . $id)
                       ->setLinkText(_('Neue GruppenmitgliederInnen einladen'))
                       ->setDefaultSelectedUser($defaultSelectedUser)
@@ -761,8 +755,7 @@ class Course_StudygroupController extends AuthenticatedController {
                       ->setTitle(_('Neue GruppenmitgliederInnen einladen'))
                       ->setExecuteURL($this->url_for('course/studygroup/execute_invite/' . $id))
                       ->setSearchObject($inviting_search)
-                      ->addQuickfilter(_('Adressbuch'), $userArray)
-                      ->addQuickfilter(_('Buddies'), GetBuddyIDs($GLOBALS['user']->id))
+                      ->addQuickfilter(_('Adressbuch'), User::findCurrent()->contacts->pluck('user_id'))
                       ->setNavigationItem('/course/members')
                       ->render();
 

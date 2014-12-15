@@ -21,10 +21,10 @@ class Visibility_Buddies extends VisibilityAbstract
     protected $int_representation = 2;
     
     // How is the state displayed in the settings?
-    protected $display_name = 'Buddies';
+    protected $display_name = 'Kontakte';
     
     // Description for the state
-    protected $description = "nur für meine Buddies sichtbar";
+    protected $description = "nur für meine Kontakte sichtbar";
     
     // When do two users have this state
     function verify($user_id, $other_id)

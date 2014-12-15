@@ -58,6 +58,9 @@ class vCard {
         $vCard['TEL;TYPE=HOME'] = studip_utf8encode($user->info->privatnr);
         $vCard['TEL;TYPE=CELL'] = studip_utf8encode($user->info->privatcell);
         
+        // Email
+        $vCard['EMAIL'] = studip_utf8encode($user->email);
+        
         // Photo
         $vCard['PHOTO;JPEG;ENCODING=BASE64'] = base64_encode(file_get_contents(Avatar::getAvatar($user->id)->getFilename(Avatar::NORMAL)));
         

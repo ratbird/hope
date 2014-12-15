@@ -43,20 +43,20 @@ class vCard {
 
         // User specific data
         //Fullname
-        $vCard['FN'] = $user->getFullname();
+        $vCard['FN'] = studip_utf8encode($user->getFullname());
         
         //Name
-        $vCard['N'][] = $user->Nachname;
-        $vCard['N'][] = $user->Vorname;
-        $vCard['N'][] = $user->info->title_rear;
-        $vCard['N'][] = $user->info->title_front;
+        $vCard['N'][] = studip_utf8encode($user->Nachname);
+        $vCard['N'][] = studip_utf8encode($user->Vorname);
+        $vCard['N'][] = studip_utf8encode($user->info->title_rear);
+        $vCard['N'][] = studip_utf8encode($user->info->title_front);
         
         // Adress
-        $vCard['ADR;TYPE=HOME'] = $user->info->privadr;
+        $vCard['ADR;TYPE=HOME'] = studip_utf8encode($user->info->privadr);
         
         // Tel
-        $vCard['TEL;TYPE=HOME'] = $user->info->privatnr;
-        $vCard['TEL;TYPE=CELL'] = $user->info->privatcell;
+        $vCard['TEL;TYPE=HOME'] = studip_utf8encode($user->info->privatnr);
+        $vCard['TEL;TYPE=CELL'] = studip_utf8encode($user->info->privatcell);
         
         // Photo
         $vCard['PHOTO;JPEG;ENCODING=BASE64'] = base64_encode(file_get_contents(Avatar::getAvatar($user->id)->getFilename(Avatar::NORMAL)));

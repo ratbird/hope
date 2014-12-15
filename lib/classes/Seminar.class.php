@@ -155,7 +155,7 @@ class Seminar
     function __isset($field)
     {
         if ($field == 'metadate') {
-            is_object($this->_metadate);
+            return is_object($this->_metadate);
         }
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];

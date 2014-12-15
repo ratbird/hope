@@ -83,7 +83,6 @@ class EvalTemplateGUI {
      $input->attr( "name", "template_createpol_scale_button" );
      $input->attr( "border", "0" );
      $input->attr( "style", "vertical-align:middle;" );
-#     $input->stri( makeButton( "erstellen", "src" ) );
      $input->stri( tooltip( _("Neue Vorlage erstellen." ), TRUE ) );
      $input->attr ("src", EVAL_PIC_ADD_TEMPLATE);
 
@@ -116,7 +115,6 @@ class EvalTemplateGUI {
     $input->attr( "name", "template_editpol_scale_button" );
     $input->attr( "border", "0" );
     $input->attr( "style", "vertical-align:middle;" );
-#    $input->stri( makeButton( "bearbeiten", "src" ) );
     $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
     $input->attr ("src", EVAL_PIC_EDIT);
 
@@ -147,7 +145,6 @@ class EvalTemplateGUI {
      $input->attr( "name", "template_createlikert_scale_button" );
      $input->attr( "border", "0" );
      $input->attr( "style", "vertical-align:middle;" );
-#     $input->stri( makeButton( "erstellen", "src" ) );
      $input->stri( tooltip( _("Neue Vorlage erstellen." ), TRUE ) );
      $input->attr ("src", EVAL_PIC_ADD_TEMPLATE);
 
@@ -179,7 +176,6 @@ class EvalTemplateGUI {
     $input->attr( "name", "template_editlikert_scale_button" );
     $input->attr( "border", "0" );
     $input->attr( "style", "vertical-align:middle;" );
-#    $input->stri( makeButton( "bearbeiten", "src" ) );
     $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
     $input->attr ("src", EVAL_PIC_EDIT);
 
@@ -210,7 +206,6 @@ class EvalTemplateGUI {
      $input->attr( "name", "template_createnormal_scale_button" );
      $input->attr( "border", "0" );
      $input->attr( "style", "vertical-align:middle;" );
-#     $input->stri( makeButton( "erstellen", "src" ) );
      $input->stri( tooltip( _("Neue Vorlage erstellen." ), TRUE ) );
      $input->attr ("src", EVAL_PIC_ADD_TEMPLATE);
 
@@ -243,7 +238,6 @@ class EvalTemplateGUI {
     $input->attr( "name", "template_editnormal_scale_button" );
     $input->attr( "border", "0" );
     $input->attr( "style", "vertical-align:middle;" );
-#    $input->stri( makeButton( "bearbeiten", "src" ) );
     $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
     $input->attr ("src", EVAL_PIC_EDIT);
 
@@ -273,7 +267,6 @@ class EvalTemplateGUI {
     $input->attr( "name", "template_createfree_scale_button" );
     $input->attr( "border", "0" );
     $input->attr( "style", "vertical-align:middle;" );
-#    $input->stri( makeButton( "erstellen", "src" ) );
     $input->stri( tooltip( _("Neue Vorlage erstellen." ), TRUE ) );
     $input->attr ("src", EVAL_PIC_ADD_TEMPLATE);
     $td->addContent($input);
@@ -305,8 +298,7 @@ class EvalTemplateGUI {
         $input->attr( "name", "template_editfree_scale_button" );
         $input->attr( "border", "0" );
         $input->attr( "style", "vertical-align:middle;" );
-#        $input->stri( makeButton( "bearbeiten", "src" ) );
-    $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
+        $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
         $input->attr ("src", EVAL_PIC_EDIT);
         $td->addContent($input);
         $tr->addContent($td);
@@ -496,7 +488,6 @@ class EvalTemplateGUI {
        $input = new HTMpty( "input" );
        $input->attr( "type", "image" );
        $input->attr( "name", "template_add_answers_button" );
-#$input->stri( makeButton( "hinzufuegen", "src" ) );
        $input->addAttr ("src", EVAL_PIC_ADD);
        $input->attr( "border", "0" );
        $input->attr( "style", "vertical-align:middle;" );
@@ -520,7 +511,6 @@ class EvalTemplateGUI {
        $input = new HTMpty( "input" );
        $input->attr( "type", "image" );
        $input->attr( "name", "template_delete_answers_button" );
-#       $input->stri( makeButton( "markierteloeschen", "src" ) );
        $input->addAttr ("src", EVAL_PIC_REMOVE);
        $input->attr( "border", "0" );
        $input->attr( "style", "vertical-align:middle;" );
@@ -660,7 +650,6 @@ class EvalTemplateGUI {
       $input = new HTMpty( "input" );
       $input->attr( "type", "image" );
       $input->attr( "name", "template_add_answers_button" );
-#$input->stri( makeButton( "hinzufuegen", "src" ) );
       $input->addAttr ("src", EVAL_PIC_ADD);
 
       $input->attr( "border", "0" );
@@ -685,7 +674,6 @@ class EvalTemplateGUI {
       $input = new HTMpty( "input" );
       $input->attr( "type", "image" );
       $input->attr( "name", "template_delete_answers_button" );
-#       $input->stri( makeButton( "markierteloeschen", "src" ) );
       $input->addAttr ("src", EVAL_PIC_REMOVE);
       $input->attr( "border", "0" );
       $input->attr( "style", "vertical-align:middle;" );

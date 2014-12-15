@@ -1604,14 +1604,11 @@ class EvalOverview {
             URLHelper::bindLinkParam('referer', $referer);
 
         if ($request) {
-            $html .="<a href=\"" . URLHelper::getLink('admin_evaluation.php?evalAction=' . $value1
-                            . '&evalID=' . $evalID . '&rangeID=' . $showrangeID);
-
-            $html .="\" title=\"" . $label["yes"] . "\"><img src=\"" . localeButtonUrl('ja2-button.png') . "\" width=\"93\" alt=\"" . $label["yes"] . "\" title=\"" . $label["yes"] . "\" border=\"0\" align=\"middle\"></a>\n";
-            $html .="<a href=\"" . URLHelper::getLink('admin_evaluation.php?evalAction=' . $value2
-                            . '&evalID=' . $evalID . '&rangeID=' . $showrangeID);
-
-            $html .="\" title=\"" . $label["no"] . "\"><img src=\"" . localeButtonUrl('nein-button.png') . "\" width=\"93\" alt=\"" . $label["no"] . "\" title=\"" . $label["no"] . "\" border=\"0\" align=\"middle\"></a>\n";
+            
+            $html .= LinkButton::createAccept(_("Ja"), URLHelper::getLink('admin_evaluation.php?evalAction=' . $value1 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+                        array('title' => $label["yes"])) . "\n";
+            $html .= LinkButton::createCancel(_("Nein"), URLHelper::getLink('admin_evaluation.php?evalAction=' . $value2 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+                        array('title' => $label["no"])) . "\n";
         }
 
         if ($mode == "unlink_delete_request") {

@@ -161,7 +161,7 @@ class ContactController extends AuthenticatedController {
         // Fallback to all contacts if we got nothing
 
         if (!$user) {
-            User::findCurrent()->contacs;
+            $user = User::findCurrent()->contacts;
         }
 
         header("Content-type: text/x-vCard;charset=" . $charset); //application/octet-stream MIME

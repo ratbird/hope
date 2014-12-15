@@ -17,7 +17,7 @@
  * Navigation for the community page used for user interaction.
  * It includes the contacts, study groups and ranking.
  */
-class CommunityNavigation extends AutoNavigation
+class CommunityNavigation extends Navigation
 {
     public function __construct()
     {
@@ -58,7 +58,7 @@ class CommunityNavigation extends AutoNavigation
 
         // contacts
         $navigation = new AutoNavigation(_('Kontakte'));
-        $navigation->addSubNavigation('view', new AutoNavigation(_('Meine Kontakte'), 'dispatch.php/contact'));
+        $navigation->addSubNavigation('view', new Navigation(_('Meine Kontakte'), 'dispatch.php/contact'));
         $this->addSubNavigation('contacts', $navigation);
 
         // study groups

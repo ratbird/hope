@@ -57,9 +57,6 @@ class OnlineController extends AuthenticatedController
     public function index_action()
     {
         
-        ###### TESTING ONLY : FAKE USERONLINE
-        DBManager::get()->query("UPDATE user_online SET last_lifesign = unix_timestamp() LIMIT 100");
-        
         $this->contact_count = GetSizeOfBook(); // Total number of contacts
 
         $this->users           = $this->getOnlineUsers($this->settings['show_groups']);

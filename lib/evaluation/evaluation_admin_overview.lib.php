@@ -1604,10 +1604,10 @@ class EvalOverview {
             URLHelper::bindLinkParam('referer', $referer);
 
         if ($request) {
-            
-            $html .= LinkButton::createAccept(_("Ja"), URLHelper::getLink('admin_evaluation.php?evalAction=' . $value1 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+
+            $html .= LinkButton::createAccept(_("Ja"), URLHelper::getURL('admin_evaluation.php?evalAction=' . $value1 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
                         array('title' => $label["yes"])) . "\n";
-            $html .= LinkButton::createCancel(_("Nein"), URLHelper::getLink('admin_evaluation.php?evalAction=' . $value2 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+            $html .= LinkButton::createCancel(_("Nein"), URLHelper::getURL('admin_evaluation.php?evalAction=' . $value2 . '&evalID=' . $evalID . '&rangeID=' . $showrangeID),
                         array('title' => $label["no"])) . "\n";
         }
 

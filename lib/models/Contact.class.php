@@ -59,10 +59,11 @@ class Contact extends SimpleORMap {
         $contact = User::findByUsername($username);
 
         // Create contact if not exist
-        Contact::import(array(
+        $newContact = Contact::import(array(
             'owner_id' => User::findCurrent()->id,
             'user_id' => $contact->id)
         );
+        $newContact->store();
 
         // Also add to a group if requested 
         if ($group) {

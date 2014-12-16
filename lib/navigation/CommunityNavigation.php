@@ -57,8 +57,7 @@ class CommunityNavigation extends Navigation
         $this->addSubNavigation('online', $navigation);
 
         // contacts
-        $navigation = new Navigation(_('Kontakte'));
-        $navigation->addSubNavigation('view', new Navigation(_('Meine Kontakte'), 'dispatch.php/contact'));
+        $navigation = new Navigation(_('Kontakte'), 'dispatch.php/contact');
         $this->addSubNavigation('contacts', $navigation);
 
         // study groups

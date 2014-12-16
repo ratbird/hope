@@ -1,4 +1,4 @@
-<form method="post" action="<?= $controller->url_for('admin/holidays/edit/' . $holiday->id) ?>" data-dialog>
+<form method="post" action="<?= $controller->url_for('admin/holidays/edit/' . $holiday->id) ?>" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag() ?>
 
 <table class="default has-form">

@@ -25,11 +25,14 @@
     <tbody>
 <? if (empty($holidays)): ?>
         <tr>
-            <td colspan="4">
+            <td colspan="4" style="text-align: center;">
             <? if ($filter): ?>
                 <?= _('In der gewählten Ansicht gibt es keine Einträge.') ?>
             <? else: ?>
-                <?= _('Es wurden noch keine Ferien angelegt.') ?>
+                <?= _('Es wurden noch keine Ferien angelegt.') ?><br>
+                <?= Studip\LinkButton::create(_('Neue Ferien anlegen'),
+                                              $controller->url_for('admin/holidays/edit'),
+                                              array('data-dialog' => 'size=auto')) ?>
             <? endif; ?>
             </td>
         </tr>

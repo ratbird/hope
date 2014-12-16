@@ -30,11 +30,14 @@
     <tbody>
 <? if (empty($semesters)): ?>
         <tr>
-            <td colspan="4">
+            <td colspan="7" style="text-align: center;">
             <? if ($filter): ?>
                 <?= _('In der gewählten Ansicht gibt es keine Einträge.') ?>
             <? else: ?>
-                <?= _('Es wurden noch keine Semester angelegt.') ?>
+                <?= _('Es wurden noch keine Semester angelegt.') ?><br>
+                <?= Studip\LinkButton::create(_('Neues Semester anlegen'),
+                                              $controller->url_for('admin/semester/edit'),
+                                              array('data-dialog' => 'size=auto')) ?>
             <? endif; ?>
             </td>
         </tr>

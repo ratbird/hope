@@ -1,4 +1,4 @@
-<form method="post" action="<?= $controller->url_for('admin/semester/edit/' . $semester->id) ?>" data-dialog>
+<form method="post" action="<?= $controller->url_for('admin/semester/edit/' . $semester->id) ?>" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag() ?>
 <table class="default has-form">
     <caption class="hide-in-dialog">

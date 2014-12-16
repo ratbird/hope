@@ -46,7 +46,7 @@ class Admin_SemesterController extends AuthenticatedController
      */
     public function index_action()
     {
-        $this->semesters = Semester::getAll();
+        $this->semesters = array_reverse(Semester::getAll());
 
         // Filter data?
         if ($this->filter === 'current') {
@@ -93,7 +93,8 @@ class Admin_SemesterController extends AuthenticatedController
 
             // Output potential errors or show success message and relocate
             if (count($errors) === 1) {
-                PageLayout::postMessage(MessageBox::error($errors[0]));
+                $error = reset($errors);
+                PageLayout::postMessage(MessageBox::error($error));
             } elseif (!empty($errors)) {
                 $message = _('Ihre eingegebenen Daten sind ungültig.');
                 PageLayout::postMessage(MessageBox::error($message, $errors));

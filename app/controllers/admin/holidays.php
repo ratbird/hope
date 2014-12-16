@@ -45,7 +45,7 @@ class Admin_HolidaysController extends AuthenticatedController
      */
     public function index_action()
     {
-        $this->holidays = SemesterHoliday::getAll();
+        $this->holidays = array_reverse(SemesterHoliday::getAll());
 
         // Filter data?
         if ($this->filter === 'current') {

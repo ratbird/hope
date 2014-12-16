@@ -65,7 +65,7 @@ class Semester extends SimpleORMap
      */
     private static $semester_cache;
     private static $current_semester;
-    
+
 
     /**
      * returns semester object for given id or null
@@ -165,7 +165,7 @@ class Semester extends SimpleORMap
             $statement->execute();
             $this->seminar_counts = $statement->fetch(PDO::FETCH_ASSOC);
         }
-        
+
         $index = str_replace('_seminars_count', '', $field);
         return (int)$this->seminar_counts[$index];
     }
@@ -233,5 +233,17 @@ class Semester extends SimpleORMap
         }
 
         return false;
+    }
+
+    function toArray($only_these_fields = null)
+    {
+        if (!isset($only_these_fields)) {
+            $fields = array_flip(array_diff($this->known_slots, array_keys($this->relations)));
+            unset($fields['absolute_seminars_count']);
+            unset($fields['duration_seminars_count']);
+            unset($fields['continuous_seminars_count']);
+            $only_these_fields = array_flip($fields);
+        }
+        return parent::toArray($only_these_fields);
     }
 }

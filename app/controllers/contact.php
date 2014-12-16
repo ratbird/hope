@@ -15,42 +15,52 @@ require_once 'app/controllers/authenticated_controller.php';
  * @category    Stud.IP
  * @since       3.2
  */
-class ContactController extends AuthenticatedController {
+class ContactController extends AuthenticatedController
+{
 
-    public function before_filter(&$action, &$args) {
+    public function before_filter(&$action, &$args)
+    {
         parent::before_filter($action, $args);
-        if (Request::isXhr() || $action == 'vcard') {
-            $this->set_content_type('text/html;Charset=windows-1252');
-            $this->set_layout(null);
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-        }
 
         // Load statusgroups
-        $this->groups = SimpleORMapCollection::createFromArray(Statusgruppen::findByRange_id(User::findCurrent()->id));
-        
+        $this->groups = SimpleCollection::createFromArray(Statusgruppen::findByRange_id(User::findCurrent()->id));
+
         // Load requested group
         if ($args[0]) {
-            $this->group = $this->groups->find($args[0]);
-            
+            $this->group = $this->groups->findOneBy('statusgruppe_id', $args[0]);
+
             //Check for cheaters
             if ($this->group->range_id != User::findCurrent()->id) {
                 throw new AccessDeniedException;
             }
         }
-        
+
     }
 
     /**
      * Main action to display contacts
      */
-    function index_action($filter = null) {
-        
+    function index_action($filter = null)
+    {
+
         // Check if we need to add contacts
         $mps = MultiPersonSearch::load('contacts');
+        $imported = 0;
         foreach ($mps->getAddedUsers() as $userId) {
-            $user = new User($userId);
-            Contact::add($user->username, $filter);
+            $user_to_add = User::find($userId);
+            if ($user_to_add) {
+                $new_contact = array(
+                    'owner_id' => User::findCurrent()->id,
+                    'user_id'  => $user_to_add->id);
+                if ($filter && $this->group) {
+                    $new_contact['group_assignments'][] = array('statusgruppe_id' => $this->group->id,
+                                                                'user_id'         => $user_to_add->id);
+                }
+                $imported += (bool)Contact::import($new_contact)->store();
+            }
+        }
+        if ($imported) {
+            PageLayout::postMessage(MessageBox::success(sprintf(_("%s Kontakte wurden hinzugefügt."), $imported)));
         }
         $mps->clearSession();
 
@@ -64,8 +74,8 @@ class ContactController extends AuthenticatedController {
         PageLayout::addStyle('div.letterlist span {color: #c3c8cc;}');
 
         if ($filter) {
-            $selected = $this->groups->find($filter);
-            $contacts = SimpleORMapCollection::createFromArray($selected->members->pluck('user'));
+            $selected = $this->group;
+            $contacts = SimpleCollection::createFromArray(User::findMany($selected->members->pluck('user_id')));
         } else {
             $contacts = User::findCurrent()->contacts;
         }
@@ -74,50 +84,65 @@ class ContactController extends AuthenticatedController {
         // Retrive first letter and store in that contactgroup
         $this->contacts = array();
         foreach ($contacts as $contact) {
-            $this->contacts[$contact->nachname[0]][] = $contact;
+            $this->contacts[strtoupper(SimpleCollection::translitLatin1($contact->nachname[0]))][] = $contact;
         }
 
         // Humans are a lot better with sorted results
         ksort($this->contacts);
-        foreach ($this->contacts as &$contactgroup) {
-            usort($contactgroup, array(__CLASS__, 'compareContacts'));
-        }
+        $this->contacts = array_map(function ($g) {
+            return SimpleCollection::createFromArray($g)->orderBy('nachname, vorname');
+        }, $this->contacts);
+
 
         // Init sidebar
         $this->initSidebar($filter);
 
         // Init person search
         $mps = MultiPersonSearch::get('contacts')
-                ->setTitle(_('Kontakte hinzufügen'))
-                ->setDefaultSelectedUser($this->allContacts->pluck('user_id'))
-                ->setExecuteURL($this->url_for('contact/index/'.$filter))
-                ->setSearchObject(new StandardSearch('user_id'));
-        
+            ->setTitle(_('Kontakte hinzufügen'))
+            ->setDefaultSelectedUser($this->allContacts->pluck('user_id'))
+            ->setExecuteURL($this->url_for('contact/index/' . $filter))
+            ->setSearchObject(new StandardSearch('user_id'));
+
         // Set default title
         $this->title = _('Alle Kontakte');
-        
+
         // If we have a group
         if ($selected) {
-            
+
             // Set title of Table
             $this->title = $selected->name;
-            
+
             // Set title of multipersonsearch
             $mps->setTitle(sprintf(_('Kontakte zu %s hinzufügen'), $selected->name));
             $mps->addQuickfilter(_('Kontakte'), User::findCurrent()->contacts->pluck('user_id'));
         }
-        
+
         // Render multiperson search
         $this->multiPerson = $mps->render();
-        
-    }
-    
-    function remove_action($group = null) {
-        Contact::remove(Request::get('user'), $group);
-        $this->redirect('contact/index');
+
     }
 
-    function editGroup_action() {
+    function remove_action($group = null)
+    {
+        $contact = Contact::find(array(User::findCurrent()->id, User::findByUsername(Request::username('user'))->id));
+        if ($contact) {
+            if ($group) {
+                $contact->group_assignments->unsetBy('statusgruppe_id', $group);
+                if ($contact->store()) {
+                    PageLayout::postMessage(MessageBox::success(_("Der Kontakt wurde aus der Gruppe entfernt.")));
+                }
+            } else {
+                if ($contact->delete()) {
+                    PageLayout::postMessage(MessageBox::success(_("Der Kontakt wurde entfernt.")));
+                }
+            }
+        }
+        $this->redirect('contact/index/' . $group);
+    }
+
+    function editGroup_action()
+    {
 
         // If we got a group load it
         if (!$this->group) {
@@ -129,11 +154,12 @@ class ContactController extends AuthenticatedController {
             CSRFProtection::verifyRequest();
             $this->group->name = Request::get('name');
             $this->group->store();
-            $this->redirect('contact/index/'.$this->group->id);
+            $this->redirect('contact/index/' . $this->group->id);
         }
     }
 
-    function deleteGroup_action() {
+    function deleteGroup_action()
+    {
         if (Request::submitted('delete')) {
             CSRFProtection::verifyRequest();
             $this->group->delete();
@@ -141,21 +167,20 @@ class ContactController extends AuthenticatedController {
         }
     }
 
-    function vcard_action($group = null) {
+    function vcard_action($group = null)
+    {
 
         $charset = 'windows-1252';
         $filename = _('Kontakte');
 
         // If we got an array of user
         if (Request::submitted('user')) {
-            foreach (Request::getArray('user') as $username) {
-                $user[] = User::findByUsername($username);
-            }
+            $user = User::findManyByUsername(Request::getArray('user'));
         }
 
         // If we got a group
         if ($group) {
-            $user = Statusgruppen::find($group)->members->pluck('user');
+            $user = User::findMany(Statusgruppen::find($group)->members->pluck('user_id'));
         }
 
         // Fallback to all contacts if we got nothing
@@ -171,11 +196,8 @@ class ContactController extends AuthenticatedController {
         $this->vCard = vCard::export($user);
     }
 
-    private static function compareContacts($a, $b) {
-        return strcmp($a->nachname, $b->nachname);
-    }
-
-    private function initSidebar($active_id = null) {
+    private function initSidebar($active_id = null)
+    {
         $sidebar = Sidebar::Get();
 
         $letterlist = new SidebarWidget();
@@ -203,7 +225,7 @@ class ContactController extends AuthenticatedController {
         $groupsWidget->setTitle(_('Gruppen'));
         $groupsWidget->addLink(_('Alle Kontakte'), URLHelper::getLink('dispatch.php/contact/index'))->setActive(!$active_id);
         foreach ($this->groups as $group) {
-            $groupsWidget->addLink(htmlReady($group->name), URLHelper::getLink('dispatch.php/contact/index/' . $group->id))->setActive($group->id == $active_id);
+            $groupsWidget->addLink($group->name, URLHelper::getLink('dispatch.php/contact/index/' . $group->id))->setActive($group->id == $active_id);
         }
         $sidebar->addWidget($groupsWidget);
     }

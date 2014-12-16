@@ -5,7 +5,7 @@
  *
  * Helps to output name with a link to the object.
  * Works for User and Course Objects
- * 
+ *
  * ::link($object) produces the name with a link
  * ::avatarlink($object) produces the avatar and the name with a link
  *
@@ -45,7 +45,7 @@ class ObjectdisplayHelper {
      * @return string output
      */
     private static function map($object, $function) {
-        
+
         /**
          * If you want to add an object to the helper simply add to this array
          */
@@ -58,7 +58,7 @@ class ObjectdisplayHelper {
             return htmlReady($obj->getFullname());
         },
                 'avatar' => function($obj) {
-            return Avatar::getAvatar($obj->id)->getImageTag($size = Avatar::SMALL);
+            return Avatar::getAvatar($obj->id, $obj->username)->getImageTag(Avatar::SMALL,array('title' => htmlReady($obj->getFullname('no_title'))));
         }
             ),
             'Course' => array(
@@ -69,11 +69,11 @@ class ObjectdisplayHelper {
             return htmlReady($obj->name);
         },
                 'avatar' => function($obj) {
-            return CourseAvatar::getAvatar($obj->id)->getImageTag($size = CourseAvatar::SMALL);
+            return CourseAvatar::getAvatar($obj->id)->getImageTag($size = CourseAvatar::SMALL,array('title' => htmlReady($obj->name)));
         }
             )
         );
-            
+
         /*
          * Some php magic to call the right function if it exists
          */

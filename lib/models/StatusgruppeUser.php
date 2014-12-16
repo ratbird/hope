@@ -68,7 +68,7 @@ class StatusgruppeUser extends SimpleORMap
             $stmt->execute(array($this->statusgruppe_id));
             $this->position = $stmt->fetchColumn();
         }
-        parent::store();
+        return parent::store();
     }
 
     /**
@@ -80,7 +80,7 @@ class StatusgruppeUser extends SimpleORMap
         $query = "UPDATE statusgruppe_user SET position = position - 1 WHERE statusgruppe_id = ? AND position > ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->statusgruppe_id, $this->position));
-        parent::delete();
+        return parent::delete();
     }
 
 }

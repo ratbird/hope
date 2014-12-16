@@ -11,6 +11,7 @@ class ContactRework extends Migration {
         DBManager::get()->exec("ALTER IGNORE TABLE contact DROP buddy, DROP contact_id, DROP INDEX owner_id, ADD PRIMARY KEY(owner_id, user_id);");
         Config::get()->delete("FOAF_ENABLE");
         Config::get()->delete("FOAF_SHOW_IDENTITY");
+        Contact::expireTableScheme();
     }
 
     function down() {

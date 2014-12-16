@@ -52,7 +52,7 @@
                         </a>
                     </td>
                     <td class="actions">
-                        <a title="<?= $filter ? _("Kontakt aus Gruppe entfernen") : _("Kontakt entfernen") ?>" href="<?= $controller->url_for('contact/remove', array('user' => $contact->username)) ?>">
+                        <a title="<?= $filter ? _("Kontakt aus Gruppe entfernen") : _("Kontakt entfernen") ?>" href="<?= $controller->url_for('contact/remove/'.$filter, array('user' => $contact->username)) ?>">
                             <?= Assets::img('icons/16/blue/remove/person.png') ?>
                         </a>
                         <a title="<?= _("vCard herunterladen") ?>" href="<?= $controller->url_for('contact/vcard', array('user[]' => $contact->username)) ?>">

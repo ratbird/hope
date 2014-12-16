@@ -7,7 +7,7 @@
         <tbody>
             <tr>
                 <td><strong><label for="topic_title"><?= _("Titel") ?></label></strong></td>
-                <td><input type="text" name="title" id="topic_title" value="<?= htmlReady($topic['title']) ?>" style="width: 100%;"></td>
+                <td><input type="text" name="title" id="topic_title" value="<?= htmlReady($topic['title']) ?>" style="width: 100%;" required></td>
             </tr>
             <tr>
                 <td><strong><label for="topic_description"><?= _("Beschreibung") ?></label></strong></td>

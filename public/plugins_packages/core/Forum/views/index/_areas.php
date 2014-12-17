@@ -9,7 +9,7 @@
         <span class="actions" id="tutorCategoryIcons">
             <? if ($category_id == $seminar_id) : ?>
             <?= tooltipIcon(_('Diese vordefinierte Kategorie kann nicht bearbeitet oder gelöscht werden.'
-                    . 'Für Autor/innen taucht sie allerdings nur auf, wenn sie Bereiche enthält.')) ?>
+                    . ' Für Autor/innen taucht sie allerdings nur auf, wenn sie Bereiche enthält.')) ?>
             <? else : ?>
                 <? if (ForumPerm::has('edit_category', $seminar_id)) : ?>
                 <a href="<?= PluginEngine::getLink('coreforum/index/?edit_category=' . $category_id) ?>"

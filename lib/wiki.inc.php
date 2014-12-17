@@ -1478,10 +1478,10 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
-                $edit.=LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?keyword=".urlencode($keyword)."&view=edit"),array('title'=>_('Seite bearbeiten')));
+                $edit.=LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?keyword=".urlencode($keyword)."&view=edit"));
             }
             if ($perm->have_studip_perm("tutor", $SessSemName[1])) {
-                $edit.=LinkButton::create(_('Löschen'),URLHelper::getURL("?keyword=".urlencode($keyword)."&cmd=delete&version=latest"),array('title'=> _('Seite löschen')) );
+                $edit.=LinkButton::create(_('Löschen'),URLHelper::getURL("?keyword=".urlencode($keyword)."&cmd=delete&version=latest"));
             }
         }
         $edit .= "<br>&nbsp;";

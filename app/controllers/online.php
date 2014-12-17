@@ -102,10 +102,13 @@ class OnlineController extends AuthenticatedController
         $username = Request::username('username');
 
         if ($action === 'add' && $username !== null) {
-            Contact::add($username);
+            Contact::import(array(
+                'owner_id' => User::findCurrent()->id,
+                'user_id' => User::findByUsername($username)->id)
+                    )->store();
             PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde zu Ihren Kontakten hinzugefügt.')));
         } elseif ($action === 'remove' && $username !== null) {
-            Contact::remove($username);
+            Contact::deleteBySQL("owner_id = ? AND user_id = ?", array(User::findCurrent()->id, User::findByUsername($username)->id));
             PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Kontakten.')));
         }
         $this->redirect('online');

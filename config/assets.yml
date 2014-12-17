@@ -72,6 +72,7 @@ javascripts:
     - javascripts/tables.js
     - javascripts/jquery/jquery.scrollTo.js
     - javascripts/start.js
+    - javascripts/hamburger_menu.js
     - *header
     - *toolbar
     - *dialog

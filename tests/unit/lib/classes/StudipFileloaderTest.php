@@ -59,11 +59,20 @@ class StudipFileloaderTestCase extends PHPUnit_Framework_TestCase {
 
   }
 
-  /**
-   * @expectedException PHPUnit_Framework_Error_Warning
-   */
   function test_should_balk_upon_file_not_found()
   {
-      StudipFileloader::load('var://pathto/not-there.php', $container);
+      $exception_catched = false;
+
+      // workaround for different phpunit versions, i.e. 3.7 and > 4.0
+      // the exceptions thrown differ in these versions
+      try {
+        StudipFileloader::load('var://pathto/not-there.php', $container);
+      } catch (PHPUnit_Framework_Error_Warning $e) {
+          $exception_catched = true;
+      } catch (PHPUnit_Framework_Exception $e) {
+          $exception_catched = true;
+      }
+
+      $this->assertTrue($exception_catched);
   }
 }

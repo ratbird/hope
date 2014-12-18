@@ -24,7 +24,7 @@
             <? if ($showGroups && $last_group !== $buddy['group']): ?>
             <tr>
                 <th colspan="4">
-                    <a href="<?= $controller->link_for('contact/index/' . $buddy['group_id']) ?>"
+                    <a href="<?= $controller->link_for('contact/index/' . ($buddy['group_id'] != 'all' ? $buddy['group_id'] : '')) ?>"
                        class="link-intern" style="color: #000;">
                         <?= htmlReady($buddy['group']) ?>
                     </a>

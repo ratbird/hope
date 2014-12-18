@@ -19,7 +19,6 @@
         // TODO: Templating?
         _.forEach(navigation, function (nav, node) {
             nav.url = STUDIP.URLHelper.getURL(nav.url);
-
             var subpath = path + '_' + node,
                 li      = $('<li>'),
                 item    = $('<div class="navigation_item">').appendTo(li),
@@ -61,6 +60,7 @@
     // STUDIP.Navigation object
     function responsify() {
         media_query.removeListener(responsify);
+        STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
         addMenu();
 

@@ -205,17 +205,12 @@
             registerNextPoll();
 
             if (typeof Notification !== "undefined" && Notification.permission !== 'denied') {
-                Notification.requestPermission(function (permission) {
-                    // Whatever the user answers, we make sure we store the information
-                    if (!('permission' in Notification)) {
-                        Notification.permission = permission;
-                    }
-                });
+                Notification.requestPermission();
             }
         }
         active = true;
     };
-    
+
     // Stops the updater, also unregisters the activity handlers
     STUDIP.JSUpdater.stop = function () {
         if (active) {
@@ -255,5 +250,29 @@
     // Try to stop js updater if window is unloaded (might not work in all
     // browsers)
     $(window).on('unload', STUDIP.JSUpdater.stop);
+
+}(jQuery, STUDIP));
+
+(function ($, STUDIP) {
+
+    STUDIP.StudipRTC = {};
+    STUDIP.StudipRTC.variables = {};
+
+    STUDIP.StudipRTC.initWorker = function () {
+        STUDIP.StudipRTC.worker = new SharedWorker(STUDIP.ASSETS_URL + 'javascripts/worker/updater.worker.js');
+        STUDIP.StudipRTC.worker.port.addEventListener('message', function(e) {
+            //e.data;
+            alert(e.data.message);
+        }, false);
+        STUDIP.StudipRTC.worker.onerror = function (e) {
+            var text = "Fehler im Webworker " + e.filename + " Zeile " + e.lineno + ":\n";
+            text += e.message;
+            alert(text);
+        };
+        STUDIP.StudipRTC.worker.port.start(); // note: need this when using addEventListener
+        STUDIP.StudipRTC.worker.port.postMessage('ping');
+    };
+
+    $(STUDIP.StudipRTC.initWorker);
 
 }(jQuery, STUDIP));

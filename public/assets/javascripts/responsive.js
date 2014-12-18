@@ -18,17 +18,21 @@
 
         // TODO: Templating?
         _.forEach(navigation, function (nav, node) {
+            nav.url = STUDIP.URLHelper.getURL(nav.url);
+
             var subpath = path + '_' + node,
                 li      = $('<li>'),
                 item    = $('<div class="navigation_item">').appendTo(li),
                 title   = $('<div class="nav_title">').appendTo(item),
-                label   = $('<label>').attr('for', subpath).html(nav.title).appendTo(title);
+                label   = nav.children
+                            ? $('<label>').attr('for', subpath).html(nav.title).appendTo(title)
+                            : $('<a>').text(nav.title).attr('href', nav.url).appendTo(title);
 
             if (nav.image) {
                 $('<img class="icon">').attr('src', STUDIP.ASSETS_URL + nav.image).prependTo(label);
             }
 
-            $('<a class="nav_link">').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + nav.url).appendTo(item);
+            $('<a class="nav_link">').attr('href', nav.url).appendTo(item);
 
             if (nav.children) {
                 $('<input type="checkbox">').attr('id', subpath).prop('checked', nav.active).appendTo(li);

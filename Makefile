@@ -1,7 +1,7 @@
 PHP = php
 PLESSC = $(PHP) vendor/mishal-iless/bin/iless
 JLESSC = $(shell which lessc)
-CODECEPT_VENDOR = $(shell which vendor/bin/codecept)
+CODECEPT_VENDOR = $(shell which composer/bin/codecept)
 CODECEPT = $(shell which codecept)
 STYLES = public/assets/stylesheets
 JAVA   = $(shell which java)

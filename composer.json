@@ -1,0 +1,8 @@
+{
+    "config": {
+        "vendor-dir": "composer"
+    },
+    "require": {
+        "codeception/codeception": "*"
+    }
+}

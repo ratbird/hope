@@ -6056,6 +6056,13 @@ label[for="hamburgerChecker"]:before {
   font-size: 1.3em;
   margin: 10px;
 }
+#hamburgerNavigation .nav_title {
+  width: 80%;
+  display: inline-block;
+}
+#hamburgerNavigation .nav_title > label {
+  display: block;
+}
 #hamburgerNavigation .navigation_item {
   display: -ms-flexbox;
   display: -webkit-box;

@@ -35,7 +35,6 @@ class OnlineController extends AuthenticatedController
 
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
 
-        $this->buddy_count = GetNumberOfBuddies();
         $this->settings    = $GLOBALS['user']->cfg->MESSAGING_SETTINGS;
 
         // If "show_groups" setting is not set, default it to whether the
@@ -56,8 +55,8 @@ class OnlineController extends AuthenticatedController
      **/
     public function index_action()
     {
-        
-        $this->contact_count = GetSizeOfBook(); // Total number of contacts
+
+        $this->contact_count = Contact::countBySQL('owner_id=?', array(User::findCurrent()->id)); // Total number of contacts
 
         $this->users           = $this->getOnlineUsers($this->settings['show_groups']);
         $this->showOnlyBuddies = $this->settings['show_only_buddys'];
@@ -73,9 +72,9 @@ class OnlineController extends AuthenticatedController
 
         // Add buddy configuration option to sidebar only if the user actually
         // has buddies
-        if ($this->buddy_count > 0) {
+        if ($this->contact_count > 0) {
             $actions = new OptionsWidget();
-            
+
             $actions->addCheckbox(_('Nur Kontakte in der Übersicht der aktiven Benutzer anzeigen'),
                                   $this->settings['show_only_buddys'],
                                   $this->url_for('online/config/show_buddies/' . get_ticket()));
@@ -102,14 +101,17 @@ class OnlineController extends AuthenticatedController
         $username = Request::username('username');
 
         if ($action === 'add' && $username !== null) {
-            Contact::import(array(
+            if (Contact::import(array(
                 'owner_id' => User::findCurrent()->id,
                 'user_id' => User::findByUsername($username)->id)
-                    )->store();
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde zu Ihren Kontakten hinzugefügt.')));
+                    )->store()) {
+                PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde zu Ihren Kontakten hinzugefügt.')));
+            }
         } elseif ($action === 'remove' && $username !== null) {
-            Contact::deleteBySQL("owner_id = ? AND user_id = ?", array(User::findCurrent()->id, User::findByUsername($username)->id));
-            PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Kontakten.')));
+            $contact = Contact::find(array(User::findCurrent()->id, User::findByUsername($username)->id));
+            if ($contact && $contact->delete()) {
+                PageLayout::postMessage(MessageBox::success(_('Der Benutzer gehört nicht mehr zu Ihren Kontakten.')));
+            }
         }
         $this->redirect('online');
     }
@@ -131,10 +133,10 @@ class OnlineController extends AuthenticatedController
                 $this->settings['show_groups'] = (int)!$this->settings['show_groups'];
             }
             $GLOBALS['user']->cfg->store('MESSAGING_SETTINGS', $this->settings);
-            
+
             $message = MessageBox::success(_('Ihre Einstellungen wurden gespeichert.'));
         }
-        
+
         PageLayout::postMessage($message);
         $this->redirect('online');
     }

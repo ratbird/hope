@@ -1,8 +1,3 @@
-<? if ($_SESSION['sms_msg']) {
-    parse_msg($_SESSION['sms_msg']);
-    unset($_SESSION['sms_msg']);
-} ?>
-
 <div class="online-list <? if (!$showOnlyBuddies) echo 'online-list-double'; ?>">
     <table class="default">
         <caption>
@@ -29,8 +24,7 @@
             <? if ($showGroups && $last_group !== $buddy['group']): ?>
             <tr>
                 <th colspan="4">
-                    <a href="<?= URLHelper::getLink('contact.php?view=gruppen',
-                                                    array('filter' => $buddy['group_id'])) ?>"
+                    <a href="<?= $controller->link_for('contact/index/' . $buddy['group_id']) ?>"
                        class="link-intern" style="color: #000;">
                         <?= htmlReady($buddy['group']) ?>
                     </a>
@@ -43,7 +37,7 @@
         <? endforeach; ?>
         </tbody>
         <? else: ?>
-            <? if ($buddy_count === 0): ?>
+            <? if ($contact_count === 0): ?>
                 <tbody>
                     <tr>
                         <td colspan="4">
@@ -65,8 +59,8 @@
             <tr>
                 <td colspan="4">
                 <? printf(_('Zum Adressbuch (%u Einträge) klicken Sie %shier%s.'),
-                          GetSizeofBook(),
-                          '<a href="' . URLHelper::getLink('contact.php') . '">', '</a>') ?>
+                          $contact_count,
+                          '<a href="' . $controller->link_for('contact') . '">', '</a>') ?>
                 </td>
             </tr>
         </tfoot>

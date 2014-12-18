@@ -115,17 +115,26 @@ class ExternSemBrowse extends SemBrowse {
             if (in_array($type["class"], $semclasses))
                 $this->sem_browse_data['sem_status'][] = $key;
         }
-        
+
         $this->get_sem_range_tree($start_item_id, true);        
     }
     
     function print_result ($args) {
         global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
-        
+
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             
             // show only selected subject areas
             $selected_ranges = $this->config->getValue('SelectSubjectAreas', 'subjectareasselected');
+            if ($stid = Request::option('sem_tree_id')) {
+                if (!is_object($this->sem_tree)){
+                    $the_tree = TreeAbstract::GetInstance("StudipSemTree");
+                } else {
+                    $the_tree =& $this->sem_tree->tree;
+                }
+                $the_tree->buildIndex();
+                $selected_ranges = array_merge(array($stid), $the_tree->getKidsKids($stid));
+            }
             if (!$this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas')
                     && count($selected_ranges)) {
                 if ($this->config->getValue('SelectSubjectAreas', 'reverseselection')) {
@@ -139,6 +148,9 @@ class ExternSemBrowse extends SemBrowse {
             
             // show only selected SemTypes
             $selected_semtypes = $this->config->getValue('ReplaceTextSemType', 'visibility');
+            if (Request::get('semstatus')) {
+                $selected_semtypes = array(Request::get('semstatus'));
+            }
             $sem_types_array = array();
             if (count($selected_semtypes)) {
                 for ($i = 0; $i < count($selected_semtypes); $i++) {
@@ -160,10 +172,15 @@ class ExternSemBrowse extends SemBrowse {
                 $the_tree->buildIndex();
             }
             
-            if (!$this->config->getValue("Main", "allseminars")) {
+            if (!$this->config->getValue("Main", "allseminars") && !Request::get('allseminars')) {
                 $sem_inst_query = " AND seminare.Institut_id='{$this->config->range_id}' ";
             }
-            
+            if (Request::option('aggregation')) {
+                $i = Institute::find($this->config->range_id);
+                $children = $i->sub_institutes->pluck('institut_id');
+                $sem_inst_query = " AND seminare.Institut_id IN ('".(implode("', '", $children))."')";
+            }
+
             $dbv = new DbView();
             
             if (!$nameformat = $this->config->getValue("Main", "nameformat"))

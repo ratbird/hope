@@ -133,6 +133,15 @@ class ExternSemBrowseTable extends SemBrowse {
             
             // show only selected subject areas
             $selected_ranges = $this->module->config->getValue('SelectSubjectAreas', 'subjectareasselected');
+            if ($stid = Request::option('sem_tree_id')) {
+                if (!is_object($this->sem_tree)){
+                    $the_tree = TreeAbstract::GetInstance("StudipSemTree");
+                } else {
+                    $the_tree =& $this->sem_tree->tree;
+                }
+                $the_tree->buildIndex();
+                $selected_ranges = array_merge(array($stid), $the_tree->getKidsKids($stid));
+            }
             if (!$this->module->config->getValue('SelectSubjectAreas', 'selectallsubjectareas')
                     && count($selected_ranges)) {
                 if ($this->module->config->getValue('SelectSubjectAreas', 'reverseselection')) {
@@ -146,6 +155,9 @@ class ExternSemBrowseTable extends SemBrowse {
             
             // show only selected SemTypes
             $selected_semtypes = $this->module->config->getValue('ReplaceTextSemType', 'visibility');
+            if (Request::get('semstatus')) {
+                $selected_semtypes = array(Request::get('semstatus'));
+            }
             $sem_types_array = array();
             if (count($selected_semtypes)) {
                 for ($i = 0; $i < count($selected_semtypes); $i++) {
@@ -170,8 +182,13 @@ class ExternSemBrowseTable extends SemBrowse {
             $the_tree->buildIndex();
             }
             
-            if (!$this->module->config->getValue("Main", "allseminars")){
+            if (!$this->module->config->getValue("Main", "allseminars") && !Request::get('allseminars')){
                 $sem_inst_query = " AND seminare.Institut_id='{$this->module->config->range_id}' ";
+            }
+            if (Request::option('aggregation')) {
+                $i = Institute::find($this->config->range_id);
+                $children = $i->sub_institutes->pluck('institut_id');
+                $sem_inst_query = " AND seminare.Institut_id IN ('".(implode("', '", $children))."')";
             }
             if (!$nameformat = $this->module->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";

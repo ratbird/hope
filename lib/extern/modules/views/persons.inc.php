@@ -51,7 +51,12 @@ if (!$all_groups = get_all_statusgruppen($range_id)) {
     $all_groups = array_keys($all_groups);
 }
 
-if (!$group_ids = $this->config->getValue('Main', 'groupsvisible')) {
+if (Request::get('visible_groups')) {
+    $group_ids = explode(',', Request::get('visible_groups'));
+} else {
+    $group_ids = $this->config->getValue('Main', 'groupsvisible');
+}
+if (!$group_ids) {
     die($GLOBALS['EXTERN_ERROR_MESSAGE']);
 } else {
     $group_ids = array_intersect($all_groups, $group_ids);
@@ -88,8 +93,19 @@ if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
 
 $grouping = $this->config->getValue('Main', 'grouping');
 if (!$grouping) {
-    $groups_ids = $this->config->getValue('Main', 'groupsvisible');
+    if (Request::get('visible_groups')) {
+        $groups_ids = array(Request::get('visible_groups'));
+    } else {
+        $groups_ids = $this->config->getValue('Main', 'groupsvisible');
+    }
     $ext_vis_query = get_ext_vis_query();
+
+    $range_ids = array($range_id);
+    if (Request::option('aggregation')) {
+        $i = Institute::find($range_id);
+        $children = $i->sub_institutes->pluck('institut_id');
+        $range_ids = array_merge($range_ids, $children);
+    }
 
     $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms,
                      Email, aum.user_id, username, aum.Nachname,
@@ -99,7 +115,7 @@ if (!$grouping) {
                    LEFT JOIN auth_user_md5 AS aum USING(user_id)
                    LEFT JOIN user_info USING (user_id)
                    LEFT JOIN user_inst AS ui USING (user_id) 
-                   WHERE statusgruppe_id IN (?) AND Institut_id = ?
+                   WHERE statusgruppe_id IN (?) AND Institut_id IN (?)
                      AND {$ext_vis_query}
                    {$query_order}";
     } else {
@@ -108,14 +124,14 @@ if (!$grouping) {
                    LEFT JOIN auth_user_md5 AS aum USING (user_id)
                    LEFT JOIN user_info USING (user_id)
                    LEFT JOIN user_inst AS ui USING (user_id) 
-                   WHERE su.statusgruppe_id IN (?) AND Institut_id = ?
+                   WHERE su.statusgruppe_id IN (?) AND Institut_id IN (?)
                      AND {$ext_vis_query}
                    ORDER BY s.position ASC, su.position ASC";
     }
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $groups_ids ?: '',
-        $range_id
+        $range_ids
     ));
     $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -178,6 +194,13 @@ foreach ($visible_groups as $group_id => $group) {
             $out .= $this->elements['TableGroup']->toString(array('content' => htmlReady($group)));
         }
 
+        $range_ids = array($range_id);
+        if (Request::option('aggregation')) {
+            $i = Institute::find($range_id);
+            $children = $i->sub_institutes->pluck('institut_id');
+            $range_ids = array_merge($range_ids, $children);
+        }
+
         foreach ($rows as $row) {
             if ($defaultadr) {
                 $ext_vis_query = get_ext_vis_query();
@@ -205,10 +228,10 @@ foreach ($visible_groups as $group_id => $group) {
                               FROM auth_user_md5 AS aum
                               LEFT JOIN user_info USING (user_id)
                               LEFT JOIN user_inst AS ui USING (user_id)
-                              WHERE aum.user_id = ? AND Institut_id = ?
+                              WHERE aum.user_id = ? AND Institut_id IN (?)
                                 AND {$ext_vis_query}";
                     $statement = DBManager::get()->prepare($query);
-                    $statement->execute(array($row['user_id'], $range_id));
+                    $statement->execute(array($row['user_id'], $range_ids));
                     $row = $statement->fetch(PDO::FETCH_ASSOC);
                 }
             }

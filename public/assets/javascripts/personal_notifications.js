@@ -37,9 +37,6 @@
                         message.addEventListener("click", function () {
                             location.href = STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/mark_notification_read/" + this.tag;
                         });
-                        message.addEventListener("close", function () {
-                            STUDIP.PersonalNotifications.sendReadInfo(this.tag);
-                        });
                         sessionStorage['desktop.notification.exists.' + notification.id] = 1;
                     }
                 }

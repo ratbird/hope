@@ -4,13 +4,13 @@
     <fieldset>
         <legend><?= _('Einstellungen') ?></legend>
         
-    	<div class="studip_input_wrapper">
+        <div class="studip_input_wrapper">
             <input type="hidden" name="active" value="0">
             <label>
                 
                 <input type="checkbox" name="active" value="1" <? if ($config['API_ENABLED']) echo 'checked'; ?>>
             <?= _('REST-API aktiviert') ?></label>
-    	</div>
+        </div>
         
         <label class="caption" for="auth"><?= _('Standard-Authentifizierung beim Login') ?>
             <select name="auth" id="auth">

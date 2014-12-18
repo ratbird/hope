@@ -499,7 +499,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                 if ($row_count['count_user'] > 0) {
                     $content['LIST_INSTITUTES']['INSTITUTE'][] = array(
                         'INSTITUTE_NAME' => ExternModule::ExtHtmlReady($row['Name']),
-						'INSTITUTE_COUNT_USER' => $row_count['count_user'],
+                        'INSTITUTE_COUNT_USER' => $row_count['count_user'],
                         'URL_LIST_PERSONS' => $this->getLinkToModule('LinkInternListInstitutes', array('item_id' => $row['Institut_id'])));
                 }
             }

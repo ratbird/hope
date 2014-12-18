@@ -654,9 +654,9 @@ class PluginManager
             if ($key === 'pluginclassname' && isset($result[$key])) {
                 $result['additionalclasses'][] = $value;
             } elseif ($key === 'screenshot' && isset($result[$key])) {
-            	$result['additionalscreenshots'][] = $value;
+                $result['additionalscreenshots'][] = $value;
             } else {
-            	$result[$key] = $value;
+                $result[$key] = $value;
             }
         }
 

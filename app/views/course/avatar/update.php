@@ -10,7 +10,7 @@ use Studip\Button, Studip\LinkButton;
 <h1><?= _("Veranstaltungsbild hochladen") ?></h1>
 
 <div style="float: left; padding: 0 1em 1em 0;">
-	<?= $avatar->getImageTag(Avatar::NORMAL) ?>
+    <?= $avatar->getImageTag(Avatar::NORMAL) ?>
 </div>
 
 <form enctype="multipart/form-data"

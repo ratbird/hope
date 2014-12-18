@@ -2486,14 +2486,14 @@ elseif ($level == 2) {
     </tr>
     <tr>
         <td class="blank" valign="top">
- 	          <div class="info">
+              <div class="info">
                 <?
                 if ($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["bereiche"])
                     echo _("Geben Sie hier Personendaten, Studienbereiche und weitere Angaben zur Veranstaltung an.")."<br><br>";
                 else
                     echo _("Geben Sie hier Personendaten und weitere Angaben zur Veranstaltung an.")."<br><br>";
                 ?>
- 	            <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
+                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>müssen</b> ausgefüllt werden, um eine Veranstaltung anlegen zu können.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
             </div>
         </td>
     </tr>

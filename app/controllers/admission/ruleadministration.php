@@ -50,7 +50,8 @@ class Admission_RuleAdministrationController extends AuthenticatedController {
     public function index_action() {
         $this->ruleTypes = RuleAdministrationModel::getAdmissionRuleTypes();
         // Available rule classes.
-        $ruleClasses = array_map(function($s) { return strtolower($s); }, array_keys($this->ruleTypes));        // Found directories with rule definitions.
+        $ruleClasses = array_map(function($s) { return strtolower($s); }, array_keys($this->ruleTypes));
+        // Found directories with rule definitions.
         $ruleDirs = array_map(function($s) { return basename($s); }, glob($GLOBALS['STUDIP_BASE_PATH'].'/lib/admissionrules/*', GLOB_ONLYDIR));
         // Compare the two.
         $this->newRules = array_diff($ruleDirs, $ruleClasses);

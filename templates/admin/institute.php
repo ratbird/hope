@@ -25,17 +25,17 @@ $may_edit_faculty = $perm->is_fak_admin()
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default">
-    	<caption>
-    		<?=_('Verwaltung der Einrichtungsgrunddaten')?>
-    	</caption>
-    	<thead>
-    		<tr>
-	    		<th>&nbsp;
-    	        </th>
-    	        <th>&nbsp;
-        	    </th>
-    		</tr>
-    	</thead>
+        <caption>
+            <?=_('Verwaltung der Einrichtungsgrunddaten')?>
+        </caption>
+        <thead>
+            <tr>
+                <th>&nbsp;
+                </th>
+                <th>&nbsp;
+                </th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
                 <td><?= _('Name:') ?></td>

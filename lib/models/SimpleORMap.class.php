@@ -830,11 +830,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     protected function _setAdditionalValueFromRelation($field, $value)
     {
-    	list($relation, $relation_field) = array($this->additional_fields[$field]['relation'],
-    			$this->additional_fields[$field]['relation_field']);
-    	$this->$relation->$field = $value;
-    	unset($this->additional_data[$field]);
-    	return $this->_getAdditionalValueFromRelation($field);
+        list($relation, $relation_field) = array($this->additional_fields[$field]['relation'],
+                $this->additional_fields[$field]['relation_field']);
+        $this->$relation->$field = $value;
+        unset($this->additional_data[$field]);
+        return $this->_getAdditionalValueFromRelation($field);
     }
 
     /**
@@ -843,7 +843,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     protected function _getAdditionalValue($field)
     {
-    	return $this->additional_data[$field];
+        return $this->additional_data[$field];
     }
 
     /**

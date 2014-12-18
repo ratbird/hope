@@ -1,13 +1,13 @@
 <?php
 class CreateTagsForMessaging extends DBMigration
 {
-	public function getDescription()
-	{
-		return _('Converts old messaging-folders into message tags.');
-	}
-	
-	public function up()
-	{
+    public function getDescription()
+    {
+        return _('Converts old messaging-folders into message tags.');
+    }
+    
+    public function up()
+    {
         DBManager::get()->exec("
             CREATE TABLE IF NOT EXISTS `message_tags` (
                   `message_id` varchar(32) NOT NULL,
@@ -20,8 +20,8 @@ class CreateTagsForMessaging extends DBMigration
         ");
 
         $old_config = DBManager::get()->prepare("
-		    SELECT user_id, value FROM user_config WHERE field = 'MESSAGING_SETTINGS'
-		");
+            SELECT user_id, value FROM user_config WHERE field = 'MESSAGING_SETTINGS'
+        ");
         $old_config->execute();
         while ($result = $old_config->fetch(PDO::FETCH_ASSOC)) {
             $config = json_decode($result['value'], true);
@@ -63,11 +63,11 @@ class CreateTagsForMessaging extends DBMigration
         DBManager::get()->exec("
           ALTER TABLE `message` DROP `reading_confirmation`;
         ");
-	}
-	
-	public function down()
-	{
-		$query = "DROP TABLE `message_tags`";
-		DBManager::get()->exec($query);
-	}
+    }
+    
+    public function down()
+    {
+        $query = "DROP TABLE `message_tags`";
+        DBManager::get()->exec($query);
+    }
 }

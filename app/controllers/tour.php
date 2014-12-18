@@ -207,13 +207,13 @@ class TourController extends AuthenticatedController
         if (Request::submitted('save_tour_settings')) {
             foreach($this->tours as $tour_id => $tour) {
                 // set status as chosen
-            	if ((Request::get('tour_status_'.$tour_id) == '1') AND (!$this->tours[$tour_id]->settings->active)) {
+                if ((Request::get('tour_status_'.$tour_id) == '1') AND (!$this->tours[$tour_id]->settings->active)) {
                     $this->tours[$tour_id]->settings->active = 1;
                     $this->tours[$tour_id]->store();
-            	} elseif ((Request::get('tour_status_'.$tour_id) != '1') AND ($this->tours[$tour_id]->settings->active)) {
+                } elseif ((Request::get('tour_status_'.$tour_id) != '1') AND ($this->tours[$tour_id]->settings->active)) {
                     $this->tours[$tour_id]->settings->active = 0;
                     $this->tours[$tour_id]->store();
-            	}
+                }
             }
         }
     }

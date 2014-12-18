@@ -124,11 +124,11 @@ class HelpTour extends SimpleORMap {
     {
         $params = array();
         $condition = '';
-    	if (strlen(trim($term)) >= 3) { 
+        if (strlen(trim($term)) >= 3) { 
             $condition =  "WHERE name LIKE CONCAT('%', ?, '%')";
             $params[] = $term;
         }
-    	$query = "SELECT tour_id AS idx, help_tours.*
+        $query = "SELECT tour_id AS idx, help_tours.*
                   FROM help_tours
                   $condition
                   ORDER BY name ASC";

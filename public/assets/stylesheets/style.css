@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -48,8 +48,8 @@
  */
 .scrollbox-vertical {
   overflow: auto;
-  background: /* Shadow covers */ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
-  background: /* Shadow covers */ linear-gradient(#ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), #ffffff 70%) 0 100%, /* Shadows */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: linear-gradient(white 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%, /* Shadows */ radial-gradient(50% 0, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(50% 100%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background: linear-gradient(white 30%, rgba(255, 255, 255, 0)), linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%, /* Shadows */ radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 0 100%;
   background-repeat: no-repeat;
   background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
   /* Opera doesn't support this in the shorthand */
@@ -57,8 +57,8 @@
 }
 .scrollbox-horizontal {
   overflow: auto;
-  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.428571429;
+  line-height: 1.42857143;
   color: #000000;
 }
 input,
@@ -340,7 +340,7 @@ td.angemeldet {
   border: 1px solid #000;
 }
 td.indexpage {
-  background: #ffffff url("../images/indexpage.jpg") no-repeat;
+  background: white url("../images/indexpage.jpg") no-repeat;
   text-align: left;
 }
 td.nix {
@@ -1467,8 +1467,8 @@ label.required:after {
 }
 #layout_content {
   overflow: auto;
-  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
-  background: /* Shadow covers */ linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), #ffffff 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, /* Shadows */ radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
+  background: linear-gradient(90deg, white 30%, rgba(255, 255, 255, 0)), linear-gradient(90deg, rgba(255, 255, 255, 0), white 70%) 100% 0, /* Shadows */ radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0)) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   /* Opera doesn't support this in the shorthand */
@@ -1515,6 +1515,11 @@ label.required:after {
   height: 25px;
   margin: 0;
   text-align: right;
+}
+#footer {
+  color: #dfdfdf;
+  float: left;
+  margin: 4px;
 }
 #layout_wrapper {
   display: -ms-flexbox;
@@ -2699,16 +2704,6 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
-/*
-.sidebar-widget.sidebar-infobox {
-    border-color: @red;
-    background: @light-gray-color-20;
-
-    .sidebar-widget-header {
-        background: @red-40;
-    }
-}
-*/
 .helpbar-container {
   background: #fff;
   clear: both;
@@ -3080,9 +3075,9 @@ section.contentbox article.new header h1:before {
   -webkit-border-radius: 9px;
   -moz-border-radius: 9px;
   border-radius: 9px;
-  -webkit-box-shadow: #000000 0px 1px 3px;
-  -moz-box-shadow: #000000 0px 1px 3px;
-  box-shadow: #000000 0px 1px 3px;
+  -webkit-box-shadow: black 0px 1px 3px;
+  -moz-box-shadow: black 0px 1px 3px;
+  box-shadow: black 0px 1px 3px;
 }
 /* --- AJAX indicator ------------------------------------------------------- */
 #ajax_notification {
@@ -3417,21 +3412,21 @@ div.messagebox_details {
 }
 div.messagebox_info {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/info.png");
   background-size: 32px 32px;
   border-color: #28497c;
 }
 div.messagebox_success {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/success.png");
   background-size: 32px 32px;
   border-color: #00962d;
 }
 div.messagebox_error {
   color: #000000;
-  background-color: #ffffff;
+  background-color: white;
   background-image: url("../images/messagebox/error.png");
   background-size: 32px 32px;
   border-color: #d60000;
@@ -5850,6 +5845,282 @@ ol ol {
 }
 .plus .helplink {
   float: right;
+}
+@media screen and (min-width: 768px) {
+  #responsive-navigation,
+  #sidebar-menu {
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  #header,
+  #barTopFont,
+  #barTopMenu,
+  #barBottomLeft .current_page,
+  #barBottommiddle,
+  .sidebar-image,
+  #sidebar-navigation,
+  #quicksearch,
+  #layout_footer {
+    display: none !important;
+  }
+  #notification_marker {
+    display: inline-block;
+    margin-top: 0;
+    vertical-align: initial;
+  }
+  #barBottomContainer {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+    height: 35px;
+  }
+  #barBottomright,
+  #barBottomright ul {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  #barBottomright > li,
+  #barBottomright ul > li {
+    line-height: 35px;
+  }
+  #layout_page {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #layout_page,
+  #layout_container,
+  #barBottomContainer,
+  #flex-header,
+  #layout_content {
+    min-width: inherit !important;
+  }
+  .visible-sidebar {
+    right: 0 !important;
+    -webkit-transition: right 300ms;
+    -moz-transition: right 300ms;
+    -o-transition: right 300ms;
+    transition: right 300ms;
+  }
+  #layout-sidebar {
+    background-color: #1e3e70;
+    background-image: -moz-linear-gradient(left, #36598f, #1e3e70);
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#36598f), to(#1e3e70));
+    background-image: -webkit-linear-gradient(left, #36598f, #1e3e70);
+    background-image: -o-linear-gradient(left, #36598f, #1e3e70);
+    background-image: linear-gradient(to right, #36598f, #1e3e70);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff36598f', endColorstr='#ff1e3e70', GradientType=1);
+    -webkit-background-clip: content-box;
+    -moz-background-clip: content-box;
+    background-clip: content-box;
+    -webkit-transition: right 300ms;
+    -moz-transition: right 300ms;
+    -o-transition: right 300ms;
+    transition: right 300ms;
+    position: fixed;
+    top: 35px;
+    right: -276px;
+    bottom: 0;
+    height: 100%;
+    width: 270px;
+    overflow: hidden;
+    overflow-y: auto;
+    z-index: 10000;
+    border-left: 6px solid rgba(0, 0, 0, 0.5);
+  }
+  #layout-sidebar .sidebar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    top: auto !important;
+    width: 270px !important;
+    background: inherit;
+    border: 0;
+  }
+  #layout-sidebar .sidebar:before {
+    border: 0 !important;
+  }
+  #layout-sidebar .widget-links li.active {
+    margin-right: 0;
+  }
+  #layout-sidebar .widget-links li.active:before,
+  #layout-sidebar .widget-links li.active:after {
+    display: none;
+  }
+}
+#responsive-navigation {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+#responsive-navigation input[type="checkbox"] {
+  display: none;
+}
+#responsive-navigation label {
+  cursor: pointer;
+}
+#responsive-navigation ul,
+#responsive-navigation li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#responsive-navigation li {
+  border-top: 1px solid #899ab9;
+}
+#responsive-navigation .nav_link {
+  padding-left: 5px;
+}
+#responsive-navigation .nav_link:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 20px;
+  margin-right: 0;
+  background-image: url("../images/icons/32/white/arr_1right.png");
+  background-image: none, url("../images/icons/white/arr_1right.svg");
+  -webkit-background-size: 20px 20px;
+  -moz-background-size: 20px 20px;
+  -o-background-size: 20px 20px;
+  background-size: 20px 20px;
+  vertical-align: text-top;
+  width: 20px;
+}
+#responsive-navigation .nav_link:before {
+  vertical-align: text-bottom;
+}
+label[for="hamburgerChecker"]:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 20px;
+  margin-right: 0;
+  background-image: url("../images/icons/32/white/hamburger-icon.png");
+  background-image: none, url("../images/icons/white/hamburger-icon.svg");
+  -webkit-background-size: 20px 20px;
+  -moz-background-size: 20px 20px;
+  -o-background-size: 20px 20px;
+  background-size: 20px 20px;
+  vertical-align: text-top;
+  width: 20px;
+}
+label[for="hamburgerChecker"]:before {
+  vertical-align: bottom;
+}
+#hamburgerChecker:checked + #hamburgerNavigation {
+  left: 0;
+}
+#hamburgerNavigation {
+  background-color: #36598f;
+  background-image: -moz-linear-gradient(left, #1e3e70, #36598f);
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#1e3e70), to(#36598f));
+  background-image: -webkit-linear-gradient(left, #1e3e70, #36598f);
+  background-image: -o-linear-gradient(left, #1e3e70, #36598f);
+  background-image: linear-gradient(to right, #1e3e70, #36598f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1e3e70', endColorstr='#ff36598f', GradientType=1);
+  -webkit-background-clip: content-box;
+  -moz-background-clip: content-box;
+  background-clip: content-box;
+  -webkit-transition: left 300ms;
+  -moz-transition: left 300ms;
+  -o-transition: left 300ms;
+  transition: left 300ms;
+  position: fixed;
+  top: 35px;
+  bottom: 0;
+  left: -276px;
+  height: 100%;
+  max-height: 100%;
+  max-width: 270px;
+  width: 270px;
+  border-right: 6px solid rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+#hamburgerNavigation > li:first-child {
+  border-top: none;
+}
+#hamburgerNavigation > li .icon {
+  height: 26px;
+  display: inline-block;
+  padding-right: 8px;
+  vertical-align: text-bottom;
+  width: 26px;
+}
+#hamburgerNavigation > li > .navigation_item {
+  font-size: 1.3em;
+  margin: 10px;
+}
+#hamburgerNavigation .navigation_item {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-box-flex;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  -moz-box-direction: normal;
+  -moz-box-orient: horizontal;
+  -webkit-box-orient: horizontal;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-content: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+}
+#hamburgerNavigation ul {
+  -webkit-transition: max-height 400ms ease;
+  -moz-transition: max-height 400ms ease;
+  -o-transition: max-height 400ms ease;
+  transition: max-height 400ms ease;
+  max-height: 0px;
+  overflow: hidden;
+}
+#hamburgerNavigation ul > li {
+  background-color: #899ab9;
+}
+#hamburgerNavigation ul > li > .navigation_item {
+  padding: 10px;
+}
+#hamburgerNavigation ul .icon {
+  display: none;
+}
+#hamburgerNavigation input:checked + ul {
+  max-height: 600px;
+}
+#hamburgerNavigation input:checked + ul > li {
+  background-color: rgba(123, 139, 167, 0.6);
+}
+#sidebar-menu {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 5px;
+  vertical-align: text-bottom;
+}
+#sidebar-menu:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 20px;
+  margin-right: 0;
+  background-image: url("../images/icons/32/white/hamburger-icon-small.png");
+  background-image: none, url("../images/icons/white/hamburger-icon-small.svg");
+  -webkit-background-size: 20px 20px;
+  -moz-background-size: 20px 20px;
+  -o-background-size: 20px 20px;
+  background-size: 20px 20px;
+  vertical-align: text-top;
+  width: 20px;
 }
 /* --- Standardvorgaben ----------------------------------------------------- */
 html,

@@ -99,6 +99,10 @@ class StartNavigation extends Navigation
 
         parent::initSubNavigation();
 
+        if (!$perm->have_perm('user')) {
+            return;
+        }
+
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
         // my courses

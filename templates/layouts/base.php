@@ -7,6 +7,7 @@ if ($navigation) {
     $subnavigation = $navigation->activeSubNavigation();
     if ($subnavigation !== null) {
         $nav_links = new NavigationWidget();
+        $nav_links->id = 'sidebar-navigation';
         foreach ($subnavigation as $path => $nav) {
             if (!$nav->isVisible()) {
                 continue;

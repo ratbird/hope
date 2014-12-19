@@ -233,12 +233,17 @@ abstract class StudipController extends Trails_Controller
     }
 
     /**
-     * Specialized redirect function that handles ajax request and
-     * can be invoked in the same way as url_for.
+     * Relocate the user to another location. This is a specialized version
+     * of redirect that differs in two points:
+     *
+     * - relocate() will force the browser to leave the current dialog while
+     *   redirect would refresh the dialog's contents
+     * - relocate() accepts all the parameters that url_for() accepts so it's
+     *   no longer neccessary to chain url_for() and redirect()
      *
      * @param String $to Location to redirect to
      */
-    public function redirect($to)
+    public function relocate($to)
     {
         $from_dialog = Request::isXhr() && isset($_SERVER['HTTP_X_DIALOG']);
 

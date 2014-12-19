@@ -102,7 +102,7 @@ class Admin_SemesterController extends AuthenticatedController
                 $message = _('Das Semester wurde erfolgreich gespeichert.');
                 PageLayout::postMessage(MessageBox::success($message));
 
-                $this->redirect('admin/semester');
+                $this->relocate('admin/semester');
             }
 
             $this->errors = $errors;

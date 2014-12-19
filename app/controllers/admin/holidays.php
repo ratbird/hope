@@ -97,7 +97,7 @@ class Admin_HolidaysController extends AuthenticatedController
                 PageLayout::postMessage(MessageBox::error(_('Die Ferien konnten nicht gespeichert werden.')));
             } else {
                 PageLayout::postMessage(MessageBox::success(_('Die Ferien wurden erfolgreich gespeichert.')));
-                $this->redirect('admin/holidays');
+                $this->relocate('admin/holidays');
             }
         }
     }
@@ -119,7 +119,7 @@ class Admin_HolidaysController extends AuthenticatedController
                 $holiday->delete();
             }
 
-            PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gelöscht")));
+            PageLayout::postMessage(MessageBox::success(_('Die Ferien wurden erfolgreich gelöscht')));
         }
 
         $this->redirect('admin/holidays');

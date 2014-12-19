@@ -5856,113 +5856,8 @@ ol ol {
 .plus .helplink {
   float: right;
 }
-@media screen and (min-width: 768px) {
-  #responsive-navigation,
-  #sidebar-menu {
-    display: none;
-  }
-}
-@media screen and (max-width: 768px) {
-  #header,
-  #barTopFont,
-  #barTopMenu,
-  #barBottomLeft .current_page,
-  #barBottommiddle,
-  #tabs,
-  .sidebar-image,
-  #sidebar-navigation,
-  #quicksearch,
-  #layout_footer {
-    display: none !important;
-  }
-  #notification_marker {
-    display: inline-block;
-    margin-top: 0;
-    vertical-align: initial;
-  }
-  #barBottomContainer {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
-    height: 35px;
-  }
-  #barBottomright,
-  #barBottomright ul {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  #barBottomright > li,
-  #barBottomright ul > li {
-    line-height: 35px;
-  }
-  #layout_page {
-    margin-left: 0;
-    margin-right: 0;
-  }
-  #layout_page,
-  #layout_container,
-  #barBottomContainer,
-  #flex-header,
-  #layout_content {
-    min-width: inherit !important;
-  }
-  .visible-sidebar {
-    right: 0 !important;
-    -webkit-transition: right 300ms;
-    -moz-transition: right 300ms;
-    -o-transition: right 300ms;
-    transition: right 300ms;
-  }
-  #layout-sidebar {
-    background-color: #1e3e70;
-    background-image: -moz-linear-gradient(left, #36598f, #1e3e70);
-    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#36598f), to(#1e3e70));
-    background-image: -webkit-linear-gradient(left, #36598f, #1e3e70);
-    background-image: -o-linear-gradient(left, #36598f, #1e3e70);
-    background-image: linear-gradient(to right, #36598f, #1e3e70);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff36598f', endColorstr='#ff1e3e70', GradientType=1);
-    -webkit-background-clip: content-box;
-    -moz-background-clip: content-box;
-    background-clip: content-box;
-    -webkit-transition: right 300ms;
-    -moz-transition: right 300ms;
-    -o-transition: right 300ms;
-    transition: right 300ms;
-    position: fixed;
-    top: 35px;
-    right: -276px;
-    bottom: 0;
-    height: 100%;
-    width: 270px;
-    overflow: hidden;
-    overflow-y: auto;
-    z-index: 10000;
-    border-left: 6px solid rgba(0, 0, 0, 0.5);
-  }
-  #layout-sidebar .sidebar {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    top: auto !important;
-    width: 270px !important;
-    background: inherit;
-    border: 0;
-  }
-  #layout-sidebar .sidebar:before {
-    border: 0 !important;
-  }
-  #layout-sidebar .widget-links li.active {
-    margin-right: 0;
-  }
-  #layout-sidebar .widget-links li.active:before,
-  #layout-sidebar .widget-links li.active:after {
-    display: none;
-  }
-}
 #responsive-navigation {
+  display: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -6125,13 +6020,13 @@ label[for="hamburgerChecker"]:before {
 #hamburgerNavigation input:checked + ul > li {
   background-color: rgba(123, 139, 167, 0.6);
 }
-#sidebar-menu {
+#barBottomright #sidebar-menu {
   cursor: pointer;
-  display: inline-block;
+  display: none;
   margin: 0 5px;
   vertical-align: text-bottom;
 }
-#sidebar-menu:before {
+#barBottomright #sidebar-menu:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -6145,6 +6040,112 @@ label[for="hamburgerChecker"]:before {
   background-size: 20px 20px;
   vertical-align: text-top;
   width: 20px;
+}
+@media screen and (max-width: 768px) {
+  #header,
+  #barTopFont,
+  #barTopMenu,
+  #barBottomLeft .current_page,
+  #barBottommiddle,
+  #tabs,
+  .sidebar-image,
+  #sidebar-navigation,
+  #quicksearch,
+  #layout_footer {
+    display: none !important;
+  }
+  #notification_marker {
+    display: inline-block;
+    margin-top: 0;
+    vertical-align: initial;
+  }
+  #barBottomContainer {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+    height: 35px;
+  }
+  #barBottomright,
+  #barBottomright ul {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  #barBottomright > li,
+  #barBottomright ul > li {
+    line-height: 35px;
+  }
+  #barBottomright #sidebar-menu {
+    display: inline-block;
+  }
+  #responsive-navigation {
+    display: block;
+  }
+  #layout_page {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #layout_page,
+  #layout_container,
+  #barBottomContainer,
+  #flex-header,
+  #layout_content {
+    min-width: inherit !important;
+  }
+  .visible-sidebar {
+    right: 0 !important;
+    -webkit-transition: right 300ms;
+    -moz-transition: right 300ms;
+    -o-transition: right 300ms;
+    transition: right 300ms;
+  }
+  #layout-sidebar {
+    background-color: #1e3e70;
+    background-image: -moz-linear-gradient(left, #36598f, #1e3e70);
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#36598f), to(#1e3e70));
+    background-image: -webkit-linear-gradient(left, #36598f, #1e3e70);
+    background-image: -o-linear-gradient(left, #36598f, #1e3e70);
+    background-image: linear-gradient(to right, #36598f, #1e3e70);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff36598f', endColorstr='#ff1e3e70', GradientType=1);
+    -webkit-background-clip: content-box;
+    -moz-background-clip: content-box;
+    background-clip: content-box;
+    -webkit-transition: right 300ms;
+    -moz-transition: right 300ms;
+    -o-transition: right 300ms;
+    transition: right 300ms;
+    position: fixed;
+    top: 35px;
+    right: -276px;
+    bottom: 0;
+    height: 100%;
+    width: 270px;
+    overflow: hidden;
+    overflow-y: auto;
+    z-index: 10000;
+    border-left: 6px solid rgba(0, 0, 0, 0.5);
+  }
+  #layout-sidebar .sidebar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    top: auto !important;
+    width: 270px !important;
+    background: inherit;
+    border: 0;
+  }
+  #layout-sidebar .sidebar:before {
+    border: 0 !important;
+  }
+  #layout-sidebar .widget-links li.active {
+    margin-right: 0;
+  }
+  #layout-sidebar .widget-links li.active:before,
+  #layout-sidebar .widget-links li.active:after {
+    display: none;
+  }
 }
 /* --- Standardvorgaben ----------------------------------------------------- */
 html,

@@ -5,96 +5,10 @@
 @responsive-menu-shadow-width: 6px;
 @responsive-menu-shadow-color: rgba(0, 0, 0, 0.5);
 
-@media screen and (min-width: @small-screen-width) {
-    #responsive-navigation, #sidebar-menu {
-        display: none;
-    }
-}
-
-@media screen and (max-width: @small-screen-width) {
-    #header, #barTopFont, #barTopMenu, #barBottomLeft .current_page, #barBottommiddle,
-    #tabs, .sidebar-image, #sidebar-navigation, #quicksearch, #layout_footer {
-        display: none !important;
-    }
-    #notification_marker {
-        display: inline-block;
-        margin-top: 0;
-        vertical-align: initial;
-    }
-
-    #barBottomContainer {
-        .box-sizing(border-box);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.7);
-        height: @header-bar-container-height;
-    }
-
-    #barBottomright, #barBottomright ul {
-        .box-sizing(border-box);
-
-        > li {
-            line-height: @header-bar-container-height;
-        }
-    }
-
-    #layout_page {
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    #layout_page, #layout_container, #barBottomContainer, #flex-header, #layout_content {
-        min-width: inherit !important;
-    }
-
-    .visible-sidebar {
-        right: 0 !important;
-        .transition(right 300ms);
-    }
-
-    #layout-sidebar {
-        #gradient > .horizontal(@brand-color-light, @brand-color-darker);
-        .background-clip(content-box);
-        .transition(right 300ms);
-
-        position: fixed;
-        top: @header-bar-container-height;
-        right: -(@responsive-menu-width + @responsive-menu-shadow-width);
-        bottom: 0;
-
-        height: 100%;
-        width: @responsive-menu-width;
-
-        overflow: hidden;
-        overflow-y: auto;
-        z-index: 10000;
-
-        border-left: @responsive-menu-shadow-width solid @responsive-menu-shadow-color;
-
-        .sidebar {
-            .box-sizing(border-box);
-
-            &:before {
-                border: 0 !important;
-            }
-
-            top: auto !important;
-            width: @responsive-menu-width !important;
-
-            background: inherit;
-            border: 0;
-        }
-
-        .widget-links li.active {
-            &:before, &:after {
-                display: none;
-            }
-            margin-right: 0;
-        }
-    }
-
-}
-
 // Responsive main navigation (hamburger navigation to the left)
 #responsive-navigation {
+    display: none;
+
     .user-select(none);
 
     input[type="checkbox"] {
@@ -219,11 +133,99 @@ label[for="hamburgerChecker"] {
 }
 
 // Responsive sidebar menu (small hamburger menu to the right)
-#sidebar-menu {
+#barBottomright #sidebar-menu {
     .icon-before('white/hamburger-icon-small.svg', 20);
     cursor: pointer;
-    display: inline-block;
+    display: none;
     margin: 0 5px;
     vertical-align: text-bottom;
 }
 
+
+@media screen and (max-width: @small-screen-width) {
+    #header, #barTopFont, #barTopMenu, #barBottomLeft .current_page, #barBottommiddle,
+    #tabs, .sidebar-image, #sidebar-navigation, #quicksearch, #layout_footer {
+        display: none !important;
+    }
+    #notification_marker {
+        display: inline-block;
+        margin-top: 0;
+        vertical-align: initial;
+    }
+
+    #barBottomContainer {
+        .box-sizing(border-box);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+        height: @header-bar-container-height;
+    }
+
+    #barBottomright, #barBottomright ul {
+        .box-sizing(border-box);
+
+        > li {
+            line-height: @header-bar-container-height;
+        }
+    }
+
+    #barBottomright #sidebar-menu {
+        display: inline-block;
+    }
+    #responsive-navigation {
+        display: block;
+    }
+
+    #layout_page {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #layout_page, #layout_container, #barBottomContainer, #flex-header, #layout_content {
+        min-width: inherit !important;
+    }
+
+    .visible-sidebar {
+        right: 0 !important;
+        .transition(right 300ms);
+    }
+
+    #layout-sidebar {
+        #gradient > .horizontal(@brand-color-light, @brand-color-darker);
+        .background-clip(content-box);
+        .transition(right 300ms);
+
+        position: fixed;
+        top: @header-bar-container-height;
+        right: -(@responsive-menu-width + @responsive-menu-shadow-width);
+        bottom: 0;
+
+        height: 100%;
+        width: @responsive-menu-width;
+
+        overflow: hidden;
+        overflow-y: auto;
+        z-index: 10000;
+
+        border-left: @responsive-menu-shadow-width solid @responsive-menu-shadow-color;
+
+        .sidebar {
+            .box-sizing(border-box);
+
+            &:before {
+                border: 0 !important;
+            }
+
+            top: auto !important;
+            width: @responsive-menu-width !important;
+
+            background: inherit;
+            border: 0;
+        }
+
+        .widget-links li.active {
+            &:before, &:after {
+                display: none;
+            }
+            margin-right: 0;
+        }
+    }
+}

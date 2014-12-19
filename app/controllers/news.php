@@ -756,5 +756,21 @@ class NewsController extends StudipController
         }
         return $result;
     }
+
+    function rss_config_action($range_id)
+    {
+        if (!get_config('NEWS_RSS_EXPORT_ENABLE') || !StudipNews::haveRangePermission('edit', $range_id)) {
+            throw new AccessDeniedException();
+        }
+        if (Request::isPost()) {
+            if (Request::submitted('rss_on')) {
+                StudipNews::SetRssId($range_id);
+            } else {
+                StudipNews::UnsetRssId($range_id);
+            }
+        }
+        $this->range_id = $range_id;
+        $this->rss_id = StudipNews::GetRssIdFromRangeId($range_id);
+    }
 }
 

@@ -293,7 +293,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
  */
 function show_rss_news($range_id, $type)
 {
-    $item_url_fmt = '%s&nopen=%s';
+    $item_url_fmt = '%1$s&contentbox_open=%2$s#%2$s';
 
     switch ($type){
         case 'user':
@@ -302,7 +302,7 @@ function show_rss_news($range_id, $type)
             $description = _('Persönliche Neuigkeiten') . ' ' . $title;
         break;
         case 'sem':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'seminar_main.php?auswahl=' . $range_id;
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/course/overview?cid=' . $range_id;
             $sem_obj = Seminar::GetInstance($range_id);
             if ($sem_obj->read_level > 0) $studip_url .= '&again=yes';
             $title = $sem_obj->getName() . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';

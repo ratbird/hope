@@ -27,15 +27,22 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
         $template->content = $response->body;
 
         if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
-            $navigation = new Navigation('', 'rss.php', array('id' => StudipNews::GetRssIdFromRangeId('studip')));
-            $navigation->setImage('icons/16/blue/rss.png', array('title' => _('RSS-Feed')));
-            $icons[] = $navigation;
+            if ($rss_id = StudipNews::GetRssIdFromRangeId('studip')) {
+                $navigation = new Navigation('', 'rss.php', array('id' => $rss_id));
+                $navigation->setImage('icons/16/blue/rss.png', array('title' => _('RSS-Feed')));
+                $icons[] = $navigation;
+            }
         }
 
         if ($GLOBALS['perm']->have_perm('root')) {
             $navigation = new Navigation('', 'dispatch.php/news/edit_news/new');
             $navigation->setImage('icons/16/blue/add.png', array('rel' => 'get_dialog', 'title' =>_('Ankündigungen bearbeiten')));
             $icons[] = $navigation;
+            if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
+                $navigation = new Navigation('', 'dispatch.php/news/rss_config/studip');
+                $navigation->setImage('icons/16/blue/add/rss.png', array('data-dialog' => 'size=auto', 'title' =>_('RSS-Feed konfigurieren')));
+                $icons[] = $navigation;
+            }
         }
 
         $template->icons = $icons;

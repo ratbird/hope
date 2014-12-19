@@ -9,9 +9,12 @@
     <? foreach ($seminare as $semester => $seminar) :?>
     <b><?= htmlReady($semester) ?></b><br>
 
-        <? foreach ($seminar as $id => $inhalt) :?>
-            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $id))?>">
-                <?= htmlReady($inhalt) ?>
+        <? foreach ($seminar as $one) :?>
+            <a href="<?= URLHelper::getScriptLink('dispatch.php/course/details', array('sem_id' => $one->id))?>">
+                <?= htmlReady($one->getFullname('number-name')) ?>
+                <? if ($one->start_semester !== $one->end_semester) : ?>
+                    (<?= htmlReady($one->getFullname('sem-duration-name')) ?>)
+                <? endif ?>
             </a><br>
         <?endforeach?>
     <?endforeach?>

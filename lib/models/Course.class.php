@@ -323,7 +323,7 @@ class Course extends SimpleORMap
         $template['type-name'] = '%2$s: %1$s';
         $template['number-type-name'] = '%3$s %2$s: %1$s';
         $template['number-name'] = '%3$s %1$s';
-        $template['number-name-semester'] = '%3$s %1$s %4$s';
+        $template['number-name-semester'] = '%3$s %1$s (%4$s)';
         $template['sem-duration-name'] = '%4$s';
         if ($format === 'default' || !isset($template[$format])) {
            $format = Config::get()->IMPORTANT_SEMNUMBER ? 'number-type-name' : 'type-name';
@@ -334,7 +334,7 @@ class Course extends SimpleORMap
         $data[2] = $this->veranstaltungsnummer;
         $data[3] = $this->start_semester->name;
         if ($this->start_semester !== $this->end_semester && (int)$this->status != 99) {
-            $data[3] .= ' - (' .  ($this->end_semester ? $this->end_semester->name : _('unbegrenzt')).')';
+            $data[3] .= ' - ' .  ($this->end_semester ? $this->end_semester->name : _('unbegrenzt'));
         }
         return trim(vsprintf($template[$format], array_map('trim', $data)));
     }

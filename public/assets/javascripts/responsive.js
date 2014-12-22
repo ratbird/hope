@@ -85,6 +85,12 @@
             } else {
                 $(this).closest('li').siblings().slideDown();
             }
+
+            // Force redraw of submenu (at least ios safari/chrome would
+            // not show it without a forced redraw)
+            $(this).siblings('ul').hide(0, function () {
+                $(this).show();
+            })
         }).trigger('change');
     }
 

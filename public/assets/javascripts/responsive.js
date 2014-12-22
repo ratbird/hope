@@ -6,7 +6,7 @@
         return;
     }
 
-    var media_query = window.matchMedia('(max-width: 768px)');
+    var media_query = window.matchMedia('(max-width: 800px)');
 
     // Builds a dom element from a navigation object
     function buildMenu(navigation, path, id) {
@@ -20,21 +20,21 @@
         _.forEach(navigation, function (nav, node) {
             nav.url = STUDIP.URLHelper.getURL(nav.url);
             var subpath = path + '_' + node,
-                li      = $('<li>'),
-                item    = $('<div class="navigation_item">').appendTo(li),
-                title   = $('<div class="nav_title">').appendTo(item),
-                label   = nav.children
-                            ? $('<label>').attr('for', subpath).html(nav.title).appendTo(title)
-                            : $('<a>').text(nav.title).attr('href', nav.url).appendTo(title);
+                li      = $('<li class="navigation-item">'),
+                title   = $('<div class="nav-title">').appendTo(li),
+                link    = $('<a>').text(nav.title).attr('href', nav.url).appendTo(title),
+                icon    = nav.icon || false;
 
-            if (nav.image) {
-                $('<img class="icon">').attr('src', STUDIP.ASSETS_URL + nav.image).prependTo(label);
+            if (icon) {
+                if (!icon.match(/^https?:\/\//)) {
+                    icon = STUDIP.ASSETS_URL + icon;
+                }
+                $('<img class="icon">').attr('src', icon).prependTo(link);
             }
-
-            $('<a class="nav_link">').attr('href', nav.url).appendTo(item);
 
             if (nav.children) {
                 $('<input type="checkbox">').attr('id', subpath).prop('checked', nav.active).appendTo(li);
+                $('<label class="nav-label">').attr('for', subpath).text(' ').appendTo(li);
                 li.append(buildMenu(nav.children, subpath));
             }
 
@@ -46,11 +46,11 @@
 
     // Adds the responsive menu to the dom
     function addMenu() {
-        var wrapper = $('<div id="responsive-navigation">'),
-            menu    = buildMenu(STUDIP.Navigation, 'resp', 'hamburgerNavigation');
+        var wrapper = $('<div id="responsive-container">'),
+            menu    = buildMenu(STUDIP.Navigation, 'resp', 'responsive-navigation');
 
-        $('<label for="hamburgerChecker" class="hamburger">').appendTo(wrapper);
-        $('<input type="checkbox" id="hamburgerChecker">').appendTo(wrapper);
+        $('<label for="responsive-toggle">').appendTo(wrapper);
+        $('<input type="checkbox" id="responsive-toggle">').appendTo(wrapper);
         wrapper.append(menu);
 
         wrapper.appendTo('#barBottomLeft');
@@ -66,20 +66,20 @@
 
         if ($('#layout-sidebar > section > :not(#sidebar-navigation,.sidebar-image)').length > 0) {
             $('<li id="sidebar-menu">').on('click', function () {
-                $('#hamburgerChecker').prop('checked', false);
+                $('#responsive-toggle').prop('checked', false);
                 $('#layout-sidebar').toggleClass('visible-sidebar');
             }).appendTo('#barBottomright ul');
 
-            $('#hamburgerChecker').on('change', function () {
+            $('#responsive-toggle').on('change', function () {
                 $('#layout-sidebar').removeClass('visible-sidebar');
             });
         }
 
-        $('#hamburgerNavigation :checkbox').on('change', function () {
+        $('#responsive-navigation :checkbox').on('change', function () {
             var li = $(this).closest('li');
             if ($(this).is(':checked')) {
-                li.siblings(':not(#hamburgerNavigation > li)').slideUp();
-                if (li.is('#hamburgerNavigation > li')) {
+                li.siblings(':not(#responsive-navigation > li)').slideUp();
+                if (li.is('#responsive-navigation > li')) {
                     li.siblings().find(':checkbox:checked').prop('checked', false);
                 }
             } else {

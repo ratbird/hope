@@ -5856,7 +5856,7 @@ ol ol {
 .plus .helplink {
   float: right;
 }
-#responsive-navigation {
+#responsive-container {
   display: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -5864,49 +5864,62 @@ ol ol {
   -o-user-select: none;
   user-select: none;
 }
-#responsive-navigation input[type="checkbox"] {
+#responsive-container input[type="checkbox"] {
   display: none;
 }
-#responsive-navigation label {
+#responsive-container label {
   cursor: pointer;
 }
-#responsive-navigation ul,
-#responsive-navigation li {
+#responsive-container ul,
+#responsive-container li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-#responsive-navigation li {
+#responsive-container li {
   border-top: 1px solid #899ab9;
 }
-#responsive-navigation a {
+#responsive-container a {
   color: white;
 }
-#responsive-navigation a:hover {
+#responsive-container a:hover {
   color: white;
 }
-#responsive-navigation .nav_link {
-  padding-left: 5px;
+#responsive-container .nav-label {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  border-right: 1px solid #899ab9;
+  padding-right: 2px;
 }
-#responsive-navigation .nav_link:before {
+#responsive-container .nav-label:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
-  height: 20px;
+  height: 24px;
   margin-right: 0;
   background-image: url("../images/icons/32/white/arr_1right.png");
   background-image: none, url("../images/icons/white/arr_1right.svg");
-  -webkit-background-size: 20px 20px;
-  -moz-background-size: 20px 20px;
-  -o-background-size: 20px 20px;
-  background-size: 20px 20px;
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
   vertical-align: text-top;
-  width: 20px;
+  width: 24px;
 }
-#responsive-navigation .nav_link:before {
+#responsive-container .nav-label:before {
+  -webkit-transition: transform 300ms;
+  -moz-transition: transform 300ms;
+  -o-transition: transform 300ms;
+  transition: transform 300ms;
   vertical-align: text-bottom;
 }
-label[for="hamburgerChecker"]:before {
+label[for="responsive-toggle"]:before {
   background-repeat: no-repeat;
   content: ' ';
   display: inline-block;
@@ -5921,13 +5934,13 @@ label[for="hamburgerChecker"]:before {
   vertical-align: text-top;
   width: 20px;
 }
-label[for="hamburgerChecker"]:before {
-  vertical-align: bottom;
+label[for="responsive-toggle"]:before {
+  background-position: left 3px;
 }
-#hamburgerChecker:checked + #hamburgerNavigation {
+#responsive-toggle:checked + #responsive-navigation {
   left: 0;
 }
-#hamburgerNavigation {
+#responsive-navigation {
   background-color: #36598f;
   background-image: -moz-linear-gradient(left, #1e3e70, #36598f);
   background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#1e3e70), to(#36598f));
@@ -5947,57 +5960,37 @@ label[for="hamburgerChecker"]:before {
   top: 35px;
   bottom: 0;
   left: -276px;
-  height: 100%;
-  max-height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   max-width: 270px;
   width: 270px;
+  margin-bottom: 35px;
   border-right: 6px solid rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
-#hamburgerNavigation > li:first-child {
+#responsive-navigation > li:first-child {
   border-top: none;
 }
-#hamburgerNavigation > li .icon {
+#responsive-navigation > li .icon {
   height: 26px;
   display: inline-block;
   padding-right: 8px;
   vertical-align: text-bottom;
   width: 26px;
 }
-#hamburgerNavigation > li > .navigation_item {
+#responsive-navigation > li > .navigation-item {
   font-size: 1.3em;
   margin: 10px;
 }
-#hamburgerNavigation .nav_title {
-  width: 80%;
-  display: inline-block;
+#responsive-navigation .navigation-item {
+  position: relative;
 }
-#hamburgerNavigation .nav_title > label {
+#responsive-navigation .nav-title {
   display: block;
+  padding: 5px 5px 5px 39px;
 }
-#hamburgerNavigation .navigation_item {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-box-flex;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  -moz-box-direction: normal;
-  -moz-box-orient: horizontal;
-  -webkit-box-orient: horizontal;
-  flex-direction: row;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  -webkit-align-content: center;
-  -ms-flex-line-pack: center;
-  align-content: center;
-}
-#hamburgerNavigation ul {
+#responsive-navigation ul {
   -webkit-transition: max-height 400ms ease;
   -moz-transition: max-height 400ms ease;
   -o-transition: max-height 400ms ease;
@@ -6005,26 +5998,63 @@ label[for="hamburgerChecker"]:before {
   max-height: 0px;
   overflow: hidden;
 }
-#hamburgerNavigation ul > li {
+#responsive-navigation ul > li {
   background-color: #899ab9;
 }
-#hamburgerNavigation ul > li > .navigation_item {
+#responsive-navigation ul > li > .navigation-item {
   padding: 10px;
 }
-#hamburgerNavigation ul .icon {
+#responsive-navigation ul .icon {
   display: none;
 }
-#hamburgerNavigation input:checked + ul {
+#responsive-navigation input:checked + label:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 24px;
+  margin-right: 0;
+  background-image: url("../images/icons/32/white/arr_1down.png");
+  background-image: none, url("../images/icons/white/arr_1down.svg");
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
+  vertical-align: text-top;
+  width: 24px;
+}
+.csstransforms #responsive-navigation input:checked + label:before {
+  background-repeat: no-repeat;
+  content: ' ';
+  display: inline-block;
+  height: 24px;
+  margin-right: 0;
+  background-image: url("../images/icons/32/white/arr_1right.png");
+  background-image: none, url("../images/icons/white/arr_1right.svg");
+  -webkit-background-size: 24px 24px;
+  -moz-background-size: 24px 24px;
+  -o-background-size: 24px 24px;
+  background-size: 24px 24px;
+  vertical-align: text-top;
+  width: 24px;
+}
+.csstransforms #responsive-navigation input:checked + label:before {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+#responsive-navigation input:checked + label + ul {
   max-height: 600px;
 }
-#hamburgerNavigation input:checked + ul > li {
+#responsive-navigation input:checked + label + ul > li {
   background-color: rgba(123, 139, 167, 0.6);
 }
 #barBottomright #sidebar-menu {
   cursor: pointer;
   display: none;
   margin: 0 5px;
-  vertical-align: text-bottom;
+  vertical-align: top;
 }
 #barBottomright #sidebar-menu:before {
   background-repeat: no-repeat;
@@ -6041,7 +6071,7 @@ label[for="hamburgerChecker"]:before {
   vertical-align: text-top;
   width: 20px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #header,
   #barTopFont,
   #barTopMenu,
@@ -6079,7 +6109,7 @@ label[for="hamburgerChecker"]:before {
   #barBottomright #sidebar-menu {
     display: inline-block;
   }
-  #responsive-navigation {
+  #responsive-container {
     display: block;
   }
   #layout_page {

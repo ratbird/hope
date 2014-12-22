@@ -1,4 +1,4 @@
-@small-screen-width: 768px;
+@small-screen-width: 800px;
 @header-bar-container-height: 35px;
 
 @responsive-menu-width: 270px;
@@ -6,7 +6,7 @@
 @responsive-menu-shadow-color: rgba(0, 0, 0, 0.5);
 
 // Responsive main navigation (hamburger navigation to the left)
-#responsive-navigation {
+#responsive-container {
     display: none;
 
     .user-select(none);
@@ -33,28 +33,35 @@
         }
     }
 
-    .nav_link {
-        .icon-before('white/arr_1right.svg', 20);
+    .nav-label {
+        .hide-text();
+        .icon-before('white/arr_1right.svg', 24);
         &:before {
+            .transition(transform 300ms);
             vertical-align: text-bottom;
         }
-        //border-left: 1px solid white;
-        padding-left: 5px;
+        
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        
+        border-right: 1px solid @brand-color-lighter;
+        padding-right: 2px;
     }
 }
 
-label[for="hamburgerChecker"] {
+label[for="responsive-toggle"] {
     .icon-before('white/hamburger-icon.svg', 20);
     &:before {
-        vertical-align: bottom;
+        background-position: left 3px;
     }
 }
 
-#hamburgerChecker:checked + #hamburgerNavigation {
+#responsive-toggle:checked + #responsive-navigation {
     left: 0;
 }
 
-#hamburgerNavigation {
+#responsive-navigation {
     #gradient > .horizontal(@brand-color-darker, @brand-color-light);
     .background-clip(content-box);
     .transition(left 300ms);
@@ -64,10 +71,10 @@ label[for="hamburgerChecker"] {
     bottom: 0;
     left: -(@responsive-menu-width + @responsive-menu-shadow-width);
 
-    height: 100%;
-    max-height: 100%;
+    .box-sizing(border-box);
     max-width: @responsive-menu-width;
     width: @responsive-menu-width;
+    margin-bottom: @header-bar-container-height;
 
     border-right: @responsive-menu-shadow-width solid @responsive-menu-shadow-color;
     overflow: auto;
@@ -85,27 +92,19 @@ label[for="hamburgerChecker"] {
             width: 26px;
         }
 
-        > .navigation_item {
+        > .navigation-item {
             font-size: 1.3em;
             margin: 10px;
         }
     }
 
-	.nav_title {
-		> label {
-			display: block;
-		}
+    .navigation-item {
+        position: relative;
+    }
 
-		width: 80%;
-		display: inline-block;
-	}
-
-    .navigation_item {
-        .flex();
-        .flex-direction-row();
-        .flex-wrap(nowrap);
-        .flex-justify-content(space-between);
-        .flex-align-content(center);
+    .nav-title {
+        display: block;
+        padding: 5px 5px 5px 39px;
     }
 
     ul {
@@ -115,7 +114,7 @@ label[for="hamburgerChecker"] {
         overflow: hidden;
         > li {
             background-color: @brand-color-lighter;
-            > .navigation_item {
+            > .navigation-item {
                 padding: 10px;
             }
         }
@@ -124,7 +123,17 @@ label[for="hamburgerChecker"] {
             display: none;
         }
     }
-    input:checked + ul {
+    input:checked + label {
+        .icon-before('white/arr_1down.svg', 24);
+    }
+    .csstransforms & input:checked + label {
+        .icon-before('white/arr_1right.svg', 24);
+        &:before {
+            .rotate(90deg);
+        }
+    }
+
+    input:checked + label + ul {
         max-height: 600px;
         > li {
             background-color: mix(rgba(0, 0, 0, 0.2), @brand-color-lighter);
@@ -138,7 +147,7 @@ label[for="hamburgerChecker"] {
     cursor: pointer;
     display: none;
     margin: 0 5px;
-    vertical-align: text-bottom;
+    vertical-align: top;
 }
 
 
@@ -170,7 +179,7 @@ label[for="hamburgerChecker"] {
     #barBottomright #sidebar-menu {
         display: inline-block;
     }
-    #responsive-navigation {
+    #responsive-container {
         display: block;
     }
 

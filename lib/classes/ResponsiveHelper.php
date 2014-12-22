@@ -28,7 +28,9 @@ class ResponsiveHelper
             $image = $nav->getImage();
 
             $item = array(
-                'icon'   => $image ? self::getAssetsURL($image['src']) : false,
+                'icon'   => ($image && strpos($image['src'], 'blank.gif') === false)
+                          ? self::getAssetsURL($image['src'])
+                          : false,
                 'title'  => $nav->getTitle(),
                 'url'    => self::getURL($nav->getURL()),
                 'active' => $nav->isActive(),

@@ -39,7 +39,7 @@
 
 
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternElement.class.php');
-require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/HTML_Template_IT/ITX.php');
+require_once 'vendor/exTpl/Template.php';
 
 class ExternElementTemplateGeneric extends ExternElement {
 
@@ -117,11 +117,17 @@ class ExternElementTemplateGeneric extends ExternElement {
 
     function toString ($args) {
         $template = $this->config->getValue($this->getName(), 'template');
+        $template = preg_replace(
+            array('/###([\w-]+)###/', '/<!--\s+BEGIN\s+([\w-]+)\s+-->/', '/<!--\s+END\s+[\w-]+\s+-->/'),
+            array('{% $1 %}', '{% foreach $1 %}', '{% endforeach %}'), $template);
+        exTpl\Template::setTagMarkers('{%', '%}');
 
-        if ($args['hide_markers'] !== FALSE) {
-            $args['hide_markers'] = TRUE;
+        try {
+            $template = new exTpl\Template($template);
+            $out = $template->render((array) $args['content'] + (array) $args['content']['__GLOBAL__']);
+        } catch (exTpl\TemplateParserException $ex) {
+            $out = $GLOBALS['EXTERN_ERROR_MESSAGE'] . '<br>' . $ex->getMessage();
         }
-        $out = $this->renderTmpl($template, $args['content'], $args['subpart'], $args['hide_markers']);
 
         return $out;
     }

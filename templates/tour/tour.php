@@ -14,7 +14,7 @@
                     <?= Button::create(_('Position wählen'), 'tour_select_css', array('id' => 'tour_select_css')) ?>
                     <?= Button::create(_('Keine Position'), 'tour_no_css', array('id' => 'tour_no_css')) ?>
                     <?= Button::create(_('Schritt löschen'), 'tour_delete_step', array('id' => 'tour_delete_step')) ?>
-                    <?= LinkButton::create(_('Seitenwechsel'), '', array('id' => 'tour_new_page', 'rel' => 'lightbox')) ?>
+                    <?= LinkButton::create(_('Seitenwechsel'), '', array('id' => 'tour_new_page', 'data-dialog' => 'size=auto')) ?>
                     </div>
                 </td>
                 <td width="120" style="text-align: center">

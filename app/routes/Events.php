@@ -35,7 +35,7 @@ class Events extends \RESTAPI\RouteMap
         $end   = strtotime('+2 weeks');
         $list  = new DbCalendarEventList(new SingleCalendar($user_id, Calendar::PERMISSION_OWN),
                                          $start, $end,
-                                         true, Calendar::getBindSeminare());
+                                         true, Calendar::getBindSeminare($user_id));
 
         $json = array();
         $events = array_slice($list->getAllEvents(), $this->offset, $this->limit); ;

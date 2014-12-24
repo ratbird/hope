@@ -227,7 +227,7 @@ class StartNavigation extends Navigation
             $navigation = new Navigation(_('Mein Planer'));
 
             if (get_config('CALENDAR_ENABLE')) {
-                $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php?caluser=self'));
+                $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'dispatch.php/calendar/single'));
             }
 
             if (get_config('SCHEDULE_ENABLE')) {

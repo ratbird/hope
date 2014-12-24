@@ -2,10 +2,10 @@
 use Studip\Button, Studip\LinkButton;
 
 $cal_views = array(
-    'showday'   => _('Tagesansicht'),
-    'showweek'  => _('Wochenansicht'),
-    'showmonth' => _('Monatsansicht'),
-    'showyear'  => _('Jahresansicht'),
+    'day'   => _('Tagesansicht'),
+    'week'  => _('Wochenansicht'),
+    'month' => _('Monatsansicht'),
+    'year'  => _('Jahresansicht'),
 );
 $cal_deletes = array(
     12 => _('12 Monate nach Ablauf'),

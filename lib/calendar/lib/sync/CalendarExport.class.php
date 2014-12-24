@@ -56,9 +56,9 @@ class CalendarExport
         $this->count = $export_driver->getCount();
 
         if ($this->count == 0) {
-            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _('Es wurden keine Termine exportiert.'));
         } else {
-            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), $export_driver->getCount()));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(ngettext('Es wurde 1 Termin exportiert', 'Es wurden %s Termine exportiert', $export_driver->getCount()), $export_driver->getCount()));
         }
 
         $this->_export($this->_writer->writeFooter());
@@ -77,9 +77,9 @@ class CalendarExport
         }
 
         if (!sizeof($events)) {
-            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _('Es wurden keine Termine exportiert.'));
         } else {
-            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), sizeof($events)));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(ngettext('Es wurde 1 Termin exportiert', 'Es wurden %s Termine exportiert', sizeof($events)), sizeof($events)));
         }
 
         $this->_export($this->_writer->writeFooter());

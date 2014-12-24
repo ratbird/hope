@@ -14,6 +14,8 @@
  * @package     calender
  */
 
+require_once 'app/models/calendar/SingleCalendar.php';
+
 class Calendar_ContentboxController extends StudipController {
 
     /**
@@ -94,12 +96,14 @@ class Calendar_ContentboxController extends StudipController {
     }
 
     private function parseUser($id) {
-        $events = new DbCalendarEventList(new SingleCalendar($range_id, Calendar::PERMISSION_READABLE), $this->start, $this->start + $this->timespan, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
-
+        $restrictions = ($GLOBALS['user']->id == $id ? array() : array('CLASS' => 'PUBLIC'));
+        $events = SingleCalendar::getEventList($id, $this->start,
+                $this->start + $this->timespan, $restrictions);
+        
         // Prepare termine
         $this->termine = array();
 
-        while ($termin = $events->nextEvent()) {
+        foreach ($events as $termin) {
             // Adjust title
             if (date("Ymd", $termin->getStart()) == date("Ymd", time())) {
                 $termin->title .= _("Heute") . date(", H:i", $termin->getStart());

@@ -47,12 +47,13 @@ class CalendarImportFile extends CalendarImport
         $data = '';
         if (!$file = @fopen($this->file['tmp_name'], 'rb')) {
             $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Import-Datei konnte nicht geöffnet werden!"));
-            return FALSE;
+            return false;
         }
 
         if ($file) {
-            while (!feof($file))
+            while (!feof($file)) {
                 $data .= fread($file, 1024);
+            }
             fclose($file);
         }
 
@@ -83,10 +84,11 @@ class CalendarImportFile extends CalendarImport
     function getFileSize()
     {
 
-        if (file_exists($this->file['tmp_name']))
+        if (file_exists($this->file['tmp_name'])) {
             return filesize($this->file['tmp_name']);
+        }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -95,7 +97,7 @@ class CalendarImportFile extends CalendarImport
     function checkFile()
     {
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -107,10 +109,10 @@ class CalendarImportFile extends CalendarImport
 
         if ($this->checkFile()) {
             parent::importIntoDatabase($range_id, $ignore);
-            return TRUE;
+            return true;
         }
         $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
-        return FALSE;
+        return false;
     }
 
     /**
@@ -122,10 +124,10 @@ class CalendarImportFile extends CalendarImport
 
         if ($this->checkFile()) {
             parent::importIntoObjects($ignore);
-            return TRUE;
+            return true;
         }
         $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
-        return FALSE;
+        return false;
     }
 
     /**
@@ -137,10 +139,10 @@ class CalendarImportFile extends CalendarImport
 
         if (!unlink($this->file['tmp_name'])) {
             $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Datei konnte nicht gelöscht werden!"));
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -150,8 +152,9 @@ class CalendarImportFile extends CalendarImport
     {
 
         $i = strrpos($this->file['name'], '.');
-        if (!$i)
+        if (!$i) {
             return '';
+        }
 
         $l = strlen($this->file['name']) - $i;
         $ext = substr($this->file['name'], $i + 1, $l);

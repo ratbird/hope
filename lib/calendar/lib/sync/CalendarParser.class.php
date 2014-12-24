@@ -29,9 +29,9 @@ class CalendarParser
     var $components;
     var $type;
     var $number_of_events;
-    var $public_to_private = FALSE;
+    var $public_to_private = false;
     var $client_identifier;
-    var $import_sem = FALSE;
+    var $import_sem = false;
 
     function CalendarParser()
     {
@@ -42,7 +42,7 @@ class CalendarParser
         $this->client_identifier = '';
     }
 
-    function parse($data, $ignore = NULL)
+    function parse($data, $ignore = null)
     {
 
         foreach ($data as $properties) {
@@ -66,10 +66,10 @@ class CalendarParser
         $database = CalendarDriver::getInstance($range_id);
         if ($this->parseIntoObjects($data, $ignore)) {
             $database->writeObjectsIntoDatabase($this->events, 'REPLACE');
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     function parseIntoObjects($data, $ignore)
@@ -83,12 +83,12 @@ class CalendarParser
                 }
             }
 
-            return TRUE;
+            return true;
         }
 
         $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Import-Daten konnten nicht verarbeitet werden!"), __FILE__, __LINE__);
 
-        return FALSE;
+        return false;
     }
 
     function getType()
@@ -103,12 +103,12 @@ class CalendarParser
         return $objects =& $this->events;
     }
 
-    function changePublicToPrivate($value = TRUE)
+    function changePublicToPrivate($value = true)
     {
         $this->public_to_private = $value;
     }
 
-    function getClientIdentifier($data = NULL)
+    function getClientIdentifier($data = null)
     {
         return $this->client_identifier;
     }

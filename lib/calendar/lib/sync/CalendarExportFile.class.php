@@ -42,8 +42,9 @@ class CalendarExportFile extends CalendarExport
             $this->tmp_file_name = $file_name;
         }
 
-        if ($path == "")
+        if ($path == "") {
             $this->path = "$TMP_PATH/export/";
+        }
 
         $this->_writer = $writer;
     }
@@ -66,7 +67,7 @@ class CalendarExportFile extends CalendarExport
 
     function sendFile()
     {
-        global $CANONICAL_RELATIVE_PATH_STUDIP, $_calendar_error;
+        global $_calendar_error;
 
         if (file_exists($this->path . $this->tmp_file_name)) {
             header('Location: ' . GetDownloadLink($this->tmp_file_name, $this->file_name, 2, 'force'));

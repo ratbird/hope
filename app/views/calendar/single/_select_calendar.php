@@ -1,28 +1,28 @@
-<form name="cal_select_calendars" method="post" action="<?= URLHelper::getLink('', array('cmd' => $cmd, 'atime' => $atime)) ?>">
+<form name="select_calendars" method="post" action="<?= $action_url ?>">
     <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
             <td>
                 <span style="font-size: small; color: #555555;">
-                    <?= _("Kalender auswählen:") ?>
+                    <?= _("Kalender:") ?>
                 </span>
-                <select style="font-size: small;" name="cal_select" onChange="document.cal_select_calendars.submit();">
-                    <option value="user.<?= get_username() ?>"<?= (get_userid() == $_calendar->getId() ? ' selected="selected"' : '') ?>>
+                <select style="font-size: small;" name="range" onChange="document.select_calendars.submit();">
+                    <option value="user.<?= get_username() ?>"<?= (get_userid() == $calendar_id ? ' selected="selected"' : '') ?>>
                             <?= _("Eigener Kalender") ?>
                     </option>
-                    <? $groups = Calendar::getGroups(); ?>
+                    <? $groups = Calendar::getGroups($GLOBALS['user']->id); ?>
                     <? if (sizeof($groups)) : ?>
-                        <option style="font-weight:bold;" value="user.<?= get_username ?>"><?= _("Gruppenkalender:") ?></option>
+                        <option style="font-weight:bold;" value=""><?= _("Gruppenkalender:") ?></option>
                         <? foreach ($groups as $group) : ?>
-                        <option value="group.<?= $group['id'] ?>"<?= ($_calendar->getId() == $group['id'] ? ' selected="selected"' : '') ?>>
+                        <option value="<?= $group['id'] ?>"<?= ($calendar_id == $group['id'] ? ' selected="selected"' : '') ?>>
                              &nbsp; &nbsp;<?= htmlReady(my_substr($group['name'], 0, 30)) ?>
                         </option>
                         <? endforeach ?>
                     <? endif; ?>
-                    <? $users = Calendar::getUsers(); ?>
+                    <? $users = Calendar::getUsers($GLOBALS['user']->id); ?>
                     <? if (sizeof($users)) : ?>
-                        <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Einzelkalender:") ?></option>
+                        <option style="font-weight:bold;" value=""><?= _("Einzelkalender:") ?></option>
                         <? foreach ($users as $user) : ?>
-                        <option value="user.<?= $user['username'] ?>"<?= ($_calendar->getId() == $user['id'] ? ' selected="selected"' : '') ?>>
+                        <option value="<?= $user['id'] ?>"<?= ($calendar_id == $user['id'] ? ' selected="selected"' : '') ?>>
                             &nbsp; &nbsp;<?= htmlReady(my_substr($user['name'] . " ({$user['username']})", 0, 30)) ?>
                         </option>
                         <? endforeach ?>
@@ -39,34 +39,35 @@
                     <? if (sizeof($lecturers)) : ?>
                         <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Dozentenkalender:") ?></option>
                         <? foreach ($lecturers as $lecturer) : ?>
-                        <option value="user.<?= $lecturer['username'] ?>"<?= ($_calendar->getId() == $lecturer['id'] ? ' selected="selected"' : '') ?>>
+                        <option value="<?= $lecturer['id'] ?>"<?= ($calendar_id == $lecturer['id'] ? ' selected="selected"' : '') ?>>
                             &nbsp; &nbsp;<?= htmlReady(my_substr($lecturer['name'] . " ({$lecturer['username']})", 0, 30)) ?>
                         </option>
                         <? endforeach ?>
                     <? endif ?>
                     <? if (get_config('COURSE_CALENDAR_ENABLE')) : ?>
-                        <? $sems = Calendar::GetSeminarActivatedCalendar(); ?>
+                        <? $sems = Calendar::GetSeminarActivatedCalendar($GLOBALS['user']->id); ?>
                         <? if (sizeof($sems)) : ?>
                             <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Veranstaltungskalender:") ?></option>
                             <? foreach ($sems as $sem_id => $sem_name) : ?>
-                            <option value="sem.<?= $sem_id ?>"<?= ($_calendar->getId() == $sem_id ? ' selected="selected"' : '') ?>>
+                            <option value="<?= $sem_id ?>"<?= ($calendar_id == $sem_id ? ' selected="selected"' : '') ?>>
                                 &nbsp; &nbsp;<?= htmlReady(my_substr($sem_name, 0, 30)) ?>
                             </option>
                             <? endforeach ?>
                         <? endif ?>
-                        <? $insts = Calendar::GetInstituteActivatedCalendar(); ?>
+                        <? $insts = Calendar::GetInstituteActivatedCalendar($GLOBALS['user']->id); ?>
                         <? if (sizeof($insts)) : ?>
                             <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Einrichtungskalender:") ?></option>
                             <? foreach ($insts as $inst_id => $inst_name) : ?>
-                            <option value="inst.<?= $inst_id ?>"<?= ($_calendar->getId() == $inst_id ? ' selected="selected"' : '') ?>>
+                            <option value="<?= $inst_id ?>"<?= ($calendar_id == $inst_id ? ' selected="selected"' : '') ?>>
                                 &nbsp; &nbsp;<?= htmlReady(my_substr($inst_name, 0, 30)); ?>
                             </option>
                             <? endforeach ?>
                         <? endif ?>
                     <? endif ?>
                 </select>
+                <input type="hidden" name="view" value="<?= $view ?>">
                 <span style="font-size: small; color: #555555; white-space: nowrap;">
-                    <?= Assets::input('icons/16/blue/accept.png', array('class' => 'text-top')) ?>
+                    <input type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" border="0" class="text-top">
                 </span>
             </td>
         </tr>

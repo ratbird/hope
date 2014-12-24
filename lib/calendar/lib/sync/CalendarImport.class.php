@@ -27,9 +27,9 @@ class CalendarImport
 
     var $_parser;
     var $data;
-    var $public_to_private = FALSE;
+    var $public_to_private = false;
 
-    function CalendarImport(&$parser, $data = NULL)
+    function CalendarImport(&$parser, $data = null)
     {
         // initialize error handler
         init_error_handler('_calendar_error');
@@ -37,12 +37,6 @@ class CalendarImport
         $this->_parser = $parser;
         $this->data = $data;
     }
-
-    /*  function setParser (&$parser) {
-
-      $this->_parser = $parser;
-      }
-     */
 
     function getContent()
     {
@@ -52,19 +46,21 @@ class CalendarImport
     function importIntoDatabase($range_id, $ignore = 'IGNORE_ERRORS')
     {
         $this->_parser->changePublicToPrivate($this->public_to_private);
-        if ($this->_parser->parseIntoDatabase($range_id, $this->getContent(), $ignore))
-            return TRUE;
+        if ($this->_parser->parseIntoDatabase($range_id, $this->getContent(), $ignore)) {
+            return true;
+        }
 
-        return FALSE;
+        return false;
     }
 
     function importIntoObjects($ignore = 'IGNORE_ERRORS')
     {
         $this->_parser->changePublicToPrivate($this->public_to_private);
-        if ($this->_parser->parseIntoObjects($this->getContent(), $ignore))
-            return TRUE;
+        if ($this->_parser->parseIntoObjects($this->getContent(), $ignore)) {
+            return true;
+        }
 
-        return FALSE;
+        return false;
     }
 
     function getObjects()
@@ -94,9 +90,9 @@ class CalendarImport
     function setImportSem($do_import)
     {
         if ($do_import) {
-            $this->_parser->import_sem = TRUE;
+            $this->_parser->import_sem = true;
         } else {
-            $this->_parser->import_sem = FALSE;
+            $this->_parser->import_sem = false;
         }
     }
 

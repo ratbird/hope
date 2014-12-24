@@ -24,7 +24,7 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/CalendarEvent.class.php");
 class CalendarParserICalendar extends CalendarParser
 {
 
-    var $count = NULL;
+    var $count = null;
 
     function CalendarParserICalendar()
     {
@@ -74,18 +74,18 @@ class CalendarParserICalendar extends CalendarParser
         $v_calendar = utf8_decode($data);
         if (!preg_match('/BEGIN:VCALENDAR(\r\n|\r|\n)([\W\w]*)END:VCALENDAR\r?\n?/', $v_calendar, $matches)) {
             $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Import-Datei ist keine gültige iCalendar-Datei!"));
-            return FALSE;
+            return false;
         }
 
         // client identifier
         if (!$this->_parseClientIdentifier($matches[2])) {
-            return FALSE;
+            return false;
         }
 
         // All sub components
         if (!preg_match_all('/BEGIN:VEVENT(\r\n|\r|\n)([\w\W]*?)END:VEVENT(\r\n|\r|\n)/', $matches[2], $v_events)) {
             $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _("Die importierte Datei enthält keine Termine."));
-            return TRUE;
+            return true;
         }
 
         if ($this->count) {
@@ -167,7 +167,7 @@ class CalendarParserICalendar extends CalendarParser
                         case 'DTEND':
                             // checking for day events
                             if ($params['VALUE'] == 'DATE')
-                                $check['DAY_EVENT'] = TRUE;
+                                $check['DAY_EVENT'] = true;
                         case 'DUE':
                         case 'RECURRENCE-ID':
                             $properties[$tag] = $this->_parseDateTime($value);
@@ -299,7 +299,7 @@ class CalendarParserICalendar extends CalendarParser
                 if (!$properties['DTSTART'] || ($properties['EXDATE'] && !$properties['RRULE'])) {
                     $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei ist keine gültige iCalendar-Datei!"));
                     $this->count = 0;
-                    return FALSE;
+                    return false;
                 }
 
                 if (!$properties['DTEND'])
@@ -327,12 +327,12 @@ class CalendarParserICalendar extends CalendarParser
             } else {
                 $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei ist keine gültige iCalendar-Datei!"));
                 $this->count = 0;
-                return FALSE;
+                return false;
             }
             $this->count++;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -350,7 +350,7 @@ class CalendarParserICalendar extends CalendarParser
             }
             return $offset;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -415,7 +415,7 @@ class CalendarParserICalendar extends CalendarParser
             }
             return $time;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -425,7 +425,7 @@ class CalendarParserICalendar extends CalendarParser
     function _parseDate($text)
     {
         if (strlen(trim($text)) != 8) {
-            return FALSE;
+            return false;
         }
 
         $date['year'] = intval(substr($text, 0, 4));
@@ -466,7 +466,7 @@ class CalendarParserICalendar extends CalendarParser
 
             return $duration;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -567,7 +567,7 @@ class CalendarParserICalendar extends CalendarParser
         $wdays_map = array('MO' => '1', 'TU' => '2', 'WE' => '3', 'TH' => '4', 'FR' => '5',
             'SA' => '6', 'SU' => '7');
         $wdays = "";
-        $sinterval = NULL;
+        $sinterval = null;
         foreach ($matches as $match) {
             $wdays .= $wdays_map[$match[2]];
             if ($match[1]) {
@@ -582,14 +582,14 @@ class CalendarParserICalendar extends CalendarParser
             }
         }
 
-        return $wdays ? array('wdays' => $wdays, 'sinterval' => $sinterval) : FALSE;
+        return $wdays ? array('wdays' => $wdays, 'sinterval' => $sinterval) : false;
     }
 
     function _parseByMonthDay($text)
     {
         $days = explode(',', $text);
         if (sizeof($days) > 1 || ((int) $days[0]) < 0)
-            return FALSE;
+            return false;
 
         return $days[0];
     }
@@ -598,7 +598,7 @@ class CalendarParserICalendar extends CalendarParser
     {
         $months = explode(',', $text);
         if (sizeof($months) > 1)
-            return FALSE;
+            return false;
 
         return $months[0];
     }
@@ -616,18 +616,18 @@ class CalendarParserICalendar extends CalendarParser
         if ($this->client_identifier == '') {
             if (!preg_match('/PRODID((;[\W\w]*)*):([\W\w]+?)(\r\n|\r|\n)/', $data, $matches)) {
                 $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei ist keine gültige iCalendar-Datei!"));
-                return FALSE;
+                return false;
             } elseif (!trim($matches[3])) {
                 $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei ist keine gültige iCalendar-Datei!"));
-                return FALSE;
+                return false;
             } else {
                 $this->client_identifier = trim($matches[3]);
             }
         }
-        return TRUE;
+        return true;
     }
     
-    function getClientIdentifier($data = NULL)
+    function getClientIdentifier($data = null)
     {
         if (!is_null($data)) {
             $this->_parseClientIdentifier($data);

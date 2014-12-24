@@ -52,17 +52,20 @@ class CalendarNavigation extends Navigation
         // calendar
         $atime = $atime ? intval($atime) : Request::int($atime);
         if (get_config('CALENDAR_ENABLE')) {
-            $navigation = new Navigation(_('Terminkalender'), 'calendar.php', array('caluser' => 'self'));
-            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday', 'atime' => $atime)));
-            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek', 'atime' => $atime)));
-            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth', 'atime' => $atime)));
-            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear', 'atime' => $atime)));
-            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit', 'atime' => $atime)));
+            $navigation = new Navigation(_('Terminkalender'), 'dispatch.php/calendar/single');
+            /*
+            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'dispatch.php/calendar/single/day', array('atime' => $atime)));
+            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'dispatch.php/calendar/single/week', array('atime' => $atime)));
+            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'dispatch.php/calendar/single/month', array('atime' => $atime)));
+            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'dispatch.php/calendar/single/year', array('atime' => $atime)));
+            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'dispatch.php/calendar/single/edit', array('atime' => $atime)));
             $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungstermine'), 'calendar.php', array('cmd' => 'bind', 'atime' => $atime)));
-            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export', 'atime' => $atime)));
+            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'dispatch.php/calendar/single/export', array('atime' => $atime)));
             if (get_config('CALENDAR_GROUP_ENABLE')) {
                 $navigation->addSubNavigation('admin_groups', new Navigation(_('Kalendergruppen'), 'contact_statusgruppen.php', array('nav' => 'calendar')));
             }
+             * 
+             */
             $this->addSubNavigation('calendar', $navigation);
         }
     }

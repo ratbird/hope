@@ -42,9 +42,6 @@ require_once ('lib/datei.inc.php');
 require_once ('lib/dates.inc.php');
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
-if (get_config('CALENDAR_ENABLE')) {
-    require_once ('lib/calendar/lib/Calendar.class.php');
-}
 
 class AdminModules extends ModulesNotification {
 
@@ -273,18 +270,7 @@ class AdminModules extends ModulesNotification {
 
     function getModuleCalendarExistingItems($range_id)
     {
-        $calendar_connect = CalendarDriver::GetInstance($range_id);
-        $calendar_connect->openDatabase('COUNT', 'CALENDAR_EVENTS');
-        return $calendar_connect->getCountEvents();
+        return CalendarEvent::countBySql('range_id = ?', array($range_id));
     }
-
-    /*function moduleCalendarDeactivate($range_id)
-    {
-        $calendar_connect = CalendarDriver::GetInstance($range_id);
-        if ($deleted = $calendar_connect->deleteFromDatabase('ALL')) {
-            return $deleted;
-        }
-        return 0;
-    }*/
 
 }

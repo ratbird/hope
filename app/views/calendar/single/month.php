@@ -72,7 +72,8 @@
                                         <span style="color: #aaaaaa; display: block;" class="inday"><?= $hday['name'] ?></span>
                                     <? endif; ?>
                                     <? foreach ($calendars[$j]->events as $event) : ?>
-                                        <span style="color: <?= $event->getCategoryStyle()['color'] ?>; display: block;"><a class="inday" href="<?= $controller->url_for('', array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a></span>
+                                        <? $category_style = $event->getCategoryStyle(); ?>
+                                        <span style="color: <?= $category_style['color'] ?>; display: block;"><a class="inday" href="<?= $controller->url_for('', array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a></span>
                                     <? endforeach; ?>
                                     </td>
                                         <td class="lightmonth" align="center" width="90" height="80">
@@ -92,7 +93,8 @@
                                         </a>
                                     <? endif; ?>
                                     <? foreach ($calendars[$j]->events as $event) : ?>
-                                        <span style="color: <?= $event->getCategoryStyle()['color'] ?>; display: block;"><a class="inday" href="<?= $controller->url_for('', array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a></span>
+                                        <? $category_style = $event->getCategoryStyle(); ?>
+                                        <span style="color: <?= $category_style['color'] ?>; display: block;"><a class="inday" href="<?= $controller->url_for('', array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a></span>
                                     <? endforeach; ?>
                                     </td>
                                 <? endif; ?>

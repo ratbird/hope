@@ -41,10 +41,6 @@ require_once 'vendor/phpass/PasswordHash.php';
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
 }
-if (get_config('CALENDAR_ENABLE')) {
-    include_once ($GLOBALS['RELATIVE_PATH_CALENDAR']
-    . "/lib/driver/{$GLOBALS['CALENDAR_DRIVER']}/CalendarDriver.class.php");
-}
 if (get_config('ELEARNING_INTERFACE_ENABLE')){
     require_once ($GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php");
 }
@@ -1005,14 +1001,17 @@ class UserManagement
         $query = "DELETE FROM user_studiengang WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
-        if (($db_ar = $statement->rowCount()) > 0)
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studiengängen gelöscht."), $db_ar) . "§";
+        }
 
         // delete all private appointments of this user
         if (get_config('CALENDAR_ENABLE')) {
-            $calendar = new CalendarDriver($this->user_data['auth_user_md5.user_id']);
-            if ($appkills = $calendar->deleteFromDatabase('ALL'))
+            $appkills = CalendarEvent::deleteBySQL('range_id = ?',
+                    array($this->user_data['auth_user_md5.user_id']));
+            if ($appkills) {
                 $this->msg .= "info§" . sprintf(_("%s Einträge aus den Terminen gelöscht."), $appkills) ."§";
+            }
         }
 
         // delete all messages send or received by this user

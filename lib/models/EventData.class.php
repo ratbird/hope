@@ -40,4 +40,11 @@ class EventData extends SimpleORMap
         
     }
     
+    public static function garbageCollect()
+    {
+        DBManager::get()->query('DELETE event_data '
+                . 'FROM calendar_event LEFT JOIN event_data USING(event_id)'
+                . 'WHERE range_id IS NULL');
+    }
+    
 }

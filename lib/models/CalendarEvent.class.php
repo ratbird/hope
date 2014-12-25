@@ -56,6 +56,12 @@ class CalendarEvent extends SimpleORMap implements Event
         parent::configure($config);
     }
 
+    public static function deleteBySQL($where, $params = array())
+    {
+        parent::deleteBySQL($where, $params);
+        EventData::garbageCollect();
+    }
+    
     /**
      * Returns a list of all categories the event belongs to.
      * Returns an empty string if no permission.

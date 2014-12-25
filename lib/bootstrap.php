@@ -59,6 +59,7 @@ namespace {
     require 'config.inc.php';
 
     require_once 'lib/functions.php';
+    require_once 'lib/visual.inc.php';
     require_once 'lib/deputies_functions.inc.php';
     require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';
 

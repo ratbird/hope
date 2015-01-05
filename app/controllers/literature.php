@@ -17,7 +17,7 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once('lib/classes/StudipLitList.class.php');
+require_once 'lib/msg.inc.php';
 
 class LiteratureController extends AuthenticatedController
 {
@@ -42,7 +42,7 @@ class LiteratureController extends AuthenticatedController
         $this->attributes['date'] = array();
         $this->attributes['combo'] = array('style' => 'width:45%; display: inline;');
         $this->attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
-        
+
         // on AJAX request set no page layout.
         if (Request::isXhr()) {
             $this->via_ajax = true;
@@ -73,11 +73,11 @@ class LiteratureController extends AuthenticatedController
             (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->return_range))){
                 throw new AccessDeniedException(_('Keine Berechtigung in diesem Bereich.'));
         }
-        
+
         PageLayout::setTitle(_("Literatur importieren"));
         require_once ('lib/classes/StudipLitListViewAdmin.class.php');
         require_once ('lib/classes/StudipLitClipBoard.class.php');
-        
+
         $this->plugin_name  = Request::quoted('plugin_name');
         $plugin = array();
 
@@ -89,14 +89,14 @@ class LiteratureController extends AuthenticatedController
                 }
             }
     }
-    
+
     /**
      * Displays a page for literature list administration.
      */
     public function edit_list_action()
     {
         global $_msg;
-        
+
         if (Request::option('_range_id') == "self"){
             $this->_range_id = $GLOBALS['user']->id;
         } else if (Request::option('_range_id')){
@@ -111,13 +111,13 @@ class LiteratureController extends AuthenticatedController
             $this->_range_id = $GLOBALS['user']->id;
         }
         $_SESSION['_lit_range'] = $this->_range_id;
-        
+
         require_once ('lib/classes/StudipLitListViewAdmin.class.php');
         require_once ('lib/classes/StudipLitClipBoard.class.php');
         require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
         PageLayout::setHelpKeyword("Basis.LiteraturListen");
         PageLayout::setTitle(_("Verwaltung von Literaturlisten"));
-        
+
         if (Request::option('list') || Request::option('view') || Request::option('view_mode') || $this->_range_id != $GLOBALS['user']->id){
             Navigation::activateItem('/course/literature/edit');
             $this->_range_id = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->_range_id;
@@ -139,11 +139,11 @@ class LiteratureController extends AuthenticatedController
             StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $this->plugin_name, $this->_range_id);
         }
         $this->msg = $_msg;
-        
+
         PageLayout::setTitle($_the_tree->root_name . " - " . PageLayout::getTitle());
 
         include 'lib/include/admin_search_form.inc.php';
-        
+
         //checking rights
         if (($_the_tree->range_type == "sem" && !$GLOBALS['perm']->have_studip_perm("tutor", $this->_range_id)) ||
             (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->_range_id))){
@@ -195,7 +195,7 @@ class LiteratureController extends AuthenticatedController
                 }
             }
         }
-        
+
         $this->lists = $_the_tree->getKids('root');
         if ($this->lists) {
             $this->list_count['visible'] = 0;
@@ -217,7 +217,7 @@ class LiteratureController extends AuthenticatedController
         $this->clipboard = $_the_clipboard;
         $this->clip_form = $_the_clip_form;
     }
-    
+
     /**
      * Displays print view of literature list
      */
@@ -233,7 +233,7 @@ class LiteratureController extends AuthenticatedController
         $this->title = sprintf(_("Literatur %s"), $_the_tree->root_name);
         $this->list = StudipLitList::GetFormattedListsByRange($_range_id, false, false);
     }
-    
+
     /**
      * Displays page for literature search
      */
@@ -254,7 +254,7 @@ class LiteratureController extends AuthenticatedController
             $this->return_range = $GLOBALS['user']->id;
         }
         $_SESSION['_lit_range'] = $this->return_range;
-        
+
         if ($this->return_range != $GLOBALS['user']->id) {
             Navigation::activateItem('/course/literature/search');
             $this->return_range = ($_SESSION['SessSemName'][1]) ? $_SESSION['SessSemName'][1] : $this->return_range;
@@ -262,7 +262,7 @@ class LiteratureController extends AuthenticatedController
             Navigation::activateItem('/tools/literature/search');
             closeObject();
         }
-        
+
         $_the_search = new StudipLitSearch();
         $_the_clipboard = StudipLitClipBoard::GetInstance();
         $_the_clip_form = $_the_clipboard->getFormObject();
@@ -270,7 +270,7 @@ class LiteratureController extends AuthenticatedController
         if (Request::quoted('change_start_result')){
             $_the_search->start_result = Request::quoted('change_start_result');
         }
-        
+
         if ($_the_clip_form->isClicked("clip_ok")){
             $_the_clipboard->doClipCmd();
         }
@@ -317,13 +317,13 @@ class LiteratureController extends AuthenticatedController
 
         $_msg .= $_the_clipboard->msg;
         $_msg .= $_the_search->search_plugin->getError("msg");
-        
+
         $this->msg = $_msg;
         $this->search = $_the_search;
         $this->clipboard = $_the_clipboard;
         $this->clip_form = $_the_clip_form;
     }
-    
+
     /**
      * Displays page to add new or edit existing literature element
      */
@@ -347,7 +347,7 @@ class LiteratureController extends AuthenticatedController
         }
         PageLayout::setTitle($title);
         Navigation::activateItem('/tools/literature');
-        
+
         //dump data into db if $_catalog_id points to a search result
         if ($_catalog_id{0} == "_"){
             $parts = explode("__", $_catalog_id);
@@ -474,7 +474,7 @@ class LiteratureController extends AuthenticatedController
             PageLayout::postMessage(MessageBox::info(_('Sie haben diesen Eintrag nicht selbst vorgenommen, und dürfen ihn daher nicht verändern! Wenn Sie mit diesem Eintrag arbeiten wollen, können Sie sich eine persönliche Kopie erstellen.')));
         $_msg .= $_the_element->msg;
         $_msg .= $_the_clipboard->msg;
-        
+
         $this->msg = $_msg;
         $this->catalog_id = $_catalog_id;
         $this->element = $_the_element;

@@ -68,10 +68,11 @@ class CoreSchedule implements StudipModule {
                 				   'Orientierung und zur inhaltlichen Einstimmung der Studierenden '.
                 				   'können Lehrende den Terminen Themen hinzufügen, die z. B. eine '.
                 				   'Kurzbeschreibung der Inhalte darstellen.'),    		
-        	'screenshot' => 'Ablaufplan/Ablaufplan_nach_Terminen.png',
+        	'icon' => 'icons/16/black/schedule.png',
+        	'screenshot' => 'plus/screenshots/Ablaufplan/Ablaufplan_nach_Terminen.png',
         	'additionalscreenshots' => array(
-        		'Ablaufplan/Ablaufplan_nach_Themen.png',
-        		'Ablaufplan/Einzelner_Termin_mit_Beschreibung.png'
+        		'plus/screenshots/Ablaufplan/Ablaufplan_nach_Themen.png',
+        		'plus/screenshots/Ablaufplan/Einzelner_Termin_mit_Beschreibung.png'
         	)
         );
     }

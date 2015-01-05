@@ -107,7 +107,7 @@ class ProfileModulesController extends AuthenticatedController
 
 
         $widget = new OptionsWidget();
-        $widget->setTitle(_('Kategorie Links'));
+        $widget->setTitle(_('Kategorien'));
 
         foreach ($_SESSION['profile_plus']['Kategorie'] as $key => $val) {
             if ($key == 'Sonstiges') continue;
@@ -177,7 +177,7 @@ class ProfileModulesController extends AuthenticatedController
     {
 
         $this->sortedList = $this->getSortedList();
-        if (Request::submitted('deleteContent')) $this->deleteContent($plugmodlist);
+        if (Request::submitted('deleteContent')) $this->deleteContent($this->sortedList);
     }
 
     /**

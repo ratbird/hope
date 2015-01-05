@@ -73,7 +73,8 @@ class CoreLiterature implements StudipModule {
                 				   'aus anderen Literaturverwaltungsprogrammen (z. B. Citavi und '.
                 				   'Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
                 				   'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann '.
-                				   'im tatsächlichen Buchbestand der Hochschule recherchiert werden.')
+                				   'im tatsächlichen Buchbestand der Hochschule recherchiert werden.'),
+        	'icon' => 'icons/16/black/literature.png'        		 
         );
      }
 }

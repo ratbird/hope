@@ -145,7 +145,8 @@ class CoreWiki implements StudipModule {
                     'erstellt eine Versionshistorie, mit der Änderungen nachvollziehbar werden. Einzelne Versionen '.
                     'können zudem auch gelöscht werden (nur Lehrende). Ein Export als pdf-Datei ist integriert.'),
             'category' => _('Kommunikation und Zusammenarbeit'),
-        	'screenshot' => 'Wiki-Web/Gemeinsam_erstellte_Texte.jpg'                
+        	'icon' => 'icons/16/black/wiki.png',
+        	'screenshot' => 'plus/screenshots/Wiki-Web/Gemeinsam_erstellte_Texte.jpg'                
         );
     }
 }

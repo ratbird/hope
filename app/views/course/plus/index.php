@@ -20,7 +20,7 @@ use Studip\Button, Studip\LinkButton;
 <?= CSRFProtection::tokenTag() ?>
 
 <table class="default nohover plus">
-<caption><?=_("Inhaltselemente")?></caption>
+<!-- <caption><?=_("Inhaltselemente")?></caption> -->
 <tbody>
 <?
 foreach ($available_modules as $category => $pluginlist) {
@@ -69,7 +69,7 @@ foreach ($available_modules as $category => $pluginlist) {
 
             $pluginname = $modul['name'];
             
-            $URL = $GLOBALS['ASSETS_URL'].'images/plus/screenshots';
+            $URL = $GLOBALS['ASSETS_URL'].'images';
 
             if ($sem_class) {
                 $studip_module = $sem_class->getModule($sem_class->getSlotModule($val['modulkey']));
@@ -204,8 +204,9 @@ foreach ($available_modules as $category => $pluginlist) {
                         <div class="descriptionbox">
 
                             <!-- inhaltlöschenbutton -->
-                            <? if (method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
-
+                            <? if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+ 			    <? if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+                           	
                             <!-- tags -->
                             <? if (isset($info['keywords'])) : ?>
                                 <ul class="keywords">

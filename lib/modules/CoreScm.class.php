@@ -130,9 +130,10 @@ class CoreScm implements StudipModule {
                 				   'eingegeben und formatiert werden kann. Oft wird die Seite für die Angabe von '.
                 				   'Literatur genutzt als Alternative zum Inhaltselement Literatur. Sie kann aber '.
                 				   'auch für andere beliebige Zusatzinformationen (Links, Protokolle etc.) verwendet werden.'),
-        	'screenshot' => 'Freie_Informationsseite/Zwei_Einträge_mit_Inhalten_zur_Verfügung_stellen.jpg',
+        	'icon' => 'icons/16/black/infopage.png',
+        	'screenshot' => 'plus/screenshots/Freie_Informationsseite/Zwei_Einträge_mit_Inhalten_zur_Verfügung_stellen.jpg',
         	'additionalscreenshots' => array(
-        		'Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg'
+        		'plus/screenshots/Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg'
         	)
         	
         );

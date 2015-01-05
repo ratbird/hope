@@ -85,7 +85,7 @@ class Course_PlusController extends AuthenticatedController
         $this->setupSidebar();
         $this->available_modules = $this->getSortedList();
 
-        if (Request::submitted('deleteContent')) $this->deleteContent($plugmodlist);
+        if (Request::submitted('deleteContent')) $this->deleteContent($this->available_modules);
     }
 
 
@@ -149,7 +149,7 @@ class Course_PlusController extends AuthenticatedController
 
 
         $widget = new OptionsWidget();
-        $widget->setTitle(_('Kategorie Links'));
+        $widget->setTitle(_('Kategorien'));
 
         foreach ($_SESSION['plus']['Kategorie'] as $key => $val) {
 

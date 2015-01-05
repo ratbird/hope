@@ -101,7 +101,8 @@ class CoreParticipants implements StudipModule {
                 				   'gibt es die Möglichkeiten für Lehrende, eine Rundmail an alle zu schreiben '.
                 				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehrorganisation'),
-        	'screenshot' => 'TeilnehmerInnen/TeilnehmerInnen.png' 
+        	'icon' => 'icons/16/black/persons.png',
+        	'screenshot' => 'plus/screenshots/TeilnehmerInnen/TeilnehmerInnen.png' 
         );
     }
 }

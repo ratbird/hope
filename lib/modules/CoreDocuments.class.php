@@ -119,12 +119,13 @@ class CoreDocuments implements StudipModule {
                 				   'sofort angezeigt bzw. abspielbar dargesellt. Über das PlugIn "Dateiordnerberechtigung" '.
                 				   'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. '.
                 				   'das Leserecht ®, festgelegt werden.'),
-        	'screenshot' => 'Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_geöffnetem_Ordner.jpg',
+        	'icon' => 'icons/16/black/files.png',
+        	'screenshot' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_geöffnetem_Ordner.jpg',
         	'additionalscreenshots' => array(
-        		'Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_Dateiinformationen.jpg',
-        		'Dateibereich_-_Dateiordnerberechtigung/Neuen_Ordner_erstellen.jpg',
-        		'Dateibereich_-_Dateiordnerberechtigung/Ordner_zum_Hausaufgabenordner_umwandeln.jpg',
-        		'Dateibereich_-_Dateiordnerberechtigung/Ansicht_alle_Dateien.jpg'	
+        		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_Dateiinformationen.jpg',
+        		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Neuen_Ordner_erstellen.jpg',
+        		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordner_zum_Hausaufgabenordner_umwandeln.jpg',
+        		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ansicht_alle_Dateien.jpg'	
         	)
         		
         );

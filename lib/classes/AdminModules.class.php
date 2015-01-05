@@ -97,9 +97,21 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["documents_folder_permissions"]['preconditions'] = array('documents');
         $this->registered_modules["documents_folder_permissions"]['metadata'] = array(
                 'summary' => _("Dateiordnerberechtigungen"),
-                'descriptionshort' => _("Vergabe von Rechten für Dateiordner, z.B. Lese- oder Schreibrechte "),
+                'descriptionshort' => _("Vergabe von Rechten für Dateiordner für teilnehmende Studierende (AutorInnen)"),
                 'category' => _("Lehrorganisation"),
-                'description' => _('Mit den Einstellungen zur Dateiordnerberechtigung können Lehrende die Zugriffsrechte für Ordner im Dateibereich verändern. Wird z. B. das Leserecht entfernt, entsteht ein Hausaufgabenordner, in den Studierende Dateien zwar hochladen, aber nicht sehen können, welche Dateien sich noch im Ordner befinden. Es gibt vier Einstellungsmöglichkeiten, die miteinander kombiniert werden können (Lesen, Schreiben, Sehen, Ordner anlegen). Beim Einschalten bestimmter PlugIns wird die Dateiordnerberechtigung automatisch eingeschaltet (z. B. bei Elmo).')
+        		'keywords' => _('Lesen, Schreiben, Sichtbarkeit, Ordner erstellen;
+								Das Recht "Lesen" ®: Dateien können geöffnet und heruntergeladen werden;
+								Das Recht "Schreiben" (w): Studierende können Dateien hochladen;
+								Das Recht "Sichtbarkeit" (x): Ordner wird angezeigt;
+								Das Recht "Ordner erstellen" (f): Studierende können Unterordner anlegen'),
+        		'icon' => 'icons/16/black/files.png',
+        		'screenshot' => 'plus/screenshots/Dateiordnerberechtigung/Ordner_zum_Hausaufgabenordner_umwandeln.jpg',
+        		        		
+                'description' => _('Mit den Einstellungen zur Dateiordnerberechtigung können Lehrende die Zugriffsrechte für Ordner '.
+                				   'im Dateibereich verändern. Wird z. B. das Leserecht entfernt, entsteht ein Hausaufgabenordner, '.
+                				   'in den Studierende Dateien zwar hochladen, aber nicht sehen können, welche Dateien sich noch im Ordner befinden. '.
+                				   'Es gibt vier Einstellungsmöglichkeiten, die miteinander kombiniert werden können (Lesen, Schreiben, Sehen, Ordner anlegen). '.
+                				   'Beim Einschalten bestimmter PlugIns wird die Dateiordnerberechtigung automatisch eingeschaltet (z. B. bei Elmo).')
             );
         if (get_config('CALENDAR_GROUP_ENABLE')) {
             $this->registered_modules["calendar"]["name"] = _("Kalender");

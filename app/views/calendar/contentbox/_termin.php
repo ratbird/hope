@@ -11,7 +11,7 @@
                 <?= $termin['room'] ? _('Raum') . ': ' . htmlReady($termin['room']) : '' ?>
             </span>
             <? if($admin && $isProfile): ?>
-            <a href="<?= URLHelper::getLink("calendar.php", array('cmd' => 'edit', 'termin_id' => $termin['id'], 'atime' => time(), 'source_page' => 'dispatch.php/profile')) ?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/event/' . $termin['id'], array('source_page' => 'dispatch.php/profile')) ?>">
                 <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
             </a>
             <? endif; ?>

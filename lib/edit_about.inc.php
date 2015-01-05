@@ -595,8 +595,7 @@ class about extends messaging
         $news = StudipNews::GetNewsByRange($this->auth_user['user_id'], true);
         // Non-private dates.
         if ($GLOBALS["CALENDAR_ENABLE"]) {
-            $dates = new DbCalendarEventList(new SingleCalendar($this->auth_user['user_id']), time(), -1, TRUE);
-            $dates = $dates->events;
+            $dates = CalendarEvent::countBySql('range_id = ?', array($this->auth_user['user_id']));
         }
         // Votes
         if (get_config('VOTE_ENABLE')) {

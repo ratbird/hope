@@ -8,7 +8,7 @@
         <nav>
     <? if ($admin): ?>
         <? if ($isProfile): ?>
-        <a href="<?= URLHelper::getLink("calendar.php", array('cmd' => 'edit', 'termin_id' => $termin->id, 'source_page' => 'dispatch.php/profile')) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/event/' . $termin->id, array('source_page' => 'dispatch.php/profile')) ?>">
             <?= Assets::img('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
         </a>
         <? else: ?>

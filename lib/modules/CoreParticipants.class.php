@@ -86,13 +86,22 @@ class CoreParticipants implements StudipModule {
                 'Möglichkeiten, eine Rundmail an alle zu schreiben (nur '.
                 'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'displayname' => _('TeilnehmerInnen'),
+        	'keywords' => _('Rundmailfunktion an alle, einzelne oder mehrere Teilnehmenden;
+							Gruppierung nach Lehrenden, TutorInnen und teilnehmenden Studierenden (AutorInnen);
+							Aufnahme neuer teilnehmender Studierender (AutorInnen) und TutorInnen;
+							Import einer Teilnehmendenliste;
+							Export der Teilnehmendenliste;
+							Funktionen und Gruppen einrichten;
+							Anzeige Studiengang und Fachsemester'),
             'descriptionshort' => _('Liste aller Teilnehmenden einschließlich Nachrichtenfunktionen'),
-            'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Funktion '.
-                'in einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum als auch der '.
-                'Studiengang mit Semesterangabe dargestellt. Die Liste kann in verschiedene Formate '.
-                'exportiert werden. Außerdem gibt es die Möglichkeiten, eine Rundmail an alle zu schreiben '.
-                '(nur Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
-            'category' => _('Lehrorganisation')  
+            'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Rolle '.
+                				   'in einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum '.
+                				   'als auch der Studiengang mit Semesterangabe der Studierenden dargestellt. '.
+                				   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem '.
+                				   'gibt es die Möglichkeiten für Lehrende, eine Rundmail an alle zu schreiben '.
+                				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
+            'category' => _('Lehrorganisation'),
+        	'screenshot' => 'TeilnehmerInnen/TeilnehmerInnen.png' 
         );
     }
 }

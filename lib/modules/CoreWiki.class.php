@@ -131,6 +131,11 @@ class CoreWiki implements StudipModule {
                 'pdf-Datei ist integriert.'),
             
             'displayname' => _('Wiki-Web'),
+        	'keywords' => _('Individuelle Bearbeitung von Texten;
+							Versionshistorie;
+							Export in PDF;
+							Löschfunktion für die aktuellste Seiten-Version;
+							Keine gleichzeige Bearbeitung desselben Textes möglich'),
             'descriptionshort' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
             'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene AutorInnen gemeinsam Texte,'.
                     'Konzepte und andere schriftliche Arbeiten erstellen und gestalten, dies allerdings nicht '.
@@ -140,8 +145,7 @@ class CoreWiki implements StudipModule {
                     'erstellt eine Versionshistorie, mit der Änderungen nachvollziehbar werden. Einzelne Versionen '.
                     'können zudem auch gelöscht werden (nur Lehrende). Ein Export als pdf-Datei ist integriert.'),
             'category' => _('Kommunikation und Zusammenarbeit'),
-            
-                
+        	'screenshot' => 'Wiki-Web/Gemeinsam_erstellte_Texte.jpg'                
         );
     }
 }

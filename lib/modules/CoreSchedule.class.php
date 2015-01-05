@@ -56,7 +56,23 @@ class CoreSchedule implements StudipModule {
                 'Terminen Themen hinzufügen, die z. B. eine Kurzbeschreibung '.
                 'der Inhalte darstellen.'),
             'displayname' => _('Ablaufplan'),
-            'category' => _('Lehrorganisation')
+            'category' => _('Lehrorganisation'),
+        	'keywords' => _('Inhaltliche und räumliche Orientierung für Studierende;
+							Beschreibung der Inhalte einzelner Termine;
+							Raumangabe;
+							Themenzuordnung zu Terminen;
+							Terminzuordnung zu Themen'),
+        	'descriptionshort' => _('Anzeige aller Termine der Veranstaltung, ggf. mit Themenansicht'),
+        	'descriptionlong' => _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, '.
+                				   'Exkursions- und sonstige Veranstaltungstermine auf. Zur besseren '.
+                				   'Orientierung und zur inhaltlichen Einstimmung der Studierenden '.
+                				   'können Lehrende den Terminen Themen hinzufügen, die z. B. eine '.
+                				   'Kurzbeschreibung der Inhalte darstellen.'),    		
+        	'screenshot' => 'Ablaufplan/Ablaufplan_nach_Terminen.png',
+        	'additionalscreenshots' => array(
+        		'Ablaufplan/Ablaufplan_nach_Themen.png',
+        		'Ablaufplan/Einzelner_Termin_mit_Beschreibung.png'
+        	)
         );
     }
 }

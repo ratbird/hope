@@ -118,7 +118,23 @@ class CoreScm implements StudipModule {
                 'andere beliebige Zusatzinformationen (Links, Protokolle '.
                 'etc.) verwendet werden.'),
             'displayname' => _('Freie Informationsseite'),
-            'category' => _('Lehrorganisation')
+            'category' => _('Lehrorganisation'),
+        	'keywords' => _('Raum für eigene Informationen;
+							Titel des Kartenreiters frei definierbar;
+							Beliebig erweiterbar durch zusätzliche "neue Einträge"'),
+            'descriptionshort' => _('Die Lehrenden bestimmen, wie Titel und Inhalt dieser Seite aussehen.'),
+            'descriptionlong' => _('Diese Seite kann von Lehrenden nach ihren speziellen Anforderungen '.
+                				   'eingerichtet werden. So ist z.B. der Titel im Kartenreiter frei definierbar. '.
+                				   'Ferner können beliebig viele neue Einträgsseiten eingefügt werden. Für jeden '.
+                				   'Eintrag öffnet sich eine Seite mit einem Text-Editor, in den beliebiger Text '.
+                				   'eingegeben und formatiert werden kann. Oft wird die Seite für die Angabe von '.
+                				   'Literatur genutzt als Alternative zum Inhaltselement Literatur. Sie kann aber '.
+                				   'auch für andere beliebige Zusatzinformationen (Links, Protokolle etc.) verwendet werden.'),
+        	'screenshot' => 'Freie_Informationsseite/Zwei_Einträge_mit_Inhalten_zur_Verfügung_stellen.jpg',
+        	'additionalscreenshots' => array(
+        		'Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg'
+        	)
+        	
         );
     }
 }

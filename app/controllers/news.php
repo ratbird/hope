@@ -439,33 +439,36 @@ class NewsController extends StudipController
             //prepare ranges array for already assigned news_ranges
             foreach($news->getRanges() as $range_id)
                 $this->ranges[$range_id] = get_object_type($range_id, array('global', 'fak', 'inst', 'sem', 'user'));
+
+            // check if new ranges must be added
+            foreach ($this->area_options_selected as $type => $area_group) {
+                foreach ($area_group as $range_id => $area_title) {
+                    if (!isset($this->ranges[$range_id])) {
+                        if ($news->haveRangePermission('edit', $range_id)) {
+                            $news->addRange($range_id);
+                            $changed = true;
+                        } else {
+                            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung für "%s".'), htmlReady($area_title))));
+                            $error++;
+                        }
+                    }
+                }
+            }
+
             // check if assigned ranges must be removed
             foreach ($this->ranges as $range_id => $range_type) {
-                if ((($range_type == 'fak') AND !isset($this->area_options_selected['inst'][$range_id])) OR
-                   (($range_type != 'fak') AND !isset($this->area_options_selected[$range_type][$range_id]))) {
+                if (($range_type === 'fak' && !isset($this->area_options_selected['inst'][$range_id])) ||
+                   ($range_type !== 'fak' && !isset($this->area_options_selected[$range_type][$range_id]))) {
                     if ($news->havePermission('unassign', $range_id)) {
                         $news->deleteRange($range_id);
                         $changed = true;
-                    }
-                    else {
+                    } else {
                         PageLayout::postMessage(MessageBox::error(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung.')));
                         $error++;
                     }
                 }
             }
-            // check if new ranges must be added
-            foreach ($this->area_options_selected as $type => $area_group)
-                foreach ($area_group as $range_id => $area_title)
-                    if (!isset($this->ranges[$range_id])) {
-                        if ($news->haveRangePermission('edit', $range_id)) {
-                            $news->addRange($range_id);
-                            $changed = true;
-                        }
-                        else {
-                            PageLayout::postMessage(MessageBox::error(sprintf(_('Sie haben keine Berechtigung zum Ändern der Bereichsverknüpfung für "%s".'), htmlReady($area_title))));
-                            $error++;
-                        }
-                    }
+
             // save news
             if ($news->validate() AND !$error) {
                 if (!$id)

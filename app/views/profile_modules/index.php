@@ -6,7 +6,8 @@
 
 <?
     foreach ($sortedList as $category => $pluginlist) {
-        if(isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category]) continue;
+        if ($_SESSION['profile_plus']['displaystyle'] != 'category' && $category != 'Plugins und Module A-Z') continue;
+        if (isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category] && $category != 'Plugins und Module A-Z') continue;
 ?>
         <tr>
             <th colspan = 3>
@@ -29,12 +30,12 @@
                 <div class="plus_basic">
 
                     <!-- checkbox -->
-                    <input type="checkbox" name="modules[]" value="<?= $plugin->getPluginId() ?>" <?= $val['activated'] ? 'checked' : '' ?>>
+                    <input type="checkbox" id="<?= $pluginname ?>" name="modules[]" value="<?= $plugin->getPluginId() ?>" <?= $val['activated'] ? 'checked' : '' ?>>
 
                     <div class="element_header">
 
                         <!-- Name -->
-                        <strong><?= $pluginname ?></strong>
+                        <label for="<?= $pluginname ?>"><strong><?= $pluginname ?></strong></label>
 
                         <!-- komplex -->
                         <? switch ($info['complexity']){
@@ -94,10 +95,12 @@
                 <div class="plus_expert">
 
                     <div class="screenshot_holder">
-                        <? if (isset($info['screenshot'])) : ?>
+                        <? if (isset($info['screenshot'])) : 
+                        	$fileext = end(explode(".", $info['screenshot']));
+                        	$filename = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));?>
 
                             <a href="<?= $URL."/".$info['screenshot'] ?>"
-                               data-lightbox="<?= $pluginname ?>" data-title="<?= $info['descriptionshort'] ?>">
+                               data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
                                <img class="big_thumb" src="<?= $URL."/".$info['screenshot'] ?>" alt="<?= $pluginname ?>" />
                             </a>
 
@@ -106,10 +109,12 @@
 
                             <div class="thumb_holder">
 
-                                <? for( $i=0; $i < count($info['additionalscreenshots']); $i++){ ?>
+                                <? for( $i=0; $i < count($info['additionalscreenshots']); $i++){ 
+                                $fileext = end(explode(".", $info['additionalscreenshots'][$i]));
+                                $filename = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));?>
 
                                 <a href="<?= $URL."/". $info['additionalscreenshots'][$i] ?>"
-                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $info['descriptionshort'] ?>">
+                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
                                    <img class="small_thumb" src="<?= $URL."/". $info['additionalscreenshots'][$i] ?>" alt="<?= $pluginname ?>" />
                                 </a>
 

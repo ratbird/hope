@@ -24,7 +24,9 @@ use Studip\Button, Studip\LinkButton;
 <tbody>
 <?
 foreach ($available_modules as $category => $pluginlist) {
-    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category]) continue;
+    if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Plugins und Module A-Z') continue;
+    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Plugins und Module A-Z') continue;
+
     ?>
     <tr>
         <th colspan=3>
@@ -32,7 +34,7 @@ foreach ($available_modules as $category => $pluginlist) {
         </th>
     </tr>
 
-    <?  foreach ($pluginlist as $key => $val) {
+    <? foreach ($pluginlist as $key => $val) {
 
         if ($val['type'] == 'plugin') {
             $plugin = $val['object'];
@@ -48,7 +50,6 @@ foreach ($available_modules as $category => $pluginlist) {
             $URL = $plugin->getPluginURL();
 
             $warning = $plugin->deactivationWarning($_SESSION['SessionSeminar']);
-
 
         } elseif ($val['type'] == 'modul') {
 
@@ -67,6 +68,8 @@ foreach ($available_modules as $category => $pluginlist) {
             $cb_checked = $modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $modul["id"]) ? "checked" : "";
 
             $pluginname = $modul['name'];
+            
+            $URL = $GLOBALS['ASSETS_URL'].'images/plus/screenshots';
 
             if ($sem_class) {
                 $studip_module = $sem_class->getModule($sem_class->getSlotModule($val['modulkey']));
@@ -86,12 +89,12 @@ foreach ($available_modules as $category => $pluginlist) {
                 <div class="plus_basic">
 
                     <!-- checkbox -->
-                    <input type="checkbox" name="<?= $cb_name ?>" value="TRUE" <?= $cb_disabled ?> <?= $cb_checked ?>>
+                    <input type="checkbox" id="<?= $pluginname ?>" name="<?= $cb_name ?>" value="TRUE" <?= $cb_disabled ?> <?= $cb_checked ?>>
 
                     <div class="element_header">
 
                         <!-- Name -->
-                        <strong><?= $pluginname ?></strong>
+                        <label for="<?= $pluginname ?>"><strong><?= $pluginname ?></strong></label>
                         <? if ($val['type'] == 'modul' && $sem_class && is_a($studip_module, "StandardPlugin")) : ?>
                             <? $already_displayed_plugins[] = $mod ?>
                             (<?= htmlReady($studip_module->getPluginName()) ?>)
@@ -161,10 +164,12 @@ foreach ($available_modules as $category => $pluginlist) {
                     <div class="plus_expert">
 
                         <div class="screenshot_holder">
-                            <? if (isset($info['screenshot'])) : ?>
-
+                            <? if (isset($info['screenshot'])) : 
+                            	$fileext = end(explode(".", $info['screenshot']));
+                        		$filename = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));?>
+								
                                 <a href="<?= $URL . "/" . $info['screenshot'] ?>"
-                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $info['descriptionshort'] ?>">
+                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
                                     <img class="big_thumb" src="<?= $URL . "/" . $info['screenshot'] ?>"
                                          alt="<?= $pluginname ?>"/>
                                 </a>
@@ -175,11 +180,13 @@ foreach ($available_modules as $category => $pluginlist) {
 
                                     <div class="thumb_holder">
 
-                                        <? for ($i = 0; $i < count($info['additionalscreenshots']); $i++) { ?>
+                                        <? for ($i = 0; $i < count($info['additionalscreenshots']); $i++) { 
+                                       		 $fileext = end(explode(".", $info['additionalscreenshots'][$i]));
+                                			 $filename = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));?>
 
                                             <a href="<?= $URL . "/" . $info['additionalscreenshots'][$i] ?>"
                                                data-lightbox="<?= $pluginname ?>"
-                                               data-title="<?= $info['descriptionshort'] ?>">
+                                               data-title="<?= $filename ?>">
                                                 <img class="small_thumb"
                                                      src="<?= $URL . "/" . $info['additionalscreenshots'][$i] ?>"
                                                      alt="<?= $pluginname ?>"/>

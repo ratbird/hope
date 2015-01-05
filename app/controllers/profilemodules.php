@@ -96,12 +96,14 @@ class ProfileModulesController extends AuthenticatedController
             $_SESSION['profile_plus']['Komplex'][2] = 1;
             $_SESSION['profile_plus']['Komplex'][3] = 1;
             $_SESSION['profile_plus']['View'] = 'openall';
+            $_SESSION['profile_plus']['displaystyle'] = 'category';
         }
 
         if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');
         if (Request::Get('Komplex2') != null) $_SESSION['profile_plus']['Komplex'][2] = Request::Get('Komplex2');
         if (Request::Get('Komplex3') != null) $_SESSION['profile_plus']['Komplex'][3] = Request::Get('Komplex3');
         if (Request::Get('mode') != null) $_SESSION['profile_plus']['View'] = Request::Get('mode');
+        if (Request::Get('displaystyle') != null) $_SESSION['profile_plus']['displaystyle'] = Request::Get('displaystyle');
 
 
         $widget = new OptionsWidget();
@@ -145,6 +147,16 @@ class ProfileModulesController extends AuthenticatedController
             $widget->addLink(_("Alles Aufklappen"),
                 URLHelper::getLink('?', array('mode' => 'openall')),
                 'icons/16/blue/assessment.png');
+        }
+        
+        if ($_SESSION['profile_plus']['displaystyle'] == 'category') {
+        	$widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
+        			URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
+        			'icons/16/blue/assessment.png');
+        } else {
+        	$widget->addLink(_("Anzeige nach Kategorien"),
+        			URLHelper::getLink('?', array('displaystyle' => 'category')),
+        			'icons/16/blue/assessment.png');
         }
 
 
@@ -239,19 +251,33 @@ class ProfileModulesController extends AuthenticatedController
             // Load plugin data (e.g. name and description)
             $metadata = $plugin->getMetadata();
 
-            $cat = isset($metadata['category']) ? $metadata['category'] : 'Sonstiges';
-
-            if (!isset($_SESSION['profile_plus']['Kategorie'][$cat])) $_SESSION['profile_plus']['Kategorie'][$cat] = 1;
-
-            $key = isset($metadata['displayname']) ? $metadata['displayname'] : $plugin->getPluginname();
-
-            if ($_SESSION['profile_plus']['Kategorie'][$cat]
-                && ($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
-                || !isset($_SESSION['profile_plus'])
-            ) {
-
-                $list[$cat][strtolower($key)]['object'] = $plugin;
-                $list[$cat][strtolower($key)]['activated'] = $activated;
+            if($_SESSION['profile_plus']['displaystyle'] != 'category'){
+            	 
+            	$key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
+            	 
+            	if (($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
+            			|| !isset($_SESSION['profile_plus'])
+            	) {
+            		$list['Plugins und Module A-Z'][strtolower($key)]['object'] = $plugin;
+            		$list['Plugins und Module A-Z'][strtolower($key)]['activated'] = $activated;
+            	}
+            	 
+            } else {            
+            
+	            $cat = isset($metadata['category']) ? $metadata['category'] : 'Sonstiges';
+	
+	            if (!isset($_SESSION['profile_plus']['Kategorie'][$cat])) $_SESSION['profile_plus']['Kategorie'][$cat] = 1;
+	
+	            $key = isset($metadata['displayname']) ? $metadata['displayname'] : $plugin->getPluginname();
+	
+	            if ($_SESSION['profile_plus']['Kategorie'][$cat]
+	                && ($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
+	                || !isset($_SESSION['profile_plus'])
+	            ) {
+	
+	                $list[$cat][strtolower($key)]['object'] = $plugin;
+	                $list[$cat][strtolower($key)]['activated'] = $activated;
+	            }
             }
         }
 

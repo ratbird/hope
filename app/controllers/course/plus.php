@@ -135,12 +135,14 @@ class Course_PlusController extends AuthenticatedController
             $_SESSION['plus']['Komplex'][2] = 1;
             $_SESSION['plus']['Komplex'][3] = 1;
             $_SESSION['plus']['View'] = 'openall';
+            $_SESSION['plus']['displaystyle'] = 'category';
         }
 
         if (Request::Get('Komplex1') != null) $_SESSION['plus']['Komplex'][1] = Request::Get('Komplex1');
         if (Request::Get('Komplex2') != null) $_SESSION['plus']['Komplex'][2] = Request::Get('Komplex2');
         if (Request::Get('Komplex3') != null) $_SESSION['plus']['Komplex'][3] = Request::Get('Komplex3');
         if (Request::Get('mode') != null) $_SESSION['plus']['View'] = Request::Get('mode');
+        if (Request::Get('displaystyle') != null) $_SESSION['plus']['displaystyle'] = Request::Get('displaystyle');
 
         $sidebar = Sidebar::get();
         $sidebar->setImage('sidebar/plugin-sidebar.png');
@@ -187,6 +189,17 @@ class Course_PlusController extends AuthenticatedController
                 URLHelper::getLink('?', array('mode' => 'openall')),
                 'icons/16/blue/assessment.png');
         }
+        
+        if ($_SESSION['plus']['displaystyle'] == 'category') {
+        	$widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
+        			URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
+        			'icons/16/blue/assessment.png');
+        } else {
+        	$widget->addLink(_("Anzeige nach Kategorien"),
+        			URLHelper::getLink('?', array('displaystyle' => 'category')),
+        			'icons/16/blue/assessment.png');
+        }
+
         $sidebar->addWidget($widget, "aktion");
 
     }
@@ -207,19 +220,33 @@ class Course_PlusController extends AuthenticatedController
 
                 $info = $plugin->getMetadata();
 
-                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
-
-                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
-
-                $key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
-
-                if ($_SESSION['plus']['Kategorie'][$cat]
-                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
-                    || !isset($_SESSION['plus'])
-                ) {
-
-                    $list[$cat][strtolower($key)]['object'] = $plugin;
-                    $list[$cat][strtolower($key)]['type'] = 'plugin';
+                if($_SESSION['plus']['displaystyle'] != 'category'){
+                	
+                	$key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
+                	
+                	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
+                			|| !isset($_SESSION['plus'])
+                	) {
+	                	$list['Plugins und Module A-Z'][strtolower($key)]['object'] = $plugin;
+	                	$list['Plugins und Module A-Z'][strtolower($key)]['type'] = 'plugin';
+                	}
+                	
+                } else {
+                                
+	                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
+	
+	                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
+	
+	                $key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
+	
+	                if ($_SESSION['plus']['Kategorie'][$cat]
+	                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
+	                    || !isset($_SESSION['plus'])
+	                ) {
+	
+	                    $list[$cat][strtolower($key)]['object'] = $plugin;
+	                    $list[$cat][strtolower($key)]['type'] = 'plugin';
+	                }
                 }
             }
         }
@@ -237,18 +264,32 @@ class Course_PlusController extends AuthenticatedController
 
                 $info = ($studip_module instanceOf StudipModule) ? $studip_module->getMetadata() : ($val['metadata'] ? $val['metadata'] : array());
 
-                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
-
-                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
-
-                if ($_SESSION['plus']['Kategorie'][$cat]
-                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
-                    || !isset($_SESSION['plus'])
-                ) {
-
-                    $list[$cat][strtolower($val['name'])]['object'] = $val;
-                    $list[$cat][strtolower($val['name'])]['type'] = 'modul';
-                    $list[$cat][strtolower($val['name'])]['modulkey'] = $key;
+                if($_SESSION['plus']['displaystyle'] != 'category'){
+                	 
+                	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
+                			|| !isset($_SESSION['plus'])
+                	) {
+                		
+                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['object'] = $val;
+                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['type'] = 'modul';
+                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['modulkey'] = $key;
+                	}
+                	 
+                } else {
+                
+	                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
+	
+	                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
+	
+	                if ($_SESSION['plus']['Kategorie'][$cat]
+	                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
+	                    || !isset($_SESSION['plus'])
+	                ) {
+	
+	                    $list[$cat][strtolower($val['name'])]['object'] = $val;
+	                    $list[$cat][strtolower($val['name'])]['type'] = 'modul';
+	                    $list[$cat][strtolower($val['name'])]['modulkey'] = $key;
+	                }
                 }
             }
         }

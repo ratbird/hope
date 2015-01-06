@@ -118,7 +118,7 @@ class CoreDocuments implements StudipModule {
                 				   'werden können. Multimediadateien wie Grafiken, Audio- und Videodateien werden '.
                 				   'sofort angezeigt bzw. abspielbar dargesellt. Über das PlugIn "Dateiordnerberechtigung" '.
                 				   'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. '.
-                				   'das Leserecht ®, festgelegt werden.'),
+                				   'das Leserecht (r), festgelegt werden.'),
         	'icon' => 'icons/16/black/files.png',
         	'screenshot' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_geöffnetem_Ordner.jpg',
         	'additionalscreenshots' => array(

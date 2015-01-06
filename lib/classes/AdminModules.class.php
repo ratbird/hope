@@ -100,7 +100,7 @@ class AdminModules extends ModulesNotification {
                 'descriptionshort' => _("Vergabe von Rechten für Dateiordner für teilnehmende Studierende (AutorInnen)"),
                 'category' => _("Lehrorganisation"),
         		'keywords' => _('Lesen, Schreiben, Sichtbarkeit, Ordner erstellen;
-								Das Recht "Lesen" ®: Dateien können geöffnet und heruntergeladen werden;
+								Das Recht "Lesen" (r): Dateien können geöffnet und heruntergeladen werden;
 								Das Recht "Schreiben" (w): Studierende können Dateien hochladen;
 								Das Recht "Sichtbarkeit" (x): Ordner wird angezeigt;
 								Das Recht "Ordner erstellen" (f): Studierende können Unterordner anlegen'),

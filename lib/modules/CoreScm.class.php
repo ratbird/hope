@@ -131,7 +131,7 @@ class CoreScm implements StudipModule {
                 				   'Literatur genutzt als Alternative zum Inhaltselement Literatur. Sie kann aber '.
                 				   'auch für andere beliebige Zusatzinformationen (Links, Protokolle etc.) verwendet werden.'),
         	'icon' => 'icons/16/black/infopage.png',
-        	'screenshot' => 'plus/screenshots/Freie_Informationsseite/Zwei_Einträge_mit_Inhalten_zur_Verfügung_stellen.jpg',
+        	'screenshot' => 'plus/screenshots/Freie_Informationsseite/Zwei_Eintraege_mit_Inhalten_zur_Verfuegung_stellen.jpg',
         	'additionalscreenshots' => array(
         		'plus/screenshots/Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg'
         	)

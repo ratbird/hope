@@ -120,7 +120,7 @@ class CoreDocuments implements StudipModule {
                 				   'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. '.
                 				   'das Leserecht (r), festgelegt werden.'),
         	'icon' => 'icons/16/black/files.png',
-        	'screenshot' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_geöffnetem_Ordner.jpg',
+        	'screenshot' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_geoeffnetem_Ordner.jpg',
         	'additionalscreenshots' => array(
         		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Ordneransicht_mit_Dateiinformationen.jpg',
         		'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung/Neuen_Ordner_erstellen.jpg',

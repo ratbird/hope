@@ -12,7 +12,7 @@ screenshot = assets/images/screenshots/Blubbern.png
 
 displayname = Blubber
 icon = ../../../assets/images/icons/16/black/blubber.png
-keywords = Informationen über neue Nachrichten per E-Mail; Antworten ebenfalls per E-Mail möglich; Direktes Kontaktieren anderer Stud.IP-NutzerInnen; Private und öffentliche bzw. veranstaltungsbezogene Blubberstreams; Einbinden von Dateien per Drag&Drop
+keywords = Einfach Text schreiben und mit <Enter> abschicken; Direktes Kontaktieren anderer Stud.IP-NutzerInnen; Private und öffentliche bzw. veranstaltungsbezogene Blubberstreams; Einbinden von Dateien per Drag&Drop
 category = Kommunikation und Zusammenarbeit
 descriptionshort = Schneller und einfacher Austausch von Informationen in Gesprächsform
 descriptionlong = Kommunikationsform mit Ähnlichkeiten zu einem Forum. Im Gegensatz zum Forum kann im Blubber-Element jedoch in Echtzeit miteinander kommuniziert werden. Das Tool ähnelt durch den etwas informelleren Charakter einem Chat. Anders als im Forum ist es nicht notwendig, die Seiten neu zu laden, um die neuesten Einträge (z. B. Antworten auf eigene Postings) sehen zu können: Die Seite aktualisiert sich selbst bei neuen Einträgen. Dateien (z.B. Fotos, Audiodateien, Links) können per Drag and Drop in das Feld gezogen und somit verlinkt werden. Auch Textformatierungen und das Verwenden von Smileys sind möglich. Des Weiteren ist ein direktes Bezugnehmen auf andere Stud.IP-NutzerInnen (@benutzername oder @'Vorname Nachname') und das Setzen von Hashtags (#hashtag) möglich.

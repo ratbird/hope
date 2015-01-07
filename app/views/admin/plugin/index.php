@@ -95,7 +95,11 @@ use Studip\Button, Studip\LinkButton;
                     <td class="actions" width="20">
                         <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                         <a href="<?= $controller->url_for('admin/plugin/edit_automaticupdate', $pluginid) ?>" data-dialog>
-                            <?= Assets::img('icons/20/blue/move_down/plugin', array('title' => _('Automatisches Update verwalten'))) ?>
+                            <? if ($plugin['automatic_update_url']) : ?>
+                                <?= Assets::img('icons/20/red/move_down/plugin', array('title' => _('Automatisches Update verwalten (eingerichtet)'))) ?>
+                            <? else : ?>
+                                <?= Assets::img('icons/20/blue/move_down/plugin', array('title' => _('Automatisches Update verwalten'))) ?>
+                            <? endif ?>
                         </a>
                         <? endif ?>
                     </td>

@@ -89,18 +89,20 @@ class ProfileModulesController extends AuthenticatedController
         $plusconfig = UserConfig::get($GLOBALS['user']->id)->PLUS_SETTINGS;
 
         if (!isset($_SESSION['profile_plus'])) {
-   
-            //$_SESSION['profile_plus']['Kategorie']['Lehrorganisation'] = 1;
-            $_SESSION['profile_plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
-            //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
-            $_SESSION['profile_plus']['Kategorie']['Sonstiges'] = 1;
-            //$_SESSION['profile_plus']['Kategorie']['Projekte und Entwicklung'] = 1;
-            $_SESSION['profile_plus']['Komplex'][1] = 1;
-            $_SESSION['profile_plus']['Komplex'][2] = 1;
-            $_SESSION['profile_plus']['Komplex'][3] = 1;
-            $_SESSION['profile_plus']['View'] = 'openall';
-            $_SESSION['profile_plus']['displaystyle'] = 'category';
-
+        	if (is_array($plusconfig['profile_plus'])){
+        		$_SESSION['profile_plus'] = $plusconfig['profile_plus'];
+        	} else {
+	            //$_SESSION['profile_plus']['Kategorie']['Lehrorganisation'] = 1;
+	            $_SESSION['profile_plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
+	            //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
+	            $_SESSION['profile_plus']['Kategorie']['Sonstiges'] = 1;
+	            //$_SESSION['profile_plus']['Kategorie']['Projekte und Entwicklung'] = 1;
+	            $_SESSION['profile_plus']['Komplex'][1] = 1;
+	            $_SESSION['profile_plus']['Komplex'][2] = 1;
+	            $_SESSION['profile_plus']['Komplex'][3] = 1;
+	            $_SESSION['profile_plus']['View'] = 'openall';
+	            $_SESSION['profile_plus']['displaystyle'] = 'category';
+        	}
         }
 
         if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');

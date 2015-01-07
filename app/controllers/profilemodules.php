@@ -86,12 +86,8 @@ class ProfileModulesController extends AuthenticatedController
         $sidebar->setImage('sidebar/plugin-sidebar.png');
         $sidebar->setTitle(PageLayout::getTitle());
 
-        $plusconfig = UserConfig::get($GLOBALS['user']->id)->PLUS_SETTINGS;
-                
         if (!isset($_SESSION['profile_plus'])) {
-        	if (isset($plusconfig['profile_plus'])){
-        		$_SESSION['profile_plus'] = $plusconfig['profile_plus'];
-        	} else {        
+        	       
 	            //$_SESSION['profile_plus']['Kategorie']['Lehrorganisation'] = 1;
 	            $_SESSION['profile_plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
 	            //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
@@ -102,7 +98,7 @@ class ProfileModulesController extends AuthenticatedController
 	            $_SESSION['profile_plus']['Komplex'][3] = 1;
 	            $_SESSION['profile_plus']['View'] = 'openall';
 	            $_SESSION['profile_plus']['displaystyle'] = 'category';
-        	}
+        	
         }
 
         if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');
@@ -173,9 +169,6 @@ class ProfileModulesController extends AuthenticatedController
             $this->url_for('profilemodules/reset'),
             'icons/16/blue/decline.png');
         $sidebar->addWidget($widget);
-        
-        $plusconfig['profile_plus'] = $_SESSION['profile_plus'];
-        UserConfig::get($GLOBALS['user']->id)->store(PLUS_SETTINGS,$plusconfig);
     }
 
     /**

@@ -139,43 +139,67 @@ function view_turnus ($seminar_id, $short = FALSE, $meta_data = false, $start_ti
 function shrink_dates($dates) {
     $ret = array();
 
-    // check which dates are follow-ups
-    for ($i=1; $i<sizeof($dates); $i++) {
-        if (((date("G", $dates[$i-1]["start_time"])) == date("G", $dates[$i]["start_time"])) && ((date("i", $dates[$i-1]["start_time"])) == date("i", $dates[$i]["start_time"])) && ((date("G", $dates[$i-1]["end_time"])) == date("G", $dates[$i]["end_time"])) && ((date("i", $dates[$i-1]["end_time"])) == date("i", $dates[$i]["end_time"])))
-            $dates[$i]["time_match"]=TRUE;
-
-        if (((date ("z", $dates[$i]["start_time"])-1) == date ("z", $dates[$i-1]["start_time"])) || ((date ("z", $dates[$i]["start_time"]) == 0) && (date ("j", $dates[$i-1]["start_time"]) == 0)))
-            if ($dates[$i]["time_match"])
-                $dates[$i]["conjuncted"]=TRUE;
+    // First step: Clean out all duplicate dates (the dates are sorted)
+    foreach ($dates as $key => $date) {
+        if (isset($dates[$key + 1])) {
+            if ($dates[$key + 1]['start_time'] == $date['start_time']
+                    && $dates[$key + 1]['end_time'] == $date['end_time']) {
+                unset($dates[$key]);
+            }
+        }
     }
 
+    // Second step: Make sure the dates are still ordered by start- and end-time without any holes
+    usort($dates, function($a, $b) {
+        if ($a['start_time'] == $b['start_time']) {
+            if ($a['end_time'] == $b['end_time']) return 0;
+            return ($a['end_time'] > $b['end_time']) ? 1 : -1;
+        }
+
+        return ($a['start_time'] > $b['start_time']) ? 1 : -1;
+    });
+
+    // Third step: Check which dates are follow-ups
+    for ($i=1; $i < sizeof($dates); $i++) {
+        if (((date("G", $dates[$i-1]["start_time"])) == date("G", $dates[$i]["start_time"]))
+                && ((date("i", $dates[$i-1]["start_time"])) == date("i", $dates[$i]["start_time"]))
+                && ((date("G", $dates[$i-1]["end_time"])) == date("G", $dates[$i]["end_time"]))
+                && ((date("i", $dates[$i-1]["end_time"])) == date("i", $dates[$i]["end_time"]))) {
+            $dates[$i]["time_match"] = true;
+        }
+
+        if (((date ("z", $dates[$i]["start_time"])-1) == date ("z", $dates[$i-1]["start_time"])) 
+                || ((date ("z", $dates[$i]["start_time"]) == 0) && (date ("j", $dates[$i-1]["start_time"]) == 0))) {
+            if ($dates[$i]["time_match"]) {
+                $dates[$i]["conjuncted"] = true;
+            }
+        }
+    }
+
+    // Fourth step: aggregate the dates with follow-ups
     $return_string = '';
     // create text-output
-    for ($i=0; $i<sizeof($dates); $i++) {
-        if (!$dates[$i]["conjuncted"])
-            $conjuncted=FALSE;
+    for ($i=0; $i < sizeof($dates); $i++) {
+        if (!$dates[$i]["conjuncted"]) {
+            $conjuncted = false;
+        }
 
         if ((!$dates[$i]["conjuncted"]) || (!$dates[$i+1]["conjuncted"])) {
-            // if the current date is a conjunction, add the year
-            // to receive an output of the format "dd.mm - dd.mm.yyyy"
             $return_string .= ' ' . getWeekday(date('w', $dates[$i]['start_time'])) .'.';
-            if ($dates[$i]['conjuncted']) {
-                $return_string .= date (" d.m.Y", $dates[$i]["start_time"]);
-            } else {
-                $return_string .= date (" d.m.", $dates[$i]["start_time"]);
-            }
+            $return_string .= date (" d.m.", $dates[$i]["start_time"]);
         }
 
         if ((!$conjuncted) && ($dates[$i+1]["conjuncted"])) {
             $return_string .= ' -';
-            $conjuncted=TRUE;
+            $conjuncted = true;
         } else if ((!$dates[$i+1]["conjuncted"]) && ($dates[$i+1]["time_match"])) {
             $return_string .= ',';
         }
 
         if (!$dates[$i+1]["time_match"]) {
+            // check if the current date is for a whole day
             if ((($dates[$i]["end_time"] - $dates[$i]["start_time"]) / 60 / 60) > 23) {
-                $return_string .= ' ('._('ganztägig') . ')';
+                $return_string .= ' ('. _('ganztägig') . ')';
             } else {
                 $return_string .= ' ' . date("H:i", $dates[$i]["start_time"]);
                 if (date("H:i", $dates[$i]["start_time"]) != date("H:i", $dates[$i]["end_time"])) {

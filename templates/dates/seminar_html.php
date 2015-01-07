@@ -98,10 +98,6 @@
             endif;
 
             if (is_array($rooms) && sizeof($rooms) > 0) :
-                if (sizeof($rooms) > 3) :
-                    $rooms = array_slice($rooms, sizeof($rooms) - 3, sizeof($rooms));
-                endif;
-
                 if ($show_room) :
                     if (count($dates) > 10) :
                         echo "<br />";
@@ -110,7 +106,12 @@
                     endif;
 
                     echo _("Ort:") . ' ';
-                    echo implode(', ', $rooms);
+                    if (sizeof($rooms) > 3) :
+                        echo implode(', ', array_slice($rooms, sizeof($rooms) - 3, sizeof($rooms)));
+                        echo sprintf(_(' (+%s weitere)'), sizeof($rooms) - 3);
+                    else:
+                        echo implode(', ', $rooms);
+                    endif;
                 endif;
             endif;
         endif;

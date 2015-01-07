@@ -24,7 +24,12 @@ class Course_PlusController extends AuthenticatedController
 
         PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
 
-        $GLOBALS['view_mode'] = $_SESSION['links_admin_data']['topkat'] ? : 'sem';
+    	if (is_array($_SESSION['links_admin_data'])){
+        	$GLOBALS['view_mode'] = $_SESSION['links_admin_data']['topkat'] ? : 'sem';
+        } else {
+        	$GLOBALS['view_mode'] = 'sem';
+        }	
+        
         require_once 'lib/admin_search.inc.php';
         $id = $range_id ? : $_SESSION['SessionSeminar'];
 

@@ -145,7 +145,7 @@ class MyCoursesController extends AuthenticatedController
         $new_contents = $this->check_for_new($this->sem_courses, $group_field);
         $this->nav_elements = MyRealmModel::calc_nav_elements($this->sem_courses, $group_field);
 
-        // 
+        //
         if ($tabularasa = $this->flash['tabularasa']) {
             $details = array();
             if ($new_contents) {
@@ -416,7 +416,7 @@ class MyCoursesController extends AuthenticatedController
      */
     public function decline_action($course_id, $waiting = null)
     {
-        $current_seminar = Course::find($course_id);
+        $current_seminar = Seminar::getInstance($course_id);
         $ticket_check    = Seminar_Session::check_ticket(Request::option('studipticket'));
         if (LockRules::Check($course_id, 'participants')) {
             $lockdata = LockRules::getObjectRule($course_id);
@@ -443,16 +443,12 @@ class MyCoursesController extends AuthenticatedController
 
             if (is_null($waiting)) {
                 // check course admission
-                $course_set = CourseSet::getSetForCourse($course_id);
-                if ($course_set === null) $course_set = false;
+                list(,$admission_end_time) = array_values($current_seminar->getAdmissionTimeFrame());
 
-                $admission_end_time = ($course_set && $course_set->hasAdmissionRule('TimedAdmission')) ?
-                    $course_set->getAdmissionRule('TimedAdmission')->getEndTime() : null;
+                $admission_enabled = $current_seminar->isAdmissionEnabled();
+                $admission_locked   = $current_seminar->isAdmissionLocked();
 
-                $admission_endabled = ($course_set && $course_set->isSeatDistributionEnabled());
-                $admission_locked   = ($course_set && $course_set->hasAdmissionRule('LockedAdmission'));
-
-                if ($admission_endabled || $admission_locked || (int)$current_seminar->admission_prelim == 1) {
+                if ($admission_enabled || $admission_locked || (int)$current_seminar->admission_prelim == 1) {
                     $message = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben?
                 Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->name);
                 } else if (isset($admission_end_time) && $admission_end_time < time()) {
@@ -502,10 +498,9 @@ class MyCoursesController extends AuthenticatedController
                 }
             } else {
                 // LOGGING
-                StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst aus der Wartliste ausgetragen');
-                $cs = CourseSet::getSetForCourse($course_id);
-                if ($cs) {
-                    $prio_delete = AdmissionPriority::unsetPriority($cs->getId(), $GLOBALS['user']->id, $course_id);
+                StudipLog::log('SEM_USER_DEL', $course_id, $GLOBALS['user']->id, 'Hat sich selbst aus der Warteliste ausgetragen');
+                if ($current_seminar->isAdmissionEnabled()) {
+                    $prio_delete = AdmissionPriority::unsetPriority($current_seminar->getCourseSet()->getId(), $GLOBALS['user']->id, $course_id);
                 }
                 $query     = "DELETE FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);

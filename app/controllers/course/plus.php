@@ -125,17 +125,23 @@ class Course_PlusController extends AuthenticatedController
     private function setupSidebar()
     {
 
+        $plusconfig = UserConfig::get($GLOBALS['user']->id)->PLUS_SETTINGS;
+        
         if (!isset($_SESSION['plus'])) {
-            $_SESSION['plus']['Kategorie']['Lehrorganisation'] = 1;
-            $_SESSION['plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
-            $_SESSION['plus']['Kategorie']['Aufgaben'] = 1;
-            $_SESSION['plus']['Kategorie']['Sonstiges'] = 1;
-            /*$_SESSION['plus']['Kategorie']['Projekte und Entwicklung'] = 1;*/
-            $_SESSION['plus']['Komplex'][1] = 1;
-            $_SESSION['plus']['Komplex'][2] = 1;
-            $_SESSION['plus']['Komplex'][3] = 1;
-            $_SESSION['plus']['View'] = 'openall';
-            $_SESSION['plus']['displaystyle'] = 'category';
+        	if (isset($plusconfig['course_plus'])){
+        		$_SESSION['plus'] = $plusconfig['course_plus'];
+        	} else {
+        		$_SESSION['plus']['Kategorie']['Lehrorganisation'] = 1;
+        		$_SESSION['plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
+        		$_SESSION['plus']['Kategorie']['Aufgaben'] = 1;
+        		$_SESSION['plus']['Kategorie']['Sonstiges'] = 1;
+        		//$_SESSION['plus']['Kategorie']['Projekte und Entwicklung'] = 1;
+        		$_SESSION['plus']['Komplex'][1] = 1;
+        		$_SESSION['plus']['Komplex'][2] = 1;
+        		$_SESSION['plus']['Komplex'][3] = 1;
+        		$_SESSION['plus']['View'] = 'openall';
+        		$_SESSION['plus']['displaystyle'] = 'category';
+        	}
         }
 
         if (Request::Get('Komplex1') != null) $_SESSION['plus']['Komplex'][1] = Request::Get('Komplex1');
@@ -201,6 +207,9 @@ class Course_PlusController extends AuthenticatedController
         }
 
         $sidebar->addWidget($widget, "aktion");
+        
+        $plusconfig['course_plus'] = $_SESSION['plus'];
+        UserConfig::get($GLOBALS['user']->id)->store(PLUS_SETTINGS,$plusconfig);
 
     }
 

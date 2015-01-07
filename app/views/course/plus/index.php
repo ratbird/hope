@@ -142,12 +142,16 @@ foreach ($available_modules as $category => $pluginlist) {
 
                         <!-- icon -->
                         <? if (isset($info['icon'])) : ?>
-                            <img class="plugin_icon" alt="" src="<?= $URL . "/" . $info['icon'] ?> ">
+                            <img class="plugin_icon text-bottom" alt="" src="<?= $URL . "/" . $info['icon'] ?> ">
                         <? endif ?>
 
                         <!-- shortdesc -->
                         <strong class="shortdesc">
-                            <?= formatReady($info['descriptionshort']) ?>
+	                        <? if (isset($info['descriptionshort'])) : ?>
+	                            <? foreach (explode('\n', $info['descriptionshort']) as $descriptionshort) { ?>
+	                            	<?= formatReady($descriptionshort) ?>
+	                            <? } ?>   
+                            <? endif ?>
                             <? if (!isset($info['descriptionshort'])) : ?>
                                 <? if (isset($info['summary'])) : ?>
                                     <?= formatReady($info['summary']) ?>
@@ -218,9 +222,11 @@ foreach ($available_modules as $category => $pluginlist) {
 
                             <!-- longdesc -->
                             <? if (isset($info['descriptionlong'])) : ?>
+                            <? foreach (explode('\n', $info['descriptionlong']) as $descriptionlong) { ?>
                                 <p class="longdesc">
-                                    <?= formatReady($info['descriptionlong']) ?>
+                                    <?= formatReady($descriptionlong) ?>
                                 </p>
+                            <? } ?>   
                             <? endif ?>
 
                             <? if (!isset($info['descriptionlong'])) : ?>

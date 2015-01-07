@@ -36,7 +36,7 @@
                     <div class="element_header">
 
                         <!-- Name -->
-                        <label for="<?= $pluginname ?>"><strong><?= $pluginname ?></strong></label>
+                        <label for="<?= $pluginname ?>"><strong><?= htmlReady($pluginname) ?></strong></label>
 
                         <!-- komplex -->
                         <? switch ($info['complexity']){
@@ -81,12 +81,12 @@
                         <strong class="shortdesc">
 	                        <? if (isset($info['descriptionshort'])) : ?>
 	                            <? foreach (explode('\n', $info['descriptionshort']) as $descriptionshort) { ?>
-	                            	<?= formatReady($descriptionshort) ?>
+	                            	<?= htmlReady($descriptionshort) ?>
 	                            <? } ?>   
                             <? endif ?>
                             <? if (!isset($info['descriptionshort'])) : ?>
                                 <? if (isset($info['summary'])) : ?>
-                                    <?= formatReady($info['summary']) ?>
+                                    <?= htmlReady($info['summary']) ?>
                                 <? endif ?>
                             <? endif ?>
                         </strong>
@@ -146,7 +146,7 @@
                         <? if (isset($info['keywords'])) : ?>
                         <ul class="keywords">
                         <? foreach(explode(';',$info['keywords']) as $keyword){
-                            echo '<li>'.$keyword.'</li>'; }?>
+                            echo '<li>'.htmlReady($keyword).'</li>'; }?>
                         </ul>
                         <? endif ?>
 
@@ -154,7 +154,7 @@
                         <? if (isset($info['descriptionlong'])) : ?>
                         <? foreach (explode('\n', $info['descriptionlong']) as $descriptionlong) { ?>
                             <p class="longdesc">
-                            	<?= formatReady($descriptionlong) ?>
+                            	<?= htmlReady($descriptionlong) ?>
                         	</p>
                         <? } ?>   
                         <? endif ?>
@@ -162,7 +162,7 @@
                         <? if (!isset($info['descriptionlong'])) : ?>
                             <p class="longdesc">
                             <? if (isset($info['description'])) : ?>
-                                <?= formatReady($info['description']) ?>
+                                <?= htmlReady($info['description']) ?>
                             <? else: ?>
                                 <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
                             <? endif ?>
@@ -179,7 +179,7 @@
 
                         <!-- helplink -->
                         <? if (isset($info['helplink'])) : ?>
-                        <a class="helplink" href=" <?= formatReady($info['helplink']) ?> ">...mehr</a>
+                        <a class="helplink" href=" <?= htmlReady($info['helplink']) ?> ">...mehr</a>
                         <? endif ?>
 
                     </div>

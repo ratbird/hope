@@ -1,3 +1,4 @@
+<?php use Studip\Button, Studip\LinkButton;?>
 <form action="<?= $controller->url_for('profilemodules/update', compact('username')) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default nohover plus" id="profile_modules">
@@ -91,7 +92,11 @@
                         </strong>
 
                     </div>
-
+                    
+					<!-- inhaltlöschenbutton -->
+                    <? if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+ 					<? if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+                         
                 </div>
 
               <? if ($_SESSION['profile_plus']['View'] == 'openall' || !isset($_SESSION['profile_plus'])){?>
@@ -134,8 +139,8 @@
                     <div class="descriptionbox">
 
                         <!-- inhaltlöschenbutton -->
-                        <? if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
- 						<? if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+                        <?// if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+ 						<?// if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
                            	
                         <!-- tags -->
                         <? if (isset($info['keywords'])) : ?>

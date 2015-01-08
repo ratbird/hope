@@ -1,10 +1,12 @@
 <? if (!$controller->showResult($vote)): ?>
-    <?= Studip\Button::create(_('Abstimmen'), 'vote', array('value' => $vote->id)) ?>
+    <? if ($vote->isRunning()) : ?>
+        <?= Studip\Button::create(_('Abstimmen'), 'vote', array('value' => $vote->id)) ?>
+    <? endif ?>
     <?= Studip\LinkButton::create(_('Ergebnisse'), ContentBoxHelper::href($vote->id, array('preview[]' => $vote->id))) ?>
 <? else: ?>
     <?= Studip\LinkButton::create(_('Ergebnisse ausblenden'), ContentBoxHelper::href($vote->id, array('preview' => 0))) ?>
     <?= Request::get('sort')
-        ? Studip\LinkButton::create(_('Nicht sortieren'), ContentBoxHelper::href($vote->id, array('preview[]' => $vote->id, 'sort' => 0))) 
+        ? Studip\LinkButton::create(_('Nicht sortieren'), ContentBoxHelper::href($vote->id, array('preview[]' => $vote->id, 'sort' => 0)))
         : Studip\LinkButton::create(_('Sortieren'), ContentBoxHelper::href($vote->id, array('preview[]' => $vote->id, 'sort' => 1)))
     ?>
     <? if ($vote->changeable && $vote->state == 'active'): ?>
@@ -15,6 +17,6 @@
             <?= Studip\LinkButton::create(_('Namen ausblenden'), ContentBoxHelper::href($vote->id, array('revealNames' => null))) ?>
         <? else : ?>
             <?= Studip\LinkButton::create(_('Namen zeigen'), ContentBoxHelper::href($vote->id, array('revealNames' => $vote->id))); ?>
-    <? endif; ?>
+        <? endif; ?>
     <? endif; ?>
 <? endif; ?>

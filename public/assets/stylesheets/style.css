@@ -3575,7 +3575,7 @@ a.message-tag:before {
   height: 20px;
   line-height: 20px;
 }
-#statusbar_container > .statusbar > .progress.error {
+#statusbar_container > .statusbar > .progress.progress-error {
   background-color: #d60000;
 }
 #statusbar_container > .statusbar > .progresstext {

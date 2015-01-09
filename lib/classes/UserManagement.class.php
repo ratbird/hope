@@ -1019,14 +1019,20 @@ class UserManagement
         $messaging->delete_all_messages($this->user_data['auth_user_md5.user_id']);
 
         // delete user from all foreign adressbooks and empty own adressbook
-        $buddykills = RemoveUserFromBuddys($this->user_data['auth_user_md5.user_id']);
+        $buddykills = Contact::deleteBySQL('user_id', array($this->user_data['auth_user_md5.user_id']));
         if ($buddykills > 0) {
             $this->msg .= "info§" . sprintf(_("%s Einträge aus Adressbüchern gelöscht."), $buddykills) . "§";
         }
-        $msg = DeleteAdressbook($this->user_data['auth_user_md5.user_id']);
-        if ($msg) {
-            $this->msg .= "info§" . $msg . "§";
+        $contactkills = Contact::deleteBySQL('owner_id', array($this->user_data['auth_user_md5.user_id']));
+        if ($contactkills) {
+            $this->msg .= sprintf(_('Adressbuch mit %d Einträgen gelöscht.'), $contactkills);
         }
+        
+        // delete users groups
+        Statusgruppen::deleteBySQL('range_id', array($this->user_data['auth_user_md5.user_id']));
+        
+        // remove user from any groups
+        StatusgruppeUser::deleteBySQL('user_id', array($this->user_data['auth_user_md5.user_id']));
 
         // delete all blubber entrys
         $query = "DELETE FROM blubber WHERE user_id = ?";

@@ -1018,7 +1018,7 @@ class Admin_UserController extends AuthenticatedController
         if (get_config('MAIL_NOTIFICATION_ENABLE') && CourseMember::findOneBySQL("user_id = ? AND notification <> 0", array($this->user['user_id']))) {
             $user_actions->addLink(_('Benachrichtigungen zurücksetzen'),
                 $this->url_for('admin/user/reset_notification/' . $this->user['user_id']),
-                'icons/16/blue/remove');
+                'icons/16/blue/refresh.png');
         }
 
         $sidebar->insertWidget($user_actions, 'actions', 'user_actions');

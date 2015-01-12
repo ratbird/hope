@@ -8,7 +8,7 @@ use Studip\Button, Studip\LinkButton;
 
 <form method="post" action="<?= $controller->url_for('admin/user/edit/' . $user['user_id']) ?>">
 <?= CSRFProtection::tokenTag() ?>
-<table class="default collapsable">
+<table class="default nohover collapsable">
 <caption>
     <?= _('Benutzerverwaltung für ') ?><?= htmlReady($user['Vorname']) ?> <?= htmlReady($user['Nachname']) ?>
     <?= ($prelim ? ' (' . _("vorläufiger Benutzer") . ')' : '')?>

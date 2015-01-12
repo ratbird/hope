@@ -3,7 +3,7 @@
     <td class="areaentry">
         <form class="add_area_form" method="post" action="<?= PluginEngine::getLink('coreforum/area/add/' . $category_id) ?>">
             <?= CSRFProtection::tokenTag() ?>
-            <input type="text" name="name" size="50" style="width: 99%;" placeholder="<?= _('Name des neuen Bereiches') ?>" required><br>
+            <input type="text" name="name" size="50" maxlength="255" style="width: 99%;" placeholder="<?= _('Name des neuen Bereiches') ?>" required><br>
             <textarea name="content" style="height: 3em; width: 99%;" placeholder="<?= _('Optionale Beschreibung des neuen Bereiches') ?>"></textarea>
 
             <?= Studip\Button::create(_('Bereich hinzufügen')) ?>

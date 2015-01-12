@@ -38,9 +38,9 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
                     <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                 </a>
-                <div class="areacontent">
-                    <?= htmlReady(ForumEntry::killEdit(substr($entry['content_raw'], 0, 150))) ?>
-                    <? if(strlen($entry['content_raw']) > 150) : ?>...<? endif ?>
+                <div class="areacontent" data-content="<?= htmlReady($entry['content_raw']) ?>">
+                    <?= htmlReady(ForumEntry::killEdit(substr($entry['content_raw'], 0, 150))) 
+                    ?><?= (strlen($entry['content_raw']) > 150) ? '&hellip;' : '' ?>
                 </div>
             </span>
 

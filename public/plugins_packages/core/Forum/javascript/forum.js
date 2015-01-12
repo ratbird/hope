@@ -233,11 +233,15 @@ STUDIP.Forum = {
 
         var template = STUDIP.Forum.getTemplate('edit_area');
 
+        // disable iconbar
+        jQuery('tr[data-area-id=' + area_id + '] .action-icons').hide();
+        
+        // show edit form
         jQuery('tr[data-area-id=' + area_id + '] span.areadata').hide()
             .parent().append(template({
                 area_id : area_id,
                 name : jQuery('tr[data-area-id=' + area_id + '] span.areaname').text().trim(),
-                content : jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text().trim()
+                content : jQuery('tr[data-area-id=' + area_id + '] div.areacontent').attr('data-content')
             }));
     },
 
@@ -245,16 +249,8 @@ STUDIP.Forum = {
         jQuery('tr[data-area-id=' + area_id + '] span.edit_area').remove();
         jQuery('tr[data-area-id=' + area_id + '] span.areadata').show();
 
-        // reset the input field with the unchanged name
-        jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit input[name=name]').val(
-            jQuery('tr[data-area-id=' + area_id + '] span.areaname').text().trim()
-        );
-
-        jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit textarea[name=content]').val(
-            jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text().trim()
-        );
-
-            jQuery('tr[data-area-id=' + area_id + '] span.areadata').parent().css('height', '');
+        // enable iconbar
+        jQuery('tr[data-area-id=' + area_id + '] .action-icons').show();
     },
 
     saveArea: function (area_id) {
@@ -264,17 +260,28 @@ STUDIP.Forum = {
 
         // display the new name immediately
         jQuery('tr[data-area-id=' + area_id + '] span.areaname').text(name.name);
-        jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(name.content);
+        
+        // shorten the description to 150 chars max
+        if (name.content.length > 150) {
+            jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(name.content.substr(0, 150)).append('&hellip;');
+        } else {
+            jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(name.content);
+        }
 
         jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit').hide();
         jQuery('tr[data-area-id=' + area_id + '] span.areaname').parent().parent().show();
 
+        // store the modified area
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/edit/' + area_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: name
         });
 
+        // remove edit form
         jQuery('tr[data-area-id=' + area_id + '] span.edit_area').remove();
+        
+        // enable iconbar
+        jQuery('tr[data-area-id=' + area_id + '] .action-icons').show();
     },
 
     saveEntry: function(topic_id) {

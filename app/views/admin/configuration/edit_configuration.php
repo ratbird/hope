@@ -1,7 +1,7 @@
 <h2 class="hide-in-dialog"><?= _('Bearbeiten von Konfigurationsparameter') ?></h2>
 <form action="<?= $controller->url_for('admin/configuration/edit_configuration?id=' . $config['field']) ?>" method="post" data-dialog>
     <?= CSRFProtection::tokenTag() ?>
-<table class="default">
+<table class="default nohover">
     <tbody>
         <tr>
             <td><?= _('Name') ?>:</td>

@@ -1,6 +1,8 @@
 <tr>
     <td>
-        <?= htmlReady($field) ?>
+        <a data-dialog href="<?= $controller->url_for($linkchunk . $field) ?>">
+            <?= htmlReady($field) ?>
+        </a>
     <? if (!empty($description)): ?>
         <br><small><?= htmlReady($description)?></small>
     <? endif; ?>

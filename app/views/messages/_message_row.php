@@ -23,7 +23,7 @@
     <? endif; ?>
     <? endif; ?>
     </td>
-    <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>
+    <td><?= date("d.m.Y G:i", $message['mkdate']) ?></td>
     <td class="tag-container">
     <? foreach ($message->getTags() as $tag) : ?>
         <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="message-tag" title="<?= _("Alle Nachrichten zu diesem Schlagwort") ?>">

@@ -24,8 +24,8 @@ use Studip\Button, Studip\LinkButton;
 <tbody>
 <?
 foreach ($available_modules as $category => $pluginlist) {
-    if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Plugins und Module A-Z') continue;
-    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Plugins und Module A-Z') continue;
+    if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Inhaltselemente von A-Z') continue;
+    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Inhaltselemente von A-Z') continue;
 
     ?>
     <tr>

@@ -7,8 +7,8 @@
 
 <?
     foreach ($sortedList as $category => $pluginlist) {
-        if ($_SESSION['profile_plus']['displaystyle'] != 'category' && $category != 'Plugins und Module A-Z') continue;
-        if (isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category] && $category != 'Plugins und Module A-Z') continue;
+        if ($_SESSION['profile_plus']['displaystyle'] != 'category' && $category != 'Inhaltselemente von A-Z') continue;
+        if (isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category] && $category != 'Inhaltselemente von A-Z') continue;
 ?>
         <tr>
             <th colspan = 3>

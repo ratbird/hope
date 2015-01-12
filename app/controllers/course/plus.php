@@ -241,8 +241,8 @@ class Course_PlusController extends AuthenticatedController
                 	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
                 			|| !isset($_SESSION['plus'])
                 	) {
-	                	$list['Plugins und Module A-Z'][strtolower($key)]['object'] = $plugin;
-	                	$list['Plugins und Module A-Z'][strtolower($key)]['type'] = 'plugin';
+	                	$list['Inhaltselemente von A-Z'][strtolower($key)]['object'] = $plugin;
+	                	$list['Inhaltselemente von A-Z'][strtolower($key)]['type'] = 'plugin';
                 	}
                 	
                 } else {
@@ -284,9 +284,9 @@ class Course_PlusController extends AuthenticatedController
                 			|| !isset($_SESSION['plus'])
                 	) {
                 		
-                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['object'] = $val;
-                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['type'] = 'modul';
-                		$list['Plugins und Module A-Z'][strtolower($val['name'])]['modulkey'] = $key;
+                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['object'] = $val;
+                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['type'] = 'modul';
+                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['modulkey'] = $key;
                 	}
                 	 
                 } else {

@@ -267,8 +267,8 @@ class ProfileModulesController extends AuthenticatedController
             	if (($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
             			|| !isset($_SESSION['profile_plus'])
             	) {
-            		$list['Plugins und Module A-Z'][strtolower($key)]['object'] = $plugin;
-            		$list['Plugins und Module A-Z'][strtolower($key)]['activated'] = $activated;
+            		$list['Inhaltselemente von A-Z'][strtolower($key)]['object'] = $plugin;
+            		$list['Inhaltselemente von A-Z'][strtolower($key)]['activated'] = $activated;
             	}
             	 
             } else {            

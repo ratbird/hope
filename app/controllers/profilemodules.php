@@ -146,11 +146,11 @@ class ProfileModulesController extends AuthenticatedController
         $widget = new ActionsWidget();
 
         if ($_SESSION['profile_plus']['View'] == 'openall') {
-            $widget->addLink(_("Alles Zuklappen"),
+            $widget->addLink(_("Alles zuklappen"),
                 URLHelper::getLink('?', array('mode' => 'closeall')),
                 'icons/16/blue/assessment.png');
         } else {
-            $widget->addLink(_("Alles Aufklappen"),
+            $widget->addLink(_("Alles aufklappen"),
                 URLHelper::getLink('?', array('mode' => 'openall')),
                 'icons/16/blue/assessment.png');
         }

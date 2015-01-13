@@ -60,7 +60,9 @@ class Settings_PasswordController extends Settings_SettingsController
 
         $password  = Request::get('new_password');
         $confirm   = Request::get('new_password_confirm');
-        if (!($hasher->CheckPassword(md5(Request::get('password')), $this->user['password'] ) || $hasher->CheckPassword(Request::get('password'), $this->user['password'] ))) {
+        if (!($hasher->CheckPassword(md5(Request::get('password')), $this->user['password'] )
+            || $hasher->CheckPassword(Request::get('password'), $this->user['password'] )
+            || (strlen($this->user['password']) == 32 && md5(Request::get('password')) == $this->user['password']))) {
             $errors[] = _('Das aktuelle Passwort wurde nicht korrekt eingegeben.');
         }
         if (!$this->validator->ValidatePassword($password)) {

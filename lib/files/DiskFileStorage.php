@@ -89,7 +89,7 @@ class DiskFileStorage implements FileStorage
      */
     public function getMimeType()
     {
-        return mime_content_type($this->file_path);
+        return get_mime_type($this->file_path);
     }
 
     /**

@@ -848,7 +848,7 @@ abstract class RouteMap
         if (isset($opts['type'])) {
             $this->contentType($opts['type']);
         } else if (!isset($this->response['Content-Type'])) {
-            $this->contentType(mime_content_type($path));
+            $this->contentType(get_mime_type($path));
         }
 
         if ($opts['disposition'] === 'attachment' || isset($opts['filename'])) {

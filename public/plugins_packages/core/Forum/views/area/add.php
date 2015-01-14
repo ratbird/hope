@@ -39,8 +39,9 @@
                     <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                 </a>
                 <div class="areacontent" data-content="<?= htmlReady($entry['content_raw']) ?>">
-                    <?= htmlReady(ForumEntry::killEdit(substr($entry['content_raw'], 0, 150))) 
-                    ?><?= (strlen($entry['content_raw']) > 150) ? '&hellip;' : '' ?>
+                    <? $description = ForumEntry::killFormat(ForumEntry::killEdit($entry['content_raw'])) ?>
+                    <?= htmlReady(substr($description, 0, 150))
+                    ?><?= (strlen($description) > 150) ? '&hellip;' : '' ?>
                 </div>
             </span>
 

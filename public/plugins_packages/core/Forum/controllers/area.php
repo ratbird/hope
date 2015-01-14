@@ -52,7 +52,7 @@ class AreaController extends ForumController
 
         if (Request::isAjax()) {
             ForumEntry::update($area_id, studip_utf8decode(Request::get('name')), studip_utf8decode(Request::get('content')));
-            $this->render_nothing();
+            $this->render_json(array('content' => ForumEntry::killFormat(ForumEntry::killEdit(studip_utf8decode(Request::get('content'))))));
         } else {
             ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
             $this->flash['messages'] = array('success' => _('Die Änderungen am Bereich wurden gespeichert.'));

@@ -235,7 +235,7 @@ STUDIP.Forum = {
 
         // disable iconbar
         jQuery('tr[data-area-id=' + area_id + '] .action-icons').hide();
-        
+
         // show edit form
         jQuery('tr[data-area-id=' + area_id + '] span.areadata').hide()
             .parent().append(template({
@@ -260,28 +260,33 @@ STUDIP.Forum = {
 
         // display the new name immediately
         jQuery('tr[data-area-id=' + area_id + '] span.areaname').text(name.name);
-        
-        // shorten the description to 150 chars max
-        if (name.content.length > 150) {
-            jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(name.content.substr(0, 150)).append('&hellip;');
-        } else {
-            jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(name.content);
-        }
 
-        jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit').hide();
-        jQuery('tr[data-area-id=' + area_id + '] span.areaname').parent().parent().show();
+        // store the modified raw-content used for possible subsequent edits
+        jQuery('tr[data-area-id=' + area_id + '] div.areacontent').attr('data-content', name.content);
 
-        // store the modified area
+        // store the modified area and get formatted content-text from server
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/area/edit/' + area_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
-            data: name
+            data: name,
+            success: function(data)  {
+                // shorten the description to 150 chars max
+                if (data.content.length > 150) {
+                    jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(data.content.substr(0, 150)).append('&hellip;');
+                } else {
+                    jQuery('tr[data-area-id=' + area_id + '] div.areacontent').text(data.content);
+                }
+
+                jQuery('tr[data-area-id=' + area_id + '] span.areaname_edit').hide();
+                jQuery('tr[data-area-id=' + area_id + '] span.areaname').parent().parent().show();
+
+                // remove edit form
+                jQuery('tr[data-area-id=' + area_id + '] span.edit_area').remove();
+
+                // enable iconbar
+                jQuery('tr[data-area-id=' + area_id + '] .action-icons').show();
+            }
         });
 
-        // remove edit form
-        jQuery('tr[data-area-id=' + area_id + '] span.edit_area').remove();
-        
-        // enable iconbar
-        jQuery('tr[data-area-id=' + area_id + '] .action-icons').show();
     },
 
     saveEntry: function(topic_id) {

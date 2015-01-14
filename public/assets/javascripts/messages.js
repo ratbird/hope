@@ -211,6 +211,7 @@ STUDIP.Messages = {
                     type: "POST",
                     success: function (html) {
                         jQuery("#preview .message_body").html(html);
+                        STUDIP.Markup.element("#preview .message_body");
                     }
                 });
                 old_written_text = written_text;

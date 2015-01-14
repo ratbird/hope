@@ -386,7 +386,8 @@ class Smiley
             array('user_info', 'lebenslauf'),
             array('user_info', 'publi'),
             array('user_info', 'schwerp'),
-            array('wiki', 'body')
+            array('wiki', 'body'),
+            array('forum_entries', 'content')
         );
 
         // add tables from ForumModules to count for
@@ -512,13 +513,12 @@ class Smiley
         }
 
         foreach ($files as $file) {
-            echo $file." ";
             $image_info = getimagesize($file);
             if ($image_info[2] !== IMAGETYPE_GIF) {
                 continue;
             }
 
-            $name = substr($file, 0, strrpos("."));
+            $name = substr(basename($file), 0, strrpos(basename($file), "."));
             //$name = basename($file, '.gif');
             $smiley = Smiley::getByName($name);
 

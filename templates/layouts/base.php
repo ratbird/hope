@@ -113,7 +113,7 @@ if ($infobox && is_array($infobox)) {
         </div>
     </div> <? // Closes #layout_page opened in included templates/header.php ?>
 
-    <? include 'templates/footer.php'; ?>
+    <?= $this->render_partial('footer'); ?>
     <!-- Ende Page -->
     <? /* <div id="layout_push"></div> */ ?>
 </div>

@@ -12,12 +12,11 @@ if ($navigation) {
             if (!$nav->isVisible()) {
                 continue;
             }
-            $image = $nav->getImage();
             $nav_id = "nav_".implode("_", preg_split("/\//", $tab_root_path, -1, PREG_SPLIT_NO_EMPTY))."_".$path;
             $link = $nav_links->addLink(
                 $nav->getTitle(),
                 URLHelper::getLink($nav->getURL()),
-                $image ? $image['src'] : null,
+                null,
                 array('id' => $nav_id)
             );
             $link->setActive($nav->isActive());

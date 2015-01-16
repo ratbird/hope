@@ -35,7 +35,7 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
         }
 
         if ($GLOBALS['perm']->have_perm('root')) {
-            $navigation = new Navigation('', 'dispatch.php/news/edit_news/new');
+            $navigation = new Navigation('', URLHelper::getLink('dispatch.php/news/edit_news/new/studip'));
             $navigation->setImage('icons/16/blue/add.png', array('rel' => 'get_dialog', 'title' =>_('Ankündigungen bearbeiten')));
             $icons[] = $navigation;
             if (get_config('NEWS_RSS_EXPORT_ENABLE')) {

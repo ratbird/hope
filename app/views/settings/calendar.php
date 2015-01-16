@@ -74,20 +74,6 @@ $cal_step_weeks = array(
                 </label>
             </td>
         </tr>
-        <tr>
-            <td>
-                <label for="cal_delete"><?= _('Löschen von Terminen'); ?></label>
-            </td>
-            <td>
-                <select name="cal_delete" id="cal_delete" size="1">
-                <? foreach ($cal_deletes as $index => $label): ?>
-                    <option value="<?= $index ?>" <? if ($delete == $index) echo 'selected'; ?>>
-                        <?= $label ?>
-                    </option>
-                <? endforeach; ?>
-                </select>
-            </td>
-        </tr>
 <? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
     </tbody>
     <tbody>
@@ -146,25 +132,6 @@ $cal_step_weeks = array(
                 </select>
             </td>
         </tr>
-<?/*
-        <tr>
-            <td><?= _('Feiertage/Semesterdaten:') ?></td>
-            <td>
-                <label>
-                    <input type="checkbox" name="cal_holidays" value="TRUE"
-                           <? if ($holidays) echo 'checked'; ?>>
-                    <?= _('Feiertage anzeigen') ?>
-                </label>
-                <br>
-
-                <label>
-                    <input type="checkbox" name="cal_sem_data" value="5"
-                           <? if ($sem_data) echo 'checked'; ?>>
-                    <?= _('Semesterdaten anzeigen') ?>
-                </label>
-            </td>
-        </tr>
-*/?>
 <? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
     </tbody>
     <tbody>
@@ -192,7 +159,7 @@ $cal_step_weeks = array(
             <td>
                 <select name="cal_step_week_group" id="cal_step_week_group">
                 <? foreach ($cal_step_weeks as $index => $label): ?>
-                    <option value="<?= $index ?>" <? if ($step_week_group) echo 'selected'; ?>>
+                    <option value="<?= $index ?>" <? if ($step_week_group == $index) echo 'selected'; ?>>
                         <?= $label ?>
                     </option>
                 <? endforeach; ?>

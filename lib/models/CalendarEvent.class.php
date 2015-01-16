@@ -45,21 +45,46 @@ class CalendarEvent extends SimpleORMap implements Event
             'class_name' => 'Institute',
             'foreign_key' => 'range_id',
         );
-        $config['belongs_to']['event'] = array(
+        $config['has_one']['event'] = array(
             'class_name' => 'EventData',
             'foreign_key' => 'event_id',
-            'on_delete' => 'delete'
+            'assoc_foreign_key' => 'event_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store'
         );
-        $config['additional_fields']['type'] = true;
-        $config['additional_fields']['name'] = true;
+        $config['additional_fields']['type']['get'] = true;
+        $config['additional_fields']['name']['get'] = true;
+        $config['additional_fields']['author_id'] = true;
+        $config['additional_fields']['editor_id'] = true;
+        $config['additional_fields']['title'] = true;
+        $config['additional_fields']['start'] = true;
+        $config['additional_fields']['end'] = true;
         
         parent::configure($config);
     }
-
+    
     public static function deleteBySQL($where, $params = array())
     {
         parent::deleteBySQL($where, $params);
         EventData::garbageCollect();
+    }
+    
+    /**
+     * Finds calendar events by the uid of the event data.
+     * 
+     * @param string $uid The global unique id of this event.
+     * @return null|CalendarEvent The calendar event, an array of calendar events or null.
+     */
+    public static function findByUid($uid, $range_id = null)
+    {
+        $event_data = EventData::findByuid($uid);
+        if ($event_data) {
+            if ($range_id) {
+                return self::find(array($range_id, $event_data->getId()));
+            }
+            return self::findByevent_id($event_data->getId());
+        }
+        return null;
     }
     
     /**
@@ -68,79 +93,113 @@ class CalendarEvent extends SimpleORMap implements Event
      *
      * @return string All categories as list.
      */
-    public function toStringCategories()
+    public function toStringCategories($as_array = false)
     {
         global $PERS_TERMIN_KAT;
 
-        $category_list = '';
+        $categories = array();
         if ($this->havePermission(Event::PERMISSION_READABLE,
                 $this->permission_user_id)) {
-            if ($this->categories) {
-                $category_list =
-                        implode(', ', array_map('trim', explode(',', $this->categories)));
+            if ($this->event->categories) {
+                $categories = array_map('trim', explode(',', $this->event->categories));
             }
-            if ($this->category_intern) {
-                $category_list = $PERS_TERMIN_KAT[$this->category_intern]['name']
-                        . ', ' . $category_list;
+            if ($this->event->category_intern) {
+                array_unshift($categories,
+                        $PERS_TERMIN_KAT[$this->event->category_intern]['name']);
             }
         }
-        return $category_list;
+        return $as_array ? $categories : implode(', ', $categories);
+    }
+    
+    /**
+     * Returns all values that defines a recurrence rule or a single value
+     * named by $index.
+     * 
+     * @param string $index Name of the value to retrieve (optional).
+     * @return string|array The value(s) of the recurrence rule.
+     * @throws InvalidArgumentException
+     */
+    public function getRecurrence($index = null)
+    {
+        $recurrence = array(
+            'ts' => $this->event->ts ?: mktime(12, 0, 0, date('n', $this->getStart()), date('j',
+                $this->getStart()), date('Y', $this->getStart())),
+            'linterval' => $this->event->linterval,
+            'sinterval' => $this->event->sinterval,
+            'wdays' => $this->event->wdays,
+            'month' => $this->event->month,
+            'day' => $this->event->day,
+            'rtype' => $this->event->rtype ?: 'SINGLE',
+            'duration' => $this->event->duration,
+            'count' => $this->event->count,
+            'expire' => $this->event->expire
+        );
+        if ($index) {
+            if (in_array($index, array_keys($recurrence))) {
+                return $recurrence[$index];
+            } else {
+                throw new InvalidArgumentException('CalendarEvent::getRecurrence '
+                        . $index . ' is not a field in the recurrence rule.');
+            }
+        }
+        return $recurrence;
     }
     
     /**
      * 
      * TODO should throw an exception if input values are wrong
      * 
-     * @param type $r_rule
-     * @param type $start
-     * @param type $end
+     * @param array $r_rule
      * @return array The values of the recurrence rule.
      */
-    public static function createRepeat($r_rule, $start, $end)
+    function setRecurrence($r_rule)
     {
-        $duration = (int) ((mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end))
-                - mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start)))
-                / 86400);
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $duration = (int) ((mktime(12, 0, 0, date('n', $end),
+                date('j', $end), date('Y', $end))
+                - mktime(12, 0, 0, date('n', $start),
+                        date('j', $start), date('Y', $start))) / 86400);
         if (!isset($r_rule['count'])) {
             $r_rule['count'] = 0;
         }
-        // Hier wird auch der 'genormte Timestamp' (immer 12.00 Uhr, ohne Sommerzeit) ts berechnet.
+        
         switch ($r_rule['rtype']) {
-
-            // ts ist hier der Tag des Termins 12:00:00 Uhr
             case 'SINGLE':
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
+                $ts = mktime(12, 0, 0, date('n', $start),
+                        date('j', $start), date('Y', $start));
                 $rrule = array($ts, 0, 0, '', 0, 0, 'SINGLE', $duration);
                 break;
-
             case 'DAILY':
                 $r_rule['linterval'] = $r_rule['linterval'] ? intval($r_rule['linterval']) : 1;
-                // ts ist hier der Tag des ersten Wiederholungstermins 12:00:00 Uhr
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) + $r_rule['linterval'], date('Y', $start));
+                $ts = mktime(12, 0, 0, date('n', $start),
+                        date('j', $start) + $r_rule['linterval'], date('Y', $start));
                 if ($r_rule['count']) {
                     $r_rule['expire'] = mktime(23, 59, 59, date('n', $start), date('j', $start)
                             + ($r_rule['count'] - 1) * $r_rule['linterval'], date('Y', $start));
                 }
                 $rrule = array($ts, $r_rule['linterval'], 0, '', 0, 0, 'DAILY', $duration);
                 break;
-
             case 'WEEKLY':
                 $r_rule['linterval'] = $r_rule['linterval'] ? intval($r_rule['linterval']) : 1;
-                // ts ist hier der Montag der ersten Wiederholungswoche 12:00:00 Uhr
                 if (!$r_rule['wdays']) {
                     $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) +
-                            ($r_rule['linterval'] * 7 - (strftime('%u', $start) - 1)), date('Y', $start));
+                            ($r_rule['linterval'] * 7 - (strftime('%u', $start) - 1)),
+                            date('Y', $start));
                     if ($r_rule['count']) {
-                        $r_rule['expire'] = mktime(23, 59, 59, date('n', $start), date('j', $start) +
-                                ($r_rule['linterval'] * 7 * ($r_rule['count'] - 1)), date('Y', $start));
+                        $r_rule['expire'] = mktime(23, 59, 59, date('n', $start),
+                                date('j', $start) + ($r_rule['linterval'] * 7 * ($r_rule['count'] - 1)),
+                                date('Y', $start));
                     }
-                    $rrule = array($ts, $r_rule['linterval'], 0, strftime('%u', $start), 0, 0, 'WEEKLY', $duration);
+                    $rrule = array($ts, $r_rule['linterval'], 0, strftime('%u', $start),
+                        0, 0, 'WEEKLY', $duration);
                 } else {
-                    $ts = mktime(12, 0, 0, date('n', $start), date('j', $start) + (7 - (strftime('%u', $start) - 1))
-                            - ((strftime('%u', $start) <= substr($r_rule['wdays'], -1)) ? 7 : 0), date('Y', $start));
+                    $ts = mktime(12, 0, 0, date('n', $start),
+                            date('j', $start) + (7 - (strftime('%u', $start) - 1))
+                            - ((strftime('%u', $start) <= substr($r_rule['wdays'], -1)) ? 7 : 0),
+                            date('Y', $start));
 
                     if ($r_rule['count']) {
-                        // last week day of the recurrence set
                         $set_start_wday = false;
                         $wdays = array(0);
                         for ($i = 0; $i < strlen($r_rule['wdays']); $i++) {
@@ -156,12 +215,13 @@ class CalendarEvent extends SimpleORMap implements Event
                         $expire_ts = $ts + ((($r_rule['count'] % (count($wdays) - 1)) >= 1) ? (($start_wday - 1) * 86400) : 0)
                                 + floor($r_rule['count'] / (count($wdays) - 1)) * 604800 * $r_rule['linterval'];
 
-                        $r_rule['expire'] = mktime(23, 59, 59, date('n', $expire_ts), date('j', $expire_ts), date('Y', $expire_ts));
+                        $r_rule['expire'] = mktime(23, 59, 59, date('n', $expire_ts),
+                                date('j', $expire_ts), date('Y', $expire_ts));
                     }
-                    $rrule = array($ts, $r_rule['linterval'], 0, $r_rule['wdays'], 0, 0, 'WEEKLY', $duration);
+                    $rrule = array($ts, $r_rule['linterval'], 0, $r_rule['wdays'],
+                        0, 0, 'WEEKLY', $duration);
                 }
                 break;
-
             case 'MONTHLY':
                 if ($r_rule['month']) {
                     return false;
@@ -170,20 +230,21 @@ class CalendarEvent extends SimpleORMap implements Event
                 if (!$r_rule['day'] && !$r_rule['sinterval'] && !$r_rule['wdays']) {
                     $amonth = date('n', $start) + $r_rule['linterval'];
                     $ts = mktime(12, 0, 0, $amonth, date('j', $start), date('Y', $start));
-                    $rrule = array($ts, $r_rule['linterval'], 0, '', 0, date('j', $start), 'MONTHLY', $duration);
+                    $rrule = array($ts, $r_rule['linterval'], 0, '', 0,
+                        date('j', $start), 'MONTHLY', $duration);
                 } else if (!$r_rule['sinterval'] && !$r_rule['wdays']) {
-                    // Ist erste Wiederholung schon im gleichen Monat?
                     if ($r_rule['day'] < date('j', $start)) {
                         $amonth = date('n', $start) + $r_rule['linterval'];
                     } else {
                         $amonth = date('n', $start);
                     }
                     $ts = mktime(12, 0, 0, $amonth, $r_rule['day'], date('Y', $start));
-                    $rrule = array($ts, $r_rule['linterval'], 0, '', 0, $r_rule['day'], 'MONTHLY', $duration);
-                } elseif (!$r_rule['day']) {
-                    // hier ist ts der erste Wiederholungstermin
+                    $rrule = array($ts, $r_rule['linterval'], 0, '', 0,
+                        $r_rule['day'], 'MONTHLY', $duration);
+                } else if (!$r_rule['day']) {
                     $amonth = date('n', $start);
-                    $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
+                    $adate = mktime(12, 0, 0, $amonth, 1,
+                            date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
                     $awday = strftime('%u', $adate);
                     $adate -= ( $awday - $r_rule['wdays']) * 86400;
                     if ($r_rule['sinterval'] == 5) {
@@ -193,14 +254,13 @@ class CalendarEvent extends SimpleORMap implements Event
                         if (date('n', $adate) == date('n', $adate + 604800)) {
                             $adate += 604800;
                         }
-                    } elseif ($awday > $r_rule['wdays']) {
+                    } else if ($awday > $r_rule['wdays']) {
                         $adate += 604800;
                     }
-                    // Ist erste Wiederholung schon im gleichen Monat?
                     if (date('Ymd', $adate) < date('Ymd', $start)) {
-                        //Dann muss hier die Berechnung ohne interval wiederholt werden
                         $amonth = date('n', $start) + $r_rule['linterval'];
-                        $adate = mktime(12, 0, 0, $amonth, 1, date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
+                        $adate = mktime(12, 0, 0, $amonth, 1,
+                                date('Y', $start)) + ($r_rule['sinterval'] - 1) * 604800;
                         $awday = strftime('%u', $adate);
                         $adate -= ( $awday - $r_rule['wdays']) * 86400;
                         if ($r_rule['sinterval'] == 5) {
@@ -210,13 +270,13 @@ class CalendarEvent extends SimpleORMap implements Event
                             if (date('n', $adate) == date('n', $adate + 604800)) {
                                 $adate += 604800;
                             }
-                        }
-                        else if ($awday > $r_rule['wdays']) {
+                        } else if ($awday > $r_rule['wdays']) {
                             $adate += 604800;
                         }
                     }
                     $ts = $adate;
-                    $rrule = array($ts, $r_rule['linterval'], $r_rule['sinterval'], $r_rule['wdays'], 0, 0, 'MONTHLY', $duration);
+                    $rrule = array($ts, $r_rule['linterval'], $r_rule['sinterval'],
+                        $r_rule['wdays'], 0, 0, 'MONTHLY', $duration);
                 }
 
                 if ($r_rule['count']) {
@@ -224,25 +284,29 @@ class CalendarEvent extends SimpleORMap implements Event
                             * ($r_rule['count'] - 1), date('j', $ts), date('Y', $ts));
                 }
                 break;
-
             case 'YEARLY':
-                // ts ist hier der erste Wiederholungstermin 12:00:00 Uhr
                 if (!$r_rule['month'] && !$r_rule['day'] && !$r_rule['sinterval'] && !$r_rule['wdays']) {
-                    $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start) + 1);
-                    $rrule = array($ts, 1, 0, '', date('n', $start), date('j', $start), 'YEARLY', $duration);
+                    $ts = mktime(12, 0, 0, date('n', $start),
+                            date('j', $start), date('Y', $start) + 1);
+                    $rrule = array($ts, 1, 0, '', date('n', $start),
+                        date('j', $start), 'YEARLY', $duration);
                 } else if (!$r_rule['sinterval'] && !$r_rule['wdays']) {
                     if (!$r_rule['day']) {
                         $r_rule['day'] = date('j', $start);
                     }
-                    $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start));
+                    $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'],
+                            date('Y', $start));
                     if ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start))) {
-                        $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'], date('Y', $start) + 1);
+                        $ts = mktime(12, 0, 0, $r_rule['month'], $r_rule['day'],
+                                date('Y', $start) + 1);
                     }
-                    $rrule = array($ts, 1, 0, '', $r_rule['month'], $r_rule['day'], 'YEARLY', $duration);
+                    $rrule = array($ts, 1, 0, '', $r_rule['month'],
+                        $r_rule['day'], 'YEARLY', $duration);
                 } else if (!$r_rule['day']) {
                     $ayear = date('Y', $start);
                     do {
-                        $adate = mktime(12, 0, 0, $r_rule['month'], 1 + ($r_rule['sinterval'] - 1) * 7, $ayear);
+                        $adate = mktime(12, 0, 0, $r_rule['month'],
+                                1 + ($r_rule['sinterval'] - 1) * 7, $ayear);
                         $aday = strftime('%u', $adate);
                         $adate -= ( $aday - $r_rule['wdays']) * 86400;
                         if ($r_rule['sinterval'] == 5) {
@@ -258,16 +322,18 @@ class CalendarEvent extends SimpleORMap implements Event
                         $ts = $adate;
                         $ayear++;
                     } while ($ts <= mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start)));
-                    $rrule = array($ts, 1, $r_rule['sinterval'], $r_rule['wdays'], $r_rule['month'], 0, 'YEARLY', $duration);
+                    $rrule = array($ts, 1, $r_rule['sinterval'], $r_rule['wdays'],
+                        $r_rule['month'], 0, 'YEARLY', $duration);
                 }
 
                 if ($r_rule['count']) {
-                    $r_rule['expire'] = mktime(23, 59, 59, date('n', $ts), date('j', $ts), date('Y', $ts) + $r_rule['count'] - 1);
+                    $r_rule['expire'] = mktime(23, 59, 59, date('n', $ts),
+                            date('j', $ts), date('Y', $ts) + $r_rule['count'] - 1);
                 }
                 break;
-
             default :
-                $ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
+                $ts = mktime(12, 0, 0, date('n', $start),
+                        date('j', $start), date('Y', $start));
                 $rrule = array($ts, 0, 0, '', 0, 0, 'SINGLE', $duration);
                 $r_rule['count'] = 0;
         }
@@ -275,49 +341,197 @@ class CalendarEvent extends SimpleORMap implements Event
         if (!$r_rule['expire'] || $r_rule['expire'] > Calendar::CALENDAR_END) {
             $r_rule['expire'] = Calendar::CALENDAR_END;
         }
-
-        return array(
-            'ts' => $rrule[0],
-            'linterval' => $rrule[1],
-            'sinterval' => $rrule[2],
-            'wdays' => $rrule[3],
-            'month' => $rrule[4],
-            'day' => $rrule[5],
-            'rtype' => $rrule[6],
-            'duration' => $rrule[7],
-            'count' => $r_rule['count'],
-            'expire' => $r_rule['expire']);
+        $this->event->ts = $rrule[0];
+        $this->event->linterval = $rrule[1];
+        $this->event->sinterval = $rrule[2];
+        $this->event->wdays = $rrule[3];
+        $this->event->month = $rrule[4];
+        $this->event->day = $rrule[5];
+        $this->event->rtype = $rrule[6];
+        $this->event->duration = $rrule[7];
+        $this->event->count = $r_rule['count'];
+        $this->event->expire = $r_rule['expire'];
     }
     
     /**
-     * 
-     * @param string $index
-     * @return string|array
-     * @throws InvalidArgumentException
+     * Returns a string representation of the recurrence rule.
+     * If $only_type is true returns only the type of the recurrence.
+     *
+     * @param bool $only_type If true returns only the type of recurrence.
+     * @return string The recurrence rule - human readable
      */
-    public function getRepeat($index = null)
+    public function toStringRecurrence($only_type = false)
     {
-        if ($index) {
-            if (in_array($index, array('ts', 'linterval',  'sinterval', 'wdays',
-                'month', 'day', 'rtype', 'duration', 'count', 'expire'))) {
-                return $this->event->$index;
-            } else {
-                throw new InvalidArgumentException('CalendarEvent::getRepeat '
-                        . $index . ' is no field in recurrence rule.');
+        $rrule = $this->getRecurrence();
+        $replace = array(_('Montag') . ', ', _('Dienstag') . ', ', _('Mittwoch') . ', ',
+            _('Donnerstag') . ', ', _('Freitag') . ', ', _('Samstag') . ', ', _('Sonntag') . ', ');
+        $search = array('1', '2', '3', '4', '5', '6', '7');
+        $wdays = str_replace($search, $replace, $rrule['wdays']);
+        $wdays = substr($wdays, 0, -2);
+
+        switch ($rrule['rtype']) {
+            case 'DAILY':
+                if ($rrule['linterval'] > 1) {
+                        $type = 'xdaily';
+                    $text = sprintf(_('Der Termin wird alle %s Tage wiederholt.'),
+                            $rrule['linterval']);
+                } else {
+                    $type = 'daily';
+                    $text = _('Der Termin wird täglich wiederholt');
+                }
+                break;
+            case 'WEEKLY':
+                if ($rrule['linterval'] > 1) {
+                    $type = 'xweek_wdaily';
+                    $text = sprintf(_('Der Termin wird alle %s Wochen am %s wiederholt.'),
+                            $rrule['linterval'], $wdays);
+                } else {
+                    if ($rrule['wdays'] = '12345') {
+                        $type = 'workdaily';
+                    } else {
+                        $type = 'wdaily';
+                    }
+                    $text = sprintf(_('Der Termin wird jeden %s wiederholt.'), $wdays);
+                }
+                break;
+            case 'MONTHLY':
+                if ($rrule['linterval'] > 1) {
+                    if ($rrule['day']) {
+                        $type = 'mday_xmonthly';
+                        $text = sprintf(_('Der Termin wird am %s. alle %s Monate wiederholt.'),
+                                $rrule['day'], $rrule['linterval']);
+                    } else {
+                        if ($rrule['sinterval'] != '5') {
+                            $type = 'xwday_xmonthly';
+                            $text = sprintf(_('Der Termin wird jeden %s. %s alle %s Monate wiederholt.'),
+                                    $rrule['sinterval'], $wdays, $rrule['linterval']);
+                        } else {
+                            $type = 'lastwday_xmonthly';
+                            $text = sprintf(_('Der Termin wird jeden letzten %s alle %s Monate wiederholt.'),
+                                    $wdays, $rrule['linterval']);
+                        }
+                    }
+                } else {
+                    if ($rrule['day']) {
+                        $type = 'mday_monthly';
+                        $text = sprintf(_('Der Termin wird am %s. jeden Monat wiederholt.'),
+                                $rrule['day'], $rrule['linterval']);
+                    } else {
+                        if ($rrule['sinterval'] != '5') {
+                            $type = 'xwday_monthly';
+                            $text = sprintf(_('Der Termin wird am %s. %s jeden Monat wiederholt.'),
+                                    $rrule['sinterval'], $wdays, $rrule['linterval']);
+                        } else {
+                            $type = 'lastwday_monthly';
+                            $text = sprintf(_('Der Termin wird jeden letzten %s jeden Monat wiederholt.'),
+                                    $wdays, $rrule['linterval']);
+                        }
+                    }
+                }
+                break;
+            case 'YEARLY':
+                $month_names = array(_('Januar'), _('Februar'), _('März'), _('April'), _('Mai'),
+                    _('Juni'), _('Juli'), _('August'), _('September'), _('Oktober'),
+                    _('November'), _('Dezember'));
+                if ($rrule['day']) {
+                    $type = 'mday_month_yearly';
+                    $text = sprintf(_('Der Termin wird jeden %s. %s wiederholt.'),
+                            $rrule['day'], $month_names[$rrule['month'] - 1]);
+                } else {
+                    if ($rrule['sinterval'] != '5') {
+                        $type = 'xwday_month_yearly';
+                        $text = sprintf(_('Der Termin wird jeden %s. %s im %s wiederholt.'),
+                                $rrule['sinterval'], $wdays, $month_names[$rrule['month'] - 1]);
+                    } else {
+                        $type = 'lastwday_month_yearly';
+                        $text = sprintf(_('Der Termin wird jeden letzten %s im %s wiederholt.'),
+                                $wdays, $month_names[$rrule['month'] - 1]);
+                    }
+                }
+                break;
+            default:
+                $type = 'single';
+                $text = _("Der Termin wird nicht wiederholt.");
+        }
+        return $only_type ? $type : $text;
+    }
+    
+    /**
+     * Returns the priority in a human readable form.
+     * If the user has no permission an epmty string will be returned.
+     * 
+     * @return string The priority as a string.
+     */
+    public function toStringPriority()
+    {
+        if (!$this->havePermission(Event::PERMISSION_READABLE,
+                $this->permission_user_id)) {
+            return '';
+        }
+        switch ($this->event->priority) {
+            case 1:
+                return _("hoch");
+            case 2:
+                return _("mittel");
+            case 3:
+                return _("niedrig");
+            default:
+                return _("keine Angabe");
+        }
+    }
+
+    /**
+     * Returns the accessibilty in a human readable form.
+     * If the user has no permission an epmty string will be returned.
+     * 
+     * @return string The accessibility as string.
+     */
+    public function toStringAccessibility()
+    {
+        if ($this->havePermission(Event::PERMISSION_READABLE,
+                $this->permission_user_id)) {
+            switch ($this->event->class) {
+                case 'PUBLIC':
+                    return _('öffentlich');
+                case 'CONFIDENTIAL':
+                    return _('vertraulich');
+                default:
+                    return _('privat');
             }
         }
-        return array(
-            'ts' => $this->event->ts,
-            'linterval' => $this->event->linterval,
-            'sinterval' => $this->event->sinterval,
-            'wdays' => $this->event->wdays,
-            'month' => $this->event->month,
-            'day' => $this->event->day,
-            'rtype' => $this->event->rtype,
-            'duration' => $this->event->duration,
-            'count' => $this->event->count,
-            'expire' => $this->event->expire
-        );
+        return '';
+    }
+    
+    /**
+     * Returns the exceptions as array of unix timestamps.
+     * 
+     * @return array Array of unix timestamps.
+     */
+    public function getExceptions()
+    {
+        $exceptions = array();
+        if (trim($this->event->exceptions)) {
+            $exceptions = explode(',', $this->event->exceptions);
+        }
+        return $exceptions;
+    }
+    
+    /**
+     * Sets proper timestamps as exceptios for given unix timestamps.
+     * 
+     * @param array $exceptions Array of exceptions as unix timestamps.
+     */
+    public function setExceptions($exceptions)
+    {
+        $exc = array();
+        if (is_array($exceptions)) {
+            $exc = array_map(function ($exception) {
+                $exception = intval($exception);
+                return mktime(12, 0, 0, date('n', $exception),
+                        date('j', $exception), date('Y', $exception));
+            }, $exceptions);
+        }
+        $this->event->exceptions = implode(',', $exc);
     }
     
     /**
@@ -340,6 +554,16 @@ class CalendarEvent extends SimpleORMap implements Event
     }
     
     /**
+     * Sets the title of this event.
+     * 
+     * @param type $title The title of this event.
+     */
+    public function setTitle($title)
+    {
+        $this->event->summary = $title;
+    }
+    
+    /**
      * Returns the starttime as unix timestamp of this event.
      *
      * @return int The starttime of this event as a unix timestamp
@@ -349,6 +573,11 @@ class CalendarEvent extends SimpleORMap implements Event
         return $this->event->start;
     }
     
+    /**
+     * Sets the start date time with given unix timestamp.
+     * 
+     * @param string $timestamp Unix timestamp.
+     */
     public function setStart($timestamp)
     {
         $this->event->start = $timestamp;
@@ -364,9 +593,54 @@ class CalendarEvent extends SimpleORMap implements Event
         return $this->event->end;
     }
     
+    /**
+     * Sets the end date time by given unix timestamp.
+     * 
+     * @param string $timestamp Unix timestamp.
+     */
     public function setEnd($timestamp)
     {
         $this->event->end = $timestamp;
+    }
+    
+    /**
+     * Returns the user id of the author.
+     * 
+     * @return string User id of the author.
+     */
+    public function getAuthor_id()
+    {
+        return $this->event->author_id;
+    }
+    
+    /**
+     * Sets the author by given user id.
+     * 
+     * @param string $author_id User id of the author.
+     */
+    public function setAuthor_id($author_id)
+    {
+        $this->event->author_id = $author_id;
+    }
+    
+    /**
+     * Returns the user id of the editor.
+     * 
+     * @return string User id of the editor.
+     */
+    public function getEditor_id()
+    {
+        return $this->event->editor_id;
+    }
+    
+    /**
+     * Sets the editor id by given user id.
+     * 
+     * @param string $editor_id User id of the editor.
+     */
+    public function setEditor_id($editor_id)
+    {
+        $this->event->editor_id = $editor_id;
     }
     
     /**
@@ -442,16 +716,19 @@ class CalendarEvent extends SimpleORMap implements Event
                 $category = $this->event->category_intern;
             }
 
-            $categories = array();
-            foreach ($PERS_TERMIN_KAT as $category) {
-                $categories[] = strtolower($category['name']);
-            }
-
-            $cat_event = explode(',', $this->event->categories);
-            foreach ($cat_event as $category) {
-                $index = array_search(strtolower(trim($category)), $categories);
-                if ($index) {
-                    $category = ++$index;
+            if ($category == 0 && trim($this->event->categories)) {
+                $categories = array();
+                $i = 1;
+                foreach ($PERS_TERMIN_KAT as $pers_cat) {
+                    $categories[strtolower($pers_cat['name'])] = $i++;
+                }
+                $cat_event = split(',', $this->event->categories);
+                foreach ($cat_event as $cat) {
+                    $index = strtolower(trim($cat));
+                    if ($categories[$index]) {
+                        $category = $categories[$index];
+                        break;
+                    }
                 }
             }
         } else {
@@ -461,33 +738,75 @@ class CalendarEvent extends SimpleORMap implements Event
     }
     
     /**
-     * Returns the index of the category.
-     * If the user has no permission, 255 is returned.
+     * Returns a csv list of categories. If no categories are stated or the user
+     * has no permission an empty string will be returned.
      * 
-     * @see config/config.inc.php $TERMIN_TYP
-     * @return int The index of the category
+     * @return string csv list of categories or empty string
      */
-    public function getCategoryStyle($image_size = 'small')
+    public function getUserDefinedCategories()
     {
-        global $PERS_TERMIN_KAT;
-
-        $index = $this->getCategory();
-        if ($index) {
-            return array('image' => $image_size == 'small' ?
-                        Assets::image_path("calendar/category{$index}_small.jpg") :
-                        Assets::image_path("calendar/category{$index}.jpg"),
-                'color' => $PERS_TERMIN_KAT[$index]['color']);
+        if ($this->havePermission(Event::PERMISSION_READABLE,
+                $this->permission_user_id)) {
+            return trim((string) $this->event->categories);
         }
-
-        return array('image' => $image_size == 'small' ?
-                    Assets::image_path("calendar/category1_small.jpg") :
-                    Assets::image_path("calendar/category1.jpg"),
-            'color' => $PERS_TERMIN_KAT[1]['color']);
+        return '';
     }
     
     /**
+     * Stores user defined categories as a csv list.
      * 
-     * @return type
+     * @param array|string $categories An array or csv list of user defined categories.
+     */
+    public function setUserDefinedCategories($categories)
+    {
+        if (!is_array($categories)) {
+            $categories = explode(',', $categories);
+        }
+        $cat_list = implode(',', array_map('trim', $categories));
+        $this->event->categories = $cat_list;
+    }
+    
+    /**
+     * Sets the accessibility (class). Possible classes are 'PUBLIC', 'PRIVATE'
+     * and 'CONFIDENTIAL'.
+     * If the given class is unknown, the event gets the class 'PRIVATE'.
+     * 
+     * @param string $class The name of the class.
+     */
+    public function setAccessibility($class)
+    {
+        $class = strtoupper($class);
+        if (in_array($class, array('PUBLIC', 'PRIVATE', 'CONFIDENTIAL'))) {
+            $this->event->class = $class;
+        } else {
+            $this->event->class = 'PRIVATE';
+        }
+    }
+    
+    /**
+     * Sets the priority. Possible values are
+     * 0: not specified
+     * 1: high
+     * 2: middle
+     * 3: low
+     * Default is 0.
+     * 
+     * @param int $priority The priority between 0 and 3.
+     */
+    public function setPriority($priority)
+    {
+        if ($priority >= 0 && $priority < 4)
+        {
+            $this->event->priority = $priority;
+        } else {
+            $this->event->priority = 0;
+        }
+    }
+    
+    /**
+     * Returns the user id of the editor.
+     * 
+     * @return string User id of the editor
      */
     public function getEditorId()
     {
@@ -495,8 +814,9 @@ class CalendarEvent extends SimpleORMap implements Event
     }
     
     /**
+     * Returns whether this event is an all day event.
      * 
-     * @return type
+     * @return boolean true if all day event
      */
     public function isDayEvent()
     {
@@ -506,6 +826,10 @@ class CalendarEvent extends SimpleORMap implements Event
     }
     
     /**
+     * Returns the state of accessibility as string.
+     * Possible values:
+     * PUBLIC, PRIVATE, CONFIDENTIAL
+     * The default is CONFIDENTIAL.
      * 
      * @return string
      */
@@ -515,6 +839,36 @@ class CalendarEvent extends SimpleORMap implements Event
             return $this->event->class;
         }
         return 'CONFIDENTIAL';
+    }
+    
+    /**
+     * Returns an array with options for accessibility depending on the permission
+     * of the given calendar permission.
+     * 
+     * @param int $permission The calendar permission
+     * @return array The accessibility options.
+     */
+    public function getAccessibilityOptions($permission)
+    {
+        switch ($permission) {
+            case Calendar::PERMISSION_OWN :
+            case Calendar::PERMISSION_ADMIN :
+                $options = array(
+                    'PUBLIC' => _('öffentlich'),
+                    'PRIVATE' => _('privat'),
+                    'CONFIDENTIAL' => _('vertraulich')
+                );
+                break;
+            case Calendar::PERMISSION_WRITABLE :
+                $options = array(
+                    'PRIVATE' => _('privat'),
+                    'CONFIDENTIAL' => _('vertraulich')
+                );
+                break;
+            default :
+                $options = array();
+        }
+        return $options;
     }
     
     /**
@@ -546,6 +900,24 @@ class CalendarEvent extends SimpleORMap implements Event
         return get_object_type($this->range_id, array('user', 'sem', 'inst', 'fak'));
     }
 
+    /**
+     * Returns the priority:
+     * 0 means priority is not stated
+     * 1 means "high"
+     * 2 means "middle"
+     * 3 means "low"
+     * If the user has no permission it returns 0.
+     * 
+     * @return int The priority.
+     */
+    public function getPriority()
+    {
+        if ($this->havePermission(Event::PERMISSION_READABLE,
+                $this->permission_user_id)) {
+            return $this->event->priority ?: 0;
+        }
+        return 0;
+    }
     
     /**
      * 
@@ -602,28 +974,18 @@ class CalendarEvent extends SimpleORMap implements Event
                 'DESCRIPTION' => stripslashes($this->getDescription()),
                 'UID' => $this->getUid(),
                 'CLASS' => $this->getAccessibility(),
-                'CATEGORIES' => stripslashes($this->getCategory()),
-                'STUDIP_CATEGORY' => $this->event->category_intern,
-                'PRIORITY' => $this->event->priority,
+                'CATEGORIES' => $this->getUserDefinedCategories(),
+                'STUDIP_CATEGORY' => $this->getCategory(),
+                'PRIORITY' => $this->getPriority(),
                 'LOCATION' => stripslashes($this->getLocation()),
-                'RRULE' => array(
-                    'rtype' => $this->event->rtype,
-                    'linterval' => $this->event->linterval,
-                    'sinterval' => $this->event->sinterval,
-                    'wdays' => $this->event->wdays,
-                    'month' => $this->event->month,
-                    'day' => $this->event->day,
-                    'expire' => $this->event->expire,
-                    'duration' => $this->event->duration,
-                    'count' => $this->event->count,
-                    'ts' => $this->event->ts),
+                'RRULE' => $this->getRecurrence(),
                 'EXDATE' => (string) $this->event->exceptions,
                 'CREATED' => $this->event->mkdate,
                 'LAST-MODIFIED' => $this->event->chdate,
                 'STUDIP_ID' => $this->event->getId(),
                 'DTSTAMP' => time(),
                 'EVENT_TYPE' => 'cal',
-                'STUDIP_AUTHOR_ID' => $this->event->autor_id,
+                'STUDIP_AUTHOR_ID' => $this->event->author_id,
                 'STUDIP_EDITOR_ID' => $this->event->editor_id);
         }
         return $this->properties;
@@ -682,6 +1044,7 @@ class CalendarEvent extends SimpleORMap implements Event
             $event->setData($row);
             $event->setNew(false);
             $event_collection[$i]->event = $event;
+            $i++;
         }
         return $event_collection;
     }
@@ -706,7 +1069,7 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         
         if (!$permissions[$user_id][$this->event_id]) {
-            if ($user_id == $this->event->autor_id) {
+            if ($user_id == $this->event->author_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_WRITABLE;
             } else if ($user_id == $this->range_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_READABLE;
@@ -799,5 +1162,15 @@ class CalendarEvent extends SimpleORMap implements Event
             }
         }
         return $permission;
+    }
+    
+    public function getAuthor()
+    {
+        return $this->event->author;
+    }
+    
+    public function getEditor()
+    {
+        return $this->event->editor;
     }
 }

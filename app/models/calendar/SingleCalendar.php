@@ -9,7 +9,7 @@
 require_once 'app/models/calendar/Calendar.php';
 
 class SingleCalendar
-{
+{   
     public $events;
     
     public $range_object;
@@ -24,13 +24,7 @@ class SingleCalendar
     
     public function __construct($range_id, $start = null, $end = null)
     {
-        $this->range_object = get_object_by_range_id($range_id);
-        $range_map = array(
-            'User' => Calendar::RANGE_USER,
-            'Course' => Calendar::RANGE_INST,
-            'Institute' => Calendar::RANGE_SEM
-        );
-        $this->range = $range_map[get_class($this->range_object)];
+        $this->getRangeObject($range_id);
         $this->start = $start ?: 0;
         $this->end = $end ?: Calendar::CALENDAR_END;
         $this->events = new SimpleORMapCollection();
@@ -38,37 +32,117 @@ class SingleCalendar
         $this->type = get_class($this->range_object);
     }
     
-    
-    public function getCalendarEvents($start = null, $end = null)
+    /**
+     * Sets the range object and checks whether the calendar is available.
+     * 
+     * @param string $range_id The id of a course, institute or user.
+     * @throws AccessDeniedException
+     */
+    private function getRangeObject($range_id)
     {
-        $start = !is_null($start) ?: $this->start;
-        $end = !is_null($end) ?: $this->end;
-        $this->events->merge(CalendarEvent::getEventsByInterval(
-                $this->range_object->getId(), new DateTime('@' . $start),
-                new DateTime('@' . $end)));
-        return $this;
+        $this->range_object = get_object_by_range_id($range_id);
+        if (!is_object($this->range_object)) {
+            throw new AccessDeniedException();
+        }
+        $range_map = array(
+            'User' => Calendar::RANGE_USER,
+            'Course' => Calendar::RANGE_INST,
+            'Institute' => Calendar::RANGE_SEM
+        );
+        $this->range = $range_map[get_class($this->range_object)];
+        if ($this->range == Calendar::RANGE_INST
+                || $this->range == Calendar::RANGE_SEM) {
+            $modules = new Modules();
+            if (!$modules->getStatus('calendar', $this->range_object->getId())) {
+                throw new AccessDeniedException();
+            }
+        }
     }
     
-    public function getCourseEvents($start = null, $end = null)
+    /**
+     * Returns all events of given class names between start and end.
+     * Returns events of all types if no class names are given. 
+     * 
+     * @param array|null $class_names The names of classes that implements Event.
+     * @param int $start The start date time.
+     * @param int $end The end date time.
+     * @return \SingleCalendar This calendar object.
+     * @throws InvalidArgumentException
+     */
+    public function getEvents($class_names = null, $start = null, $end = null)
     {
-        $start = is_null($start) ?: $this->start;
-        $end = is_null($end) ?: $this->end;
-        if ($this->range == Calendar::RANGE_USER) {
-            $this->events->merge(CourseEvent::getEventsByInterval(
-                    $this->range_object->getId(), new DateTime('@' . $start),
-                    new DateTime('@' . $end)));
+        $start = !is_null($start) ? $start : $this->start;
+        $end = !is_null($end) ? $end : $this->end;
+        if (!is_array($class_names)) {
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+        }
+        foreach ($class_names as $type) {
+            if (is_subclass_of($type, 'Event')) {
+                $this->events->merge($type::getEventsByInterval(
+                        $this->range_object->getId(), new DateTime('@' . $start),
+                        new DateTime('@' . $end)));
+            } else {
+                throw new InvalidArgumentException(sprintf('Class %s does not implements Event.', $type));
+            }
         }
         return $this;
     }
     
+    /**
+     * Returns the start date time of this calendar as a unix timestamp.
+     * 
+     * @return int Unix timestamp.
+     */
     public function getStart()
     {
         return $this->start;
     }
     
+    /**
+     * Returns the end date time of this calendar as a unix timestamp.
+     * 
+     * @return int Unix timestamp.
+     */
     public function getEnd()
     {
         return $this->end;
+    }
+    
+    
+    public function getEvent($event_id = null, $class_names = null)
+    {
+        if (!is_array($class_names)) {
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+        }
+        foreach ($class_names as $type) {
+            if ($type == 'CalendarEvent') {
+                $event = CalendarEvent::find(array($this->getRangeId(), $event_id));
+            } else {
+                $event = $type::find($event_id);
+            }
+            if ($event) {
+                return $event;
+            }
+        }
+        return $this->getNewEvent();
+    }
+    
+    /**
+     * Creates a new event, sets some default data and returns it.
+     * 
+     * @return \CalendarEvent The new event.
+     */
+    public function getNewEvent()
+    {
+        $event_data = new EventData();
+        $event_data->setId($event_data->getNewId());
+        $now = time();
+        $event_data->start = $now;
+        $event_data->end = $now + 3600;
+        $calendar_event = new CalendarEvent();
+        $calendar_event->setId(array($this->getRangeId(), $event_data->getId()));
+        $calendar_event->event = $event_data;
+        return $calendar_event;
     }
     
     /**
@@ -91,7 +165,12 @@ class SingleCalendar
     
     public function getRangeId()
     {
-        $this->range_object->getId();
+        return $this->range_object->getId();
+    }
+    
+    public function getRange()
+    {
+        return $this->range;
     }
     
     public function getPermissionByUser($user_id = null)
@@ -260,22 +339,22 @@ class SingleCalendar
     function deleteEvent($event_id)
     {
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
-            $this->event = new DbCalendarEvent($this, $event_id);
+            $this->event = CalendarEvent::find(array($this->getRangeId(), $event_id));
 
-            if (!$this->event->havePermission(Event::PERMISSION_WRITABLE)) {
-                $this->event = NULL;
-
+            if (!$this->event || !$this->event->havePermission(Event::PERMISSION_WRITABLE)) {
+                return false;
+            }
+            
+            if (!is_a($this->event, 'CalendarEvent')) {
                 return false;
             }
 
-            if ($this->range == Calendar::RANGE_USER) {
+            if ($this->getRange() == Calendar::RANGE_USER) {
                 $this->sendDeleteMessage($this->event);
-
                 $this->event->delete();
-
                 return true;
             }
-            $this->event = NULL;
+            $this->event = null;
         }
         return false;
     }
@@ -315,8 +394,19 @@ class SingleCalendar
         }
     }
     
+    /**
+     * Returns a array of all events (with calculated recurrences)
+     * in the given time range.
+     * 
+     * @param string $owner_id The user id of calendar owner.
+     * @param int $time A unix timestamp of this day.
+     * @param string $user_id The id of the user who gets access to the calendar (optional, default current user)
+     * @param array $restrictions An array with key value pairs of properties to filter the result (optional).
+     * @param array $class_names Array of class names. The class must implement Event (optional).
+     * @return \SingleCalendar
+     */
     public static function getEventList($owner_id, $start, $end, $user_id = null,
-            $restrictions = null)
+            $restrictions = null, $class_names = null)
     {
         $user_id = !is_null($user_id) ?: $GLOBALS['user']->id;
         $end_time = mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end));
@@ -325,9 +415,9 @@ class SingleCalendar
         do {
             $time = mktime(12, 0, 0, date('n', $start), $start_day, date('Y', $start));
             $start_day++;
-            $day = self::getDayCalendar($owner_id, $time, $user_id, $restrictions);
+            $day = self::getDayCalendar($owner_id, $time, $user_id, $restrictions, $class_names);
             foreach ($day->events as $event) {
-                $event_key = $event->getId() . $event->getStart();
+                $event_key = implode('', (array) $event->getId()) . $event->getStart();
                 $events["$event_key"] = $event;
             }
         } while ($time <= $end_time);
@@ -338,23 +428,27 @@ class SingleCalendar
      * Returns a SingleCalendar object with all events of the given owner for
      * one day set by timestamp.
      * 
-     * @param type $owner_id
-     * @param type $time
-     * @param type $user_id
-     * @param type $restrictions
-     * @return \SingleCalendar
+     * @param string $owner_id The user id of calendar owner.
+     * @param int $time A unix timestamp of this day.
+     * @param string $user_id The id of the user who gets access to the calendar (optional, default current user)
+     * @param array $restrictions An array with key value pairs of properties to filter the result (optional).
+     * @param array $class_names Array of class names. The class must implement Event (optional).
+     * @return \SingleCalendar Calendar Object with all events of given day.
      */
     public static function getDayCalendar($owner_id, $time, $user_id = null,
-            $restrictions = null)
+            $restrictions = null, $class_names = null)
     {
         $user_id = !is_null($user_id) ?: $GLOBALS['user']->id;
+        if (!is_array($class_names)) {
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+        }
         
         $day = date('Y-m-d-', $time);
         $start = DateTime::createFromFormat('Y-m-d-H:i:s', $day . '00:00:00');
         $end = DateTime::createFromFormat('Y-m-d-H:i:s', $day . '23:59:59');
         $calendar = new SingleCalendar($owner_id, $start->format('U'), $end->format('U'));
-        $calendar->getCalendarEvents()->sortEvents();//->getCourseEvents();
-      //  $permission = $calendar->getPermissionByUser($user_id);
+        $calendar->getEvents($class_names)->sortEvents();
+        
         $dow = date('w', $calendar->getStart());
         $month = date('n', $calendar->getStart());
         $year = date('Y', $calendar->getStart());
@@ -365,14 +459,12 @@ class SingleCalendar
                     && !SingleCalendar::checkRestriction($event, $restrictions)) {
                 continue;
             }
-
             $properties = $event->getProperties();
             $ts = mktime(12, 0, 0, date('n', $calendar->start), date('j', $calendar->start), date('Y', $calendar->start));
             $rep = $properties['RRULE'];
             $duration = (int) ((mktime(12, 0, 0, date('n', $properties['DTEND']), date('j', $properties['DTEND']), date('Y', $properties['DTEND']))
                     - mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART'])))
                     / 86400);
-
             // single events or first event
             if ($properties['DTSTART'] >= $calendar->getStart()
                     && $properties['DTEND'] <= $calendar->getEnd()) {
@@ -391,9 +483,7 @@ class SingleCalendar
                 self::createDayViewEvent($event, $properties['DTSTART'], $properties['DTEND'],
                         $calendar->getStart(), $calendar->getEnd(), $events_created);
             }
-
             switch ($rep['rtype']) {
-
                 case 'DAILY':
                     if ($calendar->getEnd() > $rep['expire'] + $duration * 86400) {
                         continue;
@@ -404,22 +494,19 @@ class SingleCalendar
                     self::createDayViewEvent($event, $start, $end, $calendar->getStart(),
                             $calendar->getEnd(), $events_created);
                     break;
-
                 case 'WEEKLY':
                     for ($i = 0; $i < strlen($rep['wdays']); $i++) {
                         $pos = ((($ts - $dow * 86400) - $rep['ts']) / 86400
-                                - $rep['wdays']{$i} + $dow)
+                                - ($rep['wdays']{$i} - 1) + $dow)
                                 % ($rep['linterval'] * 7);
                         $start = $ts - $pos * 86400;
                         $end = $start + $duration * 86400;
-
                         if ($start >= $properties['DTSTART'] && $start <= $ts && $end >= $ts) {
                             self::createDayViewEvent($event, $start, $end,
                                     $calendar->getStart(), $calendar->getEnd(), $events_created);
                         }
                     }
                     break;
-
                 case 'MONTHLY':
                     if ($rep['day']) {
                         $lwst = mktime(12, 0, 0, $month
@@ -461,7 +548,6 @@ class SingleCalendar
                         } while ($lwst < $ts);
                     }
                     break;
-
                 case 'YEARLY':
                     if ($ts < $rep['ts']) {
                         break;
@@ -472,7 +558,6 @@ class SingleCalendar
                                     $year - (($year - date('Y', $rep['ts'])) % $rep['linterval'])
                                     - $rep['linterval']);
                             $hgst = $lwst + 86400 * $duration;
-
                             if ($ts >= $lwst && $ts <= $hgst) {
                                 self::createDayViewEvent($event, $lwst, $hgst,
                                         $calendar->getStart(), $calendar->getEnd(), $events_created);
@@ -513,51 +598,41 @@ class SingleCalendar
                     } while ($lwst < $ts);
             }
         }
-        $calendar->events = SimpleORMapCollection::createFromArray(
-                array_values($events_created));
+        $calendar->events->exchangeArray(array_values($events_created));
         return $calendar;
     }
     
     private static function createDayViewEvent($event, $lwst, $hgst,
-            $cl_start, $cl_end, &$events_created)
+            $cl_start, $cl_end, Array &$events_created)
     {
-        // if this date is in the exceptions return false
-        $exdates = explode(',', $event->getProperty('EXDATE'));
-        foreach ($exdates as $exdate) {
-            if ($exdate > 0 && $exdate >= $lwst && $exdate <= $hgst) {
-                return false;
+        // if this date is in the exceptions?
+        if ($event->getProperty('EXDATE')) {
+            $exdates = explode(',', $event->getProperty('EXDATE'));
+            foreach ($exdates as $exdate) {
+                if ($exdate > 0 && $exdate >= $lwst && $exdate <= $hgst) {
+                    return false;
+                }
             }
         }
         // is event expired?
-        $rrule = $event->getProperty('RRULE');
-        if ($rrule['expire'] > 0 && $rrule['expire'] <= $hgst) {
+        $rrule = $event->getRecurrence();
+        if ($rrule['rtype'] != 'SINGLE' && $rrule['expire'] > 0 && $rrule['expire'] <= $hgst) {
             return false;
         }
         $start = mktime(date('G', $event->getStart()), date('i', $event->getStart()),
                 date('s', $event->getStart()), date('n', $lwst), date('j', $lwst), date('Y', $lwst));
         $end = mktime(date('G', $event->getEnd()), date('i', $event->getEnd()),
                 date('s', $event->getEnd()), date('n', $hgst), date('j', $hgst), date('Y', $hgst));
-
+        
         if (($start <= $cl_start && $end >= $cl_end)
                 || ($start >= $cl_start && $start < $cl_end)
                 || ($end > $cl_start && $end <= $cl_end)) {
 
-            if (!$events_created[$event->getId() . $start]) {
+            if (!$events_created[implode('', (array) $event->getId()) . $start]) {
                 $new_event = clone $event;
                 $new_event->setStart($start);
                 $new_event->setEnd($end);
-                /*
-                if ($properties['EVENT_TYPE'] == 'semcal') {
-                    $event = new SeminarCalendarEvent($properties, $properties['STUDIP_ID'], $properties['SEM_ID'], $this->permission);
-                    $event->sem_id = $properties['SEM_ID'];
-                } else if ($properties['EVENT_TYPE'] == 'cal') {
-                    $event = new CalendarEvent($properties, $properties['STUDIP_ID'], $this->user_id, $this->permission);
-                } else {
-                    $event = new SeminarEvent($properties['STUDIP_ID'], $properties, $properties['SEM_ID'], $this->permission);
-                }
-                 * 
-                 */
-                $events_created[$event->getId() . $start] = $event;
+                $events_created[implode('', (array) $event->getId()) . $start] = $new_event;
             }
         }
     }
@@ -569,16 +644,19 @@ class SingleCalendar
      * 
      * @param string $user_id Use the permissions of this user.
      * @param array $restrictions
+     * @return array An array with year day as key and number of events per day as value.
      */
-    public function getListCountEvents($user_id = null, $restrictions = null)
+    public function getListCountEvents($class_names = null, $user_id = null, $restrictions = null)
     {
-
+        if (!is_array($class_names)) {
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+        }
         $end = $this->getEnd();
         $start = $this->getStart();
         $year = $this->year;
         $end_ts = mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end));
         $start_ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
-        $this->getCalendarEvents()->sortEvents();
+        $this->getEvents($class_names)->sortEvents();
         $daylist = array();
         
         foreach ($this->events as $event) {
@@ -782,7 +860,6 @@ class SingleCalendar
         if ($date < $this->getStart() || $date > $this->getEnd()) {
             return false;
         }
-
         // if this date is in the exceptions return false
         $exdates = explode(',', $properties['EXDATE']);
         foreach ($exdates as $exdate) {
@@ -795,8 +872,9 @@ class SingleCalendar
                 && $properties['RRULE']['expire'] <= $hgst) {
             return false;
         }
-        $daylist["$date"]["{$properties['STUDIP_ID']}"] = 1;
-
+        $daylist["$date"]["{$properties['STUDIP_ID']}"] =
+                $daylist["$date"]["{$properties['STUDIP_ID']}"]
+                ? $daylist["$date"]["{$properties['STUDIP_ID']}"]++ : 1;
         return true;
     }
     
@@ -834,12 +912,11 @@ class SingleCalendar
      * @param type $params
      * @return type
      */
-    public function createEventMatrix($start, $end, $step, $params = NULL)
+    public function createEventMatrix($start, $end, $step)
     {
         $term = array();
         $em = $this->adapt_events($start, $end, $step);
         $max_cols = 0;
-
         // calculate maximum number of columns
         $w = 0;
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
@@ -851,11 +928,9 @@ class SingleCalendar
                 if ($rows < 1) {
                     $rows = 1;
                 }
-
                 while ($term[$row][$col] != '' && $term[$row][$col] != '#') {
                     $col++;
                 }
-
                 $term[$row][$col] = $em['events'][$w];
                 $mapping[$row][$col] = $em['map'][$w];
 
@@ -875,30 +950,24 @@ class SingleCalendar
                 $w++;
             }
         }
-
         $row_min = 0;
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
             $row = $i - $start / $step;
             $row_min = $row;
-
             while ($this->maxValue($term[$row], $step) > 1) {
                 $row += $this->maxValue($term[$row], $step) - 1;
             }
-
             $size = 0;
             for ($j = $row_min; $j <= $row; $j++) {
                 if (sizeof($term[$j]) > $size) {
                     $size = sizeof($term[$j]);
                 }
             }
-
             for ($j = $row_min; $j <= $row; $j++) {
                 $colsp[$j] = $size;
             }
-
             $i = $row + $start / $step;
         }
-
         $rows = array();
         for ($i = $start / $step; $i < $end / $step + 3600 / $step; $i++) {
             $row = $i - $start / $step;
@@ -907,14 +976,12 @@ class SingleCalendar
                 if ($colsp[$row] > 0) {
                     $cspan_0 = (int) ($max_cols / $colsp[$row]);
                 }
-
                 for ($j = 0; $j < $colsp[$row]; $j++) {
                     $sp = 0;
                     $n = 0;
                     if ($j + 1 == $colsp[$row]) {
                         $cspan[$row][$j] = $cspan_0 + $max_cols % $colsp[$row];
                     }
-
                     if (is_object($term[$row][$j])) {
                         // Wieviele Termine sind zum aktuellen Termin zeitgleich?
                         $p = 0;
@@ -926,7 +993,6 @@ class SingleCalendar
                             }
                             $p++;
                         }
-
                         if ($count == 0) {
                             for ($n = $j + 1; $n < $colsp[$row]; $n++) {
                                 if (!is_int($term[$row][$n])) {
@@ -970,7 +1036,6 @@ class SingleCalendar
         $em['term'] = $term;
         $em['max_cols'] = $max_cols;
         $em['mapping'] = $mapping;
-
         return $em;
     }
 
@@ -978,35 +1043,44 @@ class SingleCalendar
     {
         $max_value = 0;
         for ($i = 0; $i < sizeof($term); $i++) {
-            if (is_object($term[$i]))
+            if (is_object($term[$i])) {
                 $max = ceil($term[$i]->getDuration() / $st);
-            elseif ($term[$i] == '#')
+            } elseif ($term[$i] == '#') {
                 continue;
-            elseif ($term[$i] > $max_value)
+            } elseif ($term[$i] > $max_value) {
                 $max = $term[$i];
-            if ($max > $max_value)
+            }
+            if ($max > $max_value) {
                 $max_value = $max;
+            }
         }
-
         return $max_value;
     }
 
     private function adapt_events($start, $end, $step = 900)
     {
+        $tmp_event = array();
+        $map_events = array();
         for ($i = 0; $i < sizeof($this->events); $i++) {
-            if (($this->events[$i]->getEnd() >= $this->getStart() + $start)
-                    && ($this->events[$i]->getStart() < $this->getStart() + $end + 3600)) {
-
-                if ($this->events[$i]->isDayEvent()
-                        || ($this->events[$i]->getStart() <= $this->getStart()
-                        && $this->events[$i]->getEnd() >= $this->getEnd())) {
-                    $cloned_day_event = clone $this->events[$i];
+            $event = $this->events[$i];
+            if (($event->getEnd() >= $this->getStart() + $start)
+                    && ($event->getStart() < $this->getStart() + $end + 3600)) {
+                if ($event->isDayEvent()
+                        || ($event->getStart() <= $this->getStart()
+                        && $event->getEnd() >= $this->getEnd())) {
+                    $cloned_day_event = clone $event;
                     $cloned_day_event->setStart($this->getStart());
                     $cloned_day_event->setEnd($this->getEnd());
                     $tmp_day_event[] = $cloned_day_event;
                     $map_day_events[] = $i;
                 } else {
-                    $cloned_event = clone $this->events[$i];
+                    $cloned_event = clone $event;
+                    $start_time = mktime(date('G', $event->getStart()), date('i', $event->getStart()),
+                            date('s', $event->getStart()), date('n', $this->getStart()), date('j', $this->getStart()), date('Y', $this->getStart()));
+                    $end_time = mktime(date('G', $event->getEnd()), date('i', $event->getEnd()),
+                            date('s', $event->getEnd()), date('n', $this->getStart()), date('j', $this->getStart()), date('Y', $this->getStart()));
+                    $cloned_event->setStart($start_time);
+                    $cloned_event->setEnd($end_time);
                     $end_corr = $cloned_event->getEnd() % $step;
                     if ($end_corr > 0) {
                         $end_corr = $cloned_event->getEnd() + ($step - $end_corr);
@@ -1018,12 +1092,14 @@ class SingleCalendar
                     if ($cloned_event->getEnd() > ($this->getStart() + $end + 3600)) {
                         $cloned_event->setEnd($this->getStart() + $end + 3600);
                     }
-
                     $tmp_event[] = $cloned_event;
                     $map_events[] = $i;
                 }
             }
         }
+        $collection = new SimpleORMapCollection();
+        $collection->setClassName('Event');
+        $collection->exchangeArray($tmp_event);
         return array('events' => $tmp_event, 'map' => $map_events, 'day_events' => $tmp_day_event,
             'day_map' => $map_day_events);
     }

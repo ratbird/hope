@@ -22,8 +22,7 @@ class Calendar
     const RANGE_GROUP = 2;
     const RANGE_SEM = 3;
     const RANGE_INST = 4;
-    
-    
+ 
     
     /**
      * Returns all ids of seminars the given user wants to include in his
@@ -186,4 +185,18 @@ class Calendar
         return $lecturers;
     }
     
+    public static function getDefaultUserSettings($index = NULL)
+    {
+        $default = array(
+            'view' => 'week',
+            'start' => '9',
+            'end' => '20',
+            'step_day' => '900',
+            'step_week' => '1800',
+            'type_week' => 'LONG',
+            'step_week_group' => '3600',
+            'step_day_group' => '3600'
+        );
+        return (is_null($index) ? $default : $default[$index]);
+    }
 }

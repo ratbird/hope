@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -118,7 +118,7 @@ html {
 body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
-  line-height: 1.42857143;
+  line-height: 1.428571429;
   color: #000000;
 }
 input,
@@ -4210,11 +4210,250 @@ td.currenttoday {
   border: 2px solid #DD0000;
   background-image: url('../images/celltoday.png');
 }
+table.calendar-week {
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid #fff;
+}
+table.calendar-month {
+  width: 100%;
+}
+table.calendar-month tr td {
+  max-width: 90px;
+  min-width: 90px;
+  vertical-align: top;
+}
 td.month {
   background-color: #f0f0f0;
 }
+td.month div {
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 td.lightmonth {
   background-color: #f3f5f8;
+}
+td.lightmonth div {
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.calendar-category-mixin {
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category1 {
+  background: linear-gradient(to right, #659c63, #96c895) repeat-x #659c63;
+  border: solid 1px #41643F;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category1 div {
+  background-color: #41643F;
+}
+.calendar-category2 {
+  background: linear-gradient(to right, #3e4490, #7379a9) repeat-x #3e4490;
+  border: solid 1px #2D2C64;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category2 div {
+  background-color: #2D2C64;
+}
+.calendar-category3 {
+  background: linear-gradient(to right, #874293, #ae77b8) repeat-x #874293;
+  border: solid 1px #5C2D64;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category3 div {
+  background-color: #5C2D64;
+}
+.calendar-category4 {
+  background: linear-gradient(to right, #8fad29, #a3ba50) repeat-x #8fad29;
+  border: solid 1px #526416;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category4 div {
+  background-color: #526416;
+}
+.calendar-category5 {
+  background: linear-gradient(to right, #8e8eb2, #babad4) repeat-x #8e8eb2;
+  border: solid 1px #505064;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category5 div {
+  background-color: #505064;
+}
+.calendar-category6 {
+  background: linear-gradient(to right, #904e42, #b5867e) repeat-x #904e42;
+  border: solid 1px #64372C;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category6 div {
+  background-color: #64372C;
+}
+.calendar-category7 {
+  background: linear-gradient(to right, #ab9448, #c9b988) repeat-x #ab9448;
+  border: solid 1px #64541E;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category7 div {
+  background-color: #64541E;
+}
+.calendar-category8 {
+  background: linear-gradient(to right, #6d9441, #9db97c) repeat-x #6d9441;
+  border: solid 1px #48642B;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category8 div {
+  background-color: #48642B;
+}
+.calendar-category9 {
+  background: linear-gradient(to right, #ebc443, #ecd379) repeat-x #ebc443;
+  border: solid 1px #957C29;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category9 div {
+  background-color: #957C29;
+}
+.calendar-category10 {
+  background: linear-gradient(to right, #db9f63, #e9b583) repeat-x #db9f63;
+  border: solid 1px #956D42;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category10 div {
+  background-color: #956D42;
+}
+.calendar-category11 {
+  background: linear-gradient(to right, #90d070, #a6d98c) repeat-x #90d070;
+  border: solid 1px #66954F;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category11 div {
+  background-color: #66954F;
+}
+.calendar-category12 {
+  background: linear-gradient(to right, #418494, #6ca6b2) repeat-x #418494;
+  border: solid 1px #2C5964;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category12 div {
+  background-color: #2C5964;
+}
+.calendar-category13 {
+  background: linear-gradient(to right, #c91c0b, #e0665b) repeat-x #c91c0b;
+  border: solid 1px #951408;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category13 div {
+  background-color: #951408;
+}
+.calendar-category14 {
+  background: linear-gradient(to right, #29ab9f, #5cc4b9) repeat-x #29ab9f;
+  border: solid 1px #E0665B;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category14 div {
+  background-color: #E0665B;
+}
+.calendar-category15 {
+  background: linear-gradient(to right, #8db3d8, #acc6df) repeat-x #8db3d8;
+  border: solid 1px #627C95;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category15 div {
+  background-color: #627C95;
+}
+.calendar-category255 {
+  background: linear-gradient(to right, #a5adb2, #c3c8cc) repeat-x #a5adb2;
+  border: solid 1px #a5adb2;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+}
+.calendar-category255 div {
+  background-color: #a5adb2;
+}
+.calendar-event-text1 {
+  color: #41643F;
+}
+.calendar-event-text2 {
+  color: #2D2C64;
+}
+.calendar-event-text3 {
+  color: #5C2D64;
+}
+.calendar-event-text4 {
+  color: #526416;
+}
+.calendar-event-text5 {
+  color: #505064;
+}
+.calendar-event-text6 {
+  color: #64372C;
+}
+.calendar-event-text7 {
+  color: #64541E;
+}
+.calendar-event-text8 {
+  color: #48642B;
+}
+.calendar-event-text9 {
+  color: #957C29;
+}
+.calendar-event-text10 {
+  color: #956D42;
+}
+.calendar-event-text11 {
+  color: #66954F;
+}
+.calendar-event-text12 {
+  color: #2C5964;
+}
+.calendar-event-text13 {
+  color: #951408;
+}
+.calendar-event-text14 {
+  color: #E0665B;
+}
+.calendar-event-text15 {
+  color: #627C95;
+}
+.calendar-tooltip {
+  display: none;
+  font-size: 0.8em;
 }
 /* --- Styles fuer TerminZeile ---------------------------------------------- */
 table.tabdaterow {
@@ -4233,6 +4472,30 @@ td.tddaterowpx {
   font-weight: bold;
   color: #009900;
   font-size: 8pt;
+}
+.recurrences {
+  width: 100%;
+  float: none;
+  list-style: none;
+  text-align: left;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+.recurrences li {
+  display: block;
+  width: 100%;
+}
+.recurrences .rec-label {
+  cursor: pointer;
+}
+.recurrences .rec-content {
+  display: none;
+  position: relative;
+  padding-left: 3em;
+}
+.recurrences [id^="rec"]:checked ~ [id^="rec-content"] {
+  display: block;
 }
 .contact-legend {
   color: #555;

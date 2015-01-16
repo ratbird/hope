@@ -2,7 +2,8 @@
 use Studip\Button, Studip\LinkButton;
 SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
 ?>
-<form data-dialog="" method="post" action="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id) ?>">
+<? $event = $calendar->getEvent(); ?>
+<form method="post" action="<?= $controller->url_for('calendar/single/event/' . $calendar->getRangeId() . '/' . $event->getId()) ?>">
 <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable" id="main_content">
         <caption>
@@ -35,9 +36,9 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                     </label>
                     <span style="white-space: nowrap;">
                         <label><?= _('Uhrzeit') ?>
-                            <input style="text-align: right;" type="text" name="start_hour" value="<?= date('G', $event->getStart()) ?>" size="2" maxlength="2">
+                            <input type="text" name="start_hour" value="<?= date('H', $event->getStart()) ?>" size="2">
                         </label> :
-                        <input style="text-align: right;" type="text" name="start_minute" value="<?= date('i', $event->getStart()) ?>" size="2" maxlength="2">
+                        <input type="text" name="start_minute" value="<?= date('i', $event->getStart()) ?>" size="2">
                     </span>
                     <label style="white-space: nowrap;"><?= _('ganztägig') ?>
                         <input type="checkbox" name="isdayevent" <?= $event->isDayEvent() ? 'checked' : '' ?>>
@@ -51,13 +52,13 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                 </td>
                 <td colspan="2">
                     <label><?= _('Datum') ?>
-                        <input type="text" name="end_date" id="end-date" value="<?= strftime('%x', $event->getEnd()) ?>" size="12" required>
+                        <input type="text" name="end_date" id="end-date" value="<?= strftime('%x', $event->getStart()) ?>" size="12" required>
                     </label>
                     <span style="white-space: nowrap;">
                         <label><?= _('Uhrzeit') ?>
-                            <input style="text-align: right;" type="text" name="end_hour" value="<?= date('G', $event->getEnd()) ?>" size="2" maxlength="2">
+                            <input type="text" name="end_hour" value="<?= date('H', $event->getStart()) ?>" size="2">
                         </label> :
-                        <input style="text-align: right;" type="text" name="end_minute" value="<?= date('i', $event->getEnd()) ?>" size="2" maxlength="2">
+                        <input type="text" name="end_minute" value="<?= date('i', $event->getStart()) ?>" size="2">
                     </span>
                 </td>
             </tr>
@@ -78,22 +79,22 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                     </label>
                 </td>
                 <td colspan="2">
-                    <textarea rows="2" cols="40" id="description" name="description"><?= htmlReady($event->getDescription()) ?></textarea>
+                    <textarea rows="4" cols="40" id="description" name="description"><?= htmlReady($event->getDescription()) ?></textarea>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="category-intern">
+                    <label for="studip-category">
                         <?= _('Kategorie') ?>:
                     </label>
                 </td>
                 <td colspan="2">
-                    <select name="category_intern" id="category-intern" size="1">
+                    <select name="studip_category" id="studip-category" size="1">
                         <? foreach ($GLOBALS['PERS_TERMIN_KAT'] as $key => $category) : ?>
-                        <option value="<?= $key ?>" style="color: <?= $category['color'] ?>"<?= $key == $event->getCategory() ? ' selected' : '' ?>><?= $category['name'] ?></option>
+                        <option value="<?= $key ?>" style="color: <?= $category['color'] ?>"><?= $category['name'] ?></option>
                         <? endforeach; ?>
                     </select>
-                    <input type="text" size="40" name="categories" value="<?= htmlReady($event->getUserDefinedCategories()) ?>">
+                    <input type="text" size="40" name="summary" value="<?= htmlReady($event->getUserDefinedCategories()) ?>">
                     <?= tooltipicon(_('Sie können beliebige Kategorien in das Freitextfeld eingeben. Trennen Sie einzelne Kategorien bitte durch ein Komma.')) ?>
                 </td>
             </tr>
@@ -116,7 +117,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                 <td colspan="2">
                     <select name="accessibility" id="accessibility" size="1">
                         <? foreach ($event->getAccessibilityOptions($calendar->getPermissionByUser($GLOBALS['user']->id)) as $key => $option) : ?>
-                        <option value="<?= $key ?>"<?= $event->getAccessibility() == $key ? ' selected' : '' ?>><?= $option ?></option>
+                        <option value="<?= $key ?>"><?= $option ?></option>
                         <? endforeach; ?>
                     </select>
                     <? if ($calendar->getPermissionByUser($GLOBALS['user']->id) == Calendar::PERMISSION_OWN) : ?>
@@ -141,7 +142,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                     <? $priority_names = array(_('keine Angabe'), _('hoch'), _('mittel'), _('niedrig')) ?>
                     <select name="priority" id="priority" size="1">
                         <? foreach ($priority_names as $key => $priority) : ?>
-                        <option value="<?= $key ?>"<?= $key == $event->getPriority() ? ' selected' : '' ?>><?= $priority ?></option>
+                        <option value="<?= $key ?>"><?= $priority ?></option>
                         <? endforeach; ?>
                     </select>
                 </td>
@@ -150,11 +151,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
         <tbody class="collapsed">
             <tr class="header-row">
                 <th colspan="3" class="toggle-indicator">
-                    <a class="toggler"><?= _('Wiederholung') ?>
-                    <? if ($event->getRecurrence('rtype') != 'SINGLE') : ?>
-                        (<?= $event->toStringRecurrence() ?>)
-                    <? endif ?>
-                    </a>
+                    <a class="toggler"><?= _('Wiederholung') ?></a>
                 </th>
             </tr>
             <tr>
@@ -163,7 +160,6 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                 </td>
                 <td colspan="2">
                     <? $linterval = $event->getRecurrence('linterval') ?: '1' ?>
-                    <? $rec_type = $event->toStringRecurrence(true) ?>
                     <ul class="recurrences">
                         <li>
                             <input type="radio" class="rec-select" id="rec-none" name="recurrence" value="single"<?= $event->getRecurrence('rtype') == 'SINGLE' ? ' checked' : '' ?>>
@@ -181,14 +177,14 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                             </label>
                             <div class="rec-content" id="rec-content-daily">
                                 <div>
-                                    <input type="radio" name="type_daily" value="day"<?= in_array($rec_type, array('daily', 'xdaily')) ? ' checked' : '' ?>>
+                                    <input type="radio" name="type_daily" value="day"<?= $event->getRecurrence('wdays') ? '' : ' checked' ?>>
                                     <label>
                                         <?= sprintf(_('Jeden %s. Tag'), '<input type="text" size="3" name="linterval_d" value="' . $linterval . '">') ?>
                                     </label>
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="type_daily" value="workday"<?= $rec_type == 'workdaily' ? ' checked' : '' ?>>
+                                        <input type="radio" name="type_daily" value="workday"<?= $event->getRecurrence('wdays') == '12345' ? ' checked' : '' ?>>
                                         <?= _('Jeden Werktag') ?>
                                     </label>
                                 </div>
@@ -202,7 +198,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                                 '4' => _('Donnerstag'),
                                 '5' => _('Freitag'),
                                 '6' => _('Samstag'),
-                                '7' => _('Sonntag')) ?>
+                                '7>' => _('Sonntag')) ?>
                             <input type="radio" class="rec-select" id="rec-weekly" name="recurrence" value="weekly"<?= $event->getRecurrence('rtype') == 'WEEKLY' ? ' checked' : '' ?>>
                             <label class="rec-label" for="rec-weekly">
                                 <?= _('wöchentlich') ?>
@@ -214,10 +210,10 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                                     </label>
                                 </div>
                                 <div>
-                                    <? $aday = $event->getRecurrence('wdays') ?: date('N', $event->getStart()) ?>
+                                    <? $aday = date('N', $event->getStart()) ?>
                                     <? foreach ($wdays as $key => $wday) : ?>
                                     <label style="white-space: nowrap;">
-                                        <input type="checkbox" name="wdays[]" value="<?= $key ?>"<?= strpos((string) $aday, (string) $key) !== false ? ' checked' : '' ?>>
+                                        <input type="checkbox" name="wdays[]" value="<?= $key ?>"<?= $key == $aday ? ' checked' : '' ?>>
                                         <?= $wday ?>
                                     </label>
                                     <? endforeach; ?>
@@ -232,30 +228,20 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                                 '4' => _('vierten'),
                                 '5' => _('letzten')) ?>
                             <? $mdays_options = '' ?>
-                            <? $mday_selected = $event->getRecurrence('sinterval') ?>
-                            <? foreach ($mdays as $key => $mday) :
-                                    $mdays_options .= '<option value="' . $key . '"';
-                                    if ($key == $mday_selected) {
-                                        $mdays_options .= ' selected';
-                                    }
-                                    $mdays_options .= '>' . $mday . '</option>';
-                            endforeach; ?>
+                            <? foreach ($mdays as $key => $mday) : ?>
+                                <? $mdays_options .= '<option value="' . $key . '">' . $mday . '</option>' ?>
+                            <? endforeach; ?>
                             <? $wdays_options = '' ?>
-                            <? $wday_selected = $event->getRecurrence('wdays') ?: date('N', $event->getStart()) ?>
-                            <? foreach ($wdays as $key => $wday) :
-                                    $wdays_options .= '<option value="' . $key . '"';
-                                    if ($key == $wday_selected) {
-                                        $wdays_options .= ' selected';
-                                    }
-                                    $wdays_options .= '>' . $wday . '</option>';
-                            endforeach; ?>
+                            <? foreach ($wdays as $key => $wday) : ?>
+                                <? $wdays_options .= '<option value="' . $key . '">' . $wday . '</option>' ?>
+                            <? endforeach; ?>
                             <input type="radio" class="rec-select" id="rec-monthly" name="recurrence" value="monthly"<?= $event->getRecurrence('rtype') == 'MONTHLY' ? ' checked' : '' ?>>
                             <label class="rec-label" for="rec-monthly">
                                 <?= _('monatlich') ?>
                             </label>
                             <div class="rec-content" id="rec-content-monthly">
                                 <div>
-                                    <input type="radio" value="day" name="type_m"<?= in_array($rec_type, array('mday_monthly', 'mday_xmonthly')) ? ' checked' : '' ?>>
+                                    <input type="radio" value="day" name="type_m">
                                     <? $mday = $event->getRecurrence('day') ?: date('j', $event->getStart()) ?>
                                     <?= sprintf(_('Wiederholt am %s. jeden %s. Monat'),
                                             '<input type="text" name="day_m" size="2" value="'
@@ -264,7 +250,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                                             . $linterval . '">') ?>
                                 </div>
                                 <div>
-                                    <input type="radio" value="wday" name="type_m"<?= in_array($rec_type, array('xwday_xmonthly', 'lastwday_xmonthly', 'xwday_monthly', 'lastwday_monthly')) ? ' checked' : '' ?>>
+                                    <input type="radio" value="wday" name="type_m">
                                     <?= sprintf(_('Jeden %s alle %s Monate'),
                                             '<select size="1" name="sinterval_m">' . $mdays_options . '</select>'
                                             . '<select size="1" name="wday_m">' . $wdays_options . '</select>',
@@ -288,32 +274,27 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                                 '11' => _('November'),
                                 '12' => _('Dezember')) ?>
                             <? $months_options = '' ?>
-                            <? $month_selected = $event->getRecurrence('month') ?: date('n', $event->getStart()) ?>
-                            <? foreach ($months as $key => $month) :
-                                    $months_options .= '<option value="' . $key . '"';
-                                    if ($key == $month_selected) {
-                                        $months_options .= ' selected';
-                                    }
-                                    $months_options .= '>' . $month . '</option>';
-                            endforeach; ?>
+                            <? foreach ($months as $key => $month) : ?>
+                            <? $months_options .= '<option value="' . $key . '">' . $month . '</option>' ?>
+                            <? endforeach; ?>
                             <input type="radio" class="rec-select" id="rec-yearly" name="recurrence" value="yearly"<?= $event->getRecurrence('rtype') == 'YEARLY' ? ' checked' : '' ?>>
                             <label class="rec-label" for="rec-yearly">
                                 <?= _('jährlich') ?>
                             </label>
                             <div class="rec-content" id="rec-content-yearly">
                                 <div>
-                                    <input type="radio" value="day" name="type_y"<?= $rec_type == 'mday_month_yearly' ? ' checked' : '' ?>>
+                                    <input type="radio" checked="" value="day" name="type_y">
                                     <?= sprintf(_('Jeden %s. %s'),
                                             '<input type="text" size="2" maxlength="2" name="day_y" value="'
-                                            . ($event->getRecurrence('day') ?: date('j', $event->getStart())) . '">',
+                                            . $event->getRecurrence('day') . '">',
                                             '<select size="1" name="month_y1">' . $months_options . '</select>') ?>
                                 </div>
                                 <div>
-                                    <input type="radio" value="wday" name="type_y"<?= in_array($rec_type, array('xwday_month_yearly', 'lastwday_month_yearly')) ? ' checked' : '' ?>>
+                                    <input type="radio" value="wday" name="type_y">
                                     <?= sprintf(_('Jeden %s im %s'),
                                             '<select size="1" name="sinterval_y">' . $mdays_options . '</select>'
                                             . '<select size="1" name="wday_y">' . $wdays_options . '</select>',
-                                            '<select size="1" name="month_y2">' . $months_options . '</select>') ?>
+                                            '<select size="1" name="month_y1">' . $months_options . '</select>') ?>
                                 </div>
                             </div>
                         </li>
@@ -327,13 +308,13 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                 <td colspan="2">
                     <div>
                         <label>
-                            <? $checked = (!$event->getRecurrence('expire') || $event->getRecurrence('expire') >= Calendar::CALENDAR_END) && !$event->getRecurrence('count') ?>
+                            <? $checked = !$event->getRecurrence('expire') && !$event->getRecurrence('count') ?>
                             <input type="radio" name="exp_c" value="never"<?= $checked ? ' checked' : '' ?>>
                             <?= _('nie') ?>
                         </label>
                     </div>
                     <div>
-                        <? $checked = $event->getRecurrence('expire') && $event->getRecurrence('expire') < Calendar::CALENDAR_END && !$event->getRecurrence('count') ?>
+                        <? $checked = $event->getRecurrence('expire') && !$event->getRecurrence('count') ?>
                         <input type="radio" name="exp_c" value="date"<?= $checked ? ' checked' : '' ?>>
                         <label>
                             <? $exp_date = $event->getRecurrence('expire') ?: time() ?>
@@ -343,7 +324,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                         </label>
                     </div>
                     <div>
-                        <? $checked = $event->getRecurrence('count') ?>
+                        <? $checked = !$event->getRecurrence('expire') && $event->getRecurrence('count') ?>
                         <input type="radio" name="exp_c" value="count"<?= $checked ? ' checked' : '' ?>>
                         <label>
                             <? $exp_count = $event->getRecurrence('count') ?: '10' ?>
@@ -367,13 +348,8 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
         </tbody>
     </table>
     <div style="text-align: center; clear: both" data-dialog-button>
-        <? if (!$event->isNew()) : ?>
-        <?= LinkButton::create(_('Löschen'), $controller->url_for('calendar/single/delete/' . implode('/', $event->getId()))) ?>
-        <? endif; ?>
-        <?= Button::create(_('Speichern'), 'store', array('title' => _('Termin speichern'))) ?>
-        <? if (!Request::isXhr()) : ?>
-        <?= LinkButton::create(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view, array($event->getStart()))) ?>
-        <? endif; ?>
+        <?= Button::createSuccess(_('Speichern'), 'store', array('title' => _('Termin speichern'))) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view, array($event->getStart()))) ?>
     </div>
 </form>
 <script>

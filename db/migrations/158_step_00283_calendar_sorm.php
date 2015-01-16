@@ -68,8 +68,6 @@ class Step00283CalendarSorm extends Migration {
                 SELECT `range_id`, `event_id`, `chdate`
                 FROM `calendar_events` WHERE 1");
         DBManager::get()->exec('DROP TABLE IF EXISTS calendar_events');
-     //   CalendarEvent::expireTableScheme();
-     //   Event::expireTableScheme();
         
         DBManager::get()->exec('ALTER IGNORE TABLE contact CHANGE '
                 . "`calpermission` `calpermission` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'");

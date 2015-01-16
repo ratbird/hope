@@ -27,7 +27,7 @@ interface Event
      * 
      * @return array|string The array with th recurrence rule or only one field.
      */
-    public function getRepeat($index = null);
+    public function getRecurrence($index = null);
     
     /**
      * TODO Wird das noch benötigt?
@@ -96,11 +96,6 @@ interface Event
      * @return int The index of the category
      */
     public function getCategory();
-    
-    /**
-     * TODO remove, do this in template!
-     */
-    public function getCategoryStyle($image_size = 'small');
     
     /**
      * Returns the user id of the last editor.
@@ -172,4 +167,55 @@ interface Event
      */
     public function getProperties();
     
+    /**
+     * Returns the value of property with given name.
+     * 
+     * @param type $name See CalendarEvent::getProperties() for accepted values.
+     * @return mixed The value of the property.
+     * @throws InvalidArgumentException
+     */
+    public function getProperty($name);
+    
+    public function havePermission($permission, $user_id = null);
+    
+    public function getPermission($user_id = null);
+    
+    /**
+     * Returns the priority in a human readable form.
+     * If the user has no permission an epmty string will be returned.
+     * 
+     * @return string The priority as a string.
+     */
+    public function toStringPriority();
+    
+    /**
+     * Returns the accessibilty in a human readable form.
+     * If the user has no permission an epmty string will be returned.
+     * 
+     * @return string The accessibility as string.
+     */
+    public function toStringAccessibility();
+    
+    /**
+     * Returns a string representation of the recurrence rule.
+     * If $only_type is true returns only the type of the recurrence.
+     *
+     * @param bool $only_type If true returns only the type of recurrence.
+     * @return string The recurrence rule - human readable
+     */
+    public function toStringRecurrence($only_type = false);
+    
+    /**
+     * Returns the author of this event as user object.
+     * 
+     * @return User|null User object.
+     */
+    public function getAuthor();
+    
+    /**
+     * Returns the editor of this event as user object.
+     * 
+     * @return User|null User object.
+     */
+    public function getEditor();
 }

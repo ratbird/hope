@@ -106,38 +106,39 @@ class Calendar_ContentboxController extends StudipController {
         foreach ($events as $termin) {
             // Adjust title
             if (date("Ymd", $termin->getStart()) == date("Ymd", time())) {
-                $termin->title .= _("Heute") . date(", H:i", $termin->getStart());
+                $title = _("Heute") . date(", H:i", $termin->getStart());
             } else {
-                $termin->title = substr(strftime("%a", $termin->getStart()), 0, 2);
-                $termin->title .= date(". d.m.Y, H:i", $termin->getStart());
+                $title = substr(strftime("%a", $termin->getStart()), 0, 2);
+                $title .= date(". d.m.Y, H:i", $termin->getStart());
             }
 
             if ($termin->getStart() < $termin->getEnd()) {
                 if (date("Ymd", $termin->getStart()) < date("Ymd", $termin->getEnd())) {
-                    $termin->title .= " - " . substr(strftime("%a", $termin->getEnd()), 0, 2);
-                    $termin->title .= date(". d.m.Y, H:i", $termin->getEnd());
+                    $title .= " - " . substr(strftime("%a", $termin->getEnd()), 0, 2);
+                    $title .= date(". d.m.Y, H:i", $termin->getEnd());
                 } else {
-                    $termin->title .= " - " . date("H:i", $termin->getEnd());
+                    $title .= " - " . date("H:i", $termin->getEnd());
                 }
             }
 
             if ($termin->getTitle()) {
                 $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
-                $termin->title .= ", " . $tmp_titel;
+                $title .= ", " . $tmp_titel;
             }
 
             // Store for view
             $this->termine[] = array(
-                'id' => $termin->id,
+                'range_id' => $termin->range_id,
+                'event_id' => $termin->event_id,
                 'chdate' => $termin->chdate,
-                'title' => $termin->title,
-                'description' => $termin->description,
+                'title' => $title,
+                'description' => $termin->getDescription(),
                 'room' => $termin->getLocation(),
                 'info' => array(
                     _('Kategorie') => $termin->toStringCategories(),
                     _('Priorität') => $termin->toStringPriority(),
                     _('Sichtbarkeit') => $termin->toStringAccessibility(),
-                    $termin->toStringRecurrence())
+                    _('Wiederholung') => $termin->toStringRecurrence())
             );
         }
     }

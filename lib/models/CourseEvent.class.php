@@ -14,15 +14,23 @@
 
 class CourseEvent extends CourseDate implements Event
 {
+    private $properties = null;
+    private $permission_user_id = null;
     
-    protected static function configure($config)
+    protected static function configure($config = array())
     {
-        $config['alias_fields']['termin_id'] = 'event_id';
-        $config['alias_fields']['date'] = 'start';
-        $config['alias_fields']['end_time'] = 'end';
-        $config['alias_fields']['raum'] = 'location';
-        $config['alias_fields']['date_typ'] = 'category_intern';
+        $config['alias_fields']['event_id'] = 'termin_id';
+        $config['alias_fields']['start'] = 'date';
+        $config['alias_fields']['end'] = 'end_time';
+        $config['alias_fields']['category_intern'] = 'date_typ';
+        $config['alias_fields']['author_id'] = 'autor_id';
         
+        $config['additional_fields']['location']['get'] = 'getRoomName';
+        $config['additional_fields']['type']['get'] = true;
+        $config['additional_fields']['name']['get'] = function ($event) {
+            return $event->course->getFullname();
+        };
+        $config['additional_fields']['title']['get'] = 'getTitle';
         $config['additional_fields']['editor_id']['get'] = function ($date){
             return null;
         };
@@ -36,10 +44,13 @@ class CourseEvent extends CourseDate implements Event
         $config['additional_fields']['description']['get'] = function ($date){
             return '';
         };
-        $config['additional_fields']['location']['get'] = function ($date){
-            $date->getRoomName();
-        };
         parent::configure($config);
+    }
+    
+    public function __construct($id = null)
+    {
+        $this->permission_user_id = $GLOBALS['user']->id;
+        parent::__construct($id);
     }
     
     /**
@@ -67,11 +78,37 @@ class CourseEvent extends CourseDate implements Event
         $event_collection = new SimpleORMapCollection();
         $event_collection->setClassName('Event');
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $event_collection[$i] = new CourseEvent();
-            $event_collection[$i]->setData($row);
-            $event_collection[$i]->setNew(false);
+            $event = new CourseEvent();
+            $event->setData($row);
+            $event->setNew(false);
+          //  $event_collection[] = $event;
+            // related persons (dozenten)
+            if (self::checkRelated($event, $user_id)) {
+                $event_collection[] = $event;
+            }
         }
         return $event_collection;
+    }
+    
+    // Check auf durchführender Dozent
+    protected static function checkRelated($event, $user_id)
+    {
+        global $perm;
+        
+        $check_related = false;
+        if ($perm->get_studip_perm($event->range_id, $user_id) == 'dozent') {
+            $related_persons = $event->dozenten->pluck(user_id);
+            if (sizeof($related_persons)) {
+                if (in_array($user_id, $related_persons)) {
+                    $check_related = true;
+                }
+            } else {
+                $check_related = true;
+            }
+        } else {
+            $check_related = true;
+        }
+        return $check_related;
     }
     
     /**
@@ -79,12 +116,13 @@ class CourseEvent extends CourseDate implements Event
      *
      * @return string the name of the category
      */
-    public function toStringCategories()
+    public function toStringCategories($as_array = false)
     {
+        $caregory = '';
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            return $GLOBALS['TERMIN_TYP'][$this->date_type]['name'];
+            $category = $GLOBALS['TERMIN_TYP'][$this->getCategory()]['name'];
         }
-        return '';
+        return $as_array ? array($caregory) : $category;
     }
     
     /**
@@ -106,7 +144,7 @@ class CourseEvent extends CourseDate implements Event
      * 
      * @return array|string The array with th recurrence rule or only one field.
      */
-    public function getRepeat($index = null)
+    public function getRecurrence($index = null)
     {
         $rep = array('ts' => 0, 'linterval' => 0, 'sinterval' => 0, 'wdays' => '',
             'month' => 0, 'day' => 0, 'rtype' => 'SINGLE', 'duration' => 1);
@@ -144,13 +182,13 @@ class CourseEvent extends CourseDate implements Event
      */
     public function getTitle()
     {
-        if (!$this->havePermission(Event::PERMISSION_READABLE)) {
-            $title = _('Keine Berechtigung.');
-        }
-        if (sizeof($this->topics)) {
-            $title = implode(', ', $this->topics->pluck('title'));
-        } else {
-            $title = $this->course->name;
+        $title = _('Keine Berechtigung.');
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            if (sizeof($this->topics)) {
+                $title = implode(', ', $this->topics->pluck('title'));
+            } else {
+                $title = $this->course->name;
+            }
         }
         return $title;
     }
@@ -162,7 +200,17 @@ class CourseEvent extends CourseDate implements Event
      */
     public function getStart()
     {
-        return $this->start;
+        return $this->date;
+    }
+    
+    /**
+     * Sets the start date time with given unix timestamp.
+     * 
+     * @param string $timestamp Unix timestamp.
+     */
+    public function setStart($timestamp)
+    {
+        $this->date = $timestamp;
     }
     
     /**
@@ -172,7 +220,17 @@ class CourseEvent extends CourseDate implements Event
      */
     public function getEnd()
     {
-        return $this->end;
+        return $this->end_time;
+    }
+    
+    /**
+     * Sets the end date time by given unix timestamp.
+     * 
+     * @param string $timestamp Unix timestamp.
+     */
+    public function setEnd($timestamp)
+    {
+        $this->end_time = $timestamp;
     }
     
     /**
@@ -196,7 +254,7 @@ class CourseEvent extends CourseDate implements Event
     {
         $location = '';
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            $location = $this->location;
+            $location = $this->getRoomName();
         }
         return $location;
     }
@@ -222,7 +280,7 @@ class CourseEvent extends CourseDate implements Event
     {
         $description = '';
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            if (sizof($this->topics)) {
+            if (sizeof($this->topics)) {
                 $description = implode(', ', $this->topics->pluck('description'));
             }
         }
@@ -259,27 +317,6 @@ class CourseEvent extends CourseDate implements Event
             return $this->date_typ;
         }
         return 255;
-    }
-    
-    /**
-     * TODO remove, do this in template!
-     */
-    public function getCategoryStyle($image_size = 'small')
-    {
-        global $TERMIN_TYP, $PERS_TERMIN_KAT;
-
-        $index = $this->getCategory();
-        if ($index == 255) {
-            return array('image' => $image_size == 'small' ?
-                Assets::image_path('calendar/category' . $index . '_small.jpg') :
-                Assets::image_path('calendar/category' . $index . '.jpg'),
-                'color' => $PERS_TERMIN_KAT[$index]['color']);
-        }
-
-        return array('image' => $image_size == 'small' ?
-            Assets::image_path('calendar/category_sem' . ($index) . '_small.jpg') :
-            Assets::image_path('calendar/category_sem' . ($index) . '.jpg'),
-            'color' => $TERMIN_TYP[$index]['color']);
     }
     
     /**
@@ -356,59 +393,134 @@ class CourseEvent extends CourseDate implements Event
     
     public function getProperties()
     {
-        
-        $properties = array(
-                'DTSTART' => $result['date'],
-                'DTEND' => $result['end_time'],
-                'SUMMARY' => $result['ex_termin'] ? _("fällt aus") : $result['title'],
-                'DESCRIPTION' => $result['ex_termin'] ? $result['content'] : $result['description'],
-                'LOCATION' => $result['raum'],
-                'STUDIP_CATEGORY' => $result['date_typ'],
-                'CREATED' => $result['mkdate'],
-                'LAST-MODIFIED' => $result['chdate'],
-                'STUDIP_ID' => $result['termin_id'],
-                'SEM_ID' => $result['range_id'],
-                'SEMNAME' => $result['Name'],
-                'CLASS' => 'CONFIDENTIAL',
-                'UID' => SeminarEvent::createUid($result['termin_id']),
-                'RRULE' => SeminarEvent::createRepeat(),
-                'EVENT_TYPE' => 'sem',
-                'STATUS' => $result['ex_termin'] ? 'CANCELLED' : 'CONFIRMED',
-                'DTSTAMP' => time());
-        
         if ($this->properties === null) {
             $this->properties = array(
                 'DTSTART' => $this->getStart(),
                 'DTEND' => $this->getEnd(),
-                'SUMMARY' => stripslashes($this->getTitle()),
-                'DESCRIPTION' => stripslashes($this->getDescription()),
-                'UID' => $this->getUid(),
-                'CLASS' => $this->getAccessibility(),
-                'CATEGORIES' => stripslashes($this->getCategory()),
-                'STUDIP_CATEGORY' => $this->event->category_intern,
-                'PRIORITY' => $this->event->priority,
-                'LOCATION' => stripslashes($this->location),
-                'RRULE' => array(
-                    'rtype' => $this->rtype,
-                    'linterval' => $this->linterval,
-                    'sinterval' => $this->sinterval,
-                    'wdays' => $this->wdays,
-                    'month' => $this->month,
-                    'day' => $this->day,
-                    'expire' => $this->expire,
-                    'duration' => $this->duration,
-                    'count' => $this->count,
-                    'ts' => $this->ts),
-                'EXDATE' => (string) $this->exceptions,
+                'SUMMARY' => $this->getTitle(),
+                'DESCRIPTION' => $this->getDescription(),
+                'LOCATION' => $this->getLocation(),
+                'STUDIP_CATEGORY' => $this->getStudipCategory(),
                 'CREATED' => $this->mkdate,
                 'LAST-MODIFIED' => $this->chdate,
-                'STUDIP_ID' => $this->event_id,
-                'DTSTAMP' => time(),
-                'EVENT_TYPE' => 'cal',
-                'STUDIP_AUTHOR_ID' => $this->autor_id,
-                'STUDIP_EDITOR_ID' => $this->editor_id);
+                'STUDIP_ID' => $this->termin_id,
+                'SEM_ID' => $this->range_id,
+                'SEMNAME' => $this->course->name,
+                'CLASS' => 'CONFIDENTIAL',
+                'UID' => CourseEvent::getUid(),
+                'RRULE' => CourseEvent::getRecurrence(),
+                'EXDATE' => '',
+                'EVENT_TYPE' => 'sem',
+                'STATUS' => 'CONFIRMED',
+                'DTSTAMP' => time());
         }
         return $this->properties;
     }
     
+    /**
+     * Returns the value of property with given name.
+     * 
+     * @param type $name See CalendarEvent::getProperties() for accepted values.
+     * @return mixed The value of the property.
+     * @throws InvalidArgumentException
+     */
+    public function getProperty($name)
+    {
+        if ($this->properties === null) {
+            $this->getProperties();
+        }
+        
+        if (isset($this->properties[$name])) {
+            return $this->properties[$name];
+        }
+        throw new InvalidArgumentException(get_class($this)
+                . ': Property ' . $name . ' does not exist.');
+    }
+    
+    public function setPermissionUser($user_id)
+    {
+        $this->permission_user_id = $user_id;
+    }
+    
+    public function havePermission($permission, $user_id = null)
+    {
+        $perm = $this->getPermission($user_id);
+        return $perm >= $permission;
+    }
+    
+    public function getPermission($user_id = null)
+    {
+        global $perm;
+        
+        $user_id = $user_id ?: $this->permission_user_id;
+        $course_perm = $perm->get_studip_perm($this->range_id, $user_id);
+        $permission = Event::PERMISSION_FORBIDDEN;
+        switch ($course_perm) {
+            case 'tutor':
+            case 'dozent':
+                $permission = Event::PERMISSION_WRITABLE;
+                break;
+            case 'user':
+            case 'autor':
+                $permission = Event::PERMISSION_READABLE;
+                break;
+            default:
+                $permission = Event::PERMISSION_FORBIDDEN;
+        }
+        
+        return $permission;
+    }
+    
+    /**
+     * Course events have no priority so returns always an empty string.
+     * 
+     * @return string The priority as a string.
+     */
+    public function toStringPriority()
+    {
+        return '';
+    }
+    
+    /**
+     * Course events have no accessibility settings so returns always the
+     * an empty string.
+     * 
+     * @return string The accessibility as string.
+     */
+    public function toStringAccessibility()
+    {
+        return '';
+    }
+    
+    /**
+     * Returns a string representation of the recurrence rule.
+     * Since course events have no recurence defined it returns an empty string.
+     *
+     * @param bool $only_type If true returns only the type of recurrence.
+     * @return string The recurrence rule - human readable
+     */
+    public function toStringRecurrence($only_type = false)
+    {
+        return '';
+    }
+    
+    /**
+     * Returns the author of this event as user object.
+     * 
+     * @return User|null User object.
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+    
+    /**
+     * Course events have no editor so always null is returned.
+     * 
+     * @return null
+     */
+    public function getEditor()
+    {
+        return null;
+    }
 }

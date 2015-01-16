@@ -1,18 +1,25 @@
 <?
 // add skip link
 SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
-?>
-<table id="main_content" class="blank" border="0" cellpadding="10" cellspacing="0" style="width:100%; table-layout: fixed;">
-    <tr>
-        <td style="width:100%;">
-<?
+$at = date('G', $atime);
+if ($at >= $settings['start']
+        && $at <= $settings['end'] || !$atime) {
+    $start = $settings['start'];
+    $end = $settings['end'];
+} elseif ($at < $settings['start']) {
+    $start = 0;
+    $end = $settings['start'] + 2;
+} else {
+    $start = $settings['end'] - 2;
+    $end = 23;
+}
 $tab_arr = '';
 $max_columns = 0;
-$week_type = $calendar_settings['week_type'] == 'SHORT' ? 5 : 7;
-$rows = ($end - $start + 1) * 3600 / $step;
+$week_type = $settings['week_type'] == 'SHORT' ? 5 : 7;
+$rows = ($end - $start + 1) * 3600 / $settings['step_week'];
 
 for ($i = 0; $i < $week_type; $i++) {
-    $tab_arr[$i] = $calendars[$i]->createEventMatrix($start * 3600, $end * 3600, $step);
+    $tab_arr[$i] = $calendars[$i]->createEventMatrix($start * 3600, $end * 3600, $settings['step_week']);
     if ($tab_arr[$i]['max_cols']) {
         $max_columns += ($tab_arr[$i]['max_cols'] + 1);
     } else {
@@ -20,51 +27,74 @@ for ($i = 0; $i < $week_type; $i++) {
     }
 }
 
-$rowspan = ceil(3600 / $step);
+$rowspan = ceil(3600 / $settings['step_week']);
 $height = ' height="20"';
 
 if ($rowspan > 1) {
     $colspan_1 = ' colspan="2"';
     $colspan_2 = $max_columns + 4;
+    $width_daycols = 100 - (4 + $week_type) * 0.1;
 } else {
     $colspan_1 = '';
     $colspan_2 = $max_columns + 2;
+    $width_daycols = 100 - (2 + $week_type) * 0.1;
 }
 ?>
-<table border="0" width="100%" cellspacing="1" cellpadding="0" class="steelgroup0">
+<table id="main_content" class="calendar-week">
+    <colgroup>
+        <col style="max-width: 1.5em; width: 1.5em;">
+        <? if ($rowspan > 1) : ?>
+        <col style="max-width: 1.5em; width: 1.5em;">
+        <? endif; ?>
+        <? for ($i = 0; $i < $week_type; $i++) : ?>
+        <? if ($tab_arr[$i]['max_cols'] > 0) : ?>
+        <? $event_cols = $tab_arr[$i]['max_cols'] ?: 1; ?>
+        <col span="<?= $event_cols ?>" style="width: <?= 100 / $week_type / $event_cols ?>%">
+        <col style="max-width: 0.8em; width: 0.8em;">
+        <? else : ?>
+        <col style="width: <?= 100 / $week_type ?>%">
+        <? endif; ?>
+        <? endfor; ?>
+        <col style="max-width: 1.5em; width: 1.5em;">
+        <? if ($rowspan > 1) : ?>
+        <col style="max-width: 1.5em; width: 1.5em;">
+        <? endif; ?>
+    </colgroup>
     <thead>
     <tr>
-        <td colspan="<?= $colspan_2 ?>">
-            <table width="100%" border="0" cellpadding="2" cellspacing="0" align="center" class="steelgroup0">
-                <tr>
-                    <td align="center" width="15%">
-                        <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()) - 7, date('Y', $calendars[0]->getStart())))) ?>">
-                            <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("eine Woche zurück"))) ?>
-                        </a>
-                    </td>
-                    <td width="70%" class="calhead">
-                        <? printf(_("%s. Woche vom %s bis %s"), strftime("%V", $calendars[0]->getStart()), strftime("%x", $calendars[0]->getStart()), strftime("%x", $calendars[$week_type - 1]->getStart())) ?>
-                    </td>
-                    <td align="center" width="15%">
-                        <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()) + 7, date('Y', $calendars[0]->getStart())))) ?>">
-                            <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("eine Woche vor"))) ?>
-                        </a>
-                    </td>
-                </tr>
-            </table>
+        <td colspan="<?= $colspan_2 ?>" style="vertical-align: middle; text-align: center;">
+            <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, $atime, date('j', $atime) - 7, date('Y', $atime)))) ?>">
+                    <span style="vertical-align: middle;" <?= tooltip(_('eine Woche zurück')) ?>>
+                    <?= Assets::img('icons/16/blue/arr_1left.png') ?>
+                    </span>
+                    <?= strftime(_('%V. Woche'), strtotime('-1 week', $atime)) ?>
+                </a>
+            </div>
+            <div style="width: 50%; display: inline-block; text-align: center;" class="calhead">
+                <? printf(_("%s. Woche vom %s bis %s"), strftime("%V", $calendars[0]->getStart()), strftime("%x", $calendars[0]->getStart()), strftime("%x", $calendars[$week_type - 1]->getStart())) ?>
+            </div>
+            <div style="text-align: right; width: 20%;  display: inline-block; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $atime), date('j', $atime) + 7, date('Y', $atime)))) ?>">
+                    <?= strftime(_('%V. Woche'), strtotime('+1 week', $atime)) ?>
+                    <span style="vertical-align: middle;" <?= tooltip(_('eine Woche vor')) ?>>
+                    <?= Assets::img('icons/16/blue/arr_1right.png') ?>
+                    </span>
+                </a>
+            </div>
         </td>
     </tr>
     <tr>
-        <td nowrap="nowrap" align="center" width="<?= $week_type == 7 ? '1%' : '3%' ?>"<?= $colspan_1 ?>>
+        <td style="text-align: center; white-space: nowrap;" <?= $colspan_1 ?>>
             <? if ($start > 0) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_("zeig davor"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
             </a>
             <? endif ?>
         </td>
         <? // weekday and date as title for each column ?>
         <? for ($i = 0; $i < $week_type; $i++) : ?>
-        <td class="steelgroup0" style="text-align:center; font-weight:bold; width:<?= (98 / $week_type) ?>%;"<?= ($tab_arr[$i]['max_cols'] > 0 ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '' ) ?>>
+        <td style="text-align:center; font-weight:bold;"<?= ($tab_arr[$i]['max_cols'] > 0 ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '' ) ?>>
             <a class="calhead" href="<?= $controller->url_for('calendar/single/day', array('atime' => $calendars[$i]->getStart())) ?>">
                 <?= strftime('%a', $calendars[$i]->getStart()) . ' ' . date('d', $calendars[$i]->getStart()) ?>
             </a>
@@ -73,10 +103,10 @@ if ($rowspan > 1) {
             <? endif ?>
         </td>
         <? endfor ?>
-        <td nowrap="nowrap" align="center" width="<?= $week_type == 7 ? '1%' : '3%' ?>"<?= $colspan_1 ?>>
+        <td style="text-align: center; white-space: nowrap;" <?= $colspan_1 ?>>
             <? if ($start > 0) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_("zeig davor"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
             </a>
             <? endif ?>
         </td>
@@ -88,14 +118,13 @@ if ($rowspan > 1) {
         </td>
         <? for ($i = 0; $i < $week_type; $i++) : ?>
         <?
-        // emphesize the current day if $compact is FALSE (this means week-view)
         if (date('Ymd', $calendars[$i]->getStart()) == date('Ymd')) {
             $style_cell = 'celltoday';
         } else {
             $style_cell = 'table_row_even';
         }
         ?>
-        <td class="<?= $style_cell ?>" style="text-align:right; vertical-align:top;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
+        <td class="weekdayevents" class="<?= $style_cell ?>" style="text-align:right; vertical-align:top;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
             <?= $this->render_partial('calendar/single/_day_dayevents', array('em' => $tab_arr[$i], 'calendar' => $calendars[$i])) ?>
             <?/* if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                 <div style="width: 14px; float:right;">
@@ -107,7 +136,7 @@ if ($rowspan > 1) {
         </td>
         <? endfor ?>
         <td class="precol1w"<?= $colspan_1 ?>>
-            <?= _("Tag") ?>
+            <?= _('Tag') ?>
         </td>
     </tr>
     </thead>
@@ -131,7 +160,7 @@ if ($rowspan > 1) {
             <? endif ?>
         <? endif ?>
         <? for ($y = 0; $y < $week_type; $y++) : ?>
-            <?= $this->render_partial('calendar/single/_day_cell', array('calendar' => $calendars[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600, 'i' => $i + ($start * 3600 / $step), 'step' => $step)); ?>
+            <?= $this->render_partial('calendar/single/_day_cell', array('calendar' => $calendars[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600, 'i' => $i + ($start * 3600 / $settings['step_week']), 'step' => $settings['step_week'])); ?>
         <? endfor ?>
         <? if ($rowspan > 1) : ?>
             <? if ($minutes == 0) : ?>
@@ -146,7 +175,7 @@ if ($rowspan > 1) {
             <?  else : ?>
             <td class="precol1w" rowspan="<?= $rowspan ?>"><?= $j ?></td>
             <? endif ?>
-            <? $j = $j + ceil($step / 3600); ?>
+            <? $j = $j + ceil($settings['step_week'] / 3600); ?>
         <? endif ?>
     </tr>
     <? endfor ?>
@@ -156,7 +185,7 @@ if ($rowspan > 1) {
         <td<?= $colspan_1 ?> style="text-align:center;">
         <? if ($end < 23) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($end + 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_("zeig danach"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
             </a>
         <? endif ?>
         </td>
@@ -164,13 +193,10 @@ if ($rowspan > 1) {
         <td<?= $colspan_1 ?> style="text-align:center;">
         <? if ($end < 23) : ?>
             <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($end + 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
-                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_("zeig danach"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1down.png', tooltip2(_('zeig danach'))) ?>
             </a>
         <? endif ?>
         </td>
     </tr>
     </tfoot>
-</table>
-        </td>
-    </tr>
 </table>

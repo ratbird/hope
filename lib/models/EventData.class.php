@@ -15,28 +15,44 @@ class EventData extends SimpleORMap
         
         $config['belongs_to']['author'] = array(
             'class_name' => 'User',
-            'foreign_key' => 'autor_id',
-          //  'assoc_foreign_key' => 'user_id'
+            'foreign_key' => 'author_id',
         );
         $config['belongs_to']['editor'] = array(
             'class_name' => 'User',
             'foreign_key' => 'editor_id',
-          //  'assoc_foreign_key' => 'user_id'
         );
-        $config['has_many']['owner'] = array(
-            'class_name' => 'EventRange',
-            'foreign_key' => 'event_id',
-          //  'assoc_foreign_key' => 'user_id',
-            'on_delete' => 'delete'
+        $config['has_many']['calendars'] = array(
+            'class_name' => 'CalendarEvent',
+            'foreign_key' => 'event_id'
         );
         
-        $config['has_many']['group_events'] = array(
-            'class_name' => 'CalendarEvent',
-            'foreign_key' => 'event_id',
-            'assoc_foreign_key' => 'event_id'
-        );
+        $time = time();
+        $config['default_values']['start'] = $time;
+        $config['default_values']['end'] = $time + 3600;
+        $config['default_values']['category_intern'] = 0;
+        $config['default_values']['class'] = 'PRIVATE';
+        $config['default_values']['rtype'] = 'SINGLE';
+        $config['default_values']['linterval'] = 0;
+        $config['default_values']['sinterval'] = 0;
+        $config['default_values']['ts'] = mktime(12, 0, 0, date('n', $time),
+                date('j', $time), date('Y', $time));
+        $config['default_values']['uid'] = function($event) {
+            return 'Stud.IP-' . $event->event_id . '@' . $_SERVER['SERVER_NAME'];
+        };
         
         parent::configure($config);
+        
+    }
+    
+    public function delete()
+    {
+        if (sizeof($this->calendars) > 1) {
+            return false;
+        }
+        $calendars = $this->calendars;
+        if (parent::delete()) {
+            $calendars->each(function($c) { $c->delete(); });
+        }
         
     }
     

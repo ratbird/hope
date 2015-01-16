@@ -11,7 +11,7 @@
                 <?= $termin['room'] ? _('Raum') . ': ' . htmlReady($termin['room']) : '' ?>
             </span>
             <? if($admin && $isProfile): ?>
-            <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/event/' . $termin['id'], array('source_page' => 'dispatch.php/profile')) ?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/' . $termin['range_id'] . '/' . $termin['event_id'], array('source_page' => 'dispatch.php/profile')) ?>">
                 <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
             </a>
             <? endif; ?>
@@ -22,10 +22,12 @@
     </p>
     <footer>
         <? foreach($termin['info'] as $type => $info): ?>
-        <? if (!is_numeric($type)): ?>
-            <em><?= htmlReady($type) ?>: </em>
-        <? endif; ?>
-        <?= htmlReady($info) ?> 
+        <? if (trim($info)) : ?>
+            <? if (!is_numeric($type)): ?>
+                <em><?= htmlReady($type) ?>: </em>
+            <? endif; ?>
+            <?= htmlReady(trim($info)) ?> 
+        <? endif ?>
         <? endforeach; ?>
     </footer>
 </article>

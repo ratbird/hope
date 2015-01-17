@@ -64,7 +64,7 @@ if ($rowspan > 1) {
     <tr>
         <td colspan="<?= $colspan_2 ?>" style="vertical-align: middle; text-align: center;">
             <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
-                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, $atime, date('j', $atime) - 7, date('Y', $atime)))) ?>">
+                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $atime), date('j', $atime) - 7, date('Y', $atime)))) ?>">
                     <span style="vertical-align: middle;" <?= tooltip(_('eine Woche zurück')) ?>>
                     <?= Assets::img('icons/16/blue/arr_1left.png') ?>
                     </span>
@@ -87,7 +87,7 @@ if ($rowspan > 1) {
     <tr>
         <td style="text-align: center; white-space: nowrap;" <?= $colspan_1 ?>>
             <? if ($start > 0) : ?>
-            <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $calendars[0]->getStart()), date('j', $calendars[0]->getStart()), date('Y', $calendars[0]->getStart())))) ?>">
+            <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime($start - 1, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)))) ?>">
                 <?= Assets::img('icons/16/blue/arr_1up.png', tooltip2(_('zeig davor'))) ?>
             </a>
             <? endif ?>
@@ -111,6 +111,8 @@ if ($rowspan > 1) {
             <? endif ?>
         </td>
     </tr>
+    </thead>
+    <tbody>
     <tr>
         <? // Zeile mit Tagesterminen ausgeben ?>
         <td class="precol1w"<?= $colspan_1 ?> height="20">
@@ -139,8 +141,6 @@ if ($rowspan > 1) {
             <?= _('Tag') ?>
         </td>
     </tr>
-    </thead>
-    <tbody>
     <? $j = $start ?>
     <? for ($i = 0; $i < $rows; $i++) : ?>
     <tr>

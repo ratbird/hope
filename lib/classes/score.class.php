@@ -130,7 +130,8 @@ class Score
             // Events
             $query = "SELECT u.user_id, COUNT(u.user_id) AS eventcount
                       FROM user_info AS u
-                      INNER JOIN calendar_events ON (range_id = u.user_id AND class = 'PUBLIC')
+                      INNER JOIN calendar_event ON (range_id = u.user_id)
+                      INNER JOIN event_data ON (calendar_event.event_id = event_data.event_id AND class = 'PUBLIC')
                       WHERE score > 0 AND ? <= end
                       GROUP BY u.user_id
                       ORDER BY NULL";

@@ -1,9 +1,10 @@
 <? $link_notset = true ?>
+<? $atime_new = $calendar->getStart() + $i * $step ?>
 <? if (!$em['term'][$row]) : ?>
 <td class="calendar-day-edit" <?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-    <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $calendar->getStart() + $i * $settings['step_day'])) ?>">
-        <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $settings['step_day'] + $start - 3600)) ?>>
+    <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+        <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
     </a>
     <? endif ?>
 </td>
@@ -35,8 +36,8 @@
         <? elseif ($event == '') : ?>
             <td class="calendar-day-edit"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $calendar->getStart() + $i * $settings['step_day'])) ?>">
-                    <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $settings['step_day'] + $start - 3600)) ?>>
+                <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+                    <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
                 </a>
                 <? endif ?>
             </td>
@@ -48,8 +49,8 @@
 <? if ($link_notset) : ?>
     <td class="calendar-day-edit">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $calendar->getStart() + $i * $settings['step_day'])) ?>">
-            <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_('neuer Termin um %R Uhr'), $row * $settings['step_day'] + $start - 3600)) ?>>
+        <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+            <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
         </a>
         <? endif ?>
     </td>

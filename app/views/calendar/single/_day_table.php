@@ -26,6 +26,6 @@ if ($settings['step_day'] >= 3600) {
         <a data-dialog="" class="calhead" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $calendar->getStart() + $i * $settings['step_day'])) ?>"><?= $minute ? $minute : '00' ?></a>
     </td>
     <? endif ?>
-    <?= $this->render_partial('calendar/single/_day_cell', array('events' => $calendar->events, 'start' => $start, 'em' => $em, 'row' => $row, 'i' => $i)); ?>
+    <?= $this->render_partial('calendar/single/_day_cell', array('events' => $calendar->events, 'start' => $start, 'em' => $em, 'row' => $row, 'i' => $i, 'step' => $settings['step_day'])); ?>
 </tr>
 <? endfor; ?>

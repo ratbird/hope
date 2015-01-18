@@ -187,7 +187,7 @@ class Calendar_SingleController extends AuthenticatedController
 
     public function year_action($range_id = null)
     {
-        $this->range_id = $range_id ?: $thie->range_id;
+        $this->range_id = $range_id ?: $this->range_id;
         $start = mktime(0, 0, 0, 1, 1, date('Y', $this->atime));
         $end = mktime(23, 59, 59, 12, 31, date('Y', $this->atime));
         $this->calendar = new SingleCalendar($this->range_id, $start, $end);

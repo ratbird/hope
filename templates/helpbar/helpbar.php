@@ -12,7 +12,21 @@
             <? if ($widget->icon): ?>
                 <?= Assets::img($widget->icon, array('class' => 'helpbar-widget-icon')) ?>
             <? endif; ?>
-                <?= $widget->render(array('base_class' => 'helpbar')) ?>
+                <?= $widget->render(array('base_class' => 'helpbar'))?>
+                <div class="helpbar-widget-admin-icons">
+                <? if ($widget->edit_link): ?>
+                    <a href="<?=$widget->edit_link?>" data-dialog="size=auto;reload-on-close">
+                    <?= Assets::img('icons/16/white/edit.png') ?></a>
+                <? endif; ?>
+                <? if ($widget->delete_link): ?>
+                    <a href="<?=$widget->delete_link?>" data-dialog="size=auto;reload-on-close">
+                    <?= Assets::img('icons/16/white/trash.png') ?></a>
+                <? endif; ?>
+                <? if ($widget->add_link): ?>
+                    <a href="<?=$widget->add_link?>" data-dialog="size=auto;reload-on-close">
+                    <?= Assets::img('icons/16/white/add.png') ?></a>
+                <? endif; ?>
+                </div>
             </li>
         <? endforeach; ?>
         </ul>

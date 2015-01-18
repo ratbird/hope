@@ -22,6 +22,18 @@
         </label>
         <textarea cols="60" rows="5" name="step_tip"
             placeholder="<?= _('Bitte geben Sie den Text für diesen Schritt ein') ?>"><?= $step ? htmlReady($step->tip) : '' ?></textarea>
+        <label for="step?interactive" class="caption">
+            <?= _('Art:') ?>
+            <span class="required">*</span>
+        </label>
+        <select name="step_interactive">
+            <option value="0" <?= $step->interactive == 0 ? ' selected="selected"' : '' ?>>
+            <?= _('Geführt') ?>
+            </option>
+            <option value="1" <?= $step->interactive == 1 ? ' selected="selected"' : '' ?>>
+            <?= _('Interaktiv') ?>
+            </option>
+        </select>
         <? if ($force_route) : ?>
             <input type="hidden" name="step_route" value="<?= $force_route ?>">
             <input type="hidden" name="step_css" value="<?= $step->css_selector ?>">
@@ -77,10 +89,14 @@
             </table>
         </div>
         <br>
-        <div class="submit_wrapper">
+        <div "data-dialog-button" = "1">
             <?= CSRFProtection::tokenTag() ?>
-            <?= LinkButton::createAccept(_('Speichern'), '#', array('onclick' => "STUDIP.Tour.saveStep(".$tour_id.", ".$step->step."); return false;")) ?>
-            <?= LinkButton::createCancel(_('Abbrechen'), '#', array('rel' => 'close')) ?>
+            <? if ($via_ajax): ?>
+                <?= Button::create(_('Speichern'), 'confirm', array('data-dialog' => '1', 'data-dialog-button' => '1')) ?>
+            <? else: ?>
+                <?= Button::createAccept(_('Speichern'), 'submit') ?>
+                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('tour/admin_overview'), array()) ?>
+            <? endif; ?>
         </div>
     </fieldset>
 </form>

@@ -9,8 +9,8 @@
             <tr>
                 <td style="text-align: center">
                     <div id="tour_editor" style="display: none">
-                    <?= LinkButton::create(_('Neuer Schritt'), '', array('id' => 'tour_new_step', 'data-dialog' => 'size=auto')) ?>
-                    <?= LinkButton::create(_('Schritt bearbeiten'), '', array('id' => 'tour_edit', 'data-dialog' => 'size=auto')) ?>
+                    <?= LinkButton::create(_('Neuer Schritt'), '', array('id' => 'tour_new_step', 'data-dialog' => 'size=auto;reload-on-close')) ?>
+                    <?= LinkButton::create(_('Schritt bearbeiten'), '', array('id' => 'tour_edit', 'data-dialog' => 'size=auto;reload-on-close')) ?>
                     <?= Button::create(_('Position wählen'), 'tour_select_css', array('id' => 'tour_select_css')) ?>
                     <?= Button::create(_('Keine Position'), 'tour_no_css', array('id' => 'tour_no_css')) ?>
                     <?= Button::create(_('Schritt löschen'), 'tour_delete_step', array('id' => 'tour_delete_step')) ?>
@@ -27,7 +27,8 @@
                 </td>
                 <td width="120" style="text-align: center">
                     <?= Button::createCancel(_('Abbrechen'), 'tour_cancel', array('id' => 'tour_cancel', 'style' => 'display:none')) ?>
-                    <?= Button::createCancel(_('Beenden'), 'tour_end', array('id' => 'tour_end')) ?></td>
+                    <?= Button::createCancel(_('Beenden'), 'tour_end', array('id' => 'tour_end')) ?>
+                </td>
             </tr>
         </table>
     </div>

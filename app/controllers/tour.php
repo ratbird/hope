@@ -61,6 +61,8 @@ class TourController extends AuthenticatedController
             $this->set_layout($layout);
         }
         $this->set_content_type('text/html;charset=windows-1252');
+        $this->help_admin = $GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)');
+        
     }
 
     /**
@@ -123,6 +125,7 @@ class TourController extends AuthenticatedController
             $_SESSION['active_tour']['next_route'] = $this->tour->steps[$next_first_step-1]->route;
         }
         
+        $data['edit_mode'] = $this->help_admin;
         $data['step_count'] = count($this->tour->steps);
         $data['controls_position'] = 'BR';
         $data['tour_type'] = $this->tour->type;
@@ -204,6 +207,16 @@ class TourController extends AuthenticatedController
         // load tours
         $this->tours = HelpTour::GetToursByFilter($this->tour_searchterm);
 
+        // delete tour
+        if (Request::option('confirm_delete_tour')) {
+            CSRFProtection::verifySecurityToken();
+            $this->delete_tour(Request::option('tour_id'));
+        }
+        foreach($this->tours as $tour_id => $tour) {
+            if (Request::submitted('tour_remove_'.$tour_id))
+                $this->delete_question = $this->delete_tour($tour_id);
+        }
+                
         // save settings
         if (Request::submitted('save_tour_settings')) {
             foreach($this->tours as $tour_id => $tour) {
@@ -222,8 +235,33 @@ class TourController extends AuthenticatedController
     /**
      * delete tour step
      */
+    function delete_tour($tour_id)
+    {
+        if (!$this->help_admin) {
+            return $this->render_nothing();
+        }
+        $output = '';
+        if (Request::submitted('yes')) {
+            CSRFProtection::verifySecurityToken();
+            header('X-Action: complete');
+            $this->tour->delete();
+        } elseif (Request::submitted('no')) {
+            header('X-Action: complete');
+        } else {
+            header('X-Action: question');
+            $output = createQuestion2(sprintf(_('Wollen Sie die Tour "%s" wirklich löschen?'), $this->tour), array('confirm_delete_tour' => 1, 'tour_id' => $tour_id), array(), '');
+        }
+        return $output;
+    }
+    
+    /**
+     * delete tour step
+     */
     function delete_step($tour_id, $step_nr)
     {
+        if (!$this->help_admin) {
+            return $this->render_nothing();
+        }
         $output = '';
         if (Request::submitted('yes')) {
             CSRFProtection::verifySecurityToken();
@@ -243,7 +281,9 @@ class TourController extends AuthenticatedController
      */
     function delete_step_action($tour_id, $step_nr)
     {
-        $GLOBALS['perm']->check('root');
+        if (!$this->help_admin) {
+            return $this->render_nothing();
+        }
         $this->tour = new HelpTour($tour_id);
         $this->render_text($this->delete_step($tour_id, $step_nr));
     }
@@ -253,11 +293,12 @@ class TourController extends AuthenticatedController
      */
     function edit_step_action($tour_id, $step_nr, $mode = 'edit')
     {
-        $GLOBALS['perm']->check('root');
+        if (!$this->help_admin) {
+            return $this->render_nothing();
+        }
         // Output as dialog (Ajax-Request) or as Stud.IP page?
         if ($this->via_ajax) {
             header('X-Title: ' . _('Schritt bearbeiten'));
-            header('X-No-Buttons: 1');
         }
         // save step position
         if ($mode == 'save_position') {
@@ -265,7 +306,6 @@ class TourController extends AuthenticatedController
             $temp_step->css_selector = trim(Request::get('position'));
             if ($temp_step->validate() AND ! $temp_step->isNew()) {
                 $temp_step->store();
-                header('X-Action: close');
             }
             return $this->render_nothing();
         }
@@ -279,30 +319,29 @@ class TourController extends AuthenticatedController
                 $step_data = array(
                     'title'         => trim(Request::get('step_title')),
                     'tip'           => trim(Request::get('step_tip')),
+                    'interactive'   => trim(Request::get('step_interactive')),
                     'route'         => trim(Request::get('step_route')),
                     'css_selector'  => trim(Request::get('step_css')),
                     'orientation'   => trim(Request::get('step_orientation')),
                     'mkdate'        => time(),
-                    'author_id'     => $GLOBALS['user']->user_id
+                    'author_email'  => $GLOBALS['user']->Email
                 );
                 if ($this->tour->addStep($step_data, $step_nr)) {
-                    //PageLayout::postMessage(MessageBox::success(_('Der Schritt wurde hinzugefügt.')));
-                    header('X-Action: close');
-                    return $this->render_nothing();
+                    header('X-Dialog-Close: 1');
                 } else 
                     $mode = 'new';
             } else {
                 $temp_step = new HelpTourStep(array($tour_id, $step_nr));
-                $temp_step->title = trim(Request::get('step_title'));
-                $temp_step->tip = trim(Request::get('step_tip'));
-                $temp_step->route = trim(Request::get('step_route'));
+                $temp_step->title        = trim(Request::get('step_title'));
+                $temp_step->tip          = trim(Request::get('step_tip'));
+                $temp_step->interactive  = trim(Request::get('step_interactive'));
+                $temp_step->route        = trim(Request::get('step_route'));
                 $temp_step->css_selector = trim(Request::get('step_css'));
-                $temp_step->orientation = Request::option('step_orientation');
+                $temp_step->orientation  = Request::option('step_orientation');
+                $temp_step->author_email = $GLOBALS['user']->Email;
                 if ($temp_step->validate()) {
                     $temp_step->store();
-                    header('X-Action: close');
-                    //PageLayout::postMessage(MessageBox::success(_('Der Schritt wurde gespeichert.')));
-                    return $this->render_nothing();
+                    header('X-Dialog-Close: 1');
                 } else
                     $mode = 'edit';
             }
@@ -329,7 +368,7 @@ class TourController extends AuthenticatedController
     function admin_details_action($tour_id = '')
     {
         // check permission
-        $GLOBALS['perm']->check('admin');
+        $GLOBALS['perm']->check('root');
         // initialize
         PageLayout::setTitle(_('Verwalten von Touren'));
         PageLayout::setHelpKeyword('Basis.TourAdmin');

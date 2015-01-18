@@ -39,19 +39,19 @@
  * @property string position database column
  * @property string custom database column
  * @property string visible database column
- * @property string author_id database column
+ * @property string author_email database column
  * @property string installation_id database column
  * @property string mkdate database column
- * @property string id computed column read/write
+ * @property string chdate database column
  */
 class HelpContent extends SimpleORMap {
     
     /**
      * fetches set of content from database for given route
      * 
-     * @param string $route           route for tours to begin
-     * @param boolean $as_objects     include HelpTour objects in result array
-     * @return array                  set of tours
+     * @param string $route           route for help content
+     * @param string $language        language
+     * @return array                  set of help content
      */
     public static function GetContentByRoute($route = '', $language = '')
     {
@@ -64,15 +64,75 @@ class HelpContent extends SimpleORMap {
         $route = get_route($route);
         $query = "SELECT *
                   FROM help_content
-                  WHERE route LIKE CONCAT(?, '%') AND language = ? AND studip_version = ? AND visible = 1
-                  ORDER BY position ASC";
+                  WHERE route LIKE CONCAT(?, '%') AND language = ? AND visible = 1";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($route, $language, $version));
+        $statement->execute(array($route, $language));
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
         foreach ($ret as $index => $data)
             if (! match_route($data['route'], $route))
                 unset($ret[$index]);
         return $ret;
+    }
+
+    /**
+     * fetches content for given content_id
+     * 
+     * @param string $id              id of help content
+     * @return array                  help content object
+     */
+    public static function GetContentByID($id = '')
+    {
+        $query = "SELECT content_id AS idx, help_content.*
+                  FROM help_content
+                  WHERE content_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        return current(HelpContent::GetContentObjects($ret));
+    }
+
+    /**
+     * fetches set of help content from database filtered by parameters
+     * 
+     * @param string $term            search term for content
+     * @param boolean $as_objects     include HelpContent objects in result array
+     * @return array                  set of help content
+     */
+    public static function GetContentByFilter($term = '')
+    {
+        $params = array();
+        $condition = '';
+        if (strlen(trim($term)) >= 3) { 
+            $condition =  "WHERE content LIKE CONCAT('%', ?, '%')";
+            $params[] = $term;
+        }
+        $query = "SELECT content_id AS idx, help_content.*
+                  FROM help_content
+                  $condition
+                  ORDER BY route ASC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($params);
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        return HelpContent::GetContentObjects($ret);
+    }
+
+    /**
+     * builds help content objects for given set of content data
+     * 
+     * @param array $content_result   content set
+     * @return array                  set of content objects
+     */
+    public static function GetContentObjects($content_result)
+    {
+        $objects = array();
+        if (is_array($content_result)){
+            foreach($content_result as $id => $result){
+                $objects[$id] = new HelpContent();
+                $objects[$id]->setData($result, true);
+                $objects[$id]->setNew(false);
+            }
+        }
+        return $objects;
     }
 
     /**

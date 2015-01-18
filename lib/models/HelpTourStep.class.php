@@ -38,8 +38,9 @@
  * @property string interactive database column
  * @property string css_selector database column
  * @property string route database column
- * @property string author_id database column
+ * @property string author_email database column
  * @property string mkdate database column
+ * @property string chdate database column
  * @property string id computed column read/write
  * @property HelpTours help_tour belongs_to HelpTours
  */

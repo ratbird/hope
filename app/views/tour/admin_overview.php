@@ -46,26 +46,26 @@
                     <th><?=_("Zugang")?></th>
                     <th><?=_("Startseite")?></th>
                     <th><?=_("Anzahl der Schritte")?></th>
-                    <!-- th><?=_("Aktion")?></th-->
+                    <th><?=_("Aktion")?></th>
                 </tr></thead>
                 <tbody>
                 <? foreach ($tours as $tour_id => $tour) : ?>
                     <tr>
                     <td><input type="CHECKBOX" name="tour_status_<?=$tour_id?>" value="1" aria-label="<?= _('Status der Tour (aktiv oder inaktiv)')?>" <?=tooltip(_("Status der Tour (aktiv oder inaktiv)"),false)?><?=($tour->settings->active) ? ' checked' : ''?>></td>
-                    <td><!-- <a href="<?=URLHelper::getURL('dispatch.php/help/admin_tour_details/'.$tour_id)?>"> -->
+                    <td><a href="<?=URLHelper::getURL('dispatch.php/tour/admin_details/'.$tour_id)?>">
                     <?=htmlReady($tour->name)?>
-                    <!-- </a> --></td>
+                    </a></td>
                     <td><?=$tour->type?></td>
                     <td><?=$tour->settings->access?></td>
                     <td><?=(count($tour->steps)) ? htmlReady($tour->steps[0]->route) : ''?></td>
                     <td><?=count($tour->steps)?></td>
-                    <!-- td>
-                    <a href="<?=URLHelper::getURL('dispatch.php/help/admin_tour_details/'.$tour_id)?>" <?=tooltip(_('Tour bearbeiten'))?>>
+                    <td>
+                    <a href="<?=URLHelper::getURL('dispatch.php/tour/admin_details/'.$tour_id)?>" <?=tooltip(_('Tour bearbeiten'))?>>
                     <?= Assets::img('icons/16/blue/edit.png') ?></a>
                     <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Tour löschen')) + array(
                             'name' => 'tour_remove_' . $tour_id,
                     )) ?>
-                    </td-->
+                    </td>
                     </tr>
                 <? endforeach ?>
                 </tbody>

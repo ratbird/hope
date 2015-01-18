@@ -184,7 +184,8 @@ class AdminNavigation extends Navigation
             if (Config::get()->TOURS_ENABLE) {
                 $navigation->addSubNavigation('tour', new Navigation(_('Touren'), 'dispatch.php/tour/admin_overview'));
             }
-
+            $navigation->addSubNavigation('help_content', new Navigation(_('Hilfe-Texte'), 'dispatch.php/help_content/admin_overview'));
+            
             if (Config::get()->ELEARNING_INTERFACE_ENABLE) {
                 $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'admin_elearning_interface.php'));
             }

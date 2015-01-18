@@ -18,6 +18,7 @@ class Helpbar extends WidgetContainer
         parent::__construct();
         
         $this->json_directory = $GLOBALS['STUDIP_BASE_PATH'] . '/doc/helpbar';
+        $this->help_admin = $GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)');
     }
     
     /**
@@ -128,9 +129,11 @@ class Helpbar extends WidgetContainer
         $widget = new HelpbarWidget();
         $widget->setIcon($icon);
         $widget->addElement(new WidgetElement($content));
-        $widget->edit_link = $edit_link;
-        $widget->delete_link = $delete_link;
-        $widget->add_link = $add_link;
+        if ($this->help_admin) {
+            $widget->edit_link = $edit_link;
+            $widget->delete_link = $delete_link;
+            $widget->add_link = $add_link;
+        }
         $this->addWidget($widget);
     }
     

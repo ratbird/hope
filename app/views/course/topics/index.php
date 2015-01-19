@@ -108,18 +108,21 @@ $sidebar = Sidebar::get();
 $sidebar->setImage('sidebar/date-sidebar.png');
 
 $actions = new ActionsWidget();
-$actions->addLink(_("Alle Themen aufklappen"), null, null, array('onClick' => "jQuery('table.withdetails > tbody > tr:not(.details):not(.open) > :first-child a').click(); return false;"));
+$actions->addLink(_("Alle Themen aufklappen"),
+                  null,
+                  'icons/16/blue/arr_1down.png',
+                  array('onClick' => "jQuery('table.withdetails > tbody > tr:not(.details):not(.open) > :first-child a').click(); return false;"));
 if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
     $actions->addLink(
         _("Neues Thema erstellen"),
         URLHelper::getURL("dispatch.php/course/topics/edit"),
-        null,
+        'icons/16/blue/add.png',
         array('data-dialog' => "buttons")
     );
     $actions->addLink(
         _("Themen aus Veranstaltung kopieren"),
         URLHelper::getURL("dispatch.php/course/topics/copy"),
-        null,
+        'icons/16/blue/add/topic.png',
         array('data-dialog' => "buttons")
     );
 }

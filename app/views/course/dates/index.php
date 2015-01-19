@@ -107,6 +107,7 @@ $sidebar->setImage('sidebar/date-sidebar.png');
 $actions = new ActionsWidget();
 $actions->addLink(
     _('Als Doc-Datei runterladen'),
-    URLhelper::getURL('dispatch.php/course/dates/export')
+    URLhelper::getURL('dispatch.php/course/dates/export'),
+    'icons/16/blue/file-word.png'
 );
 $sidebar->addWidget($actions);

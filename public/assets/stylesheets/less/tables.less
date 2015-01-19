@@ -578,7 +578,7 @@ table.default {
 
 table.withdetails {
     > tbody > tr:not(.details) > td:first-child {
-        background-image: url("@{icon-path}/blue/arr_1right.png");
+        .retina-background-icon('blue/arr_1right.png');
         background-repeat: no-repeat;
         background-position: 2px center;
         padding-left: 20px;
@@ -587,21 +587,19 @@ table.withdetails {
         background-color: fadeout(@light-gray-color, 80%);
     }
     > tbody > tr.open > td:first-child {
-        background-image: url("@{icon-path}/blue/arr_1down.png");
+        .retina-background-icon('blue/arr_1down.png');
     }
     tr.details {
         display: none;
         max-height: 0px;
         overflow: hidden;
-        transition: max-height 0.8s;
-        -moz-transition: max-height 0.8s;
+        .transition(max-height 0.8s);
     }
     tr.open + tr.details {
         display: table-row;
         max-height: 200px;
         overflow: hidden;
-        transition: max-height 0.8s;
-        -moz-transition: max-height 0.8s;
+        .transition(max-height 0.8s);
         background-color: transparent !important;
         > td {
             padding-top: 0px;

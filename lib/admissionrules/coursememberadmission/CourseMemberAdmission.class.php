@@ -25,6 +25,8 @@ class CourseMemberAdmission extends AdmissionRule
      * End of course admission.
      */
     public $mandatory_course_id = '';
+    public $modus = '';
+    public $default_message1 = '';
 
     public $allowed_combinations = array('ParticipantRestrictedAdmission', 'LimitedAdmission','ConditionalAdmission', 'PasswordAdmission', 'TimedAdmission','CourseMemberAdmission');
 
@@ -39,6 +41,7 @@ class CourseMemberAdmission extends AdmissionRule
     {
         parent::__construct($ruleId, $courseSetId);
         $this->default_message = _('Sie sind nicht als Teilnehmer der Veranstaltung: %s eingetragen.');
+        $this->default_message1 = _('Sie dürfen nicht als Teilnehmer der Veranstaltung: %s eingetragen sein.');
         if ($ruleId) {
             $this->load();
         } else {
@@ -62,7 +65,7 @@ class CourseMemberAdmission extends AdmissionRule
      * subclass) does.
      */
     public static function getDescription() {
-        return _("Anmelderegeln dieses Typs legen eine Veranstaltung fest, in der die Nutzer bereits eingetragen sein müssen, um sich zu Veranstaltungen des Anmeldesets anmelden zu können.");
+        return _("Anmelderegeln dieses Typs legen eine Veranstaltung fest, in der die Nutzer bereits eingetragen sein müssen, oder in der sie nicht eingetragen sein dürfen, um sich zu Veranstaltungen des Anmeldesets anmelden zu können.");
     }
 
     /**
@@ -104,6 +107,7 @@ class CourseMemberAdmission extends AdmissionRule
             $this->startTime = $current['start_time'];
             $this->endTime = $current['end_time'];
             $this->mandatory_course_id = $current['course_id'];
+            $this->modus = $current['modus'];
         }
     }
 
@@ -118,7 +122,8 @@ class CourseMemberAdmission extends AdmissionRule
         $errors = array();
         if ($this->checkTimeFrame()) {
             $user = User::find($userId);
-            if (!$user->course_memberships->findOneBy('seminar_id', $this->mandatory_course_id)) {
+            $is_member = $user->course_memberships->findOneBy('seminar_id', $this->mandatory_course_id);
+            if ((!$this->modus && !$is_member) || ($this->modus && $is_member)) {
                 $errors[] = $this->getMessage(Course::find($this->mandatory_course_id));
             }
         }
@@ -136,6 +141,7 @@ class CourseMemberAdmission extends AdmissionRule
     public function setAllData($data) {
         parent::setAllData($data);
         $this->mandatory_course_id = $data['mandatory_course_id'] ?: $data['mandatory_course_id_old'];
+        $this->modus = $data['modus'];
         return $this;
      }
 
@@ -145,11 +151,11 @@ class CourseMemberAdmission extends AdmissionRule
     public function store() {
         // Store data.
         $stmt = DBManager::get()->prepare("INSERT INTO `coursememberadmissions`
-            (`rule_id`, `message`, `course_id`, `start_time`,
-            `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?, ?)
+            (`rule_id`, `message`, `course_id`, `modus`, `start_time`,
+            `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE `start_time`=VALUES(`start_time`),
-            `end_time`=VALUES(`end_time`),message=VALUES(message),course_id=VALUES(course_id), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $this->message,$this->mandatory_course_id, (int)$this->startTime,
+            `end_time`=VALUES(`end_time`),message=VALUES(message),course_id=VALUES(course_id),modus=VALUES(modus), `chdate`=VALUES(`chdate`)");
+        $stmt->execute(array($this->id, $this->message,$this->mandatory_course_id, (int)$this->modus, (int)$this->startTime,
             (int)$this->endTime,  time(), time()));
     }
 

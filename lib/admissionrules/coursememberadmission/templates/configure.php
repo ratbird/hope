@@ -5,7 +5,7 @@
 <? if ($mandatory_course) : ?>
     <input type="hidden" name="mandatory_course_id_old" value="<?=$mandatory_course->id?>">
     <label class="caption">
-        <?= _('Mitgliedschaft in folgender Veranstaltung ist notwendig') ?>:
+        <?= _('Mitgliedschaft in folgender Veranstaltung überprüfen') ?>:
     </label>
     <p>
         <?=htmlReady($mandatory_course->getFullName('number-name-semester'));?>
@@ -14,9 +14,25 @@
         </a>
     </p>
 <? endif ?>
+
+<label class="caption">
+    <?= _('Modus') ?>:
+</label>
+<div>
+     <label>
+        <input type="radio" name="modus" value="0" <?=(!$rule->modus ? 'checked' : '')?>>
+        <?=_("Mitgliedschaft ist notwendig")?>
+    </label>
+    <label>
+        <input type="radio" name="modus" value="1" <?=($rule->modus ? 'checked' : '')?>>
+        <?=_("Mitgliedschaft ist verboten")?>
+    </label>
+</div>
+
 <label class="caption">
     <?= _('Veranstaltung suchen') ?>:
 </label>
+
 <div style="display:inline-block">
 
 <?=
@@ -28,3 +44,13 @@ QuickSearch::get("mandatory_course_id", new SeminarSearch('number-name-lecturer'
 </div>
 
 <br><br>
+<script>
+    $('#ruleform input[name="modus"]').on('change',
+        function () {
+            var message = [
+                "<?=jsReady($rule->default_message, 'script-double')?>",
+                "<?=jsReady($rule->default_message1, 'script-double')?>"
+            ];
+            $('#ruleform textarea').text(message[this.value]);
+        });
+</script>

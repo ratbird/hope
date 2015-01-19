@@ -9,7 +9,9 @@ if ($rule->getStartTime() && $rule->getEndTime()) {
 }
 $course = Course::find($rule->mandatory_course_id);
 if ($course) {
-echo sprintf(_('Die Anmeldung ist nur Teilnehmern der Veranstaltung: <b>%s</b> %s erlaubt.'),
+echo sprintf(!$rule->modus ?
+    _('Die Anmeldung ist nur Teilnehmern der Veranstaltung: <b>%s</b> %s erlaubt.') :
+    _('Die Anmeldung ist für Teilnehmer der Veranstaltung: <b>%s</b> %s verboten.'),
     $course->getFullname('number-name'), '<a href="'.URLHelper::getScriptLink('dispatch.php/course/details/index/' . $course->id).'"  data-dialog>'.
         Assets::img('icons/16/grey/info-circle.png', array('title' =>_('Veranstaltungsdetails aufrufen'))).'</a>');
 }

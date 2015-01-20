@@ -604,7 +604,7 @@ class PluginManager
      */
     public function getPlugins ($type, $context = NULL)
     {
-        $user = $GLOBALS['user']->id;
+        $user = $GLOBALS['user']->id ?: 'nobody';
         $plugin_info = $this->getPluginInfos($type);
         $plugins = array();
 

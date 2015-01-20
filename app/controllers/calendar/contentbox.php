@@ -50,8 +50,8 @@ class Calendar_ContentboxController extends StudipController {
 
         // Check permission to edit
         if ($this->single) {
-            $this->admin = $range_id[0] == $GLOBALS['user']->id || $GLOBALS['perm']->have_studip_perm('tutor', $range_id[0]);
-
+            $this->admin = $range_id[0] == $GLOBALS['user']->id
+                || (get_object_type($range_id[0], array('sem')) === 'sem' && $GLOBALS['perm']->have_studip_perm('tutor', $range_id[0]));
             // Set range_id
             $this->range_id = $range_id[0];
         }
@@ -99,7 +99,7 @@ class Calendar_ContentboxController extends StudipController {
         $restrictions = ($GLOBALS['user']->id == $id ? array() : array('CLASS' => 'PUBLIC'));
         $events = SingleCalendar::getEventList($id, $this->start,
                 $this->start + $this->timespan, $restrictions);
-        
+
         // Prepare termine
         $this->termine = array();
 
@@ -128,6 +128,8 @@ class Calendar_ContentboxController extends StudipController {
 
             // Store for view
             $this->termine[] = array(
+                'id' => $termin->id,
+                'type' => get_class($termin),
                 'range_id' => $termin->range_id,
                 'event_id' => $termin->event_id,
                 'chdate' => $termin->chdate,

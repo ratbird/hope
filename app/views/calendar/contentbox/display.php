@@ -8,7 +8,7 @@
         <nav>
     <? if ($admin): ?>
         <? if ($isProfile): ?>
-        <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/event/' . $termin->id, array('source_page' => 'dispatch.php/profile')) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/' . $termin->id, array('source_page' => 'dispatch.php/profile')) ?>">
             <?= Assets::img('icons/16/blue/add.png', array('class' => 'text-bottom')) ?>
         </a>
         <? else: ?>
@@ -22,7 +22,7 @@
   <? if($termine): ?>
 
     <? foreach ($termine as $termin): ?>
-        <?= $this->render_partial('calendar/contentbox/_termin.php', array('termin' => $termin)); ?>    
+        <?= $this->render_partial('calendar/contentbox/_termin.php', array('termin' => $termin)); ?>
     <? endforeach; ?>
 <? else: ?>
     <section>

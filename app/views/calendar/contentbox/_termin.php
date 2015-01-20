@@ -10,7 +10,7 @@
             <span>
                 <?= $termin['room'] ? _('Raum') . ': ' . htmlReady($termin['room']) : '' ?>
             </span>
-            <? if($admin && $isProfile): ?>
+            <? if($admin && $isProfile && $termin['type'] === 'CalendarEvent'): ?>
             <a href="<?= URLHelper::getLink('dispatch.php/calendar/single/edit/' . $termin['range_id'] . '/' . $termin['event_id'], array('source_page' => 'dispatch.php/profile')) ?>">
                 <?= Assets::img('icons/16/blue/admin.png', array('class' => 'text-bottom')) ?>
             </a>
@@ -26,7 +26,7 @@
             <? if (!is_numeric($type)): ?>
                 <em><?= htmlReady($type) ?>: </em>
             <? endif; ?>
-            <?= htmlReady(trim($info)) ?> 
+            <?= htmlReady(trim($info)) ?>
         <? endif ?>
         <? endforeach; ?>
     </footer>

@@ -3,7 +3,7 @@
  * TerminWidget.php - A portal plugin for dates
  *
  * Copyright (C) 2014 - André Klaßen <klassen@elan-ev.de>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -27,7 +27,7 @@ class TerminWidget extends StudIPPlugin implements PortalPlugin
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;
 
-        $navigation = new Navigation('', 'calendar.php', array('cmd' => 'edit'));
+        $navigation = new Navigation('', 'dispatch.php/calendar/single/week');
         $navigation->setImage('icons/16/blue/add.png', array('title' => _('Neuen Termin anlegen')));
         $template->icons = array($navigation);
 

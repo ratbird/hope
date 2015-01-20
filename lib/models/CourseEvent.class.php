@@ -9,14 +9,14 @@
  * @copyright   2014 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
+ *
  */
 
 class CourseEvent extends CourseDate implements Event
 {
     private $properties = null;
     private $permission_user_id = null;
-    
+
     protected static function configure($config = array())
     {
         $config['alias_fields']['event_id'] = 'termin_id';
@@ -24,9 +24,9 @@ class CourseEvent extends CourseDate implements Event
         $config['alias_fields']['end'] = 'end_time';
         $config['alias_fields']['category_intern'] = 'date_typ';
         $config['alias_fields']['author_id'] = 'autor_id';
-        
+
         $config['additional_fields']['location']['get'] = 'getRoomName';
-        $config['additional_fields']['type']['get'] = true;
+        $config['additional_fields']['type'] = true;
         $config['additional_fields']['name']['get'] = function ($event) {
             return $event->course->getFullname();
         };
@@ -46,16 +46,16 @@ class CourseEvent extends CourseDate implements Event
         };
         parent::configure($config);
     }
-    
+
     public function __construct($id = null)
     {
         $this->permission_user_id = $GLOBALS['user']->id;
         parent::__construct($id);
     }
-    
+
     /**
      * Returns all CalendarEvents in the given time range for the given range_id.
-     * 
+     *
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
@@ -89,12 +89,12 @@ class CourseEvent extends CourseDate implements Event
         }
         return $event_collection;
     }
-    
+
     // Check auf durchführender Dozent
     protected static function checkRelated($event, $user_id)
     {
         global $perm;
-        
+
         $check_related = false;
         if ($perm->get_studip_perm($event->range_id, $user_id) == 'dozent') {
             $related_persons = $event->dozenten->pluck(user_id);
@@ -110,7 +110,7 @@ class CourseEvent extends CourseDate implements Event
         }
         return $check_related;
     }
-    
+
     /**
      * Returns the name of the category.
      *
@@ -124,10 +124,10 @@ class CourseEvent extends CourseDate implements Event
         }
         return $as_array ? array($caregory) : $category;
     }
-    
+
     /**
      * Returns the id of the related course
-     * 
+     *
      * @return string The id of the related course.
      */
     public function getSeminarId()
@@ -141,7 +141,7 @@ class CourseEvent extends CourseDate implements Event
     /**
      * Returns an array that represents the recurrence rule for this event.
      * If an index is given, returns only this field of the rule.
-     * 
+     *
      * @return array|string The array with th recurrence rule or only one field.
      */
     public function getRecurrence($index = null)
@@ -150,10 +150,10 @@ class CourseEvent extends CourseDate implements Event
             'month' => 0, 'day' => 0, 'rtype' => 'SINGLE', 'duration' => 1);
         return $index ? $rep[$index] : $rep;
     }
-    
+
     /**
      * Returns the name of the related course.
-     * 
+     *
      * @return string The name of the related course.
      */
     public function getSemName()
@@ -163,7 +163,7 @@ class CourseEvent extends CourseDate implements Event
         }
         return '';
     }
-    
+
     /**
      * TODO Wird das noch benötigt?
      */
@@ -171,14 +171,14 @@ class CourseEvent extends CourseDate implements Event
     {
         return 1;
     }
-    
+
     /**
      * Returns the title of this event.
      * The title of a course event is the name of the course or if a topic is
      * assigned, the title of this topic. If the user has not the permission
      * Event::PERMISSION_READABLE, the title is "Keine Berechtigung.".
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function getTitle()
     {
@@ -192,7 +192,7 @@ class CourseEvent extends CourseDate implements Event
         }
         return $title;
     }
-    
+
     /**
      * Returns the starttime as unix timestamp of this event.
      *
@@ -202,17 +202,17 @@ class CourseEvent extends CourseDate implements Event
     {
         return $this->date;
     }
-    
+
     /**
      * Sets the start date time with given unix timestamp.
-     * 
+     *
      * @param string $timestamp Unix timestamp.
      */
     public function setStart($timestamp)
     {
         $this->date = $timestamp;
     }
-    
+
     /**
      * Returns the endtime of this event.
      *
@@ -222,17 +222,17 @@ class CourseEvent extends CourseDate implements Event
     {
         return $this->end_time;
     }
-    
+
     /**
      * Sets the end date time by given unix timestamp.
-     * 
+     *
      * @param string $timestamp Unix timestamp.
      */
     public function setEnd($timestamp)
     {
         $this->end_time = $timestamp;
     }
-    
+
     /**
      * Returns the duration of this event in seconds.
      *
@@ -242,11 +242,11 @@ class CourseEvent extends CourseDate implements Event
     {
         return $this->end - $this->start;
     }
-    
+
     /**
      * Returns the location.
      * Without permission or the location is not set an empty string is returned.
-     * 
+     *
      * @see ClendarDate::getRoomName()
      * @return string The location
      */
@@ -258,17 +258,17 @@ class CourseEvent extends CourseDate implements Event
         }
         return $location;
     }
-    
+
     /**
      * Returns the global unique id of this event.
-     * 
+     *
      * @return string The global unique id.
      */
     public function getUid()
     {
         return $this->uid;
     }
-    
+
     /**
      * Returns the description of the topic.
      * If the user has no permission or the event has no topic
@@ -286,7 +286,7 @@ class CourseEvent extends CourseDate implements Event
         }
         return $description;
     }
-    
+
     /**
      * Returns the Stud.IP build in category as integer value.
      * If the user has no permission, 255 is returned.
@@ -301,13 +301,13 @@ class CourseEvent extends CourseDate implements Event
         }
         return 255;
     }
-    
+
     /**
      * Returns the index of the category.
      * If the user has no permission, 255 is returned.
-     * 
+     *
      * TODO remove? use getStudipCategory instead?
-     * 
+     *
      * @see config/config.inc.php $TERMIN_TYP
      * @return int The index of the category
      */
@@ -318,45 +318,45 @@ class CourseEvent extends CourseDate implements Event
         }
         return 255;
     }
-    
+
     /**
      * Returns the user id of the last editor.
      * Since course events have no editor null is returned.
-     * 
+     *
      * @return null|int Returns always null.
      */
     public function getEditorId()
     {
         return null;
     }
-    
+
     /**
      * Returns whether the event is a all day event.
-     * 
-     * @return 
+     *
+     * @return
      */
     public function isDayEvent()
     {
         return (($this->end - $this->start) / 60 / 60) > 23;
     }
-    
+
     /**
      * Returns the accessibility of this event. The value is not influenced by
      * the permission of the actual user.
-     * 
+     *
      * According to RFC5545 the accessibility (property CLASS) is represented
      * by the 3 state PUBLIC, PRIVATE and CONFIDENTIAL
-     * 
+     *
      * TODO check this statement:
-     * An course event is always CONFIDENTIAL 
-     * 
+     * An course event is always CONFIDENTIAL
+     *
      * @return string The accessibility as string.
      */
     public function getAccessibility()
     {
         return 'CONFIDENTIAL';
     }
-    
+
     /**
      * Returns the unix timestamp of the last change.
      *
@@ -366,31 +366,31 @@ class CourseEvent extends CourseDate implements Event
     {
         return $this->chdate;
     }
-    
+
     /**
      * Returns the date time the event was imported.
      * Since course events are not imported normaly, returns the date time
      * of creation.
-     * 
+     *
      * @return int Date time of import as unix timestamp:
      */
     public function getImportDate()
     {
         return $this->mkdate;
     }
-    
+
     /**
      * Returns all related groups.
-     * 
+     *
      * TODO remove, use direct access to field CourseDate::statusgruppen.
-     * 
-     * @return SimpleORMapCollection The collection of statusgruppen. 
+     *
+     * @return SimpleORMapCollection The collection of statusgruppen.
      */
     public function getRelatedGroups()
     {
         return $this->statusgruppen;
     }
-    
+
     public function getProperties()
     {
         if ($this->properties === null) {
@@ -416,10 +416,10 @@ class CourseEvent extends CourseDate implements Event
         }
         return $this->properties;
     }
-    
+
     /**
      * Returns the value of property with given name.
-     * 
+     *
      * @param type $name See CalendarEvent::getProperties() for accepted values.
      * @return mixed The value of the property.
      * @throws InvalidArgumentException
@@ -429,29 +429,29 @@ class CourseEvent extends CourseDate implements Event
         if ($this->properties === null) {
             $this->getProperties();
         }
-        
+
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
         throw new InvalidArgumentException(get_class($this)
                 . ': Property ' . $name . ' does not exist.');
     }
-    
+
     public function setPermissionUser($user_id)
     {
         $this->permission_user_id = $user_id;
     }
-    
+
     public function havePermission($permission, $user_id = null)
     {
         $perm = $this->getPermission($user_id);
         return $perm >= $permission;
     }
-    
+
     public function getPermission($user_id = null)
     {
         global $perm;
-        
+
         $user_id = $user_id ?: $this->permission_user_id;
         $course_perm = $perm->get_studip_perm($this->range_id, $user_id);
         $permission = Event::PERMISSION_FORBIDDEN;
@@ -467,31 +467,31 @@ class CourseEvent extends CourseDate implements Event
             default:
                 $permission = Event::PERMISSION_FORBIDDEN;
         }
-        
+
         return $permission;
     }
-    
+
     /**
      * Course events have no priority so returns always an empty string.
-     * 
+     *
      * @return string The priority as a string.
      */
     public function toStringPriority()
     {
         return '';
     }
-    
+
     /**
      * Course events have no accessibility settings so returns always the
      * an empty string.
-     * 
+     *
      * @return string The accessibility as string.
      */
     public function toStringAccessibility()
     {
         return '';
     }
-    
+
     /**
      * Returns a string representation of the recurrence rule.
      * Since course events have no recurence defined it returns an empty string.
@@ -503,20 +503,20 @@ class CourseEvent extends CourseDate implements Event
     {
         return '';
     }
-    
+
     /**
      * Returns the author of this event as user object.
-     * 
+     *
      * @return User|null User object.
      */
     public function getAuthor()
     {
         return $this->author;
     }
-    
+
     /**
      * Course events have no editor so always null is returned.
-     * 
+     *
      * @return null
      */
     public function getEditor()

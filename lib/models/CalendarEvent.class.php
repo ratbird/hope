@@ -29,7 +29,7 @@ class CalendarEvent extends SimpleORMap implements Event
 {
     private $properties = null;
     private $permission_user_id = null;
-    
+
     protected static function configure($config = array())
     {
         $config['db_table'] = 'calendar_event';
@@ -52,26 +52,26 @@ class CalendarEvent extends SimpleORMap implements Event
             'on_delete' => 'delete',
             'on_store' => 'store'
         );
-        $config['additional_fields']['type']['get'] = true;
-        $config['additional_fields']['name']['get'] = true;
+        $config['additional_fields']['type'] = true;
+        $config['additional_fields']['name'] = true;
         $config['additional_fields']['author_id'] = true;
         $config['additional_fields']['editor_id'] = true;
         $config['additional_fields']['title'] = true;
         $config['additional_fields']['start'] = true;
         $config['additional_fields']['end'] = true;
-        
+
         parent::configure($config);
     }
-    
+
     public static function deleteBySQL($where, $params = array())
     {
         parent::deleteBySQL($where, $params);
         EventData::garbageCollect();
     }
-    
+
     /**
      * Finds calendar events by the uid of the event data.
-     * 
+     *
      * @param string $uid The global unique id of this event.
      * @return null|CalendarEvent The calendar event, an array of calendar events or null.
      */
@@ -86,7 +86,7 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return null;
     }
-    
+
     /**
      * Returns a list of all categories the event belongs to.
      * Returns an empty string if no permission.
@@ -110,11 +110,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $as_array ? $categories : implode(', ', $categories);
     }
-    
+
     /**
      * Returns all values that defines a recurrence rule or a single value
      * named by $index.
-     * 
+     *
      * @param string $index Name of the value to retrieve (optional).
      * @return string|array The value(s) of the recurrence rule.
      * @throws InvalidArgumentException
@@ -144,11 +144,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $recurrence;
     }
-    
+
     /**
-     * 
+     *
      * TODO should throw an exception if input values are wrong
-     * 
+     *
      * @param array $r_rule
      * @return array The values of the recurrence rule.
      */
@@ -163,7 +163,7 @@ class CalendarEvent extends SimpleORMap implements Event
         if (!isset($r_rule['count'])) {
             $r_rule['count'] = 0;
         }
-        
+
         switch ($r_rule['rtype']) {
             case 'SINGLE':
                 $ts = mktime(12, 0, 0, date('n', $start),
@@ -352,7 +352,7 @@ class CalendarEvent extends SimpleORMap implements Event
         $this->event->count = $r_rule['count'];
         $this->event->expire = $r_rule['expire'];
     }
-    
+
     /**
      * Returns a string representation of the recurrence rule.
      * If $only_type is true returns only the type of the recurrence.
@@ -455,11 +455,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $only_type ? $type : $text;
     }
-    
+
     /**
      * Returns the priority in a human readable form.
      * If the user has no permission an epmty string will be returned.
-     * 
+     *
      * @return string The priority as a string.
      */
     public function toStringPriority()
@@ -483,7 +483,7 @@ class CalendarEvent extends SimpleORMap implements Event
     /**
      * Returns the accessibilty in a human readable form.
      * If the user has no permission an epmty string will be returned.
-     * 
+     *
      * @return string The accessibility as string.
      */
     public function toStringAccessibility()
@@ -501,10 +501,10 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return '';
     }
-    
+
     /**
      * Returns the exceptions as array of unix timestamps.
-     * 
+     *
      * @return array Array of unix timestamps.
      */
     public function getExceptions()
@@ -515,10 +515,10 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $exceptions;
     }
-    
+
     /**
      * Sets proper timestamps as exceptios for given unix timestamps.
-     * 
+     *
      * @param array $exceptions Array of exceptions as unix timestamps.
      */
     public function setExceptions($exceptions)
@@ -533,13 +533,13 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         $this->event->exceptions = implode(',', $exc);
     }
-    
+
     /**
      * Returns the title of this event.
      * If the user has not the permission Event::PERMISSION_READABLE,
      * the title is "Keine Berechtigung.".
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function getTitle()
     {
@@ -552,17 +552,17 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $this->event->summary;
     }
-    
+
     /**
      * Sets the title of this event.
-     * 
+     *
      * @param type $title The title of this event.
      */
     public function setTitle($title)
     {
         $this->event->summary = $title;
     }
-    
+
     /**
      * Returns the starttime as unix timestamp of this event.
      *
@@ -572,17 +572,17 @@ class CalendarEvent extends SimpleORMap implements Event
     {
         return $this->event->start;
     }
-    
+
     /**
      * Sets the start date time with given unix timestamp.
-     * 
+     *
      * @param string $timestamp Unix timestamp.
      */
     public function setStart($timestamp)
     {
         $this->event->start = $timestamp;
     }
-    
+
     /**
      * Returns the endtime as unix timestamp of this event.
      *
@@ -592,57 +592,57 @@ class CalendarEvent extends SimpleORMap implements Event
     {
         return $this->event->end;
     }
-    
+
     /**
      * Sets the end date time by given unix timestamp.
-     * 
+     *
      * @param string $timestamp Unix timestamp.
      */
     public function setEnd($timestamp)
     {
         $this->event->end = $timestamp;
     }
-    
+
     /**
      * Returns the user id of the author.
-     * 
+     *
      * @return string User id of the author.
      */
     public function getAuthor_id()
     {
         return $this->event->author_id;
     }
-    
+
     /**
      * Sets the author by given user id.
-     * 
+     *
      * @param string $author_id User id of the author.
      */
     public function setAuthor_id($author_id)
     {
         $this->event->author_id = $author_id;
     }
-    
+
     /**
      * Returns the user id of the editor.
-     * 
+     *
      * @return string User id of the editor.
      */
     public function getEditor_id()
     {
         return $this->event->editor_id;
     }
-    
+
     /**
      * Sets the editor id by given user id.
-     * 
+     *
      * @param string $editor_id User id of the editor.
      */
     public function setEditor_id($editor_id)
     {
         $this->event->editor_id = $editor_id;
     }
-    
+
     /**
      * Returns the duration of this event in seconds.
      *
@@ -652,11 +652,11 @@ class CalendarEvent extends SimpleORMap implements Event
     {
         return $this->event->end - $this->event->start;
     }
-    
+
     /**
      * Returns the location.
      * Without permission or the location is not set an empty string is returned.
-     * 
+     *
      * @return string The location
      */
     public function getLocation()
@@ -670,17 +670,17 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $location;
     }
-    
+
     /**
      * Returns the global uni id of this event.
-     * 
+     *
      * @return string The global unique id.
      */
     public function getUid()
     {
         return 'Stud.IP-' . $this->event_id . '@' . $_SERVER['SERVER_NAME'];
     }
-    
+
     /**
      * Returns the description of the topic.
      * If the user has no permission or the event has no topic
@@ -697,11 +697,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $description;
     }
-    
+
     /**
      * Returns the index of the category.
      * If the user has no permission, 255 is returned.
-     * 
+     *
      * @see config/config.inc.php $TERMIN_TYP
      * @return int The index of the category
      */
@@ -736,11 +736,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $category;
     }
-    
+
     /**
      * Returns a csv list of categories. If no categories are stated or the user
      * has no permission an empty string will be returned.
-     * 
+     *
      * @return string csv list of categories or empty string
      */
     public function getUserDefinedCategories()
@@ -751,10 +751,10 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return '';
     }
-    
+
     /**
      * Stores user defined categories as a csv list.
-     * 
+     *
      * @param array|string $categories An array or csv list of user defined categories.
      */
     public function setUserDefinedCategories($categories)
@@ -765,12 +765,12 @@ class CalendarEvent extends SimpleORMap implements Event
         $cat_list = implode(',', array_map('trim', $categories));
         $this->event->categories = $cat_list;
     }
-    
+
     /**
      * Sets the accessibility (class). Possible classes are 'PUBLIC', 'PRIVATE'
      * and 'CONFIDENTIAL'.
      * If the given class is unknown, the event gets the class 'PRIVATE'.
-     * 
+     *
      * @param string $class The name of the class.
      */
     public function setAccessibility($class)
@@ -782,7 +782,7 @@ class CalendarEvent extends SimpleORMap implements Event
             $this->event->class = 'PRIVATE';
         }
     }
-    
+
     /**
      * Sets the priority. Possible values are
      * 0: not specified
@@ -790,7 +790,7 @@ class CalendarEvent extends SimpleORMap implements Event
      * 2: middle
      * 3: low
      * Default is 0.
-     * 
+     *
      * @param int $priority The priority between 0 and 3.
      */
     public function setPriority($priority)
@@ -802,20 +802,20 @@ class CalendarEvent extends SimpleORMap implements Event
             $this->event->priority = 0;
         }
     }
-    
+
     /**
      * Returns the user id of the editor.
-     * 
+     *
      * @return string User id of the editor
      */
     public function getEditorId()
     {
         return $this->event->editor_id;
     }
-    
+
     /**
      * Returns whether this event is an all day event.
-     * 
+     *
      * @return boolean true if all day event
      */
     public function isDayEvent()
@@ -824,13 +824,13 @@ class CalendarEvent extends SimpleORMap implements Event
         (date('His', $this->getEnd()) == '235959'
         || date('His', $this->getEnd() - 1) == '235959'));
     }
-    
+
     /**
      * Returns the state of accessibility as string.
      * Possible values:
      * PUBLIC, PRIVATE, CONFIDENTIAL
      * The default is CONFIDENTIAL.
-     * 
+     *
      * @return string
      */
     public function getAccessibility()
@@ -840,11 +840,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return 'CONFIDENTIAL';
     }
-    
+
     /**
      * Returns an array with options for accessibility depending on the permission
      * of the given calendar permission.
-     * 
+     *
      * @param int $permission The calendar permission
      * @return array The accessibility options.
      */
@@ -870,29 +870,29 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $options;
     }
-    
+
     /**
-     * 
+     *
      * @return type
      */
     public function getChangeDate()
     {
         return $this->event->chdate;
     }
-    
+
     /**
-     * 
+     *
      */
     public function getImportDate()
     {
         return $this->event->importdate;
     }
-    
-    
+
+
     /**
-     * 
+     *
      * TODO wird das noch benötigt?
-     * 
+     *
      * @return type
      */
     public function getType()
@@ -907,7 +907,7 @@ class CalendarEvent extends SimpleORMap implements Event
      * 2 means "middle"
      * 3 means "low"
      * If the user has no permission it returns 0.
-     * 
+     *
      * @return int The priority.
      */
     public function getPriority()
@@ -918,11 +918,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return 0;
     }
-    
+
     /**
-     * 
+     *
      * TODO remove! not used?
-     * 
+     *
      * @return type
      */
     public function getName()
@@ -937,13 +937,13 @@ class CalendarEvent extends SimpleORMap implements Event
                 return $this->institute->name;
             }
     }
-    
+
     /**
      * Returns all properties of this event.
      * The name of the properties correspond to the properties of the
      * iCalendar calendar data exchange format. There are a few properties with
      * the suffix STUDIP_ which have no eqivalent in the iCalendar format.
-     * 
+     *
      * DTSTART: The start date-time as unix timestamp.
      * DTEND: The end date-time as unix timestamp.
      * SUMMARY: The short description (title) that will be displayed in the views.
@@ -960,8 +960,8 @@ class CalendarEvent extends SimpleORMap implements Event
      * timestamp.
      * RRULE: All data for the recurrence rule for this event as array.
      * EVENT_TYPE:
-     * 
-     * 
+     *
+     *
      * @return array The properties of this event.
      */
     public function getProperties()
@@ -990,10 +990,10 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $this->properties;
     }
-    
+
     /**
      * Returns the value of property with given name.
-     * 
+     *
      * @param type $name See CalendarEvent::getProperties() for accepted values.
      * @return mixed The value of the property.
      * @throws InvalidArgumentException
@@ -1003,17 +1003,17 @@ class CalendarEvent extends SimpleORMap implements Event
         if ($this->properties === null) {
             $this->getProperties();
         }
-        
+
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
         throw new InvalidArgumentException(get_class($this)
                 . ': Property ' . $name . ' does not exist.');
     }
-    
+
     /**
      * Returns all CalendarEvents in the given time range for the given range_id.
-     * 
+     *
      * @param string $range_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
@@ -1048,26 +1048,26 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $event_collection;
     }
-    
+
     public function setPermissionUser($user_id)
     {
         $this->permission_user_id = $user_id;
     }
-    
+
     public function havePermission($permission, $user_id = null)
     {
         $perm = $this->getPermission($user_id);
         return $perm >= $permission;
     }
-    
+
     public function getPermission($user_id = null)
     {
         static $permissions = array();
-        
+
         if (is_null($user_id)) {
             $user_id = $this->permission_user_id ?: $GLOBALS['user']->id;
         }
-        
+
         if (!$permissions[$user_id][$this->event_id]) {
             if ($user_id == $this->event->author_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_WRITABLE;
@@ -1095,7 +1095,7 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $permissions[$user_id][$this->event_id];
     }
-    
+
     private function getUserCalendarPermission($user_id)
     {
         $permission = Event::PERMISSION_FORBIDDEN;
@@ -1105,7 +1105,7 @@ class CalendarEvent extends SimpleORMap implements Event
                 if ($accessibility == 'PUBLIC') {
                     $permission = Event::PERMISSION_READABLE;
                 }
-                $stmt = DBManager::get()->prepare('SELECT calpermission FROM contacts '
+                $stmt = DBManager::get()->prepare('SELECT calpermission FROM contact '
                         . 'WHERE owner_id = ? AND user_id = ?');
                 $stmt->execute(array($this->user->getId(), $user_id));
                 $calperm = $stmt->fetchColumn();
@@ -1116,11 +1116,11 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $permission;
     }
-    
+
     private function getCourseCalendarPermission($user_id)
     {
         global $perm;
-        
+
         $permission = Event::PERMISSION_FORBIDDEN;
         if ($this->course->id) {
             $course_perm = $perm->get_studip_perm($this->course->id, $user_id);
@@ -1140,7 +1140,7 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $permission;
     }
-    
+
     private function getInstituteCalendarPermission($user_id)
     {
         global $perm;
@@ -1163,12 +1163,12 @@ class CalendarEvent extends SimpleORMap implements Event
         }
         return $permission;
     }
-    
+
     public function getAuthor()
     {
         return $this->event->author;
     }
-    
+
     public function getEditor()
     {
         return $this->event->editor;

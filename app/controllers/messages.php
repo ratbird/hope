@@ -37,16 +37,6 @@ class MessagesController extends AuthenticatedController {
     {
         Navigation::activateItem('/messaging/messages/inbox');
 
-        if (Request::isPost() && Request::get("delete_message")) {
-            $messaging = new messaging();
-            $success = $messaging->delete_message(Request::option("delete_message"));
-            if ($success) {
-                PageLayout::postMessage(MessageBox::success(_("Nachricht gelöscht!")));
-            } else {
-                PageLayout::postMessage(MessageBox::error(_("Nachricht konnte nicht gelöscht werden.")));
-            }
-        }
-
         if (Request::get("read_all")) {
             Message::markAllAs($GLOBALS['user']->id, 1);
             PageLayout::postMessage(MessageBox::success(_("Alle Nachrichten wurden als gelesen markiert.")));
@@ -67,16 +57,6 @@ class MessagesController extends AuthenticatedController {
     public function sent_action($message_id = null)
     {
         Navigation::activateItem('/messaging/messages/sent');
-
-        if (Request::isPost() && Request::get("delete_message")) {
-            $messaging = new messaging();
-            $success = $messaging->delete_message(Request::option("delete_message"));
-            if ($success) {
-                PageLayout::postMessage(MessageBox::success(_("Nachricht gelöscht!")));
-            } else {
-                PageLayout::postMessage(MessageBox::error(_("Nachricht konnte nicht gelöscht werden.")));
-            }
-        }
 
         $this->messages = $this->get_messages(
             false,
@@ -120,7 +100,7 @@ class MessagesController extends AuthenticatedController {
     {
         $this->message = new Message($message_id);
         if (!$this->message->permissionToRead()) {
-            throw new AccessDeniedException("Kein Zugriff");
+            throw new AccessDeniedException(_('Kein Zugriff'));
         }
 
         PageLayout::setTitle(_('Betreff') . ': ' . $this->message['subject']);
@@ -133,6 +113,16 @@ class MessagesController extends AuthenticatedController {
         if (Request::isXhr()) {
             $this->response->add_header('X-Tags', json_encode(studip_utf8encode($this->message->getTags())));
             $this->response->add_header('X-All-Tags', json_encode(studip_utf8encode(Message::getUserTags())));
+        } else {
+            // Try to redirect to overview of recevied/sent messages if
+            // controller is not called via ajax to ensure message is loaded
+            // in dialog.
+            $target = ($this->message->autor_id === $GLOBALS['user']->id)
+                    ? $this->url_for('messages/sent/' . $message_id)
+                    : $this->url_for('messages/overview/' . $message_id);
+
+            $script = sprintf('location.href = "%s";', $target);
+            PageLayout::addHeadElement('script', array(), $script);
         }
         $this->message->markAsRead($GLOBALS["user"]->id);
     }
@@ -380,6 +370,27 @@ class MessagesController extends AuthenticatedController {
             $this->set_status(400);
             return $this->render_nothing();
         }
+    }
+    
+    public function delete_action($message_id)
+    {
+        $message = Message::find($message_id);
+
+        $ticket = Request::get('studip-ticket');
+        if (Request::isPost() && $ticket && check_ticket($ticket)) {
+            $messaging = new messaging();
+            if ($messaging->delete_message($message_id)) {
+                PageLayout::postMessage(MessageBox::success(_('Nachricht gelöscht!')));
+            } else {
+                PageLayout::postMessage(MessageBox::error(_('Nachricht konnte nicht gelöscht werden.')));
+            }
+        }
+
+        $redirect = $message->autor_id === $GLOBALS['user']->id
+                  ? $this->url_for('messages/sent')
+                  : $this->url_for('messages/overview');
+
+        $this->redirect($redirect);
     }
 
     protected function get_messages($received = true, $limit = 50, $offset = 0, $tag = null, $search = null)

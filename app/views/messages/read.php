@@ -90,9 +90,11 @@
         <a href="<?= URLHelper::getLink("dispatch.php/messages/write", array('answer_to' => $message->getId(), 'forward' => "rec")) ?>" data-dialog="buttons"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
     </div>
     <a href="<?= URLHelper::getLink("dispatch.php/messages/print/".$message->getId()) ?>" class="print_action"><?= \Studip\Button::create(_("Drucken"))?></a>
-    <form action="?" method="post" style="display: inline;">
-        <input type="hidden" name="delete_message" value="<?= $message->getId() ?>">
-        <?= \Studip\Button::create(_("Löschen"))?>
+    <form action="<?= $controller->url_for('messages/delete/' . $message->id) ?>" method="post" style="display: inline;">
+        <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
+        <?= \Studip\Button::create(_("Löschen"), 'delete', array(
+                'onClick' => 'return window.confirm("' . _('Nachricht wirklich löschen?') . '");',
+        ))?>
     </form>
 </div>
 

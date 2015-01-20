@@ -31,10 +31,12 @@
         </a>
     <? endforeach ?>
     </td>
-    <td>
-        <form action="?" method="post" style="display: inline;">
-            <input type="hidden" name="delete_message" value="<?= $message->getId() ?>">
-            <button onClick="return window.confirm('<?= _("Nachricht wirklich löschen?") ?>');" style="background: none; border: none; cursor: pointer;"><?= Assets::img("icons/20/blue/trash") ?></button>
+    <td class="actions">
+        <form action="<?= $controller->url_for('messages/delete/' . $message->id) ?>" method="post" style="display: inline;">
+            <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
+            <button onClick="return window.confirm('<?= _("Nachricht wirklich löschen?") ?>');" style="background: none; border: none; cursor: pointer;">
+                <?= Assets::img("icons/20/blue/trash") ?>
+            </button>
         </form>
     </td>
 </tr>

@@ -292,8 +292,6 @@ class HelpTour extends SimpleORMap {
      * @return boolean true or false
      */
     function validate() {
-        if ($this->isNew()) {
-        }
         if (!$this->name OR !$this->description) {
             PageLayout::postMessage(MessageBox::error(_('Die Tour muss einen Namen und eine Beschreibung haben.')));
             return false;
@@ -307,10 +305,9 @@ class HelpTour extends SimpleORMap {
             return false;
         }
         if (!$this->version) {
-            PageLayout::postMessage(MessageBox::error(_('Ungültige oder fehlende Versionsnummer.')));
-            return false;
+            $this->version = 1;
         }
-        if (!count($this->steps)) {
+        if (! $this->isNew() AND ! count($this->steps)) {
             PageLayout::postMessage(MessageBox::error(_('Die Tour muss mindestens einen Schritt enthalten.')));
             return false;
         }

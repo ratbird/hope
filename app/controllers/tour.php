@@ -204,19 +204,18 @@ class TourController extends AuthenticatedController
                 $this->filter_text = sprintf(_('Angezeigt werden Touren zum Suchbegriff "%s".'), $this->tour_searchterm);
             }
         }
-        // load tours
-        $this->tours = HelpTour::GetToursByFilter($this->tour_searchterm);
-
         // delete tour
         if (Request::option('confirm_delete_tour')) {
             CSRFProtection::verifySecurityToken();
             $this->delete_tour(Request::option('tour_id'));
         }
+        // load tours
+        $this->tours = HelpTour::GetToursByFilter($this->tour_searchterm);
         foreach($this->tours as $tour_id => $tour) {
             if (Request::submitted('tour_remove_'.$tour_id))
                 $this->delete_question = $this->delete_tour($tour_id);
         }
-                
+        
         // save settings
         if (Request::submitted('save_tour_settings')) {
             foreach($this->tours as $tour_id => $tour) {
@@ -241,6 +240,7 @@ class TourController extends AuthenticatedController
             return $this->render_nothing();
         }
         $output = '';
+        $this->tour = new HelpTour($tour_id);
         if (Request::submitted('yes')) {
             CSRFProtection::verifySecurityToken();
             header('X-Action: complete');
@@ -249,7 +249,7 @@ class TourController extends AuthenticatedController
             header('X-Action: complete');
         } else {
             header('X-Action: question');
-            $output = createQuestion2(sprintf(_('Wollen Sie die Tour "%s" wirklich löschen?'), $this->tour), array('confirm_delete_tour' => 1, 'tour_id' => $tour_id), array(), '');
+            $output = createQuestion2(sprintf(_('Wollen Sie die Tour "%s" wirklich löschen?'), $this->tour->name), array('confirm_delete_tour' => 1, 'tour_id' => $tour_id), array(), '');
         }
         return $output;
     }
@@ -309,6 +309,24 @@ class TourController extends AuthenticatedController
             }
             return $this->render_nothing();
         }
+        // save step action (next)
+        if ($mode == 'save_action_next') {
+            $temp_step = new HelpTourStep(array($tour_id, $step_nr));
+            $temp_step->action_next = trim(Request::get('position'));
+            if ($temp_step->validate() AND ! $temp_step->isNew()) {
+                $temp_step->store();
+            }
+            return $this->render_nothing();
+        }
+        // save step action (prev)
+        if ($mode == 'save_action_prev') {
+            $temp_step = new HelpTourStep(array($tour_id, $step_nr));
+            $temp_step->action_prev = trim(Request::get('position'));
+            if ($temp_step->validate() AND ! $temp_step->isNew()) {
+                $temp_step->store();
+            }
+            return $this->render_nothing();
+        }
         // save step
         if ($mode == 'save') {
             CSRFProtection::verifySecurityToken();
@@ -322,6 +340,8 @@ class TourController extends AuthenticatedController
                     'interactive'   => trim(Request::get('step_interactive')),
                     'route'         => trim(Request::get('step_route')),
                     'css_selector'  => trim(Request::get('step_css')),
+                    'action_prev'   => trim(Request::get('action_prev')),
+                    'action_next'   => trim(Request::get('action_next')),
                     'orientation'   => trim(Request::get('step_orientation')),
                     'mkdate'        => time(),
                     'author_email'  => $GLOBALS['user']->Email
@@ -337,6 +357,8 @@ class TourController extends AuthenticatedController
                 $temp_step->interactive  = trim(Request::get('step_interactive'));
                 $temp_step->route        = trim(Request::get('step_route'));
                 $temp_step->css_selector = trim(Request::get('step_css'));
+                $temp_step->action_next  = trim(Request::get('action_next'));
+                $temp_step->action_prev  = trim(Request::get('action_prev'));
                 $temp_step->orientation  = Request::option('step_orientation');
                 $temp_step->author_email = $GLOBALS['user']->Email;
                 if ($temp_step->validate()) {
@@ -379,11 +401,11 @@ class TourController extends AuthenticatedController
             throw new AccessDeniedException(_('Die Tour mit der angegebenen ID existiert nicht.'));
         if (Request::option('confirm_delete_tour_step')) {
             CSRFProtection::verifySecurityToken();
-            $this->delete_tour_step(Request::option('tour_id'), Request::option('step_nr'));
+            $this->delete_step(Request::option('tour_id'), Request::option('step_nr'));
         }
         foreach($this->tour->steps as $step) {
             if (Request::submitted('delete_tour_step_'.$step->step))
-                $this->delete_question = $this->delete_tour_step($this->tour->tour_id, $step->step);
+                $this->delete_question = $this->delete_step($this->tour->tour_id, $step->step);
         }
         if (Request::submitted('save_tour_details')) {
             CSRFProtection::verifySecurityToken();
@@ -393,8 +415,30 @@ class TourController extends AuthenticatedController
             $this->tour->settings->access = Request::option('tour_access');
             $this->tour->roles = implode(',', Request::getArray('tour_roles'));
             $this->tour->version = Request::int('tour_version');
+            if ($this->tour->isNew()) {
+                $this->tour->global_tour_id = md5(uniqid('help_tours',1));
+                $this->tour->settings->active = 0;
+            }
+            $this->tour->author_email = $GLOBALS['user']->Email;
+            $this->tour->studip_version = $GLOBALS['SOFTWARE_VERSION'];
             if ($this->tour->validate()) {
                 $this->tour->store();
+                if (! count($this->tour->steps)) {
+                    $step_data = array(
+                        'title'         => '',
+                        'tip'           => _('(Neue Tour)'),
+                        'interactive'   => 0,
+                        'route'         => trim(Request::get('tour_startpage')),
+                        'css_selector'  => '',
+                        'action_prev'   => '',
+                        'action_next'   => '',
+                        'orientation'   => '',
+                        'mkdate'        => time(),
+                        'author_email'  => $GLOBALS['user']->Email
+                    );
+                    $this->tour->addStep($step_data, 1);
+                    $this->tour_startpage = trim(Request::get('tour_startpage'));
+                }
                 PageLayout::postMessage(MessageBox::success(_('Die Angaben wurden gespeichert.')));
             }
         }

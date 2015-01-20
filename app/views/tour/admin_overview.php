@@ -1,4 +1,5 @@
 <? use Studip\Button, Studip\LinkButton; ?>
+<?=$delete_question?>
 <div class="tour_admin">
 <h2><?= _('Verwalten von Touren') ?></h2>
 <table cellspacing="0" cellpadding="0" width="100%">
@@ -37,7 +38,7 @@
                     <col width="10%">
                     <col width="20%">
                     <col width="10%">
-                    <!-- col width="80"-->
+                    <col width="80">
                 </colgroup>                   
                 <thead><tr>
                     <th><?=_("Aktiv")?></th>
@@ -70,8 +71,9 @@
                 <? endforeach ?>
                 </tbody>
                 <tfoot>
-                <tr><td colspan="6">
+                <tr><td colspan="7">
                 <?=Button::createAccept(_('Speichern'), 'save_tour_settings') ?>
+                <?=LinkButton::create(_('Neue Tour'), URLHelper::getURL('dispatch.php/tour/admin_details')) ?>
                 </td></tr></tfoot>
             </table>
         <? else : ?>

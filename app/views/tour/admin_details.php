@@ -37,6 +37,16 @@
         <option value="autostart"<?=($tour->settings->access == 'autostart') ? ' selected' : ''?>><?=_('Startet bei jedem Aufruf der Seite, bis die Tour abgeschlossen wurde')?></option>
         <option value="autostart_once"<?=($tour->settings->access == 'autostart_once') ? ' selected' : ''?>><?=_('Startet nur beim ersten Aufruf der Seite')?></option>
         </select>
+        <? if (! count($tour->steps)) :?>
+        <label for="tour_name" class="caption">
+            <?= _('Startseite der Tour:') ?>
+            <span class="required">*</span>
+        </label>
+        <input type="text" size="60" maxlength="255" name="tour_startpage"
+            value="<?= $tour_startpage ? htmlReady($tour_startpage) : '' ?>"
+            required="required" aria-required="true"
+            placeholder="<?= _('Bitte geben Sie eine Startseite für die Tour an') ?>"/>
+        <? endif ?>
         <label for="tour_roles[]" class="caption">
             <?= _('Geltungsbereich (Nutzendenstatus):') ?>
         </label>
@@ -57,20 +67,13 @@
         <input type="text" size="60" maxlength="255" name="tour_audience_range_id"
             value="<?= $audience ? htmlReady($audience->range_id) : '' ?>"
             placeholder="<?= _('interne ID des Objekts') ?>"/-->
-        <label for="tour_version" class="caption">
-            <?= _('Versionsnummer:') ?>
-            <span class="required">*</span>
-        </label>
-        <input type="text" size="10" maxlength="10" name="tour_version"
-            value="<?= $tour ? htmlReady($tour->version) : '' ?>"
-            required="required" aria-required="true"
-            placeholder="<?= _('1') ?>"/>
         <div class="submit_wrapper">
             <?= CSRFProtection::tokenTag() ?>
             <?= Button::createAccept(_('Speichern'), 'save_tour_details') ?>
             <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('tour/admin_overview')) ?>
         </div>
     </fieldset>
+    <? if (!$tour->isNew()) :?>
     <table class="default">
         <caption>
             <div class="step_list_title"><?=_('Schritte')?></div>
@@ -122,5 +125,6 @@
             </td></tr>
         </tfoot>
     </table>
+    <? endif ?>
 </form>
 </div>

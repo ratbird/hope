@@ -416,12 +416,12 @@ STUDIP.Tour = {
         }
     },
     
-    saveStepPosition : function (tour_id, step_nr, element) {
+    saveStepPosition : function (tour_id, step_nr, element, mode = 'save_position') {
         STUDIP.Tour.options.data[STUDIP.Tour.step].element = element;
         if (! STUDIP.Tour.pending_ajax_request) {
             STUDIP.Tour.pending_ajax_request = true;
             jQuery.ajax({
-                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + tour_id + '/' + step_nr + '/save_position',
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + tour_id + '/' + step_nr + '/' + mode,
                 'type': 'POST',
                 'data': {'position': element},
                 'success': function (html, status, xhr) {
@@ -465,6 +465,26 @@ STUDIP.Tour = {
             STUDIP.Tour.options.edit_mode = 'select_css';
         });
 
+        jQuery('#tour_select_action_next').live('click', function() {
+            jQuery('#tour_controls').hide();
+            jQuery('#tour_tip').hide();
+            jQuery('#tour_tip_interactive').hide();
+            jQuery('#tour_selector_overlay').hide();
+        	if (jQuery('#tour_overlay').length)
+            	jQuery('#tour_overlay').hide();
+            STUDIP.Tour.options.edit_mode = 'select_action_next';
+        });
+
+        jQuery('#tour_select_action_prev').live('click', function() {
+            jQuery('#tour_controls').hide();
+            jQuery('#tour_tip').hide();
+            jQuery('#tour_tip_interactive').hide();
+            jQuery('#tour_selector_overlay').hide();
+        	if (jQuery('#tour_overlay').length)
+            	jQuery('#tour_overlay').hide();
+            STUDIP.Tour.options.edit_mode = 'select_action_prev';
+        });
+
         if (! jQuery('#tour_selector_overlay').length)
             jQuery('body').prepend('<div id="tour_selector_overlay" style="z-index:20000;"></div>');
         jQuery('body').live('click', function (event) {
@@ -473,7 +493,31 @@ STUDIP.Tour = {
                 event.preventDefault();
                 if (clicked_element != '#tour_select_css') {
                     STUDIP.Tour.options.edit_mode = 1;
-                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element);
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_position');
+                    STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
+                    if (jQuery('#tour_overlay').length)
+                        jQuery('#tour_overlay').show();
+               	    STUDIP.Tour.showControlButtons();
+                }
+            }
+            if (STUDIP.Tour.options.edit_mode == 'select_action_next') {
+                var clicked_element = STUDIP.Tour.getSelector(event.target);
+                event.preventDefault();
+                if (clicked_element != '#tour_select_action_next') {
+                    STUDIP.Tour.options.edit_mode = 1;
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_action_next');
+                    STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
+                    if (jQuery('#tour_overlay').length)
+                        jQuery('#tour_overlay').show();
+               	    STUDIP.Tour.showControlButtons();
+                }
+            }
+            if (STUDIP.Tour.options.edit_mode == 'select_action_prev') {
+                var clicked_element = STUDIP.Tour.getSelector(event.target);
+                event.preventDefault();
+                if (clicked_element != '#tour_select_action_prev') {
+                    STUDIP.Tour.options.edit_mode = 1;
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_action_prev');
                     STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
                     if (jQuery('#tour_overlay').length)
                         jQuery('#tour_overlay').show();

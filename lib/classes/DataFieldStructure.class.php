@@ -86,7 +86,7 @@ class DataFieldStructure
 
   function setType($v) {
     $this->data['type'] = $v;
-    if (!in_array($v, array('selectbox', 'radio', 'combo')))
+    if (!in_array($v, array('selectbox', 'selectboxmultiple', 'radio', 'combo')))
       $this->setTypeParam('');
   }
 
@@ -100,7 +100,7 @@ class DataFieldStructure
    */
   function getHTMLEditor($name) {
     $ret = '';
-    if (in_array($this->getType(), array('selectbox', 'radio', 'combo'))) {
+    if (in_array($this->getType(), array('selectbox', 'selectboxmultiple', 'radio', 'combo'))) {
       $content = $this->getTypeParam();
       $ret = "<textarea name=\"$name\" cols=\"20\" rows=\"8\" wrap=\"off\">" . htmlReady($content) . "</textarea>";
     }

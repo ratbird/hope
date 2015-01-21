@@ -695,20 +695,18 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 $types[] = $key;
             }
         }
-        $stm = DBManager::get()->prepare(sprintf(
+        $stm = DBManager::get()->prepare(
             "SELECT s.Name, s.Seminar_id, s.Untertitel, s.VeranstaltungsNummer "
             . "FROM seminar_user su "
             . "LEFT JOIN seminare s USING(seminar_id) "
             . "WHERE user_id = ? AND su.status LIKE 'dozent' "
-            . "AND ((start_time >= ? AND start_time <= ?) "
-            . "OR (start_time <= ? AND duration_time = -1)) "
-            . "AND s.status IN ('%s') AND s.visible = 1 "
-            . "ORDER BY s.mkdate DESC"
-            , implode("','", $types)));
+            . "AND start_time <= ? AND (? <= start_time + duration_time OR duration_time = -1) "
+            . "AND s.status IN (?) AND s.visible = 1 "
+            . "ORDER BY Name");
 
         $i = 0;
         for (;$current_sem <= $last_sem; $last_sem--) {
-            $stm->execute(array($this->user_id, $all_semester[$last_sem]['beginn'], $all_semester[$last_sem]['beginn'],$all_semester[$last_sem]['ende']));
+            $stm->execute(array($this->user_id, $all_semester[$last_sem]['beginn'], $all_semester[$last_sem]['beginn'], $types ?: ''));
             $result = $stm->fetchAll();
 
             if ($result && sizeof($result)) {

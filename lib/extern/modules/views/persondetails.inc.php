@@ -404,15 +404,13 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
         $last_sem = count($all_semester) - 1;
     }
 
-    // TODO: [tlx] This query seems a bit odd if you look at it's line 5
     $query = "SELECT *
               FROM seminar_user AS su
               LEFT JOIN seminare AS s USING (seminar_id)
               WHERE user_id = :user_id AND su.status = 'dozent'
-                AND ((start_time >= :beginn AND start_time <= :beginn) OR
-                     (start_time <= :ende AND duration_time = -1))
+                AND start_time <= :beginn AND (:beginn <= start_time + duration_time OR duration_time = -1)
                 AND s.status IN (:types) AND s.visible = 1
-              ORDER BY s.mkdate DESC";
+              ORDER BY Name";
     $statement = DBManager::get()->prepare($query);
     $statement->bindValue(':user_id', $row['user_id']);
     $statement->bindValue(':types', $types ?: '');
@@ -420,7 +418,6 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
     $out = '';
     for (;$current_sem <= $last_sem; $last_sem--) {
         $statement->bindValue(':beginn', $all_semester[$last_sem]['beginn']);
-        $statement->bindValue(':ende', $all_semester[$last_sem]['ende']);
         $statement->execute();
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 

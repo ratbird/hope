@@ -97,7 +97,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                 $message = sprintf(_('Der Konfigurationseintrag "%s" wurde erfolgreich übernommen!'), $field);
                 PageLayout::postMessage(MessageBox::success($message));
 
-                $this->redirect('admin/configuration/configuration/' . $section);
+                $this->relocate('admin/configuration/configuration/' . $section);
             }
         }
 

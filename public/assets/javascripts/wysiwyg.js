@@ -4,6 +4,9 @@
 /**
  * wysiwyg.js - Replace HTML textareas with WYSIWYG editor.
  *
+ * Developer documentation can be found at
+ * http://docs.studip.de/develop/Entwickler/Wysiwyg.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -72,6 +75,9 @@ jQuery(function ($) {
         // replace textarea with editor
         CKEDITOR.replace(textarea[0], {
             allowedContent: {
+                // NOTE update the dev docs when changing ACF settings!!
+                // at http://docs.studip.de/develop/Entwickler/Wysiwyg
+                //
                 // note that changes here should also be reflected in
                 // HTMLPurifier's settings!!
                 a: {

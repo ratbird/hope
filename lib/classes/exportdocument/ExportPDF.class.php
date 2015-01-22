@@ -128,8 +128,6 @@ class ExportPDF extends TCPDF implements ExportDocument {
                  : str_replace($match[1], $url, $match[0]);
         }, $content);
 
-#        header('Contnt-Type')
-
         $this->writeHTML($content.$endnote);
     }
 

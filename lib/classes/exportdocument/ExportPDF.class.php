@@ -97,6 +97,11 @@ class ExportPDF extends TCPDF implements ExportDocument {
         $content = preg_replace_callback('/<img[^>]+src="(.*?)"[^>]*>/', function ($match) {
             $url = $match[1];
 
+            // Detect possible html entities in url and remove them
+            if (strpos($url, '&amp;') !== false) {
+                $url = html_entity_decode($url);
+            }
+
             // Handle optional media proxy
             if (Config::GetInstance()->LOAD_EXTERNAL_MEDIA) {
                 $parsed = parse_url($url);
@@ -123,6 +128,8 @@ class ExportPDF extends TCPDF implements ExportDocument {
                  : str_replace($match[1], $url, $match[0]);
         }, $content);
 
+#        header('Contnt-Type')
+
         $this->writeHTML($content.$endnote);
     }
 
@@ -130,7 +137,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
      *
      * @param <type> $commented_by
      * @param <type> $text
-     * @return <type> 
+     * @return <type>
      */
     public function addEndnote($commented_by, $text)
     {
@@ -243,7 +250,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
     public function setHeaderData($ln = '', $lw = 0, $ht = '', $hs = '') {
         $logo_path = get_config("PDF_LOGO");
         if (!$ln) {
-            $ln = $logo_path ? $logo_path : '../../../public/assets/images/logos/logoklein.png';
+            $ln = $logo_path ? $logo_path : '../../../../public/assets/images/logos/logoklein.png';
         }
         $lw = 30;
         $ht = ($ht == '' ? $this->h_title : $ht);

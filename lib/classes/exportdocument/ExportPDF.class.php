@@ -121,9 +121,11 @@ class ExportPDF extends TCPDF implements ExportDocument {
                 $url = $header['Location'] ?: $header['location'] ?: $url;
             } while (in_array($status, array(300, 301, 302, 303, 305, 307)));
 
-            // Replace image with link on error, otherwise return sainitized
+            $status = $status ?: 404;
+
+            // Replace image with link on error (and not internal), otherwise return sainitized
             // url
-            return (!$status || $status >= 400)
+            return ((!is_internal_url($url) || $status == 404) && $status >= 400)
                  ? sprintf('[<a href="%s">%s</a>]', $url, basename($url))
                  : str_replace($match[1], $url, $match[0]);
         }, $content);
@@ -305,7 +307,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
                     if ($document->checkAccess($GLOBALS['user']->id)) {
                         $convurl = get_upload_file_path($matches[1]);
                     } else {
-                        $convurl = Assets::image_path("access_denied.png");
+                        $convurl = Assets::image_path('messagebox/exception.png');
                     }
                 }
             }

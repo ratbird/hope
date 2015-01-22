@@ -104,7 +104,9 @@ jQuery(function ($) {
                 h6: {},
                 hr: {},
                 img: {
-                    attributes: ['alt', '!src', 'height', 'width']
+                    attributes: ['alt', '!src', 'height', 'width'],
+                    // only float:left and float:right should be allowed
+                    styles: ['float'] 
                 },
                 li: {},
                 ol: {},

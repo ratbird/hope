@@ -164,9 +164,7 @@ class Markup
         // - only allow left margin and horizontal text alignment to be set in 
         //   divs (NOTE maybe remove these two features completely?):
         //   div[style="margin-left:(40|80|...)px; text-align:(center|right|justify)"]
-        // - only allow height and width to be set in an images `style`-attribute
-        //   (NOTE maybe max-height and max-width should be set instead?):
-        //   img[alt="..."; src="..."; style="height:123px; width:123px;"]
+        // - img[style] should only allow float:left or float:right
         // - only allow text color and background color to be set in a span's 
         //   style attribute (NOTE 'wiki-links' are currently set here due to 
         //   implementation difficulties, but probably this should be 
@@ -194,7 +192,7 @@ class Markup
             h5
             h6
             hr
-            img[alt|src|height|width]
+            img[alt|src|height|width|style]
             li
             ol
             p[style]
@@ -236,7 +234,8 @@ class Markup
             'margin-left',
             'text-align',
             'color',
-            'background-color'
+            'background-color',
+            'float'
         ));
 
         // avoid <img src="evil_CSRF_stuff">

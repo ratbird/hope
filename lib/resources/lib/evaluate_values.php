@@ -421,6 +421,7 @@ if ($change_object_schedules) {
 
                 $overlaps = $changeAssign->checkOverlap();
                 if ($overlaps) {
+                    $changeAssign->restore();
                     $msg->addMsg(11);
                 } else {
                     $changeAssign->store();

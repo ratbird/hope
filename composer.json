@@ -2,7 +2,7 @@
     "config": {
         "vendor-dir": "composer"
     },
-    "require": {
+    "require-dev": {
         "codeception/codeception": "*"
     }
 }

@@ -20,15 +20,15 @@
  */
 
 STUDIP.Tour = {
-    show_helpcenter : function() {
-        jQuery('#helpbar-sticky').prop('checked', true)
+    show_helpcenter : function () {
+        jQuery('#helpbar-sticky').prop('checked', true);
     },
-    hide_helpcenter : function() {
-        jQuery('#helpbar-sticky').prop('checked', false)
+    hide_helpcenter : function () {
+        jQuery('#helpbar-sticky').prop('checked', false);
     },
-    init : function( tour_id, step_nr) {
+    init : function (tour_id, step_nr) {
         STUDIP.Tour.direction = 'f';
-        if ((STUDIP.Tour.started != true) && ! STUDIP.Tour.pending_ajax_request) {
+        if (!STUDIP.Tour.started && !STUDIP.Tour.pending_ajax_request) {
             STUDIP.Tour.pending_ajax_request = true;
             STUDIP.Tour.started = true;
             jQuery.ajax({
@@ -41,26 +41,28 @@ STUDIP.Tour = {
                     
                     STUDIP.Tour.pending_ajax_request = false;
                     STUDIP.Tour.options = json;
-                    if (STUDIP.Tour.options.redirect)
-                	    window.location.href = STUDIP.Tour.options.redirect;
+                    if (STUDIP.Tour.options.redirect) {
+                        window.location.href = STUDIP.Tour.options.redirect;
+                    }
                     STUDIP.Tour.id = tour_id;
                     STUDIP.Tour.step = 0;
                     STUDIP.Tour.steps = STUDIP.Tour.options.data.length;
                     jQuery('body').prepend(STUDIP.Tour.options.tour_html);
-                    if (! STUDIP.Tour.steps) {
+                    if (!STUDIP.Tour.steps) {
                         STUDIP.Tour.started = false;
                         STUDIP.Tour.show_helpcenter();
                     } else if (STUDIP.Tour.options.last_run) {
                         STUDIP.Tour.hide_helpcenter();
-                    	if ((STUDIP.Tour.options.tour_type == 'tour') && ! STUDIP.Tour.options.edit_mode)
-                        	jQuery('body').prepend('<div id="tour_overlay"></div>');
+                        if ((STUDIP.Tour.options.tour_type === 'tour') && !STUDIP.Tour.options.edit_mode) {
+                            jQuery('body').prepend('<div id="tour_overlay"></div>');
+                        }
                         jQuery('#tour_title').html(STUDIP.Tour.options.last_run);
                         jQuery('#tour_end').show();
                         jQuery('#tour_next').hide();
                         jQuery('#tour_prev').hide();
                         jQuery('#tour_controls').show();
                         jQuery('#tour_reset').show();
-                        jQuery('#tour_reset').live('click', function() {
+                        jQuery('#tour_reset').live('click', function () {
                             jQuery.ajax({
                                 'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/1/on'
                             });
@@ -70,24 +72,26 @@ STUDIP.Tour = {
                             STUDIP.Tour.next();
                         });
                         jQuery('#tour_proceed').show();
-                        jQuery('#tour_proceed').live('click', function() {
+                        jQuery('#tour_proceed').live('click', function () {
                             if (STUDIP.Tour.options.last_run_href) {
                                 jQuery.ajax({
                                     'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + STUDIP.Tour.options.last_run_step + '/on',
                                     'success': function () {
-                                	    window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.last_run_href);
-                                	}
+                                        window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.last_run_href);
+                                    }
                                 });
                             }
                         });
                     } else {
                         STUDIP.Tour.hide_helpcenter();
-                    	if ((STUDIP.Tour.options.tour_type == 'tour') && ! STUDIP.Tour.options.edit_mode)
-                        	jQuery('body').prepend('<div id="tour_overlay"></div>');
-                    	STUDIP.Tour.step = step_nr - STUDIP.Tour.options.route_step_nr - 1;
+                        if ((STUDIP.Tour.options.tour_type === 'tour') && !STUDIP.Tour.options.edit_mode) {
+                            jQuery('body').prepend('<div id="tour_overlay"></div>');
+                        }
+                        STUDIP.Tour.step = step_nr - STUDIP.Tour.options.route_step_nr - 1;
                         STUDIP.Tour.next();
-                        if (STUDIP.Tour.options.edit_mode)
+                        if (STUDIP.Tour.options.edit_mode) {
                             STUDIP.Tour.startEditor();
+                        }
                     }
                 },
                 'fail': function () {
@@ -98,210 +102,218 @@ STUDIP.Tour = {
         }
     },
 
-    showControlButtons : function() {
-	    jQuery('#tour_tip').hide();
-	    jQuery('#tour_tip_interactive').hide();
+    showControlButtons : function () {
+        jQuery('#tour_tip').hide();
+        jQuery('#tour_tip_interactive').hide();
         jQuery('.tour_focus_box').removeClass('tour_focus_box');
         jQuery('#tour_reset').hide();
         jQuery('#tour_proceed').hide();
-		jQuery('#tour_end').show();
-        if ((STUDIP.Tour.step > 0) || STUDIP.Tour.options.back_link)
+        jQuery('#tour_end').show();
+        if ((STUDIP.Tour.step > 0) || STUDIP.Tour.options.back_link) {
             jQuery('#tour_prev').show();
-        else
+        } else {
             jQuery('#tour_prev').hide();
-        if ((STUDIP.Tour.step < (STUDIP.Tour.steps-1)) || STUDIP.Tour.options.proceed_link)
+        }
+        if ((STUDIP.Tour.step < (STUDIP.Tour.steps - 1)) || STUDIP.Tour.options.proceed_link) {
             jQuery('#tour_next').show();
-        else
+        } else {
             jQuery('#tour_next').hide();
+        }
         jQuery('#tour_controls').show();
     },
     
-    next : function() {
-    	STUDIP.Tour.direction = 'f';
-    	STUDIP.Tour.step++;
+    next : function () {
+        STUDIP.Tour.direction = 'f';
+        STUDIP.Tour.step++;
  
         if (STUDIP.Tour.step >= STUDIP.Tour.steps) {
-            if (STUDIP.Tour.options.proceed_link)
+            if (STUDIP.Tour.options.proceed_link) {
                 window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.proceed_link);
-            else
+            } else {
                 this.destroy();
+            }
         } else {
-            if (STUDIP.Tour.options.data[STUDIP.Tour.step].action_next)
-            	jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].action_next).click();
-           	STUDIP.Tour.showControlButtons();
+            if (STUDIP.Tour.options.data[STUDIP.Tour.step].action_next) {
+                jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].action_next).click();
+            }
+            STUDIP.Tour.showControlButtons();
             STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
         }
     },
 
-    prev : function() {
+    prev : function () {
         STUDIP.Tour.direction = 'b';
         STUDIP.Tour.step--;
 
         if ((STUDIP.Tour.step < 0) && (STUDIP.Tour.options.back_link)) {
             jQuery.ajax({
-                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (STUDIP.Tour.options.route_step_nr-1) + '/on',
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (STUDIP.Tour.options.route_step_nr - 1) + '/on',
                 'success': function () {
-                	window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.back_link);
+                    window.location.href = STUDIP.URLHelper.getURL(STUDIP.Tour.options.back_link);
                 }
             });
         } else {
-            if (STUDIP.Tour.options.data[STUDIP.Tour.step].action_prev)
-            	jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].action_prev).click();
-       	    STUDIP.Tour.showControlButtons();
+            if (STUDIP.Tour.options.data[STUDIP.Tour.step].action_prev) {
+                jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].action_prev).click();
+            }
+            STUDIP.Tour.showControlButtons();
             STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
         }
-	},
+    },
 
-	setTooltip : function(stepData) {
+    setTooltip : function (stepData) {
         jQuery('.tour_focus_box').removeClass('tour_focus_box');
         var tip_id = 'tour_tip';
-	    if (stepData.interactive) {
-	        if ((STUDIP.Tour.step == (STUDIP.Tour.steps-1)) && ((parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) != STUDIP.Tour.options.step_count))
-	            jQuery('#tour_interactive_text').show();
+        if (stepData.interactive) {
+            if ((STUDIP.Tour.step === (STUDIP.Tour.steps - 1)) && ((parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step) !== STUDIP.Tour.options.step_count)) {
+                jQuery('#tour_interactive_text').show();
+            }
             tip_id = 'tour_tip_interactive';
-	    }
-		jQuery('#tour_title').html(STUDIP.Tour.options.tour_title + 
-            ' (' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + 
+        }
+        jQuery('#tour_title').html(STUDIP.Tour.options.tour_title + 
+            ' (' + (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step) +
             '/' + STUDIP.Tour.options.step_count + ')');
-		if (stepData.controlsPosition) {
-			STUDIP.Tour.setControlsPosition(stepData.controlsPosition);
-		}
-		if (stepData.title || stepData.tip) {
-			jQuery('#' + tip_id + ' #tour_tip_title').html(stepData.title);
-			jQuery('#' + tip_id + ' #tour_tip_content').html(stepData.tip);
+        if (stepData.controlsPosition) {
+            STUDIP.Tour.setControlsPosition(stepData.controlsPosition);
+        }
+        if (stepData.title || stepData.tip) {
+            jQuery('#' + tip_id + ' #tour_tip_title').html(stepData.title);
+            jQuery('#' + tip_id + ' #tour_tip_content').html(stepData.tip);
 
-			var tooltipPos = (typeof stepData.orientation == 'undefined') ? 'B' : stepData.orientation;
-	        STUDIP.Tour.setTooltipPosition(tooltipPos, stepData.element, tip_id);
-		    if (stepData.interactive && stepData.element) {
-		    	jQuery(stepData.element).addClass('tour_focus_box');
-		    }
-		}
-	},
+            var tooltipPos = (typeof stepData.orientation === 'undefined') ? 'B' : stepData.orientation;
+            STUDIP.Tour.setTooltipPosition(tooltipPos, stepData.element, tip_id);
+            if (stepData.interactive && stepData.element) {
+                jQuery(stepData.element).addClass('tour_focus_box');
+            }
+        }
+    },
 
-	setControlsPosition : function(pos) {
-		position = STUDIP.Tour.getControlPosition(pos);
-		jQuery('#tour_controls').css(position);
-	},
-	
-	setTooltipPosition : function(pos, element, tip_id) {
-		jQuery('.tourArrow').remove();
-		if (element && ! jQuery(element).length) {
-			//alert('Das Element wurde nicht gefunden, Tooltip konnte nicht positioniert werden.');
-			element = '';
-		}
-		tw = jQuery('#'+tip_id).width() + parseInt(jQuery('#'+tip_id).css('padding-left')) + parseInt(jQuery('#'+tip_id).css('padding-right'));
-		th = jQuery('#'+tip_id).height() + parseInt(jQuery('#'+tip_id).css('padding-top')) + parseInt(jQuery('#'+tip_id).css('padding-bottom'));
-		if (STUDIP.Tour.options.edit_mode) {
-	        STUDIP.Tour.setSelectorOverlay();
-		    if (jQuery('#tour_edit').length) {
-		        jQuery('#tour_edit').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + '?hide_route=1');
-		        jQuery('#tour_new_step').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step + 1) + '/new?hide_route=1');
-		        jQuery('#tour_new_page').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step + 1) + '/new');
-		    }
-		}
-		if (! element || ! pos) {
-			jQuery('#'+tip_id).css({ 'top': window.innerHeight/2 - th/2+'px', 'left': window.innerWidth/2 - tw/2+'px', 'position': 'fixed' });
-			jQuery('#'+tip_id).show('fast');
-			return;
-		}
-		ew = jQuery(element).outerWidth();
-		eh = jQuery(element).outerHeight();
-		el = jQuery(element).offset().left;
-		et = jQuery(element).offset().top;
+    setControlsPosition : function (pos) {
+        var position = STUDIP.Tour.getControlPosition(pos);
+        jQuery('#tour_controls').css(position);
+    },
+    
+    setTooltipPosition : function (pos, element, tip_id) {
+        jQuery('.tourArrow').remove();
+        if (element && ! jQuery(element).length) {
+            //alert('Das Element wurde nicht gefunden, Tooltip konnte nicht positioniert werden.');
+            element = '';
+        }
+        var tw = jQuery('#' + tip_id).width() + parseInt(jQuery('#' + tip_id).css('padding-left'), 10) + parseInt(jQuery('#' + tip_id).css('padding-right'), 10);
+        var th = jQuery('#' + tip_id).height() + parseInt(jQuery('#' + tip_id).css('padding-top'), 10) + parseInt(jQuery('#' + tip_id).css('padding-bottom'), 10);
+        if (STUDIP.Tour.options.edit_mode) {
+            STUDIP.Tour.setSelectorOverlay();
+            if (jQuery('#tour_edit').length) {
+                jQuery('#tour_edit').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step) + '?hide_route=1');
+                jQuery('#tour_new_step').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step + 1) + '/new?hide_route=1');
+                jQuery('#tour_new_page').attr('href', STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step + 1) + '/new');
+            }
+        }
+        if (! element || ! pos) {
+            jQuery('#' + tip_id).css({'top': window.innerHeight / 2 - th / 2 + 'px', 'left': window.innerWidth / 2 - tw / 2 + 'px', 'position': 'fixed'});
+            jQuery('#' + tip_id).show('fast');
+            return;
+        }
+        var ew = jQuery(element).outerWidth();
+        var eh = jQuery(element).outerHeight();
+        var el = jQuery(element).offset().left;
+        var et = jQuery(element).offset().top;
 
-		var tbg = jQuery('#'+tip_id).css('background-color');
-		$upArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-bottom' : '16px solid '+tbg });
-		$downArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-top' : '16px solid '+tbg });
-		$rightArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-left' : '16px solid '+tbg });
-		$leftArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-right' : '16px solid '+tbg });
-		switch (pos) {
-			case 'BL' :
-				position = { 'left'  : el - 10, 'top' : et + eh + 20 };
-				$upArrow.css({ top: '-16px', left: '10px' });
-				jQuery('#'+tip_id).prepend($upArrow);
-				break;
+        var tbg = jQuery('#' + tip_id).css('background-color');
+        var $upArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-bottom' : '16px solid ' + tbg });
+        var $downArrow = $('<div class="tourArrow"></div>').css({ 'border-left' : '16px solid transparent', 'border-right' : '16px solid transparent', 'border-top' : '16px solid ' + tbg });
+        var $rightArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-left' : '16px solid ' + tbg });
+        var $leftArrow = $('<div class="tourArrow"></div>').css({ 'border-top' : '16px solid transparent', 'border-bottom' : '16px solid transparent', 'border-right' : '16px solid ' + tbg });
+        var position;
+        switch (pos) {
+        case 'BL' :
+            position = { 'left'  : el - 10, 'top' : et + eh + 20 };
+            $upArrow.css({ top: '-16px', left: '10px' });
+            jQuery('#' + tip_id).prepend($upArrow);
+            break;
 
-			case 'BR' :
-				position = { 'left'  : el + ew - tw + 10, 'top' : et + eh + 20 };
-				$upArrow.css({ top: '-16px', right: '10px' });
-				jQuery('#'+tip_id).prepend($upArrow);
-				break;
+        case 'BR' :
+            position = { 'left'  : el + ew - tw + 10, 'top' : et + eh + 20 };
+            $upArrow.css({ top: '-16px', right: '10px' });
+            jQuery('#' + tip_id).prepend($upArrow);
+            break;
 
-			case 'TL' :
-				position = { 'left'  : el - 10, 'top' : (et - th) - 20 };
-				$downArrow.css({ top: th, left: '10px' });
-				jQuery('#'+tip_id).append($downArrow);
-				break;
+        case 'TL' :
+            position = { 'left'  : el - 10, 'top' : (et - th) - 20 };
+            $downArrow.css({ top: th, left: '10px' });
+            jQuery('#' + tip_id).append($downArrow);
+            break;
 
-			case 'TR' :
-				position = { 'left'  : (el + ew) - tw + 10, 'top' : et - th - 20 };
-				$downArrow.css({ top: th, right: '10px' });
-				jQuery('#'+tip_id).append($downArrow);
-				break;
+        case 'TR' :
+            position = { 'left'  : (el + ew) - tw + 10, 'top' : et - th - 20 };
+            $downArrow.css({ top: th, right: '10px' });
+            jQuery('#' + tip_id).append($downArrow);
+            break;
 
-			case 'RT' :
-				position = { 'left'  : el + ew + 20, 'top' : et - 10 };
-				$leftArrow.css({ left: '-16px' });
-				jQuery('#'+tip_id).prepend($leftArrow);
-				break;
+        case 'RT' :
+            position = { 'left'  : el + ew + 20, 'top' : et - 10 };
+            $leftArrow.css({ left: '-16px' });
+            jQuery('#' + tip_id).prepend($leftArrow);
+            break;
 
-			case 'RB' :
-				position = { 'left'  : el + ew + 20, 'top' : et + eh - th + 10 };
-				$leftArrow.css({ left: '-16px' });
-				jQuery('#'+tip_id).prepend($leftArrow);
-				break;
+        case 'RB' :
+            position = { 'left'  : el + ew + 20, 'top' : et + eh - th + 10 };
+            $leftArrow.css({ left: '-16px' });
+            jQuery('#' + tip_id).prepend($leftArrow);
+            break;
 
-			case 'LT' :
-				position = { 'left'  : (el - tw) - 20, 'top' : et - 10 };
-				$rightArrow.css({ right: '-16px' });
-			    jQuery('#'+tip_id).prepend($rightArrow);
-				break;
+        case 'LT' :
+            position = { 'left'  : (el - tw) - 20, 'top' : et - 10 };
+            $rightArrow.css({ right: '-16px' });
+            jQuery('#' + tip_id).prepend($rightArrow);
+            break;
 
-			case 'LB' :
-				position = { 'left'  : (el - tw) - 20, 'top' : et + eh - th + 10 };
-				$rightArrow.css({ right: '-16px' });
-				jQuery('#'+tip_id).prepend($rightArrow);
-				break;
+        case 'LB' :
+            position = { 'left'  : (el - tw) - 20, 'top' : et + eh - th + 10 };
+            $rightArrow.css({ right: '-16px' });
+            jQuery('#' + tip_id).prepend($rightArrow);
+            break;
 
-			case 'B'  :
-				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et + eh) + 20 };
-				$upArrow.css({ top: '-16px', left: (tw/2 - 16)+'px' });
-				jQuery('#'+tip_id).prepend($upArrow);
-				break;
+        case 'B'  :
+            position = { 'left'  : el + ew / 2 - tw / 2, 'top' : (et + eh) + 20 };
+            $upArrow.css({ top: '-16px', left: (tw / 2 - 16) + 'px' });
+            jQuery('#' + tip_id).prepend($upArrow);
+            break;
 
-			case 'T'  :
-				position = { 'left'  : el + ew/2 - tw/2, 'top' : (et - th) - 20 };
-				$downArrow.css({ top: th, left: (tw/2 - 16)+'px' });
-				jQuery('#'+tip_id).append($downArrow);
-				break;
+        case 'T'  :
+            position = { 'left'  : el + ew / 2 - tw / 2, 'top' : (et - th) - 20 };
+            $downArrow.css({ top: th, left: (tw / 2 - 16) + 'px' });
+            jQuery('#' + tip_id).append($downArrow);
+            break;
 
-			case 'L'  :
-				position = { 'left'  : (el - tw) - 20, 'top' : et + eh/2 - th/2 };
-				$rightArrow.css({ right: '-16px', top: (th/2 - 16)+'px' });
-				jQuery('#'+tip_id).prepend($rightArrow);
-				break;
+        case 'L'  :
+            position = { 'left'  : (el - tw) - 20, 'top' : et + eh / 2 - th / 2 };
+            $rightArrow.css({ right: '-16px', top: (th / 2 - 16) + 'px' });
+            jQuery('#' + tip_id).prepend($rightArrow);
+            break;
 
-			case 'R'  :
-				position = { 'left'  : (el + ew) + 20, 'top' : et + eh/2 - th/2 };
-				$leftArrow.css({ left: '-16px', top: (th/2 - 16)+'px' });
-				jQuery('#'+tip_id).prepend($leftArrow);
-				break;
-		}
+        case 'R'  :
+            position = { 'left'  : (el + ew) + 20, 'top' : et + eh / 2 - th / 2 };
+            $leftArrow.css({ left: '-16px', top: (th / 2 - 16) + 'px' });
+            jQuery('#' + tip_id).prepend($leftArrow);
+            break;
+        }
 
-		jQuery('#'+tip_id).css({ 'top': position.top+'px', 'left': position.left+'px', 'position': 'absolute' });
-		jQuery('#'+tip_id).show('fast');
-		jQuery.scrollTo(jQuery('#'+tip_id), 400, { offset : -100});
-	},
+        jQuery('#' + tip_id).css({'top': position.top + 'px', 'left': position.left + 'px', 'position': 'absolute'});
+        jQuery('#' + tip_id).show('fast');
+        jQuery.scrollTo(jQuery('#' + tip_id), 400, { offset : -100});
+    },
 
-    destroy : function() {
+    destroy : function () {
         jQuery(document).trigger('tourend.studip');
 
         jQuery('#tour_overlay').remove();
-    	if (jQuery('#tour_selector_overlay').length)
-        	jQuery('#tour_selector_overlay').hide();
-        if (! jQuery('#tour_proceed').is(':visible')) {
-        	jQuery.ajax({
-                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step) + '/off' 
+        if (jQuery('#tour_selector_overlay').length) {
+            jQuery('#tour_selector_overlay').hide();
+        }
+        if (!jQuery('#tour_proceed').is(':visible')) {
+            jQuery.ajax({
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/set_status/' + STUDIP.Tour.id + '/' + (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step) + '/off'
             });
         }
         jQuery('#tour_controls').hide();
@@ -316,33 +328,34 @@ STUDIP.Tour = {
     setSelectorOverlay : function () {
         if (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).length) {
             jQuery('#tour_selector_overlay').css({
-            	'display': 'block',
-                'width': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).outerWidth())+'px', 
-                'height': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).outerHeight())+'px', 
-                'top': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).offset().top)+'px', 
-                'left': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).offset().left)+'px'
+                'display': 'block',
+                'width': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).outerWidth()) + 'px',
+                'height': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).outerHeight()) + 'px',
+                'top': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).offset().top) + 'px',
+                'left': (jQuery(STUDIP.Tour.options.data[STUDIP.Tour.step].element).offset().left) + 'px'
             });
+        } else {
+            jQuery('#tour_selector_overlay').hide();
         }
-        else
-        	jQuery('#tour_selector_overlay').hide();
     },
     
-    getSelector : function(target) {
+    getSelector : function (target) {
         var element = jQuery(target).prop("tagName");
-        if (jQuery(target).attr('id'))
+        if (jQuery(target).attr('id')) {
             element = '#' + jQuery(target).attr('id');
-        else if (jQuery(target).attr('name'))
+        } else if (jQuery(target).attr('name')) {
             element = element + '[name=' + jQuery(target).attr('name') + ']';
-        else {
+        } else {
             if (jQuery(target).parent().length) {
-        	    element = STUDIP.Tour.getSelector(jQuery(target).parent()) + ' ' + element;
+                element = STUDIP.Tour.getSelector(jQuery(target).parent()) + ' ' + element;
                 element = element + ':eq(' + jQuery(target).index(element) + ') ';
             }
         }
         return element;
     },
 
-    deleteStep : function (tour_id, step_nr, button='question') {
+    deleteStep : function (tour_id, step_nr, button) {
+        button = typeof button !== 'undefined' ? button : 'question';
         if (! STUDIP.Tour.pending_ajax_request) {
             STUDIP.Tour.pending_ajax_request = true;
             jQuery.ajax({
@@ -350,7 +363,7 @@ STUDIP.Tour = {
                 'data': jQuery('.modaloverlay form').serialize() + '&' + button + '=1',
                 'success': function (html, status, xhr) {
                     STUDIP.Tour.pending_ajax_request = false;
-                    if (xhr.getResponseHeader('X-Action') == 'question') {
+                    if (xhr.getResponseHeader('X-Action') === 'question') {
                         if (STUDIP.Tour.started) {
                             jQuery('#tour_controls').hide();
                             jQuery('#tour_tip').hide();
@@ -367,23 +380,23 @@ STUDIP.Tour = {
                             STUDIP.Tour.deleteStep(jQuery('.modaloverlay form input[name=tour_id]').val(), jQuery('.modaloverlay form input[name=step_nr]').val(), jQuery(this).data('clicked').attr('name'));
                             jQuery('.modaloverlay').remove();
                         });
-                    } else if (xhr.getResponseHeader('X-Action') == 'complete') {
+                    } else if (xhr.getResponseHeader('X-Action') === 'complete') {
                         if (STUDIP.Tour.started) {
-                       	    STUDIP.Tour.showControlButtons();
+                            STUDIP.Tour.showControlButtons();
                             STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
                             STUDIP.Tour.started = false;
                             if ((step_nr > 1) && (step_nr - STUDIP.Tour.options.route_step_nr) >= (STUDIP.Tour.steps - 1)) {
-                            	STUDIP.Tour.init(tour_id, step_nr - 1);
+                                STUDIP.Tour.init(tour_id, step_nr - 1);
                             } else {
                                 STUDIP.Tour.init(tour_id, step_nr);
                             }
                         }
                     }
-            	},
-            	'fail': function () {
-            	    STUDIP.Tour.pending_ajax_request = false;
+                },
+                'fail': function () {
+                    STUDIP.Tour.pending_ajax_request = false;
                     alert("Fehler beim Aufruf des Tour-Controllers");
-            	}
+                }
             });
         }
     },
@@ -392,21 +405,23 @@ STUDIP.Tour = {
         if (! STUDIP.Tour.pending_ajax_request) {
             STUDIP.Tour.pending_ajax_request = true;
             jQuery.ajax({
-    	        'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + tour_id + '/' + step_nr + '/save',
-    	        'type': 'POST',
-    	        'data': jQuery('#edit_tour_form').serialize(),
-    	        'dataType': 'html',
-    	        'success': function (html, status, xhr) {
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/tour/edit_step/' + tour_id + '/' + step_nr + '/save',
+                'type': 'POST',
+                'data': jQuery('#edit_tour_form').serialize(),
+                'dataType': 'html',
+                'success': function (html, status, xhr) {
                     STUDIP.Tour.pending_ajax_request = false;
-                    if (xhr.getResponseHeader('X-Action') == 'close') {
+                    if (xhr.getResponseHeader('X-Action') === 'close') {
                         jQuery('#edit_tour_step').parent().dialog('close');
                         if (STUDIP.Tour.started) {
                             STUDIP.Tour.started = false;
                             STUDIP.Tour.init(tour_id, step_nr);
-                        } else
-                        	window.location.replace(window.location.href); 
-                    } else
+                        } else {
+                            window.location.replace(window.location.href);
+                        }
+                    } else {
                         jQuery('#edit_tour_step').replaceWith(html);
+                    }
                 },
                 'fail': function () {
                     STUDIP.Tour.pending_ajax_request = false;
@@ -416,7 +431,8 @@ STUDIP.Tour = {
         }
     },
     
-    saveStepPosition : function (tour_id, step_nr, element, mode = 'save_position') {
+    saveStepPosition : function (tour_id, step_nr, element, mode) {
+        mode = typeof mode !== 'undefined' ? mode : 'save_position';
         STUDIP.Tour.options.data[STUDIP.Tour.step].element = element;
         if (! STUDIP.Tour.pending_ajax_request) {
             STUDIP.Tour.pending_ajax_request = true;
@@ -437,91 +453,101 @@ STUDIP.Tour = {
     
     startEditor : function () {
         jQuery('#tour_editor').show();
-        if (STUDIP.Tour.options.step_count > 1)
+        if (STUDIP.Tour.options.step_count > 1) {
             jQuery('#tour_delete_step').show();
-        else
+        } else {
             jQuery('#tour_delete_step').hide();
+        }
 
-        jQuery('#tour_delete_step').live('click', function() {
-            STUDIP.Tour.deleteStep(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step));
-        	event.preventDefault();
+        jQuery('#tour_delete_step').live('click', function () {
+            STUDIP.Tour.deleteStep(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step));
+            event.preventDefault();
         });
 
-        jQuery('#tour_no_css').live('click', function() {
+        jQuery('#tour_no_css').live('click', function () {
             jQuery('#tour_selector_overlay').hide();
-        	if (jQuery('#tour_overlay').length)
-            	jQuery('#tour_overlay').hide();
-            STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), '');
+            if (jQuery('#tour_overlay').length) {
+                jQuery('#tour_overlay').hide();
+            }
+            STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step), '');
             STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
         });
 
-        jQuery('#tour_select_css').live('click', function() {
+        jQuery('#tour_select_css').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
             jQuery('#tour_selector_overlay').hide();
-        	if (jQuery('#tour_overlay').length)
-            	jQuery('#tour_overlay').hide();
+            if (jQuery('#tour_overlay').length) {
+                jQuery('#tour_overlay').hide();
+            }
             STUDIP.Tour.options.edit_mode = 'select_css';
         });
 
-        jQuery('#tour_select_action_next').live('click', function() {
+        jQuery('#tour_select_action_next').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
             jQuery('#tour_selector_overlay').hide();
-        	if (jQuery('#tour_overlay').length)
-            	jQuery('#tour_overlay').hide();
+            if (jQuery('#tour_overlay').length) {
+                jQuery('#tour_overlay').hide();
+            }
             STUDIP.Tour.options.edit_mode = 'select_action_next';
         });
 
-        jQuery('#tour_select_action_prev').live('click', function() {
+        jQuery('#tour_select_action_prev').live('click', function () {
             jQuery('#tour_controls').hide();
             jQuery('#tour_tip').hide();
             jQuery('#tour_tip_interactive').hide();
             jQuery('#tour_selector_overlay').hide();
-        	if (jQuery('#tour_overlay').length)
-            	jQuery('#tour_overlay').hide();
+            if (jQuery('#tour_overlay').length) {
+                jQuery('#tour_overlay').hide();
+            }
             STUDIP.Tour.options.edit_mode = 'select_action_prev';
         });
 
-        if (! jQuery('#tour_selector_overlay').length)
+        if (!jQuery('#tour_selector_overlay').length) {
             jQuery('body').prepend('<div id="tour_selector_overlay" style="z-index:20000;"></div>');
+        }
         jQuery('body').live('click', function (event) {
-            if (STUDIP.Tour.options.edit_mode == 'select_css') {
-                var clicked_element = STUDIP.Tour.getSelector(event.target);
+            var clicked_element;
+            if (STUDIP.Tour.options.edit_mode === 'select_css') {
+                clicked_element = STUDIP.Tour.getSelector(event.target);
                 event.preventDefault();
-                if (clicked_element != '#tour_select_css') {
+                if (clicked_element !== '#tour_select_css') {
                     STUDIP.Tour.options.edit_mode = 1;
-                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_position');
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step), clicked_element, 'save_position');
                     STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
-                    if (jQuery('#tour_overlay').length)
+                    if (jQuery('#tour_overlay').length) {
                         jQuery('#tour_overlay').show();
-               	    STUDIP.Tour.showControlButtons();
+                    }
+                    STUDIP.Tour.showControlButtons();
                 }
             }
-            if (STUDIP.Tour.options.edit_mode == 'select_action_next') {
-                var clicked_element = STUDIP.Tour.getSelector(event.target);
+            if (STUDIP.Tour.options.edit_mode === 'select_action_next') {
+                clicked_element = STUDIP.Tour.getSelector(event.target);
                 event.preventDefault();
-                if (clicked_element != '#tour_select_action_next') {
+                if (clicked_element !== '#tour_select_action_next') {
                     STUDIP.Tour.options.edit_mode = 1;
-                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_action_next');
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step), clicked_element, 'save_action_next');
                     STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
-                    if (jQuery('#tour_overlay').length)
+                    if (jQuery('#tour_overlay').length) {
                         jQuery('#tour_overlay').show();
-               	    STUDIP.Tour.showControlButtons();
+                    }
+                    STUDIP.Tour.showControlButtons();
                 }
             }
-            if (STUDIP.Tour.options.edit_mode == 'select_action_prev') {
-                var clicked_element = STUDIP.Tour.getSelector(event.target);
+            if (STUDIP.Tour.options.edit_mode === 'select_action_prev') {
+                clicked_element = STUDIP.Tour.getSelector(event.target);
                 event.preventDefault();
-                if (clicked_element != '#tour_select_action_prev') {
+                if (clicked_element !== '#tour_select_action_prev') {
                     STUDIP.Tour.options.edit_mode = 1;
-                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr) + STUDIP.Tour.step), clicked_element, 'save_action_prev');
+                    STUDIP.Tour.saveStepPosition(STUDIP.Tour.id, (parseInt(STUDIP.Tour.options.route_step_nr, 10) + STUDIP.Tour.step), clicked_element, 'save_action_prev');
                     STUDIP.Tour.setTooltip(STUDIP.Tour.options.data[STUDIP.Tour.step]);
-                    if (jQuery('#tour_overlay').length)
+                    if (jQuery('#tour_overlay').length) {
                         jQuery('#tour_overlay').show();
-               	    STUDIP.Tour.showControlButtons();
+                    }
+                    STUDIP.Tour.showControlButtons();
                 }
             }
         });
@@ -529,35 +555,35 @@ STUDIP.Tour = {
 };
 
 jQuery(function () {
-//	STUDIP.Tour.started = false;
+    //STUDIP.Tour.started = false;
     STUDIP.Tour.pending_ajax_request = false;
 
-    jQuery(document).keyup(function(event) {
-        if (STUDIP.Tour.started && (event.keyCode == 37) && (jQuery('#tour_prev').is(':visible'))) {
+    jQuery(document).keyup(function (event) {
+        if (STUDIP.Tour.started && (event.keyCode === 37) && (jQuery('#tour_prev').is(':visible'))) {
             STUDIP.Tour.prev();
-        } else if (STUDIP.Tour.started && (event.keyCode == 39) && (jQuery('#tour_next').is(':visible'))) { 
+        } else if (STUDIP.Tour.started && (event.keyCode === 39) && (jQuery('#tour_next').is(':visible'))) {
             STUDIP.Tour.next();
-        } else if (STUDIP.Tour.started && (event.keyCode == 27) && (jQuery('#tour_end').is(':visible'))) { 
+        } else if (STUDIP.Tour.started && (event.keyCode === 27) && (jQuery('#tour_end').is(':visible'))) {
             STUDIP.Tour.destroy();
         }
     });
-    jQuery().live('keyright', function(event) {
+    jQuery().live('keyright', function (event) {
         STUDIP.Tour.prev();
     });
-    jQuery('.tour_link').live('click', function(event) {
-    	event.preventDefault();
-    	STUDIP.Tour.init(jQuery(this).attr('id'), 1);
+    jQuery('.tour_link').live('click', function (event) {
+        event.preventDefault();
+        STUDIP.Tour.init(jQuery(this).attr('id'), 1);
     });
 
-    jQuery('#tour_next').live('click', function() {
+    jQuery('#tour_next').live('click', function () {
         STUDIP.Tour.next();
     });
 
-    jQuery('#tour_prev').live('click', function() {
+    jQuery('#tour_prev').live('click', function () {
         STUDIP.Tour.prev();
     });
 
-    jQuery('#tour_end').live('click', function() {
+    jQuery('#tour_end').live('click', function () {
         STUDIP.Tour.destroy();
     });
 });

@@ -118,7 +118,7 @@
             return this.each(function () {
                 if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
                     // fixes wysiwyg insertion for jquery dialogs
-                    STUDIP.addWysiwyg($(this));
+                    STUDIP.wysiwyg.replace($(this));
                 } else {
                     STUDIP.Toolbar.initialize(this, button_set);
                 }

@@ -23,7 +23,7 @@ jQuery(function ($) {
 
     STUDIP.URLHelper.base_url // workaround: application.js sets base_url too late
         = STUDIP.ABSOLUTE_URI_STUDIP;
-    STUDIP.addWysiwyg = replaceTextarea; // for jquery dialogs, see toolbar.js
+    STUDIP.wysiwyg.replace = replaceTextarea; // for jquery dialogs, see toolbar.js
 
     // replace areas visible on page load
     replaceVisibleTextareas();

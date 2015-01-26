@@ -122,7 +122,7 @@ STUDIP.News = {
                 if (!("autofocus" in document.createElement("input"))) {
                     jQuery('[autofocus]').first().focus();
                 }
-                if (!STUDIP.WYSIWYG) {
+                if (!STUDIP.wysiwyg) {
                     // add toolbar only if WYSIWYG editor is not activated
                     jQuery('.add_toolbar').addToolbar();
                 }
@@ -176,7 +176,7 @@ STUDIP.News = {
                     if (!("autofocus" in document.createElement("input"))) {
                         jQuery('[autofocus]').first().focus();
                     }
-                    if (!STUDIP.WYSIWYG) {
+                    if (!STUDIP.wysiwyg) {
                         // add toolbar only if WYSIWYG editor is not activated
                         jQuery('.add_toolbar').addToolbar();
                     }

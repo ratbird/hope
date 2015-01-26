@@ -72,7 +72,7 @@ jQuery(function () {
         jQuery('[autofocus]').first().focus();
     }
 
-    if (!STUDIP.WYSIWYG) {
+    if (!STUDIP.wysiwyg) {
         // add toolbar only if WYSIWYG editor is not activated
         jQuery('.add_toolbar').addToolbar();
     }
@@ -299,7 +299,7 @@ jQuery(function ($) {
 
     // Specialized handler to trigger recalculation when wysiwyg
     // instances are created.
-    if (STUDIP.WYSIWYG) {
+    if (STUDIP.wysiwyg) {
         $(document).on('load.wysiwyg', 'textarea', function () {
             $(document.body).trigger('sticky_kit:recalc');
         });

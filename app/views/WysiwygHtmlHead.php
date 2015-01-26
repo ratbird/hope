@@ -9,7 +9,6 @@ if (\Studip\Wysiwyg\Settings::getInstance()->isGloballyDisabled()) {
 ?>
 <script type="text/javascript">
 <?php if (!\Studip\Wysiwyg\Settings::getInstance()->isDisabled()) { ?>
-    STUDIP.WYSIWYG = <?= \Config::get()->WYSIWYG ? 'true' : 'false' ?>;
     STUDIP.WYSIWYG_CONTEXT = '<?= $_SESSION['SessionSeminar'] ?>';
 <?php } ?>
     STUDIP.wysiwyg = {

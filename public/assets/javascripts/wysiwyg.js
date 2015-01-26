@@ -17,7 +17,7 @@
  * @category    Stud.IP
  */
 jQuery(function ($) {
-    if (!STUDIP.WYSIWYG) {
+    if (!STUDIP.wysiwyg || STUDIP.wysiwyg.disabled) {
         return;
     }
 

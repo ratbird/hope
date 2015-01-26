@@ -116,7 +116,7 @@
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
             return this.each(function () {
-                if (STUDIP.WYSIWYG) {
+                if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
                     // fixes wysiwyg insertion for jquery dialogs
                     STUDIP.addWysiwyg($(this));
                 } else {

@@ -97,7 +97,7 @@ class UserModel
         } else {
              $sql .= " AND inst_perms <> 'user'";
         }
-        $sql .= " ORDER BY Name";
+        $sql .= " ORDER BY priority ASC, Name ASC";
         $db = DBManager::get()->prepare($sql);
         $db->execute(array($user_id));
         return $db->fetchGrouped(PDO::FETCH_ASSOC);

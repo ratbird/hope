@@ -5,10 +5,6 @@
  * jQuery plugin "addToolbar"
  * ------------------------------------------------------------------------ */
 (function ($) {
-    if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
-        return; // don't add button toolbar if WYSIWYG editor is active
-    }
-
     STUDIP.Toolbar = {
 
         // For better readability, the button set is externally defined in the file
@@ -115,13 +111,11 @@
     $.fn.extend({
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
+            if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
+                return this;
+            }
             return this.each(function () {
-                if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
-                    // fixes wysiwyg insertion for jquery dialogs
-                    STUDIP.wysiwyg.replace($(this));
-                } else {
-                    STUDIP.Toolbar.initialize(this, button_set);
-                }
+                STUDIP.Toolbar.initialize(this, button_set);
             });
         },
         // Obtains the currently selected text from an element

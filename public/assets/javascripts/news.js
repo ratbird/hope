@@ -122,10 +122,9 @@ STUDIP.News = {
                 if (!("autofocus" in document.createElement("input"))) {
                     jQuery('[autofocus]').first().focus();
                 }
-                if (!STUDIP.wysiwyg) {
-                    // add toolbar only if WYSIWYG editor is not activated
-                    jQuery('.add_toolbar').addToolbar();
-                }
+
+                jQuery('.add_toolbar').addToolbar();
+                
                 if (document.createElement('textarea').style.resize === undefined) {
                     jQuery('textarea.resizable').resizable({
                         handles: 's',
@@ -176,10 +175,9 @@ STUDIP.News = {
                     if (!("autofocus" in document.createElement("input"))) {
                         jQuery('[autofocus]').first().focus();
                     }
-                    if (!STUDIP.wysiwyg) {
-                        // add toolbar only if WYSIWYG editor is not activated
-                        jQuery('.add_toolbar').addToolbar();
-                    }
+
+                    jQuery('.add_toolbar').addToolbar();
+
                     if (document.createElement('textarea').style.resize === undefined) {
                         jQuery('textarea.resizable').resizable({
                             handles: 's',

@@ -45,7 +45,7 @@
                 <tbody>
                 <? foreach ($help_contents as $help_content_id => $help_content) : ?>
                     <tr>
-                    <td><input type="CHECKBOX" name="help_content_status_<?=$help_content_id?>" value="1" aria-label="<?= _('Status der Tour (aktiv oder inaktiv)')?>" <?=tooltip(_("Status der Tour (aktiv oder inaktiv)"),false)?><?=($help_content->visible) ? ' checked' : ''?>></td>
+                    <td><input type="CHECKBOX" name="help_content_status_<?=$help_content_id?>" value="1" aria-label="<?= _('Status der Hilfe (aktiv oder inaktiv)')?>" <?=tooltip(_("Status der Hilfe (aktiv oder inaktiv)"),false)?><?=($help_content->visible) ? ' checked' : ''?>></td>
                     <td><?=htmlReady($help_content->route)?></td>
                     <td><?=formatReady($help_content->content)?></td>
                     <td>

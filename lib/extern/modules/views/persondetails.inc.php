@@ -8,8 +8,7 @@ require_once('lib/statusgruppe.inc.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php');
 
 if ($GLOBALS["CALENDAR_ENABLE"]) {
-    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/SingleCalendar.class.php");
-    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/DbCalendarEventList.class.php");
+    require_once 'app/models/calendar/SingleCalendar.php';
 }
 
 $instituts_id = $this->config->range_id;
@@ -266,7 +265,7 @@ function news (&$module, $row, $alias_content, $text_div, $text_div_end)
 
 function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
 {
-    if ($GLOBALS["CALENDAR_ENABLE"] && Visibility::verify('dates', $row['user_id'])) {
+    if ($GLOBALS["CALENDAR_ENABLE"] && Visibility::verify('dates', $row['user_id']) || 1) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -276,8 +275,9 @@ function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
             $subheadline_div_end = "";
         }
 
-        $event_list = new DbCalendarEventList(new SingleCalendar($row['user_id']));
-        if ($event_list->existEvent()) {
+        $event_list = SingleCalendar::getEventList($row['user_id'], time(),
+                time() + 60 * 60 * 24 * 7);
+        if (sizeof($event_list)) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
@@ -285,7 +285,7 @@ function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
             echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
             echo "$alias_content</font></td></tr>\n";
 
-            while ($event = $event_list->nextEvent()) {
+            foreach ($event_list as $event) {
                 echo "<tr" . $module->config->getAttributes("TableParagraphSubHeadline", "tr") . ">";
                 echo "<td" . $module->config->getAttributes("TableParagraphSubHeadline", "td") . ">";
                 echo $subheadline_div;

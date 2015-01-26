@@ -77,7 +77,7 @@
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
                     <div data-tooltip="">
-                        <a data-dialog="" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a>
+                        <a data-dialog="size=auto" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                     </div>
                 <? endforeach; ?>
@@ -100,7 +100,7 @@
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
                     <div data-tooltip="">
-                        <a data-dialog="" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= $event->getTitle() ?></a>
+                        <a data-dialog="size=auto" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                     </div>
                 <? endforeach; ?>

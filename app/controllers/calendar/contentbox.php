@@ -98,7 +98,7 @@ class Calendar_ContentboxController extends StudipController {
     private function parseUser($id) {
         $restrictions = ($GLOBALS['user']->id == $id ? array() : array('CLASS' => 'PUBLIC'));
         $events = SingleCalendar::getEventList($id, $this->start,
-                $this->start + $this->timespan, $restrictions);
+                $this->start + $this->timespan, null, $restrictions);
 
         // Prepare termine
         $this->termine = array();

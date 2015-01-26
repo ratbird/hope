@@ -11,7 +11,7 @@
                     </td>
                     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                         <td style="width: 1%; vertical-align:top;" rowspan="<?= sizeof($em['day_events']) ?>">
-                            <a style="display: block; min-width: 11px;" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'dayevent' => '1')) ?>">
+                            <a data-dialog="size=auto" style="display: block; min-width: 11px;" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'dayevent' => '1')) ?>">
                                 <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_('neuer Tagestermin')) ?>>
                             </a>
                         </td>
@@ -21,7 +21,7 @@
         </table>
 <? else : ?>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $atime, 'dayevent' => '1')) ?>">
+        <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $atime, 'dayevent' => '1')) ?>">
             <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_('neuer Tagestermin')) ?>>
         </a>
     <? endif; ?>

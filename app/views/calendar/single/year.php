@@ -1,22 +1,30 @@
-<table class="steelgroup0" width="100%" border="0" cellpadding="0" cellspacing="0">
+<table style="width: 100%;">
     <tr>
-        <td align="center" width="10%">
-            <a href="<?= $controller->url_for('calendar/single/year', array('atime' => $calendar->getStart() - 1)) ?>">
-                <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_('zurück'))) ?>&nbsp;
-            </a>
-        </td>
-        <td class="calhead" align="center" width="80%">
-            <b><?= date('Y', $calendar->getStart()) ?></b>
-        </td>
-        <td align="center" width="10%">
-            <a href="<?= $controller->url_for('calendar/single/year', array('atime' => $calendar->getEnd() + 1)) ?>">
-                <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_('vor'))) ?>&nbsp;
-            </a>
+        <td colspan="3" style="text-align: center; vertical-align: middle;">
+            <div style="text-align: left; display: inline-block; width: 20%; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/year', array('atime' => strtotime('-1 year', $atime))) ?>">
+                    <span style="vertical-align: middle;" <?= tooltip(_('ein Jahr zurück')) ?>>
+                        <?= Assets::img('icons/16/blue/arr_2left.png') ?>
+                    </span>
+                    <?= strftime('%Y', strtotime('-1 year', $atime)) ?>
+                </a>
+            </div>
+            <div class="calhead" style="text-align: center; display: inline-block; width:50%;">
+                <?= date('Y', $calendar->getStart()) ?>
+            </div>
+            <div style="text-align: right; display: inline-block; width: 20%; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/year', array('atime' => strtotime('+1 year', $atime))) ?>">
+                    <?= strftime('%Y', strtotime('+1 year', $atime)) ?>
+                    <span style="vertical-align: middle;" <?= tooltip(_('ein Jahr vor')) ?>>
+                        <?= Assets::img('icons/16/blue/arr_2right.png') ?>
+                    </span>
+                </a>
+            </div>
         </td>
     </tr>
     <tr>
         <td colspan="3" class="blank">
-            <table class="steelgroup0" width="100%" border="0" cellpadding="2" cellspacing="1">
+            <table width="100%">
             <? $days_per_month = array(31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
                 if (date('L', $calendar->getStart())) {
                     $days_per_month[2]++;

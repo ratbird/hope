@@ -3,7 +3,7 @@
 <? if (!$em['term'][$row]) : ?>
 <td class="calendar-day-edit" <?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-    <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+    <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
         <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
     </a>
     <? endif ?>
@@ -24,7 +24,7 @@
                 <? if ($event->getPermission() == Event::PERMISSION_CONFIDENTIAL) : ?>
                     <?= $event->getTitle() ?>
                 <? else : ?>
-                    <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id, array('atime' => ($calendar->getStart() + $event->getStart() % 86400), 'evtype' => $event->getType())) ?>" <?//= js_hover($mapped_event); ?>><?= $event->getTitle() ?></a>
+                    <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id, array('atime' => ($calendar->getStart() + $event->getStart() % 86400), 'evtype' => $event->getType())) ?>"><?= $event->getTitle() ?></a>
                     <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                 <? endif ?>
                 </div>
@@ -36,7 +36,7 @@
         <? elseif ($event == '') : ?>
             <td class="calendar-day-edit"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+                <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
                     <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
                 </a>
                 <? endif ?>
@@ -49,7 +49,7 @@
 <? if ($link_notset) : ?>
     <td class="calendar-day-edit">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a data-dialog="" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
+        <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
             <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
         </a>
         <? endif ?>

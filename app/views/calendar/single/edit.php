@@ -361,12 +361,16 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                     </label>
                 </td>
                 <? $exceptions = array_map(function ($exc) { return strftime('%x', $exc); }, $event->getExceptions()) ?>
-                <td colspan="2">
-                    <textarea rows="5" cols="12" name="exc_dates"><?= implode("\n", $exceptions) ?></textarea>
+                <td colspan="2" style="vertical-align: top;">
+                    <textarea rows="5" cols="12" name="exc_dates" id="exc-dates"><?= implode("\n", $exceptions) ?></textarea>
                 </td>
+            </tr>
         </tbody>
+        <? if (get_config('CALENDAR_GROUP_ENABLE') && $calendar->getRange() == Calendar::RANGE_USER) : ?>
+            <?= $this->render_partial('calendar/group/_attendees') ?>
+        <? endif; ?>
     </table>
-    <div style="text-align: center; clear: both" data-dialog-button>
+    <div style="text-align: center;" data-dialog-button>
         <? if (!$event->isNew()) : ?>
         <?= LinkButton::create(_('Löschen'), $controller->url_for('calendar/single/delete/' . implode('/', $event->getId()))) ?>
         <? endif; ?>

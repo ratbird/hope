@@ -890,10 +890,10 @@ class CalendarEvent extends SimpleORMap implements Event
 
 
     /**
+     * Returns the object type this event belongs to.
+     * Possible values are 'user', 'sem', 'inst', 'fak'.
      *
-     * TODO wird das noch benötigt?
-     *
-     * @return type
+     * @return string The object type.
      */
     public function getType()
     {
@@ -1067,14 +1067,13 @@ class CalendarEvent extends SimpleORMap implements Event
         if (is_null($user_id)) {
             $user_id = $this->permission_user_id ?: $GLOBALS['user']->id;
         }
-
         if (!$permissions[$user_id][$this->event_id]) {
             if ($user_id == $this->event->author_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_WRITABLE;
             } else if ($user_id == $this->range_id) {
                 $permissions[$user_id][$this->event_id] = Event::PERMISSION_READABLE;
             } else {
-                switch ($this->type) {
+                switch ($this->getType()) {
                     case 'user':
                         $permissions[$user_id][$this->event_id] =
                             $this->getUserCalendarPermission($user_id);
@@ -1099,19 +1098,31 @@ class CalendarEvent extends SimpleORMap implements Event
     private function getUserCalendarPermission($user_id)
     {
         $permission = Event::PERMISSION_FORBIDDEN;
+        $accessibility = $this->getAccessibility();
         if ($this->user->id) {
             if ($user_id != $this->user->id) {
-                $accessibility = $this->getAccessibility();
                 if ($accessibility == 'PUBLIC') {
                     $permission = Event::PERMISSION_READABLE;
                 }
-                $stmt = DBManager::get()->prepare('SELECT calpermission FROM contact '
-                        . 'WHERE owner_id = ? AND user_id = ?');
-                $stmt->execute(array($this->user->getId(), $user_id));
-                $calperm = $stmt->fetchColumn();
-                if ($calperm && $calperm > $permission) {
-                    $permission = $calperm;
+                $calendar_user = CalendarUser::find(
+                        array($this->user->getId(), $user_id));
+                if ($calendar_user) {
+                    if ($accessibility == 'CONFIDENTIAL') {
+                        if ($user_id == $this->getAuthor()) {
+                            $permission = Event::PERMISSION_WRITABLE;
+                        } else {
+                            $permission = Event::PERMISSION_CONFIDENTIAL;
+                        }
+                    } else {
+                        if ($calendar_user->permission == Calendar::PERMISSION_WRITABLE) {
+                            $permission = Event::PERMISSION_WRITABLE;
+                        } else {
+                            $permission = Event::PERMISSION_READABLE;
+                        }
+                    }
                 }
+            } else {
+                $permission = Event::PERMISSION_WRITABLE;
             }
         }
         return $permission;
@@ -1172,5 +1183,10 @@ class CalendarEvent extends SimpleORMap implements Event
     public function getEditor()
     {
         return $this->event->editor;
+    }
+    
+    public function getAttendees()
+    {
+        return self::findByEvent_id($this->event_id);
     }
 }

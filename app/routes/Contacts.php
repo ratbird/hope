@@ -15,7 +15,6 @@ class Contacts extends \RESTAPI\RouteMap
     public static function before()
     {
         require_once 'User.php';
-        require_once 'lib/contact.inc.php';
         require_once 'lib/statusgruppe.inc.php';
     }
 
@@ -58,12 +57,12 @@ class Contacts extends \RESTAPI\RouteMap
         $friend = $this->requireUser($buddy_user_id);
 
         // prevent duplicates
-        if (sizeof($user->contacts->findOneBy('user_id', $friend->id))) {
+        if ($user->isFriendOf($friend)) {
             $this->error(409, sprintf('User "%s" is already a contact', htmlReady($friend->id)));
         }
 
-        // TODO: only adds contacts to the global $user
-        AddNewContact($friend->id);
+        $user->contacts[] = $friend;
+        $user->store();
 
         $this->status(201);
     }
@@ -82,11 +81,12 @@ class Contacts extends \RESTAPI\RouteMap
         $user = $this->requireUser($user_id);
         $friend = $this->requireUser($buddy_user_id);
 
-        if (!sizeof($contact = $user->contacts->findOneBy('user_id', $friend->id))) {
+        if (!$user->isFriendOf($friend)) {
             $this->notFound("Contact not found");
         }
 
-        DeleteContact($contact->id);
+        $user->contacts->unsetByPK($friend->id);
+        $user->store();
 
         $this->status(204);
     }
@@ -264,7 +264,6 @@ class Contacts extends \RESTAPI\RouteMap
                 'id'            => $contact->id,
                 'owner'         => $this->urlf('/user/%s', array(htmlReady($contact->owner_id))),
                 'friend'        => User::getMiniUser($this, $contact->friend),
-                'buddy'         => (bool) $contact->buddy,
                 'calpermission' => (bool) $contact->calpermission
             );
         }

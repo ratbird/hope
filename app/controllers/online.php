@@ -14,7 +14,6 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/contact.inc.php';
 
 class OnlineController extends AuthenticatedController
 {

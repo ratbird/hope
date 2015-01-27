@@ -199,7 +199,7 @@ function vis_chooser($vis, $new = false, $id = false) {
 //
 // ATTENTION: NOT USED IN STANDARD DISTRIBUTION.
 // see header.php for further info on enabling this feature.
-//       
+//
 // DON'T USE UNMODIFIED TEXTS!
 //
 function first_decision($userid) {
@@ -239,7 +239,7 @@ function first_decision($userid) {
 
 /**
  * Gets the global visibility for the given user ID.
- * 
+ *
  * @param string $user_id user ID to check
  * @return string User visibility.
  */
@@ -254,9 +254,9 @@ function get_global_visibility_by_id($user_id) {
  * Gets the global visibility for a given username. This is just a wrapper
  * function for <code>get_global_visibility_by_id</code>, operating with a
  * usename instead of an ID.
- * 
+ *
  * @param string $username username to check
- * @return string User visibility as returned by 
+ * @return string User visibility as returned by
  * <code>get_global_visibility_by_id</code>.
  */
 function get_global_visibility_by_username($username) {
@@ -264,26 +264,26 @@ function get_global_visibility_by_username($username) {
 }
 
 /**
- * Gets a user's visibility settings for special context. Valid contexts are 
+ * Gets a user's visibility settings for special context. Valid contexts are
  * at the moment:
  * <ul>
  * <li><b>online</b>: Visibility in "Who is online" list</li>
  * <li><b>search</b>: Can the user be found via person search?</li>
  * <li><b>email</b>: Is user's email address shown?</li>
- * <li><b>homepage</b>: Visibility of all user homepage elements, stored as 
+ * <li><b>homepage</b>: Visibility of all user homepage elements, stored as
  * JSON-serialized array</li>
  * </ul>
- * 
+ *
  * @param string $user_id user ID to check
  * @param string $context local visibility in which context?
- * @param boolean $return_user_perm return not only visibility, but also 
+ * @param boolean $return_user_perm return not only visibility, but also
  * the user's global permission level
- * @return mixed Visibility flag or array with visibility and user permission 
+ * @return mixed Visibility flag or array with visibility and user permission
  * level.
  */
 function get_local_visibility_by_id($user_id, $context, $return_user_perm=false) {
     global $NOT_HIDEABLE_FIELDS;
-    
+
     $query = "SELECT a.perms, u.`{$context}`
               FROM auth_user_md5 AS a
               LEFT JOIN user_visibility AS u USING (user_id)
@@ -321,15 +321,15 @@ function get_local_visibility_by_id($user_id, $context, $return_user_perm=false)
 }
 
 /**
- * Wrapper function for checking a user's local visibility by username 
+ * Wrapper function for checking a user's local visibility by username
  * instead of user ID.
- * 
+ *
  * @param string $username username to check
- * @param string $context local visibility in which context? 
+ * @param string $context local visibility in which context?
  * @see get_local_visibility_by_id
- * @param boolean $return_user_perm return not only visibility, but also 
+ * @param boolean $return_user_perm return not only visibility, but also
  * the user's global permission level
- * @return mixed Visibility flag or array with visibility and user permission 
+ * @return mixed Visibility flag or array with visibility and user permission
  * level.
  */
 function get_local_visibility_by_username($username, $context, $return_user_perm=false) {
@@ -338,17 +338,17 @@ function get_local_visibility_by_username($username, $context, $return_user_perm
 
 /**
  * Checks whether an element of a user homepage is visible for another user.
- * We do not give an element name and look up its visibility setting in the 
- * database, because that would generate many database requests for a single 
+ * We do not give an element name and look up its visibility setting in the
+ * database, because that would generate many database requests for a single
  * user homepage. Instead, the homepage itself loads all element visibilities
- * and we only need to check if the given element visibility allows showing it 
- * to the visiting user. We need not check for not hideable fields here, 
+ * and we only need to check if the given element visibility allows showing it
+ * to the visiting user. We need not check for not hideable fields here,
  * because that is already done when loading the element visibilities.
- * 
+ *
  * @param string $user_id ID of the user who wants to see the element
  * @param string $owner_id ID of the homepage owner
- * @param int $element_visibility visibility level of the element, one of 
- * the constants VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, 
+ * @param int $element_visibility visibility level of the element, one of
+ * the constants VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN,
  * VISIBILITY_STUDIP, VISIBILITY_EXTERN
  * @return boolean Is the element visible?
  */
@@ -384,7 +384,7 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
                 }
                 break;
             case VISIBILITY_BUDDIES:
-                if (CheckBuddy(get_username($user_id), $owner_id) || $owner_id == $user_id) {
+                if (Contact::CountBySQL("user_id=? AND owner_id=?", array($user_id, $owner_id))) {
                     $is_visible = true;
                 }
                 break;
@@ -399,19 +399,19 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
 }
 
 /**
- * Checks whether a homepage element is visible on external pages. 
- * We do not give an element name and look up its visibility setting in the 
- * database, because that would generate many database requests for a single 
+ * Checks whether a homepage element is visible on external pages.
+ * We do not give an element name and look up its visibility setting in the
+ * database, because that would generate many database requests for a single
  * user homepage. Instead, the homepage itself loads all element visibilities
  * and we only need to check if the given element visibility allows showing it.
- * 
+ *
  * @param string $owner_id user ID of the homepage owner
- * @param string $owner_perm permission level of the homepage owner, needed 
+ * @param string $owner_perm permission level of the homepage owner, needed
  * because every permission level can have its own not hideable fields.
- * @param string $field_name Name of the homepage field to check, needed for 
+ * @param string $field_name Name of the homepage field to check, needed for
  * checking if the element is not hideable
- * @param int $element_visibility visibility level of the element, one of 
- * the constants VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, 
+ * @param int $element_visibility visibility level of the element, one of
+ * the constants VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN,
  * VISIBILITY_STUDIP, VISIBILITY_EXTERN
  * @return boolean May the element be shown on external pages?
  */
@@ -427,10 +427,10 @@ function is_element_visible_externally($owner_id, $owner_perm, $field_name, $ele
 }
 
 /**
- * Retrieves the standard visibility level for a homepage element if the user 
- * hasn't specified anything explicitly. This default can be set via the global 
+ * Retrieves the standard visibility level for a homepage element if the user
+ * hasn't specified anything explicitly. This default can be set via the global
  * configuration (variable "HOMEPAGE_VISIBILITY_DEFAULT").
- * 
+ *
  * @return int Default visibility level.
  */
 function get_default_homepage_visibility($user_id)
@@ -452,15 +452,15 @@ function get_default_homepage_visibility($user_id)
 }
 
 /**
- * Gets a user's email address. If the address should not be shown according 
- * to the user's privacy settings, we try to get the email address of the 
- * default institute (this can be one of the institutes the user is assigned 
+ * Gets a user's email address. If the address should not be shown according
+ * to the user's privacy settings, we try to get the email address of the
+ * default institute (this can be one of the institutes the user is assigned
  * to). If no default institute is found, the email address of the first found
- * institute is given. If the user isn't assigned to any institute, an empty 
+ * institute is given. If the user isn't assigned to any institute, an empty
  * string is returned.
- * 
+ *
  * @param string $user_id which user's email address is required?
- * @return string User email address or email address of the user's default 
+ * @return string User email address or email address of the user's default
  * institute or empty string.
  */
 function get_visible_email($user_id) {
@@ -493,13 +493,13 @@ function get_visible_email($user_id) {
 
 /**
  * Gets the visibility setting of a special element on a user's homepage.
- * The resulting value is one of the constants VISIBILITY_ME, 
- * VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, VISIBILITY_STUDIP and 
+ * The resulting value is one of the constants VISIBILITY_ME,
+ * VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, VISIBILITY_STUDIP and
  * VISIBILITY_EXTERN.
- * 
+ *
  * @param string $user_id which user is required?
  * @param string $element_name unique name of the homepage element.
- * @return int Visibility of the given element or default system visibility 
+ * @return int Visibility of the given element or default system visibility
  * if the user hasn't set anything special.
  */
 function get_homepage_element_visibility($user_id, $element_name) {
@@ -514,7 +514,7 @@ function get_homepage_element_visibility($user_id, $element_name) {
 
 /**
  * Sets the visibility of a homepage element to the given value.
- * 
+ *
  * @param string $user_id whose homepage is it?
  * @param string $element_name unique name of the homepage element to change
  * @param int $visibility new value for element visibility
@@ -524,7 +524,7 @@ function set_homepage_element_visibility($user_id, $element_name, $visibility) {
     $visibilities = get_local_visibility_by_id($user_id, 'homepage');
     $visibilities = json_decode($visibilities, true);
     $visibilities[$element_name] = $visibility;
-    
+
     $query = "UPDATE user_visibility SET homepage = ? WHERE user_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(

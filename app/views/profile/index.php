@@ -17,9 +17,9 @@
             <? endif?>
 
             <?if ($current_user->username != $user->username) : ?>
-                <?if (!CheckBuddy($current_user->username)) : ?>
+                <?if (!$user->isFriendOf($current_user)) : ?>
                     <br />
-                    <a href="<?= URLHelper::getLink($controller->url_for('profile/add_buddy?username=' . urlencode($current_user->username))) ?>">
+                    <a href="<?= URLHelper::getLink($controller->url_for('profile/add_buddy?username=' . $current_user->username)) ?>">
                         <?=Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))?>
                         <?=_("zu den Kontakten hinzufügen")?>
                     </a>

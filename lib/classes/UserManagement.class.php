@@ -30,7 +30,6 @@ require_once 'lib/datei.inc.php';   // remove documents of user
 require_once 'lib/statusgruppe.inc.php';    // remove user from statusgroups
 require_once 'lib/dates.inc.php';   // remove appointments of user
 require_once 'lib/messaging.inc.php';   // remove messages send or recieved by user
-require_once 'lib/contact.inc.php'; // remove user from adressbooks
 require_once 'lib/classes/DataFieldEntry.class.php';    // remove extra data of user
 require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';
 require_once 'lib/object.inc.php';
@@ -1027,10 +1026,10 @@ class UserManagement
         if ($contactkills) {
             $this->msg .= sprintf(_('Adressbuch mit %d Einträgen gelöscht.'), $contactkills);
         }
-        
+
         // delete users groups
         Statusgruppen::deleteBySQL('range_id = ?', array($this->user_data['auth_user_md5.user_id']));
-        
+
         // remove user from any groups
         StatusgruppeUser::deleteBySQL('user_id = ?', array($this->user_data['auth_user_md5.user_id']));
 

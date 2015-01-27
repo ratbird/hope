@@ -45,7 +45,7 @@ class ProfileController extends AuthenticatedController
         PageLayout::setHelpKeyword('Basis.Homepage');
         SkipLinks::addIndex(_('Benutzerprofil'), 'user_profile', 100);
 
-        $this->user         = $GLOBALS['user']; // current logged in user
+        $this->user         = User::findCurrent(); // current logged in user
         $this->perm         = $GLOBALS['perm']; // perms of current logged in user
         $this->current_user = User::findByUsername(Request::username('username', $this->user->username)); // current selected user
         // get additional informations to selected user
@@ -70,12 +70,6 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
-
-        if ($_SESSION['sms_msg']) {
-            $this->msg = $_SESSION['sms_msg'];
-            unset($_SESSION['sms_msg']);
-        }
-
 
         // Template Index_Box for render-partials
         $layout = $GLOBALS['template_factory']->open('shared/index_box');

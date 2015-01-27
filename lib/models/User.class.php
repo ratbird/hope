@@ -300,4 +300,15 @@ class User extends AuthUserMd5
     {
         return RolePersistence::isAssignedRole($this->user_id, $role, $institute_id);
     }
+
+    /**
+     * Returns whether the given user is stored in contacts.
+     *
+     * @param User $another_user
+     * @return bool
+     */
+    public function isFriendOf($another_user)
+    {
+        return $this->contacts->findOneBy('user_id', $another_user['user_id']) !== null;
+    }
 }

@@ -23,11 +23,8 @@
 require_once ('lib/language.inc.php');
 require_once 'lib/functions.php';
 require_once ('lib/user_visible.inc.php');
-require_once ('lib/contact.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/sms_functions.inc.php');
-require_once 'lib/models/MailQueueEntry.class.php';
-
 
 function CheckSelected($a, $b)
 {
@@ -458,37 +455,4 @@ class messaging
         return sizeof($rec_id);
     }
 
-    /**
-     * Buddy aus der Buddyliste loeschen
-     *
-     * @param $username
-     */
-    function delete_buddy($username)
-    {
-        RemoveBuddy($username);
-    }
-
-    /**
-     * Buddy zur Buddyliste hinzufuegen
-     *
-     * @param $username
-     */
-    function add_buddy($username)
-    {
-        AddNewContact(get_userid($username));
-        AddBuddy($username);
-    }
-
-    /**
-     *
-     * @param $foldername
-     */
-    function check_newmsgfoldername($foldername)
-    {
-        if ($foldername == "new" || $foldername == "all" || $foldername == "free" || $foldername == "dummy") {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
-    }
 }

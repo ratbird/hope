@@ -76,7 +76,7 @@ namespace RESTAPI {
         $status = trim($status);
         if (!headers_sent()) {
             if ($e->getCode() === 401) {
-                header('WWW-Authenticate: Basic');
+                header('WWW-Authenticate: Basic realm="' . $GLOBALS['STUDIP_INSTALLATION_ID'] . '"');
             }
             header($status, true, $e->getCode());
             echo $status;

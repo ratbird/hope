@@ -21,7 +21,7 @@ class vCard {
     public static function export($users) {
 
         // Non array fallback
-        if (!(is_array($users) || $users instanceof Traversable)) {
+        if (!(is_array($users) || $users instanceof SimpleCollection)) {
             $users = array($users);
         }
 
@@ -33,7 +33,7 @@ class vCard {
     }
 
     private static function exportUser($user) {
-        
+
         // vCard exportheader
         $vCard['BEGIN'] = 'VCARD';
         $vCard['VERSION'] = '3.0';
@@ -44,26 +44,26 @@ class vCard {
         // User specific data
         //Fullname
         $vCard['FN'] = studip_utf8encode($user->getFullname());
-        
+
         //Name
         $vCard['N'][] = studip_utf8encode($user->Nachname);
         $vCard['N'][] = studip_utf8encode($user->Vorname);
         $vCard['N'][] = studip_utf8encode($user->info->title_rear);
         $vCard['N'][] = studip_utf8encode($user->info->title_front);
-        
+
         // Adress
         $vCard['ADR;TYPE=HOME'] = studip_utf8encode($user->info->privadr);
-        
+
         // Tel
         $vCard['TEL;TYPE=HOME'] = studip_utf8encode($user->info->privatnr);
         $vCard['TEL;TYPE=CELL'] = studip_utf8encode($user->info->privatcell);
-        
+
         // Email
         $vCard['EMAIL'] = studip_utf8encode($user->email);
-        
+
         // Photo
         $vCard['PHOTO;JPEG;ENCODING=BASE64'] = base64_encode(file_get_contents(Avatar::getAvatar($user->id)->getFilename(Avatar::NORMAL)));
-        
+
         // vCard end
         $vCard['END'] = 'VCARD';
 

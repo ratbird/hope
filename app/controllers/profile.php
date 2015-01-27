@@ -54,7 +54,7 @@ class ProfileController extends AuthenticatedController
         // set the page title depending on user selection
         if ($this->current_user['user_id'] == $this->user->id && !$this->current_user['locked']) {
             PageLayout::setTitle(_('Mein Profil'));
-            $this->user->cfg->store('PROFILE_LAST_VISIT', time());
+            UserConfig::get($this->user->id)->store('PROFILE_LAST_VISIT', time());
         } elseif ($this->current_user['user_id'] && ($this->perm->have_perm('root') || (!$this->current_user['locked'] && get_visibility_by_id($this->current_user['user_id'])))) {
             PageLayout::setTitle(_('Profil')  .' - ' . $this->current_user->getFullname());
             object_add_view($this->current_user->user_id);
@@ -272,6 +272,15 @@ class ProfileController extends AuthenticatedController
 
         PageLayout::postMessage(MessageBox::success(_('Der Nutzer wurde zu Ihren Kontakten hinzugefügt.')));
         $this->redirect('profile/index?username=' . $username);
+    }
+
+    public function export_vcard_action()
+    {
+        $vcard = vCard::export($this->current_user);
+        $this->set_content_type("text/x-vCard;charset=utf-8");
+        $this->response->add_header("Content-Disposition", "attachment; filename=\"" . $this->current_user->username . ".vcf\"");
+        $this->response->add_header("Content-Length", strlen($vcard));
+        $this->render_text($vcard);
     }
 }
 

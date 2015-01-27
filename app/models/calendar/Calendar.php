@@ -19,19 +19,19 @@ class Calendar
      * The (positive) end of unix epche
      */
     const CALENDAR_END = 0x7FFFFFFF;
-    
+
     /**
      * The user is the owner of the calendar.
      */
     const PERMISSION_OWN = 16;
-    
+
     /**
      * The user has administrative access to the calendar.
      * Means, he is not the owner but have the same rights.
      * Not in use at the moment.
      */
     const PERMISSION_ADMIN = 8;
-    
+
     /**
      * The user can add new events and edit existing events in the calendar.
      * If the owner of the calendar has created an confidential event, the only
@@ -41,26 +41,26 @@ class Calendar
      * access to it. The event is shown as busy time to all other users.
      */
     const PERMISSION_WRITABLE = 4;
-    
+
     /**
      * The user can read all information of all events, except events marked as
      * confidential. These events are shown as busy times in the views.
      * The user can not add new events nor edit existing events.
      */
     const PERMISSION_READABLE = 2;
-    
+
     /**
      * The user is not allowed to get any information about the calendar.
      * The user has no access to the calendar but he see public events on the
      * profile of the owner.
      */
     const PERMISSION_FORBIDDEN = 1;
-    
+
     /**
      * The calendar is related to one user. He is the owner of the calendar.
      */
     const RANGE_USER = 1;
-    
+
     /**
      * The calendar is related to a group of users
      * ("contact group" or Statusgruppe).
@@ -70,23 +70,23 @@ class Calendar
      * have access to.
      */
     const RANGE_GROUP = 2;
-    
+
     /**
      * The calendar is a module of a course or studygroup. All members with
      * status author, tutor or dozent have write access (PERMISSION_WRITABLE).
      * Users with local status user has only read access (PERMISSION_READABLE).
      */
     const RANGE_SEM = 3;
-    
+
     /**
      * The calendar is a module of an institute or faculty. All members with
      * status author, tutor or dozent have write access (PERMISSION_WRITABLE).
      * Users with local status user has only read access (PERMISSION_READABLE).
      */
     const RANGE_INST = 4;
- 
+
     /**
-     * 
+     *
      * @param type $user_id
      * @return type
      */
@@ -104,11 +104,11 @@ class Calendar
 
         return $users;
     }
-    
+
     /**
      * Retrieves all contact groups (statusgruppen) owned by the given user
      * where at least one member has granted access to his calender for the user.
-     * 
+     *
      * @param string $user_id User id of the owner.
      * @return type
      */
@@ -130,10 +130,10 @@ class Calendar
         }
         return $groups;
     }
-    
+
     /**
      * TODO wird das noch benötigt?
-     * 
+     *
      * @return type
      */
     public static function getAllContactGroups()
@@ -155,8 +155,8 @@ class Calendar
 
         return $contact_groups;
     }
-    
-    
+
+
     public static function GetInstituteActivatedCalendar($user_id)
     {
         $stmt = DBManager::get()->prepare("SELECT ui.Institut_id, Name, modules "
@@ -174,9 +174,9 @@ class Calendar
         }
         return $active_calendar;
     }
-    
+
     /**
-     * 
+     *
      * @param type $user_id
      * @return type
      */
@@ -191,7 +191,7 @@ class Calendar
                 return $c;
             }
         });
-        return $courses->orderBy('course->name')->pluck('course');
+        return $courses->pluck('course');
     }
 
     public static function GetLecturers()
@@ -210,11 +210,11 @@ class Calendar
         }
         return $lecturers;
     }
-    
+
     /**
      * Returns an array of default user settings for the calendar or a specific
      * value if the index is given.
-     * 
+     *
      * @param string $index Index of setting to get.
      * @return string|array Array of settings or one setting
      */

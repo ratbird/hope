@@ -21,7 +21,7 @@ class Step00283UpdateCalendarSettings extends Migration {
         $res = DBManager::get()->query('SELECT user_id FROM auth_user_md5 WHERE 1');
         $default_settings = Calendar::getDefaultUserSettings();
         foreach ($res as $row) {
-            $config = UserConfig::get($row['user_id']);
+            $config = new UserConfig($row['user_id']);
             $settings = $config->getValue('CALENDAR_SETTINGS');
             if (is_array($settings)) {
                 $default_settings['view'] = $replace[$settings['cal_view']];
@@ -33,7 +33,7 @@ class Step00283UpdateCalendarSettings extends Migration {
     function down() {
         DBManager::get()->execute("ALTER TABLE `event_data` CHANGE `author_id` `autor_id` VARCHAR(32) NOT NULL");
         DBManager::get()->execute("ALTER TABLE `calendar_event` DROP `mkdate`");
-        
+
         $replace = array(
             'list' => 'showlist',
             'day' => 'showday',

@@ -121,7 +121,7 @@ class MessagesController extends AuthenticatedController {
                     ? $this->url_for('messages/sent/' . $message_id)
                     : $this->url_for('messages/overview/' . $message_id);
 
-            $script = sprintf('location.href = "%s";', $target);
+            $script = sprintf('if (STUDIP.Dialog.shouldOpen()) { location.href = "%s"; }', $target);
             PageLayout::addHeadElement('script', array(), $script);
         }
         $this->message->markAsRead($GLOBALS["user"]->id);

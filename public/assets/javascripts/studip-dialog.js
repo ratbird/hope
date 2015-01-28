@@ -153,6 +153,9 @@
             if (this.hasInstance(id)) {
                 delete this.instances[id];
             }
+        },
+        shouldOpen: function () {
+            return $(window).innerWidth() >= 800 && $(window).innerHeight() >= 400;
         }
     };
 
@@ -161,7 +164,7 @@
     STUDIP.Dialog.fromElement = function (element, options) {
         options = options || {};
 
-        if ($(element).is(':disabled') || $(window).innerWidth() < 800 || $(window).innerHeight < 400) {
+        if ($(element).is(':disabled') || !STUDIP.Dialog.shouldOpen()) {
             return;
         }
 
@@ -205,7 +208,12 @@
     // Creates a dialog from a passed url
     STUDIP.Dialog.fromURL = function (url, options) {
         options = options || {};
-        
+
+        // Check if dialog should actually open
+        if (!STUDIP.Dialog.shouldOpen()) {
+            location.href = url;
+        }
+
         // Append overlay
         if (STUDIP.Overlay) {
             if (STUDIP.Dialog.getInstance(options.id).open) {
@@ -224,7 +232,7 @@
         }).done(function (response, status, xhr) {
             // Trigger event
             $(options.origin || document).trigger('dialog-load', {xhr: xhr, options: options});
-            
+
             // Relocate if appropriate header is set
             if (xhr.getResponseHeader('X-Location')) {
                 if (document.location.href === xhr.getResponseHeader('X-Location')) {
@@ -396,7 +404,7 @@
             }
         }
     }
-    
+
     function clickHandler(event) {
         if (!event.isDefaultPrevented()) {
             var form  = $(this).closest('form');

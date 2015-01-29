@@ -18,6 +18,8 @@ require_once 'lib/user_visible.inc.php';
 
 class Admin_ConfigurationController extends AuthenticatedController
 {
+    protected $utf8decode_xhr = true;
+
     /**
      * Common before filter for all actions.
      *
@@ -139,10 +141,10 @@ class Admin_ConfigurationController extends AuthenticatedController
         PageLayout::setTitle(_('Konfigurationsparameter editieren'));
 
         $field = Request::get('id');
-        
+
         if (Request::isPost()) {
             CSRFProtection::verifyUnsafeRequest();
-            
+
             $value = Request::get('value');
             if ($this->validateInput($field, $value)) {
                 UserConfig::get($user_id)->store($field, $value);
@@ -153,7 +155,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                 $this->redirect('admin/configuration/user_configuration?user_id=' . $user_id);
             }
         }
-        
+
         $this->config  = ConfigurationModel::showUserConfiguration($user_id, $field);
         $this->user_id = $user_id;
         $this->field   = $field;
@@ -173,7 +175,7 @@ class Admin_ConfigurationController extends AuthenticatedController
 
         // Step 1: Prepare input
         if ($config['type'] === 'array') {
-            $value = json_decode(studip_utf8encode($value), true);
+            $value = studip_utf8decode(json_decode(studip_utf8encode($value), true));
         }
 
         // Step 2: Validate

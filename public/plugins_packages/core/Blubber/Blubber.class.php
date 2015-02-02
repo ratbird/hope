@@ -186,10 +186,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
      */
     public function getNotificationObjects($course_id, $since, $user_id)
     {
-        $blubber = BlubberPosting::getPostings(array(
-            'seminar_id' => $course_id,
-            'since' => $since
-        ));
+        $blubber = BlubberStream::getCourseStream($course_id)->fetchNewPostings($since);
         $contents = array();
         foreach ($blubber as $blubb) {
             $contents[] = new ContentElement(

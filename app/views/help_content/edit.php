@@ -8,8 +8,18 @@
 <form id="edit_help_content_form" class="studip_form" action="<?=URLHelper::getURL('dispatch.php/help_content/edit/'.$help_content_id)?>" method="POST">
     <?=CSRFProtection::tokenTag(); ?>
     <fieldset>
-        <input type="hidden" name="help_content_route" value="<?=$help_content->route?>">
-        <legend><?= sprintf(_('Seite %s'), $help_content->route) ?></legend>
+        <? if ($help_content->route) : ?>
+            <legend><?= sprintf(_('Seite %s'), $help_content->route) ?></legend>
+            <input type="hidden" name="help_content_route" value="<?=$help_content->route?>">
+        <? else : ?>
+            <legend><?= _('Neuer Hilfe-Text') ?></legend>
+            <label for="help_content_route" class="caption">
+                <?= _('Seite:') ?>
+            </label>
+            <input type="text" size="60" maxlength="255" name="help_content_route"
+                value=""
+                placeholder="<?= _('Bitte geben Sie eine Route für den Hilfe-Text an') ?>"/>
+        <? endif ?>
         <label for="help_content_content" class="caption">
             <?= _('Hilfe-Text:') ?>
         </label>

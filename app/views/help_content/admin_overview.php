@@ -9,20 +9,13 @@
         <input type="hidden" name="help_content_filter_term" value="<?=htmlReady($help_content_searchterm)?>">
         <?=CSRFProtection::tokenTag(); ?>
         <table class="default">
-            <thead>
-            <tr><th colspan="2">
-            <label><?= _("Suchbegriff:") ?>
-            <input type="text" name="help_content_searchterm" aria-label="<?= _('Suchbegriff') ?>" value="<?= htmlReady($help_content_searchterm)?>"></label>
-            &nbsp;&nbsp;
-            <?=Button::create(_('Filter anwenden'), 'apply_help_content_filter', array('aria-label' => _('Liste mit Suchbegriff filtern')))?>
-            </th></tr></thead>
             <? if ($filter_text) : ?>
-                <tfoot><tr><td colspan="1">
+                <tr><td colspan="1">
                 <?=$filter_text?>
                 </td><td><div class="tour_reset_filter">
                 <?=Button::create(_('Auswahl aufheben'), 'reset_filter')?>
                 </div>
-                </td></tr></tfoot>
+                </td></tr>
             <? endif ?>
         </table>
         <? if (count($help_contents)) : ?>
@@ -51,9 +44,8 @@
                     <td>
                     <a href="<?=URLHelper::getURL('dispatch.php/help_content/edit/'.$help_content_id)?>" <?=tooltip(_('Hilfe-Text bearbeiten'))?> data-dialog="size=auto;reload-on-close">
                     <?= Assets::img('icons/16/blue/edit.png') ?></a>
-                    <?= Assets::input('icons/16/blue/trash.png', tooltip2(_('Hilfe-Text löschen')) + array(
-                            'name' => 'help_content_remove_' . $help_content_id,
-                    )) ?>
+                    <a href="<?=URLHelper::getURL('dispatch.php/help_content/delete/'.$help_content_id)?>" <?=tooltip(_('Hilfe-Text löschen'))?> data-dialog="size=auto;reload-on-close">
+                    <?= Assets::img('icons/16/blue/trash.png') ?></a>
                     </td>
                     </tr>
                 <? endforeach ?>
@@ -70,3 +62,11 @@
     </tr>
 </table>
 </div>
+<?
+$sidebar = Sidebar::get();
+$widget = new ActionsWidget();
+$widget->addLink(_('Hilfe-Text erstellen'), URLHelper::getLink('dispatch.php/help_content/edit/new'), 'icons/16/blue/add.png', array('data-dialog'=>'size=auto;reload-on-close', 'target'=>'_blank'));
+$sidebar->addWidget($widget);
+$search = new SearchWidget('?apply_help_content_filter=1');
+$search->addNeedle(_('Suchbegriff'), 'help_content_searchterm');
+$sidebar->addWidget($search);

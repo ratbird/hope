@@ -68,7 +68,8 @@ class TourController extends AuthenticatedController
     /**
      * sends tour object as json data
      *
-     * @param  string  route
+     * @param  string $tour_id    id of tour object
+     * @param  String $step_nr    number of step to start with
      */
     function get_data_action($tour_id, $step_nr = 1)
     {
@@ -140,7 +141,9 @@ class TourController extends AuthenticatedController
     /**
      * sets session data for active tour
      *
-     * @param  string  route
+     * @param String $tour_id    tour id
+     * @param String $step_nr    number of current step
+     * @param String $status     status of tour ('off' to end tour)
      */
     function set_status_action($tour_id, $step_nr, $status)
     {
@@ -232,7 +235,9 @@ class TourController extends AuthenticatedController
     }
 
     /**
-     * delete tour step
+     * delete tour
+     * 
+     * @param String $tour_id    tour id
      */
     function delete_tour($tour_id)
     {
@@ -255,7 +260,10 @@ class TourController extends AuthenticatedController
     }
     
     /**
-     * delete tour step
+     * removes tour step
+     * 
+     * @param String $tour_id    tour id
+     * @param String $step_nr    number of step
      */
     function delete_step($tour_id, $step_nr)
     {
@@ -278,6 +286,9 @@ class TourController extends AuthenticatedController
     
     /**
      * delete tour step (ajax call)
+     * 
+     * @param String $tour_id    tour id
+     * @param String $step_nr    number of step
      */
     function delete_step_action($tour_id, $step_nr)
     {
@@ -290,6 +301,10 @@ class TourController extends AuthenticatedController
     
     /**
      * edit tour step
+     * 
+     * @param String $tour_id    tour id
+     * @param String $step_nr    number of step
+     * @param String $mode       indicates edit mode (new, edit or save*)
      */
     function edit_step_action($tour_id, $step_nr, $mode = 'edit')
     {
@@ -386,6 +401,8 @@ class TourController extends AuthenticatedController
 
     /**
      * Administration page for single tour
+     * 
+     * @param String $tour_id    tour id
      */
     function admin_details_action($tour_id = '')
     {

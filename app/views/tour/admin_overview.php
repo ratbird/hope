@@ -10,20 +10,13 @@
         <input type="hidden" name="tour_filter_term" value="<?=htmlReady($tour_searchterm)?>">
         <?=CSRFProtection::tokenTag(); ?>
         <table class="default">
-            <thead>
-            <tr><th colspan="2">
-            <label><?= _("Suchbegriff:") ?>
-            <input type="text" name="tour_searchterm" aria-label="<?= _('Suchbegriff') ?>" value="<?= htmlReady($tour_searchterm)?>"></label>
-            &nbsp;&nbsp;
-            <?=Button::create(_('Filter anwenden'), 'apply_tour_filter', array('aria-label' => _('Liste mit Suchbegriff filtern')))?>
-            </th></tr></thead>
             <? if ($filter_text) : ?>
-                <tfoot><tr><td colspan="1">
+                <tr><td colspan="1">
                 <?=$filter_text?>
                 </td><td><div class="tour_reset_filter">
                 <?=Button::create(_('Auswahl aufheben'), 'reset_filter')?>
                 </div>
-                </td></tr></tfoot>
+                </td></tr>
             <? endif ?>
         </table>
         <? if (count($tours)) : ?>
@@ -83,3 +76,11 @@
     </tr>
 </table>
 </div>
+<?
+$sidebar = Sidebar::get();
+$widget = new ActionsWidget();
+$widget->addLink(_('Tour erstellen'), URLHelper::getLink('dispatch.php/tour/admin_details'), 'icons/16/blue/add.png', array());
+$sidebar->addWidget($widget);
+$search = new SearchWidget('?apply_tour_filter=1');
+$search->addNeedle(_('Suchbegriff'), 'tour_searchterm');
+$sidebar->addWidget($search);

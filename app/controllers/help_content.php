@@ -6,7 +6,7 @@
 /*
  * help_content.php - Stud.IP-Help Content controller
  *
- * Copyright (C) 2013 - Arne Schröder <schroeder@data-quest.de>
+ * Copyright (C) 2014 - Arne Schröder <schroeder@data-quest.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -50,7 +50,7 @@ class HelpContentController extends AuthenticatedController
     }
 
     /**
-     * Administration page for tours
+     * Administration page for help content
      */
     function admin_overview_action()
     {
@@ -101,6 +101,8 @@ class HelpContentController extends AuthenticatedController
 
     /**
      * edit help content
+     *
+     * @param String $id         id of help content
      */
     function edit_action($id)
     {
@@ -108,9 +110,6 @@ class HelpContentController extends AuthenticatedController
             return $this->render_nothing();
         }
         // Output as dialog (Ajax-Request) or as Stud.IP page?
-        if ($this->via_ajax) {
-            header('X-Title: ' . _('Hilfe-Text bearbeiten'));
-        }
         CSRFProtection::verifySecurityToken();
         if ($id == 'new') {
             $this->help_content = new HelpContent();
@@ -119,8 +118,15 @@ class HelpContentController extends AuthenticatedController
             $this->help_content->studip_version = $GLOBALS['SOFTWARE_VERSION'];
             $this->help_content->position = 1;
             $this->help_content->custom = 1;
-        } else
+            if ($this->via_ajax) {
+                header('X-Title: ' . _('Hilfe-Text erstellen'));
+            }
+        } else {
             $this->help_content = HelpContent::GetContentByID($id);
+            if ($this->via_ajax) {
+                header('X-Title: ' . _('Hilfe-Text bearbeiten'));
+            }
+        }
         if (is_object($this->help_content)) {
             if (Request::submitted('save_help_content')) {
                 if ($id != 'new' AND $this->help_content->isNew())
@@ -140,6 +146,8 @@ class HelpContentController extends AuthenticatedController
 
     /**
      * delete help content
+     * 
+     * @param String $id         id of help content
      */
     function delete_action($id)
     {

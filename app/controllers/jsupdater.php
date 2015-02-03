@@ -132,7 +132,7 @@ class JsupdaterController extends AuthenticatedController
             foreach ($messages as $message) {
                 $data['Messages.newMessages']['messages'][$message->getId()] = $template_factory
                         ->open("messages/_message_row.php")
-                        ->render(compact("message"));
+                        ->render(compact("message") + array('controller' => $this));
             }
         }
         return $data;

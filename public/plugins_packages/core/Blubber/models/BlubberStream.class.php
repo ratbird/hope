@@ -517,19 +517,32 @@ class BlubberStream extends SimpleORMap {
         }
         $is_deputy = get_config('DEPUTIES_ENABLE') && DBManager::get()->fetchColumn("SELECT 1 FROM deputies WHERE user_id=? LIMIT 1", array($this->user_id));
         $blubber_plugin_info = PluginManager::getInstance()->getPluginInfo('Blubber');
-        $statement = DBManager::get()->prepare(
-            "SELECT seminare.Seminar_id " .
-            "FROM seminar_user " .
-                "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
-                "LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id)) " .
-            "WHERE seminar_user.user_id = :me " .
-                "AND (" .
-                    "seminare.status IN (:mandatory_types) " .
-                    "OR (plugins_activated.state = 'on') " .
-                    "OR (seminare.status IN (:standard_types) AND plugins_activated.state != 'off') " .
-                ") " .
-                "AND seminare.status NOT IN (:forbidden_types) " .
-        "");
+        $statement = DBManager::get()->prepare("
+            SELECT seminare.Seminar_id
+            FROM seminar_user
+                INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
+            WHERE seminar_user.user_id = :me
+                AND seminare.status IN (:mandatory_types)
+                AND seminare.status NOT IN (:forbidden_types)
+
+            UNION DISTINCT SELECT seminare.Seminar_id
+            FROM seminar_user
+                INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                INNER JOIN plugins_activated ON (pluginid = :blubber_plugin_id
+                    AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id))
+            WHERE seminar_user.user_id = :me
+                AND plugins_activated.state = 'on'
+                AND seminare.status NOT IN (:forbidden_types)
+
+            UNION DISTINCT SELECT seminare.Seminar_id
+            FROM seminar_user
+                INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                LEFT JOIN plugins_activated ON (pluginid = :blubber_plugin_id
+                    AND plugins_activated.poiid = CONCAT('sem', seminare.Seminar_id))
+            WHERE seminar_user.user_id = :me
+                AND plugins_activated.state IS NULL
+                AND seminare.status NOT IN (:forbidden_types)
+        ");
         $parameter = array('me' => $this->user_id);
         $parameter['mandatory_types'] = count($mandatory_types) ? $mandatory_types : null;
         $parameter['standard_types'] = count($standard_types) ? $standard_types : null;

@@ -190,8 +190,8 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         $contents = array();
         foreach ($blubber as $blubb) {
             $contents[] = new ContentElement(
-                $blubb['title'],
-                $blubb['title'],
+                $blubb['name'],
+                $blubb['name'],
                 $blubb['description'],
                 $blubb['user_id'],
                 get_fullname($blubb['user_id']),

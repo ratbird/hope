@@ -18,7 +18,7 @@ class Helpbar extends WidgetContainer
         parent::__construct();
         
         $this->json_directory = $GLOBALS['STUDIP_BASE_PATH'] . '/doc/helpbar';
-        $this->help_admin = $GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)');
+        $this->help_admin = isset($GLOBALS['perm']) && ($GLOBALS['perm']->have_perm('root') || RolePersistence::isAssignedRole($GLOBALS['user']->id, 'Hilfe-Administrator(in)'));
     }
     
     /**

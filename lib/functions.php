@@ -1376,7 +1376,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
             $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
                       FROM user_inst AS a
                       LEFT JOIN Institute AS b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id)
-                      LEFT JOIN Institute AS c ON (c.fakultaets_id = b.Institut_id AND c.fakultaets_id = c.Institut_id)
+                      LEFT JOIN Institute AS c ON (c.fakultaets_id = b.Institut_id AND c.fakultaets_id != c.Institut_id)
                       LEFT JOIN seminare AS s ON (s.Institut_id = c.Institut_id) %s
                       WHERE a.user_id = ? AND a.inst_perms = 'admin'
                         AND NOT ISNULL(b.Institut_id) AND s.Name LIKE CONCAT('%%', ?, '%%')

@@ -78,6 +78,10 @@
 </div>
 <?
 $sidebar = Sidebar::get();
+$widget = new ViewsWidget();
+$widget->addLink(_('Übersicht'), URLHelper::getURL('dispatch.php/tour/admin_overview'))->setActive(true);
+$widget->addLink(_('Konflikte'), URLHelper::getURL('dispatch.php/tour/admin_conflicts'));
+$sidebar->addWidget($widget);
 $widget = new ActionsWidget();
 $widget->addLink(_('Tour erstellen'), URLHelper::getLink('dispatch.php/tour/admin_details'), 'icons/16/blue/add.png', array());
 $sidebar->addWidget($widget);

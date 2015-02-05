@@ -64,6 +64,10 @@
 </div>
 <?
 $sidebar = Sidebar::get();
+$widget = new ViewsWidget();
+$widget->addLink(_('Übersicht'), URLHelper::getURL('dispatch.php/help_content/admin_overview'))->setActive(true);
+$widget->addLink(_('Konflikte'), URLHelper::getURL('dispatch.php/help_content/admin_conflicts'));
+$sidebar->addWidget($widget);
 $widget = new ActionsWidget();
 $widget->addLink(_('Hilfe-Text erstellen'), URLHelper::getLink('dispatch.php/help_content/edit/new'), 'icons/16/blue/add.png', array('data-dialog'=>'size=auto;reload-on-close', 'target'=>'_blank'));
 $sidebar->addWidget($widget);

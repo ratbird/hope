@@ -400,6 +400,65 @@ class TourController extends AuthenticatedController
     }
 
     /**
+     * Administration page for tour conflicts
+     */
+    function admin_conflicts_action()
+    {
+        // check permission
+        if (!$GLOBALS['auth']->is_authenticated() || $GLOBALS['user']->id === 'nobody') {
+            throw new AccessDeniedException();
+        }
+        $GLOBALS['perm']->check('root');
+
+        // initialize
+        PageLayout::setTitle(_('Versions-Konflikte der Touren'));
+        PageLayout::setHelpKeyword('Basis.TourAdmin');
+        // set navigation
+        Navigation::activateItem('/admin/config/tour');
+        
+        // load help content
+        $this->conflicts = HelpTour::GetConflicts();
+        
+        $this->diff_fields = array(
+            'description'    => _('Beschreibung'),
+            'studip_version' => _('Stud.IP-Version'),
+            'type'           => _('Art der Tour'),
+            'roles'          => _('Geltungsbereich')
+        );
+        $this->diff_step_fields = array(
+            'title'          => _('Titel'),
+            'tip'            => _('Inhalt'),
+            'interactive'    => _('Interaktiv'),
+            'route'          => _('Seite'),
+            'orientation'    => _('Orientierung')
+        );
+    }
+        
+    /**
+     * resolves tour conflict
+     *
+     * @param String $id         tour id
+     */
+    function resolve_conflict_action($id, $mode)
+    {
+        // check permission
+        if (!$GLOBALS['auth']->is_authenticated() || $GLOBALS['user']->id === 'nobody') {
+            throw new AccessDeniedException();
+        }
+        $GLOBALS['perm']->check('root');
+        
+        $this->tour = new HelpTour($id);
+        if ($mode == 'accept') {
+            $this->tour->studip_version    = $GLOBALS['SOFTWARE_VERSION'];
+            $this->tour->store();
+        }
+        elseif ($mode == 'delete') {
+            $this->tour->delete();
+        }
+        $this->redirect('tour/admin_conflicts');
+    }
+    
+    /**
      * Administration page for single tour
      * 
      * @param String $tour_id    tour id

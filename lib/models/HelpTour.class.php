@@ -140,6 +140,36 @@ class HelpTour extends SimpleORMap {
     }
 
     /**
+     * fetches tour conflicts
+     * 
+     * @return array                  set of tour objects
+     */
+    public static function GetConflicts()
+    {
+        $conflicts = array();
+        $query = "SELECT tour_id AS idx, help_tours.*
+                  FROM help_tours
+                  WHERE installation_id = ?
+                  ORDER BY name ASC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($GLOBALS['STUDIP_INSTALLATION_ID']));
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+        foreach ($ret as $index => $data) {
+            $query = "SELECT tour_id AS idx, help_tours.*
+                      FROM help_tours
+                      WHERE global_tour_id = ? AND language = ? AND studip_version >= ? AND installation_id <> ?
+                      ORDER BY studip_version DESC LIMIT 1";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($data['global_tour_id'], $data['language'], $data['studip_version'], $GLOBALS['STUDIP_INSTALLATION_ID']));
+            $ret2 = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+            if (count($ret2)) {
+                $conflicts[] = HelpTour::GetTourObjects(array_merge(array($index => $data), $ret2));
+            }
+        }
+        return $conflicts;
+    }
+    
+    /**
      * builds tour objects for given set of tour data
      * 
      * @param array $tour_result      tour set

@@ -83,7 +83,7 @@ class HelpContentController extends AuthenticatedController
 
         // load help content
         $this->help_contents = HelpContent::GetContentByFilter($this->help_content_searchterm);
-
+        
         // save settings
         if (Request::submitted('save_help_content_settings')) {
             foreach($this->help_contents as $help_content_id => $help_content) {
@@ -100,6 +100,51 @@ class HelpContentController extends AuthenticatedController
     }
 
     /**
+     * Administration page for help content conflicts
+     */
+    function admin_conflicts_action()
+    {
+        // check permission
+        if (!$GLOBALS['auth']->is_authenticated() || $GLOBALS['user']->id === 'nobody') {
+            throw new AccessDeniedException();
+        }
+        $GLOBALS['perm']->check('root');
+
+        // initialize
+        PageLayout::setTitle(_('Versions-Konflikte der Hilfe-Texte'));
+        PageLayout::setHelpKeyword('Basis.HelpContentAdmin');
+        // set navigation
+        Navigation::activateItem('/admin/config/help_content');
+        
+        // load help content
+        $this->conflicts = HelpContent::GetConflicts();
+    }
+        
+    /**
+     * resolves help content conflict
+     *
+     * @param String $id         id of help content
+     */
+    function resolve_conflict_action($id, $mode)
+    {
+        // check permission
+        if (!$GLOBALS['auth']->is_authenticated() || $GLOBALS['user']->id === 'nobody') {
+            throw new AccessDeniedException();
+        }
+        $GLOBALS['perm']->check('root');
+        
+        $this->help_content = HelpContent::GetContentByID($id);
+        if ($mode == 'accept') {
+            $this->help_content->studip_version    = $GLOBALS['SOFTWARE_VERSION'];
+            $this->help_content->store();
+        }
+        elseif ($mode == 'delete') {
+            $this->help_content->delete();
+        }
+        $this->redirect('help_content/admin_conflicts');
+    }
+    
+    /**
      * edit help content
      *
      * @param String $id         id of help content
@@ -109,15 +154,14 @@ class HelpContentController extends AuthenticatedController
         if (!$this->help_admin) {
             return $this->render_nothing();
         }
-        // Output as dialog (Ajax-Request) or as Stud.IP page?
         CSRFProtection::verifySecurityToken();
         if ($id == 'new') {
             $this->help_content = new HelpContent();
-            $this->help_content->route = trim(Request::get('help_content_route'));
             $this->help_content->global_content_id = $this->content_id = md5(uniqid('help_content',1));
-            $this->help_content->studip_version = $GLOBALS['SOFTWARE_VERSION'];
-            $this->help_content->position = 1;
-            $this->help_content->custom = 1;
+            $this->help_content->studip_version    = $GLOBALS['SOFTWARE_VERSION'];
+            $this->help_content->position          = 1;
+            $this->help_content->custom            = 1;
+            $this->help_content->language          = Request::get('help_content_language') ?: substr($GLOBALS['user']->preferred_language, 0, 2);
             if ($this->via_ajax) {
                 header('X-Title: ' . _('Hilfe-Text erstellen'));
             }
@@ -131,9 +175,21 @@ class HelpContentController extends AuthenticatedController
             if (Request::submitted('save_help_content')) {
                 if ($id != 'new' AND $this->help_content->isNew())
                     throw new AccessDeniedException(_('Der Hilfe-Text mit der angegebenen Route existiert nicht.'));
-                $this->help_content->content      = trim(Request::get('help_content_content'));
-                $this->help_content->route        = trim(Request::get('help_content_route'));
-                $this->help_content->author_email = $GLOBALS['user']->Email;
+                $this->help_content->content         = trim(Request::get('help_content_content'));
+                $this->help_content->route           = trim(Request::get('help_content_route'));
+                $this->help_content->author_email    = $GLOBALS['user']->Email;
+                $this->help_content->chdate          = time();
+                /*if ($this->help_content->installation_id != $GLOBALS['STUDIP_INSTALLATION_ID']) {
+                    $old_id = $this->help_content->getId();
+                    $this->help_content->setNew(true);
+                    $this->help_content->setId($this->help_content->getNewId());
+                    $this->help_content->content_id = $this->help_content->getId(); 
+                    if ($this->help_content->store()) {
+                        $delete_help_content = HelpContent::GetContentByID($old_id);
+                        //$delete_help_content->delete();
+                    } else
+                        PageLayout::postMessage(MessageBox::error(_('Eintrag konnte nicht gespeichert werden')));
+                }*/
                 $this->help_content->installation_id = $GLOBALS['STUDIP_INSTALLATION_ID'];
                 $this->help_content->store();
                 header('X-Dialog-Close: 1');

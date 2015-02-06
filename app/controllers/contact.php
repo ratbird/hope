@@ -170,8 +170,12 @@ class ContactController extends AuthenticatedController
     function vcard_action($group = null)
     {
 
+        // Set constants for export
         $charset = 'windows-1252';
         $filename = _('Kontakte');
+        
+        // Set layout
+        $this->set_layout(null);
 
         // If we got an array of user
         if (Request::submitted('user')) {

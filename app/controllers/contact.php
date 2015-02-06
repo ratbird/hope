@@ -171,7 +171,7 @@ class ContactController extends AuthenticatedController
     {
 
         // Set constants for export
-        $charset = 'windows-1252';
+        $charset = 'utf-8';
         $filename = _('Kontakte');
         
         // Set layout

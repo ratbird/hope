@@ -33,7 +33,7 @@
             <?endif?>
 
             <br />
-            <a href="<?=$controller->link_for("profile/export_vcard", array('username' => $current_user->username))?>">
+            <a href="<?=$controller->link_for("contact/vcard", array('user[]' => $current_user->username))?>">
                 <?=Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))?>
                 <?=_("vCard herunterladen")?>
             </a>

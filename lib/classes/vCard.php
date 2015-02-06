@@ -27,7 +27,7 @@ class vCard {
     public static function export($users) {
 
         // Non array fallback
-        if (!(is_array($users) || $users instanceof Traversable)) {
+        if ($users instanceof User) {
             return self::exportUser($users);
         }
 

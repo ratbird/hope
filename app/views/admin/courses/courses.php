@@ -121,7 +121,9 @@
         <? if (count($courses) > 10): ?>
             <tr>
                 <th colspan="<?= $colspan ?>" style="text-align: right">
-                    <?= Studip\Button::createAccept(sprintf('%s', $actions[$selected_action]['button_name']), 'save_action') ?>
+                    <?= Studip\Button::createAccept(is_string($actions[$selected_action]['multimode'])
+                        ? $actions[$selected_action]['multimode']
+                        : $actions[$selected_action]['button_name'], 'save_action') ?>
                 </th>
             </tr>
         <? endif; ?>

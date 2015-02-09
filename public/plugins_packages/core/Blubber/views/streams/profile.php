@@ -43,7 +43,8 @@
 <?
 
 $sidebar = Sidebar::get();
-$sidebar->setImage(CourseAvatar::getAvatar($course_id)->getURL(Avatar::NORMAL));
+$sidebar->setImage("sidebar/blubber-sidebar");
+$sidebar->setContextAvatar(Avatar::getAvatar($user->getId()));
 
 if (count($tags) && $tags[0]) {
     $cloud = new LinkCloudWidget();

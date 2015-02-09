@@ -742,7 +742,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         //if configuration data for subclass is found, point internal properties to it
         if (self::$config[$class] !== null) {
             foreach (array_keys(self::$config[$class]) as $config_key) {
-                $this->$config_key = self::$config[$class][$config_key];
+                //workaround if old-style config in contructor is used
+                if (is_array($this->{$config_key}) && count($this->{$config_key})) {
+                    foreach (array_keys(self::$config[$class][$config_key]) as $config_sub_key) {
+                        $this->{$config_key}[$config_sub_key] = self::$config[$class][$config_key][$config_sub_key];
+                    }
+                } else {
+                    $this->{$config_key} = self::$config[$class][$config_key];
+                }
             }
         }
 

@@ -2761,6 +2761,10 @@ function upload_recursively($range_id, $dir) {
                 // Namen vervollstaendigen
                 $file = $dir."/".$file;
 
+                if (is_link($file)) {
+                    continue;
+                }
+
                 if (is_file($file)) {
                     // Datei in Dateiliste einfuegen
                     $files[] = $file;

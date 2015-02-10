@@ -27,7 +27,7 @@ class RootDirectory extends StudipDirectory
     {
         return new self($context_id);
     }
-    
+
     /**
      * Initialize a new root directory object for the given id.
      *
@@ -52,5 +52,29 @@ class RootDirectory extends StudipDirectory
         foreach ($this->listFiles() as $entry) {
             $entry->file->delete();
         }
+    }
+
+    /**
+     * Checks whether a user has access to the current root directory.
+     *
+     * @param mixed $user_id Id of the user or null for current user (default)
+     * @param bool $throw_exception Throw an AccessDeniedException instead of
+     *                              returning false
+     * @return bool indicating whether the user may access this root directory
+     * @throws AccessDeniedException if $throw_exception is true and the user
+     *                               may not access the root directory
+     */
+    public function checkAccess($user_id = null, $throw_exception = true)
+    {
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+
+        $valid = $GLOBALS['perm']->have_perm('root')
+              || $this->file_id === $user_id;
+
+        if (!$valid && $throw_exception) {
+            throw new AccessDeniedException(_('Sie dürfen auf dieses Objekt nicht zugreifen.'));
+        }
+
+        return $valid;
     }
 }

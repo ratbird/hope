@@ -25,7 +25,7 @@ class StudipDirectory extends File
 
         parent::configure($config);
     }
-    
+
     /**
      * Get a root directory object for the given context id.
      * Root directories are not represented in the database.
@@ -82,7 +82,7 @@ class StudipDirectory extends File
         // Copy single file?
         if ($source->storage_id != '') {
             $new_entry = $this->createFile($name, $description);
-            
+
             $new_file = $new_entry->file;
 
             // copy contents
@@ -101,7 +101,7 @@ class StudipDirectory extends File
 
             return $new_entry;
         }
-        
+
         //COPY directory
         $newFolder = $this->mkdir($name, $description);
         // Todo: This probably could be more sormy
@@ -128,7 +128,7 @@ class StudipDirectory extends File
     {
         return DirectoryEntry::findOneBySQL('parent_id = ? AND name = ?', array($this->file_id, $name));
     }
-    
+
     /**
      * Get access permissions for this directory. Access
      * permissions are not implemented at this time.
@@ -210,7 +210,7 @@ class StudipDirectory extends File
         $entry->name        = $name;
         $entry->description = $description;
         $entry->store();
-        
+
         return $entry;
     }
 
@@ -247,7 +247,7 @@ class StudipDirectory extends File
     {
         return $this->files->orderBy('name asc');
     }
-    
+
     /**
      * Return a list of all child directories in this
      * directory.

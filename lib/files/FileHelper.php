@@ -10,13 +10,13 @@ class FileHelper
         }
         $filename = $pathinfo['filename'];
         $number = 1;
-            
+
         foreach ($matches as $match) {
             $number += $match[1] ? intval($match[1]) : 1;
             $filename = str_replace($match[0], '', $filename);
         }
         $filename = trim($filename);
-        
+
         $filename .= sprintf(' (%s %u)', _('Kopie'), $number);
 
         if (!empty($pathinfo['extension'])) {
@@ -28,7 +28,7 @@ class FileHelper
 
         return $filename;
     }
-    
+
     public static function AdjustFilename($filename)
     {
         $pathinfo = pathinfo($filename);
@@ -45,7 +45,7 @@ class FileHelper
 
         return self::ExtendFilename($filename, $number);
     }
-    
+
     public static function ExtendFilename($filename, $extension, $wrap = array('(', ')'))
     {
         $pathinfo = pathinfo($filename);
@@ -75,7 +75,7 @@ class FileHelper
         return $parent_id;
     }
 
-    
+
     public static function getBreadCrumbs($entry_id)
     {
         $crumbs = array();
@@ -107,9 +107,9 @@ class FileHelper
     {
         // TODO Top level?
         $result = array();
-        
+
         $folder = new StudipDirectory($folder_id);
-        
+
         foreach ($folder->listFiles() as $entry) {
             $file = $entry->file;
             if ($file instanceof StudipDirectory) {
@@ -123,5 +123,50 @@ class FileHelper
         }
 
         return $result;
+    }
+
+    /**
+     * Checks whether the user may access a file or a bunch of files if you
+     * pass an array.
+     *
+     * @param mixed $files Either a single directory entry id or an array of those
+     *                     (DirectoryEntry or File object(s) are also valid)
+     * @param mixed $user_id Id of the user or null for current user (default)
+     * @param bool $throw_exception Throw an AccessDeniedException instead of
+     *                              returning false
+     * @return bool indicating whether the user may access this file/these files
+     * @throws AccessDeniedException if $throw_exception is true and the user
+     *                               may not access the file(s)
+     */
+    public static function CheckAccess($files, $user_id = null, $throw_exception = true)
+    {
+        if (!is_array($files)) {
+            $files = array($files);
+        }
+
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+
+        foreach ($files as $file) {
+            try {
+                if (!is_object($file)) {
+                    $file = DirectoryEntry::find($file);
+                }
+                if ($file instanceof DirectoryEntry) {
+                    $file = $file->file;
+                }
+                if (!$file instanceof File || !$file->checkAccess()) {
+                    throw new Exception();
+                }
+            } catch (Exception $e) {
+                if (!is_object($file) && ($file === $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root'))) {
+                    continue;
+                }
+                if ($throw_exception) {
+                    throw new AccessDeniedException(_('Sie dürfen auf dieses Objekt nicht zugreifen.'));
+                }
+                return false;
+            }
+        }
+        return true;
     }
 }

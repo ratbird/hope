@@ -48,7 +48,8 @@ class Document_FolderController extends DocumentController
     public function create_action($parent_id)
     {
         PageLayout::setTitle(_('Ordner erstellen'));
-        
+
+        FileHelper::checkAccess($parent_id);
         $this->parent_id = $parent_id;
 
         if (Request::isPost()) {
@@ -81,7 +82,9 @@ class Document_FolderController extends DocumentController
     {
         PageLayout::setTitle(_('Ordner bearbeiten'));
 
-        $folder    = new DirectoryEntry($folder_id);
+        $folder = new DirectoryEntry($folder_id);
+        $folder->checkAccess();
+
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
 
         if (Request::isPost()) {
@@ -109,6 +112,8 @@ class Document_FolderController extends DocumentController
      */
     public function delete_action($folder_id)
     {
+        FileHelper::checkAccess($folder_id);
+
         $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
 
         if (!Request::isPost()) {

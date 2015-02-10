@@ -63,7 +63,7 @@ class File extends SimpleORMap
             'foreign_key' => 'file_id',
         );
         $config['default_values']['storage'] = 'DiskFileStorage';
-            
+
         parent::configure($config);
     }
 
@@ -174,7 +174,7 @@ class File extends SimpleORMap
 
         $source = fopen($file, 'r');
         $target = $this->open('w+');
-        
+
         if (!$source) {
             throw new Exception('Source file "' . $file . '" could not be opened.');
         }
@@ -186,7 +186,7 @@ class File extends SimpleORMap
 
         fclose($source);
         fclose($target);
-        
+
         if ($copied !== filesize($file)) {
             throw new Exception('Error during copy - not all bytes were transferred.');
         }
@@ -196,7 +196,7 @@ class File extends SimpleORMap
      * Update this file's metadata if the content has changed.
      * Note: This needs to be called after each update of the file.
      */
-    public function update() 
+    public function update()
     {
         $this->mime_type = $this->storage_object->getMimeType() ?: $this->mime_type;
         $this->mkdate    = $this->storage_object->getCreationTime();
@@ -204,5 +204,29 @@ class File extends SimpleORMap
         $this->size      = $this->storage_object->getSize();
 
         $this->store();
+    }
+
+    /**
+     * Checks whether a user has access to the current file.
+     *
+     * @param mixed $user_id Id of the user or null for current user (default)
+     * @param bool $throw_exception Throw an AccessDeniedException instead of
+     *                              returning false
+     * @return bool indicating whether the user may access this file
+     * @throws AccessDeniedException if $throw_exception is true and the user
+     *                               may not access this file
+     */
+    public function checkAccess($user_id = null, $throw_exception = true)
+    {
+        $user_id = $user_id ?: $GLOBALS['user']->id;
+
+        $valid = $GLOBALS['perm']->have_perm('root')
+              || $this->owner->id === $user_id;
+
+        if (!$valid && $throw_exception) {
+            throw new AccessDeniedException(_('Sie dürfen auf dieses Objekt nicht zugreifen.'));
+        }
+
+        return $valid;
     }
 }

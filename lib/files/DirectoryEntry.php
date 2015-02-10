@@ -48,10 +48,10 @@ class DirectoryEntry extends SimpleORMap
             'before_delete' => 'FileWillDelete',
             'after_delete'  => 'FileDidDelete',
         );
-        
+
         parent::configure($config);
     }
-    
+
     /**
      * Initialize a new directory entry object for the given id.
      *
@@ -61,7 +61,7 @@ class DirectoryEntry extends SimpleORMap
     public function __construct($id = null)
     {
         parent::__construct($id);
-        
+
         if ($id !== null && $this->isNew()) {
             throw new InvalidArgumentException('directory entry not found');
         }
@@ -101,12 +101,12 @@ class DirectoryEntry extends SimpleORMap
         }
         return $entries[0];
     }
-    
+
     public function isDirectory()
     {
         return $this->file instanceof StudipDirectory;
     }
-    
+
     public function getSize()
     {
         if ($this->isDirectory()) {
@@ -119,7 +119,7 @@ class DirectoryEntry extends SimpleORMap
         }
         return $size;
     }
-    
+
     public function getDownloadLink($inline = false, $absolute = false)
     {
         if ($absolute) {
@@ -135,5 +135,22 @@ class DirectoryEntry extends SimpleORMap
         }
 
         return $url;
+    }
+
+
+    /**
+     * Checks whether a user has access to the current directory entry.
+     *
+     * @param mixed $user_id Id of the user or null for current user (default)
+     * @param bool $throw_exception Throw an AccessDeniedException instead of
+     *                              returning false
+     * @return bool indicating whether the user may access this directory entry
+     * @throws AccessDeniedException if $throw_exception is true and the user
+     *                               may not access this directory entry
+     * @see File::checkAccess
+     */
+    public function checkAccess($user_id = null, $throw_exception = true)
+    {
+        return $this->file->checkAccess($user_id, $throw_exception);
     }
 }

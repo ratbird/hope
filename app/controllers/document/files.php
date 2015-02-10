@@ -61,7 +61,7 @@ class Document_FilesController extends DocumentController
     public function index_action($dir_id = null)
     {
         PageLayout::addScript('jquery/jquery.tablesorter.js');
-        
+
         $dir_id = $dir_id ?: $this->context_id;
         try {
             $directory = new DirectoryEntry($dir_id);
@@ -69,7 +69,7 @@ class Document_FilesController extends DocumentController
             $this->files     = $this->directory->listFiles();
             $this->folder_id = $directory->parent_id;
         } catch (Exception $e) {
-            $this->directory = new RootDirectory($this->context_id);
+            $this->directory = new RootDirectory($GLOBALS['perm']->have_perm('root') ? $dir_id : $this->context_id);
             $this->files     = $this->directory->listFiles();
             $this->parent_id = null;
             $this->folder_id = $this->context_id;
@@ -78,6 +78,8 @@ class Document_FilesController extends DocumentController
         if (isset($directory)) {
             $this->parent_id = FileHelper::getParentId($directory->id) ?: $this->context_id;
         }
+
+        $this->directory->checkAccess();
 
         $this->dir_id = $dir_id;
         $this->marked = $this->flash['marked-ids'] ?: array();
@@ -101,14 +103,15 @@ class Document_FilesController extends DocumentController
 
         $folder_id = $folder_id ?: $this->context_id;
 
-        if (Request::isPost()) {
-            if ($folder_id === $this->context_id) {
-                $directory = new RootDirectory($this->context_id);
-            } else {
-                $dirEntry = new DirectoryEntry($folder_id);
-                $directory = $dirEntry->file;
-            }
+        if ($folder_id === $this->context_id) {
+            $directory = new RootDirectory($this->context_id);
+        } else {
+            $dirEntry = new DirectoryEntry($folder_id);
+            $directory = $dirEntry->file;
+        }
+        $directory->checkAccess();
 
+        if (Request::isPost()) {
             $title       = Request::get('title');
             $description = Request::get('description', '');
             $restricted  = Request::int('restricted', 0);
@@ -245,6 +248,7 @@ class Document_FilesController extends DocumentController
         PageLayout::setTitle(_('Datei bearbeiten'));
 
         $entry = new DirectoryEntry($entry_id);
+        $entry->checkAccess();
 
         if (Request::isPost()) {
             $name = Request::get('filename');
@@ -270,7 +274,7 @@ class Document_FilesController extends DocumentController
 
     /**
      * Move a file to another folder.
-     * 
+     *
      * @param String $file_id   Direcory entry id of the file to move
      *                          (use 'flashed' to read ids from from flash
      *                          memory for a bulk operation)
@@ -280,7 +284,7 @@ class Document_FilesController extends DocumentController
     public function move_action($file_id, $source_id = null)
     {
         PageLayout::setTitle(_('Datei verschieben'));
-        
+
         if (Request::isPost()) {
             $folder_id = Request::option('folder_id');
 
@@ -289,6 +293,7 @@ class Document_FilesController extends DocumentController
             } else {
                 $ids = array($file_id);
             }
+            FileHelper::checkAccess($ids);
 
             foreach ($ids as $id) {
                 $source_id = $source_id ?: FileHelper::getParentId($file_id) ?: $this->context_id;
@@ -310,8 +315,10 @@ class Document_FilesController extends DocumentController
         if ($file_id === 'flashed') {
             $this->flashed = $this->flash['move-ids'];
             $this->parent_id = $source_id;
+            FileHelper::checkAccess($this->flashed);
         } else {
             $this->parent_id = FileHelper::getParentId($file_id) ?: $this->context_id;
+            FileHelper::checkAccess($file_id);
         }
         $this->active_folders = array_keys(FileHelper::getBreadCrumbs($this->parent_id));
 
@@ -325,7 +332,7 @@ class Document_FilesController extends DocumentController
 
     /**
      * Copy a file to another folder.
-     * 
+     *
      * @param String $file_id   Direcory entry id of the file to copy
      *                          (use 'flashed' to read ids from from flash
      *                          memory for a bulk operation)
@@ -335,7 +342,7 @@ class Document_FilesController extends DocumentController
     public function copy_action($file_id, $source_id = null)
     {
         PageLayout::setTitle(_('Datei kopieren'));
-        
+
          if (Request::isPost()) {
             $folder_id = Request::option('folder_id');
             $folder = StudipDirectory::get($folder_id);
@@ -344,6 +351,8 @@ class Document_FilesController extends DocumentController
             } else {
                 $ids = array($file_id);
             }
+            FileHelper::checkAccess($ids);
+
             if ($this->checkCopyQuota($ids)) {
                 foreach ($ids as $id) {
                     $source_id = $source_id ? : FileHelper::getParentId($file_id) ?: $this->context_id;
@@ -367,8 +376,11 @@ class Document_FilesController extends DocumentController
         if ($file_id === 'flashed') {
             $this->flashed   =  $this->flash['copy-ids'];
             $this->parent_id = $source_id;
+
+            FileHelper::checkAccess($this->flashed);
         } else {
             $this->parent_id = FileHelper::getParentId($file_id) ?: $this->context_id;
+            FileHelper::checkAccess($file_id);
         }
         $this->active_folders = array_keys(FileHelper::getBreadCrumbs($this->parent_id));
 
@@ -409,6 +421,8 @@ class Document_FilesController extends DocumentController
         $entry = DirectoryEntry::find($id);
         $parent_id = FileHelper::getParentId($id) ?: $this->context_id;
 
+        $entry->checkAccess();
+
         if (!Request::isPost()) {
             $question = createQuestion2(_('Soll die Datei wirklich gelöscht werden?'),
                                         array(), array(),
@@ -434,6 +448,7 @@ class Document_FilesController extends DocumentController
     public function bulk_action($folder_id)
     {
         $ids = Request::optionArray('ids');
+        FileHelper::checkAccess($ids);
 
         if (empty($ids)) {
             $this->redirect('document/files/index/' . $folder_id);

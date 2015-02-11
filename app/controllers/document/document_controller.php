@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  */
 
 require_once 'app/controllers/authenticated_controller.php';
@@ -14,32 +14,23 @@ class DocumentController extends AuthenticatedController
         // Lock context to user id
         $this->context_id = $GLOBALS['user']->id;
 
-        if (Request::isXhr()) {
-            $this->set_layout(null);
-            $this->set_content_type('text/html;charset=windows-1252');
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-        }
+        $this->limit = $GLOBALS['user']->cfg->PERSONAL_FILES_ENTRIES_PER_PAGE ?: Config::get()->ENTRIES_PER_PAGE;
+
         $this->userConfig = DocUsergroupConfig::getUserConfig($GLOBALS['user']->id);
-        if($this->userConfig['area_close'] == 1){
+        if ($this->userConfig['area_close'] == 1) {
             $this->redirect('document/closed/index');
         }
 
-        CSRFProtection::verifySecurityToken();
+        if (Request::isPost()) {
+            CSRFProtection::verifySecurityToken();
+        }
         if (($ticket = Request::get('studip-ticket')) && !check_ticket($ticket)) {
             $message = _('Bei der Verarbeitung Ihrer Anfrage ist ein Fehler aufgetreten.') . "\n"
                      . _('Bitte versuchen Sie es erneut.');
             PageLayout::postMessage(MessageBox::error($message));
             $this->redirect('document/files/index');
         }
-    }
-    
-    public function after_filter($action, $args)
-    {
-        if (Request::isXhr() && PageLayout::getTitle()) {
-            $this->response->add_header('X-Title', PageLayout::getTitle());
-        }
-        parent::after_filter($action, $args);
+
     }
 
     protected function setDialogLayout($icon = false)
@@ -52,5 +43,32 @@ class DocumentController extends AuthenticatedController
         }
 
         $this->set_layout($layout);
+    }
+
+    public function url_for_parent_directory($entry, $parent_id = null)
+    {
+        if (is_array($entry)) {
+            $entry = reset($entry);
+        }
+        if (!is_object($entry)) {
+            $entry = new DirectoryEntry($entry);
+        }
+        
+        $parent_id   = $parent_id ?: FileHelper::getParentId($entry->id) ?: $this->context_id;
+        $parent_page = $this->getPageForIndex($entry->indexInparent());
+        return $this->url_for('document/files/index/' . $parent_id . '/' . $parent_page);
+    }
+
+    /**
+     * Returns the page to display for a certain index of a file.
+     *
+     * @param int   $index Index of the file
+     * @param mixed $limit Optional numeric limit (defaults to configured limit)
+     * @return int Page to display for given index
+     */
+    protected function getPageForIndex($index, $limit = null)
+    {
+        $limit = $limit ?: $this->limit;
+        return ceil($index / $limit);
     }
 }

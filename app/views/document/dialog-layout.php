@@ -5,7 +5,14 @@ $formatnumber = function ($number, $digits = 0) {
 };
 ?>
 <section class="document-dialog">
-    <aside <? if ($icon): ?> style="background-image: url(<?= Assets::image_path($icon) ?>);" <? endif; ?>>
+    <aside>
+        <div class="document-dialog-icon">
+        <? if ($icon): ?>
+            <?= Assets::img($icon) ?>
+        <? else: ?>
+            <?= Assets::img('icons/100/lightblue/file-generic.png') ?>
+        <? endif; ?>
+        </div>
     <? if ($entry): ?>
         <h3><?= htmlReady($entry->name) ?></h3>
         <dl>

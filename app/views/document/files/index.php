@@ -2,9 +2,7 @@
     <?= $flash['question'] ?>
 <? endif; ?>
 
-<form action="<?= $controller->url_for('document/files/bulk/' . $dir_id) ?>" method="post" data-shiftcheck>
-    <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
-    <?= CSRFProtection::tokenTag() ?>
+<form action="<?= $controller->url_for('document/files/bulk/' . $dir_id . '/' . $page) ?>" method="post" data-shiftcheck>
 
 <table class="default documents <? if (!empty($files)) echo 'sortable-table'; ?>">
     <caption>
@@ -32,7 +30,12 @@
             </div>
             <div class="caption-content">
                 <header class="folder-description">
-                    <h2><?= htmlReady($last_crumb['name']) ?></h2>
+                    <h2>
+                        <?= htmlReady($last_crumb['name']) ?>
+                    <? if ($maxpages > 1): ?>
+                        (<?= sprintf(_('Seite %u von %u'), $page, $maxpages) ?>)
+                    <? endif; ?>
+                    </h2>
                 <? if ($last_crumb['description']): ?>
                     <p><?= formatReady($last_crumb['description']) ?></p>
                 <? endif; ?>
@@ -78,12 +81,12 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td class="document-icon">
-                <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>">
+                <a href="<?= $controller->url_for('document/files/index/' . $parent_id, $parent_page ) ?>">
                     <?= Assets::img('icons/24/blue/arr_1up.png', tooltip2(_('Ein Verzeichnis nach oben wechseln'))) ?>
                 </a>
             </td>
             <td>
-                <a href="<?= $controller->url_for('document/files/index/' . $parent_id) ?>" title="<?= _('Ein Verzeichnis nach oben wechseln') ?>">
+                <a href="<?= $controller->url_for('document/files/index/' . $parent_id, $parent_page) ?>" title="<?= _('Ein Verzeichnis nach oben wechseln') ?>">
                     .. <small><?= _('Ein Verzeichnis nach oben wechseln') ?></small>
                 </a>
             </td>
@@ -213,7 +216,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="8">
+            <td colspan="5">
                 <?= _('Alle markierten') ?>
             <? if (extension_loaded('zip')): ?>
                 <?= Studip\Button::create(_('Herunterladen'), 'download') ?>
@@ -221,6 +224,15 @@
                 <?= Studip\Button::create(_('Verschieben'), 'move', array('data-dialog' => '')) ?>
                 <?= Studip\Button::create(_('Kopieren'), 'copy', array('data-dialog' => ''))?>
                 <?= Studip\Button::create(_('Löschen'), 'delete') ?>
+            </td>
+            <td colspan="3" class="actions">
+                <?= $GLOBALS['template_factory']->render('shared/pagechooser', array(
+                        'perPage'      => $limit,
+                        'num_postings' => $filecount,
+                        'page'         => $page,
+                        'pagelink'     => $controller->url_for('document/files/index/' . $dir_id . '/%u')
+                    ))
+                ?>
             </td>
         </tr>
     </tfoot>

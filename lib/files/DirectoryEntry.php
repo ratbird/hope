@@ -102,6 +102,33 @@ class DirectoryEntry extends SimpleORMap
         return $entries[0];
     }
 
+    /**
+     * Retrieves the index/offset of a file inside this directory.
+     * 
+     * @param String $ref_id Id of the file to retrieve the index for
+     * @return mixed Either the numeric index or false if file was not found
+     */
+    public function indexInParent()
+    {
+        try {
+            $parent = $this->getParent()->file;
+        } catch (Exception $e) {
+            $parent = new RootDirectory($this->parent_id);
+        }
+        
+        $ids = $parent->listFiles()->pluck('id');
+
+        $index = 0;
+        foreach ($ids as $id) {
+            $index += 1;
+            if ($id === $this->id) {
+                return $index;
+            }
+        }
+        return false;
+    }
+
+
     public function isDirectory()
     {
         return $this->file instanceof StudipDirectory;

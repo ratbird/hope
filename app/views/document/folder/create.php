@@ -16,6 +16,7 @@
    
     <div data-dialog-button>
         <?= Studip\Button::createAccept(_('Erstellen')) ?>
-        <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('document/files/index/' . $parent_id)) ?>
+        <?= Studip\LinkButton::createCancel(_('Abbrechen'),
+                                            $controller->url_for('document/files/index/' . $parent_id . '/' . $page)) ?>
     </div>
 </form>

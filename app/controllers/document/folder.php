@@ -45,12 +45,13 @@ class Document_FolderController extends DocumentController
      *
      * @param String $parent_id Directory entry id of the parent directory
      */
-    public function create_action($parent_id)
+    public function create_action($parent_id, $page = 1)
     {
         PageLayout::setTitle(_('Ordner erstellen'));
 
         FileHelper::checkAccess($parent_id);
         $this->parent_id = $parent_id;
+        $this->page      = $page;
 
         if (Request::isPost()) {
             $name        = Request::get('name');
@@ -69,7 +70,7 @@ class Document_FolderController extends DocumentController
             $directory->file->store();
 
             PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde erstellt.')));
-            $this->redirect('document/files/index/' . $parent_id);
+            $this->redirect('document/files/index/' . $parent_id . '/' . $page);
         }
     }
 
@@ -85,24 +86,27 @@ class Document_FolderController extends DocumentController
         $folder = new DirectoryEntry($folder_id);
         $folder->checkAccess();
 
-        $parent_id = FileHelper::getParentId($folder_id) ?: $this->context_id;
-
         if (Request::isPost()) {
             $name = Request::get('name');
             $name = $folder->directory->ensureUniqueFilename($name, $folder->file);
 
             $folder->name        = $name;
             $folder->description = Request::get('description');
-            $folder->store();
+            
+            if ($folder->isDirty()) {
+                $folder->store();
 
-            PageLayout::postMessage(MessageBox::success(_('Der Ordner wurde bearbeitet.')));
-            $this->redirect('document/files/index/' . $parent_id);
+                $message = sprintf(_('Der Ordner "%s" wurde gespeichert.'), $folder->name);
+                PageLayout::postMessage(MessageBox::success($message));
+            }
+
+            $this->redirect($this->url_for_parent_directory($folder));
+            return;
         }
 
         $this->setDialogLayout('icons/100/lightblue/folder-' . ($folder->file->isEmpty() ? 'empty' : 'full') . '.png');
 
-        $this->folder_id = $folder_id;
-        $this->folder    = $folder;
+        $this->folder = $folder;
     }
 
     /**

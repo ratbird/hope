@@ -241,11 +241,16 @@ class StudipDirectory extends File
      * Return a list of all entries in this directory.
      * Each entry is returned as a DirectoryEntry object.
      *
+     * @param  int $offset Only return files after this offset (optional, default 0)
+     * @param  int $limit  Return only $limit files (optional, default 0 = all)
      * @return array  array of DirectoryEntry objects
      */
-    public function listFiles()
+    public function listFiles($offset = 0, $limit = 0)
     {
-        return $this->files->orderBy('name asc');
+        $files = $this->files->orderBy('name asc');
+        $limit = $limit ?: (count($files) - $offset);
+
+        return $files->limit($offset, $limit);
     }
 
     /**

@@ -28,6 +28,8 @@ require_once 'document_controller.php';
 
 class Document_FilesController extends DocumentController
 {
+    protected static $possible_limits = array(20, 50, 100);
+
     /**
      * Before filter, basically initializes the controller by actvating the
      * according navigation entry and other settings.
@@ -58,28 +60,32 @@ class Document_FilesController extends DocumentController
      *
      * @param mixed $dir_id Directory entry id of the folder (default to root)
      */
-    public function index_action($dir_id = null)
+    public function index_action($dir_id = null, $page = 1)
     {
         PageLayout::addScript('jquery/jquery.tablesorter.js');
 
         $dir_id = $dir_id ?: $this->context_id;
         try {
-            $directory = new DirectoryEntry($dir_id);
+            $directory       = new DirectoryEntry($dir_id);
             $this->directory = $directory->file;
-            $this->files     = $this->directory->listFiles();
+            $this->parent_id = FileHelper::getParentId($directory->id) ?: $this->context_id;
             $this->folder_id = $directory->parent_id;
+            $parent_index    = $directory->indexInParent();
         } catch (Exception $e) {
             $this->directory = new RootDirectory($GLOBALS['perm']->have_perm('root') ? $dir_id : $this->context_id);
-            $this->files     = $this->directory->listFiles();
             $this->parent_id = null;
             $this->folder_id = $this->context_id;
-        }
-
-        if (isset($directory)) {
-            $this->parent_id = FileHelper::getParentId($directory->id) ?: $this->context_id;
+            $parent_index    = false;
         }
 
         $this->directory->checkAccess();
+
+        $this->filecount   = $this->directory->countFiles();
+        $this->maxpages    = ceil($this->filecount / $this->limit);
+        $this->page        = min($page, $this->maxpages);
+        $this->parent_page = $this->getPageForIndex($parent_index);
+
+        $this->files = $this->directory->listFiles(($this->page - 1) * $this->limit, $this->limit);
 
         $this->dir_id = $dir_id;
         $this->marked = $this->flash['marked-ids'] ?: array();
@@ -89,7 +95,7 @@ class Document_FilesController extends DocumentController
         $this->space_used  = DiskFileStorage::getQuotaUsage($GLOBALS['user']->id);
         $this->space_total = $config['quota'];
 
-        $this->setupSidebar($dir_id, $this->directory->id);
+        $this->setupSidebar($dir_id, $this->directory->id, $this->page);
     }
 
     /**
@@ -97,7 +103,7 @@ class Document_FilesController extends DocumentController
      *
      * @param String $folder_id Directory entry id of the folder to upload to
      */
-    public function upload_action($folder_id)
+    public function upload_action($folder_id, $page = 1)
     {
         PageLayout::setTitle(_('Datei hochladen'));
 
@@ -230,10 +236,11 @@ class Document_FilesController extends DocumentController
                 PageLayout::postMessage(MessageBox::success($message));
             }
 
-            $this->redirect('document/files/index/' . $folder_id);
+            $this->redirect('document/files/index/' . $folder_id . '/' . $page);
         }
 
         $this->folder_id = $folder_id;
+        $this->page      = $page;
 
         PageLayout::setTitle(_('Datei hochladen'));
     }
@@ -256,14 +263,19 @@ class Document_FilesController extends DocumentController
 
             $entry->file->filename   = $name;
             $entry->file->restricted = Request::int('restricted', 0);
-            $entry->file->store();
 
             $entry->name        = $name;
             $entry->description = Request::get('description');
-            $entry->store();
+            
+            if ($entry->file->isDirty() || $entry->isDirty()) {
+                $entry->store();
+                $entry->file->store();
 
-            PageLayout::postMessage(MessageBox::success(_('Die Datei wurde bearbeitet.')));
-            $this->redirect('document/files/index/' . FileHelper::getParentId($entry->id) ?: $this->context_id);
+                $message = sprintf(_('Die Datei "%s" wurde bearbeitet.'), $entry->name);
+                PageLayout::postMessage(MessageBox::success($message));
+            }
+
+            $this->redirect($this->url_for_parent_directory($entry));
             return;
         }
 
@@ -365,7 +377,7 @@ class Document_FilesController extends DocumentController
                     'da Ihnen nicht genügend freier Speicherplatz zur Verfügung steht')));
             }
 
-            $this->redirect('document/files/index/' . $source_id);
+            $this->redirect($this->url_for_parent_directory($ids));
             return;
         }
 
@@ -374,7 +386,7 @@ class Document_FilesController extends DocumentController
         $this->dir_tree = FileHelper::getDirectoryTree($this->context_id);
 
         if ($file_id === 'flashed') {
-            $this->flashed   =  $this->flash['copy-ids'];
+            $this->flashed   = $this->flash['copy-ids'];
             $this->parent_id = $source_id;
 
             FileHelper::checkAccess($this->flashed);
@@ -399,7 +411,7 @@ class Document_FilesController extends DocumentController
      *
      * @param Array $ids Directory entry ids of the files to copy
      */
-    public function checkCopyQuota($ids)
+    protected function checkCopyQuota($ids)
     {
         $size = 0;
         foreach ($ids as $id) {
@@ -432,6 +444,7 @@ class Document_FilesController extends DocumentController
             File::get($entry->directory->id)->unlink($entry->name);
             PageLayout::postMessage(MessageBox::success(_('Die Datei wurde gelöscht.')));
         }
+
         $this->redirect('document/files/index/' . $parent_id);
     }
 
@@ -445,13 +458,13 @@ class Document_FilesController extends DocumentController
      *
      * @param String $folder_id Directory entry id of the origin folder
      */
-    public function bulk_action($folder_id)
+    public function bulk_action($folder_id, $page = 1)
     {
         $ids = Request::optionArray('ids');
         FileHelper::checkAccess($ids);
 
         if (empty($ids)) {
-            $this->redirect('document/files/index/' . $folder_id);
+            $this->redirect('document/files/index/' . $folder_id . '/' . $page);
         } else if (Request::submitted('download')) {
             $this->flash['ids'] = $ids;
             $this->redirect('document/download/flashed');
@@ -483,8 +496,20 @@ class Document_FilesController extends DocumentController
                 $this->flash['marked-ids'] = $ids;
             }
 
-            $this->redirect('document/files/index/' . $folder_id);
+            $this->redirect('document/files/index/' . $folder_id . '/' . $page);
         }
+    }
+
+    public function settings_action($limit, $page, $directory)
+    {
+        if (!in_array($limit, self::$possible_limits)) {
+            $limit = Config::get()->ENTRIES_PER_PAGE;
+        }
+        $GLOBALS['user']->cfg->store('PERSONAL_FILES_ENTRIES_PER_PAGE', $limit);
+
+        $page = $this->getPageForIndex(($page - 1) * $this->limit + 1, $limit);
+
+        $this->redirect('document/files/index/' . $directory . '/' . $page);
     }
 
     /**
@@ -493,7 +518,7 @@ class Document_FilesController extends DocumentController
      * @param String $current_entry Directory entry id of the current folder
      * @param String $current_dir   File id of the current folder
      */
-    private function setupSidebar($current_entry, $current_dir)
+    private function setupSidebar($current_entry, $current_dir, $page = 1)
     {
         $root_dir   = RootDirectory::find($this->context_id);
         $root_count = $root_dir->countFiles(true, false);
@@ -504,7 +529,7 @@ class Document_FilesController extends DocumentController
         $widget = new ActionsWidget();
 
         $widget->addLink(_('Datei hochladen'),
-                         $this->url_for('document/files/upload/' . $current_entry),
+                         $this->url_for('document/files/upload/' . $current_entry . '/' . $page),
                          'icons/16/blue/upload.png',
                          $this->userConfig['forbidden']
                              ? array('disabled' => '',
@@ -529,6 +554,15 @@ class Document_FilesController extends DocumentController
                          'icons/16/blue/trash.png',
                          $attributes);
 
+        $sidebar->addWidget($widget);
+
+        $widget = new OptionsWidget();
+        $widget->setTitle(_('Darstellung anpassen'));
+        foreach (self::$possible_limits as $limit) {
+            $widget->addRadioButton(sprintf(_('%u Einträge pro Seite anzeigen'), $limit),
+                                    $this->url_for('document/files/settings/' . $limit . '/' . $page . '/' .  $current_entry),
+                                    $limit == $this->limit);
+        }
         $sidebar->addWidget($widget);
 
         // Show export options only if zip extension is loaded

@@ -1,5 +1,5 @@
 <form enctype="multipart/form-data" method="post" class="studip_form"
-      action="<?= $controller->url_for('document/files/upload/' . $folder_id) ?>">
+      action="<?= $controller->url_for('document/files/upload/' . $folder_id . '/' . $page) ?>">
 
     <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -45,6 +45,6 @@
     <div data-dialog-button>
         <?= Studip\Button::createAccept(_('Hochladen'), 'upload') ?>
         <?= Studip\LinkButton::createCancel(_('Abbrechen'),
-                $controller->url_for('document/files/index/' . $env_dir)) ?>
+                $controller->url_for('document/files/index/' . $folder_id . '/' . $page)) ?>
     </div>
 </form>

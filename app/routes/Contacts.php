@@ -259,13 +259,7 @@ class Contacts extends \RESTAPI\RouteMap
     private function contactsToJSON($contacts) {
         $result = array();
         foreach ($contacts as $contact) {
-            $url = $this->urlf('/contact/%s', array(htmlReady($contact->id)));
-            $result[$url] = array(
-                'id'            => $contact->id,
-                'owner'         => $this->urlf('/user/%s', array(htmlReady($contact->owner_id))),
-                'friend'        => User::getMiniUser($this, $contact->friend),
-                'calpermission' => (bool) $contact->calpermission
-            );
+            $result[] = User::getMiniUser($this, $contact);
         }
         return $result;
     }

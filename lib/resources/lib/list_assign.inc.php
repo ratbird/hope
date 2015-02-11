@@ -157,8 +157,11 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                 $assEvtLst->events[] = $assEvt;
         }
         //in between days
-        $date_ao_r_end = new DateTime("@" . strtotime('T12:00', $ao_r_end));
-        $num_days = $date_ao_r_end->diff(new DateTime("@" . strtotime('T12:00',$ao_begin)))->days;
+        $date_ao_r_end = new DateTime();
+        $date_ao_r_end->setTimestamp(strtotime('T12:00', $ao_r_end));
+        $date_ao_begin = new DateTime();
+        $date_ao_begin->setTimestamp(strtotime('T12:00', $ao_begin));
+        $num_days = $date_ao_r_end->diff($date_ao_begin)->days;
         for ($d=date("j",$ao_begin)+1; $d < date("j",$ao_begin) + $num_days; $d++) {
             $temp_ts=mktime(0, 0, 0,
                     date("n",$ao_begin),
@@ -169,7 +172,6 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                     date("n",$ao_begin),
                     $d,
                     date("Y",$ao_begin));
-
             if (($temp_ts_end <= $end) && ($temp_ts >= $begin)) {
                 $assEvt = new AssignEvent($assign_object->getId(), $temp_ts, $temp_ts_end,
                                 $assign_object->getResourceId(), $assign_object->getAssignUserId(),

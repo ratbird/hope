@@ -129,7 +129,7 @@ if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_crea
     unset($cmd);
     $start_level = '';
     unset($form);
-    $_SESSION['sem_create_data'] = '';
+    $_SESSION['sem_create_data'] = array();
     $errormsg = "error§" . sprintf(_("Veranstaltungen dieser Kategorie dürfen in dieser Installation nicht angelegt werden!"));
 }
 
@@ -153,7 +153,7 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         unset($cmd);
         $start_level = '';
         unset($form);
-        $_SESSION['sem_create_data'] = '';
+        $_SESSION['sem_create_data'] = array();
     } else {
         // Einträge in generischen Datenfelder auslesen und zuweisen
         $query = "SELECT datafield_id, datafields_entries.content AS value, datafields.name, datafields.type
@@ -305,8 +305,8 @@ if (!$_SESSION['sem_create_data']["sem_entry"]) {
 
 if (($auth->lifetime != 0 && ((time() - $_SESSION['sem_create_data']["timestamp"]) >$auth->lifetime*60)) || (Request::option('new_session')))
 {
-    $_SESSION['sem_create_data']='';
-    $_SESSION['links_admin_data']='';
+    $_SESSION['sem_create_data'] = array();
+    $_SESSION['links_admin_data'] = array();
     $_SESSION['sem_create_data']["sem_start_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_end_termin"]=-1;
@@ -329,7 +329,7 @@ else
 //wenn das Seminar bereits geschrieben wurde und wir trotzdem frisch reinkommen, soll die Variable geloescht werden
 if (($_SESSION['sem_create_data']["sem_entry"]) && (!$form))
 {
-    $_SESSION['sem_create_data']='';
+    $_SESSION['sem_create_data'] = array();
     $_SESSION['sem_create_data']["sem_start_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_termin"]=-1;
     $_SESSION['sem_create_data']["sem_vor_end_termin"]=-1;
@@ -341,7 +341,7 @@ if ($start_level) { //create defaults
     if (SeminarCategories::Get($class) === false || SeminarCategories::Get($class)->course_creation_forbidden) {
         $start_level = '';
         unset($form);
-        $_SESSION['sem_create_data'] = '';
+        $_SESSION['sem_create_data'] = array();
         $errormsg = "error§" . sprintf(_("Veranstaltungen dieser Kategorie dürfen in dieser Installation nicht angelegt werden!"));
     } else {
         if (!array_key_exists('sem_class', $_SESSION['sem_create_data'])) {

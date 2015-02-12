@@ -142,8 +142,8 @@ class MyCoursesController extends AuthenticatedController
         $this->my_bosses                    = $default_deputies_enabled ? getDeputyBosses($GLOBALS['user']->id) : array();
 
         // Check for new contents
-        $new_contents = $this->check_for_new($this->sem_courses, $group_field);
-        $this->nav_elements = MyRealmModel::calc_nav_elements($this->sem_courses, $group_field);
+        $new_contents = $this->check_for_new($this->sem_courses, $this->group_field);
+        $this->nav_elements = MyRealmModel::calc_nav_elements($this->sem_courses, $this->group_field);
 
         //
         if ($tabularasa = $this->flash['tabularasa']) {

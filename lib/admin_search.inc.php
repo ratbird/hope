@@ -55,9 +55,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         global $admin_admission_data,
         $archiv_assi_data, $term_metadata;
 
-        if($reset_search_fields) $_SESSION['links_admin_data']='';
-        $_SESSION['sem_create_data']='';
-        $_SESSION['admin_dates_data']='';
+        if($reset_search_fields) $_SESSION['links_admin_data']=array();
+        $_SESSION['sem_create_data']=array();
+        $_SESSION['admin_dates_data']=array();
         $admin_admission_data='';
         $admin_rooms_data='';
         $archiv_assi_data='';

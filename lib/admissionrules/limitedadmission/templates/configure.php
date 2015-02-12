@@ -4,4 +4,4 @@
 <label for="maxnumber" class="caption">
     <?= _('Maximale Anzahl erlaubter Anmeldungen') ?>:
 </label>
-<input type="number" name="maxnumber" size="4" max="4" min="1" value="<?= $rule->getMaxNumber() ?>" required/>
+<input type="number" name="maxnumber" size="4" min="1" value="<?= $rule->getMaxNumber() ?>" required/>

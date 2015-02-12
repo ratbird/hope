@@ -44,21 +44,21 @@ class StudipFileCache implements StudipCache {
      * without the 'dir' argument the cache path is taken from
      * $CACHING_FILECACHE_PATH or is set to
      * $TMP_PATH/studip_cache
-     * throws exception if the directory does not exists or could not
-     * be created
-     *
      *
      * @param array use $args['dir'] to set cache directory
      * @return void
+     * @throws exception if the directory does not exist or could not be
+     *         created
      */
-    function __construct($args = array()) {
-        $this->dir = !empty($args['dir']) ?
-                $args['dir'] : isset($GLOBALS['CACHING_FILECACHE_PATH']) ?
-                $GLOBALS['CACHING_FILECACHE_PATH'] :
-                $GLOBALS['TMP_PATH'] . '/' . 'studip_cache';
+    public function __construct($args = array())
+    {
+        $this->dir = $args['dir']
+                  ?: $GLOBALS['CACHING_FILECACHE_PATH']
+                  ?: ($GLOBALS['TMP_PATH'] . '/' . 'studip_cache');
         $this->dir = rtrim($this->dir, '\\/') . '/';
-        if(!is_dir($this->dir)){
-            if(!@mkdir($this->dir, 0700)) throw new Exception('Could not create directory: ' . $this->dir);
+
+        if (!is_dir($this->dir) && !@mkdir($this->dir, 0700)) {
+            throw new Exception('Could not create directory: ' . $this->dir);
         }
     }
 
@@ -196,4 +196,3 @@ class StudipFileCache implements StudipCache {
         return $deleted;
     }
 }
-?>

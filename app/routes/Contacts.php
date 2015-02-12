@@ -199,8 +199,15 @@ class Contacts extends \RESTAPI\RouteMap
             $this->halt(204);
         }
 
-        AddNewContact($user_id);
-        $success = InsertPersonStatusgruppe($user_id, $group_id);
+        $new_contact = array(
+            'owner_id' => $GLOBALS['user']->id,
+            'user_id'  => $user->id);
+
+        $new_contact['group_assignments'][] = array('statusgruppe_id' => $group->id,
+                                                    'user_id'         => $user->id);
+
+        $success = (bool)\Contact::import($new_contact)->store();
+
 
         if (!$success) {
             $this->error(500);

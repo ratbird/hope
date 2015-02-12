@@ -539,7 +539,8 @@ if (($SemUserStatus == "autor") || ($rechte)) {
 
 if ($folder_system_data["move"]) {
     $check_movable_item = StudipDocument::find($folder_system_data["move"]) ?: DocumentFolder::find($folder_system_data["move"]);
-    if (@$check_movable_item->seminar_id != $SessionSeminar) {
+    if (@$check_movable_item->seminar_id != $SessionSeminar
+        || (!$rechte && @$check_movable_item->user_id != $GLOBALS['user']->id)) {
         throw new AccessDeniedException();
     }
 }
@@ -576,7 +577,7 @@ if ($rechte && Request::submittedSome('move_to_sem', 'move_to_inst', 'move_to_to
     $folder_system_data["mode"]='';
 }
 //verschieben / kopieren innerhalb der Veranstaltung
-//wurde Code fuer Starten der Verschiebung uebermittelt (=id+"_md_"), wird entsprechende Funktion aufgerufen (hier kein Rechtecheck noetig, da Dok_id aus Sess_Variable.
+//wurde Code fuer Starten der Verschiebung uebermittelt (=id+"_md_"), wird entsprechende Funktion aufgerufen
 if ($open_cmd == 'md' && $folder_tree->isWritable($open_id, $user->id) && !Request::submitted("cancel") && (!$folder_tree->isFolder($folder_system_data["move"]) || ($folder_tree->isFolder($folder_system_data["move"]) && $folder_tree->checkCreateFolder($open_id, $user->id)))) {
     if ($folder_system_data["mode"] == 'move'){
         $done = move_item($folder_system_data["move"], $open_id);

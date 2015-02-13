@@ -135,12 +135,12 @@ div.start-widgetcontainer {
         padding: 0;
         vertical-align: top;
         &:first-child {
-            -webkit-flex-grow: 2;
-            flex: 2;
+            .flex-grow(2);
+            max-width: 65%;
+            min-width: 65%;
         }
         &:last-child {
-            -webkit-flex-grow: 1;
-            flex: 1;
+            .flex-grow(1);
             margin-left: 20px;
             max-width: 33%;
             min-width: 33%;
@@ -191,13 +191,11 @@ div.available-widgets {
 @media screen and (max-width: 1024px) {
     div.start-widgetcontainer {
         display: block;
-        ul {
+        ul.portal-widget-list {
             display: block;
-            &:last-child {
-                margin-left: 0;
-                min-width: 100%;
-                max-width: 100%;
-            }
+            margin-left: 0;
+            min-width: 100%;
+            max-width: 100%;
         }
     }
 }

@@ -2945,7 +2945,7 @@ section.contentbox article footer {
   padding: 0 10px 0 10px;
   max-height: 0px;
   opacity: 0;
-  overflow: hidden;
+  overflow: auto;
   -webkit-transition: opacity 0.3s;
   -moz-transition: opacity 0.3s;
   -o-transition: opacity 0.3s;
@@ -5657,11 +5657,13 @@ div.start-widgetcontainer > ul {
 }
 div.start-widgetcontainer > ul:first-child {
   -webkit-flex-grow: 2;
-  flex: 2;
+  flex-grow: 2;
+  max-width: 65%;
+  min-width: 65%;
 }
 div.start-widgetcontainer > ul:last-child {
   -webkit-flex-grow: 1;
-  flex: 1;
+  flex-grow: 1;
   margin-left: 20px;
   max-width: 33%;
   min-width: 33%;
@@ -5702,10 +5704,8 @@ div.available-widgets .studip-widget {
   div.start-widgetcontainer {
     display: block;
   }
-  div.start-widgetcontainer ul {
+  div.start-widgetcontainer ul.portal-widget-list {
     display: block;
-  }
-  div.start-widgetcontainer ul:last-child {
     margin-left: 0;
     min-width: 100%;
     max-width: 100%;

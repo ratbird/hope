@@ -428,6 +428,7 @@ all uppercase each item of the configuration array will become a member of your 
 $STUDIP_AUTH_PLUGIN[] = "Standard";
 // $STUDIP_AUTH_PLUGIN[] = "CAS";
 // $STUDIP_AUTH_PLUGIN[] = "Shib";
+// $STUDIP_AUTH_PLUGIN[] = "IP";
 
 $STUDIP_AUTH_CONFIG_STANDARD = array("error_head" => "intern");
 /*
@@ -518,6 +519,9 @@ $STUDIP_AUTH_CONFIG_SHIB = array("session_initiator" => "https://sp.studip.de/Sh
                                                         "auth_user_md5.Vorname" => array("callback" => "getUserData", "map_args" => "givenname"),
                                                         "auth_user_md5.Nachname" => array("callback" => "getUserData", "map_args" => "surname"),
                                                         "auth_user_md5.Email" => array("callback" => "getUserData", "map_args" => "email")));
+
+$STUDIP_AUTH_CONFIG_IP = array('allowed_users' => 
+    array ('root' => array('127.0.0.1', '::1')));
 */
 
 //some additional authification-settings

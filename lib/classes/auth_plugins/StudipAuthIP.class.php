@@ -16,6 +16,6 @@ class StudipAuthIP extends StudipAuthAbstract {
      * {@inheritdoc}
      */
     function isAuthenticated($username, $password) {
-        return $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username] && in_array($_SERVER['REMOTE_ADDR'], $GLOBALS['STUDIP_AUTH_CONFIG_IP'][$username]);
+        return $this->allowed_users[$username] && in_array($_SERVER['REMOTE_ADDR'], $this->allowed_users[$username]);
     }
 }

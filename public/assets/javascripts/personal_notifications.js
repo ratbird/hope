@@ -99,8 +99,8 @@
             }
             if (old_count !== count) {
                 $('#notification_marker').text(count);
+                Notificon(count || '', {favicon: favicon_url});
             }
-            Notificon(count || '', {favicon: favicon_url});
         },
         isVisited: function () {
             var id = this.id;

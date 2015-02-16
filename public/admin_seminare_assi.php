@@ -194,6 +194,7 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
                       WHERE range_id = ? AND date_typ = 1 ORDER BY `date`";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($cp_id));
+            $db2_term_count = 0;
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $db2_start_date = $row['date'];
                 $db2_end_date   = $row['end_time'];

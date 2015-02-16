@@ -923,13 +923,13 @@ if ($question) {
         echo "\n" . '</td></tr>';
     }
 
+    print "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\">";
+
     //when changing, uploading or show all (for download selector), create a form
     if ((($change) || ($folder_system_data["cmd"]=="all")) && (!$folder_system_data["upload"])) {
         echo "<form method=\"post\" action=\"".URLHelper::getLink('#anker')."\">";
         echo CSRFProtection::tokenTag();
         }
-
-    print "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\">";
 
 
     if ($folder_system_data["cmd"]=="all") {

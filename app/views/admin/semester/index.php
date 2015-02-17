@@ -22,7 +22,7 @@
             <th><?= _('Name') ?></th>
             <th><?= _('Kürzel') ?></th>
             <th><?= _('Zeitraum') ?></th>
-            <th><?= _('Vorlesungen') ?></th>
+            <th><?= _('Veranstaltungszeitraum') ?></th>
             <th><?= _('Veranstaltungen') ?></th>
             <th>&nbsp;</th>
         </tr>

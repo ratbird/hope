@@ -27,9 +27,9 @@ class Institute_MembersController extends AuthenticatedController
             Request::set('cid', Request::option('auswahl'));
         }
 
-        $this->admin_view = Request::option('admin_view') !== null;
-
         parent::before_filter($action, $args);
+
+        $this->admin_view = $GLOBALS['perm']->have_perm('admin') && Request::option('admin_view') !== null;
 
         PageLayout::addStylesheet('multi-select.css');
         PageLayout::addScript('jquery/jquery.multi-select.js');
@@ -76,10 +76,9 @@ class Institute_MembersController extends AuthenticatedController
 
         //Change header_line if open object
         $header_line = getHeaderLine($this->inst_id);
-        if ($header_line)
+        if ($header_line) {
             PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
-
-        URLHelper::addLinkParam('admin_view', $this->admin_view);
+        }
 
         if ($this->admin_view || !isset($this->inst_id)) {
             include 'lib/include/admin_search_form.inc.php';

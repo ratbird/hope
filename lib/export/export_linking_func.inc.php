@@ -14,6 +14,7 @@
 * @module       export_linking_functions
 * @package      Export
 */
+require_once $GLOBALS['PATH_EXPORT'] . '/export_config.inc.php';
 
 use Studip\Button, Studip\LinkButton;
 

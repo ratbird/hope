@@ -162,7 +162,7 @@ class FileHelper
                     continue;
                 }
                 if ($throw_exception) {
-                    throw new AccessDeniedException(_('Sie dÃ¼rfen auf dieses Objekt nicht zugreifen.'));
+                    throw new AccessDeniedException(_('Sie dürfen auf dieses Objekt nicht zugreifen.'));
                 }
                 return false;
             }

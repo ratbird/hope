@@ -66,6 +66,7 @@ class Settings_NotificationController extends Settings_SettingsController
             $add_query = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
         }
 
+        DBView::addView('sem_tree');
         $dbv = new DbView();
 
         $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id,

@@ -154,11 +154,10 @@ jQuery(function ($) {
             },
             width: textareaWidth,
             skin: 'studip',
-            // NOTE widget plugin requires line utils plugin!!
-            extraPlugins: 'widget,studip-settings,studip-wiki'
+            // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
+            extraPlugins: 'codemirror,studip-settings,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
-            removePlugins: 'magicline',
             enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {

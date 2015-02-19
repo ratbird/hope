@@ -144,17 +144,4 @@
 $sidebar = Sidebar::get();
 $sidebar->setImage("sidebar/blubber-sidebar.png");
 
-if (count($tags) && $tags[0]) {
-    $cloud = new LinkCloudWidget();
-    $cloud->setTitle(_("Hashtags des Nutzers"));
-    $maximum = $tags[0]['counter'];
-    //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
-    foreach ($tags as $tag) {
-        $cloud->addLink(
-            "#".$tag['tag'], 
-            URLHelper::getLink("plugins.php/blubber/streams/global", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag['tag'])),
-            ceil(10 * $tag['counter'] / $maximum)
-        );
-    }
-    $sidebar->addWidget($cloud, 'tagcloud');
-}
+$controller->addTagCloudWidgetToSidebar($tags);

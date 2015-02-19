@@ -925,4 +925,21 @@ class StreamsController extends PluginController {
         $this->render_json($output);
     }
 
+    public function addTagCloudWidgetToSidebar($tags)
+    {
+        if (count($tags) && $tags[0]) {
+            $cloud = new LinkCloudWidget();
+            $cloud->setTitle(_('Hashtags'));
+            $maximum = $tags[0]['counter'];
+            //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
+            foreach ($tags as $tag) {
+                $cloud->addLink(
+                    "#".$tag['tag'],
+                    URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag['tag'])),
+                    ceil(10 * $tag['counter'] / $maximum)
+                );
+            }
+            Sidebar::get()->addWidget($cloud, 'tagcloud');
+        }
+    }
 }

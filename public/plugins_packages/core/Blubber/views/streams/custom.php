@@ -145,17 +145,4 @@ $actions = new ActionsWidget();
 $actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), "icons/16/black/edit");
 $sidebar->addWidget($actions);
 
-if (count($tags) && $tags[0]) {
-    $cloud = new LinkCloudWidget();
-    $cloud->setTitle(_("Hashtags des Nutzers"));
-    $maximum = $tags[0]['counter'];
-    //$average = ceil(array_sum(array_filter($tags, function ($val) { return $val['counter']; })) / count($tags));
-    foreach ($tags as $tag) {
-        $cloud->addLink(
-            "#".$tag['tag'],
-            URLHelper::getLink("plugins.php/blubber/streams/global", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag['tag'])),
-            ceil(10 * $tag['counter'] / $maximum)
-        );
-    }
-    $sidebar->addWidget($cloud, 'tagcloud');
-}
+$controller->addTagCloudWidgetToSidebar($tags);

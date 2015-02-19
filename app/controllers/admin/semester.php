@@ -83,7 +83,7 @@ class Admin_SemesterController extends AuthenticatedController
             $this->semester->vorles_beginn  = $this->getTimeStamp('vorles_beginn');
             $this->semester->vorles_ende    = $this->getTimeStamp('vorles_ende', '23:59:59');
 
-            // Validate 
+            // Validate
             $errors = $this->validateSemester($this->semester);
 
             // If valid, try to store the semester
@@ -196,14 +196,11 @@ class Admin_SemesterController extends AuthenticatedController
 
         // Validation, step 3: Check overlapping with other semesters
         if (empty($errors)) {
-            foreach (Semester::getAll() as $semester) {
-                if ($semester->id === $this->semester->id) {
-                    continue;
-                }
-                if ($this->semester->beginn < $semester->beginn && $this->semester->ende > $semester->ende) {
-                    $errors[] = _('Der angegebene Zeitraum des Semester überschneidet sich mit einem anderen Semester');
-                    break;
-                }
+            $all_semester = SimpleCollection::createFromArray(Semester::getAll())->findBy('id', $this->semester->id, '<>');
+            $collisions = $all_semester->findBy('beginn', array($this->semester->beginn, $this->semester->ende), '>=<=');
+            $collisions->merge($all_semester->findBy('ende', array($this->semester->beginn, $this->semester->ende), '>=<='));
+            if ($collisions->count()) {
+                $errors[] = sprintf(_('Der angegebene Zeitraum des Semester überschneidet sich mit einem anderen Semester (%s)'), join(', ', $collisions->pluck('name')));
             }
         }
 

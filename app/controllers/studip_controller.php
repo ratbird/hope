@@ -296,6 +296,9 @@ abstract class StudipController extends Trails_Controller
      * */
     function setInfoBoxImage($image)
     {
+        // Trigger deprecated warning
+        trigger_error('Use Sidebar instead', E_USER_DEPRECATED);
+        
         $this->populateInfobox();
 
         $this->infobox['picture'] = $image;
@@ -318,6 +321,9 @@ abstract class StudipController extends Trails_Controller
      * */
     function addToInfobox($category, $text, $icon = 'blank.gif')
     {
+        // Trigger deprecated warning
+        trigger_error('Use Sidebar instead', E_USER_DEPRECATED);
+        
         $this->populateInfobox();
 
         $infobox = $this->infobox;

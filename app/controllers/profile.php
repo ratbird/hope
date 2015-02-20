@@ -72,7 +72,7 @@ class ProfileController extends AuthenticatedController
     {
 
         // Template Index_Box for render-partials
-        $layout = $GLOBALS['template_factory']->open('shared/index_box');
+        $layout = $GLOBALS['template_factory']->open('shared/content_box');
         $this->shared_box = $layout;
 
         // if he has not yet stored into user_info, he comes in with no values

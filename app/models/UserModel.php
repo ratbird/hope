@@ -418,14 +418,26 @@ class UserModel
         $statement->execute(array($new_id, $old_id));
 
         //Kalender
-        $query = "UPDATE IGNORE calendar_events SET range_id = ? WHERE range_id = ?";
+        $query = "UPDATE IGNORE calendar_event SET range_id = ? WHERE range_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 
-        $query = "UPDATE IGNORE calendar_events SET autor_id = ? WHERE autor_id = ?";
+        $query = "UPDATE IGNORE calendar_user SET owner_id = ? WHERE owner_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        
+        $query = "UPDATE IGNORE calendar_user SET user_id = ? WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 
+        $query = "UPDATE IGNORE event_data SET author_id = ? WHERE author_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        
+        $query = "UPDATE IGNORE event_data SET editor_id = ? WHERE editor_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        
         //Archiv
         self::removeDoubles('archiv_user', 'seminar_id', $new_id, $old_id);
         $query = "UPDATE IGNORE archiv_user SET user_id = ? WHERE user_id = ?";

@@ -92,14 +92,16 @@ class StudipMail
      *
      * @param string $recipient
      * @param string $subject
-     * @param string $text
+     * @param string $text      Plain text version of the message (required).
+     * @param string $html      HTML version of the message (optional).
      * @return bool
      */
-    public static function sendMessage($recipient, $subject, $text) {
+    public static function sendMessage($recipient, $subject, $text, $html = null) {
         $mail = new StudipMail();
         return $mail->setSubject($subject)
                     ->addRecipient($recipient)
                     ->setBodyText($text)
+                    ->setBodyHtml($html)
                     ->send();
     }
 

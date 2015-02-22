@@ -130,10 +130,26 @@ class ForumAbo {
 
             if ($force_email) {
                 $title = implode(' >> ', ForumEntry::getFlatPathToPosting($topic_id));
-                $subject = addslashes(_('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag')));
-                $message = addslashes($template->render(compact('user_id', 'topic', 'path')));
 
-                StudipMail::sendMessage(User::find($user_id)->email, $subject, $message);
+                $subject = addslashes(
+                    _('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag'))
+                );
+
+                $htmlMessage = $template->render(
+                    compact('user_id', 'topic', 'path')
+                );
+
+                $textMessage = trim(kill_format($htmlMessage));
+
+                $userWantsHtml = UserConfig::get($user_id)
+                    ->getValue('MAIL_AS_HTML');
+
+                StudipMail::sendMessage(
+                    User::find($user_id)->email,
+                    $subject,
+                    addslashes($textMessage),
+                    $userWantsHtml ? $htmlMessage : null
+                );
             }
             restoreLanguage();
         }

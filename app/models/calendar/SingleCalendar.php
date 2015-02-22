@@ -104,7 +104,7 @@ class SingleCalendar
             $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
         }
         foreach ($class_names as $type) {
-            if (is_subclass_of($type, 'Event')) {
+            if (in_array('Event', class_implements($type))) {
                 $this->events->merge($type::getEventsByInterval(
                         $this->range_object->getId(), new DateTime('@' . $start),
                         new DateTime('@' . $end)));

@@ -79,26 +79,26 @@ class MarkupTest extends PHPUnit_Framework_TestCase
             '<a>no href</a>' => 'no href',
             '<a href=""></a>' => '',
             '<a href="">empty href</a>' => 'empty href',
-            '<a href="href only" />' => '[href%20only]',
-            '<a href="href end-tag"></a>' => '[href%20end-tag]',
-            '<a href="http://href.de">and text</a>' => '[http://href.de]and text',
+            '<a href="href only" />' => '[ href%20only ]',
+            '<a href="href end-tag"></a>' => '[ href%20end-tag ]',
+            '<a href="http://href.de">and text</a>' => '[ http://href.de ]and text',
             'before <a href="http://href.de">and text</a> after'
-            => 'before [http://href.de]and text after',
+            => 'before [ http://href.de ]and text after',
 
             '<img>no src</img>' => 'no src',
-            '<img src="src only" />' => '[src%20only]',
-            '<img src="src end-tag"></img>' => '[src%20end-tag]',
-            '<img src="http://src.de">and text</a>' => '[http://src.de]and text',
+            '<img src="src only" />' => '[ src%20only ]',
+            '<img src="src end-tag"></img>' => '[ src%20end-tag ]',
+            '<img src="http://src.de">and text</a>' => '[ http://src.de ]and text',
             'before <img src="http://src.de">and text</img> after'
-            => 'before [http://src.de]and text after',
+            => 'before [ http://src.de ]and text after',
 
             // some "real" urls
             '<a href="https://example.org/">Example'
-            => '[https://example.org/]Example',
+            => '[ https://example.org/ ]Example',
             '<img src="https://example.org/image.png">'
-            => '[https://example.org/image.png]',
+            => '[ https://example.org/image.png ]',
             '<p>link <a href="http://example.org">Example-Domain</a> and picture <img src="https://example.org/image.png"></p>'
-            => 'link [http://example.org]Example-Domain and picture [https://example.org/image.png]'
+            => 'link [ http://example.org ]Example-Domain and picture [ https://example.org/image.png ]'
         ) as $in => $out) {
             $this->assertEquals($out, StudIp\Markup::removeHtml($in));
         }

@@ -33,7 +33,7 @@ class HTMLPurifier_Injector_Unlinkify extends HTMLPurifier_Injector
                     $this->context
                 );
             }
-            $token = $url ? new HTMLPurifier_Token_Text('[' . $url . ']') : false;
+            $token = $url ? new HTMLPurifier_Token_Text('[ ' . $url . ' ]') : false;
         }
     }
 }

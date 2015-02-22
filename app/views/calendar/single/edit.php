@@ -4,8 +4,8 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
 ?>
 <form data-dialog="" method="post" action="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id) ?>">
 <?= CSRFProtection::tokenTag() ?>
-    <table class="default collapsable" id="main_content">
-        <caption>
+    <table class="default collapsable nohover" id="main_content">
+        <caption class="hide-in-dialog">
             <? if ($event->isNew()) : ?>
             <?= sprintf(_('Neuen Termin anlegen am %s'), strftime('%x', $event->getStart())) ?>
             <? else : ?>

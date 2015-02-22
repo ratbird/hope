@@ -76,8 +76,8 @@
                     <div style="color: #aaaaaa;" class="inday"><?= $hday['name'] ?></div>
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
-                    <div data-tooltip="">
-                        <a data-dialog="size=auto" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
+                    <div data-tooltip>
+                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                     </div>
                 <? endforeach; ?>
@@ -99,8 +99,8 @@
                     </a>
                 <? endif; ?>
                 <? foreach ($calendars[$j]->events as $event) : ?>
-                    <div data-tooltip="">
-                        <a data-dialog="size=auto" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
+                    <div data-tooltip>
+                        <a data-dialog="size=auto" title="<?= _('Termin bearbeiten') ?>" class="inday calendar-event-text<?= $event->getCategory() ?>" href="<?= $controller->url_for('calendar/single/edit/' . $event->range_id . '/' . $event->event_id, array('atime' => $event->getStart())) ?>"><?= htmlReady($event->getTitle()) ?></a>
                         <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                     </div>
                 <? endforeach; ?>

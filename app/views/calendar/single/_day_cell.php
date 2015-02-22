@@ -1,11 +1,9 @@
 <? $link_notset = true ?>
 <? $atime_new = $calendar->getStart() + $i * $step ?>
 <? if (!$em['term'][$row]) : ?>
-<td class="calendar-day-edit" <?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
+<td onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" class="calendar-day-edit" <?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-    <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
-        <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
-    </a>
+    <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin am %x, %R Uhr'), $atime_new) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">+</a>
     <? endif ?>
 </td>
 <? $link_notset = false ?>
@@ -34,11 +32,9 @@
                 <span class="inday">&nbsp;</span>
             </td>
         <? elseif ($event == '') : ?>
-            <td class="calendar-day-edit"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
+            <td onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" class="calendar-day-edit"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
-                    <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
-                </a>
+                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin am %x, %R Uhr'), $atime_new) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">+</a>
                 <? endif ?>
             </td>
             <? $link_notset = false; ?>
@@ -47,11 +43,9 @@
     <? endfor ?>
 <? endif ?>
 <? if ($link_notset) : ?>
-    <td class="calendar-day-edit">
+    <td onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" class="calendar-day-edit">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">
-            <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $atime_new))) ?>
-        </a>
+        <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin am %x, %R Uhr'), $atime_new) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(), array('atime' => $atime_new)) ?>">+</a>
         <? endif ?>
     </td>
 <? endif ?>

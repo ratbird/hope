@@ -112,8 +112,10 @@ class Calendar_CalendarController extends AuthenticatedController
             $this->event->setEnd($this->atime + 3600);
             $this->event->setAuthor_id($GLOBALS['user']->id);
             $this->event->setEditor_id($GLOBALS['user']->id);
-            PageLayout::setTitle($this->getTitle($this->calendar, _('Neuer Termin')));
             $this->attendees = array($this->event);
+            if (!Request::isXhr()) {
+                PageLayout::setTitle($this->getTitle($this->calendar, _('Neuer Termin')));
+            }
         } else {
             // open read only events and course events not in form
             // show information in dialog instead
@@ -123,7 +125,9 @@ class Calendar_CalendarController extends AuthenticatedController
                         array($this->range_id, $this->event->event_id))));
             }
             $this->attendees = $this->event->getAttendees();
-            PageLayout::setTitle($this->getTitle($this->calendar, _('Termin bearbeiten')));
+            if (!Request::isXhr()) {
+                PageLayout::setTitle($this->getTitle($this->calendar, _('Termin bearbeiten')));
+            }
         }
         
         if (get_config('CALENDAR_GROUP_ENABLE')

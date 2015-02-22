@@ -11,6 +11,9 @@
 require_once 'lib/classes/AdminModules.class.php';
 require_once 'lib/classes/Config.class.php';
 
+use \Studip\Markup;
+
+
 class IndexController extends ForumController
 {
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -707,7 +710,17 @@ class IndexController extends ForumController
 
         $this->flash['edit_entry'] = true;
         $this->flash['new_entry_title'] = $topic['name'];
-        $this->flash['new_entry_content'] = "[quote=". ($topic['anonymous'] ? _('Anonym') : $topic['author']) ."]\n" . $topic['content'] . "\n[/quote]\n\n";
+
+        $author = $topic['anonymous'] ? _('Anonym') : $topic['author'];
+        $content = '[quote=' . $author . ']' . PHP_EOL
+            . $topic['content'] . PHP_EOL
+            . '[/quote]' . PHP_EOL;
+        
+        if (Markup::isHtml($topic['content'])) {
+            $content = Markup::markAsHtml($content);
+        }
+
+        $this->flash['new_entry_content'] = $content;
 
         $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));
     }

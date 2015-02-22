@@ -62,6 +62,14 @@ class Markup
         return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
     }
 
+    public static $htmlStart = '<!-- HTML: Insert text after this line only. -->';
+    public static $htmlEnd = '<!-- HTML: Insert text before this line only. -->';
+
+    public static function markAsHtml($text)
+    {
+        return self::$htmlStart . PHP_EOL . $text . PHP_EOL . self::$htmlEnd;
+    }
+
     /**
      * Run text through HTML purifier and afterwards apply markup rules.
      *

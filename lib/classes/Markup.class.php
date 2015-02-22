@@ -273,11 +273,14 @@ class Markup
     public static function removeHTML($html) {
         $config = self::createDefaultPurifier();
         $config->set('Core.Encoding', 'ISO-8859-1');
-        $config->set('HTML.Allowed', 'a[href],img[src]');
+        $config->set('HTML.Allowed', 'a[href],img[alt|src],br');
         $config->set('AutoFormat.Custom', array('Unlinkify'));
 
         $purifier = new \HTMLPurifier($config);
-        return $purifier->purify($html);
+
+        return html_entity_decode(str_replace(
+            '<br />', PHP_EOL, $purifier->purify($html)
+        ));
     }
 
     private static function createDefaultPurifier() {

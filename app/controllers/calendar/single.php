@@ -42,7 +42,7 @@ class Calendar_SingleController extends Calendar_CalendarController
             $actions->addLink(_('Termin anlegen'),
                     $this->url_for('calendar/single/edit'), 'icons/16/blue/add.png',
                     array('data-dialog' => 'size=auto'));
-            if ($calendar->havePermission(Calendar::PERMISSION_OWN)) {
+            if ($calendar->havePermission(Calendar::PERMISSION_OWN) && (get_config('CALENDAR_GROUP_ENABLE'))) {
                 $actions->addLink(_('Kalender freigeben'),
                         $this->url_for('calendar/single/manage_access'), 'icons/16/blue/community.png',
                         array('id' => 'calendar-open-manageaccess', 'data-dialog' => '', 'data-dialogname' => 'manageaccess'));

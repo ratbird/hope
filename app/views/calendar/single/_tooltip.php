@@ -60,7 +60,8 @@
             </div>
             <? endif; ?>
         <? endif; ?>
-    <? else : ?>
+    <? endif; ?>
+    <? if ($event instanceof CourseEvent) : ?>
         <? // related groups ?>
         <? $related_groups = $event->getRelatedGroups(); ?>
         <? if (sizeof($related_groups)) : ?>

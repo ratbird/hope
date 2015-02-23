@@ -253,7 +253,7 @@ class Markup
             tbody
             td[colspan|rowspan|style]
             thead
-            th[scope]
+            th[colspan|rowspan|style|scope]
             tr
         ');
 
@@ -278,6 +278,8 @@ class Markup
         $config->set('CSS.AllowedProperties', array(
             'margin-left',
             'text-align',
+            'width',
+            'height',
             'color',
             'background-color',
             'float'

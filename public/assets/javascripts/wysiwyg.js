@@ -141,14 +141,20 @@ jQuery(function ($) {
                 },
                 tbody: {},
                 td: {
+                    // attributes and styles should be the same
+                    // as for <th>, except for 'scope' attribute
                     attributes: ['colspan', 'rowspan'],
-                    styles: ['text-align']
+                    styles: ['text-align', 'width', 'height']
                 },
                 thead: {},
                 th: {
+                    // attributes and styles should be the same
+                    // as for <td>, except for 'scope' attribute
+                    //
                     // note that allowed scope values should be restricted to
                     // "col", "row" or "col row", if scope is set
-                    attributes: 'scope'
+                    attributes: ['colspan', 'rowspan', 'scope'],
+                    styles: ['text-align', 'width', 'height']
                 },
                 tr: {}
             },

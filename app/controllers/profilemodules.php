@@ -43,7 +43,7 @@ class ProfileModulesController extends AuthenticatedController
 
         // Set Navigation
         PageLayout::setHelpKeyword("Basis.ProfileModules");
-        PageLayout::setTitle(_("Inhaltselemente konfigurieren"));
+        PageLayout::setTitle(_("Mehr Funktionen"));
         PageLayout::addSqueezePackage('lightbox');
         Navigation::activateItem('/profile/modules');
 
@@ -97,17 +97,17 @@ class ProfileModulesController extends AuthenticatedController
 	            //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
 	            $_SESSION['profile_plus']['Kategorie']['Sonstiges'] = 1;
 	            //$_SESSION['profile_plus']['Kategorie']['Projekte und Entwicklung'] = 1;
-	            $_SESSION['profile_plus']['Komplex'][1] = 1;
+	            /*$_SESSION['profile_plus']['Komplex'][1] = 1;
 	            $_SESSION['profile_plus']['Komplex'][2] = 1;
-	            $_SESSION['profile_plus']['Komplex'][3] = 1;
+	            $_SESSION['profile_plus']['Komplex'][3] = 1;*/
 	            $_SESSION['profile_plus']['View'] = 'openall';
 	            $_SESSION['profile_plus']['displaystyle'] = 'category';
         	}
         }
 
-        if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');
+        /*if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');
         if (Request::Get('Komplex2') != null) $_SESSION['profile_plus']['Komplex'][2] = Request::Get('Komplex2');
-        if (Request::Get('Komplex3') != null) $_SESSION['profile_plus']['Komplex'][3] = Request::Get('Komplex3');
+        if (Request::Get('Komplex3') != null) $_SESSION['profile_plus']['Komplex'][3] = Request::Get('Komplex3');*/
         if (Request::Get('mode') != null) $_SESSION['profile_plus']['View'] = Request::Get('mode');
         if (Request::Get('displaystyle') != null) $_SESSION['profile_plus']['displaystyle'] = Request::Get('displaystyle');
 
@@ -132,7 +132,7 @@ class ProfileModulesController extends AuthenticatedController
         $sidebar->addWidget($widget, "Kategorien");
 
 
-        $widget = new OptionsWidget();
+        /*$widget = new OptionsWidget();
         $widget->setTitle(_('Komplexität'));
         $widget->addCheckbox(_('Standard'), $_SESSION['profile_plus']['Komplex'][1],
             URLHelper::getLink('?', array('Komplex1' => 1)), URLHelper::getLink('?', array('Komplex1' => 0)));
@@ -140,11 +140,11 @@ class ProfileModulesController extends AuthenticatedController
             URLHelper::getLink('?', array('Komplex2' => 1)), URLHelper::getLink('?', array('Komplex2' => 0)));
         $widget->addCheckbox(_('Intensiv'), $_SESSION['profile_plus']['Komplex'][3],
             URLHelper::getLink('?', array('Komplex3' => 1)), URLHelper::getLink('?', array('Komplex3' => 0)));
-        $sidebar->addWidget($widget, "Komplex");
+        $sidebar->addWidget($widget, "Komplex");*/
 
 
         $widget = new ActionsWidget();
-
+        $widget->setTitle(_("Ansichten"));
         if ($_SESSION['profile_plus']['View'] == 'openall') {
             $widget->addLink(_("Alles zuklappen"),
                 URLHelper::getLink('?', array('mode' => 'closeall')),
@@ -267,8 +267,8 @@ class ProfileModulesController extends AuthenticatedController
             	if (($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
             			|| !isset($_SESSION['profile_plus'])
             	) {
-            		$list['Inhaltselemente von A-Z'][strtolower($key)]['object'] = $plugin;
-            		$list['Inhaltselemente von A-Z'][strtolower($key)]['activated'] = $activated;
+            		$list['Funktionen von A-Z'][strtolower($key)]['object'] = $plugin;
+            		$list['Funktionen von A-Z'][strtolower($key)]['activated'] = $activated;
             	}
             	 
             } else {            

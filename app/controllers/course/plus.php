@@ -22,7 +22,7 @@ class Course_PlusController extends AuthenticatedController
 
         PageLayout::addSqueezePackage('lightbox');
 
-        PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
+        PageLayout::setTitle(_("Mehr Funktionen"));
 
     	if (is_array($_SESSION['links_admin_data'])){
         	$GLOBALS['view_mode'] = $_SESSION['links_admin_data']['topkat'] ? : 'sem';
@@ -141,17 +141,17 @@ class Course_PlusController extends AuthenticatedController
         		$_SESSION['plus']['Kategorie']['Aufgaben'] = 1;
         		$_SESSION['plus']['Kategorie']['Sonstiges'] = 1;
         		//$_SESSION['plus']['Kategorie']['Projekte und Entwicklung'] = 1;
-        		$_SESSION['plus']['Komplex'][1] = 1;
+        		/*$_SESSION['plus']['Komplex'][1] = 1;
         		$_SESSION['plus']['Komplex'][2] = 1;
-        		$_SESSION['plus']['Komplex'][3] = 1;
+        		$_SESSION['plus']['Komplex'][3] = 1;*/
         		$_SESSION['plus']['View'] = 'openall';
         		$_SESSION['plus']['displaystyle'] = 'category';
         	}
         }
 
-        if (Request::Get('Komplex1') != null) $_SESSION['plus']['Komplex'][1] = Request::Get('Komplex1');
+        /*if (Request::Get('Komplex1') != null) $_SESSION['plus']['Komplex'][1] = Request::Get('Komplex1');
         if (Request::Get('Komplex2') != null) $_SESSION['plus']['Komplex'][2] = Request::Get('Komplex2');
-        if (Request::Get('Komplex3') != null) $_SESSION['plus']['Komplex'][3] = Request::Get('Komplex3');
+        if (Request::Get('Komplex3') != null) $_SESSION['plus']['Komplex'][3] = Request::Get('Komplex3');*/
         if (Request::Get('mode') != null) $_SESSION['plus']['View'] = Request::Get('mode');
         if (Request::Get('displaystyle') != null) $_SESSION['plus']['displaystyle'] = Request::Get('displaystyle');
 
@@ -177,7 +177,7 @@ class Course_PlusController extends AuthenticatedController
 
         $sidebar->addWidget($widget, "Kategorien");
 
-
+		/*
         $widget = new OptionsWidget();
         $widget->setTitle(_('Komplexität'));
         $widget->addCheckbox(_('Standard'), $_SESSION['plus']['Komplex'][1],
@@ -187,10 +187,11 @@ class Course_PlusController extends AuthenticatedController
         $widget->addCheckbox(_('Intensiv'), $_SESSION['plus']['Komplex'][3],
             URLHelper::getLink('?', array('Komplex3' => 1)), URLHelper::getLink('?', array('Komplex3' => 0)));
         $sidebar->addWidget($widget, "Komplex");
-
+		*/
 
         $widget = new ActionsWidget();
-
+        $widget->setTitle(_('Ansichten'));
+        
         if ($_SESSION['plus']['View'] == 'openall') {
             $widget->addLink(_("Alles zuklappen"),
                 URLHelper::getLink('?', array('mode' => 'closeall')),
@@ -241,8 +242,8 @@ class Course_PlusController extends AuthenticatedController
                 	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
                 			|| !isset($_SESSION['plus'])
                 	) {
-	                	$list['Inhaltselemente von A-Z'][strtolower($key)]['object'] = $plugin;
-	                	$list['Inhaltselemente von A-Z'][strtolower($key)]['type'] = 'plugin';
+	                	$list['Funktionen von A-Z'][strtolower($key)]['object'] = $plugin;
+	                	$list['Funktionen von A-Z'][strtolower($key)]['type'] = 'plugin';
                 	}
                 	
                 } else {
@@ -284,9 +285,9 @@ class Course_PlusController extends AuthenticatedController
                 			|| !isset($_SESSION['plus'])
                 	) {
                 		
-                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['object'] = $val;
-                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['type'] = 'modul';
-                		$list['Inhaltselemente von A-Z'][strtolower($val['name'])]['modulkey'] = $key;
+                		$list['Funktionen von A-Z'][strtolower($val['name'])]['object'] = $val;
+                		$list['Funktionen von A-Z'][strtolower($val['name'])]['type'] = 'modul';
+                		$list['Funktionen von A-Z'][strtolower($val['name'])]['modulkey'] = $key;
                 	}
                 	 
                 } else {

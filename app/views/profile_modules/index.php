@@ -7,8 +7,8 @@
 
 <?
     foreach ($sortedList as $category => $pluginlist) {
-        if ($_SESSION['profile_plus']['displaystyle'] != 'category' && $category != 'Inhaltselemente von A-Z') continue;
-        if (isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category] && $category != 'Inhaltselemente von A-Z') continue;
+        if ($_SESSION['profile_plus']['displaystyle'] != 'category' && $category != 'Funktionen von A-Z') continue;
+        if (isset($_SESSION['profile_plus']) && !$_SESSION['profile_plus']['Kategorie'][$category] && $category != 'Funktionen von A-Z') continue;
 ?>
         <tr>
             <th colspan = 3>
@@ -38,8 +38,7 @@
                         <!-- Name -->
                         <label for="<?= $pluginname ?>"><strong><?= htmlReady($pluginname) ?></strong></label>
 
-                        <!-- komplex -->
-                        <? switch ($info['complexity']){
+                        <?/* switch ($info['complexity']){
                                 case 3: $complexname = 'Intensiv';
                                         break;
                                 case 2: $complexname = 'Erweitert';
@@ -66,7 +65,7 @@
                             <div class="complexity_element" style="background-color: <?= $color2?>; border-color: <?= $border_color2?>;"></div>
                             <div class="complexity_element" style="background-color: <?= $color3?>; border-color: <?= $border_color3?>;"></div>
                         </div>
-                        <? endif ?>
+                        <? endif */?>
 
                     </div>
 
@@ -164,7 +163,7 @@
                             <? if (isset($info['description'])) : ?>
                                 <?= htmlReady($info['description']) ?>
                             <? else: ?>
-                                <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
+                                <?= _("Keine Beschreibung vorhanden.") ?>
                             <? endif ?>
                             </p>
                         <? endif ?>

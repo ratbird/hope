@@ -24,13 +24,13 @@ use Studip\Button, Studip\LinkButton;
 <tbody>
 <?
 foreach ($available_modules as $category => $pluginlist) {
-    if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Inhaltselemente von A-Z') continue;
-    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Inhaltselemente von A-Z') continue;
+    if ($_SESSION['plus']['displaystyle'] != 'category' && $category != 'Funktionen von A-Z') continue;
+    if (isset($_SESSION['plus']) && !$_SESSION['plus']['Kategorie'][$category] && $category != 'Funktionen von A-Z') continue;
 
     ?>
     <tr>
         <th colspan=3>
-            <?= $category ?>
+            <?= htmlReady($category) ?>            
         </th>
     </tr>
 
@@ -101,7 +101,7 @@ foreach ($available_modules as $category => $pluginlist) {
                         <? endif ?>
 						</label>
                         <!-- komplex -->
-                        <? switch ($info['complexity']) {
+                        <?/* switch ($info['complexity']) {
                             case 3:
                                 $complexname = 'Intensiv';
                                 break;
@@ -134,7 +134,7 @@ foreach ($available_modules as $category => $pluginlist) {
                                 <div class="complexity_element"
                                      style="background-color: <?= $color3 ?>; border-color: <?= $border_color3 ?>;"></div>
                             </div>
-                        <? } ?>
+                        <? } */?>
 
                     </div>
 
@@ -155,6 +155,10 @@ foreach ($available_modules as $category => $pluginlist) {
                             <? if (!isset($info['descriptionshort'])) : ?>
                                 <? if (isset($info['summary'])) : ?>
                                     <?= htmlReady($info['summary']) ?>
+                                <? elseif (isset($info['description'])) : ?>  
+                                    <?= htmlReady($info['description']) ?>
+                                <? else: ?>
+                                    <?= _("Keine Beschreibung vorhanden.") ?>
                                 <? endif ?>
                             <? endif ?>
                         </strong>
@@ -233,12 +237,12 @@ foreach ($available_modules as $category => $pluginlist) {
                             <? } ?>   
                             <? endif ?>
 
-                            <? if (!isset($info['descriptionlong'])) : ?>
+                            <? if (!isset($info['descriptionlong']) && isset($info['summary'])) : ?>
                                 <p class="longdesc">
                                     <? if (isset($info['description'])) : ?>
                                         <?= htmlReady($info['description']) ?>
                                     <? else: ?>
-                                        <?= _("Für dieses Element ist keine Beschreibung vorhanden.") ?>
+                                        <?= _("Keine Beschreibung vorhanden.") ?>
                                     <? endif ?>
                                 </p>
                             <? endif ?>

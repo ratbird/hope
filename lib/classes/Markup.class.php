@@ -44,30 +44,55 @@ class Markup
         return self::markupHtmlReady($markup, $text, $trim);
     }
 
+    // HTML entries must beginn with "<!--HTML-->". Whitespace is
+    // ignored and comments may be inserted between "<!--HTML" 
+    // and "-->", but must not contain "-" or ">" characters.
+    const HTML_MARKER =
+        '<!-- HTML: Insert text after this line only. -->';
+
+    // No delimiter is given here to enable using the same 
+    // regular expression in JavaScript. It is assumed that '/' 
+    // is used as delimiter and that no modifiers are set.
+    const HTML_MARKER_REGEXP =
+        '^[\s\n]*<!--[\s\n]*[Hh][Tt][Mm][Ll][^->]*-->';
+
     /**
-     * Return True for HTML code and False for plain text.
+     * Return `true` for HTML code and `false` for plain text.
      *
-     * A fairly simple heuristic is used: Every text that begins with '<'
-     * and ends with '>' is considered to be HTML code. Leading and trailing
-     * whitespace characters are ignored.
+     * HTML code must either match `HTML_MARKER_REGEXP` or begin
+     * with '<' and end with '>' (leading and trailing whitespace
+     * is ignored). Everything else is considered to be plain
+     * text.
      *
      * @param string $text  HTML code or plain text.
      *
-     * @return boolean  TRUE for HTML code, FALSE for plain text.
+     * @return boolean  `true` for HTML code, `false` for plain text.
      */
     public static function isHtml($text)
     {
-        // TODO compare trimming-and-comparing runtime to using regexp
+        // NOTE keep this function in sync with isHtml in wysiwyg.js
+        if (preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text)) {
+            return true;
+        }
         $trimmed = trim($text);
         return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
     }
 
-    public static $htmlStart = '<!-- HTML: Insert text after this line only. -->';
-    public static $htmlEnd = '<!-- HTML: Insert text before this line only. -->';
-
+    /**
+     * Mark a given text as HTML code.
+     *
+     * No sanity-checking is done on the given text. It is simply 
+     * marked up so to be identified by Markup::isHtml as HTML 
+     * code.
+     *
+     * @param string $text  The text to be marked up as HTML code.
+     *
+     * @return string  The text marked up as HTML code.
+     */
     public static function markAsHtml($text)
     {
-        return self::$htmlStart . PHP_EOL . $text . PHP_EOL . self::$htmlEnd;
+        // NOTE keep this function in sync with markAsHtml in wysiwyg.js
+        return self::HTML_MARKER . PHP_EOL . $text;
     }
 
     /**

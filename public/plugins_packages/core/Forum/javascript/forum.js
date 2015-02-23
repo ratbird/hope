@@ -290,13 +290,27 @@ STUDIP.Forum = {
     },
 
     saveEntry: function(topic_id) {
-        jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').attr('data-reset',
-            jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').val()
-        );
+        var $ = jQuery;
 
-        jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').attr('data-reset',
-            jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val()
-        );
+        var spanSelector = 'span[data-edit-topic=' + topic_id +']';
+
+        var name = $(spanSelector + ' input[name=name]');
+        name.attr('data-reset', name.val());
+
+        var textarea = $(spanSelector + ' textarea[name=content]');
+
+        // make sure HTML stays HTML
+        // usually the wysiwyg editor does this automatically,
+        // but since there is no submit event the editor does not
+        // get notified
+        var w = STUDIP.wysiwyg;
+        if (w && !w.disabled) {
+            // wysiwyg is active, ensure HTML markers are set
+            textarea.val(w.markAsHtml(textarea.val()));
+        }
+
+        // remember current textarea value
+        textarea.attr('data-reset', textarea.val());
 
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/update_entry/' + topic_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
@@ -392,9 +406,15 @@ STUDIP.Forum = {
         }
 
         // add content from cited posting in [quote]-tags
-        var content = '[quote=' + name + ']' + "\n"
-            + jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val()
-            + "\n[/quote]"
+        var originalContent = jQuery(
+            'span[data-edit-topic=' + topic_id +'] textarea[name=content]'
+        ).val();
+
+        var content = '[quote=' + name + ']\n' + originalContent + '\n[/quote]\n';
+        var w = STUDIP.wysiwyg;
+        if (w && w.isHtml(originalContent)) {
+            content = w.markAsHtml(content);
+        }
 
         jQuery('#new_entry_box textarea').val(content);
         jQuery('#new_entry_box').insertAfter('form[data-topicid=' + topic_id + ']');
@@ -407,7 +427,7 @@ STUDIP.Forum = {
     forwardEntry: function(topic_id) {
         var title   = 'WG: ' + jQuery('span[data-edit-topic=' + topic_id +'] [name=name]').attr('value');
         var content = jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val().trim();
-        var is_html = (content.indexOf('<') === 0 && content.lastIndexOf('>') === content.length -1);
+        var is_html = STUDIP.wysiwyg.isHtml(content);
         var nl      = is_html ? '<br>' : "\n";
         var text    = 'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '.toLocaleString()
                     + nl + nl
@@ -419,7 +439,7 @@ STUDIP.Forum = {
                     + content
                     + nl + nl;
         if (is_html) {
-            text = '<div>' + text + '</div>';
+            text = STUDIP.wysiwyg.markAsHtml(text);
         }
         STUDIP.Dialog.fromURL(STUDIP.URLHelper.getURL('dispatch.php/messages/write'), {
             data: {

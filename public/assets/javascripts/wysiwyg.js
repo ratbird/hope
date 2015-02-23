@@ -367,11 +367,11 @@ jQuery(function ($) {
             // clean up HTML edited in source mode before submit
             var form = $textarea.closest('form');
             form.submit(function (event) {
-                if (!isHtml(editor.getData())) {
-                    editor.setData('<div>' + editor.getData() + '</div>');
-                    // update textarea, in case it's accessed by other JS code
-                    editor.updateElement();
-                }
+                // make sure HTML marker is always set, in
+                // case contents are cut-off by the backend
+                var w = STUDIP.wysiwyg;
+                editor.setData(w.markAsHtml(editor.getData()));
+                editor.updateElement(); // update textarea, in case it's accessed by other JS code
             });
 
             // focus editor if corresponding textarea is focused
@@ -476,11 +476,7 @@ jQuery(function ($) {
 
     // convert plain text entries to html
     function getHtml(text) {
-        return isHtml(text) ? text : convertToHtml(text);
-    }
-    function isHtml(text) {
-        text = text.trim();
-        return text[0] === '<' && text[text.length - 1] === '>';
+        return STUDIP.wysiwyg.isHtml(text) ? text : convertToHtml(text);
     }
     function convertToHtml(text) {
         var quote = getQuote(text);

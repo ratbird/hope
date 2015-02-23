@@ -70,12 +70,20 @@ class Markup
      */
     public static function isHtml($text)
     {
-        // NOTE keep this function in sync with isHtml in wysiwyg.js
-        if (preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text)) {
+        // NOTE keep this function in sync with the JavaScript 
+        // function isHtml in WyswygHtmlHead.php
+        if (self::hasHtmlMarker($text)) {
             return true;
         }
         $trimmed = trim($text);
         return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+    }
+
+    public static function hasHtmlMarker($text)
+    {
+        // NOTE keep this function in sync with the JavaScript 
+        // function hasHtmlMarker in WyswygHtmlHead.php
+        return preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text);
     }
 
     /**
@@ -91,7 +99,11 @@ class Markup
      */
     public static function markAsHtml($text)
     {
-        // NOTE keep this function in sync with markAsHtml in wysiwyg.js
+        // NOTE keep this function in sync with the JavaScript 
+        // function markAsHtml in WyswygHtmlHead.php
+        if (self::hasHtmlMarker($text)) {
+            return $text; // marker already set, don't set twice
+        }
         return self::HTML_MARKER . PHP_EOL . $text;
     }
 

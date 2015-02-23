@@ -162,7 +162,7 @@ class Calendar_SingleController extends Calendar_CalendarController
         $event = $calendar->getEvent($event_id);
         if (!$event->isNew()) {
             $export = new CalendarExportFile(new CalendarWriterICalendar());
-            $export->exportFromObjects($exp_event);
+            $export->exportFromObjects($event);
             $export->sendFile();
         }
         $this->render_nothing();
@@ -365,7 +365,7 @@ class Calendar_SingleController extends Calendar_CalendarController
             PageLayout::postMessage(MessageBox::success(sprintf(
                     ngettext('Ein Benutzer wurde mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
                             '%s Benutzer wurden mit der Berechtigung zum Lesen des Kalenders hinzugefügt.',
-                            $addes), $added)));
+                            $added), $added)));
         }
         
         if (Request::isXhr()) {
@@ -418,7 +418,6 @@ class Calendar_SingleController extends Calendar_CalendarController
             }
             if ($new_perm >= Calendar::PERMISSION_READABLE
                     && $calendar_user->permission != $new_perm) {
-                $old_perm = $calendar_user->permission;
                 $calendar_user->permission = $new_perm;
                 if ($calendar_user->store()) {
                     if ($new_perm == Calendar::PERMISSION_READABLE) {

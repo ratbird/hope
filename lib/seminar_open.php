@@ -131,17 +131,17 @@ PluginEngine::loadPlugins();
 
 // add navigation item: add modules
 if ((Navigation::hasItem('/course/admin') || $GLOBALS['perm']->have_perm('admin'))
-	&& ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
-	&& ($SessSemName['class'] != 'sem' || !$GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']]['studygroup_mode'])) {
-	$plus_nav = new Navigation(_('Mehr …'), 'dispatch.php/course/plus/index');
-	$plus_nav->setDescription(_("Mehr Stud.IP-Funktionen für Ihre Veranstaltung"));
-	Navigation::addItem('/course/modules', $plus_nav);
+    && ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
+    && ($SessSemName['class'] != 'sem' || !$GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']]['studygroup_mode'])) {
+    $plus_nav = new Navigation(_('Mehr …'), 'dispatch.php/course/plus/index');
+    $plus_nav->setDescription(_("Mehr Stud.IP-Funktionen für Ihre Veranstaltung"));
+    Navigation::addItem('/course/modules', $plus_nav);
 }
 // add navigation item for profile: add modules
 if (Navigation::hasItem('/profile/edit')) {
-	$plus_nav = new Navigation(_('Mehr …'), 'dispatch.php/profilemodules/index');
-	$plus_nav->setDescription(_("Mehr Stud.IP-Funktionen für Ihr Profil"));
-	Navigation::addItem('/profile/modules', $plus_nav);
+    $plus_nav = new Navigation(_('Mehr …'), 'dispatch.php/profilemodules/index');
+    $plus_nav->setDescription(_("Mehr Stud.IP-Funktionen für Ihr Profil"));
+    Navigation::addItem('/profile/modules', $plus_nav);
 }
 if ($user_did_login) {
     NotificationCenter::postNotification('UserDidLogin', $user->id);

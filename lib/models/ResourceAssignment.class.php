@@ -55,4 +55,12 @@ class ResourceAssignment extends SimpleORMap
         );
         parent::configure($config);
     }
+
+    function delete()
+    {
+        $old_assign_object = new AssignObject($this->id);
+        $ret = parent::delete();
+        $old_assign_object->delete();
+        return $ret;
+    }
 }

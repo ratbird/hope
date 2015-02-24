@@ -219,6 +219,8 @@ class MyCoursesController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
+        DBView::addView('sem_tree');
+
         $this->title = _('Meine Veranstaltungen') . ' - ' . _('Farbgruppierungen');
 
         if (Request::isXhr()) {

@@ -19,6 +19,7 @@
 global $RELATIVE_PATH_CALENDAR, $CALENDAR_DRIVER;
 
 require_once('lib/calendar/CalendarExportException.class.php');
+require_once('app/models/calendar/SingleCalendar.php');
 
 class CalendarExport
 {
@@ -37,15 +38,13 @@ class CalendarExport
         global $_calendar_error, $user;
 
         if (!$range_id) {
-            $range->id = $user->id;
+            $range_id = $user->id;
         }
         $calendar = new SingleCalendar($range_id);
-        //$export_driver = CalendarDriver::getInstance($range_id);
-        //$export_driver->openDatabase('EVENTS', $event_types, $start, $end, $except, $sem_ids);
-        //$user_sems = Calendar::getBindSeminare($range_id, TRUE);
 
         $this->_export($this->_writer->writeHeader());
         $calendar->getEvents($event_types, $start, $end);
+
         foreach ($calendar->events as $event) {
             $this->_export($this->_writer->write($event));
         }

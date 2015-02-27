@@ -144,6 +144,17 @@ td.currenttoday {
     background-image: url('../images/celltoday.png');
 }
 
+table.calendar-week, table.calendar-day {
+    table-layout: fixed;
+    width: 100%;
+    border:1px solid #fff;
+    border-collapse: separate;
+    border-spacing: 0;
+    & td {
+        padding: 0;
+    }
+}
+
 table.calendar-month {
     width: 100%;
     tr td {
@@ -198,6 +209,7 @@ table.calendar-week, table.calendar-day {
 
 .calendar-day-edit {
     text-align: right;
+    font-size: 0.8em;
 }
 
 .calendar-week tbody tr, .calendar-day tbody tr {

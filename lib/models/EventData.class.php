@@ -53,14 +53,17 @@ class EventData extends SimpleORMap
     
     public function delete()
     {
+        // do not delete until one calendar is left
         if (sizeof($this->calendars) > 1) {
             return false;
         }
         $calendars = $this->calendars;
-        if (parent::delete()) {
+        $ret = parent::delete();
+        // only one calendar is left
+        if ($ret) {
             $calendars->each(function($c) { $c->delete(); });
         }
-        
+        return $ret;
     }
     
     public static function garbageCollect()

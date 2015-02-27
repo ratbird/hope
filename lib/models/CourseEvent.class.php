@@ -16,6 +16,7 @@ class CourseEvent extends CourseDate implements Event
 {
     private $properties = null;
     private $permission_user_id = null;
+    public  $is_extermin;
 
     protected static function configure($config = array())
     {
@@ -31,17 +32,17 @@ class CourseEvent extends CourseDate implements Event
             return $event->course->getFullname();
         };
         $config['additional_fields']['title']['get'] = 'getTitle';
-        $config['additional_fields']['editor_id']['get'] = function ($date){
+        $config['additional_fields']['editor_id']['get'] = function ($date) {
             return null;
         };
-        $config['additional_fields']['uid']['get'] = function ($date){
+        $config['additional_fields']['uid']['get'] = function ($date) {
             return 'Stud.IP-SEM-' . $date->getId()
                     . '@' . $_SERVER['SERVER_NAME'];
         };
-        $config['additional_fields']['summary']['get'] = function ($date){
+        $config['additional_fields']['summary']['get'] = function ($date) {
             return $date->course->name;
         };
-        $config['additional_fields']['description']['get'] = function ($date){
+        $config['additional_fields']['description']['get'] = function ($date) {
             return '';
         };
         parent::configure($config);
@@ -54,7 +55,7 @@ class CourseEvent extends CourseDate implements Event
     }
 
     /**
-     * Returns all CalendarEvents in the given time range for the given range_id.
+     * Returns all CourseEvents in the given time range for the given range_id.
      *
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
@@ -63,25 +64,28 @@ class CourseEvent extends CourseDate implements Event
      */
     public static function getEventsByInterval($user_id, DateTime $start, dateTime $end)
     {
-        $stmt = DBManager::get()->prepare('SELECT * FROM seminar_user '
+        $stmt = DBManager::get()->prepare('SELECT * FROM '
+                . "(SELECT termine.*, '' AS resource_id, '0' AS is_extermin FROM seminar_user "
                 . 'INNER JOIN termine ON seminar_id = range_id '
                 . 'WHERE user_id = :user_id '
-                . 'AND bind_calendar = 1 '
                 . 'AND date BETWEEN :start AND :end '
+                . "UNION SELECT ex_termine.*, '1' AS is_extermin FROM seminar_user "
+                . 'INNER JOIN ex_termine ON seminar_id = range_id '
+                . 'WHERE user_id = :user_id '
+                . 'AND date BETWEEN :start AND :end) AS t '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
             ':user_id' => $user_id,
             ':start'   => $start->getTimestamp(),
             ':end'     => $end->getTimestamp()
         ));
-        $i = 0;
         $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('Event');
+        $event_collection->setClassName('CourseEvent');
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event = new CourseEvent();
             $event->setData($row);
             $event->setNew(false);
-          //  $event_collection[] = $event;
+            $event->is_extermin = ($row['is_extermin'] == '1');
             // related persons (dozenten)
             if (self::checkRelated($event, $user_id)) {
                 $event_collection[] = $event;
@@ -90,23 +94,33 @@ class CourseEvent extends CourseDate implements Event
         return $event_collection;
     }
 
-    // Check auf durchführender Dozent
+    // Check auf durchführender Dozent oder Gruppen
     protected static function checkRelated($event, $user_id)
     {
         global $perm;
 
         $check_related = false;
-        if ($perm->get_studip_perm($event->range_id, $user_id) == 'dozent') {
-            $related_persons = $event->dozenten->pluck(user_id);
-            if (sizeof($related_persons)) {
-                if (in_array($user_id, $related_persons)) {
+        $permission = $perm->get_studip_perm($event->range_id, $user_id);
+        switch ($permission) {
+            case 'dozent' :
+                $related_persons = $event->dozenten->pluck(user_id);
+                if (sizeof($related_persons)) {
+                    if (in_array($user_id, $related_persons)) {
+                        $check_related = true;
+                    }
+                } else {
                     $check_related = true;
                 }
-            } else {
+                break;
+            case 'tutor' :
                 $check_related = true;
-            }
-        } else {
-            $check_related = true;
+                break;
+            default :
+                $group_ids = $event->statusgruppen->pluck('statusgruppe_id');
+                $member = StatusgruppeUser::findBySQL(
+                        'statusgruppe_id IN(?) AND user_id = ?',
+                        array($group_ids, $user_id));
+                $check_related = sizeof($member) > 0;
         }
         return $check_related;
     }
@@ -188,6 +202,9 @@ class CourseEvent extends CourseDate implements Event
                 $title = implode(', ', $this->topics->pluck('title'));
             } else {
                 $title = $this->course->name;
+            }
+            if ($this->is_extermin) {
+                $title .= ' ' . _('(fällt aus)');
             }
         }
         return $title;
@@ -313,7 +330,8 @@ class CourseEvent extends CourseDate implements Event
      */
     public function getCategory()
     {
-        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+        if ($this->havePermission(Event::PERMISSION_READABLE)
+                && !$this->is_extermin) {
             return $this->date_typ;
         }
         return 255;

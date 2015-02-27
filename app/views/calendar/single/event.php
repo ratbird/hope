@@ -66,7 +66,7 @@
         <? if (sizeof($related_groups)) : ?>
         <div>
             <b><?= _('Betroffene Gruppen') ?>:</b>
-            <?= htmlReady(implode(', ', array_map(function ($group) { return $group->name; }, $related_groups))) ?>
+            <?= htmlReady(implode(', ', $related_groups->pluck('name'))) ?>
         </div>
         <? endif; ?>
     <? endif; ?>

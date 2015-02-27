@@ -31,6 +31,10 @@ class Calendar_SingleController extends Calendar_CalendarController
     public function before_filter(&$action, &$args) {
         $this->base = 'calendar/single/';
         parent::before_filter($action, $args);
+        if (Request::isXhr()) {
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+            $this->layout = null;
+        }
     }
     
     protected function createSidebar($active = null, $calendar = null)
@@ -137,6 +141,9 @@ class Calendar_SingleController extends Calendar_CalendarController
     
     public function event_action($range_id = null, $event_id = null)
     {
+        if (Request::isXhr()) {
+            header('X-Title: Termindaten');
+        }
         $this->range_id = $range_id ?: $this->range_id;
         $this->calendar = new SingleCalendar($this->range_id);
         $this->event = $this->calendar->getEvent($event_id);

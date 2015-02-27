@@ -50,7 +50,7 @@ if ($rowspan > 1) {
         <? if ($tab_arr[$i]['max_cols'] > 0) : ?>
         <? $event_cols = $tab_arr[$i]['max_cols'] ?: 1; ?>
         <col span="<?= $event_cols ?>" style="width: <?= 100 / $week_type / $event_cols ?>%">
-        <col style="max-width: 0.8em; width: 0.8em;">
+        <col style="max-width: 0.9em; width: 0.9em;">
         <? else : ?>
         <col style="width: <?= 100 / $week_type ?>%">
         <? endif; ?>
@@ -121,21 +121,12 @@ if ($rowspan > 1) {
         <? for ($i = 0; $i < $week_type; $i++) : ?>
         <?
         if (date('Ymd', $calendars[$i]->getStart()) == date('Ymd')) {
-            $style_cell = 'celltoday';
+            $class_cell = 'lightgrey';
         } else {
-            $style_cell = 'table_row_even';
+            $class_cell = '';
         }
         ?>
-        <td class="weekdayevents" class="<?= $style_cell ?>" style="text-align:right; vertical-align:top;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
-            <?= $this->render_partial('calendar/single/_day_dayevents', array('em' => $tab_arr[$i], 'calendar' => $calendars[$i])) ?>
-            <?/* if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <div style="width: 14px; float:right;">
-                    <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $calendar->view->wdays[$i]->getTs(), 'devent' => '1')) ?>">
-                        <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
-                    </a>
-                </div>
-            <? endif */?>
-        </td>
+        <?= $this->render_partial('calendar/single/_day_dayevents', array('em' => $tab_arr[$i], 'calendar' => $calendars[$i], 'class_cell' => $class_cell)) ?>
         <? endfor ?>
         <td class="precol1w"<?= $colspan_1 ?>>
             <?= _('Tag') ?>
@@ -160,7 +151,14 @@ if ($rowspan > 1) {
             <? endif ?>
         <? endif ?>
         <? for ($y = 0; $y < $week_type; $y++) : ?>
-            <?= $this->render_partial('calendar/single/_day_cell', array('calendar' => $calendars[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600, 'i' => $i + ($start * 3600 / $settings['step_week']), 'step' => $settings['step_week'])); ?>
+            <?
+            if (date('Ymd', $calendars[$y]->getStart()) == date('Ymd')) {
+                $class_cell = 'lightgrey';
+            } else {
+                $class_cell = '';
+            }
+            ?>
+            <?= $this->render_partial('calendar/single/_day_cell', array('calendar' => $calendars[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600, 'i' => $i + ($start * 3600 / $settings['step_week']), 'step' => $settings['step_week'], 'class_cell' => $class_cell)); ?>
         <? endfor ?>
         <? if ($rowspan > 1) : ?>
             <? if ($minutes == 0) : ?>

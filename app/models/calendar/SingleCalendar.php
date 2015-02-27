@@ -124,8 +124,16 @@ class SingleCalendar
      */
     public function storeEvent(CalendarEvent $event, $attendee_ids = null)
     {
-        if (sizeof($attendee_ids) == 0) {
-            return $event->store();
+        if (!sizeof($attendee_ids)) {
+            if (!$this->havePermission(Calendar::PERMISSION_WRITABLE)) {
+                return false;
+            }
+            $stored = $event->store();
+            if ($stored !== false && $this->getRange() == Calendar::RANGE_USER
+                    && $this->getRangeId() != $GLOBALS['user']->id) {
+                $this->sendStoreMessage($event, $event->isNew());
+            }
+            return $stored;
         } else {
             if ($event->isNew()) {
                 return $this->storeAttendeeEvents($event, $attendee_ids);
@@ -151,22 +159,30 @@ class SingleCalendar
         foreach ($attendee_ids as $attendee_id) {
             if (trim($attendee_id)) {
                 $attendee_calendar = new SingleCalendar($attendee_id);
-                if ($attendee_calendar->getPermissionByUser($this->getRangeId())
-                        >= Calendar::PERMISSION_READABLE) {
+                if ($attendee_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
                     $attendee_event = new CalendarEvent(
                             array($attendee_calendar->getRangeId(), $event->event_id));
                     $attendee_event->event = $event->event;
-                    if ($attendee_event->store()) {
-                        $new_attendees[] = $attendee_event->getId();
-                        $ret++;
+                    $is_new = $attendee_event->isNew();
+                    $stored = $attendee_event->store();
+                    if ($stored !== false) {
+                        // send message if not own calendar
+                        if (!$attendee_calendar->havePermission(Calendar::PERMISSION_OWN)) {
+                            $this->sendStoreMessage($attendee_event, $is_new);
+                        }
+                        $new_attendees[] = $attendee_event->range_id;
+                        $ret += $stored;
                     } else {
                         return false;
                     }
                 }
             }
         }
-        if (sizeof($new_attendees)) {
-            CalendarEvent::deleteBySQL('range_id NOT IN(?)', array($new_attendees));
+        $events_delete = CalendarEvent::findBySQL('event_id = ? AND range_id NOT IN(?)',
+                array($event->event_id, $new_attendees));
+        foreach ($events_delete as $event_delete) {
+            $calendar = new SingleCalendar($event_delete->range_id);
+            $calendar->deleteEvent($event_delete);
         }
         return $ret;
     }
@@ -429,7 +445,8 @@ class SingleCalendar
         return $permission == $this->getPermissionByUser($user_id);
     }
     
-    public function addEventObj(&$event, $updated, $selected_users = NULL)
+    /*
+    public function addEventObj($event, $updated, $selected_users = NULL)
     {
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
             $this->event = $event;
@@ -441,79 +458,91 @@ class SingleCalendar
             $this->event->save();
         }
     }
+     * 
+     */
     
     /**
      * Sends a message to the owner of the calendar that a new event was inserted
      * or an old event was modified by another user. 
      * 
-     * @param CalendarEvent $event
-     * @param bool $updated
+     * @param CalendarEvent $event The new or updated event.
+     * @param bool $is_new True if the event is new.
      */
-    protected function sendStoreMessage($event, $updated)
+    protected function sendStoreMessage($event, $is_new)
     {
-        if (!$this->checkPermission(Calendar::PERMISSION_OWN)
-                && $this->getRange() == Calendar::RANGE_USER) {
-            include_once('lib/messaging.inc.php');
-            $message = new messaging();
-            $event_data = '';
+        $message = new messaging();
+        $event_data = '';
 
-            if ($updated) {
-                $msg_text = sprintf(_("%s hat einen Termin in Ihrem Kalender geändert."), get_fullname());
-                $subject = sprintf(_("Termin am %s geändert"), $event->toStringDate('SHORT_DAY'));
-                $msg_text .= "\n\n**";
-            } else {
-                $msg_text = sprintf(_("%s hat einen neuen Termin in Ihren Kalender eingetragen."), get_fullname());
-                $subject = sprintf(_("Neuer Termin am %s"), $event->toStringDate('SHORT_DAY'));
-                $msg_text .= "\n\n**";
-            }
-            $msg_text .= _("Zeit:") . '** ' . $event->toStringDate('LONG') . "\n**";
-            $msg_text .= _("Zusammenfassung:") . '** ' . $event->getTitle() . "\n";
-            if ($event_data = $event->getDescription()) {
-                $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringCategories()) {
-                $msg_text .= '**' . _("Kategorie:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringPriority()) {
-                $msg_text .= '**' . _("Priorität:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringAccessibility()) {
-                $msg_text .= '**' . _("Zugriff:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringRecurrence()) {
-                $msg_text .= '**' . _("Wiederholung:") . "** $event_data\n";
-            }
-
-            $message->insert_message($msg_text, $this->range_object->username,
-                    '____%system%____', '', '', '', '', $subject);
+        if (!$is_new) {
+            $msg_text = sprintf(_("%s hat einen Termin in Ihrem Kalender geändert."), get_fullname());
+            $subject = strftime(_('Termin am %c geändert'), $event->getStart());
+            $msg_text .= "\n\n**";
+        } else {
+            $msg_text = sprintf(_("%s hat einen neuen Termin in Ihren Kalender eingetragen."), get_fullname());
+            $subject = strftime(_('Neuer Termin am %c'), $event->getStart());
+            $msg_text .= "\n\n**";
         }
+        $msg_text .= _('Zeit:') . '** ' . strftime(' %c - ', $event->getStart())
+                . strftime('%c', $event->getEnd()) . "\n**";
+        $msg_text .= _("Zusammenfassung:") . '** ' . $event->getTitle() . "\n";
+        if ($event_data = $event->getDescription()) {
+            $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringCategories()) {
+            $msg_text .= '**' . _("Kategorie:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringPriority()) {
+            $msg_text .= '**' . _("Priorität:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringAccessibility()) {
+            $msg_text .= '**' . _("Zugriff:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringRecurrence()) {
+            $msg_text .= '**' . _("Wiederholung:") . "** $event_data\n";
+        }
+
+        $message->insert_message($msg_text, get_username($event->range_id),
+                '____%system%____', '', '', '', '', $subject);
     }
 
     /**
      * Deletes an event from this calendar.
      * 
-     * @param string $event_id The id of the event.
-     * @return boolean True if the event was deleted.
+     * @param string|object $event The id of an event or an event object of type CalendarEvent.
+     * @return boolean|int The number of deleted events. False if the event was not deleted.
      */
-    function deleteEvent($event_id)
+    public function deleteEvent($calendar_event)
     {
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
-            $this->event = CalendarEvent::find(array($this->getRangeId(), $event_id));
+            if (!is_object($calendar_event)) {
+                $calendar_event = CalendarEvent::find(
+                        array($this->getRangeId(), $calendar_event));
+            }
 
-            if (!$this->event || !$this->event->havePermission(Event::PERMISSION_WRITABLE)) {
+            if (!$calendar_event
+                    || !$calendar_event->havePermission(Event::PERMISSION_WRITABLE)) {
                 return false;
             }
             
-            if (!is_a($this->event, 'CalendarEvent')) {
+            if (!is_a($calendar_event, 'CalendarEvent')) {
                 return false;
             }
 
             if ($this->getRange() == Calendar::RANGE_USER) {
-                $this->sendDeleteMessage($this->event);
-                $this->event->delete();
-                return true;
+                $event_message = clone $calendar_event;
+                $author_id = $calendar_event->getAuthorId();
+                $deleted = $calendar_event->delete();
+                if ($deleted && !$this->havePermission(Calendar::PERMISSION_OWN)) {
+                    $this->sendDeleteMessage($event_message);
+                }
+                if ($deleted && $author_id == $this->getRangeId()) {
+                    CalendarEvent::findEachBySQL(function ($ce) use ($deleted) {
+                        $calendar = new SingleCalendar($ce->range_id);
+                        $deleted += $calendar->deleteEvent($ce);
+                    }, 'event_id = ?', array($event_message->event_id));
+                }
+                return $deleted;
             }
-            $this->event = null;
         }
         return false;
     }
@@ -526,37 +555,34 @@ class SingleCalendar
      */
     protected function sendDeleteMessage($event)
     {
-        if (!$this->checkPermission(Calendar::PERMISSION_OWN)
-                && $this->getRange() == Calendar::RANGE_USER) {
-            include_once('lib/messaging.inc.php');
-            $message = new messaging();
-            $event_data = '';
+        $message = new messaging();
+        $event_data = '';
 
-            $subject = sprintf(_("Termin am %s gelöscht"), $event->toStringDate('SHORT_DAY'));
-            $msg_text = sprintf(_("%s hat folgenden Termin in Ihrem Kalender gelöscht:"), get_fullname());
-            $msg_text .= "\n\n**";
+        $subject = strftime(_('Termin am %c gelöscht'), $event->getStart());
+        $msg_text = sprintf(_("%s hat folgenden Termin in Ihrem Kalender gelöscht:"), get_fullname());
+        $msg_text .= "\n\n";
 
-            $msg_text .= _("Zeit:") . '** ' . $event->toStringDate('LONG') . "\n**";
-            $msg_text .= _("Zusammenfassung:") . '** ' . $event->getTitle() . "\n";
-            if ($event_data = $event->getDescription()) {
-                $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringCategories()) {
-                $msg_text .= '**' . _("Kategorie:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringPriority()) {
-                $msg_text .= '**' . _("Priorität:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringAccessibility()) {
-                $msg_text .= '**' . _("Zugriff:") . "** $event_data\n";
-            }
-            if ($event_data = $event->toStringRecurrence()) {
-                $msg_text .= '**' . _("Wiederholung:") . "** $event_data\n";
-            }
-
-            $message->insert_message($msg_text, $this->range_object->username,
-                    '____%system%____', '', '', '', '', $subject);
+        $msg_text .= '**' . _('Zeit:') . '**' . strftime(' %c - ', $event->getStart())
+                . strftime('%c', $event->getEnd()) . "\n";
+        $msg_text .= '**' . _("Zusammenfassung:") . '** ' . $event->getTitle() . "\n";
+        if ($event_data = $event->getDescription()) {
+            $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
         }
+        if ($event_data = $event->toStringCategories()) {
+            $msg_text .= '**' . _("Kategorie:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringPriority()) {
+            $msg_text .= '**' . _("Priorität:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringAccessibility()) {
+            $msg_text .= '**' . _("Zugriff:") . "** $event_data\n";
+        }
+        if ($event_data = $event->toStringRecurrence()) {
+            $msg_text .= '**' . _("Wiederholung:") . "** $event_data\n";
+        }
+
+        $message->insert_message($msg_text, get_username($event->range_id),
+                '____%system%____', '', '', '', '', $subject);
     }
     
     /**
@@ -1219,6 +1245,9 @@ class SingleCalendar
                     }
                 }
             }
+        }
+        if ($max_cols < 1 && sizeof($em['day_events'])) {
+            $max_cols = 1;
         }
         $em['cspan'] = $cspan;
         $em['rows'] = $rows;

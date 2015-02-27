@@ -1,3 +1,8 @@
+<? if (Request::isXhr()) : ?>
+    <? foreach (PageLayout::getMessages() as $messagebox) : ?>
+        <?= $messagebox ?>
+    <? endforeach ?>
+<? endif; ?>
 <form id="calendar-manage-access" data-dialog="" method="post" action="<?= $controller->url_for('calendar/single/store_permissions/' . $calendar->getRangeId()) ?>">
     <? CSRFProtection::tokenTag() ?>
     <? $perms = array(1 => _('keine'), 2 => _('lesen'), 4 => _('schreiben')) ?>

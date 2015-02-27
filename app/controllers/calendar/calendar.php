@@ -45,6 +45,13 @@ class Calendar_CalendarController extends AuthenticatedController
         }
         URLHelper::bindLinkParam('last_view', $this->last_view);
         Navigation::activateItem('/calendar/calendar');
+        /*
+        if (Request::isXhr()) {
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+            $this->layout = null;
+        }
+         * 
+         */
     }
     
     protected function createSidebar($active = null, $calendar = null)
@@ -110,19 +117,20 @@ class Calendar_CalendarController extends AuthenticatedController
             $this->event = $this->calendar->getNewEvent();
             $this->event->setStart($this->atime);
             $this->event->setEnd($this->atime + 3600);
-            $this->event->setAuthor_id($GLOBALS['user']->id);
-            $this->event->setEditor_id($GLOBALS['user']->id);
+            $this->event->setAuthorId($GLOBALS['user']->id);
+            $this->event->setEditorId($GLOBALS['user']->id);
             $this->attendees = array($this->event);
             if (!Request::isXhr()) {
                 PageLayout::setTitle($this->getTitle($this->calendar, _('Neuer Termin')));
             }
         } else {
-            // open read only events and course events not in form
+            // open read only events and course events not as form
             // show information in dialog instead
             if (!$this->event->havePermission(Event::PERMISSION_WRITABLE)
                     || $this->event instanceof CourseEvent) {
                 $this->redirect($this->url_for('calendar/single/event/' . implode('/',
                         array($this->range_id, $this->event->event_id))));
+                return null;
             }
             $this->attendees = $this->event->getAttendees();
             if (!Request::isXhr()) {
@@ -137,8 +145,9 @@ class Calendar_CalendarController extends AuthenticatedController
                 . "LEFT JOIN auth_user_md5 ON calendar_user.owner_id = auth_user_md5.user_id "
                 . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
                 . 'WHERE calendar_user.user_id = '
-                . DBManager::get()->quote($GLOBALS['user']->id) . ' AND ('
-                . 'username LIKE :input OR Vorname LIKE :input '
+                . DBManager::get()->quote($GLOBALS['user']->id)
+                . ' AND calendar_user.permission > ' . Event::PERMISSION_READABLE
+                . ' AND (username LIKE :input OR Vorname LIKE :input '
                 . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
                 . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
                 . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
@@ -176,9 +185,19 @@ class Calendar_CalendarController extends AuthenticatedController
             $stored = $this->storeEventData($this->event, $this->calendar);
         }
 
-        if ($stored) {
-            PageLayout::postMessage(MessageBox::success(_('Der Termin wurde gespeichert.')));
-            $this->relocate('calendar/single/' . $this->last_view, array('atime' => $this->atime));
+        if ($stored !== false) {
+            if ($stored === 0) {
+                if (Request::isXhr()) {
+                    header('X-Dialog-Close: 1');
+                    exit;
+                } else {
+                    PageLayout::postMessage(MessageBox::success(_('Der Termin wurde nicht geändert.')));
+                    $this->relocate('calendar/single/' . $this->last_view, array('atime' => $this->atime));
+                }
+            } else {
+                PageLayout::postMessage(MessageBox::success(_('Der Termin wurde gespeichert.')));
+                $this->relocate('calendar/single/' . $this->last_view, array('atime' => $this->atime));
+            }
         }
         
         $this->createSidebar('edit', $this->calendar);
@@ -216,26 +235,42 @@ class Calendar_CalendarController extends AuthenticatedController
     
     protected function storeEventData(CalendarEvent $event, SingleCalendar $calendar)
     {
-        $dt_string = Request::get('start_date') . ' ' . Request::int('start_hour')
-                . ':' . Request::int('start_minute');
+        if (Request::int('isdayevent')) {
+            $dt_string = Request::get('start_date') . ' 00:00:00';
+        } else {
+            $dt_string = Request::get('start_date') . ' ' . Request::int('start_hour')
+                    . ':' . Request::int('start_minute');
+        }
         $event->setStart($this->parseDateTime($dt_string));
-        $dt_string = Request::get('end_date') . ' ' . Request::int('end_hour')
-                . ':' . Request::int('end_minute');
+        if (Request::int('isdayevent')) {
+            $dt_string = Request::get('end_date') . ' 23:59:59';
+        } else {
+            $dt_string = Request::get('end_date') . ' ' . Request::int('end_hour')
+                    . ':' . Request::int('end_minute');
+        }
         $event->setEnd($this->parseDateTime($dt_string));
         if ($event->getStart() > $event->getEnd()) {
             $messages[] = _('Die Startzeit muss vor der Endzeit liegen.');
         }
-        $event->setTitle(Request::get('summary', _('Kein Titel')));
+        
+        if (Request::isXhr()) {
+            $event->setTitle(studip_utf8decode(Request::get('summary', '')));
+            $event->event->description = studip_utf8decode(Request::get('description', ''));
+            $event->setUserDefinedCategories(studip_utf8decode(Request::get('categories', '')));
+            $event->event->location = studip_utf8decode(Request::get('location', ''));
+        } else {
+            $event->setTitle(Request::get('summary'));
+            $event->event->description = Request::get('description', '');
+            $event->setUserDefinedCategories(Request::get('categories', ''));
+            $event->event->location = Request::get('location', '');
+        }
+        $event->event->category_intern = Request::int('category_intern', 1);
+        $event->setAccessibility(Request::option('accessibility', 'PRIVATE'));
+        $event->setPriority(Request::int('priority', 0));
+        
         if (!$event->getTitle()) {
             $messages[] = _('Es muss eine Zusammenfassung angegeben werden.');
         }
-        
-        $event->event->description = Request::get('description', '');
-        $event->event->category_intern = Request::int('category_intern', 1);
-        $event->setUserDefinedCategories(Request::get('categories', ''));
-        $event->event->location = Request::get('location', '');
-        $event->setAccessibility(Request::option('accessibility', 'PRIVATE'));
-        $event->setPriority(Request::int('priority', 0));
         
         $rec_type = Request::option('recurrence', 'single');
         $expire = Request::option('exp_c', 'never');
@@ -252,7 +287,12 @@ class Calendar_CalendarController extends AuthenticatedController
         if ($expire == 'count') {
             $rrule['count'] = Request::int('exp_count', 10);
         } else if ($expire == 'date') {
-            $exp_date = Request::int('exp_date', strftime('%x', time()));
+            if (Request::isXhr()) {
+                $exp_date = studip_utf8decode(Request::get('exp_date'));
+            } else {
+                $exp_date = Request::get('exp_date');
+            }
+            $exp_date = $exp_date ?: strftime('%x', time());
             $rrule['expire'] = $this->parseDateTime($exp_date . ' 12:00');
         }
         switch ($rec_type) {
@@ -321,7 +361,7 @@ class Calendar_CalendarController extends AuthenticatedController
         }
         if (sizeof($messages)) {
             PageLayout::postMessage(MessageBox::error(_('Bitte Eingaben korrigieren'), $messages));
-            return null;
+            return false;
         } else {
             $event->setRecurrence($rrule);
             $event->setExceptions($this->parseExceptions(Request::get('exc_dates', '')));
@@ -354,9 +394,9 @@ class Calendar_CalendarController extends AuthenticatedController
     
     protected function parseDateTime($dt_string)
     {
-        $dt_array = date_parse_from_format('j.n.Y H:i', $dt_string);
-        return mktime($dt_array['hour'], $dt_array['minute'], 0, $dt_array['month'],
-                $dt_array['day'], $dt_array['year']);
+        $dt_array = date_parse_from_format('j.n.Y H:i:s', $dt_string);
+        return mktime($dt_array['hour'], $dt_array['minute'], $dt_array['second'],
+                $dt_array['month'], $dt_array['day'], $dt_array['year']);
     }
     
 }

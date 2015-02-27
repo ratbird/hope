@@ -8,9 +8,7 @@ if ($settings['step_day'] >= 3600) {
 ?>
 <tr>
     <td class="precol1w" <?= $rowspan_precol ? ' colspan="2"' : '' ?>><?= _("Tag") ?></td>
-    <td  style="text-align:right; vertical-align:bottom;"<?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?> valign="bottom">
-<?= $this->render_partial('calendar/single/_day_dayevents', array('em' => $em)); ?>
-    </td>
+    <?= $this->render_partial('calendar/single/_day_dayevents', array('em' => $em)); ?>
 </tr>
 <? for ($i = $start / $settings['step_day']; $i < $end / $settings['step_day'] + 3600 / $settings['step_day']; $i++) : ?>
 <? $row = $i - $start / $settings['step_day']; ?>

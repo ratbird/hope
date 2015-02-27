@@ -1,7 +1,11 @@
-<?
-use Studip\Button, Studip\LinkButton;
-SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
-?>
+<? use Studip\Button, Studip\LinkButton; ?>
+<? if (Request::isXhr()) : ?>
+    <? foreach (PageLayout::getMessages() as $messagebox) : ?>
+        <?= $messagebox ?>
+    <? endforeach ?>
+<? else : ?>
+    <? SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100); ?>
+<? endif; ?>
 <form data-dialog="" method="post" action="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id) ?>">
 <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable nohover" id="main_content">
@@ -40,7 +44,7 @@ SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
                         <input style="text-align: right;" type="text" name="start_minute" value="<?= date('i', $event->getStart()) ?>" size="2" maxlength="2">
                     </span>
                     <label style="white-space: nowrap;"><?= _('ganztägig') ?>
-                        <input type="checkbox" name="isdayevent" <?= $event->isDayEvent() ? 'checked' : '' ?>>
+                        <input type="checkbox" name="isdayevent" value="1" <?= $event->isDayEvent() ? 'checked' : '' ?>>
                     </label>
                 </td>
             </tr>

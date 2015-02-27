@@ -77,23 +77,7 @@ class GroupCalendar extends Calendar
         return $this->group_id;
     }
 
-    // private
-    function addEventObj($event, $updated, $selected_users = NULL)
-    {
-        if (is_null($selected_users) || !is_array($selected_users)) {
-            while ($calendar = $this->nextCalendar()) {
-                $event2 = new DbCalendarEvent($calendar, '', $event->properties);
-                $calendar->addEventObj($event2, $updated);
-            }
-        } else {
-            while ($calendar = $this->nextCalendar()) {
-                if (in_array($calendar->getUserName(), $selected_users)) {
-                    $event2 = new DbCalendarEvent($calendar, '', $event->properties);
-                    $calendar->addEventObj($event2, $updated);
-                }
-            }
-        }
-    }
+    
 
     function mergeEvents()
     {

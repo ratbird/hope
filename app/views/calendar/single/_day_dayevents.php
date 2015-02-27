@@ -1,24 +1,32 @@
 <? if (sizeof($em['day_events'])) : ?>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <? foreach ($em['day_events'] as $day_event) : ?>
-                <tr>
-                    <td class="calendar-category<?= $day_event->getCategory() ?>">
-                        <? if ($day_event->getPermission() == Event::PERMISSION_CONFIDENTIAL) : ?>
-                            <?= htmlReady($day_event->getTitle()) ?>
-                        <? else : ?>
-                            <a style="color:#fff; font-size:10px;" href="<?= $controller->url_for('', array('termin_id' => $day_event->getId(), 'atime' => $day_event->getStart())) ?>"><?= htmlReady($day_event->getTitle()) ?></a>
-                        <? endif ?>
-                    </td>
-                    <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                        <td style="width: 1%;" rowspan="<?= sizeof($em['day_events']) ?>">
-                            <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $atime_new) ?>" style="display: block; min-width: 11px;" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'dayevent' => '1')) ?>">+</a>
-                        </td>
-                    <? endif; ?>
-                </tr>
-            <? endforeach ?>
+    <td class="<?= $class_cell ?>" style="padding: 0px;" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols']) . '"' : '') ?>>
+        <table style="width: 100%; border-spacing: 0;">
+        <? foreach ($em['day_events'] as $day_event) : ?>
+            <tr>
+                <? if ($day_event->getPermission() == Event::PERMISSION_CONFIDENTIAL) : ?>
+                <td class="calendar-category<?= $day_event->getCategory() ?>">
+                    <?= htmlReady($day_event->getTitle()) ?>
+                </td>
+                <? else : ?>
+                <td onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" class="calendar-category<?= $day_event->getCategory() ?>">
+                    <a style="color:#fff;" data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $day_event->event_id, array('isdayevent' => '1')) ?>"><?= htmlReady($day_event->getTitle()) ?></a>
+                </td>
+                <? endif; ?>
+            </tr>
+        <? endforeach ?>
         </table>
+    </td>
+    <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
+    <td class="calendar-day-edit" onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;">
+        <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $atime) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $calendar->getStart(), 'isdayevent' => '1')) ?>">+</a>
+    </td>
+    <? endif; ?>
 <? else : ?>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $atime_new) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $atime, 'dayevent' => '1')) ?>">+</a>
+        <td class="calendar-day-edit <?= $class_cell ?>" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
+            <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $atime) ?>" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId(),  array('atime' => $atime, 'isdayevent' => '1')) ?>">+</a>
+        </td>
+    <? else : ?>
+        <td class="calendar-day-edit <?= $class_cell ?>" <?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>></td>
     <? endif; ?>
 <? endif; ?>

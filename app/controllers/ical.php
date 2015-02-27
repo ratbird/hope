@@ -10,8 +10,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once($GLOBALS['RELATIVE_PATH_CALENDAR'].'/lib/sync/CalendarExport.class.php');
-require_once($GLOBALS['RELATIVE_PATH_CALENDAR'].'/lib/sync/CalendarWriterICalendar.class.php');
+require_once($GLOBALS['RELATIVE_PATH_CALENDAR'].'/CalendarExport.class.php');
+require_once($GLOBALS['RELATIVE_PATH_CALENDAR'].'/CalendarWriterICalendar.class.php');
 require_once 'studip_controller.php';
 require_once('app/models/ical_export.php');
 
@@ -59,8 +59,7 @@ class iCalController extends StudipController
 
             $extype = 'ALL_EVENTS';
             $export = new CalendarExport(new CalendarWriterICalendar());
-            $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS',
-                    Calendar::getBindSeminare($user_id));
+            $export->exportFromDatabase($user_id, 0, 2114377200, 'ALL_EVENTS');
 
             if ($GLOBALS['_calendar_error']->getMaxStatus(ERROR_CRITICAL)) {
                 $this->set_status(500);

@@ -34,25 +34,60 @@ class CourseCancelledEvent extends CourseEvent
         $stmt = DBManager::get()->prepare('SELECT * FROM seminar_user '
                 . 'INNER JOIN ex_termine ON seminar_id = range_id '
                 . 'WHERE user_id = :user_id '
-                . 'AND bind_calendar = 1 '
                 . 'AND date BETWEEN :start AND :end '
+                . "AND (IFNULL(metadate_id, '') = '' "
+                . 'OR metadate_id NOT IN ( '
+                . 'SELECT metadate_id FROM schedule_seminare '
+                . 'WHERE user_id = :user_id AND visible = 0) ) '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
             ':user_id' => $user_id,
             ':start'   => $start->getTimestamp(),
             ':end'     => $end->getTimestamp()
         ));
-        $i = 0;
         $event_collection = new SimpleORMapCollection();
         $event_collection->setClassName('Event');
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $event_collection[$i] = new CourseCancelledEvent();
-            $event_collection[$i]->setData($row);
-            $event_collection[$i]->setNew(false);
+            $event = new CourseCancelledEvent();
+            $event->setData($row);
+            $event->setNew(false);
+            // related persons (dozenten)
+            if (self::checkRelated($event, $user_id)) {
+                $event_collection[] = $event;
+            }
         }
         return $event_collection;
     }
     
+    /**
+     * Returns the title of this event.
+     * The title of a course event is the name of the course or if a topic is
+     * assigned, the title of this topic. If the user has not the permission
+     * Event::PERMISSION_READABLE, the title is "Keine Berechtigung.".
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        $title = parent::getTitle();
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            $title .= ' ' . _('(fällt aus)');
+        }
+        return $title;
+    }
     
+    /**
+     * Returns the index of the category.
+     * If the user has no permission, 255 is returned.
+     *
+     * TODO remove? use getStudipCategory instead?
+     *
+     * @see config/config.inc.php $TERMIN_TYP
+     * @return int The index of the category
+     */
+    public function getCategory()
+    {
+        return 255;
+    }
     
 }

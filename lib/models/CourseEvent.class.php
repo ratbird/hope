@@ -16,7 +16,6 @@ class CourseEvent extends CourseDate implements Event
 {
     private $properties = null;
     private $permission_user_id = null;
-    public  $is_extermin;
 
     protected static function configure($config = array())
     {
@@ -64,15 +63,14 @@ class CourseEvent extends CourseDate implements Event
      */
     public static function getEventsByInterval($user_id, DateTime $start, dateTime $end)
     {
-        $stmt = DBManager::get()->prepare('SELECT * FROM '
-                . "(SELECT termine.*, '' AS resource_id, '0' AS is_extermin FROM seminar_user "
+        $stmt = DBManager::get()->prepare('SELECT termine.* FROM seminar_user '
                 . 'INNER JOIN termine ON seminar_id = range_id '
                 . 'WHERE user_id = :user_id '
                 . 'AND date BETWEEN :start AND :end '
-                . "UNION SELECT ex_termine.*, '1' AS is_extermin FROM seminar_user "
-                . 'INNER JOIN ex_termine ON seminar_id = range_id '
-                . 'WHERE user_id = :user_id '
-                . 'AND date BETWEEN :start AND :end) AS t '
+                . "AND (IFNULL(metadate_id, '') = '' "
+                . 'OR metadate_id NOT IN ( '
+                . 'SELECT metadate_id FROM schedule_seminare '
+                . 'WHERE user_id = :user_id AND visible = 0) ) '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
             ':user_id' => $user_id,
@@ -80,12 +78,11 @@ class CourseEvent extends CourseDate implements Event
             ':end'     => $end->getTimestamp()
         ));
         $event_collection = new SimpleORMapCollection();
-        $event_collection->setClassName('CourseEvent');
+        $event_collection->setClassName('Event');
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $event = new CourseEvent();
             $event->setData($row);
             $event->setNew(false);
-            $event->is_extermin = ($row['is_extermin'] == '1');
             // related persons (dozenten)
             if (self::checkRelated($event, $user_id)) {
                 $event_collection[] = $event;
@@ -117,10 +114,14 @@ class CourseEvent extends CourseDate implements Event
                 break;
             default :
                 $group_ids = $event->statusgruppen->pluck('statusgruppe_id');
-                $member = StatusgruppeUser::findBySQL(
-                        'statusgruppe_id IN(?) AND user_id = ?',
-                        array($group_ids, $user_id));
-                $check_related = sizeof($member) > 0;
+                if (sizeof($group_ids)) {
+                    $member = StatusgruppeUser::findBySQL(
+                            'statusgruppe_id IN(?) AND user_id = ?',
+                            array($group_ids, $user_id));
+                    $check_related = sizeof($member) > 0;
+                } else {
+                    $check_related = true;
+                }
         }
         return $check_related;
     }
@@ -198,14 +199,13 @@ class CourseEvent extends CourseDate implements Event
     {
         $title = _('Keine Berechtigung.');
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            $description = trim($this->cycle->description) ?: '';
             if (sizeof($this->topics)) {
                 $title = implode(', ', $this->topics->pluck('title'));
             } else {
                 $title = $this->course->name;
             }
-            if ($this->is_extermin) {
-                $title .= ' ' . _('(fällt aus)');
-            }
+            $title = ($description ? $description . ', ' : '') . $title;
         }
         return $title;
     }
@@ -297,9 +297,11 @@ class CourseEvent extends CourseDate implements Event
     {
         $description = '';
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            if (sizeof($this->topics)) {
-                $description = implode(', ', $this->topics->pluck('description'));
-            }
+            $descriptions = $this->topics->map(function ($topic) {
+                $desc = $topic->title . "\n";
+                $desc .= $topic->description;
+            });
+            $description = implode("\n\n", $descriptions);
         }
         return $description;
     }
@@ -330,8 +332,7 @@ class CourseEvent extends CourseDate implements Event
      */
     public function getCategory()
     {
-        if ($this->havePermission(Event::PERMISSION_READABLE)
-                && !$this->is_extermin) {
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
             return $this->date_typ;
         }
         return 255;

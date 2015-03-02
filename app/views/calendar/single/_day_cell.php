@@ -26,8 +26,8 @@
                     <?= $event->getTitle() ?>
                 <? else : ?>
                     <a title="<?= _('Termin bearbeiten') ?>" data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id, array('evtype' => $event->getType())) ?>"><?= $event->getTitle() ?></a>
-                    <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                 <? endif ?>
+                    <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                 </div>
             </td>
         <? elseif ($event == '#') : ?>

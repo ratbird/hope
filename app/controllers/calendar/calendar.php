@@ -119,6 +119,7 @@ class Calendar_CalendarController extends AuthenticatedController
             $this->event->setEnd($this->atime + 3600);
             $this->event->setAuthorId($GLOBALS['user']->id);
             $this->event->setEditorId($GLOBALS['user']->id);
+            $this->event->setAccessibility('PRIVATE');
             $this->attendees = array($this->event);
             if (!Request::isXhr()) {
                 PageLayout::setTitle($this->getTitle($this->calendar, _('Neuer Termin')));
@@ -226,7 +227,12 @@ class Calendar_CalendarController extends AuthenticatedController
     
     public function jump_to_action()
     {
-        $atime = strtotime(Request::get('jmp_date' . strftime(' %T', $this->atime), 'now'));
+        $date = Request::get('jmp_date');
+        if ($date) {
+            $atime = strtotime($date . strftime(' %T', $this->atime));
+        } else {
+            $atime = 'now';
+        }
         $action = Request::option('action', 'week');
         $this->range_id = $this->range_id ?: $GLOBALS['user']->id;
         $this->redirect($this->url_for($this->base . $action,

@@ -6,9 +6,10 @@
     <div>
         <b><?= _('Ende') ?>:</b> <?= strftime('%c', $event->getEnd()) ?>
     </div>
-    <? if ($event instanceof CourseEvent) : ?>
+    <? if ($event instanceof CourseEvent
+            && $event->havePermission(Event::PERMISSION_READABLE)) : ?>
     <div>
-        <b><?= _('Veranstaltung') ?>:</b> <?= htmlReady($event->getSemName()) ?>
+        <b><?= _('Veranstaltung') ?>:</b> <?= htmlReady($event->course->getFullname()) ?>
     </div>
     <? endif;?>
     <? if ($text = $event->getDescription()) : ?>
@@ -41,7 +42,9 @@
             <b><?= _('Wiederholung') ?>:</b> <?= htmlReady($text) ?>
         </div>
     <? endif; ?>
-    <? if ($event instanceof CalendarEvent && get_config('CALENDAR_GROUP_ENABLE')) : ?>
+    <? if ($event instanceof CalendarEvent
+            && $event->havePermission(Event::PERMISSION_READABLE)
+            && get_config('CALENDAR_GROUP_ENABLE')) : ?>
         <div>
             <? $author = $event->getAuthor() ?>
             <? if ($author) : ?>

@@ -2,6 +2,17 @@
     <tr class="header-row">
         <th colspan="3" class="toggle-indicator">
             <a class="toggler"><?= _('Teilnehmer hinzufügen') ?>
+                <? $count_attendees = count(array_filter($attendees,
+                    function ($att) use ($calendar) {
+                        return ($att->user->user_id != $calendar->getRangeId());
+                    })) ?>
+                <? if ($count_attendees) : ?>
+                    <? if ($count_attendees < sizeof($attendees)) : ?>
+                        <?= sprintf(ngettext('(%s weiterer Teilnehmer)', '(%s weitere Teilnehmer)', $count_attendees), $count_attendees) ?>
+                    <? else : ?>
+                        <?= sprintf(_('(%s Teilnehmer)'), $count_attendees) ?>
+                    <? endif; ?>
+                <? endif; ?>
             </a>
         </th>
     </tr>

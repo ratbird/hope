@@ -275,8 +275,9 @@ function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
             $subheadline_div_end = "";
         }
 
-        $event_list = SingleCalendar::getEventList($row['user_id'], time(),
-                time() + 60 * 60 * 24 * 7);
+        $event_list = SingleCalendar::getEventList($this->user_id, time(),
+                time() + 60 * 60 * 24 * 7, null, array('class' => 'PUBLIC'),
+                array('CalendarEvent'));
         if (sizeof($event_list)) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";

@@ -150,6 +150,30 @@
                     </select>
                 </td>
             </tr>
+            <? if (!$event->isNew() && get_config('CALENDAR_GROUP_ENABLE')) : ?>
+            <tr>
+                <td colspan="3">
+                    <div>
+                        <? $author = $event->getAuthor() ?>
+                        <? if ($author) : ?>
+                            <?= sprintf(_('Eingetragen am: %s von %s'),
+                            strftime('%x, %X', $event->mkdate),
+                                htmlReady($author->getFullName('no_title'))) ?>
+                        <? endif; ?>
+                    </div>
+                    <? if ($event->event->mkdate < $event->event->chdate) : ?>
+                        <? $editor = $event->getEditor() ?>
+                        <? if ($editor) : ?>
+                        <div>
+                            <?= sprintf(_('Zuletzt bearbeitet am: %s von %s'),
+                                strftime('%x, %X', $event->chdate),
+                                    htmlReady($editor->getFullName('no_title'))) ?>
+                        </div>
+                        <? endif; ?>
+                    <? endif; ?>
+                </td>
+            </tr>
+            <? endif; ?>
         </tbody>
         <tbody class="collapsed">
             <tr class="header-row">

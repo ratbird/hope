@@ -22,11 +22,7 @@
                 </div>
                 <? endif ?>
                 <div class="calendar-day-event-title">
-                <? if ($event->getPermission() == Event::PERMISSION_CONFIDENTIAL) : ?>
-                    <?= $event->getTitle() ?>
-                <? else : ?>
                     <a title="<?= _('Termin bearbeiten') ?>" data-dialog="size=auto" href="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id, array('evtype' => $event->getType())) ?>"><?= $event->getTitle() ?></a>
-                <? endif ?>
                     <?= $this->render_partial('calendar/single/_tooltip', array('event' => $event)) ?>
                 </div>
             </td>

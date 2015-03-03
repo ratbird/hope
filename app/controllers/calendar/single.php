@@ -156,7 +156,7 @@ class Calendar_SingleController extends Calendar_CalendarController
     {
         $this->range_id = $range_id ?: $this->range_id;
         $this->calendar = new SingleCalendar($this->range_id);
-        if ($this->calendar->deleteEvent($event_id)) {
+        if ($this->calendar->deleteEvent($event_id, true)) {
             PageLayout::postMessage(MessageBox::success(_('Der Termin wurde gelöscht.')));
         }
         $this->redirect($this->url_for('calendar/single/' . $this->last_view));
@@ -390,7 +390,6 @@ class Calendar_SingleController extends Calendar_CalendarController
         $this->range_id = $range_id ?: $this->range_id;
         $user_id = $user_id ?: Request::option('user_id');
         $this->calendar = new SingleCalendar($this->range_id);
-        var_dump($user_id);
         $calendar_user = new CalendarUser(
                     array($this->calendar->getRangeId(), $user_id));
         if (!$calendar_user->isNew()) {

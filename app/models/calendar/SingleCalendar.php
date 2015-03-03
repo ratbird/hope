@@ -508,10 +508,11 @@ class SingleCalendar
     /**
      * Deletes an event from this calendar.
      * 
-     * @param string|object $event The id of an event or an event object of type CalendarEvent.
+     * @param string|object $calendar_event The id of an event or an event object of type CalendarEvent.
+     * @param boolean $all If true all events of a group event will be deleted.
      * @return boolean|int The number of deleted events. False if the event was not deleted.
      */
-    public function deleteEvent($calendar_event)
+    public function deleteEvent($calendar_event, $all = false)
     {
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
             if (!is_object($calendar_event)) {
@@ -535,7 +536,7 @@ class SingleCalendar
                 if ($deleted && !$this->havePermission(Calendar::PERMISSION_OWN)) {
                     $this->sendDeleteMessage($event_message);
                 }
-                if ($deleted && $author_id == $this->getRangeId()) {
+                if ($all && $deleted && $author_id == $this->getRangeId()) {
                     CalendarEvent::findEachBySQL(function ($ce) use ($deleted) {
                         $calendar = new SingleCalendar($ce->range_id);
                         $deleted += $calendar->deleteEvent($ce);
@@ -586,7 +587,7 @@ class SingleCalendar
     }
     
     /**
-     * Returns a array of all events (with calculated recurrences)
+     * Returns an array of all events (with calculated recurrences)
      * in the given time range.
      * 
      * @param string $owner_id The user id of calendar owner.
@@ -594,7 +595,7 @@ class SingleCalendar
      * @param string $user_id The id of the user who gets access to the calendar (optional, default current user)
      * @param array $restrictions An array with key value pairs of properties to filter the result (optional).
      * @param array $class_names Array of class names. The class must implement Event (optional).
-     * @return \SingleCalendar
+     * @return array All events in the given time range (with calculated recurrences)
      */
     public static function getEventList($owner_id, $start, $end, $user_id = null,
             $restrictions = null, $class_names = null)

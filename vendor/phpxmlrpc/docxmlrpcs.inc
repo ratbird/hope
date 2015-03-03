@@ -36,7 +36,6 @@
 
 		function checkAuth()
 		{
-		    require_once "lib/classes/WebserviceAccessRule.class.php";
 
 		    $rules = WebserviceAccessRule::findByApiKey($_SERVER['PHP_AUTH_PW']);
 		    if (!count($rules)) {

@@ -74,7 +74,10 @@ class CoreLiterature implements StudipModule {
                 				   'Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
                 				   'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann '.
                 				   'im tatsächlichen Buchbestand der Hochschule recherchiert werden.'),
-        	'icon' => 'icons/16/black/literature.png'        		 
+        	'icon' => 'icons/16/black/literature.png',
+        	'screenshot' => 'plus/screenshots/Literatur/Literatur_suchen.jpg',
+        	'additionalscreenshots' => array('plus/screenshots/Literatur/Literatur_in_Literaturliste_einfuegen.jpg',
+        									 'plus/screenshots/Literatur/Literaturliste_in_der_Veranstaltung_anzeigen.jpg')          		 
         );
      }
 }

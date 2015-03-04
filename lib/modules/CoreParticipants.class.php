@@ -102,7 +102,8 @@ class CoreParticipants implements StudipModule {
                 				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehrorganisation'),
         	'icon' => 'icons/16/black/persons.png',
-        	'screenshot' => 'plus/screenshots/TeilnehmerInnen/TeilnehmerInnen.png' 
+        	'screenshot' => 'plus/screenshots/TeilnehmerInnen/Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg',
+        	'additionalscreenshots' => array('plus/screenshots/TeilnehmerInnen/Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg')
         );
     }
 }

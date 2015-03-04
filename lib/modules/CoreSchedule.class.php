@@ -69,10 +69,11 @@ class CoreSchedule implements StudipModule {
                 				   'können Lehrende den Terminen Themen hinzufügen, die z. B. eine '.
                 				   'Kurzbeschreibung der Inhalte darstellen.'),    		
         	'icon' => 'icons/16/black/schedule.png',
-        	'screenshot' => 'plus/screenshots/Ablaufplan/Termine_mit_Themen.jpg',
+        	'screenshot' => 'plus/screenshots/Ablaufplan/Termine mit Themen.jpg',
         	'additionalscreenshots' => array(
-        		'plus/screenshots/Ablaufplan/Themen_mit_Terminkopplung.jpg',
-        		'plus/screenshots/Ablaufplan/Thema_bearbeiten_und_einem_Termin_zuordnen.jpg'
+        		'plus/screenshots/Ablaufplan/Themen mit Terminkopplung.jpg',
+        		'plus/screenshots/Ablaufplan/Thema bearbeiten und einem Termin zuordnen.jpg'
+        	)
         );
     }
 }

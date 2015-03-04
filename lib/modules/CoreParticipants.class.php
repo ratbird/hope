@@ -86,19 +86,19 @@ class CoreParticipants implements StudipModule {
                 'Möglichkeiten, eine Rundmail an alle zu schreiben (nur '.
                 'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'displayname' => _('TeilnehmerInnen'),
-        	'keywords' => _('Rundmailfunktion an alle, einzelne oder mehrere Teilnehmenden;
+        	'keywords' => _('Rundmail an einzelne, mehrere oder alle Teilnehmenden;
 							Gruppierung nach Lehrenden, TutorInnen und teilnehmenden Studierenden (AutorInnen);
 							Aufnahme neuer teilnehmender Studierender (AutorInnen) und TutorInnen;
 							Import einer Teilnehmendenliste;
 							Export der Teilnehmendenliste;
-							Funktionen und Gruppen einrichten;
+							Einrichten von Gruppen;
 							Anzeige Studiengang und Fachsemester'),
             'descriptionshort' => _('Liste aller Teilnehmenden einschließlich Nachrichtenfunktionen'),
-            'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Rolle '.
-                				   'in einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum '.
+            'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Rolle in '.
+                				   'einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum '.
                 				   'als auch der Studiengang mit Semesterangabe der Studierenden dargestellt. '.
-                				   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem '.
-                				   'gibt es die Möglichkeiten für Lehrende, eine Rundmail an alle zu schreiben '.
+                				   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem gibt '.
+                				   'es die Möglichkeiten für Lehrende, allen eine Rundmail zukommen zu lassen '.
                 				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehrorganisation'),
         	'icon' => 'icons/16/black/persons.png',

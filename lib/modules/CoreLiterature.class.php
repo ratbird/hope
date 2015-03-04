@@ -65,15 +65,14 @@ class CoreLiterature implements StudipModule {
             'displayname' => _('Literatur'),
             'category' => _('Lehrorganisation'),
         	'keywords' => _('Individuell zusammengestellte Literaturlisten;
-							Anbindung an Literaturverwaltungsprogramme;
-							Einfache Suche geeigneter Literatur'),
+							Anbindung an Literaturverwaltungsprogramme (z. B. OPAC);
+							Einfache Suche nach Literatur'),
         	'descriptionshort' => _('Erstellung von Literaturlisten unter Verwendung von Katalogen'),
-        	'descriptionlong' => _('Lehrende haben die Möglichkeit, veranstaltungsspezifische '.
-                				   'Literaturlisten entweder zu erstellen oder bestehende Listen '.
-                				   'aus anderen Literaturverwaltungsprogrammen (z. B. Citavi und '.
-                				   'Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
-                				   'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann '.
-                				   'im tatsächlichen Buchbestand der Hochschule recherchiert werden.'),
+        	'descriptionlong' => _('Lehrende haben die Möglichkeit, veranstaltungsspezifische Literaturlisten '.
+        							'entweder zu erstellen oder bestehende Listen aus anderen Literaturverwaltungsprogrammen '.
+        							'(z. B. Citavi und Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
+        							'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann im tatsächlichen '.
+        							'Buchbestand der Hochschule recherchiert werden.'),
         	'icon' => 'icons/16/black/literature.png',
         	'screenshot' => 'plus/screenshots/Literatur/Literatur_suchen.jpg',
         	'additionalscreenshots' => array('plus/screenshots/Literatur/Literatur_in_Literaturliste_einfuegen.jpg',

@@ -63,17 +63,15 @@ class CoreSchedule implements StudipModule {
 							Themenzuordnung zu Terminen;
 							Terminzuordnung zu Themen'),
         	'descriptionshort' => _('Anzeige aller Termine der Veranstaltung, ggf. mit Themenansicht'),
-        	'descriptionlong' => _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, '.
-                				   'Exkursions- und sonstige Veranstaltungstermine auf. Zur besseren '.
-                				   'Orientierung und zur inhaltlichen Einstimmung der Studierenden '.
-                				   'können Lehrende den Terminen Themen hinzufügen, die z. B. eine '.
-                				   'Kurzbeschreibung der Inhalte darstellen.'),    		
+        	'descriptionlong' => _('Der Ablaufplan listet alle Präsenz-, E-Learning-, Klausur-, Exkursions- ' .
+        							'und sonstige Veranstaltungstermine auf. Zur besseren Orientierung und zur ' .
+        							'inhaltlichen Einstimmung der Studierenden können Lehrende den Terminen ' .
+        							'Themen hinzufügen, die z. B. eine Kurzbeschreibung der Inhalte darstellen.'),    		
         	'icon' => 'icons/16/black/schedule.png',
         	'screenshot' => 'plus/screenshots/Ablaufplan/Termine_mit_Themen.jpg',
         	'additionalscreenshots' => array(
         		'plus/screenshots/Ablaufplan/Themen_mit_Terminkopplung.jpg',
-        		'plus/screenshots/Ablaufplan/Thema_bearbeiten_und_einem_Termin_zuordnen.jpg'
-        	)
+        		'plus/screenshots/Ablaufplan/Thema_bearbeiten_und_einem_Termin_zuordnen.jpg')
         );
     }
 }

@@ -133,19 +133,21 @@ class CoreWiki implements StudipModule {
             'displayname' => _('Wiki-Web'),
         	'keywords' => _('Individuelle Bearbeitung von Texten;
 							Versionshistorie;
-							Export in PDF;
+							Druckansicht und PDF-Export;
 							Löschfunktion für die aktuellste Seiten-Version;
-							Keine gleichzeige Bearbeitung desselben Textes möglich'),
+							Keine gleichzeitige Bearbeitung desselben Textes möglich, nur nacheinander'),
             'descriptionshort' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
-            'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene AutorInnen gemeinsam Texte,'.
-                    'Konzepte und andere schriftliche Arbeiten erstellen und gestalten, dies allerdings nicht '.
-                    'gleichzeitig. Texte können individuell bearbeitet und die Änderungen gespeichert werden. '.
-                    'Das Besondere im Wiki ist, dass Studierende und Lehrende annähernd die gleichen Rechte '.
-                    '(schreiben, lesen, ändern, löschen) haben, was sich nicht einschränken lässt. Das System '.
-                    'erstellt eine Versionshistorie, mit der Änderungen nachvollziehbar werden. Einzelne Versionen '.
-                    'können zudem auch gelöscht werden (nur Lehrende). Ein Export als pdf-Datei ist integriert.'),
-            'category' => _('Kommunikation und Zusammenarbeit'),
-        	'icon' => 'icons/16/black/wiki.png',
+            'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene AutorInnen gemeinsam Texte, '.
+            						'Konzepte und andere schriftliche Arbeiten erstellen und gestalten. Dies '.
+            						'allerdings nicht gleichzeitig. Texte können individuell bearbeitet und '.
+            						'gespeichert werden. Das Besondere im Wiki ist, dass Studierende und Lehrende '.
+            						'annähernd die gleichen Rechte (schreiben, lesen, ändern, löschen) haben, was '.
+            						'gegenseitiges Vertrauen voraussetzt. Das System erstellt eine Versionshistorie, '.
+            						'mit der Änderungen nachvollziehbar werden. Einzelne Versionen können zudem auch '.
+            						'gelöscht werden (nur Lehrende). Eine Druckansicht und eine Exportmöglichkeit als '.
+            						'PDF-Datei ist integriert.'),
+			'category' => _('Kommunikation und Zusammenarbeit'),
+			'icon' => 'icons/16/black/wiki.png',
         	'screenshot' => 'plus/screenshots/Wiki-Web/Gemeinsam_erstellte_Texte.jpg'                
         );
     }

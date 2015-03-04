@@ -71,15 +71,16 @@ class CoreElearningInterface implements StudipModule {
                 'bereit zu stellen.'),
             'displayname' => _('Lernmodulschnittstelle'),
             'category' => _('Aufgaben'),
-        	'keywords' => _('Einbindung z. B. von Ilias-Lerneinheiten'),
+        	'keywords' => _('Einbindung z. B. von ILIAS-Lerneinheiten;
+        					Zugang zu externen Lernplattformen;
+        					Aufgaben- und Test-Erstellung'),
         	'icon' => 'icons/16/black/learnmodule.png',
         	'descriptionshort' => _('Zugang zu extern erstellten Lernmodulen'),
         	'descriptionlong' => _('Über diese Schnittstelle ist es möglich, Selbstlerneinheiten, '.
-                				   'die in externen Programmen erstellt werden, in Stud.IP zur '.
-                				   'Verfügung zu stellen. Ein häufig angebundenes System ist Ilias. '.
-                				   'Besteht eine Anbindung zu einem Ilias-System, haben Lehrende die '.
-                				   'Möglichkeit, in Ilias Selbstlerneinheiten zu erstellen und in '.
-                				   'Stud.IP bereit zu stellen.')
+        							'die in externen Programmen erstellt werden, in Stud.IP zur Verfügung '.
+        							'zu stellen. Ein häufig angebundenes System ist ILIAS. Besteht eine '.
+        							'Anbindung zu einem ILIAS-System, haben Lehrende die Möglichkeit, in '.
+        							'ILIAS Selbstlerneinheiten zu erstellen und in Stud.IP bereit zu stellen.')
         );
     }
 }

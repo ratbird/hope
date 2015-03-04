@@ -120,22 +120,19 @@ class CoreScm implements StudipModule {
             'displayname' => _('Freie Informationsseite'),
             'category' => _('Lehrorganisation'),
         	'keywords' => _('Raum für eigene Informationen;
-							Titel des Kartenreiters frei definierbar;
+							Name des Reiters frei definierbar;
 							Beliebig erweiterbar durch zusätzliche "neue Einträge"'),
-            'descriptionshort' => _('Die Lehrenden bestimmen, wie Titel und Inhalt dieser Seite aussehen.'),
-            'descriptionlong' => _('Diese Seite kann von Lehrenden nach ihren speziellen Anforderungen '.
-                				   'eingerichtet werden. So ist z.B. der Titel im Kartenreiter frei definierbar. '.
-                				   'Ferner können beliebig viele neue Einträgsseiten eingefügt werden. Für jeden '.
-                				   'Eintrag öffnet sich eine Seite mit einem Text-Editor, in den beliebiger Text '.
-                				   'eingegeben und formatiert werden kann. Oft wird die Seite für die Angabe von '.
-                				   'Literatur genutzt als Alternative zum Inhaltselement Literatur. Sie kann aber '.
-                				   'auch für andere beliebige Zusatzinformationen (Links, Protokolle etc.) verwendet werden.'),
+            'descriptionshort' => _('Freie Gestaltung von Reiternamen und Inhalten durch Lehrende.'),
+            'descriptionlong' => _('Diese Seite kann von Lehrenden nach ihren speziellen Anforderungen eingerichtet werden. '.
+            						'So ist z.B. der Titel im Reiter frei definierbar. Ferner können beliebig viele neue '.
+            						'Eintragsseiten eingefügt werden. Für jeden Eintrag öffnet sich eine Seite mit einem '.
+            						'Text-Editor, in den beliebiger Text eingefüft, eingegeben und formatiert werden kann. '.
+            						'Oft wird die Seite für die Angabe von Literatur genutzt als Alternative zur Funktion '.
+            						'Literatur. Sie kann aber auch für andere beliebige Zusatzinformationen (Links, Protokolle '.
+            						'etc.) verwendet werden.'),
         	'icon' => 'icons/16/black/infopage.png',
         	'screenshot' => 'plus/screenshots/Freie_Informationsseite/Zwei_Eintraege_mit_Inhalten_zur_Verfuegung_stellen.jpg',
-        	'additionalscreenshots' => array(
-        		'plus/screenshots/Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg'
-        	)
-        	
+        	'additionalscreenshots' => array('plus/screenshots/Freie_Informationsseite/Neue_Informationsseite_anlegen.jpg')        	
         );
     }
 }

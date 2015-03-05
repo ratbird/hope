@@ -975,7 +975,7 @@ class Admin_UserController extends AuthenticatedController
                            'user_id',
                            true,
                            new StandardSearch('user_id'),
-                           'function (value) { document.location = "' . $this->url_for('admin/user/edit') . '/" + value; }');
+                           'function (value) { document.location = STUDIP.URLHelper.getURL("dispatch.php/admin/user/edit/" + value); }');
 
         $sidebar->addWidget($actions);
         $sidebar->addWidget($search);

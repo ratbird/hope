@@ -56,7 +56,7 @@ class CoreSchedule implements StudipModule {
                 'Terminen Themen hinzufügen, die z. B. eine Kurzbeschreibung '.
                 'der Inhalte darstellen.'),
             'displayname' => _('Ablaufplan'),
-            'category' => _('Lehrorganisation'),
+            'category' => _('Lehr- und Lernorganisation'),
         	'keywords' => _('Inhaltliche und räumliche Orientierung für Studierende;
 							Beschreibung der Inhalte einzelner Termine;
 							Raumangabe;

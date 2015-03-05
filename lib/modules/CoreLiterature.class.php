@@ -63,7 +63,7 @@ class CoreLiterature implements StudipModule {
                 'kann im tatsächlichen Buchbestand der Hochschule '.
                 'recherchiert werden.'),
             'displayname' => _('Literatur'),
-            'category' => _('Lehrorganisation'),
+            'category' => _('Lehr- und Lernorganisation'),
         	'keywords' => _('Individuell zusammengestellte Literaturlisten;
 							Anbindung an Literaturverwaltungsprogramme (z. B. OPAC);
 							Einfache Suche nach Literatur'),

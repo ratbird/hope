@@ -118,7 +118,7 @@ class CoreScm implements StudipModule {
                 'andere beliebige Zusatzinformationen (Links, Protokolle '.
                 'etc.) verwendet werden.'),
             'displayname' => _('Freie Informationsseite'),
-            'category' => _('Lehrorganisation'),
+            'category' => _('Lehr- und Lernorganisation'),
         	'keywords' => _('Raum für eigene Informationen;
 							Name des Reiters frei definierbar;
 							Beliebig erweiterbar durch zusätzliche "neue Einträge"'),

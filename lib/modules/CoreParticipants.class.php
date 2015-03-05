@@ -100,7 +100,7 @@ class CoreParticipants implements StudipModule {
                 				   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem gibt '.
                 				   'es die Möglichkeiten für Lehrende, allen eine Rundmail zukommen zu lassen '.
                 				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
-            'category' => _('Lehrorganisation'),
+            'category' => _('Lehr- und Lernorganisation'),
         	'icon' => 'icons/16/black/persons.png',
         	'screenshot' => 'plus/screenshots/TeilnehmerInnen/Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg',
         	'additionalscreenshots' => array('plus/screenshots/TeilnehmerInnen/Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg')

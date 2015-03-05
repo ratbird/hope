@@ -70,7 +70,7 @@ class CoreElearningInterface implements StudipModule {
                 'ILIAS Selbstlerneinheiten zu erstellen und in Stud.IP '.
                 'bereit zu stellen.'),
             'displayname' => _('Lernmodulschnittstelle'),
-            'category' => _('Aufgaben'),
+            'category' => _('Inhalte und Aufgabenstellungen'),
         	'keywords' => _('Einbindung z. B. von ILIAS-Lerneinheiten;
         					Zugang zu externen Lernplattformen;
         					Aufgaben- und Test-Erstellung'),

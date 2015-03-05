@@ -102,7 +102,7 @@ class CoreDocuments implements StudipModule {
                 'bestimmte Rechte für Studierende, wie z.B. das Leserecht, '.
                 'festgelegt werden.'),
             'displayname' => _('Dateibereich'),
-            'category' => _('Lehrorganisation'),
+            'category' => _('Lehr- und Lernorganisation'),
         	'keywords' => _('Hoch- und Herunterladen von Dateien;
 							Anlegen von Ordnern und Unterordnern;
 							Verschieben einer Datei/eines Ordners per drag & drop innerhalb einer Veranstaltung;

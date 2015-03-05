@@ -4,6 +4,7 @@
             <tr>
                 <th><?= _("Name")?></th>
                 <th><?= _("Dozenten")?></th>
+                <th><?= _("versteckt")?></th>
                 <th><?= _("vorläufige Anmeldung")?></th>
                 <th><?= _("verbindliche Anmeldung")?></th>
                 <th><?= _("max. Teilnehmer")?></th>
@@ -20,6 +21,7 @@
                     . $course->name
                     . ($course->cycles ? ' (' . join('; ', $course->cycles->toString()) . ')' : ''))?></td>
             <td><?= htmlReady(join(', ', $course->members->findBy('status','dozent')->orderBy('position')->limit(3)->pluck('Nachname')))?></td>
+            <td><input <?=$editable?> type="checkbox" name="configure_courses_hidden[<?= $course->id?>]" value="1" <?= $course->visible ? '' : 'checked'?>></td>
             <td><input <?=$editable?> type="checkbox" name="configure_courses_prelim[<?= $course->id?>]" value="1" <?= $course->admission_prelim ? 'checked' : ''?>></td>
             <td><input <?=$editable?> type="checkbox" name="configure_courses_binding[<?= $course->id?>]" value="1" <?= $course->admission_binding ? 'checked' : ''?>></td>
             <td><input <?=$editable?> type="text" size="2" name="configure_courses_turnout[<?= $course->id?>]" value="<?= (int)$course->admission_turnout ?>"></td>
@@ -53,4 +55,4 @@
 </div>
 <?= CSRFProtection::tokenTag()?>
 </form>
-<? 
+<?

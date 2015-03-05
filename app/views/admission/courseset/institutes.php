@@ -1,7 +1,7 @@
 <?= Assets::img('icons/16/yellow/arr_2down.png', array(
     'alt' => _('Einrichtung hinzufügen'),
     'title' => _('Einrichtung hinzufügen'),
-    'onclick' => "STUDIP.Admission.updateInstitutes($('#institute_id_1_realvalue').val(), '". 
+    'onclick' => "STUDIP.Admission.updateInstitutes($('input[name=&quot;institute_id&quot;]').val(), '".
         $controller->url_for('admission/courseset/institutes', $courseset ? $courseset->getId() : '')."', '".
         $controller->url_for('admission/courseset/instcourses', $courseset ? $courseset->getId() : '')."', 'add')")) ?>
 <?= $instSearch ?>

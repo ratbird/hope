@@ -21,6 +21,7 @@
     <tbody>
         <?php foreach ($allCourses as $course) {
             $title = $course['Name'];
+            $title .= (!$course['visible'] ? ' (' . _("versteckt") . ')' : '');
             $title .= " (" . (int)$course['admission_turnout'] . ")";
             if (in_array($course['seminar_id'], $selectedCourses)) {
                 $selected = ' checked="checked"';

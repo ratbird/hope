@@ -938,21 +938,16 @@ class CourseSet
         $tpl->set_attribute('courseset', $this);
         $institutes = array();
         if (!$short) {
-            foreach ($this->institutes as $id => $assigned) {
-                $current = new Institute($id);
-                $institutes[$id] = $current['Name'];
-            }
-
+            $institutes = Institute::findAndMapMany(function($i) {return $i->name;}, array_keys($this->institutes), 'ORDER BY Name');
             $tpl->set_attribute('institutes', $institutes);
         }
         if (!$short || $this->hasAdmissionRule('LimitedAdmission')) {
-            $courses = array();
-            foreach ($this->courses as $id => $assigned) {
-                $current = new Seminar($id);
-                $name = ($current->getNumber() ? $current->getNumber().' | '.$current->getName() : $current->getName());
-                $name .= ' (' . $current->getStartSemesterName() . ')';
-                $courses[$id] = $name;
-            }
+            $courses = Course::findAndMapMany(function($c) {
+                return array('id' => $c->id,
+                             'name' => $c->getFullname('number-name-semester'));
+            },
+                array_keys($this->courses),
+                'ORDER BY start_time,VeranstaltungsNummer,Name');
             $tpl->set_attribute('is_limited', $this->hasAdmissionRule('LimitedAdmission'));
             $tpl->set_attribute('courses', $courses);
         }

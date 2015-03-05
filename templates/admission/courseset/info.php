@@ -22,12 +22,12 @@
 <?php if (!$short || $is_limited) { ?>
     <i><?= _("Veranstaltungszuordnung:") ?></i>
     <ul>
-        <?php foreach ($courses as $course_id => $course) { ?>
+        <?php foreach ($courses as $course) { ?>
         <li>
         <? if ($is_limited) : ?>
-            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('sem_id' => $course_id))?>"><?= htmlReady($course) ?></a>
+            <a href="<?= URLHelper::getLink('dispatch.php/course/details/', array('cid' => null, 'sem_id' => $course['id']))?>"><?= htmlReady($course['name']) ?></a>
         <? else : ?>
-            <?= htmlReady($course) ?>
+            <?= htmlReady($course['name']) ?>
         <? endif ?>
         </li>
         <?php } ?>

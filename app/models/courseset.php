@@ -23,19 +23,19 @@ class CoursesetModel {
      * @param Array  $selectedCourses Courses that have already been selected manually
      * @param String $semester_id Get only courses belonging to the given semester
      * @param mixed  $filter Fetch only courses fulfilling a search string or of a certain lecturer?
-     * 
+     *
      * @return Array Found courses.
      */
     public function getInstCourses($instituteIds, $coursesetId='', $selectedCourses=array(), $semester_id = null, $filter = false) {
         // Get semester dates for course sorting.
         $currentSemester = $semester_id ? Semester::find($semester_id) : Semester::findCurrent();
-        
+
         $db = DBManager::get();
         $courses = array();
         if ($filter === true) {
             $query = "SELECT su.`Seminar_id` FROM `seminar_user` su
                 INNER JOIN `seminare` s USING(`Seminar_id`)
-                WHERE s.status NOT IN(?) AND s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1) 
+                WHERE s.status NOT IN(?) AND s.`start_time` <= ? AND (? <= (s.`start_time` + s.`duration_time`) OR s.`duration_time` = -1)
                 AND su.`user_id`=?";
             $parameters = array(studygroup_sem_types(), $currentSemester->beginn, $currentSemester->beginn, $GLOBALS['user']->id);
             if (get_config('DEPUTIES_ENABLE')) {
@@ -50,7 +50,7 @@ class CoursesetModel {
             $courses = $db->fetchFirst("SELECT DISTINCT s.seminar_id FROM seminare s
                 INNER JOIN seminar_user su ON s.seminar_id=su.seminar_id AND su.status='dozent'
                 INNER JOIN auth_user_md5 aum USING(user_id)
-                WHERE s.status NOT IN(:studygroup_types) AND s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1) 
+                WHERE s.status NOT IN(:studygroup_types) AND s.start_time <= :sembegin AND (:sembegin <= (s.start_time + s.duration_time) OR s.duration_time = -1)
                 AND s.Institut_id IN(:institutes)
                 AND (s.name LIKE :filter OR s.Veranstaltungsnummer LIKE :filter OR Nachname LIKE :filter)",
                      array('studygroup_types' => studygroup_sem_types() ? studygroup_sem_types() : array(''),
@@ -68,13 +68,13 @@ class CoursesetModel {
                     AND seminar_id IN(?)", array($courses));
             $courses = array_diff($courses, $found);
         }
-        
+
         if ($coursesetId) {
             $courses = array_merge($courses, $db->fetchFirst(
                     "SELECT seminar_id FROM seminar_courseset sc
                      WHERE set_id = ?", array($coursesetId)));
         }
-        
+
         if ($selectedCourses) {
             $courses = array_merge($courses, $selectedCourses);
         }
@@ -86,6 +86,7 @@ class CoursesetModel {
                     'VeranstaltungsNummer' => $course->VeranstaltungsNummer,
                     'Name' => $course->Name . ($course->duration_time == -1 ? ' ' . _('(unbegrenzt)') : ''),
                     'admission_turnout' => $course->admission_turnout,
+                    'visible' => $course->visible,
             );
             $data[$course->id]['admission_type'] =
             DBManager::get()->fetchColumn(
@@ -97,24 +98,24 @@ class CoursesetModel {
 
         };
         Course::findEachMany($callable, array_unique($courses),"ORDER BY start_time DESC, VeranstaltungsNummer ASC, Name ASC");
-        
+
         return $data;
     }
 
     /**
      * Fetch institutes for course sets.
-     * 
+     *
      * @param Array $filter filter settings, e.g. a special subset of allowed
      * admission rules
-     * 
+     *
      * @return Array Found institutes.
      */
     static function getInstitutes($filter = array())
     {
         global $perm, $user;
-        
+
         $parameters = array(1);
-        $query = "SELECT COUNT(DISTINCT ci.set_id) FROM courseset_institute ci 
+        $query = "SELECT COUNT(DISTINCT ci.set_id) FROM courseset_institute ci
         LEFT JOIN coursesets c ON c.set_id = ci.set_id
         LEFT JOIN courseset_rule cr ON c.set_id = cr.set_id
         LEFT JOIN seminar_courseset sc ON c.set_id = sc.set_id
@@ -160,10 +161,10 @@ class CoursesetModel {
                             'name'    => sprintf(_('[Alle unter %s]'), $inst->name),
                             'is_fak'  => 'all'
                     );
-    
+
                     $num_inst = 0;
                     $num_sets_alle = $my_inst[$inst->id]['num_sets'];
-    
+
                     foreach ($alle as $institute) {
                        $num_inst += 1;
                        $my_inst[$institute->id] = $institute->toArray('name is_fak');

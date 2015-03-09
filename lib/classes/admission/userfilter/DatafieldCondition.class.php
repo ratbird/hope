@@ -24,7 +24,7 @@ class DatafieldCondition extends UserFilterField
     public static function getParameterizedTypes()
     {
         $ret = array();
-        foreach (Datafield::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) ORDER BY priority") as $df) {
+        foreach (Datafield::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) AND view_perms <> 'root' ORDER BY priority") as $df) {
             $ret[__CLASS__ . '_' . $df->id] = chr(160) . _("Datenfeld") . ': ' . $df->name;
         }
         return $ret;
@@ -67,7 +67,7 @@ class DatafieldCondition extends UserFilterField
                 $valid_values = array_combine($valid_values, $valid_values);
             }
             $this->validValues = $valid_values;
-            $this->null_yields = key($valid_values);
+            $this->null_yields = $typed_df instanceof DataFieldSelectboxMultipleEntry ? '' : key($valid_values);
         } else {
             $this->null_yields = '';
         }

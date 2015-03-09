@@ -563,15 +563,18 @@ class DataFieldSelectboxEntry extends DataFieldEntry
         list ($values, $is_assoc) = $this->getParams();
         $this->is_assoc_param = $is_assoc;
         $this->type_param = $values;
+        $this->init();
+    }
+
+    function init()
+    {
+        $is_assoc = $this->is_assoc_param;
+        $values = $this->type_param;
         reset($values);
-        if(is_null($this->getValue()))
-        {
-            if(! $is_assoc)
-            {
+        if (is_null($this->getValue())) {
+            if (!$is_assoc) {
                 $this->setValue(current($values)); // first selectbox entry is default
-            }
-            else
-            {
+            } else {
                 $this->setValue((string) key($values));
             }
         }
@@ -624,6 +627,13 @@ class DataFieldSelectboxEntry extends DataFieldEntry
 class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
 {
 
+    function init()
+    {
+        if (is_null($this->getValue())) {
+            $this->setValue('');
+        }
+    }
+
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . '][]';
@@ -657,8 +667,7 @@ class DataFieldSelectboxMultipleEntry extends DataFieldSelectboxEntry
 
     function setValueFromSubmit($value)
     {
-        if(is_array($value))
-        {
+        if (is_array($value)) {
             parent::setValueFromSubmit(join('|', array_unique(array_filter(array_map('trim',$value)))));
         } else {
             parent::setValueFromSubmit('');

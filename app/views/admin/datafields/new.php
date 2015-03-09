@@ -124,7 +124,7 @@ use Studip\Button, Studip\LinkButton;
                    <?= _("Pflichtfeld") ?>:
                 </td>
                 <td>
-                    <input type="checkbox" name="mandatory" value="true" <?= ($this->flash['request']['priority']?'checked="checked"':'') ?>>
+                    <input type="checkbox" name="is_required" value="true" <?= ($this->flash['request']['is_required']?'checked="checked"':'') ?>>
                </td>
             </tr>
             <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
@@ -136,6 +136,18 @@ use Studip\Button, Studip\LinkButton;
                </td>
             </tr>
         <? endif ?>
+        <? if (in_array($object_typ , array( 'user'))): ?>
+              <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+                <td>
+                    <label for="is_userfilter">
+                        <?= _('Mögliche Bedingung für Anmelderegel') ?>:
+                    </label>
+                </td>
+                <td>
+                    <input type="checkbox" name="is_userfilter" id="is_userfilter" value="1" <?= $this->flash['request']['is_userfilter'] ? 'checked="checked"':'' ?>  >
+                </td>
+            </tr>
+        <? endif; ?>
         <tr>
             <td colspan="2" align="center">
                 <?= Button::create(_('Anlegen'),'anlegen', array('title' => _('Neues Datenfeld anlegen')))?>

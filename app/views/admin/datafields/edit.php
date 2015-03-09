@@ -142,7 +142,18 @@ use Studip\Button, Studip\LinkButton;
             </tr>
 
          <? endif; ?>
-
+         <? if (in_array($item->getObjectType() , array( 'user'))): ?>
+              <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
+                <td>
+                    <label for="is_userfilter">
+                        <?= _('Mögliche Bedingung für Anmelderegel') ?>:
+                    </label>
+                </td>
+                <td>
+                    <input type="checkbox" name="is_userfilter" id="is_userfilter" value="1" <?= $item->getIsUserfilter() ? 'checked="checked"':'' ?>  >
+                </td>
+            </tr>
+        <? endif; ?>
         <tr class="table_footer">
             <td>&nbsp;</td>
             <td>

@@ -24,7 +24,7 @@ class DatafieldCondition extends UserFilterField
     public static function getParameterizedTypes()
     {
         $ret = array();
-        foreach (Datafield::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) AND view_perms <> 'root' ORDER BY priority") as $df) {
+        foreach (Datafield::findBySQL("object_type='user' AND (object_class & (1|2|4|8) OR object_class IS NULL) AND is_userfilter = 1 ORDER BY priority") as $df) {
             $ret[__CLASS__ . '_' . $df->id] = chr(160) . _("Datenfeld") . ': ' . $df->name;
         }
         return $ret;

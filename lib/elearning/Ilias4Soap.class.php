@@ -90,8 +90,8 @@ class Ilias4Soap extends Ilias3Soap
 
         $s = simplexml_load_string(studip_utf8encode($result));
 
-        if ($s->rows->row->column[3] == "successful")
-        return $s->rows->row->column[0];
+        if ((string)$s->rows->row->column[3] == "successful")
+        return (string)$s->rows->row->column[0];
         else
         return false;
     }

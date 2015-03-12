@@ -1049,7 +1049,7 @@ class Course_MembersController extends AuthenticatedController
             $this->redirect('course/members/additional_input');
             return 0;
         }
-
+        Navigation::activateItem('/course/members/additional');
         // fetch course and aux data
         $course = new Course($_SESSION['SessionSeminar']);
         if (Request::submitted('save')) {

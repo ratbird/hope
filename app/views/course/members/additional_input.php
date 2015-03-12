@@ -5,9 +5,9 @@
     <? foreach ($datafields as $field): ?>
         <? if ($field->getTypedDatafield()->isVisible() && $field->getTypedDatafield()->isEditable()): ?>
             <? $editable = true; ?>
-            <label><?= $field->name ?>
+            <label><?= $field->name ?></label>
                 <?= $field->getTypedDatafield()->getHTML('aux'); ?>
-            </label>
+
         <? endif; ?>
     <? endforeach; ?>
     <? if ($editable): ?>

@@ -848,7 +848,7 @@ class DataFieldDateEntry extends DataFieldEntry
             $ret .= sprintf('<option %s value="%s">%s</option>', ($parts[1] == $i ? 'selected' : ''), $i, $m);
         $ret .= "</select> ";
         $ret .= sprintf('<input name="%s" maxlength="4" size="3" value="%s" title="'._("Jahr").'" %s>', $field_name, $parts[0], $require);
-        return $ret;
+        return '<div style="white-space: nowrap">' . $ret . '</div>';
     }
 
     function isValid()
@@ -884,7 +884,7 @@ class DataFieldTimeEntry extends DataFieldEntry
         $require = $this->structure->getIsRequired() ? "required" : "";
         $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Stunden").'" %s>:', $name, $parts[0], $require);
         $ret .= sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Minuten").'" %s>', $name, $parts[1], $require);
-        return $ret;
+        return '<div style="white-space: nowrap">' . $ret . '</div>';
     }
 
     function isValid()

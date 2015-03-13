@@ -198,7 +198,7 @@ class File extends SimpleORMap
      */
     public function update()
     {
-        $this->mime_type = $this->storage_object->getMimeType() ?: $this->mime_type;
+        $this->mime_type = $this->storage_object->getMimeType($this->filename) ?: $this->mime_type;
         $this->mkdate    = $this->storage_object->getCreationTime();
         $this->chdate    = $this->storage_object->getModificationTime();
         $this->size      = $this->storage_object->getSize();

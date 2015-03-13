@@ -90,11 +90,14 @@ class DiskFileStorage implements FileStorage
     /**
      * Return the file's mime type, if known.
      *
+     * @param  string  $filename Optional filename if storage_id's do not
+     *                           provide enough information (like file
+     *                           extension)
      * @return string  mime type (NULL if unknown)
      */
-    public function getMimeType()
+    public function getMimeType($filename = null)
     {
-        return get_mime_type($this->file_path);
+        return get_mime_type($filename ?: $this->file_path);
     }
 
     /**

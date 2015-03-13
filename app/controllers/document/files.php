@@ -41,13 +41,6 @@ class Document_FilesController extends DocumentController
     {
         parent::before_filter($action, $args);
 
-        //Setup the user's sub-directory in $USER_DOC_PATH
-        $userdir = $GLOBALS['USER_DOC_PATH'] . '/' . $this->context_id . '/';
-
-        if (!file_exists($userdir)) {
-            mkdir($userdir, 0755, true);
-        }
-
         PageLayout::setTitle(_('Dateiverwaltung'));
         PageLayout::setHelpKeyword('Basis.Dateien');
         Navigation::activateItem('/profile/files');

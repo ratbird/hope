@@ -30,14 +30,6 @@ class Document_FolderController extends DocumentController
         parent::before_filter($action, $args);
 
         Navigation::activateItem('/profile/files');
-
-        // Setup the user's sub-directory in $USER_DOC_PATH
-        // TODO: This shouldn't be here
-        $userdir = $GLOBALS['USER_DOC_PATH'] . '/' . $GLOBALS['user']->id . '/';
-
-        if (!file_exists($userdir)) {
-            mkdir($userdir, 0755, true);
-        }
     }
 
     /**

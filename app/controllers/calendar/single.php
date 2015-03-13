@@ -162,6 +162,23 @@ class Calendar_SingleController extends Calendar_CalendarController
         $this->redirect($this->url_for('calendar/single/' . $this->last_view));
     }
     
+    public function delete_recurrence_action($range_id, $event_id, $atime)
+    {
+        $this->range_id = $range_id ?: $this->range_id;
+        $calendar = new SingleCalendar($this->range_id);
+        $event = $calendar->getEvent($event_id);
+        if ($event->getRecurrence('rtype') != 'SINGLE') {
+            $exceptions = $event->getExceptions();
+            $exceptions[] = $atime;
+            $event->setExceptions($exceptions);
+            if ($event->store() !== false) {
+                PageLayout::postMessage(MessageBox::success(
+                    strftime(_('Termin am %x aus Serie gelöscht.'), $atime)));
+            }
+        }
+        $this->redirect($this->url_for('calendar/single/' . $this->last_view));
+    }
+    
     public function export_event_action($event_id, $range_id = null)
     {
         $this->range_id = $range_id ?: $this->range_id;

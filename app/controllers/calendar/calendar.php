@@ -370,7 +370,9 @@ class Calendar_CalendarController extends AuthenticatedController
             return false;
         } else {
             $event->setRecurrence($rrule);
-            $event->setExceptions($this->parseExceptions(Request::get('exc_dates', '')));
+            $exceptions = array_diff(Request::getArray('exc_dates'),
+                    Request::getArray('del_exc_dates'));
+            $event->setExceptions($this->parseExceptions($exceptions));
             // if this is a group event, store event in the calendars of each attendee
             if (get_config('CALENDAR_GROUP_ENABLE')) {
                 $attendee_ids = Request::optionArray('attendees');
@@ -385,17 +387,15 @@ class Calendar_CalendarController extends AuthenticatedController
         $matches = array();
         $dates = array();
         preg_match_all('%(\d{1,2})\h*([/.])\h*(\d{1,2})\h*([/.])\h*(\d{4})\s*%',
-                $exc_dates, $matches, PREG_SET_ORDER);
+                implode(' ', $exc_dates), $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             if ($match[2] == '/') {
-                $dates[] = DateTime::createFromFormat('n/j/Y H:i',
-                        $match[1].'/'.$match[3].'/'.$match[5].' 12:00');
+                $dates[] = strtotime($match[1].'/'.$match[3].'/'.$match[5]);
             } else {
-                $dates[] = DateTime::createFromFormat('n#j#Y H:i',
-                        $match[1].$match[2].$match[3].$match[4].$match[5].' 12:00');
+                $dates[] = strtotime($match[1].$match[2].$match[3].$match[4].$match[5]);
             }
         }
-        return implode(',', $dates);
+        return $dates;
     }
     
     protected function parseDateTime($dt_string)

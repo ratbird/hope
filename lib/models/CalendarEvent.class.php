@@ -528,7 +528,7 @@ class CalendarEvent extends SimpleORMap implements Event
     }
 
     /**
-     * Sets proper timestamps as exceptios for given unix timestamps.
+     * Sets proper timestamps as exceptions for given unix timestamps.
      *
      * @param array $exceptions Array of exceptions as unix timestamps.
      */

@@ -462,6 +462,24 @@ a.calendar-event-text255 {
     border: solid 1px #505064;
 }
 
+#exc-dates {
+    padding: 2px;
+    list-style-type: none;
+    width: 7.5em;
+    min-height: 5em;
+    max-height: 10em;
+    overflow: auto;
+    border: 1px solid #888;
+    display: inline-block;
+    img {
+        vertical-align: text-top;
+    }
+    input:checked ~ span {
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
+}
+
 /* --- Styles fuer TerminZeile ---------------------------------------------- */
 table.tabdaterow {
     background-color: white;

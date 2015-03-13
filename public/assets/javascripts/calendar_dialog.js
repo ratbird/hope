@@ -35,5 +35,22 @@ STUDIP.CalendarDialog = {
             }
         });
         return false;
+    },
+    
+    addException: function () {
+        var exc_date = jQuery('#exc-date').val();
+        var exists = jQuery("#exc-dates input").is("input[value='" + exc_date + "']");
+        if (!exists) {
+            var compiled  = _.template(
+                '<li><label>'
+                + '<input type="checkbox" name="del_exc_dates[]" value="<%- excdate %>" style="display: none">'
+                + '<span><%- excdate %><img src="'
+                + STUDIP.ASSETS_URL + "images/icons/16/blue/trash.png"
+                + '"></span></label>'
+                + '<input type="hidden" name="exc_dates[]" value="<%- excdate %>">'
+                + '</li>');
+            jQuery('#exc-dates').append(compiled({excdate: exc_date, link: ""}));
+        }
+        return false;
     }
 };

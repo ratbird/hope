@@ -388,9 +388,30 @@
                         <?= _('Ausnahmen') ?>:
                     </label>
                 </td>
-                <? $exceptions = array_map(function ($exc) { return strftime('%x', $exc); }, $event->getExceptions()) ?>
-                <td colspan="2" style="vertical-align: top;">
-                    <textarea rows="5" cols="12" name="exc_dates" id="exc-dates"><?= implode("\n", $exceptions) ?></textarea>
+                <td colspan="2">
+                    <ul id="exc-dates">
+                        <? foreach ($event->getExceptions() as $exception) : ?>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="del_exc_dates[]" value="<?= strftime('%d.%m.%Y', $exception) ?>" style="display: none;">
+                                <span><?= strftime('%x', $exception) ?><?= Assets::img('images/icons/16/blue/trash.png', array('title' => _('Ausnahme löschen'))) ?></span>
+                            </label>
+                            <input type="hidden" name="exc_dates[]" value="<?= strftime('%d.%m.%Y', $exception) ?>">
+                        </li>
+                        <? endforeach; ?>
+                    <? /*
+                    <select name="exc_dates" id="exc-dates" size="5" style="width: 10em;" multiple>
+                        <? foreach ($event->getExceptions() as $exception) : ?>
+                        <option value="<?= strftime('%d.%m.%Y', $exception) ?>"><?= strftime('%x', $exception) ?></option>
+                        <? endforeach; ?>
+                    </select>
+                     * 
+                     */?>
+                    </ul>
+                    <input style="vertical-align: top; opacity: 0.8;" type="text" size="12" name="exc_date" id="exc-date" value="<?= strftime('%x', $atime) ?>">
+                    <span style="vertical-align: top;" onclick="STUDIP.CalendarDialog.addException(); return false;">
+                        <?= Assets::input('icons/16/blue/add.png', array('class' => 'text-bottom', 'title' => _('Ausnahme hinzufügen'))) ?>
+                    </span>
                 </td>
             </tr>
         </tbody>
@@ -400,6 +421,9 @@
     </table>
     <div style="text-align: center;" data-dialog-button>
         <? if (!$event->isNew()) : ?>
+        <? if ($event->getRecurrence('rtype') != 'SINGLE') : ?>
+        <?= LinkButton::create(_('Aus Serie löschen'), $controller->url_for('calendar/single/delete_recurrence/' . implode('/', $event->getId()) . '/' . $atime)) ?>
+        <? endif; ?>
         <?= LinkButton::create(_('Löschen'), $controller->url_for('calendar/single/delete/' . implode('/', $event->getId()))) ?>
         <? endif; ?>
         <?= Button::create(_('Speichern'), 'store', array('title' => _('Termin speichern'))) ?>
@@ -412,4 +436,5 @@
     jQuery('#start-date').datepicker();
     jQuery('#end-date').datepicker();
     jQuery('#exp-date').datepicker();
+    jQuery('#exc-date').datepicker();
 </script>

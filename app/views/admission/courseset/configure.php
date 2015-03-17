@@ -36,6 +36,9 @@ if ($flash['error']) {
     echo MessageBox::error($flash['error']);
 }
 ?>
+<div class="hidden-alert" style="display:none">
+    <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert."));?>
+</div>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h1><?= $courseset ? _('Anmeldeset bearbeiten') : _('Anmeldeset anlegen') ?></h1>
 <form class="studip_form" action="<?= $controller->url_for(!$instant_course_set_view ? 'admission/courseset/save/' . ($courseset ? $courseset->getId() : '') : 'course/admission/save_courseset/' . $courseset->getId()) ?>" method="post">
@@ -186,6 +189,9 @@ if ($flash['error']) {
             </div>
         </div>
     </fieldset>
+    <div class="hidden-alert" style="display:none">
+        <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert."));?>
+    </div>
     <fieldset>
         <legend><?= _('Weitere Daten') ?></legend>
    <? if (!$instant_course_set_view) : ?>

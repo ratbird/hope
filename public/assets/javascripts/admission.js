@@ -110,6 +110,7 @@ STUDIP.Admission = {
             });
         }
         STUDIP.Admission.closeDialog('configurerule');
+        STUDIP.Admission.toggleNotSavedAlert();
         return false;
     },
 
@@ -123,6 +124,7 @@ STUDIP.Admission = {
                 '<i>' + norules + '</i></span>');
         }
         STUDIP.Dialogs.closeConfirmDialog();
+        STUDIP.Admission.toggleNotSavedAlert();
     },
 
     toggleRuleDescription: function (targetId) {
@@ -219,7 +221,7 @@ STUDIP.Admission = {
             checkedItems.removeClass('jstree-unchecked');
             // Open parent nodes of checked nodes.
             checkedItems.parents().each(function () {
-                data.inst.open_node(this, false, true); 
+                data.inst.open_node(this, false, true);
             });
         }).jstree(config);
     },
@@ -249,6 +251,7 @@ STUDIP.Admission = {
                 query += '&courses[]=' + this.value;
             });
             this.getCourses(courseURL);
+            STUDIP.Admission.toggleNotSavedAlert();
         }
     },
 
@@ -291,6 +294,15 @@ STUDIP.Admission = {
             break;
         }
         return false;
+    },
+
+    toggleNotSavedAlert: function() {
+      $('.hidden-alert').show();
     }
 
 };
+jQuery(document).ready(function ($) {
+    $('tr.course input').live('change', function (i) {
+        STUDIP.Admission.toggleNotSavedAlert();
+    });
+});

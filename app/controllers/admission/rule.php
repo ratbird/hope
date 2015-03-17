@@ -96,19 +96,6 @@ class Admission_RuleController extends AuthenticatedController {
             $requestData['end_time'] = $timestamp;
         }
         $this->rule->setAllData($requestData);
-        $this->rule->store();
-    }
-
-    /**
-     * Deletes the given rule with all dependencies.
-     *
-     * @param String $ruleType Class name of the given rule.
-     * @param String $ruleId   ID of the given rule.
-     */
-    public function delete_action($ruleType, $ruleId) {
-        $rules = AdmissionRule::getAvailableAdmissionRules();
-        $rule = new $ruleType($ruleId);
-        $rule->delete();
     }
 
     /**
@@ -119,7 +106,7 @@ class Admission_RuleController extends AuthenticatedController {
      */
     public function validate_action($ruleType) {
         $rules = AdmissionRule::getAvailableAdmissionRules();
-        $rule = new $ruleType($ruleId);
+        $rule = new $ruleType();
         $this->errors = $rule->validate(Request::getInstance());
     }
 

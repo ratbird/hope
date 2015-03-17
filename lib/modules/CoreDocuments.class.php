@@ -105,7 +105,7 @@ class CoreDocuments implements StudipModule {
             'category' => _('Lehr- und Lernorganisation'),
         	'keywords' => _('Hoch- und Herunterladen von Dateien;
 							Anlegen von Ordnern und Unterordnern;
-							Verschieben einer Datei/eines Ordners per drag & drop innerhalb einer Veranstaltung;
+							Verschieben einer Datei/eines Ordners per drag and drop innerhalb einer Veranstaltung;
 							Verschieben einer Datei/eines Ordners in eine andere Veranstaltung;
 							Kopieren einer Datei/eines Ordners in eine andere oder mehrere Veranstaltungen;
 							Verlinkung auf abgelegte Dateien möglich;

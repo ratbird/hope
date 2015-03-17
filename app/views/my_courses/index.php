@@ -1,8 +1,3 @@
-<? if (sizeof($waiting_list)) : ?>
-    <?= $this->render_partial('my_courses/waiting_list.php', compact('waiting_list')) ?>
-<? endif ?>
-
-
 <? if (isset($flash['decline_course'])) : ?>
     <?=
     createQuestion($flash['message'], array('cmd' => $flash['cmd'], 'studipticket' => $flash['studipticket']),
@@ -10,6 +5,11 @@
               'studipticket' => $flash['studipticket']),
         $controller->url_for(sprintf('my_courses/decline/%s', $flash['course_id']))); ?>
 <? endif ?>
+
+<? if (sizeof($waiting_list)) : ?>
+    <?= $this->render_partial('my_courses/waiting_list.php', compact('waiting_list')) ?>
+<? endif ?>
+
 
 <? if (!empty($sem_courses)) : ?>
     <? $_order = (!$order_by || $order == 'desc') ? 'asc' : 'desc' ?>

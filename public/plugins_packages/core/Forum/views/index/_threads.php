@@ -154,7 +154,7 @@
             <? endif; ?>
             <? if (!$entry['anonymous'] || $entry['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
                 <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['user_id'])) ?>">
-                    <?= htmlReady($entry['author']) ?>
+                    <?= htmlReady(($temp_user = User::find($entry['user_id'])) ? $temp_user->getFullname() : $entry['author']) ?>
                 </a>
                 <? endif; ?>
                 <?= _("am") ?> <?= strftime($time_format_string_short, (int)$entry['mkdate']) ?>
@@ -180,7 +180,7 @@
             <? endif; ?>
             <? if (!$entry['last_posting']['anonymous'] || $entry['last_posting']['user_id'] == $GLOBALS['user']->id || $GLOBALS['perm']->have_perm('root')): ?>
             <a href="<?= UrlHelper::getLink('about.php?username='. $entry['last_posting']['username']) ?>">
-                    <?= htmlReady($entry['last_posting']['user_fullname']) ?>
+                <?= htmlReady(($temp_user = User::find($entry['last_posting']['user_id'])) ? $temp_user->getFullname() : $entry['last_posting']['user_fullname']) ?>
             </a>
             <? endif; ?>
             <br>

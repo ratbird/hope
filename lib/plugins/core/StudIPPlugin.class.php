@@ -133,7 +133,9 @@ abstract class StudIPPlugin {
 
         if (!method_exists($this, $action)) {
             $trails_root = $this->getPluginPath();
-            $dispatcher = new Trails_Dispatcher($trails_root, "plugins.php", 'index');
+            $trails_uri  = rtrim(PluginEngine::getLink($this, array(), null, true), '/');
+
+            $dispatcher = new Trails_Dispatcher($trails_root, $trails_uri, 'index');
             $dispatcher->current_plugin = $this;
             try {
                 $dispatcher->dispatch($unconsumed_path);

@@ -86,29 +86,29 @@ class CoreParticipants implements StudipModule {
                 'Möglichkeiten, eine Rundmail an alle zu schreiben (nur '.
                 'Lehrende) bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'displayname' => _('TeilnehmerInnen'),
-        	'keywords' => _('Rundmail an einzelne, mehrere oder alle Teilnehmenden;
-							Gruppierung nach Lehrenden, TutorInnen und teilnehmenden Studierenden (AutorInnen);
-							Aufnahme neuer teilnehmender Studierender (AutorInnen) und TutorInnen;
-							Import einer Teilnehmendenliste;
-							Export der Teilnehmendenliste;
-							Einrichten von Gruppen;
-							Anzeige Studiengang und Fachsemester'),
+            'keywords' => _('Rundmail an einzelne, mehrere oder alle Teilnehmenden;
+                            Gruppierung nach Lehrenden, TutorInnen und teilnehmenden Studierenden (AutorInnen);
+                            Aufnahme neuer teilnehmender Studierender (AutorInnen) und TutorInnen;
+                            Import einer Teilnehmendenliste;
+                            Export der Teilnehmendenliste;
+                            Einrichten von Gruppen;
+                            Anzeige Studiengang und Fachsemester'),
             'descriptionshort' => _('Liste aller Teilnehmenden einschließlich Nachrichtenfunktionen'),
             'descriptionlong' => _('Die Teilnehmenden werden gruppiert nach ihrer jeweiligen Rolle in '.
-                				   'einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum '.
-                				   'als auch der Studiengang mit Semesterangabe der Studierenden dargestellt. '.
-                				   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem gibt '.
-                				   'es die Möglichkeiten für Lehrende, allen eine Rundmail zukommen zu lassen '.
-                				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
+                                   'einer Tabelle gelistet. Für Lehrende werden sowohl das Anmeldedatum '.
+                                   'als auch der Studiengang mit Semesterangabe der Studierenden dargestellt. '.
+                                   'Die Liste kann in verschiedene Formate exportiert werden. Außerdem gibt '.
+                                   'es die Möglichkeiten für Lehrende, allen eine Rundmail zukommen zu lassen '.
+                                   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehr- und Lernorganisation'),
-        	'icon' => 'icons/16/black/persons.png',
-        	'screenshots' => array(
-        		'path' => 'plus/screenshots/TeilnehmerInnen',
-        		'pictures' => array(
-        			0 => array('source' => 'Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => 'Liste aller TeilnehmerInnen einer Veranstaltung'),
-        			1 => array( 'source' => 'Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => 'Rundmail an alle TeilnehmerInnen einer Veranstaltung')
-        		)
-        	)
+            'icon' => 'icons/16/black/persons.png',
+            'screenshots' => array(
+                'path' => 'plus/screenshots/TeilnehmerInnen',
+                'pictures' => array(
+                    0 => array('source' => 'Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => _('Liste aller TeilnehmerInnen einer Veranstaltung')),
+                    1 => array( 'source' => 'Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => _('Rundmail an alle TeilnehmerInnen einer Veranstaltung'))
+                )
+            )
         );
     }
 }

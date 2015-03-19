@@ -64,24 +64,24 @@ class CoreLiterature implements StudipModule {
                 'recherchiert werden.'),
             'displayname' => _('Literatur'),
             'category' => _('Lehr- und Lernorganisation'),
-        	'keywords' => _('Individuell zusammengestellte Literaturlisten;
-							Anbindung an Literaturverwaltungsprogramme (z. B. OPAC);
-							Einfache Suche nach Literatur'),
-        	'descriptionshort' => _('Erstellung von Literaturlisten unter Verwendung von Katalogen'),
-        	'descriptionlong' => _('Lehrende haben die Möglichkeit, veranstaltungsspezifische Literaturlisten '.
-        							'entweder zu erstellen oder bestehende Listen aus anderen Literaturverwaltungsprogrammen '.
-        							'(z. B. Citavi und Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
-        							'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann im tatsächlichen '.
-        							'Buchbestand der Hochschule recherchiert werden.'),
-        	'icon' => 'icons/16/black/literature.png',
-        	'screenshots' => array(
-        		'path' => 'plus/screenshots/Literatur',
-        		'pictures' => array(
-        			0 => array('source' => 'Literatur_suchen.jpg', 'title' => 'Literatur suchen'),
-        			1 => array('source' => 'Literatur_in_Literaturliste_einfuegen.jpg', 'title' => 'Literatur in Literaturliste einfügen'),
-        			2 => array( 'source' => 'Literaturliste_in_der_Veranstaltung_anzeigen.jpg', 'title' => 'Literaturliste in der Veranstaltung anzeigen')
-        		)
-        	)                		 
+            'keywords' => _('Individuell zusammengestellte Literaturlisten;
+                            Anbindung an Literaturverwaltungsprogramme (z. B. OPAC);
+                            Einfache Suche nach Literatur'),
+            'descriptionshort' => _('Erstellung von Literaturlisten unter Verwendung von Katalogen'),
+            'descriptionlong' => _('Lehrende haben die Möglichkeit, veranstaltungsspezifische Literaturlisten '.
+                                    'entweder zu erstellen oder bestehende Listen aus anderen Literaturverwaltungsprogrammen '.
+                                    '(z. B. Citavi und Endnote) hochzuladen. Diese Listen können in Lehrveranstaltungen '.
+                                    'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann im tatsächlichen '.
+                                    'Buchbestand der Hochschule recherchiert werden.'),
+            'icon' => 'icons/16/black/literature.png',
+            'screenshots' => array(
+                'path' => 'plus/screenshots/Literatur',
+                'pictures' => array(
+                    0 => array('source' => 'Literatur_suchen.jpg', 'title' => _('Literatur suchen')),
+                    1 => array('source' => 'Literatur_in_Literaturliste_einfuegen.jpg', 'title' => _('Literatur in Literaturliste einfügen')),
+                    2 => array( 'source' => 'Literaturliste_in_der_Veranstaltung_anzeigen.jpg', 'title' => _('Literaturliste in der Veranstaltung anzeigen'))
+                )
+            )                        
         );
      }
 }

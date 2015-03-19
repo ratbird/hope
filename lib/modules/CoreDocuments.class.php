@@ -103,32 +103,32 @@ class CoreDocuments implements StudipModule {
                 'festgelegt werden.'),
             'displayname' => _('Dateien'),
             'category' => _('Lehr- und Lernorganisation'),
-        	'keywords' => _('Hoch- und Herunterladen von Dateien;
-							Anlegen von Ordnern und Unterordnern;
-							Verschieben einer Datei/eines Ordners per drag and drop innerhalb einer Veranstaltung;
-							Verschieben einer Datei/eines Ordners in eine andere Veranstaltung;
-							Kopieren einer Datei/eines Ordners in eine andere oder mehrere Veranstaltungen;
-							Verlinkung auf abgelegte Dateien möglich;
-							Erstellung Hausaufgabenordner durch Aktivierung der Funktion "Dateiordnerberechtigung"'),
-        	'descriptionshort' => _('Austausch von Dateien'),
-        	'descriptionlong' => _('Dateien können sowohl von Lehrenden als auch von Studierenden hoch- bzw. '.
-        							'heruntergeladen werden. Ordner können angelegt und individuell benannt werden '.
-        							'(Standard: nur Lehrende), so dass Dateien strukuriert zur Verfügung gestellt '.
-        							'werden können. Multimediadateien wie Grafiken, Audio- und Videodateien werden '.
-        							'sofort angezeigt bzw. abspielbar dargestellt. Über das PlugIn "Dateiordnerberechtigungen" '.
-        							'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. das '.
-        							'Leserecht (r), festgelegt werden.'),
-        	'icon' => 'icons/16/black/files.png',
-        	'screenshots' => array(
-        		'path' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung',
-        		'pictures' => array(
-        			0 => array('source' => 'Ordneransicht_mit_geoeffnetem_Ordner.jpg', 'title' => 'Ordneransicht mit geöffnetem Ordner'),
-        			1 => array('source' => 'Ordneransicht_mit_Dateiinformationen.jpg', 'title' => 'Ordneransicht mit Dateiinformationen'),
-        			2 => array( 'source' => 'Neuen_Ordner_erstellen.jpg', 'title' => 'Neuen Ordner erstellen'),
-        			3 => array( 'source' => 'Ordner_zum_Hausaufgabenordner_umwandeln.jpg', 'title' => 'Ordner zum Hausaufgabenordner umwandeln'),
-        			4 => array( 'source' => 'Ansicht_alle_Dateien.jpg', 'title' => 'Ansicht alle Dateien')
-        		)
-        	)
+            'keywords' => _('Hoch- und Herunterladen von Dateien;
+                            Anlegen von Ordnern und Unterordnern;
+                            Verschieben einer Datei/eines Ordners per drag and drop innerhalb einer Veranstaltung;
+                            Verschieben einer Datei/eines Ordners in eine andere Veranstaltung;
+                            Kopieren einer Datei/eines Ordners in eine andere oder mehrere Veranstaltungen;
+                            Verlinkung auf abgelegte Dateien möglich;
+                            Erstellung Hausaufgabenordner durch Aktivierung der Funktion "Dateiordnerberechtigung"'),
+            'descriptionshort' => _('Austausch von Dateien'),
+            'descriptionlong' => _('Dateien können sowohl von Lehrenden als auch von Studierenden hoch- bzw. '.
+                                    'heruntergeladen werden. Ordner können angelegt und individuell benannt werden '.
+                                    '(Standard: nur Lehrende), so dass Dateien strukuriert zur Verfügung gestellt '.
+                                    'werden können. Multimediadateien wie Grafiken, Audio- und Videodateien werden '.
+                                    'sofort angezeigt bzw. abspielbar dargestellt. Über das PlugIn "Dateiordnerberechtigungen" '.
+                                    'können Im Dateibereich bestimmte Rechte (r, w, x, f) für Studierende, wie z.B. das '.
+                                    'Leserecht (r), festgelegt werden.'),
+            'icon' => 'icons/16/black/files.png',
+            'screenshots' => array(
+                'path' => 'plus/screenshots/Dateibereich_-_Dateiordnerberechtigung',
+                'pictures' => array(
+                    0 => array('source' => 'Ordneransicht_mit_geoeffnetem_Ordner.jpg', 'title' => _('Ordneransicht mit geöffnetem Ordner')),
+                    1 => array('source' => 'Ordneransicht_mit_Dateiinformationen.jpg', 'title' => _('Ordneransicht mit Dateiinformationen')),
+                    2 => array( 'source' => 'Neuen_Ordner_erstellen.jpg', 'title' => _('Neuen Ordner erstellen')),
+                    3 => array( 'source' => 'Ordner_zum_Hausaufgabenordner_umwandeln.jpg', 'title' => _('Ordner zum Hausaufgabenordner umwandeln')),
+                    4 => array( 'source' => 'Ansicht_alle_Dateien.jpg', 'title' => _('Ansicht alle Dateien'))
+                )
+            )
         );
     }
 }

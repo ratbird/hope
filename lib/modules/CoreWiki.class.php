@@ -148,7 +148,12 @@ class CoreWiki implements StudipModule {
             						'PDF-Datei ist integriert.'),
 			'category' => _('Kommunikation und Zusammenarbeit'),
 			'icon' => 'icons/16/black/wiki.png',
-        	'screenshot' => 'plus/screenshots/Wiki-Web/Gemeinsam_erstellte_Texte.jpg'                
+        	'screenshots' => array(
+        		'path' => 'plus/screenshots/Wiki-Web',
+        		'pictures' => array(
+        			0 => array( 'source' => 'Gemeinsam_erstellte_Texte.jpg', 'title' => 'Gemeinsam erstellte Texte')
+        		)
+        	)               
         );
     }
 }

@@ -102,8 +102,13 @@ class CoreParticipants implements StudipModule {
                 				   'bzw. einzelne Teilnehmende separat anzuschreiben.'),
             'category' => _('Lehr- und Lernorganisation'),
         	'icon' => 'icons/16/black/persons.png',
-        	'screenshot' => 'plus/screenshots/TeilnehmerInnen/Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg',
-        	'additionalscreenshots' => array('plus/screenshots/TeilnehmerInnen/Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg')
+        	'screenshots' => array(
+        		'path' => 'plus/screenshots/TeilnehmerInnen',
+        		'pictures' => array(
+        			0 => array('source' => 'Liste_aller_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => 'Liste aller TeilnehmerInnen einer Veranstaltung'),
+        			1 => array( 'source' => 'Rundmail_an_alle_TeilnehmerInnen_einer_Veranstaltung.jpg', 'title' => 'Rundmail an alle TeilnehmerInnen einer Veranstaltung')
+        		)
+        	)
         );
     }
 }

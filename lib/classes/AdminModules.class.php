@@ -104,8 +104,15 @@ class AdminModules extends ModulesNotification {
 								Das Recht "Sichtbarkeit" (x): Ordner wird angezeigt;
 								Das Recht "Ordner erstellen" (f): Studierende können Unterordner anlegen'),
                 'icon' => 'icons/16/black/files.png',
-                'screenshot' => 'plus/screenshots/Dateiordnerberechtigung/Ordner_zum_Hausaufgabenordner_umwandeln.jpg',
-
+                'screenshots' => array(
+                	'path' => 'plus/screenshots/Dateiordnerberechtigung', 
+        			'pictures' => array( 
+        				0 => array(
+        					'source' => 'Ordner_zum_Hausaufgabenordner_umwandeln.jpg', 
+        					'title' => 'Ordner zum Hausaufgabenordner umwandeln'
+        				)
+        			)
+                ),        		
                 'description' => _('Mit den Einstellungen zur Dateiordnerberechtigung können Lehrende die Zugriffsrechte '.
                 					'für Ordner im Dateibereich verändern. Wird z. B. das Leserecht entfernt, entsteht ein '.
                 					'Hausaufgabenordner, in den Studierende Dateien zwar hochladen, aber nicht sehen können, '.

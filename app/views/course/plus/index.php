@@ -67,7 +67,7 @@ foreach ($available_modules as $category => $pluginlist) {
             $cb_disabled = $pre_check ? 'disabled' : '';
             $cb_checked = $modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $modul["id"]) ? "checked" : "";
 
-            $pluginname = $modul['name'];
+            
             
             $URL = $GLOBALS['ASSETS_URL'].'images';
 
@@ -76,7 +76,7 @@ foreach ($available_modules as $category => $pluginlist) {
             }
 
             $info = ($studip_module instanceOf StudipModule) ? $studip_module->getMetadata() : ($modul['metadata'] ? $modul['metadata'] : array());
-
+            $pluginname = isset($info['displayname']) ? $info['displayname'] : $modul['name'];
             $getModuleXxExistingItems = "getModule" . $val['modulkey'] . "ExistingItems";
 
         }
@@ -176,31 +176,54 @@ foreach ($available_modules as $category => $pluginlist) {
                     <div class="plus_expert">
 
                         <div class="screenshot_holder">
-                            <? if (isset($info['screenshot'])) : 
-                            	$fileext = end(explode(".", $info['screenshot']));
-                        		$filename = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));?>
-								
-                                <a href="<?= $URL . "/" . $info['screenshot'] ?>"
-                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
-                                    <img class="big_thumb" src="<?= $URL . "/" . $info['screenshot'] ?>"
+                            <? if (isset($info['screenshot']) || isset($info['screenshots'])) : 
+                            	if(isset($info['screenshots'])){   
+	                            	$title = $info['screenshots']['pictures'][0]['title'];
+	                            	$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][0]['source'];	                            	
+                            	} else {
+                            		$fileext = end(explode(".", $info['screenshot']));
+                            		$title = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));
+                            		$source = $info['screenshot'];
+                            	}
+                        		?>
+                        		
+                                <a href="<?= $URL . "/" . $source ?>"
+                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $title ?>">
+                                    <img class="big_thumb" src="<?= $URL . "/" . $source ?>"
                                          alt="<?= $pluginname ?>"/>
                                 </a>
 
                                 <?
-                                if (isset($info['additionalscreenshots'])) {
+                                if (isset($info['additionalscreenshots']) || (isset($info['screenshots']) && count($info['screenshots']) > 1) ) {
                                     ?>
 
                                     <div class="thumb_holder">
+                                    <? 	if (isset($info['screenshots'])){
+                                    		$counter = count($info['screenshots']['pictures']);
+                                    		$cstart = 1;
+                                    	} else {
+                                    		$counter = count($info['additionalscreenshots']);
+                                    		$cstart = 0;
+                                		} ?>
+                                		
+                                        <? for ($i = $cstart; $i < $counter; $i++) { 
 
-                                        <? for ($i = 0; $i < count($info['additionalscreenshots']); $i++) { 
-                                       		 $fileext = end(explode(".", $info['additionalscreenshots'][$i]));
-                                			 $filename = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));?>
+                                        	if (isset($info['screenshots'])){
+                                        		$title = $info['screenshots']['pictures'][$i]['title'];
+                                        		$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][$i]['source'];
+                                        	} else {
+                                        		$fileext = end(explode(".", $info['additionalscreenshots'][$i]));
+                                        		$title = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));
+                                        		$source = $info['additionalscreenshots'][$i];
+                                        	}
+                                        			                             	
+                                       		 ?>
 
-                                            <a href="<?= $URL . "/" . $info['additionalscreenshots'][$i] ?>"
+                                            <a href="<?= $URL . "/" . $source ?>"
                                                data-lightbox="<?= $pluginname ?>"
-                                               data-title="<?= $filename ?>">
+                                               data-title="<?= $title ?>">
                                                 <img class="small_thumb"
-                                                     src="<?= $URL . "/" . $info['additionalscreenshots'][$i] ?>"
+                                                     src="<?= $URL . "/" . $source ?>"
                                                      alt="<?= $pluginname ?>"/>
                                             </a>
 

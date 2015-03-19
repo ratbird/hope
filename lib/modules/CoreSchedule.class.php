@@ -68,10 +68,13 @@ class CoreSchedule implements StudipModule {
         							'inhaltlichen Einstimmung der Studierenden können Lehrende den Terminen ' .
         							'Themen hinzufügen, die z. B. eine Kurzbeschreibung der Inhalte darstellen.'),    		
         	'icon' => 'icons/16/black/schedule.png',
-        	'screenshot' => 'plus/screenshots/Ablaufplan/Termine_mit_Themen.jpg',
-        	'additionalscreenshots' => array(
-        		'plus/screenshots/Ablaufplan/Themen_mit_Terminkopplung.jpg',
-        		'plus/screenshots/Ablaufplan/Thema_bearbeiten_und_einem_Termin_zuordnen.jpg')
+        	'screenshots' => array(
+        		'path' => 'plus/screenshots/Ablaufplan',
+        		'pictures' => array(
+        			0 => array('source' => 'Termine_mit_Themen.jpg', 'title' => 'Termine mit Themen'),
+        			1 => array( 'source' => 'Thema_bearbeiten_und_einem_Termin_zuordnen.jpg', 'title' => 'Thema bearbeiten und einem Termin zuordnen')
+        		)
+        	)
         );
     }
 }

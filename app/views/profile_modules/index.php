@@ -103,36 +103,64 @@
                 <div class="plus_expert">
 
                     <div class="screenshot_holder">
-                        <? if (isset($info['screenshot'])) : 
-                        	$fileext = end(explode(".", $info['screenshot']));
-                        	$filename = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));?>
-
-                            <a href="<?= $URL."/".$info['screenshot'] ?>"
-                               data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
-                               <img class="big_thumb" src="<?= $URL."/".$info['screenshot'] ?>" alt="<?= $pluginname ?>" />
-                            </a>
-
-                            <?
-                            if(isset($info['additionalscreenshots'])){ ?>
-
-                            <div class="thumb_holder">
-
-                                <? for( $i=0; $i < count($info['additionalscreenshots']); $i++){ 
-                                $fileext = end(explode(".", $info['additionalscreenshots'][$i]));
-                                $filename = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));?>
-
-                                <a href="<?= $URL."/". $info['additionalscreenshots'][$i] ?>"
-                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $filename ?>">
-                                   <img class="small_thumb" src="<?= $URL."/". $info['additionalscreenshots'][$i] ?>" alt="<?= $pluginname ?>" />
+                        <? if (isset($info['screenshot']) || isset($info['screenshots'])) : 
+                            	if(isset($info['screenshots'])){      
+	                            	$title = $info['screenshots']['pictures'][0]['title'];
+	                            	$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][0]['source'];	                            	
+                            	} else {
+                            		$fileext = end(explode(".", $info['screenshot']));
+                            		$title = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));
+                            		$source = $info['screenshot'];
+                            	}
+                        		?>
+                        		
+                                <a href="<?= $URL . "/" . $source ?>"
+                                   data-lightbox="<?= $pluginname ?>" data-title="<?= $title ?>">
+                                    <img class="big_thumb" src="<?= $URL . "/" . $source ?>"
+                                         alt="<?= $pluginname ?>"/>
                                 </a>
+
+                                <?
+                                if (isset($info['additionalscreenshots']) || (isset($info['screenshots']) && count($info['screenshots']) > 1) ) {
+                                    ?>
+
+                                    <div class="thumb_holder">
+                                    <? 	if (isset($info['screenshots'])){
+                                    		$counter = count($info['screenshots']['pictures']);
+                                    		$cstart = 1;
+                                    	} else {
+                                    		$counter = count($info['additionalscreenshots']);
+                                    		$cstart = 0;
+                                		} ?>
+                                		
+                                        <? for ($i = $cstart; $i < $counter; $i++) { 
+
+                                        	if (isset($info['screenshots'])){
+                                        		$title = $info['screenshots']['pictures'][$i]['title'];
+                                        		$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][$i]['source'];
+                                        	} else {
+                                        		$fileext = end(explode(".", $info['additionalscreenshots'][$i]));
+                                        		$title = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));
+                                        		$source = $info['additionalscreenshots'][$i];
+                                        	}
+                                        			                             	
+                                       		 ?>
+
+                                            <a href="<?= $URL . "/" . $source ?>"
+                                               data-lightbox="<?= $pluginname ?>"
+                                               data-title="<?= $title ?>">
+                                                <img class="small_thumb"
+                                                     src="<?= $URL . "/" . $source ?>"
+                                                     alt="<?= $pluginname ?>"/>
+                                            </a>
+
+                                        <? } ?>
+
+                                    </div>
 
                                 <? } ?>
 
-                            </div>
-
-                            <? } ?>
-
-                        <? endif ?>
+                            <? endif ?>
                     </div>
 
                     <div class="descriptionbox">

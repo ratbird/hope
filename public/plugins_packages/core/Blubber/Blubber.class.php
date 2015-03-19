@@ -217,7 +217,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
      * @return type
      */
     public function getDisplayTitle() {
-        return _("Blubbern");
+        return _("Blubber");
     }
 
 }

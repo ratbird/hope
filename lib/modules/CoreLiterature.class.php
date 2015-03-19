@@ -74,9 +74,14 @@ class CoreLiterature implements StudipModule {
         							'kopiert und sichtbar geschaltet werden. Je nach Anbindung kann im tatsächlichen '.
         							'Buchbestand der Hochschule recherchiert werden.'),
         	'icon' => 'icons/16/black/literature.png',
-        	'screenshot' => 'plus/screenshots/Literatur/Literatur_suchen.jpg',
-        	'additionalscreenshots' => array('plus/screenshots/Literatur/Literatur_in_Literaturliste_einfuegen.jpg',
-        									 'plus/screenshots/Literatur/Literaturliste_in_der_Veranstaltung_anzeigen.jpg')          		 
+        	'screenshots' => array(
+        		'path' => 'plus/screenshots/Literatur',
+        		'pictures' => array(
+        			0 => array('source' => 'Literatur_suchen.jpg', 'title' => 'Literatur suchen'),
+        			1 => array('source' => 'Literatur_in_Literaturliste_einfuegen.jpg', 'title' => 'Literatur in Literaturliste einfügen'),
+        			2 => array( 'source' => 'Literaturliste_in_der_Veranstaltung_anzeigen.jpg', 'title' => 'Literaturliste in der Veranstaltung anzeigen')
+        		)
+        	)                		 
         );
      }
 }

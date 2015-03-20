@@ -58,7 +58,9 @@ class Admin_CoursesController extends AuthenticatedController
 
         $this->insts      = Institute::getMyInstitutes($GLOBALS['user']->id);
         $selected_inst_id = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
-
+        if (!$selected_inst_id) {
+            $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $this->insts[0]['Institut_id']);
+        }
         // Look for Inst-Perms
         $this->selected_inst_id = ($selected_inst_id == '' || !$GLOBALS['perm']->have_studip_perm('admin', $selected_inst_id))
             ? $this->insts[0]['Institut_id'] : $selected_inst_id;

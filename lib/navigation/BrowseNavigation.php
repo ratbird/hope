@@ -68,7 +68,7 @@ class BrowseNavigation extends Navigation
             $navigation->addSubNavigation('list', new Navigation(_('Aktuelle Veranstaltungen'), 'dispatch.php/my_courses'));
 
             if ($perm->have_perm('admin')) {
-                $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
+                $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?cid=' . $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT));
             } else {
                 $navigation->addSubNavigation('archive', new Navigation(_('Archivierte Veranstaltungen'), 'dispatch.php/my_courses/archive'));
             }

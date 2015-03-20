@@ -40,12 +40,12 @@ if (!$task) {
     exit(0);
 }
  
-if (!file_exists('../' . $task->filename)) {
+if (!file_exists($GLOBALS['STUDIP_BASE_PATH'] . '/' . $task->filename)) {
     fwrite(STDOUT, 'Invalid task, unknown filename "' . $task->filename . '"' . PHP_EOL);
     exit(0);
 }
  
-require_once '../' . $task->filename;
+require_once $task->filename;
 if (!class_exists($task->class)) {
     fwrite(STDOUT, 'Invalid task, unknown class "' . $task->class . '"' . PHP_EOL);
     exit(0);

@@ -11,126 +11,122 @@ $end = ($settings['end'] + 1) * 3600;
 SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
 ?>
 <table id="main_content" style="width:100%; table-layout:fixed;">
-    <tr>
-        <td align="center" width="10%" height="40">
-            <a href="<?= $controller->url_for('calendar/group/day/' . $this->range_id, array('atime' => $calendars[0]->getStart() + $settings['start'] * 3600 - 86400)) ?>">
-                <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_('zurück'))) ?>
-            </a>
-        </td>
-        <td class="calhead" width="80%">
-            <b><?= strftime('%x', $atime) ?>
-            <? if ($hday = holiday($atime)) : ?>
-                <br><?= $hday['name'] ?>
-            <? endif ?>
-            </b>
-        </td>
-        <td align="center" width="10%">
-            <a href="<?= $controller->url_for('calendar/group/day/' . $this->range_id, array('atime' => $calendars[0]->getStart() + $settings['start'] * 3600  + 86400)) ?>">
-                <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_('vor'))) ?>
-            </a>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <div style="overflow:auto; width:100%;">
-            <table style="width: 100%;">
-                <? $time = mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)); ?>
-                <? if ($step_day < 3600) : $colsp = ' colspan="' . $step . '"'; endif ?>
-                <tr>
-                    <td width="<?= $width2 ?>%" class="precol1w" nowrap="nowrap" align="center">
-                        <?= _("Mitglied") ?>
-                    </td>
-                    <td width="<?= $width1 ?>%" class="precol1w" align="center">
-                        <a href="<?= $controller->url_for('calendar/group/edit/' . $this->range_id, array('atime' => $atime, 'dayvent' => '1')) ?>">
-                            <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_('Tagestermin'))) ?>
-                        </a>
-                    </td>
-                    <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
-                        <? if (!($i % 3600)) : ?>
-                        <td<?= $colsp ?> class="precol1w" align="center">
-                            <a href="<?= $controller->url_for('calendar/group/edit/' . $this->range_id, array('atime' => $i)) ?>" class="calhead"><?= date('G', $i) ?></a>
-                        </td>
-                        <? endif ?>
-                    <? endfor ?>
-                </tr>
-                <? foreach ($calendars as $calendar) : ?>
-                    <? $adapted = $calendar->adapt_events($start, $end, $settings['step_day_group']); ?>
+    <thead>
+        <tr>
+            <td style="text-align: center; width: 10%; height: 40px;">
+                <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
+                    <a <?= tooltip(_('einen Tag zurück')) ?> href="<?= $controller->url_for('calendar/group/day', array('atime' => $atime - 86400)) ?>">
+                        <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: text-top;')) ?>
+                        <?= strftime(_('%x'), strtotime('-1 day', $calendars[0]->getStart())) ?>
+                    </a>
+                </div>
+                <div class="calhead" style="width: 50%; display: inline-block;">
+                    <?= strftime('%A, %e. %B %Y', $atime) ?>
+                    <div style="text-align: center; font-size: 12pt; color: #bbb; height: auto; overflow: visible; font-weight: bold;"><? $hd = holiday($atime); echo $holiday['name']; ?></div>
+                </div>
+                <div style="text-align: right; width: 20%; display: inline-block; white-space: nowrap;">
+                    <a <?= tooltip(_('einen Tag vor')) ?> href="<?= $controller->url_for('calendar/group/day', array('atime' => $atime + 86400)) ?>">
+                        <?= strftime(_('%x'), strtotime('+1 day', $calendars[0]->getStart())) ?>
+                        <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </head>
+    <tbody>
+        <tr>
+            <td>
+                <div style="overflow:auto; width:100%;">
+                <table style="width: 100%;">
+                    <? $time = mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)); ?>
+                    <? if ($step_day < 3600) : $colsp = ' colspan="' . $step . '"'; endif ?>
                     <tr>
-                        <td width="<?= $width2 ?>%" nowrap="nowrap" class="month">
-                            <span class="precol2">
-                                <a class="calhead" href="<?= $controller->url_for('calendar/single/day/' . $calendar->getRangeId(), array('atime' => $atime,)); ?>">
-                                    <?= htmlReady(($calendar->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($calendar->getRangeId(), 'no_title_short'))) ?>
-                                </a>
-                            </span>
+                        <td class="precol1w" nowrap="nowrap" style="text-align: center; width: <?= $width2 ?>%;">
+                            <?= _("Mitglied") ?>
                         </td>
-                        <? // display day events
-                        $js_events = array(); ?>
-                        <? for ($i = 0; $i < sizeof($adapted['day_events']); $i++) :
-                            $js_events[] = $calendar->events[$adapted['day_map'][$i]];
-                        endfor; ?>
-                        <? if (sizeof($js_events)) : ?>
-                            <td data-tooltip="" width="<?= $width1 ?>%" class="lightmonth calendar-group-events">
-                                <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
-                        <? else : ?>
-                            <td width="<?= $width1 ?>%" class="lightmonth" align="right">
-                        <? endif ?>
-                        <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                                <a href="<?= $controller->url_for('calendar/group/edit/' . $calendar->getRangeId(), array('atime' => $atime, 'devent' => '1')) ?>">
-                                    <?= Assets::img('calplus.gif', tooltip2(_('neuer Tagestermin'))) ?>
-                                </a>
-                            </td>
-                        <? else : ?>
-                            </td>
-                        <? endif ?>
-                        <? $k = 0;
-                        for ($i = $start + $calendar->getStart(); $i < $end + $calendar->getStart(); $i += $step_day) :
-                            if (!($i % 3600)) {
-                                $k++;
-                            }
-                            $js_events = array();
-                            ?>
-
-                            <? for ($j = 0; $j < sizeof($adapted['events']); $j++) : ?>
-                                <? if (($adapted['events'][$j]->getStart() <= $i && $adapted['events'][$j]->getEnd() > $i) || ($adapted['events'][$j]->getStart() > $i && $adapted['events'][$j]->getStart() < $i + $step_day)) :
-                                    $js_events[] = $calendar->events[$adapted['map'][$j]];
-                                endif ?>
-                            <? endfor ?>
-
-                            <? if (sizeof($js_events)) : ?>
-                                <td data-tooltip="" width="<?= $width1 ?>%" class="calendar-group-events">
-                                    <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
-                            <? else: ?>
-                                <td width="<?= $width1 ?>%" class="<?= (($k % 2) ? 'month' : 'lightmonth') ?>">
-                            <? endif ?>
-
-                            <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                                <a href="<?= $controller->url_for('calendar/single/day/' . $calendar->getRangeId(), array('atime' => $i)) ?>">
-                                    <?= Assets::img('calplus.gif', tooltip2(strftime(_('neuer Termin um %R Uhr'), $i))) ?>
-                                </a>
-                            <? endif ?>
-                        </td>
-                        <? endfor ?>
-                    </tr>
-                <? endforeach; ?>
-                <tr>
-                    <td width="<?= $width2 ?>%" class="precol1w"> </td>
-                    <td width="<?= $width1 ?>%" class="precol1w" style="text-align: center;">
-                        <a href="<?= $controller->url_for('calendar/group/edit/' . $this->range_id, array('atime' => $atime, 'dayevent' => '1')) ?>">
-                            <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_('Tagestermin'))) ?>
-                        </a>
-                    </td>
-                    <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
-                        <? if (!($i % 3600)) : ?>
-                        <td<?= $colsp ?> class="precol1w" style="text-align: center;">
-                            <a href="<?= $controller->url_for('calendar/group/edit/' . $this->range_id, array('atime' => $i)) ?>" class="calhead">
-                                <?= date('G', $i) ?>
+                        <td class="precol1w" style="text-align: center; width: <?= $width1 ?>%">
+                            <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendars[0]->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendars[0]->getStart(), 'isdayevent' => '1')) ?>">
+                                <?= Assets::img('icons/16/blue/schedule.png') ?>
                             </a>
                         </td>
-                        <? endif ?>
-                    <? endfor ?>
-                </tr>
-            </table>
-            </div>
-        </td>
-    </tr>
+                        <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
+                            <? if (!($i % 3600)) : ?>
+                            <td<?= $colsp ?> class="precol1w" style="text-align: center;">
+                                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i)) ?>" class="calhead">
+                                    <?= date('G', $i) ?>
+                                </a>
+                            </td>
+                            <? endif ?>
+                        <? endfor ?>
+                    </tr>
+                    <? foreach ($calendars as $calendar) : ?>
+                        <? $adapted = $calendar->adapt_events($start, $end, $settings['step_day_group']); ?>
+                        <tr>
+                            <td style="width: <?= $width2 ?>%; white-space: nowrap;" class="month">
+                                <span class="precol2">
+                                    <a class="calhead" href="<?= $controller->url_for('calendar/single/day/' . $calendar->getRangeId(), array('atime' => $atime,)); ?>">
+                                        <?= htmlReady(($calendar->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($calendar->getRangeId(), 'no_title_short'))) ?>
+                                    </a>
+                                </span>
+                            </td>
+                            <? // display day events
+                            $js_events = array(); ?>
+                            <? for ($i = 0; $i < sizeof($adapted['day_events']); $i++) :
+                                $js_events[] = $calendar->events[$adapted['day_map'][$i]];
+                            endfor; ?>
+                            <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
+                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                                <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
+                                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendar->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendar->getStart(), 'isdayevent' => '1', 'user_id' => $calendar->getRangeId())) ?>">+</a>
+                            <? else : ?>
+                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="width: <?= $width1 ?>%;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                                <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
+                            <? endif; ?>
+                            </td>
+                            <? $k = 0;
+                            for ($i = $start + $calendar->getStart(); $i < $end + $calendar->getStart(); $i += $step_day) :
+                                if (!($i % 3600)) {
+                                    $k++;
+                                }
+                                $js_events = array();
+                                ?>
+                                <? for ($j = 0; $j < sizeof($adapted['events']); $j++) : ?>
+                                    <? if (($adapted['events'][$j]->getStart() <= $i && $adapted['events'][$j]->getEnd() > $i) || ($adapted['events'][$j]->getStart() > $i && $adapted['events'][$j]->getStart() < $i + $step_day)) :
+                                        $js_events[] = $calendar->events[$adapted['map'][$j]];
+                                    endif; ?>
+                                <? endfor; ?>
+                                <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
+                                <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                                    <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
+                                    <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $calendar->getRangeId())) ?>">+</a>
+                                <? else : ?>
+                                <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?> style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                                    <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
+                                <? endif; ?>
+                            </td>
+                            <? endfor ?>
+                        </tr>
+                    <? endforeach; ?>
+                    <tr>
+                        <td style="width: <?= $width2 ?>%;" class="precol1w"> </td>
+                        <td width="<?= $width1 ?>%" class="precol1w" style="text-align: center;">
+                            <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendars[0]->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendars[0]->getStart(), 'isdayevent' => '1')) ?>">
+                                <?= Assets::img('icons/16/blue/schedule.png') ?>
+                            </a>
+                        </td>
+                        <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
+                            <? if (!($i % 3600)) : ?>
+                            <td<?= $colsp ?> class="precol1w" style="text-align: center;">
+                                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i)) ?>" class="calhead">
+                                    <?= date('G', $i) ?>
+                                </a>
+                            </td>
+                            <? endif ?>
+                        <? endfor ?>
+                    </tr>
+                </table>
+                </div>
+            </td>
+        </tr>
+    </tbody>
 </table>

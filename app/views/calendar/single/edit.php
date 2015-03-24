@@ -6,7 +6,7 @@
 <? else : ?>
     <? SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100); ?>
 <? endif; ?>
-<form data-dialog="" method="post" action="<?= $controller->url_for('calendar/single/edit/' . $calendar->getRangeId() . '/' . $event->event_id) ?>">
+<form data-dialog="" method="post" action="<?= $controller->url_for($base . 'edit/' . $range_id . '/' . $event->event_id) ?>">
 <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable nohover" id="main_content">
         <caption class="hide-in-dialog">
@@ -364,7 +364,7 @@
                         <? $checked = $event->getRecurrence('expire') && $event->getRecurrence('expire') < Calendar::CALENDAR_END && !$event->getRecurrence('count') ?>
                         <input type="radio" name="exp_c" value="date"<?= $checked ? ' checked' : '' ?>>
                         <label>
-                            <? $exp_date = $event->getRecurrence('expire') ?: time() ?>
+                            <? $exp_date = $event->getRecurrence('expire') != Calendar::CALENDAR_END ? $event->getRecurrence('expire') : $event->getEnd() ?>
                             <?= sprintf(_('am: %s'),
                                     '<input type="text" size="12" name="exp_date" id="exp-date" value="'
                                     . strftime('%x', $exp_date) . '">') ?>
@@ -390,11 +390,13 @@
                 </td>
                 <td colspan="2">
                     <ul id="exc-dates">
-                        <? foreach ($event->getExceptions() as $exception) : ?>
+                        <? $exceptions = $event->getExceptions(); ?>
+                        <? sort($exceptions, SORT_NUMERIC); ?>
+                        <? foreach ($exceptions as $exception) : ?>
                         <li>
                             <label>
                                 <input type="checkbox" name="del_exc_dates[]" value="<?= strftime('%d.%m.%Y', $exception) ?>" style="display: none;">
-                                <span><?= strftime('%x', $exception) ?><?= Assets::img('images/icons/16/blue/trash.png', array('title' => _('Ausnahme löschen'))) ?></span>
+                                <span><?= strftime('%x', $exception) ?><?= Assets::img('icons/16/blue/trash.png', array('title' => _('Ausnahme löschen'), 'style' => 'vertical-align: text-top;')) ?></span>
                             </label>
                             <input type="hidden" name="exc_dates[]" value="<?= strftime('%d.%m.%Y', $exception) ?>">
                         </li>

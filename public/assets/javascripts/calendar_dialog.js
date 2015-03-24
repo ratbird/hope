@@ -16,7 +16,7 @@ STUDIP.CalendarDialog = {
             'type': "post"
         });
         jQuery(form).closest(".ui-dialog-content").dialog("close");
-        STUDIP.Dialog.fromElement("#calendar-open-manageaccess");
+        STUDIP.Dialog.fromURL(jQuery("#calendar-open-manageaccess").attr("action"));
         return false;
     },
     
@@ -54,3 +54,17 @@ STUDIP.CalendarDialog = {
         return false;
     }
 };
+
+jQuery('td.calendar-day-edit, td.calendar-day-event').live('click', function (event) {
+    var elem_href = jQuery(this).find('a').first().attr('href');
+   // if (STUDIP.Dialog.shouldOpen()) {
+        STUDIP.Dialog.fromURL(elem_href, {size: '150px'});
+        event.preventDefault();
+        /*
+    } else {
+        window.alert(elem);
+        elem.click();
+    }
+    */
+    
+});

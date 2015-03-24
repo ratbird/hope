@@ -88,5 +88,8 @@
     </table>
     <div style="text-align: center;" data-dialog-button>
         <?= Studip\Button::create(_('Speichern'), 'store') ?>
+        <? if (!Request::isXhr()) : ?>
+        <?= Studip\LinkButton::create(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view)) ?>
+        <? endif; ?>
     </div>
 </form>

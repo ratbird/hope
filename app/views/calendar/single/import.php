@@ -42,5 +42,8 @@ SkipLinks::addIndex(_('Termine importieren'), 'main_content', 100);
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <div style="text-align: center; clear: both" data-dialog-button>
         <?= Button::createAccept(_('Termine importieren'), 'import', array('title' => _('Termine importieren'))) ?>
+        <? if (!Request::isXhr()) : ?>
+        <?= LinkButton::create(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view)) ?>
+        <? endif; ?>
     </div>
 </form>

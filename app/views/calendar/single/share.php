@@ -53,4 +53,9 @@
         </tr>
         <? endif; ?>
     </table>
+    <div style="text-align: center;" data-dialog-button>
+        <? if (!Request::isXhr()) : ?>
+        <?= LinkButton::create(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view)) ?>
+        <? endif; ?>
+    </div>
 </form>

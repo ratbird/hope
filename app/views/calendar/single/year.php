@@ -45,6 +45,7 @@
                 <tr>
                 <? for ($month = 1; $month < 13; $month++) : ?>
                     <? $aday = mktime(12, 0, 0, $month, $i, date('Y', $calendar->getStart())); ?>
+                    <? $iday = date('Ymd', $aday); ?>
                     <? if ($i <= $days_per_month[$month]) : ?>
                            <? $wday = date('w', $aday);
                             // emphasize current day
@@ -61,7 +62,7 @@
                             <? else : ?>
                                 <td<?= $day_class ?>>
                             <? endif; ?>
-                            <? if (count($count_list[$aday])) : ?>
+                            <? if (count($count_list[$iday])) : ?>
                                 <table width="100%" cellspacing="0" cellpadding="0">
                                     <tr>
                                         <td<?= $day_class ?>>
@@ -92,8 +93,8 @@
                                 <? endif; ?>
                             <? endif; ?>
 
-                            <? if (count($count_list[$aday])) : ?>
-                                <? $event_count_txt = sprintf(ngettext('1 Termin', '%s Termine', count($count_list[$aday])), count($count_list[$aday])) ?>
+                            <? if (count($count_list[$iday])) : ?>
+                                <? $event_count_txt = sprintf(ngettext('1 Termin', '%s Termine', count($count_list[$iday])), count($count_list[$iday])) ?>
                                 </td>
                                 <td<?= $day_class ?> align="right">
                                     <?= Assets::img('icons/16/blue/date.png', array('alt' => $event_count_txt, 'title' => $event_count_txt)); ?>

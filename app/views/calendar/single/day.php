@@ -3,7 +3,7 @@
 SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
 ?>
 <div style="width: 100%; display: flex; flex-wrap: wrap;">
-    <div style="flex-grow:2;">
+    <div style="flex-grow:2; flex-basis: 60%;">
         <?= $this->render_partial('calendar/single/_day'); ?>
     </div>
     <div style="flex-grow:1; padding-left:1em;">

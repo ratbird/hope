@@ -143,7 +143,7 @@ class CalendarEvent extends SimpleORMap implements Event
             'rtype' => $this->event->rtype ?: 'SINGLE',
             'duration' => $this->event->duration,
             'count' => $this->event->count,
-            'expire' => $this->event->expire
+            'expire' => $this->event->expire ?: Calendar::CALENDAR_END
         );
         if ($index) {
             if (in_array($index, array_keys($recurrence))) {

@@ -74,7 +74,8 @@ class Calendar_SingleController extends Calendar_CalendarController
     public function day_action($range_id = null)
     {
         $this->range_id = $range_id ?: $this->range_id;
-        $this->calendar = SingleCalendar::getDayCalendar($this->range_id, $this->atime);
+        $this->calendar = SingleCalendar::getDayCalendar($this->range_id,
+                $this->atime, null, $this->restrictions);
 
         PageLayout::setTitle($this->getTitle($this->calendar, _('Tagesansicht')));
 
@@ -93,7 +94,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         $day_count = $this->settings['type_week'] == 'SHORT' ? 5 : 7;
         for ($i = 0; $i < $day_count; $i++) {
             $this->calendars[$i] =
-                    SingleCalendar::getDayCalendar($this->range_id, $monday + $i * 86400);
+                    SingleCalendar::getDayCalendar($this->range_id,
+                            $monday + $i * 86400, null, $this->restrictions);
         }
         
         PageLayout::setTitle($this->getTitle($this->calendars[0],  _('Wochenansicht')));
@@ -114,7 +116,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         $this->first_day = $month_start - $adow * 86400;
         $this->last_day = ((42 - ($adow + date('t', $this->atime))) % 7 + $cor) * 86400 + $month_end;
         for ($start_day = $this->first_day; $start_day <= $this->last_day; $start_day += 86400) {
-            $this->calendars[] = SingleCalendar::getDayCalendar($this->range_id, $start_day);
+            $this->calendars[] = SingleCalendar::getDayCalendar($this->range_id,
+                    $start_day, null, $this->restrictions);
         }
 
         PageLayout::setTitle($this->getTitle($this->calendars[0], _('Monatsansicht')));
@@ -130,7 +133,8 @@ class Calendar_SingleController extends Calendar_CalendarController
         $start = mktime(0, 0, 0, 1, 1, date('Y', $this->atime));
         $end = mktime(23, 59, 59, 12, 31, date('Y', $this->atime));
         $this->calendar = new SingleCalendar($this->range_id, $start, $end);
-        $this->count_list = $this->calendar->getListCountEvents();
+        $this->count_list = $this->calendar->getListCountEvents(null, null,
+                $this->restrictions);
         
         PageLayout::setTitle($this->getTitle($this->calendar, _('Jahresansicht')));
 
@@ -220,7 +224,7 @@ class Calendar_SingleController extends Calendar_CalendarController
             exit;
         }
         
-        PageLayout::setTitle($this->getTitle($this->calendar, _('Kalender exportieren')));
+        PageLayout::setTitle($this->getTitle($this->calendar, _('Termine exportieren')));
 
         $this->createSidebar('export_calendar', $this->calendar);
         $this->createSidebarFilter();
@@ -245,7 +249,7 @@ class Calendar_SingleController extends Calendar_CalendarController
                 $this->redirect($this->url_for('calendar/single/' . $this->last_view));
             }
         }
-        
+        PageLayout::setTitle($this->getTitle($this->calendar, _('Termine importieren')));
         $this->createSidebar('import', $this->calendar);
         $this->createSidebarFilter();
     }
@@ -301,10 +305,6 @@ class Calendar_SingleController extends Calendar_CalendarController
     {
         $this->range_id = $range_id ?: $this->range_id;
         $this->calendar = new SingleCalendar($this->range_id);
-        
-        if (Request::option('groups')) {
-            $this->all_contact_groups;
-        }
         
         $all_calendar_users =
                 CalendarUser::getUsers($this->calendar->getRangeId());

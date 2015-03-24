@@ -37,6 +37,8 @@ class Calendar_CalendarController extends AuthenticatedController
         $this->last_view = Request::option('last_view',
                 $this->settings['view']);
         $this->action = $action;
+        $this->restrictions =
+                $this->category ? array('STUDIP_CATEGORY' => $this->category) : null;
         if ($this->category) {
             URLHelper::bindLinkParam('category', $this->category);
         }
@@ -45,13 +47,6 @@ class Calendar_CalendarController extends AuthenticatedController
         }
         URLHelper::bindLinkParam('last_view', $this->last_view);
         Navigation::activateItem('/calendar/calendar');
-        /*
-        if (Request::isXhr()) {
-            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
-            $this->layout = null;
-        }
-         * 
-         */
     }
     
     protected function createSidebar($active = null, $calendar = null)
@@ -115,8 +110,15 @@ class Calendar_CalendarController extends AuthenticatedController
         
         if ($this->event->isNew()) {
             $this->event = $this->calendar->getNewEvent();
-            $this->event->setStart($this->atime);
-            $this->event->setEnd($this->atime + 3600);
+            if (Request::get('isdayevent')) {
+                $this->event->setStart(mktime(0, 0, 0, date('n', $this->atime),
+                        date('j', $this->atime), date('Y', $this->atime)));
+                $this->event->setEnd(mktime(23, 59, 59, date('n', $this->atime),
+                        date('j', $this->atime), date('Y', $this->atime)));
+            } else {
+                $this->event->setStart($this->atime);
+                $this->event->setEnd($this->atime + 3600);
+            }
             $this->event->setAuthorId($GLOBALS['user']->id);
             $this->event->setEditorId($GLOBALS['user']->id);
             $this->event->setAccessibility('PRIVATE');
@@ -207,7 +209,7 @@ class Calendar_CalendarController extends AuthenticatedController
     
     public function switch_action()
     {
-        $view = Request::option('view', 'week');
+        $view = Request::option('last_view', 'week');
         $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
         $object_type = get_object_type($this->range_id);
         switch ($object_type) {
@@ -288,7 +290,7 @@ class Calendar_CalendarController extends AuthenticatedController
             'day' => null,
             'rtype' => 'SINGLE',
             'count' => null,
-            'expire' => Calendar::CALENDAR_END
+            'expire' => null
         );
         if ($expire == 'count') {
             $rrule['count'] = Request::int('exp_count', 10);
@@ -304,64 +306,50 @@ class Calendar_CalendarController extends AuthenticatedController
         switch ($rec_type) {
             case 'daily':
                 if (Request::option('type_daily', 'day') == 'day') {
-                    $rrule = array(
-                        'linterval' => Request::int('linterval_d', 1),
-                        'rtype' => 'DAILY'
-                    );
+                    $rrule['linterval'] = Request::int('linterval_d', 1);
+                    $rrule['rtype'] = 'DAILY';
                 } else {
-                    $rrule = array(
-                        'linterval' => 1,
-                        'wdays' => '12345',
-                        'rtype' => 'WEEKLY'
-                    );
+                    $rrule['linterval'] = 1;
+                    $rrule['wdays'] = '12345';
+                    $rrule['rtype'] = 'WEEKLY';
                 }
                 break;
             case 'weekly':
-                $rrule = array(
-                    'linterval' => Request::int('linterval_w', 1),
-                    'wdays' => implode('', Request::intArray('wdays',
-                            array(strftime('%u', $event->getStart())))),
-                    'rtype' => 'WEEKLY'
-                );
+                $rrule['linterval'] = Request::int('linterval_w', 1);
+                $rrule['wdays'] = implode('', Request::intArray('wdays',
+                        array(strftime('%u', $event->getStart()))));
+                $rrule['rtype'] = 'WEEKLY';
                 break;
             case 'monthly':
                 if (Request::option('type_m', 'day') == 'day') {
-                    $rrule = array(
-                        'linterval' => Request::int('linterval_m1', 1),
-                        'day' => Request::int('day_m',
-                                strftime('%e', $event->getStart())),
-                        'rtype' => 'MONTHLY'
-                    );
+                    $rrule['linterval'] = Request::int('linterval_m1', 1);
+                    $rrule['day'] = Request::int('day_m',
+                            strftime('%e', $event->getStart()));
+                    $rrule['rtype'] = 'MONTHLY';
                 } else {
-                    $rrule = array(
-                        'linterval' => Request::int('linterval_m2', 1),
-                        'sinterval' => Request::int('sinterval_m', 1),
-                        'wdays' => Request::int('wday_m',
-                                strftime('%u', $event->getStart())),
-                        'rtype' => 'MONTHLY'
-                    );
+                    $rrule['linterval'] = Request::int('linterval_m2', 1);
+                    $rrule['sinterval'] = Request::int('sinterval_m', 1);
+                    $rrule['wdays'] = Request::int('wday_m',
+                            strftime('%u', $event->getStart()));
+                    $rrule['rtype'] = 'MONTHLY';
                 }
                 break;
             case 'yearly':
                 if (Request::option('type_y', 'day') == 'day') {
-                    $rrule = array(
-                        'linterval' => 1,
-                        'day' => Request::int('day_y',
-                                strftime('%e', $event->getStart())),
-                        'month' => Request::int('month_y1',
-                                date('n', $event->getStart())),
-                        'rtype' => 'YEARLY'
-                    );
+                    $rrule['linterval'] = 1;
+                    $rrule['day'] = Request::int('day_y',
+                            strftime('%e', $event->getStart()));
+                    $rrule['month'] = Request::int('month_y1',
+                            date('n', $event->getStart()));
+                    $rrule['rtype'] = 'YEARLY';
                 } else {
-                    $rrule = array(
-                        'linterval' => 1,
-                        'sinterval' => Request::int('sinterval_y', 1),
-                        'wdays' => Request::int('wday_y',
-                                strftime('%u', $event->getStart())),
-                        'month' => Request::int('month_y2',
-                                date('n', $event->getStart())),
-                        'rtype' => 'YEARLY'
-                    );
+                    $rrule['linterval'] = 1;
+                    $rrule['sinterval'] = Request::int('sinterval_y', 1);
+                    $rrule['wdays'] = Request::int('wday_y',
+                            strftime('%u', $event->getStart()));
+                    $rrule['month'] = Request::int('month_y2',
+                            date('n', $event->getStart()));
+                    $rrule['rtype'] = 'YEARLY';
                 }
                 break;
         }

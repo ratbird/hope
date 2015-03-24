@@ -445,22 +445,6 @@ class SingleCalendar
         return $permission == $this->getPermissionByUser($user_id);
     }
     
-    /*
-    public function addEventObj($event, $updated, $selected_users = NULL)
-    {
-        if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
-            $this->event = $event;
-            if ($this->range == Calendar::RANGE_USER) {
-                // send a message if it is not the users own calendar
-                $this->sendStoreMessage($event, $updated);
-            }
-
-            $this->event->save();
-        }
-    }
-     * 
-     */
-    
     /**
      * Sends a message to the owner of the calendar that a new event was inserted
      * or an old event was modified by another user. 
@@ -661,8 +645,10 @@ class SingleCalendar
                    && $event->getAccessibility() != 'PUBLIC') {
                 continue;
             }
-            if (!$event->havePermission(Event::PERMISSION_CONFIDENTIAL, $user_id)
-                    && !SingleCalendar::checkRestriction($event, $restrictions)) {
+            if (!$event->havePermission(Event::PERMISSION_CONFIDENTIAL, $user_id)) {
+                continue;
+            }
+            if (!SingleCalendar::checkRestriction($event, $restrictions)) {
                 continue;
             }
             $properties = $event->getProperties();
@@ -691,9 +677,16 @@ class SingleCalendar
             }
             switch ($rep['rtype']) {
                 case 'DAILY':
+                    /*
                     if ($calendar->getEnd() > $rep['expire'] + $duration * 86400) {
                         continue;
                     }
+                     * 
+                     */
+                    if ($end > $rep['expire'] + $duration * 86400) {
+                        continue;
+                    }
+                    $ts = $ts + (date('I', $rep['ts']) * 3600);
                     $pos = (($ts - $rep['ts']) / 86400) % $rep['linterval'];
                     $start = $ts - $pos * 86400;
                     $end = $start + $duration * 86400;
@@ -701,6 +694,7 @@ class SingleCalendar
                             $calendar->getEnd(), $events_created);
                     break;
                 case 'WEEKLY':
+                    $rep['ts'] = $rep['ts'] + ((date('I', $rep['ts']) - date('I', $ts)) * 3600);
                     for ($i = 0; $i < strlen($rep['wdays']); $i++) {
                         $pos = ((($ts - $dow * 86400) - $rep['ts']) / 86400
                                 - ($rep['wdays']{$i} - 1) + $dow)
@@ -833,7 +827,7 @@ class SingleCalendar
         }
         // is event expired?
         $rrule = $event->getRecurrence();
-        if ($rrule['rtype'] != 'SINGLE' && $rrule['expire'] > 0 && $rrule['expire'] <= $hgst) {
+        if ($rrule['rtype'] != 'SINGLE' && $rrule['expire'] > 0 && $rrule['expire'] < $hgst) {
             return false;
         }
         $start = mktime(date('G', $event->getStart()), date('i', $event->getStart()),
@@ -870,15 +864,17 @@ class SingleCalendar
         }
         $end = $this->getEnd();
         $start = $this->getStart();
-        $year = $this->year;
+        $year = date('Y', $start);
         $end_ts = mktime(12, 0, 0, date('n', $end), date('j', $end), date('Y', $end));
         $start_ts = mktime(12, 0, 0, date('n', $start), date('j', $start), date('Y', $start));
         $this->getEvents($class_names)->sortEvents();
         $daylist = array();
-        
+        $this->ts = mktime(12, 0, 0, 1, 1, $year);
         foreach ($this->events as $event) {
-            if (!$event->havePermission(Event::PERMISSION_CONFIDENTIAL, $user_id)
-                    && !SingleCalendar::checkRestriction($event, $restrictions)) {
+            if (!$event->havePermission(Event::PERMISSION_CONFIDENTIAL, $user_id)) {
+                continue;
+            }
+            if (!SingleCalendar::checkRestriction($event, $restrictions)) {
                 continue;
             }
             $properties = $event->getProperties();
@@ -897,7 +893,8 @@ class SingleCalendar
             }
             $hgst = $lwst + $duration * 86400;
             while ($adate >= $start_ts && $adate <= $end_ts && $adate <= $hgst) {
-                $this->countListEvent($properties, $adate, $properties['DTSTART'], $properties['DTEND'], $daylist);
+                $md_date = $adate - date('I', $adate) * 3600;
+                $this->countListEvent($properties, $md_date, $properties['DTSTART'], $properties['DTEND'], $daylist);
                 $adate += 86400;
             }
 
@@ -915,6 +912,7 @@ class SingleCalendar
                             $hgst = $adate + $duration * 86400;
                             $md_date = $adate;
                             while ($md_date <= $end_ts && $md_date >= $this->ts && $md_date <= $hgst) {
+                                $md_date -= 3600 * date('I', $md_date);
                                 $this->countListEvent($properties, $md_date, $adate, $hgst, $daylist);
                                 $md_date += 86400;
                             }
@@ -927,6 +925,7 @@ class SingleCalendar
                         $hgst = $adate + $duration * 86400;
                         $md_date = $adate;
                         while ($md_date <= $end_ts && $md_date >= $this->ts && $md_date <= $hgst) {
+                            $md_date += 3600 * date('I', $md_date);
                             $this->countListEvent($properties, $md_date, $adate, $hgst, $daylist);
                             $md_date += 86400;
                         }
@@ -939,10 +938,11 @@ class SingleCalendar
                         $lwst = mktime(12, 0, 0, date('n', $properties['DTSTART']), date('j', $properties['DTSTART']), date('Y', $properties['DTSTART']));
                         $hgst = $lwst + $duration * 86400;
                         if ($rep['ts'] != $adate) {
-                            $md_date = $lwst;
-                            while ($md_date <= $end_ts && $md_date >= $start_ts && $md_date <= $hgst) {
-                                $this->countListEvent($properties, $md_date, $lwst, $hgst, $daylist);
-                                $md_date += 86400;
+                            $wdate = $lwst;
+                            while ($wdate <= $end_ts && $wdate >= $start_ts && $wdate <= $hgst) {
+                              //  $md_date = $wdate - date('I', $wdate) * 3600;
+                                $this->countListEvent($properties, $wdate, $lwst, $hgst, $daylist);
+                                $wdate += 86400;
                             }
                         }
                         $aday = strftime('%u', $lwst) - 1;
@@ -953,6 +953,7 @@ class SingleCalendar
                                 $hgst = $lwst + $duration * 86400;
                                 $wdate = $lwst;
                                 while ($wdate >= $start_ts && $wdate <= $end_ts && $wdate <= $hgst) {
+                                  //  $md_date = $wdate - date('I', $wdate) * 3600;
                                     $this->countListEvent($properties, $wdate, $lwst, $hgst, $daylist);
                                     $wdate += 86400;
                                 }
@@ -965,7 +966,7 @@ class SingleCalendar
                                 % $rep['linterval']) * 604800;
                         $adate -= $rep['linterval'] * 604800;
                     } else {
-                        $adate = $rep['ts'];
+                        $adate = $rep['ts'] + 604800 * $rep['linterval'];
                     }
 
                     while ($adate >= $properties['DTSTART'] && $adate <= $rep['expire'] && $adate <= $end) {
@@ -978,8 +979,8 @@ class SingleCalendar
                                 $lwst = $start_ts;
                             }
                             $wdate = $lwst;
-
                             while ($wdate >= $start_ts && $wdate <= $end_ts && $wdate <= $hgst) {
+                               // $md_date = $wdate - date('I', $wdate) * 3600;
                                 $this->countListEvent($properties, $wdate, $lwst, $hgst, $daylist);
                                 $wdate += 86400;
                             }
@@ -991,6 +992,7 @@ class SingleCalendar
                 case 'MONTHLY' :
                     $bmonth = ($rep['linterval'] - ((($year - date('Y', $rep['ts'])) * 12)
                             - date('n', $rep['ts'])) % $rep['linterval']) % $rep['linterval'];
+                    
                     for ($amonth = $bmonth - $rep['linterval']; $amonth <= $bmonth; $amonth += $rep['linterval']) {
                         if ($rep['ts'] < $start) {
                             // is repeated at X. week day of X. month...
@@ -1022,11 +1024,15 @@ class SingleCalendar
                         } else {
                             // first recurrence
                             $lwst = $rep['ts'];
+                            $lwst = mktime(12, 0, 0, $amonth
+                                        - ((($year - date('Y', $rep['ts'])) * 12
+                                        + ($amonth - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $year);
+                            
                         }
                         $hgst = $lwst + $duration * 86400;
                         $md_date = $lwst;
                         // events last longer than one day
-                        while ($hgst >= $start_ts && $md_date <= $hgst && $md_date <= $end_ts) {
+                        while ($md_date >= $start_ts && $md_date <= $hgst && $md_date <= $end_ts) {
                             $this->countListEvent($properties, $md_date, $lwst, $hgst, $daylist);
                             $md_date += 86400;
                         }
@@ -1089,9 +1095,10 @@ class SingleCalendar
                 && $properties['RRULE']['expire'] <= $hgst) {
             return false;
         }
-        $daylist["$date"]["{$properties['STUDIP_ID']}"] =
-                $daylist["$date"]["{$properties['STUDIP_ID']}"]
-                ? $daylist["$date"]["{$properties['STUDIP_ID']}"]++ : 1;
+        $idate = date('Ymd', $date);
+        $daylist["$idate"]["{$properties['STUDIP_ID']}"] =
+                $daylist["$idate"]["{$properties['STUDIP_ID']}"]
+                ? $daylist["$idate"]["{$properties['STUDIP_ID']}"]++ : 1;
         return true;
     }
     
@@ -1297,9 +1304,11 @@ class SingleCalendar
     {
         $tmp_event = array();
         $map_events = array();
+        $dst_corr_start = date('I', $this->getStart());
+        $dst_corr_end = date('I', $this->getEnd());
         for ($i = 0; $i < sizeof($this->events); $i++) {
             $event = $this->events[$i];
-            if (($event->getEnd() >= $this->getStart() + $start)
+            if (($event->getEnd() > $this->getStart() + $start)
                     && ($event->getStart() < $this->getStart() + $end + 3600)) {
                 if ($event->isDayEvent()
                         || ($event->getStart() <= $this->getStart()
@@ -1311,12 +1320,6 @@ class SingleCalendar
                     $map_day_events[] = $i;
                 } else {
                     $cloned_event = clone $event;
-                    $start_time = mktime(date('G', $event->getStart()), date('i', $event->getStart()),
-                            date('s', $event->getStart()), date('n', $this->getStart()), date('j', $this->getStart()), date('Y', $this->getStart()));
-                    $end_time = mktime(date('G', $event->getEnd()), date('i', $event->getEnd()),
-                            date('s', $event->getEnd()), date('n', $this->getStart()), date('j', $this->getStart()), date('Y', $this->getStart()));
-                    $cloned_event->setStart($start_time);
-                    $cloned_event->setEnd($end_time);
                     $end_corr = $cloned_event->getEnd() % $step;
                     if ($end_corr > 0) {
                         $end_corr = $cloned_event->getEnd() + ($step - $end_corr);
@@ -1328,6 +1331,15 @@ class SingleCalendar
                     if ($cloned_event->getEnd() > ($this->getStart() + $end + 3600)) {
                         $cloned_event->setEnd($this->getStart() + $end + 3600);
                     }
+                    // adjustment of DST-offset
+                    $dst_corr_event_start = date('I', $cloned_event->getStart());
+                    $dst_corr_event_end = date('I', $cloned_event->getEnd());
+                    $cloned_event->setStart($cloned_event->getStart() +
+                            3600 * ($dst_corr_event_start - $dst_corr_start));
+                    $cloned_event->setEnd($cloned_event->getStart() + ($event->getEnd() - $event->getStart()) +
+                            3600 * ($dst_corr_end - $dst_corr_event_end)
+                            + 3600 * ($dst_corr_event_end - $dst_corr_event_start));
+                    
                     $tmp_event[] = $cloned_event;
                     $map_events[] = $i;
                 }

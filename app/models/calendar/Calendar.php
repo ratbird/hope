@@ -86,26 +86,6 @@ class Calendar
     const RANGE_INST = 4;
 
     /**
-     *
-     * @param type $user_id
-     * @return type
-     */
-    public static function getUsers($user_id)
-    {
-
-        $stmt = DBManager::get()->prepare("SELECT DISTINCT aum.username, CONCAT(aum.Nachname,', ',aum.vorname) as fullname, aum.user_id FROM contact c LEFT JOIN auth_user_md5 aum ON(c.owner_id = aum.user_id) WHERE c.user_id = ? AND c.calpermission > 1 ORDER BY fullname");
-        $stmt->execute(array($user_id));
-
-        $users = array();
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $user) {
-            $users[] = array('name' => $user['fullname'], 'username' => $user['username'],
-                'id' => $user['user_id']);
-        }
-
-        return $users;
-    }
-
-    /**
      * Retrieves all contact groups (statusgruppen) owned by the given user
      * where at least one member has granted access to his calender for the user.
      *
@@ -130,32 +110,6 @@ class Calendar
         }
         return $groups;
     }
-
-    /**
-     * TODO wird das noch benötigt?
-     *
-     * @return type
-     */
-    public static function getAllContactGroups()
-    {
-
-        $query = "SELECT aum.user_id, aum.username,  s.statusgruppe_id, s.name ";
-        $query .= "FROM statusgruppe_user su ";
-        $query .= "LEFT JOIN statusgruppen s USING ( statusgruppe_id ) ";
-        $query .= "LEFT JOIN auth_user_md5 aum ON ( range_id = aum2.user_id ) ";
-        $query .= "WHERE su.user_id = ? AND s.range_id != aum.user_id ";
-        $query .= "AND s.range_id = aum.user_id AND s.cal_enable = 1";
-
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute(array($GLOBALS['user']->id));
-        $contact_groups = array();
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $contact_group) {
-            $contact_groups[] = $contact_group;
-        }
-
-        return $contact_groups;
-    }
-
 
     public static function GetInstituteActivatedCalendar($user_id)
     {

@@ -2,10 +2,8 @@
     <tr>
         <td colspan="3" style="text-align: center; vertical-align: middle;">
             <div style="text-align: left; display: inline-block; width: 20%; white-space: nowrap;">
-                <a href="<?= $controller->url_for('calendar/group/year', array('atime' => strtotime('-1 year', $atime))) ?>">
-                    <span style="vertical-align: middle;" <?= tooltip(_('ein Jahr zurück')) ?>>
-                        <?= Assets::img('icons/16/blue/arr_2left.png') ?>
-                    </span>
+                <a <?= tooltip(_('ein Jahr zurück')) ?> href="<?= $controller->url_for('calendar/group/year', array('atime' => strtotime('-1 year', $atime))) ?>">
+                    <?= Assets::img('icons/16/blue/arr_2left.png', array('style' => 'vertical-align: text-bottom;')) ?>
                     <?= strftime('%Y', strtotime('-1 year', $atime)) ?>
                 </a>
             </div>
@@ -13,11 +11,9 @@
                 <?= date('Y', $calendars[0]->getStart()) ?>
             </div>
             <div style="text-align: right; display: inline-block; width: 20%; white-space: nowrap;">
-                <a href="<?= $controller->url_for('calendar/group/year', array('atime' => strtotime('+1 year', $atime))) ?>">
+                <a <?= tooltip(_('ein Jahr vor')) ?> href="<?= $controller->url_for('calendar/group/year', array('atime' => strtotime('+1 year', $atime))) ?>">
                     <?= strftime('%Y', strtotime('+1 year', $atime)) ?>
-                    <span style="vertical-align: middle;" <?= tooltip(_('ein Jahr vor')) ?>>
-                        <?= Assets::img('icons/16/blue/arr_2right.png') ?>
-                    </span>
+                    <?= Assets::img('icons/16/blue/arr_2right.png', array('style' => 'vertical-align: text-bottom;')) ?>
                 </a>
             </div>
         </td>

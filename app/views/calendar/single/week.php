@@ -63,19 +63,19 @@ if ($rowspan > 1) {
     <thead>
     <tr>
         <td colspan="<?= $colspan_2 ?>" style="vertical-align: middle; text-align: center;">
-            <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
-                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $atime), date('j', $atime) - 7, date('Y', $atime)))) ?>">
+            <div style="text-align: left; width: 25%; display: inline-block; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => strtotime('-1 week', $atime))) ?>">
                     <span style="vertical-align: middle;" <?= tooltip(_('eine Woche zurück')) ?>>
                     <?= Assets::img('icons/16/blue/arr_1left.png') ?>
                     </span>
                     <?= strftime(_('%V. Woche'), strtotime('-1 week', $atime)) ?>
                 </a>
             </div>
-            <div style="width: 50%; display: inline-block; text-align: center;" class="calhead">
+            <div style="display: inline-block; text-align: center;" class="calhead">
                 <? printf(_("%s. Woche vom %s bis %s"), strftime("%V", $calendars[0]->getStart()), strftime("%x", $calendars[0]->getStart()), strftime("%x", $calendars[$week_type - 1]->getStart())) ?>
             </div>
-            <div style="text-align: right; width: 20%;  display: inline-block; white-space: nowrap;">
-                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => mktime(12, 0, 0, date('n', $atime), date('j', $atime) + 7, date('Y', $atime)))) ?>">
+            <div style="width: 25%; text-align: right; display: inline-block; white-space: nowrap;">
+                <a href="<?= $controller->url_for('calendar/single/week', array('atime' => strtotime('+1 week', $atime))) ?>">
                     <?= strftime(_('%V. Woche'), strtotime('+1 week', $atime)) ?>
                     <span style="vertical-align: middle;" <?= tooltip(_('eine Woche vor')) ?>>
                     <?= Assets::img('icons/16/blue/arr_1right.png') ?>

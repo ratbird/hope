@@ -30,11 +30,11 @@ $max_columns = $em['max_cols'] ?: 1;
         <tr>
             <td class="blank" colspan="<?= $max_columns_head ?>" style="width: 100%; text-align: center; vertical-align: middle;">
                 <div style="text-align: left; width: 20%; display: inline-block; white-space: nowrap;">
-                    <a href="<?= $controller->url_for('calendar/single/day', array('atime' => $atime - 86400)) ?>">
-                        <span style="vertical-align: middle;" <?= tooltip(_('eine Woche zurück')) ?>>
-                        <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1left.png') ?>"<?= tooltip(_("zurück")) ?>>
+                    <a href="<?= $controller->url_for('calendar/single/day', array('atime' => strtotime('-1 day', $atime))) ?>">
+                        <span style="vertical-align: middle;" <?= tooltip(_('einen Tag zurück')) ?>>
+                            <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: text-top;')) ?>
+                            <?= strftime(_('%x'), strtotime('-1 day', $calendar->getStart())) ?>
                         </span>
-                        <?= strftime(_('%x'), strtotime('-1 day', $calendar->getStart())) ?>
                     </a>
                 </div>
                 <div class="calhead" style="width: 50%; display: inline-block;">
@@ -42,10 +42,10 @@ $max_columns = $em['max_cols'] ?: 1;
                     <div style="text-align: center; font-size: 12pt; color: #bbb; height: auto; overflow: visible; font-weight: bold;"><? $hd = holiday($atime); echo $holiday['name']; ?></div>
                 </div>
                 <div style="text-align: right; width: 20%; display: inline-block; white-space: nowrap;">
-                    <a href="<?= $controller->url_for('calendar/single/day', array('atime' => $atime + 86400)) ?>">
-                        <?= strftime(_('%x'), strtotime('+1 day', $calendar->getStart())) ?>
-                        <span style="vertical-align: middle;" <?= tooltip(_('eine Woche vor')) ?>>
-                        <?= Assets::img('icons/16/blue/arr_1right.png') ?>
+                    <a href="<?= $controller->url_for('calendar/single/day', array('atime' => strtotime('+1 day', $atime))) ?>">
+                        <span style="vertical-align: middle;" <?= tooltip(_('einen Tag vor')) ?>>
+                            <?= strftime(_('%x'), strtotime('+1 day', $calendar->getStart())) ?>
+                            <?= Assets::img('icons/16/blue/arr_1right.png', array('style' => 'vertical-align: text-top;')) ?>
                         </span>
                     </a>
                 </div>

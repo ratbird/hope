@@ -2576,7 +2576,7 @@ function rmdirr($dirname){
     // Simple delete for a file
     if (is_file($dirname)) {
         return @unlink($dirname);
-    } else if (!is_dir($dirname)){
+    } else if (!is_dir($dirname)) {
         return false;
     }
 
@@ -2589,7 +2589,7 @@ function rmdirr($dirname){
         }
 
         // Deep delete directories
-        if (is_dir("$dirname/$entry")) {
+        if (is_dir("$dirname/$entry") && !is_link("$dirname/$entry")) {
             rmdirr("$dirname/$entry");
         } else {
             @unlink("$dirname/$entry");

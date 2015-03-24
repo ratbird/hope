@@ -15,7 +15,7 @@
     </a>
     <? if (count($videofiles)) : ?>
     <div class="video">
-        <? if (count($videofiles) === 1 && $videofiles[0][1] === "application/x-shockwave-flash") : ?>
+        <? if (in_array($videofiles[0][1], array("text/html", "application/x-shockwave-flash"))) : ?>
             <?
             $embedder = '<iframe width="100%" height="200px" frameborder="0" src="'. htmlReady($videofiles[0][0]).'"></iframe>';
             ?>
@@ -38,7 +38,7 @@
     <? endif ?>
     <? if (count($audiofiles)) : ?>
     <div class="audio">
-        <? if (count($audiofiles) === 1 && $audiofiles[0][1] === "application/x-shockwave-flash") : ?>
+        <? if (in_array($audiofiles[0][1], array("text/html", "application/x-shockwave-flash"))) : ?>
             <?
             $embedder = '<iframe width="100%" height="200px" frameborder="0" src="'. htmlReady($audiofiles[0][0]).'"></iframe>';
             ?>

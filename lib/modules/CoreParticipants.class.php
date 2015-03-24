@@ -24,9 +24,9 @@ class CoreParticipants implements StudipModule {
         $navigation = new Navigation(_('TeilnehmerInnen'));
         $navigation->setImage('icons/16/white/persons.png');
         $navigation->setActiveImage('icons/16/black/persons.png');
-        $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), URLHelper::getLink("dispatch.php/course/members")));
+        $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'dispatch.php/course/members'));
         if (Course::find($course_id)->aux_lock_rule) {
-            $navigation->addSubNavigation('additional', new Navigation(_('Zusatzangaben'), URLHelper::getLink("dispatch.php/course/members/additional")));
+            $navigation->addSubNavigation('additional', new Navigation(_('Zusatzangaben'), 'dispatch.php/course/members/additional'));
         }
 
         $navigation->addSubNavigation('view_groups', new Navigation(_('Funktionen / Gruppen'), 'statusgruppen.php?view=statusgruppe_sem'));

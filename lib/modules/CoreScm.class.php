@@ -33,7 +33,7 @@ class CoreScm implements StudipModule {
             $navigation->setActiveImage('icons/16/black/infopage.png');
 
             foreach ($scms as $scm) {
-                $scm_link = URLHelper::getLink('dispatch.php/course/scm/' . $scm->id);
+                $scm_link = 'dispatch.php/course/scm/' . $scm->id;
                 $nav = new Navigation($scm['tab_name'], $scm_link);
                 $navigation->addSubNavigation($scm->id, $nav);
             }

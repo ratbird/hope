@@ -57,20 +57,20 @@ class CoreForum extends StudipPlugin implements ForumModule
         
         $this->setupAutoload();
 
-        $navigation = new Navigation(_('Forum'), PluginEngine::getLink($this, array(), 'index'));
+        $navigation = new Navigation(_('Forum'), PluginEngine::getURL($this, array(), 'index'));
         $navigation->setImage('icons/16/white/forum.png');
 
         // add main third-level navigation-item
-        $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), PluginEngine::getLink($this, array(), 'index')));
+        $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), PluginEngine::getURL($this, array(), 'index')));
 
         if (ForumPerm::has('fav_entry', $course_id)) {
-            $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getLink($this, array(), 'index/newest')));
-            $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getLink($this, array(), 'index/latest')));
-            $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getLink($this, array(), 'index/favorites')));
+            $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getURL($this, array(), 'index/newest')));
+            $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getURL($this, array(), 'index/latest')));
+            $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getURL($this, array(), 'index/favorites')));
 
             // mass-administrate the forum
             if (ForumPerm::has('admin', $course_id)) {
-                $navigation->addSubNavigation('admin', new Navigation(_('Administration'), PluginEngine::getLink($this, array(), 'admin')));
+                $navigation->addSubNavigation('admin', new Navigation(_('Administration'), PluginEngine::getURL($this, array(), 'admin')));
             }
         }
 
@@ -94,7 +94,7 @@ class CoreForum extends StudipPlugin implements ForumModule
             $text = 'Forum';
         }
 
-        $navigation = new Navigation('forum', PluginEngine::getLink($this, array(), 'index/enter_seminar'));
+        $navigation = new Navigation('forum', PluginEngine::getURL($this, array(), 'index/enter_seminar'));
         $navigation->setBadgeNumber($num_entries);
 
         if ($num_entries > 0) {

@@ -105,8 +105,7 @@ switch ($view) {
         Navigation::activateItem('/resources/objects/edit_assign');
 
         if ($view_mode === 'no_nav') {
-            $navigation = new Navigation(_('Zurück zum Belegungsplan'),
-                                         URLHelper::getLink('?quick_view=view_schedule&quick_view_mode=' . $view_mode));
+            $navigation = new Navigation(_('Zurück zum Belegungsplan'), '?quick_view=view_schedule&quick_view_mode=' . $view_mode);
             Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
         } else {
             $page_intro = '<h2>' . sprintf(_('Raum: %s'), $currentObject->getName()) . '</h2>';
@@ -123,8 +122,7 @@ switch ($view) {
                 $sidebar->addWidget($widget);
             }
 
-            $navigation = new Navigation(_('Zur Ressourcensuche'),
-                                         URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
+            $navigation = new Navigation(_('Zur Ressourcensuche'), 'resources.php?view=search&quick_view_mode=' . $view_mode);
             Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
         }
     break;
@@ -167,19 +165,16 @@ switch ($view) {
 
         if ($view_mode !== 'no_nav') {
             if ($SessSemName['class'] === 'sem') {
-                $navigation = new Navigation(_('Zurück zur Veranstaltung'),
-                                             URLHelper::getLink('seminar_main.php'));
+                $navigation = new Navigation(_('Zurück zur Veranstaltung'), 'seminar_main.php');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
             if ($SessSemName['class'] === 'inst') {
-                $navigation = new Navigation(_('Zurück zur Einrichtung'),
-                                             URLHelper::getLink('dispatch.php/institute/overview'));
+                $navigation = new Navigation(_('Zurück zur Einrichtung'), 'dispatch.php/institute/overview');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
         }
 
-        $navigation = new Navigation(_('Zur Ressourcensuche'),
-                                     URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
+        $navigation = new Navigation(_('Zur Ressourcensuche'), 'resources.php?view=search&quick_view_mode=' . $view_mode);
         Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
 
         $widget = new ExportWidget();
@@ -224,19 +219,16 @@ switch ($view) {
 
         if ($view_mode !== 'no_nav') {
             if ($SessSemName['class'] === 'sem') {
-                $navigation = new Navigation(_('Zurück zur Veranstaltung'),
-                                             URLHelper::getLink('seminar_main.php'));
+                $navigation = new Navigation(_('Zurück zur Veranstaltung'), 'seminar_main.php');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
             if ($SessSemName['class'] === 'inst') {
-                $navigation = new Navigation(_('Zurück zur Einrichtung'),
-                                             URLHelper::getLink('dispatch.php/institute/overview'));
+                $navigation = new Navigation(_('Zurück zur Einrichtung'), 'dispatch.php/institute/overview');
                 Navigation::getItem('/resources/objects')->addSubNavigation('back', $navigation);
             }
         }
 
-        $navigation = new Navigation(_('Zur Ressourcensuche'),
-                                     URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode));
+        $navigation = new Navigation(_('Zur Ressourcensuche'), 'resources.php?view=search&quick_view_mode=' . $view_mode);
         Navigation::getItem('/resources/objects')->addSubNavigation('search', $navigation);
 
         $widget = new ExportWidget();

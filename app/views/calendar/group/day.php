@@ -63,11 +63,9 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                         <? $adapted = $calendar->adapt_events($start, $end, $settings['step_day_group']); ?>
                         <tr>
                             <td style="width: <?= $width2 ?>%; white-space: nowrap;" class="month">
-                                <span class="precol2">
-                                    <a class="calhead" href="<?= $controller->url_for('calendar/single/day/' . $calendar->getRangeId(), array('atime' => $atime,)); ?>">
-                                        <?= htmlReady(($calendar->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($calendar->getRangeId(), 'no_title_short'))) ?>
-                                    </a>
-                                </span>
+                                <a class="calhead" href="<?= $controller->url_for('calendar/single/day/' . $calendar->getRangeId(), array('atime' => $atime,)); ?>">
+                                    <?= htmlReady(($calendar->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($calendar->getRangeId(), 'no_title_short'))) ?>
+                                </a>
                             </td>
                             <? // display day events
                             $js_events = array(); ?>
@@ -75,9 +73,9 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                                 $js_events[] = $calendar->events[$adapted['day_map'][$i]];
                             endfor; ?>
                             <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="width: <?= $width1 ?>%; text-align: right;" class="calendar-day-edit<?= sizeof($js_events) ? ' calendar-group-events' : ' lightmonth' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
-                                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $calendar->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendar->getStart(), 'isdayevent' => '1', 'user_id' => $calendar->getRangeId())) ?>">+</a>
+                                <a title="<?= strftime(_('Neuer Tagestermin am %x'), $calendar->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $calendar->getStart(), 'isdayevent' => '1', 'user_id' => $calendar->getRangeId())) ?>">+</a>
                             <? else : ?>
                             <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="width: <?= $width1 ?>%;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
@@ -96,9 +94,9 @@ SkipLinks::addIndex(_('Tagesansicht'), 'main_content', 100);
                                     endif; ?>
                                 <? endfor; ?>
                                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                                <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
+                                <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="width: <?= $width1 ?>%; text-align: right;" class="calendar-day-edit<?= sizeof($js_events) ? ' calendar-group-events' : ' lightmonth' ?>">
                                     <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>
-                                    <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $calendar->getRangeId())) ?>">+</a>
+                                    <a title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $calendar->getRangeId())) ?>">+</a>
                                 <? else : ?>
                                 <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?> style="width: <?= $width1 ?>%; text-align: right;" class="<?= sizeof($js_events) ? 'calendar-group-events' : 'lightmonth' ?>">
                                     <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $calendar, 'events' => $js_events)) ?>

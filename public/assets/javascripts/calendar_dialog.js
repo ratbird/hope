@@ -56,15 +56,7 @@ STUDIP.CalendarDialog = {
 };
 
 jQuery('td.calendar-day-edit, td.calendar-day-event').live('click', function (event) {
-    var elem_href = jQuery(this).find('a').first().attr('href');
-   // if (STUDIP.Dialog.shouldOpen()) {
-        STUDIP.Dialog.fromURL(elem_href, {size: '150px'});
-        event.preventDefault();
-        /*
-    } else {
-        window.alert(elem);
-        elem.click();
-    }
-    */
-    
+    var elem = jQuery(this).find('a').first();
+    STUDIP.Dialog.fromURL(elem.attr('href'), {size: 'auto', title: elem.attr('title')});
+    event.preventDefault();
 });

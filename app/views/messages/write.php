@@ -34,8 +34,8 @@
             . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
             . " ORDER BY fullname ASC",
             _("Nutzer suchen"), "user_id");
-        $mps = MultiPersonSearch::get("add_adressees")
-            ->setLinkText(_('Mehrere Adressaten hinzufügen'))
+        $mps = MultiPersonSearch::get("add_adressees") 
+           ->setLinkText(_('Mehrere Adressaten hinzufügen'))
             //->setDefaultSelectedUser($defaultSelectedUser)
             ->setTitle(_('Mehrere Adressaten hinzufügen'))
             ->setExecuteURL(URLHelper::getURL("dispatch.php/messages/write"))

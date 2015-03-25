@@ -33,7 +33,7 @@ SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
     <table id="main_content" style="width: 100%;">
         <thead>
             <tr>
-                <td width="<?= $width2 ?>%" class="precol1"> </td>
+                <td width="<?= $width2 ?>%" class="precol1w"> </td>
                 <? $time = $calendars[0][0]->getStart(); ?>
                 <? for ($i = 0; $i <= $wlength; $i++) : ?>
                     <td colspan="<?= $cols ?>" style="text-align: center;" class="precol1w">
@@ -68,11 +68,9 @@ SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
         <? foreach ($calendars as $user_calendar) : ?>
             <tr>
                 <td style="width: <?= $width2 ?>%; white-space: nowrap;" class="month">
-                    <span class="precol2">
-                        <a class="calhead" href="<?= $controller->url_for('calendar/single/week/' . $user_calendar[0]->getRangeId(), array('atime' => $atime)) ?>">
-                            <?= htmlReady($user_calendar[0]->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($user_calendar[0]->getRangeId(), 'no_title_short')) ?>
-                        </a>
-                    </span>
+                    <a class="calhead" href="<?= $controller->url_for('calendar/single/week/' . $user_calendar[0]->getRangeId(), array('atime' => $atime)) ?>">
+                        <?= htmlReady($user_calendar[0]->havePermission(Calendar::PERMISSION_OWN) ? _('Eigener Kalender') : get_fullname($user_calendar[0]->getRangeId(), 'no_title_short')) ?>
+                    </a>
                 </td>
                 <? $k = 1; ?>
                 <? foreach ($user_calendar as $day) : ?>
@@ -95,9 +93,9 @@ SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
                         <? $js_events[] = $day->events[$adapted['day_map'][$i]]; ?>
                     <? endfor; ?>
                     <? if ($day->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                        <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
+                        <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
                         <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
-                        <a data-dialog="size=auto" title="<?= strftime(_('Neuer Tagestermin am %x'), $day->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $day->getStart(), 'isdayevent' => '1', 'user_id' => $day->getRangeId())) ?>">+</a>
+                        <a title="<?= strftime(_('Neuer Tagestermin am %x'), $day->getStart()) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $day->getStart(), 'isdayevent' => '1', 'user_id' => $day->getRangeId())) ?>">+</a>
                     <? else : ?>
                         <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>"
                         <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
@@ -112,9 +110,9 @@ SkipLinks::addIndex(_('Wochenansicht'), 'main_content', 100);
                             <? endif ?>
                         <? endfor ?>
                         <? if ($day->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>onclick="STUDIP.Dialog.fromElement(jQuery(this).children('a').first(), {size: 'auto'}); return false;" style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
+                            <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="calendar-day-edit <?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>
-                                <a data-dialog="size=auto" title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $day->getRangeId())) ?>">+</a>
+                                <a title="<?= strftime(_('Neuer Termin um %R Uhr'), $i) ?>" href="<?= $controller->url_for('calendar/group/edit/' . $range_id, array('atime' => $i, 'user_id' => $day->getRangeId())) ?>">+</a>
                         <? else : ?>
                             <td <?= sizeof($js_events) ? 'data-tooltip ' : '' ?>style="text-align: right; width: <?= $width1 ?>%" class="<?= $css_class ?><?= sizeof($js_events) ? ' calendar-group-events' : '' ?>">
                                 <?= $this->render_partial('calendar/group/_tooltip', array('calendar' => $day, 'events' => $js_events)) ?>

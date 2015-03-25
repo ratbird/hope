@@ -2,67 +2,31 @@
 
 /* --- Styles fuer Terminkalender ------------------------------------------- */
 a.day {
-    color: #3333DD;
     font-weight: bold;
 }
 
 a.sday {
-    color: #DD0000;
+    color: @red;
     font-weight: bold;
 }
 
 a.hday {
-    color: #DD5555;
+    color: @red-80;
     font-weight: bold;
 }
 
-a.daymin {
-    color: #3333DD;
-    font-weight: bold;
-}
-
-a.sdaymin {
-    color: #DD0000;
-    font-weight: bold;
-}
-
-a.hdaymin {
-    color: #DD5555;
-    font-weight: bold;
-}
-
-font.kwmin {
-    color: #000000;
+span.kwmin {
+    color: @dark-gray-color-80;
     font-weight: bold;
 }
 
 a.lightday {
-    color: #8888DD;
+    color: @base-color-40;
     font-weight: bold;
 }
 
 a.lightsday {
-    color: #DDAAAA;
-    font-weight: bold;
-}
-
-a.lighthday {
-    color: #DDAAAA;
-    font-weight: bold;
-}
-
-a.lightdaymin {
-    color: #8888DD;
-    font-weight: bold;
-}
-
-a.lightsdaymin {
-    color: #DDAAAA;
-    font-weight: bold;
-}
-
-a.lighthdaymin {
-    color: #DDAAAA;
+    color: @red-40;
     font-weight: bold;
 }
 
@@ -73,7 +37,7 @@ a.lighthdaymin {
 .precol1w {
     font-size: 12pt;
     font-weight: bold;
-    color: #AAAAAA;
+    color: @light-gray-color;
     text-align: center;
     vertical-align: top;
 }
@@ -81,68 +45,42 @@ a.lighthdaymin {
 .precol2w {
     font-size: 8pt;
     font-weight: bold;
-    color: #AAAAAA;
+    color: @light-gray-color;
     text-align: center;
 }
 
 td.calhead, div.calhead {
     font-size: 18pt;
     font-weight: bold;
-    color: #AAAAAA;
+    color: @light-gray-color;
     text-align: center;
 }
 
-A:link.calhead {
-    color: #8888DD;
-    text-decoration: none;
+a:link.calhead {
+    color: @base-color-60;
     white-space: nowrap;
+    font-weight: bold;
 }
 
-A:visited.calhead {
-    color: #8888DD;
-    text-decoration: none;
-}
-
-A:hover.calhead {
-    color: #FF3333;
-    text-decoration: none;
+a:hover.calhead {
+    color: @red-60;
 }
 
 .celltoday {
-    background-color: #edd5d5;
-}
-
-th.inccal {
-}
-
-.precol1 {
-    font-size: 14pt;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: top;
-}
-
-.precol2 {
-    font-weight: bold;
-    text-align: left;
+    background-color: @red-20;
 }
 
 td.weekend {
-    background-color: #f0f0f0;
+    background-color: @alternating-color-odd;
 }
 
 td.weekday {
-    background-color: #f3f5f8;
+    background-color: @alternating-color-even;
 }
 
 td.current {
-    border: 2px solid #DD0000;
-    background-color: #f0f0f0;
-}
-
-td.currenttoday {
-    border: 2px solid #DD0000;
-    background-image: url('../images/celltoday.png');
+    padding: 2px;
+    border: 2px solid @red;
 }
 
 table.calendar-week, table.calendar-day {
@@ -166,7 +104,7 @@ table.calendar-month {
 }
 
 td.month {
-    background-color: #f0f0f0;
+    background-color: @alternating-color-odd;
     padding: 3px;
     div {
         width: 90%;
@@ -177,7 +115,7 @@ td.month {
 }
 
 td.lightmonth {
-    background-color: #f3f5f8;
+    background-color: @alternating-color-even;
     padding: 3px;
     div {
         width: 90%;

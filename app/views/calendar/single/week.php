@@ -121,7 +121,7 @@ if ($rowspan > 1) {
         <? for ($i = 0; $i < $week_type; $i++) : ?>
         <?
         if (date('Ymd', $calendars[$i]->getStart()) == date('Ymd')) {
-            $class_cell = 'lightgrey';
+            $class_cell = 'celltoday';
         } else {
             $class_cell = '';
         }
@@ -153,7 +153,7 @@ if ($rowspan > 1) {
         <? for ($y = 0; $y < $week_type; $y++) : ?>
             <?
             if (date('Ymd', $calendars[$y]->getStart()) == date('Ymd')) {
-                $class_cell = 'lightgrey';
+                $class_cell = 'celltoday';
             } else {
                 $class_cell = '';
             }

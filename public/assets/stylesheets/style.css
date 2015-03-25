@@ -4123,55 +4123,26 @@ table.attribute_table div[container]#deactivated_modules .plugin > div {
 }
 /* --- Styles fuer Terminkalender ------------------------------------------- */
 a.day {
-  color: #3333DD;
   font-weight: bold;
 }
 a.sday {
-  color: #DD0000;
+  color: #d60000;
   font-weight: bold;
 }
 a.hday {
-  color: #DD5555;
+  color: #de3333;
   font-weight: bold;
 }
-a.daymin {
-  color: #3333DD;
-  font-weight: bold;
-}
-a.sdaymin {
-  color: #DD0000;
-  font-weight: bold;
-}
-a.hdaymin {
-  color: #DD5555;
-  font-weight: bold;
-}
-font.kwmin {
-  color: #000000;
+span.kwmin {
+  color: #636a71;
   font-weight: bold;
 }
 a.lightday {
-  color: #8888DD;
+  color: #a9b6cb;
   font-weight: bold;
 }
 a.lightsday {
-  color: #DDAAAA;
-  font-weight: bold;
-}
-a.lighthday {
-  color: #DDAAAA;
-  font-weight: bold;
-}
-a.lightdaymin {
-  color: #8888DD;
-  font-weight: bold;
-}
-a.lightsdaymin {
-  color: #DDAAAA;
-  font-weight: bold;
-}
-a.lighthdaymin {
-  color: #DDAAAA;
+  color: #ef9999;
   font-weight: bold;
 }
 .inday {
@@ -4180,62 +4151,43 @@ a.lighthdaymin {
 .precol1w {
   font-size: 12pt;
   font-weight: bold;
-  color: #AAAAAA;
+  color: #69767f;
   text-align: center;
   vertical-align: top;
 }
 .precol2w {
   font-size: 8pt;
   font-weight: bold;
-  color: #AAAAAA;
+  color: #69767f;
   text-align: center;
 }
 td.calhead,
 div.calhead {
   font-size: 18pt;
   font-weight: bold;
-  color: #AAAAAA;
+  color: #69767f;
   text-align: center;
 }
-A:link.calhead {
-  color: #8888DD;
-  text-decoration: none;
+a:link.calhead {
+  color: #7e92b0;
   white-space: nowrap;
+  font-weight: bold;
 }
-A:visited.calhead {
-  color: #8888DD;
-  text-decoration: none;
-}
-A:hover.calhead {
-  color: #FF3333;
-  text-decoration: none;
+a:hover.calhead {
+  color: #e66666;
 }
 .celltoday {
-  background-color: #edd5d5;
-}
-.precol1 {
-  font-size: 14pt;
-  font-weight: bold;
-  text-align: center;
-  vertical-align: top;
-}
-.precol2 {
-  font-weight: bold;
-  text-align: left;
+  background-color: #f7cccc;
 }
 td.weekend {
-  background-color: #f0f0f0;
+  background-color: #e2e2e2;
 }
 td.weekday {
-  background-color: #f3f5f8;
+  background-color: #f2f2f2;
 }
 td.current {
-  border: 2px solid #DD0000;
-  background-color: #f0f0f0;
-}
-td.currenttoday {
-  border: 2px solid #DD0000;
-  background-image: url('../images/celltoday.png');
+  padding: 2px;
+  border: 2px solid #d60000;
 }
 table.calendar-week,
 table.calendar-day {
@@ -4258,7 +4210,7 @@ table.calendar-month tr td {
   vertical-align: top;
 }
 td.month {
-  background-color: #f0f0f0;
+  background-color: #e2e2e2;
   padding: 3px;
 }
 td.month div {
@@ -4268,7 +4220,7 @@ td.month div {
   text-overflow: ellipsis;
 }
 td.lightmonth {
-  background-color: #f3f5f8;
+  background-color: #f2f2f2;
   padding: 3px;
 }
 td.lightmonth div {

@@ -31,7 +31,7 @@
                     <?  $ts_month += ( $days_per_month[$i] - 1) * 86400; ?>
                     <td style="text-align: center; width: 8%;">
                         <a class="calhead" href="<?= $controller->url_for('calendar/group/month', array('atime' => $calendars[0]->getStart() + $ts_month)) ?>">
-                            <b><?= strftime('%B', $ts_month); ?></b>
+                            <?= strftime('%B', $ts_month); ?>
                         </a>
                     </td>
             <? endfor; ?>
@@ -111,7 +111,7 @@
                 <? $ts_month += ( $days_per_month[$i] - 1) * 86400; ?>
                 <td align="center" width="8%">
                     <a class="calhead" href="<?= $controller->url_for('calendar/group/month', array('atime' => $calendars[0]->getStart() + $ts_month)) ?>">
-                        <b><?= strftime('%B', $ts_month); ?></b>
+                        <?= strftime('%B', $ts_month); ?>
                     </a>
                 </td>
             <? endfor; ?>

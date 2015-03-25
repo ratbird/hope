@@ -1,10 +1,10 @@
 <? $now = mktime(12, 0, 0, date('n', time()), date('j', time()), date('Y', time())); ?>
-<table valign="top" class="blank" border="0" cellspacing="1" cellpadding="0">
+<table class="blank">
     <tr>
-        <td class="steelgroup0" align="center">
-            <table border="0" cellspacing="1" cellpadding="1">
+        <td style="text-align: center;">
+            <table style="width: 100%;">
                 <tr>
-                    <td colspan="8" align="center" class="steelgroup0" valign="top" style="white-space:nowrap;">
+                    <td colspan="8" style="vertical-align: top; text-align: center; white-space:nowrap;">
                         <div style="float:left; width:15%;">
                         <? if ($mod == 'NONAVARROWS') : ?>
                             &nbsp;
@@ -34,6 +34,12 @@
                         </div>
                     </td>
                 </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="blank">
+            <table class="blank">
                 <tr>
                     <? $week_days = array(39092400, 39178800, 39265200, 39351600, 39438000, 39524400, 39610800); ?>
                     <? foreach ($week_days as $week_day) : ?>
@@ -43,12 +49,6 @@
                     <? endforeach; ?>
                     <td class="precol2w" width="25"> </td>
                 </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank">
-            <table class="blank" border="0" cellspacing="1" cellpadding="1">
             <? $adow = date('w', mktime(12, 0, 0, date('n', $imt), 1, date('Y', $imt))); ?>
             <? if ($adow == 0) : ?>
                 <? $adow = 6; ?>
@@ -92,34 +92,34 @@
                     ?>
                 <? endif; ?>
                 <? if (abs($atime - $i) < 43199) : ?>
-                    <? $aday = '<span style="border-width: 2px; border-style: solid; border-color: #DD0000; padding: 2px;">'.$aday.'</span>' ?>
+                    <? $aday = '<span class="current">'.$aday.'</span>' ?>
                 <? endif; ?>
                 <? if (($j + 1) % 7 == 0) : ?>
-                    <a class="<?= $style ?>sdaymin" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= $hday['name'] ? tooltip($hday['name']) : '' ?> <?= $js_inc ?>>
+                    <a class="<?= $style ?>sday" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= $hday['name'] ? tooltip($hday['name']) : '' ?> <?= $js_inc ?>>
                         <?= $aday ?>
                     </a>
                 </td>
-                <td class="table_row_even" align="center" width="25" height="25">
-                    <a href="./calendar.php?cmd=showweek&atime=<?= $i ?>">
-                        <font class="kwmin"><?= strftime('%V', $i) ?></font>
+                <td class="lightmonth" style="text-align: center; width: 25px; height: 25px;">
+                    <a href="<?= $controller->url_for('calendar/single/week/', array('atime' => $i)) ?>">
+                        <span class="kwmin"><?= strftime('%V', $i) ?></span>
                     </a>
                 </td>
             </tr>
                 <? else : ?>
                     <? switch ($hday['col']) {
                         case 1:
-                            ?><a class="<?= $style ?>daymin" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
+                            ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
                                <?= $aday ?>
                             </a><?
                             break;
                         case 2:
                         case 3;
-                            ?><a class="<?= $style ?>hdaymin" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
+                            ?><a class="<?= $style ?>hday" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= tooltip($hday['name']) . $js_inc ?>>
                                 <?= $aday ?>
                             </a><?
                             break;
                         default:
-                            ?><a class="<?= $style ?>daymin" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= $js_inc ?>>
+                            ?><a class="<?= $style ?>day" href="<?= $controller->url_for($href, array('atime' => $i)) ?>" <?= $js_inc ?>>
                                 <?= $aday ?>
                             </a>
                     <?}?>

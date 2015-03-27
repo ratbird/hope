@@ -38,7 +38,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
     ELearningUtils::bench("start");
 
 
-    $cms_select = Request::option('cms_select');
+    $cms_select = Request::quoted('cms_select');
     if (isset($ELEARNING_INTERFACE_MODULES[$cms_select]["name"]))
     {
 
@@ -62,7 +62,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE'))
             die;
         }
         $parameters = "?sess_id=$sess_id";
-        $client_id = Request::option('client_id');
+        $client_id = Request::get('client_id');
         if (!empty($client_id))
             $parameters .= "&client_id=$client_id";
         if (Request::get('target'))

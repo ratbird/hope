@@ -44,7 +44,7 @@ class Course_ElearningController extends AuthenticatedController
 
         $this->search_key = Request::get('search_key');
         $GLOBALS['search_key'] = $this->search_key;
-        $this->cms_select = Request::option('cms_select');
+        $this->cms_select = Request::quoted('cms_select');
         $GLOBALS['cms_select'] = $this->cms_select;
         $this->open_all = Request::get('open_all');
         $this->close_all = Request::get('close_all');

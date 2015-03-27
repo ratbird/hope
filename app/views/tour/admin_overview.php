@@ -66,7 +66,6 @@
                 <tfoot>
                 <tr><td colspan="7">
                 <?=Button::createAccept(_('Speichern'), 'save_tour_settings') ?>
-                <?=LinkButton::create(_('Neue Tour'), URLHelper::getURL('dispatch.php/tour/admin_details')) ?>
                 </td></tr></tfoot>
             </table>
         <? else : ?>

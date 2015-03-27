@@ -218,8 +218,10 @@ class HelpContentController extends AuthenticatedController
         $this->help_content = HelpContent::GetContentByID($id);
         if (is_object($this->help_content)) {
             if (Request::submitted('delete_help_content')) {
+                PageLayout::postMessage(MessageBox::success(sprintf(_('Der Hilfe-Text zur Route "%s" wurde gelöscht.'), $this->help_content->route)));
                 $this->help_content->delete();
                 header('X-Dialog-Close: 1');
+                return $this->render_nothing();
             }
         }
 

@@ -43,10 +43,9 @@ require_once 'vendor/exTpl/Template.php';
 
 class ExternElementTemplateGeneric extends ExternElement {
 
-    var $attributes = array('template', 'rendermarkerassubpart');
+    var $attributes = array('template');
     var $markers;
     var $new_datafields = FALSE;
-    var $render_marker_inside_subparts = FALSE;
 
 
     /**
@@ -68,8 +67,7 @@ class ExternElementTemplateGeneric extends ExternElement {
     */
     function getDefaultConfig () {
         $config = array(
-            'template' => _("Geben Sie hier das Template ein."),
-            'rendermarkerassubpart' => ''
+            'template' => _("Geben Sie hier das Template ein.")
         );
 
         return $config;
@@ -100,9 +98,6 @@ class ExternElementTemplateGeneric extends ExternElement {
         $info = _("Geben Sie hier das Template ein.");
         $table = $edit_form->editTextareaGeneric('template', '', $info, 40, 80);
 
-        $info = _("Wählen Sie diese Option, wenn alle Marker mit Subparts umgeben werden sollen:") . "\n\n<!-- BEGIN MARKER-NAME -->\n\t###MARKER-NAME###\n<!-- END MARKER-NAME -->";
-        $table .= $edit_form->editCheckboxGeneric('rendermarkerassubpart', _("Alle Marker mit Subparts umschließen:"), $info, '1', '0');
-
         $content_table .= $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
 
@@ -132,77 +127,13 @@ class ExternElementTemplateGeneric extends ExternElement {
         return $out;
     }
 
-    function renderTmpl (&$tmpl, $content, $first_subpart = '', $hide_markers = TRUE) {
-        $tmpl_obj = new HTML_Template_IT();
-        $tmpl_obj->clearCacheOnParse = FALSE;
-        $tmpl_obj->setTemplate($tmpl, $hide_markers, TRUE);
-
-        if ($this->config->getValue($this->getName(), 'rendermarkerassubpart')) {
-            $this->renderMarkerInsideSubparts();
-        }
-
-        // set global markers (not nested in a subpart)
-        if (is_array($content['__GLOBAL__'])) {
-            $tmpl_obj->setVariable($content['__GLOBAL__']);
-            unset($content['__GLOBAL__']);
-        }
-
-        $this->renderSubpart($tmpl_obj, $content, $first_subpart);
-        return $tmpl_obj->get();
-    }
-
-    function renderSubpart (&$tmpl_obj, &$content, $current_subpart = '') {
-        if ($current_subpart != '') {
-            $tmpl_obj->setCurrentBlock($current_subpart);
-        }
-        if (!is_array($content)) {
-            $content = array();
-        }
-        foreach ($content as $marker => $item) {
-            if (is_int($marker)) {
-                $tmpl_obj->parse($this->renderSubpart($tmpl_obj, $item, $current_subpart));
-            } else if (is_array($item)) {
-                $tmpl_obj->parse($this->renderSubpart($tmpl_obj, $item, $marker));
-            } else {
-                if ($this->render_marker_inside_subparts) {
-                    if ($item !== '') {
-                        if (is_bool($item)) {
-                            $tmpl_obj->touchBlock($marker);
-                        } else {
-                            $tmpl_obj->setVariable($marker, $item);
-                        }
-                    }
-                } else {
-                    $tmpl_obj->setVariable($marker, $item);
-                }
-            }
-        }
-        return $current_subpart;
-    }
-
     function checkValue ($attribute, $value) {
-        if ($attribute == 'rendermarkerassubpart') {
-
-            // This is especially for checkbox-values. If there is no checkbox
-            // checked, the variable is not declared and it is necessary to set the
-            // variable to "0".
-            if (!isset($_POST[$this->getName() . '_' . $attribute])) {
-                $_POST[$this->getName() . '_' . $attribute] = '';
-                return FALSE;
-            }
-            return !($value == '1' || $value == '');
-        }
         if ($attribute == 'template') {
         //  return preg_match("|^https?://.*$|i", $value);
             return FALSE;
         }
         return FALSE;
     }
-
-    function renderMarkerInsideSubparts () {
-        $this->render_marker_inside_subparts = TRUE;
-    }
-
 }
 
 ?>

@@ -181,45 +181,6 @@ class ExternElementLitList extends ExternElement {
         
         return $content;
     }
-    
-    function toString ($args) {
-        $content = $this->getContent(NULL);
-        return ExternElementTemplateGeneric::RenderTmpl($this->template, $content, 'LITLISTS');
-    }
-
-    function renderTmpl (&$tmpl, $content = NULL) {
-        if (is_null($content)) {
-            $content = $this->getContent(NULL);
-        }
-        echo "<pre>";
-        print_r($content);
-        echo "</pre>";
-        $tmpl_obj = new HTML_Template_IT();
-        $tmpl_obj->clearCacheOnParse = FALSE;
-        $tmpl_obj->setTemplate($tmpl, TRUE, TRUE);
-        
-        $this->renderSubpart($tmpl_obj, $content, 'LITLIST');
-        
-        return $tmpl_obj->get();
-    }
-    
-    function renderSubpart (&$tmpl_obj, &$content, $current_subpart = '') {
-        if ($current_subpart != '') {
-            $tmpl_obj->setCurrentBlock($current_subpart);
-        }
-        foreach ($content as $marker => $item) {
-            
-            if (is_int($marker)) {
-                $tmpl_obj->parse($this->renderSubpart($tmpl_obj, $item, $current_subpart));
-            } else if (is_array($item)) {
-                $tmpl_obj->parse($this->renderSubpart($tmpl_obj, $item, $marker));
-            } else {
-                $tmpl_obj->setVariable($marker, $item);
-            }
-        }
-        return $current_subpart;
-    }
-    
 }
 
 ?>

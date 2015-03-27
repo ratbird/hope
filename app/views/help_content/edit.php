@@ -20,6 +20,17 @@
                 value=""
                 placeholder="<?= _('Bitte geben Sie eine Route für den Hilfe-Text an') ?>"/>
         <? endif ?>
+        <? if ($GLOBALS['perm']->have_perm('root')) : ?>
+            <label for="help_content_language" class="caption">
+                <?= _('Sprache des Textes:') ?>
+                <span class="required">*</span>
+            </label>
+            <select name="help_content_language">
+                <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $key => $language) : ?>
+                <option value="<?=substr($key, 0, 2)?>"<?=($help_content->language == substr($key, 0, 2)) ? ' selected' : ''?>><?=$language['name']?></option>
+                <? endforeach ?>
+            </select>
+        <? endif ?>
         <label for="help_content_content" class="caption">
             <?= _('Hilfe-Text:') ?>
         </label>

@@ -6,6 +6,17 @@
 <form class="studip_form" action="<?=URLHelper::getURL('dispatch.php/tour/save/'.$tour->tour_id)?>" method="POST">
     <fieldset>
         <legend><?= _('Grunddaten') ?></legend>
+        <? if (! count($tour->steps)) :?>
+        <label for="tour_language" class="caption">
+            <?= _('Sprache der Tour:') ?>
+            <span class="required">*</span>
+        </label>
+        <select name="tour_language">
+            <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $key => $language) : ?>
+            <option value="<?=substr($key, 0, 2)?>"<?=($tour->language == substr($key, 0, 2)) ? ' selected' : ''?>><?=$language['name']?></option>
+            <? endforeach ?>
+        </select>
+        <? endif ?>
         <label for="tour_name" class="caption">
             <?= _('Name der Tour:') ?>
             <span class="required">*</span>

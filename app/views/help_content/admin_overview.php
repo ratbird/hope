@@ -26,12 +26,14 @@
                 <colgroup>
                     <col width="20">
                     <col width="20%">
+                    <col width="10%">
                     <col>
                     <col width="80">
                 </colgroup>                   
                 <thead><tr>
                     <th><?=_("Aktiv")?></th>
                     <th><?=_("Seite")?></th>
+                    <th><?=_("Sprache")?></th>
                     <th><?=_("Inhalt")?></th>
                     <th><?=_("Aktion")?></th>
                 </tr></thead>
@@ -40,6 +42,7 @@
                     <tr>
                     <td><input type="CHECKBOX" name="help_content_status_<?=$help_content_id?>" value="1" aria-label="<?= _('Status der Hilfe (aktiv oder inaktiv)')?>" <?=tooltip(_("Status der Hilfe (aktiv oder inaktiv)"),false)?><?=($help_content->visible) ? ' checked' : ''?>></td>
                     <td><?=htmlReady($help_content->route)?></td>
+                    <td><?=htmlReady($help_content->language)?></td>
                     <td><?=formatReady($help_content->content)?></td>
                     <td>
                     <a href="<?=URLHelper::getURL('dispatch.php/help_content/edit/'.$help_content_id)?>" <?=tooltip(_('Hilfe-Text bearbeiten'))?> data-dialog="size=auto;reload-on-close">

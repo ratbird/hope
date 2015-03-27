@@ -29,6 +29,7 @@
                     <col>
                     <col width="10%">
                     <col width="10%">
+                    <col width="10%">
                     <col width="20%">
                     <col width="10%">
                     <col width="80">
@@ -36,6 +37,7 @@
                 <thead><tr>
                     <th><?=_("Aktiv")?></th>
                     <th><?=_("Überschrift")?></th>
+                    <th><?=_("Sprache")?></th>
                     <th><?=_("Typ")?></th>
                     <th><?=_("Zugang")?></th>
                     <th><?=_("Startseite")?></th>
@@ -49,6 +51,7 @@
                     <td><a href="<?=URLHelper::getURL('dispatch.php/tour/admin_details/'.$tour_id)?>">
                     <?=htmlReady($tour->name)?>
                     </a></td>
+                    <td><?=$tour->language?></td>
                     <td><?=$tour->type?></td>
                     <td><?=$tour->settings->access?></td>
                     <td><?=(count($tour->steps)) ? htmlReady($tour->steps[0]->route) : ''?></td>
@@ -64,7 +67,7 @@
                 <? endforeach ?>
                 </tbody>
                 <tfoot>
-                <tr><td colspan="7">
+                <tr><td colspan="8">
                 <?=Button::createAccept(_('Speichern'), 'save_tour_settings') ?>
                 </td></tr></tfoot>
             </table>

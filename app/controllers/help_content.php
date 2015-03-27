@@ -179,6 +179,8 @@ class HelpContentController extends AuthenticatedController
                 $this->help_content->route           = trim(Request::get('help_content_route'));
                 $this->help_content->author_email    = $GLOBALS['user']->Email;
                 $this->help_content->chdate          = time();
+                if (Request::option('help_content_language'))
+                    $this->help_content->language    = Request::option('help_content_language');
                 /*if ($this->help_content->installation_id != $GLOBALS['STUDIP_INSTALLATION_ID']) {
                     $old_id = $this->help_content->getId();
                     $this->help_content->setNew(true);

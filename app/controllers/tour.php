@@ -513,6 +513,8 @@ class TourController extends AuthenticatedController
             CSRFProtection::verifySecurityToken();
             $this->tour->name = trim(Request::get('tour_name'));
             $this->tour->description = trim(Request::get('tour_description'));
+            if (Request::option('tour_language'))
+                $this->tour->language = Request::option('tour_language');
             $this->tour->type = Request::option('tour_type');
             $this->tour->settings->access = Request::option('tour_access');
             $this->tour->roles = implode(',', Request::getArray('tour_roles'));
@@ -547,6 +549,7 @@ class TourController extends AuthenticatedController
                     foreach(Request::getArray('tour_roles') as $role)
                         $roles .= '&tour_roles[]='.$role;
                 $this->redirect('tour/admin_details?tour_name='.Request::get('tour_name')
+                                                 .'&tour_language='.Request::get('tour_language')
                                                  .'&tour_description='.Request::get('tour_description')
                                                  .'&tour_type='.Request::get('tour_type')
                                                  .'&tour_access='.Request::get('tour_access')

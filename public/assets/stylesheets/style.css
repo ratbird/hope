@@ -412,7 +412,7 @@ tr.hover_even:hover {
   background-color: #eeeeee;
 }
 .labelSingelDateAdd {
-	vertical-align: top;
+	vertical-align: text-top;
 }
 .table_row_even {
   background-color: #f8f8f8;

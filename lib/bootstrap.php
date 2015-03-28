@@ -15,7 +15,7 @@ namespace Studip {
 // use default namespace for the remaining lines
 namespace {
     //software version - please leave it as it is!
-    $SOFTWARE_VERSION = '3.2.alpha-svn';
+    $SOFTWARE_VERSION = '3.3.alpha-svn';
 
     global $PHP_SELF, $STUDIP_BASE_PATH;
 

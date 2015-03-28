@@ -162,6 +162,7 @@ class HelpContentController extends AuthenticatedController
             $this->help_content->position          = 1;
             $this->help_content->custom            = 1;
             $this->help_content->language          = Request::get('help_content_language') ?: substr($GLOBALS['user']->preferred_language, 0, 2);
+            $this->help_content->route             = Request::get('help_content_route');
             if ($this->via_ajax) {
                 header('X-Title: ' . _('Hilfe-Text erstellen'));
             }

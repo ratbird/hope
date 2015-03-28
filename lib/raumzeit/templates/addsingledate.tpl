@@ -77,26 +77,26 @@ use Studip\Button,
                 <TD class="table_row_odd">&nbsp;</TD>
                 <TD class="table_row_odd labelSingeDateAdd">
                     <label><?= _("Durchführende Dozenten/-innen:") ?>
-                    <? if (sizeof($sem->getMembers('dozent')) > 0) { ?>
+                    <? if (sizeof($sem->getMembers('dozent')) > 0) : ?>
 					<SELECT name="related_teachers[]" multiple>
                     <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
                         <OPTION value="<?= $dozent['user_id'] ?>"><?= htmlReady($dozent['fullname']) ?></OPTION>
-                    <? endforeach ?>
+                    <? endforeach; ?>
                     </SELECT>
-					<? } ?>
+					<? endif; ?>
                     </label>
                 </TD>
                 <TD class="table_row_odd labelSingeDateAdd">
                     <label><?= _("Beteiligte Gruppen:") ?>
-                    <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()) 
-					if (sizeof($gruppen) > 0) { ?>
+                    <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()); 
+					if (sizeof($gruppen) > 0) : ?>
 					<SELECT name="related_statusgruppen[]" multiple>
                     
                     <? foreach ($gruppen as $gruppe) : ?>
                     <OPTION value="<?= htmlReady($gruppe->getId()) ?>"><?= htmlReady($gruppe['name']) ?></OPTION>
-                    <? endforeach ?>
+                    <? endforeach; ?>
                     </SELECT>
-					<? } ?>
+					<? endif; ?>
                     </label>
                 </TD>
             </TR>

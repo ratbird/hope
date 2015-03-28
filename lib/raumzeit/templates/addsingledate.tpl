@@ -75,8 +75,8 @@ use Studip\Button,
             </TR>
             <TR>
                 <TD class="table_row_odd">&nbsp;</TD>
-                <TD class="table_row_odd labelSingelDateAdd">
-                    <label><?= _("Durchführende Dozenten/-innen:") ?></label>
+                <TD class="table_row_odd" style="vertical-align: text-top;">
+                    <label for="related_teachers[]"><?= _("Durchführende Dozenten/-innen:") ?></label>
                     <? if (sizeof($sem->getMembers('dozent')) > 0) : ?>
 					<SELECT name="related_teachers[]" multiple>
                     <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
@@ -85,11 +85,10 @@ use Studip\Button,
                     </SELECT>
 					<? endif; ?>
                 </TD>
-                <TD class="table_row_odd labelSingelDateAdd">
-                    
+                <TD class="table_row_odd" style="vertical-align: text-top;">
                     <? $gruppen = Statusgruppen::findBySeminar_id($sem->getId()); 
 					if (sizeof($gruppen) > 0) : ?>
-					<label><?= _("Beteiligte Gruppen:") ?></label>
+					<label for="related_statusgruppen[]"><?= _("Beteiligte Gruppen:") ?></label>
 					<SELECT name="related_statusgruppen[]" multiple>
                     
                     <? foreach ($gruppen as $gruppe) : ?>

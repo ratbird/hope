@@ -167,6 +167,8 @@ jQuery(function ($) {
             enterMode: CKEDITOR.ENTER_BR,
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {
+                autoCloseTags: false,
+                autoCloseBrackets: false,
                 showSearchButton: false,
                 showFormatButton: false,
                 showCommentButton: false,

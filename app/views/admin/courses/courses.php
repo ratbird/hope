@@ -123,7 +123,7 @@
                 <th colspan="<?= $colspan ?>" style="text-align: right">
                     <?= Studip\Button::createAccept(is_string($actions[$selected_action]['multimode'])
                         ? $actions[$selected_action]['multimode']
-                        : $actions[$selected_action]['button_name'], 'save_action') ?>
+                        : $actions[$selected_action]['title'], 'save_action') ?>
                 </th>
             </tr>
         <? endif; ?>
@@ -239,7 +239,7 @@
                 else : ?>
                     <?=
                     \Studip\LinkButton::createEdit(
-                        _($actions[$selected_action]['button_name']),
+                        _($actions[$selected_action]['title']),
                         URLHelper::getURL(sprintf($actions[$selected_action]['url'], $semid),
                             ($actions[$selected_action]['params'] ? $actions[$selected_action]['params'] : array())),
                         ($actions[$selected_action]['attributes'] ? $actions[$selected_action]['attributes'] : array())
@@ -256,7 +256,7 @@
                 <?= Studip\Button::createAccept(
                     is_string($actions[$selected_action]['multimode'])
                         ? $actions[$selected_action]['multimode']
-                        : $actions[$selected_action]['button_name'],
+                        : $actions[$selected_action]['title'],
                     $actions[$selected_action]['name']) ?>
             </td>
         </tr>

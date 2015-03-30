@@ -213,12 +213,14 @@ class Course_BasicdataController extends AuthenticatedController
 
         //Dritter Reiter: Personal
         $this->dozenten = $sem->getMembers('dozent');
+
         if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
             $search_template = "user_inst_not_already_in_sem";
         } else {
             $search_template = "user_not_already_in_sem";
         }
-        $dozentUserSearch = new PermissionSearch(
+
+        $this->dozentUserSearch = new PermissionSearch(
                             $search_template,
                             sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $sem->status)),
                             "user_id",
@@ -228,27 +230,23 @@ class Course_BasicdataController extends AuthenticatedController
                                   'institute' => $sem_institutes
                                  )
                             );
-        $this->dozentensuche = QuickSearch::get("new_doz", $dozentUserSearch)
-                                    ->withButton()
-                                    ->render();
         $this->dozenten_title = get_title_for_status('dozent', 1, $sem->status);
         $this->deputies_enabled = $deputies_enabled;
+
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
-            $deputysearch = new PermissionSearch(
+            $this->deputySearch = new PermissionSearch(
                     "user_not_already_in_sem_or_deputy",
                     sprintf(_("%s suchen"), get_title_for_status('deputy', 1, $sem->status)),
                     "user_id",
                     array('permission' => getValidDeputyPerms(), 'seminar_id' => $this->course_id)
                 );
-            $this->deputysearch = QuickSearch::get('new_dep', $deputysearch)
-                                    ->withButton()
-                                    ->render();
+
             $this->deputy_title = get_title_for_status('deputy', 1, $sem->status);
         }
         $this->tutoren = $sem->getMembers('tutor');
 
-        $tutorUserSearch = new PermissionSearch(
+        $this->tutorUserSearch = new PermissionSearch(
                             $search_template,
                             sprintf(_("%s suchen"), get_title_for_status('tutor', 1, $sem->status)),
                             "user_id",
@@ -258,9 +256,6 @@ class Course_BasicdataController extends AuthenticatedController
                                   'institute' => $sem_institutes
                                  )
                             );
-        $this->tutorensuche = QuickSearch::get("new_tut", $tutorUserSearch)
-                                    ->withButton()
-                                    ->render();
         $this->tutor_title = get_title_for_status('tutor', 1, $sem->status);
 
 
@@ -350,9 +345,8 @@ class Course_BasicdataController extends AuthenticatedController
      */
     public function set_action($course_id)
     {
-        global $user, $perm;
+        global $perm;
 
-        $deputies_enabled = get_config('DEPUTIES_ENABLE');
         $sem = Seminar::getInstance($course_id);
         $this->msg = array();
         $old_settings = $sem->getSettings();
@@ -422,53 +416,6 @@ class Course_BasicdataController extends AuthenticatedController
                 $this->msg[] = array("msg", _("Die Grunddaten der Veranstaltung wurden verändert."));
             }
 
-            //Dozenten hinzufügen:
-            if (Request::get('new_doz') && Request::submitted('add_dozent_x')
-                   && $perm->have_studip_perm("dozent", $sem->getId())) {
-                if ($sem->addMember(Request::option('new_doz'), "dozent")) {
-                    // Only applicable when globally enabled and user deputies enabled too
-                    if ($deputies_enabled) {
-                        // Check whether chosen person is set as deputy
-                        // -> delete deputy entry.
-                        if (isDeputy(Request::option('new_doz'), $sem->getId())) {
-                            deleteDeputy(Request::option('new_doz'), $sem->getId());
-                        }
-                        // Add default deputies of the chosen lecturer...
-                        if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
-                            $deputies = getDeputies(Request::option('new_doz'));
-                            $lecturers = $sem->getMembers('dozent');
-                            foreach ($deputies as $deputy) {
-                                // ..but only if not already set as lecturer or deputy.
-                                if (!isset($lecturers[$deputy['user_id']]) && !isDeputy($deputy['user_id'], $sem->getId())) {
-                                    addDeputy($deputy['user_id'], $sem->getId());
-                                }
-                            }
-                        }
-                    }
-
-                    // unset request parameter in order to reset quicksearch
-                    Request::set('new_doz_parameter', null);
-
-                    $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
-                            get_title_for_status('dozent', 1, $sem->status)));
-                }
-            }
-            //Vertretung hinzufügen:
-            if ($deputies_enabled && Request::option('new_dep') && Request::submitted('add_deputy_x')
-                   && $perm->have_studip_perm("dozent", $sem->getId())) {
-                if (addDeputy(Request::option('new_dep'), $sem->getId())) {
-                    $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
-                            get_title_for_status('deputy', 1, $sem->status)));
-                }
-            }
-            //Tutoren hinzufügen:
-            if (Request::option('new_tut') && Request::submitted('add_tutor_x')
-                    && $perm->have_studip_perm("tutor", $sem->getId())) {
-                if ($sem->addMember(Request::option('new_tut'), "tutor")) {
-                    $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
-                            get_title_for_status('tutor', 1, $sem->status)));
-                }
-            }
         } else {
             $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
@@ -486,27 +433,90 @@ class Course_BasicdataController extends AuthenticatedController
             }
         }
         $this->flash['msg'] = $this->msg;
-
-        if ((Request::get("new_doz_parameter")
-                && !Request::submitted("add_dozent_x")
-                && Request::get("new_doz_parameter") !== sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)))
-            || ($deputies_enabled && Request::get("new_dep_parameter")
-                && !Request::submitted("add_deputy_x")
-                && Request::get("new_dep_parameter") !== sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)))
-            || (Request::get("new_tut_parameter")
-                && !Request::submitted("add_tutor_x")
-                && Request::get("new_tut_parameter") !== sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)))) {
-            if (!$changemade) {
-                unset($this->flash['msg']);
-            }
-        }
-        $this->flash['new_doz_parameter'] = Request::get('new_doz_parameter');
-        if ($deputies_enabled) {
-            $this->flash['new_dep_parameter'] = Request::get('new_dep_parameter');
-        }
-        $this->flash['new_tut_parameter'] = Request::get('new_tut_parameter');
         $this->flash['open'] = Request::get("open");
         $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
+    }
+
+    public function add_member_action($course_id, $status = 'dozent') {
+        // load MultiPersonSearch object
+        $mp = MultiPersonSearch::load("add_member_" . $status . $course_id);
+        $fail = false;
+
+        switch($status) {
+            case 'tutor' : $func = 'addTutor'; break;
+            case 'deputy': $func = 'addDeputy'; break;
+            default: $func = 'addTeacher'; break;
+        }
+
+        foreach ($mp->getAddedUsers() as $a) {
+            $result = $this->$func($a, $course_id);
+            if ($result !== false) {
+                PageLayout::postMessage($result);
+            } else {
+                $fail = true;
+            }
+        }
+        // only show an error messagebox once.
+        if ($fail === true) {
+            PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.')));
+        }
+        $this->flash['open'] = "bd_personal";
+        $this->redirect($this->url_for('course/basicdata/view/' . $course_id));
+    }
+
+    private function addTutor($tutor, $course_id) {
+        //Tutoren hinzufügen:
+        if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
+            $sem = Seminar::GetInstance($course_id);
+            if ($sem->addMember($tutor, "tutor")) {
+                return MessageBox::success(sprintf(_("%s wurde hinzugefügt."),get_title_for_status('tutor', 1, $sem->status)));
+            }
+        }
+        return false;
+    }
+
+    private function addDeputy($deputy, $course_id) {
+        //Vertretung hinzufügen:
+        if ($GLOBALS['perm']->have_studip_perm("dozent", $course_id)) {
+            $sem = Seminar::GetInstance($course_id);
+            if (addDeputy($deputy, $sem->getId())) {
+                return MessageBox::success(sprintf(_("%s wurde hinzugefügt."), get_title_for_status('deputy', 1, $sem->status)));
+            }
+        }
+        return false;
+    }
+
+    private function addTeacher($dozent, $course_id) {
+        $deputies_enabled = get_config('DEPUTIES_ENABLE');
+        $sem = Seminar::GetInstance($course_id);
+        if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) {
+            if ($sem->addMember($dozent, "dozent")) {
+                // Only applicable when globally enabled and user deputies enabled too
+                if ($deputies_enabled) {
+                    // Check whether chosen person is set as deputy
+                    // -> delete deputy entry.
+                    if (isDeputy($dozent, $course_id)) {
+                        deleteDeputy($dozent, $course_id);
+                    }
+                    // Add default deputies of the chosen lecturer...
+                    if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
+                        $deputies  = getDeputies($dozent);
+                        $lecturers = $sem->getMembers('dozent');
+                        foreach ($deputies as $deputy) {
+                            // ..but only if not already set as lecturer or deputy.
+                            if (!isset($lecturers[$deputy['user_id']]) &&
+                                !isDeputy($deputy['user_id'], $course_id)
+                            ) {
+                                addDeputy($deputy['user_id'], $course_id);
+                            }
+                        }
+                    }
+                }
+
+                return MessageBox::success(sprintf(_('%s wurde hinzugefügt.'), get_title_for_status('dozent', 1)));
+            }
+        }
+        return false;
     }
 
     /**

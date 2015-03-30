@@ -2,7 +2,7 @@
     <h1><?=$title?></h1>
 <? endif; ?>
 <div class="mpscontainer" data-dialogname="<?= $name; ?>"><p><?= htmlReady($description); ?></p>
-<form method="POST" action="<?= URLHelper::getLink('dispatch.php/multipersonsearch/js_form_exec/?name=' . $name); ?>" id="<?= $name; ?>"<?= $jsFunction ? ' onSubmit="return '.htmlReady($jsFunction).'(this);"' : "" ?>>
+<form method="POST" action="<?= URLHelper::getLink('dispatch.php/multipersonsearch/js_form_exec/?name=' . $name); ?>" id="<?= $name; ?>" <?= $data_dialog_status ? 'data-dialog' : ''?> <?= $jsFunction ? ' onSubmit="return '.htmlReady($jsFunction).'(this);"' : "" ?>>
     <input id="<?= $name . '_searchinput'; ?>" type="text" placeholder="<?= _("Suchen"); ?>" value="" name="<?= $name . '_searchinput'; ?>" style="width: 210px;" aria-label="<?= _("Suchen"); ?>">
     <?= Assets::img('icons/16/blue/search.png',
                     tooltip2(_('Suche starten')) +

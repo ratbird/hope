@@ -74,13 +74,13 @@ class MultipersonsearchController extends AuthenticatedController {
         $this->description = $mp->getDescription();
         $this->quickfilter = $mp->getQuickfilterIds();
         $this->additionHTML = $mp->getAdditionHTML();
+        $this->data_dialog_status = $mp->getDataDialogStatus();
         foreach ($this->quickfilter as $title => $users) {
             $tmp = User::findMany($users, 'ORDER BY nachname asc, vorname asc');
             $this->quickfilter[$title] = $tmp;
         }
         $this->executeURL = $mp->getExecuteURL();
         $this->jsFunction = $mp->getJSFunctionOnSubmit();
-
         $tmp = User::findMany($mp->getDefaultSelectableUsersIDs(), 'ORDER BY nachname asc, vorname asc');
         $this->defaultSelectableUsers = $tmp;
         $tmp = User::findMany($mp->getDefaultSelectedUsersIDs(), 'ORDER BY nachname asc, vorname asc');

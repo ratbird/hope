@@ -226,6 +226,7 @@ class Admin_CoursesController extends AuthenticatedController
         $tmpname = md5(uniqid('Veranstaltungsexport'));
         if (array_to_csv($data, $GLOBALS['TMP_PATH'] . '/' . $tmpname, $captions)) {
             $this->redirect(GetDownloadLink($tmpname, 'Veranstaltungen_Export.csv', 4, 'force'));
+
             return;
         }
     }
@@ -278,6 +279,7 @@ class Admin_CoursesController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
                     Fehler aufgetreten')), $course->name));
                     $this->redirect('admin/courses/index');
+
                     return;
                 }
                 $result = true;
@@ -314,6 +316,7 @@ class Admin_CoursesController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
                     Fehler aufgetreten')), $course->name));
                     $this->redirect('admin/courses/index');
+
                     return;
                 }
                 $result = true;
@@ -357,6 +360,7 @@ class Admin_CoursesController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::error(sprintf(_('Bei den folgenden Veranstaltungen ist ein
                     Fehler aufgetreten')), $course->name));
                     $this->redirect('admin/courses/index');
+
                     return;
                 }
                 $result = true;
@@ -427,6 +431,7 @@ class Admin_CoursesController extends AuthenticatedController
     }
 
 
+
     /**
      * Return a specifically action oder all available actions
      * @param null $selected
@@ -437,52 +442,55 @@ class Admin_CoursesController extends AuthenticatedController
         // array for the avaiable modules
         $actions = array(
             1  => array('name'        => 'Grunddaten',
-                        'button_name' => 'Grunddaten',
-                        'url'         => 'dispatch.php/course/basicdata/view?cid=%s'),
+                        'title' => 'Grunddaten',
+                        'url'         => 'dispatch.php/course/basicdata/view?cid=%s',
+                        'attributes'  => array(
+                            'data-dialog' => 'size=50%'
+                        )),
             2  => array('name'        => 'Studienbereiche',
-                        'button_name' => 'Studienbereiche',
+                        'title' => 'Studienbereiche',
                         'url'         => 'dispatch.php/course/study_areas/show?cid=%s',
                         'attributes'  => array(
                             'data-dialog' => 'size=50%'
                         )),
             3  => array('name'        => 'Zeiten / Räume',
-                        'button_name' => 'Zeiten / Räume',
+                        'title' => 'Zeiten / Räume',
                         'url'         => 'raumzeit.php?cid=%s'),
             8  => array('name'        => 'Sperrebene',
-                        'button_name' => 'Sperrebenen',
+                        'title' => 'Sperrebenen',
                         'url'         => 'dispatch.php/admin/courses/set_lockrule',
                         'multimode'   => true),
             9  => array('name'        => 'Sichtbarkeit',
-                        'button_name' => 'Sichtbarkeit',
+                        'title' => 'Sichtbarkeit',
                         'url'         => 'dispatch.php/admin/courses/set_visibility',
                         'multimode'   => true),
             10 => array('name'        => 'Zusatzangaben',
-                        'button_name' => 'Zusatzangaben',
+                        'title' => 'Zusatzangaben',
                         'url'         => 'dispatch.php/admin/courses/set_aux_lockrule',
                         'multimode'   => true),
             11 => array('name'        => 'Veranstaltung kopieren',
-                        'button_name' => 'Kopieren',
+                        'title' => 'Kopieren',
                         'url'         => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
             14 => array('name'        => 'Zugangsberechtigungen',
-                        'button_name' => 'Zugangsberechtigungen',
+                        'title' => 'Zugangsberechtigungen',
                         'url'         => 'dispatch.php/course/admission?cid=%s',
                         'attributes'  => array(
                             'data-dialog' => 'size=50%'
                         )),
             16 => array('name'        => 'Archivieren',
-                        'button_name' => 'Archivieren',
+                        'title' => 'Archivieren',
                         'url'         => 'archiv_assi.php',
                         'multimode'   => true)
         );
         if (get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
             $actions[4] = array('name'        => 'Raumanfragen',
-                                'button_name' => 'Raumanfragen',
+                                'title' => 'Raumanfragen',
                                 'url'         => 'dispatch.php/course/room_requests/index?cid=%s');
         }
         foreach (PluginManager::getInstance()->getPlugins("AdminCourseAction") as $plugin) {
             $actions[get_class($plugin)] = array(
                 'name'        => $plugin->getPluginName(),
-                'button_name' => $plugin->getPluginName(),
+                'title' => $plugin->getPluginName(),
                 'url'         => $plugin->getAdminActionURL(),
                 'multimode'   => $plugin->useMultimode()
             );
@@ -491,6 +499,7 @@ class Admin_CoursesController extends AuthenticatedController
         if (is_null($selected)) {
             return $actions;
         }
+
         return $actions[$selected];
     }
 
@@ -502,14 +511,14 @@ class Admin_CoursesController extends AuthenticatedController
     private function getViewFilters()
     {
         return array(_('Nr.'),
-            _('Name'),
-            _('Veranstaltungstyp'),
-            _('Raum/Zeit'),
-            _('DozentIn'),
-            _('TeilnehmerInnen'),
-            _('TeilnehmerInnen auf Warteliste'),
-            _('Vorläufige Anmeldungen'),
-            _('Inhalt'));
+                     _('Name'),
+                     _('Veranstaltungstyp'),
+                     _('Raum/Zeit'),
+                     _('DozentIn'),
+                     _('TeilnehmerInnen'),
+                     _('TeilnehmerInnen auf Warteliste'),
+                     _('Vorläufige Anmeldungen'),
+                     _('Inhalt'));
     }
 
     /**
@@ -534,14 +543,15 @@ class Admin_CoursesController extends AuthenticatedController
         $teachers = SimpleCollection::createFromArray($teachers)
             ->orderBy('fullname asc')
             ->getArrayCopy();
+
         return $teachers;
     }
 
     /**
      * TODO: SORM
      * Get Courses (maybe migration to SORM)
-     * @param $user_id
-     * @param $inst_id
+     * @param       $user_id
+     * @param       $inst_id
      * @param array $params
      * @return mixed
      */
@@ -646,6 +656,7 @@ class Admin_CoursesController extends AuthenticatedController
             if (!empty($search_result)) {
                 return $search_result;
             }
+
             return array();
         }
 
@@ -690,6 +701,7 @@ class Admin_CoursesController extends AuthenticatedController
 
         $dozenten = array_map('reset', $teacher_statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
         $teacher_statement->closeCursor();
+
         return $dozenten;
     }
 
@@ -764,7 +776,7 @@ class Admin_CoursesController extends AuthenticatedController
     /**
      * Returns a course type widthet depending on all available courses and theirs types
      * @param string $selected
-     * @param array $params
+     * @param array  $params
      * @return ActionsWidget
      */
     private function setCourseTypeWidget($selected = 'all')

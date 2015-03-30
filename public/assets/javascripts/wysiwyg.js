@@ -359,6 +359,16 @@ jQuery(function ($) {
                 breakBeforeClose: true,
                 breakAfterClose: true
             });
+            
+            // remove html comments on paste
+            editor.on('paste', function (event) {
+                var editor = event.editor;
+                editor.dataProcessor.htmlFilter.addRules({
+                    comment: function() {
+                        return false;
+                    }
+                });
+            });
 
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function (event) {

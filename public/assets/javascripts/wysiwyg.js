@@ -316,7 +316,8 @@ jQuery(function ($) {
                     "&#x2297", // ⊗ CIRCLED TIMES
                     "&#x2299", // ⊙ CIRCLED DOT OPERATOR
                 ]
-            )
+            ),
+            on: { pluginsLoaded: onPluginsLoaded }
         }); // CKEDITOR.replace(textarea[0], {
 
         CKEDITOR.on('instanceReady', function (event) {
@@ -358,16 +359,6 @@ jQuery(function ($) {
                 breakAfterOpen: true,
                 breakBeforeClose: true,
                 breakAfterClose: true
-            });
-            
-            // remove html comments on paste
-            editor.on('paste', function (event) {
-                var editor = event.editor;
-                editor.dataProcessor.htmlFilter.addRules({
-                    comment: function() {
-                        return false;
-                    }
-                });
             });
 
             // auto-resize editor area in source view mode, and keep focus!
@@ -455,6 +446,14 @@ jQuery(function ($) {
             advancedTab.get('advCSSClasses')['default'] = 'content';
         }
     });
+
+    // editor events
+    function onPluginsLoaded(event) {
+        // tell editor to always remove html comments
+        event.editor.dataProcessor.htmlFilter.addRules({
+            comment: function () { return false; }
+        });
+    }
 
     // editor utilities
     function updateStickyTools(editor) {

@@ -77,6 +77,7 @@ class Course_AdmissionController extends AuthenticatedController
         if (!SeminarCategories::GetByTypeId($this->course->status)->write_access_nobody) {
             $this->is_locked['write_level'] = 'disabled readonly';
         }
+        update_admission($this->course->id);
         PageLayout::addSqueezePackage('admission');
     }
 

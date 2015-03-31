@@ -101,9 +101,9 @@ URLHelper::bindLinkParam('raumzeitFilter', $_SESSION['raumzeitFilter']);
 // URLHelper::bindLinkParam('sd_open', $sd_open);
 
 //Change header_line if open object
-$header_line = getHeaderLine($id);
-if ($header_line)
-    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
+$course = Course::find($id);
+if ($course)
+	PageLayout::setTitle($course->getFullname() ." - ".PageLayout::getTitle());
 
 //save messages from
 $pmessages = PageLayout::getMessages();

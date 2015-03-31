@@ -1,5 +1,5 @@
 <? if (isset($title)): ?>
-    <h1><?=$title?></h1>
+    <h1><?= htmlReady($title) ?></h1>
 <? endif; ?>
 <form method="POST" action="<?= $controller->url_for("multipersonsearch/no_js_form/?name=" . $name) ?>">
     <input type="hidden" name="search_persons_selectable_hidden" value="<?=htmlReady(serialize($selectableUsersHidden));?>">

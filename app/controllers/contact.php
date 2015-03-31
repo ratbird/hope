@@ -114,7 +114,7 @@ class ContactController extends AuthenticatedController
             $this->title = $selected->name;
 
             // Set title of multipersonsearch
-            $mps->setTitle(sprintf(_('Kontakte zu %s hinzufügen'), htmlReady($selected->name)));
+            $mps->setTitle(sprintf(_('Kontakte zu %s hinzufügen'), $selected->name));
             $mps->addQuickfilter(_('Kontakte'), User::findCurrent()->contacts->pluck('user_id'));
         }
 

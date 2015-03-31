@@ -287,6 +287,8 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
                     $affected = $statement->rowCount();
                 }
                 if ($affected > 0) {
+                    $log_message = 'Wurde automatisch aus der Warteliste in die Veranstaltung eingetragen.';
+                    StudipLog::log('SEM_USER_ADD', $seminar->getId(), $row['user_id'], $sem_preliminary ? 'accepted' : 'autor', $log_message);
                     if (!$sem_preliminary) {
                         $query = "DELETE FROM admission_seminar_user
                                   WHERE user_id = ? AND seminar_id = ?";

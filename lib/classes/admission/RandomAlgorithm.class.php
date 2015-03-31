@@ -267,6 +267,7 @@ class RandomAlgorithm extends AdmissionAlgorithm {
                 }
                 messaging::sendSystemMessage($chosen_one, $message_title, $message_body);
                 restoreLanguage();
+                StudipLog::log('SEM_USER_ADD', $course->id, $chosen_one, 'awaiting', 'Auf Warteliste gelost, Position: ' . $maxpos);
             }
         }
     }

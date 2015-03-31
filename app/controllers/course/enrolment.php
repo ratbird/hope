@@ -112,6 +112,7 @@ class Course_EnrolmentController extends AuthenticatedController {
                                     $course->admission_applicants[] = $new_admission_member;
                                     if ($new_admission_member->store()) {
                                         $msg_details[] = sprintf(_("Alle Plätze sind belegt, Sie wurden daher auf Platz %s der Warteliste gesetzt."), $maxpos);
+                                        StudipLog::log('SEM_USER_ADD', $course->id, $user_id, 'awaiting', 'Hat sich auf Warteliste eingetragen, Position: ' . $maxpos);
                                     }
                                 } else {
                                     $this->admission_error = MessageBox::error(_("Die Anmeldung war nicht erfolgreich. Alle Plätze sind belegt und es steht keine Warteliste zur Verfügung."));

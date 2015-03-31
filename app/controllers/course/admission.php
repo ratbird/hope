@@ -364,8 +364,8 @@ class Course_AdmissionController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::success(sprintf(_("Die Zuordnung zum Anmeldeset %s wurde aufgehoben."), htmlReady($cs->getName()))));
                 }
                 if (!count($cs->getCourses())
-                    && $this->user_id == $cs->getUserId()
-                    && $cs->getPrivate()) {
+                    && $cs->isGlobal()
+                    && $cs->getUserid() != '') {
                     $cs->delete();
                 }
                 if ($this->course->getNumWaiting()) {

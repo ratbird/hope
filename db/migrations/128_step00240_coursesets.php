@@ -3,7 +3,6 @@ require_once 'vendor/phpass/PasswordHash.php';
 
 class Step00240CourseSets extends Migration
 {
-
     function description()
     {
         return 'add tables needed for storing new admission related data';
@@ -12,15 +11,6 @@ class Step00240CourseSets extends Migration
     function up()
     {
         $db = DBManager::get();
-        //check for future admission
-        /*$future_admissions = $db->fetchColumn("SELECT COUNT(*) FROM seminare WHERE admission_type IN (1,2) AND
-         (admission_starttime > UNIX_TIMESTAMP() OR start_time > UNIX_TIMESTAMP())");
-
-        if ($future_admissions && !Request::submitted('i_accept_the_risk')) {
-            throw new Exception(sprintf("Es gibt %s Veranstaltungen mit Anmeldeverfahren, die in der Zukunft starten.
-                Diese Anmeldeverfahren können nicht migriert werden. Wenn sie auch diese zukünftigen Verfahren in gesperrt umwandeln wollen,
-                rufen sie manuell web_migrate.php?i_accept_the_risk auf, und klicken sie erneut auf Starten", $future_admissions ));
-        }*/
 
         // assign conditions to admission rules
         $db->exec("CREATE TABLE IF NOT EXISTS `admission_condition` (
@@ -245,9 +235,10 @@ class Step00240CourseSets extends Migration
         $password_insert = $db->prepare("INSERT INTO passwordadmissions (rule_id,message,password,mkdate,chdate) VALUES (?,'Das Passwort ist falsch',?,UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $locked_insert = $db->prepare("INSERT INTO lockedadmissions (rule_id,message,mkdate,chdate) VALUES (?,'Die Anmeldung ist gesperrt',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
         $hasher = new PasswordHash(8, false);
+        $user_id = $GLOBALS['user']->id;
 
         //mit pw wandeln
-        $pw_admission = $db->fetchAll("SELECT seminar_id,name,passwort,institut_id,chdate FROM seminare WHERE Lesezugriff=2");
+        $pw_admission = $db->fetchAll("SELECT seminar_id, name, passwort, institut_id, chdate FROM seminare WHERE admission_type = 0 AND Lesezugriff = 2");
         foreach ($pw_admission as $course) {
             $new_pwd = $hasher->HashPassword($course['passwort']);
             $rule_id = md5(uniqid('passwordadmissions',1));
@@ -255,8 +246,8 @@ class Step00240CourseSets extends Migration
             $set_id = md5(uniqid('coursesets',1));
             $name = 'Anmeldung mit Passwort: ' . $course['name'];
             $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
-            $cs_insert->execute(array($set_id,'',$name,$info,1,$course['chdate'],$course['chdate']));
-            $cs_r_insert->execute(array($set_id,$rule_id,'PasswordAdmission'));
+            $cs_insert->execute(array($set_id,$user_id,$name,$info,1,$course['chdate'],$course['chdate']));
+            $cs_r_insert->execute(array($set_id, $rule_id, 'PasswordAdmission'));
             $s_cs_insert->execute(array($set_id, $course['seminar_id']));
         }
         //ein globales set für alle gesperrten
@@ -269,111 +260,118 @@ class Step00240CourseSets extends Migration
         $cs_r_insert->execute(array($locked_set_id,$locked_rule_id,'LockedAdmission'));
 
         //locked wandeln
-        $locked_admission = $db->fetchAll("SELECT seminar_id,name,institut_id FROM seminare WHERE admission_type=3");
+        $locked_admission = $db->fetchAll("SELECT seminar_id, name, institut_id FROM seminare WHERE admission_type = 3");
         foreach ($locked_admission as $course) {
             $s_cs_insert->execute(array($locked_set_id, $course['seminar_id']));
         }
 
+        // Lade Daten des aktuellen Semesters.
+        $semester = Semester::findCurrent();
+        $now = time();
+        $preserve_waitlists = array();
+
         //gruppierte wandeln
-        $grouped_admission = $db->fetchAll("SELECT seminar_id,seminare.name,admission_group.name as a_name,institut_id,admission_group, admission_group.chdate
-            FROM seminare inner join admission_group on(group_id=admission_group)
-            WHERE admission_type in (1,2) ORDER BY admission_group");
+        $grouped_admission = $db->fetchAll("SELECT seminar_id, seminare.name, start_time, duration_time, institut_id, admission_type, admission_starttime,
+            admission_endtime, admission_endtime_sem, admission_group.name as a_name, admission_group, admission_group.chdate
+            FROM seminare INNER JOIN admission_group ON group_id = admission_group
+            WHERE admission_type IN (1, 2) ORDER BY admission_group, admission_starttime, VeranstaltungsNummer");
         foreach ($grouped_admission as $course) {
             if ($group_id != $course['admission_group']) {
                 $group_id = $course['admission_group'];
-                $group_name = $course['a_name'];
-                if (!$group_name) {
-                    $group_name = " " . ++$g;
+                $group_type = $course['admission_type'];
+                $group_inst = array($course['institut_id']);
+                $group_name = $course['a_name'] ?: ++$g;
+
+                /*
+                 * Check, ob Anmeldeverfahren in der Vergangenheit schon
+                 * abgeschlossen wurde. Hier extra ausführlich, damit es
+                 * verständlich bleibt.
+                 */
+                // Veranstaltungen, die (auch implizit) im aktuellen oder kommenden Semestern liegen.
+                if (($course['start_time'] + $course['duration_time'] >= $semester->beginn || $course['duration_time'] == -1) &&
+                    // Checke, ob Warteliste aktiviert, Anmeldezeitraum oder Loszeitpunkt in der Zukunft oder Anmeldezeitraum komplett offen.
+                    ($course['admission_disable_waitlist'] == 0 || $course['admission_starttime'] > $now || $course['admission_endtime'] > $now ||
+                     $course['admission_endtime_sem'] > $now || $course['admission_endtime_sem'] == -1)) {
+                    // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
+                    $cs = $this->buildCourseset($course, true);
+                    $cs->setName('Beschränkte Teilnehmeranzahl: Gruppe ' . $group_name)
+                       ->setInfoText('Erzeugt durch Migration 128 ' . strftime('%X %x'))
+                       ->addInstitute($course['institut_id'])->setPrivate(true)->setUserId($user_id)->store();
+                    $set_id = $cs->getId();
+                // Losen oder Anmeldezeitraum vorbei => sperren.
+                // Veranstaltungen in vergangenen Semestern werden einfach gesperrt.
+                } else {
+                    $group_type = 3;
+                    $rule_id = md5(uniqid('lockedadmissions',1));
+                    $locked_insert->execute(array($rule_id));
+                    $set_id = md5(uniqid('coursesets',1));
+                    $name = 'Anmeldung gesperrt: Gruppe ' . $group_name;
+                    $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
+                    $cs_insert->execute(array($set_id,$user_id,$name,$info,1,$course['chdate'],$course['chdate']));
+                    $cs_i_insert->execute(array($set_id,$course['institut_id']));
+                    $cs_r_insert->execute(array($set_id,$rule_id,'LockedAdmission'));
                 }
-                $rule_id = md5(uniqid('lockedadmissions',1));
-                $locked_insert->execute(array($rule_id));
-                $set_id = md5(uniqid('coursesets',1));
-                $name = 'Anmeldung gesperrt: Gruppe ' . $group_name;
-                $info = 'Erzeugt durch Migration 128 ' . strftime('%X %x');
-                $cs_insert->execute(array($set_id,$GLOBALS['user']->id,$name,$info,1,$course['chdate'],$course['chdate']));
-                $cs_i_insert->execute(array($set_id,$course['institut_id']));
-                $cs_r_insert->execute(array($set_id,$rule_id,'LockedAdmission'));
+            }
+            // Veranstaltung mit Losverfahren
+            if ($group_type == 1) {
+                // Losliste übernehmen
+                $db->execute("INSERT INTO priorities (user_id, set_id, seminar_id, priority, mkdate, chdate)
+                 SELECT user_id, ?, seminar_id, 1, mkdate, UNIX_TIMESTAMP()
+                 FROM admission_seminar_user WHERE status = 'claiming' AND seminar_id = ?", array($set_id, $course['seminar_id']));
+            // Chronologische Anmeldung
+            } else if ($group_type == 2) {
+                $preserve_waitlists[] = $course['seminar_id'];
+            }
+            // weitere Einrichtungen zuordnen
+            if ($group_type != 3 && !in_array($course['institut_id'], $group_inst)) {
+                $cs_i_insert->execute(array($set_id, $course['institut_id']));
+                $group_inst[] = $course['institut_id'];
             }
             $s_cs_insert->execute(array($set_id, $course['seminar_id']));
         }
 
-        // sperre veranstaltungen
-        $admission = $db->fetchAll("SELECT `seminar_id`,`seminare`.`name`,`start_time`,`duration_time`,`institut_id`,`admission_turnout`,`admission_type`,`admission_starttime`,`admission_endtime`,`admission_endtime_sem`, seminare.chdate
-            FROM `seminare` left join `admission_group` on(`group_id`=`admission_group`) WHERE `admission_type` in (1,2) AND `group_id` is null");
-        $now = mktime();
-        $preserve_waitlists = array();
+        $admission = $db->fetchAll("SELECT seminar_id, seminare.name, start_time, duration_time, institut_id, admission_type, admission_starttime, admission_endtime, admission_endtime_sem
+            FROM seminare left join admission_group on(group_id=admission_group) WHERE admission_type in (1, 2) AND group_id is null");
         foreach ($admission as $course) {
             /*
              * Check, ob Anmeldeverfahren in der Vergangenheit schon
              * abgeschlossen wurde. Hier extra ausführlich, damit es
              * verständlich bleibt.
              */
-            // Lade Daten des aktuellen Semesters.
-            $semester = Semester::findCurrent();
             // Veranstaltungen, die (auch implizit) im aktuellen oder kommenden Semestern liegen.
-            if ($course['start_time']+$course['duration_time'] >= $semester->beginn || $course['duration_time'] == -1) {
-                // Checke, ob Anmeldezeitraum oder Loszeitpunkt in der Zukunft oder Anmeldezeitraum komplett offen.
-                if (($course['admission_starttime'] > $now || $course['admission_endtime'] > $now || $course['admission_endtime_sem'] > $now) ||
-                        ($course['admission_type'] == 2 && $course['admission_starttime'] == -1 && $course['admission_endtime_sem'] == -1)) {
-                    // Veranstaltung mit Losverfahren
-                    if ($course['admission_type'] == 1) {
-                        // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
-                        $cs = new CourseSet();
-                        $rule = new ParticipantRestrictedAdmission();
-                        // Loszeitpunkt übernehmen.
-                        $rule->setDistributionTime($course['admission_endtime']);
-                        // Falls Anmeldezeitraum eingestellt, diesen übernehmen.
-                        if ($course['admission_starttime'] != -1 || $course['admission_endtime_sem'] != -1) {
-                            $rule2 = new TimedAdmission();
-                            if ($course['admission_starttime'] != -1) {
-                                $rule2->setStartTime($course['admission_starttime']);
-                            }
-                            if ($course['admission_endtime_sem'] != -1) {
-                                $rule2->setEndTime($course['admission_endtime_sem']);
-                            }
-                            $cs->addAdmissionRule($rule2);
-                        }
-                        $cs->setName('Beschränkte Teilnehmeranzahl: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
-                        //Losliste übernehmen
-                        $db->execute("INSERT INTO `priorities` (`user_id`, `set_id`, `seminar_id`,
-                                                    `priority`, `mkdate`, `chdate`)
-                         SELECT user_id,'".$cs->getId()."',seminar_id,1,mkdate,UNIX_TIMESTAMP()
-                         FROM `admission_seminar_user` WHERE `status` = 'claiming' AND seminar_id=?", array($course['seminar_id']));
-
-                    // Chronologische Anmeldung
-                    } else {
-                        // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
-                        $cs = new CourseSet();
-                        $rule = new ParticipantRestrictedAdmission();
-                        $rule->setDistributionTime(0);
-                        if ($course['admission_starttime'] != -1 || $course['admission_endtime_sem'] != -1) {
-                            $rule2 = new TimedAdmission();
-                            if ($course['admission_starttime'] != -1) {
-                                $rule2->setStartTime($course['admission_starttime']);
-                            }
-                            if ($course['admission_endtime_sem'] != -1) {
-                                $rule2->setEndTime($course['admission_endtime_sem']);
-                            }
-                            $cs->addAdmissionRule($rule2);
-                        }
-                        $cs->setName('Beschränkte Teilnehmeranzahl: '.$course['name'])->addCourse($course['seminar_id'])->addInstitute($course['institut_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
-                        $preserve_waitlists[] = $course['seminar_id'];
-                    }
-                // Losen oder Anmeldezeitraum vorbei => sperren.
+            if (($course['start_time'] + $course['duration_time'] >= $semester->beginn || $course['duration_time'] == -1) &&
+                // Checke, ob Warteliste aktiviert, Anmeldezeitraum oder Loszeitpunkt in der Zukunft oder Anmeldezeitraum komplett offen.
+                ($course['admission_disable_waitlist'] == 0 || $course['admission_starttime'] > $now || $course['admission_endtime'] > $now ||
+                 $course['admission_endtime_sem'] > $now || $course['admission_endtime_sem'] == -1)) {
+                // Erzeuge ein Anmeldeset mit den vorhandenen Einstellungen der Veranstaltung.
+                $cs = $this->buildCourseset($course, false);
+                $cs->setName('Beschränkte Teilnehmeranzahl: '.$course['name'])
+                   ->setInfoText('Erzeugt durch Migration 128 ' . strftime('%X %x'))
+                   ->setPrivate(true)->setUserId($user_id)->store();
+                $set_id = $cs->getId();
+                // Veranstaltung mit Losverfahren
+                if ($course['admission_type'] == 1) {
+                    // Losliste übernehmen
+                    $db->execute("INSERT INTO priorities (user_id, set_id, seminar_id, priority, mkdate, chdate)
+                     SELECT user_id, ?, seminar_id, 1, mkdate, UNIX_TIMESTAMP()
+                     FROM admission_seminar_user WHERE status = 'claiming' AND seminar_id = ?", array($set_id, $course['seminar_id']));
+                // Chronologische Anmeldung
                 } else {
-                    $s_cs_insert->execute(array($locked_set_id, $course['seminar_id']));
+                    $preserve_waitlists[] = $course['seminar_id'];
                 }
+            // Losen oder Anmeldezeitraum vorbei => sperren.
             // Veranstaltungen in vergangenen Semestern werden einfach gesperrt.
             } else {
-                $s_cs_insert->execute(array($locked_set_id, $course['seminar_id']));
+                $set_id = $locked_set_id;
             }
+            $s_cs_insert->execute(array($set_id, $course['seminar_id']));
         }
 
         $db->exec("UPDATE seminare SET Lesezugriff=1,Schreibzugriff=1 WHERE Lesezugriff=3");
         $db->exec("UPDATE seminare SET Lesezugriff=1,Schreibzugriff=1 WHERE Lesezugriff=2");
 
         // Übernehme Veranstaltungen ohne Anmeldeverfahren, aber mit Anmeldezeitraum in der Zukunft.
-        $now = mktime();
+        $now = time();
         $admission = $db->fetchAll("SELECT `seminar_id`,`seminare`.`name`,`institut_id`,`admission_starttime`,`admission_endtime_sem`
             FROM `seminare` WHERE `admission_type`=0 AND (`admission_starttime`>:now OR `admission_endtime_sem`>:now)", array('now' => $now));
         foreach ($admission as $course) {
@@ -386,7 +384,9 @@ class Step00240CourseSets extends Migration
             if ($course['admission_endtime_sem'] != -1) {
                 $rule->setEndTime($course['admission_endtime_sem']);
             }
-            $cs->setName('Anmeldezeitraum: '.$course['name'])->addCourse($course['seminar_id'])->addAdmissionRule($rule)->setPrivate(true)->store();
+            $cs->setName('Anmeldezeitraum: '.$course['name'])
+               ->setInfoText('Erzeugt durch Migration 128 ' . strftime('%X %x'))
+               ->addCourse($course['seminar_id'])->addAdmissionRule($rule)->setPrivate(true)->setUserId($user_id)->store();
         }
 
         //Warte und Anmeldelisten löschen
@@ -452,6 +452,51 @@ class Step00240CourseSets extends Migration
             `lockedadmissions`, `priorities`, `seminar_courseset`,
             `timedadmissions`, `userfilter_fields`, `userfilter`,
             `user_factorlist`, `userlimits`");
+    }
+
+    function buildCourseset($course, $grouped)
+    {
+        $db = DBManager::get();
+
+        $cs = new CourseSet();
+        $rule = new ParticipantRestrictedAdmission();
+        // Loszeitpunkt übernehmen.
+        $rule->setDistributionTime($course['admission_type'] == 1 ? $course['admission_endtime'] : 0);
+        $cs->addAdmissionRule($rule);
+        // Beschränkung 1 aus n, falls erforderlich
+        if ($grouped) {
+            $rule = new LimitedAdmission();
+            $rule->setMaxNumber(1);
+            $cs->addAdmissionRule($rule);
+        }
+        // Falls Anmeldezeitraum eingestellt, diesen übernehmen.
+        if ($course['admission_starttime'] != -1 || $course['admission_endtime_sem'] != -1) {
+            $rule = new TimedAdmission();
+            if ($course['admission_starttime'] != -1) {
+                $rule->setStartTime($course['admission_starttime']);
+            }
+            if ($course['admission_endtime_sem'] != -1) {
+                $rule->setEndTime($course['admission_endtime_sem']);
+            }
+            $cs->addAdmissionRule($rule);
+        }
+        // Studiengänge eintragen
+        $stmt = $db->prepare('SELECT studiengang_id FROM admission_seminar_studiengang WHERE seminar_id = ?');
+        $stmt->execute(array($course['seminar_id']));
+        $subjects = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('all', $subjects) && $subjects) {
+            $rule = new ConditionalAdmission();
+            foreach ($subjects as $subject) {
+                $condition = new UserFilter();
+                $subject_field = new SubjectCondition();
+                $subject_field->setCompareOperator('=');
+                $subject_field->setValue($subject);
+                $condition->addField($subject_field);
+                $rule->addCondition($condition);
+            }
+            $cs->addAdmissionRule($rule);
+        }
+        return $cs;
     }
 }
 ?>

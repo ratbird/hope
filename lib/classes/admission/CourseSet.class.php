@@ -524,7 +524,8 @@ class CourseSet
     }
 
     public function setUserId($user_id) {
-        return $this->user_id = $user_id;
+        $this->user_id = $user_id;
+        return $this;
     }
 
     /**
@@ -808,7 +809,6 @@ class CourseSet
     }
 
     public function store() {
-        global $user;
         // Generate new ID if course set doesn't exist in DB yet.
         if (!$this->id) {
             do {
@@ -817,6 +817,9 @@ class CourseSet
                     FROM `coursesets` WHERE `set_id`='$newid'");
             } while ($db->fetch());
             $this->id = $newid;
+        }
+        if (!$this->user_id) {
+            $this->user_id = $GLOBALS['user']->id;
         }
         if ($this->isSeatDistributionEnabled()) {
             if (!$this->getAlgorithm()) {
@@ -840,7 +843,7 @@ class CourseSet
             `name`=VALUES(`name`), `infotext`=VALUES(`infotext`),
             `algorithm`=VALUES(`algorithm`), `algorithm_run`=VALUES(`algorithm_run`), `private`=VALUES(`private`),
             `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $user->id, $this->name, $this->infoText,
+        $stmt->execute(array($this->id, $this->user_id, $this->name, $this->infoText,
             get_class($this->algorithm), $this->hasAlgorithmRun(), intval($this->private), time(), time()));
         // Delete removed institute assignments from database.
         DBManager::get()->exec("DELETE FROM `courseset_institute`
@@ -986,16 +989,21 @@ class CourseSet
     public function isUserAllowedToEdit($user_id)
     {
         global $perm;
-        $i_am_the_boss = $this->getUserId() != '' && ($perm->have_perm('root', $user_id) || $this->getUserId() == $user_id);
-        if (!$i_am_the_boss && ($perm->have_perm('admin', $user_id) || ($perm->have_perm('dozent', $user_id) && get_config('ALLOW_DOZENT_COURSESET_ADMIN')))) {
+
+        if ($this->getUserId() != '' && ($perm->have_perm('root', $user_id) || $this->getUserId() == $user_id)) {
+            return true;
+        }
+        if (count($this->institutes) == 0 && count($this->courses) == 1 && $perm->have_studip_perm('tutor', current($this->getCourses()), $user_id)) {
+            return true;
+        }
+        if ($perm->have_perm('admin', $user_id) || ($perm->have_perm('dozent', $user_id) && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))) {
             foreach ($this->getInstituteIds() as $one) {
                 if ($perm->have_studip_perm('dozent', $one, $user_id)) {
-                    $i_am_the_boss = true;
-                    break;
+                    return true;
                 }
             }
         }
-        return $i_am_the_boss;
+        return false;
     }
 
     /**
@@ -1061,4 +1069,3 @@ class CourseSet
 
 } /* end of class CourseSet */
 
-?>

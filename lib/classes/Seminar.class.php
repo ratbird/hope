@@ -2046,10 +2046,8 @@ class Seminar
             CourseSet::removeCourseFromSet($cs->getId(), $this->getId());
             $cs->load();
             if (!count($cs->getCourses())
-                && !($GLOBALS['perm']->have_perm('admin', $cs->getUserId())
-                    || ($GLOBALS['perm']->have_perm('dozent', $cs->getUserId()) && get_config('ALLOW_DOZENT_COURSESET_ADMIN'))
-                    )
-                && $cs->getPrivate()) {
+                && $cs->isGlobal()
+                && $cs->getUserid() != '') {
                 $cs->delete();
             }
         }

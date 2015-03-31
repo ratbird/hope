@@ -311,4 +311,51 @@ class User extends AuthUserMd5
     {
         return $this->contacts->findOneBy('user_id', $another_user['user_id']) !== null;
     }
+
+    /**
+     * checks if at least one field was modified since last restore
+     *
+     * @return boolean
+     */
+    public function isDirty()
+    {
+        return parent::isDirty() || $this->info->isDirty();
+    }
+
+    /**
+     * checks if given field was modified since last restore
+     *
+     * @param string $field
+     * @return boolean
+     */
+    public function isFieldDirty($field)
+    {
+        $field = strtolower($field);
+        return (array_key_exists($field, $this->content_db) ? parent::isFieldDirty($field) : $this->info->isFieldDirty($field));
+    }
+
+    /**
+     * reverts value of given field to last restored value
+     *
+     * @param string $field
+     * @return mixed the restored value
+     */
+    public function revertValue($field)
+    {
+        $field = strtolower($field);
+        return (array_key_exists($field, $this->content_db) ? parent::revertValue($field) : $this->info->revertValue($field));
+    }
+
+    /**
+     * returns unmodified value of given field
+     *
+     * @param string $field
+     * @throws InvalidArgumentException
+     * @return mixed
+     */
+    public function getPristineValue($field)
+    {
+        $field = strtolower($field);
+        return (array_key_exists($field, $this->content_db) ? parent::getPristineValue($field) : $this->info->getPristineValue($field));
+    }
 }

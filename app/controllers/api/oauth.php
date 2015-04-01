@@ -53,7 +53,7 @@ class Api_OauthController extends StudipController
     {
         global $user, $auth;
 
-        $auth_plugin = Config::get()->OAUTH_AUTH_PLUGIN;
+        $auth_plugin = Config::get()->API_OAUTH_AUTH_PLUGIN;
         if ($GLOBALS['user']->id === 'nobody' && $auth_plugin !== 'Standard' && !Request::option('sso')) {
             $params = $_GET;
             $params['sso'] = $auth_plugin;
@@ -66,14 +66,21 @@ class Api_OauthController extends StudipController
         $user_id = RESTAPI\Consumer\OAuth::getOAuthId($GLOBALS['user']->id);
 
         try {
-            $consumer = RESTAPI\Consumer\Base::detectConsumer('oauth');
-            if (isset($_POST['allow'])) {
-                $consumer->grantAccess($GLOBALS['user']->id);
+            $consumer = RESTAPI\Consumer\Base::detectConsumer('oauth', 'request');
+            if (Request::submitted('allow')) {
+                $result = $consumer->grantAccess($GLOBALS['user']->id);
 
-                // No oauth_callback, show the user the result of the authorization
-                // ** your code here **
-                PageLayout::postMessage(MessageBox::success(_('Sie haben der Applikation Zugriff auf Ihre Daten gewährt.')));
-                $this->redirect('api/authorizations#' . $consumer->auth_key);
+                $redirect_uri = Request::get('oauth_callback', $consumer->osr_callback_uri);
+
+                if ($redirect_uri) {
+                    $this->redirect($redirect_uri);
+                } else {
+                    // No oauth_callback, show the user the result of the authorization
+                    // ** your code here **
+                    PageLayout::postMessage(MessageBox::success(_('Sie haben der Applikation Zugriff auf Ihre Daten gewährt.')));
+                    $this->redirect('api/authorizations#' . $consumer->auth_key);
+                }
+                return;
            }
         } catch (OAuthException $e) {
             // No token to be verified in the request, show a page where the user can enter the token to be verified
@@ -83,9 +90,10 @@ class Api_OauthController extends StudipController
 
         PageLayout::disableHeader();
         PageLayout::setTitle(sprintf(_('"%s" bittet um Zugriff'), $consumer->title));
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base.php'));
         $this->consumer = $consumer;
         $this->token    = Request::option('oauth_token');
+        $this->oauth_callback = Request::get('oauth_callback');
     }
 
     /**

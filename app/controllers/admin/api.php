@@ -26,7 +26,7 @@ class Admin_ApiController extends AuthenticatedController
         $this->types = array(
             'website' => _('Website'),
             'desktop' => _('Herkömmliches Desktopprogramm'),
-            'app'     => _('Mobile App')
+            'mobile'  => _('Mobile App')
         );
 
         // Infobox
@@ -104,15 +104,15 @@ class Admin_ApiController extends AuthenticatedController
         if (Request::submitted('store')) {
             $errors = array();
 
-            $consumer->active = Request::int('active');
-            $consumer->title  = Request::get('title');
-            $consumer->contact = Request::get('contact');
-            $consumer->email = Request::get('email');
-            $consumer->callback = Request::get('callback');
-            $consumer->url = Request::get('url');
-            $consumer->type = Request::get('type');
-            $consumer->commercial = Request::int('commercial');
-            $consumer->notes = Request::get('notes');
+            $consumer->active      = Request::int('active');
+            $consumer->title       = Request::get('title');
+            $consumer->contact     = Request::get('contact');
+            $consumer->email       = Request::get('email');
+            $consumer->callback    = Request::get('callback');
+            $consumer->url         = Request::get('url');
+            $consumer->type        = Request::get('type');
+            $consumer->commercial  = Request::int('commercial');
+            $consumer->notes       = Request::get('notes');
             $consumer->description = Request::get('description');
 
             if (!empty($errors)) {

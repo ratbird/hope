@@ -17,12 +17,13 @@ class OAuth extends Base
     /**
      * Detects whether the request is authenticated via OAuth.
      *
+     * @param mixed $request_type Type of request (optional; defaults to any)
      * @return mixed Instance of self if authentication was detected, false
      *               otherwise
      */
-    public static function detect()
+    public static function detect($request_type = null)
     {
-        if (OAuthRequestVerifier::requestIsSigned()) {
+        if (OAuthRequestVerifier::requestIsSigned() && $request_type !== 'request') {
             $user_id = false;
 
             $parameters = (in_array($_SERVER['REQUEST_METHOD'], array('GET', 'POST')))
@@ -56,12 +57,12 @@ class OAuth extends Base
 
                 $query = "SELECT consumer_id
                           FROM api_consumers
-                          WHERE consumer_type = 'oauth' AND auth_key = :key";
+                          WHERE auth_key = :key";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':key', $rs['consumer_key']);
                 $statement->execute();
                 $id = $statement->fetchColumn();
-                
+
                 if ($id) {
                     return new self($id);
                 }
@@ -156,7 +157,7 @@ class OAuth extends Base
         }
 
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, true)->store();
-        self::getServer()->authorizeFinish(true, self::getOAuthId($user_id));
+        return self::getServer()->authorizeFinish(true, self::getOAuthId($user_id));
     }
 
     /**
@@ -186,7 +187,7 @@ class OAuth extends Base
         $statement->execute();
 
         UserPermissions::get($GLOBALS['user']->id)->set($this->id, false)->store();
-        self::getServer()->authorizeFinish(false, self::getOAuthId($user_id));
+        return self::getServer()->authorizeFinish(false, self::getOAuthId($user_id));
     }
 
     /**

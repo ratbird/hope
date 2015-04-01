@@ -1,7 +1,6 @@
-<h1><?= _('Registrierte Konsumenten') ?></h1>
-
 <? if (!empty($consumers)): ?>
 <table class="default">
+    <caption><?= _('Registrierte Konsumenten') ?></caption>
     <thead>
         <tr>
             <th><?= ('Aktiv') ?></th>
@@ -36,7 +35,7 @@
                 </a>
             </td>
             <td><?= Assets::img('icons/16/blue/checkbox-' . ($consumer->commercial ? '' : 'un') . 'checked') ?></td>
-            <td align="right">
+            <td class="actions">
                 <a href="<?= $controller->url_for('admin/api/keys', $consumer->id) ?>"
                    data-dialog="size=auto"
                    title="<?= htmlReady(sprintf(_('Schlüssel anzeigen für Applikation "%s"'), $consumer->title)) ?>">

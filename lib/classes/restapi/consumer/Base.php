@@ -115,11 +115,12 @@ abstract class Base extends \SimpleOrMap
      * executing the detect method on all known consumer types.
      *
      * @param mixed $type Name of the type (optional; defaults to all types)
+     * @param mixed $request_type Type of request (optional; defaults to any)
      * @return mixed Either the detected consumer or false if no consumer
      *               was detected
      * @throws Exception if type is invalid
      */
-    public static function detectConsumer($type = null)
+    public static function detectConsumer($type = null, $request_type = null)
     {
         $needles = $type === null
                  ? array_keys(self::$known_types)
@@ -129,7 +130,7 @@ abstract class Base extends \SimpleOrMap
                 throw new Exception('Trying to detect consumer of unkown type "' . $needle . '"');
             }
             $consumer_class = self::$known_types[$needle];
-            if ($consumer = $consumer_class::detect()) {
+            if ($consumer = $consumer_class::detect($request_type)) {
                 return $consumer;
             }
         }

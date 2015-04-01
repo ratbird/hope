@@ -5,6 +5,7 @@
     </p>
 
     <form action="<?= $controller->url_for('api/oauth/authorize?oauth_token=' . $token) ?>" method="post">
+        <input type="hidden" name="oauth_callback" value="<?= htmlReady($oauth_callback) ?>">
         <p>
             <?= Studip\Button::createAccept(_('Erlauben'), 'allow') ?>
             <?= Studip\LinkButton::createCancel(_('Verweigern'), $consumer->callback) ?>

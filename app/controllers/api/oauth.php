@@ -70,7 +70,7 @@ class Api_OauthController extends StudipController
             if (Request::submitted('allow')) {
                 $result = $consumer->grantAccess($GLOBALS['user']->id);
 
-                $redirect_uri = Request::get('oauth_callback', $consumer->osr_callback_uri);
+                $redirect_uri = Request::get('oauth_callback', $consumer->callback);
 
                 if ($redirect_uri) {
                     $this->redirect($redirect_uri);

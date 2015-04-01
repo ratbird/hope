@@ -24,6 +24,8 @@ require_once 'lib/classes/admission/CourseSet.class.php';
 */
 class Course_EnrolmentController extends AuthenticatedController {
 
+    protected $allow_nobody = true;
+
     /**
     * common tasks for all actions
     */
@@ -41,7 +43,9 @@ class Course_EnrolmentController extends AuthenticatedController {
         $course = Seminar::GetInstance($this->course_id);
         $enrolment_info = $course->getEnrolmentInfo($GLOBALS['user']->id);
         //Ist bereits Teilnehmer/Admin/freier Zugriff -> gleich weiter
-        if ($enrolment_info['enrolment_allowed'] && in_array($enrolment_info['cause'], words('root courseadmin member free_access'))) {
+        if ($enrolment_info['enrolment_allowed'] &&
+            (in_array($enrolment_info['cause'], words('root courseadmin member'))
+                || ($enrolment_info['cause'] == 'free_access' && $GLOBALS['user']->id == 'nobody') )) {
             $redirect_url = UrlHelper::getUrl('seminar_main.php', array('auswahl' => $this->course_id));
             if (Request::isXhr()) {
                 $this->response->add_header('X-Location', $redirect_url);

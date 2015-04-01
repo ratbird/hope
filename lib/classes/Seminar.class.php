@@ -2425,7 +2425,7 @@ class Seminar
     {
         $info = array();
         $user = User::find($user_id);
-        if ($this->read_level == 0 && get_config('ENABLE_FREE_ACCESS')) {
+        if ($this->read_level == 0 && get_config('ENABLE_FREE_ACCESS') && !$GLOBALS['perm']->get_studip_perm($this->getId(), $user_id)) {
             $info['enrolment_allowed'] = true;
             $info['cause'] = 'free_access';
             $info['description'] = _("Für die Veranstaltung ist keine Anmeldung erforderlich.");

@@ -124,13 +124,14 @@ class NewsController extends StudipController
         $this->count_all_news  = $this->show_all_news ? count($this->news) : count(StudipNews::GetNewsByRange($range_id, false));
         $this->rss_id = get_config('NEWS_RSS_EXPORT_ENABLE') ? StudipNews::GetRssIdFromRangeId($range_id) : false;
         $this->range = $range_id;
+        $this->nobody = !$GLOBALS['user']->id || $GLOBALS['user']->id == 'nobody';
 
         $this->visit();
             }
 
     function visit()
     {
-        if (Request::option('contentbox_open') && Request::option('contentbox_type') === 'news') {
+        if ($GLOBALS['user']->id && $GLOBALS['user']->id != 'nobody' && Request::option('contentbox_open') && Request::option('contentbox_type') === 'news') {
             object_add_view(Request::option('contentbox_open'));
             object_set_visit(Request::option('contentbox_open'), 'news'); //and, set a visittime
         }

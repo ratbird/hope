@@ -346,8 +346,13 @@ class StudipNews extends SimpleORMap {
             case 'fak':
             case 'inst':
             case 'sem':
-                if (($operation == 'view') AND $GLOBALS['perm']->have_studip_perm('user', $range_id))
-                    return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                if ($operation == 'view'
+                    && ($type != 'sem'
+                        || $GLOBALS['perm']->have_studip_perm('user', $range_id)
+                        || (get_config('ENABLE_FREE_ACCESS') && Seminar::getInstance($range_id)->read_level == 0)
+                        )) {
+                        return $news_range_perm_cache[$user_id.$range_id.$operation] = true;
+                    }
                 if (($operation == 'edit') OR ($operation == 'copy')) {
                     if ($GLOBALS['perm']->have_studip_perm('tutor', $range_id))
                         return $news_range_perm_cache[$user_id.$range_id.$operation] = true;

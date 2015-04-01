@@ -24,12 +24,14 @@ class VoteController extends AuthenticatedController {
         // Bind range_id
         $this->range_id = $range_id;
 
+        $this->nobody = !$GLOBALS['user']->id || $GLOBALS['user']->id == 'nobody';
+
         /*
          * Insert vote
          */
         if ($vote = Request::get('vote')) {
             $vote = new StudipVote($vote);
-            if ($vote && $vote->isRunning() && (!$vote->userVoted() || $vote->changeable)) {
+            if (!$this->nobody && $vote && $vote->isRunning() && (!$vote->userVoted() || $vote->changeable)) {
                 try {
                     $vote->insertVote(Request::getArray('vote_answers'), $GLOBALS['user']->id);
                 } catch (Exception $exc) {
@@ -43,8 +45,12 @@ class VoteController extends AuthenticatedController {
 
 
         // Load evaluations
-        $eval_db = new EvaluationDB();
-        $this->evaluations = StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_ACTIVE));
+        if (!$this->nobody) {
+            $eval_db = new EvaluationDB();
+            $this->evaluations = StudipEvaluation::findMany($eval_db->getEvaluationIDs($range_id, EVAL_STATE_ACTIVE));
+        } else {
+            $this->evaluations = array();
+        }
         $show_votes[] = 'active';
         // Check if we got expired
         if (Request::get('show_expired')) {
@@ -62,9 +68,9 @@ class VoteController extends AuthenticatedController {
 
     function visit()
     {
-        if (Request::option('contentbox_open') && in_array(Request::option('contentbox_type'), words('vote eval'))) {
+        if ($GLOBALS['user']->id && $GLOBALS['user']->id != 'nobody' && Request::option('contentbox_open') && in_array(Request::option('contentbox_type'), words('vote eval'))) {
             object_set_visit(Request::option('contentbox_open'), Request::option('contentbox_type'));
-    }
+        }
     }
 
     function visit_action()

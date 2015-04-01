@@ -1306,7 +1306,7 @@ class Course_MembersController extends AuthenticatedController
 
                 $sidebar->addWidget($widget);
             }
-        } else {
+        } else if ($this->is_autor || $this->is_user) {
             // Visibility preferences
             if (!$this->my_visibility['iam_visible']) {
                 $text = _('Sie sind für andere TeilnehmerInnen auf der TeilnehmerInnen-Liste nicht sichtbar.');
@@ -1319,6 +1319,7 @@ class Course_MembersController extends AuthenticatedController
                 $modus = 'make_invisible';
                 $link_text = _('Klicken Sie hier, um unsichtbar zu werden.');
             }
+
 
             $actions = new ActionsWidget();
             $actions->addLink($link_text,

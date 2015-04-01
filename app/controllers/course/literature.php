@@ -18,6 +18,7 @@ require_once('lib/classes/StudipLitList.class.php');
 
 class Course_LiteratureController extends AuthenticatedController
 {
+    protected $allow_nobody = true;
     /**
      * Before filter, set up the page by initializing the session and checking
      * all conditions.

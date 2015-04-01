@@ -8,20 +8,13 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("admin");
 require_once ('lib/dbviews/literatur.view.php');
-require_once ('lib/classes/StudipLitCatElement.class.php');
-
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-PageLayout::setTitle(_("Übersicht verwendeter Literatur"));
-Navigation::activateItem('/tools/literature');
-
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-include ('lib/include/deprecated_tabs_layout.php');
 
 function get_lit_admin_ids($user_id = false)
 {
@@ -365,8 +358,6 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             echo Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top'));
             echo " " . _("Alle Einträge aufklappen") . "</a>";
         }
-        echo "\n</th><th align=\"right\">";
-        echo "<a href=\"lit_overview_print_view.php\" class=\"tree\" target=\"_blank\">" . Assets::img('icons/16/blue/print.png', array('class' => 'text-top')) . " " . _("Druckansicht") ."</a></th>";
         echo "</tr></table>";
         foreach ($_SESSION['_lit_data'] as $cid => $data){
             $element->setValues($data);
@@ -397,7 +388,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 }
                 $addon = $ampel . '<input type="checkbox" style="vertical-align:middle;" name="_check_list[]" value="' . $element->getValue('catalog_id') . '" '
                         . (is_array($_SESSION['_check_list']) && in_array($element->getValue('catalog_id'), $_SESSION['_check_list']) ? 'checked' : '') .' >';
-                $open = isset($_open[$element->getValue('catalog_id')]) ? 'open' : 'close';
+                $open = isset($_SESSION['_open'][$element->getValue('catalog_id')]) ? 'open' : 'close';
                 $link = URLHelper::getLink('?' . (isset($_SESSION['_open'][$element->getValue('catalog_id')]) ? 'close' : 'open') . '_element=' . $element->getValue('catalog_id') . '#anker');
                 $titel = '<a href="' . $link . '" class="tree">' . htmlReady(my_substr($element->getShortName(),0,85)) . '</a>';
                 echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr>";
@@ -513,5 +504,17 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
     </table>
     </form>
 <?
+PageLayout::setTitle(_("Übersicht verwendeter Literatur"));
+Navigation::activateItem('/tools/literature/overview');
+$sidebar = Sidebar::Get();
+$links = new ActionsWidget();
+$links->addLink(_("Druckansicht"),
+    URLHelper::getScriptLink("lit_overview_print_view.php"),
+    'icons/16/blue/print.png',
+    array('class' => 'print_action', 'target' => '_blank'));
+$sidebar->addWidget($links);
+$layout = $GLOBALS['template_factory']->open('layouts/base');
+$layout->content_for_layout = ob_get_clean();
+echo $layout->render();
 page_close();
 ?>

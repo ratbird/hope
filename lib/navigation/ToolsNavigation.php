@@ -61,6 +61,7 @@ class ToolsNavigation extends Navigation
             if ($perm->have_perm('admin')) {
                 $navigation = new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php');
                 $this->addSubNavigation('literature', $navigation);
+                $navigation->addSubNavigation('overview', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
                 $navigation->addSubNavigation('edit_list', new Navigation(_('Literatur bearbeiten'), 'dispatch.php/literature/edit_list?_range_id=self'));
                 $navigation->addSubNavigation('search', new Navigation(_('Literatur suchen'), 'dispatch.php/literature/search?return_range=self'));
             } elseif (get_config('LITERATURE_ENABLE')) {

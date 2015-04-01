@@ -4,7 +4,7 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /*
-lit_overview_print_view.php 
+lit_overview_print_view.php
 Copyright (C) 2004 André Noack <noack@data-quest.de>
 Suchi & Berg GmbH <info@data-quest.de>
 This program is free software; you can redistribute it and/or
@@ -23,17 +23,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 require '../lib/bootstrap.php';
-
+ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check('admin');
 require_once('lib/classes/StudipLitCatElement.class.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-PageLayout::removeStylesheet('style.css');
-PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
+
 
 $element = new StudipLitCatElement();
 if(Request::quotedArray('_lit_data'))
@@ -63,7 +60,7 @@ if (is_array($_SESSION['_lit_data'])){
             $content .= "<b>" . _("Autor; weitere Beteiligte:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("authors"),true,true) . "<br>";
             $content .= "<b>" . _("Erschienen:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("published"),true,true) . "<br>";
             $content .= "<b>" . _("Identifikation:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_identifier")) . "<br>";
-            
+
             $content .= "<b>" . _("Veranstaltungen:") . "</b>&nbsp;&nbsp;";
             foreach ($_SESSION['_lit_data'][$cid]['sem_data'] as $sem_data){
                 $content .= htmlReady(my_substr($sem_data["Name"],0,50)) .', ';
@@ -88,7 +85,7 @@ if (is_array($_SESSION['_lit_data'])){
                     $content .= "<b>&nbsp;{$plugin_name}&nbsp;</b>";
                     if ($ret['found']){
                         $content .= _("gefunden") . "&nbsp;";
-                        
+
                     } elseif (count($ret['error'])){
                         $content .= '<span style="color:red;">' . htmlReady($ret['error'][0]['msg']) . '</span>';
                     } else {
@@ -104,7 +101,12 @@ if (is_array($_SESSION['_lit_data'])){
     }
 }
 
-include ('lib/include/html_end.inc.php');
-// Save data back to database.
+PageLayout::removeStylesheet('style.css');
+PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
+$layout = $GLOBALS['template_factory']->open('layouts/base');
+
+$layout->content_for_layout = ob_get_clean();
+
+echo $layout->render();
 page_close();
 ?>

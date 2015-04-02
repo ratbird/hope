@@ -26,24 +26,24 @@ class BbController extends AuthenticatedController {
     {
         $this->entries_per_page = Request::int('entries_per_page', 20);
 
-        $files = array_filter(scandir($GLOBALS['DYNAMIC_CONTENT_PATH'] . '/user'), function($file) {
+        $images = array();
+        
+        foreach (scandir($GLOBALS['DYNAMIC_CONTENT_PATH'] . '/user') as $file) {
             if (strpos($file, '_normal.png') !== FALSE && $file !== 'nobody_normal.png') {
-                return $file;
+                $images[] = array(
+                'time'     => @filemtime($GLOBALS['DYNAMIC_CONTENT_PATH'] . '/user/'.$file),
+                'file'     => $file,
+                'user_id'  => substr($file, 0, strrpos($file, '_')));
             }
+        }
+        
+        usort($images, function($b, $a) {
+            return $a['time'] - $b['time'];
         });
         
-        rsort($files);
-        
-        $this->entries = sizeof($files);
+        $this->entries = sizeof($images);
         $this->page = $page;
-        
-        foreach (array_slice($files, $this->entries_per_page * ($page - 1), $this->entries_per_page) as $entry) {
-            $this->images[] = array(
-                'time'     => filemtime($GLOBALS['DYNAMIC_CONTENT_PATH'].'/user/'.$entry), 
-                'file'     => $entry,
-                'user_id'  => substr($entry, 0, strrpos($entry, '_'))
-            );
-        }
+        $this->images = array_slice($images, $this->entries_per_page * ($page - 1), $this->entries_per_page);
     }
 
 }

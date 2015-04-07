@@ -627,13 +627,8 @@ class CourseSet
             $this->institutes[$data['institute_id']] = true;
         }
         // Load courses.
-        $order = Config::get()->IMPORTANT_SEMNUMBER ? "s.`VeranstaltungsNummer`, s.`Name`" : "s.`VeranstaltungsNummer`";
         $stmt = DBManager::get()->prepare(
-            "SELECT sc.`seminar_id`
-                FROM `seminar_courseset` sc
-                    INNER JOIN `seminare` s ON (sc.`seminar_id`=s.`Seminar_id`)
-                WHERE sc.`set_id`=?
-                ORDER BY ".$order);
+            "SELECT seminar_id FROM `seminar_courseset` WHERE set_id=?");
         $stmt->execute(array($this->id));
         $this->courses = array();
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {

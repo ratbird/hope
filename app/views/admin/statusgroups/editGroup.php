@@ -35,6 +35,6 @@
             <?= $this->render_partial("admin/statusgroups/_edit_subgroupselect.php", array('groups' => $groups, 'selected' => $group)) ?>
         </select>
     </label>
-    <?= Studip\Button::create(_('Speichern'), 'save') ?>
-    <?= Studip\LinkButton::create(_('Abbrechen'), URLHelper::getLink('dispatch.php/admin/statusgroups/index'), array('class' => 'abort')) ?>
+    <?= Studip\Button::createAccept(_('Speichern'), 'save', array('data-dialog-button' => '')) ?>
+    <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/statusgroups'), array('data-dialog-button' => '', 'data-dialog' => 'close')) ?>
 </form>

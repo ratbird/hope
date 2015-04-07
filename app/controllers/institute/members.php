@@ -368,7 +368,7 @@ class Institute_MembersController extends AuthenticatedController
                     }, $statement->fetchAll(PDO::FETCH_ASSOC)));
                     URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
                     $this->mp = MultiPersonSearch::get("inst_member_add" . $this->inst_id)
-                    ->setLinkText(_("neue Person der Einrichtung zuordnen"))
+                    ->setLinkText(_("MitarbeiterInnen hinzufügen"))
                     ->setDefaultSelectedUser($defaultSelectedUser)
                     ->setTitle(_('Personen in die Einrichtung eintragen'))
                     ->setExecuteURL(URLHelper::getLink("dispatch.php/institute/members", array('admin_view' => 1, 'ins_id' => $this->inst_id)))

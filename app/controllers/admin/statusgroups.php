@@ -58,14 +58,20 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         PageLayout::addScript('jquery/jquery.nestable.js');
         $this->setAjaxPaths();
         // Setup sidebar.
-        $this->sidebar = Sidebar::get();
-        $this->sidebar->setImage('sidebar/group-sidebar.png');
+        $sidebar = Sidebar::get();
+        $sidebar->setImage('sidebar/group-sidebar.png');
         $widget = new ActionsWidget();
-        $widget->addLink(_('Neue Gruppe anlegen'), $this->url_for('admin/statusgroups/editGroup'), 'icons/16/black/add/group3.png', array('data-dialog' => 'size=auto'));
-        $widget->addLink(_('Gruppenreihenfolge ändern'), $this->url_for('admin/statusgroups/sortGroups'), 'icons/16/black/arr_2down.png', array('data-dialog' => ''));
+        $widget->addLink(_('Neue Gruppe anlegen'),
+            $this->url_for('admin/statusgroups/editGroup'),
+            'icons/16/black/add/group3.png')
+            ->asDialog('size=auto');
+        $widget->addLink(_('Gruppenreihenfolge ändern'),
+            $this->url_for('admin/statusgroups/sortGroups'),
+            'icons/16/black/arr_2down.png')
+            ->asDialog();
+        $sidebar->addWidget($widget);
         // Collect all groups
         $this->loadGroups();
-        $this->sidebar->addWidget($widget);
         // Check if the viewing user should get the admin interface
         $this->tutor = $this->type['edit']($this->user_id);
         $membersCollection = new SimpleCollection((User::findMany(Institute::find($_SESSION['SessionSeminar'])->members->orderBy('nachname')->pluck('user_id'))));

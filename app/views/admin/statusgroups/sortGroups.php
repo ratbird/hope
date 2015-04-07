@@ -26,7 +26,7 @@
     <form class="studip_form" id='order_form' action="<?= $controller->url_for('admin/statusgroups') ?>" method="POST">
         <input type='hidden' name='ordering' id='ordering'>
         <?= Studip\Button::createAccept(_('Speichern'), 'order', array('data-dialog-button' => '')) ?>
-        <?= Studip\LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('dispatch.php/admin/statusgroups/index'), array('data-dialog-button' => '', 'data-dialog' => 'close')) ?>
+        <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/statusgroups/index'), array('data-dialog-button' => '', 'data-dialog' => 'close')) ?>
     </form>
 </div>
 

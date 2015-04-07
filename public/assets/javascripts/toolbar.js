@@ -117,41 +117,6 @@
             return this.each(function () {
                 STUDIP.Toolbar.initialize(this, button_set);
             });
-        },
-        // Obtains the currently selected text from an element
-        getSelection: function () {
-            var that = this[0];
-            if (!!document.selection) {
-                return document.selection.createRange().text;
-            }
-            if (!!this[0].setSelectionRange) {
-                return this[0].value.substring(this[0].selectionStart, this[0].selectionEnd);
-            }
-            return false;
-        },
-        // Replaces the currently selected text of an element with the given
-        // replacement
-        replaceSelection: function (replacement, cursor_position) {
-            return this.each(function () {
-                var scroll_top = this.scrollTop,
-                    range,
-                    selection_start;
-                if (!!document.selection) {
-                    this.focus();
-                    range = document.selection.createRange();
-                    range.text = replacement;
-                    range.select();
-                } else if (!!this.setSelectionRange) {
-                    selection_start = this.selectionStart;
-                    this.value = this.value.substring(0, selection_start) +
-                        replacement +
-                        this.value.substring(this.selectionEnd);
-                    this.setSelectionRange(selection_start + (cursor_position || replacement.length),
-                                           selection_start + (cursor_position || replacement.length));
-                }
-                this.focus();
-                this.scrollTop = scroll_top;
-            });
         }
     });
 

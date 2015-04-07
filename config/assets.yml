@@ -73,6 +73,7 @@ javascripts:
     - javascripts/jquery/jquery.scrollTo.js
     - javascripts/start.js
     - javascripts/responsive.js
+    - javascripts/wiki.js
     - *header
     - *toolbar
     - *dialog
@@ -80,6 +81,7 @@ javascripts:
     - javascripts/studip-tooltip.js
     - javascripts/studip-scroll.js
     - javascripts/studip-helper-attributes.js
+    - javascripts/studip-selection-helper.js
     - javascripts/studip-cache.js
     - javascripts/application.js
 

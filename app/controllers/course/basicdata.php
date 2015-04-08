@@ -79,11 +79,6 @@ class Course_BasicdataController extends AuthenticatedController
         $sem = Seminar::getInstance($this->course_id);
         $data = $sem->getData();
 
-        //Admin-Liste für den Admin
-        if ($perm->have_studip_perm("admin",$this->course_id)) {
-            $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
-        }
-
         //Erster Reiter des Akkordions: Grundeinstellungen
         $this->attributes = array();
         $this->attributes[] = array(
@@ -345,10 +340,10 @@ class Course_BasicdataController extends AuthenticatedController
             $this->url_for('course/avatar/update', $course_id),
             'icons/16/blue/edit.png');
         if ($this->deputies_enabled) {
-            if (isDeputy($GLOBALS['user']->id, $this->course_id)) {
+            if (isDeputy($user->id, $this->course_id)) {
                 $newstatus = 'dozent';
                 $text = _('Dozent/-in werden');
-            } else if (in_array($GLOBALS['user']->id, array_keys($this->dozenten))) {
+            } else if (in_array($user->id, array_keys($this->dozenten))) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');
             }
@@ -357,7 +352,18 @@ class Course_BasicdataController extends AuthenticatedController
                 'icons/blue/persons.svg');
         }
         $sidebar->addWidget($widget);
-
+        // Entry list for admin upwards.
+        if ($perm->have_studip_perm("admin",$this->course_id)) {
+            $adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
+            $list = new SelectorWidget();
+            $list->setUrl("?#admin_top_links");
+            $list->setSelectParameterName("cid");
+            foreach ($adminList->adminList as $seminar) {
+                $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+            }
+            $list->setSelection($adminList->course_id);
+            $sidebar->addWidget($list);
+        }
     }
 
     /**

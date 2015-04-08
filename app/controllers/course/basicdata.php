@@ -337,6 +337,27 @@ class Course_BasicdataController extends AuthenticatedController
             $this->flash['msg'] = array_merge((array)$this->flash['msg'], array(array("info", formatLinks($lockdata['description']))));
         }
         $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session.
+        $sidebar = Sidebar::get();
+        $sidebar->setImage("sidebar/admin-sidebar.png");
+
+        $widget = new ActionsWidget();
+        $widget->addLink(_('Bild ändern'),
+            $this->url_for('course/avatar/update', $course_id),
+            'icons/16/blue/edit.png');
+        if ($this->deputies_enabled) {
+            if (isDeputy($GLOBALS['user']->id, $this->course_id)) {
+                $newstatus = 'dozent';
+                $text = _('Dozent/-in werden');
+            } else if (in_array($GLOBALS['user']->id, array_keys($this->dozenten))) {
+                $newstatus = 'deputy';
+                $text = _('Vertretung werden');
+            }
+            $widget->addLink($text,
+                $this->url_for('course/basicdata/switchdeputy', $this->course_id, $newstatus),
+                'icons/blue/persons.svg');
+        }
+        $sidebar->addWidget($widget);
+
     }
 
     /**
@@ -677,6 +698,24 @@ class Course_BasicdataController extends AuthenticatedController
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
         $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
+    }
+
+    public function switchdeputy_action($course_id, $newstatus) {
+        $course = Seminar::getInstance($course_id);
+        switch($newstatus) {
+            case 'dozent':
+                if ($course->addMember($GLOBALS['user']->id, 'dozent')) {
+                    deleteDeputy($GLOBALS['user']->id, $course_id);
+                }
+                break;
+            case 'deputy':
+                if (addDeputy($GLOBALS['user']->id, $course_id)) {
+                    $course->deleteMember($GLOBALS['user']->id);
+                }
+                break;
+        }
+        $this->flash['open'] = "bd_personal";
+        $this->redirect($this->url_for('course/basicdata/view/'.$course_id));
     }
 
 }

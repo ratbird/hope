@@ -11,15 +11,6 @@ use Studip\Button, Studip\LinkButton;
  * the License, or (at your option) any later version.
  */
 
-$sidebar = Sidebar::get();
-$sidebar->setImage("sidebar/admin-sidebar.png");
-
-$widget = new ActionsWidget();
-$widget->addLink(_('Bild ändern'),
-    $controller->url_for('course/avatar/update', $course_id),
-    'icons/16/blue/edit.png');
-$sidebar->addWidget($widget);
-
 if ($adminList) {
     $list = new SelectorWidget();
     $list->setUrl("?#admin_top_links");

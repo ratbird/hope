@@ -149,7 +149,8 @@ class Widget
      * @param String $index Index/name of the element to check for.
      * @return bool Does a widget exist at the given index?
      */
-    public function hasElement($index) {
+    public function hasElement($index)
+    {
         return isset($this->elements[$index]);
     }
 

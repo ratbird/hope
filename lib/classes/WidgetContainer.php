@@ -167,7 +167,8 @@ abstract class WidgetContainer
      * @param String $index Index/name of the widget to check for.
      * @return bool Does a widget exist at the given index?
      */
-    public function hasWidget($index) {
+    public function hasWidget($index)
+    {
         return isset($this->widgets[$index]);
     }
 

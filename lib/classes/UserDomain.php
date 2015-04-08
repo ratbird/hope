@@ -33,8 +33,6 @@ class UserDomain
      */
     public function __construct ($id, $name = NULL)
     {
-        $db = DBManager::get();
-
         if (preg_match('/[^\\w.-]/', $id)) {
             throw new Exception(_('Ungültige ID für Nutzerdomäne').': '.$id);
         }
@@ -44,10 +42,10 @@ class UserDomain
         if (isset($name)) {
             $this->name = $name;
         } else {
-            $sql = "SELECT name FROM userdomains WHERE userdomain_id = '".$id."'";
-            $result = $db->query($sql);
-
-            if (($row = $result->fetch())) {
+            $sql = "SELECT name FROM userdomains WHERE userdomain_id = :id";
+            $statement = DBManager::get()->prepare($sql);
+            $statement->execute(array(':id' => $id));
+            if (($row = $statement->fetch())) {
                 $this->name = $row['name'];
             }
         }
@@ -92,16 +90,21 @@ class UserDomain
     public function store ()
     {
         $db = DBManager::get();
-
-        $sql = "SELECT * FROM userdomains WHERE userdomain_id = '".$this->id."'";
-        $result = $db->query($sql);
-
-        if (($row = $result->fetch())) {
-            $db->exec("UPDATE userdomains SET name = ".$db->quote($this->name)."
-                       WHERE userdomain_id = '".$this->id."'");
+        
+        $query = "SELECT * FROM userdomains WHERE userdomain_id = :id ";
+        $statement = $db->prepare($query);
+        $statement->execute(array(':id' => $this->id));
+        
+        if (($row = $statement->fetch())) {
+            $query = "UPDATE userdomains SET name = :name "
+                    . "WHERE userdomain_id = :id ";
+            $statement = $db->prepare($query);
+            $statement->execute(array(':name' => $this->name, ':id' => $this->id));
         } else {
-            $db->exec("INSERT INTO userdomains (userdomain_id, name)
-                       VALUES ('".$this->id."', ".$db->quote($this->name).")");
+                $query = "INSERT INTO userdomains (userdomain_id, name) "
+                        . "VALUES (:id, :name)";
+            $statement = $db->prepare($query);
+            $statement->execute(array(':id' => $this->id, ':name' => $this->name));
         }
     }
 
@@ -110,9 +113,9 @@ class UserDomain
      */
     public function delete ()
     {
-        $db = DBManager::get();
-
-        $db->exec("DELETE FROM userdomains WHERE userdomain_id = '".$this->id."'");
+        $query = "DELETE FROM userdomains WHERE userdomain_id = :id ";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':id' => $this->id));
     }
 
     /**
@@ -121,12 +124,10 @@ class UserDomain
      */
     public static function getUserDomains ()
     {
-        $db = DBManager::get();
         $domains = array();
-
-        $result = $db->query("SELECT * FROM userdomains ORDER BY name");
-
-        foreach ($result as $row) {
+        $statement = DBManager::get()->prepare("SELECT * FROM userdomains ORDER BY name");
+        $statement->execute();
+        foreach ($statement->fetchAll() as $row) {
             $domains[] = new UserDomain($row['userdomain_id'], $row['name']);
         }
 
@@ -138,10 +139,10 @@ class UserDomain
      */
     public function addUser ($user_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("INSERT IGNORE INTO user_userdomains (user_id, userdomain_id)
-                   VALUES ('".$user_id."', '".$this->id."')");
+        $query = "INSERT IGNORE INTO user_userdomains (user_id, userdomain_id) "
+                . "VALUES (:user_id, :id)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':user_id' => $user_id, ':id' => $this->id));
     }
 
     /**
@@ -149,11 +150,12 @@ class UserDomain
      */
     public function removeUser ($user_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("DELETE FROM user_userdomains
-                   WHERE user_id = '".$user_id."' AND
-                         userdomain_id = '".$this->id."'");
+        $query = "DELETE FROM user_userdomains "
+                . "WHERE user_id = :user_id "
+                . "AND userdomain_id = :id";
+                
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':user_id' => $user_id, ':id' => $this->id));
     }
 
     /**
@@ -162,13 +164,12 @@ class UserDomain
      */
     public function getUsers ()
     {
-        $db = DBManager::get();
+        $query = "SELECT user_id FROM user_userdomains WHERE userdomain_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':id' => $this->id));
+        
         $users = array();
-
-        $sql = "SELECT user_id FROM user_userdomains WHERE userdomain_id = '".$this->id."'";
-        $result = $db->query($sql);
-
-        foreach ($result as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $users[] = $row['user_id'];
         }
 
@@ -181,14 +182,14 @@ class UserDomain
      */
     public static function getUserDomainsForUser ($user_id)
     {
-        $db = DBManager::get();
+        $query = "SELECT * FROM userdomains JOIN user_userdomains USING (userdomain_id) "
+                . "WHERE user_userdomains.user_id = :user_id ORDER BY name";
+        
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':user_id' => $user_id));
+        
         $domains = array();
-
-        $sql = "SELECT * FROM userdomains JOIN user_userdomains USING (userdomain_id)
-                WHERE user_userdomains.user_id = '".$user_id."' ORDER BY name";
-        $result = $db->query($sql);
-
-        foreach ($result as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $domains[] = new UserDomain($row['userdomain_id'], $row['name']);
         }
 
@@ -200,9 +201,8 @@ class UserDomain
      */
     public static function removeUserDomainsForUser ($user_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("DELETE FROM user_userdomains WHERE user_id = '".$user_id."'");
+        $statement = DBManager::get()->prepare("DELETE FROM user_userdomains WHERE user_id = :user_id");
+        $statement->execute(array(':user_id' => $user_id));
     }
 
     /**
@@ -210,10 +210,10 @@ class UserDomain
      */
     public function addSeminar ($seminar_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("INSERT IGNORE INTO seminar_userdomains (seminar_id, userdomain_id)
-                   VALUES ('".$seminar_id."', '".$this->id."')");
+        $query = "INSERT IGNORE INTO seminar_userdomains (seminar_id, userdomain_id) "
+                . "VALUES (:seminar_id, :id)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':seminar_id' => $seminar_id, ':id' => $this->id));
     }
 
     /**
@@ -221,11 +221,11 @@ class UserDomain
      */
     public function removeSeminar ($seminar_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("DELETE FROM seminar_userdomains
-                   WHERE seminar_id = '".$seminar_id."' AND
-                         userdomain_id = '".$this->id."'");
+        $query = "DELETE FROM seminar_userdomains "
+                . "WHERE seminar_id = :seminar_id AND "
+                . "userdomain_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':seminar_id' => $seminar_id, ':id' => $this->id));
     }
 
     /**
@@ -234,13 +234,12 @@ class UserDomain
      */
     public function getSeminars ()
     {
-        $db = DBManager::get();
+        $query = "SELECT seminar_id FROM seminar_userdomains WHERE userdomain_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':id' => $this->id));
+    
         $seminars = array();
-
-        $sql = "SELECT seminar_id FROM seminar_userdomains WHERE userdomain_id = '".$this->id."'";
-        $result = $db->query($sql);
-
-        foreach ($result as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $seminars[] = $row['seminar_id'];
         }
 
@@ -253,14 +252,13 @@ class UserDomain
      */
     public static function getUserDomainsForSeminar ($seminar_id)
     {
-        $db = DBManager::get();
+        $query = "SELECT * FROM userdomains JOIN seminar_userdomains USING (userdomain_id) "
+                . "WHERE seminar_userdomains.seminar_id = :seminar_id ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':seminar_id' => $seminar_id));
+        
         $domains = array();
-
-        $sql = "SELECT * FROM userdomains JOIN seminar_userdomains USING (userdomain_id)
-                WHERE seminar_userdomains.seminar_id = '".$seminar_id."' ORDER BY name";
-        $result = $db->query($sql);
-
-        foreach ($result as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $domains[] = new UserDomain($row['userdomain_id'], $row['name']);
         }
 
@@ -272,8 +270,8 @@ class UserDomain
      */
     public static function removeUserDomainsForSeminar ($seminar_id)
     {
-        $db = DBManager::get();
-
-        $db->exec("DELETE FROM seminar_userdomains WHERE seminar_id = '".$seminar_id."'");
+        $query = "DELETE FROM seminar_userdomains WHERE seminar_id = :seminar_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(':seminar_id' => $seminar_id));
     }
 }

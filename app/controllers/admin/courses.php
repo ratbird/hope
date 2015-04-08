@@ -99,8 +99,8 @@ class Admin_CoursesController extends AuthenticatedController
             $config_view_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS');
             $this->view_filter  = isset($config_view_filter) ? unserialize($config_view_filter) : array();
             if (!$this->view_filter) {
-                $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->getViewFilters()));
-                $this->view_filter = unserialize($GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS'));
+                $this->view_filter = $this->getViewFilters();
+                $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->view_filter));
             }
 
             // filter by dozent
@@ -185,8 +185,8 @@ class Admin_CoursesController extends AuthenticatedController
         $config_view_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS');
         $view_filter  = isset($config_view_filter) ? unserialize($config_view_filter) : array();
         if (!$view_filter) {
-            $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->getViewFilters()));
-            $view_filter = unserialize($GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS'));
+            $view_filter = $this->getViewFilters();
+            $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($view_filter));
         }
 
         if($pos = array_search('Inhalt', $view_filter)) {

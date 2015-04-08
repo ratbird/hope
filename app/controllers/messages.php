@@ -164,9 +164,10 @@ class MessagesController extends AuthenticatedController {
         }
 
         if(Request::get('inst_id') && $GLOBALS['perm']->have_perm('admin')) {
-            $query = 'SELECT user_id FROM user_inst WHERE Institut_id = ?';
+            $query = "SELECT user_id FROM user_inst WHERE Institut_id = ? AND inst_perms != 'user'";
             $this->default_message->receivers = DBManager::get()->fetchAll($query, array(Request::get('inst_id')), 'MessageUser::build');
         }
+
         if (Request::get("filter") && Request::option("course_id")) {
             if (Request::get("filter") === 'claiming') {
                 $cs = CourseSet::getSetForCourse(Request::option("course_id"));

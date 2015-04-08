@@ -182,45 +182,80 @@ class Admin_CoursesController extends AuthenticatedController
      */
     public function export_csv_action()
     {
+        $config_view_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS');
+        $view_filter  = isset($config_view_filter) ? unserialize($config_view_filter) : array();
+        if (!$view_filter) {
+            $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->getViewFilters()));
+            $view_filter = unserialize($GLOBALS['user']->cfg->getValue('MY_COURSES_ADMIN_VIEW_FILTER_ARGS'));
+        }
+
+        if($pos = array_search('Inhalt', $view_filter)) {
+            unset($view_filter[$pos]);
+        }
         $sortby                       = $GLOBALS['user']->cfg->getValue('MEINE_SEMINARE_SORT');
         $config_my_course_type_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_TYPE_FILTER');
 
         $courses = $this->getCourses($GLOBALS['user']->id,
             array('sortby'     => $sortby,
                   'sortFlag'   => 'asc',
-                  'typeFilter' => $config_my_course_type_filter)
+                  'typeFilter' => $config_my_course_type_filter,
+                  'view_filter' => $view_filter)
         );
 
-        $captions = array(
-            _('Veranstaltungsnummer'),
-            _('Name'),
-            _('Veranstaltungstyp'),
-            _('Raum/Zeit'),
-            _('DozentIn'),
-            _('Anzahl Teilnehmer')
-        );
+        $captions = array();
+
+        if(empty($view_filter)) {
+            return;
+        }
+
+        array_walk($view_filter, function($a) use (&$captions) {
+            $captions[] = $a;
+        });
 
         foreach ($courses as $course_id => $course) {
             $sem      = new Seminar($course_id);
-            $_room    = $sem->getDatesExport(array(
-                'semester_id' => $this->semester->id,
-                'show_room'   => true
-            ));
-            $_room    = $_room ?: _('nicht angegeben');
-            $dozenten = "";
-            array_walk($course['dozenten'], function ($a) use (&$dozenten) {
-                $user = User::findByUsername($a['username']);
-                $dozenten .= $user->getFullName();
-            });
 
-            $data[] = array(
-                $course['VeranstaltungsNummer'],
-                $course['Name'],
-                $course['sem_class_name'] . ': ' . $GLOBALS['SEM_TYPE'][$course['status']]['name'],
-                $_room,
-                $dozenten,
-                $course['teilnehmer']
-            );
+            if(in_array('Nr.', $captions)) {
+                $data[$course_id][] = $course['VeranstaltungsNummer'];
+            }
+
+            if(in_array('Name', $captions)) {
+                $data[$course_id][] = $course['Name'];
+            }
+
+            if(in_array('Veranstaltungstyp', $captions)) {
+                $data[$course_id][] = $course['sem_class_name'] . ': ' . $GLOBALS['SEM_TYPE'][$course['status']]['name'];
+            }
+
+            if(in_array('Raum/Zeit', $captions)) {
+                $_room    = $sem->getDatesExport(array(
+                    'semester_id' => $this->semester->id,
+                    'show_room'   => true
+                ));
+                $_room    = $_room ?: _('nicht angegeben');
+                $data[$course_id][] = $_room;
+            }
+
+            if(in_array('DozentIn', $captions)) {
+                $dozenten = "";
+                array_walk($course['dozenten'], function ($a) use (&$dozenten) {
+                    $user = User::findByUsername($a['username']);
+                    $dozenten .= $user->getFullName();
+                });
+                $data[$course_id][] = $dozenten;
+            }
+
+            if(in_array('TeilnehmerInnen', $captions)) {
+                $data[$course_id][] = $course['teilnehmer'];
+            }
+
+            if(in_array('TeilnehmerInnen auf Warteliste', $captions)) {
+                $data[$course_id][] = $course['waiting'];
+            }
+
+            if(in_array('Vorläufige Anmeldungen', $captions)) {
+                $data[$course_id][] = $course['prelim'];
+            }
         }
 
         $tmpname = md5(uniqid('Veranstaltungsexport'));

@@ -208,23 +208,23 @@ class Admin_CoursesController extends AuthenticatedController
             return;
         }
 
-        array_walk($view_filter, function($a) use (&$captions) {
-            $captions[] = $a;
-        });
+        $captions = array_values($view_filter);
+
 
         foreach ($courses as $course_id => $course) {
             $sem      = new Seminar($course_id);
 
             if(in_array('Nr.', $captions)) {
-                $data[$course_id][] = $course['VeranstaltungsNummer'];
+                $data[$course_id][array_search('Nr.', $captions)] = $course['VeranstaltungsNummer'];
             }
 
             if(in_array('Name', $captions)) {
-                $data[$course_id][] = $course['Name'];
+                $data[$course_id][array_search('Name', $captions)] = $course['Name'];
             }
 
             if(in_array('Veranstaltungstyp', $captions)) {
-                $data[$course_id][] = $course['sem_class_name'] . ': ' . $GLOBALS['SEM_TYPE'][$course['status']]['name'];
+                $data[$course_id][array_search('Veranstaltungstyp', $captions)]
+                    = $course['sem_class_name'] . ': ' . $GLOBALS['SEM_TYPE'][$course['status']]['name'];
             }
 
             if(in_array('Raum/Zeit', $captions)) {
@@ -233,35 +233,34 @@ class Admin_CoursesController extends AuthenticatedController
                     'show_room'   => true
                 ));
                 $_room    = $_room ?: _('nicht angegeben');
-                $data[$course_id][] = $_room;
+                $data[$course_id][array_search('Raum/Zeit', $captions)] = $_room;
             }
 
             if(in_array('DozentIn', $captions)) {
-                $dozenten = "";
+                $dozenten = array();
                 array_walk($course['dozenten'], function ($a) use (&$dozenten) {
                     $user = User::findByUsername($a['username']);
-                    $dozenten .= $user->getFullName();
+                    $dozenten[] = $user->getFullName();
                 });
-                $data[$course_id][] = $dozenten;
+                $data[$course_id][array_search('DozentIn', $captions)] = !empty($dozenten) ? implode(', ', $dozenten) : '';
             }
 
             if(in_array('TeilnehmerInnen', $captions)) {
-                $data[$course_id][] = $course['teilnehmer'];
+                $data[$course_id][array_search('TeilnehmerInnen', $captions)] = $course['teilnehmer'];
             }
 
             if(in_array('TeilnehmerInnen auf Warteliste', $captions)) {
-                $data[$course_id][] = $course['waiting'];
+                $data[$course_id][array_search('TeilnehmerInnen auf Warteliste', $captions)] = $course['waiting'];
             }
 
             if(in_array('Vorläufige Anmeldungen', $captions)) {
-                $data[$course_id][] = $course['prelim'];
+                $data[$course_id][array_search('Vorläufige Anmeldungen', $captions)] = $course['prelim'];
             }
         }
 
         $tmpname = md5(uniqid('Veranstaltungsexport'));
         if (array_to_csv($data, $GLOBALS['TMP_PATH'] . '/' . $tmpname, $captions)) {
             $this->redirect(GetDownloadLink($tmpname, 'Veranstaltungen_Export.csv', 4, 'force'));
-
             return;
         }
     }

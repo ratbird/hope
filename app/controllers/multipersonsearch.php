@@ -44,7 +44,7 @@ class MultipersonsearchController extends AuthenticatedController {
         foreach ($result as $user) {
             $output[] = array('user_id' => $user->id,
                               'avatar'  => Avatar::getAvatar($user->id)->getURL(Avatar::SMALL),
-                              'text'    => htmlReady($user->nachname . ", " . $user->vorname . " -- " . $user->perms . " (" . $user->username . ")"),
+                              'text'    => $user->nachname . ", " . $user->vorname . " -- " . $user->perms . " (" . $user->username . ")",
                               'member'  => in_array($user->id, $alreadyMember));
         }
         $this->render_json($output);

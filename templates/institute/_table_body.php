@@ -8,30 +8,30 @@ use Studip\Button, Studip\LinkButton;
         <font size="-1"><b>&nbsp;
         <?= htmlReady($th_title); ?>
         </b></font></th>
-        <? 
-        if ($mail_gruppe) { 
+        <?
+        if ($mail_status) {
             ?>
             <th colspan="2" height="20">
-                <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
+                <a data-dialog href="<?= URLHelper::getScriptLink("dispatch.php/messages/write", array('filter' => 'inst_status', 'who' => $key, 'default_subject' => $GLOBALS['SessSemName'][0], 'course_id' => $GLOBALS['SessSemName'][1])) ?>">
                     <?= Assets::img('icons/16/blue/mail.png',
                                     tooltip2(sprintf(_('Nachricht an alle Mitglieder mit dem Status %s verschicken'),
                                                      $th_title))) ?>
                 </a>
             </th>
-            <? 
-        } 
-        elseif ($mail_status) { 
+            <?
+        }
+        elseif ($mail_gruppe) {
             ?>
             <th colspan="2" height="20">
-                <a href="<?= URLHelper::getLink("dispatch.php/messages/write?sms_source_page=dispatch.php/institute/members&group_id=".$role_id."&subject=".rawurlencode($GLOBALS['SessSemName'][0])) ?>">
+                <a data-dialog href="<?= URLHelper::getScriptLink("dispatch.php/messages/write", array('group_id' => $role_id, 'default_subject' => $GLOBALS['SessSemName'][0])) ?>">
                     <?= Assets::img('icons/16/blue/mail.png',
                                     tooltip2(sprintf(_('Nachricht an alle Mitglieder der Gruppe %s verschicken'),
                                                      $th_title))) ?>
                 </a>
             </th>
-            <? 
-        } 
-        ?> 
+            <?
+        }
+        ?>
         </tr>
         <?
     }
@@ -106,7 +106,7 @@ use Studip\Button, Studip\LinkButton;
 
         if ($structure["nachricht"]) {
             print "<td align=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n";
-            printf("<a href=\"%s\">", URLHelper::getLink("dispatch.php/messages/write?rec_uname=".$member['username']));
+            printf("<a href=\"%s\" data-dialog>", URLHelper::getScriptLink("dispatch.php/messages/write?rec_uname=".$member['username']));
             print Assets::img('icons/16/blue/mail.png', tooltip2(_('Nachricht an Benutzer verschicken')) + array('valign' => 'baseline'));
             print '</a>';
             print '</td>';

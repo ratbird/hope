@@ -645,6 +645,7 @@ class Institute_MembersController extends AuthenticatedController
                     if (count($institut_members) > 0) {
                         $template = $GLOBALS['template_factory']->open('institute/_table_body.php');
                         $template->mail_status = true;
+                        $template->key = $key;
                         $template->group_colspan = $this->colspan - 2;
                         $template->colspan = $this->colspan;
                         $template->th_title = $permission;
@@ -806,6 +807,7 @@ class Institute_MembersController extends AuthenticatedController
                     $template->mail_gruppe = true;
                     $template->group_colspan = $this->colspan - 2;
                 }
+                $template->role_id = $role_id;
                 $template->colspan = $this->colspan;
                 $template->th_title = $zw_title;
                 $template->members = $institut_members;

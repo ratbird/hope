@@ -165,10 +165,10 @@ class MessagesController extends AuthenticatedController {
 
         if(Request::get('inst_id') && $GLOBALS['perm']->have_perm('admin')) {
             $query = "SELECT user_id FROM user_inst WHERE Institut_id = ? AND inst_perms != 'user'";
-            $this->default_message->receivers = DBManager::get()->fetchAll($query, array(Request::get('inst_id')), 'MessageUser::build');
+            $this->default_message->receivers = DBManager::get()->fetchAll($query, array(Request::option('inst_id')), 'MessageUser::build');
         }
 
-        if (Request::get("filter") && Request::option("course_id")) {
+        if (Request::get("filter") && Request::option("course_id") && $GLOBALS['perm']->have_studip_perm('tutor', Request::option("course_id"))) {
             if (Request::get("filter") === 'claiming') {
                 $cs = CourseSet::getSetForCourse(Request::option("course_id"));
                 if (is_object($cs) && !$cs->hasAlgorithmRun()) {
@@ -379,7 +379,7 @@ class MessagesController extends AuthenticatedController {
             return $this->render_nothing();
         }
     }
-    
+
     public function delete_action($message_id)
     {
         $message = Message::find($message_id);

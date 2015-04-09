@@ -305,7 +305,6 @@ $debug .= "</pre>";
 #echo $debug;
 */
 # PHP-LIB: close session ==================================================== #
-include_once ('lib/include/html_end.inc.php');
 //page_close ();
 # ============================================================== end: PHP-LIB #
 ?>

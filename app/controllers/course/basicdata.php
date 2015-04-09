@@ -343,7 +343,7 @@ class Course_BasicdataController extends AuthenticatedController
             if (isDeputy($user->id, $this->course_id)) {
                 $newstatus = 'dozent';
                 $text = _('Dozent/-in werden');
-            } else if (in_array($user->id, array_keys($this->dozenten))) {
+            } else if (in_array($user->id, array_keys($this->dozenten)) && sizeof($this->dozenten) > 1) {
                 $newstatus = 'deputy';
                 $text = _('Vertretung werden');
             }

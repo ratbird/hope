@@ -193,9 +193,9 @@ $may_edit_faculty = $perm->is_fak_admin()
                     <?= Studip\Button::create(_('Übernehmen'), 'i_edit') ?>
 
                     <?= Studip\Button::create(_('Löschen'), 'i_trykill', !$may_delete ? array('disabled' => '') : array()) ?>
-                    <?if(!$may_delete && strlen($reason_txt) > 0) : ?>
-                        <?= Assets::img('icons/16/black/info-circle.png', tooltip2($reason_txt))?>
-                    <?endif;?>
+                    <? if(!$may_delete && strlen($reason_txt) > 0): ?>
+                        <?= Assets::img('icons/16/black/info-circle.png', tooltip2($reason_txt)) ?>
+                    <? endif; ?>
                     
                 <? else: ?>
                     <?= Studip\Button::create(_('Anlegen'), 'create') ?>

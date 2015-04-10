@@ -3229,15 +3229,17 @@ button.button {
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
 }
 a.button:hover,
-button.button:hover {
-  background: #28497c;
-  color: white;
-}
+button.button:hover,
 a.button:active,
 button.button:active {
-  background-image: none;
+  background: #28497c;
+  color: white;
   outline: 0;
 }
 a.button:focus,
@@ -5977,13 +5979,15 @@ div.available-widgets .studip-widget {
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
 }
-.ui-dialog .ui-dialog-buttonpane .ui-button:hover {
+.ui-dialog .ui-dialog-buttonpane .ui-button:hover,
+.ui-dialog .ui-dialog-buttonpane .ui-button:active {
   background: #28497c;
   color: white;
-}
-.ui-dialog .ui-dialog-buttonpane .ui-button:active {
-  background-image: none;
   outline: 0;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button:focus {

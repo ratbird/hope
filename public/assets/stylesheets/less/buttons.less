@@ -19,12 +19,9 @@
     white-space: nowrap;
     width: auto;
 
-    &:hover  {
+    &:hover, &:active  {
         background: @base-color;
         color: white;
-    }
-    &:active {
-        background-image: none;
         outline: 0;
     }
     &:focus {
@@ -44,6 +41,8 @@
             color: @base-color;
         }
     }
+
+    .transition(none);
 }
 
 a.button, button.button {

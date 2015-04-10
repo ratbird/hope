@@ -275,31 +275,48 @@ jQuery(function ($) {
         stickySidebar();
     });
 
-    // Recalculcate positions on ajax and img load events.
-    // Inside the handlers the current document height is compared
-    // to the previous height before the event occured so recalculation
-    // only happens on actual changes
-    $(document).on('ajaxComplete', function () {
-        var curr_height = $(document).height();
-        if (doc_height !== curr_height) {
-            doc_height = curr_height;
-            $(document.body).trigger('sticky_kit:recalc');
-        }
-    });
-    $(document).on('load', '#layout_content img', function () {
-        var curr_height = $(document).height();
-        if (doc_height !== curr_height) {
-            doc_height = curr_height;
-            $(document.body).trigger('sticky_kit:recalc');
-        }
-    });
-
-    // Specialized handler to trigger recalculation when wysiwyg
-    // instances are created.
-    if (STUDIP.wysiwyg) {
-        $(document).on('load.wysiwyg', 'textarea', function () {
-            $(document.body).trigger('sticky_kit:recalc');
+    if (window.MutationObserver !== undefined) {
+        // Attach mutation observer to #layout_content and trigger it on
+        // changes to class and style attributes (which affect the height
+        // of the content). Trigger a recalculation of the sticky kit when
+        // a mutation occurs so the sidebar will
+        var target = $('#layout_content')[0],
+            stickyObserver = new MutationObserver(function (mutations) {
+                $(document.body).trigger('sticky_kit:recalc');
+            });
+        stickyObserver.observe(target, {
+            attributes: true,
+            attributeFilter: ['style', 'class'],
+            characterData: true,
+            subtree: true
         });
+    } else {
+        // Recalculcate positions on ajax and img load events.
+        // Inside the handlers the current document height is compared
+        // to the previous height before the event occured so recalculation
+        // only happens on actual changes
+        $(document).on('ajaxComplete', function () {
+            var curr_height = $(document).height();
+            if (doc_height !== curr_height) {
+                doc_height = curr_height;
+                $(document.body).trigger('sticky_kit:recalc');
+            }
+        });
+        $(document).on('load', '#layout_content img', function () {
+            var curr_height = $(document).height();
+            if (doc_height !== curr_height) {
+                doc_height = curr_height;
+                $(document.body).trigger('sticky_kit:recalc');
+            }
+        });
+
+        // Specialized handler to trigger recalculation when wysiwyg
+        // instances are created.
+        if (STUDIP.wysiwyg) {
+            $(document).on('load.wysiwyg', 'textarea', function () {
+                $(document.body).trigger('sticky_kit:recalc');
+            });
+        }
     }
 
     $('a.print_action').live('click', function (event) {

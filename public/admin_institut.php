@@ -561,6 +561,16 @@ $template->num_institutes = $_num_inst;
 $template->datafields     = $datafields;
 $template->faculties      = $faculties;
 
+//Set infotext for disabled delete-button
+$reason_txt = _('Löschen nicht möglich. ');
+$reason_txt .= $institute['number'] > 0 ?
+        sprintf(ngettext(_('Es ist eine Veranstaltung zugeordnet. '), _('Es sind %d Veranstaltungen zugeordnet. '), 
+                $institute['number']), $institute['number']) : '';
+$reason_txt .= $_num_inst > 0 ?
+        sprintf(ngettext(_('Es ist eine Einrichtung zugeordnet. '), _('Es sind %d Einrichtungen zugeordnet. '), 
+                $_num_inst), $_num_inst) : '';
+$template->reason_txt = $reason_txt;
+                    
 // Select correct layout and create infobox if neccessary
 if ($i_view != 'new') {
     $template->set_layout('layouts/base');

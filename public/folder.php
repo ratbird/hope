@@ -1251,9 +1251,8 @@ div.droppable.hover {
             print "<tr><td class=\"blank\">&nbsp;</td><td>";
             print " <table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
             print " <tr><td class=\"blank\"></td><td class=\"blank\" style=\"font-size: 4px;\">&nbsp;</td><td class=\"blank\"></td></tr>";
-            print " <tr><td class=\"content_seperator\">&nbsp;";
-            print " </td><td class=\"content_seperator\" align=right>";
-            print " &nbsp;</td></tr></table>";
+            print " <tr><td colspan=\"3\" class=\"content_seperator\">&nbsp;</td>";
+            print " </tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br>";
             echo LinkButton::create(isset($check_all) ? _("Keine auswählen") : _("Alle auswählen"),

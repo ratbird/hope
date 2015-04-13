@@ -54,7 +54,15 @@ class OpenGraphURL extends SimpleORMap {
             } else {
                 $currentEncoding = "ISO-8859-1";
             }
-            $content = file_get_contents($this['url']);
+
+            $context = stream_context_create(array(
+                'http' => array(
+                    'method' => 'GET',
+                    'header' => sprintf("User-Agent: Stud.IP v%s OpenGraph Parser\r\n", $GLOBALS['SOFTWARE_VERSION']),
+                ),
+            ));
+
+            $content = file_get_contents($this['url'], false, $context);
             $content = mb_encode_numericentity($content, array(0x80, 0xffff, 0, 0xffff), $currentEncoding);
             $old_libxml_error = libxml_use_internal_errors(true);
             $doc = new DOMDocument();

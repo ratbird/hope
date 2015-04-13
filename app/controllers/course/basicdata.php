@@ -355,14 +355,16 @@ class Course_BasicdataController extends AuthenticatedController
         // Entry list for admin upwards.
         if ($perm->have_studip_perm("admin",$this->course_id)) {
             $adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
-            $list = new SelectorWidget();
-            $list->setUrl("?#admin_top_links");
-            $list->setSelectParameterName("cid");
-            foreach ($adminList->adminList as $seminar) {
-                $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+            if ($adminList) {
+                $list = new SelectorWidget();
+                $list->setUrl("?#admin_top_links");
+                $list->setSelectParameterName("cid");
+                foreach ($adminList->adminList as $seminar) {
+                    $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+                }
+                $list->setSelection($adminList->course_id);
+                $sidebar->addWidget($list);
             }
-            $list->setSelection($adminList->course_id);
-            $sidebar->addWidget($list);
         }
     }
 

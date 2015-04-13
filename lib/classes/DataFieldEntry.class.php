@@ -842,7 +842,7 @@ class DataFieldDateEntry extends DataFieldEntry
         $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Tag").'" %s>', $field_name, $parts[2], $require);
         $ret .= ". ";
         //TODO: was ist, wenn studip auf englisch eingestellt ist?!? lieber srfttime oder so benutzen...
-        $months = array('' , 'Januar' , 'Februar' , 'März' , 'April' , 'Mai' , 'Juni' , 'Juli' , 'August' , 'September' , 'Oktober' , 'Novemember' , 'Dezember');
+        $months = array('' , 'Januar' , 'Februar' , 'März' , 'April' , 'Mai' , 'Juni' , 'Juli' , 'August' , 'September' , 'Oktober' , 'November' , 'Dezember');
         $ret .= "<select name=\"$field_name\" title=\""._("Monat")."\" $require>";
         foreach($months as $i => $m)
             $ret .= sprintf('<option %s value="%s">%s</option>', ($parts[1] == $i ? 'selected' : ''), $i, $m);

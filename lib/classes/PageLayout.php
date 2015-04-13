@@ -188,7 +188,7 @@ class PageLayout
      */
     public static function getTabNavigationPath()
     {
-        if (self::$tab_navigation_path === false) {
+        if (self::$tab_navigation_path === false && self::getTabNavigation()) {
             foreach (self::getTabNavigation() as $subpath => $navigation) {
                 if ($navigation->isActive()) {
                     self::$tab_navigation_path = $subpath;

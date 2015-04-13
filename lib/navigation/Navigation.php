@@ -137,8 +137,7 @@ class Navigation implements IteratorAggregate
     public static function hasItem($path)
     {
         try {
-            self::getItem($path);
-            return true;
+            return self::getItem($path) instanceOf Navigation;
         } catch (InvalidArgumentException $ex) {
             return false;
         }

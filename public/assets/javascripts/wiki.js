@@ -14,10 +14,20 @@
 
 (function ($, STUDIP) {
     $(document).on('click', '#wiki button[name="submit-and-edit"]', function (event) {
-        var form      = $(this).closest('form'),
-            form_data = form.serializeArray(),
-            data      = {},
-            i;
+    var form      = $(this).closest('form'),
+        data      = {},
+        form_data,
+        i,
+        id,
+        wysiwyg_editor = false;
+
+        if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled && !!CKEDITOR) {
+            id = $('textarea[name="body"]', form).attr('id');
+            wysiwyg_editor = CKEDITOR.instances[id];
+            wysiwyg_editor.updateElement();
+        }
+
+        form_data = form.serializeArray();
 
         // Show ajax overlay to indicate activity (and prevent buttons to be
         // clicked again)
@@ -67,21 +77,25 @@
                         .then(function (response) {
                             var textarea = $('textarea[name=body]', form);
 
-                            // Store current selection/caret position
-                            textarea.storeSelection();
-
                             // Update header info containing version and author
                             $(form).closest('table').prev('table').find('td:last-child').html(response.zusatz);
 
                             // Update version field
                             $('input[type=hidden][name=version]', form).val(response.version);
 
-                            // Update textarea, restore selection/caret position
-                            textarea.val(response.body);
-                            textarea.prop('defaultValue', textarea.val());
-                            textarea.restoreSelection();
-                            textarea.change();
-                            textarea.focus();
+                            if (wysiwyg_editor) {
+                                wysiwyg_editor.updateElement();
+                            } else {
+                                // Store current selection/caret position
+                                textarea.storeSelection();
+
+                                // Update textarea, restore selection/caret position
+                                textarea.val(response.body);
+                                textarea.prop('defaultValue', textarea.val());
+                                textarea.restoreSelection();
+                                textarea.change();
+                                textarea.focus();
+                            }
 
                             // Remove messages (and display new messages, if any)
                             $('#layout_content .messagebox').remove();
@@ -97,11 +111,19 @@
             });
 
         event.preventDefault();
-    }).on('keyup change', '#wiki textarea[name=body]', function () {
+    });
+
+    $(document).on('keyup change', '#wiki textarea[name=body]', function () {
         // Disable "save and edit" button if text was not changed
         $('#wiki button[name="submit-and-edit"]').attr('disabled', this.value === this.defaultValue);
     }).on('ready', function () {
-        // Trigger above disable mechanism
-        $('#wiki textarea[name=body]').change();
+        if (!STUDIP.wysiwyg || STUDIP.wysiwyg.disabled) {
+            // Trigger above disable mechanism only when not using wysiwyg
+            $('#wiki textarea[name=body]').change();
+        } else {
+            $(document).off('keyup change', '#wiki textarea[name=body]');
+        }
+        
+        
     });
 }(jQuery, STUDIP));

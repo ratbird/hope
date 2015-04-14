@@ -84,7 +84,7 @@
                             $('input[type=hidden][name=version]', form).val(response.version);
 
                             if (wysiwyg_editor) {
-                                wysiwyg_editor.updateElement();
+                                wysiwyg_editor.setData(response.body);
                             } else {
                                 // Store current selection/caret position
                                 textarea.storeSelection();

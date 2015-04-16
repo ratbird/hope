@@ -49,7 +49,8 @@ class StudipVote extends SimpleORMap
     {
         $config['db_table'] = 'vote';
         $config['has_many']['answers'] = array(
-            'class_name' => 'VoteAnswer'
+            'class_name' => 'VoteAnswer',
+            'order_by' => 'ORDER BY position'
         );
         $config['has_many']['anonymous_users'] = array(
             'class_name' => 'VoteUser'
@@ -73,7 +74,7 @@ class StudipVote extends SimpleORMap
         if ($this->anonymous) {
             return $this->anonymous_users;
         }
-        
+
         $result = array();
         foreach ($this->answers as $answer) {
             foreach ($answer->users as $user) {

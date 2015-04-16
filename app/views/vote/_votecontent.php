@@ -6,7 +6,7 @@
 </section>
 <form action="<?= ContentBoxHelper::href($vote->id) ?>" method="post">
     <section class="answers">
-        <? foreach (Request::submitted('sort') ? $vote->answers->orderBy("count desc") : $vote->answers as $answer): ?>
+        <? foreach (Request::get('sort') ? $vote->answers->orderBy("count desc", SORT_NUMERIC) : $vote->answers->orderBy("position", SORT_NUMERIC) as $answer): ?>
             <div class="answer">
                 <? if ($show_result): ?>
                     <div class="bar">

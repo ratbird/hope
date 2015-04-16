@@ -704,7 +704,7 @@ class MyRealmModel
 
                 // add the the course to the correct semester
                 for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
-                    if ((int)$course->duration_time == -1) {
+                    if ((int)$course->duration_time == -1 && $course->start_time <= $semesters[$max_sem_key]->beginn) {
                         self::getObjectValues($_course);
                         $sem_courses[$max_sem_key][$course->id] = $_course;
                         unset($course[$index]);

@@ -491,6 +491,7 @@ class Admission_CoursesetController extends AuthenticatedController {
             $ok = 0;
             foreach($this->courses as $course) {
                 if ($GLOBALS['perm']->have_studip_perm('admin', $course->id)) {
+                    $do_update_admission = $course->admission_turnout < $admission_turnouts[$course->id];
                     $course->admission_turnout = $admission_turnouts[$course->id];
                     $course->admission_disable_waitlist = isset($admission_waitlists[$course->id]) ? 0 : 1;
                     $course->admission_waitlist_max = $course->admission_disable_waitlist ? 0 : $admission_waitlists_max[$course->id];
@@ -498,6 +499,9 @@ class Admission_CoursesetController extends AuthenticatedController {
                     $course->admission_prelim = @$admission_prelims[$course->id] ?: 0;
                     $course->visible = @$hidden[$course->id] ? 0 : 1;
                     $ok += $course->store();
+                    if ($do_update_admission) {
+                        update_admission($course->id);
+                    }
                 }
             }
             if ($ok) {

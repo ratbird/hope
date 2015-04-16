@@ -26,6 +26,7 @@
 require_once('lib/meine_seminare_func.inc.php');
 require_once('lib/object.inc.php');
 require_once('lib/functions.php');
+require_once('lib/classes/admission/CourseSet.class.php');
 
 class MyRealmModel
 {
@@ -647,6 +648,7 @@ class MyRealmModel
     public static function getPreparedCourses($sem = "all", $params = array())
     {
         $semesters   = self::getSelectedSemesters($sem);
+        $sem_data    = SemesterData::GetSemesterArray();
         $min_sem_key = min($semesters);
         $max_sem_key = max($semesters);
         $group_field = $params['group_field'];
@@ -704,7 +706,7 @@ class MyRealmModel
 
                 // add the the course to the correct semester
                 for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
-                    if ((int)$course->duration_time == -1 && $course->start_time <= $semesters[$max_sem_key]->beginn) {
+                    if ((int)$course->duration_time == -1 && $course->start_time <= $sem_data[$max_sem_key]['beginn']) {
                         self::getObjectValues($_course);
                         $sem_courses[$max_sem_key][$course->id] = $_course;
                         unset($course[$index]);

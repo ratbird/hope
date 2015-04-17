@@ -341,14 +341,14 @@ jQuery(function ($) {
 /* Secure textareas by displaying a warning on page unload if there are
  unsaved changes */
 (function ($) {
-    function securityHandler(event) {
+    function securityHandlerWindow(event) {
         var message = 'Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString();
         event = event || window.event || {};
         event.returnValue = message;
         return message;
     }
-    function submissionHandler() {
-        $(window).off('beforeunload', securityHandler);
+    function submissionHandlerWindow() {
+        $(window).off('beforeunload', securityHandlerWindow);
     }
 
     $(document).on('change keyup', 'textarea[data-secure]', function () {
@@ -364,15 +364,44 @@ jQuery(function ($) {
 
         if (action !== null) {
             // (at|de)tach before unload handler that will display the message
-            $(window)[action]('beforeunload', securityHandler);
+            $(window)[action]('beforeunload', securityHandlerWindow);
 
-            // (at|de)tach submit handler that will remove the securityHandler
+            // (at|de)tach submit handler that will remove the securityHandlerWindow
             // on form submission
-            $(this).closest('form')[action]('submit', submissionHandler);
+            $(this).closest('form')[action]('submit', submissionHandlerWindow);
 
             // Store current state
             $(this).data('secured', action === 'on');
         }
+
+        $(this).data('changed', changed);
+    });
+
+    function securityHandlerDialog(event, ui) {
+        var unchanged = true;
+        $('textarea[data-secure]', ui.dialog).each(function () {
+            unchanged = unchanged && this.value === this.defaultValue;
+        });
+
+        if (!unchanged && !confirm('Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString())) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        submissionHandlerWindow();
+        return true;
+    }
+
+    $(document).on('dialog-open', function (event, ui) {
+        if ($('textarea[data-secure]', ui.dialog).length === 0) {
+            return;
+        }
+
+        $(ui.dialog).on('dialogbeforeclose', securityHandlerDialog)
+            .find('form:has(textarea[data-secure])').on('submit', function () {
+                $(this).closest('ui.dialog').off('dialogbeforeclose', securityHandlerDialog);
+            });
     });
 }(jQuery));
 

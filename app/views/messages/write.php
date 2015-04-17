@@ -62,7 +62,7 @@
     <div>
         <label>
             <h4><?= _("Nachricht") ?></h4>
-            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar"><?= htmlReady($default_message['message'],false) ?></textarea>
+            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar" data-secure><?= htmlReady($default_message['message'],false) ?></textarea>
         </label>
     </div>
     <div>

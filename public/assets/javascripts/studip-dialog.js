@@ -348,7 +348,7 @@
 
                 $(options.origin || document).trigger('dialog-open', {dialog: this, options: options});
             },
-            close: function () {
+            close: function (event) {
                 $(options.origin || document).trigger('dialog-close', {dialog: this, options: options});
 
                 STUDIP.Dialog.close(options);
@@ -382,12 +382,19 @@
 
             try {
                 instance.element.dialog('close');
+            } catch (ignore) {
+            }
+            // Apparently the close event has been canceled, so don't force
+            // a close
+            if (instance.element.dialog('isOpen')) {
+                return false;
+            }
+            try {
                 instance.element.dialog('destroy');
                 instance.element.remove();
             } catch (ignore) {
-            } finally {
-                STUDIP.Dialog.removeInstance(options.id);
             }
+            STUDIP.Dialog.removeInstance(options.id);
         }
 
         if (options['reload-on-close']) {

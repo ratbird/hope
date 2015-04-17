@@ -925,7 +925,7 @@ class StreamsController extends PluginController {
         $this->render_json($output);
     }
 
-    public function addTagCloudWidgetToSidebar($tags)
+    public function addTagCloudWidgetToSidebar($tags, $context = 'global')
     {
         if (count($tags) && $tags[0]) {
             $cloud = new LinkCloudWidget();
@@ -935,7 +935,7 @@ class StreamsController extends PluginController {
             foreach ($tags as $tag) {
                 $cloud->addLink(
                     "#".$tag['tag'],
-                    URLHelper::getLink("plugins.php/blubber/streams/forum", array('cid' => $_SESSION['SessionSeminar'], 'hash' => $tag['tag'])),
+                    URLHelper::getLink("plugins.php/blubber/streams/$context", array('hash' => $tag['tag'])),
                     ceil(10 * $tag['counter'] / $maximum)
                 );
             }

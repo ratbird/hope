@@ -380,20 +380,23 @@
         if (STUDIP.Dialog.hasInstance(options.id)) {
             var instance = STUDIP.Dialog.getInstance(options.id);
 
-            try {
-                instance.element.dialog('close');
-            } catch (ignore) {
+            if (instance.open) {
+                try {
+                    instance.element.dialog('close');
+                } catch (ignore) {
+                }
+                // Apparently the close event has been canceled, so don't force
+                // a close
+                if (instance.element.dialog('isOpen')) {
+                    return false;
+                }
+                try {
+                    instance.element.dialog('destroy');
+                    instance.element.remove();
+                } catch (ignore) {
+                }
             }
-            // Apparently the close event has been canceled, so don't force
-            // a close
-            if (instance.element.dialog('isOpen')) {
-                return false;
-            }
-            try {
-                instance.element.dialog('destroy');
-                instance.element.remove();
-            } catch (ignore) {
-            }
+
             STUDIP.Dialog.removeInstance(options.id);
         }
 

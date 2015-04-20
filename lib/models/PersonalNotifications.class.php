@@ -37,17 +37,57 @@
  * @property string html_id database column
  * @property string mkdate database column
  */
-class PersonalNotifications extends SimpleORMap {
+class PersonalNotifications extends SimpleORMap
+{
+    const GC_MAX_DAYS = 30; // Garbage collector removes notifications after 30 days
+    const CACHE_DURATION = 86400; // 24 * 60 * 60 = 1 day
 
-    static public function doGarbageCollect()
+    protected static function configure($config = array())
     {
-        $max_days = 30;
-        $sql = "DELETE personal_notifications,personal_notifications_user
+        $config['db_table'] = 'personal_notifications';
+        $config['default_values']['text'] = '';
+        $config['additional_fields']['more_unseen'] = array(
+            'get' => false,
+            'set' => false,
+        );
+
+        parent::configure($config);
+    }
+
+    protected $unseen = null;
+
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
+
+        $this->registerCallback('after_store before_delete', function ($notification) {
+            $query = "SELECT user_id
+                      FROM personal_notifications_user
+                      WHERE personal_notification_id = :id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':id', $notification->id);
+            $statement->execute();
+            
+            $user_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+            
+            foreach ($user_ids as $user_id) {
+                PersonalNotifications::expireCache($user_id);
+            }
+        });
+    }
+
+    /**
+     * Garbage collector the personal notifications.
+     * Removes all notifications older than 30 days.
+     */
+    public static function doGarbageCollect()
+    {
+        $sql = "DELETE personal_notifications, personal_notifications_user
                 FROM personal_notifications
                 LEFT JOIN personal_notifications_user USING(personal_notification_id)
                 WHERE mkdate < ?";
         $st = DBManager::get()->prepare($sql);
-        $st->execute(array(time() - $max_days * 24 * 60 * 60));
+        $st->execute(array(time() - self::GC_MAX_DAYS * 24 * 60 * 60));
     }
 
     /**
@@ -63,7 +103,8 @@ class PersonalNotifications extends SimpleORMap {
      * @param string $avatar : URL of an image for the notification. Best size: 40px x 40px
      * @return boolean : true on success
      */
-    static public function add($user_ids, $url, $text, $html_id = null, $avatar = null) {
+    public static function add($user_ids, $url, $text, $html_id = null, $avatar = null)
+    {
         if (!is_array($user_ids)) {
             $user_ids = array($user_ids);
         }
@@ -72,24 +113,23 @@ class PersonalNotifications extends SimpleORMap {
         }
         $notification = new PersonalNotifications();
         $notification['html_id'] = $html_id;
-        $notification['url'] = $url;
-        $notification['text'] = $text;
-        $notification['avatar'] = $avatar;
+        $notification['url']     = $url;
+        $notification['text']    = $text;
+        $notification['avatar']  = $avatar;
         $notification->store();
 
+
+        $query = "INSERT INTO personal_notifications_user (user_id, personal_notification_id, seen)
+                  VALUES (:user_id, :id, '0')";
+        $insert_statement = DBManager::get()->prepare($query);
+        $insert_statement->bindValue(':id', $notification->id);
+
         foreach ($user_ids as $user_id) {
+            self::expireCache($user_id);
+
             if (self::isActivated($user_id)) {
-                $db = DBManager::get();
-                $insert_statement = $db->prepare(
-                    "INSERT INTO personal_notifications_user " .
-                    "SET user_id = :user_id, " .
-                        "personal_notification_id = :id, " .
-                        "seen = '0' " .
-                "");
-                $insert_statement->execute(array(
-                    'id' => $notification->getId(),
-                    'user_id' => $user_id
-                ));
+                $insert_statement->bindValue(':user_id', $user_id);
+                $insert_statement->execute();
             }
         }
         return true;
@@ -101,24 +141,40 @@ class PersonalNotifications extends SimpleORMap {
      * @param null|string $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return array of \PersonalNotifications in ascending order of mkdate
      */
-    static public function getMyNotifications($only_unread = true, $user_id = null, $limit = 15) {
+    public static function getMyNotifications($only_unread = true, $user_id = null, $limit = 15)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        $statement = DBManager::get()->prepare(
-            "SELECT pn.* " .
-            "FROM personal_notifications AS pn " .
-                "INNER JOIN personal_notifications_user AS u ON (u.personal_notification_id = pn.personal_notification_id) " .
-            "WHERE u.user_id = :user_id " .
-                ($only_unread ? "AND u.seen = '0' " : "") .
-            "GROUP BY pn.url " .
-            "ORDER BY mkdate ASC LIMIT :limit" .
-        "");
-        $statement->execute(array('user_id' => $user_id, 'limit' => (int)$limit));
+
+        $cached = self::getCache($user_id);
+        if ($cached === false) {
+            $query = "SELECT pn.*, COUNT(DISTINCT personal_notification_id) - 1 AS unseen
+                      FROM personal_notifications AS pn
+                      INNER JOIN personal_notifications_user AS u USING (personal_notification_id)
+                      WHERE u.user_id = :user_id
+                        AND u.seen = IFNULL(:only_unread, u.seen)
+                      GROUP BY pn.url
+                      ORDER BY mkdate ASC
+                      LIMIT :limit";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':user_id', $user_id);
+            $statement->bindValue(':only_unread', $only_unread ? '0' : null);
+            $statement->bindValue(':limit', (int)$limit, StudipPDO::PARAM_COLUMN);
+            $statement->execute();
+
+            $db_data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            self::setCache($user_id, $db_data);
+        } else {
+            $db_data = $cached;
+        }
+
         $notifications = array();
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
+        foreach ($db_data as $data) {
             $notification = new PersonalNotifications();
             $notification->setData($data);
+            $notification->more_unseen = $data['unseen'];
             $notifications[] = $notification;
         }
         return $notifications;
@@ -131,10 +187,13 @@ class PersonalNotifications extends SimpleORMap {
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return boolean : true on success, false if it failed.
      */
-    static public function markAsRead($notification_id, $user_id = null) {
+    public static function markAsRead($notification_id, $user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
+        self::expireCache($user_id);
+
         $pn = new PersonalNotifications($notification_id);
         $statement = DBManager::get()->prepare(
             "UPDATE personal_notifications_user AS pnu " .
@@ -156,16 +215,19 @@ class PersonalNotifications extends SimpleORMap {
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return boolean : true on success, false if it failed.
      */
-    static public function markAsReadByHTML($html_id, $user_id = null) {
+    public static function markAsReadByHTML($html_id, $user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
+        self::expireCache($user_id);
+
         $statement = DBManager::get()->prepare(
             "UPDATE personal_notifications_user AS pnu " .
                 "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
             "SET pnu.seen = '1' " .
             "WHERE pnu.user_id = :user_id " .
-                "AND pn.html_id = :html_id " .
+                "AND pn.html_id LIKE :html_id " .
         "");
         return $statement->execute(array(
             'user_id' => $user_id,
@@ -174,10 +236,66 @@ class PersonalNotifications extends SimpleORMap {
     }
 
     /**
+     * Returns the cache hash to use for a specific user.
+     *
+     * @param String $user_id Id of the user
+     * @return String Cache hash to use for the user
+     */
+    protected static function getCacheHash($user_id)
+    {
+        return '/personal-notifications/' . $user_id;
+    }
+
+    /**
+     * Returns the cached values for a specific user.
+     *
+     * @param String $user_id Id of the user
+     * @return mixed Array of item data (may be empty) or false if no data is cached
+     */
+    protected static function getCache($user_id)
+    {
+        $cache  = StudipCacheFactory::getCache();
+        $hash   = self::getCacheHash($user_id);
+        $cached = $cache->read($hash);
+
+        if ($cached === false) {
+            return false;
+        }
+
+        return unserialize($cached);
+    }
+
+    /**
+     * Stored the provided item data in cache for a specific user.
+     *
+     * @param String $user_id Id of the user
+     * @param Array  $items   Raw db data of the items
+     */
+    protected static function setCache($user_id, $items)
+    {
+        $cache = StudipCacheFactory::getCache();
+        $hash  = self::getCacheHash($user_id);
+        $cache->write($hash, serialize($items), self::CACHE_DURATION);
+    }
+
+    /**
+     * Removes the cached entries for a specific user.
+     *
+     * @param String $user_id Id of the user
+     */
+    protected static function expireCache($user_id)
+    {
+        $cache = StudipCacheFactory::getCache();
+        $hash  = self::getCacheHash($user_id);
+        $cache->expire($hash);
+    }
+
+    /**
      * Activates personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      */
-    static public function activate($user_id = null) {
+    public static function activate($user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -188,7 +306,8 @@ class PersonalNotifications extends SimpleORMap {
      * Deactivates personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      */
-    static public function deactivate($user_id = null) {
+    public static function deactivate($user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -199,7 +318,8 @@ class PersonalNotifications extends SimpleORMap {
      * Activates audio plopp for new personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      */
-    static public function activateAudioFeedback($user_id = null) {
+    public static function activateAudioFeedback($user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -210,7 +330,8 @@ class PersonalNotifications extends SimpleORMap {
      * Deactivates audio plopp for new personal notifications for a given user.
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      */
-    static public function deactivateAudioFeedback($user_id = null) {
+    public static function deactivateAudioFeedback($user_id = null)
+    {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
@@ -222,7 +343,7 @@ class PersonalNotifications extends SimpleORMap {
      * could be false for performance issues.
      * @return boolean : true if activated else false
      */
-    static public function isGloballyActivated()
+    public static function isGloballyActivated()
     {
         $config = Config::GetInstance();
         return !empty($config['PERSONAL_NOTIFICATIONS_ACTIVATED']);
@@ -235,7 +356,8 @@ class PersonalNotifications extends SimpleORMap {
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return boolean : true if activated else false
      */
-    static public function isActivated($user_id = null) {
+    public static function isActivated($user_id = null)
+    {
         if (!PersonalNotifications::isGloballyActivated()) {
             return false;
         }
@@ -253,7 +375,8 @@ class PersonalNotifications extends SimpleORMap {
      * @param string|null $user_id : ID of special user the notification should belong to or (default:) null for current user
      * @return boolean : true if activated else false
      */
-    static public function isAudioActivated($user_id = null) {
+    public static function isAudioActivated($user_id = null)
+    {
         if (!PersonalNotifications::isGloballyActivated()) {
             return false;
         }
@@ -263,40 +386,51 @@ class PersonalNotifications extends SimpleORMap {
         return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED") ? false : true;
     }
 
-    protected static function configure($config = array())
-    {
-        $config['db_table'] = 'personal_notifications';
-        $config['default_values']['text'] = '';
-        parent::configure($config);
-    }
-
     /**
      * Returns HTML-represantation of the notification which is a list-element.
      * @return string : html-output;
      */
-    public function getLiElement() {
+    public function getLiElement()
+    {
         return $GLOBALS['template_factory']
-                ->open("personal_notifications/notification.php")
+                ->open('personal_notifications/notification.php')
                 ->render(array('notification' => $this));
     }
 
-    public function more_unseen() {
-        $statement = DBManager::get()->prepare(
-            "SELECT count(*) " .
-            "FROM personal_notifications AS pn " .
-                "INNER JOIN personal_notifications_user AS u ON (pn.personal_notification_id = u.personal_notification_id) " .
-            "WHERE pn.personal_notification_id != :pn_id " .
-                "AND u.user_id = :user_id " .
-                "AND u.seen = '0' " .
-                "AND pn.url = :url " .
-        "");
-        $statement->execute(array(
-            'pn_id' => $this->getId(),
-            'user_id' => $GLOBALS['user']->id,
-            'url' => $this['url']
-        ));
-        $number = $statement->fetch(PDO::FETCH_COLUMN, 0);
-        return $number;
+    /**
+     * Sets the value of the "more unseen" notifications (notification with same url but a different id).
+     *
+     * @param int $unseen Number of more unseen notifications
+     */
+    public function setmore_unseen($unseen)
+    {
+        $this->unseen = (int)$unseen;
+    }
+
+    /**
+     * Returns (or retrieves) the number of "more unseen" notifications.
+     *
+     * @return int Number of "more unseen" notifications
+     */
+    public function getmore_unseen()
+    {
+        if ($this->unseen === null) {
+            $query = "SELECT COUNT(*)
+                      FROM personal_notifications AS pn
+                      INNER JOIN personal_notifications_user AS u USING (personal_notification_id)
+                      WHERE pn.personal_notification_id != :pn_id
+                        AND u.user_id = :user_id
+                        AND u.seen = '0'
+                        AND pn.url = :url";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                ':pn_id'   => $this->id,
+                ':user_id' => $GLOBALS['user']->id,
+                ':url'     => $this->url,
+            ));
+            $this->unseen = 0 + $statement->fetchColumn();
+        }
+        return $this->unseen;
     }
 
 }

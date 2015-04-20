@@ -1335,4 +1335,32 @@ class Course_MembersController extends AuthenticatedController
         $temp = preg_match('/href="(.*?)"/', $string, $match); // Yes, you're absolutely right - this IS horrible!
         return $match[1];
     }
+
+    public function export_members_csv_action() {
+        if (!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
+            throw new AccessDeniedException("Kein Zugriff.");
+        }
+        $filtered_members = $this->members->getMembers($this->sort_status, $this->sort_by . ' ' . $this->order);
+        $filtered_members = array_merge($filtered_members, $this->members->getAdmissionMembers($this->sort_status, $this->sort_by . ' ' . $this->order ));
+        $dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname visible mkdate');
+        $tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname visible mkdate');
+        $autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible mkdate');
+
+
+        $header = array(_("Titel"), _("Vorname"), _("Nachname"), _("Titel2"), _("Nutzernamen"), _("Privatadr"), _("Privatnr"), _("E-Mail"), _("Anmeldedatum"), _("Studiengänge"));
+        $data = array($header);
+        foreach (array($dozenten, $tutoren, $autoren) as $usergroup) {
+            foreach ($usergroup as $dozent) {
+                $line = array(
+                    "",
+                    $dozent['Vorname'],
+                    $dozent['Nachname'],
+                    "",
+                    $dozent['username']
+                );
+                $data[] = $line;
+            }
+        }
+        $csv = array_to_csv($data);
+    }
 }

@@ -771,7 +771,14 @@ class Admin_CoursesController extends AuthenticatedController
         $sidebar = Sidebar::Get();
         $list    = new SelectWidget(_('Einrichtung'), $this->url_for('admin/courses/set_selection'), 'institute');
         foreach ($this->insts as $institut) {
-            $list->addElement(new SelectElement($institut['Institut_id'], $institut['Name'], $this->selected_inst_id == $institut['Institut_id']), 'select-' . $institut['Name']);
+            $list->addElement(
+                new SelectElement(
+                    $institut['Institut_id'],
+                    (!$institut['is_fak'] ? "  ": "").$institut['Name'],
+                    $this->selected_inst_id == $institut['Institut_id']
+                ),
+                'select-' . $institut['Name']
+            );
         }
         $sidebar->addWidget($list);
     }

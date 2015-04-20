@@ -33,10 +33,6 @@ class Admin_CoursesController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        if ($GLOBALS['perm']->have_perm('root')) {
-            throw new AccessDeniedException(_('Sie haben nicht die nötigen Rechte, um diese Seite zu betreten.'));
-        }
-
         if (!$GLOBALS['perm']->have_perm('admin')) {
             throw new AccessDeniedException(_('Sie haben nicht die nötigen Rechte, um diese Seite zu betreten.'));
         }
@@ -705,12 +701,19 @@ class Admin_CoursesController extends AuthenticatedController
      */
     private function getCourseAmountForStatus(&$id)
     {
-        $sql       = "SELECT COUNT(seminar_id) FROM seminare
-            WHERE Institut_id = ? and status = ?
-            AND seminare.start_time <=" . $this->semester->beginn . " AND (" . $this->semester->beginn . " <= (seminare.start_time + seminare.duration_time)
-            OR seminare.duration_time = -1)";
+        $sql = "
+            SELECT COUNT(seminar_id) FROM seminare
+            WHERE Institut_id = :institut_id
+                AND status = :status
+                AND seminare.start_time <= :semester_beginn
+                AND (:semester_beginn <= (seminare.start_time + seminare.duration_time)
+                    OR seminare.duration_time = -1)";
         $statement = DBManager::get()->prepare($sql);
-        $statement->execute(array($this->selected_inst_id, $id));
+        $statement->execute(array(
+            'institut_id' => $this->selected_inst_id,
+            'status' => $id,
+            'semester_beginn' => $this->semester->beginn
+        ));
         $count = $statement->fetch(PDO::FETCH_COLUMN);
 
         return $count;

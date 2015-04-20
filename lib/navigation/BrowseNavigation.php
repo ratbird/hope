@@ -29,7 +29,7 @@ class BrowseNavigation extends Navigation
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
 
-            if ($perm->have_perm('admin') && !$perm->have_perm('root')) {
+            if ($perm->have_perm('admin')) {
                 $courselink = 'dispatch.php/admin/courses';
             }
         } else {
@@ -57,7 +57,7 @@ class BrowseNavigation extends Navigation
 
 
         // my courses
-        if (is_object($user) && $user->id != 'nobody' && !$perm->have_perm('root')) {
+        if (is_object($user) && $user->id != 'nobody') {
 
             if ($perm->have_perm('admin')) {
                 $navigation = new Navigation(_('Administration'));

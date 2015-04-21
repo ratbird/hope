@@ -31,8 +31,8 @@
     <article class="<?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>" data-visiturl="<?=URLHelper::getScriptLink('dispatch.php/news/visit')?>">
         <header>
             <h1>
-                <?= Assets::img('icons/16/grey/news.png'); ?>
                 <a href="<?= ContentBoxHelper::href($new->id, array('contentbox_type' => 'news')) ?>">
+                    <?= Assets::img('icons/16/blue/news.png'); ?>
                     <?= htmlReady($new['topic']); ?>
                 </a>
             </h1>

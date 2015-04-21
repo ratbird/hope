@@ -2917,9 +2917,14 @@ section.contentbox header h1 {
   border-bottom: none;
   font-size: medium;
 }
-section.contentbox header h1 img {
+section.contentbox header h1 img,
+section.contentbox header h1 svg {
   vertical-align: text-bottom;
   margin-right: 5px;
+}
+section.contentbox header h1 > a {
+  margin-left: -20px;
+  padding-left: 20px;
 }
 section.contentbox header nav {
   vertical-align: middle;

@@ -324,10 +324,8 @@ class ForumEntry {
         $stmt->execute(array($data['lft'], $data['rgt'], $data['seminar_id']));
 
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $ret[$data['topic_id']] = array(
-                'id'   => $data['topic_id'],
-                'name' => $data['name']
-            );
+            $ret[$data['topic_id']] = $data;
+            $ret[$data['topic_id']]['id'] = $data['topic_id'];
         }
 
         // set the name of the first entry to the name of the category the entry is in
@@ -1252,5 +1250,16 @@ class ForumEntry {
         }
 
         return $content;
+    }
+
+    static public function isClosed($topic_id)
+    {
+        foreach(ForumEntry::getPathToPosting($topic_id) as $entry) {
+            if ($entry['closed']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

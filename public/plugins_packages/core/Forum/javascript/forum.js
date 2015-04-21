@@ -315,6 +315,11 @@ STUDIP.Forum = {
         jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/update_entry/' + topic_id + '?cid=' + STUDIP.Forum.seminar_id), {
             type: 'POST',
             data: jQuery('form[data-topicid='+ topic_id +']').serializeObject(),
+            
+            error: function(data) {
+                alert('Server meldet: ' + data.statusText);
+            },
+            
             success: function (data) {
                 var json = jQuery.parseJSON(data);
                 // set the new name and content
@@ -652,7 +657,7 @@ STUDIP.Forum = {
         var buttonText = "Thema schließen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.closeThreadFromThread("' + topic_id + '", ' + page + '); return false;');
-        jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-locked.png' + ")");
+        jQuery('.closeButtons').closest("li").css('background-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-locked.png' + ")");
         jQuery('.hideWhenClosed').show();
 
         STUDIP.Forum.openThread(topic_id, topic_id, page, true);
@@ -687,8 +692,10 @@ STUDIP.Forum = {
         var buttonText = "Thema öffnen".toLocaleString();
         jQuery('.closeButtons').text(buttonText);
         jQuery('.closeButtons').attr('onclick', 'STUDIP.Forum.openThreadFromThread("' + topic_id + '", '+ page +'); return false;');
-        jQuery('.closeButtons').closest("li").css('list-style-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/black/lock-unlocked.png' + ")");
+        jQuery('.closeButtons').closest("li").css('background-image', "url(" + STUDIP.ASSETS_URL + 'images/icons/16/blue/lock-unlocked.png' + ")");
         jQuery('.hideWhenClosed').hide();
+        
+        STUDIP.Forum.cancelNewEntry();
 
         STUDIP.Forum.closeThread(topic_id, topic_id, page, true);
     },

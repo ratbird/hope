@@ -41,6 +41,7 @@ class ForumPerm {
      *   pdfexport         - Exporting parts of the forum as PDF<br>
      *   admin             - Allowed to mass-administrate the forum<br>
      *   view              - Allowed to view the forum at all<br>
+     *   edit_closed       - Editing entries in a closed thread
      * 
      * @param string $perm        one of the modular permissions
      * @param string $seminar_id  the seminar to check for
@@ -96,7 +97,7 @@ class ForumPerm {
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '
-            . 'make_sticky close_thread abo forward_entry pdfexport view')
+            . 'make_sticky close_thread abo forward_entry pdfexport view edit_closed')
         ) !== false) {
             return true;
         } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport view')) !== false) {
@@ -164,8 +165,11 @@ class ForumPerm {
 
             $data = $stmt->fetch();
 
+            $closed = ForumEntry::isClosed($topic_id);
+
             $perms[$topic_id] = (($GLOBALS['user']->id == $data['user_id'] && $GLOBALS['user']->id != 'nobody') ||
-                ForumPerm::has('edit_entry', $constraints['seminar_id']));
+                ForumPerm::has('edit_entry', $constraints['seminar_id']))
+                    && (!$closed || $closed && ForumPerm::has('edit_closed', $constraints['seminar_id']));
         }
 
         return $perms[$topic_id];
@@ -206,12 +210,6 @@ class ForumPerm {
                 _('Forum: Sie haben keine Berechtigung auf den Eintrag mit der ID %s zuzugreifen!'),
                 $topic_id
             ));
-        }
-
-        if ($data['closed']) {
-            throw new AccessDeniedException(
-                _('Sie dürfen keinen Beitrag in einem geschlossen Thema erstellen!')
-            );
         }
     }
 }

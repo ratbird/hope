@@ -157,6 +157,12 @@ class IndexController extends ForumController
         if (Request::getArray('highlight')) {
             $this->highlight = Request::optionArray('highlight');
         }
+
+        if ($this->edit_posting = Request::get('edit_posting', null)
+                && !ForumPerm::hasEditPerms($this->edit_posting)) {
+            $this->edit_posting = null;
+        }
+
     }
 
     /**
@@ -706,6 +712,12 @@ class IndexController extends ForumController
     {
         ForumPerm::check('add_entry', $this->getId(), $topic_id);
 
+        if (ForumEntry::isClosed($topic_id) && !ForumPerm::has('edit_closed')) {
+            throw new AccessDeniedException(
+                _('Sie dürfen keinen Beitrag in einem geschlossenen Thema erstellen!')
+            );
+        }
+
         $topic = ForumEntry::getConstraints($topic_id);
 
         $this->flash['edit_entry'] = true;
@@ -733,6 +745,12 @@ class IndexController extends ForumController
     function new_entry_action($topic_id)
     {
         ForumPerm::check('add_entry', $this->getId(), $topic_id);
+
+        if (ForumEntry::isClosed($topic_id) && !ForumPerm::has('edit_closed')) {
+            throw new AccessDeniedException(
+                _('Sie dürfen keinen Beitrag in einem geschlossenen Thema erstellen!')
+            );
+        }
 
         $this->flash['edit_entry'] = true;
         $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));

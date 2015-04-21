@@ -1,6 +1,16 @@
 <? if (!is_array($highlight)) $highlight = array(); ?>
 <? $is_new =  ((isset($visitdate) && $post['mkdate'] >= $visitdate) || !(isset($visitdate))) ?>
 <? if (!$constraint) $constraint = ForumEntry::getConstraints (ForumEntry::getParentTopicId($post['topic_id'])) ?>
+
+<? $can_edit_closed = !ForumEntry::isClosed($constraint['topic_id'])
+        || (ForumEntry::isClosed($constraint['topic_id']) && ForumPerm::has('edit_closed', $constraint['seminar_id'])) ?>
+
+<? $perms = array(
+    'edit'         => ForumPerm::hasEditPerms($post['topic_id']),
+    'edit_closed'  => ForumPerm::has('edit_closed', $constraint['seminar_id']),
+    'remove_entry' => ForumPerm::has('remove_entry', $constraint['seminar_id']),
+) ?>
+
 <!-- Anker, um zu diesem Posting springen zu können -->
 <a name="<?= $post['topic_id'] ?>"></a>
 
@@ -40,7 +50,7 @@
             </div>
 
             <? if ($post['depth'] < 3) : ?>  
-            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= $edit_posting == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <input type="text" name="name" value="<?= htmlReady($post['name_raw']) ?>" data-reset="<?= htmlReady($post['name_raw']) ?>" style="width: 100%">
             </span>
             <? else : ?>
@@ -63,7 +73,7 @@
                     <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? elseif ($post['depth'] < 3) : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
-                    <? if (Request::get('edit_posting') != $post['topic_id']) : ?>
+                    <? if ($edit_posting != $post['topic_id']) : ?>
                     <?= ($post['name_raw'] && $post['depth'] < 3) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
                     <? endif ?>
                 </span>
@@ -74,11 +84,11 @@
 
         <!-- Postinginhalt -->
         <div class="content">
-            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= $edit_posting == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <textarea data-textarea="<?= $post['topic_id'] ?>" data-reset="<?= htmlReady($post['content_raw']) ?>" name="content" class="add_toolbar"><?= htmlReady($post['content_raw']) ?></textarea>
             </span>
             
-            <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+            <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <?= ForumHelpers::highlight($post['content'], $highlight) ?>
             </span>
         </div>
@@ -87,8 +97,8 @@
         <!-- Buttons for this Posting -->
         <div class="buttons">
             <div class="button-group">
-        <? if (ForumPerm::hasEditPerms($post['topic_id'])) : ?>
-        <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+
+        <span data-edit-topic="<?= $post['topic_id'] ?>" <?= ($edit_posting == $post['topic_id']) ? '' : 'style="display: none;"' ?>>
             <!-- Buttons für den Bearbeitungsmodus -->
             <?= Studip\Button::createAccept(_('Änderungen speichern'), '',
                 array('onClick' => "STUDIP.Forum.saveEntry('". $post['topic_id'] ."'); return false;")) ?>
@@ -98,29 +108,31 @@
             
             <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('". $post['topic_id'] ."', 'preview_". $post['topic_id'] ."');") ?>
         </span>
-        <? endif ?>
                 
-        <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+        <span data-show-topic="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
             <!-- Aktions-Buttons für diesen Beitrag -->
 
-            <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
+
+            <? if (ForumPerm::has('add_entry', $constraint['seminar_id'])) : ?>
                 <?= Studip\LinkButton::create(_('Beitrag zitieren'), PluginEngine::getLink('coreforum/index/cite/' . $post['topic_id']), array(
                     'onClick' => "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."'); return false;",
-                    'class'   => 'hideWhenClosed',
-                    'style'   => $constraint['closed'] ? 'display: none' : ''
+                    'class'   => !$perms['edit_closed'] ? 'hideWhenClosed' : '',
+                    'style'   => !$can_edit_closed ? 'display: none' : ''
                 )) ?>
             <? endif ?>
 
-            <? if ($section == 'index' && ForumPerm::hasEditPerms($post['topic_id'])) : ?>
+            <? if ($section == 'index') : ?>
                 <?= Studip\LinkButton::create(_('Beitrag bearbeiten'), PluginEngine::getUrl('coreforum/index/index/' 
                       . $post['topic_id'] .'/?edit_posting=' . $post['topic_id']), array(
                           'onClick' => "STUDIP.Forum.editEntry('". $post['topic_id'] ."'); return false;",
-                          'class'   => 'hideWhenClosed',
-                          'style'   => $constraint['closed'] ? 'display: none' : ''
+                          'class'   => !$perms['edit_closed'] ? 'hideWhenClosed' : '',
+                          'style'   => !$can_edit_closed ? 'display: none' : ''
                 )) ?>
             <? endif ?>
             
-            <? if ($section == 'index' && (ForumPerm::hasEditPerms($post['topic_id']) || ForumPerm::has('remove_entry', $seminar_id))) : ?>
+            <? if ($section == 'index') : ?>
+            <span <?= (!$perms['edit_close'] && !$perms['remove_entry']) ? 'class="hideWhenClosed"': '' ?>
+                <?= (!$perms['edit'] && !$perms['remove_entry']) ? 'style="display: none"' : '' ?>>
                 <? $confirmLink = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'])  ?>
                 <? $confirmLinkApproved = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'] . '?approve_delete=1')  ?>
                 <? if ($constraint['depth'] == $post['depth']) : /* this is not only a posting, but a thread */ ?>
@@ -132,6 +144,7 @@
                     <?= Studip\LinkButton::create(_('Beitrag löschen'), $confirmLink,
                         array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLinkApproved'); return false;")) ?>
                 <? endif ?>
+            </span>
             <? endif ?>
 
             <? if (ForumPerm::has('forward_entry', $seminar_id)) : ?>
@@ -144,8 +157,8 @@
 
     </div>
 
-    <? if (ForumPerm::hasEditPerms($post['topic_id'])) : ?>
-    <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+    <? if ($perms['edit']) : ?>
+    <span data-edit-topic="<?= $post['topic_id'] ?>" <?= $edit_posting == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
                 <?= $this->render_partial('index/_smiley_favorites', array('textarea_id' => $post['topic_id'])) ?>
@@ -155,7 +168,7 @@
     <? endif ?>
 
     <!-- Infobox rechts neben jedem Posting -->
-    <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
+    <span data-show-topic="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <? if ($post['anonymous']): ?>
                 <dd class="anonymous_post" data-profile="<?= $post['topic_id'] ?>"><strong><?= _('Anonym') ?></strong></dd>

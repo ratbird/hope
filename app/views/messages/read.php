@@ -38,7 +38,7 @@
         </tr>
         <tr>
             <td><strong><?= _("Datum") ?></strong></td>
-            <td><?= date("d.m.Y G.i", $message['mkdate']) ?></td>
+            <td><?= date("d.m.Y G:i", $message['mkdate']) ?></td>
         </tr>
         <tr>
             <td><strong><?= _("Schlagworte") ?></strong></td>

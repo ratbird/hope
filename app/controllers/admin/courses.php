@@ -639,7 +639,6 @@ class Admin_CoursesController extends AuthenticatedController
                   ORDER BY {$sortby}";
 
         $statement = DBManager::get()->prepare($query);
-        //$statement->bindValue(':unlimited', _('unbegrenzt'));
         $statement->bindValue('institute_id', $this->selected_inst_id);
         if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
             $statement->bindValue(':typeFilter', $typeFilter);

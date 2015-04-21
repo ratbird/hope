@@ -49,7 +49,7 @@
                         <a href="<?= URLHelper::getLink("?", array('tag' => $tag)) ?>" class="message-tag" title="<?= _("Alle Nachrichten zu diesem Schlagwort") ?>">
                             <?= htmlReady($tag) ?>
                         </a>
-                        <?= Assets::input('icons/16/blue/trash.png', array('class' => 'text-bottom', 'name' => 'remove_tag', 'value' => $tag, 'title' => _("Schlagwort entfernen"))) ?>
+                        <?= Assets::input('icons/16/blue/trash.png', array('class' => 'text-bottom', 'name' => 'remove_tag', 'value' => htmlReady($tag), 'title' => _("Schlagwort entfernen"))) ?>
                     </span>
                 <? endforeach ?>
                     <span>

@@ -622,32 +622,24 @@ class Admin_CoursesController extends AuthenticatedController
                          seminare.Name, seminare.status, seminare.chdate,
                          seminare.start_time, seminare.admission_binding, seminare.visible,
                          seminare.modules, COUNT(seminar_user.user_id) AS teilnehmer,
-                         IFNULL(visitdate, 0) AS visitdate,
-                         sd1.name AS startsem, IF (duration_time = -1, :unlimited, sd2.name) AS endsem,
-                         sc.name as sem_class_name, seminare.lock_rule, seminare.aux_lock_rule,
+                         seminare.lock_rule, seminare.aux_lock_rule,
                          (SELECT COUNT(seminar_id)
                           FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'accepted')AS prelim,
+                          WHERE seminar_id = seminare.Seminar_id AND status = 'accepted') AS prelim,
                           (SELECT COUNT(seminar_id)
                           FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting')AS waiting
+                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting') AS waiting
                   FROM Institute
                   INNER JOIN seminare ON (seminare.Institut_id = Institute.Institut_id {$sem_condition})
                   LEFT JOIN seminar_user on (seminare.seminar_id=seminar_user.seminar_id AND seminar_user.status != 'dozent' and seminar_user.status != 'tutor')
-                  LEFT JOIN object_user_visits AS ouv
-                    ON (ouv.object_id = seminare.Seminar_id AND ouv.user_id = :user_id AND ouv.type = 'sem')
-                  LEFT JOIN semester_data AS sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende)
-                  LEFT JOIN semester_data sd2 ON (start_time + duration_time BETWEEN sd2.beginn AND sd2.ende)
                   LEFT JOIN sem_types as st ON st.id = seminare.status
-                  LEFT JOIN sem_classes as sc ON sc.id = st.class
                   WHERE Institute.Institut_id = :institute_id
                   {$where}
                   GROUP BY seminare.Seminar_id
                   ORDER BY {$sortby}";
 
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':unlimited', _('unbegrenzt'));
-        $statement->bindValue(':user_id', $user_id);
+        //$statement->bindValue(':unlimited', _('unbegrenzt'));
         $statement->bindValue('institute_id', $this->selected_inst_id);
         if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
             $statement->bindValue(':typeFilter', $typeFilter);

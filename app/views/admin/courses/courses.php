@@ -131,10 +131,6 @@
     </thead>
     <tbody>
     <? foreach ($courses as $semid => $values) { ?>
-        <?
-        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$values["status"]]["class"]];
-        $lastVisit = $values['visitdate'];
-        ?>
         <tr>
             <td>
                 <?=
@@ -145,14 +141,13 @@
             <? if (in_array('Nr.', $view_filter)) : ?>
                 <td>
                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
-                        <?= $values["VeranstaltungsNummer"] ?>
+                        <?= htmlReady($values["VeranstaltungsNummer"]) ?>
                     </a>
                 </td>
             <? endif ?>
             <? if (in_array('Name', $view_filter)) : ?>
                 <td>
-                    <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>"
-                       style="<?= lastVisit <= $values['chdate'] ? 'color: red;' : '' ?>">
+                    <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
                         <?= htmlReady(trim($values["Name"])) ?>
                     </a>
                     <a data-dialog="buttons=false;size=auto" href="<?= $controller->url_for(sprintf('course/details/index/%s', $semid)) ?>">
@@ -167,7 +162,7 @@
             <? endif ?>
             <? if (in_array('Veranstaltungstyp', $view_filter)) : ?>
                 <td>
-                    <strong><?= $values['sem_class_name'] ?></strong>: <?= $GLOBALS['SEM_TYPE'][$values["status"]]["name"] ?>
+                    <strong><?= $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$values["status"]]["class"]]['name'] ?></strong>: <?= $GLOBALS['SEM_TYPE'][$values["status"]]["name"] ?>
                 </td>
             <? endif ?>
             <? if (in_array('Raum/Zeit', $view_filter)) : ?>

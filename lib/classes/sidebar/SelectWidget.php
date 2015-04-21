@@ -20,7 +20,7 @@ class SelectWidget extends SidebarWidget
         $this->setRequestMethod($method);
     }
 
-    public function setUrl($url) 
+    public function setUrl($url)
     {
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query) {

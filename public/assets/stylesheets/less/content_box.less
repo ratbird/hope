@@ -71,7 +71,7 @@ section.contentbox {
         border-width: 1px;
         margin: 10px;
 
-        p,section,footer {
+        > p, > section, > footer, > div {
             padding: 0 10px 0 10px;
             max-height: 0px;
             opacity: 0;
@@ -79,7 +79,7 @@ section.contentbox {
             .transition(opacity 0.3s);
         }
 
-        p {
+        div, p {
             margin: 0;
         }
 
@@ -153,7 +153,7 @@ section.contentbox {
     }
 
     article.open {
-        p,section,footer {
+        > p, > section, > footer, > div {
             max-height: none;
             opacity: 1;
             .transition(opacity 0.3s);

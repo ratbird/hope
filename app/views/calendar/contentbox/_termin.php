@@ -17,9 +17,25 @@
             <? endif; ?>
         </nav>
     </header>
-    <p>
-        <?= $termin['description'] ? : _('Keine Beschreibung vorhanden') ?>
-    </p>
+    <div>
+        <? $themen = CourseTopic::findByTermin_id($termin['id']) ?>
+        <? if ($termin['description'] || count($themen)) : ?>
+        <p><?= $termin['description'] ?></p>
+        <? if (count($themen)) : ?>
+            <? foreach ($themen as $thema) : ?>
+                <h3>
+                    <?= Assets::img("icons/grey/20/topic", array('class' => "text-bottom")) ?>
+                    <?= htmlReady($thema['title']) ?>
+                </h3>
+                <div>
+                    <?= formatReady($thema['description']) ?>
+                </div>
+            <? endforeach ?>
+        <? endif ?>
+        <? else : ?>
+            <?= _('Keine Beschreibung vorhanden') ?>
+        <? endif ?>
+    </div>
     <footer>
         <? foreach($termin['info'] as $type => $info): ?>
         <? if (trim($info)) : ?>

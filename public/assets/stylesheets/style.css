@@ -2917,14 +2917,14 @@ section.contentbox header h1 {
   border-bottom: none;
   font-size: medium;
 }
-section.contentbox header h1 img,
-section.contentbox header h1 svg {
-  vertical-align: text-bottom;
-  margin-right: 5px;
-}
 section.contentbox header h1 > a {
   margin-left: -20px;
   padding-left: 20px;
+}
+section.contentbox header h1 > a img,
+section.contentbox header h1 > a svg {
+  vertical-align: text-bottom;
+  margin-right: 5px;
 }
 section.contentbox header nav {
   vertical-align: middle;
@@ -2958,9 +2958,10 @@ section.contentbox article {
   border-width: 1px;
   margin: 10px;
 }
-section.contentbox article p,
-section.contentbox article section,
-section.contentbox article footer {
+section.contentbox article > p,
+section.contentbox article > section,
+section.contentbox article > footer,
+section.contentbox article > div {
   padding: 0 10px 0 10px;
   max-height: 0px;
   opacity: 0;
@@ -2970,6 +2971,7 @@ section.contentbox article footer {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
+section.contentbox article div,
 section.contentbox article p {
   margin: 0;
 }
@@ -3046,9 +3048,10 @@ section.contentbox article footer article.comment time {
   font-size: 0.8em;
   color: #c3c8cc;
 }
-section.contentbox article.open p,
-section.contentbox article.open section,
-section.contentbox article.open footer {
+section.contentbox article.open > p,
+section.contentbox article.open > section,
+section.contentbox article.open > footer,
+section.contentbox article.open > div {
   max-height: none;
   opacity: 1;
   -webkit-transition: opacity 0.3s;

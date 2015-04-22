@@ -46,9 +46,12 @@
             if ($dateSemester &&
                 $semester->getId() === $dateSemester->getId()
             ) {
-                echo $this->render_partial(
+                 if (is_null($is_next_date) && $date['end_time'] >= time() && !is_a($date, "CourseExDate")) {
+                     $is_next_date = $key;
+                 }
+                 echo $this->render_partial(
                     'course/dates/_date_row.php',
-                    compact('date', 'dates', 'key')
+                    array('date' => $date, 'is_next_date' => $is_next_date === $key)
                 );
             } elseif (!$dateSemester && !in_array($key, $lostDateKeys)) {
                 $lostDateKeys[] = $key;

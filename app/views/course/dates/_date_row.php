@@ -1,14 +1,3 @@
-<?
-$is_next_date = $date['end_time'] >= time() && !is_a($date, "CourseExDate");
-if ($is_next_date) {
-    for ($i = 1; $i < $key; $i++) {
-        if (!is_a($dates[$key - $i], "CourseExDate") || ($dates[$key - $i]['end_time'] <= time())) {
-            $is_next_date = $dates[$key - $i]['end_time'] <= time();
-            break;
-        }
-    }
-}
-?>
 <tr id="date_<?= $date->getId() ?>" class="<?= is_a($date, "CourseExDate") ? "ausfall" : "" ?><?= $is_next_date ? 'nextdate' : ""?>"<?= $is_next_date ? ' title="'._("Der nächste Termin").'"' : ""?>>
     <td data-timestamp="<?=htmlReady($date['date']);?>">
         <? if (is_a($date, "CourseExDate")) : ?>

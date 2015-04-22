@@ -21,13 +21,14 @@
             <td><strong><?= _("An") ?></strong></td>
             <td>
                 <? if ($message["autor_id"] !== $GLOBALS["user"]->id) : ?>
-                <?= count($message->receivers) > 1 ? sprintf(_("%s Personen"), count($message->receivers)) : _("Eine Person") ?>
+                <? $num_recipients = $message->getNumRecipients() ?>
+                <?= $num_recipients > 1 ? sprintf(_("%s Personen"), $num_recipients) : _("Eine Person") ?>
                 <? else : ?>
                 <ul class='clean' id="adressees">
                 <? foreach ($message->getRecipients() as $message_user) : ?>
                     <li>
                         <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $message_user["username"])) ?>">
-                            <?= htmlReady($message_user->getFullname()) ?>
+                            <?= htmlReady($message_user['fullname']) ?>
                         </a>
                     </li>
 

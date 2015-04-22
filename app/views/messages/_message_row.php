@@ -1,5 +1,5 @@
 <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
-    <td><?= count($message->attachments) ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
+    <td><?= $message->getNumAttachments() ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
     <td class="title">
         <a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-dialog>
             <?= $message['subject'] ? htmlReady($message['subject']) : htmlReady(mila($message['message'], 40)) ?>
@@ -9,8 +9,9 @@
     <? if ($message['autor_id'] == "____%system%____") : ?>
         <?= _("Systemnachricht") ?>
     <? else : if(!$received): ?>
-        <? if (count($message->receivers) > 1) : ?>
-            <?= sprintf(_("%s Personen"), count($message->receivers)) ?>
+        <? $num_recipients = $message->getNumRecipients() ?>
+        <? if ($num_recipients > 1) : ?>
+            <?= sprintf(_("%s Personen"), $num_recipients) ?>
         <? else : ?>
         <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' =>  get_username($message->receivers[0]['user_id']))) ?>">
             <?= htmlReady(get_fullname($message->receivers[0]['user_id'])) ?>

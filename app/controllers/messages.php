@@ -254,7 +254,12 @@ class MessagesController extends AuthenticatedController {
                 $message .= "\n" . _("Betreff") . ": " . $old_message['subject'];
                 $message .= "\n" . _("Datum") . ": " . strftime('%x %X', $old_message['mkdate']);
                 $message .= "\n" . _("Von") . ": " . get_fullname($old_message['autor_id']);
-                $message .= "\n" . _("An") . ": " . join(', ', $old_message->getRecipients()->getFullname());
+                $num_recipients = $old_message->getNumRecipients();
+                if ($GLOBALS['user']->id == $old_message->autor_id) {
+                    $message .= "\n" . _("An") . ": " . ($num_recipients == 1 ? _('Eine Person') : sprintf(_('%s Personen'), $num_recipients));
+                } else {
+                    $message .= "\n" . _("An") . ": " . $GLOBALS['user']->getFullname() . ($num_recipients > 1 ? ' ' . sprintf(_('(und %d weitere)'), $num_recipients) : '');
+                }
                 $message .= "\n\n";
                 if (Studip\Markup::isHtml($old_message['message'])) {
                     $message = '<div>' . htmlReady($message,false,true) . '</div>' . $old_message['message'];
@@ -369,8 +374,8 @@ class MessagesController extends AuthenticatedController {
             $this->msg = $message->toArray();
             $this->msg['from'] = $message->getSender()->getFullname();
             $this->msg['to'] = $GLOBALS['user']->id == $message->autor_id ?
-                join(', ', $message->getRecipients()->getFullname()) :
-                $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), count($message->receivers)-1);
+                join(', ', $message->getRecipients()->pluck('fullname')) :
+                $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), $message->getNumRecipients()-1);
             $this->msg['attachments'] = $message->attachments->toArray('filename filesize');
             PageLayout::setTitle($this->msg['subject']);
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
@@ -406,14 +411,14 @@ class MessagesController extends AuthenticatedController {
         if ($tag) {
             $messages_data = DBManager::get()->prepare("
                 SELECT message.*
-                FROM message
-                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
-                    INNER JOIN message_tags ON (message_tags.message_id = message.message_id AND message_tags.user_id = message_user.user_id)
+                FROM message_user
+                    INNER JOIN message ON (message_user.message_id = message.message_id)
+                    INNER JOIN message_tags ON (message_tags.message_id = message_user.message_id AND message_tags.user_id = message_user.user_id)
                 WHERE message_user.user_id = :me
                     AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
                     AND message_tags.tag = :tag
-                ORDER BY message.mkdate DESC
+                ORDER BY message_user.mkdate DESC
                 LIMIT ".(int) $offset .", ".(int) $limit ."
             ");
             $messages_data->execute(array(
@@ -463,15 +468,15 @@ class MessagesController extends AuthenticatedController {
 
 
             $messages_data = DBManager::get()->prepare("
-                SELECT *
-                FROM message
-                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
+                SELECT message.*
+                FROM message_user
+                    INNER JOIN message ON (message_user.message_id = message.message_id)
                     INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = message.autor_id)
                 WHERE message_user.user_id = :me
                     AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
                     $search_sql
-                ORDER BY message.mkdate DESC
+                ORDER BY message_user.mkdate DESC
                 LIMIT ".(int) $offset .", ".(int) $limit ."
             ");
             $messages_data->execute(array(
@@ -480,13 +485,13 @@ class MessagesController extends AuthenticatedController {
             ));
         } else {
             $messages_data = DBManager::get()->prepare("
-                SELECT *
-                FROM message
-                    INNER JOIN message_user ON (message_user.message_id = message.message_id)
+                SELECT message.*
+                FROM message_user
+                    INNER JOIN message ON (message_user.message_id = message.message_id)
                 WHERE message_user.user_id = :me
                     AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver
-                ORDER BY message.mkdate DESC
+                ORDER BY message_user.mkdate DESC
                 LIMIT ".(int) $offset .", ".(int) $limit ."
             ");
             $messages_data->execute(array(
@@ -494,13 +499,10 @@ class MessagesController extends AuthenticatedController {
                 'sender_receiver' => $received ? "rec" : "snd"
             ));
         }
-        $messages_data = $messages_data->fetchAll(PDO::FETCH_ASSOC);
+        $messages_data->setFetchMode(PDO::FETCH_ASSOC);
         $messages = array();
         foreach ($messages_data as $data) {
-            $message = new Message();
-            $message->setData($data);
-            $message->setNew(false);
-            $messages[] = $message;
+            $messages[] = Message::buildExisting($data);
         }
         return $messages;
     }

@@ -13,7 +13,7 @@
             <li style="padding: 0px;" class="adressee">
                 <input type="hidden" name="message_to[]" value="<?= htmlReady($user['user_id']) ?>">
                 <span class="visual">
-                    <?= htmlReady($user->getFullname()) ?>
+                    <?= htmlReady($user['fullname']) ?>
                 </span>
                 <a class="remove_adressee"><?= Assets::img("icons/16/blue/trash", array('class' => "text-bottom")) ?></a>
             </li>

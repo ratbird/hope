@@ -18,9 +18,9 @@
         </nav>
     </header>
     <div>
-        <? $themen = CourseTopic::findByTermin_id($termin['id']) ?>
+        <? $themen = $termin['topics'] ?>
         <? if ($termin['description'] || count($themen)) : ?>
-        <p><?= $termin['description'] ?></p>
+        <p><?= formatReady($termin['description']) ?></p>
         <? if (count($themen)) : ?>
             <? foreach ($themen as $thema) : ?>
                 <h3>

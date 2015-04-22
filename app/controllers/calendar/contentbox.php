@@ -88,7 +88,8 @@ class Calendar_ContentboxController extends StudipController {
                 'id' => $courseDate->id,
                 'chdate' => $courseDate->chdate,
                 'title' => $courseDate->getFullname() . ($courseDate->topics[0] ? ', ' . join(', ', $courseDate->topics->getValue('title')) : ""),
-                'description' => $courseDate->topics[0] ? ', ' . join("\n\n", $courseDate->topics->getValue('description')) : $courseDate instanceOf CourseExDate ? $courseDate->content : '',
+                'description' => $courseDate instanceOf CourseExDate ? $courseDate->content : '',
+                'topics' => $courseDate->topics->toArray('title description'),
                 'room' => $courseDate->getRoomName(),
                 'info' => $info
             );

@@ -56,6 +56,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
             $form_fields['days']['options'][] = array('name' => _("Jeden Tag") , 'value' => 'everyday');
             $form_fields['days']['options'][] = array('name' => _("Mo - Fr") , 'value' => 'weekdays');
             $form_fields['date_count'] = array('type' => 'select', 'caption' => _("Anzahl"), 'options' => range(1,5));
+            $form_fields['room_text'] = array('type' => 'text', 'caption' => _("freie Ortsangabe"));
             $start_ts = strtotime('this monday');
             foreach (range(0,6) as $d) {
                 $form_fields['days']['options'][] = array('name' => strftime('%A', strtotime("+$d day", $start_ts)) , 'value' => $d + 1);
@@ -82,6 +83,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                     }
                 }
                 $termin_typ = (int)$form->getFormFieldValue('termin_typ');
+                $free_room_text = $form->getFormFieldValue('room_text');
                 $days = $form->getFormFieldValue('days');
                 if (!is_array($days)) {
                     $errors[] = _("Bitte wählen Sie mindestens einen Tag aus!");
@@ -104,6 +106,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                             for ($i = 1; $i <= $date_count; $i++) {
                                 $date = new SingleDate();
                                 $date->setDateType($termin_typ);
+                                $date->setFreeRoomText($free_room_text);
                                 $date->setSeminarID($this->course_id);
                                 $date->date = $t;
                                 $date->end_time = $t + $delta;

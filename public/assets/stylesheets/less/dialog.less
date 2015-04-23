@@ -63,38 +63,25 @@
         }
         .ui-button {
             .button(); // Include button mixin
-        
-            // Replicate cancel and accept buttons
-            // TODO This should not be repeated here (not DRY)
-            &.accept, &.cancel {
-                white-space: normal;
-
-                .ui-button-text:before {
-                    content: ' ';
-                    float: left;
-                    height: 16px;
-                    margin: -2px 8px 0 -4px;
-                    width: 16px;
-                }
-            }
 
             &.accept {
-                .ui-button-text:before {
-                    background: no-repeat; 
-                    .retina-background-icon('blue/accept.png');
-                }
+              .button-with-icon("blue/accept.png", "white/accept.png");
             }
 
             &.cancel {
-                .ui-button-text:before {
-                    background: no-repeat; 
-                    .retina-background-icon('blue/decline.png');
-                }
+                .button-with-icon("blue/decline.png", "white/decline.png");
+            }
+
+            &:before {
+                margin-left: -5px;
+                margin-top: 2px;
             }
         }
     
         .ui-button-text-only .ui-button-text {
+            margin-left: 0.8em;
             padding: 0;
+            white-space: nowrap;
         }
     }
 }

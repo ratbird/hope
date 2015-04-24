@@ -128,7 +128,7 @@ class Message extends SimpleORMap
     public function getRecipients()
     {
         if ($this->relations['receivers'] === null) {
-            $sql = "SELECT vorname,nachname,username,title_front,title_rear,perms,motto FROM
+            $sql = "SELECT user_id,vorname,nachname,username,title_front,title_rear,perms,motto FROM
                     message_user
                     INNER JOIN auth_user_md5 aum USING(user_id)
                     LEFT JOIN user_info ui USING(user_id)
@@ -136,7 +136,7 @@ class Message extends SimpleORMap
                     ORDER BY Nachname";
             $params = array($this->id);
         } else {
-            $sql = "SELECT vorname,nachname,username,title_front,title_rear,perms,motto FROM
+            $sql = "SELECT user_id,vorname,nachname,username,title_front,title_rear,perms,motto FROM
                     auth_user_md5 aum
                     LEFT JOIN user_info ui USING(user_id)
                     WHERE aum.user_id IN(?)
@@ -148,9 +148,12 @@ class Message extends SimpleORMap
             $db->fetchAll($sql,
                              $params,
                              function ($data) {
+                                 $user_id = $data['user_id'];
+                                 unset($data['user_id']);
                                  $user = User::build($data);
                                  $ret = $user->toArray('username vorname nachname');
                                  $ret['fullname'] = $user->getFullname();
+                                 $ret['user_id'] = $user_id;
                                  return $ret;
                              })
             );

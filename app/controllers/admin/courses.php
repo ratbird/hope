@@ -633,6 +633,7 @@ class Admin_CoursesController extends AuthenticatedController
                   INNER JOIN seminare ON (seminare.Institut_id = Institute.Institut_id {$sem_condition})
                   LEFT JOIN seminar_user on (seminare.seminar_id=seminar_user.seminar_id AND seminar_user.status != 'dozent' and seminar_user.status != 'tutor')
                   LEFT JOIN sem_types as st ON st.id = seminare.status
+                  LEFT JOIN sem_classes as sc ON sc.id = st.class
                   WHERE Institute.Institut_id = :institute_id
                   {$where}
                   GROUP BY seminare.Seminar_id

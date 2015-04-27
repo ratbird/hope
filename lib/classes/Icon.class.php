@@ -57,6 +57,10 @@ class Icon
 
         $opts = self::rearrange($source, $defined, $icon);
 
+        if ($opts === false) {
+            return new self($source, $size, $color, $attributes, true);
+        }
+
         $opts['source'] = preg_replace('/\.(png|svg)$/', '', $opts['icon']);
 
         return new self($opts['source'], $opts['size'], $opts['color'], $attributes);
@@ -76,7 +80,7 @@ class Icon
         if (!is_array($input)) {
             $input = str_replace(Assets::url('images/'), '', $input);
             if (strpos($input, 'http') !== false) {
-                echo '<pre>';var_dump($input, Assets::url('images/'));die;
+                return false;
             }
             $input = preg_replace('~^icons/~S', '', $input);
             $input = preg_replace('/\.png$/S', '', $input);
@@ -109,9 +113,10 @@ class Icon
     }
 
     protected $icon;
-    protected $size;
-    protected $color;
-    protected $attributes;
+    protected $size       = null;
+    protected $color      = null;
+    protected $attributes = array();
+    protected $static     = false;
 
     /**
      * Constructor of the object.
@@ -125,23 +130,30 @@ class Icon
      *                       color
      * @param Array  $attributes Additional attributes to pass the rendered
      *                           output
+     * @param bool   $static Defines whether the icon is static (not from assets folder)
      */
-    public function __construct($icon, $size = Icon::DEFAULT_SIZE, $color = Icon::DEFAULT_COLOR, $attributes = array())
+    public function __construct($icon, $size = Icon::DEFAULT_SIZE, $color = Icon::DEFAULT_COLOR, $attributes = array(), $static = false)
     {
-        $this->icon       = preg_replace('/\.(?:png|svg)$/', '', $icon);
+        if ($static) {
+            $this->icon = $icon;
+        } else {
+            $this->icon = preg_replace('/\.(?:png|svg)$/', '', $icon);
+        }
+
         $this->size       = $size;
         $this->color      = $color;
         $this->attributes = $attributes;
+        $this->static = $static;
     }
 
     /**
      * Function to be called whenever the object is converted to string.
      *
-     * @return String representation (defaults to svg rendering)
+     * @return String representation
      */
     public function __toString()
     {
-        return $this->render_svg();
+        return $this->render();
     }
 
     /**
@@ -173,6 +185,10 @@ class Icon
      */
     protected function render_svg()
     {
+        if ($this->static) {
+            return $this->render_png();
+        }
+
         $png_attributes = array(
             'xlink:href' => $this->get_asset(Icon::SVG),
             'src' => $this->get_asset(Icon::PNG),
@@ -211,8 +227,8 @@ class Icon
     protected function render_png()
     {
         $attributes = array_merge($this->attributes, array(
-            'src' => $this->get_asset(Icon::PNG),
-            'alt' => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->icon),
+            'src'    => $this->static ? $this->icon : $this->get_asset(Icon::PNG),
+            'alt'    => $this->attributes['alt'] ?: $this->attributes['title'] ?: basename($this->icon),
             'width'  => $this->get_size(),
             'height' => $this->get_size(),
         ));
@@ -227,6 +243,12 @@ class Icon
      */
     protected function render_css_background()
     {
+        if ($this->static) {
+            return sprintf('background-image:url(%1$s);background-size:%2$upx %2$upx;',
+                           $this->icon,
+                           $this->get_size());
+        }
+        
         return sprintf('background-image:url(%1$s);background-image:none,url(%2$s);background-size:%3$upx %3$upx;',
                        $this->get_asset(Icon::PNG),
                        $this->get_asset(Icon::SVG),

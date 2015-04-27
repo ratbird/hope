@@ -7,7 +7,8 @@
  *
  * @author      André Noack <noack@data-quest.de>
  * @author      <mlunzena@uos.de>
- * @copyright   2013 Stud.IP Core-Group
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @copyright   2015 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */
@@ -22,6 +23,10 @@
  * StudipAutoloader::register();
  * StudipAutoloader::addAutoloadPath("/tmp");
  * StudipAutoloader::addAutoloadPath("[...]lib/classes");
+ *
+ * // Add namespace prefix that indicates that class with the given
+ * // namespace will be found in the given directory
+ * StudipAutoloader::addAutoloadPath("[...]lib/classes", "Studip");
  * \endcode
  */
 class StudipAutoloader
@@ -49,25 +54,38 @@ class StudipAutoloader
     /**
      * Adds another path to the list of paths where to search for
      * classes.
+     * You may also pass an optional namespace prefix that indicates
+     * that class that start with this prefix are found in the given
+     * path.
      *
-     * @param string $path  the path to add
+     * @param string $path   the path to add
+     * @param string $prefix the optional namespace prefix
      */
-    public static function addAutoloadPath($path)
+    public static function addAutoloadPath($path, $prefix = '')
     {
-        self::$autoload_paths[] = realpath($path);
+        $path = realpath($path);
+        if ($prefix) {
+            $prefix = rtrim($prefix, '\\') . '\\';
+        }
+
+        self::$autoload_paths[] = compact('path', 'prefix');
     }
 
 
     /**
      * Removes a path from the list of paths.
      *
-     * @param string $path  the path to remove
+     * @param string $path   the path to remove
+     * @param string $prefix the optional namespace prefix
      */
-    public static function removeAutoloadPath($path)
+    public static function removeAutoloadPath($path, $prefix = '')
     {
-        $i = array_search(realpath($path), self::$autoload_paths);
-        if ($i !== false) {
-            unset(self::$autoload_paths[$i]);
+        $path = realpath($path);
+
+        foreach (self::$autoload_paths as $index => $item) {
+            if ($item['path'] === $path && $item['prefix'] === $prefix) {
+                unset(self::$autoload_paths[$index]);
+            }
         }
     }
 
@@ -93,32 +111,47 @@ class StudipAutoloader
      * directory structure.
      *
      * @param string $class  the name of the class
-     * @param bool   $handle_namespace Should namespaces be handled by
-     *                                 converting into directory structure?
-     *
      * @return string|null   the path, if found, otherwise null
      */
-    private static function findFile($class, $handle_namespace = true)
+    private static function findFile($class)
     {
-        // Handle possible namespace
-        if ($handle_namespace && strpos($class, '\\') !== false) {
-            // Convert namespace into directory structure
-            $namespaced = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-            $namespaced = strtolower(dirname($namespaced)) . DIRECTORY_SEPARATOR . basename($namespaced);
-            $class = basename($namespaced);
-
-            if ($filename = self::findFile($namespaced, false)) {
-                return $filename;
+        foreach (self::$autoload_paths as $item) {
+            $class_file = self::convertClassToFilename($class, $item['prefix']);
+            if ($class_file === false) {
+                continue;
             }
-        }
 
-        foreach (self::$autoload_paths as $path) {
-            $base =  $path . DIRECTORY_SEPARATOR . $class;
+            $base =  $item['path'] . DIRECTORY_SEPARATOR . $class_file;
             if (file_exists($base . '.class.php')) {
                 return $base . '.class.php';
             } elseif (file_exists($base . '.php')) {
                 return $base . '.php';
             }
         }
+    }
+
+    /**
+     * Convert the raw php class name to a potential file name. Namespaces are taken
+     * into account.
+     *
+     * @param string $class  the name of the class
+     * @param string $prefix the optional namespace prefix
+     * @return string containing the resolved file name.
+     */
+    private static function convertClassToFilename($class, $prefix = '')
+    {
+        // Test whether the namespace prefix matches the class name, leave early if not
+        if ($prefix && strpos($class, $prefix) !== 0) {
+            return false;
+        }
+
+        // Remove namespace prefix
+        $class = substr($class, strlen($prefix));
+
+        // Convert namespace into directory structure
+        $namespaced = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+        $filename   = strtolower(dirname($namespaced)) . DIRECTORY_SEPARATOR . basename($namespaced);
+
+        return $filename;
     }
 }

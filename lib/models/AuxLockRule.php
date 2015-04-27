@@ -93,12 +93,8 @@ class AuxLockRule extends SimpleORMap
             $course = $this->course;
         }
 
-        // fetch mapping data
-        foreach (SimpleORMapCollection::createFromArray($course->members->findBy('status', 'dozent')->pluck('user')) as $dozent) {
-            $dozentenlist[] = $dozent->getFullName();
-        }
         $mapping = array(
-            'vadozent' => join(', ', $dozentenlist),
+            'vadozent' => join(', ', $course->members->findBy('status', 'dozent')->getUserFullname()),
             'vasemester' => $course->start_semester->name,
             'vatitle' => $course->name,
             'vanr' => $course->VeranstaltungsNummer,
@@ -114,8 +110,8 @@ class AuxLockRule extends SimpleORMap
         $result['head']['name'] = _('Name');
 
         // get all autors and users
-        foreach ($course->members->findBy('status', array('autor', 'user'))->orderBy('vorname')->orderBy('nachname') as $member) {
-            $new['name'] = $member->user->getFullName('full_rev');
+        foreach ($course->members->findBy('status', array('autor', 'user'))->orderBy('nachname,vorname') as $member) {
+            $new['name'] = $member->getUserFullName('full_rev');
 
             // get all datafields
             foreach ($this->datafields as $field => $useless_value_pls_refactor) {
@@ -128,7 +124,7 @@ class AuxLockRule extends SimpleORMap
                     $datafield = $this->getDatafield($member, $field);
                     if ($datafield && current($datafield)->isVisible()) {
                         $result['head'][$field] = key($datafield);
-                        if (!$display_only && current($datafield)->isEditable()) {
+                        if (!$display_only && current($datafield)->isEditable() && $this->datafieldCache[$field]->object_type == 'usersemdata') {
                             $new[$field] = current($datafield)->getHTML($member->user_id);
                         } else {
                             $new[$field] = current($datafield)->getDisplayValue();
@@ -161,16 +157,27 @@ class AuxLockRule extends SimpleORMap
      * @param type $fieldID
      * @return null
      */
-    private function getDatafield($member, $fieldID)
-    {
-        if (!$this->datafieldCache[$member->id]) {
-            $this->datafieldCache[$member->id] = SimpleCollection::createFromArray(DatafieldEntryModel::findByModel($member));
-        }
-        $field = $this->datafieldCache[$member->id]->findOneBy('datafield_id', $fieldID);
-        if (!$field) {
-            return null;
-        }
-        return array($field->name => $field->getTypedDatafield());
-    }
+     private function getDatafield($member, $fieldID)
+     {
+         if (strlen($fieldID) == 32) {
+             if (!array_key_exists($fieldID, $this->datafieldCache)) {
+                 $this->datafieldCache[$fieldID] = Datafield::find($fieldID);
+             }
+             if (isset($this->datafieldCache[$fieldID])) {
+                 if ($this->datafieldCache[$fieldID]->object_type == 'usersemdata') {
+                     $field = current(DatafieldEntryModel::findByModel($member, $fieldID));
+                 }
+                 if ($this->datafieldCache[$fieldID]->object_type == 'user') {
+                     $field = current(DatafieldEntryModel::findByModel(User::find($member->user_id), $fieldID));
+                 }
+                 if ($field) {
+                     $structure = new DataFieldStructure($field->datafield->toArray());
+                     $range_id = $field->sec_range_id ? array($field->range_id, $field->sec_range_id) : $field->range_id;
+                     $typed_df = DataFieldEntry::createDataFieldEntry($structure, $range_id, $field->getValue('content'));
+                     return array($field->name => $typed_df);
+                 }
+             }
+         }
+     }
 
 }

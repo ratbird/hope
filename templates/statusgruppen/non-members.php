@@ -37,7 +37,7 @@
             <? endif; ?>
             </td>
             <td style="text-align: right;">
-                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an Benutzer verschicken'))) ?>
                 </a>
             </td>

@@ -37,11 +37,11 @@
                     <?= Assets::img('icons/16/blue/files', tooltip2(_('Dateiordner vorhanden'))) ?>
                 </a>
             <? endif; ?>
-            <? if ($may_mail): ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('emailrequest' => 1, 'group_id' => $group_id, 'default_subject' => $subject)) ?>">
+            <? if ($may_mail && $members > 0): ?>
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('emailrequest' => 1, 'group_id' => $group_id, 'default_subject' => $subject)) ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/move_right/mail', tooltip2(_('Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken'))) ?>
                 </a>
-                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('group_id' => $group_id, 'default_subject' => $subject)) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('group_id' => $group_id, 'default_subject' => $subject)) ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an alle Gruppenmitglieder verschicken'))) ?>
                 </a>
             <? endif; ?>
@@ -72,7 +72,7 @@
                 </a>
             <? endif; ?>
             <? if (($visio[$row['user_id']] || $rechte) && $row['user_id'] != $GLOBALS['user']->id): ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/messages/write', array('rec_uname' => $row['username'])) ?>" data-dialog>
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an Benutzer verschicken'))) ?>
                 </a>
             <? endif; ?>

@@ -883,6 +883,13 @@ class UserManagement
 
         // delete documents of this user
         if ($delete_documents) {
+            // Remove private file space of this user
+            if (Config::get()->PERSONALDOCUMENT_ENABLE) {
+                $root_dir = new RootDirectory($this->user_data['auth_user_md5.user_id']);
+                $root_dir->delete();
+            }
+
+            // Remove other files
             $temp_count = 0;
             $query = "SELECT dokument_id FROM dokumente WHERE user_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -893,9 +900,9 @@ class UserManagement
                 }
             }
 
-            // Remove private file space of this user
-            $root_dir = new RootDirectory($this->user_data['auth_user_md5.user_id']);
-            $root_dir->delete();
+            if ($temp_count) {
+                $this->msg .= "info§" . sprintf(_("%s Dokumente gelöscht."), $temp_count) . "§";
+	        }
 
             // delete empty folders of this user
             $temp_count = 0;

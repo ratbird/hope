@@ -461,7 +461,7 @@ class MessagesController extends AuthenticatedController {
                     $tmp_sql[] = "message.message LIKE ".DBManager::get()->quote("%".$val."%")." ";
                 }
                 $search_sql .= "AND (";
-                $search_sql .= implode(" OR ", $tmp_sql);
+                $search_sql .= implode(" OR ", $tmp_sql) ?: '0';
                 $search_sql .= ") ";
             }
 

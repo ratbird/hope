@@ -1,16 +1,12 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-/*
+# Lifter007: TEST
+
+/**
  * siteinfo - display information about Stud.IP
  *
- * Copyright (c) 2008  Ansgar Bockstiegel
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
+ * @author    Ansgar Bockstiegel
+ * @copyright 2008 Ansgar Bockstiegel
+ * @license   GPL2 or any later version
  */
 
 require_once 'app/models/siteinfo.php';
@@ -23,46 +19,32 @@ class SiteinfoController extends StudipController
     /**
      * common tasks for all actions
      */
-    function before_filter (&$action, &$args)
+    public function before_filter (&$action, &$args)
     {
-        global $perm, $template_factory;
+        $this->with_session = true;
 
-        # open session
-        page_open(array('sess' => 'Seminar_Session',
-                        'auth' => 'Seminar_Default_Auth',
-                        'perm' => 'Seminar_Perm',
-                        'user' => 'Seminar_User'));
+        parent::before_filter($action, $args);
 
-        // set up user session
-        include 'lib/seminar_open.php';
-
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
-        //Siteinfo-Class is defined in models/siteinfo.php
+        // Siteinfo-Class is defined in models/siteinfo.php
         $this->si = new Siteinfo();
 
         $this->populate_ids($args);
         $this->add_navigation($action);
+        $this->setupSidebar();
 
-        //if the user has root-permissions the infobox with edit-links should be displayed
-        if ($perm->have_perm('root')) {
-            $this->layout = $template_factory->open('layouts/base');
-            $this->layout->set_attribute('infobox', $this->infobox_content());
-        } else {
-            $action = "show";
-            $this->layout = $template_factory->open('layouts/base_without_infobox');
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            $action = 'show';
         }
-        $this->set_layout($this->layout);
+
         PageLayout::setTitle(_('Impressum'));
         PageLayout::setTabNavigation('/footer/siteinfo');
     }
 
-    function populate_ids($args)
+    //the first element of the unconsumed trails-path determines the rubric
+    //the second element defines the page(detail)
+    //if they are missing the first detail/rubric is the fallback
+    protected function populate_ids($args)
     {
-        //the first element of the unconsumed trails-path determines the rubric
-        //the second element defines the page(detail)
-        //if they are missing the first detail/rubric is the fallback
         if (isset($args[0]) && is_numeric($args[0])) {
             $this->currentrubric = $args[0];
             if (isset($args[1]) && is_numeric($args[1])) {
@@ -76,7 +58,7 @@ class SiteinfoController extends StudipController
         }
     }
 
-    function add_navigation($action)
+    protected function add_navigation($action)
     {
         foreach ($this->si->get_all_rubrics() as $rubric) {
             $rubric[1] = language_filter($rubric[1]);
@@ -105,123 +87,125 @@ class SiteinfoController extends StudipController
         }
     }
 
-    function infobox_content()
+    protected function setupSidebar()
     {
-        global $rubrics_empty;
-        if (!$rubrics_empty) {
-            if ($this->currentrubric > 0) {
-                $infobox_actions[] = array('icon' => 'icons/16/black/add.png',
-                                           'text' => '<a href="'.$this->url_for('siteinfo/new/'.$this->currentrubric).'">'._('Neue Seite anlegen').'</a>');
-            }
-            if ($this->currentdetail > 0) {
-                $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
-                                           'text' => '<a href="'.$this->url_for('siteinfo/edit/'.$this->currentrubric.'/'.$this->currentdetail).'">'._('Seite bearbeiten').'</a>');
-                $infobox_actions[] = array('icon' => 'icons/16/black/trash.png',
-                                           'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric.'/'.$this->currentdetail).'">'._('Seite löschen').'</a>');
-            }
-        }
-        $infobox_actions[] = array('icon' => 'icons/16/black/add.png',
-                                   'text' => '<a href="'.$this->url_for('siteinfo/new').'">'._('Neue Rubrik anlegen').'</a>');
-        if ($this->currentrubric > 0) {
-            $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
-                                       'text' => '<a href="'.$this->url_for('siteinfo/edit/'.$this->currentrubric).'">'._('Rubrik bearbeiten').'</a>');
-            $infobox_actions[] = array('icon' => 'icons/16/black/trash.png',
-                                       'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric).'">'._('Rubrik löschen').'</a>');
-        }
-        return array('picture' => 'sidebar/seminar-sidebar.png',
-                     'content' => array(array('kategorie' => _("Administration des Impressums"),
-                                              'eintrag' => $infobox_actions))
-                    );
-    }
+        $sidebar = Sidebar::get();
+        
+        if (!$GLOBALS['rubrics_empty']) {
+            $actions = new ActionsWidget();
+            $actions->setTitle(_('Seiten-Aktionen'));
 
-    /**
-     * common tasks for all actions
-     */
-    function after_filter ($action, $args)
-    {
-        page_close();
+            if ($this->currentrubric) {
+                $actions->addLink(_('Neue Seite anlegen'),
+                                  $this->url_for('siteinfo/new/' . $this->currentrubric),
+                                  'icons/16/blue/add.png');
+            }
+            if ($this->currentdetail) {
+                $actions->addLink(_('Seite bearbeiten'),
+                                  $this->url_for('siteinfo/edit/' . $this->currentrubric . '/' . $this->currentdetail),
+                                  'icons/16/blue/edit.png');
+                $actions->addLink(_('Seite löschen'),
+                                  $this->url_for('siteinfo/delete/' . $this->currentrubric . '/' . $this->currentdetail),
+                                  'icons/16/blue/trash.png');
+            }
+
+            $sidebar->addWidget($actions);
+        }
+
+
+        $actions = new ActionsWidget();
+        $actions->setTitle(_('Rubrik-Aktionen'));
+
+        $actions->addLink(_('Neue Rubrik anlegen'),
+                          $this->url_for('siteinfo/new'),
+                          'icons/16/blue/add.png');
+        if ($this->currentrubric) {
+            $actions->addLink(_('Rubrik bearbeiten'),
+                              $this->url_for('siteinfo/edit/' . $this->currentrubric),
+                              'icons/16/blue/edit.png');
+            $actions->addLink(_('Rubrik löschen'),
+                              $this->url_for('siteinfo/delete/' . $this->currentrubric),
+                              'icons/16/blue/trash.png');
+        }
+
+        $sidebar->addWidget($actions);
     }
 
     /**
      * Display the siteinfo
      */
-    function show_action ()
+    public function show_action()
     {
         $this->output = $this->si->get_detail_content_processed($this->currentdetail);
     }
 
-    function new_action ($givenrubric=NULL)
+    public function new_action($givenrubric = null)
     {
-        if($givenrubric===NULL){
+        if ($givenrubric === null) {
             Navigation::addItem('/footer/siteinfo/rubric_new',
-                new AutoNavigation(_('Neue Rubrik'), $this->url_for('siteinfo/new')));
-            $this->edit_rubric = TRUE;
+                                new AutoNavigation(_('Neue Rubrik'),
+                                                   $this->url_for('siteinfo/new')));
+            $this->edit_rubric = true;
         } else {
-            Navigation::addItem('/footer/siteinfo/'.$this->currentrubric.'/detail_new',
-                new AutoNavigation(_('Neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
+            Navigation::addItem('/footer/siteinfo/' . $this->currentrubric . '/detail_new',
+                                new AutoNavigation(_('Neue Seite'),
+                                                   $this->url_for('siteinfo/new/' . $this->currentrubric)));
             $this->rubrics = $this->si->get_all_rubrics();
         }
     }
 
-    function edit_action ($givenrubric=NULL, $givendetail=NULL)
+    public function edit_action($givenrubric = null, $givendetail = null)
     {
         if (is_numeric($givendetail)) {
-            $this->rubrics = $this->si->get_all_rubrics();
-            $this->rubric_id = $this->si->rubric_for_detail($this->currentdetail);
+            $this->rubrics     = $this->si->get_all_rubrics();
+            $this->rubric_id   = $this->si->rubric_for_detail($this->currentdetail);
             $this->detail_name = $this->si->get_detail_name($this->currentdetail);
-            $this->content = $this->si->get_detail_content($this->currentdetail);
+            $this->content     = $this->si->get_detail_content($this->currentdetail);
         } else {
-            $this->edit_rubric = TRUE;
+            $this->edit_rubric = true;
             $this->rubric_id = $this->currentrubric;
        }
         $this->rubric_name = $this->si->rubric_name($this->currentrubric);
     }
 
-    function save_action ()
+    public function save_action()
     {
-        $detail_name = remove_magic_quotes($_POST['detail_name']);
-        $rubric_name = remove_magic_quotes($_POST['rubric_name']);
-        $content = remove_magic_quotes($_POST['content']);
-        if (isset($_POST['rubric_id'])) {
-            $rubric_id = (int) $_POST['rubric_id'];
-            if (isset($_POST['detail_id'])) {
-                $detail_id = (int) $_POST['detail_id'];
-                list($rubric, $detail) = $this->si->save("update_detail", array("rubric_id" => $rubric_id,
-                                                                                "detail_name" => $detail_name,
-                                                                                "content" => $content,
-                                                                                "detail_id" => $detail_id));
+        $detail_name = Request::get('detail_name');
+        $rubric_name = Request::get('rubric_name');
+        $content     = Request::get('content');
+        $rubric_id   = Request::int('rubric_id');
+        $detail_id   = Request::int('detail_id');
+        if ($rubric_id) {
+            if ($detail_id) {
+                list($rubric, $detail) = $this->si->save('update_detail', compact('rubric_id', 'detail_name', 'content', 'detail_id'));
             } else {
-                if (isset($_POST['content'])) {
-                list($rubric, $detail) = $this->si->save("insert_detail", array("rubric_id" => $rubric_id,
-                                                                                "detail_name" => $detail_name,
-                                                                                "content" => $content));
+                if ($content) {
+                    list($rubric, $detail) = $this->si->save('insert_detail', compact('rubric_id', 'detail_name','content'));
                 } else {
-                    list($rubric, $detail) = $this->si->save("update_rubric", array("rubric_id" => $rubric_id,
-                                                                         "rubric_name" => $rubric_name));
+                    list($rubric, $detail) = $this->si->save('update_rubric', compact('rubric_id', 'rubric_name'));
                 }
             }
         } else {
-            list($rubric, $detail) = $this->si->save("insert_rubric", array("rubric_name" => $rubric_name));
+            list($rubric, $detail) = $this->si->save('insert_rubric', compact('rubric_name'));
         }
-        $this->redirect('siteinfo/show/'.$rubric.'/'.$detail);
+        $this->redirect('siteinfo/show/' . $rubric . '/' . $detail);
     }
 
-    function delete_action ($givenrubric=NULL, $givendetail=NULL, $execute=FALSE)
+    public function delete_action($givenrubric = null, $givendetail = null, $execute = false)
     {
         if ($execute) {
-            if ($givendetail == "all") {
-                $this->si->delete("rubric", $this->currentrubric);
+            if ($givendetail === 'all') {
+                $this->si->delete('rubric', $this->currentrubric);
                 $this->redirect('siteinfo/show/');
             } else {
-                $this->si->delete("detail", $this->currentdetail);
-                $this->redirect('siteinfo/show/'.$this->currentrubric);
+                $this->si->delete('detail', $this->currentdetail);
+                $this->redirect('siteinfo/show/' . $this->currentrubric);
             }
         } else {
             if (is_numeric($givendetail)) {
-                $this->detail = TRUE;
+                $this->detail = true;
             }
             $this->output = $this->si->get_detail_content_processed($this->currentdetail);
         }
     }
 }
-?>

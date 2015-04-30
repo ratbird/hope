@@ -137,6 +137,8 @@ class Document_DownloadController extends AuthenticatedController
         $entry->downloads += 1;
         $entry->store();
 
+        Metrics::increment('core.personal_files.downloads');
+
         $this->initiateDownload($inline, $file->filename, $file->mime_type, $file->size, $storage->open('r'));
     }
     
@@ -165,6 +167,8 @@ class Document_DownloadController extends AuthenticatedController
         }
 
         array_map('unlink', $remove);
+
+        Metrics::count('core.personal_files.downloads', count($files));
 
         // TODO: swap "Stud-IP.zip" with a more appropriate name
         $filename = basename($filename, '.zip') . '.zip';

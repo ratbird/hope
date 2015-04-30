@@ -225,6 +225,8 @@ class Document_FilesController extends DocumentController
                 }
             }
             if ($count - count($failed) > 0) {
+                Metrics::count('core.personal_files.uploads', $count - count($failed));
+
                 $message = sprintf(_('%u Dateien wurden erfolgreich hochgeladen.'), $count - count($failed));
                 PageLayout::postMessage(MessageBox::success($message));
             }

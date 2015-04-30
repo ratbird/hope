@@ -476,7 +476,7 @@ class MessagesController extends AuthenticatedController {
                 SELECT message.*
                 FROM message_user
                     INNER JOIN message ON (message_user.message_id = message.message_id)
-                    INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = message.autor_id)
+                    LEFT JOIN auth_user_md5 ON (auth_user_md5.user_id = message.autor_id)
                 WHERE message_user.user_id = :me
                     AND message_user.deleted = 0
                     AND snd_rec = :sender_receiver

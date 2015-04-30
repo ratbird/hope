@@ -2705,7 +2705,7 @@ function upload_zip_item() {
             $msg .= 'msg§' . sprintf(_("Es wurden %d Dateien und %d Ordner erfolgreich entpackt."),$ret['files'], $ret['subdirs'] ) . '§';
             @rmdirr($tmpdirname);
             @unlink($GLOBALS['TMP_PATH'] . '/' . $tmpname);
-            return true;
+            return (int)$ret['files'];
         }
     }
     @rmdirr($tmpdirname);

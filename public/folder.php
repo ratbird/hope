@@ -484,13 +484,18 @@ if (($SemUserStatus == "autor") || ($rechte)) {
     $cmd = Request::get("cmd");
     if (($cmd=="upload") && (!Request::submitted("cancel")) && ($folder_system_data["upload"])) {
         if (!$folder_system_data["zipupload"]){
+            Metrics::increment('core.file_upload');
+
             upload_item ($folder_system_data["upload"], TRUE, FALSE, $folder_system_data["refresh"]);
             $open = $dokument_id;
             $close = $folder_system_data["refresh"];
             $folder_system_data["upload"]='';
             $folder_system_data["refresh"]='';
         } elseif ($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
-            upload_zip_item();
+            $uploaded_files = upload_zip_item();
+            if ($uploaded_files !== false) {
+                Metrics::count('core.file_upload', $uploaded_files);
+            }
             $folder_system_data["upload"]='';
             $folder_system_data["zipupload"]='';
         }

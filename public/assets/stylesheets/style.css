@@ -6035,6 +6035,10 @@ div.available-widgets .studip-widget {
 .ui-dialog .ui-dialog-buttonpane .ui-button[disabled]:hover {
   color: #28497c;
 }
+.ui-dialog .ui-dialog-buttonpane .ui-button.accept,
+.ui-dialog .ui-dialog-buttonpane .ui-button.cancel {
+  margin-left: 0.8em;
+}
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept:before {
   background-image: url("../images/icons/16/blue/accept.png");
   background-image: none, url("../images/icons/blue/accept.svg");
@@ -6072,7 +6076,6 @@ div.available-widgets .studip-widget {
   margin-top: 2px;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-button-text-only .ui-button-text {
-  margin-left: 0.8em;
   padding: 0;
   white-space: nowrap;
 }

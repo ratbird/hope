@@ -64,6 +64,10 @@
         .ui-button {
             .button(); // Include button mixin
 
+            &.accept, &.cancel {
+                margin-left: 0.8em;
+            }
+
             &.accept {
               .button-with-icon("blue/accept.png", "white/accept.png");
             }
@@ -79,7 +83,6 @@
         }
     
         .ui-button-text-only .ui-button-text {
-            margin-left: 0.8em;
             padding: 0;
             white-space: nowrap;
         }

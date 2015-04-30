@@ -2722,16 +2722,6 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
-/*
-.sidebar-widget.sidebar-infobox {
-    border-color: @red;
-    background: @light-gray-color-20;
-
-    .sidebar-widget-header {
-        background: @red-40;
-    }
-}
-*/
 .helpbar-container {
   background: #fff;
   clear: both;
@@ -5126,6 +5116,12 @@ div.news_area_selected {
 div.news_dialog_buttons {
   margin-right: 15px;
   border-top: 1px solid #d1d1d1;
+}
+.news-comments-count {
+  color: #aa6;
+}
+.news-comments-count.news-comments-unread {
+  color: #d60000;
 }
 /* --- ablaufplan / dates --------------------------------------------------- */
 .dates_items th,

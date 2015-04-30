@@ -63,13 +63,11 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
             return;
         }
 
-        sleep(5);
-
-        // $global_news = StudipNews::GetNewsByRange('studip', true);
-        // foreach ($global_news as $news) {
-        //     object_add_view($news['news_id']);
-        //     object_set_visit($news['news_id'], 'news');
-        // }
+        $global_news = StudipNews::GetNewsByRange('studip', true);
+        foreach ($global_news as $news) {
+            object_add_view($news['news_id']);
+            object_set_visit($news['news_id'], 'news');
+        }
 
         if (Request::isXhr()) {
             echo json_encode(true);

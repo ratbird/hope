@@ -252,7 +252,7 @@
             }
             // Close dialog if appropriate header is set
             if (xhr.getResponseHeader('X-Dialog-Close')) {
-                STUDIP.Dialog.close();
+                STUDIP.Dialog.close(options);
                 return;
             }
 
@@ -381,15 +381,19 @@
             var instance = STUDIP.Dialog.getInstance(options.id);
 
             if (instance.open) {
+                instance.open = false;
                 try {
                     instance.element.dialog('close');
+                    instance.open = instance.element.dialog('isOpen');
                 } catch (ignore) {
                 }
+
                 // Apparently the close event has been canceled, so don't force
                 // a close
-                if (instance.element.dialog('isOpen')) {
+                if (instance.open) {
                     return false;
                 }
+
                 try {
                     instance.element.dialog('destroy');
                     instance.element.remove();

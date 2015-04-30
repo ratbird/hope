@@ -422,13 +422,14 @@
         <? endif; ?>
     </table>
     <div style="text-align: center;" data-dialog-button>
+        <?= Button::create(_('Speichern'), 'store', array('title' => _('Termin speichern'))) ?>
+
         <? if (!$event->isNew()) : ?>
         <? if ($event->getRecurrence('rtype') != 'SINGLE') : ?>
         <?= LinkButton::create(_('Aus Serie löschen'), $controller->url_for('calendar/single/delete_recurrence/' . implode('/', $event->getId()) . '/' . $atime)) ?>
         <? endif; ?>
         <?= LinkButton::create(_('Löschen'), $controller->url_for('calendar/single/delete/' . implode('/', $event->getId()))) ?>
         <? endif; ?>
-        <?= Button::create(_('Speichern'), 'store', array('title' => _('Termin speichern'))) ?>
         <? if (!Request::isXhr()) : ?>
         <?= LinkButton::create(_('Abbrechen'), $controller->url_for('calendar/single/' . $last_view, array($event->getStart()))) ?>
         <? endif; ?>

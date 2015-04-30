@@ -175,12 +175,16 @@ class Widget
         $content = '';
 
         if ($this->hasElements() || $this->forced_rendering) {
-            $layout = $GLOBALS['template_factory']->open($this->layout);
 
             $template = $GLOBALS['template_factory']->open($this->template);
-            $template->set_layout($layout);
             $template->set_attributes($variables + $this->template_variables);
             $template->elements = $this->elements;
+
+            if ($this->layout) {
+                $layout = $GLOBALS['template_factory']->open($this->layout);
+                $template->set_layout($layout);
+            }
+
             $content = $template->render();
         }
         

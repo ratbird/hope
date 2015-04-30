@@ -28,4 +28,20 @@ class OptionsWidget extends ListWidget
                            htmlReady($label));
         $this->addElement(new WidgetElement($content));
     }
+    
+    public function addSelect($label, $url, $name, $options, $selected_option = false, $attributes = array())
+    {
+        $widget = new SelectWidget($label, $url, $name);
+        $widget->layout = false;
+
+        foreach ($options as $value => $option_label) {
+            $widget->addElement(new SelectElement($value, $option_label, $value === $selected_option));
+        }
+
+        $widget->attributes = array_merge($widget->attributes, $attributes);
+
+        $content = $widget->render();
+
+        $this->addElement(new WidgetElement($content));
+    }
 }

@@ -30,6 +30,8 @@ require_once('lib/showNews.inc.php');
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
     $range = StudipNews::GetRangeFromRssID(Request::option('id'));
     if (is_array($range)){
+        Metrics::increment('core.news.rss_fetched');
+
         show_rss_news($range['range_id'], $range['range_type']);
     } else {
         header("Content-type: text/xml; charset=utf-8");
@@ -37,4 +39,3 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE')){
     }
 }   
 ob_end_flush();
-?>

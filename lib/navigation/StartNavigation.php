@@ -29,16 +29,7 @@ class StartNavigation extends Navigation
 
         if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
             if (WidgetHelper::hasWidget($GLOBALS['user']->id, 'News')) {
-                $query = "SELECT SUM(chdate > IFNULL(b.visitdate, 0) AND nw.user_id != :user_id)
-                          FROM news_range a
-                          LEFT JOIN news nw ON (a.news_id = nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND date + expire)
-                          LEFT JOIN object_user_visits b ON (b.object_id = nw.news_id AND b.user_id = :user_id AND b.type = 'news')
-                          WHERE a.range_id = 'studip'
-                          GROUP BY a.range_id";
-                $statement = DBManager::get()->prepare($query);
-                $statement->bindValue(':user_id', $GLOBALS['user']->id);
-                $statement->execute();
-                $news = (int)$statement->fetchColumn();
+                $news = StudipNews::CountUnread();
             }
 
             if (Config::get()->VOTE_ENABLE && WidgetHelper::hasWidget($GLOBALS['user']->id, 'Evaluations')) {

@@ -3160,7 +3160,8 @@ section.contentbox article.new header h1:before {
   background-color: transparent;
   border: 0;
 }
-.ajaxing img {
+.ajaxing img,
+.ajaxing svg {
   display: none;
 }
 /* --- Autocompleter -------------------------------------------------------- */

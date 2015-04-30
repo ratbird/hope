@@ -26,6 +26,12 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;
 
+        if (StudipNews::CountUnread() > 0) {
+            $navigation = new Navigation('', PluginEngine::getLink($this, array(), 'read_all'));
+            $navigation->setImage('icons/16/blue/refresh.png', array('title' => _('Alle als gelesen markieren')));
+            $icons[] = $navigation;
+        }
+
         if (get_config('NEWS_RSS_EXPORT_ENABLE')) {
             if ($rss_id = StudipNews::GetRssIdFromRangeId('studip')) {
                 $navigation = new Navigation('', 'rss.php', array('id' => $rss_id));
@@ -48,5 +54,28 @@ class NewsWidget extends StudIPPlugin implements PortalPlugin
         $template->icons = $icons;
 
         return $template;
+    }
+    
+    
+    public function perform($unconsumed)
+    {
+        if ($unconsumed !== 'read_all') {
+            return;
+        }
+
+        sleep(5);
+
+        // $global_news = StudipNews::GetNewsByRange('studip', true);
+        // foreach ($global_news as $news) {
+        //     object_add_view($news['news_id']);
+        //     object_set_visit($news['news_id'], 'news');
+        // }
+
+        if (Request::isXhr()) {
+            echo json_encode(true);
+        } else {
+            PageLayout::postMessage(MessageBox::success(_('Alle Ankündigungen wurden als gelesen markiert.')));
+            header('Location: '. URLHelper::getLink('dispatch.php/start'));
+        }
     }
 }

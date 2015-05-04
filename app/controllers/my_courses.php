@@ -380,6 +380,9 @@ class MyCoursesController extends AuthenticatedController
      */
     public function tabularasa_action($sem = 'all', $timestamp = null)
     {
+        NotificationCenter::postNotification('OverviewWillClear', $GLOBALS['user']->id);
+
+        $timestamp        = $timestamp ?: time();
         $deputies_enabled = Config::get()->DEPUTIES_ENABLE;
 
         $semesters   = MyRealmModel::getSelectedSemesters($sem);
@@ -394,6 +397,8 @@ class MyCoursesController extends AuthenticatedController
             $courses[$index]['obj_type'] = 'sem';
             MyRealmModel::setObjectVisits($courses[$index], $course['seminar_id'], $GLOBALS['user']->id, $timestamp);
         }
+
+        NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
 
         $this->flash['tabularasa'] = $timestamp;
         $this->redirect('my_courses/index');

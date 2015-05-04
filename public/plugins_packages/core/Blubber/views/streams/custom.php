@@ -142,7 +142,7 @@ if ($streamAvatar->is_customized()) {
 }
 
 $actions = new ActionsWidget();
-$actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), "icons/16/black/edit");
+$actions->addLink(_("Diesen Stream bearbeiten"), PluginEngine::getURL($plugin, array(), 'streams/edit/'.$stream->getId()), "icons/16/blue/edit");
 $sidebar->addWidget($actions);
 
 $controller->addTagCloudWidgetToSidebar($tags, 'custom/' . $stream->getId());

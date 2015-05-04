@@ -265,5 +265,5 @@ $actions = new LinksWidget();
 $actions->setTitle(_("Aktionen"));
 
 if (!$stream->isNew()) {
-    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global"), "icons/16/black/trash");
+    $actions->addLink(_("Diesen Stream löschen"), PluginEngine::getLink($plugin, array('delete_stream' => $stream->getId()), "streams/global"), "icons/16/blue/trash");
 }

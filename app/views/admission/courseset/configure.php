@@ -139,7 +139,7 @@ if ($flash['error']) {
                 <div>
                         <?= LinkButton::create(_('Ausgewählte Veranstaltungen konfigurieren'),
                             $controller->url_for('admission/courseset/configure_courses/' . $courseset->getId()),
-                            array('data-dialog' => '')
+                            array('data-dialog' => 'width=90%')
                             ); ?>
                         <? if ($num_applicants = $courseset->getNumApplicants()) :?>
                         <?= LinkButton::create(sprintf(_('Liste der Anmeldungen (%s Nutzer)'), $num_applicants),

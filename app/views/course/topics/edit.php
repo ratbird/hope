@@ -63,17 +63,14 @@
             <tr>
                 <td><strong><?= _("Forumsthema") ?></strong></td>
                 <td>
-                    <? if (class_exists("ForumIssue")) : ?>
-                        <? $posting = ForumEntry::getEntry(ForumIssue::getThreadIdForIssue($topic->getId())) ?>
-                        <? if ($posting) : ?>
-                            <?= Assets::img("icons/16/green/accept", array('class' => "text-bottom")) ?>
-                            <?= _("Forumsthema vorhanden ") ?>
-                        <? else : ?>
-                            <label>
-                                <input type="checkbox" name="forumthread" id="topic_forumthread">
-                                <?= _("Forumsthema anlegen") ?>
-                            </label>
-                        <? endif ?>
+                    <? if ($topic->hasForum()) : ?>
+                        <?= Assets::img("icons/16/green/accept", array('class' => "text-bottom")) ?>
+                        <?= _("Forumsthema vorhanden ") ?>
+                    <? else : ?>
+                        <label>
+                            <input type="checkbox" name="forumthread" id="topic_forumthread">
+                            <?= _("Forumsthema anlegen") ?>
+                        </label>
                     <? endif ?>
                 </td>
             </tr>

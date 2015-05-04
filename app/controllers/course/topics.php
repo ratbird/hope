@@ -49,13 +49,11 @@ class Course_TopicsController extends AuthenticatedController
                 if (Request::get("folder") && !$topic->folder) {
                     $topic->createFolder();
                 }
-                if (Request::get("forumthread") && class_exists("ForumIssue")) {
-                    ForumIssue::setThreadForIssue(
-                        $_SESSION['SessionSeminar'],
-                        $topic->getId(),
-                        $topic['title'],
-                        $topic['description']
-                    );
+
+                // create a connection to the module forum (can be anything)
+                // will update title and description automagically
+                if (Request::get("forumthread")) {
+                    $topic->setForum(true);
                 }
 
                 if (Request::option("issue_id") === "new") {

@@ -48,17 +48,14 @@
                                         <? $material = true ?>
                                     <? endif ?>
 
-                                    <? if (class_exists("ForumIssue")) : ?>
-                                        <? $posting = ForumEntry::getEntry(ForumIssue::getThreadIdForIssue($topic->getId())) ?>
-                                        <? if ($posting) : ?>
-                                            <li>
-                                                <a href="<?= URLhelper::getLink("plugins.php/coreforum/index/index/".$posting['topic_id']."#".$posting['topic_id']) ?>">
-                                                    <?= Assets::img("icons/16/blue/forum", array('class' => "text-bottom")) ?>
-                                                    <?= _("Thema im Forum") ?>
-                                                </a>
-                                            </li>
-                                            <? $material = true ?>
-                                        <? endif ?>
+                                    <? if ($link_to_thread = $topic->hasForum()) : ?>
+                                        <li>
+                                            <a href="<?= $link_to_thread ?>">
+                                                <?= Assets::img("icons/16/blue/forum", array('class' => "text-bottom")) ?>
+                                                <?= _("Thema im Forum") ?>
+                                            </a>
+                                        </li>
+                                        <? $material = true ?>
                                     <? endif ?>
                                 </ul>
                                 <? if (!$material) : ?>

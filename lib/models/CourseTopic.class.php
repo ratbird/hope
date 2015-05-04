@@ -98,4 +98,59 @@ class CourseTopic extends SimpleORMap {
         }
     }
 
+    public function hasForum()
+    {
+        // check if it is a new topic
+        if (!$this->seminar_id) {
+            return false;
+        }
+
+        // check, if there is a forums-connection
+        $sem = Course::find($this->seminar_id);
+
+        $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            if (get_class($plugin) == $forum_slot) {
+                return $plugin->getLinkToThread($this->issue_id) ?: false;
+            }
+        }
+    }
+
+    function setForum($newForumValue) {
+        // only do something, if we enable the link to a thread in a forum
+        if ($newForumValue) {
+
+            // find the ForumModule which takes the role of the CoreForum in the current Seminar
+            $sem = Seminar::getInstance($this->seminar_id);
+            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                if (get_class($plugin) == $forum_slot) {
+
+                    // only link if there is none yet
+                    if (!$plugin->getLinkToThread($this->issue_id)) {
+                        $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
+                    }
+                }
+            }
+        }
+    }
+
+    function store()
+    {
+        parent::store();
+
+        if ($this->hasForum()) {
+            $sem = Seminar::getInstance($this->seminar_id);
+            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                if (get_class($plugin) == $forum_slot) {
+                    $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
+                }
+            }
+        }
+    }
+
 }

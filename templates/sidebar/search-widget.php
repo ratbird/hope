@@ -1,6 +1,6 @@
 <form action="<?= $url ?>" method="<?= $method ?>" <? if (isset($id)) printf('id="%s"', htmlReady($id)); ?> class="sidebar-search">
 <? foreach ($url_params as $key => $value): ?>
-    <input type="hidden" name="<?= htmlReady($key) ?>" value="<?= htmlReady($value) ?>">
+    <?=addHiddenFields($key,$value)?>
 <? endforeach; ?>
     <ul class="needles">
     <? foreach ($needles as $needle): ?>

@@ -45,7 +45,7 @@
                     </ul>
                 </td>
             </tr>
-            <? if ($this->documents_activated) : ?>
+            <? if ($documents_activated) : ?>
                 <tr>
                     <td><strong><?= _("Themen-Dateiordner") ?></strong></td>
                     <td>
@@ -62,7 +62,7 @@
                     </td>
                 </tr>
             <? endif ?>
-            <? if ($this->forum_activated) : ?>
+            <? if ($forum_activated) : ?>
             <tr>
                 <td><strong><?= _("Forumsthema") ?></strong></td>
                 <td>

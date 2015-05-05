@@ -2622,4 +2622,24 @@ class Seminar
             array('start_time' => $cs->getAdmissionRule('TimedAdmission')->getStartTime(),
                   'end_time' => $cs->getAdmissionRule('TimedAdmission')->getEndTime()) : null;
     }
+
+    /**
+     * returns StudipModule object for given slot, null when deactivated or not available
+     *
+     * @param string $slot
+     * @return StudipModule
+     */
+    function getSlotModule($slot)
+    {
+        $m = new Modules();
+        $activated_slots = array_filter($m->getLocalModules($this->id, 'sem', $this->modules, $this->status));
+        if (isset($activated_slots[$slot])) {
+            $module = $this->getSemClass()->getSlotModule($slot);
+            if (is_subclass_of($module, 'StudIPPlugin')) {
+                return PluginManager::getInstance()->getPlugin($module);
+            } else {
+                return new $module();
+            }
+        }
+    }
 }

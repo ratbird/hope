@@ -74,83 +74,87 @@ class CourseTopic extends SimpleORMap {
             'foreign_key' => 'author_id'
         );
         $config['default_values']['priority'] = function($topic) {return CourseTopic::getMaxPriority($topic->seminar_id) + 1;};
+        $config['additional_fields']['forum_thread_url']['get'] = 'getForumThreadURL';
 
         parent::configure($config);
     }
 
+    function __construct($id = null)
+    {
+        parent::__construct($id);
+        $this->registerCallback('after_store', 'cbUpdateConnectedContentModules');
+    }
+
+    /**
+    *
+    * @deprecated
+    */
     public function createFolder()
     {
-        $folder = $this->folder;
-        if ($folder) {
-            return $folder;
-        } else {
-            $folder = new DocumentFolder();
-            $folder['range_id'] = $this->getId();
-            $folder['name'] = $this['title'];
-            $folder['description'] = $this['description'];
-            $folder['priority'] = $this['priority'];
-            $folder['seminar_id'] = $this['seminar_id'];
-            $folder['user_id'] = $GLOBALS['user']->id;
-            $folder['permission'] = 15;
-            $folder->store();
-            $this->resetRelation("folder");
-            return $folder;
-        }
+        $this->connectWithDocumentFolder();
+        return $this->folder;
     }
 
-    public function hasForum()
+    /**
+    * set or update connection with document folder
+    */
+    function connectWithDocumentFolder()
     {
-        // check if it is a new topic
-        if (!$this->seminar_id) {
-            return false;
-        }
-
-        // check, if there is a forums-connection
-        $sem = Course::find($this->seminar_id);
-
-        $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
-
-        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-            if (get_class($plugin) == $forum_slot) {
-                return $plugin->getLinkToThread($this->issue_id) ?: false;
-            }
-        }
-    }
-
-    function setForum($newForumValue) {
-        // only do something, if we enable the link to a thread in a forum
-        if ($newForumValue) {
-
-            // find the ForumModule which takes the role of the CoreForum in the current Seminar
-            $sem = Seminar::getInstance($this->seminar_id);
-            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
-
-            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                if (get_class($plugin) == $forum_slot) {
-
-                    // only link if there is none yet
-                    if (!$plugin->getLinkToThread($this->issue_id)) {
-                        $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
-                    }
+        if ($this->seminar_id) {
+            $document_module = Seminar::getInstance($this->seminar_id)->getSlotModule('documents');
+            if ($document_module) {
+                if (!$this->folder) {
+                    $folder = new DocumentFolder();
+                    $folder['range_id'] = $this->getId();
+                    $folder['priority'] = $this['priority'];
+                    $folder['seminar_id'] = $this['seminar_id'];
+                    $folder['user_id'] = $GLOBALS['user']->id;
+                    $folder['permission'] = 15;
+                    $this->folder = $folder;
                 }
+                $this->folder['name'] = $this['title'];
+                $this->folder['description'] = $this['description'];
+                return $this->folder->store();
             }
         }
+        return false;
     }
 
-    function store()
+    /**
+    * set or update connection with forum thread
+    */
+    function connectWithForumThread()
     {
-        parent::store();
+        if ($this->seminar_id) {
+            $forum_module = Seminar::getInstance($this->seminar_id)->getSlotModule('forum');
+            if ($forum_module instanceOf ForumModule) {
+                $forum_module->setThreadForIssue($this->id, $this->title, $this->description);
+                return true;
+            }
+        }
+        return false;
+    }
 
-        if ($this->hasForum()) {
-            $sem = Seminar::getInstance($this->seminar_id);
-            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+    function getForumThreadURL()
+    {
+        if ($this->seminar_id) {
+            $forum_module = Seminar::getInstance($this->seminar_id)->getSlotModule('forum');
+            if ($forum_module instanceOf ForumModule) {
+                return html_entity_decode($forum_module->getLinkToThread($this->id));
+            }
+        }
+        return '';
+    }
 
-            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                if (get_class($plugin) == $forum_slot) {
-                    $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
-                }
+    protected function cbUpdateConnectedContentModules()
+    {
+        if ($this->isFieldDirty('title') || $this->isFieldDirty('description')) {
+            if ($this->folder) {
+                $this->connectWithDocumentFolder();
+            }
+            if ($this->forum_thread_url) {
+                $this->connectWithForumThread();
             }
         }
     }
-
 }

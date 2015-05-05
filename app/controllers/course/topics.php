@@ -12,6 +12,9 @@ class Course_TopicsController extends AuthenticatedController
         checkObject();
         checkObjectModule("schedule");
         PageLayout::setTitle(sprintf('%s - %s', Course::findCurrent()->getFullname(), _("Themen")));
+        $seminar = new Seminar(Course::findCurrent());
+        $this->forum_activated = $seminar->getSlotModule('forum');
+        $this->documents_activated = $seminar->getSlotModule('documents');
     }
 
     public function index_action()
@@ -47,13 +50,13 @@ class Course_TopicsController extends AuthenticatedController
                 $topic->store();
 
                 if (Request::get("folder") && !$topic->folder) {
-                    $topic->createFolder();
+                    $topic->connectWithDocumentFolder();
                 }
 
                 // create a connection to the module forum (can be anything)
                 // will update title and description automagically
                 if (Request::get("forumthread")) {
-                    $topic->setForum(true);
+                    $topic->connectWithForumThread();
                 }
 
                 if (Request::option("issue_id") === "new") {

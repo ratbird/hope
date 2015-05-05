@@ -38,7 +38,7 @@
                                 <? $material = false ?>
                                 <ul class="clean">
                                     <? $folder = $topic->folder ?>
-                                    <? if ($folder) : ?>
+                                    <? if ($documents_activated && $folder) : ?>
                                         <li>
                                             <a href="<?= URLHelper::getLink("folder.php#anker", array('data[cmd]' => "tree", 'open' => $folder->getId())) ?>">
                                                 <?= Assets::img("icons/16/blue/folder-empty", array('class' => "text-bottom")) ?>
@@ -48,9 +48,9 @@
                                         <? $material = true ?>
                                     <? endif ?>
 
-                                    <? if ($link_to_thread = $topic->hasForum()) : ?>
+                                    <? if ($forum_activated && ($link_to_thread = $topic->forum_thread_url)) : ?>
                                         <li>
-                                            <a href="<?= $link_to_thread ?>">
+                                            <a href="<?= URLHelper::getLink($link_to_thread) ?>">
                                                 <?= Assets::img("icons/16/blue/forum", array('class' => "text-bottom")) ?>
                                                 <?= _("Thema im Forum") ?>
                                             </a>

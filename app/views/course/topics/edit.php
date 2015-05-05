@@ -45,25 +45,28 @@
                     </ul>
                 </td>
             </tr>
-            <tr>
-                <td><strong><?= _("Themen-Dateiordner") ?></strong></td>
-                <td>
-                    <? $folder = $topic->folder ?>
-                    <? if ($folder) : ?>
-                        <?= Assets::img("icons/16/green/accept", array('class' => "text-bottom")) ?>
-                        <?= _("Dateiordner vorhanden ") ?>
-                    <? else : ?>
-                        <label>
-                            <input type="checkbox" name="folder" id="topic_folder">
-                            <?= _("Dateiordner anlegen") ?>
-                        </label>
-                    <? endif ?>
-                </td>
-            </tr>
+            <? if ($this->documents_activated) : ?>
+                <tr>
+                    <td><strong><?= _("Themen-Dateiordner") ?></strong></td>
+                    <td>
+                        <? $folder = $topic->folder ?>
+                        <? if ($folder) : ?>
+                            <?= Assets::img("icons/16/green/accept", array('class' => "text-bottom")) ?>
+                            <?= _("Dateiordner vorhanden ") ?>
+                        <? else : ?>
+                            <label>
+                                <input type="checkbox" name="folder" id="topic_folder">
+                                <?= _("Dateiordner anlegen") ?>
+                            </label>
+                        <? endif ?>
+                    </td>
+                </tr>
+            <? endif ?>
+            <? if ($this->forum_activated) : ?>
             <tr>
                 <td><strong><?= _("Forumsthema") ?></strong></td>
                 <td>
-                    <? if ($topic->hasForum()) : ?>
+                    <? if ($topic->forum_thread_url) : ?>
                         <?= Assets::img("icons/16/green/accept", array('class' => "text-bottom")) ?>
                         <?= _("Forumsthema vorhanden ") ?>
                     <? else : ?>
@@ -74,6 +77,7 @@
                     <? endif ?>
                 </td>
             </tr>
+            <? endif ?>
         </tbody>
     </table>
     <div align="center" data-dialog-button>

@@ -358,4 +358,18 @@ class User extends AuthUserMd5
         $field = strtolower($field);
         return (array_key_exists($field, $this->content_db) ? parent::getPristineValue($field) : $this->info->getPristineValue($field));
     }
+
+    /**
+     * Returns data of table row as assoc array with raw contents like
+     * they are in the database.
+     * Pass array of fieldnames or ws separated string to limit
+     * fields.
+     *
+     * @param mixed $only_these_fields
+     * @return array
+     */
+    public function toRawArray($only_these_fields = null)
+    {
+        return array_merge($this->info->toRawArray($only_these_fields), parent::toRawArray($only_these_fields));
+    }
 }

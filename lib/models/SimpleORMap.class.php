@@ -1120,7 +1120,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * fields
      *
      * @param mixed $only_these_fields limit returned fields
-     * @param boolean raw : raw content or virtually by getValue
      * @return array
      */
     function toArray($only_these_fields = null)
@@ -1151,7 +1150,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * Pass array of fieldnames or ws separated string to limit
      * fields.
      *
-     * @param null $only_these_fields
+     * @param mixed $only_these_fields
      * @return array
      */
     function toRawArray($only_these_fields = null)
@@ -1160,7 +1159,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (is_string($only_these_fields)) {
             $only_these_fields = words($only_these_fields);
         }
-        $fields = $this->known_slots;
+        $fields = array_keys($this->db_fields);
         if (is_array($only_these_fields)) {
             $only_these_fields = array_filter(array_map(function($s) {
                 return is_string($s) ? strtolower($s) : null;
@@ -1681,9 +1680,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $rel_ret = $this->storeRelations();
         $this->applyCallbacks('after_store');
-        if ($ret) {
-            NotificationCenter::postNotification("SimpleORMapDidStore", $this);
-        }
         if ($ret || $rel_ret) {
             $this->restore();
         }
@@ -1790,9 +1786,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $ret += DBManager::get()->exec($query);
             }
             $this->applyCallbacks('after_delete');
-            if ($ret) {
-                NotificationCenter::postNotification("SimpleORMapDidDelete", $this);
-            }
         }
         $this->setData(array(), true);
         return $ret;

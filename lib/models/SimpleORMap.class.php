@@ -1120,6 +1120,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * fields
      *
      * @param mixed $only_these_fields limit returned fields
+     * @param boolean raw : raw content or virtually by getValue
      * @return array
      */
     function toArray($only_these_fields = null)
@@ -1136,10 +1137,38 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $fields = array_intersect($only_these_fields, $fields);
         }
         foreach($fields as $field) {
-           $ret[$field] = $this->getValue($field);
-           if ($ret[$field] instanceof StudipArrayObject) {
-               $ret[$field] = $ret[$field]->getArrayCopy();
-           }
+            $ret[$field] = $this->getValue($field);
+            if ($ret[$field] instanceof StudipArrayObject) {
+                $ret[$field] = $ret[$field]->getArrayCopy();
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Returns data of table row as assoc array with raw contents like
+     * they are in the database.
+     * Pass array of fieldnames or ws separated string to limit
+     * fields.
+     *
+     * @param null $only_these_fields
+     * @return array
+     */
+    function toRawArray($only_these_fields = null)
+    {
+        $ret = array();
+        if (is_string($only_these_fields)) {
+            $only_these_fields = words($only_these_fields);
+        }
+        $fields = $this->known_slots;
+        if (is_array($only_these_fields)) {
+            $only_these_fields = array_filter(array_map(function($s) {
+                return is_string($s) ? strtolower($s) : null;
+            }, $only_these_fields));
+            $fields = array_intersect($only_these_fields, $fields);
+        }
+        foreach($fields as $field) {
+            $ret[$field] = $this->content[$field];
         }
         return $ret;
     }
@@ -1652,6 +1681,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $rel_ret = $this->storeRelations();
         $this->applyCallbacks('after_store');
+        if ($ret) {
+            NotificationCenter::postNotification("SimpleORMapDidStore", $this);
+        }
         if ($ret || $rel_ret) {
             $this->restore();
         }
@@ -1758,6 +1790,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $ret += DBManager::get()->exec($query);
             }
             $this->applyCallbacks('after_delete');
+            if ($ret) {
+                NotificationCenter::postNotification("SimpleORMapDidDelete", $this);
+            }
         }
         $this->setData(array(), true);
         return $ret;

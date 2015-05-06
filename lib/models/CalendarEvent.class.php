@@ -78,7 +78,7 @@ class CalendarEvent extends SimpleORMap implements Event
      */
     public static function findByUid($uid, $range_id = null)
     {
-        $event_data = EventData::findByuid($uid);
+        $event_data = EventData::findOneByuid($uid);
         if ($event_data) {
             if ($range_id) {
                 return self::find(array($range_id, $event_data->getId()));
@@ -97,7 +97,7 @@ class CalendarEvent extends SimpleORMap implements Event
         parent::__clone();
         $this->event = $event;
     }
-    
+
     /**
      * Returns a list of all categories the event belongs to.
      * Returns an empty string if no permission.
@@ -1189,7 +1189,7 @@ class CalendarEvent extends SimpleORMap implements Event
     {
         return $this->event->editor;
     }
-    
+
     public function getAttendees()
     {
         return self::findByEvent_id($this->event_id);

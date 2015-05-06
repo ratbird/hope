@@ -175,10 +175,10 @@ class StudipLitCatElement {
 
     function &getFormObject(){
         if (!is_object($this->form_obj)){
-            $this->setFormObject();    
+            $this->setFormObject();
         }
         return $this->form_obj;
-        
+
     }
 
     function setFormObject(){
@@ -192,7 +192,7 @@ class StudipLitCatElement {
                                                 'options'=> array_merge(array('---'), (array)StudipLitList::GetListsByRange($GLOBALS['user']->id, 'form_options')));
         }
         foreach ($this->fields as $field_name => $field_detail){
-            
+
             if ($field_detail['caption']){
                 if ($field_detail['select_list']){
                     $form_fields[$field_name . "_select"] = array('type' => 'select','options' => $field_detail['select_list']);
@@ -232,7 +232,7 @@ class StudipLitCatElement {
         $this->getFormObject();
         if (is_array($this->form_obj->form_values)){
             foreach($this->form_obj->form_values as $name => $value){
-                if ($this->fields[$name] && $value['type'] != 'hidden'){
+                if (isset($this->fields[$name]) && $this->fields[$name]['type'] != 'hidden'){
                     $this->fields[$name]['value'] = $value;
                 }
             }
@@ -250,8 +250,8 @@ class StudipLitCatElement {
     function setValues($fields){
         if (is_array($fields)){
             foreach ($fields as $name => $value){
-                
-                if ($this->fields[$name]) $this->fields[$name]['value'] = $value;
+
+                if (isset($this->fields[$name])) $this->fields[$name]['value'] = $value;
             }
             return true;
         } else {
@@ -328,7 +328,7 @@ class StudipLitCatElement {
     function checkValues(){
         $missing_fields = false;
         foreach($this->fields as $name => $detail){
-            
+
             if ($detail['mandatory']){
                 if ($detail['type'] == 'date' || $detail['type'] == 'datepicker'){
                     $this->setValue($name, $this->checkDate($detail['value']));
@@ -356,7 +356,7 @@ class StudipLitCatElement {
     }
 
     function getValue($name){
-        if ($this->fields[$name]){
+        if (isset($this->fields[$name])){
             return trim($this->fields[$name]['value']);
         } else {
             switch ($name){

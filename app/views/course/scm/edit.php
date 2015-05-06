@@ -14,13 +14,13 @@ use Studip\Button,
 
 <form action="<?= $controller->url_for('course/scm/edit/' . $scm->id) ?>" method="post" class="studip_form">
     <?= CSRFProtection::tokenTag() ?>
-
-    <label>
+    <fieldset>
+    <legend>
         <?= _('Titel') ?>
-        <input id="tab_name" type="text" name="tab_name" value="<?= htmlReady($scm->tab_name) ?>"
+    </legend>
+            <input id="tab_name" type="text" name="tab_name" value="<?= htmlReady($scm->tab_name) ?>"
                placeholder="<?= _('Titel der Informationsseite') ?>" maxlength="20"
                data-length-hint>
-    </label>
     <label>
         <?= _('oder wählen Sie hier einen Namen aus:') ?>
         <select name="tab_name_template" data-copy-to="input[name=tab_name]">
@@ -30,20 +30,22 @@ use Studip\Button,
             <? endforeach; ?>
         </select>
     </label>
-    <? if (!$scm->isNew()): ?>
-        <p>
-            <?=
-            sprintf(_('Zuletzt geändert von %s am %s'), ObjectdisplayHelper::link($scm->user), strftime('%x, %X', $scm->chdate))
-            ?>
-        </p>
-    <? endif; ?>
-    <br>
+    </fieldset>
     <fieldset>
         <legend>
             <?= _('Inhalt') ?>
         </legend>
-        <textarea style="width: 90%;" name="content" data-secure="true"><?= htmlReady($scm->content) ?></textarea>
+        <div>
+        <textarea style="width: 100%;" class="add_toolbar" name="content" data-secure="true"><?= htmlReady($scm->content) ?></textarea>
+        </div>
     </fieldset>
+    <? if (!$scm->isNew()): ?>
+    <p>
+        <?=
+        sprintf(_('Zuletzt geändert von %s am %s'), ObjectdisplayHelper::link($scm->user), strftime('%x, %X', $scm->chdate))
+        ?>
+    </p>
+    <? endif; ?>
     <div data-dialog-button>
         <?= Button::createAccept(_('Speichern'), 'submit') ?>
         <? if ($first_entry): ?>

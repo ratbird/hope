@@ -152,7 +152,7 @@ if (($view=="openobject_main") || ($view=="openobject_details") || ($view=="open
 }
 //we take a search as long with us, as no other overview modul is used
 if (($view=="openobject_main") || ($view=="lists") || ($view=="resources"))
-    $_SESSION['resources_data']["search_array"]='';
+    $_SESSION['resources_data']["search_array"]=array();
 
 
 

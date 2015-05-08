@@ -2,7 +2,7 @@
 /**
  * Adds default startpage widgets for all users
  */
-class SetDefaultStartwidgets extends Migration
+class Tic5544SetDefaultStartwidgets extends Migration
 {
     function description()
     {

@@ -1,7 +1,7 @@
 <? use \Studip\Button; ?>
 
 <a name="tutoren"></a>
-<form action="<?= $controller->url_for('course/members/edit_tutor') ?>" method="post">
+<form action="<?= $controller->url_for('course/members/edit_tutor') ?>" method="post" data-dialog="size=50%">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable">
         <caption>

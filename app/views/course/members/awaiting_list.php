@@ -1,7 +1,7 @@
 <? use \Studip\Button; ?>
 <br />
 <a name="awaiting"></a>
-<form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post">
+<form action="<?= $controller->url_for('course/members/edit_awaiting/') ?>" method="post" data-dialog="size=50%>
     <?= CSRFProtection::tokenTag() ?>
     <table class="default collapsable ">
         <caption>

@@ -2,7 +2,7 @@
 <a name="autoren"></a>
 
 
-<form action="<?= $controller->url_for('course/members/edit_autor/') ?>" method="post">
+<form action="<?= $controller->url_for('course/members/edit_autor/') ?>" method="post" data-dialog="size=50%>
     <?= CSRFProtection::tokenTag() ?>
     <table id="autor" class="default collapsable tablesorter">
         <caption>

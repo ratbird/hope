@@ -680,29 +680,23 @@ class Course_MembersController extends AuthenticatedController
         // select the additional method
         switch (Request::get('action_tutor')) {
             case '':
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
             case 'downgrade':
-                $redirect_url = $this->url_for('course/members/downgrade_user/tutor/autor');
-
+                $target = 'course/members/downgrade_user/tutor/autor';
                 break;
             case 'remove':
-                $redirect_url = $this->url_for('course/members/cancel_subscription/collection/tutor');
+                $target = 'course/members/cancel_subscription/collection/tutor';
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
                 break;
             default:
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
         }
-        if(Request::isXhr()) {
-            $this->response->add_header('X-Location', $redirect_url);
-            $this->render_nothing();
-        } else {
-            $this->redirect($redirect_url);
-        }
+        $this->relocate($target);
     }
 
     /**
@@ -720,34 +714,29 @@ class Course_MembersController extends AuthenticatedController
 
         switch (Request::get('action_autor')) {
             case '':
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
             case 'upgrade':
-                $redirect_url = $this->url_for('course/members/upgrade_user/autor/tutor');
+                $target = 'course/members/upgrade_user/autor/tutor';
                 break;
             case 'downgrade':
-                $redirect_url = $this->url_for('course/members/downgrade_user/autor/user');
+                $target = 'course/members/downgrade_user/autor/user';
                 break;
             case 'to_admission':
                 // TODO Warteliste setzen
                 break;
             case 'remove':
-                $redirect_url = $this->url_for('course/members/cancel_subscription/collection/autor');
+                $target = 'course/members/cancel_subscription/collection/autor';
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
                 break;
             default:
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
         }
-        if(Request::isXhr()) {
-            $this->response->add_header('X-Location', $redirect_url);
-            $this->render_nothing();
-        } else {
-            $this->redirect($redirect_url);
-        }
+        $this->relocate($target);
     }
 
     /**
@@ -768,28 +757,23 @@ class Course_MembersController extends AuthenticatedController
         // select the additional method
         switch (Request::get('action_user')) {
             case '':
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
             case 'upgrade':
-                $redirect_url = $this->url_for('course/members/upgrade_user/user/autor');
+                $target = 'course/members/upgrade_user/user/autor';
                 break;
             case 'remove':
-                $redirect_url = $this->url_for('course/members/cancel_subscription/collection/user');
+                $target = 'course/members/cancel_subscription/collection/user';
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
                 break;
             default:
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
         }
-        if(Request::isXhr()) {
-            $this->response->add_header('X-Location', $redirect_url);
-            $this->render_nothing();
-        } else {
-            $this->redirect($redirect_url);
-        }
+        $this->relocate($target);
     }
 
     /**
@@ -809,28 +793,23 @@ class Course_MembersController extends AuthenticatedController
         // select the additional method
         switch (Request::get('action_awaiting')) {
             case '':
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
             case 'upgrade':
-                $redirect_url = $this->url_for('course/members/insert_admission/awaiting/collection');
+                $target = 'course/members/insert_admission/awaiting/collection';
                 break;
             case 'remove':
-                $redirect_url = $this->url_for('course/members/cancel_subscription/collection/' . $waiting_type);
+                $target = 'course/members/cancel_subscription/collection/' . $waiting_type;
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
                 break;
             default:
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
         }
-        if(Request::isXhr()) {
-            $this->response->add_header('X-Location', $redirect_url);
-            $this->render_nothing();
-        } else {
-            $this->redirect($redirect_url);
-        }
+        $this->relocate($target);
     }
 
     /**
@@ -852,28 +831,23 @@ class Course_MembersController extends AuthenticatedController
         // select the additional method
         switch (Request::get('action_accepted')) {
             case '':
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
             case 'upgrade':
-                $redirect_url = $this->url_for('course/members/insert_admission/accepted/collection');
+                $target = 'course/members/insert_admission/accepted/collection';
                 break;
             case 'remove':
-                $redirect_url = $this->url_for('course/members/cancel_subscription/collection/accepted');
+                $target = 'course/members/cancel_subscription/collection/accepted';
                 break;
             case 'message':
                 $this->redirect('course/members/send_message');
                 return;
                 break;
             default:
-                $redirect_url = $this->url_for('course/members/index');
+                $target = 'course/members/index';
                 break;
         }
-        if(Request::isXhr()) {
-            $this->response->add_header('X-Location', $redirect_url);
-            $this->render_nothing();
-        } else {
-            $this->redirect($redirect_url);
-        }
+        $this->relocate($target);
     }
 
     /**

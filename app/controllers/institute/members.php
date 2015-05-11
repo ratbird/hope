@@ -30,6 +30,7 @@ class Institute_MembersController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         $this->admin_view = $GLOBALS['perm']->have_perm('admin') && Request::option('admin_view') !== null;
+        
         PageLayout::addStylesheet('multi-select.css');
         PageLayout::addScript('jquery/jquery.multi-select.js');
         PageLayout::addScript('multi_person_search.js');
@@ -48,7 +49,7 @@ class Institute_MembersController extends AuthenticatedController
 
         // this page is used for administration (if the user has the proper rights)
         // or for just displaying the workers and their roles
-        if ($this->admin_view || $GLOBALS['perm']->have_perm('admin')) {
+        if ($this->admin_view) {
             PageLayout::setTitle(_("Verwaltung der MitarbeiterInnen"));
             Navigation::activateItem('/admin/institute/faculty');
             $GLOBALS['perm']->check("admin");

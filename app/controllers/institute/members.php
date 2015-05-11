@@ -30,7 +30,7 @@ class Institute_MembersController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         $this->admin_view = $GLOBALS['perm']->have_perm('admin') && Request::option('admin_view') !== null;
-        
+
         PageLayout::addStylesheet('multi-select.css');
         PageLayout::addScript('jquery/jquery.multi-select.js');
         PageLayout::addScript('multi_person_search.js');
@@ -51,19 +51,29 @@ class Institute_MembersController extends AuthenticatedController
         // or for just displaying the workers and their roles
         if ($this->admin_view) {
             PageLayout::setTitle(_("Verwaltung der MitarbeiterInnen"));
-            Navigation::activateItem('/admin/institute/faculty');
+            if (Navigation::hasItem('/admin/institute/faculty')) {
+                Navigation::activateItem('/admin/institute/faculty');
+            }
             $GLOBALS['perm']->check("admin");
         } else {
             PageLayout::setTitle(_("Liste der MitarbeiterInnen"));
-            Navigation::activateItem('/course/faculty/view');
+            if (Navigation::hasItem('/course/faculty/view')) {
+                Navigation::activateItem('/course/faculty/view');
+            }
             $GLOBALS['perm']->check("autor");
         }
 
         require_once 'lib/admin_search.inc.php';
 
         //get ID from a open Institut. We have to wait until a links_*.inc.php has opened an institute (necessary if we jump directly to this page)
-        if ($GLOBALS['SessSemName'][1])
+        if ($GLOBALS['SessSemName'][1]) {
             $this->inst_id=$GLOBALS['SessSemName'][1];
+        } else {
+            PageLayout::postMessage(MessageBox::info(_('Sie müssen zunächst eine Einrichtung auswählen')));
+            $this->redirect(URLHelper::getLink('admin_institut.php?list=TRUE'));
+            return;
+        }
+
 
         if (!$this->admin_view) {
             checkObject();

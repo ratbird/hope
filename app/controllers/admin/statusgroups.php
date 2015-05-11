@@ -335,8 +335,9 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $type = 'inst';
         }
         $types = $this->types();
+
         if (!$type || Request::submitted('type') && $type != Request::get('type')) {
-            $types[Request::get('type')]['redirect']();
+            $types[is_null(Request::get('type')) ? 'inst' : Request::get('type')]['redirect']();
         } else {
             $this->type = $types[$type];
         }

@@ -34,7 +34,7 @@ class Helpbar extends WidgetContainer
                                 URLHelper::getURL('dispatch.php/help_content/edit/'.$row['content_id']),
                                 URLHelper::getURL('dispatch.php/help_content/delete/'.$row['content_id']));
         }  
-        if (!count($help_content)) {
+        if (!count($help_content) && $GLOBALS['perm']->have_perm("root")) {
             $this->addPlainText('',
                                 '',
                                 null,

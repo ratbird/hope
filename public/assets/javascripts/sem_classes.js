@@ -81,6 +81,7 @@ STUDIP.admin_sem_class = {
                 'modules': modules,
                 'compact_mode': jQuery("#compact_mode").is(":checked") ? 1 : 0,
                 'workgroup_mode': jQuery("#workgroup_mode").is(":checked") ? 1 : 0,
+                'studygroup_mode': jQuery("#studygroup_mode").is(":checked") ? 1 : 0,
                 'only_inst_user': jQuery("#only_inst_user").is(":checked") ? 1 : 0,
                 'turnus_default': jQuery("#turnus_default").val(),
                 'default_read_level': jQuery("#default_read_level").val(),

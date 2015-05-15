@@ -112,6 +112,7 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('title_autor_plural', Request::get("title_autor_plural") ? studip_utf8decode(Request::get("title_autor_plural")) : null);
         $sem_class->set('compact_mode', Request::int("compact_mode"));
         $sem_class->set('workgroup_mode', Request::int("workgroup_mode"));
+        $sem_class->set('studygroup_mode', Request::int("studygroup_mode"));
         $sem_class->set('only_inst_user', Request::int("only_inst_user"));
         $sem_class->set('turnus_default', Request::int("turnus_default"));
         $sem_class->set('default_read_level', Request::int("default_read_level"));

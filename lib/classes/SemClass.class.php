@@ -328,6 +328,7 @@ class SemClass implements ArrayAccess
                 "create_description = :create_description, " .
                 "compact_mode = :compact_mode, " .
                 "workgroup_mode = :workgroup_mode, " .
+                "studygroup_mode = :studygroup_mode, " .
                 "only_inst_user = :only_inst_user, " .
                 "turnus_default = :turnus_default, " .
                 "default_read_level = :default_read_level, " .
@@ -369,6 +370,7 @@ class SemClass implements ArrayAccess
             'create_description' => $this->data['create_description'],
             'compact_mode' => (int) $this->data['compact_mode'],
             'workgroup_mode' => (int) $this->data['workgroup_mode'],
+            'studygroup_mode' => (int) $this->data['studygroup_mode'],
             'only_inst_user' => (int) $this->data['only_inst_user'],
             'turnus_default' => (int) $this->data['turnus_default'],
             'default_read_level' => (int) $this->data['default_read_level'],

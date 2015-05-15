@@ -81,6 +81,12 @@ CKEDITOR.plugins.add('studip-upload', {
                         } else {
                             alert('Das Hochladen der Datei(en) ist fehlgeschlagen.\n\n' + data.result);
                         }
+                    },
+                    fail: function (e, data) {
+                        alert(
+                            'Das Hochladen der Datei(en) ist fehlgeschlagen.'
+                            + '\n\nFehler: ' + data.errorThrown.message
+                        );
                     }
                 });
 

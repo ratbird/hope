@@ -18,6 +18,7 @@ class CourseCancelledEvent extends CourseEvent
     protected static function configure($config= array())
     {
         $config['db_table'] = 'ex_termine';
+        $config['alias_fields']['ex_description'] = 'content';
         parent::configure($config);
     }
     
@@ -33,7 +34,7 @@ class CourseCancelledEvent extends CourseEvent
     {
         $stmt = DBManager::get()->prepare('SELECT * FROM seminar_user '
                 . 'INNER JOIN ex_termine ON seminar_id = range_id '
-                . 'WHERE user_id = :user_id '
+                . 'WHERE ex_termine.content <> \'\' AND user_id = :user_id '
                 . 'AND date BETWEEN :start AND :end '
                 . "AND (IFNULL(metadate_id, '') = '' "
                 . 'OR metadate_id NOT IN ( '
@@ -90,4 +91,12 @@ class CourseCancelledEvent extends CourseEvent
         return 255;
     }
     
+    function getDescription()
+    {
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->ex_description;
+        }
+        return '';
+    }
+
 }

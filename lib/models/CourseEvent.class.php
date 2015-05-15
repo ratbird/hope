@@ -24,6 +24,7 @@ class CourseEvent extends CourseDate implements Event
         $config['alias_fields']['end'] = 'end_time';
         $config['alias_fields']['category_intern'] = 'date_typ';
         $config['alias_fields']['author_id'] = 'autor_id';
+        $config['alias_fields']['sem_id'] = 'range_id';
 
         $config['additional_fields']['location']['get'] = 'getRoomName';
         $config['additional_fields']['type'] = true;

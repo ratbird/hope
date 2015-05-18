@@ -24,6 +24,7 @@ require_once 'lib/classes/StudipDispatcher.php';
 // prepare environment
 URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
 StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/app/models');
+StudipAutoloader::addAutoloadPath($GLOBALS['STUDIP_BASE_PATH'] . '/app/models', 'Studip');
 
 $request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 

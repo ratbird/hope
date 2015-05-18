@@ -108,7 +108,7 @@
             </th>
         <? endif ?>
         <? if (in_array('Inhalt', $view_filter)) : ?>
-            <th>
+            <th style="width: <?= $nav_elements * 27 ?>px">
                 <?= 'Inhalt' ?>
             </th>
         <? endif ?>
@@ -189,9 +189,9 @@
                 <td style="text-align: center;"><?= $values["prelim"] ?></td>
             <? endif ?>
             <? if (in_array('Inhalt', $view_filter)) : ?>
-                <td>
-                    <? if (!empty($values['navigations'])) : ?>
-                        <? foreach (MyRealmModel::array_rtrim($values['navigations']) as $key => $nav)  : ?>
+                <td style="text-align: left; white-space: nowrap;">
+                    <? if (!empty($values['navigation'])) : ?>
+                        <? foreach (MyRealmModel::array_rtrim($values['navigation']) as $key => $nav)  : ?>
                             <? if (isset($nav) && $nav->isVisible(true)) : ?>
                                 <? $image = $nav->getImage(); ?>
                                 <a href="<?=

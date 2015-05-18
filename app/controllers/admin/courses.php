@@ -130,6 +130,10 @@ class Admin_CoursesController extends AuthenticatedController
                       'view_filter' => $this->view_filter,
                       'typeFilter'  => $config_my_course_type_filter));
             $this->count_courses = count($this->courses);
+
+            if(in_array('Inhalt', $this->view_filter)) {
+                $this->nav_elements = MyRealmModel::calc_nav_elements(array($this->courses));
+            }
             // get all available teacher for infobox-filter
             // filter by selected teacher
             if (!empty($this->courses)) {
@@ -617,6 +621,11 @@ class Admin_CoursesController extends AuthenticatedController
             $sem_condition = '';
         }
 
+
+        if($pluginsFilter) {
+            $sem_types = SemType::getTypes();
+            $modules = new Modules();
+        }
         // Prepare and execute seminar statement
         $query = "SELECT DISTINCT seminare.Seminar_id, Institute.Name AS Institut, seminare.VeranstaltungsNummer,
                          seminare.Name, seminare.status, seminare.chdate,
@@ -646,6 +655,7 @@ class Admin_CoursesController extends AuthenticatedController
         }
         $statement->execute();
         $seminars = array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
+
         $statement->closeCursor();
         if (!empty($seminars)) {
             foreach ($seminars as $seminar_id => $seminar) {
@@ -653,7 +663,9 @@ class Admin_CoursesController extends AuthenticatedController
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
                 if ($pluginsFilter) {
-                    $seminars[$seminar_id]['navigations'] = MyRealmModel::getPluginNavigationForSeminar($seminar_id, object_get_visit($seminar_id, 'sem', ''));
+                    $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
+                    $seminars[$seminar_id]['modules'] = $modules->getLocalModules($seminar_id, 'sem', $seminar['modules'], $seminar['status']);
+                    $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations($seminar_id, $seminars[$seminar_id],$seminars[$seminar_id]['sem_class'], $GLOBALS['user']->id);
                 }
             }
         }

@@ -262,7 +262,8 @@ class Markup
         $config->set('Attr.AllowedClasses', array(
             'content',
             'link-extern',
-            'wiki-link'
+            'wiki-link',
+            'math-tex'
         ));
         $config->set('AutoFormat.Custom', array(
             'ClassifyLinks',

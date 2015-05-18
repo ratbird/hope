@@ -254,7 +254,8 @@ MathJax.Hub.Config({
     //  be able to handle that.
     //
     inlineMath: [
-      ['[tex]','[/tex]']
+      ['[tex]','[/tex]'],
+      ['\\(', '\\)']
     ],
 
     //

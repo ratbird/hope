@@ -122,7 +122,7 @@ jQuery(function ($) {
                     // note that 'wiki-links' are currently set as a span due
                     // to implementation difficulties, but probably this
                     // might be changed in future versions
-                    classes: 'wiki-link',
+                    classes: ['wiki-link', 'math-tex'],
 
                     // note that allowed (background-)colors should be further
                     // restricted

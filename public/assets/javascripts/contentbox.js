@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    $('section.contentbox article h1 a').click(function(e) {
+(function ($) {
+    $(document).on('click', 'section.contentbox article h1 a', function (e) {
         e.preventDefault();
         var article = $(this).closest('article');
 
@@ -14,4 +14,4 @@ $(document).ready(function() {
         // Open the contentbox
         article.toggleClass('open').removeClass('new');
     });
-});
+}(jQuery));

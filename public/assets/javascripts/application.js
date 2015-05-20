@@ -202,7 +202,9 @@ jQuery.ui.accordion.prototype.options.icons = {
         firstDay: 1,
         isRTL: false,
         showMonthAfterYear: false,
-        yearSuffix: ''
+        yearSuffix: '',
+        changeMonth: true,
+        changeYear: true
     };
     $.datepicker.setDefaults($.datepicker.regional.de);
 

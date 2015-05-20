@@ -126,12 +126,10 @@
                     <div class="progresstext">0%</div>
                 </div>
             </div>
-            <label>
+            <label style="cursor: pointer;">
                 <input type="file" id="fileupload" multiple onChange="STUDIP.Messages.upload_from_input(this);" style="display: none;">
-                <a style="cursor: pointer;">
-                    <?= Assets::img("icons/20/blue/upload", array('title' => _("Datei hochladen"), 'class' => "text-bottom")) ?>
-                    <?= _("Datei hochladen") ?>
-                </a>
+                <?= Assets::img("icons/20/blue/upload", array('title' => _("Datei hochladen"), 'class' => "text-bottom")) ?>
+                <?= _("Datei hochladen") ?>
             </label>
 
             <div id="upload_finished" style="display: none"><?= _("wird verarbeitet") ?></div>

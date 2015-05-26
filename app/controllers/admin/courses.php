@@ -124,7 +124,7 @@ class Admin_CoursesController extends AuthenticatedController
 
             $this->sortby        = $sortby;
             $this->sortFlag      = $sortFlag;
-            $this->courses       = $this->getCourses($GLOBALS['user']->id,
+            $this->courses       = $this->getCourses(
                 array('sortby'      => $sortby,
                       'sortFlag'    => $sortFlag,
                       'view_filter' => $this->view_filter,
@@ -195,7 +195,7 @@ class Admin_CoursesController extends AuthenticatedController
         $sortby                       = $GLOBALS['user']->cfg->getValue('MEINE_SEMINARE_SORT');
         $config_my_course_type_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_TYPE_FILTER');
 
-        $courses = $this->getCourses($GLOBALS['user']->id,
+        $courses = $this->getCourses(
             array('sortby'     => $sortby,
                   'sortFlag'   => 'asc',
                   'typeFilter' => $config_my_course_type_filter,
@@ -589,7 +589,7 @@ class Admin_CoursesController extends AuthenticatedController
      * @param array $params
      * @return mixed
      */
-    private function getCourses($user_id, $params = array())
+    private function getCourses($params = array())
     {
         // Init
         $sortby        = $params['sortby'];
@@ -597,6 +597,13 @@ class Admin_CoursesController extends AuthenticatedController
         $typeFilter    = $params['typeFilter'];
         $pluginsFilter = in_array('Inhalt', $params['view_filter']);
 
+        $inst_ids = array($this->selected_inst_id);
+        if($this->selected_inst->isFaculty()) {
+            $inst = new SimpleCollection(Institute::findByFaculty($this->selected_inst_id));
+            $inst->filter(function($a) use(&$inst_ids) {
+                $inst_ids[] = $a->id;
+            });
+        }
 
         if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer waiting prelim'))) {
             if ($sortby == "status") {
@@ -643,13 +650,13 @@ class Admin_CoursesController extends AuthenticatedController
                   LEFT JOIN seminar_user on (seminare.seminar_id=seminar_user.seminar_id AND seminar_user.status != 'dozent' and seminar_user.status != 'tutor')
                   LEFT JOIN sem_types as st ON st.id = seminare.status
                   LEFT JOIN sem_classes as sc ON sc.id = st.class
-                  WHERE Institute.Institut_id = :institute_id
+                  WHERE Institute.Institut_id IN(:institute_id)
                   {$where}
                   GROUP BY seminare.Seminar_id
                   ORDER BY {$sortby}";
 
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue('institute_id', $this->selected_inst_id);
+        $statement->bindValue('institute_id', $inst_ids);
         if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
             $statement->bindValue(':typeFilter', $typeFilter);
         }

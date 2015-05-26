@@ -170,9 +170,14 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setViewWidget($this->view_filter);
 
         if ($this->sem_create_perm) {
+            $params = array();
+
+            if(Request::get('search')) {
+                $params['search'] = Request::get('search');
+            }
             $export = new ExportWidget();
             $export->addLink(_('Als Excel exportieren'),
-                URLHelper::getLink('dispatch.php/admin/courses/export_csv'),
+                URLHelper::getLink('dispatch.php/admin/courses/export_csv', $params),
                 'icons/16/blue/file-excel.png');
             $sidebar->addWidget($export);
         }
@@ -600,7 +605,7 @@ class Admin_CoursesController extends AuthenticatedController
         $inst_ids = array();
 
 
-        if ($this->selected_inst_id == 'all') {
+        if ($this->selected_inst_id == 'all' || Request::get('search')) {
             $inst = new SimpleCollection($this->insts);
             $inst->filter(function ($a) use (&$inst_ids) {
                 $inst_ids[] = $a->Institut_id;

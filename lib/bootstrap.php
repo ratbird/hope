@@ -195,9 +195,6 @@ namespace {
     unset($mail_transporter);
 
     require 'lib/plugins/plugins.inc.php';
-    
-    // Set default observer
-    NotificationCenter::addObserver("WidgetHelper", "setInitialPositionsNotification", 'UserDidCreate');
 
 // Development: Use own directory for file related classes
     if (Config::get()->PERSONALDOCUMENT_ENABLE) {

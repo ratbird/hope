@@ -52,9 +52,10 @@ class StartController extends AuthenticatedController
         $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
         $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
 
-        // If startpage is empty show some helptext
         if (!(count($this->left) + count($this->right)) ) {
-            PageLayout::postMessage(MessageBox::info(_('Ihre Startseite ist leer. Nutzen Sie die Sidebar um Widgets hinzuzufügen oder den Standard wiederherzustellen.')));
+            WidgetHelper::setInitialPositions();
+            $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
+            $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
         }
 
         WidgetHelper::setActiveWidget(Request::get('activeWidget'));

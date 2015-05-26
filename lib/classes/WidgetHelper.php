@@ -148,21 +148,13 @@ class WidgetHelper
          DBManager::get()->execute('DELETE FROM widget_default WHERE `perm` = ?', array($group));
          DBManager::get()->execute('INSERT INTO widget_default (SELECT pluginid, col, position, ? as perm  FROM widget_user WHERE range_id = ?)', array($group, $range_id));
      }
-     
-     static function setInitialPositionsNotification($notification, $user) {
-         self::setInitialPositions($user);
-     }
 
      /**
       * setInitialPositions - copies the default to the logged on user
       */
-     static function setInitialPositions($user = NULL)
+     static function setInitialPositions()
      {
-         // Parse user
-         if (!$user) {
-             $user = $GLOBALS['user'];
-         }
-         DBManager::get()->execute('INSERT INTO widget_user (pluginid, position, range_id, col) (SELECT pluginid, position, ?, col as perm  FROM widget_default WHERE perm = ?)', array($user->id, $user->perms));
+         DBManager::get()->execute('INSERT INTO widget_user (pluginid, position, range_id, col) (SELECT pluginid, position, ?, col as perm  FROM widget_default WHERE perm = ?)', array($GLOBALS['user']->id, $GLOBALS['perm']->get_perm()));
      }
 
     /**

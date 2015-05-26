@@ -49,7 +49,7 @@
     </colgroup>
     <caption>
         <?=
-        sprintf(_('%s im %s'), htmlReady($selected_inst['Name']), htmlReady($semester->name)) ?>
+        sprintf(_('%s im %s'), !is_null($selected_inst) ? htmlReady($selected_inst['Name']) : _('Alle Einrichtungen'), htmlReady($semester->name)) ?>
         <span class="actions">
                 <?= sprintf('%u %s', $count_courses, $count_courses > 1 ? _('Veranstaltungen') : _('Veranstaltung')) ?>
             </span>

@@ -21,7 +21,7 @@ class AddCacheOperationsTable extends Migration
                       `parameters` TEXT NOT NULL,
                       `mkdate` INT(11) UNSIGNED NOT NULL,
                       `chdate` INT(11) UNSIGNED NOT NULL,
-                      PRIMARY KEY (`cache_key`(200), `opreation`)
+                      PRIMARY KEY (`cache_key`(200), `operation`)
                   )";
         DBManager::get()->exec($query);
     }

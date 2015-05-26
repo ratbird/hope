@@ -1,33 +1,22 @@
 <?php
-# Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
-/*
- * Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- */
 
 /**
  * This factory retrieves the instance of StudipCache configured for use in
  * this Stud.IP installation.
  *
- * @package        studip
+ * @package    studip
  * @subpackage lib
  *
- * @author        Marco Diedrich (mdiedric@uos)
- * @author        Marcus Lunzenauer (mlunzena@uos.de)
- * @copyright (c) Authors
- * @since         1.6
+ * @author    Marco Diedrich (mdiedric@uos)
+ * @author    Marcus Lunzenauer (mlunzena@uos.de)
+ * @copyright 2007 (c) Authors
+ * @since     1.6
+ * @license   GPL2 or any later version
  */
 
-class StudipCacheFactory {
-
+class StudipCacheFactory
+{
     /**
      * the default cache class
      *
@@ -40,7 +29,7 @@ class StudipCacheFactory {
      *
      * @var StudipCache
      */
-    static private $cache;
+    private static $cache;
 
 
     /**
@@ -48,7 +37,7 @@ class StudipCacheFactory {
      *
      * @var Config
      */
-    static private $config;
+    private static $config = null;
 
 
     /**
@@ -60,7 +49,7 @@ class StudipCacheFactory {
      *                       returns the instance returned by Config#getInstance
      * @see Config
      */
-    static function getConfig()
+    public static function getConfig()
     {
         return is_null(self::$config) ? Config::getInstance() : self::$config;
     }
@@ -73,7 +62,7 @@ class StudipCacheFactory {
      *
      * @return void
      */
-    static function setConfig($config)
+    public static function setConfig($config)
     {
         self::$config = $config;
         self::$cache = NULL;
@@ -91,9 +80,8 @@ class StudipCacheFactory {
      *
      * @return void
      */
-    static function configure($file, $class, $arguments)
+    public static function configure($file, $class, $arguments)
     {
-
         # TODO encoding for strings... but probably the caller should care..
         $arguments = json_encode($arguments);
 
@@ -127,9 +115,8 @@ class StudipCacheFactory {
      *
      * @return void
      */
-    static function unconfigure()
+    public static function unconfigure()
     {
-
         $cfg = self::getConfig();
 
         $cfg->delete('cache_class');
@@ -145,24 +132,41 @@ class StudipCacheFactory {
      *
      * @return StudipCache    the cache instance
      */
-    static function getCache()
+    public static function getCache()
     {
-
         if (is_null(self::$cache)) {
+            $proxied = false;
 
             if (!$GLOBALS['CACHING_ENABLE']) {
-                return self::$cache = new StudipNullCache();
+                self::$cache = new StudipNullCache();
+
+                // Proxy cache operations if CACHING_ENABLE is different from the globally set
+                // caching value. This should only be the case in cli mode.
+                if (isset($GLOBALS['GLOBAL_CACHING_ENABLE']) && $GLOBALS['GLOBAL_CACHING_ENABLE']) {
+                    $proxied = true;
+                }
+            } else {
+                try {
+                    $class = self::loadCacheClass();
+                    $args = self::retrieveConstructorArguments();
+                    self::$cache = self::instantiateCache($class, $args);
+                } catch (Exception $e) {
+                    // Proxy the cache operations when the configured cache failed to instantiate.
+                    $proxied = true;
+
+                    error_log(__METHOD__ . ': ' . $e->getMessage());
+                    PageLayout::addBodyElements(MessageBox::error(__METHOD__ . ': ' . $e->getMessage()));
+                    $class = self::DEFAULT_CACHE_CLASS;
+                    self::$cache = new $class();
+                }
             }
 
-            try {
-                $class = self::loadCacheClass();
-                $args = self::retrieveConstructorArguments();
-                self::$cache = self::instantiateCache($class, $args);
-            } catch (Exception $e) {
-                error_log(__METHOD__ . ': ' . $e->getMessage());
-                PageLayout::addBodyElements(MessageBox::error(__METHOD__ . ': ' . $e->getMessage()));
-                $class = self::DEFAULT_CACHE_CLASS;
-                self::$cache = new $class();
+            // If proxy should be used, inject it. Otherwise apply pending
+            // operations, if any.
+            if ($proxied) {
+                self::$cache = new StudipCacheProxy(self::$cache);
+            } else {
+                StudipCacheOperation::apply(self::$cache);
             }
         }
 
@@ -175,7 +179,7 @@ class StudipCacheFactory {
      *
      * @return string  the name of the configured cache class
      */
-    static function loadCacheClass()
+    public static function loadCacheClass()
     {
         $cfg = self::getConfig();
         $cache_class_file = $cfg->getValue('cache_class_file');
@@ -206,7 +210,7 @@ class StudipCacheFactory {
      *
      * @return array  the array of arguments
      */
-    static function retrieveConstructorArguments()
+    public static function retrieveConstructorArguments()
     {
         $cfg_args = self::getConfig()->getValue('cache_init_args');
         return isset($cfg_args) ? json_decode($cfg_args, TRUE) : array();
@@ -220,7 +224,7 @@ class StudipCacheFactory {
      *
      * @return StudipCache  an instance of the specified class
      */
-    static function instantiateCache($class, $arguments)
+    public static function instantiateCache($class, $arguments)
     {
         $reflection_class = new ReflectionClass($class);
         return sizeof($arguments)

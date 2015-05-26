@@ -58,7 +58,8 @@ set_error_handler('CliErrorHandler');
 require_once $STUDIP_BASE_PATH . "/lib/bootstrap.php";
 
 // disable caching for cli scripts
-$CACHING_ENABLE = false;
+$GLOBAL_CACHING_ENABLE = $GLOBALS['CACHING_ENABLE'];
+$CACHING_ENABLE        = false;
 
 // set base url for URLHelper class
 URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);

@@ -27,11 +27,14 @@ class Course_DatesController extends AuthenticatedController
         Navigation::activateItem('/course/schedule/dates');
 
         object_set_visit_module("schedule");
+
         PageLayout::addScript("jquery/jquery.tablesorter.js");
+
         $this->dates = Course::findCurrent()->getDatesWithExdates();
     }
 
-    public function details_action($termin_id) {
+    public function details_action($termin_id)
+    {
         Navigation::activateItem('/course/schedule/dates');
         $this->date = new CourseDate($termin_id);
         $this->cancelled_dates_locked = LockRules::Check($this->date->range_id, 'cancelled_dates');
@@ -45,7 +48,8 @@ class Course_DatesController extends AuthenticatedController
         }
     }
 
-    public function add_topic_action() {
+    public function add_topic_action()
+    {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
             throw new AccessDeniedException("Kein Zugriff");
         }
@@ -76,7 +80,42 @@ class Course_DatesController extends AuthenticatedController
         $this->render_json($output);
     }
 
-    public function remove_topic_action() {
+    /**
+     * Moves a topic from one date to another.
+     * This action will be called from an ajax request and will return only
+     * the neccessary output for a single topic element.
+     *
+     * @param String $topic_id    The id of the topic
+     * @param String $old_date_id The id of the original date of the topic
+     * @param String $new_date_id The id of the new date of the topic
+     * @throws MethodNotAllowedException if request method is not post
+     * @throws AccessDeniedException if the user is not allowed to execute the
+     *                               action (at least tutor of the course)
+     */
+    public function move_topic_action($topic_id, $old_date_id, $new_date_id)
+    {
+        if (!Request::isPost()) {
+            throw new MethodNotAllowedException();
+        }
+
+        if (!$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException();
+        }
+
+        $this->topic = CourseTopic::find($topic_id);
+
+        $this->topic->dates->unsetByPK($old_date_id);
+        if (!$this->topic->dates->findOneBy('termin_id', $new_date_id)) {
+            $this->topic->dates[] = CourseDate::find($new_date_id);
+        }
+        $this->topic->store();
+
+        $this->set_content_type('text/html;charset=windows-1252');
+        $this->render_template('course/dates/_topic_li.php');
+    }
+
+    public function remove_topic_action()
+    {
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
             throw new AccessDeniedException("Kein Zugriff");
         }
@@ -88,8 +127,8 @@ class Course_DatesController extends AuthenticatedController
         $this->render_json($output);
     }
 
-    public function export_action() {
-
+    public function export_action()
+    {
         $course = new Course($_SESSION['SessionSeminar']);
         $sem = new Seminar($_SESSION['SessionSeminar']);
         $themen =& $sem->getIssues();

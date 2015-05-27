@@ -2722,6 +2722,16 @@ select.sidebar-selectlist {
   vertical-align: text-top;
   width: 16px;
 }
+/*
+.sidebar-widget.sidebar-infobox {
+    border-color: @red;
+    background: @light-gray-color-20;
+
+    .sidebar-widget-header {
+        background: @red-40;
+    }
+}
+*/
 .helpbar-container {
   background: #fff;
   clear: both;
@@ -4934,15 +4944,15 @@ fieldset.document-admin-search label {
   display: inline-block;
   width: 49%;
 }
+.themen_list,
+.dozenten_list {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
 .themen_list > * {
   background-color: #e7ebf1;
   margin: 2px;
-}
-.themen_list > * .topic_actions {
-  float: right;
-}
-.themen_list > * .topic_decription {
-  padding: 4px;
 }
 table.dates {
   width: calc(100% - 4px);
@@ -4956,11 +4966,14 @@ table.dates .ausfall {
 table.dates .nextdate {
   background-color: #d0d7e3;
 }
-table.dates .topic_decription {
-  display: none;
+table.dates .topic-droppable.active {
+  background-color: #fff1ad;
 }
-table.dates .topic_actions {
-  display: none;
+table.dates .topic-droppable.hovered {
+  background-color: #ffe25c;
+}
+table.dates .draggable-topic-handle {
+  cursor: move;
 }
 /* classes for the evaluation modules in Stud.IP ---------------------------- */
 .eval_title {

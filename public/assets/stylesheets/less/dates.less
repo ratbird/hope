@@ -1,12 +1,11 @@
+.themen_list, .dozenten_list {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
 .themen_list > * {
     background-color: @content-color-20;
     margin: 2px;
-    .topic_actions {
-        float: right;
-    }
-    .topic_decription {
-        padding: 4px;
-    }
 }
 table.dates {
     width: ~"calc(100% - 4px)";
@@ -19,10 +18,16 @@ table.dates {
     .nextdate {
         background-color: @content-color-40;
     }
-    .topic_decription {
-        display: none;
+    
+    .topic-droppable {
+        &.active {
+            background-color: @activity-color-40;
+        }
+        &.hovered {
+            background-color: @activity-color-80;
+        }
     }
-    .topic_actions {
-        display: none;
+    .draggable-topic-handle {
+        cursor: move;
     }
 }

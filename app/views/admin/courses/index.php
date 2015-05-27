@@ -3,7 +3,7 @@
     <? if (!empty($courses)) : ?>
         <?= $this->render_partial('admin/courses/courses.php', compact('courses')) ?>
     <? elseif (empty($courses) && Request::get('search')) : ?>
-        <?= MessageBox::info(_('Ihre Suche ergab kein Treffer')) ?>
+        <?= MessageBox::info(_('Ihre Suche ergab keine Treffer')) ?>
         <? elseif($selected_inst_id == 'all' &&  !Request::get('search')) : ?>
         <?= MessageBox::info(_('Bitte geben Sie zunächst einen Suchbegriff ein'))?>
     <? else : ?>

@@ -13,15 +13,29 @@ STUDIP.Markup = {
         } else {
             elements = jQuery(selector);
         }
-        jQuery.each(elements, function (index, element) {
-            jQuery.each(STUDIP.Markup, function (index, func) {
+        elements.each(function (index, element) {
+            jQuery.each(STUDIP.Markup.callbacks, function (index, func) {
                 if ((index !== "element") || typeof func === "function") {
-                    func(element[0]);
+                    func(element);
                 }
             });
         });
     },
-    math_jax: function (element) {
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    callbacks: {
+        math_jax: function (element) {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+        },
+        codehighlight: function (element) {
+            jQuery(document).find("pre, code").each(function (index, block) {
+                hljs.highlightBlock(block);
+            });
+        }
     }
 };
+
+
+jQuery(function () {
+    jQuery(document).find("pre, code").each(function (index, block) {
+        hljs.highlightBlock(block);
+    });
+});

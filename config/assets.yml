@@ -12,6 +12,9 @@ javascripts:
   modernizr: &modernizr
     - javascripts/vendor/modernizr.js
 
+  highlight: &highlight
+    - javascripts/vendor/highlight.pack.js
+
   header: &header
     - javascripts/vendor/notificon.js
     - javascripts/header.js
@@ -35,6 +38,7 @@ javascripts:
   base:
     - *jquery
     - *modernizr
+    - *highlight
     - javascripts/lodash.underscore-1.3.1.js
     - javascripts/l10n.js
     - javascripts/init.js
@@ -125,6 +129,7 @@ css:
     jquery-ui-studip.css: screen, print
     jquery-ui-timepicker-addon.css: screen, print
     multi-select.css: screen, print
+    jshighlight_tomorrow.css: screen, print
     style.css:  screen
     smiley.css: screen, print
     print.css:  print

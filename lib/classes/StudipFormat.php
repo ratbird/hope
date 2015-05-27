@@ -147,7 +147,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupNoFormat'
         ),
         'code' => array(
-            'start'    => '\[code\](.*?)\[\/code\]',
+            'start'    => '\[code(=.*?)?\](.*?)\[\/code\]',
             'callback' => 'StudipFormat::markupCode'
         ),
         'media' => array(
@@ -479,11 +479,12 @@ class StudipFormat extends TextFormat
      */
     protected static function markupCode($markup, $matches)
     {
-        return '<div class="code_header">'. _('Code') .'<hr></div>'
-               . str_replace(
-                   '<code>', '<code class="code_content">',
-                   highlight_string(decodeHTML(trim($matches[1]), ENT_QUOTES), true)
-               );
+        $codetype = "";
+        if (strlen($matches[1])) {
+            $codetype = " ".decodeHTML(trim(substr($matches[1], 1)), ENT_QUOTES);
+        }
+        $code = decodeHTML(trim($matches[2]), ENT_QUOTES);
+        return '<pre class="usercode'.$codetype.'"><code class="'.$codetype.'">'.htmlReady($code).'</code></pre>';
     }
 
     /**

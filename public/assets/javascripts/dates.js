@@ -1,7 +1,8 @@
-/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*jslint browser: true, white: true, undef: true, nomen: true, plusplus: true, bitwise: true, newcap: true, indent: 4 */
 /*global jQuery, STUDIP */
 
 (function ($, STUDIP) {
+    'use strict';
 
     STUDIP.Dates = {
         addTopic: function () {
@@ -41,18 +42,6 @@
 
     $(document).on('click', '.remove_topic', STUDIP.Dates.removeTopic);
 
-    $(document).ready(function () {
-        $('#course-dates-index .dates').tablesorter({
-            textExtraction: function(node) {
-                var $node = $(node);
-                return String($node.data('timestamp') || $node.text()).trim();
-            },
-            cssAsc: 'sortasc',
-            cssDesc: 'sortdesc',
-            sortList: [[0, 0]]
-        });
-    });
-
     // Drag and drop support for topics in date list
     function createDraggable() {
         $('.themen_list li > a:not(.draggable-topic)').each(function () {
@@ -78,6 +67,16 @@
         if ($('body#course-dates-index').length === 0) {
             return;
         }
+
+        $('#course-dates-index .dates').tablesorter({
+            textExtraction: function(node) {
+                var $node = $(node);
+                return String($node.data('timestamp') || $node.text()).trim();
+            },
+            cssAsc: 'sortasc',
+            cssDesc: 'sortdesc',
+            sortList: [[0, 0]]
+        });
 
         $(document).ajaxComplete(createDraggable);
 

@@ -210,6 +210,7 @@ class StreamsController extends PluginController {
             $output['threads'][] = array(
                 'content' => $template->render(),
                 'discussion_time' => $posting['discussion_time'],
+                'mkdate' => $posting['mkdate'],
                 'posting_id' => $posting->getId()
             );
         }
@@ -309,6 +310,7 @@ class StreamsController extends PluginController {
             $template->set_attribute('controller', $this);
             $output['content'] = $template->render();
             $output['discussion_time'] = time();
+            $output['mkdate'] = time();
             $output['posting_id'] = $thread->getId();
         } else {
             $thread->delete();

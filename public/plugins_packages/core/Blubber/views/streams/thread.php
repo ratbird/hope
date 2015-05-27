@@ -25,6 +25,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
 <input type="hidden" id="user_id" value="<?= htmlReady($GLOBALS['user']->id) ?>">
 <input type="hidden" id="stream_time" value="<?= time() ?>">
 <input type="hidden" id="browser_start_time" value="">
+<input type="hidden" id="orderby" value="mkdate">
 <div id="editing_question" style="display: none;"><?= _("Wollen Sie den Beitrag wirklich bearbeiten?") ?></div>
 <? if (Navigation::hasItem("/community/blubber")) : ?>
 <p>
@@ -47,8 +48,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
 
 <ul id="blubber_threads" class="coursestream singlethread" aria-live="polite" aria-relevant="additions">
 <? endif; ?>
-<li id="posting_<?= htmlReady($thread->getId()) ?>" mkdate="<?= htmlReady($thread['discussion_time']) ?>" data-discussion_time="<?= htmlReady($thread['discussion_time']) ?>" class="thread posting<?= $last_visit < $thread['mkdate'] ? " new" : "" ?> <?= $thread['context_type'] ?>" data-autor="<?= htmlReady($thread['user_id']) ?>">
-    <? $thread['discussion_time'] ?>
+<li id="posting_<?= htmlReady($thread->getId()) ?>" mkdate="<?= htmlReady($thread['discussion_time']) ?>" data-discussion_time="<?= htmlReady($thread['discussion_time']) ?>" data-mkdate="<?= htmlReady($thread['discussion_time']) ?>" class="thread posting<?= $last_visit < $thread['mkdate'] ? " new" : "" ?> <?= $thread['context_type'] ?>" data-autor="<?= htmlReady($thread['user_id']) ?>">
     <div class="hiddeninfo">
         <input type="hidden" name="context" value="<?= htmlReady($thread['Seminar_id']) ?>">
         <input type="hidden" name="context_type" value="<?= $thread['Seminar_id'] === $thread['user_id'] ? "public" : "course" ?>">

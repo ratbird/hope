@@ -19,6 +19,7 @@
 <input type="hidden" id="stream_time" value="<?= time() ?>">
 <input type="hidden" id="browser_start_time" value="">
 <input type="hidden" id="loaded" value="1">
+<input type="hidden" id="orderby" value="mkdate">
 <div id="editing_question" style="display: none;"><?= _("Wollen Sie den Beitrag wirklich bearbeiten?") ?></div>
 
 <? if ($user->getId() === $GLOBALS['user']->id) : ?>

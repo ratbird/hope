@@ -165,8 +165,16 @@ class StudipCacheFactory
             // operations, if any.
             if ($proxied) {
                 self::$cache = new StudipCacheProxy(self::$cache);
-            } else {
-                StudipCacheOperation::apply(self::$cache);
+            } elseif ($GLOBALS['CACHING_ENABLE'] && get_class(self::$cache) !== self::DEFAULT_CACHE_CLASS) {
+                // Even if the above condition will try to eliminate most
+                // failures, the following operation still needs to be wrapped
+                // in a try/catch block. Otherwise there are no means to
+                // execute migration 166 which creates the neccessary tables
+                // for said operation.
+                try {
+                    StudipCacheOperation::apply(self::$cache);
+                } catch (Exception $e) {
+                }
             }
         }
 

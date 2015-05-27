@@ -37,9 +37,9 @@ class StudipCacheOperation extends SimpleORMap
     {
         self::findEachBySQL(function ($item) use ($cache) {
             $parameters = unserialize($item->parameters);
-            call_user_func_array(array($cache, $item['operation']), $parameters);
-        }, '1 ORDER BY chdate ASC');
+            call_user_func_array(array($cache, $item->operation), $parameters);
 
-        self::deleteBySQL('1');
+            $item->delete();
+        }, '1 ORDER BY chdate ASC');
     }
 }

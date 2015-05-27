@@ -54,6 +54,10 @@ class Admin_CoursesController extends AuthenticatedController
 
         $this->insts = Institute::getMyInstitutes($GLOBALS['user']->id);
 
+        if(empty($this->insts) && !$GLOBALS['perm']->have_perm('root')) {
+            PageLayout::postMessage(MessageBox::error(_('Sie wurden noch keiner Einrichtung zugeordnet')));
+        }
+
         $selected_inst_id = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
         if (!$selected_inst_id) {
             $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', $this->insts[0]['Institut_id']);
@@ -86,7 +90,7 @@ class Admin_CoursesController extends AuthenticatedController
 
 
         // get courses only if institutes available
-        if (!empty($this->insts)) {
+        if ($this->selected_inst_id != 'all' || ($this->selected_inst_id == 'all' && Request::get('search'))) {
             $this->actions = self::getActions();
             $teachers = array();
             $config_my_course_type_filter = $GLOBALS['user']->cfg->getValue('MY_COURSES_TYPE_FILTER');
@@ -125,6 +129,7 @@ class Admin_CoursesController extends AuthenticatedController
 
             $this->sortby = $sortby;
             $this->sortFlag = $sortFlag;
+
             $this->courses = $this->getCourses(
                 array('sortby'      => $sortby,
                       'sortFlag'    => $sortFlag,
@@ -145,6 +150,7 @@ class Admin_CoursesController extends AuthenticatedController
                              'Seminar_id' => $id);
             }, array_values($this->courses), array_keys($this->courses));
         }
+
         $this->all_lock_rules = array_merge(array(array('name'    => '--' . _("keine Sperrebene") . '--',
                                                         'lock_id' => 'none')),
             LockRule::findAllByType('sem'));
@@ -161,9 +167,9 @@ class Admin_CoursesController extends AuthenticatedController
                     array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
             $sidebar->addWidget($actions, 'links');
         }
+        $this->setInstSelector();
         $this->setSearchWiget();
-        $this->set_inst_selector();
-        $this->set_semester_selector();
+        $this->setSemesterSelector();
         $this->setTeacherWidget($teachers);
         $this->setCourseTypeWidget($config_my_course_type_filter);
         $this->setActionsWidget($this->selected_action);
@@ -208,7 +214,6 @@ class Admin_CoursesController extends AuthenticatedController
                   'view_filter' => $view_filter)
         );
 
-        $captions = array();
 
         if (empty($view_filter)) {
             return;
@@ -605,7 +610,7 @@ class Admin_CoursesController extends AuthenticatedController
         $inst_ids = array();
 
 
-        if ($this->selected_inst_id == 'all' || Request::get('search')) {
+        if ($this->selected_inst_id == 'all' && Request::get('search')) {
             $inst = new SimpleCollection($this->insts);
             $inst->filter(function ($a) use (&$inst_ids) {
                 $inst_ids[] = $a->Institut_id;
@@ -630,7 +635,7 @@ class Admin_CoursesController extends AuthenticatedController
             $sortby = sprintf('VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag);
         }
 
-        $where = '';
+        $where = ' AND seminare.status != 99';
 
         if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
             $where .= ' AND seminare.status = :typeFilter ';
@@ -792,7 +797,7 @@ class Admin_CoursesController extends AuthenticatedController
     /**
      * Adds the institutes selector to the sidebar
      */
-    private function set_inst_selector()
+    private function setInstSelector()
     {
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Einrichtung'), $this->url_for('admin/courses/set_selection'), 'institute');
@@ -819,7 +824,7 @@ class Admin_CoursesController extends AuthenticatedController
     /**
      * Adds the semester selector to the sidebar
      */
-    private function set_semester_selector()
+    private function setSemesterSelector()
     {
         $semesters = array_reverse(Semester::getAll());
         $sidebar = Sidebar::Get();

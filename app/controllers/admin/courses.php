@@ -72,7 +72,7 @@ class Admin_CoursesController extends AuthenticatedController
         if ($config_sem != '' && $config_sem != '0') {
             $this->semester = Semester::find($config_sem);
         } else {
-            $this->semester = Semester::findCurrent();
+            $this->semester = Semester::findCurrent() ?: end(Semester::getAll());
         }
 
         PageLayout::setHelpKeyword("Basis.Veranstaltungen");

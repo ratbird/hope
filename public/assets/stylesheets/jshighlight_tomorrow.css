@@ -2,7 +2,7 @@
 
 /* Tomorrow Comment */
 .hljs-comment {
-  color: #8e908c;
+  color: #879199;
 }
 
 /* Tomorrow Red */
@@ -18,7 +18,7 @@
 .css .hljs-id,
 .css .hljs-class,
 .css .hljs-pseudo {
-  color: #c82829;
+  color: #d60000;
 }
 
 /* Tomorrow Orange */
@@ -29,13 +29,13 @@
 .hljs-literal,
 .hljs-params,
 .hljs-constant {
-  color: #f5871f;
+  color: #f23600;
 }
 
-/* Tomorrow Yellow */
+/* Tomorrow Yellow now Stud.IP @base-color */
 .ruby .hljs-class .hljs-title,
 .css .hljs-rule .hljs-attribute {
-  color: #eab700;
+  color: #28497c;
 }
 
 /* Tomorrow Green */
@@ -52,7 +52,7 @@
 /* Tomorrow Aqua */
 .hljs-title,
 .css .hljs-hexcolor {
-  color: #3e999f;
+  color: #899ab9;
 }
 
 /* Tomorrow Blue */
@@ -64,7 +64,7 @@
 .perl .hljs-sub,
 .javascript .hljs-title,
 .coffeescript .hljs-title {
-  color: #4271ae;
+  color: #28497c;
 }
 
 /* Tomorrow Purple */
@@ -76,8 +76,8 @@
 .hljs {
   display: block;
   overflow-x: auto;
-  background: white;
-  color: #4d4d4c;
+  background: rgba(255, 255, 255, 0.5);
+  color: #3c454e;
   padding: 0.5em;
   -webkit-text-size-adjust: none;
 }

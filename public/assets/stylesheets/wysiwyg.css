@@ -17,15 +17,10 @@
     -moz-transition: height 0.2s;
     transition: height 0.2s;
 }
-#cktoolbar {                        /* toolbar */
+.cktoolbar {                        /* toolbar */
     padding: 0;
     margin: 0;
-    margin-bottom: 5px;
-    z-index: 999;
-    opacity: 0.95;
-    -webkit-box-shadow: 0 1px 2px -1px #7788AA;
-    -moz-box-shadow: 0 1px 2px -1px #7788AA;
-    box-shadow: 0 1px 2px -1px #7788AA;
+    z-index: 1;
 }
 
 /* drop zone effects */

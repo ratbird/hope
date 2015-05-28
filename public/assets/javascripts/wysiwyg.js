@@ -66,6 +66,7 @@ jQuery(function ($) {
             toolbarId = createNewId('cktoolbar'); // needed for sharedSpaces
             toolbar = $('<div>')
                 .attr('id', toolbarId)
+                .addClass('cktoolbar')
                 .css('max-width', textareaWidth),
             toolbarPlaceholder = $('<div>').attr('id', toolbarId + '-placeholder');
 

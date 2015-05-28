@@ -166,6 +166,7 @@ jQuery(function ($) {
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,
+            mathJaxLib: STUDIP.URLHelper.getURL('assets/javascripts/mathjax/MathJax.js?config=TeX-AMS_HTML,default'),
             studipUpload_url: STUDIP.URLHelper.getURL('dispatch.php/wysiwyg/upload'),
             codemirror: {
                 autoCloseTags: false,

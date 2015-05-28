@@ -591,25 +591,9 @@ class Admin_CoursesController extends AuthenticatedController
         return $teachers;
     }
 
-    /**
-     * TODO: SORM
-     * Get Courses (maybe migration to SORM)
-     * @param       $user_id
-     * @param       $inst_id
-     * @param array $params
-     * @return mixed
-     */
     private function getCourses($params = array())
     {
         // Init
-        $sortby = $params['sortby'];
-        $sortFlag = $params['sortFlag'];
-        $typeFilter = $params['typeFilter'];
-        $pluginsFilter = in_array('Inhalt', $params['view_filter']);
-
-        $inst_ids = array();
-
-
         if ($this->selected_inst_id == 'all' && Request::get('search')) {
             $inst = new SimpleCollection($this->insts);
             $inst->filter(function ($a) use (&$inst_ids) {
@@ -625,102 +609,46 @@ class Admin_CoursesController extends AuthenticatedController
             }
         }
 
-        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer waiting prelim'))) {
-            if ($sortby == "status") {
-                $sortby = sprintf('sc.name %s, st.name %s, VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag, $sortFlag, $sortFlag);
-            } else {
-                $sortby = sprintf('%s %s', $sortby, $sortFlag);
-            }
-        } else {
-            $sortby = sprintf('VeranstaltungsNummer %s, Name %s', $sortFlag, $sortFlag);
-        }
 
-        $where = ' AND seminare.status != 99';
-
-        if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
-            $where .= ' AND seminare.status = :typeFilter ';
-        }
+        $filter = AdminCourseFilter::get(true);
+        $filter->where("sem_classes.studygroup_mode = '0'");
 
         if (is_object($this->semester)) {
-            $sem_condition = "AND seminare.start_time <=" . $this->semester->beginn . " AND (" . $this->semester->beginn . " <= (seminare.start_time + seminare.duration_time)
-                OR seminare.duration_time = -1) ";
-        } else {
-            $sem_condition = '';
+            $filter->filterBySemester($this->semester->getId());
+        }
+        if ($params['typeFilter'] && $params['typeFilter'] !== "all") {
+            $filter->filterByType($params['typeFilter']);
+        }
+        if (Request::get('search')) {
+            $filter->filterBySearchString(Request::get('search'));
+        }
+        $filter->filterByInstitute($inst_ids);
+        if ($params['sortby'] === "status") {
+            $filter->orderBy(sprintf('sem_classes.name %s, sem_types.name %s, VeranstaltungsNummer', $params['sortFlag'], $params['sortFlag'], $params['sortFlag']), $params['sortFlag']);
+        } elseif($params['sortby']) {
+            $filter->orderBy($params['sortby'], $params['sortFlag']);
         }
 
+        $courses = $filter->getCourses();
 
-        if ($pluginsFilter) {
+        if (in_array('Inhalt', $params['view_filter'])) {
             $sem_types = SemType::getTypes();
             $modules = new Modules();
         }
-        // Prepare and execute seminar statement
-        $query = "SELECT DISTINCT seminare.Seminar_id, Institute.Name AS Institut, seminare.VeranstaltungsNummer,
-                         seminare.Name, seminare.status, seminare.chdate,
-                         seminare.start_time, seminare.admission_binding, seminare.visible,
-                         seminare.modules, COUNT(seminar_user.user_id) AS teilnehmer,
-                         seminare.lock_rule, seminare.aux_lock_rule,
-                         (SELECT COUNT(seminar_id)
-                          FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'accepted') AS prelim,
-                          (SELECT COUNT(seminar_id)
-                          FROM admission_seminar_user
-                          WHERE seminar_id = seminare.Seminar_id AND status = 'awaiting') AS waiting
-                  FROM Institute
-                  INNER JOIN seminare ON (seminare.Institut_id = Institute.Institut_id {$sem_condition})
-                  LEFT JOIN seminar_user on (seminare.seminar_id=seminar_user.seminar_id AND seminar_user.status != 'dozent' and seminar_user.status != 'tutor')
-                  LEFT JOIN sem_types as st ON st.id = seminare.status
-                  LEFT JOIN sem_classes as sc ON sc.id = st.class
-                  WHERE Institute.Institut_id IN(:institute_id)
-                  {$where}
-                  GROUP BY seminare.Seminar_id
-                  ORDER BY {$sortby}";
+        $seminars = array_map('reset', $courses);
 
-        $statement = DBManager::get()->prepare($query);
-        $statement->bindValue('institute_id', $inst_ids);
-        if (!is_null($typeFilter) && strcmp($typeFilter, "all") !== 0) {
-            $statement->bindValue(':typeFilter', $typeFilter);
-        }
-        $statement->execute();
-        $seminars = array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC));
-
-        $statement->closeCursor();
         if (!empty($seminars)) {
             foreach ($seminars as $seminar_id => $seminar) {
                 $dozenten = $this->getTeacher($seminar_id);
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
-                if ($pluginsFilter) {
+                if (in_array('Inhalt', $params['view_filter'])) {
                     $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
                     $seminars[$seminar_id]['modules'] = $modules->getLocalModules($seminar_id, 'sem', $seminar['modules'], $seminar['status']);
                     $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations($seminar_id, $seminars[$seminar_id], $seminars[$seminar_id]['sem_class'], $GLOBALS['user']->id);
                 }
             }
         }
-
-        if (Request::get('search')) {
-            $search_result = array_filter($seminars, function ($a) {
-                if (stripos($a['VeranstaltungsNummer'], Request::get('search')) !== false) {
-                    return $a;
-                }
-
-                if (stripos($a['Name'], Request::get('search')) !== false) {
-                    return $a;
-                }
-
-                foreach ($a['dozenten'] as $teacher) {
-                    if (stripos($teacher['fullname'], Request::get('search')) !== false) {
-                        return $a;
-                    }
-                }
-            });
-
-            if (!empty($search_result)) {
-                return $search_result;
-            }
-
-            return array();
-        }
-
 
         return $seminars;
     }

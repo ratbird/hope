@@ -178,13 +178,13 @@ class ModulesNotification extends Modules {
         }
 
         $my_sem = array();
-        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, s.modules, s.status as sem_status, su.status,s.admission_prelim, su.notification, IFNULL(visitdate, 0) AS visitdate "
+        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, s.modules, s.status as sem_status, su.status,s.admission_prelim, su.notification, IFNULL(visitdate, :threshold) AS visitdate "
                . "FROM seminar_user su "
                . "LEFT JOIN seminare s USING (Seminar_id) "
                . "LEFT JOIN object_user_visits ouv ON (ouv.object_id = su.Seminar_id AND ouv.user_id = :user_id AND ouv.type = 'sem') "
                . "WHERE su.user_id = :user_id AND su.status != 'user' AND su.notification <> 0";
         if (get_config('DEPUTIES_ENABLE')) {
-            $query .= " UNION SELECT s.Seminar_id, CONCAT(s.Name, ' [Vertretung]') as Name, s.chdate, s.start_time, s.modules, s.status as sem_status, 'dozent' as status, s.admission_prelim, d.notification, IFNULL(visitdate, 0) AS visitdate "
+            $query .= " UNION SELECT s.Seminar_id, CONCAT(s.Name, ' [Vertretung]') as Name, s.chdate, s.start_time, s.modules, s.status as sem_status, 'dozent' as status, s.admission_prelim, d.notification, IFNULL(visitdate, :threshold) AS visitdate "
                . "FROM deputies d "
                . "LEFT JOIN seminare s ON (d.range_id = s.Seminar_id) "
                . "LEFT JOIN object_user_visits ouv ON (ouv.object_id = d.range_id AND ouv.user_id = :user_id AND ouv.type = 'sem') "
@@ -192,6 +192,7 @@ class ModulesNotification extends Modules {
         }
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':user_id', $user_id);
+        $statement->bindValue(':threshold', $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0);
         $statement->execute();
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $seminar_id = $row['Seminar_id'];

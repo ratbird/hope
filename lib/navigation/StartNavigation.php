@@ -33,17 +33,18 @@ class StartNavigation extends Navigation
             }
 
             if (Config::get()->VOTE_ENABLE && WidgetHelper::hasWidget($GLOBALS['user']->id, 'Evaluations')) {
-                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, 0) AND a.author_id != :user_id AND a.state != 'stopvis', vote_id, NULL))
+                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, :threshold) AND a.author_id != :user_id AND a.state != 'stopvis', vote_id, NULL))
                           FROM vote a
                           LEFT JOIN object_user_visits b ON (b.object_id = vote_id AND b.user_id = :user_id AND b.type = 'vote')
                           WHERE a.range_id = 'studip' AND a.state IN ('active', 'stopvis')
                           GROUP BY a.range_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':user_id', $GLOBALS['user']->id);
+                $statement->bindValue(':threshold', $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0);
                 $statement->execute();
                 $vote = (int)$statement->fetchColumn();
 
-                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, 0) AND d.author_id != :user_id, a.eval_id, NULL))
+                $query = "SELECT COUNT(IF(chdate > IFNULL(b.visitdate, :threshold) AND d.author_id != :user_id, a.eval_id, NULL))
                           FROM eval_range a
                           INNER JOIN eval d ON (a.eval_id = d.eval_id AND d.startdate < UNIX_TIMESTAMP() AND
                                             (d.stopdate > UNIX_TIMESTAMP() OR d.startdate + d.timespan > UNIX_TIMESTAMP() OR (d.stopdate IS NULL AND d.timespan IS NULL)))
@@ -52,6 +53,7 @@ class StartNavigation extends Navigation
                           GROUP BY a.range_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':user_id', $GLOBALS['user']->id);
+                $statement->bindValue(':threshold', $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0);
                 $statement->execute();
                 $vote += (int)$statement->fetchColumn();
             }

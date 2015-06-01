@@ -67,13 +67,14 @@ class StudipNews extends SimpleORMap {
 
     public static function CountUnread($range_id = 'studip', $user_id = false)
     {
-        $query = "SELECT SUM(chdate > IFNULL(b.visitdate, 0) AND nw.user_id != :user_id)
+        $query = "SELECT SUM(chdate > IFNULL(b.visitdate, :threshold) AND nw.user_id != :user_id)
                   FROM news_range a
                   LEFT JOIN news nw ON (a.news_id = nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND date + expire)
                   LEFT JOIN object_user_visits b ON (b.object_id = nw.news_id AND b.user_id = :user_id AND b.type = 'news')
                   WHERE a.range_id = :range_id
                   GROUP BY a.range_id";
         $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':threshold', $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0);
         $statement->bindValue(':user_id', $user_id ?: $GLOBALS['user']->id);
         $statement->bindValue(':range_id', $range_id);
         $statement->execute();

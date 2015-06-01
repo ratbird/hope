@@ -310,6 +310,8 @@ function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
  */
 function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 {
+    $threshold = $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0;
+
     $db2 = new DB_seminar;
     $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) ENGINE = MEMORY");
     $db2->query("REPLACE INTO  myobj_" . $user_id . " (object_id) VALUES ('" . join("'),('", array_keys($my_obj)) . "')");
@@ -328,7 +330,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             }
         }
     }
-    $db2->query(get_obj_clause('dokumente a','Seminar_id','dokument_id',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'documents', false, (count($unreadable_folders) ? "AND a.range_id NOT IN('".join("','", $unreadable_folders)."')" : ""), false, $user_id));
+    $db2->query(get_obj_clause('dokumente a','Seminar_id','dokument_id',"(chdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')", 'documents', false, (count($unreadable_folders) ? "AND a.range_id NOT IN('".join("','", $unreadable_folders)."')" : ""), false, $user_id));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["documents"]) {
@@ -355,7 +357,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     //Ankündigungen
-    $db2->query(get_obj_clause('news_range a {ON_CLAUSE} LEFT JOIN news nw ON(a.news_id=nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND (date+expire))','range_id','nw.news_id',"(chdate > IFNULL(b.visitdate,0) AND nw.user_id !='$user_id')",'news',false,false,'a.news_id', $user_id));
+    $db2->query(get_obj_clause('news_range a {ON_CLAUSE} LEFT JOIN news nw ON(a.news_id=nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND (date+expire))','range_id','nw.news_id',"(chdate > IFNULL(b.visitdate, $threshold) AND nw.user_id !='$user_id')",'news',false,false,'a.news_id', $user_id));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         $my_obj[$object_id]["neuenews"] = $db2->f("neue");
@@ -379,7 +381,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     // scm?
-    $db2->query(get_obj_clause('scm a','range_id',"IF(content !='',1,0)","(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", "scm", 'tab_name', false, false, $user_id));
+    $db2->query(get_obj_clause('scm a','range_id',"IF(content !='',1,0)","(chdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')", "scm", 'tab_name', false, false, $user_id));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["scm"]) {
@@ -421,7 +423,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     //Termine?
-    $db2->query(get_obj_clause('ex_termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate,0) AND autor_id !='$user_id')", 'schedule', false, " AND a.content <> '' ", false, $user_id));
+    $db2->query(get_obj_clause('ex_termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate, $threshold) AND autor_id !='$user_id')", 'schedule', false, " AND a.content <> '' ", false, $user_id));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["schedule"]) {
@@ -432,7 +434,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             }
         }
     }
-    $db2->query(get_obj_clause('termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate,0) AND autor_id !='$user_id')", 'schedule', false, false, false, $user_id));
+    $db2->query(get_obj_clause('termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate, $threshold) AND autor_id !='$user_id')", 'schedule', false, false, false, $user_id));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["schedule"]) {
@@ -459,7 +461,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
     //Wiki-Eintraege?
     if (get_config('WIKI_ENABLE')) {
-        $db2->query(get_obj_clause('wiki a','range_id','keyword',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'wiki', "COUNT(DISTINCT keyword) as count_d", false, false, $user_id));
+        $db2->query(get_obj_clause('wiki a','range_id','keyword',"(chdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')", 'wiki', "COUNT(DISTINCT keyword) as count_d", false, false, $user_id));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
             if ($my_obj[$object_id]["modules"]["wiki"]) {
@@ -488,9 +490,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
     //Lernmodule?
     if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-        $db2->query(get_obj_clause('object_contentmodules a','object_id','module_id',"(chdate > IFNULL(b.visitdate,0) AND a.module_type != 'crs')",
+        $db2->query(get_obj_clause('object_contentmodules a','object_id','module_id',"(chdate > IFNULL(b.visitdate, $threshold) AND a.module_type != 'crs')",
                                     'elearning_interface', false , " AND a.module_type != 'crs'", false, $user_id));
-//      $db2->query(get_obj_clause('object_contentmodules a','object_id','module_id',"(chdate > IFNULL(b.visitdate,0))", 'elearning_interface'));
+//      $db2->query(get_obj_clause('object_contentmodules a','object_id','module_id',"(chdate > IFNULL(b.visitdate, $threshold))", 'elearning_interface'));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
             if ($my_obj[$object_id]["modules"]["elearning_interface"]) {
@@ -517,7 +519,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
     //Umfragen
     if (get_config('VOTE_ENABLE')) {
-        $db2->query(get_obj_clause('vote a','range_id','vote_id',"(chdate > IFNULL(b.visitdate,0) AND a.author_id !='$user_id' AND a.state != 'stopvis')",
+        $db2->query(get_obj_clause('vote a','range_id','vote_id',"(chdate > IFNULL(b.visitdate, $threshold) AND a.author_id !='$user_id' AND a.state != 'stopvis')",
                                     'vote', false , " AND a.state IN('active','stopvis')",'vote_id', $user_id));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
@@ -529,7 +531,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
         }
 
         $db2->query(get_obj_clause('eval_range a {ON_CLAUSE} INNER JOIN eval d ON ( a.eval_id = d.eval_id AND d.startdate < UNIX_TIMESTAMP( ) AND (d.stopdate > UNIX_TIMESTAMP( ) OR d.startdate + d.timespan > UNIX_TIMESTAMP( ) OR (d.stopdate IS NULL AND d.timespan IS NULL)))',
-                                    'range_id','a.eval_id',"(chdate > IFNULL(b.visitdate,0) AND d.author_id !='$user_id' )",'eval',false,false,'a.eval_id', $user_id));
+                                    'range_id','a.eval_id',"(chdate > IFNULL(b.visitdate, $threshold) AND d.author_id !='$user_id' )",'eval',false,false,'a.eval_id', $user_id));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
             $my_obj[$object_id]["neuevotes"] += $db2->f("neue");
@@ -556,7 +558,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
     //Literaturlisten
     if (get_config('LITERATURE_ENABLE')) {
-        $db2->query(get_obj_clause('lit_list a','range_id','list_id',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'literature', false, " AND a.visibility=1", false, $user_id));
+        $db2->query(get_obj_clause('lit_list a','range_id','list_id',"(chdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')", 'literature', false, " AND a.visibility=1", false, $user_id));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
             if ($my_obj[$object_id]["modules"]["literature"]) {
@@ -585,7 +587,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     if ($GLOBALS['perm']->have_perm('tutor')) {
         //vorläufige Teilnahme
         $db2->query(get_obj_clause('admission_seminar_user a','seminar_id','a.user_id',
-            "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+            "(mkdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')",
             'participants', false, " AND a.status='accepted' ", false, $user_id, 'mkdate'));
 
         while($db2->next_record()) {
@@ -602,7 +604,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
         }
 
         $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',
-            "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+            "(mkdate > IFNULL(b.visitdate, $threshold) AND a.user_id !='$user_id')",
             'participants', false, false, false, $user_id, 'mkdate'));
 
         $all_auto_inserts = AutoInsert::getAllSeminars(true);

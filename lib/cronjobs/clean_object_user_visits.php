@@ -38,14 +38,7 @@ class CleanObjectUserVisits extends CronJob
      */
     public static function getParameters()
     {
-        return array(
-            'expires' => array(
-                'type'        => 'integer',
-                'default'     => 365,
-                'status'      => 'mandatory',
-                'description' => _('Anzahl an Tagen, nach denen ein Eintrag aus der Tabelle gelöscht wird.'),
-            ),
-        );
+        return array();
     }
 
     /**
@@ -56,13 +49,11 @@ class CleanObjectUserVisits extends CronJob
      */
     public function execute($last_result, $parameters = array())
     {
-        $expires = $parameters['expires'];
-
-        if ($expires) {
+        if ($GLOBALS['NEW_INDICATOR_THRESHOLD']) {
             $query = "DELETE FROM `object_user_visits`
                       WHERE GREATEST(`visitdate`, `last_visitdate`) < UNIX_TIMESTAMP(NOW() - INTERVAL :expires DAY)";
             $statement = DBManager::get()->prepare($query);
-            $statement->bindValue(':expires', (int) $expires, PDO::PARAM_INT);
+            $statement->bindValue(':expires', (int) $GLOBALS['NEW_INDICATOR_THRESHOLD'], PDO::PARAM_INT);
             $statement->execute();
         }
     }

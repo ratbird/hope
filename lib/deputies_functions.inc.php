@@ -220,6 +220,7 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
     switch ($type) {
         // My courses list
         case 'meine_sem':
+            $threshold = $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0;
             $fields = array(
                 "seminare.VeranstaltungsNummer AS sem_nr",
                 "CONCAT(seminare.Name, ' ["._("Vertretung")."]') AS Name",
@@ -231,7 +232,7 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
                 "seminare.visible",
                 "admission_binding",
                 "modules",
-                "IFNULL(visitdate,0) as visitdate",
+                "IFNULL(visitdate, $threshold) as visitdate",
                 "admission_prelim",
                 "$sem_number_sql as sem_number",
                 "$sem_number_end_sql as sem_number_end"

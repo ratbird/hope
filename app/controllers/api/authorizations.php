@@ -43,8 +43,10 @@ class Api_AuthorizationsController extends AuthenticatedController
             'app'     => _('Mobile App')
         );
 
-        $this->setInfoboxImage('sidebar/admin-sidebar.png');
-        $this->addToInfobox('Informationen', _('Dies sind die Apps, die Zugriff auf Ihren Account haben.'), 'icons/16/black/info-circle.png');
+        $widget = new SidebarWidget();
+        $widget->setTitle(_('Informationen'));
+        $widget->addElement(new WidgetElement(_('Dies sind die Apps, die Zugriff auf Ihren Account haben.')));
+        Sidebar::Get()->addWidget($widget);
     }
 
     /**

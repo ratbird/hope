@@ -29,30 +29,15 @@ class Admin_ApiController extends AuthenticatedController
             'mobile'  => _('Mobile App')
         );
 
-        // Infobox
-        $this->setInfoboxImage('sidebar/admin-sidebar.png');
+        $sidebar = Sidebar::Get();
+        $views = new ViewsWidget();
+        $views->setTitle(_('Aktionen'));
 
-        if ($action !== 'index') {
-            $back = sprintf('<a href="%s">%s</a>',
-                           $this->url_for('admin/api'),
-                           _('Zurück zur Übersicht'));
-            $this->addToInfobox(_('Aktionen'), $back, 'icons/16/black/arr_1left');
-        }
-
-        $new = sprintf('<a href="%s">%s</a>',
-                       $this->url_for('admin/api/edit'),
-                       _('Neue Applikation registrieren'));
-        $this->addToInfobox(_('Aktionen'), $new, 'icons/16/black/add');
-
-        $global = sprintf('<a href="%s">%s</a>',
-                         $this->url_for('admin/api/permissions'),
-                         _('Globale Zugriffseinstellungen'));
-        $this->addToInfobox(_('Aktionen'), $global, 'icons/16/black/admin');
-
-        $config = sprintf('<a href="%s">%s</a>',
-                          $this->url_for('admin/api/config'),
-                          _('Konfiguration'));
-        $this->addToInfobox(_('Aktionen'), $config, 'icons/16/black/tools');
+        $views->addLink(_('Registrierte Applikationen'), $this->url_for('admin/api'))->setActive($action == 'index');
+        $views->addLink(_('Neue Applikation registrieren'), $this->url_for('admin/api/edit'))->setActive($action == 'edit');
+        $views->addLink(_('Globale Zugriffseinstellungen'), $this->url_for('admin/api/permissions'))->setActive($action == 'permissions');
+        $views->addLink(_('Konfiguration'), $this->url_for('admin/api/config'))->setActive($action == 'config');
+        $sidebar->addWidget($views);
     }
 
     /**

@@ -58,7 +58,7 @@
 </table>
 <? else: ?>
 <p>
-    <?= _('Es wurde noch keine Applikation registriert.') ?>
-    <?= sprintf(_('Klicken Sie <a href="%s">hier</a>, um eine Applikation zu registrieren.'), $controller->url_for('admin/api/edit')) ?>
+    <?= MessageBox::info(_('Es wurde noch keine Applikation registriert.'),
+        array(sprintf(_('Klicken Sie <a href="%s">hier</a>, um eine Applikation zu registrieren.'), $controller->url_for('admin/api/edit')))) ?>
 </p>
 <? endif; ?>

@@ -180,13 +180,25 @@
                 <td><?= $this->render_partial_collection('my_courses/_dozent', $values['dozenten']) ?></td>
             <? endif ?>
             <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>
-                <td style="text-align: center;"><?= $values["teilnehmer"] ?></td>
+                <td style="text-align: center;">
+                    <a title=<?=_('TeilnehmerInnen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                        <?= $values["teilnehmer"] ?>
+                    </a>
+                </td>
             <? endif ?>
             <? if (in_array('TeilnehmerInnen auf Warteliste', $view_filter)) : ?>
-                <td style="text-align: center;"><?= $values["waiting"] ?></td>
+                <td style="text-align: center;">
+                    <a title=<?=_('TeilnehmerInnen auf der Warteliste')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                        <?= $values["waiting"] ?>
+                    </a>
+                </td>
             <? endif ?>
             <? if (in_array('Vorläufige Anmeldungen', $view_filter)) : ?>
-                <td style="text-align: center;"><?= $values["prelim"] ?></td>
+                <td style="text-align: center;">
+                    <a title=<?=_('Vorläufige Anmeldungen')?>" href="<?= URLHelper::getLink('dispatch.php/course/members', array('cid' => $semid))?>">
+                        <?= $values["prelim"] ?>
+                    </a>
+                </td>
             <? endif ?>
             <? if (in_array('Inhalt', $view_filter)) : ?>
                 <td style="text-align: left; white-space: nowrap;">

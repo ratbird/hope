@@ -1,31 +1,15 @@
 <?php
 use Studip\Button, Studip\LinkButton;
 
-//Infobox:
-$info = array();
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Nutzerlisten dienen dazu, um Sonderfälle erfassen zu ".
-                        "können, die in Anmeldeverfahren gesondert behandelt ".
-                        "werden sollen (Härtefälle etc.).");
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Stellen Sie hier ein, wie die Chancen bei der ".
-                        "Platzverteilung verändert werden sollen. Ein Wert ".
-                        "von 1 bedeutet normale Verteilung, ein Wert kleiner ".
-                        "als 1 führt zur Benachteiligung, mit einem Wert ".
-                        "größer als 1 werden die betreffenden Personen ".
-                        "bevorzugt.");
-
-$infobox = array(
-    array("kategorie" => _('Informationen:'),
-          "eintrag" => $info
-    )
-);
-$infobox = array('content' => $infobox,
-                 'picture' => 'sidebar/admin-sidebar.png'
-);
-
+Helpbar::get()->addPlainText(_('Info'), "Nutzerlisten dienen dazu, um Sonderfälle erfassen zu ".
+                                        "können, die in Anmeldeverfahren gesondert behandelt ".
+                                        "werden sollen (Härtefälle etc.).");
+Helpbar::get()->addPlainText(_('Info'), "Stellen Sie hier ein, wie die Chancen bei der ".
+                                        "Platzverteilung verändert werden sollen. Ein Wert ".
+                                        "von 1 bedeutet normale Verteilung, ein Wert kleiner ".
+                                        "als 1 führt zur Benachteiligung, mit einem Wert ".
+                                        "größer als 1 werden die betreffenden Personen ".
+                                        "bevorzugt.");
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <?= $error ? $error : '' ?>

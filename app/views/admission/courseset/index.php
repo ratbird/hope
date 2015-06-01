@@ -1,32 +1,8 @@
 <?php
-//Infobox:
-$actions = array();
-$actions[] = array(
-              "icon" => "icons/16/black/add.png",
-              "text" => '<a href="' .
-                        $controller->url_for('admission/courseset/configure').
-                        '">' . _("Anmeldeset anlegen") . '</a>');
-$info = array();
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => _("Anmeldesets legen fest, wer sich zu den zugeordneten ".
-                        "Veranstaltungen anmelden darf."));
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => _("Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff ".
-                        "haben."));
 
-$infobox = array(
-    array("kategorie" => _('Informationen:'),
-          "eintrag" => $info
-    ),
-    array("kategorie" => _("Aktionen:"),
-          "eintrag"   => $actions
-    )
-);
-$infobox = array('content' => $infobox,
-                 'picture' => 'sidebar/admin-sidebar.png'
-);
+Helpbar::get()->addPlainText(_('Info'),_("Anmeldesets legen fest, wer sich zu den zugeordneten Veranstaltungen anmelden darf."));
+Helpbar::get()->addPlainText(_('Info'),_("Hier sehen Sie alle Anmeldesets, auf die Sie Zugriff haben."));
+
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h2><?= _('Anmeldesets') ?></h2>

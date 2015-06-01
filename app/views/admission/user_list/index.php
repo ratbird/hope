@@ -1,35 +1,11 @@
 <?php
-//Infobox:
-$actions = array();
-$actions[] = array(
-              "icon" => "icons/16/black/add.png",
-              "text" => '<a href="' .
-                        $controller->url_for('admission/userlist/configure').
-                        '">' . _("Nutzerliste anlegen") . '</a>');
-$info = array();
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Nutzerlisten erfassen eine Menge von Personen, die ".
-                        "mit modifizierten Chancen in die Platzverteilung bei ".
-                        "Anmeldeverfahren eingehen. Dies können z.B. ".
-                        "Härtefälle sein, die bevorzugt einen Platz in ".
-                        "Veranstaltungen erhalten sollen.");
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Hier sehen Sie alle Nutzerlisten, auf die Sie Zugriff ".
-                        "haben.");
-
-$infobox = array(
-    array("kategorie" => _('Informationen:'),
-          "eintrag" => $info
-    ),
-    array("kategorie" => _("Aktionen:"),
-          "eintrag"   => $actions
-    )
-);
-$infobox = array('content' => $infobox,
-                 'picture' => 'sidebar/admin-sidebar.png'
-);
+Helpbar::get()->addPlainText(_('Info'),"Nutzerlisten erfassen eine Menge von Personen, die ".
+                                       "mit modifizierten Chancen in die Platzverteilung bei ".
+                                       "Anmeldeverfahren eingehen. Dies können z.B. ".
+                                       "Härtefälle sein, die bevorzugt einen Platz in ".
+                                       "Veranstaltungen erhalten sollen.");
+Helpbar::get()->addPlainText(_('Info'), "Hier sehen Sie alle Nutzerlisten, auf die Sie Zugriff ".
+                                        "haben.");
 ?>
 <?= $this->render_partial('dialog/confirm_dialog') ?>
 <h2><?= _('Nutzerlisten') ?></h2>

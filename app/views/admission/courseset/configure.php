@@ -1,31 +1,9 @@
 <?php
 use Studip\Button, Studip\LinkButton;
 
-//Infobox:
-$info = array();
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Hier können Sie die Regeln, Eigenschaften und ".
-                        "Zuordnungen des Anmeldesets bearbeiten.");
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Sie können das Anmeldeset allen Einrichtungen zuordnen, ".
-                        "an denen Sie mindestens Dozentenrechte haben.");
-
-$info[] = array(
-              "icon" => "icons/16/black/info.png",
-              "text" => "Alle Veranstaltungen der Einrichtungen, an denen Sie ".
-                        "mindestens Dozentenrechte haben, können zum ".
-                        "Anmeldeset hinzugefügt werden.");
-
-$infobox = array(
-    array("kategorie" => _('Informationen:'),
-          "eintrag" => $info
-    )
-);
-$infobox = array('content' => $infobox,
-                 'picture' => 'sidebar/admin-sidebar.png'
-);
+Helpbar::get()->addPlainText(_('Regeln'), _('Hier können Sie die Regeln, Eigenschaften und Zuordnungen des Anmeldesets bearbeiten.'));
+Helpbar::get()->addPlainText(_('Info'), _('Sie können das Anmeldeset allen Einrichtungen zuordnen, an denen Sie mindestens Dozentenrechte haben.'));
+Helpbar::get()->addPlainText(_('Sichtbarkeit'), _('Alle Veranstaltungen der Einrichtungen, an denen Sie mindestens Dozentenrechte haben, können zum Anmeldeset hinzugefügt werden.'));
 
 // Load assigned course IDs.
 $courseIds = $courseset ? $courseset->getCourses() : array();

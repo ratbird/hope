@@ -40,6 +40,11 @@ class Admission_UserListController extends AuthenticatedController {
         }
         PageLayout::addSqueezePackage('admission');
         $this->set_content_type('text/html;charset=windows-1252');
+
+        $views = new ViewsWidget();
+        $views->setTitle(_('Aktionen'));
+        $views->addLink(_('Nutzerliste anlegen'),$this->url_for('admission/userlist/configure'))->setActive($action == 'configure');
+        Sidebar::Get()->addWidget($views);
     }
 
     /**

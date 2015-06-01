@@ -43,6 +43,7 @@ require_once 'lib/classes/StudipSemTreeViewSimple.class.php';
 require_once 'lib/classes/StudipSemRangeTreeViewSimple.class.php';
 require_once 'lib/raumzeit/SingleDate.class.php';
 require_once 'lib/raumzeit/SeminarDB.class.php';
+require_once 'lib/raumzeit/MetaDate.class.php';
 
 
 class ExternModuleTemplateSemBrowse extends ExternModule {

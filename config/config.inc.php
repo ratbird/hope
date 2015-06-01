@@ -378,4 +378,4 @@ $NOT_HIDEABLE_FIELDS = array(
 $TEILNEHMER_IMPORT_DATAFIELDS = array('36908df6f81f7401d96856f69e522d20');
 
 // number of days that new content is highlighted (0/false to show infinitely)
-$NEW_INDICATOR_THRESHOLD = false;
+$NEW_INDICATOR_THRESHOLD = 180;

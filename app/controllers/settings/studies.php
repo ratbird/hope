@@ -39,8 +39,8 @@ class Settings_StudiesController extends Settings_SettingsController {
 
         $this->allow_change = array(
             'sg' => !StudipAuthAbstract::CheckField('studiengang_id', $this->user->auth_plugin)
-            && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $GLOBALS['perm']->have_perm('admin')),
-            'in' => $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm('admin'),
+                    && (Config::get()->ALLOW_SELFASSIGN_STUDYCOURSE || $GLOBALS['perm']->have_perm('admin')),
+            'in' => Config::get()->ALLOW_SELFASSIGN_INSTITUTE || $GLOBALS['perm']->have_perm('admin'),
         );
     }
 

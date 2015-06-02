@@ -53,7 +53,7 @@
                            <? if (!$controller->shallChange('user_info.privadr')) echo 'disabled'; ?>>
                 </td>
             </tr>
-        <? if ($GLOBALS['ENABLE_SKYPE_INFO']): ?>
+        <? if (Config::get()->ENABLE_SKYPE_INFO): ?>
             <tr>
                 <td>
                     <label><?= _('Skype:') ?></label>

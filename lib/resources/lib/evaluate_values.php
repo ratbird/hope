@@ -1947,7 +1947,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
 
         $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"]=array();
         $current_time = (time()-3600);
-        if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
+        if (Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES) {
             $new_assign_objects = Array();
             if (!$reqObj->getTerminId()) {
                 if (is_array($assignObjects) && sizeof($assignObjects) > 0) {
@@ -2044,7 +2044,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                 if (count($overlaps)) {
                     $events_count = sizeof($event_zw);
                     foreach ($overlaps as $overlap_room_id => $overlap_events_count) {
-                        if ($overlap_events_count >= round($events_count * ($GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] / 100))) {
+                        if ($overlap_events_count >= round($events_count * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
                             if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$overlap_room_id]['type'] == 'matching') {
                                 $red_flag_rooms[$overlap_room_id]++;
                             }

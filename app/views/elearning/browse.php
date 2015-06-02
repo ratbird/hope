@@ -44,7 +44,7 @@ if (Request::option('do_open'))
 elseif (Request::option('do_close'))
     $_SESSION['print_open_search'][Request::option('do_close')] = false;
 
-if ($ELEARNING_INTERFACE_ENABLE)
+if (Config::get()->ELEARNING_INTERFACE_ENABLE)
 {
 
     include_once ($RELATIVE_PATH_ELEARNING_INTERFACE ."/" . "ELearningUtils.class.php");

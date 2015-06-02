@@ -5,7 +5,7 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <?
 define('SELECTED', ' checked');
-if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
+if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ENABLE_BOOKINGSTATUS_COLORING) {
     $class = 'content_title_red';
 } else {
     $class = 'printhead';

@@ -1002,7 +1002,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 'REGULAR_DESCRIPTION' => ExternModule::ExtHtmlReady(trim($cycle['desc'])),
                 'REGULAR_DELIMITER' => true);
             $k = 0;
-            if ($GLOBALS['RESOURCES_ENABLE']) {
+            if (Config::get()->RESOURCES_ENABLE) {
                 if (($resource_ids = CycleDataDB::getPredominantRoomDB($metadate_id, $start_time, $end_time)) !== false) {
                     foreach ($resource_ids as $resource_id => $foo) {
                         $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($resource_id)->getName()));
@@ -1056,7 +1056,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 } else {
                     $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_TYPE_OTHER'] = $GLOBALS['TERMIN_TYP'][$date['date_typ']]['name'];
                 }
-                if ($GLOBALS['RESOURCES_ENABLE'] && $date['resource_id']) {
+                if (Config::get()->RESOURCES_ENABLE && $date['resource_id']) {
                     $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($date['resource_id'])->getName()));
                 } else if (trim($date['raum'])) {
                     $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim($date['raum']));
@@ -1467,7 +1467,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             foreach ($data['regular']['turnus_data'] as $cycle_id => $cycle) {
                 $date[$i]['time'] = sprintf('%02d:%02d - %02d:%02d', $cycle['start_hour'], $cycle['start_minute'], $cycle['end_hour'], $cycle['end_minute']);
                 $date[$i]['interval'] = (empty($data['regular']['turnus']) ? '' : _("14-täglich"));
-                if ($GLOBALS['RESOURCES_ENABLE']) {
+                if (Config::get()->RESOURCES_ENABLE) {
                     if ($room_ids = $seminar->metadate->cycles[$cycle_id]->getPredominantRoom($start, $end)) {
                         foreach ($room_ids as $room_id) {
                             $res_obj = ResourceObject::Factory($room_id);
@@ -1488,7 +1488,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                     $date[$i]['time'] = date('H:i', $irregular_date['start_time']) . date(' - H:i', $irregular_date['end_time']);
                     $date[$i]['date'] = strftime('%x', $irregular_date['start_time']);
                     $date[$i]['dow'] = getWeekDay(date('w', $irregular_date['start_time']));
-                    if ($GLOBALS['RESOURCES_ENABLE'] && $irregular_date['resource_id']) {
+                    if (Config::get()->RESOURCES_ENABLE && $irregular_date['resource_id']) {
                         $res_obj = ResourceObject::Factory($irregular_date['resource_id']);
                         $date[$i]['room'] = $res_obj->getName();
                     } else {
@@ -1503,5 +1503,3 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     }
 
 }
-
-?>

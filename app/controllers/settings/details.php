@@ -64,7 +64,7 @@ class Settings_DetailsController extends Settings_SettingsController
 
         $changed = false;
 
-        if ($GLOBALS['ENABLE_SKYPE_INFO']) {
+        if (Config::get()->ENABLE_SKYPE_INFO) {
             $new_skype_name = Request::get('skype_name');
             if ($new_skype_name != $this->config->SKYPE_NAME) {
                 $this->config->store('SKYPE_NAME', $new_skype_name);

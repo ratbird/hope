@@ -85,7 +85,7 @@ use Studip\Button,
                 <input type="hidden" name="related_teachers" value="<?= implode(',', $tpl['related_persons']) ?>">
 
                 <select name="teachers" style="width: 300px">
-					<option value="none"><?= _('-- Dozent/in auswählen --') ?></option>
+                    <option value="none"><?= _('-- Dozent/in auswählen --') ?></option>
                     <? foreach ($dozenten as $dozent) : ?>
                     <option value="<?= htmlReady($dozent['user_id']) ?>" <?= $dozent['hidden'] ? 'style="display: none"' : '' ?>>
                         <?= htmlReady($dozent['fullname']) ?>
@@ -109,49 +109,49 @@ use Studip\Button,
             
             <div style="float: right; width: 49%">
                 <b><?= _('Raumangaben:') ?></b><br>
-                <? if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) : ?>
+                <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
                 <? $resList->reset() ?>
-				<label>
-					<input type="radio" name="action" value="room" checked="checked">
-					<?= _("Raum:"); ?>
-				</label>
+                <label>
+                    <input type="radio" name="action" value="room" checked="checked">
+                    <?= _("Raum:"); ?>
+                </label>
 
-				<select name="room_sd" onFocus="jQuery('input[type=radio][name=action][value=room]').attr('checked', 'checked')">
-					<option value="">-- kein Raum gebucht --</value>
-					<? while ($res = $resList->next()) : ?>
-						<option value="<?= $res['resource_id'] ?>" <?= $res['resource_id'] == $tpl['resource_id'] ? 'selected="selected"' : '' ?>>
-							<?= my_substr(htmlReady($res["name"]), 0, 30) ?> <?= $seats[$res['resource_id']] ? '('. $seats[$res['resource_id']] .' '. _('Sitzplätze') .')' : '' ?>
-						</option>
-					<? endwhile; ?>
-				</select>
+                <select name="room_sd" onFocus="jQuery('input[type=radio][name=action][value=room]').attr('checked', 'checked')">
+                    <option value="">-- kein Raum gebucht --</value>
+                    <? while ($res = $resList->next()) : ?>
+                        <option value="<?= $res['resource_id'] ?>" <?= $res['resource_id'] == $tpl['resource_id'] ? 'selected="selected"' : '' ?>>
+                            <?= my_substr(htmlReady($res["name"]), 0, 30) ?> <?= $seats[$res['resource_id']] ? '('. $seats[$res['resource_id']] .' '. _('Sitzplätze') .')' : '' ?>
+                        </option>
+                    <? endwhile; ?>
+                </select>
 
                 <?= Assets::img('icons/16/grey/room-clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
                 
                 <br>
                 <br>
 
-				<label>
-					<input type="radio" name="action" value="freetext" <?= $tpl['freeRoomText'] ? 'checked="checked"' : '' ?>>
-					<?= _('freie Ortsangabe (keine Raumbuchung):') ?><br>
-				</label>
+                <label>
+                    <input type="radio" name="action" value="freetext" <?= $tpl['freeRoomText'] ? 'checked="checked"' : '' ?>>
+                    <?= _('freie Ortsangabe (keine Raumbuchung):') ?><br>
+                </label>
                 <? else : ?>
                     <br>
                     <?= _('freie Ortsangabe:') ?><br>
-					<input type="hidden" name="action" value="freetext">
-				<? endif ?>
+                    <input type="hidden" name="action" value="freetext">
+                <? endif ?>
 
                 <input type="text" name="freeRoomText_sd" maxlength="255" value="<?= $tpl['freeRoomText'] ?>" style="margin-left: 25px; width: 90%;"
-					onFocus="jQuery('input[type=radio][name=action][value=freetext]').attr('checked', 'checked')">
+                    onFocus="jQuery('input[type=radio][name=action][value=freetext]').attr('checked', 'checked')">
 
-				<? if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) : ?>
-					<br>
-					<br>
-					<label>
-						<input type="radio" name="action" value="noroom" <?= !$tpl['freeRoomText'] && !$tpl['resource_id'] ? 'checked="checked"' : '' ?>>
-						<?=_('kein Raum') ?>
-					</label>
-					<br>
-				<? endif ?>
+                <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
+                    <br>
+                    <br>
+                    <label>
+                        <input type="radio" name="action" value="noroom" <?= !$tpl['freeRoomText'] && !$tpl['resource_id'] ? 'checked="checked"' : '' ?>>
+                        <?=_('kein Raum') ?>
+                    </label>
+                    <br>
+                <? endif ?>
                 
                 <br>
                 <br>
@@ -203,7 +203,7 @@ use Studip\Button,
                             URLHelper::getURL('?cmd=delete_singledate&subcmd=cancel&cycle_id=' . $tpl['cycle_id'] . '&sd_id='. $tpl['sd_id'] . '#' . $tpl['sd_id'])) ?>
                 </div>
                 <div class="button-group">
-                <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
+                <? if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                     <?= LinkButton::create(($tpl['room_request']) ? _('Raumanfrage bearbeiten') : _('Raumanfrage erstellen'),
                             URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->getId()) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])),
                             array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false")) ?>

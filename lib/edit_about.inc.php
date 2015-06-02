@@ -594,11 +594,11 @@ class about extends messaging
         // News
         $news = StudipNews::GetNewsByRange($this->auth_user['user_id'], true);
         // Non-private dates.
-        if ($GLOBALS["CALENDAR_ENABLE"]) {
+        if (Config::get()->CALENDAR_ENABLE) {
             $dates = CalendarEvent::countBySql('range_id = ?', array($this->auth_user['user_id']));
         }
         // Votes
-        if (get_config('VOTE_ENABLE')) {
+        if (Config::get()->VOTE_ENABLE) {
             $voteDB = new VoteDB();
             $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
             $stoppedVotes = $voteDB->getStoppedVisibleVotes($this->auth_user['user_id']);
@@ -624,7 +624,7 @@ class about extends messaging
         }
         if ($my_data["motto"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['motto'])
             $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
-        if ($GLOBALS['ENABLE_SKYPE_INFO']) {
+        if (Config::get()->ENABLE_SKYPE_INFO) {
             if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['skype_name']) {
                 $homepage_elements["skype_name"] = array("name" => _("Skype Name"), "visibility" => $homepage_visibility["skype_name"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
                 if ($GLOBALS['user']->cfg->getValue('SKYPE_ONLINE_STATUS')) {
@@ -642,9 +642,9 @@ class about extends messaging
             $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($news && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['news'])
             $homepage_elements["news"] = array("name" => _("Ankündigungen"), "visibility" => $homepage_visibility["news"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
-        if ($GLOBALS["CALENDAR_ENABLE"] && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
+        if (Config::get()->CALENDAR_ENABLE && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
             $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
-        if (get_config('VOTE_ENABLE') && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
+        if (Config::get()->VOTE_ENABLE && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
             $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
         
         $query = "SELECT 1

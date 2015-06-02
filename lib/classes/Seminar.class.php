@@ -1192,7 +1192,7 @@ class Seminar
     function getCycleColorClass($cycle_id)
     {
         $stat = $this->getStatOfNotBookedRooms($cycle_id);
-        if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
+        if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ENABLE_BOOKINGSTATUS_COLORING) {
             if (!$this->metadate->hasDates($cycle_id, $this->filterStart, $this->filterEnd)) {
                 $return = 'content_title_red';
             } else {
@@ -1527,7 +1527,7 @@ class Seminar
         $semesterData = new SemesterData();
         $all_semester = $semesterData->getAllSemesterData();
 
-        if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
+        if (Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES) {
             // filtering
             foreach ($all_semester as $semester) {
                 if ($semester['ende'] > time()) {
@@ -1545,7 +1545,7 @@ class Seminar
                     $metadate_has_termine = 0;
                     $single = true;
                     foreach ($group as $termin) {
-                        if (!$termin->isExTermin() && $termin->getStartTime() >= $semester['beginn'] && $termin->getStartTime() <= $semester['ende'] && (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] || $termin->getStartTime() >= time()) && $termin->isPresence()) {
+                        if (!$termin->isExTermin() && $termin->getStartTime() >= $semester['beginn'] && $termin->getStartTime() <= $semester['ende'] && (!Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES || $termin->getStartTime() >= time()) && $termin->isPresence()) {
                             if (empty($first_event)) {
                                 $first_event = $termin->getStartTime();
                             }
@@ -1579,10 +1579,10 @@ class Seminar
             if (!$metadate) {
                 $irreg = $this->getSingleDates();
 
-                if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
+                if (Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES) {
                     $anzahl = 0;
                     foreach ($irreg as $termin_id => $termin) {
-                        if ($termin->getStartTime() > (time() - 3600)) {
+                        if ($termin->getStartTime() > time() - 3600) {
                             $anzahl++;
                         }
                     }
@@ -1590,12 +1590,12 @@ class Seminar
                     $anzahl = sizeof($irreg);
                 }
 
-                if ($anzahl > $GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]) {
+                if ($anzahl > Config::get()->RESOURCES_ALLOW_SINGLE_DATE_GROUPING) {
                     $single = true;
                     $first = true;
                     foreach ($irreg as $termin_id => $termin) {
                         if ($termin->isPresence()) {
-                            if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
+                            if (!Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES || $termin->getStartTime() > time() - 3600) {
                                 if (empty($first_event)) {
                                     $first_event = $termin->getStartTime();
                                 }
@@ -1624,7 +1624,7 @@ class Seminar
                 } else {
                     foreach ($irreg as $termin_id => $termin) {
                         if ($termin->isPresence()) {
-                            if (!$GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES'] ||  $termin->getStartTime() > (time() - 3600)) {
+                            if (!Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES || $termin->getStartTime() > time() - 3600) {
                                 if (empty($first_event)) {
                                     $first_event = $termin->getStartTime();
                                 }
@@ -1993,7 +1993,7 @@ class Seminar
         $statement->execute(array($s_id));
 
         // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
-        if ($GLOBALS['RESOURCES_ENABLE']) {
+        if (Config::get()->RESOURCES_ENABLE) {
             $killAssign = new DeleteResourcesUser($s_id);
             $killAssign->delete();
             if ($rr = RoomRequest::existsByCourse($s_id)) {

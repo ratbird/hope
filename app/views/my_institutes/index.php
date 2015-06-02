@@ -8,7 +8,7 @@
 <? endif ?>
 
 <? if (empty($institutes)) : ?>
-    <? if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm("dozent")) : ?>
+    <? if (!Config::get()->ALLOW_SELFASSIGN_INSTITUTE || $GLOBALS['perm']->have_perm("dozent")) : ?>
         <?=
         MessageBox::info(sprintf(_('Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s.'),
             '<a href="' . URLHelper::getLink('dispatch.php/siteinfo/show') . '">', '</a>'))?>
@@ -75,7 +75,7 @@
                 </td>
 
                 <td style="text-align: left; white-space: nowrap">
-                    <? if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['perms'] == 'user') : ?>
+                    <? if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $values['perms'] == 'user') : ?>
                         <a href="<?=$controller->url_for('my_institutes/decline_inst/'.$instid)?>">
                             <?= Assets::img('icons/20/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
                         </a>

@@ -225,7 +225,7 @@ function news (&$module, $data, $alias_content, $text_div, $text_div_end) {
 }
 
 function termine (&$module, $data, $alias_content, $text_div, $text_div_end) {
-    if ($GLOBALS["CALENDAR_ENABLE"]) {
+    if (Config::get()->CALENDAR_ENABLE) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";

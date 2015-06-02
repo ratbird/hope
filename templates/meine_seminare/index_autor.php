@@ -151,7 +151,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                 <table class="">
                     <?
-                    if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm("dozent")) {
+                    if (!Config::get()->ALLOW_SELFASSIGN_INSTITUTE || $perm->have_perm('dozent')) {
                         $meldung = "info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zuständigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§";
                     } else {
                         $meldung = "info§" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer persönlichen Einstellungsseite."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>") . "§";
@@ -206,7 +206,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                                 <td align="right" nowrap="nowrap">
                                     <? var_dump($values)?>
-                                <?  if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
+                                <?  if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $values['status'] == 'user') { ?>
                                     <a href="<?= URLHelper::getLink('', array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
                                         <?= Assets::img('icons/20/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
                                     </a>

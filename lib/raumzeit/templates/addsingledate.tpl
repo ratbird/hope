@@ -37,7 +37,7 @@ use Studip\Button,
             <TR>
                 <TD class="table_row_odd">&nbsp;</TD>
                 <TD class="table_row_odd" colspan="2" valign="top">
-                    <? if ($GLOBALS['RESOURCES_ENABLE']) : ?>
+                    <? if (Config::get()->RESOURCES_ENABLE) : ?>
                     <?=_("Raum:")?>
                     <select name="room">
                         <OPTION value="nothing"><?=_("KEINEN Raum buchen")?></option>
@@ -57,7 +57,7 @@ use Studip\Button,
                     <? endif ?>
                     <?=_("freie Ortsangabe:")?>
                     <input name="freeRoomText" type="text" size="10" maxlength="255">
-                    <?=$GLOBALS['RESOURCES_ENABLE']? _("(führt <em>nicht</em> zu einer Raumbuchung)") : ''?>
+                    <?= Config::get()->RESOURCES_ENABLE ? _('(führt <em>nicht</em> zu einer Raumbuchung)') : '' ?>
                 </TD>
                 <TD class="table_row_odd" colspan="2" valign="top" nowrap>
                     <?=_("Art:");?>

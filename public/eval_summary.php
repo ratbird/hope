@@ -20,8 +20,6 @@
 
 require '../lib/bootstrap.php';
 
-if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
-
 require_once "vendor/phplot/phplot.php";
 require_once 'lib/msg.inc.php';
 require_once 'lib/datei.inc.php';
@@ -32,6 +30,8 @@ require_once 'lib/export/export_tmp_gc.inc.php';
 
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
+
+$EVAL_AUSWERTUNG_GRAPH_FORMAT = Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT ?: 'gif';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -166,8 +166,8 @@ function do_graph($data, $evalquestion_id)
     $graph->SetYTickIncrement($max_x < 10 ? 1 : round($max_x/10));
     $graph->SetPlotBgColor(array(222,222,222));
     $graph->SetDataType("text-data");
-    $graph->SetFileFormat($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
-    $graph->SetOutputFile($tmp_path_export."/evalsum".$evalquestion_id.$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
+    $graph->SetFileFormat(Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT);
+    $graph->SetOutputFile($tmp_path_export."/evalsum".$evalquestion_id.$auth->auth["uid"].".".Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT);
     $graph->SetIsInline(true);
     $graph->SetDataValues($data);
     $graph->SetPlotType($type);
@@ -317,7 +317,7 @@ function answers($parent_id, $anz_nutzer, $question_type)
     $txt .= "    </td>\n";
     $txt .= "    <td width=\"30%\" valign=\"TOP\" align=\"RIGHT\">\n";
     if (do_template("show_graphics")) {
-        $txt .= '<IMG SRC="' . GetDownloadLink('evalsum'.$parent_id.$auth->auth['uid'].'.'.$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'], 'evalsum'.$parent_id.$auth->auth['uid'].'.'.$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'], 2) .'">'."\n";
+        $txt .= '<IMG SRC="' . GetDownloadLink('evalsum'.$parent_id.$auth->auth['uid'].'.'.Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT, 'evalsum'.$parent_id.$auth->auth['uid'].'.'.Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT, 2) .'">'."\n";
     } else $txt .= "&nbsp;\n";
     $txt .= "    </td>\n";
     $txt .= "  </tr>\n";

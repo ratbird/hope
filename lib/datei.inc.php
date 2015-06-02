@@ -2362,7 +2362,7 @@ function get_mime_type($filename)
 
 /**
 * Erzeugt einen Downloadlink abhaengig von der Konfiguration des Systems
-* ($GLOBALS['SENDFILE_LINK_MODE'] = 'normal'|'old'|'rewrite')
+* (Config::get()->SENDFILE_LINK_MODE = 'normal'|'old'|'rewrite')
 *
 * @param    string  $file_id
 * @param    string  $file_name
@@ -2371,7 +2371,7 @@ function get_mime_type($filename)
 * @return   string  downloadlink
 */
 function GetDownloadLink($file_id, $file_name, $type = 0, $dltype = 'normal', $range_id = '', $list_id = ''){
-    $mode = (isset($GLOBALS['SENDFILE_LINK_MODE']))? $GLOBALS['SENDFILE_LINK_MODE']:'normal';
+    $mode = Config::get()->SENDFILE_LINK_MODE ?: 'normal';
     $link[] = $GLOBALS['ABSOLUTE_URI_STUDIP'];
     $wa = '';
     switch($mode) {

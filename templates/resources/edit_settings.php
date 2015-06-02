@@ -17,7 +17,7 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="checkbox" name="allow_requests"
-                           <? if ($GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) echo 'checked'; ?>>
                     <?= _('NutzerInnen können im Rahmen der Veranstaltungsverwaltung Raumeigenschaften und konkrete Räume wünschen.') ?>
                 </label>
                 <br>
@@ -33,7 +33,7 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="checkbox" name="locking_active"
-                           <? if ($GLOBALS['RESOURCES_LOCKING_ACTIVE']) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_LOCKING_ACTIVE) echo 'checked'; ?>>
                     <?= _('Blockierung ist zu den angegebenen Sperrzeiten aktiv:') ?><br>
                 </label>
                 <br>
@@ -53,7 +53,7 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="checkbox" name="assign_locking_active"
-                           <? if ($GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_ASSIGN_LOCKING_ACTIVE) echo 'checked'; ?>>
                     <?= _('Blockierung ist zu den angegebenen Sperrzeiten aktiv:') ?><br>
                 </label>
                 <br>
@@ -73,7 +73,7 @@
                     <?= _('Anzahl der Belegungen, ab der Räume dennoch mit Einzelterminen passend belegt werden können:') ?>
                     <input type="text" size="5" maxlength="10"
                            name="allow_single_assign_percentage"
-                           value="<?= $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] ?>">%
+                           value="<?= Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE ?>">%
                     <br>
                 </label>
 
@@ -82,7 +82,7 @@
                     <?= _('Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen:') ?>
                     <input type="text" size="3" maxlength="5"
                            name="allow_single_date_grouping"
-                           value="<?= $GLOBALS['RESOURCES_ALLOW_SINGLE_DATE_GROUPING'] ?>"><br>
+                           value="<?= Config::get()->RESOURCES_ALLOW_SINGLE_DATE_GROUPING ?>"><br>
                 </label>
                 <br>
             </td>
@@ -95,7 +95,7 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="checkbox" name="enable_orga_classify"
-                           <? if ($GLOBALS['RESOURCES_ENABLE_ORGA_CLASSIFY']) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_ENABLE_ORGA_CLASSIFY) echo 'checked'; ?>>
                     <?= _('<i>Räume</i> können Fakultäten und Einrichtungen unabhängig von Besitzerrechten zugeordnet werden.')?><br>
                 </label>
                 <br>
@@ -111,13 +111,13 @@
                     <br>
                     &nbsp;&nbsp;&nbsp;
                     <select name="allow_create_resources">
-                        <option value="1" <? if ($GLOBALS['RESOURCES_ALLOW_CREATE_ROOMS'] == 1) echo 'selected'; ?>>
+                        <option value="1" <? if (Config::get()->RESOURCES_ALLOW_CREATE_ROOMS == 1) echo 'selected'; ?>>
                             <?= _('NutzerInnen ab globalem Status Tutor') ?>
                         </option>
-                        <option value="2" <? if ($GLOBALS['RESOURCES_ALLOW_CREATE_ROOMS'] == 2) echo 'selected'; ?>>
+                        <option value="2" <? if (Config::get()->RESOURCES_ALLOW_CREATE_ROOMS == 2) echo 'selected'; ?>>
                             <?= _('NutzerInnen ab globalem Status Admin') ?>
                         </option>
-                        <option value="3" <? if ($GLOBALS['RESOURCES_ALLOW_CREATE_ROOMS'] == 3) echo 'selected'; ?>>
+                        <option value="3" <? if (Config::get()->RESOURCES_ALLOW_CREATE_ROOMS == 3) echo 'selected'; ?>>
                             <?= _('nur globale Ressourcenadministratoren') ?>
                         </option>
                     </select>
@@ -138,21 +138,21 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance_rooms" value="1"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS_ROOMS'] == 1) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS_ROOMS == 1) echo 'checked'; ?>>
                     <?= _('die lokalen Rechte der Einrichtung oder Veranstaltung werden übertragen') ?>
                     <br>
                 </label>
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance_rooms" value="2"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS_ROOMS'] == 2) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS_ROOMS == 2) echo 'checked'; ?>>
                     <?= _('nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)') ?>
                     <br>
                 </label>
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance_rooms" value="3"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS_ROOMS'] == 3) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS_ROOMS == 3) echo 'checked'; ?>>
                     <?= _('keine Rechte') ?>
                     <br>
                 </label>
@@ -171,19 +171,19 @@
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance" value="1"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS'] == 1) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS == 1) echo 'checked'; ?>>
                     <?= _('die lokalen Rechte der Einrichtung oder Veranstaltung werden übertragen') ?><br>
                 </label>
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance" value="2"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS'] == 2) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS == 2) echo 'checked'; ?>>
                     <?= _('nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)') ?><br>
                 </label>
                 <label>
                     &nbsp;&nbsp;&nbsp;
                     <input type="radio" name="inheritance" value="3"
-                           <? if ($GLOBALS['RESOURCES_INHERITANCE_PERMS'] == 3) echo 'checked'; ?>>
+                           <? if (Config::get()->RESOURCES_INHERITANCE_PERMS == 3) echo 'checked'; ?>>
                     <?= _('keine Rechte') ?><br>
                 </label>
                 <br>

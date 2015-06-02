@@ -48,23 +48,22 @@ require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObjectPerms.cla
 * @return   boolean
 *
 **/
-function allowCreateRooms($user_id='') {
-    global $user, $perm;
+function allowCreateRooms ($user_id = '')
+{
+    if (!$user_id) {
+        $user_id = $GLOBALS['user']->id;
+    }
 
-    if (!$user_id)
-        $user_id = $user->id;
-
-    switch ($GLOBALS['RESOURCES_ALLOW_CREATE_ROOMS']) {
+    switch (Config::get()->RESOURCES_ALLOW_CREATE_ROOMS) {
         case 1:
-            return $perm->have_perm('tutor');
+            return $GLOBALS['perm']->have_perm('tutor');
         break;
         case 2:
-            return $perm->have_perm('admin');
+            return $GLOBALS['perm']->have_perm('admin');
         break;
         case 3:
             return getGlobalPerms($user_id) == 'admin';
         break;
-
     }
 }
 
@@ -92,7 +91,7 @@ function getLockPeriod($type, $timestamp1='', $timestamp2='')
         $timestamp2 = time();
     }
 
-    if (((!$GLOBALS['RESOURCES_LOCKING_ACTIVE']) && ($type == "edit")) || ((!$GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) && ($type == "assign"))) {
+    if ((!Config::get()->RESOURCES_LOCKING_ACTIVE && $type === 'edit') || (!Config::get()->RESOURCES_ASSIGN_LOCKING_ACTIVE && $type === 'assign')) {
         $cache[$type][$timestamp1 / 60][$timestamp2 / 60] = FALSE;
         return FALSE;
     } else {
@@ -151,10 +150,11 @@ function isLockPeriod($type, $timestamp = '')
         return $cache[$type][$timestamp / 60];
     }
 
-    if (!$timestamp)
+    if (!$timestamp) {
         $timestamp = time();
+    }
 
-    if (((!$GLOBALS['RESOURCES_LOCKING_ACTIVE']) && ($type == "edit")) || ((!$GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) && ($type == "assign"))) {
+    if ((!Config::get()->RESOURCES_LOCKING_ACTIVE && $type === 'edit') || (!Config::get()->RESOURCES_ASSIGN_LOCKING_ACTIVE && $type === 'assign')) {
         $cache[$type][$timestamp % 60] = FALSE;
         return FALSE;
     } else {

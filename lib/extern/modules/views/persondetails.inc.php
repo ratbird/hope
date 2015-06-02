@@ -4,16 +4,16 @@
 # Lifter007: TODO
 # Lifter010: TODO
 
-require_once('lib/statusgruppe.inc.php');
-require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php');
+require_once 'lib/statusgruppe.inc.php';
+require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php';
 
-if ($GLOBALS["CALENDAR_ENABLE"]) {
+if (Config::get()->CALENDAR_ENABLE) {
     require_once 'app/models/calendar/SingleCalendar.php';
 }
 
 $instituts_id = $this->config->range_id;
-$username = $args["username"];
-$sem_id = $args["seminar_id"];
+$username = $args['username'];
+$sem_id = $args['seminar_id'];
 
 // Mitarbeiter/in am Institut
 $ext_vis_query = get_ext_vis_query();
@@ -265,7 +265,7 @@ function news (&$module, $row, $alias_content, $text_div, $text_div_end)
 
 function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
 {
-    if ($GLOBALS["CALENDAR_ENABLE"] && Visibility::verify('dates', $row['user_id']) || 1) {
+    if (Config::get()->CALENDAR_ENABLE && Visibility::verify('dates', $row['user_id']) || 1) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";

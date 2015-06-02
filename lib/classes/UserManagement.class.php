@@ -37,11 +37,11 @@ require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'app/models/studygroup.php';
 require_once 'vendor/phpass/PasswordHash.php';
 
-if ($GLOBALS['RESOURCES_ENABLE']) {
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
+if (Config::get()->RESOURCES_ENABLE) {
+    include_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php';
 }
-if (get_config('ELEARNING_INTERFACE_ENABLE')){
-    require_once ($GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php");
+if (Config::get()->ELEARNING_INTERFACE_ENABLE) {
+    require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . '/ELearningUtils.class.php';
 }
 
 /**
@@ -940,7 +940,7 @@ class UserManagement
             }
         }
         // kill all the ressources that are assigned to the user (and all the linked or subordinated stuff!)
-        if ($GLOBALS['RESOURCES_ENABLE']) {
+        if (Config::get()->RESOURCES_ENABLE) {
             $killAssign = new DeleteResourcesUser($this->user_data['auth_user_md5.user_id']);
             $killAssign->delete();
         }

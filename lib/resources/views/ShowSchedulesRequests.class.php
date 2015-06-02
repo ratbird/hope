@@ -165,26 +165,28 @@ class ShowSchedulesRequests extends ShowSchedules{
             $reqObj = RoomRequest::find($req["request_id"]);
             $assignObjects = array();
             if ($reqObj) {
-            $semResAssign = new VeranstaltungResourcesAssign($reqObj->getSeminarId());
+                $semResAssign = new VeranstaltungResourcesAssign($reqObj->getSeminarId());
                 if ($reqObj->getType() == 'date' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'repeated') {
                     $assignObjects[] = $semResAssign->getDateAssignObject($reqObj->getTerminId());
                 } else if ($reqObj->getType() == 'cycle' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'single') {
                     $assignObjects = $semResAssign->getMetaDateAssignObjects($reqObj->getMetadateId());
                 } else if ($reqObj->getType() == 'course' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'single') {
                     $assignObjects = $semResAssign->getDateAssignObjects(TRUE);
-            }
-            }
-                if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
-                    $assignObjects = array_filter($assignObjects, create_function('$a', 'return $a->getBegin() > '.(time()-3600).';'));
                 }
+            }
+            if (Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES) {
+                $assignObjects = array_filter($assignObjects, function ($a) {
+                    return $a->getBegin() > time() - 3600;
+                });
+            }
             $check = new CheckMultipleOverlaps();
             $check->setAutoTimeRange($assignObjects);
             $check->addResource($this->resource_id);
             $events = array();
             $result = array();
-            foreach($assignObjects as $ao){
+            foreach ($assignObjects as $ao) {
                 foreach ($ao->getEvents() as $event) {
-                            $events[$event->getId()] = $event;
+                    $events[$event->getId()] = $event;
                 }
             }
             uasort($events, create_function('$a,$b', 'return $a->getBegin() < $b->getBegin() ? -1 : 1;'));

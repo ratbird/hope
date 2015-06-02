@@ -321,11 +321,11 @@ class MetaDate
 
                 // delete issues, that are not assigned to a single date because of to few dates
                 // (only if the schedule expert view is off)
-                if(!$GLOBALS["RESOURCES_ENABLES_EXPERT_SCHEDULE_VIEW"]){
-                    if( $new_singledate_count < $singledate_count) {
-                        for($i = $new_singledate_count; $i < $singledate_count; $i++){
-                            if( $issues[$i] != NULL) {
-                                foreach( $issues[$i] as $issue_id){
+                if (!Config::get()->RESOURCES_ENABLES_EXPERT_SCHEDULE_VIEW) {
+                    if ($new_singledate_count < $singledate_count) {
+                        for ($i = $new_singledate_count; $i < $singledate_count; $i++) {
+                            if ($issues[$i] != NULL) {
+                                foreach ($issues[$i] as $issue_id) {
                                     // delete this issue
                                     IssueDB::deleteIssue($issue_id);
                                 }

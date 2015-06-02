@@ -151,7 +151,7 @@ class ShowToolsRequests
     function selectDates($seminar_id, $termin_id = '')
     {
         if (!$termin_id) {
-            if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
+            if (Config::get()->RESOURCES_HIDE_PAST_SINGLE_DATES) {
                 $query = "SELECT *, resource_id
                           FROM termine
                           LEFT JOIN resources_assign AS ra ON (ra.assign_user_id = termine.termin_id)
@@ -883,20 +883,26 @@ class ShowToolsRequests
     {
         if ($overlap_events_count) {
             foreach ($overlaps as $val) {
-                if ($val["lock"])
-                    $lock_desc.=sprintf(_("%s, %s Uhr bis %s, %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+                if ($val['lock']) {
+                    $lock_desc .= sprintf(_('%s, %s Uhr bis %s, %s Uhr') . "\n",
+                                          date('d.m.Y', $val['begin']),
+                                          date('H:i', $val['begin']),
+                                          date('d.m.Y', $val['end']),
+                                          date('H:i', $val['end']));
+                }
             }
-            if ($lock_desc)
+            if ($lock_desc) {
                 $lock_desc = _("Sperrzeit(en):\n").$lock_desc;
+            }
 
-            if ($overlap_events_count >= round($events_count * ($GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] / 100))) {
+            if ($overlap_events_count >= round($events_count * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
                 if ($overlap_events_count == 1)
                     if ($lock_desc)
                         $desc.=sprintf(_("Es besteht eine Belegungssperre zur gewünschten Belegungszeit.")."\n".$lock_desc);
                     else
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
-                    $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
+                    $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE);
                 $html = Assets::img('icons/16/red/progress.png', tooltip2($desc));
                 $status = 2;
             } else {
@@ -923,20 +929,26 @@ class ShowToolsRequests
     function showOverlapStatus($overlaps, $events_count, $overlap_events_count) {
         if (is_array($overlaps)) {
             foreach ($overlaps as $val) {
-                if ($val["lock"])
-                    $lock_desc.=sprintf(_("%s, %s Uhr bis %s, %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+                if ($val["lock"]) {
+                    $lock_desc .= sprintf(_('%s, %s Uhr bis %s, %s Uhr') . "\n",
+                                          date('d.m.Y', $val['begin']),
+                                          date('H:i', $val['begin']),
+                                          date('d.m.Y', $val['end']), 
+                                          date('H:i', $val['end']));
+                }
             }
-            if ($lock_desc)
+            if ($lock_desc) {
                 $lock_desc = _("Sperrzeit(en):\n").$lock_desc;
+            }
 
-            if ($overlap_events_count >= round($events_count * ($GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] / 100))) {
+            if ($overlap_events_count >= round($events_count * Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE / 100)) {
                 if ($overlap_events_count == 1)
                     if ($overlaps[0]["lock"])
                         $desc.=sprintf(_("Es besteht eine Belegungssperre zur gewünschten Belegungszeit.")."\n".$lock_desc);
                     else
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
-                    $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
+                    $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, Config::get()->RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE);
                 $html = Assets::img('icons/16/red/decline.png', tooltip2($desc));
                 $status = 2;
             } else {

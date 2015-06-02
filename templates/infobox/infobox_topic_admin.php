@@ -49,7 +49,7 @@
                 </tr>
 
                 <!-- Ansicht -->
-            <? if ($GLOBALS['RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW']): ?>
+            <? if (Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW): ?>
                 <tr>
                     <td colspan="2">
                         <b><?= _('Ansicht') ?>:</b>

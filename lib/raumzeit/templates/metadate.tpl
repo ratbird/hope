@@ -29,7 +29,7 @@ use Studip\Button,
                         <?=htmlready($tpl['date'])?>
                     </a>
                 </TD>
-                <? if ($GLOBALS['RESOURCES_ENABLE']) { ?>
+                <? if (Config::get()->RESOURCES_ENABLE) { ?>
                 <TD width="35%" nowrap="nowrap" class="<?=$tpl['class']?>">
                     <FONT size="-1">
                         <B><?=_("Raum:")?></B>
@@ -48,7 +48,7 @@ use Studip\Button,
                     <? } ?>
                 </TD>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>">
-                <? if( $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
+                <? if (Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                     <FONT size="-1">
                         <B><?=_("Einzel-Raumanfragen:")?></B>
                         <?=$tpl['anfragen']?>
@@ -136,7 +136,7 @@ use Studip\Button,
                             </div>
                             
                             <div class="button-group">
-                                <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
+                                <? if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ALLOW_ROOM_REQUESTS) : ?>
                                     <?= LinkButton::create($tpl['room_request'] ? _('Raumanfrage bearbeiten') : _('Raumanfrage erstellen'),
                                         URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])),
                                         array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>

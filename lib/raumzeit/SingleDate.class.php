@@ -223,7 +223,7 @@ class SingleDate {
 
     function killIssue() {
         // We delete the issue, cause there is no chance anybody can get to it without the expert view
-        if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
+        if (!Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
             if ($issue_ids = $this->getIssueIDs()) {
                 foreach ($issue_ids as $issue_id) {
                     // delete this issue

@@ -19,16 +19,16 @@ function raumzeit_delete_singledate($sem) {
 
     // does the have issues?
     if ($termin->getIssueIds()) {
-        if($GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
-            $warning[] = _("Diesem Termin ist im Ablaufplan ein Thema zugeordnet. Titel und Beschreibung des Themas bleiben erhalten und können in der Expertenansicht des Ablaufplans einem anderen Termin wieder zugeordnet werden.");
+        if (Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
+            $warning[] = _('Diesem Termin ist im Ablaufplan ein Thema zugeordnet. Titel und Beschreibung des Themas bleiben erhalten und können in der Expertenansicht des Ablaufplans einem anderen Termin wieder zugeordnet werden.');
         } else {
-            $warning[] = _("Diesem Termin ist ein Thema zugeordnet.");
+            $warning[] = _('Diesem Termin ist ein Thema zugeordnet.');
         }
     }
 
     // does the date have a booked room?
-    if ($GLOBALS['RESOURCES_ENABLE'] && $termin->hasRoom()) {
-        $warning[] = _("Dieser Termin hat eine Raumbuchung, welche mit dem Termin gelöscht wird.");
+    if (Config::get()->RESOURCES_ENABLE && $termin->hasRoom()) {
+        $warning[] = _('Dieser Termin hat eine Raumbuchung, welche mit dem Termin gelöscht wird.');
     }
 
     // do we have warnings we need approval for?
@@ -48,7 +48,7 @@ function raumzeit_delete_singledate($sem) {
     else {
         // deletion approved, delete show approval-message
         if (Request::get('approveDelete')) {
-            if($GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
+            if (Config::get()->RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW) {
                 $sem->createMessage(sprintf(_("Sie haben den Termin %s gelöscht, dem ein Thema zugeorndet war. Sie können das Thema in der %sExpertenansicht des Ablaufplans%s einem anderen Termin (z.B. einem Ausweichtermin) zuordnen."),
                     $termin->toString(), '<a href="'. URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') .'">', '</a>'));
             } else {

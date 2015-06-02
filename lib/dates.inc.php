@@ -360,9 +360,9 @@ dies muss das aufrufende Script sicherstellen.
 */
 
 function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem_id=0) {
-    global $RESOURCES_ENABLE, $RELATIVE_PATH_RESOURCES;
+    global $RELATIVE_PATH_RESOURCES;
 
-    if ($RESOURCES_ENABLE) {
+    if (Config::get()->RESOURCES_ENABLE) {
         include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     }
 
@@ -396,7 +396,7 @@ function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($termin_id));
 
-    if ($statement->rowCount() && $RESOURCES_ENABLE) {
+    if ($statement->rowCount() && Config::get()->RESOURCES_ENABLE) {
         $insertAssign = new VeranstaltungResourcesAssign($sem_id);
         $insertAssign->killDateAssign($termin_id);
     }

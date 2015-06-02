@@ -510,7 +510,7 @@ class SiteinfoMarkupEngine {
         $indicator['resource'] = array("query" => "SELECT COUNT(*) FROM resources_objects",
                                        "title" => _("Ressourcen-Objekte"),
                                        "detail" => _("von Stud.IP verwaltete Ressourcen wie Räume oder Geräte"),
-                                       "constraint" => $RESOURCES_ENABLE);
+                                       "constraint" => Config::get()->RESOURCES_ENABLE);
         
         if ($key == 'posting') {
             $count = 0;

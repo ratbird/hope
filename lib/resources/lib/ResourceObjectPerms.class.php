@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ResourceObjectPerms.class.php
-* 
+*
 * perm-class for a resource-object
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -39,16 +39,16 @@
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObject.class.php";
 
 /*****************************************************************************
-ResourceObjectPerms, stellt Perms zum Ressourcen Object zur 
+ResourceObjectPerms, stellt Perms zum Ressourcen Object zur
 Verfuegung
 /*****************************************************************************/
 
 class ResourceObjectPerms {
-    
+
     function Factory($resource_id, $user_id = false){
-        
+
         static $object_pool;
-        
+
         if (!$user_id){
             $user_id = $GLOBALS['auth']->auth['uid'];
         }
@@ -59,51 +59,54 @@ class ResourceObjectPerms {
             return $object_pool[$user_id][$resource_id];
         }
     }
-    
+
     var $user_id;
     var $db;
     var $db2;
     var $resource_id;
     var $perm_weight= array("admin" => 4, "tutor" => 2, "autor" => 1);
 
-    
+
     function ResourceObjectPerms ($resource_id, $user_id='') {
         global $user, $perm;
-        
+
         if ($user_id)
             $this->user_id=$user_id;
         else
             $this->user_id=$user->id;
-        
+
         $this->resource_id=$resource_id;
         if (!$this->resource_id){
             $this->perm = false;
             return;
         }
-        
+
         $resObject = ResourceObject::Factory($this->resource_id);
         $is_room = $resObject->isRoom();
-        
-        if ($is_room)
-            $inheritance = $GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"];
-        else
-            $inheritance = $GLOBALS["RESOURCES_INHERITANCE_PERMS"];
-        
+
+        if ($is_room) {
+            $inheritance = Config::get()->RESOURCES_INHERITANCE_PERMS_ROOMS;
+        } else {
+            $inheritance = Config::get()->RESOURCES_INHERITANCE_PERMS;
+        }
+
         //check if user is root
-        if ($perm->have_perm("root")) {
-            $this->changePerm("admin");
-        } else //check if resources admin
-            if (getGlobalPerms($this->user_id) == "admin")
-                $this->changePerm("admin");
-        
+        if ($perm->have_perm('root')) {
+            $this->changePerm('admin');
+        }
+        //check if resources admin
+        elseif (getGlobalPerms($this->user_id) === 'admin') {
+            $this->changePerm('admin');
+        }
+
         //check, if the resource is locked at the moment (only rooms!)
         if (($this->perm != "admin") && ($resObject->isLocked())) {
             $this->perm = FALSE;
             return;
         }
-        
+
         //check if the user is owner of the object
-        if ($this->perm != "admin") {           
+        if ($this->perm != "admin") {
             $result = DBManager::get()->query("SELECT owner_id FROM resources_objects WHERE owner_id='$this->user_id' AND resource_id = '$this->resource_id' ");
             if ($result->fetch()) {
                 $this->owner=TRUE;
@@ -112,7 +115,7 @@ class ResourceObjectPerms {
                 $this->owner=FALSE;
             }
         }
-        
+
         //else check all the other possibilities
         if ($this->perm != "admin") {
             $my_administrable_objects = search_administrable_objects(); //the administrative ones....
@@ -120,7 +123,7 @@ class ResourceObjectPerms {
             $my_objects["all"] = TRUE;
             $my_objects = array_merge((array)$my_administrable_objects, (array)$my_objects);
             //check if one of my administrable (system) objects owner of the resourcen object, so that I am too...
-            
+
             if (is_array($my_objects) && count($my_objects)){
                 $objects_sql = " ('" . join("','", array_keys($my_objects)) . "') ";
 
@@ -128,8 +131,8 @@ class ResourceObjectPerms {
                 $top=FALSE;
 
                 while ((!$top) && ($k<10000) && ($superordinated_id)) {
-                    $result = DBManager::get()->query("SELECT owner_id, resource_id 
-                        FROM resources_objects 
+                    $result = DBManager::get()->query("SELECT owner_id, resource_id
+                        FROM resources_objects
                         WHERE owner_id IN $objects_sql AND resource_id = '$superordinated_id' ");
 
                     while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -154,7 +157,7 @@ class ResourceObjectPerms {
                         break;
 
                     //also check the additional perms...
-                    $result = DBManager::get()->query("SELECT user_id,perms 
+                    $result = DBManager::get()->query("SELECT user_id,perms
                         FROM resources_user_resources
                         WHERE user_id IN $objects_sql AND resource_id = '$superordinated_id' ");
 
@@ -177,7 +180,7 @@ class ResourceObjectPerms {
             }
         }
     }
-    
+
     //private
     function changePerm($new_perm) {
         if ($new_perm == "dozent")
@@ -185,7 +188,7 @@ class ResourceObjectPerms {
         if ($this->perm_weight[$new_perm] > $this->perm_weight[$this->perm])
             $this->perm = $new_perm;
     }
-    
+
     function havePerm ($perm) {
         if ($perm == "admin") {
             if ($this->getUserPerm () == "admin")
@@ -203,17 +206,17 @@ class ResourceObjectPerms {
     function getUserPerm () {
         return $this->perm;
     }
-    
+
     function getUserIsOwner () {
         return $this->owner;
     }
 
     function getId () {
-        return $this->resource_id;  
+        return $this->resource_id;
     }
 
     function getUserId () {
-        return $this->user_id;  
+        return $this->user_id;
     }
-    
+
 }

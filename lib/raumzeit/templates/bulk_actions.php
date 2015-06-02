@@ -63,7 +63,7 @@ use Studip\Button, Studip\LinkButton;
 
     <div style="display: table-cell; width: 33%;">
         <b><?= _('Raumangaben:') ?></b><br>
-        <? if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) : ?>
+        <? if (Config::get()->RESOURCES_ENABLE && $resList->numberOfRooms()) : ?>
         <? $resList->reset() ?>
         <label>
             <input type="radio" name="action" value="room" checked="checked">
@@ -107,7 +107,7 @@ use Studip\Button, Studip\LinkButton;
         <br>
         <br>
 
-        <? if ($GLOBALS['RESOURCES_ENABLE']) : ?>
+        <? if (Config::get()->RESOURCES_ENABLE) : ?>
             <label>
                 <input type="radio" name="action" value="noroom">
                 <?=_('kein Raum') ?>

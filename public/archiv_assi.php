@@ -208,7 +208,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     } elseif (time() < $seminar['start_time'] + $seminar['duration_time']) {
         $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
     }
-    if($ELEARNING_INTERFACE_ENABLE){
+    if(Config::get()->ELEARNING_INTERFACE_ENABLE) {
         $cms_types = ObjectConnections::GetConnectedSystems($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
         if(count($cms_types)){
             $msg .= "info§" . sprintf(_("Die Veranstaltung besitzt verknüpfte Inhalte in %s externen Systemen (%s). Diese verknüpften Inhalte werden durch die Archivierung gelöscht!"), count($cms_types), join(',',$cms_types)) . "§";

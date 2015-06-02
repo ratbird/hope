@@ -81,7 +81,7 @@ class Institute_OverviewController extends AuthenticatedController
         URLHelper::bindLinkParam("inst_data", $this->institut_main_data);
 
         // (un)subscribe to institute
-        if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] AND ($GLOBALS['user']->id != 'nobody') AND ! $GLOBALS['perm']->have_perm('admin')) {
+        if (Config::get()->ALLOW_SELFASSIGN_INSTITUTE && $GLOBALS['user']->id !== 'nobody' && !$GLOBALS['perm']->have_perm('admin')) {
             $widget = new ActionsWidget();
             if (! $GLOBALS['perm']->have_studip_perm('user', $this->institute_id)) {
                 $url = URLHelper::getLink('dispatch.php/institute/overview', array(

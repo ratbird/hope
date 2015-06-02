@@ -65,8 +65,7 @@ require_once('lib/language.inc.php');
 
 global $i_page,
        $DEFAULT_LANGUAGE, $SessSemName, $SessionSeminar,
-       $sess, $auth, $user, $perm,
-       $CALENDAR_ENABLE, $_language_path;
+       $sess, $auth, $user, $perm, $_language_path;
 
 //get the name of the current page in $i_page
 $i_page = basename($_SERVER['PHP_SELF']);

@@ -363,7 +363,7 @@ function dump_sem($sem_id, $print_view = false)
 
     // Teilnehmer
     if ($Modules['participants']
-        && ($GLOBALS['AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM'] || !in_array($sem_id, AutoInsert::getAllSeminars(true))))
+        && (Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM || !in_array($sem_id, AutoInsert::getAllSeminars(true))))
     {
         $dump .= '<br>';
 

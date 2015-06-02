@@ -86,7 +86,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     }
 
     /* css-Klasse auswählen, sowie Template-Feld für den Raum mit Text füllen */
-    if ($GLOBALS['RESOURCES_ENABLE']) {
+    if (Config::get()->RESOURCES_ENABLE) {
         if ($val->getResourceID()) {
             $resObj = ResourceObject::Factory($val->getResourceID());
             $tpl['room']        = _("Raum: ");
@@ -94,7 +94,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
             $tpl['class']       = 'content_title_green';
             $tpl['resource_id'] = $val->getResourceID();
         } else {
-            if ($GLOBALS['RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT']) {
+            if (Config::get()->RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT) {
                 $tpl['room'] = '('._("kein gebuchter Raum").')';
             } else {
                 $tpl['room'] = _("keine Raumangabe");
@@ -127,7 +127,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 
     }
 
-    if (!$GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
+    if (!Config::get()->RESOURCES_ENABLE_BOOKINGSTATUS_COLORING) {
         $tpl['class'] = 'printhead';
     }
 

@@ -320,7 +320,8 @@ class AssignObject {
         return false;
     }
 
-    function checkLock() {
+    function checkLock()
+    {
         global $user;
 
         $resObject = ResourceObject::Factory($this->resource_id);
@@ -328,11 +329,14 @@ class AssignObject {
         create_assigns($this, $this);
 
         //check, if an assign_lock for one of the events is active
-        if (($GLOBALS["RESOURCES_ASSIGN_LOCKING_ACTIVE"]) && ($resObject->isLockable()) && ($resObject->isRoom()) && (getGlobalPerms($user->id) != "admin")) {
+        if (Config::get()->RESOURCES_ASSIGN_LOCKING_ACTIVE && $resObject->isLockable() && $resObject->isRoom() && getGlobalPerms($user->id) !== 'admin') {
             foreach ($this->events as $obj) {
-                $lock = getLockPeriod("assign", $obj->getBegin(), $obj->getEnd());
+                $lock = getLockPeriod('assign', $obj->getBegin(), $obj->getEnd());
                 if ($lock) {
-                    $locks[$lock[2]] = array("lock_begin"=>$lock[0], "lock_end"=>$lock[1]);
+                    $locks[$lock[2]] = array(
+                        'lock_begin' => $lock[0],
+                        'lock_end'   => $lock[1],
+                    );
                 }
             }
             if ($locks) {
@@ -355,11 +359,18 @@ class AssignObject {
         $events = $this->getEvents();
 
         //check, if an assign_lock for one of the events is active (results in an "overlap" so assign cant be saved)
-        if (($GLOBALS["RESOURCES_ASSIGN_LOCKING_ACTIVE"]) && ($resObject->isLockable()) && ($resObject->isRoom()) && (getGlobalPerms($user->id) != "admin") && ($check_locks)) {
+        if (Config::get()->RESOURCES_ASSIGN_LOCKING_ACTIVE && $resObject->isLockable() && $resObject->isRoom() && getGlobalPerms($user->id) !== 'admin' && $check_locks) {
             foreach ($events as $obj) {
-                $lock = getLockPeriod("assign", $obj->getBegin(), $obj->getEnd());
+                $lock = getLockPeriod('assign', $obj->getBegin(), $obj->getEnd());
                 if ($lock) {
-                    $overlaps[] = array("begin" =>$obj->getBegin(), "end"=>$obj->getEnd(), "lock"=> TRUE, "lock_begin"=>$lock[0], "lock_end"=>$lock[1], "lock_id"=>$lock[2],);
+                    $overlaps[] = array(
+                        'begin'      => $obj->getBegin(),
+                        'end'        =>$obj->getEnd(),
+                        'lock'       => TRUE,
+                        'lock_begin' =>$lock[0],
+                        'lock_end'   =>$lock[1],
+                        'lock_id'    =>$lock[2],
+                    );
                 }
             }
             if ($overlaps) {

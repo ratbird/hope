@@ -158,10 +158,6 @@ namespace {
     require_once 'lib/navigation/StudipNavigation.php';
     Navigation::setRootNavigation(new StudipNavigation(''));
 
-    /*class for config; load config in globals (should be deprecated in future)
-    ----------------------------------------------------------------*/
-    Config::GetInstance()->extractAllGlobal(false);
-
     /* set default umask to a sane value */
     umask(022);
 

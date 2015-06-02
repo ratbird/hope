@@ -74,15 +74,6 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * export all global config entries into global namespace
-     */
-    function extractAllGlobal() {
-        foreach ($this->getFields('global') as $key) {
-            $GLOBALS[$key] = $this->getValue($key);
-        }
-    }
-
-    /**
      * returns a list of config entry names, filtered by
      * given params
      * @param string filter by range: global or user

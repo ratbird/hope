@@ -49,11 +49,11 @@ class CleanObjectUserVisits extends CronJob
      */
     public function execute($last_result, $parameters = array())
     {
-        if ($GLOBALS['NEW_INDICATOR_THRESHOLD']) {
+        if (Config::get()->NEW_INDICATOR_THRESHOLD) {
             $query = "DELETE FROM `object_user_visits`
                       WHERE GREATEST(`visitdate`, `last_visitdate`) < UNIX_TIMESTAMP(NOW() - INTERVAL :expires DAY)";
             $statement = DBManager::get()->prepare($query);
-            $statement->bindValue(':expires', (int) $GLOBALS['NEW_INDICATOR_THRESHOLD'], PDO::PARAM_INT);
+            $statement->bindValue(':expires', (int) Config::get()->NEW_INDICATOR_THRESHOLD, PDO::PARAM_INT);
             $statement->execute();
         }
     }

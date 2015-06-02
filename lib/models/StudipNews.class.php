@@ -74,7 +74,7 @@ class StudipNews extends SimpleORMap {
                   WHERE a.range_id = :range_id
                   GROUP BY a.range_id";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':threshold', $GLOBALS['NEW_INDICATOR_THRESHOLD'] ? strtotime("-{$GLOBALS['NEW_INDICATOR_THRESHOLD']} days 0:00:00") : 0);
+        $statement->bindValue(':threshold', ($threshold = Config::get()->NEW_INDICATOR_THRESHOLD) ? strtotime("-{$threshold} days 0:00:00") : 0);
         $statement->bindValue(':user_id', $user_id ?: $GLOBALS['user']->id);
         $statement->bindValue(':range_id', $range_id);
         $statement->execute();

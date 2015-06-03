@@ -165,7 +165,7 @@ class StudipCacheFactory
             // operations, if any.
             if ($proxied) {
                 self::$cache = new StudipCacheProxy(self::$cache);
-            } elseif ($GLOBALS['CACHING_ENABLE'] && get_class(self::$cache) !== self::DEFAULT_CACHE_CLASS) {
+            } elseif ($GLOBALS['CACHING_ENABLE']) {
                 // Even if the above condition will try to eliminate most
                 // failures, the following operation still needs to be wrapped
                 // in a try/catch block. Otherwise there are no means to

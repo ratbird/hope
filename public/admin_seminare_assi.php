@@ -2157,11 +2157,11 @@ elseif ((!$level) || ($level == 1)) {
                                 ? "selected"
                                 : "",
                             $sem_type_id,
-                            $sem_type["name"]);
+                            htmlReady($sem_type["name"]));
                 }
                 ?>
             </select> <br>
-            &nbsp; <font size="-1"> <?=_("in der Kategorie"); ?> <b><? echo $SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["name"] ?></b></font>
+            &nbsp; <font size="-1"> <?=_("in der Kategorie"); ?> <b><? echo htmlReady($SEM_CLASS[$_SESSION['sem_create_data']["sem_class"]]["name"]) ?></b></font>
             <?= tooltipIcon(_("Über den Typ der Veranstaltung werden die Veranstaltungen innerhalb von Listen gruppiert.")) ?>
             <font color="red" size=+2>*</font>
         </td>
@@ -3054,7 +3054,7 @@ elseif ($level == 3) {
                         echo ' value="'.$sem_week.'">';
                         echo ($sem_week+1).'. '._("Semesterwoche")." ("._("ab")." ".date("d.m.Y",$tmp_first_date).")</option>";
                         $sem_week++;
-                        $tmp_first_date = $tmp_first_date + (7 * 24 * 60 * 60);
+                        $tmp_first_date = strtotime('+1 week', $tmp_first_date);
                     }
                     echo '</select>';
                     echo "&nbsp;" ._("SWS Dozent:");

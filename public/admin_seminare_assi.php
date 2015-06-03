@@ -1293,7 +1293,7 @@ if (($form == 4) && (Request::submitted('jump_next'))) {
     } else {
         for ($i=0; $i<$_SESSION['sem_create_data']["term_count"]; $i++) {
             //check overlaps
-            if (!$errormsg && Config::get()->RESOURCES_ENABLE)) {
+            if (!$errormsg && Config::get()->RESOURCES_ENABLE) {
                 $tmp_chk_date=mktime((int)$_SESSION['sem_create_data']["term_start_stunde"][$i], (int)$_SESSION['sem_create_data']["term_start_minute"][$i], 0, (int)$_SESSION['sem_create_data']["term_monat"][$i], (int)$_SESSION['sem_create_data']["term_tag"][$i], (int)$_SESSION['sem_create_data']["term_jahr"][$i]);
                 $tmp_chk_end_time=mktime((int)$_SESSION['sem_create_data']["term_end_stunde"][$i], (int)$_SESSION['sem_create_data']["term_end_minute"][$i], 0, (int)$_SESSION['sem_create_data']["term_monat"][$i], (int)$_SESSION['sem_create_data']["term_tag"][$i], (int)$_SESSION['sem_create_data']["term_jahr"][$i]);
                 $checkResult = array_merge((array)$checkResult, (array)$resAssign->insertDateAssign(FALSE, $_SESSION['sem_create_data']["term_resource_id"][$i], $tmp_chk_date, $tmp_chk_end_time, TRUE));

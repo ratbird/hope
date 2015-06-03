@@ -235,7 +235,7 @@ class Modules {
 
     function checkGlobal($modul) {
         $const = $this->registered_modules[$modul]['const'];
-        return !$const or $GLOBALS[$const];
+        return !$const or Config::get()->$const;
     }
 
     function checkLocal($modul, $range_id, $range_type = '') {

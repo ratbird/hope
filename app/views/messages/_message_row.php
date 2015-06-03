@@ -1,5 +1,6 @@
 <tr id="message_<?= $message->getId() ?>" class="<?= $message->isRead() || $message['autor_id'] === $GLOBALS['user']->id ? "" : "unread" ?>">
     <td><?= $message->getNumAttachments() ? Assets::img("icons/20/black/staple", array("title" => _("Mit Anhang"))) : "" ?></td>
+    <td><?= $message->originator->answered ? Assets::img("icons/20/black/outbox", array("title" => _("Beantwortet"))) : "" ?></td>
     <td class="title">
         <a href="<?= URLHelper::getLink("dispatch.php/messages/read/".$message->getId()) ?>" data-dialog>
             <?= $message['subject'] ? htmlReady($message['subject']) : htmlReady(mila($message['message'], 40)) ?>

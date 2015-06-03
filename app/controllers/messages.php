@@ -248,6 +248,7 @@ class MessagesController extends AuthenticatedController {
                 $user = new MessageUser();
                 $user->setData(array('user_id' => $old_message['autor_id'], 'snd_rec' => "rec"));
                 $this->default_message->receivers[] = $user;
+                $this->answer_to = $old_message->id;
             } else {
                 $messagesubject = 'FWD: ' . $old_message['subject'];
                 $message = _("-_-_ Weitergeleitete Nachricht _-_-");
@@ -343,6 +344,13 @@ class MessagesController extends AuthenticatedController {
                 'normal',
                 trim(Request::get("message_tags")) ?: null
             );
+            if (Request::option('answer_to')) {
+                $old_message = Message::find(Request::option('answer_to'));
+                if ($old_message) {
+                    $old_message->originator->answered = 1;
+                    $old_message->store();
+                }
+            }
             PageLayout::postMessage(MessageBox::success(_("Nachricht wurde verschickt.")));
         } else if (!count(array_filter(Request::getArray('message_to')))) {
             PageLayout::postMessage(MessageBox::error(_('Sie haben nicht angegeben, wer die Nachricht empfangen soll!')));

@@ -16,6 +16,7 @@
     <thead>
         <tr>
             <th></th>
+            <th></th>
             <th><?= _("Betreff") ?></th>
             <th><?= $received ? _("Gesendet") : _("Empfänger") ?></th>
             <th><?= _("Zeit") ?></th>

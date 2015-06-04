@@ -6,7 +6,7 @@
  *
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
- * @since  3.1
+ * @since  3.3
  */
 
 class CleanObjectUserVisits extends CronJob

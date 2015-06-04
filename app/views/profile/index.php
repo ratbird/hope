@@ -4,47 +4,56 @@
 <table class="default nohover">
     <tr>
         <td valign="top">
-            <?=$avatar?>
+            <?= $avatar ?>
             <br>
             <br>
-            <?= _("Besucher dieses Profils:") ?> <?= object_return_views($current_user->user_id) ?>
-            <br />
+            <?= _('Profilbesuche:') ?>
+            <?= object_return_views($current_user->user_id) ?>
+            <br>
             <? if(!empty($score) && !empty($score_title)) :?>
-                <br />
+                <br>
                 <a href="<?=URLhelper::getLink("dispatch.php/score")?>" <?=tooltip(_("Zur Rangliste"))?>><?=_("Stud.IP-Punkte:")?> <?=$score?><br>
                     <?=_("Rang:")?> <?=$score_title?>
                 </a>
             <? endif?>
 
-            <?if ($current_user->username != $user->username) : ?>
-                <?if (!$user->isFriendOf($current_user)) : ?>
-                    <br />
-                    <a href="<?= URLHelper::getLink($controller->url_for('profile/add_buddy?username=' . $current_user->username)) ?>">
-                        <?=Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))?>
-                        <?=_("zu den Kontakten hinzufügen")?>
-                    </a>
-                <? endif?>
-
-                <br />
-                <a href="<?=URLHelper::getLink('dispatch.php/messages/write', array('rec_uname'=>$current_user->username))?>" data-dialog="button">
-                    <?=Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))?>
-                    <?=_("Nachricht an Nutzer")?>
+        <?if ($current_user->username != $user->username) : ?>
+            <?if (!$user->isFriendOf($current_user)) : ?>
+                <br>
+                <a href="<?= URLHelper::getLink($controller->url_for('profile/add_buddy?username=' . $current_user->username)) ?>">
+                    <?=Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))?>
+                    <?=_("zu den Kontakten hinzufügen")?>
                 </a>
-            <?endif?>
+            <? endif?>
 
-            <br />
+                <br>
+                <a  href="<?=URLHelper::getLink('dispatch.php/messages/write', array('rec_uname'=>$current_user->username))?>" data-dialog="button">
+                    <?=Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle')) ?>
+                    <?= _('Nachricht schreiben') ?>
+                </a>
+                
+            <? if (class_exists('Blubber')): ?>
+                <br>
+                <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/global', array('mention' => $current_user->username)) ?>">
+                    <?= Assets::img('icons/16/blue/blubber.png', array('title' => _('Blubber diesen Nutzer an'), 'class' => 'middle')) ?>
+                    <?= _('Anblubbern') ?>
+                </a>
+            <? endif; ?>
+        <?endif?>
+
+            <br>
             <a href="<?=$controller->link_for("contact/vcard", array('user[]' => $current_user->username))?>">
                 <?=Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))?>
                 <?=_("vCard herunterladen")?>
             </a>
 
-            <?if (($current_user->username != $user->username) && $perm->have_perm('root')) : ?>
-                <br />
-                <a href="<?=URLHelper::getLink('dispatch.php/admin/user/edit/'.$current_user->user_id)?>">
-                    <?=Assets::img('icons/16/blue/edit', array('title' => _('Diesen Benutzer bearbeiten'), 'class' => 'middle'))?>
-                    <?=_('Diesen Benutzer bearbeiten')?>
-                </a>
-            <?endif?>
+        <? if ($current_user->username != $user->username && $perm->have_perm('root')): ?>
+            <br>
+            <a href="<?=URLHelper::getLink('dispatch.php/admin/user/edit/'.$current_user->user_id)?>">
+                <?=Assets::img('icons/16/blue/edit', array('title' => _('Diese Person bearbeiten'), 'class' => 'middle'))?>
+                <?=_('Dieses Konto bearbeiten')?>
+            </a>
+        <? endif; ?>
         </td>
 
 

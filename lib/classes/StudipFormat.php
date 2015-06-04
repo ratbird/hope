@@ -146,6 +146,14 @@ class StudipFormat extends TextFormat
             'start'    => '\[nop\](.*?)\[\/nop\]',
             'callback' => 'StudipFormat::markupNoFormat'
         ),
+        'tex' => array(
+            'start'    => '\[tex\](.*?)\[\/tex\]',
+            'callback' => 'StudipFormat::markupTex'
+        ),
+        'TEX' => array(
+            'start'    => '\[TEX\](.*?)\[\/TEX\]',
+            'callback' => 'StudipFormat::markupTex'
+        ),
         'code' => array(
             'start'    => '\[code(=.*?)?\](.*?)\[\/code\]',
             'callback' => 'StudipFormat::markupCode'
@@ -648,5 +656,10 @@ class StudipFormat extends TextFormat
     protected static function htmlImg($markup, $matches, $contents)
     {
         return $matches[0];
+    }
+
+    protected static function markupTex($markup, $matches)
+    {
+         return preg_replace('/<br\s*\/?>/', '', $matches[0]);
     }
 }

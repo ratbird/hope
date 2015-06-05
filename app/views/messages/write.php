@@ -1,4 +1,4 @@
-<form name="write_message" action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;" data-dialog>
+<form name="write_message" action="<?= URLHelper::getLink("dispatch.php/messages/send") ?>" method="post" style="margin-left: auto; margin-right: auto;" data-dialog="<?=($answer_to ? 'reload-on-close' : '')?>">
     <? $message_id = Request::option("message_id") ?: md5(uniqid("neWMesSagE")) ?>
     <input type="hidden" name="message_id" id="message_id" value="<?= htmlReady($message_id) ?>">
     <input type="hidden" name="answer_to" value="<?= htmlReady($answer_to) ?>">

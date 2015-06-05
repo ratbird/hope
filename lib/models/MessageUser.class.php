@@ -50,6 +50,39 @@ class MessageUser extends SimpleORMap
         return self::findBySQL("message_id=? AND snd_rec='rec'", array($message_id));
     }
 
+    function __construct($id = null)
+    {
+        $this->registerCallback('after_store', 'cleanUpAfterStore');
+        parent::__construct($id);
+    }
+
+    function cleanUpAfterStore()
+    {
+        if ($this->isDirty("deleted") && $this['deleted']) {
+            $query = "DELETE FROM message_tags
+                      WHERE message_id = :message_id AND user_id = :user_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':message_id', $this['message_id']);
+            $statement->bindValue(':user_id', $this['user_id']);
+            $statement->execute();
+
+            $visible = false;
+            foreach ($this->message['receivers'] as $message_user) {
+                if (!$message_user['deleted']) {
+                    $visible = true;
+                    break;
+                }
+            }
+            if (!$this->message['originator']['deleted']) {
+                $visible = true;
+            }
+            if (!$visible) {
+                $this->message->delete();
+            }
+        }
+        return true;
+    }
+
     /**
      * Deletes a user message connection. Extends default delete() by
      * removing associated tags as well.
@@ -59,16 +92,21 @@ class MessageUser extends SimpleORMap
      */
     public function delete()
     {
-        $message_id = $this->message_id;
         $user_id    = $this->user_id;
+        $message    = $this->message;
 
         $ret = parent::delete();
 
         if ($ret) {
+
+            if (count($message->receivers) + count($message->originator) === 0) {
+                $message->delete();
+            }
+
             $query = "DELETE FROM message_tags
                       WHERE message_id = :message_id AND user_id = :user_id";
             $statement = DBManager::get()->prepare($query);
-            $statement->bindValue(':message_id', $message_id);
+            $statement->bindValue(':message_id', $message->getId());
             $statement->bindValue(':user_id', $user_id);
             $statement->execute();
             $ret += $statement->rowCount();

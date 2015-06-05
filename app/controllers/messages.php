@@ -399,8 +399,18 @@ class MessagesController extends AuthenticatedController {
 
         $ticket = Request::get('studip-ticket');
         if (Request::isPost() && $ticket && check_ticket($ticket)) {
-            $messaging = new messaging();
-            if ($messaging->delete_message($message_id)) {
+            $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "snd"));
+            $success = 0;
+            if (!$messageuser->isNew()) {
+                $messageuser['deleted'] = 1;
+                $success = $messageuser->store();
+            }
+            $messageuser = new MessageUser(array($GLOBALS['user']->id, $message_id, "rec"));
+            if (!$messageuser->isNew()) {
+                $messageuser['deleted'] = 1;
+                $success += $messageuser->store();
+            }
+            if ($success) {
                 PageLayout::postMessage(MessageBox::success(_('Nachricht gelöscht!')));
             } else {
                 PageLayout::postMessage(MessageBox::error(_('Nachricht konnte nicht gelöscht werden.')));

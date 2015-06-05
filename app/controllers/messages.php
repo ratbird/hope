@@ -537,7 +537,7 @@ class MessagesController extends AuthenticatedController {
         if (!$GLOBALS['ENABLE_EMAIL_ATTACHMENTS']) {
             throw new AccessDeniedException(_('Mailanhänge sind nicht erlaubt.'));
         }
-        $file = $_FILES['file'];
+        $file = studip_utf8decode($_FILES['file']);
         $output = array(
             'name' => $file['name'],
             'size' => $file['size']

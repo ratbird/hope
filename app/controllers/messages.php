@@ -579,6 +579,14 @@ class MessagesController extends AuthenticatedController {
         }
     }
 
+    public function delete_tag_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        DbManager::get()->execute("DELETE FROM message_tags WHERE user_id=? AND tag LIKE ?", array($GLOBALS['user']->id, Request::get('tag')));
+        PageLayout::postMessage(MessageBox::success(_('Schlagwort gelöscht!')));
+        $this->redirect($this->url_for('messages/overview'));
+    }
+
     function after_filter($action, $args)
     {
         if (Request::isXhr()) {

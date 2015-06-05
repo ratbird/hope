@@ -11,6 +11,12 @@
         <?= $received ? _("Eingang") : _("Gesendet") ?>
         <? if (Request::get("tag")) : ?>
             <?= ", "._("Schlagwort: ").htmlReady(ucfirst(Request::get("tag"))) ?>
+            <form action="<?= $controller->url_for('messages/delete_tag', array('tag' => Request::get("tag"))) ?>" method="post" style="display: inline;">
+                <button onClick="return window.confirm('<?= _("Schlagwort wirklich löschen?") ?>');" style="background: none; border: none; cursor: pointer;">
+                    <?= Assets::img("icons/20/blue/trash") ?>
+                </button>
+                <?= CSRFProtection::tokenTag() ?>
+            </form>
         <? endif ?>
     </caption>
     <thead>

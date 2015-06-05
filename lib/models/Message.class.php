@@ -120,7 +120,9 @@ class Message extends SimpleORMap
             'class_name' => 'StudipDocument',
             'assoc_foreign_key' => 'range_id',
             'on_store' => 'store',
-            'on_delete' => 'delete'
+            'on_delete' => function($message) {
+                return array_sum(array_map('delete_document', $message->attachments->pluck('id')));
+            }
         );
         parent::configure($config);
     }
@@ -281,6 +283,18 @@ class Message extends SimpleORMap
     public function getNumAttachments()
     {
         return StudipDocument::countBySQL("range_id=?", array($this->id));
+    }
+
+    /**
+     * Deletes the message if all references in message_user indicate 'deleted'
+     * @return bool
+     */
+    public function removeIfOrphaned()
+    {
+        if (!MessageUser::countBySQL("message_id = ? AND snd_rec IN('rec','snd') AND deleted = 0", array($this->message_id))) {
+            return (bool)$this->delete();
+        }
+        return false;
     }
 
 }

@@ -294,7 +294,7 @@ class MessagesController extends AuthenticatedController {
             $this->default_message['subject'] = Request::get("default_subject");
         }
         $settings = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
-        $this->mailforwarding = Request::get('emailrequest') ? true : $settings['send_as_email'];
+        $this->mailforwarding = Request::get('emailrequest') ? true : $settings['request_mail_forward'];
         if (trim($settings['sms_sig'])) {
             if (Studip\Markup::isHtml($this->default_message['message']) || Studip\Markup::isHtml($settings['sms_sig'])) {
                 if (!Studip\Markup::isHtml($this->default_message['message'])) {

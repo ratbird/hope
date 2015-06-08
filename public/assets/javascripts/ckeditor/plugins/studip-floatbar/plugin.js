@@ -59,11 +59,11 @@
 
         var toolbarId = editor.config.sharedSpaces.top;
 
-        var toolbar = $('#' + toolbarId);
+        var $toolbar = $('#' + toolbarId);
 
         var placeholder = $('#' + toolbarId + '-placeholder');
 
-        if (toolbar.length === 0 || placeholder.length === 0) {
+        if ($toolbar.length === 0 || placeholder.length === 0) {
             // toolbar/editor removed by some JS code (e.g. when sending messages)
             // TODO remove listeners!!
             return;
@@ -75,19 +75,19 @@
         var width = $(editor.container.$).outerWidth(true);
 
         // is(':visible'): offset() is wrong for hidden elements
-        if (toolbar.is(':visible') && outOfView) {
+        if ($toolbar.is(':visible') && outOfView) {
 
-            toolbar.css({
+            $toolbar.css({ // floating toolbar
                 position: 'fixed',
                 top: MARGIN,
                 width: width
             });
 
-            placeholder.css('height', toolbar.height());
+            placeholder.css('height', $toolbar.height());
 
         } else {
 
-            toolbar.css({
+            $toolbar.css({ // inline toolbar
                 position: 'relative',
                 top: '',
                 width: width

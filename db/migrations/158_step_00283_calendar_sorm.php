@@ -55,7 +55,7 @@ class Step00283CalendarSorm extends Migration {
                 `priority`, `location`, `ts`, `linterval`, `sinterval`, `wdays`,
                 `month`, `day`, `rtype`, `duration`, `count`, `expire`, `exceptions`,
                 `mkdate`, `chdate`, `importdate`)
-                SELECT `event_id`, `autor_id`, NULLIF(STRCMP(`editor_id`, ''), `editor_id`),
+                SELECT `event_id`, `autor_id`, NULLIF(`editor_id`, ''),
                 `uid`, `start`, `end`,
                 `summary`, `description`, `class`, `categories`, `category_intern`,
                 `priority`, `location`, `ts`, `linterval`, `sinterval`, `wdays`,

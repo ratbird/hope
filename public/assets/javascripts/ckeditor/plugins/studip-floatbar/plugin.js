@@ -72,14 +72,28 @@
         var outOfView = $(window).scrollTop() + MARGIN
                 > placeholder.offset().top;
 
-        var width = $(editor.container.$).outerWidth(true);
+        var $container = $(editor.container.$);
+        var width = $container.outerWidth(true);
 
         // is(':visible'): offset() is wrong for hidden elements
         if ($toolbar.is(':visible') && outOfView) {
 
-            $toolbar.css({ // floating toolbar
+            // compute toolbar position
+            // make sure it doesn't scroll below editor area
+            var editorBottom = $container.position().top +
+                               $container.outerHeight(true);
+
+            var bottomMargin = 50;
+
+            var maxToolbarTop = editorBottom
+                - bottomMargin
+                - $toolbar.outerHeight(true)
+                - $(window).scrollTop();
+
+            // reposition floating toolbar
+            $toolbar.css({
                 position: 'fixed',
-                top: MARGIN,
+                top: Math.min(MARGIN, maxToolbarTop),
                 width: width
             });
 
@@ -87,7 +101,8 @@
 
         } else {
 
-            $toolbar.css({ // inline toolbar
+            // reset toolbar to inline-mode
+            $toolbar.css({
                 position: 'relative',
                 top: '',
                 width: width

@@ -160,7 +160,13 @@ jQuery(function ($) {
                 tr: {}
             },
             width: textareaWidth,
-            skin: 'studip',
+            skin: 'studip,' + 
+                (function () {
+                    var skinPath = 'assets/stylesheets/ckeditor-skin/';
+                    var a = document.createElement('a');
+                    a.href = STUDIP.URLHelper.getURL(skinPath);
+                    return a.pathname;
+                })(),
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
             extraPlugins: 'codemirror,studip-settings,studip-wiki'
                 // only enable uploads in courses with a file section

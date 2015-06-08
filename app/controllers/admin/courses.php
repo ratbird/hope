@@ -149,6 +149,8 @@ class Admin_CoursesController extends AuthenticatedController
                 return array('Name'       => $c['Name'],
                              'Seminar_id' => $id);
             }, array_values($this->courses), array_keys($this->courses));
+
+
         }
 
         $this->all_lock_rules = array_merge(array(array('name'    => '--' . _("keine Sperrebene") . '--',

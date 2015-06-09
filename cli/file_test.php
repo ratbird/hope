@@ -1,4 +1,4 @@
-#!/usr/bin/env php -q
+#!/usr/bin/env php
 <?php
 /**
  * file_test.php - tests for the File class

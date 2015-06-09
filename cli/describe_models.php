@@ -1,4 +1,4 @@
-#!/usr/bin/env php -q
+#!/usr/bin/env php
 <?php
 require_once 'studip_cli_env.inc.php';
 

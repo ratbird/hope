@@ -1,4 +1,4 @@
-#!/usr/bin/env php -q
+#!/usr/bin/env php
 <?php
 /**
 * cronjobs - Helper script for the cronjobs

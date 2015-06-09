@@ -1,4 +1,4 @@
-#!/usr/bin/env php -q
+#!/usr/bin/env php
 <?php
 # Lifter003: TEST
 # Lifter007: TODO

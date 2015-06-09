@@ -1,7 +1,7 @@
+#!/usr/bin/env php
 <?php
 # Lifter007: TODO
 # Lifter003: TODO
-#!/usr/bin/php -q
 /**
 * create_table_schemes.php
 * 

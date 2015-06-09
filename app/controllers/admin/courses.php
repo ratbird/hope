@@ -583,7 +583,9 @@ class Admin_CoursesController extends AuthenticatedController
                         unset($seminars[$index]);
                     }
                 }
-                $teachers = array_merge($teachers, $course['dozenten']);
+                foreach ($course['dozenten'] as $user_id => $teacher) {
+                    $teachers[$user_id] = $teacher;
+                }
             }
         }
         $teachers = SimpleCollection::createFromArray($teachers)

@@ -179,9 +179,9 @@
             <? if (in_array('DozentIn', $view_filter)) : ?>
                 <td>
                     <?= $this->render_partial_collection('my_courses/_dozent', $values['dozenten']) ?>
-                    <a href="<?= URLHelper::getLink('dispatch.php/course/basicdata/view', array('cid' => $semid, 'open' => 'bd_personal'))?>" data-dialog="size=50%">
-                        <?= Assets::img('icons/16/blue/add/person.png', tooltip2(sprintf(_('% hinzufügen'), get_title_for_status('dozent',1))))?>
-                    </a>
+
+                    <br />
+                    <?=$values['teacher_search']->render()?>
                 </td>
             <? endif ?>
             <? if (in_array('TeilnehmerInnen', $view_filter)) : ?>

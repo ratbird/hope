@@ -646,6 +646,27 @@ class Admin_CoursesController extends AuthenticatedController
                 $dozenten = $this->getTeacher($seminar_id);
                 $seminars[$seminar_id]['dozenten'] = $dozenten;
 
+                if (in_array('DozentIn',  $params['view_filter'])) {
+
+                    $dozentUserSearch = new PermissionSearch(
+                        'user_not_already_in_sem',
+                        sprintf(_("%s suchen"), get_title_for_status('dozent', 1)),
+                        "user_id",
+                        array('permission' => 'dozent',
+                              'seminar_id' => $seminar_id,
+                              'sem_perm' => 'dozent'
+                        )
+                    );
+
+                    $seminars[$seminar_id]['teacher_search'] = MultiPersonSearch::get("add_member_dozent" . $seminar_id)
+                        ->setTitle(_('Mehrere DozentInnen hinzufügen'))
+                        ->setSearchObject($dozentUserSearch)
+                        ->setDefaultSelectedUser(array_keys($dozenten))
+                        ->setDataDialogStatus(Request::isXhr())
+                        ->setJSFunctionOnSubmit('jQuery(this).closest(".ui-dialog-content").dialog("close");')
+                        ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $seminar_id, array('from' => 'admin/courses')));
+                }
+
                 if (in_array('Inhalt', $params['view_filter'])) {
                     $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
                     $seminars[$seminar_id]['modules'] = $modules->getLocalModules($seminar_id, 'sem', $seminar['modules'], $seminar['status']);

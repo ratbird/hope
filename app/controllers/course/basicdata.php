@@ -490,7 +490,8 @@ class Course_BasicdataController extends AuthenticatedController
             PageLayout::postMessage(MessageBox::error(_('Die gewünschte Operation konnte nicht ausgeführt werden.')));
         }
         $this->flash['open'] = "bd_personal";
-        $this->redirect($this->url_for('course/basicdata/view/' . $course_id));
+        $redirect = Request::get('from') ? : 'course/basicdata/view/' . $course_id;
+        $this->redirect($this->url_for($redirect));
     }
 
     private function addTutor($tutor, $course_id) {

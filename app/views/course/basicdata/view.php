@@ -361,8 +361,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
     </form>
     <script>
         jQuery("#settings").accordion({
-            <? $open = Request::get('open', $flash['open'])?>
-            <?= $open || Request::get('open') ? "active: '#".$open."',\n" : "" ?>
+            <?= $flash['open'] ? "active: '#".$flash['open']."',\n" : "" ?>
             collapsible: true,
             autoHeight: false,
             change: function (event, ui) {

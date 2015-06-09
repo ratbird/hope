@@ -179,7 +179,6 @@
             <? if (in_array('DozentIn', $view_filter)) : ?>
                 <td>
                     <?= $this->render_partial_collection('my_courses/_dozent', $values['dozenten']) ?>
-
                     <br />
                     <?=$values['teacher_search']->render()?>
                 </td>

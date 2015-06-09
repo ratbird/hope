@@ -648,13 +648,20 @@ class Admin_CoursesController extends AuthenticatedController
 
                 if (in_array('DozentIn',  $params['view_filter'])) {
 
+                    if (SeminarCategories::getByTypeId($seminar['status'])->only_inst_user) {
+                        $search_template = "user_inst_not_already_in_sem";
+                    } else {
+                        $search_template = "user_not_already_in_sem";
+                    }
+
                     $dozentUserSearch = new PermissionSearch(
-                        'user_not_already_in_sem',
-                        sprintf(_("%s suchen"), get_title_for_status('dozent', 1)),
+                        $search_template,
+                        sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $seminar['status'])),
                         "user_id",
                         array('permission' => 'dozent',
-                              'seminar_id' => $seminar_id,
-                              'sem_perm' => 'dozent'
+                              'seminar_id' => $this->course_id,
+                              'sem_perm' => 'dozent',
+                              'institute' => Seminar::GetInstance($seminar_id)->getInstitutes()
                         )
                     );
 

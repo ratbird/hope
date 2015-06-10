@@ -670,7 +670,6 @@ class Admin_CoursesController extends AuthenticatedController
                         ->setSearchObject($dozentUserSearch)
                         ->setDefaultSelectedUser(array_keys($dozenten))
                         ->setDataDialogStatus(Request::isXhr())
-                        ->setJSFunctionOnSubmit('jQuery(this).closest(".ui-dialog-content").dialog("close");')
                         ->setExecuteURL(URLHelper::getLink('dispatch.php/course/basicdata/add_member/' . $seminar_id, array('from' => 'admin/courses')));
                 }
 

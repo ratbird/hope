@@ -30,9 +30,10 @@ class SiteinfoController extends StudipController
 
         $this->populate_ids($args);
         $this->add_navigation($action);
-        $this->setupSidebar();
 
-        if (!$GLOBALS['perm']->have_perm('root')) {
+        if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('root')) {
+            $this->setupSidebar();
+        } else {
             $action = 'show';
         }
 
@@ -90,7 +91,7 @@ class SiteinfoController extends StudipController
     protected function setupSidebar()
     {
         $sidebar = Sidebar::get();
-        
+
         if (!$GLOBALS['rubrics_empty']) {
             $actions = new ActionsWidget();
             $actions->setTitle(_('Seiten-Aktionen'));

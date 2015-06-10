@@ -130,9 +130,11 @@ class StudipCacheFactory
     /**
      * Returns a cache instance.
      *
-     * @return StudipCache    the cache instance
+     * @param bool $apply_proxied_operations Whether or not to apply any
+     *                                       proxied (disable this in tests!)
+     * @return StudipCache the cache instance
      */
-    public static function getCache()
+    public static function getCache($apply_proxied_operations = true)
     {
         if (is_null(self::$cache)) {
             $proxied = false;
@@ -165,7 +167,7 @@ class StudipCacheFactory
             // operations, if any.
             if ($proxied) {
                 self::$cache = new StudipCacheProxy(self::$cache);
-            } elseif ($GLOBALS['CACHING_ENABLE']) {
+            } elseif ($GLOBALS['CACHING_ENABLE'] && $apply_proxied_operations) {
                 // Even if the above condition will try to eliminate most
                 // failures, the following operation still needs to be wrapped
                 // in a try/catch block. Otherwise there are no means to

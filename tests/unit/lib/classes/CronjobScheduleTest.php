@@ -14,6 +14,7 @@ require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/DBManager.class.php';
 require_once 'lib/classes/StudipCache.class.php';
 require_once 'lib/classes/StudipCacheFactory.class.php';
+require_once 'lib/models/StudipCacheOperation.php';
 require_once 'lib/models/CronjobSchedule.class.php';
 
 if (!class_exists('StudipArrayCache')) {
@@ -54,15 +55,15 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
         Config::set($testconfig);
         StudipCacheFactory::setConfig($testconfig);
         $GLOBALS['CACHING_ENABLE'] = true;
-        $cache = StudipCacheFactory::getCache();
+        $cache = StudipCacheFactory::getCache(false);
         foreach (array('cronjobs_schedules') as $db_table) {
             include TEST_FIXTURES_PATH . "simpleormap/$db_table.php";
             foreach ($result as $rs) {
                 $db_fields[strtolower($rs['Field'])] = array(
-                                                            'name' => $rs['Field'],
-                                                            'null' => $rs['Null'],
-                                                            'default' => $rs['Default'],
-                                                            'extra' => $rs['Extra']
+                    'name'    => $rs['Field'],
+                    'null'    => $rs['Null'],
+                    'default' => $rs['Default'],
+                    'extra'   => $rs['Extra']
                 );
                 if ($rs['Key'] == 'PRI'){
                     $pk[] = strtolower($rs['Field']);

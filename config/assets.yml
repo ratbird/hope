@@ -75,6 +75,7 @@ javascripts:
     - javascripts/tour.js
     - javascripts/tables.js
     - javascripts/jquery/jquery.scrollTo.js
+    - javascripts/jquery/jquery.doubleScroll.js
     - javascripts/start.js
     - javascripts/responsive.js
     - javascripts/wiki.js

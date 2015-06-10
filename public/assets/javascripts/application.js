@@ -416,6 +416,47 @@ jQuery(document).on('change', 'select[data-copy-to]', function () {
 
 jQuery(document).ready(function ($) {
     $('#checkAll').attr('checked', $('.sem_checkbox:checked').length !== 0);
+
+    // Duplicate scrollbar on top of layout content, if:
+    // - Device does not support touch input (supports sideways scrolling)
+    // - Content is wider than allowed (horizontal scrollbars are visible)
+    // - Content takes up more than 3/4 of the screen and vertical scrollbars
+    //   are visible (otherwise we can except the user to scroll a little bit
+    //   vertically)
+    if ($('html').is('.no-touch')) {
+        var $layout_content = $('#layout_content'),
+            $body           = $('body'),
+            content_element,
+            max_width       = 0,
+            // Determine whether there actually are horizontal scrollbars
+            horizontal_scroll  = $layout_content.get(0).scrollWidth > $layout_content.width(),
+            // Determine whether there actually are vertical scrollbars
+            vertical_scroll    = $body.get(0).scrollHeight > $body.height() + 10,
+            // Determine whether the content is large enough so that a duplication
+            // of the horizontal scrollbars is neccessary (3/4 or 75% seems like
+            // a good value)
+            vertical_oversized = $layout_content.height() > $body.height() * 0.75;
+
+        // Determine the widest element in the content. The double scroll
+        // library needs this, otherwise the scrollbar on top is kinda
+        // messed up
+        $layout_content.children().each(function () {
+            var width = $(this).width();
+            if (width > max_width) {
+                content_element = this;
+                max_width = width;
+            }
+        });
+
+        if (horizontal_scroll && vertical_scroll && vertical_oversized) {
+            // #layout_content's children need to be wrapped in a div since
+            // the flexi layout will interfere with inserted element by
+            // the double scroll library
+            $layout_content.children().wrapAll('<div>').parent().doubleScroll({
+                contentElement: content_element
+            });
+        }
+    }
 });
 
 

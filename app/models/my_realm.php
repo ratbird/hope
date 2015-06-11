@@ -552,14 +552,11 @@ class MyRealmModel
                 return (int)$a['status'] != 99;
             });
         }
-
         $courses = $courses->filter(function ($a) use ($min_sem, $max_sem) {
-            return (($a->end_semester->beginn >= $min_sem['beginn'])
-                || ($a->start_semester->beginn >= $min_sem['beginn'] && $a->end_semester->beginn <= $max_sem['beginn'])
-                || (int)$a->duration_time == -1);
+            return ($a->end_time >= $min_sem['beginn'] && $a->end_time <= $max_sem['beginn'])
+            || ($a->end_time == -1 && $a->start_time <= $max_sem['beginn'])
+            || ($a->end_time > $max_sem['beginn'] &&  $a->start_time <= $min_sem['beginn']);
         });
-
-
         $courses->orderBy($ordering);
 
         return $courses;
@@ -585,32 +582,6 @@ class MyRealmModel
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         return $statement->fetch(PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * Get the start_ and end_sem_number for a given course
-     * @param $course
-     * @return array
-     */
-    public static function getCourseSemNumbers($course)
-    {
-        $sem_data = SemesterData::GetSemesterArray();
-        $result   = array();
-
-        foreach ($sem_data as $key => $sem) {
-            if (!empty($result['sem_number']) && !empty($result['sem_number_end'])) return $result;
-
-            if ($sem['semester_id'] == $course->start_semester->semester_id) $result['sem_number'] = $key;
-
-            if ($sem['semester_id'] == $course->end_semester->semester_id) $result['sem_number_end'] = $key;
-        }
-
-        // add the last existiting semester to unlimited courses / studygroup
-        if ((int)$course->duration_time == -1) {
-            $result['sem_number_end'] = max(array_keys($sem_data));
-        }
-
-        return $result;
     }
 
     public static function getSelectedSemesters($sem = 'all')
@@ -656,12 +627,13 @@ class MyRealmModel
     public static function getPreparedCourses($sem = "all", $params = array())
     {
         $semesters   = self::getSelectedSemesters($sem);
-        $sem_data    = SemesterData::GetSemesterArray();
+        $current_semester_nr = SemesterData::GetSemesterIndexById(@Semester::findCurrent()->id);
         $min_sem_key = min($semesters);
         $max_sem_key = max($semesters);
         $group_field = $params['group_field'];
         $courses     = self::getCourses($min_sem_key, $max_sem_key, $params);
-
+        $show_semester_name = UserConfig::get($GLOBALS['user']->id)->SHOWSEM_ENABLE;
+        $sem_courses = array();
 
         $param_array = 'name seminar_id visible veranstaltungsnummer start_time duration_time status visible ';
         $param_array .= 'chdate admission_binding modules admission_prelim';
@@ -681,9 +653,6 @@ class MyRealmModel
                 if ($group_field == 'sem_tree_id') {
                     $_course['sem_tree'] = $course->study_areas->toArray();
                 }
-
-                // the sem numbers for a given course
-                $sem_nrs     = self::getCourseSemNumbers($course);
 
                 $user_status = @$member_ships[$course->id]['status'];
                 if(!$user_status && Config::get()->DEPUTIES_ENABLE && isDeputy($GLOBALS['user']->id, $course->id)) {
@@ -705,30 +674,30 @@ class MyRealmModel
                 $_course['visitdate']      = object_get_visit($course->id, 'sem', '');
                 $_course['user_status']    = $user_status;
                 $_course['gruppe']         = !$is_deputy ? @$member_ships[$course->id]['gruppe'] : self::getDeputieGroup($course->id);
-                $_course['sem_number_end'] = $sem_nrs['sem_number_end'];
-                $_course['sem_number']     = $sem_nrs['sem_number'];
+                $_course['sem_number_end'] = $course->duration_time == -1 ? $max_sem_key : SemesterData::GetSemesterIndexById($course->end_semester->id);
+                $_course['sem_number']     = SemesterData::GetSemesterIndexById($course->start_semester->id);
                 $_course['modules']        = $modules->getLocalModules($course->id, 'sem', $course->modules, $course->status);
                 $_course['name']           = $course->name;
                 $_course['temp_name']      = $course->name;
                 $_course['is_deputy']      = $is_deputy;
-
+                if ($show_semester_name && $course->duration_time != 0 && !$course->getSemClass()->offsetGet('studygroup_mode')) {
+                    $_course['name'] .= ' (' . $course->getFullname('sem-duration-name') . ')';
+                }
                 // add the the course to the correct semester
-                for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
-                    if ((int)$course->duration_time == -1 && $course->start_time <= $sem_data[$max_sem_key]['beginn']) {
-                        self::getObjectValues($_course);
+                self::getObjectValues($_course);
+                if ($course->duration_time == -1) {
+                    if ($current_semester_nr >= $min_sem_key && $current_semester_nr <= $max_sem_key) {
+                        $sem_courses[$current_semester_nr][$course->id] = $_course;
+                    } else {
                         $sem_courses[$max_sem_key][$course->id] = $_course;
-                        unset($course[$index]);
-                        break;
                     }
-
-                    if ($i >= $sem_nrs['sem_number'] && $i <= $sem_nrs['sem_number_end']) {
-                        self::getObjectValues($_course);
-                        $sem_courses[$i][$course->id] = $_course;
-                        unset($course[$index]);
-                        break;
+                } else {
+                    for ($i = $min_sem_key; $i <= $max_sem_key; $i++) {
+                        if ($i >= $_course['sem_number'] && $i <= $_course['sem_number_end']) {
+                            $sem_courses[$i][$course->id] = $_course;
+                        }
                     }
                 }
-
             }
         } else {
             return null;

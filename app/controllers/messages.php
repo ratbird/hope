@@ -152,6 +152,7 @@ class MessagesController extends AuthenticatedController {
             }
         }
         if (Request::option("group_id")) {
+            $this->default_message->receivers = array();
             $group = Statusgruppen::find(Request::option("group_id"));
             if (($group['range_id'] === $GLOBALS['user']->id)
                     || ($GLOBALS['perm']->have_studip_perm("autor", $group['range_id']))) {
@@ -169,6 +170,7 @@ class MessagesController extends AuthenticatedController {
         }
 
         if (Request::get("filter") && Request::option("course_id") && $GLOBALS['perm']->have_studip_perm('tutor', Request::option("course_id"))) {
+            $this->default_message->receivers = array();
             if (Request::get("filter") === 'claiming') {
                 $cs = CourseSet::getSetForCourse(Request::option("course_id"));
                 if (is_object($cs) && !$cs->hasAlgorithmRun()) {
@@ -230,8 +232,10 @@ class MessagesController extends AuthenticatedController {
 
         if (!$this->default_message->receivers->count() && is_array($_SESSION['sms_data']['p_rec'])) {
             $this->default_message->receivers = DBManager::get()->fetchAll("SELECT user_id,'rec' as snd_rec FROM auth_user_md5 WHERE username IN(?) ORDER BY Nachname,Vorname", array($_SESSION['sms_data']['p_rec']), 'MessageUser::build');
+            unset($_SESSION['sms_data']);
         }
         if (Request::option("answer_to")) {
+            $this->default_message->receivers = array();
             $old_message = new Message(Request::option("answer_to"));
             if (!$old_message->permissionToRead()) {
                 throw new AccessDeniedException("Message is not for you.");

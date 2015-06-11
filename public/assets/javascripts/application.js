@@ -441,7 +441,7 @@ jQuery(document).ready(function ($) {
         // library needs this, otherwise the scrollbar on top is kinda
         // messed up
         $layout_content.children().each(function () {
-            var width = $(this).width();
+            var width = $(this).get(0).scrollWidth;
             if (width > max_width) {
                 content_element = this;
                 max_width = width;

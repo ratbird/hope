@@ -34,10 +34,11 @@
 
 require '../lib/bootstrap.php';
 
-page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$perm->check('user');
+if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
 
-$EVAL_AUSWERTUNG_GRAPH_FORMAT = Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT ?: 'gif';
+page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
+
+$perm->check('user');
 
 include ('lib/seminar_open.php');             // initialise Stud.IP-Session
 
@@ -48,6 +49,7 @@ require_once('lib/evaluation/evaluation.config.php');
 require_once(EVAL_FILE_EVAL);
 require_once(EVAL_FILE_OBJECTDB);
 require_once('lib/export/export_tmp_gc.inc.php');
+require_once('lib/export/export_xml_func.inc.php');
 
 // Start of Output
 $eval_id = Request::option('eval_id');
@@ -91,8 +93,7 @@ function freetype_answers ($parent_id, $anz_nutzer) {
     while ($answer = $statement->fetchColumn()) {
         $counter++;
         fputs($fo_file,"                <fo:table-row>\n");
-        // fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".htmlspecialchars($db_answers->f("text"))."</fo:block></fo:table-cell>\n");
-        fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(htmlReady($answer),TRUE))."</fo:block></fo:table-cell>\n");
+        fputs($fo_file,"                  <fo:table-cell ><fo:block linefeed-treatment=\"preserve\" font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(xml_escape($answer)))."</fo:block></fo:table-cell>\n");
         fputs($fo_file,"                </fo:table-row>\n");
     }
     fputs($fo_file,"                <fo:table-row>\n");
@@ -168,7 +169,7 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
         $prozente_wo_residual = 0;
         if ($has_residual && ($answers_sum-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $edit .= "                <fo:table-row>\n";
-        $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$antwort_nummer.". ".preg_replace($pattern,$replace,smile(htmlReady(($answer['text']!="" ? $answer['text'] : $answer['value'])),TRUE))."</fo:block></fo:table-cell>\n";
+        $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$antwort_nummer.". ". xml_escape(($answer['text']!="" ? $answer['text'] : $answer['value']))."</fo:block></fo:table-cell>\n";
 
         if ($has_residual) $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$answer_counter." (".$prozente."%) ".($answer['residual'] == 0 ? "(".$prozente_wo_residual."%)*" : "" )."</fo:block></fo:table-cell>\n";
         else $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$answer_counter." (".$prozente."%)</fo:block></fo:table-cell>\n";
@@ -256,7 +257,7 @@ function groups ($parent_id) {
             fputs($fo_file,"    <!-- Groupblock -->\n");
             fputs($fo_file,"    <fo:block font-variant=\"small-caps\" font-weight=\"bold\" text-align=\"start\" space-after.optimum=\"2pt\" background-color=\"lightblue\" space-before.optimum=\"10pt\">\n");
             if (do_template("show_group_headline"))
-                fputs($fo_file,"      ".$global_counter.". ".preg_replace($pattern,$replace,smile(htmlReady($group['title']),TRUE))."\n");
+                fputs($fo_file,"      ".$global_counter.". ". xml_escape($group['title']) ."\n");
             fputs($fo_file,"    </fo:block>\n");
         } else {
             $local_counter += 1;
@@ -268,7 +269,7 @@ function groups ($parent_id) {
             fputs($fo_file,"    <!-- Questionblock -->\n");
             fputs($fo_file,"    <fo:block font-variant=\"small-caps\" font-weight=\"bold\" text-align=\"start\" background-color=\"grey\" color=\"white\" space-after.optimum=\"10pt\">\n");
             if (do_template("show_questionblock_headline"))
-                fputs($fo_file,"      ".$global_counter.".".$local_counter.". ".preg_replace($pattern,$replace,smile(htmlReady($group['title']),TRUE))."\n");
+                fputs($fo_file,"      ".$global_counter.".".$local_counter.". ". xml_escape($group['title']) ."\n");
             fputs($fo_file,"    </fo:block>\n");
         }
 
@@ -289,7 +290,7 @@ function groups ($parent_id) {
                 fputs($fo_file,"    <!-- Question -->\n");
                 fputs($fo_file,"    <fo:block text-align=\"start\" font-weight=\"bold\" space-before.optimum=\"10pt\" space-after.optimum=\"10pt\">\n");
                 if (do_template("show_questions")) {
-                    fputs($fo_file,"      ".$global_counter.".".$local_counter.".".$local_question_counter.". ".preg_replace($pattern,$replace,smile(htmlReady($question['text']),TRUE))."\n");
+                    fputs($fo_file,"      ".$global_counter.".".$local_counter.".".$local_question_counter.". ". xml_escape($question['text']) ."\n");
                 }
                 fputs($fo_file,"    </fo:block>\n");
                 fputs($fo_file,"    <!-- table start -->\n");
@@ -337,7 +338,7 @@ function groups ($parent_id) {
                     if (!($freetype)) {
                         fputs($fo_file,"          <fo:table-cell ><fo:block start-indent=\"3mm\" end-indent=\"3mm\" padding-left=\"3mm\" padding-right=\"3mm\" padding-top=\"4mm\" padding-bottom=\"4mm\">\n");
                         if (do_template("show_graphics")) {
-                            fputs($fo_file,"            <fo:external-graphic content-width=\"70mm\" content-height=\"60mm\" src=\"url('file:///".$tmp_path_export."/evalsum".$question['evalquestion_id'].$auth->auth["uid"].".".Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT."')\"/>\n");
+                            fputs($fo_file,"            <fo:external-graphic content-width=\"70mm\" content-height=\"60mm\" src=\"url('file:///".$tmp_path_export."/evalsum".$question['evalquestion_id'].$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']."')\"/>\n");
                         }
                         fputs($fo_file,"          </fo:block></fo:table-cell>\n");
                     }
@@ -379,7 +380,7 @@ function groups ($parent_id) {
                         fputs($fo_file,"          </fo:block></fo:table-cell >");
                         foreach ($questions["antwort_texte"] as $k2=>$v2) { // 1. Unterebene, hier sind die Antworttexte abgelegt
                             fputs($fo_file,"          <fo:table-cell ><fo:block space-before.optimum=\"10pt\" font-size=\"7pt\">\n");
-                            fputs($fo_file, preg_replace($pattern,$replace,smile(htmlReady($v2),TRUE)));
+                            fputs($fo_file, xml_escape($v2));
                             fputs($fo_file,"          </fo:block></fo:table-cell >");
                         }
 
@@ -529,7 +530,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
 
     // ----- START HEADER -----
 
-    fputs($fo_file,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+    fputs($fo_file,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     fputs($fo_file,"<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\">\n");
     fputs($fo_file,"  <!-- defines the layout master -->\n");
     fputs($fo_file,"  <fo:layout-master-set>\n");
@@ -543,10 +544,10 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     fputs($fo_file,"  <fo:page-sequence master-reference=\"first\">\n");
     fputs($fo_file,"  <fo:static-content flow-name=\"xsl-region-after\">\n");
     fputs($fo_file,"    <fo:block text-align=\"center\" font-size=\"8pt\" font-family=\"serif\" line-height=\"14pt\" >\n");
-    fputs($fo_file,"    "._("Erstellt mit Stud.IP")." $SOFTWARE_VERSION - "._("Seite")." <fo:page-number/>\n");
+    fputs($fo_file,"    "._("Erstellt mit Stud.IP")." " . xml_escape($SOFTWARE_VERSION) . " - ". _("Seite")." <fo:page-number/>\n");
     fputs($fo_file,"    </fo:block>\n");
     fputs($fo_file,"    <fo:block text-align=\"center\" font-size=\"8pt\" font-family=\"serif\" line-height=\"14pt\" >\n");
-    fputs($fo_file,"      <fo:basic-link color=\"blue\" external-destination=\"$ABSOLUTE_URI_STUDIP\">$UNI_NAME_CLEAN</fo:basic-link>\n");
+    fputs($fo_file,"      <fo:basic-link color=\"blue\" external-destination=\"$ABSOLUTE_URI_STUDIP\">". xml_escape($UNI_NAME_CLEAN) . "</fo:basic-link>\n");
     fputs($fo_file,"    </fo:block>\n");
     fputs($fo_file,"  </fo:static-content>\n");
     fputs($fo_file,"  <fo:flow flow-name=\"xsl-region-body\">\n");
@@ -557,14 +558,14 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     fputs($fo_file,"    <!-- this defines a title level 2-->\n");
 
     fputs($fo_file,"    <fo:block font-size=\"16pt\" font-weight=\"bold\" font-family=\"sans-serif\" space-before.optimum=\"10pt\" space-after.optimum=\"15pt\" text-align=\"center\">\n");
-    fputs($fo_file,"      ".preg_replace($pattern,$replace,smile(htmlReady($evaluation['title']),TRUE))."\n");
+    fputs($fo_file,"      ". xml_escape($evaluation['title'])."\n");
     fputs($fo_file,"    </fo:block>\n");
     fputs($fo_file,"    <fo:block text-align=\"start\" line-height=\"10pt\" font-size=\"8pt\">\n");
     fputs($fo_file,    _("Diese Evaluation ist folgenden Bereichen zugeordnet:"));
     fputs($fo_file,"    </fo:block>\n");
     foreach($eval_ranges_names as $n) {
         fputs($fo_file,"    <fo:block text-align=\"start\" margin-left=\"0.5cm\" line-height=\"10pt\" font-size=\"8pt\">\n");
-        fputs($fo_file, htmlReady($n));
+        fputs($fo_file, xml_escape($n));
         fputs($fo_file,"    </fo:block>\n");
     }
 
@@ -572,9 +573,9 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
 
     if (do_template("show_total_stats")) {
         fputs($fo_file,"    <fo:block text-align=\"start\" space-before.optimum=\"10pt\" line-height=\"10pt\" font-size=\"8pt\">\n");
-        fputs($fo_file,"      ".$number_of_votes." "._("Teilnehmer insgesamt").".\n");
-        fputs($fo_file,"      "._("Die Teilnahme war")." ". ($evaluation['anonymous']==0 ? _("nicht") : "") . " "._("anonym").".\n");
-        fputs($fo_file,"      "._("Eigentümer").": ".$db_owner.". "._("Erzeugt am").": ".date("d.m.Y H:i:s")."\n");
+        fputs($fo_file,"      ". xml_escape($number_of_votes." "._("Teilnehmer insgesamt")).".\n");
+        fputs($fo_file,"      ". xml_escape(_("Die Teilnahme war")." ". ($evaluation['anonymous']==0 ? _("nicht") : "") . " "._("anonym")).".\n");
+        fputs($fo_file,"      " . xml_escape(_("Eigentümer").": ".$db_owner.". "._("Erzeugt am").": ".date("d.m.Y H:i:s"))."\n");
         fputs($fo_file,"    </fo:block>\n");
     }
 

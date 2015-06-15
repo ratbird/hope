@@ -173,13 +173,13 @@ class AdminCourseFilter {
      * Plugins may register at this event to fully alter this AdminCourseFilter-object and so the resultset.
      * @return array : associative array with seminar_ids as keys and seminar-data-arrays as values.
      */
-    public function getCourses()
+    public function getCourses($grouped = true)
     {
         NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
         $statement = DBManager::get()->prepare($this->createQuery());
         $statement->execute($this->settings['parameter']);
         $_SESSION['AdminCourseFilter_settings'] = $this->settings;
-        return $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
+        return $statement->fetchAll($grouped ? (PDO::FETCH_GROUP | PDO::FETCH_ASSOC) : PDO::FETCH_ASSOC);
     }
 
     /**

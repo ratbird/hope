@@ -55,30 +55,17 @@ echo $flash['message'];
     <?= MessageBox::info(_("Zu dieser Veranstaltung sind noch keine Raumanfragen vorhanden.")) ?>
 <? endif ?>
 <?
-$infobox_content = array(
-    array(
-        'kategorie' => _('Raumanfragen und gewünschte Raumeigenschaften'),
-        'eintrag'   => array(
-    array(
-        'icon' => 'icons/16/black/info.png',
-        'text' => _("Hier sehen Sie eine Übersicht der Raumanfragen zu dieser Veranstaltung.")
-    ),
-    array(
-            'icon' => 'icons/16/black/add.png',
-            'text' => '<a href="'.$controller->link_for('new/'.$course_id).'">'._('Neue Raumanfrage erstellen').'</a>'
-        ))
-    ),
-);
-if ($adminList) {
-    $infobox_content[] = array(
-        "kategorie" => _("Veranstaltungsliste:"),
-        "eintrag"   =>
-            array(
-                array(
-                      "icon" => "icons/16/black/link-intern.png",
-                      "text" => $adminList->render()
-                )
-            )
-    );
+$actions = new ActionsWidget();
+$actions->addLink(_('Neue Raumanfrage erstellen'), $controller->url_for('new/'.$course_id), Assets::image_path("icons/16/black/add"));
+Sidebar::get()->addWidget($actions);
+
+if ($GLOBALS['perm']->have_perm("admin")) {
+    $list = new SelectorWidget();
+    $list->setUrl("?#admin_top_links");
+    $list->setSelectParameterName("cid");
+    foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
+        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+    }
+    $list->setSelection($course_id);
+    Sidebar::get()->addWidget($list);
 }
-$infobox = array('picture' => 'sidebar/resources-sidebar.png', 'content' => $infobox_content);

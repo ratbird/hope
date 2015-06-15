@@ -9,10 +9,10 @@ if ($adminList) {
     $list = new SelectorWidget();
     $list->setUrl("?#admin_top_links");
     $list->setSelectParameterName("cid");
-    foreach ($adminList->adminList as $seminar) {
+    foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
         $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
     }
-    $list->setSelection($adminList->course_id);
+    $list->setSelection($course_id);
     $sidebar->addWidget($list);
 }
 

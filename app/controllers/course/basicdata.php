@@ -354,17 +354,14 @@ class Course_BasicdataController extends AuthenticatedController
         $sidebar->addWidget($widget);
         // Entry list for admin upwards.
         if ($perm->have_studip_perm("admin",$this->course_id)) {
-            $adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
-            if ($adminList) {
-                $list = new SelectorWidget();
-                $list->setUrl("?#admin_top_links");
-                $list->setSelectParameterName("cid");
-                foreach ($adminList->adminList as $seminar) {
-                    $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
-                }
-                $list->setSelection($adminList->course_id);
-                $sidebar->addWidget($list);
+            $list = new SelectorWidget();
+            $list->setUrl("?#admin_top_links");
+            $list->setSelectParameterName("cid");
+            foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
+                $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
             }
+            $list->setSelection($this->course_id);
+            $sidebar->addWidget($list);
         }
     }
 
@@ -492,61 +489,6 @@ class Course_BasicdataController extends AuthenticatedController
         $this->flash['open'] = "bd_personal";
         $redirect = Request::get('from') ? : 'course/basicdata/view/' . $course_id;
         $this->redirect($this->url_for($redirect));
-    }
-
-    private function addTutor($tutor, $course_id) {
-        //Tutoren hinzufügen:
-        if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
-            $sem = Seminar::GetInstance($course_id);
-            if ($sem->addMember($tutor, "tutor")) {
-                return MessageBox::success(sprintf(_("%s wurde hinzugefügt."),get_title_for_status('tutor', 1, $sem->status)));
-            }
-        }
-        return false;
-    }
-
-    private function addDeputy($deputy, $course_id) {
-        //Vertretung hinzufügen:
-        if ($GLOBALS['perm']->have_studip_perm("dozent", $course_id)) {
-            $sem = Seminar::GetInstance($course_id);
-            if (addDeputy($deputy, $sem->getId())) {
-                return MessageBox::success(sprintf(_("%s wurde hinzugefügt."), get_title_for_status('deputy', 1, $sem->status)));
-            }
-        }
-        return false;
-    }
-
-    private function addTeacher($dozent, $course_id) {
-        $deputies_enabled = get_config('DEPUTIES_ENABLE');
-        $sem = Seminar::GetInstance($course_id);
-        if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) {
-            if ($sem->addMember($dozent, "dozent")) {
-                // Only applicable when globally enabled and user deputies enabled too
-                if ($deputies_enabled) {
-                    // Check whether chosen person is set as deputy
-                    // -> delete deputy entry.
-                    if (isDeputy($dozent, $course_id)) {
-                        deleteDeputy($dozent, $course_id);
-                    }
-                    // Add default deputies of the chosen lecturer...
-                    if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
-                        $deputies  = getDeputies($dozent);
-                        $lecturers = $sem->getMembers('dozent');
-                        foreach ($deputies as $deputy) {
-                            // ..but only if not already set as lecturer or deputy.
-                            if (!isset($lecturers[$deputy['user_id']]) &&
-                                !isDeputy($deputy['user_id'], $course_id)
-                            ) {
-                                addDeputy($deputy['user_id'], $course_id);
-                            }
-                        }
-                    }
-                }
-
-                return MessageBox::success(sprintf(_('%s wurde hinzugefügt.'), get_title_for_status('dozent', 1)));
-            }
-        }
-        return false;
     }
 
     /**

@@ -65,7 +65,7 @@ class SelectWidget extends SidebarWidget
     public function render($variables = array())
     {
         $attributes = array();
-        foreach ($this->template_variables['attributes'] as $key => $value) {
+        foreach ((array) $this->template_variables['attributes'] as $key => $value) {
             $attributes[] = sprintf('%s="%s"', htmlReady($key), htmlReady($value));
         }
         $this->template_variables['attributes'] = implode(' ', $attributes) ?: '';

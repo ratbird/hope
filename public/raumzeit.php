@@ -607,10 +607,17 @@ foreach ($selection as $item) {
 }
 $sidebar->addWidget($widget);
 
-if ($adminList) {
-    $widget = new SidebarWidget(_('Veranstaltungsliste'));
-    $widget->addElement(new WidgetElement($adminList->render()));
-    $sidebar->addWidget($widget);
+if ($GLOBALS['perm']->have_perm("admin")) {
+    include_once 'app/models/AdminCourseFilter.class.php';
+
+    $list = new SelectorWidget();
+    $list->setUrl("?#admin_top_links");
+    $list->setSelectParameterName("cid");
+    foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
+        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+    }
+    $list->setSelection($id);
+    $sidebar->addWidget($list);
 }
 
 if (Config::get()->RESOURCES_ENABLE && Config::get()->RESOURCES_ENABLE_BOOKINGSTATUS_COLORING) {

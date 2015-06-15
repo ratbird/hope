@@ -23,7 +23,7 @@ class CoreAdmin implements StudipModule {
 
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
             $navigation = new Navigation(_('Verwaltung'));
             $navigation->setImage('icons/16/white/admin.png');
             $navigation->setActiveImage('icons/16/black/admin.png');
@@ -89,7 +89,7 @@ class CoreAdmin implements StudipModule {
                 $main->addSubNavigation('change_view', $item);
             }  // endif modules only seminars
 
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) {
                 if (get_config('VOTE_ENABLE')) {
                     $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem');
                     $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));

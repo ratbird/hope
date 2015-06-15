@@ -35,23 +35,8 @@ class Course_RoomRequestsController extends AuthenticatedController
         $this->course_id = Request::option('cid', $course_id);
         //$course_id == '-' means dialog called from Assi
         if ($course_id != '-') {
-            if ($perm->have_perm('admin')) {
-                //Navigation im Admin-Bereich:
-                Navigation::activateItem('/admin/course/room_requests');
-            } else {
-                //Navigation in der Veranstaltung:
-                Navigation::activateItem('/course/admin/room_requests');
-            }
-
-            if (!$this->course_id) {
-                PageLayout::setTitle(_("Verwaltung von Raumanfragen"));
-                $GLOBALS['view_mode'] = "sem";
-
-                require_once 'lib/admin_search.inc.php';
-
-                include 'lib/include/admin_search_form.inc.php';  // will not return
-                die(); //must not return
-            }
+            //Navigation in der Veranstaltung:
+            Navigation::activateItem('/course/admin/room_requests');
 
             if (!get_object_type($this->course_id, array('sem')) ||
                 SeminarCategories::GetBySeminarId($this->course_id)->studygroup_mode ||

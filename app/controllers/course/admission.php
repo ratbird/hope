@@ -31,23 +31,7 @@ class Course_AdmissionController extends AuthenticatedController
 
         $this->course_id = Request::option('cid', $course_id);
 
-        if ($perm->have_perm('admin')) {
-            //Navigation im Admin-Bereich:
-            Navigation::activateItem('/admin/course/admission');
-        } else {
-            //Navigation in der Veranstaltung:
-            Navigation::activateItem('/course/admin/admission');
-        }
-
-        if (!$this->course_id) {
-            PageLayout::setTitle(_("Verwaltung von Zugangsberechtigungen"));
-            $GLOBALS['view_mode'] = "sem";
-
-            require_once 'lib/admin_search.inc.php';
-
-            include 'lib/include/admin_search_form.inc.php';  // will not return
-            die(); //must not return
-        }
+        Navigation::activateItem('/course/admin/admission');
 
         if (!get_object_type($this->course_id, array('sem')) ||
             SeminarCategories::GetBySeminarId($this->course_id)->studygroup_mode ||

@@ -34,17 +34,12 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('lib/admission.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/datei.inc.php');
-require_once 'lib/admin_search.inc.php';
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
 
 PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
 
-if ($perm->have_perm('admin')) {
-    Navigation::activateItem('/admin/course/groups');
-} else {
-    Navigation::activateItem('/course/members/edit_groups');
-}
+Navigation::activateItem('/course/members/edit_groups');
 
 //get ID, if a object is open
 if ($SessSemName[1])
@@ -61,8 +56,6 @@ if ($header_line)
   PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
-
-include 'lib/include/admin_search_form.inc.php';
 
 // Rechtecheck
 $_range_type = get_object_type($range_id);

@@ -64,18 +64,9 @@ if ($GLOBALS['SessSemName'][1]) {
 PageLayout::setTitle($title);
 
 require_once 'lib/evaluation/evaluation.config.php';
-require_once 'lib/admin_search.inc.php';
 
 if ($list || $view) {
-    if ($perm->have_perm('admin')) {
-        if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
-            Navigation::activateItem('/admin/course/evaluation');
-        } else {
-            Navigation::activateItem('/admin/institute/evaluation');
-        }
-    } else {
-        Navigation::activateItem('/course/admin/evaluation');
-    }
+    Navigation::activateItem('/course/admin/evaluation');
 } else {
     Navigation::activateItem('/tools/evaluation');
 }

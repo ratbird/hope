@@ -55,17 +55,8 @@ include_once 'lib/seminar_open.php';
 PageLayout::setHelpKeyword("Basis.Votings");
 PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 
-require_once 'lib/admin_search.inc.php';
-
 if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
     $navigation_item = '/course/admin/vote';
-    if ($perm->have_perm('admin')) {
-        if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
-            $navigation_item = '/admin/course/vote';
-        } else {
-            $navigation_item = '/admin/institute/vote';
-        }
-    }
     if (Navigation::hasItem($navigation_item)) {
         Navigation::activateItem($navigation_item);
     } else {
@@ -73,10 +64,6 @@ if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutAct
     }
 } else {
     Navigation::activateItem('/tools/vote');
-}
-
-if (Request::option('list') || Request::option('view')) {
-    include 'lib/include/admin_search_form.inc.php';
 }
 
 ob_start();

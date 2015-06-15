@@ -43,24 +43,7 @@ class Course_BasicdataController extends AuthenticatedController
 
         $this->course_id = Request::option('cid', $course_id);
 
-        if ($perm->have_perm('admin')) {
-            //Navigation im Admin-Bereich:
-            Navigation::activateItem('/admin/course/details');
-        } else {
-            //Navigation in der Veranstaltung:
-            Navigation::activateItem('/course/admin/details');
-        }
-
-        //Auswähler für Admin-Bereich:
-        if (!$this->course_id) {
-            PageLayout::setTitle(_("Verwaltung der Grunddaten"));
-            $GLOBALS['view_mode'] = "sem";
-
-            require_once 'lib/admin_search.inc.php';
-
-            include 'lib/include/admin_search_form.inc.php';  // will not return
-            die(); //must not return
-        }
+        Navigation::activateItem('/course/admin/details');
 
         //Berechtigungscheck:
         if (!$perm->have_studip_perm("tutor",$this->course_id)) {

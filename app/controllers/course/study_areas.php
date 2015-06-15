@@ -74,25 +74,9 @@ class Course_StudyAreasController extends AuthenticatedController
             $layout =
                 $GLOBALS['template_factory']->open('layouts/base');
             $this->set_layout($layout);
-            if ($perm->have_perm('admin')) {
-                Navigation::activateItem('/admin/course/study_areas');
-            } else {
-                Navigation::activateItem('/course/admin/study_areas');
-            }
+            Navigation::activateItem('/course/admin/study_areas');
         }
 
-
-        // w/o a course ID show the admin search form
-        if (!self::isCourseId($course_id)) {
-
-            PageLayout::setTitle(_('Studienbereichsauswahl'));
-
-            $GLOBALS['view_mode'] = "sem";
-            require_once 'lib/admin_search.inc.php';
-
-            include 'lib/include/admin_search_form.inc.php';  // will not return
-            die(); //must not return
-        }
         $this->set_course($course_id);
         $title = sprintf('%s - %s',
             Course::find($this->course_id)->getFullname(),
@@ -133,9 +117,6 @@ class Course_StudyAreasController extends AuthenticatedController
             $this->update_selection($study_areas);
 
             $this->course->setStudyAreas($this->selection->getAreaIDs());
-        }
-        if ($perm->have_perm("admin")) {
-            $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
         }
 
         $this->url = $this->url_for('course/study_areas/show/'.$course_id);

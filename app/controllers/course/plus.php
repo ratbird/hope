@@ -33,12 +33,8 @@ class Course_PlusController extends AuthenticatedController
         require_once 'lib/admin_search.inc.php';
         $id = $range_id ? : $_SESSION['SessionSeminar'];
 
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            if ($GLOBALS['view_mode'] == 'sem') {
-                Navigation::activateItem('/admin/course/modules');
-            } else {
-                Navigation::activateItem('/admin/institute/modules');
-            }
+        if ($GLOBALS['perm']->have_perm('admin') && $GLOBALS['view_mode'] !== 'sem') {
+            Navigation::activateItem('/admin/institute/modules');
         } else {
             Navigation::activateItem('/course/modules');
         }

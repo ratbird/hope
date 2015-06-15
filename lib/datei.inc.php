@@ -2291,7 +2291,7 @@ function GetFileIcon($ext, $with_img_tag = false){
             $icon = 'icons/16/blue/file-generic.png';
         break;
     }
-    return ($with_img_tag ? Assets::img($icon) : $icon);
+    return ($with_img_tag ? (string)Assets::img($icon) : $icon);
 }
 
 /**

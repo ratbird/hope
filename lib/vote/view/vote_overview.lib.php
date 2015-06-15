@@ -796,11 +796,7 @@ function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
 
 
     $html.= Assets::img($icon, array('class' => 'middle'));
-    if ($open == "closed")
-        $html.= $label["arrow_openthis"];
-    else
-        $html.= $label["arrow_closethis"];
-    $html.= "\"></a>\n"
+    $html.= "</a>\n"
          .  "    </td>\n";
     return $html;
 }

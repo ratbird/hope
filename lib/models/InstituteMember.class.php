@@ -95,7 +95,7 @@ class InstituteMember extends SimpleORMap
                              FROM user_inst
                              LEFT JOIN auth_user_md5 aum USING (user_id)
                              LEFT JOIN user_info ui USING (user_id)
-                             WHERE institut_id = ? AND seminar_user.status IN(?) ORDER BY inst_perms,nachname",
+                             WHERE institut_id = ? AND user_inst.inst_perms IN (?) ORDER BY inst_perms,nachname",
                              array($institute_id, is_array($status) ? $status : words($status)),
                              __CLASS__ . '::buildExisting');
     }

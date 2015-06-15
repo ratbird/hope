@@ -34,11 +34,11 @@
 
 require '../lib/bootstrap.php';
 
-if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
-
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $perm->check('user');
+
+$EVAL_AUSWERTUNG_GRAPH_FORMAT = Config::get()->EVAL_AUSWERTUNG_GRAPH_FORMAT ?: 'gif';
 
 include ('lib/seminar_open.php');             // initialise Stud.IP-Session
 

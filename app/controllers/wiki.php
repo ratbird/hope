@@ -17,6 +17,10 @@ class WikiController extends AuthenticatedController
         
         $this->keyword  = Request::get('keyword');
         $this->range_id = $GLOBALS['SessSemName'][1];
+        
+        if (Request::isXhr()) {
+            $this->keyword = studip_utf8decode($this->keyword);
+        }
     }
 
     public function store_action($version)

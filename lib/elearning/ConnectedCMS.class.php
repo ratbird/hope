@@ -58,7 +58,7 @@ class ConnectedCMS
         global $RELATIVE_PATH_ELEARNING_INTERFACE;
 
         $this->cms_type = $cms;
-        if ($GLOBALS["ELEARNING_INTERFACE_" . $this->cms . "_ACTIVE"] == "1")
+        if (Config::get()->getValue("ELEARNING_INTERFACE_" . $this->cms . "_ACTIVE"))
             $this->is_active = true;
         else
             $this->is_active = false;

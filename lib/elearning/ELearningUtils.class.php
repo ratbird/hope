@@ -90,7 +90,7 @@ class ELearningUtils
     function isCMSActive($cms = "")
     {
         if ($cms != "")
-            return $GLOBALS["ELEARNING_INTERFACE_" . $cms . "_ACTIVE"];
+            return Config::get()->getValue("ELEARNING_INTERFACE_" . $cms . "_ACTIVE");
     }
 
     /**
@@ -333,7 +333,7 @@ class ELearningUtils
         $template->set_attribute('step', $step);
         if ($is_verified)
             $new_account_cms = "";
-        
+
         return $template->render();
     }
 
@@ -465,7 +465,7 @@ class ELearningUtils
     function getIliasCourses($sem_id) {
         global  $connected_cms, $messages, $view, $cms_select;
         $db = DBManager::get();
-        
+
         $rs = $db->query("SELECT DISTINCT system_type, module_id
                           FROM object_contentmodules
                           WHERE module_type = 'crs' AND object_id = " . $db->quote($sem_id))

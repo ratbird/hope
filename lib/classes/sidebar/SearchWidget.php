@@ -84,9 +84,9 @@ class SearchWidget extends SidebarWidget
      *                             function itself that's executed when an
      *                             entry of the found elements is selected
      */
-    public function addNeedle($label, $name, $placeholder = false, SearchType $quick_search = null, $js_func = null)
+    public function addNeedle($label, $name, $placeholder = false, SearchType $quick_search = null, $js_func = null, $value = null)
     {
-        $value = Request::get($name);
+        $value = $value ?: Request::get($name);
         $this->needles[] = compact(words('label name placeholder value quick_search js_func'));
     }
 

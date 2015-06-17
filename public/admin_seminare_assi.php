@@ -2591,13 +2591,13 @@ elseif ($level == 2) {
                       'institute' => array_merge((array)$_SESSION['sem_create_data']["sem_inst_id"], (array)$_SESSION['sem_create_data']["sem_bet_inst"])
                 )
             );
-            print QuickSearch::get("add_doz", $searchForDozentUser)
+            print "<br>". QuickSearch::get("add_doz", $searchForDozentUser)
                 ->withButton(array('search_button_name' => 'search_doz', 'reset_button_name' => 'reset_search'))
                 ->render();
             print "<input type=\"text\" name=\"sem_doz_label\" placeholder=\""._("Funktion")."\">";
 
             ?>
-            <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
+
         </td>
     </tr>
     <?php if ($deputies_enabled) { ?>
@@ -2652,11 +2652,10 @@ elseif ($level == 2) {
                           'exclude_user' => array_keys((array)$_SESSION['sem_create_data']["sem_dep"])
                     )
                 );
-                print QuickSearch::get("add_dep", $deputysearch)
+                print "<br>" . QuickSearch::get("add_dep", $deputysearch)
                     ->withButton(array('search_button_name' => 'search_dep', 'reset_button_name' => 'reset_search'))
                     ->render();
                 ?>
-                <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
             </td>
         </tr>
     <?php } ?>
@@ -2736,13 +2735,11 @@ elseif ($level == 2) {
                       'institute' => array_merge((array)$_SESSION['sem_create_data']["sem_inst_id"], (array)$_SESSION['sem_create_data']["sem_bet_inst"])
                 )
             );
-            print QuickSearch::get("add_tut", $searchForTutorUser)
+            print "<br>" . QuickSearch::get("add_tut", $searchForTutorUser)
                 ->withButton(array('search_button_name' => 'search_tut', 'reset_button_name' => 'reset_search'))
                 ->render();
-
             ?>
             <input type="text" name="sem_tut_label" placeholder="<?= _('Funktion') ?>">
-            <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
         </td>
     </tr>
 

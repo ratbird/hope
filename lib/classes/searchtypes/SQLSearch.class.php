@@ -40,6 +40,7 @@ class SQLSearch extends SearchType
     protected $sql;
     protected $avatarLike;
     protected $title;
+    public $extendedLayout = false;
     
     /**
      * 
@@ -94,9 +95,9 @@ class SQLSearch extends SearchType
     {
         switch ($this->avatarLike) {
             case "username":
-                return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::SMALL);
+                return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::MEDIUM);
             case "user_id":
-                return Avatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
+                return Avatar::getAvatar(NULL, $id)->getURL(Avatar::MEDIUM);
             case "Seminar_id":
             case "Arbeitsgruppe_id":
                 return CourseAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);

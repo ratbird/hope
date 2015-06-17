@@ -299,6 +299,7 @@ class QuickSearch
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('search_button_name', $this->search_button_name);
             $template->set_attribute('reset_button_name', $this->reset_button_name);
+            $template->set_attribute('extendedLayout', $this->search->extendedLayout);
             return $template->render();
 
         } else {
@@ -336,6 +337,7 @@ class QuickSearch
             $template->set_attribute('query_id', $query_id);
             $template->set_attribute('search_button_name', $this->search_button_name);
             $template->set_attribute('reset_button_name', $this->reset_button_name);
+            $template->set_attribute('extendedLayout', $this->search->extendedLayout);
             return $template->render();
         }
     }

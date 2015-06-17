@@ -2,7 +2,7 @@
 # Lifter010: TODO
 ?>
 <? if ($withButton): ?>
-<div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
+<div class="quicksearch_frame <?= ($extendedLayout === true) ? 'extendedLayout' : ''; ?>" id="<?= $id ?>_frame" style="width: <?= $box_width ?>px;">
 <? $withAttributes['style'] = "width: ".($box_width-23)."px;"; ?>
     <? if ($box_align === 'left'): ?>
         <?= Assets::input('icons/16/blue/search.png', array('class' => 'text-bottom')) ?>
@@ -17,10 +17,7 @@
             $name ?>_parameter" value="<?= htmlReady($defaultName) ?>" placeholder="<?= $beschriftung && !$defaultID ? htmlReady($beschriftung) : '' ?>">
 <? if ($withButton): ?>
     <? if ($box_align !== 'left'): ?>
-        <?= Assets::input('icons/16/blue/search.png', tooltip2(_('Suche starten')) + array(
-            'name' => $search_button_name,
-            'class' => 'text-bottom',
-        )) ?>
+        <input type="submit" value="Suche starten" name="<?= $search_button_name; ?>"></input>
     <? endif; ?>
 </div>
 <? endif; ?>

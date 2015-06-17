@@ -39,9 +39,14 @@ STUDIP.QuickSearch = {
      */
     autocomplete: function (name, url, func, disabled) {
         if (typeof disabled === "undefined" || disabled !== true) {
+            var appendTo = "body";
+            if (jQuery("#" + name + "_frame").length) {
+                appendTo = "#" + name + "_frame";
+            }
             jQuery('#' + name).autocomplete({
                 delay: 500,
                 minLength: 3,
+                appendTo: appendTo,
                 create: function () {
                     if ($(this).is('[autofocus]')) {
                         $(this).focus();
@@ -61,11 +66,22 @@ STUDIP.QuickSearch = {
                         success: function (data) {
                             var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
                             //an array of possible selections
+                            
+                            if (!data.length) {
+                                add([{value:"", label: "Kein Ergebnis gefunden.".toLocaleString()}]);
+                                return;
+                            }
+                            
                             var suggestions = _.map(data, function (val) {
                                 //adding a label and a hidden item_id - don't use "value":
+                                var label_text = val.item_name;
+                                if (val.item_description !== undefined) {
+                                    label_text += "<br>" + val.item_description
+                                }
+                                
                                 return {
                                     //what is displayed in the drop down box
-                                    label: val.item_name,
+                                    label: label_text,
                                     //the hidden ID of the item
                                     item_id: val.item_id,
                                     //what is inserted in the visible input box
@@ -90,8 +106,32 @@ STUDIP.QuickSearch = {
                     }
                 }
             });
+            
+            if (jQuery("#" + name + "_frame").length) {
+                // trigger search on button click
+                $( '#' + name + '_frame input[type="submit"]').click(function(e) {
+                    e.preventDefault();
+                    STUDIP.QuickSearch.triggerSearch(name);
+                });
+
+                // trigger search on enter key down
+                $( '#' + name ).keydown(function(e) {
+                    if (e.keyCode == 13) {
+                        e.preventDefault();
+                        STUDIP.QuickSearch.triggerSearch(name);
+                    }
+                });
+            }
         }
         jQuery('#' + name).placehold();
+    },
+
+    // start searching now
+    triggerSearch: function (name) {
+        var term = jQuery('#' + name).val();
+        jQuery('#' + name).autocomplete({ minLength: 1 });
+        jQuery('#' + name).autocomplete('search', term);
+        jQuery('#' + name).autocomplete({ minLength: 3 });
     }
 };
 

@@ -105,7 +105,11 @@ class QuicksearchController extends AuthenticatedController
     {
         if ($this->search instanceof SearchType) {
             try {
-                $results = $this->search->getResults($request, $this->form_data, 10);
+                if ($this->search instanceof StandardSearch && $this->search->search == "username") {
+                    $results = $this->search->getResults($request, $this->form_data, 50);
+                } else {
+                    $results = $this->search->getResults($request, $this->form_data, 10);
+                }
             } catch (Exception $exception) {
                 //Der Programmierer will ja seine Fehler sehen:
                 return array(array("", $exception->getMessage()));

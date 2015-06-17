@@ -16,20 +16,67 @@ input.quicksearchbox {
     line-height: 1em;
 }
 
+.quicksearch_frame {
+    input[type="text"] {
+        box-sizing: border-box;
+        border-width: 1px 30px 1px 1px;
+        border-style: solid;
+        border-color: #7E92B0;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image: none;
+        float: left;
+        height: 22px;
+        width: 250px;
+    }
+
+    input[type=submit] {
+        font: 0/0 a;
+        color: transparent;
+        text-shadow: none;
+        background-color: transparent;
+        border: 0;
+        width: 29px;
+        height: 20px;
+        background-image: url("../images/icons/16/white/search.png");
+        background-image: none, url("../images/icons/white/search.svg");
+        -webkit-background-size: 16px 16px;
+        -moz-background-size: 16px 16px;
+        -o-background-size: 16px 16px;
+        background-size: 16px 16px;
+        background-position: center 3px;
+        background-repeat: no-repeat;
+        vertical-align: top;
+        margin-left: -30px;
+    }
+    
+    display: inline;
+}
+
+.extendedLayout {
+    .ui-autocomplete {
+        max-height: 275px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 2;
+    }
+    
+    .ui-menu-item {
+        white-space: nowrap;
+    }
+
+    .ui-menu-item a img {
+        float: left;
+        width: 40px;
+        height: 40px;
+        margin-right: 5px;
+    }
+}
 .quicksearchbutton {
     border: 0;
     margin-right: 10px;
     padding: 0;
     vertical-align: text-bottom;
-}
-
-div.quicksearch_frame {
-    background-color: #fff;
-    border: 1px #999 solid;
-    display: inline-block;
-}
-
-div.quicksearch_frame input, div.quicksearch_frame select {
-    background-color: #fff;
-    border: 0;
 }

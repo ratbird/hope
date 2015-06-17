@@ -33,7 +33,7 @@ require_once 'lib/functions.php';
 class StandardSearch extends SQLSearch
 {
 
-    private $search;
+    public $search;
 
     /**
      *
@@ -88,15 +88,19 @@ class StandardSearch extends SQLSearch
     {
         switch ($this->search) {
             case "username":
-                return "SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" (\", auth_user_md5.username,\")\") " .
+                $this->extendedLayout = true;
+                return "SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname), auth_user_md5.perms, auth_user_md5.username " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                            "OR CONCAT(auth_user_md5.Nachname, \" \", auth_user_md5.Vorname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input) AND " . get_vis_query() .
                         " ORDER BY Vorname, Nachname";
             case "user_id":
-                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" (\", auth_user_md5.username,\")\") " .
+                $this->extendedLayout = true;
+                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname), auth_user_md5.perms, auth_user_md5.username " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                            "OR CONCAT(auth_user_md5.Nachname, \" \", auth_user_md5.Vorname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input) AND " . get_vis_query() .
                         " ORDER BY Vorname, Nachname";
             case "Seminar_id":

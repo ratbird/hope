@@ -179,7 +179,7 @@ class SearchWidget extends SidebarWidget
         }
 
         foreach ($this->needles as $needle) {
-            if (Request::get($needle['name'])) {
+            if ($needle['value']) {
                 return true;
             }
         }

@@ -1,7 +1,7 @@
 <?php
 # Lifter010: TODO
 /**
- * SQLSearch.class.php - Class of type SearchType used for searches with QuickSearch 
+ * SQLSearch.class.php - Class of type SearchType used for searches with QuickSearch
  *
  * Long description for file (if any)...
  *
@@ -19,56 +19,56 @@ require_once 'lib/classes/searchtypes/SearchType.class.php';
 require_once 'lib/functions.php';
 
 /**
- * Class of type SearchType used for searches with QuickSearch 
- * (lib/classes/QuickSearch.class.php). You can search with a sql-syntax in the 
- * database. You just need to give in a query like for a PDB-prepare statement 
- * and at least the variable ":input" in the query (the :input will be replaced 
+ * Class of type SearchType used for searches with QuickSearch
+ * (lib/classes/QuickSearch.class.php). You can search with a sql-syntax in the
+ * database. You just need to give in a query like for a PDB-prepare statement
+ * and at least the variable ":input" in the query (the :input will be replaced
  * with the input of the QuickSearch userinput.
  *  [code]
  *  $search = new SQLSearch("SELECT username, Nachname "
  *      "FROM auth_user_md5 " .
  *      "WHERE Nachname LIKE :input ", _("Nachname suchen"), "username");
- *  [/code]  
- * 
+ *  [/code]
+ *
  * @author Rasmus Fuhse
  *
  */
 
 class SQLSearch extends SearchType
 {
-    
+
     protected $sql;
     protected $avatarLike;
     protected $title;
     public $extendedLayout = false;
-    
+
     /**
-     * 
-     * @param string $query SQL with at least ":input" as parameter 
+     *
+     * @param string $query SQL with at least ":input" as parameter
      * @param string $title
      * @param string $avatarLike
      * in this search. array("input_name" => "placeholder_in_sql_query")
      *
      * @return void
      */
-    public function __construct($query, $title = "", $avatarLike = "") 
+    public function __construct($query, $title = "", $avatarLike = "")
     {
         $this->sql = $query;
         $this->title = $title;
         $this->avatarLike = $avatarLike;
     }
-    
+
     /**
      * returns an object of type SQLSearch with parameters to constructor
      *
-     * @param string $query SQL with at least ":input" as parameter 
+     * @param string $query SQL with at least ":input" as parameter
      * @param string $title
      * @param string $avatarLike
      * in this search. array("input_name" => "placeholder_in_sql_query")
      *
      * @return SQLSearch
      */
-    static public function get($query, $title = "", $avatarLike = "") 
+    static public function get($query, $title = "", $avatarLike = "")
     {
         return new SQLSearch($query, $title, $avatarLike);
     }
@@ -78,7 +78,7 @@ class SQLSearch extends SearchType
      *
      * @return string title/description
      */
-    public function getTitle() 
+    public function getTitle()
     {
         return $this->title;
     }
@@ -91,18 +91,18 @@ class SQLSearch extends SearchType
      *
      * @return string adress of an image
      */
-    public function getAvatar($id) 
+    public function getAvatar($id)
     {
         switch ($this->avatarLike) {
             case "username":
-                return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::MEDIUM);
+                return Avatar::getAvatar(get_userid($id), $id)->getURL(Avatar::MEDIUM);
             case "user_id":
-                return Avatar::getAvatar(NULL, $id)->getURL(Avatar::MEDIUM);
+                return Avatar::getAvatar($id)->getURL(Avatar::MEDIUM);
             case "Seminar_id":
             case "Arbeitsgruppe_id":
-                return CourseAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
+                return CourseAvatar::getAvatar($id)->getURL(Avatar::SMALL);
             case "Institut_id":
-                return InstituteAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
+                return InstituteAvatar::getAvatar($id)->getURL(Avatar::SMALL);
         }
     }
 
@@ -114,18 +114,18 @@ class SQLSearch extends SearchType
      *
      * @return string like "<img src="...avatar.jpg" ... >"
      */
-    public function getAvatarImageTag($id, $size = Avatar::SMALL) 
+    public function getAvatarImageTag($id, $size = Avatar::SMALL, $options = array())
     {
         switch ($this->avatarLike) {
             case "username":
-                return Avatar::getAvatar(get_userid($id))->getImageTag($size);
+                return Avatar::getAvatar(get_userid($id), $id)->getImageTag($size, $options);
             case "user_id":
-                return Avatar::getAvatar($id)->getImageTag($size);
+                return Avatar::getAvatar($id)->getImageTag($size, $options);
             case "Seminar_id":
             case "Arbeitsgruppe_id":
-                return CourseAvatar::getAvatar(NULL, $id)->getImageTag($size);
+                return CourseAvatar::getAvatar($id)->getImageTag($size, $options);
             case "Institut_id":
-                return InstituteAvatar::getAvatar(NULL, $id)->getImageTag($size);
+                return InstituteAvatar::getAvatar($id)->getImageTag($size, $options);
         }
     }
 
@@ -142,7 +142,7 @@ class SQLSearch extends SearchType
      *
      * @return array  array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0) 
+    public function getResults($input, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0)
     {
         $db = DBManager::get();
         $sql = $this->sql;
@@ -170,7 +170,7 @@ class SQLSearch extends SearchType
      *
      * @return string path to this class
      */
-    public function includePath() 
+    public function includePath()
     {
         return __file__;
     }

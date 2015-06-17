@@ -37,7 +37,8 @@ STUDIP.Messages = {
         var new_adressee = jQuery("#template_adressee").clone();
         new_adressee.find("input").val(user_id);
         new_adressee.find(".visual").html(name).find("b").replaceWith(function() { return jQuery(this).contents(); });
-        new_adressee.find('img.avatar-small').remove();
+        new_adressee.find('img.avatar-medium').remove();
+        new_adressee.find('br').replaceWith(' ');
         new_adressee.removeAttr("id").appendTo("#adressees").fadeIn();
         return false;
     },
@@ -48,7 +49,7 @@ STUDIP.Messages = {
             if (jQuery(this).is(":visible")) {
                 var user_id = jQuery(this).attr("id").substr(0, 32);
                 var name = jQuery(this).text();
-                
+
                 var new_adressee = jQuery("#template_adressee").clone();
                 new_adressee.find("input").val(user_id);
                 new_adressee.find(".visual").html(name);
@@ -189,7 +190,7 @@ STUDIP.Messages = {
                     STUDIP.Messages.setTags(message_id, tags);
                 });
             }
-        });        
+        });
     },
     toggleSetting: function (name) {
         jQuery("#" + name).toggle("fade");

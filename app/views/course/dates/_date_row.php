@@ -12,23 +12,27 @@
     <? endif ?>
     </td>
     <td><?= htmlReady($date->getTypeName()) ?></td>
-    <td style="display: flex; flex-direction: row;">
-        <ul class="themen_list clean" style="">
-        <? foreach ($date->topics as $topic) : ?>
-            <?= $this->render_partial('course/dates/_topic_li', compact('topic', 'date')) ?>
-        <? endforeach ?>
-        </ul>
-        <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
-            <a href="<?= URLHelper::getLink("dispatch.php/course/dates/new_topic", array('termin_id' => $date->getId())) ?>" style="align-self: flex-end;" title="<?= _("Thema hinzufügen") ?>" data-dialog>
-                <?= Assets::img("icons/12/grey/add") ?>
-            </a>
+    <? if (!$date instanceof CourseExDate) : ?>
+        <td style="display: flex; flex-direction: row;">
+            <ul class="themen_list clean" style="">
+            <? foreach ($date->topics as $topic) : ?>
+                <?= $this->render_partial('course/dates/_topic_li', compact('topic', 'date')) ?>
+            <? endforeach ?>
+            </ul>
+            <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                <a href="<?= URLHelper::getLink("dispatch.php/course/dates/new_topic", array('termin_id' => $date->getId())) ?>" style="align-self: flex-end;" title="<?= _("Thema hinzufügen") ?>" data-dialog>
+                    <?= Assets::img("icons/12/grey/add") ?>
+                </a>
+            <? endif ?>
+        </td>
+        <td>
+        <? if ($date->getRoom()) : ?>
+            <?= $date->getRoom()->getFormattedLink() ?>
+        <? else : ?>
+            <?= htmlReady($date->raum) ?>
         <? endif ?>
-    </td>
-    <td>
-    <? if ($date->getRoom()) : ?>
-        <?= $date->getRoom()->getFormattedLink() ?>
+        </td>
     <? else : ?>
-        <?= htmlReady($date->raum) ?>
+        <td colspan="2"></td>
     <? endif ?>
-    </td>
 </tr>

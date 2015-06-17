@@ -26,7 +26,6 @@
         removeTopicFromIcon: function () {
             var topic_id  = $(this).closest('li').data('issue_id'),
                 termin_id = $(this).closest('[data-termin_id]').data('termin_id');
-            console.log($(this));
             STUDIP.Dates.removeTopic(termin_id, topic_id);
         },
         removeTopic: function (termin_id, topic_id) {

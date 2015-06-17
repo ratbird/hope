@@ -116,7 +116,7 @@ class SearchWidget extends SidebarWidget
 
     /**
      * Renders the widget.
-     * 
+     *
      * @param Array $variables Unused variables parameter
      * @return String containing the html output of the widget
      */
@@ -146,6 +146,14 @@ class SearchWidget extends SidebarWidget
                 $needle['quick_search'] = $quick_search;
                 $this->needles[$index] = $needle;
             }
+        }
+
+        if ($this->hasData()) {
+            $reset_link = sprintf('<a href="%s">%s %s</a>',
+                                  $this->template_variables['url'],
+                                  Assets::img('icons/blue/decline/search.svg', array('class' => 'text-top')),
+                                  _('Zurücksetzen'));
+            $this->template_variables['extra'] = $reset_link;
         }
 
         $this->template_variables['needles'] = $this->needles;

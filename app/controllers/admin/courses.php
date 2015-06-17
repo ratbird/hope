@@ -74,7 +74,7 @@ class Admin_CoursesController extends AuthenticatedController
             $this->semester = Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE);
         }
 
-        if (Request::submitted("search")) {
+        if (Request::submitted("search") || Request::get("reset-search")) {
             $GLOBALS['user']->cfg->store('ADMIN_COURSES_SEARCHTEXT', Request::get("search"));
         }
 

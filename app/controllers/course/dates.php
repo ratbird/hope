@@ -24,6 +24,22 @@ class Course_DatesController extends AuthenticatedController
 
     public function index_action()
     {
+        if (Request::isPost() && Request::option("termin_id") && Request::get("topic_title")) {
+            $date = new CourseDate(Request::option("termin_id"));
+            $seminar_id = $date['range_id'];
+            $title = Request::get("topic_title");
+            $topic = CourseTopic::findByTitle($seminar_id, $title);
+            if (!$topic) {
+                $topic = new CourseTopic();
+                $topic['title'] = $title;
+                $topic['seminar_id'] = $seminar_id;
+                $topic['author_id'] = $GLOBALS['user']->id;
+                $topic['description'] = "";
+                $topic->store();
+            }
+            $date->addTopic($topic);
+            PageLayout::postMessage(MessageBox::success(_("Thema wurde hinzugefügt.")));
+        }
         Navigation::activateItem('/course/schedule/dates');
 
         object_set_visit_module("schedule");
@@ -46,6 +62,16 @@ class Course_DatesController extends AuthenticatedController
                 $this->date->getFullname()
             );
         }
+    }
+
+    public function new_topic_action()
+    {
+        Navigation::activateItem('/course/schedule/dates');
+        if (Request::isAjax()) {
+            PageLayout::setTitle(_("Thema hinzufügen"));
+        }
+        $this->date = new CourseDate(Request::option("termin_id"));
+        $this->course = Course::findCurrent();
     }
 
     public function add_topic_action()
@@ -103,6 +129,7 @@ class Course_DatesController extends AuthenticatedController
         }
 
         $this->topic = CourseTopic::find($topic_id);
+        $this->date = new CourseDate($new_date_id);
 
         $this->topic->dates->unsetByPK($old_date_id);
         if (!$this->topic->dates->findOneBy('termin_id', $new_date_id)) {

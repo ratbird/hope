@@ -23,9 +23,13 @@
 
             $('#new_topic').val('');
         },
-        removeTopic: function () {
+        removeTopicFromIcon: function () {
             var topic_id  = $(this).closest('li').data('issue_id'),
-                termin_id = $('#new_topic').closest('table[data-termin_id]').data('termin_id');
+                termin_id = $(this).closest('[data-termin_id]').data('termin_id');
+            console.log($(this));
+            STUDIP.Dates.removeTopic(termin_id, topic_id);
+        },
+        removeTopic: function (termin_id, topic_id) {
             $.ajax({
                 url: STUDIP.URLHelper.getURL('dispatch.php/course/dates/remove_topic'),
                 data: {
@@ -35,16 +39,16 @@
                 dataType: 'json',
                 type: 'post'
             }).done(function () {
-                $('.topic_' + topic_id).remove();
+                $('.topic_' + termin_id + '_' + topic_id).remove();
             });
         }
     };
 
-    $(document).on('click', '.remove_topic', STUDIP.Dates.removeTopic);
+    $(document).on('click', '.remove_topic', STUDIP.Dates.removeTopicFromIcon);
 
     // Drag and drop support for topics in date list
     function createDraggable() {
-        $('.themen_list li > a:not(.draggable-topic)').each(function () {
+        $('.themen_list li > a.title:not(.draggable-topic)').each(function () {
             var table_id = $(this).closest('table').data().tableId;
 
             // jQuery' addClass does not work on svgs so we need to set the
@@ -89,8 +93,8 @@
                 drop: function (event, ui) {
                     var context = $(ui.draggable.context),
                         topic   = context.closest('li').data().issue_id,
-                        source  = context.closest('tr').data().dateId,
-                        target  = $(this).closest('tr').data().dateId,
+                        source  = context.closest('tr').data().termin_id,
+                        target  = $(this).closest('tr').data().termin_id,
                         path    = ['dispatch.php/course/dates/move_topic', topic, source, target].join('/'),
                         url     = STUDIP.URLHelper.getURL(path),
                         cell    = $(this);

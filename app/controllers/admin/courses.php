@@ -77,6 +77,9 @@ class Admin_CoursesController extends AuthenticatedController
         if (Request::submitted("search") || Request::get("reset-search")) {
             $GLOBALS['user']->cfg->store('ADMIN_COURSES_SEARCHTEXT', Request::get("search"));
         }
+        if (Request::submitted("teacher_filter")) {
+            $GLOBALS['user']->cfg->store('ADMIN_COURSES_TEACHERFILTER', Request::option("teacher_filter"));
+        }
 
         PageLayout::setHelpKeyword("Basis.Veranstaltungen");
         PageLayout::setTitle(_("Verwaltung von Veranstaltungen und Einrichtungen"));
@@ -145,9 +148,6 @@ class Admin_CoursesController extends AuthenticatedController
             }
             // get all available teacher for infobox-filter
             // filter by selected teacher
-            if (!empty($this->courses)) {
-                $teachers = $this->filterTeacher($this->courses);
-            }
             $_SESSION['MY_COURSES_LIST'] = array_map(function ($c, $id) {
                 return array('Name'       => $c['Name'],
                              'Seminar_id' => $id);
@@ -169,7 +169,7 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setSearchWiget();
         $this->setInstSelector();
         $this->setSemesterSelector();
-        $this->setTeacherWidget($teachers);
+        $this->setTeacherWidget();
         $this->setCourseTypeWidget($config_my_course_type_filter);
         $this->setActionsWidget($this->selected_action);
 
@@ -577,34 +577,6 @@ class Admin_CoursesController extends AuthenticatedController
             _('Inhalt'));
     }
 
-    /**
-     * Search for teachers for the given course selection
-     * @param $seminars
-     * @return array
-     */
-    private function filterTeacher(&$seminars)
-    {
-
-        $teachers = array();
-        if (!empty($seminars)) {
-            foreach ($seminars as $index => $course) {
-                if (Request::option('teacher_filter') && strcmp('all', Request::get('teacher_filter')) !== 0) {
-                    if (!isset($course['dozenten'][Request::option('teacher_filter')])) {
-                        unset($seminars[$index]);
-                    }
-                }
-                foreach ($course['dozenten'] as $user_id => $teacher) {
-                    $teachers[$user_id] = $teacher;
-                }
-            }
-        }
-        $teachers = SimpleCollection::createFromArray($teachers)
-            ->orderBy('fullname asc')
-            ->getArrayCopy();
-
-        return $teachers;
-    }
-
     private function getCourses($params = array())
     {
         // Init
@@ -635,6 +607,9 @@ class Admin_CoursesController extends AuthenticatedController
         }
         if ($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT) {
             $filter->filterBySearchString($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT);
+        }
+        if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER && ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER !== "all")) {
+            $filter->filterByDozent(Request::option("teacher_filter"));
         }
         $filter->filterByInstitute($inst_ids);
         if ($params['sortby'] === "status") {
@@ -884,17 +859,40 @@ class Admin_CoursesController extends AuthenticatedController
      * @param array $teachers
      * @return ActionsWidget|null
      */
-    private function setTeacherWidget($teachers = array())
+    private function setTeacherWidget()
     {
-        if (empty($teachers)) {
-            return null;
+        if (!$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT || $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === "all") {
+            return;
         }
+        $statement = DBManager::get()->prepare("
+            SELECT auth_user_md5.*, user_info.*
+            FROM seminar_user
+                INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
+                LEFT JOIN seminar_inst ON (seminar_user.Seminar_id = seminar_inst.seminar_id)
+                INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = seminar_user.user_id)
+                LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)
+            WHERE (
+                  seminar_inst.institut_id IN (:institut_ids)
+                  OR seminare.Institut_id IN (:institut_ids)
+                )
+                AND seminar_user.status = 'dozent'
+        ");
+        $statement->execute(array(
+            'institut_ids' => array_map(function ($data) { return $data['Institut_id']; }, $this->insts)
+        ));
+        $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $teachers = array_map(function ($data) { return User::buildExisting($data); }, $teachers);
+
         $sidebar = Sidebar::Get();
         $list = new SelectWidget(_('Dozenten-Filter'), $this->url_for('admin/courses/index'), 'teacher_filter');
         $list->addElement(new SelectElement('all', _('alle'), Request::get('teacher_filter') == 'all'), 'teacher_filter-all');
 
-        foreach ($teachers as $user_id => $teacher) {
-            $list->addElement(new SelectElement($user_id, $teacher['fullname'], Request::get('teacher_filter') == $user_id), 'teacher_filter-' . $user_id);
+        foreach ($teachers as $teacher) {
+            $list->addElement(new SelectElement(
+                $teacher->getId(),
+                $teacher->getFullName(),
+                $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER === $teacher->getId()
+            ), 'teacher_filter-' . $teacher->getId());
         }
 
         $sidebar->addWidget($list, 'filter_teacher');

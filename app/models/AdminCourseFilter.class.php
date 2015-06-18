@@ -110,6 +110,22 @@ class AdminCourseFilter {
         return $this;
     }
 
+    public function filterByDozent($user_ids) {
+        $this->settings['query']['joins']['dozenten'] = array(
+            'join' => "INNER JOIN",
+            'table' => "seminar_user",
+            'on' => "dozenten.Seminar_id = seminare.Seminar_id AND dozenten.status = 'dozent'"
+        );
+        if (is_array($user_ids)) {
+            $this->settings['query']['where']['dozenten'] = "dozenten.user_id IN (:dozenten_ids)";
+            $this->settings['parameter']['dozenten_ids'] = $user_ids;
+        } else {
+            $this->settings['query']['where']['dozenten'] = "dozenten.user_id = :dozenten_id";
+            $this->settings['parameter']['dozenten_id'] = (string) $user_ids;
+        }
+        return $this;
+    }
+
     /**
      * Adds a filter for a textstring, that can be the coursenumber, the name of the course
      * or the last name of one of the dozenten.

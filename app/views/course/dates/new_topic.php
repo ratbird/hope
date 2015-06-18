@@ -23,7 +23,7 @@
             </td>
         </tr>
         <tr>
-            <td></td>
+            <td><?= _("Vorhandenes Thema verknüpfen") ?></td>
             <td>
                 <ul class="clean">
                 <? foreach ($course->topics as $topic) : ?>

@@ -37,8 +37,12 @@ class Course_DatesController extends AuthenticatedController
                 $topic['description'] = "";
                 $topic->store();
             }
-            $date->addTopic($topic);
-            PageLayout::postMessage(MessageBox::success(_("Thema wurde hinzugefügt.")));
+            $success = $date->addTopic($topic);
+            if ($success) {
+                PageLayout::postMessage(MessageBox::success(_("Thema wurde hinzugefügt.")));
+            } else {
+                PageLayout::postMessage(MessageBox::info(_("Thema war schon mit dem Termin verknüpft.")));
+            }
         }
         Navigation::activateItem('/course/schedule/dates');
 

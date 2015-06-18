@@ -454,6 +454,7 @@ class RoomRequest extends SimpleORMap
             if ($properties_stored || $this->isDirty()) {
                 $this->last_modified_by = $GLOBALS['user']->id;
             }
+            $is_new = $this->isNew();
             $stored = parent::store();
             // LOGGING
             $props="";
@@ -463,18 +464,20 @@ class RoomRequest extends SimpleORMap
             if (!$props) {
                 $props="--";
             }
-            if ($this->isNew()) {
+            if ($is_new) {
                 log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Metadate: $this->metadate_id, Properties: $props, Kommentar: $this->comment",$query);
             } else {
                 if($properties_changed && !$stored) {
                     $this->triggerChdate();
                 }
-                if ($this->closed==1 || $this->closed==2) {
-                    log_event("RES_REQUEST_RESOLVE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
-                } else if ($this->closed==3) {
-                    log_event("RES_REQUEST_DENY",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
-                } else {
-                    log_event("RES_REQUEST_UPDATE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
+                if ($stored) {
+                    if ($this->closed==1 || $this->closed==2) {
+                        log_event("RES_REQUEST_RESOLVE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
+                    } else if ($this->closed==3) {
+                        log_event("RES_REQUEST_DENY",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
+                    } else {
+                        log_event("RES_REQUEST_UPDATE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
+                    }
                 }
             }
         }

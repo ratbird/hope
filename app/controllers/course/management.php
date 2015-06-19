@@ -8,7 +8,7 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- * 
+ *
  * @author      tgloeggl <tgloeggl@uos.de>
  * @author      aklassen <andre.klassen@elan-ev.de>
  * @copyright   2010 ELAN e.V.
@@ -29,6 +29,9 @@ class Course_ManagementController extends AuthenticatedController
         if (!$sem_class->isModuleAllowed("CoreAdmin")) {
             throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
         }
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $GLOBALS['SessionSeminar'])) {
+            throw new Trails_Exception(400);
+        }
         PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $GLOBALS['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
     }
@@ -48,5 +51,25 @@ class Course_ManagementController extends AuthenticatedController
         } else {
             $this->infotext = _('Sie können hier Ihre Veranstaltung in mehreren Kategorien anpassen. Informationen wie Grunddaten oder Termine und Einstellungen, Zugangsbeschränkungen und Funktionen können Sie hier administrieren.');
         }
+    }
+
+    function change_visibility_action()
+    {
+        if (get_config('ALLOW_DOZENT_VISIBILITY') && !LockRules::Check($GLOBALS['SessionSeminar'], 'seminar_visibility') && Seminar_Session::check_ticket(Request::option('studip_ticket'))) {
+            $course = Course::findCurrent();
+            if (!$course->visible) {
+                log_event("SEM_VISIBLE", $course->id);
+                $course->visible = 1;
+                $msg = _("Die Veranstaltung wurde sichtbar gemacht.");
+            } else {
+                log_event("SEM_INVISIBLE", $course->id);
+                $course->visible = 0;
+                $msg = _("Die Veranstaltung wurde versteckt.");
+            }
+            if ($course->store()) {
+                PageLayout::postMessage(MessageBox::success($msg));
+            }
+        }
+        $this->redirect($this->url_for('/index'));
     }
 }

@@ -854,6 +854,7 @@ class Admin_CoursesController extends AuthenticatedController
         if (!$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT || $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === "all") {
             return;
         }
+        $institut = new Institute($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT);
         $statement = DBManager::get()->prepare("
             SELECT auth_user_md5.*, user_info.*
             FROM auth_user_md5
@@ -862,7 +863,7 @@ class Admin_CoursesController extends AuthenticatedController
                 INNER JOIN Institute ON (Institute.Institut_id = user_inst.Institut_id)
             WHERE (Institute.Institut_id = :institut_id OR Institute.fakultaets_id = :institut_id)
                 AND auth_user_md5.perms = 'dozent'
-            ORDER BY user_inst.priority ASC
+            ORDER BY ".($institut->isFaculty() ? "auth_user_md5.Nachname ASC, auth_user_md5.Vorname ASC" : "user_inst.priority ASC")."
         ");
         $statement->execute(array(
             'institut_id' => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT

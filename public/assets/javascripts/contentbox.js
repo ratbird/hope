@@ -1,5 +1,5 @@
 (function ($) {
-    $(document).on('click', 'section.contentbox article h1 a', function (e) {
+    $(document).on('click', 'section.contentbox article header h1 a', function (e) {
         e.preventDefault();
         var article = $(this).closest('article');
 

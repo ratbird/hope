@@ -1,4 +1,4 @@
-<article class="comment">
+<article class="comment open">
     <time><?= reltime($comment[3]) ?></time>
     <h1>#<?= $index + 1 ?>
         <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $comment[2]) ?>">

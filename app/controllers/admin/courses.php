@@ -100,7 +100,6 @@ class Admin_CoursesController extends AuthenticatedController
             $this->actions = self::getActions();
             $config_my_course_type_filter = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
 
-
             // Get the view filter
             $config_view_filter = $GLOBALS['user']->cfg->MY_COURSES_ADMIN_VIEW_FILTER_ARGS;
             $this->view_filter = isset($config_view_filter) ? unserialize($config_view_filter) : array();
@@ -587,7 +586,6 @@ class Admin_CoursesController extends AuthenticatedController
             }
         }
 
-
         $filter = AdminCourseFilter::get(true);
         $filter->where("sem_classes.studygroup_mode = '0'");
 
@@ -601,7 +599,7 @@ class Admin_CoursesController extends AuthenticatedController
             $filter->filterBySearchString($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT);
         }
         if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER && ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER !== "all")) {
-            $filter->filterByDozent(Request::option("teacher_filter"));
+            $filter->filterByDozent($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER);
         }
         $filter->filterByInstitute($inst_ids);
         if ($params['sortby'] === "status") {
@@ -864,6 +862,7 @@ class Admin_CoursesController extends AuthenticatedController
                 INNER JOIN Institute ON (Institute.Institut_id = user_inst.Institut_id)
             WHERE (Institute.Institut_id = :institut_id OR Institute.fakultaets_id = :institut_id)
                 AND auth_user_md5.perms = 'dozent'
+            ORDER BY user_inst.priority ASC
         ");
         $statement->execute(array(
             'institut_id' => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT
@@ -878,7 +877,7 @@ class Admin_CoursesController extends AuthenticatedController
         foreach ($teachers as $teacher) {
             $list->addElement(new SelectElement(
                 $teacher->getId(),
-                $teacher->getFullName(),
+                $teacher->getFullName("full_rev"),
                 $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER === $teacher->getId()
             ), 'teacher_filter-' . $teacher->getId());
         }

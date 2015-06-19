@@ -23,7 +23,6 @@ class Course_AvatarController extends AuthenticatedController
 
     # see Trails_Controller#before_filter
     function before_filter(&$action, &$args) {
-        global $SEM_TYPE, $SEM_CLASS;
 
         parent::before_filter($action, $args);
 
@@ -38,7 +37,7 @@ class Course_AvatarController extends AuthenticatedController
         PageLayout::setTitle(Course::findCurrent()->getFullname() . ' - ' . _('Bild ändern'));
 
         $sem = Seminar::getInstance($this->course_id);
-        $this->studygroup_mode = $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"];
+        $this->studygroup_mode = $sem->getSemClass()->offsetget("studygroup_mode");
 
         if ($this->studygroup_mode) {
             $this->avatar = StudygroupAvatar::getAvatar($this->course_id);
@@ -46,17 +45,7 @@ class Course_AvatarController extends AuthenticatedController
             $this->avatar = CourseAvatar::getAvatar($this->course_id);
         }
 
-        # choose base layout w/o infobox and set tabs
-        $layout = $GLOBALS['template_factory']->open('layouts/base');
-
-        if ($this->studygroup_mode) {
-            Navigation::activateItem('/course/admin/avatar');
-        } else if ($GLOBALS['perm']->have_perm('admin')) {
-            Navigation::activateItem('/admin/course/details');
-        } else {
-            Navigation::activateItem('/course/admin/avatar');
-        }
-        $this->set_layout($layout);
+        Navigation::activateItem('/course/admin/avatar');
     }
 
     /**

@@ -92,13 +92,12 @@ class Admin_CoursesController extends AuthenticatedController
     public function index_action()
     {
         $this->sem_create_perm = in_array(Config::get()->SEM_CREATE_PERM, array('root', 'admin', 'dozent'))
-            ? Config::get()->SEM_CREATE_PERM : 'dozent';
-
+            ? Config::get()->SEM_CREATE_PERM
+            : 'dozent';
 
         // get courses only if institutes available
         if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT != 'all' || ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT == 'all' && $GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT)) {
             $this->actions = self::getActions();
-            $teachers = array();
             $config_my_course_type_filter = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
 
 
@@ -110,22 +109,12 @@ class Admin_CoursesController extends AuthenticatedController
                 $GLOBALS['user']->cfg->store('MY_COURSES_ADMIN_VIEW_FILTER_ARGS', serialize($this->view_filter));
             }
 
-            // filter by dozent
-            if (Request::submitted('filterByTeacher')) {
-                Request::set('teacher_filter', Request::option('teacher_filter'));
-            }
-
-            // Get the sort flag
-            if (Request::option('sortFlag')) {
-                $sortFlag = Request::get('sortFlag');
-            }
-
             $sortby = $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT;
-            $sortFlag = ($sortFlag == 'asc') ? 'DESC' : 'ASC';
+            $sortFlag = (Request::get('sortFlag') == 'asc') ? 'DESC' : 'ASC';
 
             if (Request::option('sortby') && Request::get('sortby') != $sortby) {
                 $sortby = Request::option('sortby');
-                $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT', $sortby);
+                $GLOBALS['user']->cfg->store('MEINE_SEMINARE_SORT', Request::option('sortby'));
             }
 
             $this->selected_action = $GLOBALS['user']->cfg->MY_COURSES_ACTION_AREA;
@@ -136,11 +125,12 @@ class Admin_CoursesController extends AuthenticatedController
             $this->sortby = $sortby;
             $this->sortFlag = $sortFlag;
 
-            $this->courses = $this->getCourses(
-                array('sortby'      => $sortby,
-                      'sortFlag'    => $sortFlag,
-                      'view_filter' => $this->view_filter,
-                      'typeFilter'  => $config_my_course_type_filter));
+            $this->courses = $this->getCourses(array(
+                'sortby'      => $GLOBALS['user']->cfg->MEINE_SEMINARE_SORT,
+                'sortFlag'    => $sortFlag,
+                'view_filter' => $this->view_filter,
+                'typeFilter'  => $config_my_course_type_filter
+            ));
             $this->count_courses = count($this->courses);
 
             if (in_array('Inhalt', $this->view_filter)) {
@@ -152,13 +142,15 @@ class Admin_CoursesController extends AuthenticatedController
                 return array('Name'       => $c['Name'],
                              'Seminar_id' => $id);
             }, array_values($this->courses), array_keys($this->courses));
-
-
         }
 
-        $this->all_lock_rules = array_merge(array(array('name'    => '--' . _("keine Sperrebene") . '--',
-                                                        'lock_id' => 'none')),
-            LockRule::findAllByType('sem'));
+        $this->all_lock_rules = array_merge(
+            array(array(
+                'name'    => '--' . _("keine Sperrebene") . '--',
+                'lock_id' => 'none'
+            )),
+            LockRule::findAllByType('sem')
+        );
         $this->aux_lock_rules = array_merge(array(array('name'    => '--' . _("keine Zusatzangaben") . '--',
                                                         'lock_id' => 'none')),
             AuxLockRules::getAllLockRules());
@@ -866,19 +858,15 @@ class Admin_CoursesController extends AuthenticatedController
         }
         $statement = DBManager::get()->prepare("
             SELECT auth_user_md5.*, user_info.*
-            FROM seminar_user
-                INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id)
-                LEFT JOIN seminar_inst ON (seminar_user.Seminar_id = seminar_inst.seminar_id)
-                INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = seminar_user.user_id)
+            FROM auth_user_md5
                 LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)
-            WHERE (
-                  seminar_inst.institut_id IN (:institut_ids)
-                  OR seminare.Institut_id IN (:institut_ids)
-                )
-                AND seminar_user.status = 'dozent'
+                INNER JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id)
+                INNER JOIN Institute ON (Institute.Institut_id = user_inst.Institut_id)
+            WHERE (Institute.Institut_id = :institut_id OR Institute.fakultaets_id = :institut_id)
+                AND auth_user_md5.perms = 'dozent'
         ");
         $statement->execute(array(
-            'institut_ids' => array_map(function ($data) { return $data['Institut_id']; }, $this->insts)
+            'institut_id' => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT
         ));
         $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
         $teachers = array_map(function ($data) { return User::buildExisting($data); }, $teachers);

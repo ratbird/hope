@@ -80,7 +80,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
 
     /**
      * Interface to edit a group or create a new one.
-     * 
+     *
      * @param string group id
      */
     public function editGroup_action($group_id = null) {
@@ -96,10 +96,10 @@ class Admin_StatusgroupsController extends AuthenticatedController {
         PageLayout::addScript('jquery/jquery.nestable.js');
         $this->loadGroups();
     }
-    
+
     /**
      * Action to add multiple members to a group.
-     * 
+     *
      * @param string group id
      */
     public function memberAdd_action($group_id = null) {
@@ -114,16 +114,16 @@ class Admin_StatusgroupsController extends AuthenticatedController {
                 $countAdded++;
             }
         }
-        
+
         if ($countAdded == 1) {
             PageLayout::postMessage(MessageBox::success(_('Es wurde eine Person hinzugefügt.')));
         } elseif ($countAdded > 1) {
             PageLayout::postMessage(MessageBox::success(sprintf(_('Es wurden %s MitgliederInnen hinzugefügt.'), $countAdded)));
         }
-        
+
         $this->redirect('admin/statusgroups');
     }
-    
+
     /**
      * Ajax action to move a user
      */
@@ -230,14 +230,14 @@ class Admin_StatusgroupsController extends AuthenticatedController {
     /* *********************************
      * ***** PRIVATE HELP FUNCTIONS ****
      * *********************************/
-    
+
     /*
      * Loads groups from the database.
      */
     private function loadGroups() {
         $this->groups = Statusgruppen::findBySQL('range_id = ? ORDER BY position', array($_SESSION['SessionSeminar']));
     }
-    
+
     /*
      * Updates groups recursivly.
      */
@@ -254,7 +254,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             }
         }
     }
-    
+
     /*
      * Renders an action (ajax) or redirects to the statusgroup index page (no ajax).
      */
@@ -265,7 +265,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->redirect('admin/statusgroups');
         }
     }
-    
+
     /*
      * Sets the urls for ajax calls.
      */
@@ -288,7 +288,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             $this->unfoldGroup($list, $group->children, $newpre);
         }
     }
-    
+
     /*
      * Checks if a group should be updated from a request
      */
@@ -379,9 +379,7 @@ class Admin_StatusgroupsController extends AuthenticatedController {
             return $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessionSeminar']) && !LockRules::Check($_SESSION['SessionSeminar'], 'groups');
         },
                 'redirect' => function () {
-            $GLOBALS['view_mode'] = "inst";
             require_once 'lib/admin_search.inc.php';
-            include 'lib/include/admin_search_form.inc.php';  // will not return
             die(); //must not return
         },
                 'groups' => array(

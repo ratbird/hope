@@ -44,7 +44,7 @@ require_once($RELATIVE_PATH_EXTERN . '/extern_config.inc.php');
 require_once($RELATIVE_PATH_EXTERN . '/lib/extern_functions.inc.php');
 require_once($RELATIVE_PATH_EXTERN . '/lib/ExternConfig.class.php');
 require_once($RELATIVE_PATH_EXTERN . '/lib/ExternModule.class.php');
-require_once 'lib/admin_search.inc.php';
+
 
 // -- here you have to put initialisations for the current page
 
@@ -68,8 +68,9 @@ if (Request::get('com') == 'download_config') {
 
 PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
-if ($_SESSION['links_admin_data']["topkat"] == "inst") {
+if ($range_id != 'studip') {
     Navigation::activateItem('/admin/institute/external');
+    require_once 'lib/admin_search.inc.php';
 } else {
     Navigation::activateItem('/admin/locations/external');
 }
@@ -107,8 +108,6 @@ if (Request::option('com') == "do_upload_config") {
 }
 
 //Output starts here
-
-include 'lib/include/admin_search_form.inc.php';
 
 ob_start();
 

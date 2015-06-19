@@ -90,10 +90,6 @@ class Institute_MembersController extends AuthenticatedController
             PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
         }
 
-        if ($this->admin_view || !isset($this->inst_id)) {
-            include 'lib/include/admin_search_form.inc.php';
-        }
-
         // check the given parameters or initialize them
         if ($GLOBALS['perm']->have_studip_perm("admin", $this->inst_id)) {
             $accepted_columns = array("Nachname", "inst_perms");

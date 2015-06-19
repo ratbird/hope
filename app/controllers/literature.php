@@ -142,8 +142,6 @@ class LiteratureController extends AuthenticatedController
 
         PageLayout::setTitle($_the_tree->root_name . " - " . PageLayout::getTitle());
 
-        include 'lib/include/admin_search_form.inc.php';
-
         //checking rights
         if (($_the_tree->range_type == "sem" && !$GLOBALS['perm']->have_studip_perm("tutor", $this->_range_id)) ||
             (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$GLOBALS['perm']->have_studip_perm("autor", $this->_range_id))){

@@ -24,32 +24,23 @@ class Course_PlusController extends AuthenticatedController
 
         PageLayout::setTitle(_("Mehr Funktionen"));
 
-    	if (is_array($_SESSION['links_admin_data'])){
-        	$GLOBALS['view_mode'] = $_SESSION['links_admin_data']['topkat'] ? : 'sem';
-        } else {
-        	$GLOBALS['view_mode'] = 'sem';
-        }	
-        
-        require_once 'lib/admin_search.inc.php';
-        $id = $range_id ? : $_SESSION['SessionSeminar'];
-
-        if ($GLOBALS['perm']->have_perm('admin') && $GLOBALS['view_mode'] !== 'sem') {
-            Navigation::activateItem('/admin/institute/modules');
-        } else {
-            Navigation::activateItem('/course/modules');
-        }
-
+        $id = $GLOBALS['SessionSeminar'];
         if (!$id) {
             if ($GLOBALS['perm']->have_perm('admin')) {
-
-                include 'lib/include/admin_search_form.inc.php'; // will not return
-                die(); //must not return
+                Navigation::activateItem('/admin/institute/modules');
+                require_once 'lib/admin_search.inc.php';
             } else {
-                throw new Trails_Exception(400);
+                throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
 
         $object_type = get_object_type($id);
+
+        if ($object_type !== "sem") {
+            Navigation::activateItem('/admin/institute/modules');
+        } else {
+            Navigation::activateItem('/course/modules');
+        }
 
         if (!$GLOBALS['perm']->have_studip_perm($object_type === 'sem' ? 'tutor' : 'admin', $id)) {
             throw new AccessDeniedException(_("Keine Berechtigung."));
@@ -127,28 +118,28 @@ class Course_PlusController extends AuthenticatedController
     {
 
         $plusconfig = UserConfig::get($GLOBALS['user']->id)->PLUS_SETTINGS;
-        
+
         if (!isset($_SESSION['plus'])) {
         	if (isset($plusconfig['course_plus'])){
         		//$_SESSION['plus'] = $plusconfig['course_plus'];
         		$usr_conf = $plusconfig['course_plus'];
-        		
+
         		$_SESSION['plus']['Kategorie']['Lehr- und Lernorganisation'] = $usr_conf['Kategorie']['Lehr- und Lernorganisation'];
         		$_SESSION['plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = $usr_conf['Kategorie']['Kommunikation und Zusammenarbeit'];
         		$_SESSION['plus']['Kategorie']['Inhalte und Aufgabenstellungen'] = $usr_conf['Kategorie']['Inhalte und Aufgabenstellungen'];
         		$_SESSION['plus']['Kategorie']['Sonstiges'] = $usr_conf['Kategorie']['Sonstiges'];
         		//$_SESSION['plus']['Kategorie']['Spiele'] = $usr_conf['Kategorie']['Spiele'];
         		//$_SESSION['plus']['Kategorie']['Projekte und Entwicklung'] = $usr_conf['Kategorie']['Projekte und Entwicklung'];
-        		
-        		foreach ($usr_conf['Kategorie'] as $key => $val){        			
+
+        		foreach ($usr_conf['Kategorie'] as $key => $val){
         			if(!array_key_exists($key, $_SESSION['plus']['Kategorie'])){
         				$_SESSION['plus']['Kategorie'][$key] = $val;
         			}
         		}
-        		
+
         		$_SESSION['plus']['View'] = $usr_conf['View'];
         		$_SESSION['plus']['displaystyle'] = $usr_conf['displaystyle'];
-        		
+
         	} else {
         		$_SESSION['plus']['Kategorie']['Lehr- und Lernorganisation'] = 1;
         		$_SESSION['plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
@@ -163,7 +154,7 @@ class Course_PlusController extends AuthenticatedController
         		$_SESSION['plus']['displaystyle'] = 'category';
         	}
         }
-        
+
         if(isset($_SESSION['plus']['Kategorielist'])){
 	        foreach ($_SESSION['plus']['Kategorie'] as $key => $val){
 	        	if(!array_key_exists($key, $_SESSION['plus']['Kategorielist']) && $key != 'Sonstiges'){
@@ -213,7 +204,7 @@ class Course_PlusController extends AuthenticatedController
 
         $widget = new ActionsWidget();
         $widget->setTitle(_('Ansichten'));
-        
+
         if ($_SESSION['plus']['View'] == 'openall') {
             $widget->addLink(_("Alles zuklappen"),
                 URLHelper::getLink('?', array('mode' => 'closeall')),
@@ -223,7 +214,7 @@ class Course_PlusController extends AuthenticatedController
                 URLHelper::getLink('?', array('mode' => 'openall')),
                 'icons/16/blue/assessment.png');
         }
-        
+
         if ($_SESSION['plus']['displaystyle'] == 'category') {
         	$widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
         			URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
@@ -235,7 +226,7 @@ class Course_PlusController extends AuthenticatedController
         }
 
         $sidebar->addWidget($widget, "aktion");
-        
+
         unset($_SESSION['plus']['Kategorielist']);
         $plusconfig['course_plus'] = $_SESSION['plus'];
         UserConfig::get($GLOBALS['user']->id)->store(PLUS_SETTINGS,$plusconfig);
@@ -258,34 +249,34 @@ class Course_PlusController extends AuthenticatedController
             ) {
 
                 $info = $plugin->getMetadata();
-                
+
                 $indcat = isset($info['category']) ? $info['category'] : 'Sonstiges';
                 if(!array_key_exists($indcat, $cat_index)) array_push($cat_index, $indcat);
 
                 if($_SESSION['plus']['displaystyle'] != 'category'){
-                	
+
                 	$key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
-                	
+
                 	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
                 			|| !isset($_SESSION['plus'])
                 	) {
 	                	$list['Funktionen von A-Z'][strtolower($key)]['object'] = $plugin;
 	                	$list['Funktionen von A-Z'][strtolower($key)]['type'] = 'plugin';
                 	}
-                	
+
                 } else {
-                                
+
 	                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
-	
+
 	                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
-	
+
 	                $key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
-	
+
 	                if ($_SESSION['plus']['Kategorie'][$cat]
 	                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
 	                    || !isset($_SESSION['plus'])
 	                ) {
-	
+
 	                    $list[$cat][strtolower($key)]['object'] = $plugin;
 	                    $list[$cat][strtolower($key)]['type'] = 'plugin';
 	                }
@@ -308,29 +299,29 @@ class Course_PlusController extends AuthenticatedController
 
                 $indcat = isset($info['category']) ? $info['category'] : 'Sonstiges';
                 if(!array_key_exists($indcat, $cat_index)) array_push($cat_index, $indcat);
-                
+
                 if($_SESSION['plus']['displaystyle'] != 'category'){
-                	 
+
                 	if (($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
                 			|| !isset($_SESSION['plus'])
                 	) {
-                		
+
                 		$list['Funktionen von A-Z'][strtolower($val['name'])]['object'] = $val;
                 		$list['Funktionen von A-Z'][strtolower($val['name'])]['type'] = 'modul';
                 		$list['Funktionen von A-Z'][strtolower($val['name'])]['modulkey'] = $key;
                 	}
-                	 
+
                 } else {
-                
+
 	                $cat = isset($info['category']) ? $info['category'] : 'Sonstiges';
-	
+
 	                if (!isset($_SESSION['plus']['Kategorie'][$cat])) $_SESSION['plus']['Kategorie'][$cat] = 1;
-	
+
 	                if ($_SESSION['plus']['Kategorie'][$cat]
 	                    && ($_SESSION['plus']['Komplex'][$info['complexity']] || !isset($info['complexity']))
 	                    || !isset($_SESSION['plus'])
 	                ) {
-	
+
 	                    $list[$cat][strtolower($val['name'])]['object'] = $val;
 	                    $list[$cat][strtolower($val['name'])]['type'] = 'modul';
 	                    $list[$cat][strtolower($val['name'])]['modulkey'] = $key;
@@ -352,7 +343,7 @@ class Course_PlusController extends AuthenticatedController
         if (isset($list['Sonstiges'])) $sortedcats['Sonstiges'] = $list['Sonstiges'];
 
         $_SESSION['plus']['Kategorielist'] = array_flip($cat_index);
-        
+
         return $sortedcats;
     }
 

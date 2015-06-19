@@ -434,16 +434,17 @@ switch ($submitted_task) {
         break;
 }
 
-//workaround
-if ($i_view == 'new') {
-    closeObject();
-}
+
 
 PageLayout::setTitle(_('Verwaltung der Grunddaten'));
 Navigation::activateItem('/admin/institute/details');
 
-// We need to place this here since it might detect a valid $SessSemName
-require_once 'lib/admin_search.inc.php';
+//workaround
+if ($i_view == 'new') {
+    closeObject();
+} else {
+    require_once 'lib/admin_search.inc.php';
+}
 
 //get ID from a open Institut
 if ($SessSemName[1]) {
@@ -453,18 +454,6 @@ if ($SessSemName[1]) {
 $header_line = getHeaderLine($i_view);
 if ($header_line) {
     PageLayout::setTitle($header_line . ' - ' . PageLayout::getTitle());
-}
-
-// We need to copy this condition from admin_search_form.inc.php to determine whether
-// we need to include the header, since admin_search_form DIES and thus prevents templating
-if ((!$SessSemName[1] || $SessSemName['class'] == 'sem') && Request::option('list') && ($GLOBALS['view_mode'] == 'inst')) {
-    if ($deleted = Request::get('deleted')) {
-        $message = sprintf(_('Die Einrichtung "%s" wurde gelöscht!'), htmlReady(Request::get('deleted')));
-        echo '<table class="default blank"><tr><td>' . MessageBox::success($message) . '</td></tr></table>';
-    }
-
-    include 'lib/include/admin_search_form.inc.php';
-    die; // just to be sure
 }
 
 $lockrule = LockRules::getObjectRule($i_view);
@@ -564,13 +553,13 @@ $template->faculties      = $faculties;
 //Set infotext for disabled delete-button
 $reason_txt = _('Löschen nicht möglich.');
 $reason_txt .= $institute['number'] > 0 ?
-        ' ' . sprintf(ngettext(_('Es ist eine Veranstaltung zugeordnet.'), _('Es sind %u Veranstaltungen zugeordnet.'), 
+        ' ' . sprintf(ngettext(_('Es ist eine Veranstaltung zugeordnet.'), _('Es sind %u Veranstaltungen zugeordnet.'),
                 $institute['number']), $institute['number']): '';
 $reason_txt .= $_num_inst > 0 ?
-        ' ' . sprintf(ngettext(_('Es ist eine Einrichtung zugeordnet.'), _('Es sind %u Einrichtungen zugeordnet.'), 
+        ' ' . sprintf(ngettext(_('Es ist eine Einrichtung zugeordnet.'), _('Es sind %u Einrichtungen zugeordnet.'),
                 $_num_inst), $_num_inst): '';
 $template->reason_txt = $reason_txt;
-                    
+
 // Select correct layout and create infobox if neccessary
 if ($i_view != 'new') {
     $template->set_layout('layouts/base');

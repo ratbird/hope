@@ -69,24 +69,24 @@ class AdminNavigation extends Navigation
         // institute administration
         $navigation = new Navigation(_('Einrichtungen'));
 
-        $navigation->setURL('admin_institut.php?list=TRUE&quit=1');
-        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php?list=TRUE'));
-        $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'dispatch.php/institute/members?list=TRUE&admin_view=1'));
-        $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'dispatch.php/admin/statusgroups?type=inst&list=TRUE'));
+        $navigation->setURL('admin_institut.php?cid=');
+        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php'));
+        $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'dispatch.php/institute/members?admin_view=1'));
+        $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'dispatch.php/admin/statusgroups?type=inst'));
 
         if (Config::get()->VOTE_ENABLE) {
-            $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst&list=TRUE'));
+            $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst'));
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
         }
 
-        $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));
+        $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index'));
 
         if (Config::get()->EXTERN_ENABLE) {
-            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
+            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?view=extern_inst'));
         }
 
         if ($perm->have_perm("root") || ($perm->is_fak_admin() && Config::get()->INST_FAK_ADMIN_PERMS != 'none')) {
-            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?i_view=new'));
+            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?cid=&i_view=new'));
         }
 
         $this->addSubNavigation('institute', $navigation);
@@ -146,7 +146,7 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('tour', new Navigation(_('Touren'), 'dispatch.php/tour/admin_overview'));
             }
             $navigation->addSubNavigation('help_content', new Navigation(_('Hilfe-Texte'), 'dispatch.php/help_content/admin_overview'));
-            
+
             if (Config::get()->ELEARNING_INTERFACE_ENABLE) {
                 $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'admin_elearning_interface.php'));
             }

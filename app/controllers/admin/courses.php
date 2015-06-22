@@ -662,31 +662,6 @@ class Admin_CoursesController extends AuthenticatedController
     }
 
     /**
-     * Return the amount of courses in a institute and given type
-     * @param $id
-     * @return mixed
-     */
-    private function getCourseAmountForStatus(&$id)
-    {
-        $sql = "
-            SELECT COUNT(seminar_id) FROM seminare
-            WHERE Institut_id = :institut_id
-                AND status = :status
-                AND seminare.start_time <= :semester_beginn
-                AND (:semester_beginn <= (seminare.start_time + seminare.duration_time)
-                    OR seminare.duration_time = -1)";
-        $statement = DBManager::get()->prepare($sql);
-        $statement->execute(array(
-            'institut_id'     => $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT,
-            'status'          => $id,
-            'semester_beginn' => $this->semester->beginn
-        ));
-        $count = $statement->fetch(PDO::FETCH_COLUMN);
-
-        return $count;
-    }
-
-    /**
      * TODO: SORM
      * Returns the teacher for a given cours
      * @param $course_id
@@ -811,31 +786,8 @@ class Admin_CoursesController extends AuthenticatedController
     {
         $sidebar = Sidebar::get();
         $this->url = $this->url_for('admin/courses/set_course_type');
-        $result = array();
         $this->types = array();
-        $semCats = SeminarCategories::GetAll();
         $this->selected = $selected;
-        if (!empty($semCats)) {
-            foreach ($semCats as $cat) {
-                $types = $cat->getTypes();
-                if (!empty($types)) {
-                    if (count($types) > 1) {
-                        asort($types, SORT_LOCALE_STRING);
-                    }
-                    $result[$cat->name] = $types;
-                }
-            }
-        }
-
-        foreach ($result as $cat => $types) {
-            foreach ($types as $id => $name) {
-                $amount = $this->getCourseAmountForStatus($id);
-                if ($amount > 0) {
-                    $this->types[$cat][$id]['name'] = $name;
-                    $this->types[$cat][$id]['amount'] = $amount;
-                }
-            }
-        }
 
         $this->render_template('admin/courses/filters/course_type_filter.php', null);
         $html = $this->response->body;

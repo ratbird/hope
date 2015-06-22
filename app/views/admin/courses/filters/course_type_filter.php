@@ -1,11 +1,11 @@
 <form action="<?= $url ?>" method="post">
     <select id="course_type" name="course_type" style="width: 100%">
         <option value="all" <?= ($selected == 'all' ? 'selected="selected"' : '') ?>><?= _('Alle') ?></option>
-        <? foreach ($types as $cat => $ids) : ?>
-            <optgroup label="<?= htmlReady($cat)?>">
-                <? foreach ($ids as $id => $result) : ?>
+        <? foreach ($GLOBALS['SEM_CLASS'] as $class_id => $class) : ?>
+            <optgroup label="<?= htmlReady($class['name'])?>">
+                <? foreach ($GLOBALS['SEM_TYPE'] as $id => $result) : ?>
                     <option value="<?=$id?>" <?= ($selected == $id ? 'selected="selected"' : '')?>>
-                        <?= htmlReady($result['name'])?> (<?= htmlReady($result['amount'])?>)
+                        <?= htmlReady($result['name'])?>
                     </option>
             <? endforeach ?>
             </optgroup>

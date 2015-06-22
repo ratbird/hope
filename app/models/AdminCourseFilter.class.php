@@ -199,14 +199,31 @@ class AdminCourseFilter {
     }
 
     /**
+     * @return number of courses that this filter would return
+     */
+    public function countCourses() {
+        NotificationCenter::postNotification("AdminCourseFilterWillQuery", $this);
+        $query = "SELECT COUNT(*) FROM (".$this->createQuery(true).") AS filterted_courses";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($this->settings['parameter']);
+        $number =  $statement->fetch(PDO::FETCH_COLUMN, 0);
+        return $number;
+    }
+
+    /**
      * Creates the sql-query from the $this->settings['query']
+     * @only_count : boolean
      * @return string : the big query
      */
-    public function createQuery()
+    public function createQuery($only_count = false)
     {
-        $select_query = "seminare.* ";
-        foreach ((array) $this->settings['query']['select'] as $alias => $select) {
-            $select_query .= ", ".$select." AS ".$alias." ";
+        if ($only_count) {
+            $select_query = "1";
+        } else {
+            $select_query = "seminare.* ";
+            foreach ((array) $this->settings['query']['select'] as $alias => $select) {
+                $select_query .= ", ".$select." AS ".$alias." ";
+            }
         }
 
         $join_query = "";

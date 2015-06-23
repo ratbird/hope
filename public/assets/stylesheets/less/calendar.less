@@ -85,7 +85,7 @@ td.current {
 
 table.calendar-week, table.calendar-day {
     table-layout: fixed;
-    width: 100%;
+    width: 100%;  
     & td {
         padding: 0;
     }
@@ -154,7 +154,6 @@ table.calendar-week {
 }
 
 .calendar-day-event-title {
-    width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -172,7 +171,7 @@ table.calendar-week {
 
 table.calendar-week, table.calendar-day {
     &  tbody tr td {
-        &.calendar-category1 {
+        &.calendar-category1, &.calendar-course-category5 {
             div:first-child {
                 background-color: #41643F;
                 overflow: hidden;
@@ -181,7 +180,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #41643F;
             .calendar-category-mixin;
         }
-        &.calendar-category2 {
+        &.calendar-category2, &.calendar-course-category1 {
             div:first-child {
                 background-color: #2D2C64;
                 overflow: hidden;
@@ -190,7 +189,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #2D2C64;
             .calendar-category-mixin;
         }
-        &.calendar-category3 {
+        &.calendar-category3, &.calendar-course-category2 {
             div:first-child {
                 background-color: #5C2D64;
                 overflow: hidden;
@@ -199,7 +198,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #5C2D64;
             .calendar-category-mixin;
         }
-        &.calendar-category4 {
+        &.calendar-category4, &.calendar-course-category3 {
             div:first-child {
                 background-color: #526416;
                 overflow: hidden;
@@ -208,7 +207,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #526416;
             .calendar-category-mixin;
         }
-        &.calendar-category5 {
+        &.calendar-category5, &.calendar-course-category4 {
             div:first-child {
                 background-color: #505064;
                 overflow: hidden;
@@ -217,7 +216,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #505064;
             .calendar-category-mixin;
         }
-        &.calendar-category6 {
+        &.calendar-category6, &.calendar-course-category6 {
             div:first-child {
                 background-color: #64372C;
                 overflow: hidden;
@@ -298,7 +297,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #18645C;
             .calendar-category-mixin;
         }
-        &.calendar-category15 {
+        &.calendar-category15, &.calendar-course-category7 {
             div:first-child {
                 background-color: #627C95;
                 overflow: hidden;
@@ -307,7 +306,7 @@ table.calendar-week, table.calendar-day {
             border: solid 1px #627C95;
             .calendar-category-mixin;
         }
-        &.calendar-category255 {
+        &.calendar-category255, &.calendar-course-category255 {
             div:first-child {
                 background-color: @light-gray-color-60;
                 overflow: hidden;
@@ -319,27 +318,33 @@ table.calendar-week, table.calendar-day {
     }
 }
 
-a.calendar-event-text1 {
+a.calendar-event-text1,
+a.Calendar-course-event-text5 {
     color: #41643F;
 }
 
-a.calendar-event-text2 {
+a.calendar-event-text2,
+a.Calendar-course-event-text1{
     color: #2D2C64;
 }
 
-a.calendar-event-text3 {
+a.calendar-event-text3,
+a.Calendar-course-event-text2 {
     color: #5C2D64;
 }
 
-a.calendar-event-text4 {
+a.calendar-event-text4,
+a.Calendar-course-event-text3 {
     color: #526416;
 }
 
-a.calendar-event-text5 {
+a.calendar-event-text5,
+a.Calendar-course-event-text4 {
     color: #505064;
 }
 
-a.calendar-event-text6 {
+a.calendar-event-text6,
+a.Calendar-course-event-text6 {
     color: #64372C;
 }
 
@@ -375,11 +380,13 @@ a.calendar-event-text14 {
     color: #E0665B;
 }
 
-a.calendar-event-text15 {
+a.calendar-event-text15,
+a.Calendar-course-event-text7 {
     color: #627C95;
 }
 
-a.calendar-event-text255 {
+a.calendar-event-text255,
+a.Calendar-course-event-text255 {
     color: @light-gray-color-60;
 }
 .calendar-tooltip {

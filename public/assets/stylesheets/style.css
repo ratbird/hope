@@ -4211,7 +4211,7 @@ td.current {
 }
 table.calendar-week,
 table.calendar-day {
-  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
   width: 100%;
 }

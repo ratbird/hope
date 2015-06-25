@@ -1,6 +1,6 @@
 <?php
 /**
- * WysiwygHtmlHead.php - 
+ * WysiwygHtmlHead.php -
  * Include this file in HTML-files after Stud.IP's JS library is loaded.
  */
 use \Studip\Markup;

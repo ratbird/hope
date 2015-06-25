@@ -39,9 +39,12 @@ namespace {
     StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'sidebar');
     StudipAutoloader::addAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'helpbar');
 
-// sample the request time every tenth time
+// sample the request time and number of db queries every tenth time
     register_shutdown_function(function ($timer) {
         $timer('core.request_time', 0.1);
+
+        $query_count = DBManager::get()->query_count;
+        Metrics::gauge('core.database.queries', $query_count, 0.1);
     }, Metrics::startTimer());
 
     require 'lib/phplib/DB_Sql.class.php';

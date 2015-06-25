@@ -21,6 +21,9 @@ class StudipPDO extends PDO
     const PARAM_ARRAY  = 100;
     const PARAM_COLUMN = 101;
 
+    // Counter for the queries sent to the database
+    public $query_count = 0;
+
     /**
      * Verifies that the given SQL query only contains a single statement.
      *
@@ -34,6 +37,10 @@ class StudipPDO extends PDO
                 throw new PDOException('multiple statement execution not allowed');
             }
         }
+
+        // Count executed queries (this is placed here since this is the only
+        // method that is executed on every call to the database)
+        $this->query_count += 1;
     }
 
     /**

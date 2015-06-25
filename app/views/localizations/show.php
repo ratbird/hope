@@ -131,6 +131,9 @@ $translations = array(
     'Hervorhebung aufheben' => _('Hervorhebung aufheben'),
     'Thema hervorheben' => _('Thema hervorheben'),
 
+    // public/plugins_packages/core/Forum/javascript/forum.js
+    // public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
+    '%s hat geschrieben:' => _('%s hat geschrieben:'),
 );
 
 // translations have to be UTF8 for #json_encode

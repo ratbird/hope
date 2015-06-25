@@ -39,7 +39,15 @@ class Markup
     public static function apply($markup, $text, $trim)
     {
         if (self::isHtml($text)){
-            return self::markupPurified($markup, $text, $trim);
+            $text = self::purify($text);
+            foreach (\StudipFormat::getStudipMarkups() as $name => $rule) {
+                // filter out all basic Stud.IP markup rules
+                if (is_string($rule['callback']) &&
+                    strpos($rule['callback'], 'StudipFormat::') === 0) {
+                    $markup->removeMarkup($name);
+                }
+            }
+            return $markup->format($text);
         }
         return self::markupHtmlReady($markup, $text, $trim);
     }
@@ -70,19 +78,26 @@ class Markup
      */
     public static function isHtml($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
-        // function isHtml in WyswygHtmlHead.php
+        // check if WYSIWYG is enabled in the config
+        if (!\Config::get()->WYSIWYG) {
+            return false;
+        }
+        
         if (self::hasHtmlMarker($text)) {
             return true;
         }
-        $trimmed = trim($text);
-        return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+        
+        // check if heuristic is enabled in the conifg
+        if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
+            $trimmed = trim($text);
+            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+        }
+        
+        return false;
     }
 
     public static function hasHtmlMarker($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
-        // function hasHtmlMarker in WyswygHtmlHead.php
         return preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text);
     }
 
@@ -99,30 +114,10 @@ class Markup
      */
     public static function markAsHtml($text)
     {
-        // NOTE keep this function in sync with the JavaScript 
-        // function markAsHtml in WyswygHtmlHead.php
         if (self::hasHtmlMarker($text)) {
             return $text; // marker already set, don't set twice
         }
-        return self::HTML_MARKER . PHP_EOL . $text;
-    }
-
-    /**
-     * Run text through HTML purifier and afterwards apply markup rules.
-     *
-     * @param TextFormat $markup  Markup rules applied on marked-up text.
-     * @param string     $text    Marked-up text on which rules are applied.
-     * @param boolean    $trim    Trim text before applying markup rules, if TRUE.
-     *
-     * @return string  HTML code computed from marked-up text.
-     */
-    private static function markupPurified($markup, $text, $trim)
-    {
-        $text = self::unixEOL($text);
-        if ($trim) {
-            $text = trim($text);
-        }
-        return self::markupText($markup, self::purify($text));
+        return self::HTML_MARKER . $text;
     }
 
     /**
@@ -227,8 +222,10 @@ class Markup
         //
         $config->set('HTML.Allowed', '
             a[class|href|target|rel]
+            blockquote
             br
             caption
+            div[class|style]
             em
             h1
             h2
@@ -255,6 +252,9 @@ class Markup
             thead
             th[colspan|rowspan|style|scope]
             tr
+            tt
+            big
+            small
         ');
 
         $config->set('Attr.AllowedFrameTargets', array('_blank'));
@@ -263,7 +263,8 @@ class Markup
             'content',
             'link-extern',
             'wiki-link',
-            'math-tex'
+            'math-tex',
+            'author'
         ));
         $config->set('AutoFormat.Custom', array(
             'ClassifyLinks',
@@ -316,6 +317,29 @@ class Markup
             $text = nl2br($text, false);
         }
         return $text;
+    }
+    
+    /**
+     * Prepare text for wysiwyg (if enabled), otherwise convert special
+     * characters using htmlReady.
+     *
+     * @param  string  $text  The text.
+     * @param  boolean $trim  Trim text before applying markup rules, if TRUE.
+     * @param  boolean $br    Replace newlines by <br>, if TRUE and wysiwyg editor disabled.
+     * @param  boolean $double_encode  Encode existing HTML entities, if TRUE and wysiwyg editor disabled.
+     * @return string         The converted string.
+     */
+    public static function wysiwygReady(
+        $text, $trim = true, $br = false, $double_encode = true
+    ) {
+        if (\Config::get()->WYSIWYG) {
+            if (!self::isHtml($text)) {
+                $text = self::markupHtmlReady(new \StudipCoreFormat(), $text, $trim);
+            }
+            $text = self::purify($text);
+        }
+        
+        return self::htmlReady($text, $trim, $br, $double_encode);
     }
 
     public static function removeHTML($html) {

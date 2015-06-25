@@ -34,6 +34,14 @@
                 button_set.right.wysiwyg = {
                     label: 'WYSIWYG',
                     evaluate: function () {
+                        if (!$(element).hasClass('wysiwyg')) {
+                            var message = 'WYSIWYG wird von diesem'
+                               + ' Eingabefeld leider nicht unterstützt.';
+
+                            alert(message.toLocaleString());
+                            return;
+                        }
+
                         var activate = confirm(
                             'Soll der WYSIWYG Editor aktiviert werden?'
                             + '\n'
@@ -111,11 +119,12 @@
     $.fn.extend({
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
-            if (STUDIP.wysiwyg && !STUDIP.wysiwyg.disabled) {
-                return this;
-            }
             return this.each(function () {
-                STUDIP.Toolbar.initialize(this, button_set);
+                var wysiwygDisabled = !STUDIP.wysiwyg || STUDIP.wysiwyg.disabled;
+                var wysiwygTextarea = $(this).hasClass('wysiwyg');
+                if (wysiwygDisabled || !wysiwygTextarea) {
+                    STUDIP.Toolbar.initialize(this, button_set);
+                }
             });
         }
     });

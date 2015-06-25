@@ -12,7 +12,7 @@
             <tr>
                 <td><strong><label for="topic_description"><?= _("Beschreibung") ?></label></strong></td>
                 <td>
-                    <textarea class="add_toolbar" name="description" id="topic_description" style="width: 100%; height: 150px;"><?= htmlReady($topic['description']) ?></textarea>
+                    <textarea class="add_toolbar wysiwyg" name="description" id="topic_description" style="width: 100%; height: 150px;"><?= wysiwygReady($topic['description']) ?></textarea>
                     <? if (Request::isAjax()) : ?>
                     <script>jQuery('.add_toolbar').addToolbar();</script>
                     <? endif ?>

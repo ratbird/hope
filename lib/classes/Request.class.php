@@ -13,6 +13,8 @@
  * the License, or (at your option) any later version.
  */
 
+use Studip\Markup;
+
 /**
  * Singleton class representing a HTTP request in Stud.IP.
  */
@@ -245,7 +247,7 @@ class Request implements ArrayAccess, IteratorAggregate
      * consisting only of allowed characters for usernames.
      *
      * @param string $param    parameter name
-     * @param string  $default  default value if parameter is not set
+     * @param string $default  default value if parameter is not set
      *
      * @return string   parameter value (if set), else NULL
      */
@@ -255,6 +257,26 @@ class Request implements ArrayAccess, IteratorAggregate
 
         if (!isset($value) || !preg_match($GLOBALS['USERNAME_REGULAR_EXPRESSION'], $value)) {
             $value = $default;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Return the HTML-purified value of the selected query parameter as
+     * a string.
+     *
+     * @param string $param    parameter name
+     * @param string $default  default value if parameter is not set
+     *
+     * @return string  parameter purified value as string (if set), else NULL
+     */
+    public static function html ($param, $default = NULL)
+    {
+        $value = self::get($param, $default);
+
+        if (isset($value) && $value !== '' && Config::get()->WYSIWYG) {
+            $value = Markup::markAsHtml(Markup::purify($value));
         }
 
         return $value;
@@ -372,6 +394,28 @@ class Request implements ArrayAccess, IteratorAggregate
 
         return $array;
     }
+
+    /**
+     * Return the value of the selected query parameter as a string array.
+     * The contents of each element is HTML-purified with Markup::purify().
+     *
+     * @param string $param    parameter name
+     *
+     * @return string  parameter value as array (if set), else an empty array
+     */
+    public static function htmlArray ($param)
+    {
+        $array = self::getArray($param);
+
+        foreach ($array as $key => $value) {
+            if ($value !== '' && Config::get()->WYSIWYG) {
+                $array[$key] = Markup::markAsHtml(Markup::purify($value));
+            }
+        }
+
+        return $array;
+    }
+
     /**
      * Check whether a form submit button has been pressed. This works for
      * both image and text submit buttons.

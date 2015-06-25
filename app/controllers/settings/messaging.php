@@ -57,7 +57,7 @@ class Settings_MessagingController extends Settings_SettingsController
 
             $settings = $this->settings;
 
-            $settings['sms_sig']              = Request::get('sms_sig');
+            $settings['sms_sig']              = Request::html('sms_sig');
             $settings['logout_markreaded']    = Request::int('logout_markreaded');
             $settings['save_snd']             = Request::int('save_snd', 2);
             $settings['request_mail_forward'] = Request::int('request_mail_forward', 0);

@@ -242,11 +242,8 @@ class MessagesController extends AuthenticatedController {
             }
             if (!Request::get('forward')) {
                 if (Request::option("quote") === $old_message->getId()) {
-                    if (Studip\Markup::isHtml($old_message['message'])) {
-                        $this->default_message['message'] = "<div>[quote]\n".$old_message['message']."\n[/quote]</div>";
-                    } else {
-                        $this->default_message['message'] = "[quote]\n".$old_message['message']."\n[/quote]";
-                    }
+                    $this->default_message['message'] =
+                        quotes_encode($old_message['message']);
                 }
                 $this->default_message['subject'] = substr($old_message['message'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
                 $user = new MessageUser();
@@ -316,7 +313,8 @@ class MessagesController extends AuthenticatedController {
             }
         }
         NotificationCenter::postNotification("DefaultMessageForComposerCreated", $this->default_message);
-
+        // only show preview if wysiwyg is deactivated
+        $this->previewActivated = !\Config::get()->WYSIWYG;
 
     }
 
@@ -336,7 +334,7 @@ class MessagesController extends AuthenticatedController {
             $messaging->provisonal_attachment_id = Request::option("message_id");
             $messaging->send_as_email =  Request::int("message_mail");
             $messaging->insert_message(
-                Request::get("message_body"),
+                Request::html("message_body"),
                 $rec_uname,
                 $GLOBALS['user']->id,
                 '',

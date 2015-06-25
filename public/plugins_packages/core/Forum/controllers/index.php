@@ -162,6 +162,8 @@ class IndexController extends ForumController
                 && !ForumPerm::hasEditPerms($this->edit_posting)) {
             $this->edit_posting = null;
         }
+        // only show preview if wysiwyg is deactivated 
+        $this->previewActivated = !\Config::get()->WYSIWYG; 
 
     }
 
@@ -393,7 +395,7 @@ class IndexController extends ForumController
             'seminar_id'  => $this->getId(),
             'user_id'     => $GLOBALS['user']->id,
             'name'        => Request::get('name') ?: '',
-            'content'     => Request::get('content'),
+            'content'     => Request::html('content'),
             'author'      => $fullname,
             'author_host' => getenv('REMOTE_ADDR'),
             'anonymous'   => Config::get()->FORUM_ANONYMOUS_POSTINGS ? Request::get('anonymous') ? : 0 : 0
@@ -455,10 +457,10 @@ class IndexController extends ForumController
     {
         if (Request::isXhr()) {
             $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
-            $content = studip_utf8decode(Request::get('content', _('Keine Beschreibung')));
+            $content = studip_utf8decode(Request::html('content', _('Keine Beschreibung')));
         } else {
             $name    = Request::get('name', _('Kein Titel'));
-            $content = Request::get('content', _('Keine Beschreibung'));
+            $content = Request::html('content', _('Keine Beschreibung'));
         }
 
         ForumPerm::check('add_entry', $this->getId(), $topic_id);
@@ -724,9 +726,7 @@ class IndexController extends ForumController
         $this->flash['new_entry_title'] = $topic['name'];
 
         $author = $topic['anonymous'] ? _('Anonym') : $topic['author'];
-        $content = '[quote=' . $author . ']' . PHP_EOL
-            . $topic['content'] . PHP_EOL
-            . '[/quote]' . PHP_EOL;
+        $content = quotes_encode($topic['content'], $author);
         
         if (Markup::isHtml($topic['content'])) {
             $content = Markup::markAsHtml($content);

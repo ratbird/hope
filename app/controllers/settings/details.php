@@ -115,9 +115,20 @@ class Settings_DetailsController extends Settings_SettingsController
             'schwerp'    => _('Arbeitsschwerpunkte'),
             'publi'      => _('Publikationen'),
         );
-
+        
         foreach ($mapping as $key => $column) {
-            $value = Request::get($key);
+            // purify HTML input using Request::html() if wysiwyg is used
+            switch($key) {
+                case "hobby":
+                case "lebenslauf":
+                case "schwerp":
+                case "publi":
+                    $value = Request::html($key);
+                    break;
+                default:
+                    $value = Request::get($key);
+            }
+            
             if ($this->user->$column != $value && $this->shallChange('user_info.' . $column, $column, $value)) {
                 $this->user->$column = $value;
                 Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $vis_mapping[$key], 'privatedata', 1, $this->user->user_id);

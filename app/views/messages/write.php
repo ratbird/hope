@@ -63,7 +63,7 @@
     <div>
         <label>
             <h4><?= _("Nachricht") ?></h4>
-            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar" data-secure><?= htmlReady($default_message['message'],false) ?></textarea>
+            <textarea style="width: 100%; height: 200px;" name="message_body" class="add_toolbar wysiwyg" data-secure><?= wysiwygReady($default_message['message'],false) ?></textarea>
         </label>
     </div>
     <div>
@@ -91,6 +91,7 @@
                     <strong><?= _("Optionen") ?></strong>
                 </a>
             </li>
+            <? if ($previewActivated) : ?>
             <li style="display: inline-block; min-width: 70px;">
                 <a href="" onClick="STUDIP.Messages.toggleSetting('preview'); STUDIP.Messages.previewComposedMessage(); return false;">
                     <?= Assets::img("icons/40/blue/visibility-visible") ?>
@@ -98,6 +99,7 @@
                     <strong><?= _("Vorschau") ?></strong>
                 </a>
             </li>
+            <? endif; ?>
         </ul>
     </div>
 

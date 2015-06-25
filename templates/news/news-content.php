@@ -34,7 +34,7 @@
                 <?= CSRFProtection::tokenTag() ?>
                 <input type="hidden" name="comsubmit" value="<?= $news['news_id'] ?>">
                 <div align="center">
-                    <textarea class="add_toolbar" name="comment_content" style="width:70%" rows="8" cols="38" wrap="virtual" placeholder="<?= _('Geben Sie hier Ihren Kommentar ein!') ?>"></textarea>
+                    <textarea class="add_toolbar wysiwyg" name="comment_content" style="width:70%" rows="8" cols="38" wrap="virtual" placeholder="<?= _('Geben Sie hier Ihren Kommentar ein!') ?>"></textarea>
                     <br>
                     <?= Button::createAccept(_('Absenden')) ?>
 

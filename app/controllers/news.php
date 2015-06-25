@@ -254,12 +254,12 @@ class NewsController extends StudipController
                 $this->area_options_selected = unserialize(studip_utf8decode(Request::get('news_selected_areas')));
                 $this->area_options_selectable = unserialize(studip_utf8decode(Request::get('news_selectable_areas')));
                 $topic = studip_utf8decode(Request::get('news_topic'));
-                $body = transformBeforeSave(studip_utf8decode(Request::get('news_body')));
+                $body = transformBeforeSave(studip_utf8decode(Request::html('news_body')));
             } else {
                 $this->area_options_selected = unserialize(Request::get('news_selected_areas'));
                 $this->area_options_selectable = unserialize(Request::get('news_selectable_areas'));
                 $topic = Request::get('news_topic');
-                $body = transformBeforeSave(Request::get('news_body'));
+                $body = transformBeforeSave(Request::html('news_body'));
             }
             $date = $this->getTimeStamp(Request::get('news_startdate'), 'start');
             $expire = $this->getTimeStamp(Request::get('news_enddate'), 'end') ? $this->getTimeStamp(Request::get('news_enddate'), 'end') - $this->getTimeStamp(Request::get('news_startdate'), 'start') : '';

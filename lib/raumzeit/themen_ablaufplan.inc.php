@@ -17,7 +17,7 @@ function themen_doAddIssue() {
 
     $issue = new Issue(array('seminar_id' => $id));
     $issue->setTitle(Request::get('theme_title'));
-    $issue->setDescription(Request::get('theme_description'));
+    $issue->setDescription(Request::html('theme_description'));
     $issue->setForum((Request::get('forumFolder') == 'on') ? TRUE : FALSE);
     $issue->setFile((Request::get('fileFolder') == 'on') ? TRUE : FALSE);
     $sem->addIssue($issue);     // sets $issue->priority
@@ -33,7 +33,7 @@ function themen_changeIssue() {
     global $sem, $themen;
 
     $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[Request::option('issue_id')]->toString())) . '<br>';
-    $themen[Request::option('issue_id')]->setDescription(Request::get('theme_description'));
+    $themen[Request::option('issue_id')]->setDescription(Request::html('theme_description'));
     $themen[Request::option('issue_id')]->setTitle(Request::get('theme_title'));
     $themen[Request::option('issue_id')]->setForum((Request::get('forumFolder') == 'on') ? TRUE : FALSE);
     $themen[Request::option('issue_id')]->setFile((Request::get('fileFolder') == 'on') ? TRUE : FALSE);

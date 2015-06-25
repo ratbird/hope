@@ -140,7 +140,7 @@ class StudipFormat extends TextFormat
         'quote' => array(
             'start'    => '\[quote(=.*?)?\]',
             'end'      => '\[\/quote\]',
-            'callback' => 'StudipFormat::markupQuote'
+            'callback' => 'StudipFormat::markupQuote',
         ),
         'nop' => array(
             'start'    => '\[nop\](.*?)\[\/nop\]',
@@ -324,15 +324,15 @@ class StudipFormat extends TextFormat
     protected static function markupText($markup, $matches, $contents)
     {
         static $tag = array(
-            '**' => 'b',
-            '%%' => 'i',
+            '**' => 'strong',
+            '%%' => 'em',
             '++' => 'big',
             '--' => 'small',
             '__' => 'u',
             '##' => 'tt',
             '&gt;&gt;' => 'sup',
             '&lt;&lt;' => 'sub',
-            '{-' => 'strike',
+            '{-' => 's',
             '[admin_msg]' => 'i'
         );
 
@@ -362,8 +362,8 @@ class StudipFormat extends TextFormat
     protected static function markupTextSimple($markup, $matches)
     {
         static $tag = array(
-            '*' => 'b',
-            '%' => 'i',
+            '*' => 'strong',
+            '%' => 'em',
             '_' => 'u',
             '#' => 'tt',
             '+' => 'big',
@@ -464,6 +464,15 @@ class StudipFormat extends TextFormat
      */
     protected static function markupQuote($markup, $matches, $contents)
     {
+        // If quoting is changed update these functions:
+        // - StudipFormat::markupQuote
+        //   lib/classes/StudipFormat.php
+        // - quotes_encode lib/visual.inc.php
+        // - STUDIP.Forum.citeEntry > quote
+        //   public/plugins_packages/core/Forum/javascript/forum.js
+        // - studipQuotePlugin > insertStudipQuote
+        //   public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
+
         if (strlen($matches[1]) > 1) {
             $title = sprintf(_('%s hat geschrieben:'), $markup->format(substr($matches[1], 1)));
             return sprintf('<blockquote><div class="author">%s</div>%s</blockquote>',

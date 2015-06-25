@@ -195,16 +195,15 @@ function printTitleField ( $title = "" ) {
     global $pageMode, $vote;
 
     if( $title == "" || $title == TITLE_HELPTEXT ) {
-    $title = TITLE_HELPTEXT;
-    $js = "onFocus='deleteField( this, \"".$title."\" );'";
-    $js .= " onBlur='restoreField( this, \"".$title."\" );'";
+		$title_placeholder = TITLE_HELPTEXT;
+		$title = "";
     }
 
     if( strpos($_SERVER["HTTP_REFERER"], "page=edit") )
        $title = stripslashes($title);
 
     $html = "<font size=-1><b>" . _("Titel:")   . "</b></font><br>"
-    . "<input type=text size=50 maxlength=100 name=\"title\" value=\"".htmlReady($title)."\" ".$js." tabindex=1>";
+    . "<input type=text size=50 maxlength=100 name=\"title\" value=\"".htmlReady($title)."\" placeholder=\"".htmlReady($title_placeholder)."\" tabindex=1>";
     $html .= tooltipIcon(_('Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen.'));
     $html .= "<br><br>\n";
 
@@ -223,9 +222,7 @@ function printQuestionField ( $question = "" ) {
     global $pageMode;
 
     if( $question == "" || $question == QUESTION_HELPTEXT ) {
-    $question = QUESTION_HELPTEXT;
-    $js = "onFocus='deleteField( this, \"".$question."\" );'";
-    $js .= " onBlur='restoreField( this, \"".$question."\" );'";
+    $question_help = QUESTION_HELPTEXT;
     }
 
     if( strpos($_SERVER["HTTP_REFERER"], "page=edit") && $pageMode != MODE_RESTRICTED )
@@ -234,7 +231,7 @@ function printQuestionField ( $question = "" ) {
     $html = "<font size=-1><b>" . _("Frage:")   . "</b></font><br>";
 
     if( $pageMode != MODE_RESTRICTED ) {
-    $html .= "<textarea class=\"add_toolbar\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=2>".htmlReady($question)."</textarea>";
+    $html .= "<textarea class=\"add_toolbar wysiwyg\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" placeholder=\"".htmlReady($question_help)."\" tabindex=2>".wysiwygReady($question)."</textarea>";
     } else {
        $html .= "<div class=table_row_odd style=\"padding:2px;\">"
       . "<font size=-1>".formatReady($question)."</font>"

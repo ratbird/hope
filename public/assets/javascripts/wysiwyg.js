@@ -21,6 +21,11 @@ jQuery(function ($) {
         return;
     }
 
+    if (!CKEDITOR.env.isCompatible) {
+        workaroundIncompatibleEnvironment();
+        return;
+    }
+
     STUDIP.URLHelper.base_url // workaround: application.js sets base_url too late
         = STUDIP.ABSOLUTE_URI_STUDIP;
     STUDIP.wysiwyg.replace = replaceTextarea; // for jquery dialogs, see toolbar.js
@@ -37,7 +42,7 @@ jQuery(function ($) {
     // hidden, the editor does not function properly; therefore attach to
     // visible textareas only
     function replaceVisibleTextareas() {
-        $('textarea.add_toolbar').each(function() {
+        $('textarea.wysiwyg').each(function() {
             var editor = CKEDITOR.dom.element.get(this).getEditor();
             if (!editor && $(this).is(':visible')) {
                 replaceTextarea(this);
@@ -58,9 +63,6 @@ jQuery(function ($) {
             textarea.attr('id', createNewId('wysiwyg'));
         }
 
-        // convert plain text to html
-        textarea.val(getHtml(textarea.val()));
-
         // create new toolbar container
         var textareaWidth = (textarea.width() / textarea.parent().width() * 100) + '%';
 
@@ -80,10 +82,13 @@ jQuery(function ($) {
                     attributes: ['!href', 'target', 'rel'],
                     classes: 'link-extern'
                 },
+                big: {},
+                blockquote: {},
                 br: {},
                 caption: {},
                 em: {},
                 div: {
+                    classes: 'author', // needed for quotes
                     // only allow left margin and horizontal text alignment to
                     // be set in divs
                     // - margin-left should only be settable in multiples of
@@ -124,6 +129,7 @@ jQuery(function ($) {
                 u: {},
                 ul: {},
                 s: {},
+                small: {},
                 sub: {},
                 sup: {},
                 table: {
@@ -148,7 +154,8 @@ jQuery(function ($) {
                     attributes: ['colspan', 'rowspan', 'scope'],
                     styles: ['text-align', 'width', 'height']
                 },
-                tr: {}
+                tr: {},
+                tt: {}
             },
             width: textareaWidth,
             skin: 'studip,' +
@@ -159,7 +166,7 @@ jQuery(function ($) {
                     return a.pathname;
                 })(),
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
-            extraPlugins: 'codemirror,studip-floatbar,studip-settings,studip-wiki'
+            extraPlugins: 'codemirror,studip-floatbar,studip-quote,studip-settings,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,
@@ -322,37 +329,6 @@ jQuery(function ($) {
             var editor = event.editor,
                 $textarea = $(editor.element.$);
 
-            // NOTE some HTML elements are output on their own line so that old
-            // markup code and older plugins run into less problems
-
-            // output divivisons as
-            // text before
-            // <div>
-            // Text
-            // </div>
-            // text after
-            editor.dataProcessor.writer.setRules('div', {
-                indent: false,
-                breakBeforeOpen: true,
-                breakAfterOpen: true,
-                breakBeforeClose: true,
-                breakAfterClose: true
-            });
-
-            // output paragraphs as
-            // text before
-            // <p>
-            // Text
-            // </p>
-            // text after
-            editor.dataProcessor.writer.setRules('p', {
-                indent: false,
-                breakBeforeOpen: true,
-                breakAfterOpen: true,
-                breakBeforeClose: true,
-                breakAfterClose: true
-            });
-
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function (event) {
                 var editor = event.editor;
@@ -362,19 +338,6 @@ jQuery(function ($) {
                     editor.focus();
                 }
             });
-
-            // clean up HTML edited in source mode before submit
-            var form = $textarea.closest('form');
-            form.submit(function (event) {
-                // make sure HTML marker is always set, in
-                // case contents are cut-off by the backend
-                var w = STUDIP.wysiwyg;
-                editor.setData(w.markAsHtml(editor.getData()));
-                editor.updateElement(); // update textarea, in case it's accessed by other JS code
-            });
-
-            // focus editor if corresponding textarea is focused
-            $textarea.focus(function (event) { event.editor.focus(); });
 
             // update textarea on editor blur
             editor.on('blur', function (event) {
@@ -439,36 +402,65 @@ jQuery(function ($) {
         });
     }
 
-    // convert plain text entries to html
-    function getHtml(text) {
-        return STUDIP.wysiwyg.isHtml(text) ? text : convertToHtml(text);
+    //// helpers for environments where ckeditor doesn't work
+
+    function workaroundIncompatibleEnvironment() {
+        // do nothing when other JS code wants to replace textareas
+        STUDIP.wysiwyg.replace = function () { };
+
+        // JS does not emit an event when new DOM nodes are
+        // inserted. This interval timer checks for new
+        // textareas.
+        setInterval(function () {
+            $('textarea.wysiwyg').each(function (index, textarea) {
+                onSubmitConvertToHtml(textarea);
+            });
+        }, 300);
     }
-    function convertToHtml(text) {
-        var quote = getQuote(text);
-        if (quote) {
-            var quotedHtml = getHtml(quote[2].trim());
-            return '<p>' + quote[1] + quotedHtml + quote[3] + '</p>';
+
+    // convert content of wysiwyg textareas to html when
+    // user presses submit button of surrounding form
+    function onSubmitConvertToHtml(textarea) {
+        // detach from invisible textareas
+        if (!$(textarea).is(':visible')) {
+            delete textarea.containsHtml;
+            return;
         }
-        return replaceNewlines(encodeHtmlEntities(text));
+
+        // return if we are already attached to this textarea
+        if (textarea.hasOwnProperty('containsHtml')) {
+            return;
+        }
+
+        // remember if contents already are html
+        textarea.containsHtml = textarea.value.trim().length > 0;
+
+        // on submit replace plain text with html contents
+        var form = $(textarea).closest('form');
+        form.submit({ textarea: textarea }, function (event) {
+            var t = event.data.textarea;
+            if (!t.containsHtml) {
+                t.value = text2Html(t.value);
+                t.containsHtml = true;
+            }
+        });
     }
-    function getQuote(text) {
-        // matches[1] = quote start  \[quote(=.*?)?\]
-        // matches[2] = quoted text  [\s\S]*   (multiline)
-        // matches[3] = quote end    \[\/quote\]
-        return text.match(
-            /^\s*(\[quote(?:=.*?)?\])([\s\S]*)(\[\/quote\])\s*$/) || null;
+
+    //// helpers that could be useful not only for wysiwyg
+
+    // convert plain text to html
+    function text2Html(text) {
+        return newline2br(htmlEncode(text));
     }
-    function encodeHtmlEntities(text) {
-        return $('<div>').text(text).html();
+
+    // encode html entities
+    function htmlEncode(text) {
+        return $('<div/>').text(text).html();
     }
-    function replaceNewlines(text) {
-        return replaceNewlineWithBr(replaceMultiNewlinesWithP(text));
-    }
-    function replaceMultiNewlinesWithP(text) {
-        return '<p>' + text.replace(/(\r?\n|\r){2,}/, '</p><p>') + '</p>';
-    }
-    function replaceNewlineWithBr(text) {
-        return text.replace(/(\r?\n|\r)/g, '<br>\n');
+
+    // convert all newline characters to <br> tags
+    function newline2br(text) {
+        return text.replace(/(?:\r\n|\r|\n)/g, '<br />\n');
     }
 
     // create an unused id

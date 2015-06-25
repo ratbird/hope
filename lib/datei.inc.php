@@ -1619,7 +1619,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     $javascriptok = true;
     print "\n\t<div class=\"".($rechte ? "draggable" : "")."\" id=\"file_".$folder_id."_$countfiles\">";
     print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
-    print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
+    print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr class=\"handle\">";
     if (!$all) {
         print "<td class=\"tree-elbow-end\">" . Assets::img("datatree_2.gif") . "</td>";
     }
@@ -2065,7 +2065,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     //Jetzt fängt eine zweite Tabelle an mit den Zeilen: Titel, Beschreibung und Knöpfe, Unterdateien und Unterordner
     if ($rechte) {
-        print "<div class=\"droppable\" id=\"dropfolder_$folder_id\">";
+        print "<div class=\"droppable handle\" id=\"dropfolder_$folder_id\">";
     }
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\" id=\"droppable_folder_$droppable_folder\"><tr>";
 

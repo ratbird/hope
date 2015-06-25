@@ -21,7 +21,7 @@ STUDIP.Filesystem = {
      */
     unsetarrows     : function () {
         jQuery("span.move_arrows, span.updown_marker").hide();
-        jQuery(".sortable").find(".draggable, .draggable_folder").css("cursor", "move");
+        jQuery(".sortable").find(".handle").css("cursor", "move");
     }
 };
 
@@ -34,6 +34,7 @@ STUDIP.Filesystem.setdraggables = function () {
         //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
         jQuery(this).sortable({
             axis: "y",
+            handle: ".handle",
             opacity: 0.6,
             revert: 300,
             scroll: true,

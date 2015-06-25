@@ -95,7 +95,9 @@ class Markup
         // check if heuristic is enabled in the conifg
         if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
             $trimmed = trim($text);
-            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+            $oldHeuristic = $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+            $oldMarker = preg_match('/^<!-- HTML: .*? -->/', $text);
+            return $oldHeuristic || $oldMarker;
         }
 
         return false;
@@ -323,7 +325,7 @@ class Markup
         }
         return $text;
     }
-    
+
     /**
      * Prepare text for wysiwyg (if enabled), otherwise convert special
      * characters using htmlReady.
@@ -348,7 +350,7 @@ class Markup
             }
             $text = self::purify($text);
         }
-        
+
         return self::htmlReady($text, $trim, $br, $double_encode);
     }
 

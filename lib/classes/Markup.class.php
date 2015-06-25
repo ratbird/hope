@@ -38,7 +38,7 @@ class Markup
      */
     public static function apply($markup, $text, $trim)
     {
-        if (self::isHtml($text)){
+        if (self::isHtml($text)) {
             $text = self::purify($text);
             foreach (\StudipFormat::getStudipMarkups() as $name => $rule) {
                 // filter out all basic Stud.IP markup rules
@@ -48,7 +48,11 @@ class Markup
                 }
             }
             return $markup->format($text);
+        } else if (self::maybeHtml($text)) {
+            $text = self::purify($text);
+            return $markup->format($text);
         }
+
         return self::markupHtmlReady($markup, $text, $trim);
     }
 
@@ -73,17 +77,27 @@ class Markup
         if (!\Config::get()->WYSIWYG) {
             return false;
         }
-        
+
         if (self::hasHtmlMarker($text)) {
             return true;
         }
-        
+
+        return false;
+    }
+
+    public static function maybeHtml($text)
+    {
+        // check if WYSIWYG is enabled in the config
+        if (!\Config::get()->WYSIWYG) {
+            return false;
+        }
+
         // check if heuristic is enabled in the conifg
         if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
             $trimmed = trim($text);
             return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
         }
-        
+
         return false;
     }
 
@@ -325,7 +339,12 @@ class Markup
     ) {
         if (\Config::get()->WYSIWYG) {
             if (!self::isHtml($text)) {
-                $text = self::markupHtmlReady(new \StudipCoreFormat(), $text, $trim);
+                if (self::maybeHtml($text)) {
+                    $text = preg_replace('/^<!-- HTML: .*? -->/', '', $text);
+                    $text = self::markupText(new \StudipCoreFormat(), $text);
+                } else {
+                    $text = self::markupHtmlReady(new \StudipCoreFormat(), $text, $trim);
+                }
             }
             $text = self::purify($text);
         }

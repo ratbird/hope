@@ -395,8 +395,16 @@ function preg_call_format_signature($username, $timestamp) {
 */
 function kill_format ($text) {
     if (Markup::isHtml($text)) {
+        // pure HTML no Stud.IP markup to remove
+        return Markup::removeHTML($text);
+    }
+
+    if (Markup::maybeHtml($text)) {
+        // HTML + Stud.IP markup, remove HTML first
         $text = Markup::removeHTML($text);
     }
+
+    // remove Stud.IP markup
     $text = preg_replace("'\n?\r\n?'", "\n", $text);
     // wir wandeln [code] einfach in [pre][nop] um und sind ein Problem los ... :-)
     $text = preg_replace_callback ( "|(\[/?code\])|isU", create_function('$a', 'return ($a[0] == "[code]")? "[pre][nop]":"[/nop][/pre]";'), $text);

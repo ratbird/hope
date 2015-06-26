@@ -17,15 +17,6 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class Institute_BasicdataController extends AuthenticatedController
 {
-    protected $allow_nobody = true;
-
-    function before_filter(&$action, &$args) {
-        if (Request::option('admin_inst_id')) {
-            Request::set('cid', Request::option('admin_inst_id'));
-        }
-
-        parent::before_filter($action, $args);
-    }
 
     /**
      * show institute basicdata page
@@ -64,7 +55,7 @@ class Institute_BasicdataController extends AuthenticatedController
         if ($header_line) {
             PageLayout::setTitle($header_line . ' - ' . PageLayout::getTitle());
         }
-        
+
         if (get_config('RESOURCES_ENABLE')) {
             include_once($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php');
         }
@@ -175,8 +166,6 @@ class Institute_BasicdataController extends AuthenticatedController
 
                 $i_view = $i_id;
 
-                //This will select the new institute later for navigation (=>admin_search_form.inc.php)
-                $admin_inst_id = $i_id;
                 openInst($i_id);
                 break;
 
@@ -416,12 +405,10 @@ class Institute_BasicdataController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::success($message));
 
                     // logging - put institute's name in info - it's no longer derivable from id afterwards
-                    log_event("INST_DEL",$i_id,NULL,Request::quoted('Name'));
+                    log_event("INST_DEL",$i_id,NULL, Request::quoted('Name'));
 
-                    URLHelper::removeLinkParam('cid');
-                    header('Location: ' . URLHelper::getURL('dispatch.php/institute/basicdata/index?list=true', array('deleted' => Request::get('Name'))));
-                    page_close();
-                    die;
+                    $this->redirect($this->url_for('institute/basicdata/index', array('cid' => '')));
+                    return;
                 }
 
                 // We deleted that intitute, so we have to unset the selection
@@ -529,7 +516,7 @@ class Institute_BasicdataController extends AuthenticatedController
         $reason_txt .= $_num_inst > 0 ?
                 ' ' . sprintf(ngettext(_('Es ist eine Einrichtung zugeordnet.'), _('Es sind %u Einrichtungen zugeordnet.'),
                         $_num_inst), $_num_inst): '';
-        
+
         // Prepare template
         $this->institute      = $institute;
         $this->i_view         = $i_view;

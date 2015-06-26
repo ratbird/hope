@@ -35,7 +35,5 @@ STUDIP.Markup = {
 
 
 jQuery(function () {
-    jQuery(document).find("pre, code").each(function (index, block) {
-        hljs.highlightBlock(block);
-    });
+    STUDIP.Markup.callbacks.codehighlight(document);
 });

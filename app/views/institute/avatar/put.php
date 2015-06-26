@@ -10,7 +10,7 @@
 </p>
 
 <p>
-    <a href="<?= URLHelper::getLink('admin_institut.php?i_id=' . $institute_id) ?>">
+    <a href="<?= URLHelper::getLink('dispatch.php/institute/basicdata/index?i_view=' . $institute_id) ?>">
       <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: baseline;')) ?>
       <?= _("zurück zur Einrichtungsadministration") ?>
     </a>

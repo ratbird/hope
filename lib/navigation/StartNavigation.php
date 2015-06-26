@@ -142,7 +142,7 @@ class StartNavigation extends Navigation
 
         // insitute administration
         if ($perm->have_perm('admin')) {
-            $navigation = new Navigation(_('Verwaltung von Einrichtungen'), 'admin_institut.php?list=TRUE');
+            $navigation = new Navigation(_('Verwaltung von Einrichtungen'), 'dispatch.php/institute/basicdata/index?list=TRUE');
             $this->addSubNavigation('admin_inst', $navigation);
         }
 

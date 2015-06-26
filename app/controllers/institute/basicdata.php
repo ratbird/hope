@@ -28,7 +28,7 @@ class Institute_BasicdataController extends AuthenticatedController
     }
 
     /**
-     * show institute members page
+     * show institute basicdata page
      *
      * @return void
      */
@@ -419,7 +419,7 @@ class Institute_BasicdataController extends AuthenticatedController
                     log_event("INST_DEL",$i_id,NULL,Request::quoted('Name'));
 
                     URLHelper::removeLinkParam('cid');
-                    header('Location: ' . URLHelper::getURL('admin_institut.php?list=true', array('deleted' => Request::get('Name'))));
+                    header('Location: ' . URLHelper::getURL('dispatch.php/institute/basicdata/index?list=true', array('deleted' => Request::get('Name'))));
                     page_close();
                     die;
                 }

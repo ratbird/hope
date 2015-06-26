@@ -70,7 +70,7 @@ class Institute_MembersController extends AuthenticatedController
             $this->inst_id=$GLOBALS['SessSemName'][1];
         } else {
             PageLayout::postMessage(MessageBox::info(_('Sie müssen zunächst eine Einrichtung auswählen')));
-            $this->redirect(URLHelper::getLink('admin_institut.php?list=TRUE'));
+            $this->redirect(URLHelper::getLink('dispatch.php/institute/basicdata/index?list=TRUE'));
             return;
         }
 

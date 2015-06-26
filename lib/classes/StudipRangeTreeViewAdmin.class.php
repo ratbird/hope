@@ -576,7 +576,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($this->isItemAdmin($item_id) && $range_object->item_data['studip_object']){
             $content .= "\n<div class=\"blank\" align=\"center\" style=\"font-size:10pt\">";
 
-            $content .= LinkButton::create(_("Grunddaten in Stud.IP bearbeiten"), "admin_institut.php?admin_inst_id=" . $range_object->item_data['studip_object_id']);
+            $content .= LinkButton::create(_("Grunddaten in Stud.IP bearbeiten"), "dispatch.php/institute/basicdata/index?admin_inst_id=" . $range_object->item_data['studip_object_id']);
             $content .= "</div>";
         }
 

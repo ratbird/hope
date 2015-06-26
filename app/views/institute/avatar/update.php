@@ -32,7 +32,7 @@ use Studip\Button, Studip\LinkButton;
         <?= Button::createAccept(_('Absenden'))?>
         <span class="quiet">
             <?= _("oder") ?>
-            <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('admin_institut.php?i_id=' . $institute_id))?>
+            <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('dispatch.php/institute/basicdata/index?i_view=' . $institute_id))?>
         </span>
     </p>
 </form>

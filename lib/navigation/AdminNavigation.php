@@ -69,8 +69,8 @@ class AdminNavigation extends Navigation
         // institute administration
         $navigation = new Navigation(_('Einrichtungen'));
 
-        $navigation->setURL('admin_institut.php?cid=');
-        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php'));
+        $navigation->setURL('dispatch.php/institute/basicdata/index?cid=');
+        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'dispatch.php/institute/basicdata/index'));
         $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'dispatch.php/institute/members?admin_view=1'));
         $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'dispatch.php/admin/statusgroups?type=inst'));
 
@@ -86,7 +86,7 @@ class AdminNavigation extends Navigation
         }
 
         if ($perm->have_perm("root") || ($perm->is_fak_admin() && Config::get()->INST_FAK_ADMIN_PERMS != 'none')) {
-            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?cid=&i_view=new'));
+            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'dispatch.php/institute/basicdata/index?cid=&i_view=new'));
         }
 
         $this->addSubNavigation('institute', $navigation);

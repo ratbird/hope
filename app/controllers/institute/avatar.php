@@ -77,6 +77,6 @@ class Institute_AvatarController extends AuthenticatedController
     function delete_action()
     {
         InstituteAvatar::getAvatar($this->institute_id)->reset();
-        $this->redirect(URLHelper::getUrl('admin_institut.php?i_id=' . $this->institute_id));
+        $this->redirect(URLHelper::getUrl('dispatch.php/institute/basicdata/index?i_view=' . $this->institute_id));
     }
 }

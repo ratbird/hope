@@ -6,40 +6,34 @@
  * the License, or (at your option) any later version.
  *
  * @author      Peter Thienel <thienel@data-quest.de>
- * @copyright   2014 Stud.IP Core-Group
+ * @copyright   2015 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * 
  */
 
-class CourseCancelledEvent extends CourseEvent
+class CourseMarkedEvent extends CourseEvent
 {
     
     protected static function configure($config= array())
     {
-        $config['alias_fields']['ex_description'] = 'content';
         parent::configure($config);
-        self::$config['CourseCancelledEvent']['db_table'] = 'ex_termine';
     }
     
     /**
-     * Returns all CourseCancelledEvents in the given time range for the given range_id.
+     * Returns all CourseMarkedEvents in the given time range for the given range_id.
      * 
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
-     * @return SimpleORMapCollection Collection of found CourseCancelledEvents.
+     * @return SimpleORMapCollection Collection of found CourseMarkedEvents.
      */
     public static function getEventsByInterval($user_id, DateTime $start, dateTime $end)
     {
-        $stmt = DBManager::get()->prepare('SELECT ex_termine.* FROM seminar_user '
-                . 'INNER JOIN ex_termine ON seminar_id = range_id '
-                . 'WHERE ex_termine.content <> \'\' AND user_id = :user_id '
+        $stmt = DBManager::get()->prepare('SELECT DISTINCT termine.* FROM schedule_seminare '
+                . 'INNER JOIN termine ON seminar_id = range_id '
+                . 'WHERE user_id = :user_id '
                 . 'AND date BETWEEN :start AND :end '
-                . "AND (IFNULL(metadate_id, '') = '' "
-                . 'OR metadate_id NOT IN ( '
-                . 'SELECT metadate_id FROM schedule_seminare '
-                . 'WHERE user_id = :user_id AND visible = 0) ) '
                 . 'ORDER BY date ASC');
         $stmt->execute(array(
             ':user_id' => $user_id,
@@ -49,15 +43,17 @@ class CourseCancelledEvent extends CourseEvent
         $event_collection = new SimpleORMapCollection();
         $event_collection->setClassName('Event');
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $event = new CourseCancelledEvent();
+            $event = new CourseMarkedEvent();
             $event->setData($row);
             $event->setNew(false);
-            // related persons (dozenten) or groups
-            if (self::checkRelated($event, $user_id)) {
-                $event_collection[] = $event;
-            }
+            $event_collection[] = $event;
         }
         return $event_collection;
+    }
+    
+    public function getPermission($user_id = null)
+    {
+        return Event::PERMISSION_READABLE;
     }
     
     /**
@@ -70,10 +66,9 @@ class CourseCancelledEvent extends CourseEvent
      */
     public function getTitle()
     {
-        $title = parent::getTitle();
-        if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            $title .= ' ' . _('(fällt aus)');
-        }
+        $title = $this->course->name;
+        $title .= ' ' . _('(vorgemerkt)');
+        
         return $title;
     }
     
@@ -88,15 +83,12 @@ class CourseCancelledEvent extends CourseEvent
      */
     public function getCategory()
     {
-        return 255;
+        return 256;
     }
     
     public function getDescription()
     {
-        if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            return $this->ex_description;
-        }
         return '';
     }
-
+    
 }

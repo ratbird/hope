@@ -60,7 +60,7 @@ class CourseEvent extends CourseDate implements Event
      * @param string $user_id Id of Stud.IP object from type user, course, inst
      * @param DateTime $start The start date time.
      * @param DateTime $end The end date time.
-     * @return SimpleORMapCollection Collection of found CalendarEvents.
+     * @return SimpleORMapCollection Collection of found CourseEvents.
      */
     public static function getEventsByInterval($user_id, DateTime $start, dateTime $end)
     {
@@ -84,16 +84,26 @@ class CourseEvent extends CourseDate implements Event
             $event = new CourseEvent();
             $event->setData($row);
             $event->setNew(false);
-            // related persons (dozenten)
+            // related persons (dozenten) or groups
             if (self::checkRelated($event, $user_id)) {
                 $event_collection[] = $event;
             }
         }
         return $event_collection;
     }
-
-    // Check auf durchführender Dozent oder Gruppen
-    protected static function checkRelated($event, $user_id)
+    
+    // 
+    
+    /**
+     * Checks if given user is the responsible lecturer or is member of a
+     * related group
+     * 
+     * @global object $perm The globa perm object.
+     * @param CourseEvent $event The course event to check against.
+     * @param string $user_id The id of the user.
+     * @return boolean
+     */
+    protected static function checkRelated(CourseEvent $event, $user_id)
     {
         global $perm;
 

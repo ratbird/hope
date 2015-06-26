@@ -4290,6 +4290,10 @@ table.calendar-week {
   color: #fff;
   padding: 0;
 }
+table.calendar-week tbody tr td,
+table.calendar-day tbody tr td {
+  /* Termin von im Stundenplan vorgemerkter Kurs */
+}
 table.calendar-week tbody tr td.calendar-category1,
 table.calendar-day tbody tr td.calendar-category1,
 table.calendar-week tbody tr td.calendar-course-category5,
@@ -4544,6 +4548,20 @@ table.calendar-day tbody tr td.calendar-category255 div:first-child,
 table.calendar-week tbody tr td.calendar-course-category255 div:first-child,
 table.calendar-day tbody tr td.calendar-course-category255 div:first-child {
   background-color: #a5adb2;
+  overflow: hidden;
+}
+table.calendar-week tbody tr td.calendar-course-category256,
+table.calendar-day tbody tr td.calendar-course-category256 {
+  background: linear-gradient(to right, #3e4490, #7379a9) repeat-x #3e4490;
+  border: solid 1px #2D2C64;
+  vertical-align: top;
+  font-size: 11px;
+  color: #fff;
+  padding: 0;
+}
+table.calendar-week tbody tr td.calendar-course-category256 div:first-child,
+table.calendar-day tbody tr td.calendar-course-category256 div:first-child {
+  background-color: #2D2C64;
   overflow: hidden;
 }
 a.calendar-event-text1,

@@ -316,6 +316,16 @@ table.calendar-week, table.calendar-day {
             border: solid 1px @light-gray-color-60;
             .calendar-category-mixin;
         }
+        /* Termin von im Stundenplan vorgemerkter Kurs */
+        &.calendar-course-category256 {
+            div:first-child {
+                background-color: #2D2C64;
+                overflow: hidden;
+            }
+            background: linear-gradient(to right, #3E4490, #7379A9) repeat-x #3E4490;
+            border: solid 1px #2D2C64;
+            .calendar-category-mixin;
+        }
     }
 }
 

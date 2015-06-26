@@ -101,7 +101,7 @@ class SingleCalendar
         $start = !is_null($start) ? $start : $this->start;
         $end = !is_null($end) ? $end : $this->end;
         if (!is_array($class_names)) {
-            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
         foreach ($class_names as $type) {
             if (in_array('Event', class_implements($type))) {
@@ -242,7 +242,7 @@ class SingleCalendar
     public function getEvent($event_id = null, $class_names = null)
     {
         if (!is_array($class_names)) {
-            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
         foreach ($class_names as $type) {
             if ($type == 'CalendarEvent') {
@@ -250,7 +250,7 @@ class SingleCalendar
             } else {
                 $event = $type::find($event_id);
             }
-            if ($event) {
+            if ($event && $event->havePermission(Event::PERMISSION_READABLE)) {
                 return $event;
             }
         }
@@ -616,7 +616,7 @@ class SingleCalendar
     {
         $user_id = $user_id ?: $GLOBALS['user']->id;
         if (!is_array($class_names)) {
-            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
         
         $day = date('Y-m-d-', $time);
@@ -860,7 +860,7 @@ class SingleCalendar
     public function getListCountEvents($class_names = null, $user_id = null, $restrictions = null)
     {
         if (!is_array($class_names)) {
-            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent');
+            $class_names = array('CalendarEvent', 'CourseEvent', 'CourseCancelledEvent', 'CourseMarkedEvent');
         }
         $end = $this->getEnd();
         $start = $this->getStart();

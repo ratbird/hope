@@ -77,7 +77,13 @@
             <? if (sizeof($related_groups)) : ?>
             <div>
                 <b><?= _('Betroffene Gruppen') ?>:</b>
-                <?= htmlReady(implode(', ', $related_groups->pluck('name'))) ?>
+                <ul class="list-unstyled">
+                <? foreach ($related_groups as $group) : ?>
+                    <li>
+                        <?= htmlReady($group->name) ?>
+                    </li>
+                <? endforeach; ?>
+                </ul>
             </div>
             <? endif; ?>
         <? endif; ?>

@@ -27,7 +27,7 @@ require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionne für den 
 class Course_MembersController extends AuthenticatedController
 {
 
-    function before_filter(&$action, &$args)
+    public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
 
@@ -75,13 +75,6 @@ class Course_MembersController extends AuthenticatedController
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
 
-        if (Request::isXhr()) {
-            $this->set_content_type('text/html;charset=windows-1252');
-            $this->set_layout(null);
-        } else {
-            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
-        }
-
         object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($this->course_id, 'participants');
 
@@ -89,7 +82,6 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_tutor) {
             $this->last_visitdate = time() + 10;
         }
-
 
         // Get the max-page-value for the pagination
         $this->max_per_page = Config::get()->ENTRIES_PER_PAGE;
@@ -123,7 +115,7 @@ class Course_MembersController extends AuthenticatedController
         $sidebar->setImage('sidebar/person-sidebar.png');
     }
 
-    function index_action()
+    public function index_action()
     {
         global $perm, $PATH_EXPORT;
 
@@ -239,7 +231,8 @@ class Course_MembersController extends AuthenticatedController
      * @param String $user_id
      * @throws AccessDeniedException
      */
-    function add_comment_action($user_id = null) {
+    public function add_comment_action($user_id = null)
+    {
         // Security Check
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -271,7 +264,8 @@ class Course_MembersController extends AuthenticatedController
      * @param String $user_id
      * @throws AccessDeniedException
      */
-    function set_comment_action($user_id = null) {
+    public function set_comment_action($user_id = null)
+    {
         // Security Check
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -300,7 +294,7 @@ class Course_MembersController extends AuthenticatedController
      * Add members to a seminar.
      * @throws AccessDeniedException
      */
-    function execute_multipersonsearch_autor_action()
+    public function execute_multipersonsearch_autor_action()
     {
         // Security Check
         if (!$this->is_tutor) {
@@ -330,7 +324,7 @@ class Course_MembersController extends AuthenticatedController
      * Add dozents to a seminar.
      * @throws AccessDeniedException
      */
-    function execute_multipersonsearch_dozent_action()
+    public function execute_multipersonsearch_dozent_action()
     {
         // Security Check
         if (!$this->is_dozent) {
@@ -359,7 +353,8 @@ class Course_MembersController extends AuthenticatedController
     /**
      * Helper function to add dozents to a seminar.
      */
-    private function addDozent($dozent) {
+    private function addDozent($dozent)
+    {
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
         $sem = Seminar::GetInstance($this->course_id);
         if ($sem->addMember($dozent, "dozent")) {
@@ -397,7 +392,7 @@ class Course_MembersController extends AuthenticatedController
      * Add tutors to a seminar.
      * @throws AccessDeniedException
      */
-    function execute_multipersonsearch_tutor_action()
+    public function execute_multipersonsearch_tutor_action()
     {
         // Security Check
         if (!$this->is_tutor) {
@@ -426,7 +421,7 @@ class Course_MembersController extends AuthenticatedController
     /**
      * Send Stud.IP-Message to selected users
      */
-    function send_message_action()
+    public function send_message_action()
     {
         if (!empty($this->flash['users'])) {
             // create a usable array
@@ -443,8 +438,8 @@ class Course_MembersController extends AuthenticatedController
         }
     }
 
-
-    function import_autorlist_action() {
+    public function import_autorlist_action()
+    {
         global $perm;
         if (!Request::isXhr()) {
             Navigation::activateItem('/course/members/view');
@@ -465,7 +460,7 @@ class Course_MembersController extends AuthenticatedController
      * @return type
      * @throws AccessDeniedException
      */
-    function set_autor_csv_action()
+    public function set_autor_csv_action()
     {
         global $perm;
         // Security Check
@@ -617,7 +612,7 @@ class Course_MembersController extends AuthenticatedController
      * @global Object $perm
      * @throws AccessDeniedException
      */
-    function csv_manual_assignment_action()
+    public function csv_manual_assignment_action()
     {
         global $perm;
         // Security. If user not autor, then redirect to index
@@ -634,7 +629,7 @@ class Course_MembersController extends AuthenticatedController
      * Change the visibilty of an autor
      * @return Boolean
      */
-    function change_visibility_action($cmd, $mode)
+    public function change_visibility_action($cmd, $mode)
     {
         global $perm;
         // Security. If user not autor, then redirect to index
@@ -668,7 +663,7 @@ class Course_MembersController extends AuthenticatedController
      * Helper function to select the action
      * @throws AccessDeniedException
      */
-    function edit_tutor_action()
+    public function edit_tutor_action()
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -703,7 +698,7 @@ class Course_MembersController extends AuthenticatedController
      * Helper function to select the action
      * @throws AccessDeniedException
      */
-    function edit_autor_action()
+    public function edit_autor_action()
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -743,7 +738,7 @@ class Course_MembersController extends AuthenticatedController
      * Helper function to select the action
      * @throws AccessDeniedException
      */
-    function edit_user_action()
+    public function edit_user_action()
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
@@ -780,7 +775,7 @@ class Course_MembersController extends AuthenticatedController
      * Helper function to select the action
      * @throws AccessDeniedException
      */
-    function edit_awaiting_action()
+    public function edit_awaiting_action()
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -816,7 +811,7 @@ class Course_MembersController extends AuthenticatedController
      * Helper function to select the action
      * @throws AccessDeniedException
      */
-    function edit_accepted_action()
+    public function edit_accepted_action()
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
@@ -858,7 +853,7 @@ class Course_MembersController extends AuthenticatedController
      * @return String
      * @throws AccessDeniedException
      */
-    function insert_admission_action($status, $cmd)
+    public function insert_admission_action($status, $cmd)
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben leider keine ausreichende Berechtigung, um auf diesen Bereich von Stud.IP zuzugreifen.');
@@ -907,7 +902,7 @@ class Course_MembersController extends AuthenticatedController
      * @param String $user_id
      * @throws AccessDeniedException
      */
-    function cancel_subscription_action($cmd, $status, $user_id = null)
+    public function cancel_subscription_action($cmd, $status, $user_id = null)
     {
         if (!$this->is_tutor) {
             throw new AccessDeniedException('Sie haben keine ausreichende Berechtigung,
@@ -966,7 +961,7 @@ class Course_MembersController extends AuthenticatedController
      * @param type $cmd
      * @throws AccessDeniedException
      */
-    function upgrade_user_action($status, $next_status)
+    public function upgrade_user_action($status, $next_status)
     {
         global $perm;
 
@@ -1017,7 +1012,7 @@ class Course_MembersController extends AuthenticatedController
      * @param type $cmd
      * @throws AccessDeniedException
      */
-    function downgrade_user_action($status, $next_status)
+    public function downgrade_user_action($status, $next_status)
     {
         // Security Check
         if (!$this->is_tutor) {
@@ -1056,7 +1051,8 @@ class Course_MembersController extends AuthenticatedController
      * Displays all members of the course and their aux data
      * @return int fake return to stop after redirect;
      */
-    function additional_action($format = null) {
+    public function additional_action($format = null)
+    {
 
         // Users get forwarded to aux_input
         if (!($this->is_dozent || $this->is_tutor)) {
@@ -1084,7 +1080,8 @@ class Course_MembersController extends AuthenticatedController
     /**
      * Aux input for users
      */
-    function additional_input_action() {
+    public function additional_input_action()
+    {
 
         // Activate the autoNavi otherwise we dont find this page in navi
         Navigation::activateItem('/course/members/additional');
@@ -1350,9 +1347,10 @@ class Course_MembersController extends AuthenticatedController
         return $match[1];
     }
 
-    public function export_members_csv_action() {
+    public function export_members_csv_action()
+    {
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
-            throw new AccessDeniedException("Kein Zugriff.");
+            throw new AccessDeniedException(_('Kein Zugriff.'));
         }
         $filtered_members = $this->members->getMembers($this->sort_status, $this->sort_by . ' ' . $this->order);
         $filtered_members = array_merge($filtered_members, $this->members->getAdmissionMembers($this->sort_status, $this->sort_by . ' ' . $this->order ));
@@ -1361,15 +1359,15 @@ class Course_MembersController extends AuthenticatedController
         $autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible mkdate');
 
 
-        $header = array(_("Titel"), _("Vorname"), _("Nachname"), _("Titel2"), _("Nutzernamen"), _("Privatadr"), _("Privatnr"), _("E-Mail"), _("Anmeldedatum"), _("Studiengänge"));
+        $header = array(_('Titel'), _('Vorname'), _('Nachname'), _('Titel2'), _('Nutzernamen'), _('Privatadr'), _('Privatnr'), _('E-Mail'), _('Anmeldedatum'), _('Studiengänge'));
         $data = array($header);
         foreach (array($dozenten, $tutoren, $autoren) as $usergroup) {
             foreach ($usergroup as $dozent) {
                 $line = array(
-                    "",
+                    '',
                     $dozent['Vorname'],
                     $dozent['Nachname'],
-                    "",
+                    '',
                     $dozent['username']
                 );
                 $data[] = $line;

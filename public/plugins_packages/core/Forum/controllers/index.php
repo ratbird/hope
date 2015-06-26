@@ -158,7 +158,7 @@ class IndexController extends ForumController
             $this->highlight = Request::optionArray('highlight');
         }
 
-        if ($this->edit_posting = Request::get('edit_posting', null)
+        if (($this->edit_posting = Request::get('edit_posting', null))
                 && !ForumPerm::hasEditPerms($this->edit_posting)) {
             $this->edit_posting = null;
         }
@@ -727,10 +727,6 @@ class IndexController extends ForumController
 
         $author = $topic['anonymous'] ? _('Anonym') : $topic['author'];
         $content = quotes_encode($topic['content'], $author);
-        
-        if (Markup::isHtml($topic['content'])) {
-            $content = Markup::markAsHtml($content);
-        }
 
         $this->flash['new_entry_content'] = $content;
 

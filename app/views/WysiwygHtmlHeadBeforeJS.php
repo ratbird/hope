@@ -5,7 +5,7 @@
  */
 require_once 'app/models/Wysiwyg/Settings.php';
 
-if (\Studip\Wysiwyg\Settings::getInstance()->isDisabled()) {
+if (\Studip\Wysiwyg\Settings::getInstance()->isGloballyDisabled()) {
     $old_packages = array_flip(PageLayout::getSqueezePackages());
     unset($old_packages['wysiwyg']);
     call_user_func_array(

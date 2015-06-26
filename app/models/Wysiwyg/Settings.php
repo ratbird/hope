@@ -29,17 +29,6 @@ require_once 'app/models/Wysiwyg/Singleton.php';
 class Settings extends Singleton
 {
     /**
-     * Check whether WYSIWYG has been disabled by user or
-     * global settings.
-     *
-     * @return boolean `true` if WYSIWYG is disabled.
-     */
-    public function isDisabled() {
-        return (boolean)$GLOBALS['user']->cfg->WYSIWYG_DISABLED
-            || $this->isGloballyDisabled();
-    }
-
-    /**
      * Check whether the admin has globally disabled WYSIWYG
      * for this Stud.IP installation.
      *

@@ -15,7 +15,7 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 
-class Admin_InstituteController extends AuthenticatedController
+class Institute_BasicdataController extends AuthenticatedController
 {
     protected $allow_nobody = true;
 

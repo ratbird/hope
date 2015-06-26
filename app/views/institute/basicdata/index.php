@@ -174,26 +174,9 @@
     </table>
 </form>
 <?
-    $aktionen = array();
-    $aktionen[] = array(
-        'icon' => 'icons/16/black/edit.png',
-        'text' => sprintf('<a href="%s">%s</a>',
-                          URLHelper::getLink('dispatch.php/institute/avatar/update/' . $institute['Institut_id']),
-                          _('Bild ändern')),
-    );
-    $aktionen[] = array(
-        'icon' => 'icons/16/black/trash.png',
-        'text' => sprintf('<a href="%s">%s</a>',
-                          URLHelper::getLink('dispatch.php/institute/avatar/delete/' . $institute['Institut_id']),
-                          _('Bild löschen')),
-    );
-    $template->infobox = array(
-        'content' => array(
-            array(
-                'kategorie' => _('Aktionen:'),
-                'eintrag'   => $aktionen
-            )
-        ),
-        'picture' => InstituteAvatar::getAvatar($institute['Institut_id']),
-    );
+$sidebar = Sidebar::get();
+$sidebar->setImage('sidebar/institute-sidebar.png');
+$widget = new ActionsWidget();
+$widget->addLink(_('Infobild ändern'), URLHelper::getLink('dispatch.php/institute/avatar/update/' . $institute['Institut_id']), 'icons/16/black/edit.png');
+$sidebar->addWidget($widget);
 ?>

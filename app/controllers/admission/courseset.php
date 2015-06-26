@@ -212,7 +212,7 @@ class Admission_CoursesetController extends AuthenticatedController {
                     $this->myInstitutes = array();
                     foreach ($institutes as $id) {
                         $this->myInstitutes[$id] = new Institute($id);
-                        $this->selectedInstitutes[$id] = true;
+                        $this->selectedInstitutes[$id] = $this->myInstitutes[$id];
                     }
                 }
                 $selectedCourses = $this->courseset->getCourses();
@@ -597,6 +597,32 @@ class Admission_CoursesetController extends AuthenticatedController {
                   'emailrequest'    => 1
             )
         ));
+    }
+
+    function copy_action($set_id)
+    {
+        $courseset = new CourseSet($set_id);
+        $this->flash['name'] = _("Kopie von:") . ' ' . $courseset->getName();
+        $this->flash['institutes'] = array_keys($courseset->getInstituteIds());
+        $this->flash['infotext'] = $courseset->getInfoText();
+        $this->flash['private'] = $courseset->getPrivate();
+        $rules = array();
+        foreach ($courseset->getAdmissionRules() as $id => $rule) {
+            $rule->id = md5(uniqid(get_class($rule)));
+            $rule->courseSetId = null;
+            if ($rule instanceOf ParticipantRestrictedAdmission) {
+                if ($rule->getDistributionTime() && $rule->getDistributionTime() < time()) {
+                    $rule->setDistributionTime(strtotime('+1 month 23:59'));
+                    PageLayout::postMessage(MessageBox::info(sprintf(_("Bitte passen Sie das Datum der automatischen Platzverteilung an, es wurde automatisch auf %s festgelegt!"), strftime('%x %X', $rule->getDistributiontime()))));
+                }
+            } else if ($rule->getEndTime() < time()) {
+                PageLayout::postMessage(MessageBox::info(sprintf(_("Der Gültigkeitszeitraum der Regel %s endet in der Vergangenheit!"), $rule->getName())));
+            }
+            $rule->store();
+            $rules[] = serialize($rule);
+        }
+        $this->flash['rules'] = $rules;
+        $this->redirect($this->url_for('/configure?is_copy=1'));
     }
 
     /**

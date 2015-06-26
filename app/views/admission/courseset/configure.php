@@ -225,3 +225,6 @@ if ($flash['error']) {
         </div>
 
 </form>
+<? if (Request::get('is_copy')) :?>
+    <script>STUDIP.Admission.toggleNotSavedAlert();</script>
+<? endif ?>

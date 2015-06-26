@@ -525,7 +525,7 @@ class Institute_BasicdataController extends AuthenticatedController
         $this->faculties      = $faculties;
         $this->reason_txt = $reason_txt;
         // Indicates whether the current user is allowed to delete the institute
-        $this->may_delete = $i_view != 'new' && !($institute['number'] || $num_institutes)
+        $this->may_delete = $i_view != 'new' && !($institute['number'] || $_num_inst)
                     && ($GLOBALS['perm']->have_perm('root')
                         || ($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'));
         // Indicates whether the current user is allowed to change the faculty

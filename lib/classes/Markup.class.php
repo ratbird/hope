@@ -39,25 +39,36 @@ class Markup
     public static function apply($markup, $text, $trim)
     {
         if (self::isHtml($text)) {
+            $is_fallback = self::isHtmlFallback($text);
             $text = self::purify($text);
-            foreach (\StudipFormat::getStudipMarkups() as $name => $rule) {
-                // filter out all basic Stud.IP markup rules
-                if (is_string($rule['callback']) &&
-                    strpos($rule['callback'], 'StudipFormat::') === 0) {
-                    $markup->removeMarkup($name);
+
+            if (!$is_fallback) {
+                foreach (\StudipFormat::getStudipMarkups() as $name => $rule) {
+                    // filter out all basic Stud.IP markup rules
+                    if (is_string($rule['callback']) &&
+                        strpos($rule['callback'], 'StudipFormat::') === 0) {
+                        $markup->removeMarkup($name);
+                    }
                 }
             }
-            return $markup->format($text);
-        } else if (self::maybeHtml($text)) {
-            $text = self::purify($text);
+
             return $markup->format($text);
         }
 
         return self::markupHtmlReady($markup, $text, $trim);
     }
 
-    // HTML entries must beginn with "<!-- HTML -->".
-    const HTML_MARKER = '<!-- HTML -->';
+    // HTML entries must beginn with "<!--HTML-->". Whitespace is
+    // ignored and comments may be inserted between "<!--HTML"
+    // and "-->", but must not contain "-" or ">" characters.
+    const HTML_MARKER =
+        '<!-- HTML: Insert text after this line only. -->';
+
+    // No delimiter is given here to enable using the same
+    // regular expression in JavaScript. It is assumed that '/'
+    // is used as delimiter and that no modifiers are set.
+    const HTML_MARKER_REGEXP =
+        '^[\s\n]*<!--[\s\n]*[Hh][Tt][Mm][Ll][^->]*-->';
 
     /**
      * Return `true` for HTML code and `false` for plain text.
@@ -82,22 +93,44 @@ class Markup
             return true;
         }
 
-        return false;
-    }
-
-    public static function maybeHtml($text)
-    {
-        // check if WYSIWYG is enabled in the config
-        if (!\Config::get()->WYSIWYG) {
-            return false;
-        }
-
         // check if heuristic is enabled in the conifg
         if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
             $trimmed = trim($text);
-            $oldHeuristic = $trimmed[0] === '<' && substr($trimmed, -1) === '>';
-            $oldMarker = preg_match('/^<!-- HTML: .*? -->/', $text);
-            return $oldHeuristic || $oldMarker;
+            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+        }
+
+        return false;
+    }
+
+    /**
+     * Return `true` for HTML code mixed with Stud.IP markup and
+     * `false` for pure HTML code.
+     *
+     * HTML code must either match `HTML_MARKER_REGEXP` or begin
+     * with '<' and end with '>' (leading and trailing whitespace
+     * is ignored). Everything else is considered to be plain
+     * text.
+     *
+     * @param string $text  HTML code or plain text.
+     *
+     * @return boolean  `true` for HTML code mixed with Stud.IP markup
+     */
+    public static function isHtmlFallback($text)
+    {
+        // check if heuristic is enabled in the conifg
+        if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
+            // FIXME trunk has been using the "new" HTML marker for some
+            // time to mark mixed content - while the branch used this
+            // exclusively to mark pure HTML content. We cannot change
+            // the marker on the branch without breaking existing content.
+            // Alas, the same is true for the trunk, so we have to treat
+            // content using the new marker as mixed content here.
+            if (self::hasHtmlMarker($text)) {
+                return true;
+            }
+
+            $trimmed = trim($text);
+            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
         }
 
         return false;
@@ -105,7 +138,7 @@ class Markup
 
     public static function hasHtmlMarker($text)
     {
-        return preg_match('/^' . self::HTML_MARKER . '/', $text);
+        return preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text);
     }
 
     /**
@@ -340,15 +373,16 @@ class Markup
         $text, $trim = true, $br = false, $double_encode = true
     ) {
         if (\Config::get()->WYSIWYG) {
-            if (!self::isHtml($text)) {
-                if (self::maybeHtml($text)) {
-                    $text = preg_replace('/^<!-- HTML: .*? -->/', '', $text);
+            if (self::isHtml($text)) {
+                $is_fallback = self::isHtmlFallback($text);
+                $text = self::purify($text);
+
+                if ($is_fallback) {
                     $text = self::markupText(new \StudipCoreFormat(), $text);
-                } else {
-                    $text = self::markupHtmlReady(new \StudipCoreFormat(), $text, $trim);
                 }
+            } else {
+                $text = self::markupHtmlReady(new \StudipCoreFormat(), $text, $trim);
             }
-            $text = self::purify($text);
         }
 
         return self::htmlReady($text, $trim, $br, $double_encode);

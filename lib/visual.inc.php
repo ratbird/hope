@@ -395,13 +395,13 @@ function preg_call_format_signature($username, $timestamp) {
 */
 function kill_format ($text) {
     if (Markup::isHtml($text)) {
-        // pure HTML no Stud.IP markup to remove
-        return Markup::removeHTML($text);
-    }
-
-    if (Markup::maybeHtml($text)) {
-        // HTML + Stud.IP markup, remove HTML first
+        $is_fallback = Markup::isHtmlFallback($text);
         $text = Markup::removeHTML($text);
+
+        if (!$is_fallback) {
+            // pure HTML - no Stud.IP markup to remove
+            return $text;
+        }
     }
 
     // remove Stud.IP markup

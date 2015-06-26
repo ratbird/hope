@@ -38,6 +38,22 @@ class RoomRequest extends SimpleORMap
     protected static function configure($config = array())
     {
         $config['db_table'] = 'resources_requests';
+        $config['belongs_to']['user'] = array(
+            'class_name'  => 'User',
+            'foreign_key' => 'user_id'
+        );
+        $config['belongs_to']['course'] = array(
+            'class_name'  => 'Course',
+            'foreign_key' => 'seminar_id'
+        );
+        $config['belongs_to']['cycle'] = array(
+            'class_name'  => 'SeminarCycleDate',
+            'foreign_key' => 'metadate_id'
+        );
+        $config['belongs_to']['date'] = array(
+            'class_name'  => 'CourseDate',
+            'foreign_key' => 'termin_id'
+        );
         parent::configure($config);
     }
 
@@ -633,6 +649,23 @@ class RoomRequest extends SimpleORMap
         $st = $db->prepare($sql);
         $st->execute(array($this->request_id, $user_id));
         return $st->rowCount();
+    }
+
+    function getAffectedDates()
+    {
+        $dates = array();
+        switch ($this->getType()) {
+        case 'date':
+            $dates[] = $this->date;
+            break;
+        case 'cycle':
+            $dates = $this->cycle->dates->getArrayCopy();
+            break;
+        case 'course':
+            $dates = $this->course->dates->getArrayCopy();
+            break;
+        }
+        return $dates;
     }
 }
 

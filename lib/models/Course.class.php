@@ -105,6 +105,7 @@ class Course extends SimpleORMap
             'assoc_foreign_key' => 'range_id',
             'on_delete' => 'delete',
             'on_store' => 'store',
+            'order_by' => 'ORDER BY date'
         );
         $config['has_many']['ex_dates'] = array(
             'class_name' => 'CourseExDate',

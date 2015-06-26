@@ -2,7 +2,7 @@
 <? if (isset($new_room_request_type)) : ?>
     <input type="hidden" name="new_room_request_type" value="<?= $new_room_request_type ?>">
 <? endif ?>
-<table class="default">
+<table class="default nohover">
 <tr>
     <td colspan="2">
         <?
@@ -47,7 +47,7 @@ if ($request_resource_id = $request->getResourceId()) :
 <? endif ?>
 <tr>
     <td colspan="2">
-        <table class="default">
+        <table class="default nohover">
             <tr>
                 <td width="50%" style="background-image: url(<?= Assets::image_path('line2.gif') ?>); background-repeat: repeat-y; background-position: right;">
                     <?
@@ -69,7 +69,7 @@ if ($request_resource_id = $request->getResourceId()) :
                         }
 
                         print _("Folgende Eigenschaften sind wünschbar:")."<br><br>";
-                        print "<table class=\"default\">";
+                        print "<table class=\"default nohover\">";
                         foreach ($request->getAvailableProperties() as $prop) {
                             ?>
                             <tr>
@@ -133,13 +133,23 @@ if ($request_resource_id = $request->getResourceId()) :
                     if (is_array($search_result)) {
                         if (count($search_result)) {
                             printf ("<br><b>%s</b> ".(!$search_by_properties ? _("Räume gefunden:") : _("passende Räume gefunden."))."<br><br>", sizeof($search_result));
-                            print "<select name=\"select_room\">";
-                            foreach ($search_result as $key => $val) {
-                                printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
-                            }
-                            print "</select>";
-                            print "&nbsp;".Assets::input("icons/16/blue/accept.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "send_room", 'value' => _("Den Raum als Wunschraum auswählen"), 'title' => _('Den Raum als Wunschraum auswählen')));
-                            print "&nbsp;&nbsp;".Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_room_search", 'value' => _("neue Suche starten"), 'title' => _('neue Suche starten')));
+                            ?>
+                            <div class="selectbox">
+                            <fieldset>
+                            <? foreach ($search_result as $key => $val)  :?>
+                                <div>
+                                <label>
+                                <?=Assets::img('icons/16/' . $val['overlap_status'] . '/radiobutton-checked');?>
+                                <input type="radio" name="select_room" value="<?=$key?>">
+                                <?=htmlReady(my_substr($val['name'], 0, 50));?>
+                                </label>
+                                </div>
+                            <? endforeach ?>
+                            </fieldset>
+                            </div>
+                            <?=Studip\Button::create(_("Raum als Wunschraum auswählen"), 'send_room')?>
+                            <?=Studip\Button::create(_("neue Suche starten"), 'reset_room_search')?>
+                            <?
                             if ($search_by_properties) {
                                 print "<br><br>"._("(Diese Räume erfüllen die Wunschkriterien, die Sie links angegeben haben.)");
                             }

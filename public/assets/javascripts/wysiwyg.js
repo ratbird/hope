@@ -17,7 +17,7 @@
  * @category    Stud.IP
  */
 jQuery(function ($) {
-    if (!STUDIP.wysiwyg || STUDIP.wysiwyg.disabled) {
+    if (!STUDIP.wysiwyg) {
         return;
     }
 
@@ -166,7 +166,7 @@ jQuery(function ($) {
                     return a.pathname;
                 })(),
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
-            extraPlugins: 'codemirror,studip-floatbar,studip-quote,studip-settings,studip-wiki'
+            extraPlugins: 'codemirror,studip-floatbar,studip-quote,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,
@@ -193,7 +193,7 @@ jQuery(function ($) {
                 {name: 'tools'},
                 {name: 'links'},
                 {name: 'insert'},
-                {name: 'others', groups: ['mode', 'settings']}
+                {name: 'others', groups: ['mode']}
             ],
             removeButtons: 'Font,FontSize,Anchor',
             toolbarCanCollapse: true,

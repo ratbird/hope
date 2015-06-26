@@ -12,7 +12,6 @@ if (Settings::getInstance()->isGloballyDisabled()) {
 ?>
 <script type="text/javascript">
     STUDIP.wysiwyg = {
-        disabled: <?= Settings::getInstance()->isDisabled() ? 'true' : 'false' ?>,
         settings: <?= Settings::getInstance()->asJson() ?>,
         seminarId: '<?= $_SESSION['SessionSeminar'] ?>'
     };

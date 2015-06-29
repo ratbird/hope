@@ -34,7 +34,7 @@ require_once 'lib/classes/Markup.class.php';
 
 # Seminar_Session cannot be mocked since it uses static functions.
 # Also, including phplib_local.inc.php, where Seminar_Session is
-# defined, introduces a massive amount of dependencies that are otherwise 
+# defined, introduces a massive amount of dependencies that are otherwise
 # completely unneeded for testing the Markup class.
 # Instead, create a fake class.
 # => But note, this will fail if another test case does the same thing!
@@ -68,7 +68,217 @@ class MarkupTest extends PHPUnit_Framework_TestCase
         error_reporting(MarkupTest::$originalErrorReporting);
     }
 
-    # unit tests
+    //// unit tests
+
+    /**
+     * Identify HTML content.
+     *
+     * @param $html string  HTML text as defined by current
+     *                      Stud.IP without fallback-solution.
+     *
+     * @dataProvider htmlProvider
+     */
+    public function testIsHtml($html)
+    {
+        $this->mockConfig();
+        Config::get()->WYSIWYG = true;
+        Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK = false;
+        $this->assertTrue(StudIp\Markup::isHtml($html));
+    }
+
+    // Stud.IP 3.2's HTML marker
+    const STUDIP_3_2_HTML_MARKER
+        = '<!-- HTML: Insert text after this line only. -->';
+
+    /**
+     * Provide plain HTML, no Stud.IP markup allowed.
+     */
+    public function htmlProvider()
+    {
+        return array_merge(
+            $this->newHtmlProvider(),
+            array(array(self::STUDIP_3_2_HTML_MARKER))
+        );
+    }
+
+    /**
+     * Provide plain HTML, no Stud.IP markup allowed.
+     *
+     * Must not contain Stud.IP 3.2's HTML marker, even though
+     * it's a valid "plain HTML" marker from Stud.IP 3.3 onwards.
+     */
+    public function newHtmlProvider()
+    {
+        return array_map(function ($e) { return array($e); }, array(
+            // simplest possible marker, default marker
+            '<!--HTML-->',
+            StudIp\Markup::HTML_MARKER,
+
+            // case insensitivity
+            '<!--html-->',
+            '<!--Html-->',
+            '<!--hTmL-->',
+            '<!--htMl-->',
+
+            // initial whitespace
+            ' <!--HTML-->', // spaces
+            "\t<!--HTML-->", // tabs
+            "\n<!--HTML-->", // new line
+            "\r<!--HTML-->", // carriage return
+            "\r\n<!--HTML-->", // windows line break
+            " \t\r\n \t\r\n \t\r\n<!--HTML-->", // all mixed up
+
+            // whitespace in marker
+            '<!--   HTML   -->', // spaces
+            "<!--\t\t\tHTML\t\t\t-->", // tabs
+            "<!--\n\n\nHTML\n\n\n-->", // new line
+            "<!--\r\r\rHTML\r\r\r-->", // carriage return
+            "<!--\r\n\r\n\r\nHTML\r\n\r\n\r\n-->", // windows line break
+            "<!-- \t\r\nHTML \t\r\n-->", // all mixed up
+
+            // appended content
+            '<!-- HTML --><p>Blabla</p>', // closing HTML tags at end
+            '<!-- HTML -->&nbsp;<br />&nbsp;', // HTML entities at end
+            '<!-- HTML -->HTML with plain text only.', // plain text at end
+            '<!-- HTML --> text <br> text <br /> &nbsp;  \t\r\n  ', // misc contents
+
+            // other cases
+            '<!-- HTML5 -->', // possible versioning for future extensions
+            '<!-- HTML-SML -->' // another variant for future extensions
+        ));
+    }
+
+    /**
+     * Identify mixed HTML + Stud.IP markup content.
+     *
+     * Identification of plain Stud.IP markup contents is
+     * not tested here. Only identification of older HTML
+     * contents that where allowed to contain Stud.IP
+     * markup is tested.
+     *
+     * @param $studipHtml string  Text containing HTML and
+     *                            maybe also Stud.IP markup,
+     *                            as defined by older Stud.IP
+     *                            versions.
+     *
+     * @dataProvider studipHtmlProvider
+     */
+    public function testIsStudipHtml($studipHtml)
+    {
+        $this->mockConfig();
+        Config::get()->WYSIWYG = true;
+        Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK = true;
+        $this->assertTrue(StudIp\Markup::isHtml($studipHtml));
+        $this->assertTrue(StudIp\Markup::isHtmlFallback($studipHtml));
+    }
+
+    /**
+     * Identify plain HTML contents when fallback allows
+     * older, mixed HTML+Stud.IP markup contents.
+     *
+     * @param $html string Text containing plain HTML.
+     *
+     * @dataProvider newHtmlProvider
+     */
+    public function testIsHtmlButNotStudipHtml($html)
+    {
+        $this->mockConfig();
+        Config::get()->WYSIWYG = true;
+        Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK = true;
+        $this->assertTrue(StudIp\Markup::isHtml($html));
+        $this->assertFalse(StudIp\Markup::isHtmlFallback($html));
+    }
+
+    /**
+     * Provide contents that contain HTML with optional
+     * Stud.IP markup as created by WYSIWYG implementation
+     * in Stud.IP 3.0, 3.1 and 3.2.
+     */
+    public function studipHtmlProvider()
+    {
+        return array_merge(
+            $this->studipHtmlHeuristicProvider(),
+            $this->studipHtmlMarkerProvider()
+        );
+    }
+
+    /**
+     * Provide contents that contain HTML with optional
+     * Stud.IP markup as created by WYSIWYG implementation
+     * in Stud.IP 3.0 & 3.1.
+     *
+     * Heuristic: Text containing HTML and optional Stud.IP
+     * markup starts with < and ends with >.
+     */
+    public function studipHtmlHeuristicProvider()
+    {
+        return array_map(function ($e) { return array($e); }, array(
+            '<>', // not valid HTML, yet still detected previously
+            '<div></div>',
+            '<div></div><p></p>',
+            "<div>\r\n</div>\r\n<p>\r\n</p>",
+            " \t\r\n \t\r\n<div> \t\r\n<br> \t\r\n</div> \t\r\n \t\r\n",
+
+            // second heuristic: text starts with HTML marker
+            self::STUDIP_3_2_HTML_MARKER
+        ));
+    }
+
+    /**
+     * Provide contents that contain HTML with optional
+     * Stud.IP markup as created by WYSIWYG implementation
+     * in Stud.IP 3.2.
+     *
+     * Heuristic: Text containing HTML and optional Stud.IP
+     * markup starts with
+     *   '<!-- HTML: Insert text after this line only. -->'.
+     */
+    public function studipHtmlMarkerProvider()
+    {
+        return array_map(function ($e) { return array($e); }, array(
+            '<!-- HTML: Insert text after this line only. -->' // old marker
+        ));
+    }
+
+    /**
+     * Test if plain text content is identified by Markup::isHtml().
+     *
+     * @param $text string  Plain text as defined by current
+     *                      Stud.IP without fallback-solution.
+     *
+     * @dataProvider isNotHtmlProvider
+     */
+    public function testIsNotHtml($text)
+    {
+        $this->mockConfig();
+        Config::get()->WYSIWYG = true;
+        Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK = false;
+        $this->assertFalse(StudIp\Markup::isHtml($text));
+    }
+
+    /**
+     * Data provider for testIsNotHtml().
+     */
+    public function isNotHtmlProvider()
+    {
+        return array_map(function ($e) { return array($e); }, array(
+            // content must start with marker
+            '<p><!--HTML--></p>',
+            'text <!--HTML-->',
+
+            // only whitespace allowed before "HTML"
+            '<!-- XHTML -->', // letters
+            '<!-- 5 HTML -->', // numbers
+            '<!-- ! HTML -->', // punctuation
+
+            // other invalid cases
+            '<!---->',
+            '<!-- -->',
+            '<!--H--><!--T--><!--M--><!--L-->',
+            '<!-- H --><!-- T --><!-- M --><!-- L -->',
+            '<!-- This is HTML!!! -->'
+        ));
+    }
 
     public function testRemoveHTML()
     {
@@ -106,27 +316,7 @@ class MarkupTest extends PHPUnit_Framework_TestCase
 
     public function testGetMediaUrl()
     {
-        # mock class Config
-        $configStub = $this->getMockBuilder('Config')
-        ->disableOriginalConstructor()
-        ->getMock();
-
-        $properties = array();
-
-        $configStub->expects($this->any())
-        ->method('__get')
-        ->will($this->returnCallback(function ($property) use (&$properties) {
-            return $properties[$property];
-        }));
-
-        $configStub->expects($this->any())
-        ->method('__set')
-        ->will($this->returnCallback(function ($property, $value) use (&$properties) {
-            $properties[$property] = $value;
-            return $properties[$property];
-        }));
-
-        Config::set($configStub);
+        $this->mockConfig();
 
         # exceptions
         $namespace = 'Studip\MarkupPrivate\MediaProxy\\';
@@ -240,5 +430,34 @@ class MarkupTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals($test['out'], $out, 'Test ' . $index);
             }
         }
+    }
+
+    //// helpers
+
+    /**
+     * Mocks the Config class, so we don't need a database to
+     * run tests.
+     */
+    private function mockConfig() {
+        $configStub = $this->getMockBuilder('Config')
+        ->disableOriginalConstructor()
+        ->getMock();
+
+        $properties = array();
+
+        $configStub->expects($this->any())
+        ->method('__get')
+        ->will($this->returnCallback(function ($property) use (&$properties) {
+            return $properties[$property];
+        }));
+
+        $configStub->expects($this->any())
+        ->method('__set')
+        ->will($this->returnCallback(function ($property, $value) use (&$properties) {
+            $properties[$property] = $value;
+            return $properties[$property];
+        }));
+
+        Config::set($configStub);
     }
 }

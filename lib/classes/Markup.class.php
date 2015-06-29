@@ -58,17 +58,11 @@ class Markup
         return self::markupHtmlReady($markup, $text, $trim);
     }
 
-    // HTML entries must beginn with "<!--HTML-->". Whitespace is
-    // ignored and comments may be inserted between "<!--HTML"
-    // and "-->", but must not contain "-" or ">" characters.
-    const HTML_MARKER =
-        '<!-- HTML: Insert text after this line only. -->';
+    // signature for HTML entries
+    const HTML_MARKER = '<!--HTML-->';
 
-    // No delimiter is given here to enable using the same
-    // regular expression in JavaScript. It is assumed that '/'
-    // is used as delimiter and that no modifiers are set.
-    const HTML_MARKER_REGEXP =
-        '^[\s\n]*<!--[\s\n]*[Hh][Tt][Mm][Ll][^->]*-->';
+    // regular expression for detecting HTML signature
+    const HTML_MARKER_REGEXP = '/^\s*<!--\s*HTML(.|\s)*?-->/i';
 
     /**
      * Return `true` for HTML code and `false` for plain text.
@@ -84,61 +78,55 @@ class Markup
      */
     public static function isHtml($text)
     {
-        // check if WYSIWYG is enabled in the config
-        if (!\Config::get()->WYSIWYG) {
-            return false;
-        }
-
-        if (self::hasHtmlMarker($text)) {
-            return true;
-        }
-
-        // check if heuristic is enabled in the conifg
-        if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
-            $trimmed = trim($text);
-            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
-        }
-
-        return false;
+        return \Config::get()->WYSIWYG &&
+            (self::hasHtmlMarker($text) || self::isHtmlFallback($text));
     }
 
     /**
-     * Return `true` for HTML code mixed with Stud.IP markup and
-     * `false` for pure HTML code.
+     * Return `true` for Stud.IP-HTML and `false` otherwise.
      *
-     * HTML code must either match `HTML_MARKER_REGEXP` or begin
-     * with '<' and end with '>' (leading and trailing whitespace
-     * is ignored). Everything else is considered to be plain
-     * text.
+     * Stud.IP-HTML is HTML that can contain Stud.IP Markup.
      *
-     * @param string $text  HTML code or plain text.
+     * Stud.IP-HTML must either match Stud.IP 3.2's HTML marker
+     * or begin with '<' and end with '>'. Leading and trailing
+     * whitespace is ignored.
      *
-     * @return boolean  `true` for HTML code mixed with Stud.IP markup
+     * Everything else is considered not Stud.IP-HTML. In other
+     * words, if it's not Stud.IP-HTML it might be everything
+     * from plain text to binary code. But usually it's either
+     * Stud.IP markup or plain HTML code, then.
+     *
+     * @param string $text  Text that is or isn't Stud.IP-HTML.
+     *
+     * @return boolean  `true` for Stud.IP-HTML
      */
     public static function isHtmlFallback($text)
     {
-        // check if heuristic is enabled in the conifg
-        if (\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
-            // FIXME trunk has been using the "new" HTML marker for some
-            // time to mark mixed content - while the branch used this
-            // exclusively to mark pure HTML content. We cannot change
-            // the marker on the branch without breaking existing content.
-            // Alas, the same is true for the trunk, so we have to treat
-            // content using the new marker as mixed content here.
-            if (self::hasHtmlMarker($text)) {
-                return true;
-            }
-
-            $trimmed = trim($text);
-            return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
+        // return false if Stud.IP-HTML is not allowed
+        if (!\Config::get()->WYSIWYG_HTML_HEURISTIC_FALLBACK) {
+            return false;
         }
 
-        return false;
+        // it's Stud.IP-HTML if Stud.IP 3.2's HTML marker is detected
+        $trimmed = trim($text);
+        $studip_3_2_Marker = '<!-- HTML: Insert text after this line only. -->';
+        if (MarkupPrivate\String\startsWith($trimmed, $studip_3_2_Marker)) {
+            return true;
+        }
+
+        // it's not Stud.IP-HTML if it's plain HTML: plain HTML
+        // might look like Stud.IP-HTML to '< ... >' heuristic
+        if (self::hasHtmlMarker($text)) {
+            return false;
+        }
+
+        // it's Stud.IP-HTML if it fit's the '< ... >' heuristic
+        return $trimmed[0] === '<' && substr($trimmed, -1) === '>';
     }
 
     public static function hasHtmlMarker($text)
     {
-        return preg_match('/' . self::HTML_MARKER_REGEXP . '/', $text);
+        return preg_match(self::HTML_MARKER_REGEXP, $text);
     }
 
     /**

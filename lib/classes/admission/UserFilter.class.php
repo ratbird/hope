@@ -258,6 +258,18 @@ class UserFilter
         return $this->toString();
     }
 
+    public function __clone()
+    {
+        $this->id = md5(uniqid(get_class($this)));
+        $cloned_fields= array();
+        foreach ($this->fields as $field) {
+            $dolly = clone $field;
+            $dolly->conditionId = $this->id;
+            $cloned_fields[$dolly->id] = $dolly;
+        }
+        $this->fields = $cloned_fields;
+    }
+
 } /* end of class UserFilter */
 
 ?>

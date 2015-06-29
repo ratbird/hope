@@ -602,27 +602,22 @@ class Admission_CoursesetController extends AuthenticatedController {
     function copy_action($set_id)
     {
         $courseset = new CourseSet($set_id);
-        $this->flash['name'] = _("Kopie von:") . ' ' . $courseset->getName();
-        $this->flash['institutes'] = array_keys($courseset->getInstituteIds());
-        $this->flash['infotext'] = $courseset->getInfoText();
-        $this->flash['private'] = $courseset->getPrivate();
-        $rules = array();
-        foreach ($courseset->getAdmissionRules() as $id => $rule) {
-            $rule->id = md5(uniqid(get_class($rule)));
-            $rule->courseSetId = null;
+        $cloned_courseset = clone $courseset;
+        $cloned_courseset->setName(_("Kopie von:") . ' ' . $cloned_courseset->getName());
+        $cloned_courseset->store();
+        foreach ($cloned_courseset->getAdmissionRules() as $id => $rule) {
             if ($rule instanceOf ParticipantRestrictedAdmission) {
                 if ($rule->getDistributionTime() && $rule->getDistributionTime() < time()) {
                     $rule->setDistributionTime(strtotime('+1 month 23:59'));
+                    $rule->store();
+                    $cloned_courseset->setAlgorithmRun(false);
                     PageLayout::postMessage(MessageBox::info(sprintf(_("Bitte passen Sie das Datum der automatischen Platzverteilung an, es wurde automatisch auf %s festgelegt!"), strftime('%x %X', $rule->getDistributiontime()))));
                 }
-            } else if ($rule->getEndTime() < time()) {
+            } else if ($rule->getEndTime() && $rule->getEndTime() < time()) {
                 PageLayout::postMessage(MessageBox::info(sprintf(_("Der Gültigkeitszeitraum der Regel %s endet in der Vergangenheit!"), $rule->getName())));
             }
-            $rule->store();
-            $rules[] = serialize($rule);
         }
-        $this->flash['rules'] = $rules;
-        $this->redirect($this->url_for('/configure?is_copy=1'));
+        $this->redirect($this->url_for('/configure/' . $cloned_courseset->getId()));
     }
 
     /**

@@ -1067,5 +1067,18 @@ class CourseSet
         return $ok;
     }
 
+    public function __clone()
+    {
+        $this->courses = array();
+        $this->id = null;
+        $this->user_id = null;
+        $cloned_rules = array();
+        foreach ($this->admissionRules as $key => $rule) {
+            $dolly = clone $rule;
+            $cloned_rules[$dolly->id] = $dolly;
+        }
+        $this->admissionRules = $cloned_rules;
+    }
+
 } /* end of class CourseSet */
 

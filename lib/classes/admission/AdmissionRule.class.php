@@ -390,6 +390,12 @@ abstract class AdmissionRule
         return in_array($admission_rule, $this->allowed_combinations);
     }
 
+    public function __clone()
+    {
+        $this->id = md5(uniqid(get_class($this)));
+        $this->courseSetId = null;
+    }
+
 } /* end of abstract class AdmissionRule */
 
 ?>

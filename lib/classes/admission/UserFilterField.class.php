@@ -389,6 +389,12 @@ class UserFilterField
             $this->value, $this->compareOperator, time(), time()));
     }
 
+    public function __clone()
+    {
+        $this->id = md5(uniqid(get_class($this)));
+        $this->conditionId = null;
+    }
+
 } /* end of class UserFilterField */
 
 ?>

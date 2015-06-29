@@ -313,6 +313,18 @@ class ConditionalAdmission extends AdmissionRule
         }
     }
 
+    public function __clone()
+    {
+        $this->id = md5(uniqid(get_class($this)));
+        $this->courseSetId = null;
+        $cloned_conditions = array();
+        foreach ($this->conditions as $condition) {
+            $dolly = clone $condition;
+            $cloned_conditions[$dolly->id] = $dolly;
+        }
+        $this->conditions = $cloned_conditions;
+    }
+
 } /* end of class ConditionalAdmission */
 
 ?>

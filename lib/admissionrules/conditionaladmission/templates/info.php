@@ -12,12 +12,12 @@ if ($rule->getStartTime() && $rule->getEndTime()) {
     <?= _('Folgende Bedingung muss zur Anmeldung erfüllt sein:') ?>
     <br/>
     <div id="conditions">
-        <?php 
+        <?php
         $conditions = $rule->getConditions();
         $condition = reset($conditions);
         ?>
         <div id="condition_<?= $condition->getId() ?>">
-            <i><?= $condition->toString() ?></i>
+            <i><?= htmlReady($condition->toString()) ?></i>
         </div>
     </div>
 <?php } else { ?>
@@ -30,7 +30,7 @@ if ($rule->getStartTime() && $rule->getEndTime()) {
         foreach ($rule->getConditions() as $condition) {
         ?>
         <li id="condition_<?= $condition->getId() ?>">
-            <i><?= $condition->toString() ?></i>
+            <i><?= htmlReady($condition->toString()) ?></i>
         </li>
         <?php
             $i++;

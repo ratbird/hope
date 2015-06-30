@@ -153,7 +153,7 @@ class SearchWidget extends SidebarWidget
                                   URLHelper::getLink($this->template_variables['url'], array('reset-search' => 1)),
                                   Assets::img('icons/blue/decline/search.svg', array('class' => 'text-top')),
                                   _('Zurücksetzen'));
-            $this->template_variables['extra'] = $reset_link;
+            $this->template_variables['reset_search'] = $reset_link;
         }
 
         $this->template_variables['needles'] = $this->needles;

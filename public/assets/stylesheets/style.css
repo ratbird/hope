@@ -3298,7 +3298,7 @@ button.button[disabled]:hover {
 .button.move-down,
 .ui-dialog .ui-dialog-buttonpane .ui-button.accept,
 .ui-dialog .ui-dialog-buttonpane .ui-button.cancel {
-  white-space: normal;
+  white-space: nowrap;
 }
 .button-with-empty-icon:before,
 .button.accept:before,

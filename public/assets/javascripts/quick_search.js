@@ -62,38 +62,47 @@ STUDIP.QuickSearch = {
                         url: url,
                         type: "post",
                         dataType: "json",
-                        data: send_vars,
-                        success: function (data) {
-                            var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
-                            //an array of possible selections
-                            
-                            if (!data.length) {
-                                add([{value:"", label: "Kein Ergebnis gefunden.".toLocaleString()}]);
-                                return;
+                        data: send_vars
+                    }).done(function (data) {
+                        var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
+                        //an array of possible selections
+                        
+                        if (!data.length) {
+                            add([{value: '', label: 'Kein Ergebnis gefunden.'.toLocaleString(), disabled: true}]);
+                            return;
+                        }
+                        
+                        var suggestions = _.map(data, function (val) {
+                            //adding a label and a hidden item_id - don't use "value":
+                            var label_text = val.item_name;
+                            if (val.item_description !== undefined) {
+                                label_text += "<br>" + val.item_description
                             }
                             
-                            var suggestions = _.map(data, function (val) {
-                                //adding a label and a hidden item_id - don't use "value":
-                                var label_text = val.item_name;
-                                if (val.item_description !== undefined) {
-                                    label_text += "<br>" + val.item_description
-                                }
-                                
-                                return {
-                                    //what is displayed in the drop down box
-                                    label: label_text,
-                                    //the hidden ID of the item
-                                    item_id: val.item_id,
-                                    //what is inserted in the visible input box
-                                    value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html((val.item_name || '').replace(stripTags, "")).text()
-                                };
-                            });
-                            //pass it to the function of UI-widget:
-                            add(suggestions);
-                        }
+                            return {
+                                //what is displayed in the drop down box
+                                label: label_text,
+                                //the hidden ID of the item
+                                item_id: val.item_id,
+                                //what is inserted in the visible input box
+                                value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html((val.item_name || '').replace(stripTags, "")).text()
+                            };
+                        });
+                        //pass it to the function of UI-widget:
+                        add(suggestions);
+                    }).fail(function (jqxhr, textStatus) {
+                        add([{
+                            value: '',
+                            label: 'Fehler'.toLocaleString() + ': ' + jqxhr.responseText,
+                            disabled: true
+                        }]);
                     });
                 },
                 select: function (event, ui) {
+                    if (ui.item.disabled) {
+                        return;
+                    }
+                    
                     //inserts the ID of the selected item in the hidden input:
                     jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
                     //and execute a special function defined before by the programmer:

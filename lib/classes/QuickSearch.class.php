@@ -76,6 +76,8 @@ require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
 class QuickSearch
 {
 
+    const GC_LIFETIME = 10800; // = 3 * 60 * 60 = 3 hours
+
     static $count_QS = 0;       //static counter of all instances of this class
 
     private $name;              //name of the input/select field
@@ -91,6 +93,51 @@ class QuickSearch
     private $search_button_name;
     private $reset_button_name;
 
+    /**
+     * Deletes all older requests that have not been used for three hours
+     * from the session
+     *
+     * @return int Number of removed searches
+     */
+    public static function garbageCollect()
+    {
+        $count = count($_SESSION['QuickSearches']);
+
+        $_SESSION['QuickSearches'] = array_filter($_SESSION['QuickSearches'], function ($query) {
+            return $query['time'] + QuickSearch::GC_LIFETIME > time();
+        });
+
+        return $count - count($_SESSION['QuickSearches']);
+    }
+
+    /**
+     * Retrieves the search object for the given id previously stored in
+     * the session.
+     *
+     * @param String $query_id Id of the quicksearch object
+     * @return SearchType Quicksearch object
+     * @throws RuntimeException when the given query does not exist in session
+     */
+    public static function getFromSession($query_id)
+    {
+        self::garbageCollect();
+
+        if (!isset($_SESSION['QuickSearches'][$query_id])) {
+            throw new RuntimeException('Quicksearch id not in session');
+        }
+
+        // Store last access to search
+        $_SESSION['QuickSearches'][$query_id]['time'] = time();
+
+        $query = $_SESSION['QuickSearches'][$query_id];
+
+        if ($query['includePath']) {
+            include_once $query['includePath'];
+        }
+
+        return unserialize($query['object']);
+
+    }
 
     /**
      * returns an instance of QuickSearch so you can use it as singleton

@@ -48,6 +48,10 @@
     // Drag and drop support for topics in date list
     function createDraggable() {
         $('.dates tbody tr:not(:only-child) .themen_list li > a.title:not(.draggable-topic)').each(function () {
+            if ($(this).closest('.themen_list').next('a').length === 0) {
+                return;
+            }
+
             var table_id = $(this).closest('table').data().tableId;
 
             // jQuery' addClass does not work on svgs so we need to set the

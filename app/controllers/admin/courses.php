@@ -91,6 +91,7 @@ class Admin_CoursesController extends AuthenticatedController
 
         // get courses only if institutes available
         $this->actions = self::getActions();
+
         $config_my_course_type_filter = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
 
         // Get the view filter
@@ -590,7 +591,11 @@ class Admin_CoursesController extends AuthenticatedController
             $filter->filterBySemester($this->semester->getId());
         }
         if ($params['typeFilter'] && $params['typeFilter'] !== "all") {
-            $filter->filterByType($params['typeFilter']);
+            list($class_filter,$type_filter) = explode('_', $params['typeFilter']);
+            if (!$type_filter) {
+                $type_filter = array_keys($GLOBALS['SEM_CLASS'][$class_filter]->getSemTypes());
+            }
+            $filter->filterByType($type_filter);
         }
         if ($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT) {
             $filter->filterBySearchString($GLOBALS['user']->cfg->ADMIN_COURSES_SEARCHTEXT);

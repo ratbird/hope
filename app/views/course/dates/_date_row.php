@@ -22,7 +22,7 @@
                 </ul>
                 <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
                     <a href="<?= URLHelper::getLink("dispatch.php/course/dates/new_topic", array('termin_id' => $date->getId())) ?>" style="align-self: flex-end;" title="<?= _("Thema hinzufügen") ?>" data-dialog>
-                        <?= Assets::img("icons/12/grey/add") ?>
+                        <?= Assets::img("icons/12/blue/add") ?>
                     </a>
                 <? endif ?>
             </div>

@@ -372,8 +372,10 @@ jQuery(function ($) {
             // jQuery.
             $textarea.trigger('load.wysiwyg');
 
-            // focus the editor so the user can immediately hack away...
-            editor.focus();
+            // focus the editor if requested
+            if ($textarea.is('[autofocus]')) {
+                editor.focus();
+            }
         });
     }
 

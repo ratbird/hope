@@ -55,6 +55,9 @@ $translations = array(
     'Dialog wird geladen...' => _('Dialog wird geladen...'),
     'Fehler beim Aufruf des News-Controllers' => _('Fehler beim Aufruf des News-Controllers'),
 
+    // public/assets/javascripts/quick_search.js
+    'Kein Ergebnis gefunden.' => _('Kein Ergebnis gefunden.'),
+
     // public/assets/javascripts/raumzeit.js
     'Nicht buchbare Räume:' => _('Nicht buchbare Räume:'),
     'Alle Räume anzeigen' => _('Alle Räume anzeigen'),
@@ -78,10 +81,6 @@ $translations = array(
 
     // public/assets/javascripts/settings.js
     'Die beiden Werte "$1" und "$2" stimmen nicht überein. ' => _('Die beiden Werte "$1" und "$2" stimmen nicht überein. '),
-
-    // public/assets/javascripts/single_person_search.js
-    'Das Suchwort ist zu kurz.' => _('Das Suchwort ist zu kurz.'),
-    'Kein Ergebnis gefunden.' => _('Kein Ergebnis gefunden.'),
 
     // public/assets/javascripts/smiley-picker.js
     'Smileys' => _('Smileys'),
@@ -124,6 +123,7 @@ $translations = array(
     'Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' => _('Sind sie sicher, dass Sie diesen Bereich löschen möchten? '),
     'Es werden auch alle Beiträge in diesem Bereich gelöscht!' => _('Es werden auch alle Beiträge in diesem Bereich gelöscht!'),
     'Anonym' => _('Anonym'),
+    '%s hat geschrieben:' => _('%s hat geschrieben:'),
     'Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. ' => _('Die Senderin/der Sender dieser Nachricht möchte Sie auf den folgenden Beitrag aufmerksam machen. '),
     'Link zum Beitrag: ' => _('Link zum Beitrag: '),
     'Thema schließen' => _('Thema schließen'),
@@ -131,9 +131,6 @@ $translations = array(
     'Hervorhebung aufheben' => _('Hervorhebung aufheben'),
     'Thema hervorheben' => _('Thema hervorheben'),
 
-    // public/plugins_packages/core/Forum/javascript/forum.js
-    // public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
-    '%s hat geschrieben:' => _('%s hat geschrieben:'),
 );
 
 // translations have to be UTF8 for #json_encode

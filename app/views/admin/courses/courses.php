@@ -48,8 +48,11 @@
         <col width="15%">
     </colgroup>
     <caption>
-        <?=
-        sprintf(_('%s im %s'), !is_null($selected_inst) ? htmlReady($selected_inst['Name']) : _('Alle Einrichtungen'), htmlReady($semester->name)) ?>
+        <? if (!$GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE || ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE === "all")) : ?>
+            <?= htmlReady('Veranstaltungen') ?>
+        <? else : ?>
+            <?= htmlReady(sprintf(_('Veranstaltungen im %s'), $semester->name)) ?>
+        <? endif ?>
         <span class="actions">
                 <?= sprintf('%u %s', $count_courses, $count_courses > 1 ? _('Veranstaltungen') : _('Veranstaltung')) ?>
             </span>

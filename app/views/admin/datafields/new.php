@@ -58,25 +58,25 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td>
-	            <label for="object_class">
-		            <? if ($object_typ == 'sem'): ?>
-			            <?= _('Veranstaltungskategorie') ?>:
-		            <? elseif ($object_typ == 'inst'): ?>
-			            <?= _('Einrichtungstyp') ?>:
-		            <? else: ?>
-			            <?= _('Nutzerstatus') ?>:
-		            <? endif; ?>
-	            </label>
+                <label for="object_class">
+                    <? if ($object_typ == 'sem'): ?>
+                        <?= _('Veranstaltungskategorie') ?>:
+                    <? elseif ($object_typ == 'inst'): ?>
+                        <?= _('Einrichtungstyp') ?>:
+                    <? else: ?>
+                        <?= _('Nutzerstatus') ?>:
+                    <? endif; ?>
+                </label>
             </td>
             <td>
                 <? if ($object_typ == 'sem'): ?>
-	                <select name="object_class[]" id="object_class">
+                    <select name="object_class[]" id="object_class">
                         <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
                             <option value="<?= $key ?>"><?= htmlReady($val['name']) ?> </option>
                         <? endforeach; ?>
                 <? elseif ($object_typ== 'inst'): ?>
-		                <select name="object_class[]" id="object_class">
+                        <select name="object_class[]" id="object_class">
                         <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['INST_TYPE'] as $key=>$val): ?>
                             <option value="<?= $key ?>"><?= htmlReady($val['name']) ?> </option>

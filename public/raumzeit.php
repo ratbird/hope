@@ -98,7 +98,7 @@ URLHelper::bindLinkParam('raumzeitFilter', $_SESSION['raumzeitFilter']);
 //Change header_line if open object
 $course = Course::find($id);
 if ($course)
-	PageLayout::setTitle($course->getFullname() ." - ".PageLayout::getTitle());
+    PageLayout::setTitle($course->getFullname() ." - ".PageLayout::getTitle());
 
 //save messages from
 $pmessages = PageLayout::getMessages();

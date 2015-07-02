@@ -902,7 +902,7 @@ class UserManagement
 
             if ($temp_count) {
                 $this->msg .= "info§" . sprintf(_("%s Dokumente gelöscht."), $temp_count) . "§";
-	        }
+            }
 
             // delete empty folders of this user
             $temp_count = 0;

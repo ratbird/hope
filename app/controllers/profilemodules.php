@@ -89,20 +89,20 @@ class ProfileModulesController extends AuthenticatedController
         $plusconfig = UserConfig::get($GLOBALS['user']->id)->PLUS_SETTINGS;
 
         if (!isset($_SESSION['profile_plus'])) {
-        	if (is_array($plusconfig['profile_plus'])){
-        		$_SESSION['profile_plus'] = $plusconfig['profile_plus'];
-        	} else {
-	            //$_SESSION['profile_plus']['Kategorie']['Lehrorganisation'] = 1;
-	            $_SESSION['profile_plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
-	            //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
-	            $_SESSION['profile_plus']['Kategorie']['Sonstiges'] = 1;
-	            //$_SESSION['profile_plus']['Kategorie']['Projekte und Entwicklung'] = 1;
-	            /*$_SESSION['profile_plus']['Komplex'][1] = 1;
-	            $_SESSION['profile_plus']['Komplex'][2] = 1;
-	            $_SESSION['profile_plus']['Komplex'][3] = 1;*/
-	            $_SESSION['profile_plus']['View'] = 'openall';
-	            $_SESSION['profile_plus']['displaystyle'] = 'category';
-        	}
+            if (is_array($plusconfig['profile_plus'])){
+                $_SESSION['profile_plus'] = $plusconfig['profile_plus'];
+            } else {
+                //$_SESSION['profile_plus']['Kategorie']['Lehrorganisation'] = 1;
+                $_SESSION['profile_plus']['Kategorie']['Kommunikation und Zusammenarbeit'] = 1;
+                //$_SESSION['profile_plus']['Kategorie']['Aufgaben'] = 1;
+                $_SESSION['profile_plus']['Kategorie']['Sonstiges'] = 1;
+                //$_SESSION['profile_plus']['Kategorie']['Projekte und Entwicklung'] = 1;
+                /*$_SESSION['profile_plus']['Komplex'][1] = 1;
+                $_SESSION['profile_plus']['Komplex'][2] = 1;
+                $_SESSION['profile_plus']['Komplex'][3] = 1;*/
+                $_SESSION['profile_plus']['View'] = 'openall';
+                $_SESSION['profile_plus']['displaystyle'] = 'category';
+            }
         }
 
         /*if (Request::Get('Komplex1') != null) $_SESSION['profile_plus']['Komplex'][1] = Request::Get('Komplex1');
@@ -156,13 +156,13 @@ class ProfileModulesController extends AuthenticatedController
         }
         
         if ($_SESSION['profile_plus']['displaystyle'] == 'category') {
-        	$widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
-        			URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
-        			'icons/16/blue/assessment.png');
+            $widget->addLink(_("Alphabetische Anzeige ohne Kategorien"),
+                    URLHelper::getLink('?', array('displaystyle' => 'alphabetical')),
+                    'icons/16/blue/assessment.png');
         } else {
-        	$widget->addLink(_("Anzeige nach Kategorien"),
-        			URLHelper::getLink('?', array('displaystyle' => 'category')),
-        			'icons/16/blue/assessment.png');
+            $widget->addLink(_("Anzeige nach Kategorien"),
+                    URLHelper::getLink('?', array('displaystyle' => 'category')),
+                    'icons/16/blue/assessment.png');
         }
 
 
@@ -261,32 +261,32 @@ class ProfileModulesController extends AuthenticatedController
             $metadata = $plugin->getMetadata();
 
             if($_SESSION['profile_plus']['displaystyle'] != 'category'){
-            	 
-            	$key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
-            	 
-            	if (($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
-            			|| !isset($_SESSION['profile_plus'])
-            	) {
-            		$list['Funktionen von A-Z'][strtolower($key)]['object'] = $plugin;
-            		$list['Funktionen von A-Z'][strtolower($key)]['activated'] = $activated;
-            	}
-            	 
+                 
+                $key = isset($info['displayname']) ? $info['displayname'] : $plugin->getPluginname();
+                 
+                if (($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
+                        || !isset($_SESSION['profile_plus'])
+                ) {
+                    $list['Funktionen von A-Z'][strtolower($key)]['object'] = $plugin;
+                    $list['Funktionen von A-Z'][strtolower($key)]['activated'] = $activated;
+                }
+                 
             } else {            
             
-	            $cat = isset($metadata['category']) ? $metadata['category'] : 'Sonstiges';
-	
-	            if (!isset($_SESSION['profile_plus']['Kategorie'][$cat])) $_SESSION['profile_plus']['Kategorie'][$cat] = 1;
-	
-	            $key = isset($metadata['displayname']) ? $metadata['displayname'] : $plugin->getPluginname();
-	
-	            if ($_SESSION['profile_plus']['Kategorie'][$cat]
-	                && ($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
-	                || !isset($_SESSION['profile_plus'])
-	            ) {
-	
-	                $list[$cat][strtolower($key)]['object'] = $plugin;
-	                $list[$cat][strtolower($key)]['activated'] = $activated;
-	            }
+                $cat = isset($metadata['category']) ? $metadata['category'] : 'Sonstiges';
+    
+                if (!isset($_SESSION['profile_plus']['Kategorie'][$cat])) $_SESSION['profile_plus']['Kategorie'][$cat] = 1;
+    
+                $key = isset($metadata['displayname']) ? $metadata['displayname'] : $plugin->getPluginname();
+    
+                if ($_SESSION['profile_plus']['Kategorie'][$cat]
+                    && ($_SESSION['profile_plus']['Komplex'][$metadata['complexity']] || !isset($metadata['complexity']))
+                    || !isset($_SESSION['profile_plus'])
+                ) {
+    
+                    $list[$cat][strtolower($key)]['object'] = $plugin;
+                    $list[$cat][strtolower($key)]['activated'] = $activated;
+                }
             }
         }
 

@@ -131,29 +131,29 @@ class CoreWiki implements StudipModule {
                 'pdf-Datei ist integriert.'),
             
             'displayname' => _('Wiki-Web'),
-        	'keywords' => _('Individuelle Bearbeitung von Texten;
-							Versionshistorie;
-							Druckansicht und PDF-Export;
-							Löschfunktion für die aktuellste Seiten-Version;
-							Keine gleichzeitige Bearbeitung desselben Textes möglich, nur nacheinander'),
+            'keywords' => _('Individuelle Bearbeitung von Texten;
+                            Versionshistorie;
+                            Druckansicht und PDF-Export;
+                            Löschfunktion für die aktuellste Seiten-Version;
+                            Keine gleichzeitige Bearbeitung desselben Textes möglich, nur nacheinander'),
             'descriptionshort' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
             'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene AutorInnen gemeinsam Texte, '.
-            						'Konzepte und andere schriftliche Arbeiten erstellen und gestalten. Dies '.
-            						'allerdings nicht gleichzeitig. Texte können individuell bearbeitet und '.
-            						'gespeichert werden. Das Besondere im Wiki ist, dass Studierende und Lehrende '.
-            						'annähernd die gleichen Rechte (schreiben, lesen, ändern, löschen) haben, was '.
-            						'gegenseitiges Vertrauen voraussetzt. Das System erstellt eine Versionshistorie, '.
-            						'mit der Änderungen nachvollziehbar werden. Einzelne Versionen können zudem auch '.
-            						'gelöscht werden (nur Lehrende). Eine Druckansicht und eine Exportmöglichkeit als '.
-            						'PDF-Datei ist integriert.'),
-			'category' => _('Kommunikation und Zusammenarbeit'),
-			'icon' => 'icons/16/black/wiki.png',
-        	'screenshots' => array(
-        		'path' => 'plus/screenshots/Wiki-Web',
-        		'pictures' => array(
-        			0 => array( 'source' => 'Gemeinsam_erstellte_Texte.jpg', 'title' => 'Gemeinsam erstellte Texte')
-        		)
-        	)               
+                                    'Konzepte und andere schriftliche Arbeiten erstellen und gestalten. Dies '.
+                                    'allerdings nicht gleichzeitig. Texte können individuell bearbeitet und '.
+                                    'gespeichert werden. Das Besondere im Wiki ist, dass Studierende und Lehrende '.
+                                    'annähernd die gleichen Rechte (schreiben, lesen, ändern, löschen) haben, was '.
+                                    'gegenseitiges Vertrauen voraussetzt. Das System erstellt eine Versionshistorie, '.
+                                    'mit der Änderungen nachvollziehbar werden. Einzelne Versionen können zudem auch '.
+                                    'gelöscht werden (nur Lehrende). Eine Druckansicht und eine Exportmöglichkeit als '.
+                                    'PDF-Datei ist integriert.'),
+            'category' => _('Kommunikation und Zusammenarbeit'),
+            'icon' => 'icons/16/black/wiki.png',
+            'screenshots' => array(
+                'path' => 'plus/screenshots/Wiki-Web',
+                'pictures' => array(
+                    0 => array( 'source' => 'Gemeinsam_erstellte_Texte.jpg', 'title' => 'Gemeinsam erstellte Texte')
+                )
+            )               
         );
     }
 }

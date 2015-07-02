@@ -653,13 +653,13 @@ class PluginManager
             
             $key_array = explode('.',$key,2);
             if(count($key_array) > 1){
-            	if($key_array[0] === 'screenshots'){
-            		$screenshot_data['source'] = $key_array[1];
-            		$screenshot_data['title'] = $value;
-            		$result['screenshots']['pictures'][] = $screenshot_data;
-            	}
+                if($key_array[0] === 'screenshots'){
+                    $screenshot_data['source'] = $key_array[1];
+                    $screenshot_data['title'] = $value;
+                    $result['screenshots']['pictures'][] = $screenshot_data;
+                }
             } elseif($key === 'screenshots') {
-            	$result['screenshots']['path'] = $value;
+                $result['screenshots']['path'] = $value;
             } elseif ($key === 'pluginclassname' && isset($result[$key])) {
                 $result['additionalclasses'][] = $value;
             } elseif ($key === 'screenshot' && isset($result[$key])) {

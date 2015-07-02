@@ -195,8 +195,8 @@ function printTitleField ( $title = "" ) {
     global $pageMode, $vote;
 
     if( $title == "" || $title == TITLE_HELPTEXT ) {
-		$title_placeholder = TITLE_HELPTEXT;
-		$title = "";
+        $title_placeholder = TITLE_HELPTEXT;
+        $title = "";
     }
 
     if( strpos($_SERVER["HTTP_REFERER"], "page=edit") )

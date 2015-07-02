@@ -78,10 +78,10 @@
 
                         <!-- shortdesc -->
                         <strong class="shortdesc">
-	                        <? if (isset($info['descriptionshort'])) : ?>
-	                            <? foreach (explode('\n', $info['descriptionshort']) as $descriptionshort) { ?>
-	                            	<?= htmlReady($descriptionshort) ?>
-	                            <? } ?>   
+                            <? if (isset($info['descriptionshort'])) : ?>
+                                <? foreach (explode('\n', $info['descriptionshort']) as $descriptionshort) { ?>
+                                    <?= htmlReady($descriptionshort) ?>
+                                <? } ?>   
                             <? endif ?>
                             <? if (!isset($info['descriptionshort'])) : ?>
                                 <? if (isset($info['summary'])) : ?>
@@ -92,9 +92,9 @@
 
                     </div>
                     
-					<!-- inhaltlöschenbutton -->
+                    <!-- inhaltlöschenbutton -->
                     <? if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
- 					<? if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+                    <? if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
                          
                 </div>
 
@@ -104,16 +104,16 @@
 
                     <div class="screenshot_holder">
                         <? if (isset($info['screenshot']) || isset($info['screenshots'])) : 
-                            	if(isset($info['screenshots'])){      
-	                            	$title = $info['screenshots']['pictures'][0]['title'];
-	                            	$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][0]['source'];	                            	
-                            	} else {
-                            		$fileext = end(explode(".", $info['screenshot']));
-                            		$title = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));
-                            		$source = $info['screenshot'];
-                            	}
-                        		?>
-                        		
+                                if(isset($info['screenshots'])){      
+                                    $title = $info['screenshots']['pictures'][0]['title'];
+                                    $source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][0]['source'];                                   
+                                } else {
+                                    $fileext = end(explode(".", $info['screenshot']));
+                                    $title = str_replace("_"," ",basename($info['screenshot'], ".".$fileext));
+                                    $source = $info['screenshot'];
+                                }
+                                ?>
+                                
                                 <a href="<?= $URL . "/" . $source ?>"
                                    data-lightbox="<?= $pluginname ?>" data-title="<?= $title ?>">
                                     <img class="big_thumb" src="<?= $URL . "/" . $source ?>"
@@ -125,26 +125,26 @@
                                     ?>
 
                                     <div class="thumb_holder">
-                                    <? 	if (isset($info['screenshots'])){
-                                    		$counter = count($info['screenshots']['pictures']);
-                                    		$cstart = 1;
-                                    	} else {
-                                    		$counter = count($info['additionalscreenshots']);
-                                    		$cstart = 0;
-                                		} ?>
-                                		
+                                    <?  if (isset($info['screenshots'])){
+                                            $counter = count($info['screenshots']['pictures']);
+                                            $cstart = 1;
+                                        } else {
+                                            $counter = count($info['additionalscreenshots']);
+                                            $cstart = 0;
+                                        } ?>
+                                        
                                         <? for ($i = $cstart; $i < $counter; $i++) { 
 
-                                        	if (isset($info['screenshots'])){
-                                        		$title = $info['screenshots']['pictures'][$i]['title'];
-                                        		$source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][$i]['source'];
-                                        	} else {
-                                        		$fileext = end(explode(".", $info['additionalscreenshots'][$i]));
-                                        		$title = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));
-                                        		$source = $info['additionalscreenshots'][$i];
-                                        	}
-                                        			                             	
-                                       		 ?>
+                                            if (isset($info['screenshots'])){
+                                                $title = $info['screenshots']['pictures'][$i]['title'];
+                                                $source = $info['screenshots']['path'].'/'.$info['screenshots']['pictures'][$i]['source'];
+                                            } else {
+                                                $fileext = end(explode(".", $info['additionalscreenshots'][$i]));
+                                                $title = str_replace("_"," ",basename($info['additionalscreenshots'][$i], ".".$fileext));
+                                                $source = $info['additionalscreenshots'][$i];
+                                            }
+                                                                                    
+                                             ?>
 
                                             <a href="<?= $URL . "/" . $source ?>"
                                                data-lightbox="<?= $pluginname ?>"
@@ -167,8 +167,8 @@
 
                         <!-- inhaltlöschenbutton -->
                         <?// if ($val['type'] == 'plugin' && method_exists($plugin, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
- 						<?// if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
-                           	
+                        <?// if ($val['type'] == 'modul' && $studip_module instanceOf StudipModule && method_exists($studip_module, 'deleteContent')) echo LinkButton::create(_('Inhalte löschen'), URLHelper::getURL("?deleteContent=true&name=" . $key), array('style' => 'float:right; z-index: 1;')); ?>
+                            
                         <!-- tags -->
                         <? if (isset($info['keywords'])) : ?>
                         <ul class="keywords">
@@ -181,8 +181,8 @@
                         <? if (isset($info['descriptionlong'])) : ?>
                         <? foreach (explode('\n', $info['descriptionlong']) as $descriptionlong) { ?>
                             <p class="longdesc">
-                            	<?= htmlReady($descriptionlong) ?>
-                        	</p>
+                                <?= htmlReady($descriptionlong) ?>
+                            </p>
                         <? } ?>   
                         <? endif ?>
 

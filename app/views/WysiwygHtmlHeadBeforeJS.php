@@ -1,11 +1,10 @@
 <?php
 /**
- * WysiwygHtmlHeadBeforeJS.php - 
+ * WysiwygHtmlHeadBeforeJS.php -
  * Include this file in HTML-files before ckeditor.js is loaded.
  */
-require_once 'app/models/Wysiwyg/Settings.php';
-
-if (\Studip\Wysiwyg\Settings::getInstance()->isGloballyDisabled()) {
+if (!\Config::get()->WYSIWYG) {
+    // wysiwyg is switched off, remove it from squeeze packages
     $old_packages = array_flip(PageLayout::getSqueezePackages());
     unset($old_packages['wysiwyg']);
     call_user_func_array(

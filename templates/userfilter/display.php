@@ -6,8 +6,8 @@ foreach ($filter->getFields() as $field) {
         $fieldText .= ' <b>'._('und').'</b> ';
     }
     $valueNames = $field->getValidValues();
-    $fieldText .= $field->getName()." ".$field->getCompareOperator().
-        " " . (count($valueNames) ? $valueNames[$field->getValue()] : $field->getValue());
+    $fieldText .= htmlReady($field->getName()." ".$field->getCompareOperator().
+        " " . (count($valueNames) ? $valueNames[$field->getValue()] : $field->getValue()));
     $i++;
 
 }

@@ -17,7 +17,7 @@ if ($rule->getStartTime() && $rule->getEndTime()) {
         $condition = reset($conditions);
         ?>
         <div id="condition_<?= $condition->getId() ?>">
-            <i><?= htmlReady($condition->toString()) ?></i>
+            <i><?= $condition->toString() ?></i>
         </div>
     </div>
 <?php } else { ?>
@@ -30,7 +30,7 @@ if ($rule->getStartTime() && $rule->getEndTime()) {
         foreach ($rule->getConditions() as $condition) {
         ?>
         <li id="condition_<?= $condition->getId() ?>">
-            <i><?= htmlReady($condition->toString()) ?></i>
+            <i><?= $condition->toString() ?></i>
         </li>
         <?php
             $i++;

@@ -18,4 +18,6 @@ if (!\Config::get()->WYSIWYG) {
     CKEDITOR_BASEPATH = '<?=
         $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'assets/javascripts/ckeditor/'
     ?>';
+    var STUDIP = STUDIP || {};
+    STUDIP.wysiwyg = STUDIP.wysiwyg || {};
 </script>

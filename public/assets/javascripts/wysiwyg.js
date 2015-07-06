@@ -181,6 +181,7 @@ jQuery(function ($) {
                 showUncommentButton: false,
                 showAutoCompleteButton: false
             },
+            readOnly: textarea.attr('readonly') || textarea.attr('disabled'),
             autoGrow_onStartup: true,
 
             // configure toolbar
@@ -328,6 +329,13 @@ jQuery(function ($) {
         CKEDITOR.on('instanceReady', function (event) {
             var editor = event.editor,
                 $textarea = $(editor.element.$);
+
+            // CKEDITOR "steals" the required flag from the
+            // textarea, but we don't want that, so give
+            // it back.
+            if (editor._.required) {
+                $textarea.attr('required', true);
+            }
 
             // auto-resize editor area in source view mode, and keep focus!
             editor.on('mode', function (event) {

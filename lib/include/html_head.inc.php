@@ -56,10 +56,6 @@
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
     </script>
-    <?php
-        // needs to be included in templates/layouts/base.php as well
-        include 'app/views/WysiwygHtmlHead.php';
-    ?>
 </head>
 
 <body id="<?= PageLayout::getBodyElementId() ?>">

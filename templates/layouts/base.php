@@ -73,10 +73,6 @@ if ($infobox && is_array($infobox)) {
         <? endif ?>
         STUDIP.URLHelper.parameters = <?= json_encode(studip_utf8encode(URLHelper::getLinkParams())) ?>;
     </script>
-    <?php
-        // needs to be included in lib/include/html_head.inc.php as well
-        include 'app/views/WysiwygHtmlHead.php';
-    ?>
 </head>
 
 <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">

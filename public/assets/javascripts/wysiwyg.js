@@ -166,7 +166,7 @@ jQuery(function ($) {
                     return a.pathname;
                 })(),
             // NOTE codemirror crashes when not explicitely loaded in CKEditor 4.4.7
-            extraPlugins: 'codemirror,studip-floatbar,studip-quote,studip-wiki'
+            extraPlugins: 'studip-floatbar,studip-quote,studip-wiki'
                 // only enable uploads in courses with a file section
                 + ($('li#nav_course_files').length > 0 ? ',studip-upload' : ''),
             enterMode: CKEDITOR.ENTER_BR,

@@ -369,6 +369,9 @@
             };
         }
 
+        // Trigger update event on document since options.origin might have been removed
+        $(document).trigger('dialog-update', {dialog: instance.element, options: options});
+
         // Create/update dialog
         instance.element.dialog(dialog_options);
     };

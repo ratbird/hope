@@ -385,6 +385,12 @@ jQuery(function ($) {
             unchanged = unchanged && this.value === this.defaultValue;
         });
 
+        // If WYSIWYG editor is enabled, always assume that the text has been
+        // changed.
+        if ($('textarea.wysiwyg', ui.dialog).length > 0) {
+            unchanged = false;
+        }
+
         if (!unchanged && !confirm('Ihre Eingaben wurden bislang noch nicht gespeichert.'.toLocaleString())) {
             event.preventDefault();
             event.stopPropagation();

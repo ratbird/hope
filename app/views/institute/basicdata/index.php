@@ -1,5 +1,6 @@
-<form method="POST" name="edit" action="<?= URLHelper::getLink() ?>">
+<form method="POST" name="edit" action="<?= $controller->url_for('institute/basicdata/store/'.$i_view) ?>">
     <?= CSRFProtection::tokenTag() ?>
+    <?= $question ?>
     <table class="default nohover">
         <caption>
             <?=_('Verwaltung der Einrichtungsgrunddaten')?>
@@ -171,14 +172,14 @@
             <? if ($i_view != 'new' && isset($institute['Institut_id'])): ?>
                 <input type="hidden" name="i_id" value="<?= $institute['Institut_id'] ?>">
                 <?= Studip\Button::create(_('Übernehmen'), 'i_edit') ?>
-                <?= Studip\Button::create(_('Löschen'), 'i_trykill', !$may_delete ? array('disabled' => '') : array()) ?>
+                <?= Studip\LinkButton::create(_('Löschen'), $controller->url_for('institute/basicdata/index/'.$i_view).'&i_trykill=1', !$may_delete ? array('disabled' => '') : array()) ?>
                 <? if(!$may_delete && strlen($reason_txt) > 0): ?>
                     <?= Assets::img('icons/16/black/info-circle.png', tooltip2($reason_txt)) ?>
                 <? endif; ?>
             <? else: ?>
                 <?= Studip\Button::create(_('Anlegen'), 'create') ?>
             <? endif; ?>
-           <input type="hidden" name="i_view" value="<?= $i_view == 'new' ? 'create' : $i_view  ?>">
+           <input type="hidden" name="i_view" value="<?= $i_view ?>">
             </td>
         </tr>
     </foot>

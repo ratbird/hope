@@ -62,36 +62,36 @@ class RoomRequest extends SimpleORMap
     private $properties_changed = false;
     private $default_seats;
 
-    static function findByCourse($seminar_id)
+    public static function findByCourse($seminar_id)
     {
         return self::findOneBySql("termin_id = '' AND metadate_id = '' AND seminar_id = ?", array($seminar_id));
     }
 
-    static function findByDate($termin_id)
+    public static function findByDate($termin_id)
     {
         return self::findOneBySql("termin_id = ?", array($termin_id));
     }
 
-    static function findByCycle($metadate_id)
+    public static function findByCycle($metadate_id)
     {
         return self::findOneBySql("metadate_id = ?", array($metadate_id));
     }
 
-    static function existsByCourse($seminar_id, $is_open = false)
+    public static function existsByCourse($seminar_id, $is_open = false)
     {
         $db = DbManager::get();
         $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "termin_id = '' AND metadate_id = '' AND seminar_id = " . $db->quote($seminar_id));
         return $id;
     }
 
-    static function existsByDate($termin_id, $is_open = false)
+    public static function existsByDate($termin_id, $is_open = false)
     {
         $db = DbManager::get();
         $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "termin_id = " . $db->quote($termin_id));
         return $id;
     }
 
-    static function existsByCycle($metadate_id, $is_open = false)
+    public static function existsByCycle($metadate_id, $is_open = false)
     {
         $db = DbManager::get();
         $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "metadate_id = " . $db->quote($metadate_id));
@@ -105,62 +105,62 @@ class RoomRequest extends SimpleORMap
         return $db->query($sql)->fetchColumn();
     }
 
-    function getResourceId()
+    public function getResourceId()
     {
         return $this->content['resource_id'];
     }
 
-    function getSeminarId()
+    public function getSeminarId()
     {
         return $this->content['seminar_id'];
     }
 
-    function getTerminId()
+    public function getTerminId()
     {
         return $this->content['termin_id'];
     }
 
-    function getMetadateId()
+    public function getMetadateId()
     {
         return $this->content['metadate_id'];
     }
 
-    function getUserId()
+    public function getUserId()
     {
         return $this->content['user_id'];
     }
 
-    function getCategoryId()
+    public function getCategoryId()
     {
         return $this->content['category_id'];
     }
 
-    function getComment()
+    public function getComment()
     {
         return $this->content['comment'];
     }
 
-    function getReplyComment()
+    public function getReplyComment()
     {
         return $this->content['reply_comment'];
     }
 
-    function getClosed()
+    public function getClosed()
     {
         return $this->content['closed'];
     }
 
-    function getPropertyState($property_id)
+    public function getPropertyState($property_id)
     {
         return $this->properties[$property_id]["state"];
     }
 
-    function getProperties()
+    public function getProperties()
     {
         return $this->properties;
     }
 
-    function getAvailableProperties()
+    public function getAvailableProperties()
     {
         $available_properties = array();
         if ($this->category_id) {
@@ -177,7 +177,7 @@ class RoomRequest extends SimpleORMap
         return $available_properties;
     }
 
-    function getSettedPropertiesCount()
+    public function getSettedPropertiesCount()
     {
         $count = 0;
         foreach ($this->properties as $val) {
@@ -186,31 +186,33 @@ class RoomRequest extends SimpleORMap
         return $count;
     }
 
-    function getSeats()
+    public function getSeats()
     {
         $available_properties = $this->getAvailableProperties();
         foreach ($this->properties as $key => $val) {
-            if ($available_properties[$key]["system"] == 2) return $val["state"];
+            if ($available_properties[$key]["system"] == 2) {
+                return $val["state"];
+            }
         }
         return false;
     }
 
-    function setResourceId($value)
+    public function setResourceId($value)
     {
         $this->content['resource_id'] = $value;
     }
 
-    function setUserId($value)
+    public function setUserId($value)
     {
         $this->content['user_id'] = $value;
     }
 
-    function setSeminarId($value)
+    public function setSeminarId($value)
     {
         $this->content['seminar_id'] = $value;
     }
 
-    function setCategoryId($value)
+    public function setCategoryId($value)
     {
         $this->content['category_id'] = $value;
         if ($this->isFieldDirty('category_id')) {
@@ -231,12 +233,12 @@ class RoomRequest extends SimpleORMap
         }
     }
 
-    function setComment($value)
+    public function setComment($value)
     {
         $this->content['comment'] = $value;
     }
 
-    function setReplyComment($value)
+    public function setReplyComment($value)
     {
         $this->content['reply_comment'] = $value;
     }
@@ -252,41 +254,42 @@ class RoomRequest extends SimpleORMap
      *
      * @param integer $value one of the states
      */
-    function setClosed($value)
+    public function setClosed($value)
     {
         $this->content['closed'] = $value;
     }
 
-    function setTerminId($value)
+    public function setTerminId($value)
     {
         $this->content['termin_id'] = $value;
     }
 
-    function setMetadateId($value)
+    public function setMetadateId($value)
     {
         $this->content['metadate_id'] = $value;
     }
 
-    function setPropertyState($property_id, $value) {
+    public function setPropertyState($property_id, $value)
+    {
         if ($this->properties[$property_id]['state'] != $value) {
             $this->properties_changed = true;
         }
         if ($value) {
             $this->properties[$property_id] = array("state" => $value);
         } else {
-            $this->properties[$property_id] = FALSE;
+            $this->properties[$property_id] = false;
         }
     }
 
-    function setDefaultSeats($value)
+    public function setDefaultSeats($value)
     {
         $this->default_seats = (int)$value;
     }
 
-    function searchRoomsToRequest($search_exp, $properties = false)
+    public function searchRoomsToRequest($search_exp, $properties = false)
     {
         $permitted_rooms = null;
-        if(getGlobalPerms($GLOBALS['user']->id) != 'admin' && !Config::GetInstance()->getValue('RESOURCES_ALLOW_ROOM_REQUESTS_ALL_ROOMS')){
+        if(getGlobalPerms($GLOBALS['user']->id) != 'admin' && !Config::GetInstance()->getValue('RESOURCES_ALLOW_ROOM_REQUESTS_ALL_ROOMS')) {
             $my_rooms = new ResourcesUserRoomsList($GLOBALS['user']->id, false, false, true);
             $global_resources = DBManager::get()
                                 ->query("SELECT resource_id FROM resources_objects WHERE owner_id='global'")
@@ -296,7 +299,8 @@ class RoomRequest extends SimpleORMap
         return $this->searchRooms($search_exp, $properties, 0, 0, true, $permitted_rooms);
     }
 
-    function searchRooms($search_exp, $properties = FALSE, $limit_lower = 0, $limit_upper = 0, $only_rooms = TRUE, $permitted_resources = FALSE) {
+    public function searchRooms($search_exp, $properties = FALSE, $limit_lower = 0, $limit_upper = 0, $only_rooms = TRUE, $permitted_resources = FALSE)
+    {
         $search_exp = mysql_escape_string($search_exp);
         //create permitted resource clause
         if (is_array($permitted_resources)) {
@@ -366,7 +370,7 @@ class RoomRequest extends SimpleORMap
         return $found;
     }
 
-    function restore()
+    public function restore()
     {
         $found = parent::restore();
         if ($found) {
@@ -417,7 +421,7 @@ class RoomRequest extends SimpleORMap
         return $changed;
     }
 
-    function checkOpen($also_change = FALSE)
+    public function checkOpen($also_change = FALSE)
     {
         $db = DBManager::get();
         $existing_assign = false;
@@ -446,14 +450,14 @@ class RoomRequest extends SimpleORMap
     }
 
 
-    function copy()
+    public function copy()
     {
         $this->setId($this->getNewId());
         $this->setNew(true);
         $this->properties_changed = true;
     }
 
-    function store()
+    public function store()
     {
         if (!$this->user_id) {
             $this->user_id = $GLOBALS['user']->id;
@@ -500,7 +504,7 @@ class RoomRequest extends SimpleORMap
         return $stored || $properties_changed;
     }
 
-    function delete()
+    public function delete()
     {
         $db = DBManager::get();
         $query = "DELETE FROM resources_requests_properties WHERE request_id=". $db->quote($this->getId());
@@ -510,32 +514,46 @@ class RoomRequest extends SimpleORMap
         return parent::delete() || $properties_deleted;
     }
 
-    function toArray()
+    public function toArray()
     {
         $ret = parent::toArray();
         $ret['properties'] = $this->getProperties();
         return $ret;
     }
 
-    function getType()
+    public function getType()
     {
-        if ($this->termin_id) return 'date';
-        if ($this->metadate_id) return 'cycle';
-        if ($this->seminar_id) return 'course';
+        if ($this->termin_id) {
+            return 'date';
+        }
+        if ($this->metadate_id) {
+            return 'cycle';
+        }
+        if ($this->seminar_id) {
+            return 'course';
+        }
         return null;
     }
 
-    function getStatus()
+    public function getStatus()
     {
         switch ($this->getClosed()) {
-            case '0'; return 'open'; break;
-            case '1'; return 'pending'; break;
-            case '2'; return 'closed'; break;
-            case '3'; return 'declined'; break;
+            case '0';
+                return 'open';
+                break;
+            case '1';
+                return 'pending';
+                break;
+            case '2';
+                return 'closed';
+                break;
+            case '3';
+                return 'declined';
+                break;
         }
     }
 
-    function getInfo()
+    public function getInfo()
     {
         if ($this->isNew()) {
             if (!($this->getSettedPropertiesCount() || $this->getResourceId())) {
@@ -591,7 +609,7 @@ class RoomRequest extends SimpleORMap
         return join("\n", $requestData);
     }
 
-    function getTypeExplained()
+    public function getTypeExplained()
     {
         $ret = '';
         if ($this->termin_id) {
@@ -617,7 +635,7 @@ class RoomRequest extends SimpleORMap
         return $ret;
     }
 
-    function getStatusExplained()
+    public function getStatusExplained()
     {
         if ($this->getClosed() == 0) {
             $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
@@ -629,7 +647,7 @@ class RoomRequest extends SimpleORMap
         return $txt;
     }
 
-    function getUserStatus($user_id)
+    public function getUserStatus($user_id)
     {
         $db = DBManager::get();
         $sql = "SELECT mkdate FROM resources_requests_user_status WHERE request_id=? AND user_id=?";
@@ -638,7 +656,7 @@ class RoomRequest extends SimpleORMap
         return $st->fetchColumn();
     }
 
-    function setUserStatus($user_id, $status= true)
+    public function setUserStatus($user_id, $status= true)
     {
         $db = DBManager::get();
         if ($status) {
@@ -651,19 +669,19 @@ class RoomRequest extends SimpleORMap
         return $st->rowCount();
     }
 
-    function getAffectedDates()
+    public function getAffectedDates()
     {
         $dates = array();
         switch ($this->getType()) {
-        case 'date':
-            $dates[] = $this->date;
-            break;
-        case 'cycle':
-            $dates = $this->cycle->dates->getArrayCopy();
-            break;
-        case 'course':
-            $dates = $this->course->dates->getArrayCopy();
-            break;
+            case 'date':
+                $dates[] = $this->date;
+                break;
+            case 'cycle':
+                $dates = $this->cycle->dates->getArrayCopy();
+                break;
+            case 'course':
+                $dates = $this->course->dates->getArrayCopy();
+                break;
         }
         return $dates;
     }

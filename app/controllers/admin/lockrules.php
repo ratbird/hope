@@ -47,10 +47,12 @@ class Admin_LockrulesController extends AuthenticatedController
         } elseif ($this->lock_rule_type == 'user') {
             $this->lock_rule_permissions = array('tutor','dozent','admin','root');
         }
-        if ($this->flash['message']) {
-            $this->message = $this->flash['message'];
-        }
+
         $this->rule_type_names = array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer"));
+
+        $this->sidebar = Sidebar::Get();
+        $this->sidebar->setTitle(_('Sperrebenen'));
+        $this->sidebar->setImage('sidebar/lock-sidebar.png');
     }
 
     /**
@@ -58,6 +60,18 @@ class Admin_LockrulesController extends AuthenticatedController
      */
     function index_action()
     {
+
+        $actions = new ActionsWidget();
+        $actions->addLink(_('Neue Sperrebene anlegen'), $this->url_for('admin/lockrules/new'), 'icons/16/blue/add.png');
+        $this->sidebar->addWidget($actions);
+        if ($GLOBALS['perm']->have_perm('root')) {
+            $list = new SelectWidget(_('Bereichsauswahl'), $this->url_for('admin/lockrules'), 'lock_rule_type');
+            foreach (array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer")) as $type => $desc) {
+                $list->addElement(new SelectElement($type, $desc, Request::get('lock_rule_type') == $type), 'lock_rule_type-' . $type);
+            }
+            $this->sidebar->addWidget($list);
+        }
+
         if ($this->lock_rule_type == 'sem') {
            $this->lock_rules = LockRules::getAdministrableSeminarRules($GLOBALS['user']->id);
         } else {
@@ -76,11 +90,21 @@ class Admin_LockrulesController extends AuthenticatedController
         if (Request::submitted('ok')) {
             $ok = $this->handle_form_data();
             if ($ok === false) {
-               $this->message = MessageBox::error("Die Änderungen der Sperrebene konnten nicht gespeichert werden.", $this->msg['error']);
+               PageLayout::postMessage(MessageBox::error("Die Änderungen der Sperrebene konnten nicht gespeichert werden.", $this->msg['error']));
            } else if ($ok) {
-               $this->message = MessageBox::success("Die Änderungen wurden gespeichert.");
+                PageLayout::postMessage(MessageBox::success("Die Änderungen wurden gespeichert."));
            }
         }
+
+        $info = new ListWidget();
+        $info->setTitle(_('Informationen'));
+        $info->addElement(new WidgetElement( sprintf(_("Diese Sperrebene wird von %s Objekten benutzt."), $this->lock_rule->getUsage())));
+        $this->sidebar->addWidget($info);
+        $actions = new ActionsWidget();
+        $actions->addLink(_("Diese Ebene löschen"), $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid()), 'icons/16/blue/trash.png');
+        $actions->addLink(_("Bearbeiten abbrechen"), $this->url_for('admin/lockrules'), 'icons/16/blue/decline.png');
+        $this->sidebar->addWidget($actions);
+
     }
 
     function new_action()
@@ -92,12 +116,15 @@ class Admin_LockrulesController extends AuthenticatedController
            $this->lock_rule->user_id = $GLOBALS['user']->id;
            $this->lock_rule->object_type = $this->lock_rule_type;
            if (!$this->handle_form_data()) {
-               $this->message = MessageBox::error("Die neue Sperrebene konnte nicht gespeichert werden.", $this->msg['error']);
+               PageLayout::postMessage(MessageBox::error("Die neue Sperrebene konnte nicht gespeichert werden.", $this->msg['error']));
            } else {
-               $this->flash['message'] = MessageBox::success("Die neue Sperrebene wurde gespeichert");
+               PageLayout::postMessage(MessageBox::success("Die neue Sperrebene wurde gespeichert"));
                $this->redirect($this->url_for('admin/lockrules/edit/' . $this->lock_rule->getid()));
            }
         }
+        $actions = new ActionsWidget();
+        $actions->addLink(_("Bearbeiten abbrechen"), $this->url_for('admin/lockrules'), 'icons/16/blue/decline.png');
+        $this->sidebar->addWidget($actions);
     }
 
     function delete_action($lock_rule_id)
@@ -106,23 +133,9 @@ class Admin_LockrulesController extends AuthenticatedController
         if (!(!$this->lock_rule->isNew() && ($GLOBALS['perm']->have_perm('root') || $this->lock_rule->user_id == $GLOBALS['user']->id))) {
             throw new Trails_Exception(403);
         }
-        if (Request::isGet()) {
-            $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/');
-            $template = $factory->open('admin/lockrules/_del.php');
-            $template->action = $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid());
-            if ($this->lock_rule->getUsage()) {
-                $template->question = sprintf(_("Sie beabsichtigen die Ebene %s zu löschen. Diese Ebene wird von %s Objekten benutzt. Soll sie trotzdem gelöscht werden?"), $this->lock_rule->name, $this->lock_rule->getUsage());
-            } else {
-                $template->question = sprintf(_("Möchten Sie die Ebene %s löschen?"), $this->lock_rule->name);
-            }
-            $this->flash['message'] = $template->render();
-        } else {
-            CSRFProtection::verifyUnsafeRequest();
-            if (Request::submitted('kill')) {
-                if ($this->lock_rule->delete()) {
-                    $this->flash['message'] = MessageBox::success("Die Sperrebene wurde gelöscht.");
-                }
-            }
+        CSRFProtection::verifyUnsafeRequest();
+        if ($this->lock_rule->delete()) {
+            PageLayout::postMessage(MessageBox::success("Die Sperrebene wurde gelöscht."));
         }
         $this->redirect($this->url_for('admin/lockrules'));
     }

@@ -196,10 +196,7 @@ class StudipSemTreeSearch {
     function getSearchButton($attributes = array())
     {
         $ret = Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "{$this->form_name}_do_search", 'title' => _('Suche nach Studienbereichen starten')));
-        foreach ($attributes as $key => $value) {
-            $ret .= "$key=\"$value\"";
-        }
-        $ret .= ">";
+
         return $ret;
     }
 
@@ -218,8 +215,8 @@ class StudipSemTreeSearch {
     }
 
     function doSearch(){
-        if (Request::get($this->form_name . "_do_search_x") || Request::get($this->form_name . "_send")){
-            if(Request::get($this->form_name . "_search_field") && strlen($_REQUEST[$this->form_name . "_search_field"]) > 2){
+        if (Request::submitted($this->form_name . "_do_search") || Request::submitted($this->form_name . "_send")){
+            if(strlen($_REQUEST[$this->form_name . "_search_field"]) > 2){
                 $this->view->params[0] = "%" . Request::quoted($this->form_name . "_search_field") . "%";
                 $this->view->params[1] = $this->sem_tree_ids;
                 $rs = $this->view->get_query("view:SEM_TREE_SEARCH_ITEM");

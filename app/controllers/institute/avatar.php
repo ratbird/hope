@@ -22,8 +22,8 @@ class Institute_AvatarController extends AuthenticatedController
 {
 
     # see Trails_Controller#before_filter
-    function before_filter(&$action, &$args) {
-
+    public function before_filter(&$action, &$args)
+    {
         parent::before_filter($action, $args);
 
         $this->institute_id = current($args);
@@ -49,7 +49,7 @@ class Institute_AvatarController extends AuthenticatedController
      *
      * @return void
      */
-    function update_action()
+    public function update_action()
     {
         // nothing to do
     }
@@ -59,7 +59,7 @@ class Institute_AvatarController extends AuthenticatedController
      *
      * @return void
      */
-    function put_action()
+    public function put_action()
     {
         try {
             InstituteAvatar::getAvatar($this->institute_id)->createFromUpload('avatar');
@@ -74,9 +74,11 @@ class Institute_AvatarController extends AuthenticatedController
      *
      * @return void
      */
-    function delete_action()
+    public function delete_action()
     {
         InstituteAvatar::getAvatar($this->institute_id)->reset();
-        $this->redirect(URLHelper::getUrl('dispatch.php/institute/basicdata/index?i_view=' . $this->institute_id));
+
+        PageLayout::postMessage(MessageBox::success(_('Das Infobild wurde gelöscht.')));
+        $this->redirect(URLHelper::getUrl('dispatch.php/institute/basicdata/index/' . $this->institute_id));
     }
 }

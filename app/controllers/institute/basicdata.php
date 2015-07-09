@@ -1,49 +1,66 @@
 <?php
-# Lifter010: TODO
-
-/*
- * Copyright (C) 2002 Cornelis Kater <ckater@gwdg.de>, Stefan Suchi <suchi@gmx.de>
- * Copyright (C) 2015 - Arne Schröder <schroeder@data-quest.de>
- *
+/**
  * formerly admin_institut.php - Grunddaten fuer ein Institut
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
+ * @author  Arne Schröder <schroeder@data-quest.de>
+ * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @author  Cornelis Kater <ckater@gwdg.de>
+ * @author  Stefan Suchi <suchi@gmx.de>
+ * @license GPL2 or any version
+ * @since   Stud.IP 3.3
  */
 
 require_once 'app/controllers/authenticated_controller.php';
 
 class Institute_BasicdataController extends AuthenticatedController
 {
+    /**
+     * common tasks for all actions
+     */
+    public function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+
+        // Ensure only admins gain access to this page
+        if (!$GLOBALS['perm']->have_perm("admin")) {
+            throw new AccessDeniedException(_('Keine Berechtigung in diesem Bereich.'));
+        }
+
+        if (get_config('RESOURCES_ENABLE')) {
+            include_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php';
+        }
+
+        if (get_config('EXTERN_ENABLE')) {
+            require_once $GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/ExternConfig.class.php';
+        }
+    }
 
     /**
      * show institute basicdata page
      *
-     * @return void
+     * @param mixed $i_id Optional institute id 
+     * @throws AccessDeniedException
      */
     public function index_action($i_id = false)
     {
-        // Ensure only admins gain access to this page
-        if (!$GLOBALS['perm']->have_perm("admin")) {
-                throw new AccessDeniedException(_('Keine Berechtigung in diesem Bereich.'));
-        }
-
         PageLayout::setTitle(_('Verwaltung der Grunddaten'));
         Navigation::activateItem('/admin/institute/details');
 
         //get ID from an open Institut
-        if ($i_id) {
-            $i_view = $i_id;
-        } elseif (Request::option('i_view')) {
-            $i_view = Request::option('i_view');
-        } elseif ($GLOBALS['SessSemName'][1]) {
-            $i_view = $GLOBALS['SessSemName'][1];
+        $i_view = $i_id ?: Request::option('i_view', $GLOBALS['SessSemName'][1]);
+
+        if (!$i_view) {
+            require_once 'lib/admin_search.inc.php';
+
+            // This search just died a little inside, so it should be safe to
+            // continue here but we nevertheless return just to be sure
+            return;
+        } elseif ($i_view === 'new') {
+            closeObject();
         }
 
         //  allow only inst-admin and root to view / edit
-        if ($i_view && !$GLOBALS['perm']->have_studip_perm('admin', $i_view) && $i_view != 'new') {
+        if ($i_view && !$GLOBALS['perm']->have_studip_perm('admin', $i_view) && $i_view !== 'new') {
             throw new AccessDeniedException(_('Sie sind nicht berechtigt, auf diesen Bereich zuzugreifen.'));
         }
 
@@ -53,26 +70,11 @@ class Institute_BasicdataController extends AuthenticatedController
             PageLayout::setTitle($header_line . ' - ' . PageLayout::getTitle());
         }
 
-        if (get_config('RESOURCES_ENABLE')) {
-            include_once($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php');
-        }
-
-        if (get_config('EXTERN_ENABLE')) {
-            require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/ExternConfig.class.php');
-        }
-        if(Request::get('i_trykill')) {
+        if (Request::get('i_trykill')) {
             $message              = _('Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?');
-            $post['i_id']         = $i_id;
             $post['i_kill']       = 1;
-            $post['Name']         = Request::get('Name');
             $post['studipticket'] = get_ticket();
-            $this->question = createQuestion($message, $post, array(), $this->url_for('institute/basicdata/delete/'.$i_view));
-        }
-
-        if ($i_view == 'new') {
-            closeObject();
-        } else {
-            require_once 'lib/admin_search.inc.php';
+            $this->question = createQuestion2($message, $post, array(), $this->url_for('institute/basicdata/delete/' . $i_view));
         }
 
         $lockrule = LockRules::getObjectRule($i_view);
@@ -81,66 +83,21 @@ class Institute_BasicdataController extends AuthenticatedController
         }
 
         // Load institute data
-        $institute = array();
-        if ($i_view != 'new') {
-            $query = "SELECT a.*, b.Name AS fak_name, COUNT(Seminar_id) AS number
-                      FROM Institute AS a
-                      LEFT JOIN Institute AS b ON (b.Institut_id = a.fakultaets_id)
-                      LEFT JOIN seminare AS c ON (a.Institut_id = c.Institut_id)
-                      WHERE a.Institut_id = ?
-                      GROUP BY a.Institut_id";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($i_view));
-            $institute = $statement->fetch(PDO::FETCH_ASSOC);
-
-            $query = "SELECT COUNT(b.Institut_id)
-                      FROM Institute AS a
-                      LEFT JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id)
-                      WHERE a.Institut_id = ? AND b.Institut_id != ? AND a.Institut_id = a.fakultaets_id
-                      GROUP BY a.Institut_id";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($i_view, $i_view));
-            $_num_inst = $statement->fetchColumn();
-        }
-
-        // Read faculties if neccessary
-        if (!$_num_inst) {
-            if ($GLOBALS['perm']->have_perm('root')) {
-                $query = "SELECT Institut_id, Name
-                          FROM Institute
-                          WHERE Institut_id = fakultaets_id AND fakultaets_id != ?
-                          ORDER BY Name";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($i_view ?: ''));
-            } else {
-                $query = "SELECT a.Institut_id, Name
-                          FROM user_inst AS a
-                          LEFT JOIN Institute USING (Institut_id)
-                          WHERE user_id = ? AND inst_perms = 'admin'
-                          AND a.Institut_id=fakultaets_id
-                          AND fakultaets_id <> ?
-                          ORDER BY Name";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($GLOBALS['user']->id, $i_view ?: ''));
-            }
-            $faculties = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-        }
+        $institute = new Institute($i_view === 'new' ? null : $i_view);
 
         //add the free administrable datafields
         $datafields = array();
-
-        $localEntries = DataFieldEntry::getDataFieldEntries($institute['Institut_id'], 'inst');
+        $localEntries = DataFieldEntry::getDataFieldEntries($institute->id, 'inst');
         if ($localEntries) {
+            $invalidEntries = $this->flash['invalid_entries'] ?: array();
             foreach ($localEntries as $entry) {
-                $value = $entry->getValue();
-                $color = '#000000';
-                $id = $entry->structure->getID();
-                if ($invalidEntries[$id]) {
-                    $entry = $invalidEntries[$id];
-                    $color = '#ff0000';
-                }
                 if (!$entry->structure->accessAllowed($GLOBALS['perm'])) {
                     continue;
+                }
+
+                $color = '#000000';
+                if (in_array($entry->getId(), $invalidEntries)) {
+                    $color = '#ff0000';
                 }
                 $datafields[] = array(
                     'color' => $color,
@@ -153,334 +110,360 @@ class Institute_BasicdataController extends AuthenticatedController
             }
         }
 
-        // Prepare template
-        $this->institute      = $institute;
-        $this->i_view         = $i_view;
-        $this->num_institutes = $_num_inst;
-        $this->datafields     = $datafields;
-        $this->faculties      = $faculties;
-        $this->reason_txt = $reason_txt;
+        // Read faculties if neccessary
+        if (count($institute->sub_institutes) === 0) {
+            if ($GLOBALS['perm']->have_perm('root')) {
+                $this->faculties = Institute::findBySQL('Institut_id = fakultaets_id ORDER BY Name ASC', array($i_view));
+            } else {
+                $temp = User::find($GLOBALS['user']->id)
+                            ->institute_memberships->findBy('status', 'admin')
+                            ->pluck('institute');
+                $institutes = SimpleORMapCollection::createFromArray($temp);
+                $faculties  = $institutes->filter(function ($institute) {
+                    return $institute->is_fak;
+                });
+                $this->faculties = $faculties;
+            }
+        }
+
         // Indicates whether the current user is allowed to delete the institute
-        $this->may_delete = $i_view != 'new' && !($institute['number'] || $_num_inst)
-                    && ($GLOBALS['perm']->have_perm('root')
-                        || ($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'));
+        $this->may_delete = $i_view !== 'new'
+                         && !(count($institute->home_courses) || count($institute->sub_institutes))
+                         && ($GLOBALS['perm']->have_perm('root')
+                             || ($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'));
         if (!$this->may_delete) {
             //Set infotext for disabled delete-button
             $reason_txt = _('Löschen nicht möglich.');
-            $reason_txt .= $institute['number'] > 0 ?
-                    ' ' . sprintf(ngettext(_('Es ist eine Veranstaltung zugeordnet.'), _('Es sind %u Veranstaltungen zugeordnet.'),
-                                  $institute['number']), $institute['number']): '';
-            $reason_txt .= $_num_inst > 0 ?
-                    ' ' . sprintf(ngettext(_('Es ist eine Einrichtung zugeordnet.'), _('Es sind %u Einrichtungen zugeordnet.'),
-                                  $_num_inst), $_num_inst): '';
+            if (count($institute->home_courses) > 0) {
+                $reason_txt .= ' ';
+                $reason_txt .= sprintf(ngettext('Es ist eine Veranstaltung zugeordnet.',
+                                                'Es sind %u Veranstaltungen zugeordnet.',
+                                                count($institute->home_courses)),
+                                       count($institute->home_courses));
+            }
+            if (count($institute->sub_institutes) > 0) {
+                $reason_txt .= ' ';
+                $reason_txt .= sprintf(ngettext('Es ist eine Einrichtung zugeordnet.',
+                                                'Es sind %u Einrichtungen zugeordnet.',
+                                                count($institute->sub_institutes)),
+                                       count($institute->sub_institutes));
+            }
         }
         // Indicates whether the current user is allowed to change the faculty
         $this->may_edit_faculty = $GLOBALS['perm']->is_fak_admin()
-                          && ! LockRules::Check($institute['Institut_id'], 'fakultaets_id')
-                          && ($GLOBALS['perm']->have_studip_perm('admin', $institute['fakultaets_id']) || $i_view == 'new');
+                               && !LockRules::Check($institute['Institut_id'], 'fakultaets_id')
+                               && ($GLOBALS['perm']->have_studip_perm('admin', $institute['fakultaets_id']) || $i_view === 'new');
+
+        // Prepare template
+        $this->institute      = $institute;
+        $this->i_view         = $i_view;
+        $this->datafields     = $datafields;
+        $this->reason_txt     = $reason_txt;
     }
 
+    /**
+     * Stores the changed or created institute data
+     *
+     * @param String $i_id Institute id or 'new' to create
+     * @throws MethodNotAllowedException
+     */
     public function store_action($i_id)
     {
+        // We won't accept anything but a POST request
+        if (!Request::isPost()) {
+            throw new MethodNotAllowedException();
+        }
+        
+        $create_institute = $i_id === 'new';
+        
+        $institute = new Institute($create_institute ? null : $i_id);
+        $institute->name            = trim(Request::get('Name', $institute->name));
+        $institute->fakultaets_id   = Request::option('Fakultaet', $institute->fakultaets_id);
+        $institute->strasse         = Request::get('strasse', $institute->strasse);
+        // Beware: Despite the name, this contains both zip code AND city name
+        $institute->plz             = Request::get('plz', $institute->plz);
+        $institute->url             = Request::get('home', $institute->url);
+        $institute->telefon         = Request::get('telefon', $institute->telefon);
+        $institute->email           = Request::get('email', $institute->email);
+        $institute->fax             = Request::get('fax', $institute->fax);
+        $institute->type            = Request::int('type', $institute->type);
+        $institute->lit_plugin_name = Request::get('lit_plugin_name', $institute->lit_plugin_name);
+        $institute->lock_rule       = Request::option('lock_rule', $institute->lock_rule);
+
+
         // Do we have all necessary data?
-        if (!trim(Request::get('Name'))) {
+        if (!$institute->name) {
             PageLayout::postMessage(MessageBox::error(_('Bitte geben Sie eine Bezeichnung für die Einrichtung ein!')));
             return $this->redirect('institute/basicdata/index/' . $i_id);
         }
-        
-        if ($i_id == 'new') {
-            if (!$GLOBALS['perm']->have_perm("root") && !($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none'))  {
+
+        if ($create_institute) {
+            $institute->id = $institute->getNewId();
+
+            // Is the user allowed to create new faculties
+            if (!$institute->fakultaets_id && !$GLOBALS['perm']->have_perm('root')) {
+                PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung, neue Fakultäten zu erstellen')));
+                return $this->redirect('institute/basicdata/index/new');
+            }
+
+            // Is the user allowed to create new institutes
+            if (!$GLOBALS['perm']->have_perm('root') && !($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') !== 'none'))  {
                 PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!')));
                 return $this->redirect('institute/basicdata/index/new');
             }
 
-            // Does the Institut already exist?
-            // NOTE: This should be a transaction, but it is not...
-            $query      = "SELECT 1 FROM Institute WHERE Name = ?";
-            $parameters = array(Request::get('Name'));
-            $Fakultaet = Request::option('Fakultaet');
-            if ($Fakultaet) {
-                $query .= " AND fakultaets_id = ?";
-                $parameters[] = $Fakultaet;
-            }
-
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute($parameters);
-
-            if (!$Fakultaet && !$GLOBALS['perm']->have_perm('root')) {
-                PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung, neue Fakultäten zu erstellen')));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
-            }
-            if ($statement->fetchColumn()) {
-                $message = sprintf(_('Die Einrichtung "%s" existiert bereits!'), htmlReady(Request::get('Name')));
+            // Does an institute with the given name already exist in the given faculty?
+            if ($institute->fakultaets_id && Institute::findOneBySQL('Name = ? AND fakultaets_id = ?', array($institute->name, $institute->fakultaets_id)) !== null) {
+                $message = sprintf(_('Die Einrichtung "%s" existiert bereits innerhalb der angegebenen Fakultät!'), $institute->name);
                 PageLayout::postMessage(MessageBox::error($message));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
-            }
-
-            $data = array('name' => Request::get('Name'),
-                          'fakultaets_id' => $Fakultaet,
-                          'strasse' => Request::get('strasse'),
-                          'plz' => Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
-                          'url' => Request::get('home'),
-                          'telefon' => Request::get('telefon'),
-                          'email' => Request::get('email'),
-                          'fax' => Request::get('fax'),
-                          'type' => Request::int('type'),
-                          'lit_plugin_name' => Request::get('lit_plugin_name'),
-                          'lock_rule' => Request::option('lock_rule'));
-
-            // Set the default list of modules
-            $Modules = new Modules;
-            $data['modules'] = $Modules->getDefaultBinValue('', 'inst', $data['type']);
-
-            $institute = new Institute();
-            $institute->setData($data, true);
-
-            if (!$institute->store()) {
-                PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht angelegt werden.')));
                 return $this->redirect('institute/basicdata/index/new');
             }
 
-            $i_id = $institute->getId();
+            // Does a faculty with the given name already exist
+            if (!$institute->fakultaets_id && Institute::findOneBySQL('Name = ? AND fakultaets_id = Institut_id', array($institute->name)) !== null) {
+                $message = sprintf(_('Die Fakultät "%s" existiert bereits!'), $institute->name);
+                PageLayout::postMessage(MessageBox::error($message));
+                return $this->redirect('institute/basicdata/index/new');
+            }
 
-            if (!$Fakultaet) {
-                $institute->setValue('fakultaets_id', $i_id);
-                if (!$institute->store()) {
-                    PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht angelegt werden.')));
-                    return $this->redirect('institute/basicdata/index/new');
+            // Initialize modules
+            $modules = new Modules;
+            $institute->modules = $modules->getDefaultBinValue('', 'inst', $institute->type);
+
+            // Declare faculty status if neccessary
+            if (!$institute->fakultaets_id) {
+                $institute->fakultaets_id = $institute->getId();
+            }
+        } else {
+            // Is the user allowed to change the institute/faculty?
+            if (!$GLOBALS['perm']->have_studip_perm('admin', $institute->id)) {
+                PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung diese Einrichtung zu verändern!')));
+                return $this->redirect('institute/basicdata/index/' . $institute->id);
+            }
+
+            // Save datafields
+            $datafields = Request::getArray('datafields');
+            $invalidEntries = array();
+            $datafields_stored = 0;
+            foreach (DataFieldEntry::getDataFieldEntries($institute->id, 'inst') as $entry) {
+                if (isset($datafields[$entry->getId()])) {
+                    $valueBefore = $entry->getValue();
+                    $entry->setValueFromSubmit($datafields[$entry->getId()]);
+                    if ($valueBefore != $entry->getValue()) {
+                        if ($entry->isValid()) {
+                            $datafields_stored += 1;
+                            $entry->store();
+                        } else {
+                            $invalidEntries[] = $entry->getId();
+                        }
+                    }
                 }
             }
 
-            log_event("INST_CREATE", $i_id, NULL, NULL, ''); // logging
+            // If any errors occured while updating the datafields, report them
+            if (count($invalidEntries) > 0) {
+                $this->flash['invalid_entries'] = $invalidEntries;
+                PageLayout::postMessage(MessageBox::error(_('ungültige Eingaben (s.u.) wurden nicht gespeichert')));
+            }
+        }
 
-            $module_list = $Modules->getLocalModules($i_id, 'inst', $institute->modules, $institute->type);
+        // Try to store the institute, report any errors
+        if ($institute->isDirty() && !$institute->store()) {
+            if ($institute->isNew()) {
+                PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht angelegt werden.')));
+            } else {
+                PageLayout::postMessage(MessageBox::error(_('Die Änderungen konnten nicht gespeichert werden.')));
+            }
+            return $this->redirect('institute/basicdata/index/' . $i_id);
+        }
 
+        if ($create_institute) {
+            // Log creation of institute
+            log_event('INST_CREATE', $institute->id, null, null, ''); // logging
+
+            // Further initialize modules (the modules class setup is in
+            // no way expensive, so it can be constructed twice, don't worry)
+            $modules = new Modules;
+            $module_list = $modules->getLocalModules($institute->id, 'inst', $institute->modules, $institute->type);
             if (isset($module_list['documents'])) {
                 create_folder(
                     _('Allgemeiner Dateiordner'),
                     _('Ablage für allgemeine Ordner und Dokumente der Einrichtung'),
-                    $i_id,
+                    $institute->id,
                     7,
-                    $i_id);
+                    $institute->id
+                );
             }
 
-            $message = sprintf(_('Die Einrichtung "%s" wurde erfolgreich angelegt.'), htmlReady(Request::get('Name')));
+            // Report success
+            $message = sprintf(_('Die Einrichtung "%s" wurde erfolgreich angelegt.'), $institute->name);
             PageLayout::postMessage(MessageBox::success($message));
-            openInst($i_id);
+
+            openInst($institute->id);
         } else {
-            if (!$GLOBALS['perm']->have_studip_perm("admin", $i_id)){
-                PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung diese Einrichtungen zu verändern!')));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
-            }
-            
-            $data = array('name' => Request::get('Name'),
-                          'fakultaets_id' => Request::option('Fakultaet'),
-                          'strasse' => Request::get('strasse'),
-                          'plz' => Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
-                          'url' => Request::get('home'),
-                          'telefon' => Request::get('telefon'),
-                          'email' => Request::get('email'),
-                          'fax' => Request::get('fax'),
-                          'type' => Request::int('type'),
-                          'lit_plugin_name' => Request::get('lit_plugin_name'),
-                          'lock_rule' => Request::option('lock_rule'));
-            $data = array_filter($data, function ($v) 
-                                        { 
-                                            return $v !== null;
-                                        });
-            //update Institut information.
-            $institute = Institute::find($i_id);
-            if ($institute) {
-                $institute->setData($data, false);
-                $ok = $institute->store();
-                if ($ok === false) {
-                    PageLayout::postMessage(MessageBox::error(_('Die Änderungen konnten nicht gespeichert werden.')));
-                    return $this->redirect('institute/basicdata/index/new');
-                } elseif ($ok) {
-                    $message = sprintf(_('Die Änderung der Einrichtung "%s" wurde erfolgreich gespeichert.'), htmlReady($institute->name));
-                    PageLayout::postMessage(MessageBox::success($message));
-                    // update additional datafields
-                    $datafields = Request::getArray('datafields');
-                    if (is_array($datafields)) {
-                        $invalidEntries = array();
-                        foreach (DataFieldEntry::getDataFieldEntries($i_id, 'inst') as $entry) {
-                            if(isset($datafields[$entry->getId()])){
-                                $valueBefore = $entry->getValue();
-                                $entry->setValueFromSubmit($datafields[$entry->getId()]);
-                                if ($valueBefore != $entry->getValue()) {
-                                    if ($entry->isValid()) {
-                                        $df_stored++;
-                                        $entry->store();
-                                    } else {
-                                        $invalidEntries[$entry->getId()] = $entry;
-                                    }
-                                }
-                            }
-                        }
-                        if (count($invalidEntries)  > 0) {
-                            PageLayout::postMessage(MessageBox::error(_('ungültige Eingaben (s.u.) wurden nicht gespeichert')));
-                        } elseif ($df_stored) {
-                            $message = sprintf(_('Die Daten der Einrichtung "%s" wurden verändert.'), htmlReady($institute->name));
-                            PageLayout::postMessage(MessageBox::success($message));
-                        }
-                    }
-                }
-            }
+            // Report success
+            $message = sprintf(_('Die Änderung der Einrichtung "%s" wurde erfolgreich gespeichert.'), htmlReady($institute->name));
+            PageLayout::postMessage(MessageBox::success($message));
         }
-        $this->redirect('institute/basicdata/index/' . $i_id);
+        
+        $this->redirect('institute/basicdata/index/' . $institute->id, array('cid' => $institute->id));
     }
 
+    /**
+     * Deletes an institute
+     * @param String $i_id Institute id
+     */
     public function delete_action($i_id)
     {
-        require_once 'lib/classes/DataFieldEntry.class.php';
-        require_once 'lib/classes/StudipLitList.class.php';
+        CSRFProtection::verifyUnsafeRequest();
         
-        if (get_config('RESOURCES_ENABLE')) {
-            include_once($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/DeleteResourcesUser.class.php');
-        }
-        if (get_config('EXTERN_ENABLE')) {
-            require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/ExternConfig.class.php');
-        }
-                
-        if(!Request::get('i_kill')) {
+        // Missing parameter
+        if (!Request::get('i_kill')) {
             return $this->redirect('institute/basicdata/index/' . $i_id);
         }
-        if ( !check_ticket(Request::option('studipticket'))) {
+
+        // Invalid ticket
+        if (!check_ticket(Request::option('studipticket'))) {
             PageLayout::postMessage(MessageBox::error(_('Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut.')));
             return $this->redirect('institute/basicdata/index/' . $i_id);
-        } elseif (!$GLOBALS['perm']->have_perm("root") && !($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all')) {
+        }
+    
+        // User may not delete this institue
+        if (!$GLOBALS['perm']->have_perm('root') && !($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') === 'all')) {
             PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung Fakultäten zu löschen!')));
             return $this->redirect('institute/basicdata/index/' . $i_id);
         }
+
         $institute = Institute::find($i_id);
+        if ($institute === null) {
+            throw new Exception('Invalid institute id');
+        }
+
+        // Institut in use?
+        if (count($institute->home_courses)) {
+            PageLayout::postMessage(MessageBox::error(_('Diese Einrichtung kann nicht gelöscht werden, da noch Veranstaltungen an dieser Einrichtung existieren!')));
+            return $this->redirect('institute/basicdata/index/' . $i_id);
+        }
+
+        // Institute has sub institutes?
+        if (count($institute->sub_institutes)) {
+            PageLayout::postMessage(MessageBox::error(_('Diese Einrichtung kann nicht gelöscht werden, da sie den Status Fakultät hat und noch andere Einrichtungen zugeordnet sind!')));
+            return $this->redirect('institute/basicdata/index/' . $i_id);
+        }
+
+        // Is the user allowed to delete faculties?
+        if ($institute->is_fak && !$GLOBALS['perm']->have_perm('root')) {
+            PageLayout::postMessage(MessageBox::error(_('Sie haben nicht die Berechtigung Fakultäten zu löschen!')));
+            return $this->redirect('institute/basicdata/index/' . $i_id);
+        }
+
+        // Save users, name and number of courses
+        $user_ids  = $institute->members->pluck('user_id');
+        $i_name    = $institute->name;
+        $i_courses = count($institute->courses);
+
+        // Delete that institute
+        if (!$institute->delete()) {
+            PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
+        } else {
+            $details = array();
+            
+            // logging - put institute's name in info - it's no longer derivable from id afterwards
+            log_event('INST_DEL', $i_id, NULL, $i_name);
         
-        // Delete the Institut
-        if ($institute) {
-            // Institut in use?
-            if (count($institute->home_courses)) {
-                PageLayout::postMessage(MessageBox::error(_('Diese Einrichtung kann nicht gelöscht werden, da noch Veranstaltungen an dieser Einrichtung existieren!')));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
+            // set a suitable default institute for each user
+            foreach ($user_ids as $user_id) {
+                log_event('INST_USER_DEL', $i_id, $user_id);
+                checkExternDefaultForUser($user_id);
+            }
+            if (count($user_ids)) {
+                $details[] = sprintf(_('%u Mitarbeiter gelöscht.'), count($user_ids));
             }
 
-            if (count($institute->sub_institutes)) {
-                PageLayout::postMessage(MessageBox::error(_("Diese Einrichtung kann nicht gelöscht werden, da sie den Status Fakultät hat, und noch andere Einrichtungen zugeordnet sind!")));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
+            // Report number of formerly associated courses
+            if ($i_courses) {
+                $details[] = sprintf(_('%u Beteiligungen an Veranstaltungen gelöscht'), $i_courses);
             }
 
-            if ($institute->is_fak && !$GLOBALS['perm']->have_perm("root")) {
-                PageLayout::postMessage(MessageBox::error(_("Sie haben nicht die Berechtigung Fakultäten zu löschen!")));
-                return $this->redirect('institute/basicdata/index/' . $i_id);
+            // delete literatur
+            $del_lit = StudipLitList::DeleteListsByRange($i_id);
+            if ($del_lit) {
+                $details[] = sprintf(_('%u Literaturlisten gelöscht.'), $del_lit['list']);
             }
-            
-            $user_ids = array();
-            foreach ($institute->members as $member) {
-                $user_ids[] = $member->user_id;
-            }
-            $i_name = $institute->name;
-            $i_courses = count($institute->courses);
-            // Delete that Institut.
-            if (! $institute->delete()) {
-                PageLayout::postMessage(MessageBox::error(_('Datenbankoperation gescheitert:') . " $query"));
-            } else {
-                $message = sprintf(_('Die Einrichtung "%s" wurde gelöscht!'), htmlReady($i_name));
-                PageLayout::postMessage(MessageBox::success($message));
 
-                // logging - put institute's name in info - it's no longer derivable from id afterwards
-                log_event("INST_DEL",$i_id,NULL, $i_name);
-            
-                // set a suitable default institute for each user
-                foreach ($user_ids as $user_id) {
-                    log_event('INST_USER_DEL', $i_id, $member->user_id);
-                    checkExternDefaultForUser($user_id);
-                }
-                if (count($user_ids)) {
-                    $message = sprintf(_('%s Mitarbeiter gelöscht.'), count($user_ids));
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-                if ($i_courses) {
-                    $message = sprintf(_('%s Beteiligungen an Veranstaltungen gelöscht'), $i_courses);
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-                // delete literatur
-                $del_lit = StudipLitList::DeleteListsByRange($i_id);
-                if ($del_lit) {
-                    $message = sprintf(_('%s Literaturlisten gelöscht.'), $del_lit['list']);
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-                // SCM löschen
-                $query = "DELETE FROM scm WHERE range_id = ?";
+            // delete news-links
+            StudipNews::DeleteNewsRanges($i_id);
+
+            //delete entry in news_rss_range
+            StudipNews::UnsetRssId($i_id);
+
+            //updating range_tree
+            $query = "UPDATE range_tree SET name = ?, studip_object = '', studip_object_id = '' WHERE studip_object_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                _('(in Stud.IP gelöscht)'),
+                $i_id,
+            ));
+            if (($db_ar = $statement->rowCount()) > 0) {
+                $details[] = sprintf(_('%u Bereiche im Einrichtungsbaum angepasst.'), $db_ar);
+            }
+
+            // Statusgruppen entfernen
+            if ($db_ar = DeleteAllStatusgruppen($i_id) > 0) {
+                $details[] = sprintf(_('%s Funktionen/Gruppen gelöscht.'), $db_ar);
+            }
+
+            //kill the datafields
+            DataFieldEntry::removeAll($i_id);
+
+            //kill all wiki-pages
+            $removed_wiki_pages = 0;
+            foreach (array('', '_links', '_locks') as $area) {
+                $query = "DELETE FROM wiki{$area} WHERE range_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($i_id));
-                if (($db_ar = $statement->rowCount()) > 0) {
-                    PageLayout::postMessage(MessageBox::success(_('Freie Seite der Einrichtung gelöscht.')));
-                }
-                // delete news-links
-                StudipNews::DeleteNewsRanges($i_id);
-                //delete entry in news_rss_range
-                StudipNews::UnsetRssId($i_id);
-                //updating range_tree
-                $query = "UPDATE range_tree SET name = ?, studip_object = '', studip_object_id = '' WHERE studip_object_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array(
-                    _('(in Stud.IP gelöscht)'),
-                    $i_id,
-                ));
-
-                if (($db_ar = $statement->rowCount()) > 0) {
-                    $message = sprintf(_('%s Bereiche im Einrichtungsbaum angepasst.'), $db_ar);
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-
-                // Statusgruppen entfernen
-                if ($db_ar = DeleteAllStatusgruppen($i_id) > 0) {
-                    $message = sprintf(_('%s Funktionen/Gruppen gelöscht.'), $db_ar);
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-
-                //kill the datafields
-                DataFieldEntry::removeAll($i_id);
-
-                //kill all wiki-pages
-                foreach (array('', '_links', '_locks') as $area) {
-                    $query = "DELETE FROM wiki{$area} WHERE range_id = ?";
-                    $statement = DBManager::get()->prepare($query);
-                    $statement->execute(array($i_id));
-                }
-
-                // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
-                if (get_config('RESOURCES_ENABLE')) {
-                    $killAssign = new DeleteResourcesUser($i_id);
-                    $killAssign->delete();
-                }
-
-                // delete all configuration files for the "extern modules"
-                if (get_config('EXTERN_ENABLE')) {
-                    $counts = ExternConfig::DeleteAllConfigurations($i_id);
-                    if ($counts) {
-                        $message = sprintf(_('%s Konfigurationsdateien für externe Seiten gelöscht.'), $counts);
-                        PageLayout::postMessage(MessageBox::success($message));
-                    }
-                }
-
-                // delete all contents in forum-modules
-                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                    $plugin->deleteContents($i_id);  // delete content irrespective of plugin-activation in the seminar
-                    if ($plugin->isActivated($i_id)) {   // only show a message, if the plugin is activated, to not confuse the user
-                        $message = sprintf(_('Einträge in %s gelöscht.'), $plugin->getPluginName());
-                        PageLayout::postMessage(MessageBox::success($message));
-                    }
-                }
-
-                $db_ar = delete_all_documents($i_id);
-                if ($db_ar > 0) {
-                    $message = sprintf(_('%s Dokumente gelöscht.'), $db_ar);
-                    PageLayout::postMessage(MessageBox::success($message));
-                }
-
-                //kill the object_user_vists for this institut
-                object_kill_visits(null, $i_id);
+                $removed_wiki_pages += $statement->rowCount();
             }
+            if ($removed_wiki_pages > 0) {
+                $details[] = sprintf(_('%u Wikiseiten gelöscht.'));
+            }
+
+            // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
+            if (get_config('RESOURCES_ENABLE')) {
+                $killAssign = new DeleteResourcesUser($i_id);
+                $killAssign->delete();
+            }
+
+            // delete all configuration files for the "extern modules"
+            if (get_config('EXTERN_ENABLE')) {
+                $counts = ExternConfig::DeleteAllConfigurations($i_id);
+                if ($counts) {
+                    $details[] = sprintf(_('%u Konfigurationsdateien für externe Seiten gelöscht.'), $counts);
+                }
+            }
+
+            // delete all contents in forum-modules
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                $plugin->deleteContents($i_id);  // delete content irrespective of plugin-activation in the seminar
+                if ($plugin->isActivated($i_id)) {   // only show a message, if the plugin is activated, to not confuse the user
+                    $details[] = sprintf(_('Einträge in %s gelöscht.'), $plugin->getPluginName());
+                }
+            }
+
+            // Delete assigned documents
+            $db_ar = delete_all_documents($i_id);
+            if ($db_ar > 0) {
+                $details[] = sprintf(_('%u Dokumente gelöscht.'), $db_ar);
+            }
+
+            //kill the object_user_vists for this institut
+            object_kill_visits(null, $i_id);
+
+            // Report success with details
+            $message = sprintf(_('Die Einrichtung "%s" wurde gelöscht!'), $i_name);
+            PageLayout::postMessage(MessageBox::success($message, $details));
         }
-        $this->redirect('institute/basicdata/index/' . $i_id);
+
+        $this->redirect('institute/basicdata/index?cid=');
     }
 }

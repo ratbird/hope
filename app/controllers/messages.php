@@ -382,7 +382,11 @@ class MessagesController extends AuthenticatedController {
         }
         if ($message && $message->permissionToRead($GLOBALS['user']->id)) {
             $this->msg = $message->toArray();
-            $this->msg['from'] = $message->getSender()->getFullname();
+            $this->msg['from'] = $message['autor_id'] === '____%system%____'
+                                ? _('Stud.IP')
+                                : ($message->getSender()
+                                    ? $message->getSender()->getFullname()
+                                    : _('unbekannt'));
             $this->msg['to'] = $GLOBALS['user']->id == $message->autor_id ?
                 join(', ', $message->getRecipients()->pluck('fullname')) :
                 $GLOBALS['user']->getFullname() . ' ' . sprintf(_('(und %d weitere)'), $message->getNumRecipients()-1);

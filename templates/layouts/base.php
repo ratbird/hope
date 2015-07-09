@@ -20,7 +20,10 @@ if ($navigation) {
                 array('id' => $nav_id)
             );
             $link->setActive($nav->isActive());
-            // TODO check $nav->isEnabled() and make link ".quit" if true "<span class="quiet">"
+            if (!$nav->isEnabled()) {
+                $link['disabled'] = true;
+                $link->addClass('quiet');
+            }
         }
         if ($nav_links->hasElements()) {
             Sidebar::get()->insertWidget($nav_links, ':first');

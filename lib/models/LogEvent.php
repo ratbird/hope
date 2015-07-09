@@ -170,8 +170,8 @@ class LogEvent extends SimpleORMap
             return $this->$field;
         }
         return sprintf('<a href="%s">%s %s (%s)</a>',
-                       URLHelper::getLink('adminarea_start.php',
-                               array('select_sem_id' => $course->getId())),
+                       URLHelper::getLink('dispatch.php/course/details',
+                               array('sem_id' => $course->getId())),
                        htmlReady($course->VeranstaltungsNummer),
                        htmlReady(my_substr($course->name, 0, 100)),
                        htmlReady($course->start_semester->name));

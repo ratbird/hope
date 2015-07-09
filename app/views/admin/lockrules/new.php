@@ -10,15 +10,9 @@
 echo $message;
 echo $this->render_partial('admin/lockrules/_form.php', array('action' => $this->controller->url_for('admin/lockrules/new')));
 
-$infobox_content = array(
-           array(
-               'kategorie' => _('Sperrebenen verwalten'),
-               'eintrag'   => array(
-                array(
-                'icon' => 'icons/16/black/remove.png',
-                'text' => '<a href="'.$controller->url_for('admin/lockrules').'">'._('Bearbeiten abbrechen').'</a>'
-                ))
-            )
-);
-
-$infobox = array('picture' => 'sidebar/lock-sidebar.png', 'content' => $infobox_content);
+$sidebar = Sidebar::Get();
+$sidebar->setTitle(_('Sperrebenen'));
+$sidebar->setImage('sidebar/lock-sidebar.png');
+$actions = new ActionsWidget();
+$actions->addLink(_("Bearbeiten abbrechen"), $controller->url_for('admin/lockrules'), 'icons/16/blue/remove.png');
+$sidebar->addWidget($actions);

@@ -45,10 +45,15 @@ $sidebar = Sidebar::Get();
 $sidebar->setTitle(_('Sperrebenen'));
 $sidebar->setImage('sidebar/lock-sidebar.png');
 
-if ($GLOBALS['perm']->have_perm('root')) {
+
 $actions = new ActionsWidget();
 $actions->addLink(_('Neue Sperrebene anlegen'), $controller->url_for('admin/lockrules/new'), 'icons/16/blue/add.png');
 $sidebar->addWidget($actions);
-    $this->render_partial('admin/lockrules/_chooser.php');
+if ($GLOBALS['perm']->have_perm('root')) {
+    $list    = new SelectWidget(_('Bereichsauswahl'), $controller->url_for('admin/lockrules'), 'lock_rule_type');
+    foreach (array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer")) as $type => $desc) {
+        $list->addElement(new SelectElement($type, $desc, Request::get('lock_rule_type') == $type), 'lock_rule_type-' . $type);
+    }
+    $sidebar->addWidget($list);
 }
 

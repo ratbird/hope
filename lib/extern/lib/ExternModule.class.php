@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ExternModule.class.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <pthienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -59,37 +59,37 @@ class ExternModule {
     var $data_fields = array();
     var $args = array();
     var $is_raw_output = FALSE;
-    
-    
+
+
     /**
     *
     */
     function GetInstance ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-        
+
         if ($module_name != '') {
             $module_name = ucfirst($module_name);
             require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/modules/ExternModule$module_name.class.php");
-        
+
             $class_name = "ExternModule" . $module_name;
             $module = new $class_name($range_id, $module_name, $config_id, $set_config, $global_id);
             return $module;
         }
-        
+
         return NULL;
     }
-    
+
     /**
     * The constructor of a child class has to call this parent constructor!
     */
     function ExternModule ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-        
+
         foreach ($GLOBALS["EXTERN_MODULE_TYPES"] as $type => $module) {
             if ($module["module"] == $module_name) {
                 $this->type = $type;
                 break;
             }
         }
-        
+
         // the module is called via extern.php (not via the admin area) and there is
         // no config_id so it's necessary to check the range_id
         if (!$config_id && !$this->checkRangeId($range_id)) {
@@ -98,20 +98,20 @@ class ExternModule {
         if (is_null($this->type)) {
             $this->printError();
         }
-        
+
         $this->name = $module_name;
-        
+
         if ($config_id) {
             $this->config = ExternConfig::GetInstance($range_id, $module_name, $config_id);
         } else  {
             $this->config = ExternConfig::GetInstance($range_id, $module_name);
         }
-        
+
         // the "Main"-element is included in every module and needs information
         // about the data this module handles with
         $this->elements["Main"] = ExternElementMain::GetInstance($module_name,
                 $this->data_fields, $this->field_names, $this->config);
-        
+
         // instantiate the registered elements
         foreach ($this->registered_elements as $name => $registered_element) {
             if (is_int($name) || !$name) {
@@ -121,18 +121,18 @@ class ExternModule {
                 $this->elements[$name]->name = $name;
             }
         }
-                
+
         if ($set_config && !$config_id) {
             $config = $this->getDefaultConfig();
             $this->config->setDefaultConfiguration($config);
         }
-        
+
         // overwrite modules configuration with global configuration
         if (!is_null($global_id)) {
             $this->config->setGlobalConfig(ExternConfig::GetInstance($range_id, $module_name, $global_id),
                     $this->registered_elements);
         }
-        
+
         $this->setup();
     }
 
@@ -156,13 +156,13 @@ class ExternModule {
     function &getConfig () {
         return $this->config;
     }
-    
+
     /**
     *
     */
     function getDefaultConfig () {
         $default_config = array();
-        
+
         if ($default_config = $this->getRangeDefaultConfig('global')) {
             return $default_config;
         }
@@ -171,10 +171,10 @@ class ExternModule {
                 $default_config[$element->getName()] = $element->getDefaultConfig();
             }
         }
-        
+
         return $default_config;
     }
-    
+
     function getRangeDefaultConfig ($range_id = 'global') {
         $query = "SELECT config_type FROM extern_config WHERE config_id = ? AND range_id = ?";
         $parameters = array($this->getName(), $range_id );
@@ -186,62 +186,62 @@ class ExternModule {
             $config = $config_obj->getConfiguration();
             return $config;
         }
-        
+
         return FALSE;
     }
-    
+
     /**
     *
     */
     function getAllElements () {
         return $this->elements;
     }
-    
+
     /**
     *
     */
     function getValue ($attribute) {
         return $this->config->getValue($this->name, $attribute);
     }
-    
+
     /**
     *
     */
     function setValue ($attribute, $value) {
         $this->config->setValue($this->name, $attribute, $value);
     }
-    
+
     /**
     *
     */
     function getAttributes ($element_name, $tag_name) {
         return $this->config->getAttributes($element_name, $tag_name);
     }
-    
+
     function getArgs () {
-        
+
         return $this->args;
     }
-        
+
     /**
     *
     */
     function toString ($args) {}
-    
+
     /**
     *
     */
     function toStringEdit ($open_elements = "", $post_vars = "",
             $faulty_values = "", $anker = "") {
-        
+
         require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/views/ExternEditModule.class.php");
         $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
-        
+
         $out = $edit_form->editHeader();
-        
+
         foreach ($this->elements as $element) {
             if ($element->isEditable()) {
-                if ($open_elements[$element->getName()]) {
+                if (isset($open_elements[$element->getName()])) {
                     $out .= $element->toStringEdit($post_vars, $faulty_values, $edit_form, $anker);
                 } else {
                     $edit_form->setElementName($element->getName());
@@ -250,9 +250,9 @@ class ExternModule {
                 }
             }
         }
-        
+
         $out .= $edit_form->editFooter();
-        
+
         return $out;
     }
 
@@ -267,16 +267,16 @@ class ExternModule {
     */
     function printoutEdit ($element_name = "", $post_vars = "",
             $faulty_values = "", $anker = "") {
-            
+
         echo $this->toStringEdit($element_name, $post_vars, $faulty_values, $anker);
     }
-    
+
     /**
     *
     */
     function checkFormValues ($element_name = "") {
         $faulty_values = array();
-        
+
         if ($element_name == "") {
             foreach ($this->elements as $element) {
                 if ($faulty = $element->checkFormValues()) {
@@ -285,18 +285,18 @@ class ExternModule {
             }
         }
         else {
-            if ($faulty_values = $this->elements[$element_name]->checkFormValues()) {   
+            if ($faulty_values = $this->elements[$element_name]->checkFormValues()) {
                 return $faulty_values;
             }
         }
-            
+
         if (sizeof($faulty_values)) {
             return $faulty_values;
         }
-        
+
         return FALSE;
     }
-    
+
     /**
     *
     */
@@ -304,14 +304,14 @@ class ExternModule {
         $this->config->restore($this, $element_name, $values);
         $this->config->store();
     }
-    
+
     /**
     *
     */
     function getDescription () {
         return $GLOBALS["EXTERN_ELEMENT_TYPES"][$this->type]["description"];
     }
-    
+
     /**
     *
     */
@@ -320,7 +320,7 @@ class ExternModule {
             return $this->elements[$element]->executeCommand($command, $value);
         }
     }
-    
+
     /**
     *
     */
@@ -328,10 +328,10 @@ class ExternModule {
         if ($range_id == 'studip') {
             return in_array('studip', $GLOBALS['EXTERN_MODULE_TYPES'][$this->type]['view']);
         }
-        
+
         return in_array(get_object_type($range_id), $GLOBALS['EXTERN_MODULE_TYPES'][$this->type]['view']);
     }
-    
+
     /**
     *
     */
@@ -339,7 +339,7 @@ class ExternModule {
         page_close();
         exit;
     }
-    
+
     /**
     *
     */
@@ -367,15 +367,15 @@ class ExternModule {
                 $link .= "&range_id={$this->config->range_id}";
             }
         }
-        
+
         return $link;
     }
-    
+
     /**
     *
     */
     function setup () {}
-    
+
     function updateGenericDatafields ($element_name, $object_type) {
         $datafields_config = $this->config->getValue($element_name, 'genericdatafields');
         if (!is_array($datafields_config)) {
@@ -390,7 +390,7 @@ class ExternModule {
         $this->config->setValue($element_name, 'genericdatafields', $datafields_config);
         $this->config->store();
     }
-    
+
     function insertDatafieldMarkers ($object_type, &$markers, $element_name) {
         $datafields_config = $this->config->getValue($element_name, 'genericdatafields');
         if (!is_array($datafields_config)) {
@@ -425,32 +425,32 @@ class ExternModule {
             $markers[$element_name][] = array("###$keyname###", $plugin['description']);
         }
     }
-    
+
     function setRawOutput ($raw = TRUE) {
         $this->is_raw_output = $raw;
     }
-    
+
     function extHtmlReady ($text, $allow_links = FALSE) {
         if ($this->is_raw_output) {
             return $text;
         }
         return $allow_links ? formatLinks($text) : htmlReady($text);
     }
-    
+
     function extFormatReady ($text) {
         if ($this->is_raw_output) {
             return $text;
         }
         return formatReady($text, TRUE, TRUE, FALSE);
     }
-    
+
     function extWikiReady ($text, $show_comments = 'all') {
         if ($this->is_raw_output) {
             return $text;
         }
         return wikiReady($text, TRUE, TRUE, $show_comments);
     }
-    
+
     function GetOrderedModuleTypes () {
         $order = array();
         foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $key => $module) {
@@ -459,7 +459,7 @@ class ExternModule {
         ksort($order, SORT_NUMERIC);
         return $order;
     }
-        
+
     function getLinkToModule ($linked_element_name = null, $params = null, $with_module_params = false, $self = false) {
         if ($with_module_params) {
             $module_params = $this->getModuleParams();
@@ -472,7 +472,7 @@ class ExternModule {
                 $query_parts[] = "{$param_key}[{$name}]=" . $value;
             }
         }
-        
+
         if (is_null($linked_element_name)) {
             $sriurl = trim($this->config->getValue('Main', 'sriurl'));
             $includeurl = trim($this->config->getValue('Main', 'includeurl'));
@@ -480,7 +480,7 @@ class ExternModule {
             $sriurl = trim($this->config->getValue($linked_element_name, 'srilink'));
             $includeurl = trim($this->config->getValue($linked_element_name, 'includlink'));
         }
-            
+
         if ($sriurl) {
             $url = $sriurl;
         } else if ($includeurl) {
@@ -488,13 +488,13 @@ class ExternModule {
         } else {
             $url = $GLOBALS['EXTERN_SERVER_NAME'] . 'extern.php';
         }
-        
+
         if (parse_url($url, PHP_URL_QUERY)) {
             $url .= '&';
         } else {
             $url .= '?';
         }
-        
+
         if ($self) {
             $module = $this->name;
         } else {
@@ -513,18 +513,18 @@ class ExternModule {
                 return '';
             }
         }
-        
+
         $url .= "module={$module}&config_id=" . (is_null($linked_element_name) ? $this->config->getId() : $this->config->getValue($linked_element_name, 'config')) . "&range_id={$this->config->range_id}";
         if (sizeof($query_parts)) {
             $url .= '&' . implode('&', $query_parts);
         }
         return $url;
     }
-    
+
     function getLinkToSelf ($params = null, $with_module_params = false, $linked_element_name = null) {
         return $this->getLinkToModule($linked_element_name, $params, $with_module_params, true);
     }
-    
+
     function getModuleParams ($params = null) {
         $param_key = 'ext_' . strtolower($this->name);
         if (is_array($_REQUEST[$param_key])) {
@@ -554,7 +554,7 @@ class ExternModule {
         }
         return array();
     }
-    
+
     /**
      * Checks access for a module in a given view.of the admin area.
      *

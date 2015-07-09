@@ -266,7 +266,8 @@ class ExternEditModule extends ExternEditHtml {
         $groups_visible = $this->getValue("groupsvisible");
         if (!is_array($groups_visible))
             $groups_visible = array();
-        
+        if (!is_array($groups_aliases))
+            $groups_aliases = array();
         if (sizeof(array_intersect(array_keys($groups_aliases),
                 array_keys($groups_db)))) {
             foreach ($groups_config as $group_config) {
@@ -277,7 +278,7 @@ class ExternEditModule extends ExternEditHtml {
                 $groups[$groups_config[$i]] = $groups_aliases[$i];
             }
         }
-        
+
         $this->css->resetClass();
         $this->css->switchClass();
         $out = "<tr><td><table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
@@ -400,13 +401,13 @@ class ExternEditModule extends ExternEditHtml {
 
                     // move up
                 $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-                $out .= Assets::inpit('icons/16/yellow/arr_2up.png', tooltip2(_('Datenfeld verschieben')) + array(
+                $out .= Assets::input('icons/16/yellow/arr_2up.png', tooltip2(_('Datenfeld verschieben')) + array(
                             'name' => $this->element_name . '_move_left[' . $i . ']',
                             'align' => 'middle',
                         ));
 
                 // move down
-                $out .= Assets::inpit('icons/16/yellow/arr_2down.png', tooltip2(_('Datenfeld verschieben')) + array(
+                $out .= Assets::input('icons/16/yellow/arr_2down.png', tooltip2(_('Datenfeld verschieben')) + array(
                             'name' => $this->element_name . '_move_right[' . $i . ']',
                             'align' => 'middle',
                         ));
@@ -425,10 +426,10 @@ class ExternEditModule extends ExternEditHtml {
                 $this->css->switchClass();
             }
         }
-        
+
         $out .= "</table>\n</td></tr>\n";
         $out .= "<input type=\"hidden\" name=\"count_semtypes\" value=\"$i\">\n";
-        
+
         // update order
         if (sizeof(array_diff($order, $new_order))) {
             $this->config->setValue($this->element_name, 'order', $new_order);

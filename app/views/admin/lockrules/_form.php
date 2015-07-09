@@ -7,14 +7,14 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag(); ?>
     <table class="default nohover">
         <colgroup>
-            <col>
+            <col width="30%">
             <col>
         </colgroup>
         <caption>
             <? if ($lock_rule->name) : ?>
-                <?= sprintf("Sperrebene \"%s\" ändern", htmlready($lock_rule["name"])) ?>
+                <?= sprintf(_('Sperrebene "%s" ändern'), htmlready($lock_rule["name"])) ?>
             <? else : ?>
-                <?= _("Neue Sperrebene eingeben für den Bereich:") ?> <?= $rule_type_names[$lock_rule_type]; ?>
+                <?= _('Neue Sperrebene eingeben für den Bereich:') ?> <?= $rule_type_names[$lock_rule_type]; ?>
             <? endif ?>
         </caption>
         <tr>
@@ -28,9 +28,9 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr>
             <td>
-                <?= _("Beschreibung") ?>
+                <?= _('Beschreibung') ?>
                 <div
-                    style="font-size:80%"><?= _("(dieser Text wird auf allen Seiten mit gesperrtem Inhalt angezeigt)") ?></div>
+                    style="font-size:80%"><?= _('(dieser Text wird auf allen Seiten mit gesperrtem Inhalt angezeigt)') ?></div>
             </td>
             <td>
                 <textarea name="lockdata_description" rows="5"
@@ -38,9 +38,9 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr>
             <td>
-                <?= _("Nutzerstatus") ?>
+                <?= _('Nutzerstatus') ?>
                 <div
-                    style="font-size:80%"><?= _("(die Einstellungen dieser Sperrebene gelten für Nutzer bis zu dieser Berechtigung)") ?></div>
+                    style="font-size:80%"><?= _('(die Einstellungen dieser Sperrebene gelten für Nutzer bis zu dieser Berechtigung)') ?></div>
             </td>
             <td>
                 <select name="lockdata_permission">
@@ -65,8 +65,8 @@ use Studip\Button, Studip\LinkButton;
                 <thead>
                 <tr>
                     <th></th>
-                    <th><?= _("gesperrt") ?></th>
-                    <th><?= _("nicht gesperrt") ?></th>
+                    <th><?= _('gesperrt') ?></th>
+                    <th><?= _('nicht gesperrt') ?></th>
                 </tr>
                 </thead>
                 <tbody>

@@ -1,3 +1,8 @@
+<header>
+    <h1>
+        <?= _('Grunddaten') ?>
+    </h1>
+</header>
 <section class="required">
     <label for="wizard-coursetype">
         <?= _('Typ') ?>

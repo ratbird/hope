@@ -47,7 +47,7 @@ class Course_WizardController extends AuthenticatedController
      * Just some sort of placeholder for initial calling without a step number.
      */
     public function index_action() {
-        $this->redirect($this->url_for('course/wizard/step', 0));
+        $this->redirect('course/wizard/step/0'.(Request::int('studygroup') ? '?studygroup=1' : ''));
     }
 
     /**
@@ -68,10 +68,12 @@ class Course_WizardController extends AuthenticatedController
         if ($number == 0) {
             $this->first_step = true;
         }
-        $this->values = $this->getValues();
         if ($this->flash['studygroup']) {
-            $this->values[get_class($step)]['studygroup'] = true;
+            // Add special studygroup flag to set values.
+            $this->setStepValues(get_class($step),
+                array_merge($this->getValues(get_class($step)), array('studygroup' => 1)));
         }
+        $this->values = $this->getValues();
         $this->content = $step->getStepTemplate($this->values, $number, $this->temp_id);
         $this->stepnumber = $number;
     }
@@ -308,9 +310,9 @@ class Course_WizardController extends AuthenticatedController
     private function getValues($classname='')
     {
         if ($classname) {
-            return $_SESSION['coursewizard'][$this->temp_id][$classname];
+            return $_SESSION['coursewizard'][$this->temp_id][$classname] ?: array();
         } else {
-            return $_SESSION['coursewizard'][$this->temp_id];
+            return $_SESSION['coursewizard'][$this->temp_id] ?: array();
         }
     }
 

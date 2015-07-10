@@ -454,7 +454,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $actions = new ActionsWidget();
             
             $actions->addLink(_('Neue Studiengruppe anlegen'),
-                              $this->url_for('course/studygroup/new'),
+                              $this->url_for('course/wizard?studygroup=1'),
                               'icons/16/blue/add/studygroup.png');
             if ($GLOBALS['perm']->have_studip_perm('tutor', $id)) {
                 $actions->addLink(_('Bild ändern'),

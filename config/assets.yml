@@ -123,6 +123,9 @@ javascripts:
   lightbox:
     - javascripts/jquery/lightbox/lightbox.min.js
 
+  coursewizard:
+    - javascripts/coursewizard.js
+
 css:
   base:
     # filename : media

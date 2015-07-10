@@ -27,6 +27,10 @@
         overflow: hidden;
         padding-left: @css-tree-distance + 2px;
         position: relative;
+
+        &.css-tree-hidden {
+            display: none;
+        }
     }
     ul li:before {
         content: '';
@@ -78,7 +82,7 @@
                 }
             }
             ~ ul {
-                max-height: 1000px;
+                max-height: 10000px;
                 opacity: 1;
             }
         }

@@ -187,7 +187,7 @@ class MyCoursesController extends AuthenticatedController
 
         if ($sem_create_perm == 'dozent' && $GLOBALS['perm']->have_perm('dozent')) {
             $setting_widget->addLink(_('Neue Veranstaltung anlegen'),
-                                     URLHelper::getLink('admin_seminare_assi.php', array('new_session' => 'TRUE')),
+                                     URLHelper::getLink('dispatch.php/course/wizard'),
                                      'icons/16/blue/add/seminar.png');
         }
 

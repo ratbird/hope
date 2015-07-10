@@ -1,15 +1,17 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
 /*
- * Copyright (C) 2008 - Marcus Lunzenauer <mlunzena@uos.de>
+ * Course_StudyAreasController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ *
+ * @author      Marcus Lunzenauer <mlunzena@uos.de>
+ * @author      David Siegfried <david.siegfried@uni-vechta.de>
+ * @category    Stud.IP
+ * @since       3.2
  */
 
 
@@ -17,6 +19,7 @@ require_once 'lib/functions.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_lecture_tree.php';
 require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/coursewizardsteps/StudyAreasWizardStep.php';
 
 class Course_StudyAreasController extends AuthenticatedController
 {
@@ -30,289 +33,203 @@ class Course_StudyAreasController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        // user must have tutor permission
-        $course_id = current($args);
-        if (self::isCourseId($course_id)
-            && !$perm->have_studip_perm("tutor", $course_id)) {
+        // Search for course object
+        $this->course = Course::findCurrent();
+
+        // check course object and perms
+        if (!is_null($this->course)
+            && !$perm->have_studip_perm("tutor", $this->course->id)
+        ) {
             $this->set_status(403);
             return FALSE;
         }
+
         $this->set_content_type('text/html; charset=windows-1252');
-    }
 
-    /**
-     * Every (non-empty) string is a valid course ID except the string '-'
-     *
-     * @param mixed  the value to check
-     * @return bool  TRUE if it is courseID-ish, FALSE otherwise
-     */
-    static function isCourseId($id)
-    {
-        return is_string($id) && $id !== '' && $id !== '-';
-    }
-
-
-    /**
-     * This method shows the study area selection form for a given course ID.
-     *
-     * @param  string     the MD5ish ID of the course
-     *
-     * @return void
-     */
-    function show_action($course_id = '-')
-    {
-
-        global $perm;
-        if (Request::get("cid")) {
-            $course_id = Request::option("cid");
-        }
-
-        if(Request::isXhr()) {
-            $this->set_layout(null);
-        } else {
-            // prepare layout
-            $layout =
-                $GLOBALS['template_factory']->open('layouts/base');
-            $this->set_layout($layout);
-            Navigation::activateItem('/course/admin/study_areas');
-        }
-
-        $this->set_course($course_id);
-        $title = sprintf('%s - %s',
-            Course::find($this->course_id)->getFullname(),
-            _('Studienbereichsauswahl'));
-
-        if(Request::isXhr()) {
-            header('X-Title: ' . $title);
-        } else {
-            PageLayout::setTitle($title);
-        }
-
-        // is locked?
-        // TODO (mlunzena) shouldn't this be done in the before filter?
-        $this->locked = LockRules::Check($course_id , 'sem_tree');
-
-        // DOES the course's class permit "bereiche"?
-        // TODO (mlunzena) shouldn't this be done in the before filter?
-        $class = $GLOBALS['SEM_TYPE'][$this->course->getStatus()]["class"];
-        $this->areas_not_allowed = !$GLOBALS['SEM_CLASS'][$class]["bereiche"];
-
-
-        if (!$this->locked && !$this->areas_not_allowed) {
-
-            // renew status
-            $study_areas = Request::getArray('study_area_selection');
-
-
-            if (isset($study_areas['last_selected'])) {
-                $this->selection->setSelected((string) $study_areas['last_selected']);
-            }
-            if (isset($study_areas['showall'])) {
-                $this->selection->setShowAll((boolean) $study_areas['showall']);
-            }
-            if (isset($study_areas['areas'])) {
-                $this->selection->setAreas((array) $study_areas['areas']);
-            }
-
-            $this->update_selection($study_areas);
-
-            $this->course->setStudyAreas($this->selection->getAreaIDs());
-        }
-
-        $this->url = $this->url_for('course/study_areas/show/'.$course_id);
+        // Init Studyareas-Step for
+        $this->step = new StudyAreasWizardStep();
+        $this->values = array();
+        $this->values['StudyAreasWizardStep']['studyareas'] = $this->get_area_ids($this->course->id);
+        $this->values['StudyAreasWizardStep']['ajax_url'] = $this->url_for('course/study_areas/ajax');
+        $this->values['StudyAreasWizardStep']['no_js_url'] = $this->url_for('course/study_areas/show');
+        PageLayout::addSqueezePackage('coursewizard');
+        PageLayout::setTitle(sprintf(_("%s - Studienbereiche"), $this->course->getFullname()));
     }
 
 
-    function update_selection($study_areas)
+    function show_action()
     {
-
-        // action: add
-        if (isset($study_areas['add'])) {
-            foreach ($study_areas['add'] as $key => $value) {
-                $this->selection->add($key);
-            }
+        $this->url_params = array();
+        if (Request::get('from')) {
+            $this->url_params['from'] = Request::get('from');
         }
+        if (Request::get('open_node')) {
+            $this->url_params['open_node'] = Request::get('open_node');
+        }
+        if (!Request::isXhr()) {
 
-        // action: remove
-        else if (isset($study_areas['remove'])) {
+            Navigation::activateItem('course/admin/study_areas');
+            $sidebar = Sidebar::get();
+            $sidebar->setImage('sidebar/admin-sidebar.png');
 
-            // keep at least one
-            if ($this->selection->size() >= 1 + sizeof($study_areas['remove'])) {
-                foreach ($study_areas['remove'] as $key => $value) {
-                    $this->selection->remove($key);
+            if ($this->course) {
+                $links = new ActionsWidget();
+                foreach (Navigation::getItem('/course/admin/main') as $nav) {
+                    if ($nav->isVisible(true)) {
+                        $image = $nav->getImage();
+                        $links->addLink($nav->getTitle(), URLHelper::getLink($nav->getURL(), array('studip_ticket' => Seminar_Session::get_ticket())), $image['src']);
+                    }
+                }
+                $sidebar->addWidget($links);
+                // Entry list for admin upwards.
+                if ($GLOBALS['perm']->have_studip_perm("admin", $GLOBALS['SessionSeminar'])) {
+                    $list = new SelectorWidget();
+                    $list->setUrl("?#admin_top_links");
+                    $list->setSelectParameterName("cid");
+                    foreach (AdminCourseFilter::get()->getCourses(false) as $seminar) {
+                        $list->addElement(new SelectElement($seminar['Seminar_id'], $seminar['Name']), 'select-' . $seminar['Seminar_id']);
+                    }
+                    $list->setSelection($this->course->id);
+                    $sidebar->addWidget($list);
                 }
             }
-            else {
-                $this->error = _("Sie können diesen Studienbereich nicht löschen, da eine Veranstaltung immer mindestens einem Studienbereich zugeordnet sein muss.");
-            }
         }
-
-        // action: switch show all
-        else if (isset($study_areas['showall_button'])) {
-            $this->selection->toggleShowAll();
+        if (Request::get('open_node')) {
+            $this->values['StudyAreasWizardStep']['open_node'] = Request::get('open_node');
         }
-
-        // action: search
-        else if (isset($study_areas['search_key']) &&
-                 $study_areas['search_key'] != '') {
-            $this->selection->setSearchKey($study_areas['search_key']);
-        }
-
-        // action: expand
-        else if (isset($study_areas['selected'])) {
-            $this->selection->setSelected($study_areas['selected']);
-        }
+        $this->tree = $this->step->getStepTemplate($this->values, 0, 0);
     }
 
-
-    /**
-     * This method is sent using AJAX to add a study area to a course.
-     *
-     * @param  string     the MD5ish ID of the course
-     *
-     * @return void
-     */
-    function add_action($course_id = '-')
+    function ajax_action()
     {
+        $parameter = Request::getArray('parameter');
+        $method = Request::get('method');
 
-        $this->set_course($course_id);
-
-        // retrieve the study area from the POST body
-        // w/o a study area ID, render a BAD REQUEST
-        $id = Request::option('id');
-        if ($id === NULL) {
-            $this->set_status(400);
-            return $this->render_nothing();
+        switch ($method) {
+            case 'searchSemTree':
+                $json = $this->step->searchSemTree($parameter[0]);
+                break;
+            case 'getSemTreeLevel':
+                $json = $this->step->getSemTreeLevel($parameter[0]);
+                break;
+            case 'getAncestorTree':
+                $json = $this->step->getAncestorTree($parameter[0]);
+                break;
+            default:
+                $json = $this->step->getAncestorTree($parameter[0]);
+                break;
         }
 
-        $this->area = StudipStudyArea::find($id);
-
-        $this->selection->add($this->area);
-
-        $this->store_selection($course_id, $this->selection);
-
-        $this->render_template('course/study_areas/selected_entries');
+        $this->render_json($json);
     }
 
-
-    /**
-     * This method is sent using AJAX to remove a study area from a course.
-     *
-     * @param  string     the MD5ish ID of the course
-     *
-     * @return void
-     */
-    function remove_action($course_id = '-')
+    function save_action()
     {
-
-        $id = Request::option('id');
-
-        if ($id === NULL) {
-            $this->set_status(400);
-            return $this->render_nothing();
+        $params = array();
+        if(Request::get('open_node')) {
+            $params['open_node'] = Request::get('open_node');
         }
-
-        $selection = self::get_selection($course_id);
-
-        // removing the last area, would put the server into an inconsistent state;
-        // send a 409 Conflict back
-        if ($selection->size() == 1) {
-            $this->set_status(409);
-            return $this->render_nothing();
-        }
-
-        $selection->remove($id);
-
-        $this->store_selection($course_id, $selection);
-
-        $this->render_nothing();
-    }
-
-
-    /**
-     * This method is sent using AJAX to expand a study area subtree whose root is
-     * the specified $id.
-     *
-     * @param  string     the MD5ish ID of the course
-     * @param  string     the ID of the study area to expand
-     *
-     * @return void
-     */
-    function expand_action($course_id = '-', $id = NULL)
-    {
-
-        $this->set_course($course_id);
-
-        if ($id === NULL) {
-            $this->set_status(400);
-            return $this->render_nothing();
-        }
-
-        $this->selection->setSelected($id);
-
-        $this->render_template('course/study_areas/tree');
-    }
-
-
-    /**
-     * Returns a StudipStudyAreaSelection object for a given course ID.
-     * If the course ID is falsy, use the session variable from
-     * admin_seminare_assi.
-     *
-     * NOTE: This is a hack -- remove it ASAP.
-     *
-     * @param  string     either the MD5ish ID of a course or something falsy to
-     *                    indicate a course that is currently being created
-     *
-     * @return mixed      a "bean" of class StudipStudyAreaSelection representing
-     *                    the selection form
-     */
-    function get_selection($course_id)
-    {
-        if (self::isCourseId($course_id)) {
-            $selection = new StudipStudyAreaSelection($course_id);
-        }
-        else {
-
-            $areas = array();
-            if (isset($_SESSION['sem_create_data']) &&
-                isset($_SESSION['sem_create_data']['sem_bereich'])) {
-                $areas = $_SESSION['sem_create_data']['sem_bereich'];
-            }
-
-            $selection = new StudipStudyAreaSelection();
-            $selection->setAreas($areas);
-        }
-        return $selection;
-    }
-
-
-    // TODO (mlunzena) this hack has to be removed
-    function store_selection($course_id, $selection)
-    {
-
-        // w/ course ID, write the new study areas to the db
-        if (self::isCourseId($course_id)) {
-            $course = Seminar::getInstance($course_id);
-            $course->setStudyAreas($selection->getAreaIDs());
-        }
-
-        // w/o a course ID, insert all the areas IDs into the session variable of
-        // admin_seminare_assi.php
-        else {
-            $_SESSION['sem_create_data']['sem_bereich'] = $selection->getAreaIDs();
-        }
-    }
-
-    function set_course($course_id)
-    {
-        $this->selection = self::get_selection($course_id);
-        if (self::isCourseId($course_id)){
-            $this->course_id = $course_id;
-            $this->course = Seminar::getInstance($course_id);
-            $this->semester_id = SemesterData::GetSemesterIdByDate($this->course->getSemesterStartTime());
+        if (Request::get('from')) {
+            $url = $this->url_for(Request::get('from'));
         } else {
-            $this->semester_id = SemesterData::GetSemesterIdByDate($_SESSION['sem_create_data']['sem_start_time']);
+            $url = $this->url_for('course/study_areas/show/' . $this->course->id);
         }
+
+        if (Request::submittedSome('assign', 'unassign')) {
+            if (Request::submitted('assign')) {
+                $msg = $this->assign();
+            }
+
+            if (Request::submitted('unassign')) {
+                $msg = $this->unassign();
+            }
+
+
+        } else {
+            $studyareas = Request::getArray('studyareas');
+
+            if (empty($studyareas)) {
+                PageLayout::postMessage(MessageBox::error(_('Sie müssen mindesens einen Studienbereich auswählen')));
+                $this->redirect($url);
+                return;
+            }
+
+            $this->course->study_areas = SimpleORMapCollection::createFromArray(StudipStudyArea::findMany($studyareas));
+            try {
+                $msg = null;
+                $this->course->store();
+            } catch (UnexpectedValueException $e) {
+                $msg = $e->getMessage();
+            }
+        }
+
+        if (!$msg) {
+            PageLayout::postMessage(MessageBox::success(_('Die Studienbereichszuordnung wurde übernommen')));
+        } else {
+            PageLayout::postMessage(MessageBox::error($msg));
+        }
+        $this->redirect($url);
+    }
+
+    public function unassign()
+    {
+        if ($this->course->study_areas) {
+            foreach ($this->course->study_areas as $area) {
+                $assigned[] = $area->sem_tree_id;
+            }
+
+            foreach (array_keys(Request::getArray('unassign')) as $remove) {
+                if (false !== ($pos = array_search($remove, $assigned))) {
+                    unset($assigned[$pos]);
+                }
+            }
+        }
+
+        if(empty($assigned)) {
+            return _('Sie müssen mindesens einen Studienbereich auswählen');
+        }
+        $this->course->study_areas = SimpleORMapCollection::createFromArray(StudipStudyArea::findMany(array_values($assigned)));
+
+        try {
+            $msg = null;
+            $this->course->store();
+        } catch (UnexpectedValueException $e) {
+            $msg = $e->getMessage();
+        }
+        return $msg;
+    }
+
+    public function assign()
+    {
+
+        if ($this->course->study_areas) {
+            foreach ($this->course->study_areas as $area) {
+                $assigned[] = $area->sem_tree_id;
+            }
+
+            foreach (array_keys(Request::getArray('assign')) as $new) {
+                if (!in_array($new, $assigned)) {
+                    $assigned[] = $new;
+                }
+            }
+        }
+
+        $this->course->study_areas = SimpleORMapCollection::createFromArray(StudipStudyArea::findMany($assigned));
+
+        try {
+            $msg = null;
+            $this->course->store();
+        } catch (UnexpectedValueException $e) {
+            $msg = $e->getMessage();
+        }
+        return $msg;
+    }
+
+
+    function get_area_ids($course_id)
+    {
+        $selection = StudipStudyArea::getStudyAreasForCourse($course_id);
+
+        return array_keys($selection->toGroupedArray('sem_tree_id'));
     }
 }

@@ -79,7 +79,7 @@ class BrowseNavigation extends Navigation
                 $navigation = new Navigation(_('Meine Studiengruppen'), 'dispatch.php/my_studygroups');
                 $navigation->addSubNavigation('index', new Navigation(_('Meine Studiengruppen'), 'dispatch.php/my_studygroups'));
                 $navigation->addSubNavigation('all', new Navigation(_('Studiengruppensuche'), 'dispatch.php/studygroup/browse'));
-                $navigation->addSubNavigation('new', new Navigation(_('Neue Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
+                $navigation->addSubNavigation('new', new Navigation(_('Neue Studiengruppe anlegen'), 'dispatch.php/course/wizard?studygroup=1'));
                 $this->addSubNavigation('my_studygroups', $navigation);
             }
 

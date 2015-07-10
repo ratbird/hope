@@ -64,7 +64,7 @@ class CoreAdmin implements StudipModule {
 
                 if ($GLOBALS['perm']->have_perm($sem_create_perm)) {
                     if (!LockRules::check($course_id, 'seminar_copy')) {
-                        $item = new Navigation(_('Veranstaltung kopieren'), 'admin_seminare_assi.php?cmd=do_copy&cp_id='.$course_id.'&start_level=TRUE&class=1');
+                        $item = new Navigation(_('Veranstaltung kopieren'), 'dispatch.php/course/wizard/copy/'.$course_id);
                         $item->setImage('icons/16/black/add/seminar.png');
                         $main->addSubNavigation('copy', $item);
                     }

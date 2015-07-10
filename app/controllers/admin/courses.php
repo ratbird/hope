@@ -162,10 +162,11 @@ class Admin_CoursesController extends AuthenticatedController
         $this->setActionsWidget($this->selected_action);
 
         if ($this->sem_create_perm) {
+            PageLayout::addSqueezePackage('coursewizard');
             $actions = new ActionsWidget();
             $actions->addLink(_('Neue Veranstaltung anlegen'),
-                URLHelper::getLink('admin_seminare_assi.php',
-                    array('new_session' => 'TRUE')), 'icons/16/blue/add/seminar.png');
+                URLHelper::getLink('dispatch.php/course/wizard'),
+                'icons/16/blue/add/seminar.png')->asDialog('size=50%');
             $sidebar->addWidget($actions, 'links');
         }
 
@@ -494,7 +495,7 @@ class Admin_CoursesController extends AuthenticatedController
                         )),
             2  => array('name'       => 'Studienbereiche',
                         'title'      => 'Studienbereiche',
-                        'url'        => 'dispatch.php/course/study_areas/show?cid=%s',
+                        'url'        => 'dispatch.php/course/study_areas/show/?cid=%s&from=admin/courses',
                         'attributes' => array(
                             'data-dialog' => 'size=50%'
                         )),
@@ -515,7 +516,10 @@ class Admin_CoursesController extends AuthenticatedController
                         'multimode' => true),
             11 => array('name'  => 'Veranstaltung kopieren',
                         'title' => 'Kopieren',
-                        'url'   => 'admin_seminare_assi.php?cmd=do_copy&start_level=1&class=1&cp_id=%s'),
+                        'url'   => 'dispatch.php/course/wizard/copy/%s',
+                        'attributes' => array(
+                            'data-dialog' => 'size=50%'
+                        )),
             14 => array('name'       => 'Zugangsberechtigungen',
                         'title'      => 'Zugangsberechtigungen',
                         'url'        => 'dispatch.php/course/admission?cid=%s',

@@ -64,7 +64,7 @@ class CommunityNavigation extends Navigation
         if (get_config('STUDYGROUPS_ENABLE')) {
             $navigation = new Navigation(_('Studiengruppen'));
             $navigation->addSubNavigation('browse', new Navigation(_('Studiengruppensuche'), 'dispatch.php/studygroup/browse'));
-            $navigation->addSubNavigation('new', new Navigation(_('Neue Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
+            $navigation->addSubNavigation('new', new Navigation(_('Neue Studiengruppe anlegen'), 'dispatch.php/course/wizard?studygroup=1'));
             if (Config::get()->MY_COURSES_ENABLE_STUDYGROUPS) {
                 $navigation->addSubNavigation('index', new Navigation(_('Meine Studiengruppen'), 'dispatch.php/my_studygroups'));
             }

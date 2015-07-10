@@ -1428,7 +1428,7 @@ label.required:after {
   transform: rotate(90deg);
 }
 .css-tree.collapsable input[type=checkbox]:checked ~ ul {
-  max-height: 1000px;
+  max-height: 5000px;
   opacity: 1;
 }
 .css-tree.selectable input[type=checkbox] + label {
@@ -1457,6 +1457,9 @@ label.required:after {
 }
 .css-tree.selectable input[type=radio][disabled] + label {
   color: #888;
+}
+.css-tree li.css-tree-hidden {
+    display: none;
 }
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
@@ -6309,6 +6312,23 @@ ol ol {
 }
 .plus .helplink {
   float: right;
+}
+option.faculty {
+  font-weight: bold;
+}
+option.sub_institute {
+  padding-left: 15px;
+}
+div#assigned {
+  float:left;
+  padding-right: 10px;
+  width: 45%;
+}
+div#studyareas {
+  border-left: 1px solid #666666;
+  float: left;
+  padding-left: 10px;
+  width: 45%;
 }
 #responsive-container {
   display: none;

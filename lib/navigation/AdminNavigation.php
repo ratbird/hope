@@ -136,6 +136,8 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('banner', new Navigation(_('Werbebanner'), 'dispatch.php/admin/banner'));
             }
 
+            $navigation->addSubNavigation('coursewizardsteps',
+                new Navigation(_('Anlegeassistent'), 'dispatch.php/admin/coursewizardsteps'));
             $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
 
             if (Config::get()->SMILEYADMIN_ENABLE) {

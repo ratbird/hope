@@ -125,6 +125,21 @@ class StartNavigation extends Navigation
 
         $this->addSubNavigation('my_courses', $navigation);
 
+        // course administration 
+       if ($perm->have_perm('admin')) { 
+           $navigation = new Navigation(_('Verwaltung von Veranstaltungen'), 'dispatch.php/my_courses'); 
+
+           if ($perm->have_perm($sem_create_perm)) { 
+               $navigation->addSubNavigation('new_course', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE')); 
+           } 
+
+           if (get_config('STUDYGROUPS_ENABLE')) { 
+               $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new')); 
+           } 
+
+           $this->addSubNavigation('admin_course', $navigation); 
+       } 
+
         // insitute administration
         if ($perm->have_perm('admin')) {
             $navigation = new Navigation(_('Verwaltung von Einrichtungen'), 'dispatch.php/institute/basicdata/index?list=TRUE');

@@ -2,7 +2,7 @@
 <a name="autoren"></a>
 
 
-<form action="<?= $controller->url_for('course/members/edit_autor/') ?>" method="post" data-dialog="size=50%>
+<form action="<?= $controller->url_for('course/members/edit_autor') ?>" method="post" data-dialog="size=auto">
     <?= CSRFProtection::tokenTag() ?>
     <table id="autor" class="default collapsable tablesorter">
         <caption>
@@ -150,15 +150,20 @@
                     <select name="action_autor" id="action_autor" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <? if($is_dozent) : ?>
-                            <option value="upgrade"><?= sprintf(_('Zu %s hochstufen'),
-                                htmlReady($status_groups['tutor'])) ?></option>
+                        <option value="upgrade"><?= sprintf(_('Zu %s hochstufen'),
+                            htmlReady($status_groups['tutor'])) ?></option>
                         <? endif ?>
                         <option value="downgrade"><?= sprintf(_('Zu %s herunterstufen'),
                                 htmlReady($status_groups['user'])) ?></option>
-                        <!--<option value="to_admission">Auf Warteliste setzen</option>-->
+                            <?php if ($to_waitlist_actions) : ?>
+                            <option value="to_admission_first"><?= _('An den Anfang der Warteliste verschieben') ?></option>
+                            <option value="to_admission_last"><?= _('Ans Ende der Warteliste verschieben') ?></option>
+                            <?php endif ?>
                         <option value="remove"><?= _('Austragen') ?></option>
+                            <?php if($is_dozent) : ?>
+                            <option value="to_course"><?= _('In andere Veranstaltung verschieben/kopieren') ?></option>
+                            <?php endif ?>
                         <option value="message"><?=_('Nachricht senden')?></option>
-                        <!--<option value="copy_to_course">In Seminar verschieben/kopieren</option>-->
                     </select>
                     <?= Button::create(_('Ausführen'), 'submit_autor') ?>
                 </td>

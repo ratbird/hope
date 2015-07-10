@@ -2573,7 +2573,7 @@ CREATE TABLE IF NOT EXISTS `sem_classes` (
   `title_autor_plural` varchar(64) DEFAULT NULL,
   `mkdate` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL
-) ENGINE=MyISAM 00;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2605,7 +2605,7 @@ CREATE TABLE IF NOT EXISTS `sem_types` (
   `class` int(11) NOT NULL,
   `mkdate` bigint(20) NOT NULL,
   `chdate` bigint(20) NOT NULL
-) ENGINE=MyISAM 00;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 

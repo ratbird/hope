@@ -9,8 +9,8 @@ class Step00283UpdateCalendarSettings extends Migration {
 
     function up() {
         DBManager::get()->exec("ALTER TABLE `event_data` CHANGE `autor_id` `author_id` VARCHAR(32) NOT NULL");
-        DBManager::get()->execute("ALTER TABLE `calendar_event` ADD `mkdate` INT NOT NULL AFTER `group_status`");
-        DBManager::get()->execute("UPDATE calendar_event ce LEFT JOIN event_data ed USING(event_id) SET ce.mkdate = ed.mkdate");
+        DBManager::get()->exec("ALTER TABLE `calendar_event` ADD `mkdate` INT NOT NULL AFTER `group_status`");
+        DBManager::get()->exec("UPDATE calendar_event ce LEFT JOIN event_data ed USING(event_id) SET ce.mkdate = ed.mkdate");
 
         $replace = array(
             'showlist' => 'list',
@@ -18,15 +18,17 @@ class Step00283UpdateCalendarSettings extends Migration {
             'showweek' => 'week',
             'showmonth' => 'month',
             'showyear' => 'year');
-        $res = DBManager::get()->query('SELECT user_id FROM auth_user_md5 WHERE 1');
+        $res = DBManager::get()->query("SELECT user_id FROM `user_config` WHERE field = 'CALENDAR_SETTINGS'");
         $default_settings = Calendar::getDefaultUserSettings();
+        Config::get()->store('CALENDAR_SETTINGS', $default_settings);
         foreach ($res as $row) {
             $config = new UserConfig($row['user_id']);
             $settings = $config->getValue('CALENDAR_SETTINGS');
-            if (is_array($settings)) {
-                $default_settings['view'] = $replace[$settings['cal_view']];
+            if (isset($settings['view'])) {
+                $default_settings['view'] = $replace[$settings['view']];
+                $config->store('CALENDAR_SETTINGS', $default_settings);
             }
-            $config->store('CALENDAR_SETTINGS', $default_settings);
+            
         }
     }
 
@@ -51,14 +53,15 @@ class Step00283UpdateCalendarSettings extends Migration {
             'step_week_group' => '3600',
             'step_day_group' => '3600'
         );
-        $res = DBManager::get()->query('SELECT user_id FROM auth_user_md5 WHERE 1');
+        $res = DBManager::get()->query("SELECT user_id FROM `user_config` WHERE field = 'CALENDAR_SETTINGS'");
         foreach ($res as $row) {
             $config = UserConfig::get($row['user_id']);
             $settings = $config->getValue('CALENDAR_SETTINGS');
-            if (is_array($settings)) {
-                $default_settings['view'] = $replace[$settings['cal_view']];
+            if (isset($settings['view'])) {
+                $default_settings['view'] = $replace[$settings['view']];
+                $config->store('CALENDAR_SETTINGS', $default_settings);
             }
-            $config->store('CALENDAR_SETTINGS', $default_settings);
+            
         }
     }
 

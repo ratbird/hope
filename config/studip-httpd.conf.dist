@@ -25,6 +25,10 @@
     #PHP Konstanten sind hier nicht verfügbar
     # 22519 = E_ALL & ~(E_NOTICE|E_DEPRECATED) PHP 5.3.x
     php_value error_reporting 22519
+    
+    #ab PHP 5.6
+    #default_charset = 
+    
     #Wenn die suhosin extension benutzt wird, sind diese Optionen notwendig
     #php_value suhosin.cookie.plainlist Seminar_Session
     #php_flag suhosin.session.encrypt Off

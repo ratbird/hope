@@ -36,31 +36,37 @@ require_once('lib/statusgruppe.inc.php'); //Enthaelt Funktionen fuer Statusgrupp
 require_once('lib/log_events.inc.php'); // Logging
 require_once('lib/classes/DataFieldEntry.class.php'); //Enthaelt Funktionen fuer Statusgruppen
 require_once('lib/classes/StudipLitList.class.php');
-require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
-require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
+require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
+require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
 require_once 'lib/classes/Seminar.class.php';
 
 
-page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
+page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm",
+                'user' => "Seminar_User"
+));
 $auth->login_if($auth->auth["uid"] == "nobody");
 
 $check_perm = (get_config('ALLOW_DOZENT_ARCHIV') ? 'dozent' : 'admin');
 
 $perm->check($check_perm);
 
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once 'lib/admin_search.inc.php';
+include('lib/seminar_open.php'); // initialise Stud.IP-Session
+
 
 // -- here you have to put initialisations for the current page
 
 if (get_config('RESOURCES_ENABLE')) {
-    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/DeleteResourcesUser.class.php");
+    include_once($GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/DeleteResourcesUser.class.php");
 }
 
 if ($perm->have_perm('admin')) {
-    Navigation::activateItem('/admin/course/archive');
+    if (Navigation::hasItem('/browse/my_courses/list')) {
+        Navigation::activateItem('/browse/my_courses/list');
+    }
 } else {
-    Navigation::activateItem('/course/admin/main/archive');
+    if (Navigation::hasItem('/course/admin/main/archive')) {
+        Navigation::activateItem('/course/admin/main/archive');
+    }
 }
 
 PageLayout::setTitle(_("Archivieren von Veranstaltungen"));
@@ -74,7 +80,7 @@ if ($SessSemName[1]) {
     $archiv_sem[] = "_id_" . $SessSemName[1];
     $archiv_sem[] = "on";
 }
-if(!is_array($archiv_sem)){
+if (!is_array($archiv_sem)) {
     $archiv_sem = Request::quotedArray('archiv_sem');
 }
 // Handlings....
@@ -84,23 +90,25 @@ if (Request::option('new_session'))
     $_SESSION['archiv_assi_data'] = array();
 
 // A list was sent
-if (is_array($archiv_sem) && !Request::option('archive_kill') && !Request::option('inc') && !Request::option('dec') ) {
+if (is_array($archiv_sem) && !Request::option('archive_kill') && !Request::option('inc') && !Request::option('dec')) {
     $_SESSION['archiv_assi_data']['sems'] = array();
     $_SESSION['archiv_assi_data']['sem_check'] = array();
     $_SESSION['archiv_assi_data']['pos'] = 0;
-    foreach($archiv_sem as $key => $val) {
+    foreach ($archiv_sem as $key => $val) {
         if ((substr($val, 0, 4) == "_id_") && (substr($$archiv_sem[$key + 1], 0, 4) != "_id_"))
             if ($archiv_sem[$key + 1] == "on") {
-                $_SESSION['archiv_assi_data']["sems"][] = array("id" => substr($val, 4, strlen($val)), "succesful_archived" => FALSE);
+                $_SESSION['archiv_assi_data']["sems"][] = array("id"                 => substr($val, 4, strlen($val)),
+                                                                "succesful_archived" => FALSE
+                );
                 $_SESSION['archiv_assi_data']["sem_check"][substr($val, 4, strlen($val))] = TRUE;
             }
     }
 }
 // inc if we have lectures left in the upper
 if (Request::option('inc'))
-    if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) {
+    if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1) {
         $i = 1;
-        while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
+        while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1))
             $i++;
         if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
             $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $i;
@@ -117,9 +125,9 @@ if (Request::option('dec'))
     }
 
 
-if(LockRules::Check($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"], 'seminar_archive')) {
+if (LockRules::Check($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"], 'seminar_archive')) {
     $lockdata = LockRules::getObjectRule($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
-    if ($lockdata['description']){
+    if ($lockdata['description']) {
         $details = formatLinks($lockdata['description']);
     } else {
         $details = _("Die Veranstaltung kann nicht archiviert werden.");
@@ -134,12 +142,12 @@ if (Request::option('archive_kill')) {
     // # Do we have permission to do so?
 
     if (!$perm->have_perm($check_perm)) {
-        $msg .= "error§" . _("Sie haben keine Berechtigung zum archivieren von Veranstaltungen.") . "§";
+        $msg['error'] .= _("Sie haben keine Berechtigung zum archivieren von Veranstaltungen.");
         $run = FALSE;
     }
     // Trotzdem nochmal nachsehen
-    if (!$perm->have_studip_perm($check_perm , $s_id)) {
-        $msg .= "error§" . _("Sie haben keine Berechtigung diese Veranstaltung zu archivieren.") . "§";
+    if (!$perm->have_studip_perm($check_perm, $s_id)) {
+        $msg['error'] .= _("Sie haben keine Berechtigung diese Veranstaltung zu archivieren.");
         $run = FALSE;
     }
 
@@ -155,7 +163,8 @@ if (Request::option('archive_kill')) {
         unset($sem);
 
         // Successful archived, if we are here
-        $msg .= "msg§" . sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gelöscht. Sie steht nun im Archiv zur Verfügung."), "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>") . "§";
+        $msg['success'] .= sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gelöscht. Sie steht nun im Archiv zur Verfügung."),
+            "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>");
 
         // unset the checker, lecture is now killed!
         unset($_SESSION['archiv_assi_data']["sem_check"][$s_id]);
@@ -170,9 +179,9 @@ if (Request::option('archive_kill')) {
 
         // if there are lectures left....
         if (is_array($_SESSION['archiv_assi_data']["sem_check"])) {
-            if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) { // ...inc the counter if possible..
+            if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1) { // ...inc the counter if possible..
                 $i = 1;
-                while ((! $_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
+                while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1))
                     $i++;
                 $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $i;
             } else { // ...else dec the counter to find a unarchived lecture
@@ -187,13 +196,12 @@ if (Request::option('archive_kill')) {
 }
 
 // Start of Output
-include 'lib/include/admin_search_form.inc.php';
-
 ob_start();
 
 // Outputs...
 if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 0)) {
-    $query = "SELECT Name, Untertitel, status, Beschreibung, VeranstaltungsNummer,
+    $query
+        = "SELECT Name, Untertitel, status, Beschreibung, VeranstaltungsNummer,
                      duration_time, start_time, art, Institut_id
               FROM seminare
               WHERE Seminar_id = ?";
@@ -201,240 +209,211 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     $statement->execute(array($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
     $seminar = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $msg .= "info§" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht rückgängig gemacht werden!") . "§";
+    $msg['info'] .= _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht rückgängig gemacht werden!");
     // check is Veranstaltung running
     if ($seminar['duration_time'] == -1) {
-        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.") . "§";
+        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.");
     } elseif (time() < $seminar['start_time'] + $seminar['duration_time']) {
-        $msg .= "info§" . _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
+        $msg['info'] .= _("Das Archivieren könnte unter Umständen nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.");
     }
-    if(Config::get()->ELEARNING_INTERFACE_ENABLE) {
+    if (Config::get()->ELEARNING_INTERFACE_ENABLE) {
         $cms_types = ObjectConnections::GetConnectedSystems($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
-        if(count($cms_types)){
-            $msg .= "info§" . sprintf(_("Die Veranstaltung besitzt verknüpfte Inhalte in %s externen Systemen (%s). Diese verknüpften Inhalte werden durch die Archivierung gelöscht!"), count($cms_types), join(',',$cms_types)) . "§";
+        if (count($cms_types)) {
+            $msg['info'] .= sprintf(_("Die Veranstaltung besitzt verknüpfte Inhalte in %s externen Systemen (%s). Diese verknüpften Inhalte werden durch die Archivierung gelöscht!"),
+                count($cms_types), join(',', $cms_types));
         }
     }
     ?>
     <body>
-
-    <table width="100%" border=0 cellpadding=0 cellspacing=0>
-    <? if($perm->have_perm('admin')) : ?>
-        <tr>
-            <td class="table_header_bold" colspan=2><b>&nbsp;
-                    <?
-                    echo $SEM_TYPE[$seminar['status']]["name"], ": ", htmlReady(substr($seminar['Name'], 0, 60));
-                    if (strlen($seminar['Name']) > 60)
-                        echo "... ";
-                    echo " -  " . _("Archivieren der Veranstaltung");
-                    ?></b>
-            </td>
-        </tr>
-    <? endif ?>
-    <tr>
-    <td class="blank" colspan=2>
     <? if ($messages) : ?>
         <? foreach ($messages as $type => $message_data) : ?>
             <?= MessageBox::$type($message_data['title'], $message_data['details']) ?>
         <? endforeach ?>
     <? endif ?>
-    <table class="default" align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
-    <?
-    parse_msg($msg, "§", "blank", 3);
-    ?>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td valign="top" colspan=3 valign="top" width="96%">
-            <?
-            // Grunddaten des Seminars
-            printf ("<b>%s</b>", htmlReady($seminar['Name']));
-            // last activity
-            $last_activity = lastActivity($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
-            if ((time() - $last_activity) < (60 * 60 * 24 * 7 * 12))
-                $activity_warning = TRUE;
-            printf ("<br>" . _("letzte Veränderung am:") . " %s%s%s", ($activity_warning) ? "<font color=\"red\" >" : "", date("d.m.Y, G:i", $last_activity), ($activity_warning) ? "</font>" : "");
-            ?>
-        </td>
-    </tr>
-    <? if ($seminar['Untertitel'] != "") {
-
-        ?>
+    <? if (!empty($msg))  : ?>
+        <? foreach ($msg as $type => $message) : ?>
+            <?= MessageBox::$type($message) ?>
+        <? endforeach ?>
+    <? endif ?>
+    <table class="default nohover">
+        <caption>
+            <?= $SEM_TYPE[$seminar['status']]["name"], ": ", htmlReady(substr($seminar['Name'], 0, 60)); ?>
+            <? if (strlen($seminar['Name']) > 60) : ?>
+                ...
+            <? endif ?>
+        </caption>
+        <colgroup>
+            <col width="50%">
+            <col width="50%">
+        </colgroup>
         <tr>
-            <td width="4%">&nbsp;
-            </td>
-            <td valign="top" colspan=2 valign="top" width="96%">
+            <td style="vertical-align: top" colspan="2">
                 <?
                 // Grunddaten des Seminars
-                printf ("<b>" . _("Untertitel:") . "</b><br>%s", htmlReady($seminar['Untertitel']));
+                printf("<b>%s</b>", htmlReady($seminar['Name']));
+                // last activity
+                $last_activity = lastActivity($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
+                if ((time() - $last_activity) < (60 * 60 * 24 * 7 * 12))
+                    $activity_warning = TRUE;
+                printf("<br>" . _("letzte Veränderung am:") . " %s%s%s", ($activity_warning) ? "<span style='color: red'>" : "", date("d.m.Y, G:i", $last_activity), ($activity_warning) ? "</span>" : "");
                 ?>
             </td>
         </tr>
-    <? }
-    ?>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td valign="top" width="48%">
-            <?
-            printf ("<b>" . _("Zeit:") . "</b><br>%s", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
+        <? if ($seminar['Untertitel'] != "") {
+
             ?>
-        </td>
-        <td valign="top" width="48%">
-            <?
-            printf ("<b>" . _("Semester:") . "</b><br>%s", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td valign="top" width="48%">
-            <?
-            printf ("<b>" . _("Erster Termin:") . "</b><br>%s", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
-            ?>
-        </td>
-        <td valign="top" width="48%">
-            <?
-            printf ("<b>" . _("Vorbesprechung:") . "</b><br>%s", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td width="48%" valign="top">
-            <?
-            $sem = Seminar::getInstance($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']);
-            printf ("<b>" . _("Veranstaltungsort:") . "</b><br>%s",
-                htmlReady($sem->getDatesTemplate('dates/seminar_export_location')));
-            ?>
-        </td>
-        <td width="48%" valign="top">
-            <?
-            if ($seminar['VeranstaltungsNummer'])
-                printf ("<b>" . _("Veranstaltungsnummer:") . "</b><br>%s", htmlReady($seminar['VeranstaltungsNummer']));
-            else
-                print "&nbsp; ";
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td width="48%" valign="top">
-            <?
-            // wer macht den Dozenten?
-            $query = "SELECT {$_fullname_sql['full']} AS fullname, username
+            <tr>
+                <td style="vertical-align: top" colspan="2">
+                    <?
+                    // Grunddaten des Seminars
+                    printf("<b>" . _("Untertitel:") . "</b><br>%s", htmlReady($seminar['Untertitel']));
+                    ?>
+                </td>
+            </tr>
+        <? }
+        ?>
+        <tr>
+            <td style="vertical-align: top">
+                <?
+                printf("<b>" . _("Zeit:") . "</b><br>%s", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
+                ?>
+            </td>
+            <td style="vertical-align: top">
+                <?
+                printf("<b>" . _("Semester:") . "</b><br>%s", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <?
+                printf("<b>" . _("Erster Termin:") . "</b><br>%s", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
+                ?>
+            </td>
+            <td style="vertical-align: top">
+                <?
+                printf("<b>" . _("Vorbesprechung:") . "</b><br>%s", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <?
+                $sem = Seminar::getInstance($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']);
+                printf("<b>" . _("Veranstaltungsort:") . "</b><br>%s",
+                    htmlReady($sem->getDatesTemplate('dates/seminar_export_location')));
+                ?>
+            </td>
+            <td style="vertical-align: top">
+                <?
+                if ($seminar['VeranstaltungsNummer'])
+                    printf("<b>" . _("Veranstaltungsnummer:") . "</b><br>%s", htmlReady($seminar['VeranstaltungsNummer']));
+                else
+                    print "&nbsp; ";
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                <?
+                // wer macht den Dozenten?
+                $query
+                    = "SELECT {$_fullname_sql['full']} AS fullname, username
                           FROM seminar_user
                           LEFT JOIN auth_user_md5 USING (user_id)
                           LEFT JOIN user_info USING (user_id)
                           WHERE Seminar_id = ? AND status = ? ORDER BY position, Nachname";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
-                'dozent'
-            ));
-            $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $statement->closeCursor();
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    'dozent'
+                ));
+                $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement->closeCursor();
 
-            printf("<b>" . get_title_for_status('dozent', count($teachers), $seminar['status']) . "</b><br>");
+                printf("<b>" . get_title_for_status('dozent', count($teachers), $seminar['status']) . "</b><br>");
 
-            if (count($teachers) === 1) {
-                $teacher = reset($teachers);
-                printf('<a href="%s">%s</a>',
-                    URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
-                    htmlReady($teacher['fullname']));
-            } else {
-                echo '<ul style="margin:0;">';
-                foreach ($teachers as $teacher) {
-                    echo '<li>';
+                if (count($teachers) === 1) {
+                    $teacher = reset($teachers);
                     printf('<a href="%s">%s</a>',
                         URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
                         htmlReady($teacher['fullname']));
-                    echo '</li>';
+                } else {
+                    echo '<ul style="margin:0;">';
+                    foreach ($teachers as $teacher) {
+                        echo '<li>';
+                        printf('<a href="%s">%s</a>',
+                            URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
+                            htmlReady($teacher['fullname']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
                 }
-                echo '</ul>';
-            }
 
-            ?>
-        </td>
-        <td width="48%" valign="top">
-            <?
-            // und wer ist Tutor?
-            $statement->execute(array(
-                $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
-                'tutor'
-            ));
-            $tutors = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $statement->closeCursor();
+                ?>
+            </td>
+            <td style="vertical-align: top">
+                <?
+                // und wer ist Tutor?
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    'tutor'
+                ));
+                $tutors = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement->closeCursor();
 
-            printf("<b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b><br>");
-            if (count($tutors) === 0) {
-                echo _('keine');
-            } else if (count($tutors) === 1) {
-                $tutor = reset($tutors);
-                printf('<a href="%s">%s</a>',
-                    URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
-                    htmlReady($tutor['fullname']));
-            } else {
-                echo '<ul style="margin:0;">';
-                foreach ($tutors as $tutor) {
-                    echo '<li>';
+                printf("<b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b><br>");
+                if (count($tutors) === 0) {
+                    echo _('keine');
+                } else if (count($tutors) === 1) {
+                    $tutor = reset($tutors);
                     printf('<a href="%s">%s</a>',
                         URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
                         htmlReady($tutor['fullname']));
-                    echo '</li>';
+                } else {
+                    echo '<ul style="margin:0;">';
+                    foreach ($tutors as $tutor) {
+                        echo '<li>';
+                        printf('<a href="%s">%s</a>',
+                            URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
+                            htmlReady($tutor['fullname']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
                 }
-                echo '</ul>';
-            }
 
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td width="48%" valign="top">
-            <?
-            printf ("<b>" . _("Veranstaltungstyp:") . "</b><br>%s in der Kategorie %s", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
-            ?>
-        </td>
-        <td width="48%" valign="top">
-            <?
-            if ($seminar['art'])
-                printf ("<b>" . _("Art/Form:") . "</b><br>%s", htmlReady($seminar['art']));
-            else
-                print "&nbsp; ";
-            ?>
-        </td>
-    </tr>
-    <? if ($seminar['Beschreibung'] != "") {
-
-        ?>
-        <tr>
-            <td width="4%">&nbsp;</td>
-            <td colspan="2" width="96%" valign="top">
-                <?
-                printf ("<b>" . _("Kommentar/Beschreibung:") . "</b><br>%s", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
                 ?>
             </td>
         </tr>
-    <?
-    }
-    ?>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td width="48%" valign="top">
-            <?
-            $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($seminar['Institut_id']));
-            $institute_name = $statement->fetchColumn();
-
-            if ($institute_name) {
-                printf("<b>" . _('Heimat-Einrichtung:') . "</b><br><a href=\"%s\">%s</a>",
-                    URLHelper::getLink('institut_main.php?auswahl=' . $seminar['Institut_id']),
-                    htmlReady($institute_name));
-            }
+        <tr>
+            <td style="vertical-align: top">
+                <?
+                printf("<b>" . _("Veranstaltungstyp:") . "</b><br>%s in der Kategorie %s", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
+                ?>
+            </td>
+            <td style="vertical-align: top">
+                <?
+                if ($seminar['art'])
+                    printf("<b>" . _("Art/Form:") . "</b><br>%s", htmlReady($seminar['art']));
+                else
+                    print "&nbsp; ";
+                ?>
+            </td>
+        </tr>
+        <? if ($seminar['Beschreibung'] != "") {
 
             ?>
             <tr>
-                <td width="4%">&nbsp;</td>
-                <td width="48%" valign="top">
+                <td colspan="2" style="vertical-align: top">
+                    <?
+                    printf("<b>" . _("Kommentar/Beschreibung:") . "</b><br>%s", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
+                    ?>
+                </td>
+            </tr>
+            <?
+        }
+        ?>
+            <td style="vertical-align: top">
                 <?
                 $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
                 $statement = DBManager::get()->prepare($query);
@@ -443,134 +422,111 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                 if ($institute_name) {
                     printf("<b>" . _('Heimat-Einrichtung:') . "</b><br><a href=\"%s\">%s</a>",
-                           URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $seminar['Institut_id']),
-                           htmlReady($institute_name));
+                        URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $seminar['Institut_id']),
+                        htmlReady($institute_name));
                 }
 
                 ?>
-                </td>
-                <td width="48%" valign="top">
+            </td>
+            <td style="vertical-align: top">
                 <?
-                $query = "SELECT Name, Institut_id
+                $query
+                    = "SELECT Name, Institut_id
                           FROM Institute
                           LEFT JOIN seminar_inst USING (institut_id)
                           WHERE seminar_id = ? AND Institute.Institut_id != ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
-                $seminar['Institut_id']
-            ));
-            $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    $seminar['Institut_id']
+                ));
+                $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-            if (count($institutes) === 1) {
-                print("<b>" . _("Beteiligte Einrichtung:") . "</b><br>");
-                $institute = reset($institutes);
-                printf('<a href="%s">%s</a><br>',
-                    URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
-                    htmlReady($institute['Name']));
-            } else if (count($institutes) >= 2) {
-                print("<b>" . _("Beteiligte Einrichtungen:") . "</b><br>");
+                if (count($institutes) === 1) {
+                    print("<b>" . _("Beteiligte Einrichtung:") . "</b><br>");
+                    $institute = reset($institutes);
+                    printf('<a href="%s">%s</a><br>',
+                        URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
+                        htmlReady($institute['Name']));
+                } else if (count($institutes) >= 2) {
+                    print("<b>" . _("Beteiligte Einrichtungen:") . "</b><br>");
 
-                echo '<ul style="margin:0;">';
-                foreach ($institutes as $institute) {
-                    echo '<li>';
-                    printf('<a href="%s">%s</a>',
-                           URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
-                           htmlReady($institute['Name']));
-                    echo '</li>';
+                    echo '<ul style="margin:0;">';
+                    foreach ($institutes as $institute) {
+                        echo '<li>';
+                        printf('<a href="%s">%s</a>',
+                            URLHelper::getLink('dispatch.php/institute/overview?auswahl=' . $institute['Institut_id']),
+                            htmlReady($institute['Name']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
                 }
-                echo '</ul>';
-            }
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td width="4%">&nbsp;</td>
-        <td colspan="2" width="96%" valign="top" align="center">
-            <?
-            // can we dec?
-            if ($_SESSION['archiv_assi_data']["pos"] > 0) {
-                $d = -1;
-                while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $d > 0))
-                    $d--;
-                if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]))
-                    $inc_possible = TRUE;
-            }
-            if ($inc_possible) {
-                echo LinkButton::create(_('<< Vorherige'), URLHelper::getURL("?dec=TRUE"));
-            }
-            echo LinkButton::create(_('Archivieren'), URLHelper::getURL("?archive_kill=TRUE"));
-            if (!$_SESSION['links_admin_data']["sem_id"]) {
-
-                if ($perm->have_perm('admin')) {
-                    $cancel_url = URLHelper::getURL((($SessSemName[1])
-                        ? 'dispatch.php/course/basicdata/view/'. $SessSemName[1] .'?list=TRUE'
-                        : '?list=TRUE&new_session=TRUE'));
-                } else {
-                    $cancel_url = URLHelper::getURL('dispatch.php/course/management');
+                ?>
+            </td>
+        </tr>
+        <tfoot>
+        <tr>
+            <td colspan="2" style="vertical-align: top; text-align:center">
+                <?
+                // can we dec?
+                if ($_SESSION['archiv_assi_data']["pos"] > 0) {
+                    $d = -1;
+                    while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $d > 0))
+                        $d--;
+                    if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]))
+                        $inc_possible = TRUE;
                 }
+                if ($inc_possible) {
+                    echo LinkButton::create(_('<< Vorherige'), URLHelper::getURL("?dec=TRUE"));
+                }
+                echo LinkButton::create(_('Archivieren'), URLHelper::getURL("?archive_kill=TRUE"));
+                if (!$_SESSION['links_admin_data'] || !$_SESSION['links_admin_data']['sem_id']) {
 
-                echo LinkButton::createCancel(_('Abbrechen'), $cancel_url);
-            }
-            // can we inc?
-            if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) {
-                $i = 1;
-                while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
-                    $i++;
-                if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
-                    $dec_possible = TRUE;
-            }
-            if ($dec_possible) {
-                echo LinkButton::create(_('Nächster >>'), URLHelper::getURL("?inc=TRUE"));
-            }
-            if (sizeof($_SESSION['archiv_assi_data']["sems"]) > 1)
-                printf ("<br>" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgewählt."), sizeof($_SESSION['archiv_assi_data']["sem_check"]), sizeof($_SESSION['archiv_assi_data']["sems"]));
-            ?>
-        </td>
-    </tr>
-    </table>
-    <br>
-    </td>
-    </tr>
+                    if ($perm->have_perm('admin')) {
+                        $cancel_url = URLHelper::getURL((($SessSemName[1])
+                            ? 'dispatch.php/course/basicdata/view/' . $SessSemName[1] . '?list=TRUE'
+                            : '?list=TRUE&new_session=TRUE'));
+                    } else {
+                        $cancel_url = URLHelper::getURL('dispatch.php/course/management');
+                    }
+
+                    echo LinkButton::createCancel(_('Abbrechen'), $cancel_url);
+                }
+                // can we inc?
+                if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1) {
+                    $i = 1;
+                    while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"]) - 1))
+                        $i++;
+                    if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
+                        $dec_possible = TRUE;
+                }
+                if ($dec_possible) {
+                    echo LinkButton::create(_('Nächster >>'), URLHelper::getURL("?inc=TRUE"));
+                }
+                if (sizeof($_SESSION['archiv_assi_data']["sems"]) > 1)
+                    printf("<br>" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgewählt."), sizeof($_SESSION['archiv_assi_data']["sem_check"]), sizeof($_SESSION['archiv_assi_data']["sems"]));
+                ?>
+            </td>
+        </tr>
+        </tfoot>
     </table>
 
-<?
+    <?
 } elseif (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) == 0)) {
     ?>
 
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="table_header_bold" colspan=2> <b><?=_("Die Veranstaltung wurde archiviert.")?></b>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" colspan=2>
-                <b><? parse_msg($msg . "info§" . _("Sie haben alle ausgewählten Veranstaltungen archiviert!")); ?></b>
-            </td>
-        </tr>
-    </table>
+    <?= MessageBox::success(_("Sie haben alle ausgewählten Veranstaltungen archiviert!")) ?>
     <?
     if ($_SESSION['links_admin_data']["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
-        reset_all_data();
-} elseif (!$list) {
+        $_SESSION['links_admin_data']["select_old"]=TRUE;
+        $_SESSION['links_admin_data']['srch_sem'] =& $_SESSION['_default_sem'];
+    } elseif (!$list) {
     if ($_SESSION['links_admin_data']["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
-        reset_all_data();
+        $_SESSION['links_admin_data']["select_old"]=TRUE;
+        $_SESSION['links_admin_data']['srch_sem'] =& $_SESSION['_default_sem'];
     ?>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td class="table_header_bold" colspan=2><b><?=_("Keine Veranstaltung zum Archivieren gewählt")?></b>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" colspan=2><b>
-                    <?
-                    if (!$_SESSION['links_admin_data']["sem_id"])
-                        parse_msg("info§" . _("Sie haben keine Veranstaltung zum Archivieren gewählt."));
-                    ?></b>
-            </td>
-        </tr>
-    </table>
-<?php
+    <?= MessageBox::info(_("Sie haben keine Veranstaltung zum Archivieren gewählt.")) ?>
+    <?php
 }
 
 $template = $GLOBALS['template_factory']->open('layouts/base.php');

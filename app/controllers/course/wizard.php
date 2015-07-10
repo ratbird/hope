@@ -70,7 +70,7 @@ class Course_WizardController extends AuthenticatedController
         }
         $this->values = $this->getValues();
         if ($this->flash['studygroup']) {
-            $this->values['studygroup'] = true;
+            $this->values[get_class($step)]['studygroup'] = true;
         }
         $this->content = $step->getStepTemplate($this->values, $number, $this->temp_id);
         $this->stepnumber = $number;

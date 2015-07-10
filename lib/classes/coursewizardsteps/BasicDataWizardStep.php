@@ -27,12 +27,11 @@ class BasicDataWizardStep implements CourseWizardStep
      */
     public function getStepTemplate($values, $stepnumber, $temp_id)
     {
-        $studygroup = $values['studygroup'];
         // We only need our own stored values here.
         $values = $values[__CLASS__];
         // Load template from step template directory.
         $factory = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'].'/app/views/course/wizard/steps');
-        if ($studygroup) {
+        if ($values['studygroup']) {
             $tpl = $factory->open('basicdata/index_studygroup');
             $values['lecturers'][$GLOBALS['user']->id] = 1;
         } else {
@@ -45,7 +44,7 @@ class BasicDataWizardStep implements CourseWizardStep
         {
             $class = $type->getClass();
             // Creates a studygroup.
-            if ($studygroup) {
+            if ($values['studygroup']) {
                 // Get all studygroup types.
                 if ($class['studygroup_mode']) {
                     $typestruct[$class['name']][] = $type;
